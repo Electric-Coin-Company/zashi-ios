@@ -1,0 +1,8 @@
+# options
+--self remove # redundantSelf
+--importgrouping testable-bottom # sortedImports
+--commas always # trailingCommas
+--trimwhitespace always # trailingSpace
+
+# rules
+--rules redundantParens,redundantSelf,sortedImports,trailingCommas,trailingSpace
