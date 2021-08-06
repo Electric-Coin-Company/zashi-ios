@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D170A7226BC802800EB6A46 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D170A7126BC802800EB6A46 /* Router.swift */; };
+		0D1922EA26BDD96A00052649 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922E926BDD96A00052649 /* ViewModel.swift */; };
+		0D1922ED26BDE0C600052649 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922EC26BDE0C600052649 /* AppRouter.swift */; };
+		0D1922EF26BDE1A300052649 /* Services.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922EE26BDE1A300052649 /* Services.swift */; };
+		0D1922F226BDE29300052649 /* ZcashSDKStubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922F126BDE29300052649 /* ZcashSDKStubs.swift */; };
+		0D1922F426BDE5F200052649 /* MnemonicSeedPhraseHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922F326BDE5F200052649 /* MnemonicSeedPhraseHandling.swift */; };
+		0D1922F626BDE74500052649 /* KeyStoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922F526BDE74500052649 /* KeyStoring.swift */; };
+		0D1922F826BDEB3500052649 /* MockServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922F726BDEB3500052649 /* MockServices.swift */; };
 		0D4E7A0926B364170058B01E /* SecantApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0826B364170058B01E /* SecantApp.swift */; };
 		0D4E7A0B26B364170058B01E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0A26B364170058B01E /* ContentView.swift */; };
 		0D4E7A0D26B364180058B01E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0C26B364180058B01E /* Assets.xcassets */; };
@@ -33,6 +41,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0D170A7126BC802800EB6A46 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		0D1922E926BDD96A00052649 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		0D1922EC26BDE0C600052649 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		0D1922EE26BDE1A300052649 /* Services.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services.swift; sourceTree = "<group>"; };
+		0D1922F126BDE29300052649 /* ZcashSDKStubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZcashSDKStubs.swift; sourceTree = "<group>"; };
+		0D1922F326BDE5F200052649 /* MnemonicSeedPhraseHandling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MnemonicSeedPhraseHandling.swift; sourceTree = "<group>"; };
+		0D1922F526BDE74500052649 /* KeyStoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyStoring.swift; sourceTree = "<group>"; };
+		0D1922F726BDEB3500052649 /* MockServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServices.swift; sourceTree = "<group>"; };
 		0D4E7A0526B364170058B01E /* secant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = secant.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D4E7A0826B364170058B01E /* SecantApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecantApp.swift; sourceTree = "<group>"; };
 		0D4E7A0A26B364170058B01E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -72,6 +88,49 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0D170A7326BC802E00EB6A46 /* Routers */ = {
+			isa = PBXGroup;
+			children = (
+				0D1922EC26BDE0C600052649 /* AppRouter.swift */,
+			);
+			path = Routers;
+			sourceTree = "<group>";
+		};
+		0D170A7426BC9B7500EB6A46 /* Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				0D1922F326BDE5F200052649 /* MnemonicSeedPhraseHandling.swift */,
+				0D1922EE26BDE1A300052649 /* Services.swift */,
+				0D1922F526BDE74500052649 /* KeyStoring.swift */,
+			);
+			path = Dependencies;
+			sourceTree = "<group>";
+		};
+		0D1922E826BDD95000052649 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				0D170A7126BC802800EB6A46 /* Router.swift */,
+				0D1922E926BDD96A00052649 /* ViewModel.swift */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		0D1922EB26BDD9A500052649 /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		0D1922F026BDE27D00052649 /* Stubs */ = {
+			isa = PBXGroup;
+			children = (
+				0D1922F126BDE29300052649 /* ZcashSDKStubs.swift */,
+				0D1922F726BDEB3500052649 /* MockServices.swift */,
+			);
+			path = Stubs;
+			sourceTree = "<group>";
+		};
 		0D4E79FC26B364170058B01E = {
 			isa = PBXGroup;
 			children = (
@@ -95,11 +154,16 @@
 		0D4E7A0726B364170058B01E /* secant */ = {
 			isa = PBXGroup;
 			children = (
+				0D1922F026BDE27D00052649 /* Stubs */,
+				0D1922EB26BDD9A500052649 /* Screens */,
+				0D1922E826BDD95000052649 /* Base */,
+				0D170A7426BC9B7500EB6A46 /* Dependencies */,
 				0D4E7A0826B364170058B01E /* SecantApp.swift */,
 				0D4E7A0A26B364170058B01E /* ContentView.swift */,
 				0D4E7A0C26B364180058B01E /* Assets.xcassets */,
 				0D4E7A1126B364180058B01E /* Info.plist */,
 				0D4E7A0E26B364180058B01E /* Preview Content */,
+				0D170A7326BC802E00EB6A46 /* Routers */,
 			);
 			path = secant;
 			sourceTree = "<group>";
@@ -259,7 +323,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D1922ED26BDE0C600052649 /* AppRouter.swift in Sources */,
+				0D1922F226BDE29300052649 /* ZcashSDKStubs.swift in Sources */,
+				0D1922EF26BDE1A300052649 /* Services.swift in Sources */,
+				0D1922F826BDEB3500052649 /* MockServices.swift in Sources */,
 				0D4E7A0B26B364170058B01E /* ContentView.swift in Sources */,
+				0D1922F426BDE5F200052649 /* MnemonicSeedPhraseHandling.swift in Sources */,
+				0D170A7226BC802800EB6A46 /* Router.swift in Sources */,
+				0D1922F626BDE74500052649 /* KeyStoring.swift in Sources */,
+				0D1922EA26BDD96A00052649 /* ViewModel.swift in Sources */,
 				0D4E7A0926B364170058B01E /* SecantApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
