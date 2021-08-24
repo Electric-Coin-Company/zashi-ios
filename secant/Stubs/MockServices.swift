@@ -7,7 +7,7 @@
 
 import Foundation
 
-class MockAppServices: Services {
+class MockServices: Services {
     init(){}
     var networkProvider: ZcashNetworkProvider {
         MockNetworkProvider()

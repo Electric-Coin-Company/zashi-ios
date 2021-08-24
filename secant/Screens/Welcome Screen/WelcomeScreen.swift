@@ -1,0 +1,50 @@
+//
+//  CreateNewWalletScreen.swift
+//  secant
+//
+//  Created by Francisco Gindre on 8/9/21.
+//
+
+import SwiftUI
+
+protocol WelcomeScreenRouter: AnyObject {
+    
+}
+
+struct WelcomeScreen: View {
+    @State var router: WelcomeScreenRouter?
+    
+    @ObservedObject var viewModel: WelcomeScreenViewModel
+    
+    var body: some View {
+        VStack {
+            
+            Spacer()
+            Text("Welcome and Onboarding")
+            Spacer()
+            
+            VStack(alignment: .center, spacing: 16) {
+                Button(action: {
+                    self.viewModel.restoreWallet()
+                }, label: {
+                    Text("RESTORE WALLET")
+                })
+                .buttonStyle(PlainButton())
+                
+                Button(action: {
+                    self.viewModel.createNew()
+                }, label: {
+                    Text("CREATE NEW WALLET")
+                })
+                .buttonStyle(PlainButton())
+            }
+        }
+        .padding()
+    }
+}
+
+struct CreateNewWalletScreenPreviews: PreviewProvider {
+    static var previews: some View {
+        WelcomeScreen(viewModel: WelcomeScreenViewModel(services: MockServices()))
+    }
+}
