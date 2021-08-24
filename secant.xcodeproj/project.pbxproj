@@ -10,10 +10,7 @@
 		0D170A7226BC802800EB6A46 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D170A7126BC802800EB6A46 /* Router.swift */; };
 		0D1922EA26BDD96A00052649 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922E926BDD96A00052649 /* ViewModel.swift */; };
 		0D1922ED26BDE0C600052649 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922EC26BDE0C600052649 /* AppRouter.swift */; };
-		0D1922EF26BDE1A300052649 /* Services.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922EE26BDE1A300052649 /* Services.swift */; };
 		0D1922F226BDE29300052649 /* ZcashSDKStubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922F126BDE29300052649 /* ZcashSDKStubs.swift */; };
-		0D1922F426BDE5F200052649 /* MnemonicSeedPhraseHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922F326BDE5F200052649 /* MnemonicSeedPhraseHandling.swift */; };
-		0D1922F626BDE74500052649 /* KeyStoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922F526BDE74500052649 /* KeyStoring.swift */; };
 		0D1922F826BDEB3500052649 /* MockServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922F726BDEB3500052649 /* MockServices.swift */; };
 		0D2ACE8026C2C67100D62E3C /* Zboto.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0D2ACE7F26C2C67100D62E3C /* Zboto.otf */; };
 		0D2ACE8326C2C8B400D62E3C /* SwiftUI+secant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2ACE8226C2C8B400D62E3C /* SwiftUI+secant.swift */; };
@@ -29,6 +26,9 @@
 		0D32282E26C5870B00262533 /* SendScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D32282C26C5870B00262533 /* SendScreenViewModel.swift */; };
 		0D32283226C5877A00262533 /* BalanceScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D32283026C5877A00262533 /* BalanceScreen.swift */; };
 		0D32283326C5877A00262533 /* BalanceScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D32283126C5877A00262533 /* BalanceScreenViewModel.swift */; };
+		0D354A0326D5A63200315F45 /* MnemonicSeedPhraseHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922F326BDE5F200052649 /* MnemonicSeedPhraseHandling.swift */; };
+		0D354A0426D5A63700315F45 /* Services.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922EE26BDE1A300052649 /* Services.swift */; };
+		0D354A0526D5A63A00315F45 /* KeyStoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922F526BDE74500052649 /* KeyStoring.swift */; };
 		0D4E7A0926B364170058B01E /* SecantApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0826B364170058B01E /* SecantApp.swift */; };
 		0D4E7A0B26B364170058B01E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0A26B364170058B01E /* ContentView.swift */; };
 		0D4E7A0D26B364180058B01E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0C26B364180058B01E /* Assets.xcassets */; };
@@ -514,26 +514,26 @@
 				0D1922ED26BDE0C600052649 /* AppRouter.swift in Sources */,
 				0D1922F226BDE29300052649 /* ZcashSDKStubs.swift in Sources */,
 				0DA13C9D26C1942100E3B610 /* BackupWalletScreenViewModel.swift in Sources */,
+				0D354A0326D5A63200315F45 /* MnemonicSeedPhraseHandling.swift in Sources */,
 				0D32281E26C5867D00262533 /* ScanQrScreen.swift in Sources */,
 				0DA13C9C26C1942100E3B610 /* BackupWalletScreen.swift in Sources */,
 				0DA13C9826C186FF00E3B610 /* RestoreWalletScreenViewModel.swift in Sources */,
-				0D1922EF26BDE1A300052649 /* Services.swift in Sources */,
 				0D32283326C5877A00262533 /* BalanceScreenViewModel.swift in Sources */,
 				0D32282326C586A800262533 /* HistoryScreen.swift in Sources */,
 				0DA13CA526C1963000E3B610 /* Balance.swift in Sources */,
 				0D1922F826BDEB3500052649 /* MockServices.swift in Sources */,
 				0D4E7A0B26B364170058B01E /* ContentView.swift in Sources */,
-				0D1922F426BDE5F200052649 /* MnemonicSeedPhraseHandling.swift in Sources */,
 				0D170A7226BC802800EB6A46 /* Router.swift in Sources */,
 				0DA13C9726C186FF00E3B610 /* RestoreWalletScreen.swift in Sources */,
-				0D1922F626BDE74500052649 /* KeyStoring.swift in Sources */,
 				0D1922EA26BDD96A00052649 /* ViewModel.swift in Sources */,
 				0D4E7A0926B364170058B01E /* SecantApp.swift in Sources */,
 				0D32281A26C5864B00262533 /* ProfileScreenViewModel.swift in Sources */,
 				0DA13CA126C1955600E3B610 /* HomeScreen.swift in Sources */,
+				0D354A0526D5A63A00315F45 /* KeyStoring.swift in Sources */,
 				0DA13C9026C15D1D00E3B610 /* WelcomeScreenViewModel.swift in Sources */,
 				0DA13C8F26C15D1D00E3B610 /* WelcomeScreen.swift in Sources */,
 				0DA13C9326C15E2F00E3B610 /* PlainButton.swift in Sources */,
+				0D354A0426D5A63700315F45 /* Services.swift in Sources */,
 				0D32282826C586E000262533 /* RequestZcashScreen.swift in Sources */,
 				0D32283226C5877A00262533 /* BalanceScreen.swift in Sources */,
 				0DA13CA226C1955600E3B610 /* HomeScreenViewModel.swift in Sources */,
