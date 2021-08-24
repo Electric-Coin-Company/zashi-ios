@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import secant
+@testable import secant_testnet
 
 class secantTests: XCTestCase {
 
