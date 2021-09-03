@@ -35,6 +35,12 @@
 		0D4E7A1026B364180058B01E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0F26B364180058B01E /* Preview Assets.xcassets */; };
 		0D4E7A1B26B364180058B01E /* secantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A1A26B364180058B01E /* secantTests.swift */; };
 		0D4E7A2626B364180058B01E /* secantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A2526B364180058B01E /* secantUITests.swift */; };
+		0D5D16F526E24CCF00AD33D1 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5D16F426E24CCF00AD33D1 /* AppError.swift */; };
+		0D864A0526E1546000A61879 /* LoadingScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D864A0426E1546000A61879 /* LoadingScreenTests.swift */; };
+		0D864A0926E154FD00A61879 /* InitFailedScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D864A0726E154FD00A61879 /* InitFailedScreen.swift */; };
+		0D864A0A26E154FD00A61879 /* InitFailedScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D864A0826E154FD00A61879 /* InitFailedScreenViewModel.swift */; };
+		0D864A0E26E1583000A61879 /* LoadingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D864A0C26E1583000A61879 /* LoadingScreen.swift */; };
+		0D864A0F26E1583000A61879 /* LoadingScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D864A0D26E1583000A61879 /* LoadingScreenViewModel.swift */; };
 		0DA13C8F26C15D1D00E3B610 /* WelcomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA13C8D26C15D1D00E3B610 /* WelcomeScreen.swift */; };
 		0DA13C9026C15D1D00E3B610 /* WelcomeScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA13C8E26C15D1D00E3B610 /* WelcomeScreenViewModel.swift */; };
 		0DA13C9326C15E2F00E3B610 /* PlainButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA13C9226C15E2F00E3B610 /* PlainButton.swift */; };
@@ -99,6 +105,12 @@
 		0D4E7A2126B364180058B01E /* secantUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = secantUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D4E7A2526B364180058B01E /* secantUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = secantUITests.swift; sourceTree = "<group>"; };
 		0D4E7A2726B364180058B01E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0D5D16F426E24CCF00AD33D1 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
+		0D864A0426E1546000A61879 /* LoadingScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingScreenTests.swift; sourceTree = "<group>"; };
+		0D864A0726E154FD00A61879 /* InitFailedScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitFailedScreen.swift; sourceTree = "<group>"; };
+		0D864A0826E154FD00A61879 /* InitFailedScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitFailedScreenViewModel.swift; sourceTree = "<group>"; };
+		0D864A0C26E1583000A61879 /* LoadingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingScreen.swift; sourceTree = "<group>"; };
+		0D864A0D26E1583000A61879 /* LoadingScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingScreenViewModel.swift; sourceTree = "<group>"; };
 		0DA13C8D26C15D1D00E3B610 /* WelcomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreen.swift; sourceTree = "<group>"; };
 		0DA13C8E26C15D1D00E3B610 /* WelcomeScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreenViewModel.swift; sourceTree = "<group>"; };
 		0DA13C9226C15E2F00E3B610 /* PlainButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainButton.swift; sourceTree = "<group>"; };
@@ -166,6 +178,8 @@
 		0D1922EB26BDD9A500052649 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				0D864A0B26E1580700A61879 /* Loading */,
+				0D864A0626E154D100A61879 /* Error */,
 				0D32282F26C5874B00262533 /* Balance */,
 				0D32282A26C586E700262533 /* Send ZEC */,
 				0D32282526C586C600262533 /* Request ZEC */,
@@ -282,6 +296,7 @@
 		0D4E7A0726B364170058B01E /* secant */ = {
 			isa = PBXGroup;
 			children = (
+				0D5D16F326E24CB900AD33D1 /* App Errors */,
 				0D2ACE8126C2C71100D62E3C /* Utilities */,
 				0D2ACE7E26C2C65E00D62E3C /* Fonts */,
 				0DA13CA326C1960A00E3B610 /* Models */,
@@ -313,6 +328,7 @@
 			children = (
 				0D4E7A1A26B364180058B01E /* secantTests.swift */,
 				0D4E7A1C26B364180058B01E /* Info.plist */,
+				0D864A0426E1546000A61879 /* LoadingScreenTests.swift */,
 			);
 			path = secantTests;
 			sourceTree = "<group>";
@@ -324,6 +340,32 @@
 				0D4E7A2726B364180058B01E /* Info.plist */,
 			);
 			path = secantUITests;
+			sourceTree = "<group>";
+		};
+		0D5D16F326E24CB900AD33D1 /* App Errors */ = {
+			isa = PBXGroup;
+			children = (
+				0D5D16F426E24CCF00AD33D1 /* AppError.swift */,
+			);
+			path = "App Errors";
+			sourceTree = "<group>";
+		};
+		0D864A0626E154D100A61879 /* Error */ = {
+			isa = PBXGroup;
+			children = (
+				0D864A0726E154FD00A61879 /* InitFailedScreen.swift */,
+				0D864A0826E154FD00A61879 /* InitFailedScreenViewModel.swift */,
+			);
+			path = Error;
+			sourceTree = "<group>";
+		};
+		0D864A0B26E1580700A61879 /* Loading */ = {
+			isa = PBXGroup;
+			children = (
+				0D864A0C26E1583000A61879 /* LoadingScreen.swift */,
+				0D864A0D26E1583000A61879 /* LoadingScreenViewModel.swift */,
+			);
+			path = Loading;
 			sourceTree = "<group>";
 		};
 		0DA13C8C26C15CBE00E3B610 /* Welcome Screen */ = {
@@ -538,10 +580,13 @@
 				0DA13C9D26C1942100E3B610 /* BackupWalletScreenViewModel.swift in Sources */,
 				0D354A0B26D5A9D000315F45 /* MnemonicSeedPhraseHandling.swift in Sources */,
 				0D32281E26C5867D00262533 /* ScanQrScreen.swift in Sources */,
+				0D864A0E26E1583000A61879 /* LoadingScreen.swift in Sources */,
 				0DA13C9C26C1942100E3B610 /* BackupWalletScreen.swift in Sources */,
 				0DA13C9826C186FF00E3B610 /* RestoreWalletScreenViewModel.swift in Sources */,
 				0D32283326C5877A00262533 /* BalanceScreenViewModel.swift in Sources */,
+				0D5D16F526E24CCF00AD33D1 /* AppError.swift in Sources */,
 				0D32282326C586A800262533 /* HistoryScreen.swift in Sources */,
+				0D864A0A26E154FD00A61879 /* InitFailedScreenViewModel.swift in Sources */,
 				0DA13CA526C1963000E3B610 /* Balance.swift in Sources */,
 				0D1922F826BDEB3500052649 /* MockServices.swift in Sources */,
 				0D4E7A0B26B364170058B01E /* ContentView.swift in Sources */,
@@ -550,7 +595,9 @@
 				0DA13C9726C186FF00E3B610 /* RestoreWalletScreen.swift in Sources */,
 				0D1922EA26BDD96A00052649 /* ViewModel.swift in Sources */,
 				0D4E7A0926B364170058B01E /* SecantApp.swift in Sources */,
+				0D864A0926E154FD00A61879 /* InitFailedScreen.swift in Sources */,
 				0D32281A26C5864B00262533 /* ProfileScreenViewModel.swift in Sources */,
+				0D864A0F26E1583000A61879 /* LoadingScreenViewModel.swift in Sources */,
 				0DA13CA126C1955600E3B610 /* HomeScreen.swift in Sources */,
 				0DA13C9026C15D1D00E3B610 /* WelcomeScreenViewModel.swift in Sources */,
 				0DA13C8F26C15D1D00E3B610 /* WelcomeScreen.swift in Sources */,
@@ -570,6 +617,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D864A0526E1546000A61879 /* LoadingScreenTests.swift in Sources */,
 				0D4E7A1B26B364180058B01E /* secantTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
