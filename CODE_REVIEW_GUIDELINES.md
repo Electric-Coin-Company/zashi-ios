@@ -1,0 +1,47 @@
+# Overall:
+
+- Does the contribution referece an existing Issue?
+- Are the requirements well defined?
+
+
+#  Specification:
+
+- Are the requirements for the change well specified? Where are they documented? Bugfixes need a clear specification of the bug's cause and fix. (Small PRs might specify in a github ticket. Large changes may require stand-alone docs, or ZIPs.)
+- Is there a documented test plan, which describes how to manually verify the change works on testnet prior to a release?
+
+# User Documentation:
+
+- What is the "changelog" entry for this change? (All changes should include this.)
+- Are there any changes which require updates to user-facing documentation? If so, does the new documentation make sense?
+
+# Testing:
+
+- For non-minor PRs (up to the code reviewers and PR creator if this is needed), both the person who opened the PR and at least one of the code reviewers need to run a node with the updated code on testnet and again on mainnet to make sure nothing obvious breaks.
+- Are there new tests that check all of the requirements? If it's a bugfix does it include new tests testing the bug triggering condition? (Do they fail before the fix and pass after the fix?)
+- Do tests include edge cases, error conditions, and "negative case" tests to ensure the software is robust? Example: a function for verifying transaction signatures should include a bunch of tests for invalid signature cases.
+- Do tests include all "logical test coverage" in addition to requirements-focused tests? Logical test coverage verifies behavior of the code that isn't obvious or implied by the requirements themselves.
+- Have all of the automated tests been executed by CI? Read over the CI report to verify this. (Note: our CI system may not currently provide test results prior to review. We should change this! In the meantime, the reviewer should run the tests.)
+- Is it clear that the test plan does actually test the new change? Does the test plan include any edge case / negative case / error conditions?
+
+# Code Review:
+- Does the code structure make sense? Does it follow existing conventions / frameworks of existing code, or is it introducing new abstractions / structure?
+- Is the code style consistent with the [Swift Style Guide](SWIFTLINT.md)?
+- Does every change make sense? Make sure to ask questions, even or especially "basic" coding questions ("what does this mean in Swift?") and domain-newbie questions ("what is the priority system, and why does this line change the priority?").
+
+In summary, here's a checklist that summarizes what reviewers should be looking for when doing a Code Review [1]
+
+- The code is well-designed.
+- The functionality is good for the users of the code.
+- Any UI changes are sensible and look good.
+- Any parallel programming is done safely.
+- The code isn’t more complex than it needs to be.
+- The developer isn’t implementing things they might need in the future but don’t know they need now.
+- Code has appropriate unit tests.
+- Tests are well-designed.
+- The developer used clear names for everything.
+- Comments are clear and useful, and mostly explain why instead of what.
+- Code is appropriately documented (generally in g3doc).
+- The code conforms to our style guides.
+- Make sure to review every line of code you’ve been asked to review, look at the context, make sure you’re improving code health, and compliment developers on good things that they do.
+
+[[1] What to look for in a code review](https://google.github.io/eng-practices/review/reviewer/looking-for.html)
