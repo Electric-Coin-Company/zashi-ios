@@ -12,11 +12,12 @@
 # User Documentation:
 
 - What is the "changelog" entry for this change? (All changes should include this.)
-- Are there any changes which require updates to user-facing documentation? If so, does the new documentation make sense?
+- Are there any changes which require updates to user-facing documentation? If so, does the new documentation make sense? (documentation should be placed in [docs/](/docs) folder of the repo)
 
 # Testing:
 
-- For non-minor PRs (up to the code reviewers and PR creator if this is needed), both the person who opened the PR and at least one of the code reviewers need to run a node with the updated code on testnet and again on mainnet to make sure nothing obvious breaks.
+- For non-minor PRs (up to the code reviewers and PR creator if this is needed), we require authors to perform a thorough self-review and self-test of the resulting code base, including use cases that might not be visible affected by the introduced changes. Reviewers are not expected to run the changes locally, but are definitely encouraged to do so at their best judgement. 
+- When introducing modifications that affect the UI, screenshots might be provided in a BEFORE/AFTER fashion to speed up UI/UX requirement validation. 
 - Are there new tests that check all of the requirements? If it's a bugfix does it include new tests testing the bug triggering condition? (Do they fail before the fix and pass after the fix?)
 - Do tests include edge cases, error conditions, and "negative case" tests to ensure the software is robust? Example: a function for verifying transaction signatures should include a bunch of tests for invalid signature cases.
 - Do tests include all "logical test coverage" in addition to requirements-focused tests? Logical test coverage verifies behavior of the code that isn't obvious or implied by the requirements themselves.
@@ -35,7 +36,7 @@ In summary, here's a checklist that summarizes what reviewers should be looking 
 - Any UI changes are sensible and look good.
 - Any parallel programming is done safely.
 - The code isn’t more complex than it needs to be.
-- The developer isn’t implementing things they might need in the future but don’t know they need now.
+- The developer isn’t implementing things they might need in the future but don’t know they need now or aren't using now.
 - Code has appropriate unit tests.
 - Tests are well-designed.
 - The developer used clear names for everything.
