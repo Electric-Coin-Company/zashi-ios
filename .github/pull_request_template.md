@@ -14,7 +14,7 @@ This code review checklist is intended to serve as a starting point for the auth
 # Reviewer
 
 - [ ] Checklist review: Did you go through the code with the [Code Review Guidelines](../blob/main/CODE_REVIEW_GUIDELINES.md) checklist?
-- [ ] Ad hoc review: Did you perform an ad hoc review? _Did you perform an ad hoc review? In addition to a first pass using the code review guidelines, do a second pass using your best judgement and experience which may identify additional questions or comments. Research shows that code review is most effective when done in multiple passes, where reviewers look for different things through each pass._
+- [ ] Ad hoc review: Did you perform an ad hoc review?  _In addition to a first pass using the code review guidelines, do a second pass using your best judgement and experience which may identify additional questions or comments. Research shows that code review is most effective when done in multiple passes, where reviewers look for different things through each pass._
 - [ ] Automated tests: Did you review the automated tests?
 - [ ] Manual tests: Did you review the manual tests?
 - [ ] Documentation: Did you review Docs, [README.md](../blob/master/README.md), [LICENSE.md](../blob/master/LICENSE.md), and [Architecture.md](../blob/master/docs/Architecture.md) as appropriate?
