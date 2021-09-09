@@ -5,9 +5,9 @@ This code review checklist is intended to serve as a starting point for the auth
 - [ ] Self-review: Did you review your own code in GitHub's web interface? Code often looks different when reviewing the diff in a browser, making it easier to spot potential bugs.
 - [ ] Automated tests: Did you add appropriate automated tests for any code changes?
 - [ ] Code coverage: Did you check the code coverage report for the automated tests?  While we are not looking for perfect coverage, the tool can point out potential cases that have been missed.
-- [ ] Documentation: Did you update Docs as appropiate? (E.g [README.md](../blob/main/README.md), [LICENSE.md](../blob/main/LICENSE.md), etc.)
+- [ ] Documentation: Did you update Docs as appropiate? (E.g [README.md](../blob/main/README.md), etc.)
 - [ ] Run the app: Did you run the app and try the changes? 
-- [ ] Did you provide Screenshots of what the App looks like before and your changes? (only applicable to UI Changes)
+- [ ] Did you provide Screenshots of what the App looks like before and after your changes as part of the description of this PR? (only applicable to UI Changes)
 - [ ] Rebase and squash: Did you pull in the latest changes from the main branch and squash your commits before assigning a reviewer? Having your code up to date and squashed will make it easier for others to review. Use best judgement when squashing commits, as some changes (such as refactoring) might be easier to review as a separate commit.
 
 

@@ -16,7 +16,7 @@ These guides use SwiftLint as a standard. You can learn more about SwiftLint by 
 * [Running SwiftLint](#running-swiftlint)
 * [Handling rule exceptions](#handling-rule-exceptions)
 * [Approved exceptions](#approved-exceptions)
-	* [Implicitly Unwrapped Optionals](#implicitly-unwrapped-optionals)
+	* [Implicitly unwrapped optionals](#implicitly-unwrapped-optionals)
 	* [Force cast](#force-cast)
 	* [Force unwrapping](#force-unwrapping)
 	* [SwiftUI and multiple trailing closures](#swiftui-and-multiple-trailing-closures)
@@ -82,9 +82,9 @@ There are certain common idioms that violate SwiftLint's strict checking. If you
 
 If you find that you're struggling with rules other than those described below, please reach out to your Team Lead with your specific example.
 
-### Implicitly Unwrapped Optionals
+### Implicitly unwrapped optionals
 
-It is sometimes common, in lieu of using dependency injection, to declare a child view controller's properties as Implicitly Unwrapped Optionals (IUO). If you're unable to structure your project to avoid this, you may disable the `implicitly_unwrapped_optional` rule for those dependency declarations. With the advent of `@IBSegueAction`, this should be rare.
+It is sometimes common, in lieu of using dependency injection, to declare a child view controller's properties as implicitly unwrapped optionals (IUO). If you're unable to structure your project to avoid this, you may disable the `implicitly_unwrapped_optional` rule for those dependency declarations. With the advent of `@IBSegueAction`, this should be rare.
 
 ### Force cast
 
@@ -133,6 +133,4 @@ Occasionally, you'll find it necessary to include an unmodified open-source file
 
 ## Other notes
 
-While SwiftLint goes a long way towards making your source code compliant with our style guide, it doesn't cover everything. For example, it won't catch or force you to correct the formatting for multi-condition `guard` statements. (See [Golden Path](https://github.com/raywenderlich/swift-style-guide#golden-path) for correct formatting.)
-
-This configuration has been tested against several dozen of our most recent tutorials. A couple of rules, such as the line length limit or the limit on the length of a function, may need tweaking to fit our style. If you find yourself butting heads with SwiftLint, please reach out to the iOS Team Lead with details.
+While SwiftLint goes a long way towards making your source code compliant with our style guide, it doesn't cover everything. For example, it won't catch or force you to correct the formatting for multi-condition `guard` statements. If you find yourself butting heads with SwiftLint, or have improvement suggestions, please file an Issue and send a PR request with your suggestions.
