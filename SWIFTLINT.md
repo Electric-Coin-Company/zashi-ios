@@ -39,7 +39,7 @@ You'll need to configure Xcode to remove trailing whitespace from all lines. Thi
 
 In Xcode's Preferences, select **Text Editing** ▸ **Editing** and check **Including whitespace-only lines**. 
 
-![](screens/trailing-whitespace.png)
+![](images/trailing-whitespace.png)
 
 ## Handling rule exceptions
 
@@ -72,7 +72,7 @@ If you must disable rules in your project, leave those in-line comments in the p
 
 Finally, if you're not sure which rule is triggering a warning, you can find the rule name in parentheses at the end of message:
 
-![](screens/swiftlint-warning.png)
+![](images/swiftlint-warning.png)
 
 ## Approved exceptions
 
