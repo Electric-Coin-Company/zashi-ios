@@ -7,16 +7,15 @@
 
 import SwiftUI
 
-protocol HistoryScreenRouter: AnyObject {
-}
+protocol HistoryScreenRouter: AnyObject {}
 
 struct HistoryScreen: View {
-    @State var router: HistoryScreenRouter?
-    
     @ObservedObject var viewModel: HistoryScreenViewModel
-    
+
+    @State var router: HistoryScreenRouter?
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("Hello, World!")
     }
 }
 

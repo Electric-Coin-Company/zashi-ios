@@ -17,9 +17,9 @@ protocol HomeScreenRouter: AnyObject {
 }
 
 struct HomeScreen: View {
-    @State var router: HomeScreenRouter?
-    
     @ObservedObject var viewModel: HomeScreenViewModel
+
+    @State var router: HomeScreenRouter?
     
     var body: some View {
         VStack {
@@ -32,18 +32,18 @@ struct HomeScreen: View {
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(
             leading: qrCodeButton,
-            trailing: profileButton)
+            trailing: profileButton
+        )
     }
-    
+
     @ViewBuilder var qrCodeButton: some View {
         Button(action: {}, label: {
             Image(systemName: "qrcode.viewfinder")
-                .frame(width: 20, height: 20, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                .frame(width: 20, height: 20, alignment: .center)
         })
         .contentShape(Circle())
-        
     }
-    
+
     @ViewBuilder var profileButton: some View {
         Button(action: {}, label: {
             Image(systemName: "person.crop.circle")
@@ -51,21 +51,21 @@ struct HomeScreen: View {
         })
         .contentShape(Circle())
     }
-    
+
     @ViewBuilder var requestButton: some View {
         Button(action: {}, label: {
             Text("Request ZEC")
         })
         .buttonStyle(PlainButton())
     }
-    
+
     @ViewBuilder var sendButton: some View {
         Button(action: {}, label: {
             Text("Send ZEC")
         })
         .buttonStyle(PlainButton())
     }
-    
+
     @ViewBuilder var historyButton: some View {
         Button(action: {}, label: {
             Text("History")
@@ -74,14 +74,33 @@ struct HomeScreen: View {
     }
 }
 
+// MARK: - Previews
+
 struct HomeScreenPreviews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            HomeScreen(viewModel: HomeScreenViewModel.mockWithValues(services: MockServices(), status: .offline, balance: mockBalance, fiatConversion: 1.12453))
+            HomeScreen(
+                viewModel: HomeScreenViewModel.mockWithValues(
+                    services: MockServices(),
+                    status: .offline,
+                    balance: mockBalance,
+                    fiatConversion: 1.12453
+                )
+            )
         }
     }
-    
+
     static var mockBalance: WalletBalance {
-        Balance(transaparent: ZcashFunds.noFunds, sapling: ZcashFunds(confirmed: 123456790, unconfirmed: 0), orchard: ZcashFunds(confirmed: 0, unconfirmed: 0))
+        Balance(
+            transaparent: ZcashFunds.noFunds,
+            sapling: ZcashFunds(
+                confirmed: 123456790,
+                unconfirmed: 0
+            ),
+            orchard: ZcashFunds(
+                confirmed: 0,
+                unconfirmed: 0
+            )
+        )
     }
 }

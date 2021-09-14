@@ -2,8 +2,8 @@
 # https://github.com/raywenderlich/swift-style-guide
 
 excluded:
-  - ${PWD}/Pods
-  - ${PWD}/xctemplates
+  - Pods
+  - xctemplates
 
 disabled_rules:
   - notification_center_detachment
@@ -37,7 +37,7 @@ opt_in_rules:
   - legacy_random
   - literal_expression_end_indentation
   - multiline_arguments
-  - multiline_argument_brackets
+  - multiline_arguments_brackets
   - multiline_function_chains
   - multiline_literal_brackets
   - multiline_parameters
@@ -70,26 +70,26 @@ custom_rules:
     severity: warning
 
   string_concatenation:
-    included: ".*\.swift"
-    excluded: ".*Test\.swift"
+    included: ".*\\.swift"
+    excluded: ".*Test\\.swift"
     name: "String Concatenation"
-    regex: '' \+ "|" \+ |\+= "'
+    regex:  " \\+ \"|\" \\+ |\\+= \""
     message: "Please use string interpolation instead of concatenation"
     severity: error
 
   print_function_usage:
-    included: ".*\.swift"
-    excluded: ".*Test\.swift"
+    included: ".*\\.swift"
+    excluded: ".*Test\\.swift"
     name: "Swift print() or debugPrint() should not be used in App Code"
-    regex: "print\(|debugPrint\("
+    regex: "print\\(|debugPrint\\("
     message: "The Swift print() or debugPrint() functions should not be used."
     severity: warning
 
   nslog_function_usage:
-    included: ".*\.swift"
-    excluded: ".*Test\.swift"
+    included: ".*\\.swift"
+    excluded: ".*Test\\.swift"
     name: "Swift NSLog() should not be used in App Code"
-    regex: "NSLog\("
+    regex: "NSLog\\("
     message: "The swift NSLog function should not be used."
     severity: error
 
@@ -117,7 +117,7 @@ identifier_name:
     - z
 
 indentation_width:
-  indentation_width: 2
+  indentation_width: 4
 
 line_length:
   warning: 150
@@ -127,7 +127,7 @@ line_length:
 
 file_length:
   warning: 600
-  ignore_comment_only_lines: false: true
+  ignore_comment_only_lines: true
 
 multiline_arguments:
   first_argument_location: next_line
@@ -141,4 +141,4 @@ trailing_whitespace:
   ignores_comments: true
 
 vertical_whitespace:
-  max_empty_lines: 2
+  max_empty_lines: 1

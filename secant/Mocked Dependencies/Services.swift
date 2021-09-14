@@ -13,7 +13,6 @@ protocol Services {
     var keyStorage: KeyStoring { get }
 }
 
-
 protocol ZcashNetworkProvider {
     func currentNetwork() -> ZcashNetwork
 }

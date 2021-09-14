@@ -3,13 +3,14 @@
 import SwiftUI
 
 protocol ___FILEBASENAMEASIDENTIFIER___Router: AnyObject {
+
 }
 
 struct ___FILEBASENAMEASIDENTIFIER___: View {
-    @State var router: ___FILEBASENAMEASIDENTIFIER___Router?
-    
     @ObservedObject var viewModel: ___FILEBASENAME___ViewModel
-    
+
+    @State var router: ___FILEBASENAMEASIDENTIFIER___Router?
+
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }

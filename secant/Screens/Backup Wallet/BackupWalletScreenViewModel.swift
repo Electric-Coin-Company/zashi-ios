@@ -5,9 +5,7 @@
 //  Created by Francisco Gindre on 8/9/21.
 //
 
-import Foundation
 import Combine
+import Foundation
 
-class BackupWalletScreenViewModel: BaseViewModel<Services>, ObservableObject {
-    
-}
+class BackupWalletScreenViewModel: BaseViewModel<Services>, ObservableObject {}

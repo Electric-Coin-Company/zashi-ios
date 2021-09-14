@@ -9,8 +9,8 @@ import SwiftUI
 
 @main
 struct SecantApp: App {
-    
     @StateObject var appRouter = AppRouter(services: MockServices())
+    
     var body: some Scene {
         WindowGroup {
             appRouter.rootView()

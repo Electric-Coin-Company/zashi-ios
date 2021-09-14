@@ -7,20 +7,19 @@
 
 import SwiftUI
 
-protocol RestoreWalletScreenRouter: AnyObject {
-}
+protocol RestoreWalletScreenRouter: AnyObject {}
 
 struct RestoreWalletScreen: View {
-    @State var router: RestoreWalletScreenRouter?
-    
     @ObservedObject var viewModel: RestoreWalletScreenViewModel
-    
+
+    @State var router: RestoreWalletScreenRouter?
+
     var body: some View {
         VStack {
             Text("Enter Seed Phrase")
-            
+
             TextEditor(text: $viewModel.seedText)
-            
+
             Button(action: {}, label: {
                 Text("Restore Seed Phrase")
             })

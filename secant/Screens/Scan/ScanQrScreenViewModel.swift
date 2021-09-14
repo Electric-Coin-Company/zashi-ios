@@ -5,9 +5,7 @@
 //  Created by Francisco Gindre on 8/12/21.
 //
 
-import Foundation
 import Combine
+import Foundation
 
-class ScanQrScreenViewModel: BaseViewModel<Services>, ObservableObject {
-    
-}
+class ScanQrScreenViewModel: BaseViewModel<Services>, ObservableObject {}

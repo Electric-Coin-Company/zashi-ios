@@ -10,6 +10,6 @@ import SwiftUI
 
 public protocol Router: ObservableObject {
     associatedtype ViewOutput: View
-    
+
     func rootView() -> ViewOutput
 }
