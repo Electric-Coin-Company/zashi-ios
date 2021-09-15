@@ -16,7 +16,7 @@
 
 # Testing:
 
-- For non-minor PRs (up to the code reviewers and PR creator if this is needed), we require authors to perform a thorough self-review and self-test of the resulting code base, including use cases that might not be visible affected by the introduced changes. Reviewers are not expected to run the changes locally, but are definitely encouraged to do so at their best judgement. 
+- For non-minor PRs (up to the code reviewers and PR creator if this is needed), we require authors to perform a thorough self-review and self-test of the resulting code base, including use cases that might not be visibly affected by the introduced changes. Reviewers are not expected to run the changes locally, but are definitely encouraged to do so at their best judgement. 
 - When introducing modifications that affect the UI, screenshots might be provided in a BEFORE/AFTER fashion to speed up UI/UX requirement validation. 
 - Are there new tests that check all of the requirements? If it's a bugfix does it include new tests testing the bug triggering condition? (Do they fail before the fix and pass after the fix?)
 - Do tests include edge cases, error conditions, and "negative case" tests to ensure the software is robust? Example: a function for verifying transaction signatures should include a bunch of tests for invalid signature cases.
@@ -32,6 +32,7 @@
 In summary, here's a checklist that summarizes what reviewers should be looking for when doing a Code Review [1]
 
 - The code is well-designed.
+- The code abides by the [Coding Guidelines](../blob/main/docs/CODING_GUIDELINES.md)?
 - The functionality is good for the users of the code.
 - Any UI changes are sensible and look good.
 - Any parallel programming is done safely.

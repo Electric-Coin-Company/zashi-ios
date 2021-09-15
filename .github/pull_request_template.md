@@ -3,6 +3,7 @@ This code review checklist is intended to serve as a starting point for the auth
 # Author
 <!-- NOTE: Do not modify these when initially opening the pull request.  This is a checklist template that you tick off AFTER the pull request is created. -->
 - [ ] Self-review: Did you review your own code in GitHub's web interface? Code often looks different when reviewing the diff in a browser, making it easier to spot potential bugs.
+- [ ] Does the code abide by the [Coding Guidelines](../blob/main/docs/CODING_GUIDELINES.md)?
 - [ ] Automated tests: Did you add appropriate automated tests for any code changes?
 - [ ] Code coverage: Did you check the code coverage report for the automated tests?  While we are not looking for perfect coverage, the tool can point out potential cases that have been missed.
 - [ ] Documentation: Did you update Docs as appropiate? (E.g [README.md](../blob/main/README.md), etc.)
