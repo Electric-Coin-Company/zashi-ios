@@ -7,30 +7,31 @@
 
 import Foundation
 
-
 protocol KeyStoring {
     func importBirthday(_ height: BlockHeight) throws
     func exportBirthday() throws -> BlockHeight
     func importPhrase(bip39 phrase: String) throws
     func exportPhrase() throws -> String
-    var keysPresent: Bool { get }
+
     /**
-     Use carefully: Deletes the seed phrase from the keychain
-     */
+    Use carefully: Deletes the seed phrase from the keychain
+    */
     func nukePhrase()
 
     /**
-     Use carefully: deletes the wallet birthday from the keychain
-     */
+    Use carefully: deletes the wallet birthday from the keychain
+    */
     func nukeBirthday()
 
     /**
     There's no fate but what we make for ourselves - Sarah Connor
     */
     func nukeWallet()
+
+    var keysPresent: Bool { get }
 }
 
-enum KeyStoringError : Error {
+enum KeyStoringError: Error {
     case alreadyImported
     case uninitializedWallet
 }

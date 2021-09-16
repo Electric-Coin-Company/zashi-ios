@@ -7,16 +7,15 @@
 
 import SwiftUI
 
-protocol SendScreenRouter: AnyObject {
-}
+protocol SendScreenRouter: AnyObject {}
 
 struct SendScreen: View {
-    @State var router: SendScreenRouter?
-    
     @ObservedObject var viewModel: SendScreenViewModel
-    
+
+    @State var router: SendScreenRouter?
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("Hello, World!")
     }
 }
 

@@ -12,9 +12,9 @@ struct PlainButton: ButtonStyle {
         case light
         case bold
     }
-    
+
     var style = Theme.bold
-    
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .foregroundColor(style.foregroundColor)
@@ -24,16 +24,18 @@ struct PlainButton: ButtonStyle {
     }
 }
 
+// MARK: - Previews
+
 struct PlainButton_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
-                /*@START_MENU_TOKEN@*/Text("Button")/*@END_MENU_TOKEN@*/
+            Button(action: {}, label: {
+                Text("Button")
             })
             .buttonStyle(PlainButton())
-            
-            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
-                /*@START_MENU_TOKEN@*/Text("Button")/*@END_MENU_TOKEN@*/
+
+            Button(action: {}, label: {
+                Text("Button")
             })
             .buttonStyle(PlainButton(style: .bold))
         }
@@ -41,22 +43,20 @@ struct PlainButton_Previews: PreviewProvider {
     }
 }
 
+// MARK: - Theme
+
 extension PlainButton.Theme {
     var background: some View {
         switch self {
-        case .bold:
-            return Color.black
-        default:
-            return Color.white
+        case .bold: return Color.black
+        default:    return Color.white
         }
     }
-    
+
     var foregroundColor: Color {
         switch self {
-        case .bold:
-            return Color.white
-        default:
-            return Color.black
+        case .bold: return Color.white
+        default:    return Color.black
         }
     }
 }

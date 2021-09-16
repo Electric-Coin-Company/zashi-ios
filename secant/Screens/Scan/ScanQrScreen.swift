@@ -7,16 +7,15 @@
 
 import SwiftUI
 
-protocol ScanQrScreenRouter: AnyObject {
-}
+protocol ScanQrScreenRouter: AnyObject {}
 
 struct ScanQrScreen: View {
-    @State var router: ScanQrScreenRouter?
-    
     @ObservedObject var viewModel: ScanQrScreenViewModel
-    
+
+    @State var router: ScanQrScreenRouter?
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("Hello, World!")
     }
 }
 

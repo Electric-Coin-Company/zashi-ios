@@ -7,16 +7,15 @@
 
 import SwiftUI
 
-protocol BalanceScreenRouter: AnyObject {
-}
+protocol BalanceScreenRouter: AnyObject {}
 
 struct BalanceScreen: View {
-    @State var router: BalanceScreenRouter?
-    
     @ObservedObject var viewModel: BalanceScreenViewModel
-    
+
+    @State var router: BalanceScreenRouter?
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("Hello, World!")
     }
 }
 

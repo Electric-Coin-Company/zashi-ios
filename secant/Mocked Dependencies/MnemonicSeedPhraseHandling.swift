@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 enum MnemonicError: Error {
     case invalidSeed
     case checksumFailed
@@ -14,26 +15,27 @@ enum MnemonicError: Error {
 
 protocol MnemonicSeedPhraseHandling {
     /**
-     random 24 words mnemonic phrase
-     */
+    Random 24 words mnemonic phrase
+    */
     func randomMnemonic() throws -> String
+
     /**
-    random 24 words mnemonic phrase as array of words
+    Random 24 words mnemonic phrase as array of words
     */
     func randomMnemonicWords() throws -> [String]
-    
+
     /**
-     generate deterministic seed from mnemonic phrase
-     */
+    Generate deterministic seed from mnemonic phrase
+    */
     func toSeed(mnemonic: String) throws -> [UInt8]
-    
+
     /**
-     get this mnemonic
+    Get this mnemonic
     */
     func asWords(mnemonic: String) throws -> [String]
-    
+
     /**
-     validates whether the given mnemonic is correct
-     */
+    Validates whether the given mnemonic is correct
+    */
     func isValid(mnemonic: String) throws
 }

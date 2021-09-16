@@ -7,16 +7,15 @@
 
 import SwiftUI
 
-protocol ProfileScreenRouter: AnyObject {
-}
+protocol ProfileScreenRouter: AnyObject {}
 
 struct ProfileScreen: View {
-    @State var router: ProfileScreenRouter?
-    
     @ObservedObject var viewModel: ProfileScreenViewModel
-    
+
+    @State var router: ProfileScreenRouter?
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("Hello, World!")
     }
 }
 

@@ -7,16 +7,15 @@
 
 import SwiftUI
 
-protocol BackupWalletScreenRouter: AnyObject {
-}
+protocol BackupWalletScreenRouter: AnyObject {}
 
 struct BackupWalletScreen: View {
-    @State var router: BackupWalletScreenRouter?
-    
     @ObservedObject var viewModel: BackupWalletScreenViewModel
-    
+
+    @State var router: BackupWalletScreenRouter?
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("Hello, World!")
     }
 }
 
