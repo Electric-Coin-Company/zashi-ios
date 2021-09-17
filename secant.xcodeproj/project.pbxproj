@@ -7,11 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D16BF2926FBBF0F0011BA02 /* OnboardingMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1D933D26F91EB40093BB5E /* OnboardingMocks.swift */; };
+		0D16BF2B26FBE17C0011BA02 /* Stepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D16BF2A26FBE17C0011BA02 /* Stepper.swift */; };
 		0D170A7226BC802800EB6A46 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D170A7126BC802800EB6A46 /* Router.swift */; };
 		0D1922EA26BDD96A00052649 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922E926BDD96A00052649 /* ViewModel.swift */; };
 		0D1922ED26BDE0C600052649 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922EC26BDE0C600052649 /* AppRouter.swift */; };
 		0D1922F226BDE29300052649 /* ZcashSDKStubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922F126BDE29300052649 /* ZcashSDKStubs.swift */; };
 		0D1922F826BDEB3500052649 /* MockServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922F726BDEB3500052649 /* MockServices.swift */; };
+		0D24267926E975CC00DA2A47 /* OnboardingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D24267826E975CC00DA2A47 /* OnboardingTests.swift */; };
 		0D2ACE8026C2C67100D62E3C /* Zboto.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0D2ACE7F26C2C67100D62E3C /* Zboto.otf */; };
 		0D32281926C5864B00262533 /* ProfileScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D32281726C5864B00262533 /* ProfileScreen.swift */; };
 		0D32281A26C5864B00262533 /* ProfileScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D32281826C5864B00262533 /* ProfileScreenViewModel.swift */; };
@@ -29,12 +32,13 @@
 		0D354A0A26D5A9D000315F45 /* KeyStoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D354A0726D5A9D000315F45 /* KeyStoring.swift */; };
 		0D354A0B26D5A9D000315F45 /* MnemonicSeedPhraseHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D354A0826D5A9D000315F45 /* MnemonicSeedPhraseHandling.swift */; };
 		0D4E7A0926B364170058B01E /* SecantApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0826B364170058B01E /* SecantApp.swift */; };
-		0D4E7A0B26B364170058B01E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0A26B364170058B01E /* ContentView.swift */; };
 		0D4E7A0D26B364180058B01E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0C26B364180058B01E /* Assets.xcassets */; };
 		0D4E7A1026B364180058B01E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0F26B364180058B01E /* Preview Assets.xcassets */; };
 		0D4E7A1B26B364180058B01E /* secantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A1A26B364180058B01E /* secantTests.swift */; };
 		0D4E7A2626B364180058B01E /* secantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A2526B364180058B01E /* secantUITests.swift */; };
 		0D5D16F526E24CCF00AD33D1 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5D16F426E24CCF00AD33D1 /* AppError.swift */; };
+		0D77BAEF26F52E5800DD020F /* OnboardingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D77BAED26F52E5800DD020F /* OnboardingScreen.swift */; };
+		0D77BAF026F52E5800DD020F /* OnboardingScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D77BAEE26F52E5800DD020F /* OnboardingScreenViewModel.swift */; };
 		0D864A0526E1546000A61879 /* LoadingScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D864A0426E1546000A61879 /* LoadingScreenTests.swift */; };
 		0D864A0926E154FD00A61879 /* InitFailedScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D864A0726E154FD00A61879 /* InitFailedScreen.swift */; };
 		0D864A0A26E154FD00A61879 /* InitFailedScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D864A0826E154FD00A61879 /* InitFailedScreenViewModel.swift */; };
@@ -73,11 +77,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0D16BF2A26FBE17C0011BA02 /* Stepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stepper.swift; sourceTree = "<group>"; };
 		0D170A7126BC802800EB6A46 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		0D1922E926BDD96A00052649 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		0D1922EC26BDE0C600052649 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
 		0D1922F126BDE29300052649 /* ZcashSDKStubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZcashSDKStubs.swift; sourceTree = "<group>"; };
 		0D1922F726BDEB3500052649 /* MockServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServices.swift; sourceTree = "<group>"; };
+		0D1D933D26F91EB40093BB5E /* OnboardingMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingMocks.swift; sourceTree = "<group>"; };
+		0D24267826E975CC00DA2A47 /* OnboardingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTests.swift; sourceTree = "<group>"; };
 		0D2ACE7F26C2C67100D62E3C /* Zboto.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zboto.otf; sourceTree = "<group>"; };
 		0D32281726C5864B00262533 /* ProfileScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScreen.swift; sourceTree = "<group>"; };
 		0D32281826C5864B00262533 /* ProfileScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScreenViewModel.swift; sourceTree = "<group>"; };
@@ -96,7 +103,6 @@
 		0D354A0826D5A9D000315F45 /* MnemonicSeedPhraseHandling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MnemonicSeedPhraseHandling.swift; sourceTree = "<group>"; };
 		0D4E7A0526B364170058B01E /* secant-testnet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "secant-testnet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D4E7A0826B364170058B01E /* SecantApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecantApp.swift; sourceTree = "<group>"; };
-		0D4E7A0A26B364170058B01E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		0D4E7A0C26B364180058B01E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0D4E7A0F26B364180058B01E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		0D4E7A1126B364180058B01E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -107,6 +113,8 @@
 		0D4E7A2526B364180058B01E /* secantUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = secantUITests.swift; sourceTree = "<group>"; };
 		0D4E7A2726B364180058B01E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0D5D16F426E24CCF00AD33D1 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
+		0D77BAED26F52E5800DD020F /* OnboardingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreen.swift; sourceTree = "<group>"; };
+		0D77BAEE26F52E5800DD020F /* OnboardingScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenViewModel.swift; sourceTree = "<group>"; };
 		0D864A0426E1546000A61879 /* LoadingScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingScreenTests.swift; sourceTree = "<group>"; };
 		0D864A0726E154FD00A61879 /* InitFailedScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitFailedScreen.swift; sourceTree = "<group>"; };
 		0D864A0826E154FD00A61879 /* InitFailedScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitFailedScreenViewModel.swift; sourceTree = "<group>"; };
@@ -163,9 +171,9 @@
 		0D170A7426BC9B7500EB6A46 /* Mocked Dependencies */ = {
 			isa = PBXGroup;
 			children = (
+				0D1D933D26F91EB40093BB5E /* OnboardingMocks.swift */,
 				0D354A0726D5A9D000315F45 /* KeyStoring.swift */,
 				0D354A0826D5A9D000315F45 /* MnemonicSeedPhraseHandling.swift */,
-				0D354A0626D5A9D000315F45 /* Services.swift */,
 			);
 			path = "Mocked Dependencies";
 			sourceTree = "<group>";
@@ -182,6 +190,7 @@
 		0D1922EB26BDD9A500052649 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				0D77BAEC26F52E4200DD020F /* Onboarding */,
 				0D864A0B26E1580700A61879 /* Loading */,
 				0D864A0626E154D100A61879 /* Error */,
 				0D32282F26C5874B00262533 /* Balance */,
@@ -205,6 +214,13 @@
 				0D1922F726BDEB3500052649 /* MockServices.swift */,
 			);
 			path = Stubs;
+			sourceTree = "<group>";
+		};
+		0D1D933C26F91E9C0093BB5E /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Mocks;
 			sourceTree = "<group>";
 		};
 		0D2ACE7E26C2C65E00D62E3C /* Fonts */ = {
@@ -293,7 +309,9 @@
 			isa = PBXGroup;
 			children = (
 				660558F4270C85F7009D6954 /* Generated */,
+				0D77BAEB26F52CEB00DD020F /* Services */,
 				0D5D16F326E24CB900AD33D1 /* App Errors */,
+				0D2ACE8126C2C71100D62E3C /* Utilities */,
 				0D2ACE7E26C2C65E00D62E3C /* Fonts */,
 				0DA13CA326C1960A00E3B610 /* Models */,
 				0DA13C9126C15E1900E3B610 /* UI Components */,
@@ -302,7 +320,6 @@
 				0D1922E826BDD95000052649 /* Base */,
 				0D170A7426BC9B7500EB6A46 /* Mocked Dependencies */,
 				0D4E7A0826B364170058B01E /* SecantApp.swift */,
-				0D4E7A0A26B364170058B01E /* ContentView.swift */,
 				0D4E7A0C26B364180058B01E /* Assets.xcassets */,
 				660558E8270C7A54009D6954 /* Colors.xcassets */,
 				0D4E7A1126B364180058B01E /* Info.plist */,
@@ -323,9 +340,11 @@
 		0D4E7A1926B364180058B01E /* secantTests */ = {
 			isa = PBXGroup;
 			children = (
+				0D1D933C26F91E9C0093BB5E /* Mocks */,
 				0D4E7A1A26B364180058B01E /* secantTests.swift */,
 				0D4E7A1C26B364180058B01E /* Info.plist */,
 				0D864A0426E1546000A61879 /* LoadingScreenTests.swift */,
+				0D24267826E975CC00DA2A47 /* OnboardingTests.swift */,
 			);
 			path = secantTests;
 			sourceTree = "<group>";
@@ -345,6 +364,23 @@
 				0D5D16F426E24CCF00AD33D1 /* AppError.swift */,
 			);
 			path = "App Errors";
+			sourceTree = "<group>";
+		};
+		0D77BAEB26F52CEB00DD020F /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				0D354A0626D5A9D000315F45 /* Services.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		0D77BAEC26F52E4200DD020F /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				0D77BAED26F52E5800DD020F /* OnboardingScreen.swift */,
+				0D77BAEE26F52E5800DD020F /* OnboardingScreenViewModel.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 		0D864A0626E154D100A61879 /* Error */ = {
@@ -378,6 +414,7 @@
 			isa = PBXGroup;
 			children = (
 				0DA13C9226C15E2F00E3B610 /* PlainButton.swift */,
+				0D16BF2A26FBE17C0011BA02 /* Stepper.swift */,
 			);
 			path = "UI Components";
 			sourceTree = "<group>";
@@ -612,20 +649,23 @@
 				0D32281E26C5867D00262533 /* ScanQrScreen.swift in Sources */,
 				0D864A0E26E1583000A61879 /* LoadingScreen.swift in Sources */,
 				0DA13C9C26C1942100E3B610 /* BackupWalletScreen.swift in Sources */,
+				0D16BF2B26FBE17C0011BA02 /* Stepper.swift in Sources */,
 				0DA13C9826C186FF00E3B610 /* RestoreWalletScreenViewModel.swift in Sources */,
 				0D32283326C5877A00262533 /* BalanceScreenViewModel.swift in Sources */,
+				0D77BAEF26F52E5800DD020F /* OnboardingScreen.swift in Sources */,
 				0D5D16F526E24CCF00AD33D1 /* AppError.swift in Sources */,
 				0D32282326C586A800262533 /* HistoryScreen.swift in Sources */,
 				0D864A0A26E154FD00A61879 /* InitFailedScreenViewModel.swift in Sources */,
 				0DA13CA526C1963000E3B610 /* Balance.swift in Sources */,
 				0D1922F826BDEB3500052649 /* MockServices.swift in Sources */,
-				0D4E7A0B26B364170058B01E /* ContentView.swift in Sources */,
+				0D77BAF026F52E5800DD020F /* OnboardingScreenViewModel.swift in Sources */,
 				0D170A7226BC802800EB6A46 /* Router.swift in Sources */,
 				0D354A0926D5A9D000315F45 /* Services.swift in Sources */,
 				660558F7270C862F009D6954 /* Fonts+Generated.swift in Sources */,
 				0DA13C9726C186FF00E3B610 /* RestoreWalletScreen.swift in Sources */,
 				0D1922EA26BDD96A00052649 /* ViewModel.swift in Sources */,
 				0D4E7A0926B364170058B01E /* SecantApp.swift in Sources */,
+				0D16BF2926FBBF0F0011BA02 /* OnboardingMocks.swift in Sources */,
 				0D864A0926E154FD00A61879 /* InitFailedScreen.swift in Sources */,
 				0D32281A26C5864B00262533 /* ProfileScreenViewModel.swift in Sources */,
 				0D864A0F26E1583000A61879 /* LoadingScreenViewModel.swift in Sources */,
@@ -647,6 +687,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D24267926E975CC00DA2A47 /* OnboardingTests.swift in Sources */,
 				0D864A0526E1546000A61879 /* LoadingScreenTests.swift in Sources */,
 				0D4E7A1B26B364180058B01E /* secantTests.swift in Sources */,
 			);

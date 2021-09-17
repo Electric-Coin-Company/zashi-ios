@@ -58,18 +58,24 @@ class MockMnemonicPhraseHandling: MnemonicSeedPhraseHandling {
 }
 
 class KeysPresentStub: KeyStoring {
+    var returnBlock: () throws -> Bool
+    var called = false
+    var birthday: BlockHeight?
+    var phrase: String?
+
+    var keysPresent: Bool {
+        return self.phrase != nil && self.birthday != nil
+    }
+
     init(returnBlock: @escaping () throws -> Bool) {
         self.returnBlock = returnBlock
     }
-    var returnBlock: () throws -> Bool
-    var called = false
+
     func areKeysPresent() throws -> Bool {
         called = true
         return try returnBlock()
     }
-    
-    var birthday: BlockHeight?
-    var phrase: String?
+
     func importBirthday(_ height: BlockHeight) throws {
         guard birthday == nil else {
             throw KeyStoringError.alreadyImported
@@ -97,11 +103,7 @@ class KeysPresentStub: KeyStoring {
         }
         return phrase
     }
-    
-    var keysPresent: Bool {
-        return self.phrase != nil && self.birthday != nil
-    }
-    
+
     func nukePhrase() {
         self.phrase = nil
     }
@@ -115,6 +117,7 @@ class KeysPresentStub: KeyStoring {
         nukeBirthday()
     }
 }
+
 class MockKeyStoring: KeyStoring {
     var birthday: BlockHeight?
     var phrase: String?
