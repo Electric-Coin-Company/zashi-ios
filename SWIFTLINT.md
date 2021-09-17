@@ -121,14 +121,6 @@ You can work around this by extracting the `Button`'s action into a separate met
 
 In these cases, you're permitted to disable this rule **for the declaration of a SwiftUI view** only. The rule name is `multiple_closures_with_trailing_closure`.
 
-### Open-source files
-
-Occasionally, you'll find it necessary to include an unmodified open-source file in the sample project. It's a virtual certainty that these files won't comply with our style guide. Our practice has always been to leave these files in their original state. In this situation, you should disable SwiftLint for the entire file:
-
-```
-// swiftlint:disable all
-```
-
 ## Other notes
 
 While SwiftLint goes a long way towards making your source code compliant with our style guide, it doesn't cover everything. For example, it won't catch or force you to correct the formatting for multi-condition `guard` statements. If you find yourself butting heads with SwiftLint, or have improvement suggestions, please file an Issue and send a PR request with your suggestions.
