@@ -34,5 +34,5 @@ protocol KeyStoring {
 enum KeyStoringError: Error {
     case alreadyImported
     case uninitializedWallet
-    case storageError(underlyingError: Error)
+    case storageError(Error)
 }

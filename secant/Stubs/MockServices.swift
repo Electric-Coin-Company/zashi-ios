@@ -116,12 +116,16 @@ class KeysPresentStub: KeyStoring {
     }
 }
 class MockKeyStoring: KeyStoring {
+    var birthday: BlockHeight?
+    var phrase: String?
+
+    var keysPresent: Bool {
+        return self.phrase != nil && self.birthday != nil
+    }
+    
     func areKeysPresent() throws -> Bool {
         false
     }
-    
-    var birthday: BlockHeight?
-    var phrase: String?
 
     func importBirthday(_ height: BlockHeight) throws {
         guard birthday == nil else {
@@ -153,10 +157,6 @@ class MockKeyStoring: KeyStoring {
         }
         
         return phrase
-    }
-
-    var keysPresent: Bool {
-        return self.phrase != nil && self.birthday != nil
     }
 
     func nukePhrase() {

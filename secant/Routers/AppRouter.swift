@@ -40,7 +40,10 @@ class AppRouter: Router {
     }
 
     @ViewBuilder func loadingScreen() -> some View {
-        LoadingScreen(router: self, viewModel: LoadingScreenViewModel(services: self.services))
+        LoadingScreen(
+            viewModel: LoadingScreenViewModel(services: self.services),
+            router: self
+        )
     }
     
     @ViewBuilder func loadingFailedScreen() -> some View {
@@ -54,7 +57,7 @@ struct AppRouterView: View {
     var body: some View {
         viewForScreen(router.screen)
     }
-    
+
     @ViewBuilder func viewForScreen(_ screen: AppRouterScreen) -> some View {
         switch router.screen {
         case .appLoading:           router.loadingScreen()

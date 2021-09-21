@@ -8,5 +8,5 @@
 import Foundation
 
 enum AppError: Error {
-    case failedToInitialize(underlyingError: Error)
+    case failedToInitialize(Error)
 }

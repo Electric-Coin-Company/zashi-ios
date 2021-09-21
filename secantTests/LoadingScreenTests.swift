@@ -14,7 +14,7 @@ class LoadingScreenTests: XCTestCase {
     
     // MARK: LoadingScreenViewModel Tests
     
-    func testLoadingPublishedHomeScreenWhenCredentialsArePresent() throws {
+    func testCredentialsFoundIsPublishedWhenCredentialsArePresent() throws {
         let mockServices = MockServices()
         let stub = KeysPresentStub(returnBlock: {
             true
@@ -45,7 +45,7 @@ class LoadingScreenTests: XCTestCase {
         wait(for: [testExpectation], timeout: 0.1)
     }
 
-    func testLoadingPublishesNavigatesToOnboardingWhenNoCredentialsFound() throws {
+    func testNewWalletLoadingResultPublishedWhenNoCredentialsFound() throws {
         let mockServices = MockServices()
         let stub = KeysPresentStub(returnBlock: {
             false
@@ -77,7 +77,7 @@ class LoadingScreenTests: XCTestCase {
         wait(for: [testExpectation], timeout: 0.1)
     }
     
-    func testLoadingPublishesInitFailedScreenWhenFailsToInitialize() throws {
+    func testFailureIsPublishedWhenWalletFailsToInitialize() throws {
         let mockServices = MockServices()
         let stub = KeysPresentStub(returnBlock: {
             throw KeyStoringError.alreadyImported
@@ -106,7 +106,7 @@ class LoadingScreenTests: XCTestCase {
         wait(for: [testExpectation], timeout: 0.1)
     }
 
-    func testLoadReturnsNewWalletWhenCredentialsAreNotPresent() throws {
+    func testNewWalletLoadingResultReturnedWhenCredentialsAreNotPresent() throws {
         let mockServices = MockServices()
         let stub = KeysPresentStub(returnBlock: {
             false
@@ -126,7 +126,7 @@ class LoadingScreenTests: XCTestCase {
         }
     }
     
-    func testLoadReturnsCredentialsFoundWhenCredentialsArePresent() throws {
+    func testCredentialsFoundReturnedWhenCredentialsArePresent() throws {
         let mockServices = MockServices()
         let stub = KeysPresentStub(returnBlock: {
             true

@@ -14,29 +14,38 @@ protocol LoadingScreenRouter: AnyObject {
 }
 
 struct LoadingScreen: View {
-    @State var router: LoadingScreenRouter?
-    
     @StateObject var viewModel: LoadingScreenViewModel
-    
+
+    @State var router: LoadingScreenRouter?
+
     var body: some View {
         Text("Loading")
-            .onReceive(viewModel.$loadingResult, perform: { result in
-                guard let loadingResult = result,
-                    let router = self.router else { return }
+            .onReceive(
+                viewModel.$loadingResult,
+            perform: { result in
+                guard
+                    let loadingResult = result,
+                    let router = self.router
+                else { return }
+
                 viewModel.callRouter(router, with: loadingResult)
-            })
-            .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                    viewModel.loadAsync()
-                }
             }
+        )
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                viewModel.loadAsync()
+            }
+        }
     }
 }
 
 // MARK: Routing
 
 extension LoadingScreenViewModel {
-    func callRouter(_ router: LoadingScreenRouter, with loadingResult: Result<LoadingScreenViewModel.LoadingResult, Error>) {
+    func callRouter(
+        _ router: LoadingScreenRouter,
+        with loadingResult: Result<LoadingScreenViewModel.LoadingResult, Error>
+    ) {
         switch loadingResult {
         case .success(let result):
             switch result {
