@@ -12,7 +12,7 @@ protocol KeyStoring {
     func exportBirthday() throws -> BlockHeight
     func importPhrase(bip39 phrase: String) throws
     func exportPhrase() throws -> String
-
+    func areKeysPresent() throws -> Bool
     /**
     Use carefully: Deletes the seed phrase from the keychain
     */
@@ -34,4 +34,5 @@ protocol KeyStoring {
 enum KeyStoringError: Error {
     case alreadyImported
     case uninitializedWallet
+    case storageError(Error)
 }
