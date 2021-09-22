@@ -167,12 +167,9 @@ class LoadingScreenTests: XCTestCase {
     // MARK: LoadingScreen View Tests
     
     func testProceedToHomeIsCalledWhenCredentialsAreFound() throws {
-        let mockServices = MockServices()
-        let stub = KeysPresentStub(returnBlock: {
+        let loadingViewModel = LoadingScreenViewModelHelper.loadingViewModelWith {
             true
-        })
-        mockServices.keyStorage = stub
-        let loadingViewModel = LoadingScreenViewModel(services: mockServices)
+        }
 
         let spyRouter = LoadingScreenRouterSpy(fulfillment: {
         })
@@ -182,12 +179,9 @@ class LoadingScreenTests: XCTestCase {
     }
     
     func testProceedToWelcomeIsCalledWhenCredentialsAreNotFound() throws {
-        let mockServices = MockServices()
-        let stub = KeysPresentStub(returnBlock: {
+        let loadingViewModel = LoadingScreenViewModelHelper.loadingViewModelWith {
             false
-        })
-        mockServices.keyStorage = stub
-        let loadingViewModel = LoadingScreenViewModel(services: mockServices)
+        }
 
         let spyRouter = LoadingScreenRouterSpy(fulfillment: {
         })
@@ -197,12 +191,9 @@ class LoadingScreenTests: XCTestCase {
     }
     
     func testFailWithErrorIsCalledWhenKeyStoringFails() throws {
-        let mockServices = MockServices()
-        let stub = KeysPresentStub(returnBlock: {
+        let loadingViewModel = LoadingScreenViewModelHelper.loadingViewModelWith {
             throw KeyStoringError.alreadyImported
-        })
-        mockServices.keyStorage = stub
-        let loadingViewModel = LoadingScreenViewModel(services: mockServices)
+        }
 
         let spyRouter = LoadingScreenRouterSpy(fulfillment: {
         })
@@ -213,14 +204,14 @@ class LoadingScreenTests: XCTestCase {
 }
 
 class LoadingScreenRouterSpy: LoadingScreenRouter {
-    init(fulfillment: @escaping () -> Void) {
-        self.fulfillmentBlock = fulfillment
-    }
-    
     var fulfillmentBlock: () -> Void
     var proceedToHomeCalled = false
     var failWithErrorCalled = false
     var proceedToWelcomeCalled = false
+
+    init(fulfillment: @escaping () -> Void) {
+        self.fulfillmentBlock = fulfillment
+    }
 
     func proceedToHome() {
         proceedToHomeCalled = true
@@ -235,5 +226,14 @@ class LoadingScreenRouterSpy: LoadingScreenRouter {
     func proceedToWelcome() {
         proceedToWelcomeCalled = true
         fulfillmentBlock()
+    }
+}
+
+enum LoadingScreenViewModelHelper {
+    static func loadingViewModelWith(keysPresentStubBlock: @escaping () throws -> Bool) -> LoadingScreenViewModel {
+        let mockServices = MockServices()
+        let stub = KeysPresentStub(returnBlock: keysPresentStubBlock)
+        mockServices.keyStorage = stub
+        return LoadingScreenViewModel(services: mockServices)
     }
 }
