@@ -15,22 +15,30 @@ class OnboardingStepProviderBuilder {
         return self
     }
 
+    func starting(at step: Int) -> Self {
+        precondition(step < steps.count)
+        precondition(step > 0)
+        self.startingAt = step
+        return self
+    }
+
     func build() -> OnboardingStepProviding {
         SequencedOnboardingStepProvider(
-            steps: steps
+            steps: steps,
+            startingAt: self.startingAt
         )
     }
 }
 
 extension OnboardingStep {
-    static let stepOne = OnboardingStep(
+    static let stepZero = OnboardingStep(
         title: "First Onboarding Step",
         imageName: "figure.wave",
         blurb: "This is the first step of the Secant Wallet user onboarding",
         stepNumber: 0
     )
 
-    static let stepTwo = OnboardingStep(
+    static let stepOne = OnboardingStep(
         title: "Second Onboarding Step",
         imageName: "figure.wave",
         blurb: "This is the Second step of the Secant Wallet user onboarding",
@@ -39,7 +47,7 @@ extension OnboardingStep {
 }
 
 class SequencedOnboardingStepProvider: OnboardingStepProviding {
-    var currentStepIndex: Int = 0
+    var currentStepIndex: Int
 
     var steps: [OnboardingStep]
 
@@ -58,8 +66,12 @@ class SequencedOnboardingStepProvider: OnboardingStepProviding {
         self.currentStepIndex > 0
     }
 
-    init(steps: [OnboardingStep]) {
+    init(
+        steps: [OnboardingStep],
+        startingAt index: Int = 0
+    ) {
         self.steps = steps
+        self.currentStepIndex = index
     }
 
     func next() {

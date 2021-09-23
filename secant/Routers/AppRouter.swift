@@ -58,8 +58,8 @@ class AppRouter: Router {
         OnboardingScreen(
             viewModel: OnboardingScreenViewModel(
                 services: OnboardingStepProviderBuilder()
+                    .add(.stepZero)
                     .add(.stepOne)
-                    .add(.stepTwo)
                     .build()
             ),
             router: self

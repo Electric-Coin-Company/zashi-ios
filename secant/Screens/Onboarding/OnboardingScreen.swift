@@ -114,8 +114,8 @@ struct OnboardingScreenPreviews: PreviewProvider {
             OnboardingScreen(
                 viewModel: OnboardingScreenViewModel(
                     services: OnboardingStepProviderBuilder()
+                        .add(.stepZero)
                         .add(.stepOne)
-                        .add(.stepTwo)
                         .build()
                 )
             )
