@@ -35,7 +35,9 @@ struct OnboardingScreen: View {
             }
 
             Text(viewModel.currentStep.blurb)
+
             Spacer()
+
             Stepper(
                 currentStep: viewModel.currentStep.stepNumber,
                 totalSteps: viewModel.totalSteps
@@ -55,8 +57,9 @@ struct OnboardingScreen: View {
         .padding()
     }
 
+    // These calls (skip and close) should be differenciated for usage analysis purposes.
     func skip() {
-        router?.onboardingDone()
+        close()
     }
 
     func close() {
@@ -69,9 +72,9 @@ struct ItemsToolbar: ToolbarContent {
     let previous: () -> Void
     let skip: () -> Void
     let close: () -> Void
-
     let nextButton: OnboardingScreenViewModel.RightBarButton
     let showPrevious: Bool
+
     var body: some ToolbarContent {
         ToolbarItemGroup(placement: .navigationBarLeading) {
             if showPrevious {

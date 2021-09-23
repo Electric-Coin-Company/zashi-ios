@@ -30,7 +30,7 @@ class LoadingScreenTests: XCTestCase {
             .sink { loadingResult in
                 testExpectation.fulfill()
                 
-                XCTAssertTrue(stub.called)
+                XCTAssertTrue(stub.isAreKeysPresentFunctionCalled)
                 switch loadingResult {
                 case .success(let result):
                     XCTAssertEqual(result, expected)
@@ -62,7 +62,7 @@ class LoadingScreenTests: XCTestCase {
             .sink { loadingResult in
                 testExpectation.fulfill()
                 
-                XCTAssertTrue(stub.called)
+                XCTAssertTrue(stub.isAreKeysPresentFunctionCalled)
                 switch loadingResult {
                 case .success(let result):
                     XCTAssertEqual(result, expected)
@@ -91,7 +91,7 @@ class LoadingScreenTests: XCTestCase {
             .sink { loadingResult in
                 testExpectation.fulfill()
                 
-                XCTAssertTrue(stub.called)
+                XCTAssertTrue(stub.isAreKeysPresentFunctionCalled)
                 switch loadingResult {
                 case .success(let result):
                     XCTFail("found result: \(result) but expected a failure")
@@ -117,7 +117,7 @@ class LoadingScreenTests: XCTestCase {
         let expected = LoadingScreenViewModel.LoadingResult.newWallet
         let result = loadingViewModel.load()
         
-        XCTAssertTrue(stub.called)
+        XCTAssertTrue(stub.isAreKeysPresentFunctionCalled)
         switch result {
         case .failure(let error):
             XCTFail("found error \(error.localizedDescription)")
@@ -137,7 +137,7 @@ class LoadingScreenTests: XCTestCase {
         let expected = LoadingScreenViewModel.LoadingResult.credentialsFound
         let result = loadingViewModel.load()
         
-        XCTAssertTrue(stub.called)
+        XCTAssertTrue(stub.isAreKeysPresentFunctionCalled)
         switch result {
         case .failure(let error):
             XCTFail("found error \(error.localizedDescription)")
@@ -155,7 +155,7 @@ class LoadingScreenTests: XCTestCase {
         let loadingViewModel = LoadingScreenViewModel(services: mockServices)
 
         let result = loadingViewModel.load()
-        XCTAssertTrue(stub.called)
+        XCTAssertTrue(stub.isAreKeysPresentFunctionCalled)
         switch result {
         case .failure:
             XCTAssertTrue(true)

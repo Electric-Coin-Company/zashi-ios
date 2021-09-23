@@ -30,6 +30,7 @@ class OnboardingScreenViewModel: BaseViewModel<OnboardingStepProviding>, Observa
         case close
         case none
     }
+    
     @Published var currentStep: OnboardingStep
 
     var totalSteps: Int {
@@ -70,11 +71,4 @@ class OnboardingScreenViewModel: BaseViewModel<OnboardingStepProviding>, Observa
     func skip() {}
 }
 
-extension OnboardingStep: Equatable {
-    public static func == (lhs: OnboardingStep, rhs: OnboardingStep) -> Bool {
-        lhs.stepNumber == rhs.stepNumber &&
-        lhs.blurb == rhs.blurb &&
-        lhs.imageName == rhs.imageName &&
-        lhs.title == rhs.title
-    }
-}
+extension OnboardingStep: Equatable {}

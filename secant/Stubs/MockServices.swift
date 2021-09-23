@@ -59,7 +59,7 @@ class MockMnemonicPhraseHandling: MnemonicSeedPhraseHandling {
 
 class KeysPresentStub: KeyStoring {
     var returnBlock: () throws -> Bool
-    var called = false
+    var isAreKeysPresentFunctionCalled = false
     var birthday: BlockHeight?
     var phrase: String?
 
@@ -72,7 +72,7 @@ class KeysPresentStub: KeyStoring {
     }
 
     func areKeysPresent() throws -> Bool {
-        called = true
+        isAreKeysPresentFunctionCalled = true
         return try returnBlock()
     }
 
