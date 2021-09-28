@@ -22,8 +22,8 @@ class OnboardingStepProviderBuilder {
         return self
     }
 
-    func build() -> OnboardingStepProviding {
-        SequencedOnboardingStepProvider(
+    func build() -> OnboardingStepProvider {
+        OnboardingStepProvider(
             steps: steps,
             startingAt: self.startingAt
         )
@@ -46,7 +46,7 @@ extension OnboardingStep {
     )
 }
 
-class SequencedOnboardingStepProvider: OnboardingStepProviding {
+struct OnboardingStepProvider {
     var currentStepIndex: Int
 
     var steps: [OnboardingStep]
@@ -74,12 +74,12 @@ class SequencedOnboardingStepProvider: OnboardingStepProviding {
         self.currentStepIndex = index
     }
 
-    func next() {
+    mutating func next() {
         guard currentStepIndex < steps.count else { return }
         currentStepIndex += 1
     }
 
-    func previous() {
+    mutating func previous() {
         guard currentStepIndex > 0 else { return }
         currentStepIndex -= 1
     }

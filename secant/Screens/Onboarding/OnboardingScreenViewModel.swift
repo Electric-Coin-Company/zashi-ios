@@ -8,15 +8,6 @@
 import Foundation
 import Combine
 
-protocol OnboardingStepProviding {
-    var totalSteps: Int { get }
-    var currentStep: OnboardingStep { get }
-    var hasNext: Bool { get }
-    var hasPrevious: Bool { get }
-    func next()
-    func previous()
-}
-
 struct OnboardingStep {
     var title: String?
     var imageName: String
@@ -24,7 +15,7 @@ struct OnboardingStep {
     var stepNumber: Int
 }
 
-class OnboardingScreenViewModel: BaseViewModel<OnboardingStepProviding>, ObservableObject {
+class OnboardingScreenViewModel: BaseViewModel<OnboardingStepProvider>, ObservableObject {
     enum RightBarButton {
         case skip
         case close
@@ -53,7 +44,7 @@ class OnboardingScreenViewModel: BaseViewModel<OnboardingStepProviding>, Observa
         services.totalSteps > 1
     }
 
-    override init(services: OnboardingStepProviding) {
+    override init(services: OnboardingStepProvider) {
         self.currentStep = services.currentStep
         super.init(services: services)
     }
