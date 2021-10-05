@@ -11,9 +11,23 @@ struct PlainButton: ButtonStyle {
     enum Theme {
         case light
         case bold
+        
+        var background: some View {
+            switch self {
+            case .bold: return Color.black
+            default:    return Color.white
+            }
+        }
+
+        var foregroundColor: Color {
+            switch self {
+            case .bold: return Color.white
+            default:    return Color.black
+            }
+        }
     }
 
-    var style = Theme.bold
+    var style = Theme.light
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -46,17 +60,5 @@ struct PlainButton_Previews: PreviewProvider {
 // MARK: - Theme
 
 extension PlainButton.Theme {
-    var background: some View {
-        switch self {
-        case .bold: return Color.black
-        default:    return Color.white
-        }
-    }
-
-    var foregroundColor: Color {
-        switch self {
-        case .bold: return Color.white
-        default:    return Color.black
-        }
-    }
+    
 }
