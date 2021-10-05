@@ -13,7 +13,6 @@
 		0D1922F226BDE29300052649 /* ZcashSDKStubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922F126BDE29300052649 /* ZcashSDKStubs.swift */; };
 		0D1922F826BDEB3500052649 /* MockServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922F726BDEB3500052649 /* MockServices.swift */; };
 		0D2ACE8026C2C67100D62E3C /* Zboto.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0D2ACE7F26C2C67100D62E3C /* Zboto.otf */; };
-		0D2ACE8326C2C8B400D62E3C /* SwiftUI+secant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2ACE8226C2C8B400D62E3C /* SwiftUI+secant.swift */; };
 		0D32281926C5864B00262533 /* ProfileScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D32281726C5864B00262533 /* ProfileScreen.swift */; };
 		0D32281A26C5864B00262533 /* ProfileScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D32281826C5864B00262533 /* ProfileScreenViewModel.swift */; };
 		0D32281E26C5867D00262533 /* ScanQrScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D32281C26C5867D00262533 /* ScanQrScreen.swift */; };
@@ -51,6 +50,9 @@
 		0DA13CA126C1955600E3B610 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA13C9F26C1955600E3B610 /* HomeScreen.swift */; };
 		0DA13CA226C1955600E3B610 /* HomeScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA13CA026C1955600E3B610 /* HomeScreenViewModel.swift */; };
 		0DA13CA526C1963000E3B610 /* Balance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA13CA426C1963000E3B610 /* Balance.swift */; };
+		660558E9270C7A54009D6954 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 660558E8270C7A54009D6954 /* Colors.xcassets */; };
+		660558F7270C862F009D6954 /* Fonts+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660558F5270C862F009D6954 /* Fonts+Generated.swift */; };
+		660558F8270C862F009D6954 /* XCAssets+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660558F6270C862F009D6954 /* XCAssets+Generated.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,7 +79,6 @@
 		0D1922F126BDE29300052649 /* ZcashSDKStubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZcashSDKStubs.swift; sourceTree = "<group>"; };
 		0D1922F726BDEB3500052649 /* MockServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServices.swift; sourceTree = "<group>"; };
 		0D2ACE7F26C2C67100D62E3C /* Zboto.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zboto.otf; sourceTree = "<group>"; };
-		0D2ACE8226C2C8B400D62E3C /* SwiftUI+secant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftUI+secant.swift"; sourceTree = "<group>"; };
 		0D32281726C5864B00262533 /* ProfileScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScreen.swift; sourceTree = "<group>"; };
 		0D32281826C5864B00262533 /* ProfileScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScreenViewModel.swift; sourceTree = "<group>"; };
 		0D32281C26C5867D00262533 /* ScanQrScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanQrScreen.swift; sourceTree = "<group>"; };
@@ -121,6 +122,9 @@
 		0DA13C9F26C1955600E3B610 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		0DA13CA026C1955600E3B610 /* HomeScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenViewModel.swift; sourceTree = "<group>"; };
 		0DA13CA426C1963000E3B610 /* Balance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Balance.swift; sourceTree = "<group>"; };
+		660558E8270C7A54009D6954 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
+		660558F5270C862F009D6954 /* Fonts+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Fonts+Generated.swift"; sourceTree = "<group>"; };
+		660558F6270C862F009D6954 /* XCAssets+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "XCAssets+Generated.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -211,14 +215,6 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
-		0D2ACE8126C2C71100D62E3C /* Utilities */ = {
-			isa = PBXGroup;
-			children = (
-				0D2ACE8226C2C8B400D62E3C /* SwiftUI+secant.swift */,
-			);
-			path = Utilities;
-			sourceTree = "<group>";
-		};
 		0D32281526C5862400262533 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
@@ -296,8 +292,8 @@
 		0D4E7A0726B364170058B01E /* secant */ = {
 			isa = PBXGroup;
 			children = (
+				660558F4270C85F7009D6954 /* Generated */,
 				0D5D16F326E24CB900AD33D1 /* App Errors */,
-				0D2ACE8126C2C71100D62E3C /* Utilities */,
 				0D2ACE7E26C2C65E00D62E3C /* Fonts */,
 				0DA13CA326C1960A00E3B610 /* Models */,
 				0DA13C9126C15E1900E3B610 /* UI Components */,
@@ -308,6 +304,7 @@
 				0D4E7A0826B364170058B01E /* SecantApp.swift */,
 				0D4E7A0A26B364170058B01E /* ContentView.swift */,
 				0D4E7A0C26B364180058B01E /* Assets.xcassets */,
+				660558E8270C7A54009D6954 /* Colors.xcassets */,
 				0D4E7A1126B364180058B01E /* Info.plist */,
 				0D4E7A0E26B364180058B01E /* Preview Content */,
 				0D170A7326BC802E00EB6A46 /* Routers */,
@@ -420,6 +417,15 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		660558F4270C85F7009D6954 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				660558F5270C862F009D6954 /* Fonts+Generated.swift */,
+				660558F6270C862F009D6954 /* XCAssets+Generated.swift */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -427,6 +433,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0D4E7A2A26B364180058B01E /* Build configuration list for PBXNativeTarget "secant-testnet" */;
 			buildPhases = (
+				664E39ED270C693C0044AD7E /* SwiftGen */,
 				6696BA8726F0B1D200D5C875 /* SwiftLint */,
 				0D4E7A0126B364170058B01E /* Sources */,
 				0D4E7A0226B364170058B01E /* Frameworks */,
@@ -525,6 +532,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0D4E7A1026B364180058B01E /* Preview Assets.xcassets in Resources */,
+				660558E9270C7A54009D6954 /* Colors.xcassets in Resources */,
 				0D4E7A0D26B364180058B01E /* Assets.xcassets in Resources */,
 				0D2ACE8026C2C67100D62E3C /* Zboto.otf in Resources */,
 			);
@@ -547,6 +555,27 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		664E39ED270C693C0044AD7E /* SwiftGen */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/swiftlint.yml",
+			);
+			name = SwiftGen;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Generated/XCAssets+Generated.swift",
+				"$(DERIVED_FILE_DIR)/Generated/Fonts+Generated.swift",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftgen >/dev/null; then\n  swiftgen\nelse\n  echo \"warning: SwiftGen not installed, download from https://github.com/SwiftGen/SwiftGen\"\nfi\n";
+		};
 		6696BA8726F0B1D200D5C875 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -572,6 +601,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				660558F8270C862F009D6954 /* XCAssets+Generated.swift in Sources */,
 				0D32281F26C5867D00262533 /* ScanQrScreenViewModel.swift in Sources */,
 				0D32282E26C5870B00262533 /* SendScreenViewModel.swift in Sources */,
 				0D32282D26C5870B00262533 /* SendScreen.swift in Sources */,
@@ -592,6 +622,7 @@
 				0D4E7A0B26B364170058B01E /* ContentView.swift in Sources */,
 				0D170A7226BC802800EB6A46 /* Router.swift in Sources */,
 				0D354A0926D5A9D000315F45 /* Services.swift in Sources */,
+				660558F7270C862F009D6954 /* Fonts+Generated.swift in Sources */,
 				0DA13C9726C186FF00E3B610 /* RestoreWalletScreen.swift in Sources */,
 				0D1922EA26BDD96A00052649 /* ViewModel.swift in Sources */,
 				0D4E7A0926B364170058B01E /* SecantApp.swift in Sources */,
@@ -607,7 +638,6 @@
 				0D354A0A26D5A9D000315F45 /* KeyStoring.swift in Sources */,
 				0DA13CA226C1955600E3B610 /* HomeScreenViewModel.swift in Sources */,
 				0D32282926C586E000262533 /* RequestZcashScreenViewModel.swift in Sources */,
-				0D2ACE8326C2C8B400D62E3C /* SwiftUI+secant.swift in Sources */,
 				0D32281926C5864B00262533 /* ProfileScreen.swift in Sources */,
 				0D32282426C586A800262533 /* HistoryScreenViewModel.swift in Sources */,
 			);
@@ -770,7 +800,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
-				DEVELOPMENT_TEAM = RLPRR8CPQG;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = secant/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -794,7 +824,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
-				DEVELOPMENT_TEAM = RLPRR8CPQG;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = secant/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
