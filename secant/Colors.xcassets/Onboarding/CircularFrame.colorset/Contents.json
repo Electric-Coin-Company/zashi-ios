@@ -2,10 +2,12 @@
   "colors" : [
     {
       "color" : {
-        "color-space" : "extended-gray",
+        "color-space" : "srgb",
         "components" : {
           "alpha" : "1.000",
-          "white" : "1.000"
+          "blue" : "0xE6",
+          "green" : "0xDD",
+          "red" : "0xCD"
         }
       },
       "idiom" : "universal"
@@ -21,9 +23,9 @@
         "color-space" : "srgb",
         "components" : {
           "alpha" : "1.000",
-          "blue" : "0x82",
-          "green" : "0x7B",
-          "red" : "0x70"
+          "blue" : "0x83",
+          "green" : "0x7C",
+          "red" : "0x71"
         }
       },
       "idiom" : "universal"
