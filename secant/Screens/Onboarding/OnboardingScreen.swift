@@ -113,10 +113,13 @@ struct OnboardingScreenPreviews: PreviewProvider {
         NavigationView {
             OnboardingScreen(
                 viewModel: OnboardingScreenViewModel(
-                    services: OnboardingStepProviderBuilder()
-                        .add(.stepZero)
-                        .add(.stepOne)
-                        .build()
+                    services: OnboardingStepProvider(
+                        steps: [
+                            .stepZero,
+                            .stepOne
+                        ],
+                        startingAt: 0
+                    )
                 )
             )
         }

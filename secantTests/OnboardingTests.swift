@@ -12,89 +12,107 @@ class OnboardingTests: XCTestCase {
     var cancellables: [AnyCancellable] = []
 
     func testWhenThereIsASingleOnboardingStepItShouldNotShowStepper() {
-        let stepProvider = OnboardingStepProviderBuilder()
-            .add(.stepZero)
-            .build()
+        let stepProvider = OnboardingStepProvider(
+            steps: [
+                .stepZero
+            ]
+        )
         let viewModel = OnboardingScreenViewModel(services: stepProvider)
 
         XCTAssertFalse(viewModel.showStepper)
     }
 
     func testWhenThereIsASingleStepItShouldNotShowNextButton() {
-        let stepProvider = OnboardingStepProviderBuilder()
-            .add(.stepZero)
-            .build()
+        let stepProvider = OnboardingStepProvider(
+            steps: [
+                .stepZero
+            ]
+        )
         let viewModel = OnboardingScreenViewModel(services: stepProvider)
 
         XCTAssertFalse(viewModel.showNextButton)
     }
 
     func testWhenThereIsASingleStepItShouldNotShowPreviousButton() {
-        let stepProvider = OnboardingStepProviderBuilder()
-            .add(.stepZero)
-            .build()
+        let stepProvider = OnboardingStepProvider(
+            steps: [
+                .stepZero
+            ]
+        )
         let viewModel = OnboardingScreenViewModel(services: stepProvider)
 
         XCTAssertFalse(viewModel.showPreviousButton)
     }
 
     func testWhenThereAreManyStepsItShouldShowStepper() {
-        let stepProvider = OnboardingStepProviderBuilder()
-            .add(.stepZero)
-            .add(.stepOne)
-            .build()
+        let stepProvider = OnboardingStepProvider(
+            steps: [
+                .stepZero,
+                .stepOne
+            ]
+        )
         let viewModel = OnboardingScreenViewModel(services: stepProvider)
 
         XCTAssertTrue(viewModel.showStepper)
     }
 
     func testWhenStepsArePendingRightNavItemShouldSaySkip() {
-        let stepProvider = OnboardingStepProviderBuilder()
-            .add(.stepZero)
-            .add(.stepOne)
-            .build()
+        let stepProvider = OnboardingStepProvider(
+            steps: [
+                .stepZero,
+                .stepOne
+            ]
+        )
         let viewModel = OnboardingScreenViewModel(services: stepProvider)
 
         XCTAssertEqual(viewModel.showRightBarButton, OnboardingScreenViewModel.RightBarButton.skip)
     }
 
     func testWhenLastStepRightNavItemShouldSayClose() {
-        let stepProvider = OnboardingStepProviderBuilder()
-            .add(.stepZero)
-            .add(.stepOne)
-            .starting(at: 1)
-            .build()
+        let stepProvider = OnboardingStepProvider(
+            steps: [
+                .stepZero,
+                .stepOne
+            ],
+            startingAt: 1
+        )
         let viewModel = OnboardingScreenViewModel(services: stepProvider)
         
         XCTAssertEqual(viewModel.showRightBarButton, OnboardingScreenViewModel.RightBarButton.close)
     }
 
     func testWhenFirstStepLeftNavItemShouldNotShow() {
-        let stepProvider = OnboardingStepProviderBuilder()
-            .add(.stepZero)
-            .add(.stepOne)
-            .build()
+        let stepProvider = OnboardingStepProvider(
+            steps: [
+                .stepZero,
+                .stepOne
+            ]
+        )
         let viewModel = OnboardingScreenViewModel(services: stepProvider)
 
         XCTAssertFalse(viewModel.showPreviousButton)
     }
 
     func testWhenThereIsAPriorStepLeftNavItemShouldShow() {
-        let stepProvider = OnboardingStepProviderBuilder()
-            .add(.stepZero)
-            .add(.stepOne)
-            .starting(at: 1)
-            .build()
+        let stepProvider = OnboardingStepProvider(
+            steps: [
+                .stepZero,
+                .stepOne
+            ],
+            startingAt: 1
+        )
         let viewModel = OnboardingScreenViewModel(services: stepProvider)
 
         XCTAssertTrue(viewModel.showPreviousButton)
     }
 
     func testWhenNextButtonIsTappedStepShouldIncrement() {
-        let stepProvider = OnboardingStepProviderBuilder()
-            .add(.stepZero)
-            .add(.stepOne)
-            .build()
+        let stepProvider = OnboardingStepProvider(
+            steps: [
+                .stepZero,
+                .stepOne
+            ]
+        )
         let viewModel = OnboardingScreenViewModel(services: stepProvider)
 
         let previousStepNumber = viewModel.currentStep.stepNumber
@@ -106,11 +124,13 @@ class OnboardingTests: XCTestCase {
     }
 
     func testWhenBackButtonIsTappedStepShouldDecrement() {
-        let stepProvider = OnboardingStepProviderBuilder()
-            .add(.stepZero)
-            .add(.stepOne)
-            .starting(at: 1)
-            .build()
+        let stepProvider = OnboardingStepProvider(
+            steps: [
+                .stepZero,
+                .stepOne
+            ],
+            startingAt: 1
+        )
         let viewModel = OnboardingScreenViewModel(services: stepProvider)
         let previousStepNumber = viewModel.currentStep.stepNumber
 
@@ -127,10 +147,12 @@ class OnboardingTests: XCTestCase {
         let stepTwo = OnboardingStep.stepOne
         let expectation = XCTestExpectation(description: "next button should publish the following item")
 
-        let stepProvider = OnboardingStepProviderBuilder()
-            .add(stepOne)
-            .add(stepTwo)
-            .build()
+        let stepProvider = OnboardingStepProvider(
+            steps: [
+                stepOne,
+                stepTwo
+            ]
+        )
         let viewModel = OnboardingScreenViewModel(services: stepProvider)
 
         viewModel.$currentStep
@@ -149,11 +171,14 @@ class OnboardingTests: XCTestCase {
         let stepTwo = OnboardingStep.stepOne
         let expectation = XCTestExpectation(description: "previous button should publish the preceding item")
 
-        let stepProvider = OnboardingStepProviderBuilder()
-            .add(stepOne)
-            .add(stepTwo)
-            .starting(at: 1)
-            .build()
+        let stepProvider = OnboardingStepProvider(
+            steps: [
+                stepOne,
+                stepTwo
+            ],
+            startingAt: 1
+        )
+
         let viewModel = OnboardingScreenViewModel(services: stepProvider)
         viewModel.$currentStep
             .dropFirst()

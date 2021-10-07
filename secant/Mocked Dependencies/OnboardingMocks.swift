@@ -6,29 +6,6 @@
 //
 
 import Foundation
-class OnboardingStepProviderBuilder {
-    var steps: [OnboardingStep] = []
-    var startingAt: Int = 0
-
-    func add(_ step: OnboardingStep) -> Self {
-        steps.append(step)
-        return self
-    }
-
-    func starting(at step: Int) -> Self {
-        precondition(step < steps.count)
-        precondition(step > 0)
-        self.startingAt = step
-        return self
-    }
-
-    func build() -> OnboardingStepProvider {
-        OnboardingStepProvider(
-            steps: steps,
-            startingAt: self.startingAt
-        )
-    }
-}
 
 extension OnboardingStep {
     static let stepZero = OnboardingStep(
@@ -48,7 +25,6 @@ extension OnboardingStep {
 
 struct OnboardingStepProvider {
     var currentStepIndex: Int
-
     var steps: [OnboardingStep]
 
     var totalSteps: Int {

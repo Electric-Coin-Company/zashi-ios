@@ -57,10 +57,14 @@ class AppRouter: Router {
     @ViewBuilder func onboarding() -> some View {
         OnboardingScreen(
             viewModel: OnboardingScreenViewModel(
-                services: OnboardingStepProviderBuilder()
-                    .add(.stepZero)
-                    .add(.stepOne)
-                    .build()
+                services:
+                    OnboardingStepProvider(
+                        steps: [
+                            .stepZero,
+                            .stepOne
+                        ],
+                        startingAt: 0
+                    )
             ),
             router: self
         )
