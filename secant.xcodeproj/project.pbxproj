@@ -216,13 +216,6 @@
 			path = Stubs;
 			sourceTree = "<group>";
 		};
-		0D1D933C26F91E9C0093BB5E /* Mocks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Mocks;
-			sourceTree = "<group>";
-		};
 		0D2ACE7E26C2C65E00D62E3C /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -311,7 +304,6 @@
 				660558F4270C85F7009D6954 /* Generated */,
 				0D77BAEB26F52CEB00DD020F /* Services */,
 				0D5D16F326E24CB900AD33D1 /* App Errors */,
-				0D2ACE8126C2C71100D62E3C /* Utilities */,
 				0D2ACE7E26C2C65E00D62E3C /* Fonts */,
 				0DA13CA326C1960A00E3B610 /* Models */,
 				0DA13C9126C15E1900E3B610 /* UI Components */,
@@ -340,7 +332,6 @@
 		0D4E7A1926B364180058B01E /* secantTests */ = {
 			isa = PBXGroup;
 			children = (
-				0D1D933C26F91E9C0093BB5E /* Mocks */,
 				0D4E7A1A26B364180058B01E /* secantTests.swift */,
 				0D4E7A1C26B364180058B01E /* Info.plist */,
 				0D864A0426E1546000A61879 /* LoadingScreenTests.swift */,
