@@ -60,5 +60,4 @@ struct PlainButton_Previews: PreviewProvider {
 // MARK: - Theme
 
 extension PlainButton.Theme {
-    
 }

@@ -53,16 +53,12 @@ struct BadgeIcon: ViewModifier {
         case list
         case person
 
-        var assetName: String {
-            switch self {
-            case .shield:    return "icon_badge"
-            case .list:     return "icon_list"
-            case .person:   return "icon_person"
-            }
-        }
-        
         var image: Image {
-            return Image(assetName, bundle: .main)
+            switch self {
+            case .shield:   return Asset.Assets.Icons.badge.image
+            case .list:     return Asset.Assets.Icons.list.image
+            case .person:   return Asset.Assets.Icons.person.image
+            }
         }
     }
     

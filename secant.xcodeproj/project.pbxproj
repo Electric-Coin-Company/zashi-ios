@@ -53,6 +53,10 @@
 		660558E9270C7A54009D6954 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 660558E8270C7A54009D6954 /* Colors.xcassets */; };
 		660558F7270C862F009D6954 /* Fonts+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660558F5270C862F009D6954 /* Fonts+Generated.swift */; };
 		660558F8270C862F009D6954 /* XCAssets+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660558F6270C862F009D6954 /* XCAssets+Generated.swift */; };
+		66A080722718511E00118B79 /* PrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A080712718511E00118B79 /* PrimaryButton.swift */; };
+		66A080742718512A00118B79 /* CreateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A080732718512A00118B79 /* CreateButton.swift */; };
+		66A080762718513D00118B79 /* SecondaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A080752718513D00118B79 /* SecondaryButton.swift */; };
+		66A080782718516D00118B79 /* ActiveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A080772718516D00118B79 /* ActiveButton.swift */; };
 		66ED2B88270482C200CB71C4 /* CircularImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66ED2B87270482C200CB71C4 /* CircularImage.swift */; };
 /* End PBXBuildFile section */
 
@@ -126,6 +130,10 @@
 		660558E8270C7A54009D6954 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		660558F5270C862F009D6954 /* Fonts+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Fonts+Generated.swift"; sourceTree = "<group>"; };
 		660558F6270C862F009D6954 /* XCAssets+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "XCAssets+Generated.swift"; sourceTree = "<group>"; };
+		66A080712718511E00118B79 /* PrimaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButton.swift; sourceTree = "<group>"; };
+		66A080732718512A00118B79 /* CreateButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateButton.swift; sourceTree = "<group>"; };
+		66A080752718513D00118B79 /* SecondaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondaryButton.swift; sourceTree = "<group>"; };
+		66A080772718516D00118B79 /* ActiveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveButton.swift; sourceTree = "<group>"; };
 		66ED2B87270482C200CB71C4 /* CircularImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularImage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -381,6 +389,10 @@
 			children = (
 				0DA13C9226C15E2F00E3B610 /* PlainButton.swift */,
 				66ED2B87270482C200CB71C4 /* CircularImage.swift */,
+				66A080712718511E00118B79 /* PrimaryButton.swift */,
+				66A080732718512A00118B79 /* CreateButton.swift */,
+				66A080752718513D00118B79 /* SecondaryButton.swift */,
+				66A080772718516D00118B79 /* ActiveButton.swift */,
 			);
 			path = "UI Components";
 			sourceTree = "<group>";
@@ -602,6 +614,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				660558F8270C862F009D6954 /* XCAssets+Generated.swift in Sources */,
+				66A080742718512A00118B79 /* CreateButton.swift in Sources */,
 				0D32281F26C5867D00262533 /* ScanQrScreenViewModel.swift in Sources */,
 				0D32282E26C5870B00262533 /* SendScreenViewModel.swift in Sources */,
 				0D32282D26C5870B00262533 /* SendScreen.swift in Sources */,
@@ -610,6 +623,7 @@
 				0DA13C9D26C1942100E3B610 /* BackupWalletScreenViewModel.swift in Sources */,
 				0D354A0B26D5A9D000315F45 /* MnemonicSeedPhraseHandling.swift in Sources */,
 				0D32281E26C5867D00262533 /* ScanQrScreen.swift in Sources */,
+				66A080762718513D00118B79 /* SecondaryButton.swift in Sources */,
 				0D864A0E26E1583000A61879 /* LoadingScreen.swift in Sources */,
 				0DA13C9C26C1942100E3B610 /* BackupWalletScreen.swift in Sources */,
 				0DA13C9826C186FF00E3B610 /* RestoreWalletScreenViewModel.swift in Sources */,
@@ -632,11 +646,13 @@
 				0DA13CA126C1955600E3B610 /* HomeScreen.swift in Sources */,
 				66ED2B88270482C200CB71C4 /* CircularImage.swift in Sources */,
 				0DA13C9026C15D1D00E3B610 /* WelcomeScreenViewModel.swift in Sources */,
+				66A080782718516D00118B79 /* ActiveButton.swift in Sources */,
 				0DA13C8F26C15D1D00E3B610 /* WelcomeScreen.swift in Sources */,
 				0DA13C9326C15E2F00E3B610 /* PlainButton.swift in Sources */,
 				0D32282826C586E000262533 /* RequestZcashScreen.swift in Sources */,
 				0D32283226C5877A00262533 /* BalanceScreen.swift in Sources */,
 				0D354A0A26D5A9D000315F45 /* KeyStoring.swift in Sources */,
+				66A080722718511E00118B79 /* PrimaryButton.swift in Sources */,
 				0DA13CA226C1955600E3B610 /* HomeScreenViewModel.swift in Sources */,
 				0D32282926C586E000262533 /* RequestZcashScreenViewModel.swift in Sources */,
 				0D32281926C5864B00262533 /* ProfileScreen.swift in Sources */,
