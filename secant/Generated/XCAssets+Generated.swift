@@ -27,15 +27,9 @@ internal enum Asset {
       internal static let lockImage = ImageAsset(name: "LockImage")
     }
     internal enum Icons {
-      internal enum IconBadge {
-        internal static let iconBadge = ImageAsset(name: "icon_badge")
-      }
-      internal enum IconList {
-        internal static let iconList = ImageAsset(name: "icon_list")
-      }
-      internal enum IconPerson {
-        internal static let iconPerson = ImageAsset(name: "icon_person")
-      }
+      internal static let badge = ImageAsset(name: "badge")
+      internal static let list = ImageAsset(name: "list")
+      internal static let person = ImageAsset(name: "person")
     }
     internal enum Logos {
       internal static let largeYellow = ImageAsset(name: "LargeYellow")
@@ -43,12 +37,29 @@ internal enum Asset {
   }
   internal enum Colors {
     internal enum Buttons {
-      internal static let primary = ColorAsset(name: "Primary")
-      internal static let primaryDisabled = ColorAsset(name: "PrimaryDisabled")
-      internal static let primaryPressed = ColorAsset(name: "PrimaryPressed")
+      internal static let createButton = ColorAsset(name: "CreateButton")
+      internal static let createButtonDisabled = ColorAsset(name: "CreateButtonDisabled")
+      internal static let createButtonPressed = ColorAsset(name: "CreateButtonPressed")
+      internal static let primaryButton = ColorAsset(name: "PrimaryButton")
+      internal static let primaryButtonDisabled = ColorAsset(name: "PrimaryButtonDisabled")
+      internal static let primaryButtonPressed = ColorAsset(name: "PrimaryButtonPressed")
+      internal static let secondaryButton = ColorAsset(name: "SecondaryButton")
+      internal static let secondaryButtonPressed = ColorAsset(name: "SecondaryButtonPressed")
     }
     internal enum Onboarding {
       internal static let circularFrame = ColorAsset(name: "CircularFrame")
+      internal static let navigationButtonDisabled = ColorAsset(name: "NavigationButtonDisabled")
+      internal static let navigationButtonEnabled = ColorAsset(name: "NavigationButtonEnabled")
+    }
+    internal enum ProgressIndicator {
+      internal static let gradientLeft = ColorAsset(name: "GradientLeft")
+      internal static let gradientRight = ColorAsset(name: "GradientRight")
+    }
+    internal enum Text {
+      internal static let button = ColorAsset(name: "Button")
+      internal static let heading = ColorAsset(name: "Heading")
+      internal static let medium = ColorAsset(name: "Medium")
+      internal static let regular = ColorAsset(name: "Regular")
     }
   }
 }
