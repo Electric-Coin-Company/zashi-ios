@@ -12,7 +12,7 @@ import ComposableArchitecture
 class OnboardingStoreTests: XCTestCase {
     func testIncrementingOnboarding() {
         let store = TestStore(
-            initialState: OnboardingState(steps: OnboardingState.steps),
+            initialState: OnboardingState(),
             reducer: onboardingReducer,
             environment: ()
         )
@@ -23,7 +23,7 @@ class OnboardingStoreTests: XCTestCase {
             
             XCTAssertFalse($0.nextButtonDisabled)
             XCTAssertFalse($0.backButtonDisabled)
-            XCTAssertEqual($0.currentStep, OnboardingState.steps[1])
+            XCTAssertEqual($0.currentStep, $0.steps[1])
             XCTAssertEqual($0.progress, 66)
         }
                 
@@ -33,7 +33,7 @@ class OnboardingStoreTests: XCTestCase {
             
             XCTAssertTrue($0.nextButtonDisabled)
             XCTAssertFalse($0.backButtonDisabled)
-            XCTAssertEqual($0.currentStep, OnboardingState.steps[2])
+            XCTAssertEqual($0.currentStep, $0.steps[2])
             XCTAssertEqual($0.progress, 100)
         }
     }
@@ -41,7 +41,6 @@ class OnboardingStoreTests: XCTestCase {
     func testDecrementingOnboarding() {
         let store = TestStore(
             initialState: OnboardingState(
-                steps: OnboardingState.steps,
                 index: 2,
                 offset: .zero - 20.0 - 20.0
             ),
@@ -55,7 +54,7 @@ class OnboardingStoreTests: XCTestCase {
             
             XCTAssertFalse($0.nextButtonDisabled)
             XCTAssertFalse($0.backButtonDisabled)
-            XCTAssertEqual($0.currentStep, OnboardingState.steps[1])
+            XCTAssertEqual($0.currentStep, $0.steps[1])
             XCTAssertEqual($0.progress, 66)
         }
                 
@@ -65,7 +64,7 @@ class OnboardingStoreTests: XCTestCase {
             
             XCTAssertFalse($0.nextButtonDisabled)
             XCTAssertTrue($0.backButtonDisabled)
-            XCTAssertEqual($0.currentStep, OnboardingState.steps[0])
+            XCTAssertEqual($0.currentStep, $0.steps[0])
             XCTAssertEqual($0.progress, 33)
         }
     }
