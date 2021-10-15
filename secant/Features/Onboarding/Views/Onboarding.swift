@@ -59,7 +59,7 @@ struct OnboardingView: View {
 }
 
 extension OnboardingState {
-    static let steps = IdentifiedArray(
+    static let onboardingSteps = IdentifiedArray(
         uniqueElements: [
             OnboardingStep(
                 id: UUID(),
@@ -85,7 +85,7 @@ struct Onboarding_Previews: PreviewProvider {
         Group {
             OnboardingView(
                 store: Store(
-                    initialState: OnboardingState(steps: OnboardingState.steps),
+                    initialState: OnboardingState(),
                     reducer: onboardingReducer,
                     environment: ()
                 )
