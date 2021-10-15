@@ -387,12 +387,8 @@
 		0DA13C9126C15E1900E3B610 /* UI Components */ = {
 			isa = PBXGroup;
 			children = (
-				0DA13C9226C15E2F00E3B610 /* PlainButton.swift */,
 				66ED2B87270482C200CB71C4 /* CircularImage.swift */,
-				66A080712718511E00118B79 /* PrimaryButton.swift */,
-				66A080732718512A00118B79 /* CreateButton.swift */,
-				66A080752718513D00118B79 /* SecondaryButton.swift */,
-				66A080772718516D00118B79 /* ActiveButton.swift */,
+				66A080792719930B00118B79 /* Buttons */,
 			);
 			path = "UI Components";
 			sourceTree = "<group>";
@@ -439,6 +435,18 @@
 				660558F6270C862F009D6954 /* XCAssets+Generated.swift */,
 			);
 			path = Generated;
+			sourceTree = "<group>";
+		};
+		66A080792719930B00118B79 /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				0DA13C9226C15E2F00E3B610 /* PlainButton.swift */,
+				66A080712718511E00118B79 /* PrimaryButton.swift */,
+				66A080732718512A00118B79 /* CreateButton.swift */,
+				66A080752718513D00118B79 /* SecondaryButton.swift */,
+				66A080772718516D00118B79 /* ActiveButton.swift */,
+			);
+			path = Buttons;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
