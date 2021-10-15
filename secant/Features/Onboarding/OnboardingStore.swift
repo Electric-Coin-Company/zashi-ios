@@ -16,7 +16,7 @@ struct OnboardingStep: Equatable, Identifiable {
 }
 
 struct OnboardingState: Equatable {
-    var steps: IdentifiedArrayOf<OnboardingStep>
+    var steps: IdentifiedArrayOf<OnboardingStep> = Self.onboardingSteps
     var index = 0
     var offset: CGFloat = .zero
     

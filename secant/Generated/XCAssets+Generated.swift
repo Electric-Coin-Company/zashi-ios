@@ -45,9 +45,6 @@ internal enum Asset {
       internal static let navigationButtonDisabled = ColorAsset(name: "NavigationButtonDisabled")
       internal static let navigationButtonEnabled = ColorAsset(name: "NavigationButtonEnabled")
     }
-    internal static let primaryButton = ColorAsset(name: "PrimaryButton")
-    internal static let primaryButtonDisabled = ColorAsset(name: "PrimaryButtonDisabled")
-    internal static let primaryButtonPressed = ColorAsset(name: "PrimaryButtonPressed")
     internal enum ProgressIndicator {
       internal static let gradientLeft = ColorAsset(name: "GradientLeft")
       internal static let gradientRight = ColorAsset(name: "GradientRight")
