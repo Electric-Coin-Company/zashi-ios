@@ -13,8 +13,8 @@ import SwiftUI
 // Deprecated typealiases
 @available(*, deprecated, renamed: "ColorAsset.SystemColor", message: "This typealias will be removed in SwiftGen 7.0")
 internal typealias AssetColorTypeAlias = ColorAsset.SystemColor
-@available(*, deprecated, renamed: "ImageAsset.Image", message: "This typealias will be removed in SwiftGen 7.0")
-internal typealias AssetImageTypeAlias = ImageAsset.Image
+@available(*, deprecated, renamed: "ImageAsset.UniversalImage", message: "This typealias will be removed in SwiftGen 7.0")
+internal typealias AssetImageTypeAlias = ImageAsset.UniversalImage
 
 // swiftlint:disable superfluous_disable_command file_length implicit_return
 
@@ -23,10 +23,16 @@ internal typealias AssetImageTypeAlias = ImageAsset.Image
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
 internal enum Asset {
   internal enum Assets {
+    internal enum Backgrounds {
+      internal static let lockImage = ImageAsset(name: "LockImage")
+    }
     internal enum Icons {
       internal static let badge = ImageAsset(name: "badge")
       internal static let list = ImageAsset(name: "list")
       internal static let person = ImageAsset(name: "person")
+    }
+    internal enum Logos {
+      internal static let largeYellow = ImageAsset(name: "LargeYellow")
     }
   }
   internal enum Colors {
@@ -77,7 +83,6 @@ internal final class ColorAsset {
     }
     return color
   }()
-
   internal private(set) lazy var color: Color = {
     Color(systemColor)
   }()
@@ -105,29 +110,34 @@ internal struct ImageAsset {
   internal fileprivate(set) var name: String
 
   #if os(macOS)
-  internal typealias Image = NSImage
+  internal typealias UniversalImage = NSImage
   #elseif os(iOS) || os(tvOS) || os(watchOS)
-  internal typealias Image = UIImage
+  internal typealias UniversalImage = UIImage
   #endif
 
-  internal var image: Image {
+  internal var systemImage: UniversalImage {
     let bundle = BundleToken.bundle
     #if os(iOS) || os(tvOS)
-    let image = Image(named: name, in: bundle, compatibleWith: nil)
+    let image = UniversalImage(named: name, in: bundle, compatibleWith: nil)
     #elseif os(macOS)
     let name = NSImage.Name(self.name)
     let image = (bundle == .main) ? NSImage(named: name) : bundle.image(forResource: name)
     #elseif os(watchOS)
-    let image = Image(named: name)
+    let image = UniversalImage(named: name)
     #endif
     guard let result = image else {
       fatalError("Unable to load image asset named \(name).")
     }
     return result
   }
+
+  internal var image: Image {
+    let bundle = BundleToken.bundle
+    return Image(name, bundle: bundle)
+  }
 }
 
-internal extension ImageAsset.Image {
+internal extension ImageAsset.UniversalImage {
   @available(macOS, deprecated,
     message: "This initializer is unsafe on macOS, please use the ImageAsset.image property")
   convenience init?(asset: ImageAsset) {

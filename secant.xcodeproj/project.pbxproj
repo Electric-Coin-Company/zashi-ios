@@ -40,6 +40,16 @@
 		0D864A0A26E154FD00A61879 /* InitFailedScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D864A0826E154FD00A61879 /* InitFailedScreenViewModel.swift */; };
 		0D864A0E26E1583000A61879 /* LoadingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D864A0C26E1583000A61879 /* LoadingScreen.swift */; };
 		0D864A0F26E1583000A61879 /* LoadingScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D864A0D26E1583000A61879 /* LoadingScreenViewModel.swift */; };
+		0D8BDC84271A3D4A001524BB /* Wedge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8BDC7E271A3D4A001524BB /* Wedge.swift */; };
+		0D8BDC86271A3D4A001524BB /* Pie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8BDC80271A3D4A001524BB /* Pie.swift */; };
+		0D8BDC87271A3D4A001524BB /* NeumorphicButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8BDC81271A3D4A001524BB /* NeumorphicButtons.swift */; };
+		0D8BDC88271A3D4A001524BB /* GlowEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8BDC82271A3D4A001524BB /* GlowEffect.swift */; };
+		0D8BDC89271A3D4A001524BB /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8BDC83271A3D4A001524BB /* Card.swift */; };
+		0D8BDC91271A462E001524BB /* ZcashSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8BDC8B271A462D001524BB /* ZcashSymbol.swift */; };
+		0D8BDC92271A462E001524BB /* ZcashButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8BDC8C271A462D001524BB /* ZcashButton.swift */; };
+		0D8BDC93271A462E001524BB /* ZircleOptionSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8BDC8D271A462D001524BB /* ZircleOptionSelector.swift */; };
+		0D8BDC94271A462E001524BB /* ZircleProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8BDC8E271A462D001524BB /* ZircleProgress.swift */; };
+		0D8BDC96271A462E001524BB /* ZcashButtonBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8BDC90271A462E001524BB /* ZcashButtonBackground.swift */; };
 		0DA13C8F26C15D1D00E3B610 /* WelcomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA13C8D26C15D1D00E3B610 /* WelcomeScreen.swift */; };
 		0DA13C9026C15D1D00E3B610 /* WelcomeScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA13C8E26C15D1D00E3B610 /* WelcomeScreenViewModel.swift */; };
 		0DA13C9726C186FF00E3B610 /* RestoreWalletScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA13C9526C186FF00E3B610 /* RestoreWalletScreen.swift */; };
@@ -120,6 +130,16 @@
 		0D864A0826E154FD00A61879 /* InitFailedScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitFailedScreenViewModel.swift; sourceTree = "<group>"; };
 		0D864A0C26E1583000A61879 /* LoadingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingScreen.swift; sourceTree = "<group>"; };
 		0D864A0D26E1583000A61879 /* LoadingScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingScreenViewModel.swift; sourceTree = "<group>"; };
+		0D8BDC7E271A3D4A001524BB /* Wedge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wedge.swift; sourceTree = "<group>"; };
+		0D8BDC80271A3D4A001524BB /* Pie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pie.swift; sourceTree = "<group>"; };
+		0D8BDC81271A3D4A001524BB /* NeumorphicButtons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeumorphicButtons.swift; sourceTree = "<group>"; };
+		0D8BDC82271A3D4A001524BB /* GlowEffect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlowEffect.swift; sourceTree = "<group>"; };
+		0D8BDC83271A3D4A001524BB /* Card.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		0D8BDC8B271A462D001524BB /* ZcashSymbol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZcashSymbol.swift; sourceTree = "<group>"; };
+		0D8BDC8C271A462D001524BB /* ZcashButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZcashButton.swift; sourceTree = "<group>"; };
+		0D8BDC8D271A462D001524BB /* ZircleOptionSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZircleOptionSelector.swift; sourceTree = "<group>"; };
+		0D8BDC8E271A462D001524BB /* ZircleProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZircleProgress.swift; sourceTree = "<group>"; };
+		0D8BDC90271A462E001524BB /* ZcashButtonBackground.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZcashButtonBackground.swift; sourceTree = "<group>"; };
 		0DA13C8D26C15D1D00E3B610 /* WelcomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreen.swift; sourceTree = "<group>"; };
 		0DA13C8E26C15D1D00E3B610 /* WelcomeScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreenViewModel.swift; sourceTree = "<group>"; };
 		0DA13C9526C186FF00E3B610 /* RestoreWalletScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreWalletScreen.swift; sourceTree = "<group>"; };
@@ -383,6 +403,23 @@
 			path = Loading;
 			sourceTree = "<group>";
 		};
+		0D8BDC8A271A461F001524BB /* imported */ = {
+			isa = PBXGroup;
+			children = (
+				0D8BDC83271A3D4A001524BB /* Card.swift */,
+				0D8BDC82271A3D4A001524BB /* GlowEffect.swift */,
+				0D8BDC81271A3D4A001524BB /* NeumorphicButtons.swift */,
+				0D8BDC80271A3D4A001524BB /* Pie.swift */,
+				0D8BDC7E271A3D4A001524BB /* Wedge.swift */,
+				0D8BDC8C271A462D001524BB /* ZcashButton.swift */,
+				0D8BDC90271A462E001524BB /* ZcashButtonBackground.swift */,
+				0D8BDC8B271A462D001524BB /* ZcashSymbol.swift */,
+				0D8BDC8D271A462D001524BB /* ZircleOptionSelector.swift */,
+				0D8BDC8E271A462D001524BB /* ZircleProgress.swift */,
+			);
+			path = imported;
+			sourceTree = "<group>";
+		};
 		0DA13C8C26C15CBE00E3B610 /* Welcome Screen */ = {
 			isa = PBXGroup;
 			children = (
@@ -395,6 +432,7 @@
 		0DA13C9126C15E1900E3B610 /* UI Components */ = {
 			isa = PBXGroup;
 			children = (
+				0D8BDC8A271A461F001524BB /* imported */,
 				66ED2B87270482C200CB71C4 /* CircularImage.swift */,
 				66A080792719930B00118B79 /* Buttons */,
 			);
@@ -671,9 +709,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				660558F8270C862F009D6954 /* XCAssets+Generated.swift in Sources */,
+				0D8BDC93271A462E001524BB /* ZircleOptionSelector.swift in Sources */,
+				0D8BDC87271A3D4A001524BB /* NeumorphicButtons.swift in Sources */,
+				0D8BDC96271A462E001524BB /* ZcashButtonBackground.swift in Sources */,
 				66A080742718512A00118B79 /* CreateButton.swift in Sources */,
 				0D32281F26C5867D00262533 /* ScanQrScreenViewModel.swift in Sources */,
 				0D32282E26C5870B00262533 /* SendScreenViewModel.swift in Sources */,
+				0D8BDC84271A3D4A001524BB /* Wedge.swift in Sources */,
 				0D32282D26C5870B00262533 /* SendScreen.swift in Sources */,
 				0D1922ED26BDE0C600052649 /* AppRouter.swift in Sources */,
 				0D1922F226BDE29300052649 /* ZcashSDKStubs.swift in Sources */,
@@ -686,9 +728,11 @@
 				0DA13C9C26C1942100E3B610 /* BackupWalletScreen.swift in Sources */,
 				0DA13C9826C186FF00E3B610 /* RestoreWalletScreenViewModel.swift in Sources */,
 				0D32283326C5877A00262533 /* BalanceScreenViewModel.swift in Sources */,
+				0D8BDC86271A3D4A001524BB /* Pie.swift in Sources */,
 				0D5D16F526E24CCF00AD33D1 /* AppError.swift in Sources */,
 				0D32282326C586A800262533 /* HistoryScreen.swift in Sources */,
 				0D864A0A26E154FD00A61879 /* InitFailedScreenViewModel.swift in Sources */,
+				0D8BDC94271A462E001524BB /* ZircleProgress.swift in Sources */,
 				0DA13CA526C1963000E3B610 /* Balance.swift in Sources */,
 				0D1922F826BDEB3500052649 /* MockServices.swift in Sources */,
 				0D4E7A0B26B364170058B01E /* ContentView.swift in Sources */,
@@ -706,15 +750,19 @@
 				0DA13C9026C15D1D00E3B610 /* WelcomeScreenViewModel.swift in Sources */,
 				66A080782718516D00118B79 /* ActiveButton.swift in Sources */,
 				0DA13C8F26C15D1D00E3B610 /* WelcomeScreen.swift in Sources */,
+				0D8BDC89271A3D4A001524BB /* Card.swift in Sources */,
 				0D32282826C586E000262533 /* RequestZcashScreen.swift in Sources */,
 				0D32283226C5877A00262533 /* BalanceScreen.swift in Sources */,
 				0D354A0A26D5A9D000315F45 /* KeyStoring.swift in Sources */,
+				0D8BDC91271A462E001524BB /* ZcashSymbol.swift in Sources */,
 				66A080722718511E00118B79 /* PrimaryButton.swift in Sources */,
 				0DA13CA226C1955600E3B610 /* HomeScreenViewModel.swift in Sources */,
 				0D32282926C586E000262533 /* RequestZcashScreenViewModel.swift in Sources */,
 				0D32281926C5864B00262533 /* ProfileScreen.swift in Sources */,
 				6654C7412715A47300901167 /* Onboarding.swift in Sources */,
+				0D8BDC92271A462E001524BB /* ZcashButton.swift in Sources */,
 				0D32282426C586A800262533 /* HistoryScreenViewModel.swift in Sources */,
+				0D8BDC88271A3D4A001524BB /* GlowEffect.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
