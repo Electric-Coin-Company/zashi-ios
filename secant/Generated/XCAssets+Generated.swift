@@ -48,6 +48,7 @@ internal enum Asset {
     internal enum ProgressIndicator {
       internal static let gradientLeft = ColorAsset(name: "GradientLeft")
       internal static let gradientRight = ColorAsset(name: "GradientRight")
+      internal static let negativeSpace = ColorAsset(name: "NegativeSpace")
     }
     internal enum Text {
       internal static let button = ColorAsset(name: "Button")
