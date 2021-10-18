@@ -53,11 +53,17 @@
 		660558E9270C7A54009D6954 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 660558E8270C7A54009D6954 /* Colors.xcassets */; };
 		660558F7270C862F009D6954 /* Fonts+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660558F5270C862F009D6954 /* Fonts+Generated.swift */; };
 		660558F8270C862F009D6954 /* XCAssets+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660558F6270C862F009D6954 /* XCAssets+Generated.swift */; };
+		663FAB9C271D874D00E495F8 /* ActiveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663FAB9B271D874D00E495F8 /* ActiveButton.swift */; };
+		663FAB9E271D875700E495F8 /* CreateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663FAB9D271D875700E495F8 /* CreateButton.swift */; };
+		663FABA0271D876200E495F8 /* PrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663FAB9F271D876200E495F8 /* PrimaryButton.swift */; };
+		663FABA2271D876C00E495F8 /* SecondaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663FABA1271D876C00E495F8 /* SecondaryButton.swift */; };
 		6654C73A2715A38000901167 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 6654C7392715A38000901167 /* ComposableArchitecture */; };
 		6654C73E2715A41300901167 /* OnboardingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6654C73D2715A41300901167 /* OnboardingStore.swift */; };
 		6654C7412715A47300901167 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6654C7402715A47300901167 /* Onboarding.swift */; };
 		6654C7442715A4AC00901167 /* OnboardingStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6654C7432715A4AC00901167 /* OnboardingStoreTests.swift */; };
 		66A0807B271993C500118B79 /* OnboardingProgressIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A0807A271993C500118B79 /* OnboardingProgressIndicator.swift */; };
+		66D50668271D9B6100E51F0D /* NavigationButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D50667271D9B6100E51F0D /* NavigationButtonStyle.swift */; };
+		66DC733F271D88CC0053CBB6 /* StandardButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DC733E271D88CC0053CBB6 /* StandardButtonStyle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,10 +136,16 @@
 		660558E8270C7A54009D6954 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		660558F5270C862F009D6954 /* Fonts+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Fonts+Generated.swift"; sourceTree = "<group>"; };
 		660558F6270C862F009D6954 /* XCAssets+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "XCAssets+Generated.swift"; sourceTree = "<group>"; };
+		663FAB9B271D874D00E495F8 /* ActiveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveButton.swift; sourceTree = "<group>"; };
+		663FAB9D271D875700E495F8 /* CreateButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateButton.swift; sourceTree = "<group>"; };
+		663FAB9F271D876200E495F8 /* PrimaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButton.swift; sourceTree = "<group>"; };
+		663FABA1271D876C00E495F8 /* SecondaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondaryButton.swift; sourceTree = "<group>"; };
 		6654C73D2715A41300901167 /* OnboardingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStore.swift; sourceTree = "<group>"; };
 		6654C7402715A47300901167 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
 		6654C7432715A4AC00901167 /* OnboardingStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStoreTests.swift; sourceTree = "<group>"; };
 		66A0807A271993C500118B79 /* OnboardingProgressIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingProgressIndicator.swift; sourceTree = "<group>"; };
+		66D50667271D9B6100E51F0D /* NavigationButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationButtonStyle.swift; sourceTree = "<group>"; };
+		66DC733E271D88CC0053CBB6 /* StandardButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardButtonStyle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -389,7 +401,7 @@
 		0DA13C9126C15E1900E3B610 /* UI Components */ = {
 			isa = PBXGroup;
 			children = (
-				0DA13C9226C15E2F00E3B610 /* PlainButton.swift */,
+				663FAB9A271D873300E495F8 /* Buttons */,
 				66A0807A271993C500118B79 /* OnboardingProgressIndicator.swift */,
 			);
 			path = "UI Components";
@@ -437,6 +449,20 @@
 				660558F6270C862F009D6954 /* XCAssets+Generated.swift */,
 			);
 			path = Generated;
+			sourceTree = "<group>";
+		};
+		663FAB9A271D873300E495F8 /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				0DA13C9226C15E2F00E3B610 /* PlainButton.swift */,
+				66DC733E271D88CC0053CBB6 /* StandardButtonStyle.swift */,
+				663FAB9B271D874D00E495F8 /* ActiveButton.swift */,
+				663FAB9D271D875700E495F8 /* CreateButton.swift */,
+				663FAB9F271D876200E495F8 /* PrimaryButton.swift */,
+				663FABA1271D876C00E495F8 /* SecondaryButton.swift */,
+				66D50667271D9B6100E51F0D /* NavigationButtonStyle.swift */,
+			);
+			path = Buttons;
 			sourceTree = "<group>";
 		};
 		6654C73B2715A3F000901167 /* Features */ = {
@@ -616,6 +642,8 @@
 			);
 			inputPaths = (
 				"$(SRCROOT)/swiftlint.yml",
+				"$(SRCROOT)/secant/Colors.xcassets",
+				"$(SRCROOT)/secant/Assets/xcassets",
 			);
 			name = SwiftGen;
 			outputFileListPaths = (
@@ -657,6 +685,7 @@
 				0D32281F26C5867D00262533 /* ScanQrScreenViewModel.swift in Sources */,
 				0D32282E26C5870B00262533 /* SendScreenViewModel.swift in Sources */,
 				0D32282D26C5870B00262533 /* SendScreen.swift in Sources */,
+				663FABA2271D876C00E495F8 /* SecondaryButton.swift in Sources */,
 				0D1922ED26BDE0C600052649 /* AppRouter.swift in Sources */,
 				0D1922F226BDE29300052649 /* ZcashSDKStubs.swift in Sources */,
 				0DA13C9D26C1942100E3B610 /* BackupWalletScreenViewModel.swift in Sources */,
@@ -671,6 +700,7 @@
 				0D32282326C586A800262533 /* HistoryScreen.swift in Sources */,
 				0D864A0A26E154FD00A61879 /* InitFailedScreenViewModel.swift in Sources */,
 				0DA13CA526C1963000E3B610 /* Balance.swift in Sources */,
+				66D50668271D9B6100E51F0D /* NavigationButtonStyle.swift in Sources */,
 				0D1922F826BDEB3500052649 /* MockServices.swift in Sources */,
 				0D4E7A0B26B364170058B01E /* ContentView.swift in Sources */,
 				0D170A7226BC802800EB6A46 /* Router.swift in Sources */,
@@ -679,12 +709,16 @@
 				0DA13C9726C186FF00E3B610 /* RestoreWalletScreen.swift in Sources */,
 				0D1922EA26BDD96A00052649 /* ViewModel.swift in Sources */,
 				0D4E7A0926B364170058B01E /* SecantApp.swift in Sources */,
+				66DC733F271D88CC0053CBB6 /* StandardButtonStyle.swift in Sources */,
 				0D864A0926E154FD00A61879 /* InitFailedScreen.swift in Sources */,
+				663FABA0271D876200E495F8 /* PrimaryButton.swift in Sources */,
+				663FAB9C271D874D00E495F8 /* ActiveButton.swift in Sources */,
 				0D32281A26C5864B00262533 /* ProfileScreenViewModel.swift in Sources */,
 				0D864A0F26E1583000A61879 /* LoadingScreenViewModel.swift in Sources */,
 				0DA13CA126C1955600E3B610 /* HomeScreen.swift in Sources */,
 				0DA13C9026C15D1D00E3B610 /* WelcomeScreenViewModel.swift in Sources */,
 				66A0807B271993C500118B79 /* OnboardingProgressIndicator.swift in Sources */,
+				663FAB9E271D875700E495F8 /* CreateButton.swift in Sources */,
 				0DA13C8F26C15D1D00E3B610 /* WelcomeScreen.swift in Sources */,
 				0DA13C9326C15E2F00E3B610 /* PlainButton.swift in Sources */,
 				0D32282826C586E000262533 /* RequestZcashScreen.swift in Sources */,
