@@ -1,5 +1,5 @@
 //
-//  Background.swift
+//  ScreenBackground.swift
 //  secant-testnet
 //
 //  Created by Francisco Gindre on 10/18/21.
@@ -44,7 +44,7 @@ extension View {
     }
 }
 
-struct Background_Previews: PreviewProvider {
+struct ScreenBackground_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             Text("Hello")
