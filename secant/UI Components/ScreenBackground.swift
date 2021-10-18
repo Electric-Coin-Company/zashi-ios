@@ -11,8 +11,8 @@ import SwiftUI
 */
 struct ScreenBackground: View {
     var colors = [
-        Asset.Colors.Background.linearGradientStart.color,
-        Asset.Colors.Background.linearGradientEnd.color
+        Asset.Colors.ScreenBackground.gradientStart.color,
+        Asset.Colors.ScreenBackground.gradientEnd.color
     ]
     var body: some View {
         LinearGradient(
