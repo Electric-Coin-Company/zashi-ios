@@ -9,35 +9,33 @@ import SwiftUI
 
 struct DesignGuide: View {
     var body: some View {
-        ZStack {
-            Background()
-            VStack(spacing: 30) {
-                Button(action: {}) {
-                    Text("Primary Button")
-                }
-                .primaryButtonStyle
-                .frame(height: 50)
-
-                Button(action: {}) {
-                    Text("Primary Active Button")
-                }
-                .createButtonStyle
-                .frame(height: 50)
-
-                Button(action: {}) {
-                    Text("Secondary Button")
-                }
-                .secondaryButtonStyle
-                .frame(height: 50)
-
-                Button(action: {}) {
-                    Text("Action Button")
-                }
-                .activeButtonStyle
-                .frame(height: 50)
+        VStack(spacing: 30) {
+            Button(action: {}) {
+                Text("Primary Button")
             }
-            .padding(.horizontal, 30)
+            .primaryButtonStyle
+            .frame(height: 50)
+
+            Button(action: {}) {
+                Text("Primary Active Button")
+            }
+            .createButtonStyle
+            .frame(height: 50)
+
+            Button(action: {}) {
+                Text("Secondary Button")
+            }
+            .secondaryButtonStyle
+            .frame(height: 50)
+
+            Button(action: {}) {
+                Text("Action Button")
+            }
+            .activeButtonStyle
+            .frame(height: 50)
         }
+        .padding(.horizontal, 30)
+        .linearGradientBackground()
     }
 }
 

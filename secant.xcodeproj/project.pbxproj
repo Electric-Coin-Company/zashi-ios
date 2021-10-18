@@ -35,7 +35,7 @@
 		0D4E7A1B26B364180058B01E /* secantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A1A26B364180058B01E /* secantTests.swift */; };
 		0D4E7A2626B364180058B01E /* secantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A2526B364180058B01E /* secantUITests.swift */; };
 		0D5D16F526E24CCF00AD33D1 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5D16F426E24CCF00AD33D1 /* AppError.swift */; };
-		0D7DF08C271DCC0E00530046 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7DF08B271DCC0E00530046 /* Background.swift */; };
+		0D7DF08C271DCC0E00530046 /* VLinearGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7DF08B271DCC0E00530046 /* VLinearGradient.swift */; };
 		0D864A0526E1546000A61879 /* LoadingScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D864A0426E1546000A61879 /* LoadingScreenTests.swift */; };
 		0D864A0926E154FD00A61879 /* InitFailedScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D864A0726E154FD00A61879 /* InitFailedScreen.swift */; };
 		0D864A0A26E154FD00A61879 /* InitFailedScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D864A0826E154FD00A61879 /* InitFailedScreenViewModel.swift */; };
@@ -119,7 +119,7 @@
 		0D4E7A2526B364180058B01E /* secantUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = secantUITests.swift; sourceTree = "<group>"; };
 		0D4E7A2726B364180058B01E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0D5D16F426E24CCF00AD33D1 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
-		0D7DF08B271DCC0E00530046 /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
+		0D7DF08B271DCC0E00530046 /* VLinearGradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VLinearGradient.swift; sourceTree = "<group>"; };
 		0D864A0426E1546000A61879 /* LoadingScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingScreenTests.swift; sourceTree = "<group>"; };
 		0D864A0726E154FD00A61879 /* InitFailedScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitFailedScreen.swift; sourceTree = "<group>"; };
 		0D864A0826E154FD00A61879 /* InitFailedScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitFailedScreenViewModel.swift; sourceTree = "<group>"; };
@@ -406,7 +406,7 @@
 				663FAB9A271D873300E495F8 /* Buttons */,
 				66A0807A271993C500118B79 /* OnboardingProgressIndicator.swift */,
 				0DB8AA80271DC7520035BC9D /* DesignGuide.swift */,
-				0D7DF08B271DCC0E00530046 /* Background.swift */,
+				0D7DF08B271DCC0E00530046 /* VLinearGradient.swift */,
 			);
 			path = "UI Components";
 			sourceTree = "<group>";
@@ -723,7 +723,7 @@
 				0DA13C9026C15D1D00E3B610 /* WelcomeScreenViewModel.swift in Sources */,
 				66A0807B271993C500118B79 /* OnboardingProgressIndicator.swift in Sources */,
 				663FAB9E271D875700E495F8 /* CreateButton.swift in Sources */,
-				0D7DF08C271DCC0E00530046 /* Background.swift in Sources */,
+				0D7DF08C271DCC0E00530046 /* VLinearGradient.swift in Sources */,
 				0DA13C8F26C15D1D00E3B610 /* WelcomeScreen.swift in Sources */,
 				0D32282826C586E000262533 /* RequestZcashScreen.swift in Sources */,
 				0D32283226C5877A00262533 /* BalanceScreen.swift in Sources */,
