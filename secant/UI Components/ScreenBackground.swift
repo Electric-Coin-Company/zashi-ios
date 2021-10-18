@@ -7,9 +7,9 @@
 
 import SwiftUI
 /**
-    A Vertical LinearGradient that takes an array of Colors and renders them vertically in a centered fashion.
+    A Vertical LinearGradient that takes an array of Colors and renders them vertically in a centered fashion mostly used as a background for Screen views..
 */
-struct VLinearGradient: View {
+struct ScreenBackground: View {
     var colors = [
         Asset.Colors.Background.linearGradientStart.color,
         Asset.Colors.Background.linearGradientEnd.color
@@ -23,10 +23,10 @@ struct VLinearGradient: View {
     }
 }
 
-struct VLinearGradientBackgroundModifier: ViewModifier {
+struct ScreenBackgroundModifier: ViewModifier {
     func body(content: Content) -> some View {
         ZStack {
-            VLinearGradient()
+            ScreenBackground()
                 .edgesIgnoringSafeArea(.all)
             content
         }
@@ -37,9 +37,9 @@ extension View {
     /**
     Adds a Vertical Linear Gradient with the default Colors of VLinearGradient. Supports both Light and Dark Mode
     */
-    func linearGradientBackground() -> some View {
+    func applyScreenBackground() -> some View {
         self.modifier(
-            VLinearGradientBackgroundModifier()
+            ScreenBackgroundModifier()
         )
     }
 }
@@ -49,7 +49,7 @@ struct Background_Previews: PreviewProvider {
         VStack {
             Text("Hello")
         }
-        .linearGradientBackground()
+        .applyScreenBackground()
         .preferredColorScheme(.light)
     }
 }

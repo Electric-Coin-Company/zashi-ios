@@ -35,7 +35,7 @@ struct DesignGuide: View {
             .frame(height: 50)
         }
         .padding(.horizontal, 30)
-        .linearGradientBackground()
+        .applyScreenBackground()
     }
 }
 
