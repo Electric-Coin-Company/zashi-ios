@@ -23,7 +23,8 @@ struct RestoreWalletScreen: View {
             Button(action: {}, label: {
                 Text("Restore Seed Phrase")
             })
-            .buttonStyle(PlainButton())
+            .primaryButtonStyle
+            .frame(height: 50)
         }
         .padding(.horizontal, 30)
         .padding(.vertical)

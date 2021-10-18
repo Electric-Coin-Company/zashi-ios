@@ -30,6 +30,10 @@ internal enum Asset {
     }
   }
   internal enum Colors {
+    internal enum Background {
+      internal static let linearGradientEnd = ColorAsset(name: "LinearGradientEnd")
+      internal static let linearGradientStart = ColorAsset(name: "LinearGradientStart")
+    }
     internal enum Buttons {
       internal static let activeButton = ColorAsset(name: "ActiveButton")
       internal static let createButton = ColorAsset(name: "CreateButton")
