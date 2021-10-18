@@ -68,7 +68,7 @@ extension ProgressView {
 // MARK: - Interactive ProgressStyle View
 
 struct OnboardingProgressViewPreviewHelper: View {
-    @State private var value: CGFloat = 0.0
+    @State private var value: CGFloat = 35.0
     
     var progressString: String {
         String(format: "%02d", value)
