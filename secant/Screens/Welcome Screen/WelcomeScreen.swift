@@ -28,14 +28,16 @@ struct WelcomeScreen: View {
                 }, label: {
                     Text("RESTORE WALLET")
                 })
-                .buttonStyle(PlainButton())
+                .primaryButtonStyle
+                .frame(height: 50)
 
                 Button(action: {
                     self.viewModel.createNew()
                 }, label: {
                     Text("CREATE NEW WALLET")
                 })
-                .buttonStyle(PlainButton())
+                .primaryButtonStyle
+                .frame(height: 50)
             }
         }
         .padding()
