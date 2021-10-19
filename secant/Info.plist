@@ -30,6 +30,8 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>Zboto.otf</string>
+		<string>Rubik-Italic-VariableFont_wght.ttf</string>
+		<string>Rubik-VariableFont_wght.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

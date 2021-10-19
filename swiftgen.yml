@@ -14,6 +14,7 @@ xcassets:
 fonts:
   inputs:
     - Fonts/Zboto.otf
+    - Fonts/Rubik
   outputs:
       templatePath: Templates/fonts/fonts_swift5_swiftui.stencil
       output: Fonts+Generated.swift
