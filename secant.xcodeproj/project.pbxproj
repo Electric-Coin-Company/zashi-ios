@@ -34,6 +34,8 @@
 		0D4E7A1026B364180058B01E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0F26B364180058B01E /* Preview Assets.xcassets */; };
 		0D4E7A1B26B364180058B01E /* secantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A1A26B364180058B01E /* secantTests.swift */; };
 		0D4E7A2626B364180058B01E /* secantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A2526B364180058B01E /* secantUITests.swift */; };
+		0D535FDE271F4214009A9E3E /* Rubik-Italic-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D535FDC271F4214009A9E3E /* Rubik-Italic-VariableFont_wght.ttf */; };
+		0D535FDF271F4214009A9E3E /* Rubik-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D535FDD271F4214009A9E3E /* Rubik-VariableFont_wght.ttf */; };
 		0D5D16F526E24CCF00AD33D1 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5D16F426E24CCF00AD33D1 /* AppError.swift */; };
 		0D7DF08C271DCC0E00530046 /* ScreenBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7DF08B271DCC0E00530046 /* ScreenBackground.swift */; };
 		0D864A0526E1546000A61879 /* LoadingScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D864A0426E1546000A61879 /* LoadingScreenTests.swift */; };
@@ -118,6 +120,8 @@
 		0D4E7A2126B364180058B01E /* secantUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = secantUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D4E7A2526B364180058B01E /* secantUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = secantUITests.swift; sourceTree = "<group>"; };
 		0D4E7A2726B364180058B01E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0D535FDC271F4214009A9E3E /* Rubik-Italic-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-Italic-VariableFont_wght.ttf"; sourceTree = "<group>"; };
+		0D535FDD271F4214009A9E3E /* Rubik-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-VariableFont_wght.ttf"; sourceTree = "<group>"; };
 		0D5D16F426E24CCF00AD33D1 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 		0D7DF08B271DCC0E00530046 /* ScreenBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenBackground.swift; sourceTree = "<group>"; };
 		0D864A0426E1546000A61879 /* LoadingScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingScreenTests.swift; sourceTree = "<group>"; };
@@ -234,6 +238,7 @@
 		0D2ACE7E26C2C65E00D62E3C /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				0D535FDB271F3B50009A9E3E /* Rubik */,
 				0D2ACE7F26C2C67100D62E3C /* Zboto.otf */,
 			);
 			path = Fonts;
@@ -363,6 +368,15 @@
 				0D4E7A2726B364180058B01E /* Info.plist */,
 			);
 			path = secantUITests;
+			sourceTree = "<group>";
+		};
+		0D535FDB271F3B50009A9E3E /* Rubik */ = {
+			isa = PBXGroup;
+			children = (
+				0D535FDC271F4214009A9E3E /* Rubik-Italic-VariableFont_wght.ttf */,
+				0D535FDD271F4214009A9E3E /* Rubik-VariableFont_wght.ttf */,
+			);
+			path = Rubik;
 			sourceTree = "<group>";
 		};
 		0D5D16F326E24CB900AD33D1 /* App Errors */ = {
@@ -612,8 +626,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D535FDE271F4214009A9E3E /* Rubik-Italic-VariableFont_wght.ttf in Resources */,
 				0D4E7A1026B364180058B01E /* Preview Assets.xcassets in Resources */,
 				660558E9270C7A54009D6954 /* Colors.xcassets in Resources */,
+				0D535FDF271F4214009A9E3E /* Rubik-VariableFont_wght.ttf in Resources */,
 				0D4E7A0D26B364180058B01E /* Assets.xcassets in Resources */,
 				0D2ACE8026C2C67100D62E3C /* Zboto.otf in Resources */,
 			);

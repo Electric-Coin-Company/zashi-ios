@@ -10,6 +10,12 @@ import SwiftUI
 struct DesignGuide: View {
     var body: some View {
         VStack(spacing: 30) {
+            Text("H1 Onboarding Rubik Light")
+                .font(FontFamily.Rubik.light.textStyle(.title))
+                .foregroundColor(Asset.Colors.Text.titleText.color)
+            Text("H1 Onboarding Rubik medium")
+                .font(FontFamily.Rubik.medium.textStyle(.title))
+                .foregroundColor(Asset.Colors.Text.titleText.color)
             Button(action: {}) {
                 Text("Primary Button")
             }
