@@ -57,6 +57,9 @@ internal enum Asset {
       internal static let gradientEnd = ColorAsset(name: "gradientEnd")
       internal static let gradientStart = ColorAsset(name: "gradientStart")
     }
+    internal enum Shadow {
+      internal static let primaryButtonShadow = ColorAsset(name: "primaryButtonShadow")
+    }
     internal enum Text {
       internal static let activeButtonText = ColorAsset(name: "ActiveButtonText")
       internal static let button = ColorAsset(name: "Button")
@@ -65,6 +68,7 @@ internal enum Asset {
       internal static let regular = ColorAsset(name: "Regular")
       internal static let secondaryButtonText = ColorAsset(name: "SecondaryButtonText")
       internal static let titleText = ColorAsset(name: "TitleText")
+      internal static let highlightedSuperscriptText = ColorAsset(name: "highlightedSuperscriptText")
     }
   }
 }
