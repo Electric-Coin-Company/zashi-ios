@@ -19,6 +19,7 @@ struct EnumeratedChip: View {
             minWidth: 0,
             maxWidth: .infinity,
             minHeight: 30,
+            idealHeight: 40,
             maxHeight: .infinity,
             alignment: .leading
         )
