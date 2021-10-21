@@ -8,16 +8,13 @@
 import SwiftUI
 
 struct EnumeratedChip: View {
-    @Clamping(1...24)
-    var index: UInt = 1
+    @Clamped(1...24)
+    var index: Int = 1
 
     var text: String
 
     var body: some View {
-        NumberedText(
-            number: index,
-            text: text
-        )
+        NumberedText(number: index, text: text)
         .frame(
             minWidth: 0,
             maxWidth: .infinity,
@@ -27,7 +24,6 @@ struct EnumeratedChip: View {
         )
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
-
         .background(
             Asset.Colors.Buttons.primaryButtonPressed.color
         )
@@ -36,7 +32,7 @@ struct EnumeratedChip: View {
 }
 
 struct NumberedText: View {
-    @Clamping(1...24) var number: UInt = 1
+    @Clamped(1...24) var number: Int = 1
 
     var text: String
 
@@ -71,19 +67,20 @@ struct NumberedText: View {
 }
 
 struct EnumeratedChip_Previews: PreviewProvider {
-    private static var threeColumnGrid = Array.init(
+    private static var threeColumnGrid = Array(
         repeating: GridItem(
             .flexible(minimum: 60, maximum: 120),
             spacing: 15,
             alignment: .topLeading
-            ),
+        ),
         count: 3
-        )
+    )
 
     static var words = [
         "pyramid", "negative", "page",
         "crown", "secret", "zebra"
     ]
+
     @ViewBuilder static var grid: some View {
         LazyVGrid(
             columns: threeColumnGrid,
@@ -91,10 +88,8 @@ struct EnumeratedChip_Previews: PreviewProvider {
             spacing: 15
         ) {
             ForEach(Array(zip(words.indices, words)), id: \.1) { i, word in
-                EnumeratedChip(
-                    index: UInt((i + 1)),
-                    text: word
-                ).frame(minWidth: 0, maxWidth: .infinity, minHeight: 50)
+                EnumeratedChip(index: (i + 1),text: word)
+                    .frame(minWidth: 0, maxWidth: .infinity, minHeight: 50)
             }
         }
         .padding()
@@ -102,31 +97,31 @@ struct EnumeratedChip_Previews: PreviewProvider {
     }
     static var previews: some View {
         grid
-        .previewLayout(.fixed(width: 428, height: 200))
+            .previewLayout(.fixed(width: 428, height: 200))
 
         grid
-        .preferredColorScheme(.dark)
-        .previewLayout(.fixed(width: 428, height: 200))
+            .preferredColorScheme(.dark)
+            .previewLayout(.fixed(width: 428, height: 200))
 
         grid
-        .previewLayout(.fixed(width: 390, height: 200))
+            .previewLayout(.fixed(width: 390, height: 200))
 
         grid
-        .preferredColorScheme(.dark)
-        .previewLayout(.fixed(width: 390, height: 200))
+            .preferredColorScheme(.dark)
+            .previewLayout(.fixed(width: 390, height: 200))
 
         grid
-        .previewLayout(.fixed(width: 375, height: 200))
+            .previewLayout(.fixed(width: 375, height: 200))
 
         grid
-        .preferredColorScheme(.dark)
-        .previewLayout(.fixed(width: 375, height: 200))
+            .preferredColorScheme(.dark)
+            .previewLayout(.fixed(width: 375, height: 200))
 
         grid
-        .previewLayout(.fixed(width: 320, height: 200))
+            .previewLayout(.fixed(width: 320, height: 200))
 
         grid
-        .preferredColorScheme(.dark)
-        .previewLayout(.fixed(width: 320, height: 200))
+            .preferredColorScheme(.dark)
+            .previewLayout(.fixed(width: 320, height: 200))
     }
 }

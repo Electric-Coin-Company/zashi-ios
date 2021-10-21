@@ -11,19 +11,21 @@ import Foundation
 Limits a value to an enclosing range
 */
 @propertyWrapper
-struct Clamping<Value: Comparable> {
+struct Clamped<Value: Comparable> {
     var value: Value
     let range: ClosedRange<Value>
+    var wrappedValue: Value {
+        get { value }
+        set {
+            value = min(
+                max(range.lowerBound, newValue),
+                range.upperBound
+            )
+        }
+    }
+
     init(wrappedValue: Value, _ range: ClosedRange<Value>) {
         self.value = wrappedValue
         self.range = range
-    }
-    var wrappedValue: Value {
-        get { value }
-        set { value = min(
-            max(range.lowerBound, newValue),
-            range.upperBound
-            )
-        }
     }
 }

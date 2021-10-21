@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension UInt {
+extension Int {
     private func toScalarSuperscript() -> String {
         precondition(self >= 0 && self <= 9)
         return [
@@ -28,6 +28,7 @@ extension UInt {
     Returns a superscript string representation this unsigned integer using Unicode Scalars
     */
     var superscriptRepresentation: String {
+        precondition(self >= 0)
         var number = self
         var superscript = ""
         repeat {
