@@ -46,6 +46,8 @@ struct SmallVisualElements: View {
     let gridItems = [GridItem(.flexible(minimum: 40, maximum: 100)), GridItem(.flexible(minimum: 40, maximum: 100))]
     var body: some View {
         VStack {
+            Text("Navigation Buttons")
+                .font(.caption)
             LazyVGrid(columns: gridItems) {
                 // TODO: Change state to selected
                 Button("Back") { dump("Example button") }
@@ -55,7 +57,6 @@ struct SmallVisualElements: View {
                 .buttonStyle(NavigationButtonStyle())
                     .frame(width: 80, height: 40)
 
-                // Active Navigation Buttons
                 Button("Back") { dump("Example button") }
                     .buttonStyle(NavigationButtonStyle())
                     .frame(width: 80, height: 40)
@@ -63,6 +64,11 @@ struct SmallVisualElements: View {
                 .buttonStyle(NavigationButtonStyle())
                     .frame(width: 80, height: 40)
             }
+
+            Text("Recovery Phrase Chip")
+                .font(.caption)
+            EnumeratedChip(index: 1, text: "Salami")
+                .frame(width: 100, height: 40)
             Text("shield icon")
                 .frame(width: 76, height: 76)
             Text("profile icon")
