@@ -32,8 +32,7 @@ struct EnumeratedChip: View {
 }
 
 struct NumberedText: View {
-    @Clamped(1...24) var number: Int = 1
-
+    var number: Int = 1
     var text: String
 
     @ViewBuilder var numberedText: some View {
