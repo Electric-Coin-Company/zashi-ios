@@ -65,6 +65,7 @@ internal enum Asset {
       internal static let regular = ColorAsset(name: "Regular")
       internal static let secondaryButtonText = ColorAsset(name: "SecondaryButtonText")
       internal static let titleText = ColorAsset(name: "TitleText")
+      internal static let highlightedSuperscriptText = ColorAsset(name: "highlightedSuperscriptText")
     }
   }
 }
