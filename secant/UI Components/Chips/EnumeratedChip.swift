@@ -88,8 +88,13 @@ struct EnumeratedChip_Previews: PreviewProvider {
             spacing: 15
         ) {
             ForEach(Array(zip(words.indices, words)), id: \.1) { i, word in
-                EnumeratedChip(index: (i + 1),text: word)
-                    .frame(minWidth: 0, maxWidth: .infinity, minHeight: 50)
+                EnumeratedChip(index: (i + 1), text: word)
+                    .frame(
+                        minWidth: 0,
+                        maxWidth: .infinity,
+                        minHeight: 30,
+                        idealHeight: 40
+                    )
             }
         }
         .padding()
