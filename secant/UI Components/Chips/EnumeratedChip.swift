@@ -15,20 +15,20 @@ struct EnumeratedChip: View {
 
     var body: some View {
         NumberedText(number: index, text: text)
-        .frame(
-            minWidth: 0,
-            maxWidth: .infinity,
-            minHeight: 30,
-            idealHeight: 40,
-            maxHeight: .infinity,
-            alignment: .leading
-        )
-        .padding(.horizontal, 16)
-        .padding(.vertical, 8)
-        .background(
-            Asset.Colors.Buttons.primaryButtonPressed.color
-        )
-        .cornerRadius(6)
+            .frame(
+                minWidth: 0,
+                maxWidth: .infinity,
+                minHeight: 30,
+                idealHeight: 40,
+                maxHeight: .infinity,
+                alignment: .leading
+            )
+            .padding(.horizontal, 16)
+            .padding(.vertical, 4)
+            .background(
+                Asset.Colors.Buttons.primaryButtonPressed.color
+            )
+            .cornerRadius(6)
     }
 }
 
@@ -43,8 +43,8 @@ struct NumberedText: View {
             )
             .font(
                 .custom(
-                    FontFamily.Roboto.black.name,
-                    size: 24
+                    FontFamily.Roboto.bold.name,
+                    size: 20
                 )
             ) +
         Text(" \(text)")
@@ -53,14 +53,20 @@ struct NumberedText: View {
             )
             .font(
                 .custom(
-                    FontFamily.Rubik.regular.name,
-                    size: 15
+                    FontFamily.Rubik.medium.name,
+                    size: 16
                 )
             )
     }
 
     var body: some View {
         numberedText
+            .shadow(
+                color: Asset.Colors.Shadow.buttonTextShadow.color,
+                radius: 1,
+                x: 0,
+                y: 1
+            )
             .layoutPriority(1)
             .fixedSize(horizontal: false, vertical: false)
     }
@@ -78,7 +84,7 @@ struct EnumeratedChip_Previews: PreviewProvider {
 
     static var words = [
         "pyramid", "negative", "page",
-        "crown", "secret", "zebra"
+        "crown", "", "zebra"
     ]
 
     @ViewBuilder static var grid: some View {
@@ -88,44 +94,67 @@ struct EnumeratedChip_Previews: PreviewProvider {
             spacing: 15
         ) {
             ForEach(Array(zip(words.indices, words)), id: \.1) { i, word in
-                EnumeratedChip(index: (i + 1), text: word)
-                    .frame(
-                        minWidth: 0,
-                        maxWidth: .infinity,
-                        minHeight: 30,
-                        idealHeight: 40
-                    )
+                if word.isEmpty {
+                    EmptyChip()
+                        .frame(
+                            minWidth: 0,
+                            maxWidth: .infinity,
+                            minHeight: 30,
+                            idealHeight: 40
+                        )
+                } else {
+                    EnumeratedChip(index: (i + 1), text: word)
+                        .frame(
+                            minWidth: 0,
+                            maxWidth: .infinity,
+                            minHeight: 30,
+                            idealHeight: 40
+                        )
+                }
             }
         }
         .padding()
-        .applyScreenBackground()
     }
     static var previews: some View {
         grid
+            .background(Asset.Colors.BackgroundColors.phraseGridDarkGray.color)
+            .previewLayout(.fixed(width: 428, height: 200))
+        grid
+            .applyScreenBackground()
+            .previewLayout(.fixed(width: 428, height: 200))
+        grid
+            .applyScreenBackground()
             .previewLayout(.fixed(width: 428, height: 200))
 
         grid
+            .applyScreenBackground()
             .preferredColorScheme(.dark)
             .previewLayout(.fixed(width: 428, height: 200))
 
         grid
+            .applyScreenBackground()
             .previewLayout(.fixed(width: 390, height: 200))
 
         grid
+            .applyScreenBackground()
             .preferredColorScheme(.dark)
             .previewLayout(.fixed(width: 390, height: 200))
 
         grid
+            .applyScreenBackground()
             .previewLayout(.fixed(width: 375, height: 200))
 
         grid
+            .applyScreenBackground()
             .preferredColorScheme(.dark)
             .previewLayout(.fixed(width: 375, height: 200))
 
         grid
+            .applyScreenBackground()
             .previewLayout(.fixed(width: 320, height: 200))
 
         grid
+            .applyScreenBackground()
             .preferredColorScheme(.dark)
             .previewLayout(.fixed(width: 320, height: 200))
     }

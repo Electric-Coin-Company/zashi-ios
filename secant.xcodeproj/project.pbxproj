@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0D170A7226BC802800EB6A46 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D170A7126BC802800EB6A46 /* Router.swift */; };
+		0D185819272723FF0046B928 /* BlueChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D185818272723FF0046B928 /* BlueChip.swift */; };
+		0D18581B272728D60046B928 /* PhraseChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D18581A272728D60046B928 /* PhraseChip.swift */; };
 		0D1922EA26BDD96A00052649 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922E926BDD96A00052649 /* ViewModel.swift */; };
 		0D1922ED26BDE0C600052649 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922EC26BDE0C600052649 /* AppRouter.swift */; };
 		0D1922F226BDE29300052649 /* ZcashSDKStubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922F126BDE29300052649 /* ZcashSDKStubs.swift */; };
@@ -68,6 +70,8 @@
 		0DACFA9A27209FA70039EEA5 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0DACFA8D27209FA70039EEA5 /* Roboto-Light.ttf */; };
 		0DACFA9C27209FA70039EEA5 /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0DACFA8F27209FA70039EEA5 /* Roboto-ThinItalic.ttf */; };
 		0DB8AA81271DC7520035BC9D /* DesignGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB8AA80271DC7520035BC9D /* DesignGuide.swift */; };
+		0DF2DC51272344E400FA31E2 /* EmptyChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF2DC50272344E400FA31E2 /* EmptyChip.swift */; };
+		0DF2DC5427235E3E00FA31E2 /* View+InnerShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF2DC5327235E3E00FA31E2 /* View+InnerShadow.swift */; };
 		660558E9270C7A54009D6954 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 660558E8270C7A54009D6954 /* Colors.xcassets */; };
 		660558F7270C862F009D6954 /* Fonts+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660558F5270C862F009D6954 /* Fonts+Generated.swift */; };
 		660558F8270C862F009D6954 /* XCAssets+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660558F6270C862F009D6954 /* XCAssets+Generated.swift */; };
@@ -103,6 +107,8 @@
 
 /* Begin PBXFileReference section */
 		0D170A7126BC802800EB6A46 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		0D185818272723FF0046B928 /* BlueChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueChip.swift; sourceTree = "<group>"; };
+		0D18581A272728D60046B928 /* PhraseChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhraseChip.swift; sourceTree = "<group>"; };
 		0D1922E926BDD96A00052649 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		0D1922EC26BDE0C600052649 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
 		0D1922F126BDE29300052649 /* ZcashSDKStubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZcashSDKStubs.swift; sourceTree = "<group>"; };
@@ -169,6 +175,8 @@
 		0DACFA8D27209FA70039EEA5 /* Roboto-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Light.ttf"; sourceTree = "<group>"; };
 		0DACFA8F27209FA70039EEA5 /* Roboto-ThinItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-ThinItalic.ttf"; sourceTree = "<group>"; };
 		0DB8AA80271DC7520035BC9D /* DesignGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignGuide.swift; sourceTree = "<group>"; };
+		0DF2DC50272344E400FA31E2 /* EmptyChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyChip.swift; sourceTree = "<group>"; };
+		0DF2DC5327235E3E00FA31E2 /* View+InnerShadow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+InnerShadow.swift"; sourceTree = "<group>"; };
 		660558E8270C7A54009D6954 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		660558F5270C862F009D6954 /* Fonts+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Fonts+Generated.swift"; sourceTree = "<group>"; };
 		660558F6270C862F009D6954 /* XCAssets+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "XCAssets+Generated.swift"; sourceTree = "<group>"; };
@@ -415,6 +423,9 @@
 			isa = PBXGroup;
 			children = (
 				0D535FE1271F9476009A9E3E /* EnumeratedChip.swift */,
+				0DF2DC50272344E400FA31E2 /* EmptyChip.swift */,
+				0D185818272723FF0046B928 /* BlueChip.swift */,
+				0D18581A272728D60046B928 /* PhraseChip.swift */,
 			);
 			path = Chips;
 			sourceTree = "<group>";
@@ -457,6 +468,7 @@
 		0DA13C9126C15E1900E3B610 /* UI Components */ = {
 			isa = PBXGroup;
 			children = (
+				0DF2DC5227235E1F00FA31E2 /* Extensions */,
 				0D535FE0271F945C009A9E3E /* Chips */,
 				663FAB9A271D873300E495F8 /* Buttons */,
 				66A0807A271993C500118B79 /* OnboardingProgressIndicator.swift */,
@@ -527,6 +539,14 @@
 				0DACFA8F27209FA70039EEA5 /* Roboto-ThinItalic.ttf */,
 			);
 			path = Roboto;
+			sourceTree = "<group>";
+		};
+		0DF2DC5227235E1F00FA31E2 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				0DF2DC5327235E3E00FA31E2 /* View+InnerShadow.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		660558F4270C85F7009D6954 /* Generated */ = {
@@ -799,6 +819,7 @@
 				0DA13C9826C186FF00E3B610 /* RestoreWalletScreenViewModel.swift in Sources */,
 				0D32283326C5877A00262533 /* BalanceScreenViewModel.swift in Sources */,
 				0D5D16F526E24CCF00AD33D1 /* AppError.swift in Sources */,
+				0D18581B272728D60046B928 /* PhraseChip.swift in Sources */,
 				0DB8AA81271DC7520035BC9D /* DesignGuide.swift in Sources */,
 				0D32282326C586A800262533 /* HistoryScreen.swift in Sources */,
 				0D864A0A26E154FD00A61879 /* InitFailedScreenViewModel.swift in Sources */,
@@ -811,13 +832,16 @@
 				660558F7270C862F009D6954 /* Fonts+Generated.swift in Sources */,
 				0DA13C9726C186FF00E3B610 /* RestoreWalletScreen.swift in Sources */,
 				0DACFA8127208D940039EEA5 /* UInt+SuperscriptText.swift in Sources */,
+				0DF2DC51272344E400FA31E2 /* EmptyChip.swift in Sources */,
 				0D1922EA26BDD96A00052649 /* ViewModel.swift in Sources */,
 				0D4E7A0926B364170058B01E /* SecantApp.swift in Sources */,
 				66DC733F271D88CC0053CBB6 /* StandardButtonStyle.swift in Sources */,
 				0D864A0926E154FD00A61879 /* InitFailedScreen.swift in Sources */,
 				663FABA0271D876200E495F8 /* PrimaryButton.swift in Sources */,
 				663FAB9C271D874D00E495F8 /* ActiveButton.swift in Sources */,
+				0DF2DC5427235E3E00FA31E2 /* View+InnerShadow.swift in Sources */,
 				0D32281A26C5864B00262533 /* ProfileScreenViewModel.swift in Sources */,
+				0D185819272723FF0046B928 /* BlueChip.swift in Sources */,
 				0D864A0F26E1583000A61879 /* LoadingScreenViewModel.swift in Sources */,
 				0DA13CA126C1955600E3B610 /* HomeScreen.swift in Sources */,
 				0DA13C9026C15D1D00E3B610 /* WelcomeScreenViewModel.swift in Sources */,
