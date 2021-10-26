@@ -9,15 +9,6 @@ struct TransactionDetailView: View {
     }
 }
 
-struct TransactionDetail_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            TransactionDetailView(transaction: .demo)
-        }
-    }
-}
-
-#if DEBUG
 extension Transaction {
     static var demo: Self {
         .init(
@@ -27,6 +18,15 @@ extension Transaction {
             toAddress: "ToAddress",
             fromAddress: "FromAddress"
         )
+    }
+}
+
+#if DEBUG
+struct TransactionDetail_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            TransactionDetailView(transaction: .demo)
+        }
     }
 }
 #endif

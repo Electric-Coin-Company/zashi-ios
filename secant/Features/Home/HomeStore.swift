@@ -6,6 +6,7 @@ struct HomeState: Equatable {
         case history
         case send
         case onboarding
+        case recoveryPhraseDisplay
     }
     var transactionHistoryState: TransactionHistoryState
     var route: Route?
@@ -91,6 +92,15 @@ extension HomeViewStore {
         )
     }
 
+    var showPhraseDisplayBinding: Binding<Bool> {
+        self.binding(
+            get: { $0.route == .recoveryPhraseDisplay },
+            send: { isActive in
+                return .updateRoute(isActive ? .send : nil)
+            }
+        )
+    }
+
     var showSendBinding: Binding<Bool> {
         self.binding(
             get: { $0.route == .send },
@@ -102,7 +112,7 @@ extension HomeViewStore {
 
     var showOnboardingBinding: Binding<Bool> {
         self.binding(
-            get: {$0.route == .onboarding },
+            get: { $0.route == .onboarding },
             send: { isActive in
                 return .updateRoute(isActive ? .onboarding : nil)
             }
