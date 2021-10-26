@@ -30,6 +30,8 @@
 		0D354A0926D5A9D000315F45 /* Services.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D354A0626D5A9D000315F45 /* Services.swift */; };
 		0D354A0A26D5A9D000315F45 /* KeyStoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D354A0726D5A9D000315F45 /* KeyStoring.swift */; };
 		0D354A0B26D5A9D000315F45 /* MnemonicSeedPhraseHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D354A0826D5A9D000315F45 /* MnemonicSeedPhraseHandling.swift */; };
+		0D3D04082728B3440032ABC1 /* RecoveryPhraseDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3D04072728B3440032ABC1 /* RecoveryPhraseDisplayView.swift */; };
+		0D3D040A2728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3D04092728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift */; };
 		0D4E7A0926B364170058B01E /* SecantApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0826B364170058B01E /* SecantApp.swift */; };
 		0D4E7A0B26B364170058B01E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0A26B364170058B01E /* ContentView.swift */; };
 		0D4E7A0D26B364180058B01E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0C26B364180058B01E /* Assets.xcassets */; };
@@ -129,6 +131,8 @@
 		0D354A0626D5A9D000315F45 /* Services.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Services.swift; sourceTree = "<group>"; };
 		0D354A0726D5A9D000315F45 /* KeyStoring.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyStoring.swift; sourceTree = "<group>"; };
 		0D354A0826D5A9D000315F45 /* MnemonicSeedPhraseHandling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MnemonicSeedPhraseHandling.swift; sourceTree = "<group>"; };
+		0D3D04072728B3440032ABC1 /* RecoveryPhraseDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseDisplayView.swift; sourceTree = "<group>"; };
+		0D3D04092728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseDisplayStore.swift; sourceTree = "<group>"; };
 		0D4E7A0526B364170058B01E /* secant-testnet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "secant-testnet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D4E7A0826B364170058B01E /* SecantApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecantApp.swift; sourceTree = "<group>"; };
 		0D4E7A0A26B364170058B01E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -337,6 +341,30 @@
 			path = Balance;
 			sourceTree = "<group>";
 		};
+		0D3D04052728B2D70032ABC1 /* Backup Flow */ = {
+			isa = PBXGroup;
+			children = (
+				0D3D04062728B2EC0032ABC1 /* Views */,
+				0D3D04092728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift */,
+			);
+			path = "Backup Flow";
+			sourceTree = "<group>";
+		};
+		0D3D04062728B2EC0032ABC1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0D3D04072728B3440032ABC1 /* RecoveryPhraseDisplayView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		0D3D040B2728B6970032ABC1 /* App Core */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "App Core";
+			sourceTree = "<group>";
+		};
 		0D4E79FC26B364170058B01E = {
 			isa = PBXGroup;
 			children = (
@@ -360,6 +388,7 @@
 		0D4E7A0726B364170058B01E /* secant */ = {
 			isa = PBXGroup;
 			children = (
+				0D3D040B2728B6970032ABC1 /* App Core */,
 				0DACFA7D27208CC80039EEA5 /* Util */,
 				6654C73B2715A3F000901167 /* Features */,
 				660558F4270C85F7009D6954 /* Generated */,
@@ -574,6 +603,7 @@
 		6654C73B2715A3F000901167 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				0D3D04052728B2D70032ABC1 /* Backup Flow */,
 				6654C73C2715A3FA00901167 /* Onboarding */,
 			);
 			path = Features;
@@ -822,10 +852,12 @@
 				0D18581B272728D60046B928 /* PhraseChip.swift in Sources */,
 				0DB8AA81271DC7520035BC9D /* DesignGuide.swift in Sources */,
 				0D32282326C586A800262533 /* HistoryScreen.swift in Sources */,
+				0D3D04082728B3440032ABC1 /* RecoveryPhraseDisplayView.swift in Sources */,
 				0D864A0A26E154FD00A61879 /* InitFailedScreenViewModel.swift in Sources */,
 				0DA13CA526C1963000E3B610 /* Balance.swift in Sources */,
 				66D50668271D9B6100E51F0D /* NavigationButtonStyle.swift in Sources */,
 				0D1922F826BDEB3500052649 /* MockServices.swift in Sources */,
+				0D3D040A2728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift in Sources */,
 				0D4E7A0B26B364170058B01E /* ContentView.swift in Sources */,
 				0D170A7226BC802800EB6A46 /* Router.swift in Sources */,
 				0D354A0926D5A9D000315F45 /* Services.swift in Sources */,

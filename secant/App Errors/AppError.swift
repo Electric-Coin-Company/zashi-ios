@@ -7,6 +7,6 @@
 
 import Foundation
 
-enum AppError: Error {
-    case failedToInitialize(Error)
+enum AppError: Error, Equatable {
+    case failedToInitialize
 }
