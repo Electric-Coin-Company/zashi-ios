@@ -8,12 +8,18 @@
 import SwiftUI
 
 struct DesignGuide: View {
+    let columns = [GridItem(.adaptive(minimum: 320, maximum: .infinity))]
+    
     var body: some View {
-        HStack {
-            TextAndPlaceholdersGuide()
-            SmallVisualElements()
-            ButtonGuide()
+        ScrollView {
+            LazyVGrid(columns: columns) {
+                TextAndPlaceholdersGuide()
+                SmallVisualElements()
+                ButtonGuide()
+            }
         }
+        .padding(30)
+        .navigationBarHidden(true)
     }
 }
 
@@ -44,6 +50,7 @@ struct TextAndPlaceholdersGuide: View {
 
 struct SmallVisualElements: View {
     let gridItems = [GridItem(.flexible(minimum: 40, maximum: 100)), GridItem(.flexible(minimum: 40, maximum: 100))]
+
     var body: some View {
         VStack {
             Text("Navigation Buttons")
@@ -69,6 +76,8 @@ struct SmallVisualElements: View {
                 .font(.caption)
             EnumeratedChip(index: 1, text: "Salami")
                 .frame(width: 100, height: 40)
+            EmptyChip()
+                .frame(width: 100, height: 40)
             Text("shield icon")
                 .frame(width: 76, height: 76)
             Text("profile icon")
@@ -81,6 +90,7 @@ struct SmallVisualElements: View {
 
 struct ButtonGuide: View {
     let buttonHeight: CGFloat = 60
+
     var body: some View {
         VStack(spacing: 30) {
             // Idle Primary Button
@@ -143,16 +153,15 @@ struct ButtonGuide: View {
         }
     }
 }
+
 struct DesignGuide_Previews: PreviewProvider {
     static var previews: some View {
         DesignGuide()
-            .padding(30)
             .applyScreenBackground()
             .preferredColorScheme(.dark)
-            .previewLayout(.fixed(width: 1086, height: 1080))
+            .previewLayout(.fixed(width: 420, height: 1080))
 
         DesignGuide()
-            .padding(30)
             .applyScreenBackground()
             .preferredColorScheme(.light)
             .previewLayout(.fixed(width: 1086, height: 1080))
