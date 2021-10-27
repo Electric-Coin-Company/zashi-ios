@@ -30,10 +30,16 @@ internal enum Asset {
     }
   }
   internal enum Colors {
+    internal enum BackgroundColors {
+      internal static let phraseGridDarkGray = ColorAsset(name: "phraseGridDarkGray")
+    }
     internal enum Buttons {
+      internal static let activeButton = ColorAsset(name: "ActiveButton")
       internal static let createButton = ColorAsset(name: "CreateButton")
       internal static let createButtonDisabled = ColorAsset(name: "CreateButtonDisabled")
       internal static let createButtonPressed = ColorAsset(name: "CreateButtonPressed")
+      internal static let onboardingNavigation = ColorAsset(name: "OnboardingNavigation")
+      internal static let onboardingNavigationPressed = ColorAsset(name: "OnboardingNavigationPressed")
       internal static let primaryButton = ColorAsset(name: "PrimaryButton")
       internal static let primaryButtonDisabled = ColorAsset(name: "PrimaryButtonDisabled")
       internal static let primaryButtonPressed = ColorAsset(name: "PrimaryButtonPressed")
@@ -48,12 +54,25 @@ internal enum Asset {
     internal enum ProgressIndicator {
       internal static let gradientLeft = ColorAsset(name: "GradientLeft")
       internal static let gradientRight = ColorAsset(name: "GradientRight")
+      internal static let negativeSpace = ColorAsset(name: "NegativeSpace")
+    }
+    internal enum ScreenBackground {
+      internal static let gradientEnd = ColorAsset(name: "gradientEnd")
+      internal static let gradientStart = ColorAsset(name: "gradientStart")
+    }
+    internal enum Shadow {
+      internal static let emptyChipInnerShadow = ColorAsset(name: "emptyChipInnerShadow")
+      internal static let numberedTextShadow = ColorAsset(name: "numberedTextShadow")
     }
     internal enum Text {
+      internal static let activeButtonText = ColorAsset(name: "ActiveButtonText")
       internal static let button = ColorAsset(name: "Button")
       internal static let heading = ColorAsset(name: "Heading")
       internal static let medium = ColorAsset(name: "Medium")
       internal static let regular = ColorAsset(name: "Regular")
+      internal static let secondaryButtonText = ColorAsset(name: "SecondaryButtonText")
+      internal static let titleText = ColorAsset(name: "TitleText")
+      internal static let highlightedSuperscriptText = ColorAsset(name: "highlightedSuperscriptText")
     }
   }
 }

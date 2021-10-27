@@ -56,21 +56,24 @@ struct HomeScreen: View {
         Button(action: {}, label: {
             Text("Request ZEC")
         })
-        .buttonStyle(PlainButton())
+        .primaryButtonStyle
+        .frame(height: 50)
     }
 
     @ViewBuilder var sendButton: some View {
         Button(action: {}, label: {
             Text("Send ZEC")
         })
-        .buttonStyle(PlainButton())
+        .primaryButtonStyle
+        .frame(height: 50)
     }
 
     @ViewBuilder var historyButton: some View {
         Button(action: {}, label: {
             Text("History")
         })
-        .buttonStyle(PlainButton(style: .light))
+        .primaryButtonStyle
+        .frame(height: 50)
     }
 }
 
