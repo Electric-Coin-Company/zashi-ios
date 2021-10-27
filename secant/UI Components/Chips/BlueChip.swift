@@ -18,14 +18,10 @@ struct BlueChip: View {
                 minHeight: 30,
                 idealHeight: 40
             )
-            .foregroundColor(
-                Asset.Colors.Text.activeButtonText.color
-            )
+            .foregroundColor(Asset.Colors.Text.activeButtonText.color)
             .padding(.horizontal, 4)
             .padding(.vertical, 4)
-            .background(
-                Asset.Colors.Buttons.activeButton.color
-            )
+            .background(Asset.Colors.Buttons.activeButton.color)
             .cornerRadius(6)
     }
 }

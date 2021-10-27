@@ -25,9 +25,7 @@ struct EnumeratedChip: View {
             )
             .padding(.horizontal, 16)
             .padding(.vertical, 4)
-            .background(
-                Asset.Colors.Buttons.primaryButtonPressed.color
-            )
+            .background(Asset.Colors.Buttons.primaryButtonPressed.color)
             .cornerRadius(6)
     }
 }
@@ -38,31 +36,17 @@ struct NumberedText: View {
 
     @ViewBuilder var numberedText: some View {
         Text(number.superscriptRepresentation)
-            .foregroundColor(
-                Asset.Colors.Text.highlightedSuperscriptText.color
-            )
-            .font(
-                .custom(
-                    FontFamily.Roboto.bold.name,
-                    size: 20
-                )
-            ) +
+            .foregroundColor(Asset.Colors.Text.highlightedSuperscriptText.color)
+            .font(.custom(FontFamily.Roboto.bold.name, size: 20)) +
         Text(" \(text)")
-            .foregroundColor(
-                Asset.Colors.Text.button.color
-            )
-            .font(
-                .custom(
-                    FontFamily.Rubik.medium.name,
-                    size: 16
-                )
-            )
+            .foregroundColor(Asset.Colors.Text.button.color)
+            .font(.custom(FontFamily.Rubik.medium.name, size: 16))
     }
 
     var body: some View {
         numberedText
             .shadow(
-                color: Asset.Colors.Shadow.buttonTextShadow.color,
+                color: Asset.Colors.Shadow.numberedTextShadow.color,
                 radius: 1,
                 x: 0,
                 y: 1
@@ -82,7 +66,7 @@ struct EnumeratedChip_Previews: PreviewProvider {
         count: 3
     )
 
-    static var words = [
+    private static var words = [
         "pyramid", "negative", "page",
         "crown", "", "zebra"
     ]
@@ -115,13 +99,16 @@ struct EnumeratedChip_Previews: PreviewProvider {
         }
         .padding()
     }
+
     static var previews: some View {
         grid
             .background(Asset.Colors.BackgroundColors.phraseGridDarkGray.color)
             .previewLayout(.fixed(width: 428, height: 200))
+
         grid
             .applyScreenBackground()
             .previewLayout(.fixed(width: 428, height: 200))
+
         grid
             .applyScreenBackground()
             .previewLayout(.fixed(width: 428, height: 200))

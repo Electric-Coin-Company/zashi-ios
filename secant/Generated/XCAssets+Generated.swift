@@ -61,8 +61,8 @@ internal enum Asset {
       internal static let gradientStart = ColorAsset(name: "gradientStart")
     }
     internal enum Shadow {
-      internal static let buttonTextShadow = ColorAsset(name: "buttonTextShadow")
       internal static let emptyChipInnerShadow = ColorAsset(name: "emptyChipInnerShadow")
+      internal static let numberedTextShadow = ColorAsset(name: "numberedTextShadow")
     }
     internal enum Text {
       internal static let activeButtonText = ColorAsset(name: "ActiveButtonText")

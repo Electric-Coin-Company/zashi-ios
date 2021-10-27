@@ -29,7 +29,8 @@ class AppRouter: Router {
         // Add your content here
         NavigationView {
             AppRouterView(router: self)
-        }.onTapGesture(count: 10) {
+        }
+        .onTapGesture(count: 10) {
             self.screen = .designGuide
         }
     }

@@ -14,10 +14,10 @@ struct PhraseChip: View {
         case ordered(position: Int, word: String)
     }
 
-    @State var kind: Kind = .empty
+    var kind: Kind
 
     var body: some View {
-        chipFor(kind)
+        chipFor(for: kind)
             .frame(
                 minWidth: 0,
                 maxWidth: 120,
@@ -27,12 +27,14 @@ struct PhraseChip: View {
             .animation(.easeIn)
     }
 
-    @ViewBuilder func chipFor(_ kind: Kind) -> some View {
+    @ViewBuilder func chipFor(for kind: Kind) -> some View {
         switch kind {
         case .empty:
             EmptyChip()
+
         case let .ordered(position, word):
             EnumeratedChip(index: position, text: word)
+
         case .unassigned(let word):
             BlueChip(word: word)
         }
@@ -44,8 +46,10 @@ struct PhraseChip_Previews: PreviewProvider {
         VStack {
             PhraseChip(kind: .unassigned(word: "negative"))
                 .frame(height: 40)
+
             PhraseChip(kind: .empty)
                 .frame(height: 40)
+
             PhraseChip(kind: .ordered(position: 23, word: "mutual"))
                 .frame(height: 40)
         }

@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct DesignGuide: View {
-    let columns: [GridItem] = [
-        GridItem(.adaptive(minimum: 320, maximum: .infinity))
-    ]
+    let columns = [GridItem(.adaptive(minimum: 320, maximum: .infinity))]
+    
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns) {
@@ -51,6 +50,7 @@ struct TextAndPlaceholdersGuide: View {
 
 struct SmallVisualElements: View {
     let gridItems = [GridItem(.flexible(minimum: 40, maximum: 100)), GridItem(.flexible(minimum: 40, maximum: 100))]
+
     var body: some View {
         VStack {
             Text("Navigation Buttons")
@@ -90,6 +90,7 @@ struct SmallVisualElements: View {
 
 struct ButtonGuide: View {
     let buttonHeight: CGFloat = 60
+
     var body: some View {
         VStack(spacing: 30) {
             // Idle Primary Button
@@ -152,6 +153,7 @@ struct ButtonGuide: View {
         }
     }
 }
+
 struct DesignGuide_Previews: PreviewProvider {
     static var previews: some View {
         DesignGuide()
