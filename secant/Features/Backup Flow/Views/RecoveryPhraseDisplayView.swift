@@ -29,14 +29,13 @@ struct RecoveryPhraseDisplayView: View {
                             Button(action: {}) {
                                 Text("Finished!")
                             }
-                                .activeButtonStyle
+                            .activeButtonStyle
 
                             Button(action: {}) {
                                 Text("Copy To Buffer")
                                     .bodyText()
                             }
-                                .frame(height: 60)
-
+                            .frame(height: 60)
                         }
                         .padding()
                     } else {
