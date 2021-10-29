@@ -27,8 +27,8 @@ import SwiftUI
 {{accessModifier}} typealias {{param.colorAliasName|default:"AssetColorTypeAlias"}} = {{colorType}}.SystemColor
 {% endif %}
 {% if resourceCount.image > 0 %}
-@available(*, deprecated, renamed: "{{imageType}}.Image", message: "This typealias will be removed in SwiftGen 7.0")
-{{accessModifier}} typealias {{param.imageAliasName|default:"AssetImageTypeAlias"}} = {{imageType}}.Image
+@available(*, deprecated, renamed: "{{imageType}}.UniversalImage", message: "This typealias will be removed in SwiftGen 7.0")
+{{accessModifier}} typealias {{param.imageAliasName|default:"AssetImageTypeAlias"}} = {{imageType}}.UniversalImage
 {% endif %}
 
 // swiftlint:disable superfluous_disable_command file_length implicit_return
@@ -224,29 +224,34 @@ import SwiftUI
   {{accessModifier}} fileprivate(set) var name: String
 
   #if os(macOS)
-  {{accessModifier}} typealias Image = NSImage
+  {{accessModifier}} typealias UniversalImage = NSImage
   #elseif os(iOS) || os(tvOS) || os(watchOS)
-  {{accessModifier}} typealias Image = UIImage
+  {{accessModifier}} typealias UniversalImage = UIImage
   #endif
 
-  {{accessModifier}} var image: Image {
+  {{accessModifier}} var systemImage: UniversalImage {
     let bundle = {{param.bundle|default:"BundleToken.bundle"}}
     #if os(iOS) || os(tvOS)
-    let image = Image(named: name, in: bundle, compatibleWith: nil)
+    let image = UniversalImage(named: name, in: bundle, compatibleWith: nil)
     #elseif os(macOS)
     let name = NSImage.Name(self.name)
     let image = (bundle == .main) ? NSImage(named: name) : bundle.image(forResource: name)
     #elseif os(watchOS)
-    let image = Image(named: name)
+    let image = UniversalImage(named: name)
     #endif
     guard let result = image else {
       fatalError("Unable to load image asset named \(name).")
     }
     return result
   }
+
+  {{accessModifier}} var image: Image {
+    let bundle = {{param.bundle|default:"BundleToken.bundle"}}
+    return Image(name, bundle: bundle)
+  }
 }
 
-{{accessModifier}} extension {{imageType}}.Image {
+{{accessModifier}} extension {{imageType}}.UniversalImage {
   @available(macOS, deprecated,
     message: "This initializer is unsafe on macOS, please use the {{imageType}}.image property")
   convenience init?(asset: {{imageType}}) {
