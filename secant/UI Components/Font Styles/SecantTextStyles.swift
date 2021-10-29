@@ -12,6 +12,10 @@ extension View {
     func bodyText() -> some View {
         self.modifier(BodyTextStyle())
     }
+
+    func titleText() -> some View {
+        self.modifier(TitleTextStyle())
+    }
 }
 
 /**
@@ -22,5 +26,13 @@ struct BodyTextStyle: ViewModifier {
         content
             .foregroundColor(Asset.Colors.Text.body.color)
             .font(.custom(FontFamily.Rubik.regular.name, size: 18))
+    }
+}
+
+struct TitleTextStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .foregroundColor(Asset.Colors.Text.body.color)
+            .font(.custom(FontFamily.Roboto.medium.name, size: 24))
     }
 }

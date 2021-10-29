@@ -16,9 +16,15 @@ struct RecoveryPhraseDisplayView: View {
             ScrollView {
                 VStack {
                     if let chunks = viewStore.phrase?.toChunks() {
-                        // swiftlint:disable:next line_length
-                        Text("The following 24 words represent your funds and the security used to protect them.\n\nBack them up now! There will be a test.")
-                            .bodyText()
+                        VStack(spacing: 20) {
+                            Text("Your Secret Recovery Phrase")
+                                .titleText()
+                            // swiftlint:disable:next line_length
+                            Text("The following 24 words represent your funds and the security used to protect them.\n\nBack them up now! There will be a test.")
+                                .bodyText()
+                                .frame(alignment: .center)
+                        }
+
                         VStack(alignment: .leading, spacing: 30) {
                             ForEach(chunks, id: \.startIndex) { chunk in
                                 WordChipGrid(words: chunk.words, startingAt: chunk.startIndex)
@@ -43,13 +49,14 @@ struct RecoveryPhraseDisplayView: View {
                     }
                 }
                 .padding()
+                .padding(.top, 0)
             }
             .padding(.horizontal)
         }
 
         // TODO: NavigationBar Style
-        .navigationTitle(Text("Your Secret Recovery Phrase"))
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarHidden(true)
         .applyScreenBackground()
     }
 }
