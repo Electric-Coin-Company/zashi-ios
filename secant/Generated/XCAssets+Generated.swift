@@ -38,6 +38,7 @@ internal enum Asset {
   }
   internal enum Colors {
     internal enum BackgroundColors {
+      internal static let numberedChip = ColorAsset(name: "numberedChip")
       internal static let phraseGridDarkGray = ColorAsset(name: "phraseGridDarkGray")
     }
     internal enum Buttons {
@@ -73,6 +74,7 @@ internal enum Asset {
     }
     internal enum Text {
       internal static let activeButtonText = ColorAsset(name: "ActiveButtonText")
+      internal static let body = ColorAsset(name: "Body")
       internal static let button = ColorAsset(name: "Button")
       internal static let heading = ColorAsset(name: "Heading")
       internal static let medium = ColorAsset(name: "Medium")

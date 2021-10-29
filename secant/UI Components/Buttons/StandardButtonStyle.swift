@@ -17,8 +17,8 @@ struct StandardButtonStyle: ButtonStyle {
             .frame(
                 minWidth: 0,
                 maxWidth: .infinity,
-                minHeight: 0,
-                maxHeight: .infinity
+                minHeight: 60,
+                maxHeight: 60
             )
             .foregroundColor(foregroundColor)
             .background(
@@ -45,7 +45,7 @@ struct ButtonModifier_Previews: PreviewProvider {
         Button("Example Button") { dump("Example button") }
             .exampleButtonStyle
             .padding(.horizontal, 25)
-            .frame(height: 75)
+            .frame(height: 60)
             .previewLayout(.fixed(width: 300, height: 100))
             .preferredColorScheme(.dark)
     }

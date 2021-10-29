@@ -19,14 +19,14 @@ struct EnumeratedChip: View {
                 minWidth: 0,
                 maxWidth: .infinity,
                 minHeight: 30,
-                idealHeight: 40,
                 maxHeight: .infinity,
                 alignment: .leading
             )
-            .padding(.horizontal, 16)
+            .padding(.leading, 14)
             .padding(.vertical, 4)
-            .background(Asset.Colors.Buttons.primaryButtonPressed.color)
+            .background(Asset.Colors.BackgroundColors.numberedChip.color)
             .cornerRadius(6)
+            .shadow(color: Asset.Colors.Shadow.numberedTextShadow.color, radius: 3, x: 0, y: 1)
     }
 }
 
@@ -35,22 +35,28 @@ struct NumberedText: View {
     var text: String
 
     @ViewBuilder var numberedText: some View {
-        Text(number.superscriptRepresentation)
+        GeometryReader { geometry in
+        (Text(String(number))
+            .baselineOffset(geometry.size.height / 4)
             .foregroundColor(Asset.Colors.Text.highlightedSuperscriptText.color)
-            .font(.custom(FontFamily.Roboto.bold.name, size: 20)) +
+            .font(.custom(FontFamily.Roboto.bold.name, size: 12)) +
+
         Text(" \(text)")
             .foregroundColor(Asset.Colors.Text.button.color)
-            .font(.custom(FontFamily.Rubik.medium.name, size: 16))
-    }
-
-    var body: some View {
-        numberedText
+            .font(.custom(FontFamily.Rubik.regular.name, size: 14))
+        )
             .shadow(
                 color: Asset.Colors.Shadow.numberedTextShadow.color,
                 radius: 1,
                 x: 0,
                 y: 1
             )
+            .frame(width: .infinity, height: geometry.size.height, alignment: .center)
+        }
+    }
+
+    var body: some View {
+        numberedText
             .layoutPriority(1)
             .fixedSize(horizontal: false, vertical: false)
     }
@@ -83,8 +89,8 @@ struct EnumeratedChip_Previews: PreviewProvider {
                         .frame(
                             minWidth: 0,
                             maxWidth: .infinity,
-                            minHeight: 30,
-                            idealHeight: 40
+                            minHeight: 40,
+                            maxHeight: .infinity
                         )
                 } else {
                     EnumeratedChip(index: (i + 1), text: word)
@@ -92,7 +98,7 @@ struct EnumeratedChip_Previews: PreviewProvider {
                             minWidth: 0,
                             maxWidth: .infinity,
                             minHeight: 30,
-                            idealHeight: 40
+                            maxHeight: .infinity
                         )
                 }
             }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PhraseChip: View {
-    enum Kind {
+    enum Kind: Hashable {
         case empty
         case unassigned(word: String)
         case ordered(position: Int, word: String)
