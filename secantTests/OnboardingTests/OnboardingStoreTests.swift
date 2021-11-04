@@ -17,23 +17,33 @@ class OnboardingStoreTests: XCTestCase {
             environment: ()
         )
         
-        store.send(.nextPressed) {
+        store.send(.next) {
             $0.index += 1
             $0.offset -= 20.0
             
-            XCTAssertFalse($0.nextButtonDisabled)
+            XCTAssertFalse($0.skipButtonDisabled)
             XCTAssertFalse($0.backButtonDisabled)
             XCTAssertEqual($0.currentStep, $0.steps[1])
-            XCTAssertEqual($0.progress, 66)
+            XCTAssertEqual($0.progress, 50)
         }
                 
-        store.send(.nextPressed) {
+        store.send(.next) {
             $0.index += 1
             $0.offset -= 20.0
             
-            XCTAssertTrue($0.nextButtonDisabled)
+            XCTAssertFalse($0.skipButtonDisabled)
             XCTAssertFalse($0.backButtonDisabled)
             XCTAssertEqual($0.currentStep, $0.steps[2])
+            XCTAssertEqual($0.progress, 75)
+        }
+        
+        store.send(.next) {
+            $0.index += 1
+            $0.offset -= 20.0
+            
+            XCTAssertTrue($0.skipButtonDisabled)
+            XCTAssertFalse($0.backButtonDisabled)
+            XCTAssertEqual($0.currentStep, $0.steps[3])
             XCTAssertEqual($0.progress, 100)
         }
     }
@@ -48,24 +58,60 @@ class OnboardingStoreTests: XCTestCase {
             environment: ()
         )
         
-        store.send(.backPressed) {
+        store.send(.back) {
             $0.index -= 1
             $0.offset += 20.0
             
-            XCTAssertFalse($0.nextButtonDisabled)
+            XCTAssertFalse($0.skipButtonDisabled)
             XCTAssertFalse($0.backButtonDisabled)
             XCTAssertEqual($0.currentStep, $0.steps[1])
-            XCTAssertEqual($0.progress, 66)
+            XCTAssertEqual($0.progress, 50)
         }
                 
-        store.send(.backPressed) {
+        store.send(.back) {
             $0.index -= 1
             $0.offset += 20.0
             
-            XCTAssertFalse($0.nextButtonDisabled)
+            XCTAssertFalse($0.skipButtonDisabled)
             XCTAssertTrue($0.backButtonDisabled)
             XCTAssertEqual($0.currentStep, $0.steps[0])
-            XCTAssertEqual($0.progress, 33)
+            XCTAssertEqual($0.progress, 25)
+        }
+    }
+    
+    func testSkipOnboarding() {
+        let initialIndex = 1
+        let initialOffset: CGFloat = .zero - 20.0
+        
+        let store = TestStore(
+            initialState: OnboardingState(
+                index: initialIndex,
+                offset: initialOffset
+            ),
+            reducer: onboardingReducer,
+            environment: ()
+        )
+        
+        store.send(.skip) {
+            $0.index = $0.steps.count - 1
+            $0.offset = initialOffset
+            $0.skippedAtindex = initialIndex
+            
+            XCTAssertTrue($0.skipButtonDisabled)
+            XCTAssertFalse($0.backButtonDisabled)
+            XCTAssertEqual($0.currentStep, $0.steps[3])
+            XCTAssertEqual($0.progress, 100)
+        }
+                
+        store.send(.back) {
+            $0.skippedAtindex = nil
+            $0.index = initialIndex
+            $0.offset = initialOffset
+            
+            XCTAssertFalse($0.skipButtonDisabled)
+            XCTAssertFalse($0.backButtonDisabled)
+            XCTAssertEqual($0.currentStep, $0.steps[1])
+            XCTAssertEqual($0.progress, 50)
         }
     }
 }

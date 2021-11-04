@@ -15,26 +15,20 @@ struct OnboardingView: View {
         WithViewStore(self.store) { viewStore in
             VStack(spacing: 50) {
                 HStack(spacing: 50) {
-                    Button(
-                        action: { viewStore.send(.backPressed) },
-                        label: { Text("Previous") }
-                    )
-                    .disabled(viewStore.backButtonDisabled)
+                    Button("Back") { viewStore.send(.back) }
+                        .disabled(viewStore.backButtonDisabled)
                     
                     Spacer()
                     
-                    Button(
-                        action: { viewStore.send(.nextPressed) },
-                        label: { Text("Next") }
-                    )
-                    .disabled(viewStore.nextButtonDisabled)
+                    Button("Skip") { viewStore.send(.skip) }
+                        .disabled(viewStore.skipButtonDisabled)
                 }
                 .frame(height: 100)
                 .padding(.horizontal, 50)
                 
                 Spacer()
                 
-                Text(viewStore.currentStep.imageName)
+                Text(viewStore.currentStep.title)
                     .frame(maxWidth: .infinity)
                     .offset(y: viewStore.offset)
                     .animation(.easeOut(duration: 0.4))
@@ -58,23 +52,29 @@ struct OnboardingView: View {
     }
 }
 
+// swiftlint:disable line_length
 extension OnboardingState {
     static let onboardingSteps = IdentifiedArray(
         uniqueElements: [
             OnboardingStep(
                 id: UUID(),
-                description: "This is the description of the first onboarding step, please read it carefully.",
-                imageName: "Image"
+                title: "Shielded by Default",
+                description: "Tired of worrying about which wallet you used last? US TOO! Now you don't have to, as all funds will automatically be moved to your shielded wallet (and migrated for you)."
             ),
             OnboardingStep(
                 id: UUID(),
-                description: "The second step is even more important, have to pay attention to the details here.",
-                imageName: "Image"
+                title: "Unified Addresses",
+                description: "Tired of worrying about which wallet you used last? US TOO! Now you don't have to, as all funds will automatically be moved to your shielded wallet (and migrated for you)."
             ),
             OnboardingStep(
                 id: UUID(),
-                description: "Congratulations you made it all the way through to the end, you can use the app now!",
-                imageName: "Image"
+                title: "And so much more...",
+                description: "Faster reverse syncing (yes it's a thing).  Liberated Payments, Social Payments, Address Books, in-line ZEC requests, wrapped Bitcoin, fractionalize NFTs, you providing liquidity for anything you want, getting that Defi, and going to Mexico."
+            ),
+            OnboardingStep(
+                id: UUID(),
+                title: "Ready for the Future",
+                description: "Lets get you set up!"
             )
         ]
     )
