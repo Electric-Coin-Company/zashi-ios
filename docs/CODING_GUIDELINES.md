@@ -9,7 +9,7 @@ When creating new files, please use the provided templates when applicable. You 
 
 # Type definition structure
 
-When defining new type or modificating an existing one, please follow the convention below:
+When defining new type or modifying an existing one, please follow the convention below:
 
 ````
 Type
