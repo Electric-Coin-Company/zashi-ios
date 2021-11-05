@@ -19,6 +19,7 @@ struct OnboardingView: View {
                         .disabled(viewStore.backButtonDisabled)
                     
                     Spacer()
+                    Button("Next") { viewStore.send(.next) }
                     
                     Button("Skip") { viewStore.send(.skip) }
                         .disabled(viewStore.skipButtonDisabled)

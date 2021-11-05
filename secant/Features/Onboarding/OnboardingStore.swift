@@ -18,13 +18,18 @@ struct OnboardingStep: Equatable, Identifiable {
 struct OnboardingState: Equatable {
     var steps: IdentifiedArrayOf<OnboardingStep> = Self.onboardingSteps
     var index = 0
-    var offset: CGFloat = .zero
     var skippedAtindex: Int?
     
     var currentStep: OnboardingStep { steps[index] }
     var skipButtonDisabled: Bool { steps.count == index + 1 }
     var backButtonDisabled: Bool { index == 0 }
     var progress: Int { ((index + 1) * 100) / (steps.count) }
+    var offset: CGFloat {
+        let maxOffset = CGFloat(-60)
+        let stepOffset = CGFloat(maxOffset / CGFloat(steps.count - 1))
+        guard index != 0 else { return .zero }
+        return stepOffset * CGFloat(index)
+    }
 }
 
 enum OnboardingAction: Equatable {
@@ -43,14 +48,12 @@ let onboardingReducer = Reducer<OnboardingState, OnboardingAction, Void> { state
             state.skippedAtindex = nil
         } else {
             state.index -= 1
-            state.offset += 20.0
         }
         return .none
         
     case .next:
         guard state.index < state.steps.count - 1 else { return .none }
         state.index += 1
-        state.offset -= 20.0
         return .none
         
     case .skip:
