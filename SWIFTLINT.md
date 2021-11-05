@@ -2,7 +2,7 @@
 
 The SwiftLint configuration on this repo is based on the great work of the raywenderlich.com folks [The Official raywenderlich.com Swift Style Guide](https://github.com/raywenderlich/swift-style-guide).
 
-The purpose of this guide is to provide a base format for our Swift codebase. This guide describes what are the rules enforced by our swift lint rules and should beused when contributing or reviewing code. 
+The purpose of this guide is to provide a base format for our Swift codebase. This guide describes what are the rules enforced by our swift lint rules and should be used when contributing or reviewing code. 
 
 These guides use SwiftLint as a standard. You can learn more about SwiftLint by visiting its [official documentation page](https://github.com/realm/SwiftLint).
 

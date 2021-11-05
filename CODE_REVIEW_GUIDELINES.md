@@ -1,6 +1,6 @@
 # Overall:
 
-- Does the contribution referece an existing Issue?
+- Does the contribution reference an existing Issue?
 - Are the requirements well defined?
 
 
