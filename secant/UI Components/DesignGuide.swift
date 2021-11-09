@@ -29,21 +29,24 @@ struct TextAndPlaceholdersGuide: View {
             Text("H1 Onboarding Rubik Light")
                 .font(FontFamily.Rubik.light.textStyle(.title))
                 .foregroundColor(Asset.Colors.Text.titleText.color)
+
             Text(
                 """
                 Rubik 16 regular #93A4BE Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
                 """
             )
-                .font(FontFamily.Rubik.light.textStyle(.footnote))
-                .fontWeight(.thin)
-                .foregroundColor(Asset.Colors.Text.titleText.color)
+            .font(FontFamily.Rubik.light.textStyle(.footnote))
+            .fontWeight(.thin)
+            .foregroundColor(Asset.Colors.Text.titleText.color)
 
-            Text("Placeholder for circular view")
-                .frame(width: 370, height: 370, alignment: .center)
+            CircularFrame()
+                .frame(width: 300, height: 300, alignment: .center)
 
             Text("Placeholder for rectangular view")
                 .frame(width: 386, height: 125, alignment: .center)
-            OnboardingProgressViewPreviewHelper()
+
+            ProgressView.init(value: 25.0, total: 100.0)
+                .onboardingProgressStyle
         }
     }
 }
@@ -52,38 +55,53 @@ struct SmallVisualElements: View {
     let gridItems = [GridItem(.flexible(minimum: 40, maximum: 100)), GridItem(.flexible(minimum: 40, maximum: 100))]
 
     var body: some View {
-        VStack {
-            Text("Navigation Buttons")
-                .font(.caption)
-            LazyVGrid(columns: gridItems) {
-                // TODO: Change state to selected
-                Button("Back") { dump("Example button") }
-                    .buttonStyle(NavigationButtonStyle())
-                    .frame(width: 80, height: 40)
-                Button("Skip") { dump("Example button") }
-                .buttonStyle(NavigationButtonStyle())
-                    .frame(width: 80, height: 40)
+        VStack(spacing: 75) {
+            VStack {
+                Text("Navigation Buttons")
+                    .font(.caption)
 
-                Button("Back") { dump("Example button") }
-                    .buttonStyle(NavigationButtonStyle())
-                    .frame(width: 80, height: 40)
-                Button("Skip") { dump("Example button") }
-                .buttonStyle(NavigationButtonStyle())
-                    .frame(width: 80, height: 40)
+                LazyVGrid(columns: gridItems) {
+                    Button("Back") { dump("Example button") }
+                        .navigationButtonStyle
+                        .frame(width: 80, height: 40)
+
+                    Button("Skip") { dump("Example button") }
+                        .navigationButtonStyle
+                        .frame(width: 80, height: 40)
+
+                    // TODO: Change state to selected
+                    Button("Back") { dump("Example button") }
+                        .navigationButtonStyle
+                        .frame(width: 80, height: 40)
+
+                    // TODO: Change state to selected
+                    Button("Skip") { dump("Example button") }
+                        .navigationButtonStyle
+                        .frame(width: 80, height: 40)
+                }
             }
 
-            Text("Recovery Phrase Chip")
-                .font(.caption)
-            EnumeratedChip(index: 1, text: "Salami")
-                .frame(width: 100, height: 40)
-            EmptyChip()
-                .frame(width: 100, height: 40)
-            Text("shield icon")
-                .frame(width: 76, height: 76)
-            Text("profile icon")
-                .frame(width: 76, height: 76)
-            Text("listing icon")
-                .frame(width: 76, height: 76)
+            VStack {
+                Text("Recovery Phrase Chip")
+                    .font(.caption)
+
+                EnumeratedChip(index: 1, text: "Salami")
+                    .frame(width: 100, height: 40)
+
+                EmptyChip()
+                    .frame(width: 100, height: 40)
+            }
+
+            VStack(spacing: 25) {
+                Asset.Assets.Icons.shield.image
+                    .frame(width: 76, height: 76)
+
+                Asset.Assets.Icons.profile.image
+                    .frame(width: 76, height: 76)
+
+                Asset.Assets.Icons.list.image
+                    .frame(width: 76, height: 76)
+            }
         }
     }
 }
@@ -93,7 +111,7 @@ struct ButtonGuide: View {
 
     var body: some View {
         VStack(spacing: 30) {
-            // Idle Primary Button
+            // Primary Button
             Button(action: {}) {
                 Text("Primary Button")
             }
@@ -102,53 +120,56 @@ struct ButtonGuide: View {
 
             // TODO: Pressed Primary Button
             Button(action: {}) {
-                Text("Primary Button")
+                Text("Pressed Primary Button")
             }
             .primaryButtonStyle
             .frame(height: buttonHeight)
 
             // Disabled Primary Button
             Button(action: {}) {
-                Text("Primary Button")
+                Text("Disabled Primary Button")
             }
             .primaryButtonStyle
             .frame(height: buttonHeight)
             .disabled(true)
 
-            // Idle Primary Action Button
+            // Active Button
             Button(action: {}) {
-                Text("Primary Active Button")
+                Text("Active Button")
             }
-            .createButtonStyle
+            .activeButtonStyle
             .frame(height: buttonHeight)
 
-            // TODO: Pressed Primary Action Button
+            // TODO: Pressed Active Button
             Button(action: {}) {
-                Text("Primary Active Button")
+                Text("Pressed Active Button")
             }
-            .createButtonStyle
+            .activeButtonStyle
             .frame(height: buttonHeight)
 
-            // TODO: Pressed Primary Action Button
+            // TODO: Disabled Active Button
             Button(action: {}) {
-                Text("Primary Active Button")
+                Text("Disabled Active Button")
             }
-            .createButtonStyle
+            .activeButtonStyle
             .frame(height: buttonHeight)
+            .disabled(true)
 
-            // Idle Secondary Button
+            // Secondary Button
             Button(action: {}) {
                 Text("Secondary Button")
             }
             .secondaryButtonStyle
             .frame(height: buttonHeight)
 
-            // Action Button
+            // Disabled Secondary Button
             Button(action: {}) {
-                Text("Action Button")
+                Text("Disabled Secondary Button")
             }
-            .activeButtonStyle
+            .secondaryButtonStyle
             .frame(height: buttonHeight)
+            .disabled(true)
+
             Spacer()
         }
     }
@@ -156,14 +177,15 @@ struct ButtonGuide: View {
 
 struct DesignGuide_Previews: PreviewProvider {
     static var previews: some View {
-        DesignGuide()
-            .applyScreenBackground()
-            .preferredColorScheme(.dark)
-            .previewLayout(.fixed(width: 420, height: 1080))
+        Group {
+            DesignGuide()
+                .applyScreenBackground()
+                .preferredColorScheme(.dark)
 
-        DesignGuide()
-            .applyScreenBackground()
-            .preferredColorScheme(.light)
-            .previewLayout(.fixed(width: 1086, height: 1080))
+            DesignGuide()
+                .applyScreenBackground()
+                .preferredColorScheme(.light)
+        }
+        .previewLayout(.fixed(width: 1086, height: 1080))
     }
 }
