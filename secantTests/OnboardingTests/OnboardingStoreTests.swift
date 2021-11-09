@@ -13,15 +13,15 @@ class OnboardingStoreTests: XCTestCase {
     func testIncrementingOnboarding() {
         let store = TestStore(
             initialState: OnboardingState(),
-            reducer: onboardingReducer,
+            reducer: OnboardingReducer.default,
             environment: ()
         )
         
         store.send(.next) {
             $0.index += 1
             
-            XCTAssertFalse($0.skipButtonDisabled)
-            XCTAssertFalse($0.backButtonDisabled)
+            XCTAssertFalse($0.isFinalStep)
+            XCTAssertFalse($0.isInitialStep)
             XCTAssertEqual($0.currentStep, $0.steps[1])
             XCTAssertEqual($0.offset, -20.0)
             XCTAssertEqual($0.progress, 50)
@@ -30,8 +30,8 @@ class OnboardingStoreTests: XCTestCase {
         store.send(.next) {
             $0.index += 1
             
-            XCTAssertFalse($0.skipButtonDisabled)
-            XCTAssertFalse($0.backButtonDisabled)
+            XCTAssertFalse($0.isFinalStep)
+            XCTAssertFalse($0.isInitialStep)
             XCTAssertEqual($0.currentStep, $0.steps[2])
             XCTAssertEqual($0.offset, -40.0)
             XCTAssertEqual($0.progress, 75)
@@ -40,8 +40,8 @@ class OnboardingStoreTests: XCTestCase {
         store.send(.next) {
             $0.index += 1
             
-            XCTAssertTrue($0.skipButtonDisabled)
-            XCTAssertFalse($0.backButtonDisabled)
+            XCTAssertTrue($0.isFinalStep)
+            XCTAssertFalse($0.isInitialStep)
             XCTAssertEqual($0.currentStep, $0.steps[3])
             XCTAssertEqual($0.offset, -60.0)
             XCTAssertEqual($0.progress, 100)
@@ -51,21 +51,21 @@ class OnboardingStoreTests: XCTestCase {
     func testIncrementingPastTotalStepsDoesNothing() {
         let store = TestStore(
             initialState: OnboardingState(index: 3),
-            reducer: onboardingReducer,
+            reducer: OnboardingReducer.default,
             environment: ()
         )
         
         store.send(.next) {
-            XCTAssertTrue($0.skipButtonDisabled)
-            XCTAssertFalse($0.backButtonDisabled)
+            XCTAssertTrue($0.isFinalStep)
+            XCTAssertFalse($0.isInitialStep)
             XCTAssertEqual($0.currentStep, $0.steps[3])
             XCTAssertEqual($0.offset, -60.0)
             XCTAssertEqual($0.progress, 100)
         }
                 
         store.send(.next) {
-            XCTAssertTrue($0.skipButtonDisabled)
-            XCTAssertFalse($0.backButtonDisabled)
+            XCTAssertTrue($0.isFinalStep)
+            XCTAssertFalse($0.isInitialStep)
             XCTAssertEqual($0.currentStep, $0.steps[3])
             XCTAssertEqual($0.offset, -60.0)
             XCTAssertEqual($0.progress, 100)
@@ -75,15 +75,15 @@ class OnboardingStoreTests: XCTestCase {
     func testDecrementingOnboarding() {
         let store = TestStore(
             initialState: OnboardingState(index: 2),
-            reducer: onboardingReducer,
+            reducer: OnboardingReducer.default,
             environment: ()
         )
         
         store.send(.back) {
             $0.index -= 1
             
-            XCTAssertFalse($0.skipButtonDisabled)
-            XCTAssertFalse($0.backButtonDisabled)
+            XCTAssertFalse($0.isFinalStep)
+            XCTAssertFalse($0.isInitialStep)
             XCTAssertEqual($0.currentStep, $0.steps[1])
             XCTAssertEqual($0.offset, -20.0)
             XCTAssertEqual($0.progress, 50)
@@ -92,8 +92,8 @@ class OnboardingStoreTests: XCTestCase {
         store.send(.back) {
             $0.index -= 1
             
-            XCTAssertFalse($0.skipButtonDisabled)
-            XCTAssertTrue($0.backButtonDisabled)
+            XCTAssertFalse($0.isFinalStep)
+            XCTAssertTrue($0.isInitialStep)
             XCTAssertEqual($0.currentStep, $0.steps[0])
             XCTAssertEqual($0.offset, 0.0)
             XCTAssertEqual($0.progress, 25)
@@ -103,21 +103,21 @@ class OnboardingStoreTests: XCTestCase {
     func testDecrementingPastFirstStepDoesNothing() {
         let store = TestStore(
             initialState: OnboardingState(),
-            reducer: onboardingReducer,
+            reducer: OnboardingReducer.default,
             environment: ()
         )
         
         store.send(.back) {
-            XCTAssertFalse($0.skipButtonDisabled)
-            XCTAssertTrue($0.backButtonDisabled)
+            XCTAssertFalse($0.isFinalStep)
+            XCTAssertTrue($0.isInitialStep)
             XCTAssertEqual($0.currentStep, $0.steps[0])
             XCTAssertEqual($0.offset, 0.0)
             XCTAssertEqual($0.progress, 25)
         }
                 
         store.send(.back) {
-            XCTAssertFalse($0.skipButtonDisabled)
-            XCTAssertTrue($0.backButtonDisabled)
+            XCTAssertFalse($0.isFinalStep)
+            XCTAssertTrue($0.isInitialStep)
             XCTAssertEqual($0.currentStep, $0.steps[0])
             XCTAssertEqual($0.offset, 0.0)
             XCTAssertEqual($0.progress, 25)
@@ -129,7 +129,7 @@ class OnboardingStoreTests: XCTestCase {
 
         let store = TestStore(
             initialState: OnboardingState(index: initialIndex),
-            reducer: onboardingReducer,
+            reducer: OnboardingReducer.default,
             environment: ()
         )
         
@@ -137,8 +137,8 @@ class OnboardingStoreTests: XCTestCase {
             $0.index = $0.steps.count - 1
             $0.skippedAtindex = initialIndex
             
-            XCTAssertTrue($0.skipButtonDisabled)
-            XCTAssertFalse($0.backButtonDisabled)
+            XCTAssertTrue($0.isFinalStep)
+            XCTAssertFalse($0.isInitialStep)
             XCTAssertEqual($0.currentStep, $0.steps[3])
             XCTAssertEqual($0.offset, -60.0)
             XCTAssertEqual($0.progress, 100)
@@ -148,8 +148,8 @@ class OnboardingStoreTests: XCTestCase {
             $0.skippedAtindex = nil
             $0.index = initialIndex
             
-            XCTAssertFalse($0.skipButtonDisabled)
-            XCTAssertFalse($0.backButtonDisabled)
+            XCTAssertFalse($0.isFinalStep)
+            XCTAssertFalse($0.isInitialStep)
             XCTAssertEqual($0.currentStep, $0.steps[1])
             XCTAssertEqual($0.offset, -20.0)
             XCTAssertEqual($0.progress, 50)

@@ -10,7 +10,7 @@ import SwiftUI
 struct CircularFrame: View {
     var body: some View {
         GeometryReader { proxy in
-            let lineWidth = proxy.size.width * 0.07
+            let lineWidth = proxy.size.width * 0.05
 
             Circle()
                 .stroke(lineWidth: lineWidth)

@@ -72,6 +72,10 @@
 		0DB8AA81271DC7520035BC9D /* DesignGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB8AA80271DC7520035BC9D /* DesignGuide.swift */; };
 		0DF2DC51272344E400FA31E2 /* EmptyChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF2DC50272344E400FA31E2 /* EmptyChip.swift */; };
 		0DF2DC5427235E3E00FA31E2 /* View+InnerShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF2DC5327235E3E00FA31E2 /* View+InnerShadow.swift */; };
+		2E58E73B274679F000B2B84B /* OnboardingHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E58E73A274679F000B2B84B /* OnboardingHeaderView.swift */; };
+		2EA11F5B27467EF800709571 /* OnboardingFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA11F5A27467EF800709571 /* OnboardingFooterView.swift */; };
+		2EA11F5D27467F7700709571 /* OnboardingContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA11F5C27467F7700709571 /* OnboardingContentView.swift */; };
+		2EB660E02747EAB900A06A07 /* OnboardingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5C03802738C570008BFFD3 /* OnboardingScreen.swift */; };
 		660558E9270C7A54009D6954 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 660558E8270C7A54009D6954 /* Colors.xcassets */; };
 		660558F7270C862F009D6954 /* Fonts+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660558F5270C862F009D6954 /* Fonts+Generated.swift */; };
 		660558F8270C862F009D6954 /* XCAssets+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660558F6270C862F009D6954 /* XCAssets+Generated.swift */; };
@@ -190,6 +194,10 @@
 		0DB8AA80271DC7520035BC9D /* DesignGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignGuide.swift; sourceTree = "<group>"; };
 		0DF2DC50272344E400FA31E2 /* EmptyChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyChip.swift; sourceTree = "<group>"; };
 		0DF2DC5327235E3E00FA31E2 /* View+InnerShadow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+InnerShadow.swift"; sourceTree = "<group>"; };
+		2E58E73A274679F000B2B84B /* OnboardingHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingHeaderView.swift; sourceTree = "<group>"; };
+		2E5C03802738C570008BFFD3 /* OnboardingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreen.swift; sourceTree = "<group>"; };
+		2EA11F5A27467EF800709571 /* OnboardingFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFooterView.swift; sourceTree = "<group>"; };
+		2EA11F5C27467F7700709571 /* OnboardingContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingContentView.swift; sourceTree = "<group>"; };
 		660558E8270C7A54009D6954 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		660558F5270C862F009D6954 /* Fonts+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Fonts+Generated.swift"; sourceTree = "<group>"; };
 		660558F6270C862F009D6954 /* XCAssets+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "XCAssets+Generated.swift"; sourceTree = "<group>"; };
@@ -201,6 +209,7 @@
 		6654C7402715A47300901167 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
 		6654C7432715A4AC00901167 /* OnboardingStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStoreTests.swift; sourceTree = "<group>"; };
 		665C963E272C26E600BC04FB /* CircularFrameBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularFrameBackground.swift; sourceTree = "<group>"; };
+		66779071273AAC26003A1540 /* OnboardingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreen.swift; sourceTree = "<group>"; };
 		669FDAE8272C23B3007B9422 /* CircularFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularFrame.swift; sourceTree = "<group>"; };
 		669FDAEA272C23C2007B9422 /* CircularFrameBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularFrameBadge.swift; sourceTree = "<group>"; };
 		66A0807A271993C500118B79 /* OnboardingProgressIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingProgressIndicator.swift; sourceTree = "<group>"; };
@@ -274,6 +283,7 @@
 		0D1922EB26BDD9A500052649 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				2E5C037F2738C55F008BFFD3 /* Onboarding */,
 				0D864A0B26E1580700A61879 /* Loading */,
 				0D864A0626E154D100A61879 /* Error */,
 				0D32282F26C5874B00262533 /* Balance */,
@@ -370,6 +380,7 @@
 				0D4E7A1926B364180058B01E /* secantTests */,
 				0D4E7A2426B364180058B01E /* secantUITests */,
 				0D4E7A0626B364170058B01E /* Products */,
+				2EB660DF2747EA6000A06A07 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -579,6 +590,25 @@
 				0DF2DC5327235E3E00FA31E2 /* View+InnerShadow.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		2E5C037F2738C55F008BFFD3 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				2E5C03802738C570008BFFD3 /* OnboardingScreen.swift */,
+				2E58E73A274679F000B2B84B /* OnboardingHeaderView.swift */,
+				2EA11F5C27467F7700709571 /* OnboardingContentView.swift */,
+				2EA11F5A27467EF800709571 /* OnboardingFooterView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		2EB660DF2747EA6000A06A07 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				66779071273AAC26003A1540 /* OnboardingScreen.swift */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		660558F4270C85F7009D6954 /* Generated */ = {
@@ -887,7 +917,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "swiftlint_version=0.44.0\n\nif which swiftlint >/dev/null; then\n  if [ $(swiftlint version) = $swiftlint_version ]; then\n      swiftlint\n  else\n    echo \"warning: Compatible SwiftLint version not installed, download version $swiftlint_version from https://github.com/realm/SwiftLint. Currently installed version is $(swiftlint version)\"\n  fi  \nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "swiftlint_version=0.45.0\n\nif which swiftlint >/dev/null; then\n  if [ $(swiftlint version) = $swiftlint_version ]; then\n      swiftlint\n  else\n    echo \"warning: Compatible SwiftLint version not installed, download version $swiftlint_version from https://github.com/realm/SwiftLint. Currently installed version is $(swiftlint version)\"\n  fi  \nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -896,6 +926,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2EB660E02747EAB900A06A07 /* OnboardingScreen.swift in Sources */,
 				660558F8270C862F009D6954 /* XCAssets+Generated.swift in Sources */,
 				F96B41E9273B501F0021B49A /* TransactionHistoryView.swift in Sources */,
 				0D32281F26C5867D00262533 /* ScanQrScreenViewModel.swift in Sources */,
@@ -929,6 +960,7 @@
 				0D32282326C586A800262533 /* HistoryScreen.swift in Sources */,
 				0D864A0A26E154FD00A61879 /* InitFailedScreenViewModel.swift in Sources */,
 				0DA13CA526C1963000E3B610 /* Balance.swift in Sources */,
+				2EA11F5B27467EF800709571 /* OnboardingFooterView.swift in Sources */,
 				66D50668271D9B6100E51F0D /* NavigationButtonStyle.swift in Sources */,
 				0D1922F826BDEB3500052649 /* MockServices.swift in Sources */,
 				0D4E7A0B26B364170058B01E /* ContentView.swift in Sources */,
@@ -949,8 +981,10 @@
 				0D32281A26C5864B00262533 /* ProfileScreenViewModel.swift in Sources */,
 				0D185819272723FF0046B928 /* BlueChip.swift in Sources */,
 				0D864A0F26E1583000A61879 /* LoadingScreenViewModel.swift in Sources */,
+				2EA11F5D27467F7700709571 /* OnboardingContentView.swift in Sources */,
 				0DA13CA126C1955600E3B610 /* HomeScreen.swift in Sources */,
 				0DA13C9026C15D1D00E3B610 /* WelcomeScreenViewModel.swift in Sources */,
+				2E58E73B274679F000B2B84B /* OnboardingHeaderView.swift in Sources */,
 				66A0807B271993C500118B79 /* OnboardingProgressIndicator.swift in Sources */,
 				663FAB9E271D875700E495F8 /* CreateButton.swift in Sources */,
 				0D7DF08C271DCC0E00530046 /* ScreenBackground.swift in Sources */,

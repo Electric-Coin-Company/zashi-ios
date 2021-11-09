@@ -6,9 +6,37 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
-struct CircularFrameBackgroundImage: ViewModifier {
+struct CircularFrameBackgroundImages: Animatable, ViewModifier {
+    struct ViewState: Equatable {
+        let index: Int
+        let images: [Image]
+    }
+
+    let store: Store<ViewState, Never>
+    
+    func body(content: Content) -> some View {
+        WithViewStore(self.store) { viewStore in
+            ZStack {
+                ForEach(0..<viewStore.images.count - 1) { imageIndex in
+                    viewStore.images[imageIndex]
+                        .resizable()
+                        .aspectRatio(1.3, contentMode: .fill)
+                        .opacity(imageIndex == viewStore.index ? 1 : 0)
+                        .offset(x: imageIndex <= viewStore.index ? 0 : 25)
+                        .mask(Circle())
+                }
+                
+                content
+            }
+        }
+    }
+}
+
+struct CircularFrameBackgroundImage: Animatable, ViewModifier {
     let image: Image
+    
     func body(content: Content) -> some View {
         ZStack {
             image
@@ -24,6 +52,10 @@ struct CircularFrameBackgroundImage: ViewModifier {
 extension CircularFrame {
     func backgroundImage(_ image: Image) -> some View {
         modifier(CircularFrameBackgroundImage(image: image))
+    }
+    
+    func backgroundImages(_ store: Store<CircularFrameBackgroundImages.ViewState, Never>) -> some View {
+        modifier(CircularFrameBackgroundImages(store: store))
     }
 }
 

@@ -6,23 +6,70 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
-struct BadgeIcon: ViewModifier {
-    enum Badge: Equatable {
-        case shield
-        case list
-        case person
+enum Badge: Equatable {
+    case shield
+    case list
+    case person
 
-        var image: Image {
-            switch self {
-            case .shield: return Asset.Assets.Icons.shield.image
-            case .list: return Asset.Assets.Icons.list.image
-            case .person: return Asset.Assets.Icons.profile.image
-            }
+    var image: Image {
+        switch self {
+        case .shield: return Asset.Assets.Icons.shield.image
+        case .list: return Asset.Assets.Icons.list.image
+        case .person: return Asset.Assets.Icons.profile.image
         }
     }
+}
 
-    let badge: Badge
+struct BadgesOverlay: Animatable, ViewModifier {
+    struct ViewState: Equatable {
+        let index: Int
+        let badges: [Badge]
+    }
+    
+    let store: Store<ViewState, Never>
+    
+    func body(content: Content) -> some View {
+        WithViewStore(self.store) { viewStore in
+            content
+                .overlay(
+                    GeometryReader { proxy in
+                        VStack {
+                            Spacer()
+
+                            HStack {
+                                Spacer()
+
+                                ZStack {
+                                    ForEach(0..<viewStore.badges.count) { badgeIndex in
+                                        viewStore.badges[viewStore.index].image
+                                            .resizable()
+                                            .renderingMode(.none)
+                                            .frame(
+                                                width: proxy.size.width * 0.35,
+                                                height: proxy.size.height * 0.35,
+                                                alignment: .center
+                                            )
+                                            .offset(
+                                                x: 4.0,
+                                                y: proxy.size.height * 0.15
+                                            )
+                                            .opacity(badgeIndex == viewStore.index ? 1 : 0)
+                                    }
+                                }
+                               
+                                Spacer()
+                            }
+                        }
+                    }
+                )
+        }
+    }
+}
+
+struct BadgeOverlay: Animatable, ViewModifier {
+    var badge: Badge
 
     func body(content: Content) -> some View {
         content
@@ -37,14 +84,16 @@ struct BadgeIcon: ViewModifier {
                             badge.image
                                 .resizable()
                                 .frame(
-                                    width: proxy.size.width * 0.5,
-                                    height: proxy.size.height * 0.5,
+                                    width: proxy.size.width * 0.35,
+                                    height: proxy.size.height * 0.35,
                                     alignment: .center
                                 )
                                 .offset(
-                                    x: 0.0,
-                                    y: proxy.size.height * 0.21
+                                    x: 4.0,
+                                    y: proxy.size.height * 0.15
                                 )
+                                .transition(.scale(scale: 2))
+                                .transition(.opacity)
                             Spacer()
                         }
                     }
@@ -54,8 +103,12 @@ struct BadgeIcon: ViewModifier {
 }
 
 extension View {
-    func badgeIcon(_ badge: BadgeIcon.Badge) -> some View {
-        modifier(BadgeIcon(badge: badge))
+    func badgeIcon(_ badge: Badge) -> some View {
+        modifier(BadgeOverlay(badge: badge))
+    }
+    
+    func badgeIcons(_ store: Store<BadgesOverlay.ViewState, Never>) -> some View {
+        modifier(BadgesOverlay(store: store))
     }
 }
 
