@@ -26,7 +26,7 @@ struct NavigationButtonStyle: ButtonStyle {
     }
 }
 
-private extension Button {
+extension Button {
     var navigationButtonStyle: some View {
         buttonStyle(
             NavigationButtonStyle()
