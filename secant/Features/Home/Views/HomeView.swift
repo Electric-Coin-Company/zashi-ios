@@ -36,6 +36,19 @@ struct HomeView: View {
             }
             .padding(.horizontal, 30)
             .navigationBarTitle("Home", displayMode: .inline)
+            .fullScreenCover(
+                isPresented: viewStore.showHistoryBinding,
+                content: {
+                    NavigationView {
+                        TransactionHistoryView(store: store.historyStore())
+                            .toolbar {
+                                ToolbarItem {
+                                    Button("Done") { viewStore.send(.updateRoute(nil)) }
+                                }
+                            }
+                    }
+                }
+            )
         }
     }
 }
