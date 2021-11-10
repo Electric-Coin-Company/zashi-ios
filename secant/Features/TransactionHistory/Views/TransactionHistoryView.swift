@@ -8,11 +8,11 @@ struct TransactionHistoryView: View {
         WithViewStore(store) { viewStore in
             List {
                 ForEach(viewStore.transactions) { transaction in
-                    NavigationLink(
-                        isActive: viewStore.bindingForSelectingTransaction(transaction),
-                        destination: { TransactionDetailView(transaction: transaction) },
-                        label: { Text("Show Transaction \(transaction.id)") }
-                    )
+                    Text("Show Transaction \(transaction.id)")
+                        .navigationLink(
+                            isActive: viewStore.bindingForSelectingTransaction(transaction),
+                            destination: { TransactionDetailView(transaction: transaction) }
+                        )
                 }
             }
             .navigationTitle(Text("Transactions"))
