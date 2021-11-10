@@ -9,11 +9,12 @@ import SwiftUI
 
 @main
 struct SecantApp: App {
-    @StateObject var appRouter = AppRouter(services: MockServices())
-    
+    var homeStore: HomeStore = .demo
     var body: some Scene {
         WindowGroup {
-            appRouter.rootView()
+            NavigationView {
+                HomeView(store: homeStore)
+            }
         }
     }
 }
