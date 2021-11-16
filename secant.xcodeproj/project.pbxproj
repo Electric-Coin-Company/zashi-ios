@@ -89,6 +89,16 @@
 		66A0807B271993C500118B79 /* OnboardingProgressIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A0807A271993C500118B79 /* OnboardingProgressIndicator.swift */; };
 		66D50668271D9B6100E51F0D /* NavigationButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D50667271D9B6100E51F0D /* NavigationButtonStyle.swift */; };
 		66DC733F271D88CC0053CBB6 /* StandardButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DC733E271D88CC0053CBB6 /* StandardButtonStyle.swift */; };
+		F9322DC0273B555C00C105B5 /* NavigationLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9322DBF273B555C00C105B5 /* NavigationLinks.swift */; };
+		F93673D62742CB840099C6AF /* Previews.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93673D52742CB840099C6AF /* Previews.swift */; };
+		F93874F0273C4DE200F0E875 /* HomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93874ED273C4DE200F0E875 /* HomeStore.swift */; };
+		F93874F1273C4DE200F0E875 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93874EF273C4DE200F0E875 /* HomeView.swift */; };
+		F96B41E7273B501F0021B49A /* TransactionHistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41E3273B501F0021B49A /* TransactionHistoryStore.swift */; };
+		F96B41E8273B501F0021B49A /* TransactionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41E5273B501F0021B49A /* TransactionDetailView.swift */; };
+		F96B41E9273B501F0021B49A /* TransactionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41E6273B501F0021B49A /* TransactionHistoryView.swift */; };
+		F96B41EB273B50520021B49A /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41EA273B50520021B49A /* Strings.swift */; };
+		F9C165B4274031F600592F76 /* Bindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165B3274031F600592F76 /* Bindings.swift */; };
+		F9EEB8162742C2210032EEB8 /* WithStateBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9EEB8152742C2210032EEB8 /* WithStateBinding.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -196,6 +206,16 @@
 		66A0807A271993C500118B79 /* OnboardingProgressIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingProgressIndicator.swift; sourceTree = "<group>"; };
 		66D50667271D9B6100E51F0D /* NavigationButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationButtonStyle.swift; sourceTree = "<group>"; };
 		66DC733E271D88CC0053CBB6 /* StandardButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardButtonStyle.swift; sourceTree = "<group>"; };
+		F9322DBF273B555C00C105B5 /* NavigationLinks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationLinks.swift; sourceTree = "<group>"; };
+		F93673D52742CB840099C6AF /* Previews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Previews.swift; sourceTree = "<group>"; };
+		F93874ED273C4DE200F0E875 /* HomeStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeStore.swift; sourceTree = "<group>"; };
+		F93874EF273C4DE200F0E875 /* HomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		F96B41E3273B501F0021B49A /* TransactionHistoryStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionHistoryStore.swift; sourceTree = "<group>"; };
+		F96B41E5273B501F0021B49A /* TransactionDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionDetailView.swift; sourceTree = "<group>"; };
+		F96B41E6273B501F0021B49A /* TransactionHistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionHistoryView.swift; sourceTree = "<group>"; };
+		F96B41EA273B50520021B49A /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
+		F9C165B3274031F600592F76 /* Bindings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bindings.swift; sourceTree = "<group>"; };
+		F9EEB8152742C2210032EEB8 /* WithStateBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithStateBinding.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -525,6 +545,11 @@
 			children = (
 				0DACFA7E27208CE00039EEA5 /* Clamped.swift */,
 				0DACFA8027208D940039EEA5 /* UInt+SuperscriptText.swift */,
+				F96B41EA273B50520021B49A /* Strings.swift */,
+				F9322DBF273B555C00C105B5 /* NavigationLinks.swift */,
+				F9C165B3274031F600592F76 /* Bindings.swift */,
+				F9EEB8152742C2210032EEB8 /* WithStateBinding.swift */,
+				F93673D52742CB840099C6AF /* Previews.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -581,6 +606,8 @@
 		6654C73B2715A3F000901167 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				F93874EC273C4DE200F0E875 /* Home */,
+				F96B41E2273B501F0021B49A /* TransactionHistory */,
 				6654C73C2715A3FA00901167 /* Onboarding */,
 			);
 			path = Features;
@@ -635,6 +662,41 @@
 				665C963E272C26E600BC04FB /* CircularFrameBackground.swift */,
 			);
 			path = CircularFrame;
+			sourceTree = "<group>";
+		};
+		F93874EC273C4DE200F0E875 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				F93874ED273C4DE200F0E875 /* HomeStore.swift */,
+				F93874EE273C4DE200F0E875 /* Views */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		F93874EE273C4DE200F0E875 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F93874EF273C4DE200F0E875 /* HomeView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F96B41E2273B501F0021B49A /* TransactionHistory */ = {
+			isa = PBXGroup;
+			children = (
+				F96B41E3273B501F0021B49A /* TransactionHistoryStore.swift */,
+				F96B41E4273B501F0021B49A /* Views */,
+			);
+			path = TransactionHistory;
+			sourceTree = "<group>";
+		};
+		F96B41E4273B501F0021B49A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F96B41E5273B501F0021B49A /* TransactionDetailView.swift */,
+				F96B41E6273B501F0021B49A /* TransactionHistoryView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -835,9 +897,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				660558F8270C862F009D6954 /* XCAssets+Generated.swift in Sources */,
+				F96B41E9273B501F0021B49A /* TransactionHistoryView.swift in Sources */,
 				0D32281F26C5867D00262533 /* ScanQrScreenViewModel.swift in Sources */,
 				669FDAE9272C23B3007B9422 /* CircularFrame.swift in Sources */,
 				0D32282E26C5870B00262533 /* SendScreenViewModel.swift in Sources */,
+				F96B41E8273B501F0021B49A /* TransactionDetailView.swift in Sources */,
 				0D32282D26C5870B00262533 /* SendScreen.swift in Sources */,
 				663FABA2271D876C00E495F8 /* SecondaryButton.swift in Sources */,
 				0D1922ED26BDE0C600052649 /* AppRouter.swift in Sources */,
@@ -848,15 +912,20 @@
 				0D535FE2271F9476009A9E3E /* EnumeratedChip.swift in Sources */,
 				6654C73E2715A41300901167 /* OnboardingStore.swift in Sources */,
 				0D32281E26C5867D00262533 /* ScanQrScreen.swift in Sources */,
+				F93874F0273C4DE200F0E875 /* HomeStore.swift in Sources */,
 				669FDAEB272C23C2007B9422 /* CircularFrameBadge.swift in Sources */,
 				0D864A0E26E1583000A61879 /* LoadingScreen.swift in Sources */,
 				0DA13C9C26C1942100E3B610 /* BackupWalletScreen.swift in Sources */,
 				0DA13C9826C186FF00E3B610 /* RestoreWalletScreenViewModel.swift in Sources */,
+				F9EEB8162742C2210032EEB8 /* WithStateBinding.swift in Sources */,
+				F93673D62742CB840099C6AF /* Previews.swift in Sources */,
 				0D32283326C5877A00262533 /* BalanceScreenViewModel.swift in Sources */,
 				0D5D16F526E24CCF00AD33D1 /* AppError.swift in Sources */,
 				0D18581B272728D60046B928 /* PhraseChip.swift in Sources */,
 				665C963F272C26E600BC04FB /* CircularFrameBackground.swift in Sources */,
 				0DB8AA81271DC7520035BC9D /* DesignGuide.swift in Sources */,
+				F9322DC0273B555C00C105B5 /* NavigationLinks.swift in Sources */,
+				F93874F1273C4DE200F0E875 /* HomeView.swift in Sources */,
 				0D32282326C586A800262533 /* HistoryScreen.swift in Sources */,
 				0D864A0A26E154FD00A61879 /* InitFailedScreenViewModel.swift in Sources */,
 				0DA13CA526C1963000E3B610 /* Balance.swift in Sources */,
@@ -866,6 +935,7 @@
 				0D170A7226BC802800EB6A46 /* Router.swift in Sources */,
 				0D354A0926D5A9D000315F45 /* Services.swift in Sources */,
 				660558F7270C862F009D6954 /* Fonts+Generated.swift in Sources */,
+				F96B41E7273B501F0021B49A /* TransactionHistoryStore.swift in Sources */,
 				0DA13C9726C186FF00E3B610 /* RestoreWalletScreen.swift in Sources */,
 				0DACFA8127208D940039EEA5 /* UInt+SuperscriptText.swift in Sources */,
 				0DF2DC51272344E400FA31E2 /* EmptyChip.swift in Sources */,
@@ -885,7 +955,9 @@
 				663FAB9E271D875700E495F8 /* CreateButton.swift in Sources */,
 				0D7DF08C271DCC0E00530046 /* ScreenBackground.swift in Sources */,
 				0DA13C8F26C15D1D00E3B610 /* WelcomeScreen.swift in Sources */,
+				F9C165B4274031F600592F76 /* Bindings.swift in Sources */,
 				0D32282826C586E000262533 /* RequestZcashScreen.swift in Sources */,
+				F96B41EB273B50520021B49A /* Strings.swift in Sources */,
 				0D32283226C5877A00262533 /* BalanceScreen.swift in Sources */,
 				0D354A0A26D5A9D000315F45 /* KeyStoring.swift in Sources */,
 				0DA13CA226C1955600E3B610 /* HomeScreenViewModel.swift in Sources */,
