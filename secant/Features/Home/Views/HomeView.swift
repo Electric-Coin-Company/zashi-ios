@@ -21,6 +21,13 @@ struct HomeView: View {
                 .primaryButtonStyle
                 .frame(height: 50)
 
+                Button(
+                    action: { viewStore.send(.updateRoute(.send)) },
+                    label: { Text("Go to Send") }
+                )
+                .primaryButtonStyle
+                .frame(height: 50)
+
                 Spacer()
 
                 HStack {
@@ -36,6 +43,21 @@ struct HomeView: View {
             }
             .padding(.horizontal, 30)
             .navigationBarTitle("Home", displayMode: .inline)
+            .navigationLinkEmpty(
+                isActive: viewStore.showSendBinding,
+                destination: {
+                    Create(
+                        store: .init(
+                            initialState: .init(
+                                transaction: .demo,
+                                route: nil
+                            ),
+                            reducer: .default.debug(),
+                            environment: ()
+                        )
+                    )
+                }
+            )
             .fullScreenCover(
                 isPresented: viewStore.showHistoryBinding,
                 content: {

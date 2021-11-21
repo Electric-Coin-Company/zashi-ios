@@ -89,4 +89,13 @@ extension HomeViewStore {
             }
         )
     }
+
+    var showSendBinding: Binding<Bool> {
+        self.binding(
+            get: { $0.route == .send },
+            send: { isActive in
+                return .updateRoute(isActive ? .send : nil)
+            }
+        )
+    }
 }
