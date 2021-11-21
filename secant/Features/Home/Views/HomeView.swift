@@ -52,7 +52,10 @@ struct HomeView: View {
                                 transaction: .demo,
                                 route: nil
                             ),
-                            reducer: .default.debug(),
+                            reducer: SendReducer.default(
+                                whenDone: { viewStore.send(.updateRoute(nil)) }
+                            )
+                            .debug(),
                             environment: ()
                         )
                     )

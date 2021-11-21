@@ -28,6 +28,17 @@ extension SendReducer {
             return .none
         }
     }
+
+    static func `default`(whenDone: @escaping () -> Void) -> SendReducer {
+        SendReducer { state, action, _ in
+            switch action {
+            case let .updateRoute(route) where route == .showApprove(route: .showSent(route: .done)):
+                return Effect.fireAndForget(whenDone)
+            default:
+                return Self.default.run(&state, action, ())
+            }
+        }
+    }
 }
 
 // Mark: - SendStore
