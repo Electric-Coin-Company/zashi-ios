@@ -2,17 +2,14 @@ import SwiftUI
 import ComposableArchitecture
 
 struct Sent: View {
-    enum Route {
-        case done
-    }
-    @State var transaction: Transaction
-    @Binding var route: Route?
+    var transaction: Transaction
+    @Binding var isComplete: Bool
 
     var body: some View {
         VStack {
             Button(
                 action: {
-                    route = .done
+                    isComplete = true
                 },
                 label: { Text("Done") }
             )
@@ -22,7 +19,7 @@ struct Sent: View {
 
 
             Text("\(String(dumping: transaction))")
-            Text("\(String(dumping: route))")
+            Text("\(String(dumping: isComplete))")
 
             Spacer()
         }
@@ -32,6 +29,6 @@ struct Sent: View {
 
 struct Done_Previews: PreviewProvider {
     static var previews: some View {
-        Sent(transaction: .demo, route: .constant(nil))
+        Sent(transaction: .demo, isComplete: .constant(false))
     }
 }

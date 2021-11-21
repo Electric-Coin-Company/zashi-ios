@@ -103,6 +103,7 @@
 		F9C165C22740403600592F76 /* CreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165BB2740403600592F76 /* CreateView.swift */; };
 		F9C165C42740403600592F76 /* SentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165BD2740403600592F76 /* SentView.swift */; };
 		F9EEB8162742C2210032EEB8 /* WithStateBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9EEB8152742C2210032EEB8 /* WithStateBinding.swift */; };
+		F9C165CB2741AB5D00592F76 /* SendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165CA2741AB5D00592F76 /* SendView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -224,6 +225,7 @@
 		F9C165BB2740403600592F76 /* CreateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateView.swift; sourceTree = "<group>"; };
 		F9C165BD2740403600592F76 /* SentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SentView.swift; sourceTree = "<group>"; };
 		F9EEB8152742C2210032EEB8 /* WithStateBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithStateBinding.swift; sourceTree = "<group>"; };
+		F9C165CA2741AB5D00592F76 /* SendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -720,6 +722,7 @@
 		F9C165B82740403600592F76 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F9C165CA2741AB5D00592F76 /* SendView.swift */,
 				F9C165BB2740403600592F76 /* CreateView.swift */,
 				F9C165B92740403600592F76 /* ApproveView.swift */,
 				F9C165BD2740403600592F76 /* SentView.swift */,
@@ -994,6 +997,7 @@
 				0DA13CA226C1955600E3B610 /* HomeScreenViewModel.swift in Sources */,
 				0D32282926C586E000262533 /* RequestZcashScreenViewModel.swift in Sources */,
 				0D32281926C5864B00262533 /* ProfileScreen.swift in Sources */,
+				F9C165CB2741AB5D00592F76 /* SendView.swift in Sources */,
 				6654C7412715A47300901167 /* Onboarding.swift in Sources */,
 				0D32282426C586A800262533 /* HistoryScreenViewModel.swift in Sources */,
 				F9C165C42740403600592F76 /* SentView.swift in Sources */,

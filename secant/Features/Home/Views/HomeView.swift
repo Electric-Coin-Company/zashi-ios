@@ -46,7 +46,7 @@ struct HomeView: View {
             .navigationLinkEmpty(
                 isActive: viewStore.showSendBinding,
                 destination: {
-                    Create(
+                    SendView(
                         store: .init(
                             initialState: .init(
                                 transaction: .demo,

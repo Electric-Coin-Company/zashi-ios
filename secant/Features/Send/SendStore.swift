@@ -3,12 +3,12 @@ import ComposableArchitecture
 
 struct SendState: Equatable {
     var transaction: Transaction
-    var route: Create.Route?
+    var route: SendView.Route?
 }
 
 enum SendAction: Equatable {
     case updateTransaction(Transaction)
-    case updateRoute(Create.Route?)
+    case updateRoute(SendView.Route?)
 }
 
 // Mark: - SendReducer
@@ -32,7 +32,7 @@ extension SendReducer {
     static func `default`(whenDone: @escaping () -> Void) -> SendReducer {
         SendReducer { state, action, _ in
             switch action {
-            case let .updateRoute(route) where route == .showApprove(route: .showSent(route: .done)):
+            case let .updateRoute(route) where route == .done:
                 return Effect.fireAndForget(whenDone)
             default:
                 return Self.default.run(&state, action, ())
@@ -58,10 +58,31 @@ extension SendViewStore {
         )
     }
 
-    var routeBinding: Binding<Create.Route?> {
+    var routeBinding: Binding<SendView.Route?> {
         self.binding(
             get: \.route,
             send: SendAction.updateRoute
+        )
+    }
+
+    var bindingForApprove: Binding<Bool> {
+        self.routeBinding.map(
+            extract: { $0 == .showApprove || self.bindingForSent.wrappedValue },
+            embed: { $0 ? SendView.Route.showApprove : nil }
+        )
+    }
+
+    var bindingForSent: Binding<Bool> {
+        self.routeBinding.map(
+            extract: { $0 == .showSent || self.bindingForDone.wrappedValue },
+            embed: { $0 ? SendView.Route.showSent : SendView.Route.showApprove }
+        )
+    }
+
+    var bindingForDone: Binding<Bool> {
+        self.routeBinding.map(
+            extract: { $0 == .done },
+            embed: { $0 ? SendView.Route.done : SendView.Route.showSent }
         )
     }
 }

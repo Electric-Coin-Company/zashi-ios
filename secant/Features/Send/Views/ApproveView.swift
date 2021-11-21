@@ -2,17 +2,13 @@ import SwiftUI
 import ComposableArchitecture
 
 struct Approve: View {
-    enum Route: Equatable {
-        case showSent(route: Sent.Route?)
-    }
-
     let transaction: Transaction
-    @Binding var route: Route?
+    @Binding var isComplete: Bool
 
     var body: some View {
         VStack {
             Button(
-                action: { route = .showSent(route: nil) },
+                action: { isComplete = true },
                 label: { Text("Go to sent") }
             )
             .primaryButtonStyle
@@ -20,42 +16,21 @@ struct Approve: View {
             .padding()
 
             Text("\(String(dumping: transaction))")
-            Text("\(String(dumping: route))")
+            Text("\(String(dumping: isComplete))")
 
             Spacer()
         }
         .navigationTitle(Text("2. Approve"))
-        .navigationLinkEmpty(
-            isActive: $route.map(
-                extract: {
-                    if case .showSent = $0 {
-                        return true
-                    } else {
-                        return false
-                    }
-                },
-                embed: { $0 ? .showSent(route: (/Route.showSent).extract(from: route)) : nil }
-            ),
-            destination: {
-                Sent(
-                    transaction: transaction,
-                    route:  $route.map(
-                        extract: /Route.showSent,
-                        embed: Route.showSent
-                    )
-                )
-            }
-        )
     }
 }
 
 struct Approve_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            StateContainer(initialState: (Transaction.demo, Approve.Route?.none)) {
+            StateContainer(initialState: (Transaction.demo, false)) {
                 Approve(
                     transaction: $0.0.wrappedValue,
-                    route: $0.1
+                    isComplete: $0.1
                 )
             }
         }
