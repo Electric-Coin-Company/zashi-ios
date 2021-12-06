@@ -65,7 +65,7 @@ struct RecoveryPhraseDisplayView: View {
     }
 }
 
-#if DEBUG
+//#if DEBUG
 extension RecoveryPhraseDisplayStore {
     static let scheduler = DispatchQueue.main
     static var demo: RecoveryPhraseDisplayStore {
@@ -98,7 +98,7 @@ extension RecoveryPhrase {
 
     static let demo = RecoveryPhrase(words: testPhrase)
 }
-#endif
+
 
 struct RecoveryPhraseDisplayView_Previews: PreviewProvider {
     static let scheduler = DispatchQueue.main
@@ -116,3 +116,4 @@ struct RecoveryPhraseDisplayView_Previews: PreviewProvider {
         .preferredColorScheme(.dark)
     }
 }
+//#endif

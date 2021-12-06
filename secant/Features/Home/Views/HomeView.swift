@@ -100,9 +100,8 @@ struct HomeView: View {
     }
 }
 
-// MARK: - Previews
 
-#if DEBUG
+
 extension HomeStore {
     static var demo: HomeStore {
         HomeStore(
@@ -118,8 +117,8 @@ extension HomeStore {
         )
     }
 }
-#endif
 
+// MARK: - Previews
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
@@ -127,3 +126,4 @@ struct HomeView_Previews: PreviewProvider {
         }
     }
 }
+

@@ -1,6 +1,6 @@
 import SwiftUI
 
-#if DEBUG
+//#if DEBUG
 struct StateContainer<T, Content: View>: View {
     @State private var state: T
     private var content: (Binding<T>) -> Content
@@ -14,4 +14,4 @@ struct StateContainer<T, Content: View>: View {
         content($state)
     }
 }
-#endif
+//#endif

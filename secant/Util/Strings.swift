@@ -1,6 +1,6 @@
 import Foundation
 
-#if DEBUG
+//#if DEBUG
 extension String {
     init<T>(dumping value: T) {
         var output = String()
@@ -8,4 +8,4 @@ extension String {
         self.init(stringLiteral: output)
     }
 }
-#endif
+//#endif
