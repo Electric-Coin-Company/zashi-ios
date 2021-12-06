@@ -40,10 +40,15 @@ struct WordChipGrid: View {
         }
     }
 
+    init(chips: [PhraseChip.Kind]) {
+        self.chips = chips
+    }
+
     init(words: [String], startingAt index: Int) {
-        self.chips = zip(words, index..<index + words.count).map({ word, index in
-            word.isEmpty ? .empty : .ordered(position: index, word: word)
+        let chips = zip(words, index..<index + words.count).map({ word, index in
+            word.isEmpty ? PhraseChip.Kind.empty : .ordered(position: index, word: word)
         })
+        self.init(chips: chips)
     }
 
     @ViewBuilder func chipView(for chipKind: PhraseChip.Kind) -> some View {
