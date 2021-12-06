@@ -51,7 +51,7 @@ struct NumberedText: View {
                 x: 0,
                 y: 1
             )
-            .frame(width: .infinity, height: geometry.size.height, alignment: .center)
+            .frame(height: geometry.size.height, alignment: .center)
         }
     }
 
