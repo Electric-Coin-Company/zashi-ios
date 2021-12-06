@@ -9,7 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 
 struct RecoveryPhraseBackupValidationView: View {
-    let store: Store<RecoveryPhraseValidationState, RecoveryPhraseValidationAction>
+    let store: RecoveryPhraseValidationStore
 
     var body: some View {
         WithViewStore(self.store) { viewStore in
@@ -161,7 +161,7 @@ struct RecoveryPhraseBackupView_Previews: PreviewProvider {
 
     static let store = Store(
         initialState: RecoveryPhraseValidationState(phrase: recoveryPhrase),
-        reducer: validatePhraseFlowReducer,
+        reducer: .default,
         environment: RecoveryPhraseEnvironment(
             mainQueue: scheduler.eraseToAnyScheduler(),
             newPhrase: { Effect(value: recoveryPhrase) }

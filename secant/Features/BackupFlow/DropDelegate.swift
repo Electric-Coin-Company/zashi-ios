@@ -46,7 +46,7 @@ struct WordChipDropDelegate: DropDelegate {
 
 extension RecoveryPhraseValidationStep {
     func dropDelegate(
-        for viewStore: ViewStore<RecoveryPhraseValidationState, RecoveryPhraseValidationAction>,
+        for viewStore: RecoveryPhraseValidationViewStore,
         group: Int
     ) -> DropDelegate {
         switch self {

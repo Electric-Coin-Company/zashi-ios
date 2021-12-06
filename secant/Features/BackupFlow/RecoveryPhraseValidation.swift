@@ -8,6 +8,9 @@
 import Foundation
 import ComposableArchitecture
 
+typealias RecoveryPhraseValidationStore = Store<RecoveryPhraseValidationState, RecoveryPhraseValidationAction>
+typealias RecoveryPhraseValidationViewStore = ViewStore<RecoveryPhraseValidationState, RecoveryPhraseValidationAction>
+
 struct RecoveryPhraseEnvironment {
     var mainQueue: AnySchedulerOf<DispatchQueue>
     var newPhrase: () -> Effect<RecoveryPhrase, AppError>
@@ -81,28 +84,28 @@ enum RecoveryPhraseValidationAction: Equatable {
     case fail
 }
 
-let validatePhraseFlowReducer = Reducer<
-    RecoveryPhraseValidationState,
-    RecoveryPhraseValidationAction,
-    RecoveryPhraseEnvironment
-    > { state, action, _ in
-    switch action {
-    case .reset:
-        state.reset()
-        return .none
+typealias RecoveryPhraseValidationReducer = Reducer<RecoveryPhraseValidationState, RecoveryPhraseValidationAction, RecoveryPhraseEnvironment>
 
-    case let .drag(wordChip, intoGroup):
-        state.apply(chip: wordChip, into: intoGroup)
-        return .none
+extension RecoveryPhraseValidationReducer {
+    static let `default` = RecoveryPhraseValidationReducer { state, action, _ in
+        switch action {
+        case .reset:
+            state.reset()
+            return .none
 
-    case .validate:
-        state.step.validate()
-        return .none
+        case let .drag(wordChip, intoGroup):
+            state.apply(chip: wordChip, into: intoGroup)
+            return .none
 
-    case .succeed:
-        return .none
-    case .fail:
-        state.reset()
-        return .none
+        case .validate:
+            state.step.validate()
+            return .none
+
+        case .succeed:
+            return .none
+        case .fail:
+            state.reset()
+            return .none
+        }
     }
 }

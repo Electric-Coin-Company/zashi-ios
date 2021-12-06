@@ -28,7 +28,7 @@ extension View {
     func onDrop(
         for step: RecoveryPhraseValidationStep,
         group: Int,
-        viewStore: ViewStore<RecoveryPhraseValidationState, RecoveryPhraseValidationAction>
+        viewStore: RecoveryPhraseValidationViewStore
     ) -> some View {
         self.onDrop(
             of: [PhraseChip.completionTypeIdentifier],
