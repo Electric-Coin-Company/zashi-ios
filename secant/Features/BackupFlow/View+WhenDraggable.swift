@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-
+import ComposableArchitecture
 extension PhraseChip {
     static let completionTypeIdentifier = "private.secant.chipCompletion"
 
@@ -25,18 +25,31 @@ extension PhraseChip {
 }
 
 extension View {
+    func onDrop(
+        for step: RecoveryPhraseValidationStep,
+        group: Int,
+        viewStore: ViewStore<RecoveryPhraseValidationState, RecoveryPhraseValidationAction>
+    ) -> some View {
+        self.onDrop(
+            of: [PhraseChip.completionTypeIdentifier],
+            delegate: step.dropDelegate(for: viewStore, group: group)
+        )
+    }
+}
+
+extension View {
     /// Makes a View accept drop types Self.completionTypeIdentifier when it is of kind .empty
-    func whenDroppable(_ isDroppable: Bool, dropDelegate: DropDelegate) -> some View {
-        self.modifier(MakeDroppableModifier(isDroppable: isDroppable, dropDelegate: dropDelegate))
+    func whenIsDroppable(_ isDroppable: Bool, dropDelegate: DropDelegate) -> some View {
+        self.modifier(MakeDroppableModifier(isDroppable: isDroppable, drop: dropDelegate))
     }
 }
 
 struct MakeDroppableModifier: ViewModifier {
     var isDroppable: Bool
-    var dropDelegate: DropDelegate
+    var drop: DropDelegate
     func body(content: Content) -> some View {
         if isDroppable {
-            content.onDrop(of: [PhraseChip.completionTypeIdentifier], delegate: dropDelegate)
+            content.onDrop(of: [PhraseChip.completionTypeIdentifier], delegate: drop)
         } else {
             content
         }

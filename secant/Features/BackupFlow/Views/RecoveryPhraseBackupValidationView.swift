@@ -28,7 +28,7 @@ struct RecoveryPhraseBackupValidationView: View {
                     let chunks = step.phrase.toChunks()
                     ForEach(Array(zip(chunks.indices, chunks)), id: \.0) { index, chunk in
                         WordChipGrid(chips: step.wordChips(for: index, groupSize: RecoveryPhraseValidationState.wordGroupSize, from: chunk))
-                            .whenDroppable(!step.groupCompleted(index: index), dropDelegate: step.dropDelegate(for: viewStore, group: index))
+                            .whenIsDroppable(!step.groupCompleted(index: index), dropDelegate: step.dropDelegate(for: viewStore, group: index))
                     }
                 }
                 .padding()

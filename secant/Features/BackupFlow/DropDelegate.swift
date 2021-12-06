@@ -12,11 +12,16 @@ import ComposableArchitecture
 
 /// There's no way to pass a nullable action to a droppable target. So, the Null Object Pattern comes to the rescue
 struct NullDelegate: DropDelegate {
+    func validateDrop(info: DropInfo) -> Bool {
+        return false
+    }
+
     func performDrop(info: DropInfo) -> Bool {
         false
     }
 }
 
+/// Drop delegate that accepts items conforming to `PhraseChip.completionTypeIdentifier`
 struct WordChipDropDelegate: DropDelegate {
     var dropAction: ((PhraseChip.Kind) -> Void)?
 
@@ -36,12 +41,6 @@ struct WordChipDropDelegate: DropDelegate {
             return true
         }
         return false
-    }
-}
-
-extension RecoveryPhraseValidationStep {
-    func makeDropDelegate() -> DropDelegate {
-        NullDelegate()
     }
 }
 
@@ -82,17 +81,5 @@ extension RecoveryPhraseValidationStep {
         case .incomplete(_, _, let completion, _):
             return completion.first(where: { $0.groupIndex == index }) != nil
         }
-    }
-}
-extension View {
-    func onDrop(
-        for step: RecoveryPhraseValidationStep,
-        group: Int,
-        viewStore: ViewStore<RecoveryPhraseValidationState, RecoveryPhraseValidationAction>
-    ) -> some View {
-        self.onDrop(
-            of: [PhraseChip.completionTypeIdentifier],
-            delegate: step.dropDelegate(for: viewStore, group: group)
-        )
     }
 }
