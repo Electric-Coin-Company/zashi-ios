@@ -9,7 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 
 struct RecoveryPhraseDisplayView: View {
-    let store: Store<BackupPhraseState, BackupPhraseAction>
+    let store: RecoveryPhraseDisplayStore
 
     var body: some View {
         WithViewStore(self.store) { viewStore in
@@ -25,19 +25,23 @@ struct RecoveryPhraseDisplayView: View {
                                 .frame(alignment: .center)
                         }
 
-                        VStack(alignment: .leading, spacing: 30) {
+                        VStack(alignment: .leading, spacing: 20) {
                             ForEach(chunks, id: \.startIndex) { chunk in
                                 WordChipGrid(words: chunk.words, startingAt: chunk.startIndex)
                             }
                         }
 
                         VStack {
-                            Button(action: {}) {
+                            Button(action: {
+                                viewStore.send(.finishedPressed)
+                            }) {
                                 Text("Finished!")
                             }
                             .activeButtonStyle
 
-                            Button(action: {}) {
+                            Button(action: {
+                                viewStore.send(.copyToBufferPressed)
+                            }) {
                                 Text("Copy To Buffer")
                                     .bodyText()
                             }
@@ -48,8 +52,8 @@ struct RecoveryPhraseDisplayView: View {
                         Text("Oops no words")
                     }
                 }
-                .padding()
                 .padding(.top, 0)
+                .padding()
             }
             .padding(.horizontal)
         }
@@ -61,9 +65,22 @@ struct RecoveryPhraseDisplayView: View {
     }
 }
 
-struct RecoveryPhraseDisplayView_Previews: PreviewProvider {
+#if DEBUG
+extension RecoveryPhraseDisplayStore {
     static let scheduler = DispatchQueue.main
+    static var demo: RecoveryPhraseDisplayStore {
+        RecoveryPhraseDisplayStore(
+            initialState: RecoveryPhraseDisplayState(phrase: RecoveryPhrase.demo),
+            reducer: RecoveryPhraseDisplayReducer.default,
+            environment: BackupPhraseEnvironment(
+                mainQueue: scheduler.eraseToAnyScheduler(),
+                newPhrase: { Effect(value: RecoveryPhrase.demo) }
+            )
+        )
+    }
+}
 
+extension RecoveryPhrase {
     static let testPhrase = [
         // 1
         "bring", "salute", "thank",
@@ -79,16 +96,14 @@ struct RecoveryPhraseDisplayView_Previews: PreviewProvider {
         "pizza", "just", "garlic"
     ]
 
-    static let recoveryPhrase = RecoveryPhrase(words: testPhrase)
+    static let demo = RecoveryPhrase(words: testPhrase)
+}
+#endif
 
-    static let store = Store(
-        initialState: BackupPhraseState(phrase: recoveryPhrase),
-        reducer: backupFlowReducer,
-        environment: BackupPhraseEnvironment(
-            mainQueue: scheduler.eraseToAnyScheduler(),
-            newPhrase: { Effect(value: recoveryPhrase) }
-        )
-    )
+struct RecoveryPhraseDisplayView_Previews: PreviewProvider {
+    static let scheduler = DispatchQueue.main
+
+    static let store = RecoveryPhraseDisplayStore.demo
 
     static var previews: some View {
         NavigationView {

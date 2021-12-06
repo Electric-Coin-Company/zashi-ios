@@ -7,14 +7,17 @@
 
 import Foundation
 import ComposableArchitecture
+import UIKit
 
 struct BackupPhraseEnvironment {
     var mainQueue: AnySchedulerOf<DispatchQueue>
     var newPhrase: () -> Effect<RecoveryPhrase, AppError>
 }
 
+typealias RecoveryPhraseDisplayStore = Store<RecoveryPhraseDisplayState, RecoveryPhraseDisplayAction>
+
 struct RecoveryPhrase: Equatable {
-    struct Chunk {
+    struct Chunk: Hashable {
         var startIndex: Int
         var words: [String]
     }
@@ -29,37 +32,48 @@ struct RecoveryPhrase: Equatable {
             Chunk(startIndex: $0 * chunkSize + 1, words: $1)
         }
     }
+
+    func toString() -> String {
+        words.joined(separator: " ")
+    }
 }
 
-struct BackupPhraseState: Equatable {
+struct RecoveryPhraseDisplayState: Equatable {
     var phrase: RecoveryPhrase?
+    var showCopyToBufferAlert = false
 }
 
-enum BackupPhraseAction: Equatable {
+enum RecoveryPhraseDisplayAction: Equatable {
     case createPhrase
     case copyToBufferPressed
     case finishedPressed
     case phraseResponse(Result<RecoveryPhrase, AppError>)
 }
 
-let backupFlowReducer = Reducer<BackupPhraseState, BackupPhraseAction, BackupPhraseEnvironment> { state, action, environment in
-    switch action {
-    case .createPhrase:
-        return environment.newPhrase()
-            .receive(on: environment.mainQueue)
-            .catchToEffect(BackupPhraseAction.phraseResponse)
-    case .copyToBufferPressed:
-        dump("not implemented")
-        return .none
-    case .finishedPressed:
-        dump("not implemented")
-        return .none
-    case let .phraseResponse(.success(phrase)):
-        state.phrase = phrase
-        return .none
-    case .phraseResponse(.failure):
-        dump("not implemented")
-        return .none
+typealias RecoveryPhraseDisplayReducer = Reducer<RecoveryPhraseDisplayState, RecoveryPhraseDisplayAction, BackupPhraseEnvironment>
+
+extension RecoveryPhraseDisplayReducer {
+    static let `default` = RecoveryPhraseDisplayReducer { state, action, environment in
+        switch action {
+        case .createPhrase:
+            return environment.newPhrase()
+                .receive(on: environment.mainQueue)
+                .catchToEffect(RecoveryPhraseDisplayAction.phraseResponse)
+        case .copyToBufferPressed:
+            guard let phrase = state.phrase?.toString() else { return .none }
+            UIPasteboard.general.string = phrase
+            state.showCopyToBufferAlert = true
+            return .none
+        case .finishedPressed:
+            dump("not implemented")
+            return .none
+        case let .phraseResponse(.success(phrase)):
+            state.phrase = phrase
+            return .none
+        case .phraseResponse(.failure):
+            dump("not implemented")
+            return .none
+        }
     }
 }
 
