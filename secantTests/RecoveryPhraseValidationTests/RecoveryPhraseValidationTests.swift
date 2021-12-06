@@ -28,7 +28,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
         let indices = [1, 0, 5, 3]
 
         let expected = ["salute", "boil", "cancel", "pizza"].map({ PhraseChip.Kind.unassigned(word: $0) })
-        let result = RecoveryPhaseValidationState.pickWordsFromMissingIndices(indices: indices, phrase: phrase)
+        let result = RecoveryPhraseValidationState.pickWordsFromMissingIndices(indices: indices, phrase: phrase)
 
         XCTAssertEqual(expected, result)
     }
@@ -54,16 +54,16 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let missingWordChips = ["salute", "boil", "cancel", "pizza"].map({ PhraseChip.Kind.unassigned(word: $0) })
 
-        let initialStep = RecoveryPhaseValidationState.ValidationStep.initial(
+        let initialStep = RecoveryPhraseValidationState.ValidationStep.initial(
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordsChips: missingWordChips
         )
 
-        let expectedStep = RecoveryPhaseValidationState.ValidationStep.incomplete(
+        let expectedStep = RecoveryPhraseValidationState.ValidationStep.incomplete(
             phrase: phrase,
             missingIndices: missingIndices,
-            completion: [RecoveryPhaseValidationState.StepCompletion(groupIndex: 1, word: "salute")],
+            completion: [RecoveryPhraseValidationState.StepCompletion(groupIndex: 1, word: "salute")],
             missingWordsChips: [
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.unassigned(word: "boil"),
@@ -72,7 +72,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
             ]
         )
 
-        let result = RecoveryPhaseValidationState.ValidationStep.given(step: initialStep, apply: missingWordChips[0], into: 1)
+        let result = RecoveryPhraseValidationState.ValidationStep.given(step: initialStep, apply: missingWordChips[0], into: 1)
 
         XCTAssertEqual(expectedStep, result)
     }
@@ -98,16 +98,16 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let missingWordChips = ["salute", "boil", "cancel", "pizza"].map({ PhraseChip.Kind.unassigned(word: $0) })
 
-        let initialStep = RecoveryPhaseValidationState.ValidationStep.initial(
+        let initialStep = RecoveryPhraseValidationState.ValidationStep.initial(
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordsChips: missingWordChips
         )
 
-        let expectedStep = RecoveryPhaseValidationState.ValidationStep.incomplete(
+        let expectedStep = RecoveryPhraseValidationState.ValidationStep.incomplete(
             phrase: phrase,
             missingIndices: missingIndices,
-            completion: [RecoveryPhaseValidationState.StepCompletion(groupIndex: 0, word: "pizza")],
+            completion: [RecoveryPhraseValidationState.StepCompletion(groupIndex: 0, word: "pizza")],
             missingWordsChips: [
                 PhraseChip.Kind.unassigned(word: "salute"),
                 PhraseChip.Kind.unassigned(word: "boil"),
@@ -116,7 +116,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
             ]
         )
 
-        let result = RecoveryPhaseValidationState.ValidationStep.given(step: initialStep, apply: missingWordChips[3], into: 0)
+        let result = RecoveryPhraseValidationState.ValidationStep.given(step: initialStep, apply: missingWordChips[3], into: 0)
 
         XCTAssertEqual(expectedStep, result)
     }
@@ -140,10 +140,10 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let phrase = RecoveryPhrase(words: words)
 
-        let currentStep = RecoveryPhaseValidationState.ValidationStep.incomplete(
+        let currentStep = RecoveryPhraseValidationState.ValidationStep.incomplete(
             phrase: phrase,
             missingIndices: missingIndices,
-            completion: [RecoveryPhaseValidationState.StepCompletion(groupIndex: 0, word: "salute")],
+            completion: [RecoveryPhraseValidationState.StepCompletion(groupIndex: 0, word: "salute")],
             missingWordsChips: [
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.unassigned(word: "boil"),
@@ -152,12 +152,12 @@ class RecoveryPhraseValidationTests: XCTestCase {
             ]
         )
 
-        let expected = RecoveryPhaseValidationState.ValidationStep.incomplete(
+        let expected = RecoveryPhraseValidationState.ValidationStep.incomplete(
             phrase: phrase,
             missingIndices: missingIndices,
             completion: [
-                RecoveryPhaseValidationState.StepCompletion(groupIndex: 0, word: "salute"),
-                RecoveryPhaseValidationState.StepCompletion(groupIndex: 1, word: "boil")
+                RecoveryPhraseValidationState.StepCompletion(groupIndex: 0, word: "salute"),
+                RecoveryPhraseValidationState.StepCompletion(groupIndex: 1, word: "boil")
             ],
             missingWordsChips: [
                 PhraseChip.Kind.empty,
@@ -167,7 +167,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
             ]
         )
 
-        let result = RecoveryPhaseValidationState.ValidationStep.given(step: currentStep, apply: PhraseChip.Kind.unassigned(word: "boil"), into: 1)
+        let result = RecoveryPhraseValidationState.ValidationStep.given(step: currentStep, apply: PhraseChip.Kind.unassigned(word: "boil"), into: 1)
 
         XCTAssertEqual(expected, result)
     }
@@ -191,12 +191,12 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let phrase = RecoveryPhrase(words: words)
 
-        let currentStep = RecoveryPhaseValidationState.ValidationStep.incomplete(
+        let currentStep = RecoveryPhraseValidationState.ValidationStep.incomplete(
             phrase: phrase,
             missingIndices: missingIndices,
             completion: [
-                RecoveryPhaseValidationState.StepCompletion(groupIndex: 0, word: "salute"),
-                RecoveryPhaseValidationState.StepCompletion(groupIndex: 1, word: "boil")
+                RecoveryPhraseValidationState.StepCompletion(groupIndex: 0, word: "salute"),
+                RecoveryPhraseValidationState.StepCompletion(groupIndex: 1, word: "boil")
             ],
             missingWordsChips: [
                 PhraseChip.Kind.empty,
@@ -206,13 +206,13 @@ class RecoveryPhraseValidationTests: XCTestCase {
             ]
         )
 
-        let expected = RecoveryPhaseValidationState.ValidationStep.incomplete(
+        let expected = RecoveryPhraseValidationState.ValidationStep.incomplete(
             phrase: phrase,
             missingIndices: missingIndices,
             completion: [
-                RecoveryPhaseValidationState.StepCompletion(groupIndex: 0, word: "salute"),
-                RecoveryPhaseValidationState.StepCompletion(groupIndex: 1, word: "boil"),
-                RecoveryPhaseValidationState.StepCompletion(groupIndex: 2, word: "cancel")
+                RecoveryPhraseValidationState.StepCompletion(groupIndex: 0, word: "salute"),
+                RecoveryPhraseValidationState.StepCompletion(groupIndex: 1, word: "boil"),
+                RecoveryPhraseValidationState.StepCompletion(groupIndex: 2, word: "cancel")
             ],
             missingWordsChips: [
                 PhraseChip.Kind.empty,
@@ -222,7 +222,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
             ]
         )
 
-        let result = RecoveryPhaseValidationState.ValidationStep.given(step: currentStep, apply: PhraseChip.Kind.unassigned(word: "cancel"), into: 2)
+        let result = RecoveryPhraseValidationState.ValidationStep.given(step: currentStep, apply: PhraseChip.Kind.unassigned(word: "cancel"), into: 2)
 
         XCTAssertEqual(expected, result)
     }
@@ -246,13 +246,13 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let phrase = RecoveryPhrase(words: words)
 
-        let currentStep = RecoveryPhaseValidationState.ValidationStep.incomplete(
+        let currentStep = RecoveryPhraseValidationState.ValidationStep.incomplete(
             phrase: phrase,
             missingIndices: missingIndices,
             completion: [
-                RecoveryPhaseValidationState.StepCompletion(groupIndex: 0, word: "salute"),
-                RecoveryPhaseValidationState.StepCompletion(groupIndex: 1, word: "boil"),
-                RecoveryPhaseValidationState.StepCompletion(groupIndex: 2, word: "cancel")
+                RecoveryPhraseValidationState.StepCompletion(groupIndex: 0, word: "salute"),
+                RecoveryPhraseValidationState.StepCompletion(groupIndex: 1, word: "boil"),
+                RecoveryPhraseValidationState.StepCompletion(groupIndex: 2, word: "cancel")
             ],
             missingWordsChips: [
                 PhraseChip.Kind.empty,
@@ -262,14 +262,14 @@ class RecoveryPhraseValidationTests: XCTestCase {
             ]
         )
 
-        let expected = RecoveryPhaseValidationState.ValidationStep.complete(
+        let expected = RecoveryPhraseValidationState.ValidationStep.complete(
             phrase: phrase,
             missingIndices: missingIndices,
             completion: [
-                RecoveryPhaseValidationState.StepCompletion(groupIndex: 0, word: "salute"),
-                RecoveryPhaseValidationState.StepCompletion(groupIndex: 1, word: "boil"),
-                RecoveryPhaseValidationState.StepCompletion(groupIndex: 2, word: "cancel"),
-                RecoveryPhaseValidationState.StepCompletion(groupIndex: 3, word: "pizza")
+                RecoveryPhraseValidationState.StepCompletion(groupIndex: 0, word: "salute"),
+                RecoveryPhraseValidationState.StepCompletion(groupIndex: 1, word: "boil"),
+                RecoveryPhraseValidationState.StepCompletion(groupIndex: 2, word: "cancel"),
+                RecoveryPhraseValidationState.StepCompletion(groupIndex: 3, word: "pizza")
             ],
             missingWordsChips: [
                 PhraseChip.Kind.empty,
@@ -279,7 +279,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
             ]
         )
 
-        let result = RecoveryPhaseValidationState.ValidationStep.given(step: currentStep, apply: PhraseChip.Kind.unassigned(word: "pizza"), into: 3)
+        let result = RecoveryPhraseValidationState.ValidationStep.given(step: currentStep, apply: PhraseChip.Kind.unassigned(word: "pizza"), into: 3)
 
         XCTAssertEqual(expected, result)
     }
@@ -304,13 +304,13 @@ class RecoveryPhraseValidationTests: XCTestCase {
         let phrase = RecoveryPhrase(words: words)
 
         let completion = [
-            RecoveryPhaseValidationState.StepCompletion(groupIndex: 0, word: "salute"),
-            RecoveryPhaseValidationState.StepCompletion(groupIndex: 1, word: "boil"),
-            RecoveryPhaseValidationState.StepCompletion(groupIndex: 2, word: "cancel"),
-            RecoveryPhaseValidationState.StepCompletion(groupIndex: 3, word: "pizza")
+            RecoveryPhraseValidationState.StepCompletion(groupIndex: 0, word: "salute"),
+            RecoveryPhraseValidationState.StepCompletion(groupIndex: 1, word: "boil"),
+            RecoveryPhraseValidationState.StepCompletion(groupIndex: 2, word: "cancel"),
+            RecoveryPhraseValidationState.StepCompletion(groupIndex: 3, word: "pizza")
         ]
 
-        let result = RecoveryPhaseValidationState.ValidationStep.resultingPhrase(
+        let result = RecoveryPhraseValidationState.ValidationStep.resultingPhrase(
             from: completion,
             missingIndices: missingIndices,
             originalPhrase: phrase,
