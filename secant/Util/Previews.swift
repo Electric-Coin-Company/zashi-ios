@@ -1,6 +1,6 @@
 import SwiftUI
 
-//#if DEBUG
+// TODO: This should have a #DEBUG tag, but if so, it's not possible to compile this on release mode and submit it to testflight
 struct StateContainer<T, Content: View>: View {
     @State private var state: T
     private var content: (Binding<T>) -> Content
@@ -14,4 +14,3 @@ struct StateContainer<T, Content: View>: View {
         content($state)
     }
 }
-//#endif

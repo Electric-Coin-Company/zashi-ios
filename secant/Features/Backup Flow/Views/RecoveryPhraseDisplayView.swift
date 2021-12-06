@@ -64,8 +64,7 @@ struct RecoveryPhraseDisplayView: View {
         .applyScreenBackground()
     }
 }
-
-//#if DEBUG
+// TODO: This should have a #DEBUG tag, but if so, it's not possible to compile this on release mode and submit it to testflight
 extension RecoveryPhraseDisplayStore {
     static let scheduler = DispatchQueue.main
     static var demo: RecoveryPhraseDisplayStore {
@@ -79,7 +78,7 @@ extension RecoveryPhraseDisplayStore {
         )
     }
 }
-
+// TODO: This should have a #DEBUG tag, but if so, it's not possible to compile this on release mode and submit it to testflight
 extension RecoveryPhrase {
     static let testPhrase = [
         // 1
@@ -99,7 +98,6 @@ extension RecoveryPhrase {
     static let demo = RecoveryPhrase(words: testPhrase)
 }
 
-
 struct RecoveryPhraseDisplayView_Previews: PreviewProvider {
     static let scheduler = DispatchQueue.main
 
@@ -116,4 +114,3 @@ struct RecoveryPhraseDisplayView_Previews: PreviewProvider {
         .preferredColorScheme(.dark)
     }
 }
-//#endif

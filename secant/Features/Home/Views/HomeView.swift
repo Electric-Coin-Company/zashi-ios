@@ -100,8 +100,6 @@ struct HomeView: View {
     }
 }
 
-
-
 extension HomeStore {
     static var demo: HomeStore {
         HomeStore(
@@ -126,4 +124,3 @@ struct HomeView_Previews: PreviewProvider {
         }
     }
 }
-

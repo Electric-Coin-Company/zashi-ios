@@ -22,7 +22,6 @@ struct TransactionHistoryView: View {
     }
 }
 
-
 extension TransactionHistoryStore {
     static var demo: Store<TransactionHistoryState, TransactionHistoryAction> {
         return Store(
@@ -64,7 +63,6 @@ extension IdentifiedArrayOf where Element == Transaction {
     }
 }
 
-//#if DEBUG
 struct TransactionView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
@@ -78,4 +76,3 @@ struct TransactionView_Previews: PreviewProvider {
         }
     }
 }
-//#endif
