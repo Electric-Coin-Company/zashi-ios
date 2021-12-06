@@ -29,6 +29,7 @@
 		0D535FDF271F4214009A9E3E /* Rubik-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D535FDD271F4214009A9E3E /* Rubik-VariableFont_wght.ttf */; };
 		0D535FE2271F9476009A9E3E /* EnumeratedChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D535FE1271F9476009A9E3E /* EnumeratedChip.swift */; };
 		0D5D16F526E24CCF00AD33D1 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5D16F426E24CCF00AD33D1 /* AppError.swift */; };
+		0D7CE63427349B5D0020E050 /* View+WhenDraggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7CE63327349B5D0020E050 /* View+WhenDraggable.swift */; };
 		0D7DF08C271DCC0E00530046 /* ScreenBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7DF08B271DCC0E00530046 /* ScreenBackground.swift */; };
 		0D8A43C4272AEEDE005A6414 /* SecantTextStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8A43C3272AEEDE005A6414 /* SecantTextStyles.swift */; };
 		0D8A43C6272B129C005A6414 /* WordChipGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8A43C5272B129C005A6414 /* WordChipGrid.swift */; };
@@ -150,6 +151,7 @@
 		0D535FDD271F4214009A9E3E /* Rubik-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-VariableFont_wght.ttf"; sourceTree = "<group>"; };
 		0D535FE1271F9476009A9E3E /* EnumeratedChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumeratedChip.swift; sourceTree = "<group>"; };
 		0D5D16F426E24CCF00AD33D1 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
+		0D7CE63327349B5D0020E050 /* View+WhenDraggable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+WhenDraggable.swift"; sourceTree = "<group>"; };
 		0D7DF08B271DCC0E00530046 /* ScreenBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenBackground.swift; sourceTree = "<group>"; };
 		0D8A43C3272AEEDE005A6414 /* SecantTextStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecantTextStyles.swift; sourceTree = "<group>"; };
 		0D8A43C5272B129C005A6414 /* WordChipGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordChipGrid.swift; sourceTree = "<group>"; };
@@ -295,6 +297,8 @@
 				0D3D04092728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift */,
 				0DFE93E2272CA1AA000FCCA5 /* RecoveryPhraseValidation.swift */,
 				0D4377C12731E10E001EF204 /* RecoveryPhraseValidationStep.swift */,
+				0D7CE63327349B5D0020E050 /* View+WhenDraggable.swift */,
+				0D93747C274417B6002C127A /* DropDelegate.swift */,
 			);
 			path = BackupFlow;
 			sourceTree = "<group>";
@@ -989,9 +993,12 @@
 				F9971A4D27680DC400A2DB75 /* App.swift in Sources */,
 				F9322DC0273B555C00C105B5 /* NavigationLinks.swift in Sources */,
 				F93874F1273C4DE200F0E875 /* HomeView.swift in Sources */,
+				0D7CE63427349B5D0020E050 /* View+WhenDraggable.swift in Sources */,
+				0D32282326C586A800262533 /* HistoryScreen.swift in Sources */,
 				0D3D04082728B3440032ABC1 /* RecoveryPhraseDisplayView.swift in Sources */,
 				F9971A5F27680DF600A2DB75 /* ScanView.swift in Sources */,
 				F9971A4E27680DC400A2DB75 /* AppView.swift in Sources */,
+				0D93747D274417B6002C127A /* DropDelegate.swift in Sources */,
 				0DA13CA526C1963000E3B610 /* Balance.swift in Sources */,
 				2EA11F5B27467EF800709571 /* OnboardingFooterView.swift in Sources */,
 				0D4377C22731E10E001EF204 /* RecoveryPhraseValidationStep.swift in Sources */,

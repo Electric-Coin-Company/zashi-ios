@@ -31,10 +31,8 @@ struct PhraseChip: View {
         switch kind {
         case .empty:
             EmptyChip()
-
         case let .ordered(position, word):
             EnumeratedChip(index: position, text: word)
-
         case .unassigned(let word):
             BlueChip(word: word)
         }

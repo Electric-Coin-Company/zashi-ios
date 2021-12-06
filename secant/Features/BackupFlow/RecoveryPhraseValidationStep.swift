@@ -143,23 +143,3 @@ extension RecoveryPhrase.Chunk {
         return wordsApplyingMissing
     }
 }
-
-extension RecoveryPhraseValidationStep {
-    func wordsChips(for group: Int, groupSize: Int = RecoveryPhraseValidationState.phraseChunks, from chunk: RecoveryPhrase.Chunk, with missingIndex: Int, completing completions: [RecoveryPhraseStepCompletion]) -> [PhraseChip.Kind] {
-        let completion = completions.first(where: { $0.groupIndex == group })
-
-        var chips: [PhraseChip.Kind] = []
-        for (i, word) in chunk.words.enumerated() {
-            if i == missingIndex {
-                if let completedWord = completion?.word {
-                    chips.append(.unassigned(word: completedWord))
-                } else {
-                    chips.append(.empty)
-                }
-            } else {
-                chips.append(.ordered(position: (groupSize * group) + i + 1, word: word))
-            }
-        }
-        return chips
-    }
-}

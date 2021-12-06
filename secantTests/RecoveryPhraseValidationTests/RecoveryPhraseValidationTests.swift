@@ -357,6 +357,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let result = currentStep.wordsChips(
             for: 0,
+            groupSize: 6,
             from: phrase.toChunks()[0],
             with: 1,
             completing: [
@@ -414,6 +415,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let result = currentStep.wordsChips(
             for: 0,
+            groupSize: 6,
             from: phrase.toChunks()[0],
             with: 1,
             completing: [
