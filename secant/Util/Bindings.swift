@@ -74,7 +74,14 @@ extension Binding {
         )
     }
 
-    func map<T>(extract: @escaping (Value) -> T, embed: @escaping (T) -> Value?) -> Binding<T> {
+    func map<T>(extract: @escaping (Value) -> T, embed: @escaping (T) -> Value) -> Binding<T> {
+        Binding<T>(
+            get: { extract(wrappedValue) },
+            set: { wrappedValue = embed($0) }
+        )
+    }
+
+    func compactMap<T>(extract: @escaping (Value) -> T, embed: @escaping (T) -> Value?) -> Binding<T> {
         Binding<T>(
             get: { extract(wrappedValue) },
             set: {
