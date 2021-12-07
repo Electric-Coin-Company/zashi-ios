@@ -19,10 +19,11 @@ struct RecoveryPhraseBackupValidationView: View {
                         .bodyText()
 
                     viewStore.state.step.completionWords
+                        .padding(.horizontal, 30)
                 }
-                .padding(.horizontal, 60)
-                .padding(.bottom, 40)
-                
+                .padding(.horizontal)
+                .padding(.bottom, 10)
+
                 VStack(spacing: 40) {
                     let step = viewStore.state.step
                     let chunks = step.phrase.toChunks()
@@ -34,6 +35,7 @@ struct RecoveryPhraseBackupValidationView: View {
                 .padding()
                 .background(Asset.Colors.BackgroundColors.phraseGridDarkGray.color)
             }
+            .applyScreenBackground()
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(Text("Verify Your Backup"))
