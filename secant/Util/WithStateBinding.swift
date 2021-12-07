@@ -1,5 +1,6 @@
 import SwiftUI
 import ComposableArchitecture
+
 struct WithStateBinding<T: Equatable, Content: View>: View {
     @State var localState: T
     @Binding private var externalBindng: T

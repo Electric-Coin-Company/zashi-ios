@@ -32,19 +32,22 @@ struct RecoveryPhraseDisplayView: View {
                         }
 
                         VStack {
-                            Button(action: {
-                                viewStore.send(.finishedPressed)
-                            }) {
-                                Text("Finished!")
-                            }
+                            Button(
+                                action: { viewStore.send(.finishedPressed) },
+                                label: { Text("Finished!") }
+                            )
                             .activeButtonStyle
+                            .frame(height: 60)
 
-                            Button(action: {
-                                viewStore.send(.copyToBufferPressed)
-                            }) {
-                                Text("Copy To Buffer")
-                                    .bodyText()
-                            }
+                            Button(
+                                action: {
+                                    viewStore.send(.copyToBufferPressed)
+                                },
+                                label: {
+                                    Text("Copy To Buffer")
+                                        .bodyText()
+                                }
+                            )
                             .frame(height: 60)
                         }
                         .padding()
@@ -52,7 +55,6 @@ struct RecoveryPhraseDisplayView: View {
                         Text("Oops no words")
                     }
                 }
-                .padding(.top, 0)
                 .padding()
             }
             .padding(.horizontal)
@@ -66,17 +68,20 @@ struct RecoveryPhraseDisplayView: View {
 }
 // TODO: This should have a #DEBUG tag, but if so, it's not possible to compile this on release mode and submit it to testflight
 extension RecoveryPhraseDisplayStore {
-    static let scheduler = DispatchQueue.main
     static var demo: RecoveryPhraseDisplayStore {
         RecoveryPhraseDisplayStore(
             initialState: RecoveryPhraseDisplayState(phrase: RecoveryPhrase.demo),
             reducer: RecoveryPhraseDisplayReducer.default,
-            environment: BackupPhraseEnvironment(
-                mainQueue: scheduler.eraseToAnyScheduler(),
-                newPhrase: { Effect(value: RecoveryPhrase.demo) }
-            )
+            environment: BackupPhraseEnvironment.demo
         )
     }
+}
+
+extension BackupPhraseEnvironment {
+    static let demo = BackupPhraseEnvironment(
+        mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
+        newPhrase: { Effect(value: RecoveryPhrase.demo) }
+    )
 }
 // TODO: This should have a #DEBUG tag, but if so, it's not possible to compile this on release mode and submit it to testflight
 extension RecoveryPhrase {

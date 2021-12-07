@@ -17,8 +17,8 @@ struct StandardButtonStyle: ButtonStyle {
             .frame(
                 minWidth: 0,
                 maxWidth: .infinity,
-                minHeight: 60,
-                maxHeight: 60
+                minHeight: 0,
+                maxHeight: .infinity
             )
             .foregroundColor(foregroundColor)
             .background(

@@ -65,13 +65,13 @@ extension RecoveryPhraseDisplayReducer {
             state.showCopyToBufferAlert = true
             return .none
         case .finishedPressed:
-            dump("not implemented")
+            // TODO: remove this when feature is implemented in https://github.com/zcash/secant-ios-wallet/issues/47
             return .none
         case let .phraseResponse(.success(phrase)):
             state.phrase = phrase
             return .none
         case .phraseResponse(.failure):
-            dump("not implemented")
+            // TODO: remove this when feature is implemented in https://github.com/zcash/secant-ios-wallet/issues/129
             return .none
         }
     }

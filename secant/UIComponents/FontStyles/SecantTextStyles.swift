@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-extension View {
+extension Text {
     func bodyText() -> some View {
         self.modifier(BodyTextStyle())
     }
@@ -18,9 +18,7 @@ extension View {
     }
 }
 
-/**
-Body text style. Used for content.  Roboto-Regular 18pt
-*/
+/// Body text style. Used for content.  Roboto-Regular 18pt
 struct BodyTextStyle: ViewModifier {
     func body(content: Content) -> some View {
         content

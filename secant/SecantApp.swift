@@ -10,12 +10,10 @@ import SwiftUI
 @main
 struct SecantApp: App {
     var homeStore: HomeStore = .demo
-    var recoveryPhraseStore: RecoveryPhraseDisplayStore = .demo
     var body: some Scene {
         WindowGroup {
             NavigationView {
-//                HomeView(store: homeStore)
-                RecoveryPhraseDisplayView(store: recoveryPhraseStore)
+                HomeView(store: homeStore)
             }
             .navigationViewStyle(StackNavigationViewStyle()) 
         }

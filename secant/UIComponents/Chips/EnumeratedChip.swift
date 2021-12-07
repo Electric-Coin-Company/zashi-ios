@@ -36,7 +36,7 @@ struct NumberedText: View {
 
     @ViewBuilder var numberedText: some View {
         GeometryReader { geometry in
-        (Text(String(number))
+        (Text("\(number)")
             .baselineOffset(geometry.size.height / 4)
             .foregroundColor(Asset.Colors.Text.highlightedSuperscriptText.color)
             .font(.custom(FontFamily.Roboto.bold.name, size: 12)) +
