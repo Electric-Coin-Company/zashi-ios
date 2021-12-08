@@ -33,7 +33,10 @@ struct HomeView: View {
                 HStack {
                     VStack(alignment: .leading) {
                         Text("Route: \(String(dumping: viewStore.route))")
-                        Text("SelectedTransaction: \(String(dumping: viewStore.transactionHistoryState.route.map(/TransactionHistoryState.Route.showTransaction)))")
+                        Text(
+                            // swiftlint:disable:next line_length
+                            "SelectedTransaction: \(String(dumping: viewStore.transactionHistoryState.route.map(/TransactionHistoryState.Route.showTransaction)))"
+                        )
                     }
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)

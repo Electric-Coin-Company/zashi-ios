@@ -22,6 +22,7 @@ struct WithStateBinding<T: Equatable, Content: View>: View {
 struct WithStateBinding_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
+            // swiftlint:disable:next large_tuple
             StateContainer(initialState: (false, false, false)) { (binding: Binding<(Bool, Bool, Bool)>) in
                 List {
                     NavigationLink(
@@ -46,7 +47,7 @@ struct WithStateBinding_Previews: PreviewProvider {
                         ),
                         content: {
                             NavigationLink(
-                                isActive:$0,
+                                isActive: $0,
                                 destination: { Text("Wrapped Custom Binding") },
                                 label: { Text("Wrapped Custom Binding") }
                             )

@@ -16,13 +16,13 @@ struct OnboardingView: View {
             VStack(spacing: 50) {
                 HStack(spacing: 50) {
                     Button("Back") { viewStore.send(.back) }
-                        .disabled(viewStore.backButtonDisabled)
+                        .disabled(viewStore.isInitialStep)
                     
                     Spacer()
                     Button("Next") { viewStore.send(.next) }
                     
                     Button("Skip") { viewStore.send(.skip) }
-                        .disabled(viewStore.skipButtonDisabled)
+                        .disabled(viewStore.isFinalStep)
                 }
                 .frame(height: 100)
                 .padding(.horizontal, 50)
@@ -57,25 +57,33 @@ struct OnboardingView: View {
 extension OnboardingState {
     static let onboardingSteps = IdentifiedArray(
         uniqueElements: [
-            OnboardingStep(
+            Step(
                 id: UUID(),
                 title: "Shielded by Default",
-                description: "Tired of worrying about which wallet you used last? US TOO! Now you don't have to, as all funds will automatically be moved to your shielded wallet (and migrated for you)."
+                description: "Tired of worrying about which wallet you used last? US TOO! Now you don't have to, as all funds will automatically be moved to your shielded wallet (and migrated for you).",
+                background: Asset.Assets.Backgrounds.callout1.image,
+                badge: .shield
             ),
-            OnboardingStep(
+            Step(
                 id: UUID(),
                 title: "Unified Addresses",
-                description: "Tired of worrying about which wallet you used last? US TOO! Now you don't have to, as all funds will automatically be moved to your shielded wallet (and migrated for you)."
+                description: "Tired of worrying about which wallet you used last? US TOO! Now you don't have to, as all funds will automatically be moved to your shielded wallet (and migrated for you).",
+                background: Asset.Assets.Backgrounds.callout2.image,
+                badge: .person
             ),
-            OnboardingStep(
+            Step(
                 id: UUID(),
                 title: "And so much more...",
-                description: "Faster reverse syncing (yes it's a thing).  Liberated Payments, Social Payments, Address Books, in-line ZEC requests, wrapped Bitcoin, fractionalize NFTs, you providing liquidity for anything you want, getting that Defi, and going to Mexico."
+                description: "Faster reverse syncing (yes it's a thing).  Liberated Payments, Social Payments, Address Books, in-line ZEC requests, wrapped Bitcoin, fractionalize NFTs, you providing liquidity for anything you want, getting that Defi, and going to Mexico.",
+                background: Asset.Assets.Backgrounds.callout3.image,
+                badge: .list
             ),
-            OnboardingStep(
+            Step(
                 id: UUID(),
                 title: "Ready for the Future",
-                description: "Lets get you set up!"
+                description: "Lets get you set up!",
+                background: Asset.Assets.Backgrounds.callout4.image,
+                badge: .shield
             )
         ]
     )
@@ -87,7 +95,7 @@ struct Onboarding_Previews: PreviewProvider {
             OnboardingView(
                 store: Store(
                     initialState: OnboardingState(),
-                    reducer: onboardingReducer,
+                    reducer: .default,
                     environment: ()
                 )
             )
