@@ -62,7 +62,6 @@ struct RecoveryPhraseDisplayView: View {
 
         // TODO: NavigationBar Style
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarHidden(true)
         .applyScreenBackground()
     }
 }

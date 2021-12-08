@@ -22,6 +22,13 @@ struct HomeView: View {
                 .frame(height: 50)
 
                 Button(
+                    action: { viewStore.send(.updateRoute(.recoveryPhraseDisplay)) },
+                    label: { Text("Show Recovery Phrase Demo") }
+                )
+                .primaryButtonStyle
+                .frame(height: 50)
+
+                Button(
                     action: { viewStore.send(.updateRoute(.send)) },
                     label: { Text("Go to Send") }
                 )
@@ -53,6 +60,12 @@ struct HomeView: View {
             }
             .padding(.horizontal, 30)
             .navigationBarTitle("Home", displayMode: .inline)
+            .navigationLinkEmpty(
+                isActive: viewStore.showPhraseDisplayBinding,
+                destination: {
+                    RecoveryPhraseDisplayView(store: .demo)
+                }
+            )
             .navigationLinkEmpty(
                 isActive: viewStore.showSendBinding,
                 destination: {
