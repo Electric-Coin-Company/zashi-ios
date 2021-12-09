@@ -19,10 +19,16 @@ struct RecoveryPhraseDisplayView: View {
                         VStack(spacing: 20) {
                             Text("Your Secret Recovery Phrase")
                                 .titleText()
+                                .multilineTextAlignment(.center)
                             // swiftlint:disable:next line_length
-                            Text("The following 24 words represent your funds and the security used to protect them.\n\nBack them up now! There will be a test.")
-                                .bodyText()
-                                .frame(alignment: .center)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("The following 24 words represent your funds and the security used to protect them.")
+                                    .bodyText()
+
+                                Text("Back them up now! There will be a test.")
+                                    .bodyText()
+
+                            }
                         }
 
                         VStack(alignment: .leading, spacing: 20) {
