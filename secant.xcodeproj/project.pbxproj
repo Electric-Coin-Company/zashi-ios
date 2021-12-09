@@ -77,11 +77,11 @@
 		0DB8AA81271DC7520035BC9D /* DesignGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB8AA80271DC7520035BC9D /* DesignGuide.swift */; };
 		0DF2DC51272344E400FA31E2 /* EmptyChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF2DC50272344E400FA31E2 /* EmptyChip.swift */; };
 		0DF2DC5427235E3E00FA31E2 /* View+InnerShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF2DC5327235E3E00FA31E2 /* View+InnerShadow.swift */; };
+		0DFE93DF272C6D4B000FCCA5 /* RecoveryFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DFE93DE272C6D4B000FCCA5 /* RecoveryFlowTests.swift */; };
 		2E58E73B274679F000B2B84B /* OnboardingHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E58E73A274679F000B2B84B /* OnboardingHeaderView.swift */; };
 		2EA11F5B27467EF800709571 /* OnboardingFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA11F5A27467EF800709571 /* OnboardingFooterView.swift */; };
 		2EA11F5D27467F7700709571 /* OnboardingContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA11F5C27467F7700709571 /* OnboardingContentView.swift */; };
 		2EB660E02747EAB900A06A07 /* OnboardingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5C03802738C570008BFFD3 /* OnboardingScreen.swift */; };
-		0DFE93DF272C6D4B000FCCA5 /* RecoveryFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DFE93DE272C6D4B000FCCA5 /* RecoveryFlowTests.swift */; };
 		660558E9270C7A54009D6954 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 660558E8270C7A54009D6954 /* Colors.xcassets */; };
 		660558F7270C862F009D6954 /* Fonts+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660558F5270C862F009D6954 /* Fonts+Generated.swift */; };
 		660558F8270C862F009D6954 /* XCAssets+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660558F6270C862F009D6954 /* XCAssets+Generated.swift */; };
@@ -210,11 +210,11 @@
 		0DB8AA80271DC7520035BC9D /* DesignGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignGuide.swift; sourceTree = "<group>"; };
 		0DF2DC50272344E400FA31E2 /* EmptyChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyChip.swift; sourceTree = "<group>"; };
 		0DF2DC5327235E3E00FA31E2 /* View+InnerShadow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+InnerShadow.swift"; sourceTree = "<group>"; };
+		0DFE93DE272C6D4B000FCCA5 /* RecoveryFlowTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoveryFlowTests.swift; sourceTree = "<group>"; };
 		2E58E73A274679F000B2B84B /* OnboardingHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingHeaderView.swift; sourceTree = "<group>"; };
 		2E5C03802738C570008BFFD3 /* OnboardingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreen.swift; sourceTree = "<group>"; };
 		2EA11F5A27467EF800709571 /* OnboardingFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFooterView.swift; sourceTree = "<group>"; };
 		2EA11F5C27467F7700709571 /* OnboardingContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingContentView.swift; sourceTree = "<group>"; };
-		0DFE93DE272C6D4B000FCCA5 /* RecoveryFlowTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoveryFlowTests.swift; sourceTree = "<group>"; };
 		660558E8270C7A54009D6954 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		660558F5270C862F009D6954 /* Fonts+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Fonts+Generated.swift"; sourceTree = "<group>"; };
 		660558F6270C862F009D6954 /* XCAssets+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "XCAssets+Generated.swift"; sourceTree = "<group>"; };
@@ -642,6 +642,15 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		0DFE93DD272C6D4B000FCCA5 /* BackupFlowTests */ = {
+			isa = PBXGroup;
+			children = (
+				0DFE93DE272C6D4B000FCCA5 /* RecoveryFlowTests.swift */,
+				0D1C1AA227611EFD0004AF6A /* RecoveryPhraseDisplayReducerTests.swift */,
+			);
+			path = BackupFlowTests;
+			sourceTree = "<group>";
+		};
 		2E5C037F2738C55F008BFFD3 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
@@ -659,15 +668,6 @@
 				66779071273AAC26003A1540 /* OnboardingScreen.swift */,
 			);
 			name = "Recovered References";
-			sourceTree = "<group>";
-		};
-		0DFE93DD272C6D4B000FCCA5 /* BackupFlowTests */ = {
-			isa = PBXGroup;
-			children = (
-				0DFE93DE272C6D4B000FCCA5 /* RecoveryFlowTests.swift */,
-				0D1C1AA227611EFD0004AF6A /* RecoveryPhraseDisplayReducerTests.swift */,
-			);
-			path = BackupFlowTests;
 			sourceTree = "<group>";
 		};
 		660558F4270C85F7009D6954 /* Generated */ = {
@@ -1250,7 +1250,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
 				DEVELOPMENT_TEAM = RLPRR8CPQG;
 				ENABLE_PREVIEWS = YES;
@@ -1274,7 +1274,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
 				DEVELOPMENT_TEAM = RLPRR8CPQG;
 				ENABLE_PREVIEWS = YES;
