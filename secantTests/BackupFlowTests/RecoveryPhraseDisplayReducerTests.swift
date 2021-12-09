@@ -25,7 +25,7 @@ class RecoveryPhraseDisplayReducerTests: XCTestCase {
             $0.showCopyToBufferAlert = true
         }
         
-        XCTAssertEqual(UIPasteboard.general.string, phrase.toString())
+        XCTAssertEqual(environment.pasteboard.string, phrase.toString())
     }
     
     func testNewPhrase() {

@@ -12,6 +12,7 @@ import UIKit
 struct BackupPhraseEnvironment {
     var mainQueue: AnySchedulerOf<DispatchQueue>
     var newPhrase: () -> Effect<RecoveryPhrase, AppError>
+    var pasteboard: UIPasteboard = .general
 }
 
 typealias RecoveryPhraseDisplayStore = Store<RecoveryPhraseDisplayState, RecoveryPhraseDisplayAction>
@@ -61,7 +62,7 @@ extension RecoveryPhraseDisplayReducer {
                 .catchToEffect(RecoveryPhraseDisplayAction.phraseResponse)
         case .copyToBufferPressed:
             guard let phrase = state.phrase?.toString() else { return .none }
-            UIPasteboard.general.string = phrase
+            environment.pasteboard.string = phrase
             state.showCopyToBufferAlert = true
             return .none
         case .finishedPressed:
