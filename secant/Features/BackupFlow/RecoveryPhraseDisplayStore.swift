@@ -9,9 +9,14 @@ import Foundation
 import ComposableArchitecture
 import UIKit
 
+enum RecoveryPhraseError: Error {
+    /// This error is thrown then the Recovery Phrase can't be generated
+    case unableToGeneratePhrase
+}
+
 struct BackupPhraseEnvironment {
     var mainQueue: AnySchedulerOf<DispatchQueue>
-    var newPhrase: () -> Effect<RecoveryPhrase, AppError>
+    var newPhrase: () -> Effect<RecoveryPhrase, RecoveryPhraseError>
     var pasteboard: UIPasteboard = .general
 }
 
@@ -48,7 +53,7 @@ enum RecoveryPhraseDisplayAction: Equatable {
     case createPhrase
     case copyToBufferPressed
     case finishedPressed
-    case phraseResponse(Result<RecoveryPhrase, AppError>)
+    case phraseResponse(Result<RecoveryPhrase, RecoveryPhraseError>)
 }
 
 typealias RecoveryPhraseDisplayReducer = Reducer<RecoveryPhraseDisplayState, RecoveryPhraseDisplayAction, BackupPhraseEnvironment>
