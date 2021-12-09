@@ -16,21 +16,20 @@ extension Text {
     func titleText() -> some View {
         self.modifier(TitleTextStyle())
     }
-}
-
-/// Body text style. Used for content.  Roboto-Regular 18pt
-private struct BodyTextStyle: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .foregroundColor(Asset.Colors.Text.body.color)
-            .font(.custom(FontFamily.Rubik.regular.name, size: 18))
+    /// Body text style. Used for content.  Roboto-Regular 18pt
+    private struct BodyTextStyle: ViewModifier {
+        func body(content: Content) -> some View {
+            content
+                .foregroundColor(Asset.Colors.Text.body.color)
+                .font(.custom(FontFamily.Rubik.regular.name, size: 18))
+        }
     }
-}
 
-private struct TitleTextStyle: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .foregroundColor(Asset.Colors.Text.body.color)
-            .font(.custom(FontFamily.Roboto.medium.name, size: 24))
+    private struct TitleTextStyle: ViewModifier {
+        func body(content: Content) -> some View {
+            content
+                .foregroundColor(Asset.Colors.Text.body.color)
+                .font(.custom(FontFamily.Roboto.medium.name, size: 24))
+        }
     }
 }
