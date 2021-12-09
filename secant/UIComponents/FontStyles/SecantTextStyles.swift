@@ -19,7 +19,7 @@ extension Text {
 }
 
 /// Body text style. Used for content.  Roboto-Regular 18pt
-struct BodyTextStyle: ViewModifier {
+private struct BodyTextStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
             .foregroundColor(Asset.Colors.Text.body.color)
@@ -27,7 +27,7 @@ struct BodyTextStyle: ViewModifier {
     }
 }
 
-struct TitleTextStyle: ViewModifier {
+private struct TitleTextStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
             .foregroundColor(Asset.Colors.Text.body.color)
