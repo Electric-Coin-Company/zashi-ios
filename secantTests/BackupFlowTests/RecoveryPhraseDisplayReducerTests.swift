@@ -8,44 +8,48 @@
 import XCTest
 import ComposableArchitecture
 @testable import secant_testnet
+
 class RecoveryPhraseDisplayReducerTests: XCTestCase {
     func testCopyToBuffer() {
-        let environment = BackupPhraseEnvironment.demo
-        
         let store = TestStore(
-            initialState: RecoveryPhraseDisplayState.test,
-            reducer: RecoveryPhraseDisplayReducer.default,
-            environment: environment
+            initialState: .test,
+            reducer: .default,
+            environment: .demo
         )
-        
-        let phrase = RecoveryPhrase.demo
-        
+                
         store.send(.copyToBufferPressed) {
-            $0.phrase = phrase
+            $0.phrase = .demo
             $0.showCopyToBufferAlert = true
         }
-        
-        XCTAssertEqual(environment.pasteboard.string, phrase.toString())
+
+        XCTAssertEqual(
+            store.environment.pasteboard.getString(),
+            RecoveryPhrase.demo.toString()
+        )
     }
     
     func testNewPhrase() {
-        let environment = BackupPhraseEnvironment.demo
-        
         let store = TestStore(
-            initialState: RecoveryPhraseDisplayState.test,
-            reducer: RecoveryPhraseDisplayReducer.default,
-            environment: environment
+            initialState: .empty,
+            reducer: .default,
+            environment: .demo
         )
-        
-        let phrase = RecoveryPhrase.demo
-        
-        store.send(.phraseResponse(.success(phrase))) {
-            $0.phrase = phrase
+                
+        store.send(.phraseResponse(.success(.demo))) {
+            $0.phrase = .demo
             $0.showCopyToBufferAlert = false
         }
     }
 }
 
 private extension RecoveryPhraseDisplayState {
-    static let test = RecoveryPhraseDisplayState(phrase: RecoveryPhrase.demo, showCopyToBufferAlert: false)
+    static let test = RecoveryPhraseDisplayState(
+        phrase: .demo,
+        showCopyToBufferAlert: false
+    )
+    
+    static let empty = RecoveryPhraseDisplayState(
+        phrase: .empty,
+        showCopyToBufferAlert: false
+    )
 }

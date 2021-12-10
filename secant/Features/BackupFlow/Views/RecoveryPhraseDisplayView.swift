@@ -20,14 +20,12 @@ struct RecoveryPhraseDisplayView: View {
                             Text("Your Secret Recovery Phrase")
                                 .titleText()
                                 .multilineTextAlignment(.center)
-                            // swiftlint:disable:next line_length
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("The following 24 words represent your funds and the security used to protect them.")
                                     .bodyText()
 
                                 Text("Back them up now! There will be a test.")
                                     .bodyText()
-
                             }
                         }
 
@@ -75,19 +73,13 @@ struct RecoveryPhraseDisplayView: View {
 extension RecoveryPhraseDisplayStore {
     static var demo: RecoveryPhraseDisplayStore {
         RecoveryPhraseDisplayStore(
-            initialState: RecoveryPhraseDisplayState(phrase: RecoveryPhrase.demo),
-            reducer: RecoveryPhraseDisplayReducer.default,
-            environment: BackupPhraseEnvironment.demo
+            initialState: .init(phrase: .demo),
+            reducer: .default,
+            environment: .demo
         )
     }
 }
 
-extension BackupPhraseEnvironment {
-    static let demo = BackupPhraseEnvironment(
-        mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
-        newPhrase: { Effect(value: RecoveryPhrase.demo) }
-    )
-}
 // TODO: This should have a #DEBUG tag, but if so, it's not possible to compile this on release mode and submit it to testflight
 extension RecoveryPhrase {
     static let testPhrase = [
@@ -106,6 +98,7 @@ extension RecoveryPhrase {
     ]
 
     static let demo = RecoveryPhrase(words: testPhrase)
+    static let empty = RecoveryPhrase(words: [])
 }
 
 struct RecoveryPhraseDisplayView_Previews: PreviewProvider {

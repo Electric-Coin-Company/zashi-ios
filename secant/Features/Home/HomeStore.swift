@@ -112,7 +112,7 @@ extension HomeViewStore {
 
     var showOnboardingBinding: Binding<Bool> {
         self.binding(
-            get: {$0.route == .onboarding },
+            get: { $0.route == .onboarding },
             send: { isActive in
                 return .updateRoute(isActive ? .onboarding : nil)
             }

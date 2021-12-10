@@ -14,10 +14,51 @@ enum RecoveryPhraseError: Error {
     case unableToGeneratePhrase
 }
 
+struct Pasteboard {
+    let setString: (String) -> Void
+    let getString: () -> String?
+}
+
+extension Pasteboard {
+    private struct TestPasteboard {
+        static var general = TestPasteboard()
+        var string: String?
+    }
+    
+    static let live = Pasteboard(
+        setString: { UIPasteboard.general.string = $0 },
+        getString: { UIPasteboard.general.string }
+    )
+    
+    static let test = Pasteboard(
+        setString: { TestPasteboard.general.string = $0 },
+        getString: { TestPasteboard.general.string }
+    )
+}
+
 struct BackupPhraseEnvironment {
-    var mainQueue: AnySchedulerOf<DispatchQueue>
-    var newPhrase: () -> Effect<RecoveryPhrase, RecoveryPhraseError>
-    var pasteboard: UIPasteboard = .general
+    let mainQueue: AnySchedulerOf<DispatchQueue>
+    let newPhrase: () -> Effect<RecoveryPhrase, RecoveryPhraseError>
+    let pasteboard: Pasteboard
+}
+
+extension BackupPhraseEnvironment {
+    private struct DemoPasteboard {
+        static var general = Self()
+        var string: String?
+    }
+
+    static let demo = Self(
+        mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
+        newPhrase: { Effect(value: .init(words: RecoveryPhrase.demo.words)) },
+        pasteboard: .test
+    )
+        
+    static let live = Self(
+        mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
+        newPhrase: { Effect(value: .init(words: RecoveryPhrase.demo.words)) },
+        pasteboard: .live
+    )
 }
 
 typealias RecoveryPhraseDisplayStore = Store<RecoveryPhraseDisplayState, RecoveryPhraseDisplayAction>
@@ -28,9 +69,9 @@ struct RecoveryPhrase: Equatable {
         var words: [String]
     }
 
-    private let chunkSize = 6
-
     let words: [String]
+    
+    private let chunkSize = 6
 
     func toChunks() -> [Chunk] {
         let chunks = words.count / chunkSize
@@ -67,7 +108,7 @@ extension RecoveryPhraseDisplayReducer {
                 .catchToEffect(RecoveryPhraseDisplayAction.phraseResponse)
         case .copyToBufferPressed:
             guard let phrase = state.phrase?.toString() else { return .none }
-            environment.pasteboard.string = phrase
+            environment.pasteboard.setString(phrase)
             state.showCopyToBufferAlert = true
             return .none
         case .finishedPressed:
