@@ -15,7 +15,7 @@ struct SecantApp: App {
             NavigationView {
                 HomeView(store: homeStore)
             }
-            .navigationViewStyle(StackNavigationViewStyle()) 
+            .navigationViewStyle(StackNavigationViewStyle())
         }
     }
 }

@@ -17,7 +17,6 @@ struct Sent: View {
             .frame(height: 50)
             .padding()
 
-
             Text("\(String(dumping: transaction))")
             Text("\(String(dumping: isComplete))")
 

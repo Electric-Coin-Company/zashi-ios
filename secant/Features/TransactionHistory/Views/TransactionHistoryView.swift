@@ -22,21 +22,6 @@ struct TransactionHistoryView: View {
     }
 }
 
-struct TransactionView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            TransactionHistoryView(store: .demo)
-                .navigationBarTitleDisplayMode(.inline)
-        }
-
-        NavigationView {
-            TransactionHistoryView(store: .demoWithSelectedTransaction)
-                .navigationBarTitleDisplayMode(.inline)
-        }
-    }
-}
-
-#if DEBUG
 extension TransactionHistoryStore {
     static var demo: Store<TransactionHistoryState, TransactionHistoryAction> {
         return Store(
@@ -77,4 +62,17 @@ extension IdentifiedArrayOf where Element == Transaction {
         )
     }
 }
-#endif
+
+struct TransactionView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            TransactionHistoryView(store: .demo)
+                .navigationBarTitleDisplayMode(.inline)
+        }
+
+        NavigationView {
+            TransactionHistoryView(store: .demoWithSelectedTransaction)
+                .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+}

@@ -11,7 +11,7 @@ enum SendAction: Equatable {
     case updateRoute(SendView.Route?)
 }
 
-// Mark: - SendReducer
+// MARK: - SendReducer
 
 typealias SendReducer = Reducer<SendState, SendAction, Void>
 
@@ -41,16 +41,15 @@ extension SendReducer {
     }
 }
 
-// Mark: - SendStore
+// MARK: - SendStore
 
 typealias SendStore = Store<SendState, SendAction>
 
-// Mark: - SendViewStore
+// MARK: - SendViewStore
 
 typealias SendViewStore = ViewStore<SendState, SendAction>
 
 extension SendViewStore {
-
     var bindingForTransaction: Binding<Transaction> {
         self.binding(
             get: \.transaction,
@@ -86,4 +85,3 @@ extension SendViewStore {
         )
     }
 }
-
