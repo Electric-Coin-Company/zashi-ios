@@ -26,14 +26,17 @@ struct WordChipDropDelegate: DropDelegate {
     var dropAction: ((PhraseChip.Kind) -> Void)?
 
     func validateDrop(info: DropInfo) -> Bool {
-        return info.hasItemsConforming(to: [PhraseChip.completionTypeIdentifier])
+        return  info.hasItemsConforming(to: [PhraseChip.completionTypeIdentifier])
     }
 
     func performDrop(info: DropInfo) -> Bool {
         if let item = info.itemProviders(for: [PhraseChip.completionTypeIdentifier]).first {
-            item.loadItem(forTypeIdentifier: PhraseChip.completionTypeIdentifier, options: nil) { loadedItem, _ in
+            item.loadItem(forTypeIdentifier: PhraseChip.completionTypeIdentifier, options: nil) { text, _ in
                 DispatchQueue.main.async {
-                    if let word = loadedItem as? NSString {
+                    if let data = text as? Data {
+                        //  Extract string from data
+
+                        let word = String(decoding: data, as: UTF8.self)
                         dropAction?(.unassigned(word: word as String))
                     }
                 }

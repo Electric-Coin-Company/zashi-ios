@@ -9,14 +9,14 @@ import Foundation
 import SwiftUI
 import ComposableArchitecture
 extension PhraseChip {
-    static let completionTypeIdentifier = "private.secant.chipCompletion"
+    static let completionTypeIdentifier = "public.text"
 
     /// Makes a PhraseChip draggable when it is of kind .unassigned
     @ViewBuilder func makeDraggable() -> some View {
         switch self.kind {
         case .unassigned(let word):
             self.onDrag {
-                NSItemProvider(item: word as NSString, typeIdentifier: PhraseChip.completionTypeIdentifier)
+                NSItemProvider(object: word as NSString)
             }
         default:
             self
