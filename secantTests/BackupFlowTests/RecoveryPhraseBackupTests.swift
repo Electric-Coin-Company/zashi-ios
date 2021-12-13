@@ -8,7 +8,7 @@
 import XCTest
 @testable import secant_testnet
 
-class RecoveryFlowTests: XCTestCase {
+class RecoveryPhraseBackupTests: XCTestCase {
     func testGiven24WordsBIP39ChunkItIntoQuarters() throws {
         let words = [
             "bring", "salute", "thank",
@@ -25,7 +25,7 @@ class RecoveryFlowTests: XCTestCase {
         ]
         let phrase = RecoveryPhrase(words: words)
 
-        let chunks = phrase.toChunks()
+        let chunks = phrase.toGroups()
 
         XCTAssertEqual(chunks.count, 4)
         XCTAssertEqual(chunks[0].startIndex, 1)

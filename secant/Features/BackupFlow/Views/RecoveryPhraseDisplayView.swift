@@ -10,31 +10,37 @@ import ComposableArchitecture
 
 struct RecoveryPhraseDisplayView: View {
     let store: RecoveryPhraseDisplayStore
-
+    
     var body: some View {
         WithViewStore(self.store) { viewStore in
             ScrollView {
-                VStack {
-                    if let chunks = viewStore.phrase?.toChunks() {
+                VStack(alignment: .center, spacing: 0) {
+                    if let groups = viewStore.phrase?.toGroups() {
                         VStack(spacing: 20) {
                             Text("Your Secret Recovery Phrase")
                                 .titleText()
                                 .multilineTextAlignment(.center)
-                            VStack(alignment: .leading, spacing: 4) {
+
+                            VStack(alignment: .center, spacing: 4) {
                                 Text("The following 24 words represent your funds and the security used to protect them.")
                                     .bodyText()
-
+                                
                                 Text("Back them up now! There will be a test.")
                                     .bodyText()
                             }
                         }
-
-                        VStack(alignment: .leading, spacing: 20) {
-                            ForEach(chunks, id: \.startIndex) { chunk in
-                                WordChipGrid(words: chunk.words, startingAt: chunk.startIndex)
+                        .padding(.top, 0)
+                        .padding(.bottom, 20)
+                        
+                        VStack(alignment: .leading, spacing: 35) {
+                            ForEach(groups, id: \.startIndex) { group in
+                                VStack {
+                                    WordChipGrid(words: group.words, startingAt: group.startIndex)
+                                }
                             }
                         }
-
+                        .padding(.horizontal, 5)
+                        
                         VStack {
                             Button(
                                 action: { viewStore.send(.finishedPressed) },
@@ -42,7 +48,7 @@ struct RecoveryPhraseDisplayView: View {
                             )
                             .activeButtonStyle
                             .frame(height: 60)
-
+                            
                             Button(
                                 action: {
                                     viewStore.send(.copyToBufferPressed)
@@ -59,21 +65,21 @@ struct RecoveryPhraseDisplayView: View {
                         Text("Oops no words")
                     }
                 }
-                .padding()
             }
+            .padding(.bottom, 20)
             .padding(.horizontal)
+            .padding(.top, 0)
+            .applyScreenBackground()
         }
-
-        // TODO: NavigationBar Style
-        .navigationBarTitleDisplayMode(.inline)
-        .applyScreenBackground()
+        .navigationBarTitleDisplayMode(.inline) // TODO: NavigationBar Style
+        .navigationBarHidden(true)
     }
 }
 // TODO: This should have a #DEBUG tag, but if so, it's not possible to compile this on release mode and submit it to testflight
 extension RecoveryPhraseDisplayStore {
     static var demo: RecoveryPhraseDisplayStore {
         RecoveryPhraseDisplayStore(
-            initialState: .init(phrase: .demo),
+            initialState: .init(phrase: .placeholder),
             reducer: .default,
             environment: .demo
         )
@@ -97,19 +103,19 @@ extension RecoveryPhrase {
         "pizza", "just", "garlic"
     ]
 
-    static let demo = RecoveryPhrase(words: testPhrase)
+    static let placeholder = RecoveryPhrase(words: testPhrase)
     static let empty = RecoveryPhrase(words: [])
 }
 
 struct RecoveryPhraseDisplayView_Previews: PreviewProvider {
     static let scheduler = DispatchQueue.main
-
     static let store = RecoveryPhraseDisplayStore.demo
 
     static var previews: some View {
         NavigationView {
             RecoveryPhraseDisplayView(store: store)
         }
+        .environment(\.sizeCategory, .accessibilityLarge)
 
         NavigationView {
             RecoveryPhraseDisplayView(store: store)

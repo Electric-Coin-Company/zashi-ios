@@ -18,6 +18,7 @@ struct AppView: View {
                     )
                 }
                 .navigationViewStyle(StackNavigationViewStyle())
+
             case .onboarding:
                 OnboardingScreen(
                     store: store.scope(
@@ -25,9 +26,44 @@ struct AppView: View {
                         action: AppAction.onboarding
                     )
                 )
+
             case .startup:
                 ZStack(alignment: .topTrailing) {
                     StartupView(sendAction: viewStore.send)
+                }
+
+            case .phraseValidation:
+                NavigationView {
+                    RecoveryPhraseBackupValidationView(
+                        store: store.scope(
+                            state: \.phraseValidationState,
+                            action: AppAction.phraseValidation
+                        )
+                    )
+                    .toolbar(
+                        content: {
+                            ToolbarItem(
+                                placement: .navigationBarLeading,
+                                content: {
+                                    Button(
+                                        action: { viewStore.send(.updateRoute(.startup)) },
+                                        label: { Text("Back") }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                    .navigationViewStyle(StackNavigationViewStyle())
+                }
+
+            case .phraseDisplay:
+                NavigationView {
+                    RecoveryPhraseDisplayView(
+                        store: store.scope(
+                            state: \.phraseDisplayState,
+                            action: AppAction.phraseDisplay
+                        )
+                    )
                 }
             }
         }
@@ -43,8 +79,17 @@ private struct StartupView: View {
                 Button("Go To Home") {
                     sendAction(.updateRoute(.home))
                 }
+
                 Button("Go To Onboarding") {
                     sendAction(.updateRoute(.onboarding))
+                }
+
+                Button("Go To Phrase Validation Demo") {
+                    sendAction(.updateRoute(.phraseValidation))
+                }
+
+                Button("Go To Phrase Display Demo") {
+                    sendAction(.updateRoute(.phraseDisplay))
                 }
             }
         }
