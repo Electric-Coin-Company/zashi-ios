@@ -7,28 +7,31 @@
 
 import SwiftUI
 
-struct BlueChip: View {
+struct ColoredChip: View {
     var word: String
+    var color = Asset.Colors.Buttons.activeButton.color
     var body: some View {
         Text(word)
-            .font(FontFamily.Rubik.regular.textStyle(.body))
+            .font(.custom(FontFamily.Rubik.regular.name, size: 15))
             .frame(
                 minWidth: 0,
-                maxWidth: 120,
+                maxWidth: .infinity,
                 minHeight: 30,
-                idealHeight: 40
+                maxHeight: .infinity
             )
+            .fixedSize(horizontal: false, vertical: true)
             .foregroundColor(Asset.Colors.Text.activeButtonText.color)
-            .padding(.horizontal, 4)
+            .padding(.horizontal, 8)
             .padding(.vertical, 4)
-            .background(Asset.Colors.Buttons.activeButton.color)
+            .background(color)
             .cornerRadius(6)
     }
 }
 
-struct BlueChip_Previews: PreviewProvider {
+struct ColoredChip_Previews: PreviewProvider {
     static var previews: some View {
-        BlueChip(word: "negative")
+        ColoredChip(word: "negative")
+            .frame(width: 115)
             .applyScreenBackground()
     }
 }

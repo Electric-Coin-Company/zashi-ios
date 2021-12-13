@@ -45,7 +45,8 @@ extension HomeReducer {
                     action: /HomeAction.profile,
                     environment: { _ in
                         return ProfileEnvironment()
-                    })
+                    }
+                )
                 .run(&state, action, ())
         case .reset:
             return .none
@@ -103,7 +104,6 @@ extension HomeViewStore {
 }
 
 // MARK: PlaceHolders
-
 extension HomeState {
     static var placeholder: Self {
         .init(

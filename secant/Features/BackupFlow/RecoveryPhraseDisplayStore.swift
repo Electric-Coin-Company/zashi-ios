@@ -50,13 +50,13 @@ extension BackupPhraseEnvironment {
 
     static let demo = Self(
         mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
-        newPhrase: { Effect(value: .init(words: RecoveryPhrase.demo.words)) },
+        newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
         pasteboard: .test
     )
         
     static let live = Self(
         mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
-        newPhrase: { Effect(value: .init(words: RecoveryPhrase.demo.words)) },
+        newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
         pasteboard: .live
     )
 }
@@ -64,24 +64,32 @@ extension BackupPhraseEnvironment {
 typealias RecoveryPhraseDisplayStore = Store<RecoveryPhraseDisplayState, RecoveryPhraseDisplayAction>
 
 struct RecoveryPhrase: Equatable {
-    struct Chunk: Hashable {
+    struct Group: Hashable {
         var startIndex: Int
         var words: [String]
     }
 
     let words: [String]
     
-    private let chunkSize = 6
+    private let groupSize = 6
 
-    func toChunks() -> [Chunk] {
-        let chunks = words.count / chunkSize
-        return zip(0 ..< chunks, words.chunked(into: chunkSize)).map {
-            Chunk(startIndex: $0 * chunkSize + 1, words: $1)
+    func toGroups() -> [Group] {
+        let chunks = words.count / groupSize
+        return zip(0 ..< chunks, words.chunked(into: groupSize)).map {
+            Group(startIndex: $0 * groupSize + 1, words: $1)
         }
     }
 
     func toString() -> String {
         words.joined(separator: " ")
+    }
+
+    func words(fromMissingIndices indices: [Int]) -> [PhraseChip.Kind] {
+        assert((indices.count - 1) * groupSize <= self.words.count)
+
+        return indices.enumerated().map { index, position in
+            .unassigned(word: self.words[(index * groupSize) + position])
+        }
     }
 }
 

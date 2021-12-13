@@ -18,13 +18,13 @@ class RecoveryPhraseDisplayReducerTests: XCTestCase {
         )
                 
         store.send(.copyToBufferPressed) {
-            $0.phrase = .demo
+            $0.phrase = .placeholder
             $0.showCopyToBufferAlert = true
         }
 
         XCTAssertEqual(
             store.environment.pasteboard.getString(),
-            RecoveryPhrase.demo.toString()
+            RecoveryPhrase.placeholder.toString()
         )
     }
     
@@ -35,8 +35,8 @@ class RecoveryPhraseDisplayReducerTests: XCTestCase {
             environment: .demo
         )
                 
-        store.send(.phraseResponse(.success(.demo))) {
-            $0.phrase = .demo
+        store.send(.phraseResponse(.success(.placeholder))) {
+            $0.phrase = .placeholder
             $0.showCopyToBufferAlert = false
         }
     }
@@ -44,7 +44,7 @@ class RecoveryPhraseDisplayReducerTests: XCTestCase {
 
 private extension RecoveryPhraseDisplayState {
     static let test = RecoveryPhraseDisplayState(
-        phrase: .demo,
+        phrase: .placeholder,
         showCopyToBufferAlert: false
     )
     
