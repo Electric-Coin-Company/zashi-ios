@@ -55,6 +55,15 @@ struct HomeView: View {
                         }
                     }
 
+                    Section(header: Text("Modal Routes")) {
+                        ForEach(modalRoutes) { routeValue in
+                            Button(
+                                action: { viewStore.send(.updateRoute(routeValue.route)) },
+                                label: { Text("\(String(describing: routeValue.route))") }
+                            )
+                        }
+                    }
+
                     Section(header: Text("Other Actions")) {
                         Button(
                             action: { viewStore.toggleSelectedTransaction() },
