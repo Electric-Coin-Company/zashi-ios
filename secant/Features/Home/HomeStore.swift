@@ -2,7 +2,7 @@ import ComposableArchitecture
 import SwiftUI
 
 struct HomeState: Equatable {
-    enum Route: Equatable {
+    enum Route: Equatable, CaseIterable {
         case history
         case send
         case recoveryPhraseDisplay
@@ -80,6 +80,15 @@ extension HomeViewStore {
             .route
             .flatMap(/TransactionHistoryState.Route.showTransaction)
             .map(\.id)
+    }
+
+    func bindingForRoute(_ route: HomeState.Route) -> Binding<Bool> {
+        self.binding(
+            get: { $0.route == route },
+            send: { isActive in
+                return .updateRoute(isActive ? route : nil)
+            }
+        )
     }
 
     var showHistoryBinding: Binding<Bool> {
