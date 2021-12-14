@@ -243,7 +243,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0D170A7426BC9B7500EB6A46 /* Mocked Dependencies */ = {
+		0D170A7426BC9B7500EB6A46 /* MockedDependencies */ = {
 			isa = PBXGroup;
 			children = (
 				0D354A0726D5A9D000315F45 /* KeyStoring.swift */,
@@ -331,7 +331,7 @@
 				0DA13C9126C15E1900E3B610 /* UIComponents */,
 				0D1922F026BDE27D00052649 /* Stubs */,
 				0D1922EB26BDD9A500052649 /* Screens */,
-				0D170A7426BC9B7500EB6A46 /* Mocked Dependencies */,
+				0D170A7426BC9B7500EB6A46 /* MockedDependencies */,
 				0D4E7A0826B364170058B01E /* SecantApp.swift */,
 				0D4E7A0A26B364170058B01E /* ContentView.swift */,
 				0D4E7A0C26B364180058B01E /* Assets.xcassets */,
@@ -406,7 +406,7 @@
 			path = FontStyles;
 			sourceTree = "<group>";
 		};
-		0DA13C9126C15E1900E3B610 /* UI Components */ = {
+		0DA13C9126C15E1900E3B610 /* UIComponents */ = {
 			isa = PBXGroup;
 			children = (
 				0D8A43C2272AEEA7005A6414 /* FontStyles */,
@@ -1170,7 +1170,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = "\\";
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
 				DEVELOPMENT_TEAM = RLPRR8CPQG;
 				ENABLE_PREVIEWS = YES;
@@ -1194,7 +1194,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = "\\";
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
 				DEVELOPMENT_TEAM = RLPRR8CPQG;
 				ENABLE_PREVIEWS = YES;
