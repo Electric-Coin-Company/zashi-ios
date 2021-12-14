@@ -7,6 +7,7 @@ struct HomeState: Equatable {
         case send
         case recoveryPhraseDisplay
         case scan
+        case request
     }
     var transactionHistoryState: TransactionHistoryState
     var route: Route?

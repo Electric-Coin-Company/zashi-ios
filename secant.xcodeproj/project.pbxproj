@@ -107,6 +107,8 @@
 		F96B41E8273B501F0021B49A /* TransactionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41E5273B501F0021B49A /* TransactionDetailView.swift */; };
 		F96B41E9273B501F0021B49A /* TransactionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41E6273B501F0021B49A /* TransactionHistoryView.swift */; };
 		F96B41EB273B50520021B49A /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41EA273B50520021B49A /* Strings.swift */; };
+		F9971A5927680DDE00A2DB75 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A5627680DDE00A2DB75 /* Request.swift */; };
+		F9971A5A27680DDE00A2DB75 /* RequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A5827680DDE00A2DB75 /* RequestView.swift */; };
 		F9971A5F27680DF600A2DB75 /* ScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A5D27680DF600A2DB75 /* ScanView.swift */; };
 		F9971A6027680DF600A2DB75 /* Scan.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A5E27680DF600A2DB75 /* Scan.swift */; };
 		F9971A6527680DFE00A2DB75 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A6227680DFE00A2DB75 /* Settings.swift */; };
@@ -246,6 +248,8 @@
 		F96B41E5273B501F0021B49A /* TransactionDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionDetailView.swift; sourceTree = "<group>"; };
 		F96B41E6273B501F0021B49A /* TransactionHistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionHistoryView.swift; sourceTree = "<group>"; };
 		F96B41EA273B50520021B49A /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
+		F9971A5627680DDE00A2DB75 /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
+		F9971A5827680DDE00A2DB75 /* RequestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestView.swift; sourceTree = "<group>"; };
 		F9971A5D27680DF600A2DB75 /* ScanView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanView.swift; sourceTree = "<group>"; };
 		F9971A5E27680DF600A2DB75 /* Scan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scan.swift; sourceTree = "<group>"; };
 		F9971A6227680DFE00A2DB75 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
@@ -708,6 +712,7 @@
 			isa = PBXGroup;
 			children = (
 				F93874EC273C4DE200F0E875 /* Home */,
+				F9971A5527680DDE00A2DB75 /* Request */,
 				F9971A5B27680DF600A2DB75 /* Scan */,
 				F9C165B62740403600592F76 /* Send */,
 				F9971A6127680DFE00A2DB75 /* Settings */,
@@ -801,6 +806,23 @@
 			children = (
 				F96B41E5273B501F0021B49A /* TransactionDetailView.swift */,
 				F96B41E6273B501F0021B49A /* TransactionHistoryView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F9971A5527680DDE00A2DB75 /* Request */ = {
+			isa = PBXGroup;
+			children = (
+				F9971A5627680DDE00A2DB75 /* Request.swift */,
+				F9971A5727680DDE00A2DB75 /* Views */,
+			);
+			path = Request;
+			sourceTree = "<group>";
+		};
+		F9971A5727680DDE00A2DB75 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F9971A5827680DDE00A2DB75 /* RequestView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1121,6 +1143,7 @@
 				660558F7270C862F009D6954 /* Fonts+Generated.swift in Sources */,
 				F96B41E7273B501F0021B49A /* TransactionHistoryStore.swift in Sources */,
 				0DA13C9726C186FF00E3B610 /* RestoreWalletScreen.swift in Sources */,
+				F9971A5A27680DDE00A2DB75 /* RequestView.swift in Sources */,
 				0DACFA8127208D940039EEA5 /* UInt+SuperscriptText.swift in Sources */,
 				0DF2DC51272344E400FA31E2 /* EmptyChip.swift in Sources */,
 				F9C165BF2740403600592F76 /* SendStore.swift in Sources */,
@@ -1161,6 +1184,7 @@
 				6654C7412715A47300901167 /* Onboarding.swift in Sources */,
 				0D32282426C586A800262533 /* HistoryScreenViewModel.swift in Sources */,
 				F9C165C42740403600592F76 /* SentView.swift in Sources */,
+				F9971A5927680DDE00A2DB75 /* Request.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

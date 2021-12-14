@@ -32,6 +32,8 @@ struct HomeView: View {
             RecoveryPhraseDisplayView(store: .demo)
         case .scan:
             ScanView()
+        case .request:
+            RequestView()
         }
     }
 
