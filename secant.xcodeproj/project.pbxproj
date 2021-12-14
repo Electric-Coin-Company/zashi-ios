@@ -107,6 +107,8 @@
 		F96B41E8273B501F0021B49A /* TransactionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41E5273B501F0021B49A /* TransactionDetailView.swift */; };
 		F96B41E9273B501F0021B49A /* TransactionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41E6273B501F0021B49A /* TransactionHistoryView.swift */; };
 		F96B41EB273B50520021B49A /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41EA273B50520021B49A /* Strings.swift */; };
+		F9971A6527680DFE00A2DB75 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A6227680DFE00A2DB75 /* Settings.swift */; };
+		F9971A6627680DFE00A2DB75 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A6427680DFE00A2DB75 /* SettingsView.swift */; };
 		F9971A6B27680E1000A2DB75 /* WalletInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A6827680E1000A2DB75 /* WalletInfo.swift */; };
 		F9971A6C27680E1000A2DB75 /* WalletInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A6A27680E1000A2DB75 /* WalletInfoView.swift */; };
 		F9C165B4274031F600592F76 /* Bindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165B3274031F600592F76 /* Bindings.swift */; };
@@ -242,6 +244,8 @@
 		F96B41E5273B501F0021B49A /* TransactionDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionDetailView.swift; sourceTree = "<group>"; };
 		F96B41E6273B501F0021B49A /* TransactionHistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionHistoryView.swift; sourceTree = "<group>"; };
 		F96B41EA273B50520021B49A /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
+		F9971A6227680DFE00A2DB75 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		F9971A6427680DFE00A2DB75 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F9971A6827680E1000A2DB75 /* WalletInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletInfo.swift; sourceTree = "<group>"; };
 		F9971A6A27680E1000A2DB75 /* WalletInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletInfoView.swift; sourceTree = "<group>"; };
 		F9C165B3274031F600592F76 /* Bindings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bindings.swift; sourceTree = "<group>"; };
@@ -701,6 +705,7 @@
 			children = (
 				F93874EC273C4DE200F0E875 /* Home */,
 				F9C165B62740403600592F76 /* Send */,
+				F9971A6127680DFE00A2DB75 /* Settings */,
 				F96B41E2273B501F0021B49A /* TransactionHistory */,
 				0D3D04052728B2D70032ABC1 /* BackupFlow */,
 				6654C73C2715A3FA00901167 /* Onboarding */,
@@ -791,6 +796,23 @@
 			children = (
 				F96B41E5273B501F0021B49A /* TransactionDetailView.swift */,
 				F96B41E6273B501F0021B49A /* TransactionHistoryView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F9971A6127680DFE00A2DB75 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				F9971A6227680DFE00A2DB75 /* Settings.swift */,
+				F9971A6327680DFE00A2DB75 /* Views */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		F9971A6327680DFE00A2DB75 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F9971A6427680DFE00A2DB75 /* SettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1103,6 +1125,7 @@
 				0DA13C8F26C15D1D00E3B610 /* WelcomeScreen.swift in Sources */,
 				F9C165B4274031F600592F76 /* Bindings.swift in Sources */,
 				0D32282826C586E000262533 /* RequestZcashScreen.swift in Sources */,
+				F9971A6627680DFE00A2DB75 /* SettingsView.swift in Sources */,
 				F96B41EB273B50520021B49A /* Strings.swift in Sources */,
 				0D32283226C5877A00262533 /* BalanceScreen.swift in Sources */,
 				0D354A0A26D5A9D000315F45 /* KeyStoring.swift in Sources */,
@@ -1110,6 +1133,7 @@
 				0D32282926C586E000262533 /* RequestZcashScreenViewModel.swift in Sources */,
 				0D32281926C5864B00262533 /* ProfileScreen.swift in Sources */,
 				F9C165CB2741AB5D00592F76 /* SendView.swift in Sources */,
+				F9971A6527680DFE00A2DB75 /* Settings.swift in Sources */,
 				6654C7412715A47300901167 /* Onboarding.swift in Sources */,
 				0D32282426C586A800262533 /* HistoryScreenViewModel.swift in Sources */,
 				F9C165C42740403600592F76 /* SentView.swift in Sources */,
