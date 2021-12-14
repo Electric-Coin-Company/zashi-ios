@@ -107,6 +107,8 @@
 		F96B41E8273B501F0021B49A /* TransactionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41E5273B501F0021B49A /* TransactionDetailView.swift */; };
 		F96B41E9273B501F0021B49A /* TransactionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41E6273B501F0021B49A /* TransactionHistoryView.swift */; };
 		F96B41EB273B50520021B49A /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41EA273B50520021B49A /* Strings.swift */; };
+		F9971A6B27680E1000A2DB75 /* WalletInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A6827680E1000A2DB75 /* WalletInfo.swift */; };
+		F9971A6C27680E1000A2DB75 /* WalletInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A6A27680E1000A2DB75 /* WalletInfoView.swift */; };
 		F9C165B4274031F600592F76 /* Bindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165B3274031F600592F76 /* Bindings.swift */; };
 		F9C165BF2740403600592F76 /* SendStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165B72740403600592F76 /* SendStore.swift */; };
 		F9C165C02740403600592F76 /* ApproveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165B92740403600592F76 /* ApproveView.swift */; };
@@ -240,6 +242,8 @@
 		F96B41E5273B501F0021B49A /* TransactionDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionDetailView.swift; sourceTree = "<group>"; };
 		F96B41E6273B501F0021B49A /* TransactionHistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionHistoryView.swift; sourceTree = "<group>"; };
 		F96B41EA273B50520021B49A /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
+		F9971A6827680E1000A2DB75 /* WalletInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletInfo.swift; sourceTree = "<group>"; };
+		F9971A6A27680E1000A2DB75 /* WalletInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletInfoView.swift; sourceTree = "<group>"; };
 		F9C165B3274031F600592F76 /* Bindings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bindings.swift; sourceTree = "<group>"; };
 		F9C165B72740403600592F76 /* SendStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendStore.swift; sourceTree = "<group>"; };
 		F9C165B92740403600592F76 /* ApproveView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApproveView.swift; sourceTree = "<group>"; };
@@ -700,6 +704,7 @@
 				F96B41E2273B501F0021B49A /* TransactionHistory */,
 				0D3D04052728B2D70032ABC1 /* BackupFlow */,
 				6654C73C2715A3FA00901167 /* Onboarding */,
+				F9971A6727680E1000A2DB75 /* WalletInfo */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -786,6 +791,23 @@
 			children = (
 				F96B41E5273B501F0021B49A /* TransactionDetailView.swift */,
 				F96B41E6273B501F0021B49A /* TransactionHistoryView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F9971A6727680E1000A2DB75 /* WalletInfo */ = {
+			isa = PBXGroup;
+			children = (
+				F9971A6827680E1000A2DB75 /* WalletInfo.swift */,
+				F9971A6927680E1000A2DB75 /* Views */,
+			);
+			path = WalletInfo;
+			sourceTree = "<group>";
+		};
+		F9971A6927680E1000A2DB75 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F9971A6A27680E1000A2DB75 /* WalletInfoView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1028,6 +1050,7 @@
 				F93874F0273C4DE200F0E875 /* HomeStore.swift in Sources */,
 				669FDAEB272C23C2007B9422 /* CircularFrameBadge.swift in Sources */,
 				0D864A0E26E1583000A61879 /* LoadingScreen.swift in Sources */,
+				F9971A6C27680E1000A2DB75 /* WalletInfoView.swift in Sources */,
 				0DA13C9C26C1942100E3B610 /* BackupWalletScreen.swift in Sources */,
 				0DA13C9826C186FF00E3B610 /* RestoreWalletScreenViewModel.swift in Sources */,
 				F9EEB8162742C2210032EEB8 /* WithStateBinding.swift in Sources */,
@@ -1065,6 +1088,7 @@
 				F9C165C02740403600592F76 /* ApproveView.swift in Sources */,
 				0DF2DC5427235E3E00FA31E2 /* View+InnerShadow.swift in Sources */,
 				0D32281A26C5864B00262533 /* ProfileScreenViewModel.swift in Sources */,
+				F9971A6B27680E1000A2DB75 /* WalletInfo.swift in Sources */,
 				0D185819272723FF0046B928 /* BlueChip.swift in Sources */,
 				0D864A0F26E1583000A61879 /* LoadingScreenViewModel.swift in Sources */,
 				2EA11F5D27467F7700709571 /* OnboardingContentView.swift in Sources */,
