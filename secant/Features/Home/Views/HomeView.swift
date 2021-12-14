@@ -32,6 +32,8 @@ struct HomeView: View {
             RecoveryPhraseDisplayView(store: .demo)
         case .scan:
             ScanView()
+        case .profile:
+            ProfileView(store: store.profileStore())
         case .request:
             RequestView()
         }
@@ -91,6 +93,7 @@ extension HomeStore {
         HomeStore(
             initialState: HomeState(
                 transactionHistoryState: .placeHolder,
+                profileState: .placeholder,
                 route: nil
             ),
             reducer: .default.debug(),
