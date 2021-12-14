@@ -107,6 +107,8 @@
 		F96B41E8273B501F0021B49A /* TransactionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41E5273B501F0021B49A /* TransactionDetailView.swift */; };
 		F96B41E9273B501F0021B49A /* TransactionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41E6273B501F0021B49A /* TransactionHistoryView.swift */; };
 		F96B41EB273B50520021B49A /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41EA273B50520021B49A /* Strings.swift */; };
+		F9971A4D27680DC400A2DB75 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A4A27680DC400A2DB75 /* App.swift */; };
+		F9971A4E27680DC400A2DB75 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A4C27680DC400A2DB75 /* AppView.swift */; };
 		F9971A5327680DD000A2DB75 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A5027680DD000A2DB75 /* Profile.swift */; };
 		F9971A5427680DD000A2DB75 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A5227680DD000A2DB75 /* ProfileView.swift */; };
 		F9971A5927680DDE00A2DB75 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A5627680DDE00A2DB75 /* Request.swift */; };
@@ -250,6 +252,8 @@
 		F96B41E5273B501F0021B49A /* TransactionDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionDetailView.swift; sourceTree = "<group>"; };
 		F96B41E6273B501F0021B49A /* TransactionHistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionHistoryView.swift; sourceTree = "<group>"; };
 		F96B41EA273B50520021B49A /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
+		F9971A4A27680DC400A2DB75 /* App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
+		F9971A4C27680DC400A2DB75 /* AppView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		F9971A5027680DD000A2DB75 /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		F9971A5227680DD000A2DB75 /* ProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		F9971A5627680DDE00A2DB75 /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
@@ -715,6 +719,7 @@
 		6654C73B2715A3F000901167 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				F9971A4927680DC400A2DB75 /* App */,
 				F93874EC273C4DE200F0E875 /* Home */,
 				F9971A4F27680DD000A2DB75 /* Profile */,
 				F9971A5527680DDE00A2DB75 /* Request */,
@@ -811,6 +816,23 @@
 			children = (
 				F96B41E5273B501F0021B49A /* TransactionDetailView.swift */,
 				F96B41E6273B501F0021B49A /* TransactionHistoryView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F9971A4927680DC400A2DB75 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				F9971A4A27680DC400A2DB75 /* App.swift */,
+				F9971A4B27680DC400A2DB75 /* Views */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		F9971A4B27680DC400A2DB75 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F9971A4C27680DC400A2DB75 /* AppView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1149,12 +1171,14 @@
 				0D18581B272728D60046B928 /* PhraseChip.swift in Sources */,
 				665C963F272C26E600BC04FB /* CircularFrameBackground.swift in Sources */,
 				0DB8AA81271DC7520035BC9D /* DesignGuide.swift in Sources */,
+				F9971A4D27680DC400A2DB75 /* App.swift in Sources */,
 				F9322DC0273B555C00C105B5 /* NavigationLinks.swift in Sources */,
 				F93874F1273C4DE200F0E875 /* HomeView.swift in Sources */,
 				0D32282326C586A800262533 /* HistoryScreen.swift in Sources */,
 				0D3D04082728B3440032ABC1 /* RecoveryPhraseDisplayView.swift in Sources */,
 				F9971A5F27680DF600A2DB75 /* ScanView.swift in Sources */,
 				0D864A0A26E154FD00A61879 /* InitFailedScreenViewModel.swift in Sources */,
+				F9971A4E27680DC400A2DB75 /* AppView.swift in Sources */,
 				0DA13CA526C1963000E3B610 /* Balance.swift in Sources */,
 				2EA11F5B27467EF800709571 /* OnboardingFooterView.swift in Sources */,
 				66D50668271D9B6100E51F0D /* NavigationButtonStyle.swift in Sources */,
