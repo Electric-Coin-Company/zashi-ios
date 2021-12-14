@@ -19,6 +19,7 @@ enum HomeAction: Equatable {
     case updateRoute(HomeState.Route?)
     case transactionHistory(TransactionHistoryAction)
     case profile(ProfileAction)
+    case reset
 }
 
 // MARK: - HomeReducer
@@ -46,6 +47,8 @@ extension HomeReducer {
                         return ProfileEnvironment()
                     })
                 .run(&state, action, ())
+        case .reset:
+            return .none
         }
     }
 }

@@ -37,6 +37,8 @@ extension AppReducer {
         switch action {
         case let .updateRoute(route):
             state.route = route
+        case .home(.reset):
+            state.route = .startup
         case .onboarding(.createNewWallet):
             state.route = .home
         default:
