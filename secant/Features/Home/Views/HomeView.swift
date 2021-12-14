@@ -78,7 +78,7 @@ struct HomeView: View {
                 }
             }
             .fullScreenCover(
-                isPresented: viewStore.showHistoryBinding,
+                isPresented: viewStore.bindingForRoute(.history),
                 content: {
                     NavigationView {
                         TransactionHistoryView(store: store.historyStore())
@@ -115,8 +115,6 @@ extension HomeStore {
         )
     }
 }
-
-// MARK: - Previews
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
