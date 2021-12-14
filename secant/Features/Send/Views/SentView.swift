@@ -28,6 +28,6 @@ struct Sent: View {
 
 struct Done_Previews: PreviewProvider {
     static var previews: some View {
-        Sent(transaction: .demo, isComplete: .constant(false))
+        Sent(transaction: .placeholder, isComplete: .constant(false))
     }
 }

@@ -44,7 +44,7 @@ struct SendView_Previews: PreviewProvider {
             SendView(
                 store: .init(
                     initialState: .init(
-                        transaction: .demo,
+                        transaction: .placeholder,
                         route: nil
                     ),
                     reducer: .default,

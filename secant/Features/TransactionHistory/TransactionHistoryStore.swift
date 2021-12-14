@@ -56,3 +56,61 @@ extension TransactionHistoryViewStore {
         )
     }
 }
+
+// MARK: PlaceHolders
+
+extension Transaction {
+    static var placeholder: Self {
+        .init(
+            id: 2,
+            amount: 123,
+            memo: "defaultMemo",
+            toAddress: "ToAddress",
+            fromAddress: "FromAddress"
+        )
+    }
+}
+
+extension TransactionHistoryState {
+    static var placeHolder: Self {
+        .init(transactions: .placeholder, route: nil)
+    }
+}
+
+extension TransactionHistoryStore {
+    static var placeholder: Store<TransactionHistoryState, TransactionHistoryAction> {
+        return Store(
+            initialState: .placeHolder,
+            reducer: .default,
+            environment: ()
+        )
+    }
+
+    static var demoWithSelectedTransaction: Store<TransactionHistoryState, TransactionHistoryAction> {
+        let transactions = IdentifiedArrayOf<Transaction>.placeholder
+        return Store(
+            initialState: TransactionHistoryState(
+                transactions: transactions,
+                route: .showTransaction(transactions[3])
+            ),
+            reducer: .default.debug(),
+            environment: ()
+        )
+    }
+}
+
+extension IdentifiedArrayOf where Element == Transaction {
+    static var placeholder: IdentifiedArrayOf<Transaction> {
+        return .init(
+            uniqueElements: (0..<10).map {
+                Transaction(
+                    id: $0,
+                    amount: 25,
+                    memo: "defaultMemo",
+                    toAddress: "ToAddress",
+                    fromAddress: "FromAddress"
+                )
+            }
+        )
+    }
+}

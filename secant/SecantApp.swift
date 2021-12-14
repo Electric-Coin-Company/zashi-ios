@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct SecantApp: App {
-    var homeStore: HomeStore = .demo
+    var homeStore: HomeStore = .placeholder
     var body: some Scene {
         WindowGroup {
             NavigationView {

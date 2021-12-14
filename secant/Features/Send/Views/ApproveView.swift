@@ -27,7 +27,7 @@ struct Approve: View {
 struct Approve_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            StateContainer(initialState: (Transaction.demo, false)) {
+            StateContainer(initialState: (Transaction.placeholder, false)) {
                 Approve(
                     transaction: $0.0.wrappedValue,
                     isComplete: $0.1

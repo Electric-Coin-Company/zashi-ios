@@ -119,3 +119,15 @@ extension HomeViewStore {
         )
     }
 }
+
+// MARK: PlaceHolders
+
+extension HomeState {
+    static var placeholder: Self {
+        .init(
+            transactionHistoryState: .placeHolder,
+            route: nil
+        )
+    }
+}
+

@@ -85,3 +85,11 @@ extension SendViewStore {
         )
     }
 }
+
+// MARK: PlaceHolders
+
+extension SendState {
+    static var placeholder: Self {
+        .init(transaction: .placeholder, route: nil)
+    }
+}
