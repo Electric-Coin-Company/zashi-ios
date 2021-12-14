@@ -107,6 +107,8 @@
 		F96B41E8273B501F0021B49A /* TransactionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41E5273B501F0021B49A /* TransactionDetailView.swift */; };
 		F96B41E9273B501F0021B49A /* TransactionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41E6273B501F0021B49A /* TransactionHistoryView.swift */; };
 		F96B41EB273B50520021B49A /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41EA273B50520021B49A /* Strings.swift */; };
+		F9971A5F27680DF600A2DB75 /* ScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A5D27680DF600A2DB75 /* ScanView.swift */; };
+		F9971A6027680DF600A2DB75 /* Scan.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A5E27680DF600A2DB75 /* Scan.swift */; };
 		F9971A6527680DFE00A2DB75 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A6227680DFE00A2DB75 /* Settings.swift */; };
 		F9971A6627680DFE00A2DB75 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A6427680DFE00A2DB75 /* SettingsView.swift */; };
 		F9971A6B27680E1000A2DB75 /* WalletInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A6827680E1000A2DB75 /* WalletInfo.swift */; };
@@ -244,6 +246,8 @@
 		F96B41E5273B501F0021B49A /* TransactionDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionDetailView.swift; sourceTree = "<group>"; };
 		F96B41E6273B501F0021B49A /* TransactionHistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionHistoryView.swift; sourceTree = "<group>"; };
 		F96B41EA273B50520021B49A /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
+		F9971A5D27680DF600A2DB75 /* ScanView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanView.swift; sourceTree = "<group>"; };
+		F9971A5E27680DF600A2DB75 /* Scan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scan.swift; sourceTree = "<group>"; };
 		F9971A6227680DFE00A2DB75 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		F9971A6427680DFE00A2DB75 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F9971A6827680E1000A2DB75 /* WalletInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletInfo.swift; sourceTree = "<group>"; };
@@ -704,6 +708,7 @@
 			isa = PBXGroup;
 			children = (
 				F93874EC273C4DE200F0E875 /* Home */,
+				F9971A5B27680DF600A2DB75 /* Scan */,
 				F9C165B62740403600592F76 /* Send */,
 				F9971A6127680DFE00A2DB75 /* Settings */,
 				F96B41E2273B501F0021B49A /* TransactionHistory */,
@@ -796,6 +801,23 @@
 			children = (
 				F96B41E5273B501F0021B49A /* TransactionDetailView.swift */,
 				F96B41E6273B501F0021B49A /* TransactionHistoryView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F9971A5B27680DF600A2DB75 /* Scan */ = {
+			isa = PBXGroup;
+			children = (
+				F9971A5C27680DF600A2DB75 /* Views */,
+				F9971A5E27680DF600A2DB75 /* Scan.swift */,
+			);
+			path = Scan;
+			sourceTree = "<group>";
+		};
+		F9971A5C27680DF600A2DB75 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F9971A5D27680DF600A2DB75 /* ScanView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1086,6 +1108,7 @@
 				F93874F1273C4DE200F0E875 /* HomeView.swift in Sources */,
 				0D32282326C586A800262533 /* HistoryScreen.swift in Sources */,
 				0D3D04082728B3440032ABC1 /* RecoveryPhraseDisplayView.swift in Sources */,
+				F9971A5F27680DF600A2DB75 /* ScanView.swift in Sources */,
 				0D864A0A26E154FD00A61879 /* InitFailedScreenViewModel.swift in Sources */,
 				0DA13CA526C1963000E3B610 /* Balance.swift in Sources */,
 				2EA11F5B27467EF800709571 /* OnboardingFooterView.swift in Sources */,
@@ -1132,6 +1155,7 @@
 				0DA13CA226C1955600E3B610 /* HomeScreenViewModel.swift in Sources */,
 				0D32282926C586E000262533 /* RequestZcashScreenViewModel.swift in Sources */,
 				0D32281926C5864B00262533 /* ProfileScreen.swift in Sources */,
+				F9971A6027680DF600A2DB75 /* Scan.swift in Sources */,
 				F9C165CB2741AB5D00592F76 /* SendView.swift in Sources */,
 				F9971A6527680DFE00A2DB75 /* Settings.swift in Sources */,
 				6654C7412715A47300901167 /* Onboarding.swift in Sources */,
