@@ -15,7 +15,7 @@ struct ScanEnvironment: Equatable {
 typealias ScanReducer = Reducer<ScanState, ScanAction, ScanEnvironment>
 
 extension ScanReducer {
-    static let `default` = ScanReducer { state, action, environment in
+    static let `default` = ScanReducer { _, action, _ in
         switch action {
         default:
             return .none

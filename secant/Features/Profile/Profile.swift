@@ -24,7 +24,7 @@ struct ProfileEnvironment {
 typealias ProfileReducer = Reducer<ProfileState, ProfileAction, ProfileEnvironment>
 
 extension ProfileReducer {
-    static let `default` = ProfileReducer { state, action, environment in
+    static let `default` = ProfileReducer { state, action, _ in
         switch action {
         case let .updateRoute(route):
             state.route = route
@@ -78,4 +78,3 @@ extension ProfileState {
         )
     }
 }
-

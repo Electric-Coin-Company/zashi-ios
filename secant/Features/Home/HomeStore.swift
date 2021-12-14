@@ -71,7 +71,6 @@ extension HomeStore {
             action: HomeAction.profile
         )
     }
-
 }
 
 // MARK: - HomeViewStore
@@ -165,4 +164,3 @@ extension HomeState {
         )
     }
 }
-

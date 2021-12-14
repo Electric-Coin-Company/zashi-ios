@@ -15,7 +15,7 @@ struct WalletInfoEnvironment: Equatable {
 typealias WalletInfoReducer = Reducer<WalletInfoState, WalletInfoAction, WalletInfoEnvironment>
 
 extension WalletInfoReducer {
-    static let `default` = WalletInfoReducer { state, action, environment in
+    static let `default` = WalletInfoReducer { _, action, _ in
         switch action {
         default:
             return .none

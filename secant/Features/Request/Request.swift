@@ -15,7 +15,7 @@ struct RequestEnvironment: Equatable {
 typealias RequestReducer = Reducer<RequestState, RequestAction, RequestEnvironment>
 
 extension RequestReducer {
-    static let `default` = RequestReducer { state, action, environment in
+    static let `default` = RequestReducer { _, action, _ in
         switch action {
         default:
             return .none

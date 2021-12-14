@@ -33,7 +33,7 @@ extension AppReducer {
         ]
     )
 
-    private static let routeReducer = AppReducer { state, action, environment in
+    private static let routeReducer = AppReducer { state, action, _ in
         switch action {
         case let .updateRoute(route):
             state.route = route
@@ -56,7 +56,7 @@ extension AppReducer {
     private static let onboardingReducer: AppReducer = OnboardingReducer.default.pullback(
         state: \AppState.onboardingState,
         action: /AppAction.onboarding,
-        environment:  { _ in }
+        environment: { _ in }
     )
 }
 

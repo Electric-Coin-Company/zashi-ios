@@ -15,7 +15,7 @@ struct SettingsEnvironment: Equatable {
 typealias SettingsReducer = Reducer<SettingsState, SettingsAction, SettingsEnvironment>
 
 extension SettingsReducer {
-    static let `default` = SettingsReducer { state, action, environment in
+    static let `default` = SettingsReducer { _, action, _ in
         switch action {
         default:
             return .none
