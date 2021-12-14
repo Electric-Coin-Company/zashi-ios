@@ -4,98 +4,70 @@ import ComposableArchitecture
 struct HomeView: View {
     let store: Store<HomeState, HomeAction>
 
+    var navigationRouteValues: [RouteValue] = HomeState.Route.allCases
+        .enumerated()
+        .filter { $0.1 != .history }
+        .map { RouteValue(id: $0.0, route: $0.1) }
+
+    var modalRoutes: [RouteValue] = HomeState.Route.allCases
+        .enumerated()
+        .filter { $0.1 == .history }
+        .map { RouteValue(id: $0.0, route: $0.1) }
+
+    @ViewBuilder func view(for route: HomeState.Route) -> some View {
+        switch route {
+        case .history:
+            TransactionHistoryView(store: store.historyStore())
+        case .send:
+            SendView(
+                store: .init(
+                    initialState: .placeholder,
+                    reducer: SendReducer.default(
+                        whenDone: { HomeViewStore(store).send(.updateRoute(nil)) }
+                    ).debug(),
+                    environment: ()
+                )
+            )
+        case .recoveryPhraseDisplay:
+            RecoveryPhraseDisplayView(store: .demo)
+        case .scan:
+            ScanView()
+        case .profile:
+            ProfileView(store: store.profileStore())
+        case .request:
+            RequestView()
+        }
+    }
+
     var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
-                Button(
-                    action: { viewStore.toggleShowingHistory() },
-                    label: { Text(viewStore.historyToggleString()) }
-                )
-                .primaryButtonStyle
-                .frame(height: 50)
+                List {
+                    Section(header: Text("Navigation Stack Routes")) {
+                        ForEach(navigationRouteValues) { routeValue in
+                             Text("\(String(describing: routeValue.route))")
+                            .navigationLink(
+                                isActive: viewStore.bindingForRoute(routeValue.route),
+                                destination: {
+                                    view(for: routeValue.route)
+                                }
+                            )
+                        }
+                    }
 
-                Button(
-                    action: { viewStore.toggleSelectedTransaction() },
-                    label: { Text("Toggle Selected Transaction") }
-                )
-                .primaryButtonStyle
-                .frame(height: 50)
+                    Section(header: Text("Other Actions")) {
+                        Button(
+                            action: { viewStore.toggleSelectedTransaction() },
+                            label: { Text("Toggle Selected Transaction") }
+                        )
 
-                Button(
-                    action: { viewStore.send(.updateRoute(.recoveryPhraseDisplay)) },
-                    label: { Text("Show Recovery Phrase Demo") }
-                )
-                .primaryButtonStyle
-                .frame(height: 50)
-
-                Button(
-                    action: { viewStore.send(.updateRoute(.send)) },
-                    label: { Text("Go to Send") }
-                )
-                .primaryButtonStyle
-                .frame(height: 50)
-
-                Button(
-                    action: { viewStore.send(.updateRoute(.onboarding)) },
-                    label: { Text("Show Onboarding") }
-                )
-                .primaryButtonStyle
-                .frame(height: 50)
-
-                Spacer()
-
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text("Route: \(String(dumping: viewStore.route))")
-                        Text(
-                            // swiftlint:disable:next line_length
-                            "SelectedTransaction: \(String(dumping: viewStore.transactionHistoryState.route.map(/TransactionHistoryState.Route.showTransaction)))"
+                        Button(
+                            action: { viewStore.send(.reset) },
+                            label: { Text("Reset (to startup)") }
                         )
                     }
-                    .multilineTextAlignment(.leading)
-                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
-
-                Spacer()
             }
-            .padding(.horizontal, 30)
-            .navigationBarTitle("Home", displayMode: .inline)
-            .navigationLinkEmpty(
-                isActive: viewStore.showPhraseDisplayBinding,
-                destination: {
-                    RecoveryPhraseDisplayView(store: .demo)
-                }
-            )
-            .navigationLinkEmpty(
-                isActive: viewStore.showSendBinding,
-                destination: {
-                    SendView(
-                        store: .init(
-                            initialState: .init(
-                                transaction: .demo,
-                                route: nil
-                            ),
-                            reducer: SendReducer.default(
-                                whenDone: { viewStore.send(.updateRoute(nil)) }
-                            )
-                            .debug(),
-                            environment: ()
-                        )
-                    )
-                }
-            )
-            .navigationLinkEmpty(
-                isActive: viewStore.showOnboardingBinding,
-                destination: {
-                    OnboardingScreen(
-                        store: Store(
-                            initialState: OnboardingState(),
-                            reducer: .default,
-                            environment: ()
-                        )
-                    )
-                }
-            )
             .fullScreenCover(
                 isPresented: viewStore.showHistoryBinding,
                 content: {
@@ -109,18 +81,24 @@ struct HomeView: View {
                     }
                 }
             )
+            .navigationBarTitle("Home")
         }
     }
 }
 
+struct RouteValue: Identifiable {
+    let id: Int
+    let route: HomeState.Route
+}
+
+// MARK: - Previews
+
 extension HomeStore {
-    static var demo: HomeStore {
+    static var placeholder: HomeStore {
         HomeStore(
             initialState: HomeState(
-                transactionHistoryState: .init(
-                    transactions: .demo,
-                    route: nil
-                ),
+                transactionHistoryState: .placeHolder,
+                profileState: .placeholder,
                 route: nil
             ),
             reducer: .default.debug(),
@@ -134,7 +112,7 @@ extension HomeStore {
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            HomeView(store: .demo)
+            HomeView(store: .placeholder)
         }
     }
 }

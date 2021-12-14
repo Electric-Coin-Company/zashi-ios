@@ -9,13 +9,21 @@ import SwiftUI
 
 @main
 struct SecantApp: App {
-    var homeStore: HomeStore = .demo
+    var appStore: AppStore = .placeholder
+
     var body: some Scene {
         WindowGroup {
-            NavigationView {
-                HomeView(store: homeStore)
-            }
-            .navigationViewStyle(StackNavigationViewStyle())
+            AppView(store: appStore)
         }
+    }
+}
+
+extension AppStore {
+    static var placeholder: AppStore {
+        AppStore(
+            initialState: .placeholder,
+            reducer: .default,
+            environment: .init()
+        )
     }
 }

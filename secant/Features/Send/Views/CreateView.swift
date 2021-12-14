@@ -46,7 +46,7 @@ struct Create: View {
 struct Create_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            StateContainer(initialState: (Transaction.demo, false)) {
+            StateContainer(initialState: (Transaction.placeholder, false)) {
                 Create(
                     transaction: $0.0,
                     isComplete: $0.1
@@ -59,10 +59,10 @@ struct Create_Previews: PreviewProvider {
 
 #if DEBUG
 extension SendStore {
-    static var demo: SendStore {
+    static var placeholder: SendStore {
         return SendStore(
             initialState: .init(
-                transaction: .demo,
+                transaction: .placeholder,
                 route: nil
             ),
             reducer: .default,
