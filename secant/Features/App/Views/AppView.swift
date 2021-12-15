@@ -29,6 +29,8 @@ struct AppView: View {
                 ZStack(alignment: .topTrailing) {
                     StartupView(sendAction: viewStore.send)
                 }
+            case .phraseValidation:
+                RecoveryPhraseBackupValidationView(store: .demo)
             }
         }
     }
@@ -43,8 +45,13 @@ private struct StartupView: View {
                 Button("Go To Home") {
                     sendAction(.updateRoute(.home))
                 }
+
                 Button("Go To Onboarding") {
                     sendAction(.updateRoute(.onboarding))
+                }
+
+                Button("Go To Phrase Validation Demo") {
+                    sendAction(.updateRoute(.phraseValidation))
                 }
             }
         }

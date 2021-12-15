@@ -50,13 +50,13 @@ extension BackupPhraseEnvironment {
 
     static let demo = Self(
         mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
-        newPhrase: { Effect(value: .init(words: RecoveryPhrase.demo.words)) },
+        newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
         pasteboard: .test
     )
         
     static let live = Self(
         mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
-        newPhrase: { Effect(value: .init(words: RecoveryPhrase.demo.words)) },
+        newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
         pasteboard: .live
     )
 }

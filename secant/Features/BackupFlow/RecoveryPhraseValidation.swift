@@ -84,7 +84,7 @@ enum RecoveryPhraseValidationAction: Equatable {
     case fail
 }
 
-typealias RecoveryPhraseValidationReducer = Reducer<RecoveryPhraseValidationState, RecoveryPhraseValidationAction, RecoveryPhraseEnvironment>
+typealias RecoveryPhraseValidationReducer = Reducer<RecoveryPhraseValidationState, RecoveryPhraseValidationAction, Void>
 
 extension RecoveryPhraseValidationReducer {
     static let `default` = RecoveryPhraseValidationReducer { state, action, _ in

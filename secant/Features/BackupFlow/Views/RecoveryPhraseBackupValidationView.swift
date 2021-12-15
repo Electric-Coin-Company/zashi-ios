@@ -141,36 +141,18 @@ private extension RecoveryPhraseValidationStep {
     }
 }
 
-struct RecoveryPhraseBackupView_Previews: PreviewProvider {
-    static let scheduler = DispatchQueue.main
+extension RecoveryPhraseValidationStore {
+    private static let scheduler = DispatchQueue.main
 
-    static let testPhrase = [
-        // 1
-        "bring", "salute", "thank",
-        "require", "spirit", "toe",
-        // 7
-        "boil", "hill", "casino",
-        "trophy", "drink", "frown",
-        // 13
-        "bird", "grit", "close",
-        "morning", "bind", "cancel",
-        // 19
-        "daughter", "salon", "quit",
-        "pizza", "just", "garlic"
-    ]
-
-    static let recoveryPhrase = RecoveryPhrase(words: testPhrase)
-
-    static let store = Store(
-        initialState: RecoveryPhraseValidationState(phrase: recoveryPhrase),
+    static let demo = Store(
+        initialState: RecoveryPhraseValidationState(phrase: RecoveryPhrase.placeholder),
         reducer: .default,
-        environment: RecoveryPhraseEnvironment(
-            mainQueue: scheduler.eraseToAnyScheduler(),
-            newPhrase: { Effect(value: recoveryPhrase) }
-        )
+        environment: ()
     )
+}
 
+struct RecoveryPhraseBackupView_Previews: PreviewProvider {
     static var previews: some View {
-        RecoveryPhraseBackupValidationView(store: store)
+        RecoveryPhraseBackupValidationView(store: RecoveryPhraseValidationStore.demo)
     }
 }

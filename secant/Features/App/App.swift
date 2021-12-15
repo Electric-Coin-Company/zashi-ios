@@ -5,9 +5,11 @@ struct AppState: Equatable {
         case startup
         case onboarding
         case home
+        case phraseValidation
     }
     var homeState: HomeState
     var onboardingState: OnboardingState
+    var phraseValidationState: RecoveryPhraseValidationState
     var route: Route = .startup
 }
 
@@ -15,6 +17,7 @@ enum AppAction: Equatable {
     case updateRoute(AppState.Route)
     case home(HomeAction)
     case onboarding(OnboardingAction)
+    case phraseValidation(RecoveryPhraseValidationAction)
 }
 
 struct AppEnvironment: Equatable {
@@ -58,6 +61,13 @@ extension AppReducer {
         action: /AppAction.onboarding,
         environment: { _ in }
     )
+
+    private static let phraseValidationReducer: AppReducer = RecoveryPhraseValidationReducer.default.pullback(
+        state: \AppState.phraseValidationState,
+        action: /AppAction.phraseValidation,
+        environment: { _ in }
+    )
+
 }
 
 // MARK: - AppStore
@@ -80,7 +90,8 @@ extension AppState {
     static var placeholder: Self {
         .init(
             homeState: .placeholder,
-            onboardingState: .init()
+            onboardingState: .init(),
+            phraseValidationState: RecoveryPhraseValidationState.init(phrase: RecoveryPhrase.placeholder)
         )
     }
 }

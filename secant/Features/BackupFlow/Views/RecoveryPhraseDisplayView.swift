@@ -73,7 +73,7 @@ struct RecoveryPhraseDisplayView: View {
 extension RecoveryPhraseDisplayStore {
     static var demo: RecoveryPhraseDisplayStore {
         RecoveryPhraseDisplayStore(
-            initialState: .init(phrase: .demo),
+            initialState: .init(phrase: .placeholder),
             reducer: .default,
             environment: .demo
         )
@@ -97,13 +97,12 @@ extension RecoveryPhrase {
         "pizza", "just", "garlic"
     ]
 
-    static let demo = RecoveryPhrase(words: testPhrase)
+    static let placeholder = RecoveryPhrase(words: testPhrase)
     static let empty = RecoveryPhrase(words: [])
 }
 
 struct RecoveryPhraseDisplayView_Previews: PreviewProvider {
     static let scheduler = DispatchQueue.main
-
     static let store = RecoveryPhraseDisplayStore.demo
 
     static var previews: some View {
