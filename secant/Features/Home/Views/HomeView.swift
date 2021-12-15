@@ -55,6 +55,15 @@ struct HomeView: View {
                         }
                     }
 
+                    Section(header: Text("Modal Routes")) {
+                        ForEach(modalRoutes) { routeValue in
+                            Button(
+                                action: { viewStore.send(.updateRoute(routeValue.route)) },
+                                label: { Text("\(String(describing: routeValue.route))") }
+                            )
+                        }
+                    }
+
                     Section(header: Text("Other Actions")) {
                         Button(
                             action: { viewStore.toggleSelectedTransaction() },
@@ -69,7 +78,7 @@ struct HomeView: View {
                 }
             }
             .fullScreenCover(
-                isPresented: viewStore.showHistoryBinding,
+                isPresented: viewStore.bindingForRoute(.history),
                 content: {
                     NavigationView {
                         TransactionHistoryView(store: store.historyStore())
@@ -106,8 +115,6 @@ extension HomeStore {
         )
     }
 }
-
-// MARK: - Previews
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {

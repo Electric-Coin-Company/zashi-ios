@@ -78,26 +78,11 @@ extension HomeStore {
 typealias HomeViewStore = ViewStore<HomeState, HomeAction>
 
 extension HomeViewStore {
-    func historyToggleString() -> String {
-        let hideShowString = isHistoryActive ? "HIDE" : "SHOW"
-        let selectedString = selectedTranactionID.map { "selected id: \($0)" } ?? "NONE selected"
-        let parts = [hideShowString, "History", selectedString]
-        return parts.joined(separator: " ")
-    }
-
-    func toggleShowingHistory() {
-        send(.updateRoute(isHistoryActive ? nil : .history))
-    }
-
     func toggleSelectedTransaction() {
         let isAlreadySelected = (self.selectedTranactionID != nil)
         let transcation = self.transactionHistoryState.transactions[5]
         let newRoute = isAlreadySelected ? nil : TransactionHistoryState.Route.showTransaction(transcation)
         send(.transactionHistory(.setRoute(newRoute)))
-    }
-
-    var isHistoryActive: Bool {
-        self.route == .history
     }
 
     var selectedTranactionID: Int? {
@@ -112,42 +97,6 @@ extension HomeViewStore {
             get: { $0.route == route },
             send: { isActive in
                 return .updateRoute(isActive ? route : nil)
-            }
-        )
-    }
-
-    var showHistoryBinding: Binding<Bool> {
-        self.binding(
-            get: { $0.route == .history },
-            send: { isActive in
-                return .updateRoute(isActive ? .history : nil)
-            }
-        )
-    }
-
-    var showPhraseDisplayBinding: Binding<Bool> {
-        self.binding(
-            get: { $0.route == .recoveryPhraseDisplay },
-            send: { isActive in
-                return .updateRoute(isActive ? .send : nil)
-            }
-        )
-    }
-
-    var showSendBinding: Binding<Bool> {
-        self.binding(
-            get: { $0.route == .send },
-            send: { isActive in
-                return .updateRoute(isActive ? .send : nil)
-            }
-        )
-    }
-
-    var showProfileBinding: Binding<Bool> {
-        self.binding(
-            get: { $0.route == .profile },
-            send: { isActive in
-                return .updateRoute(isActive ? .profile : nil)
             }
         )
     }
