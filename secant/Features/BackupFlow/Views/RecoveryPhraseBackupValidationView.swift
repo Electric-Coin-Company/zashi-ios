@@ -61,8 +61,8 @@ private extension RecoveryPhraseValidationStep {
     @ViewBuilder func missingWordGrid(for chips: [PhraseChip.Kind]) -> some View {
         let columns = Array(repeating: GridItem(.flexible(minimum: 40, maximum: 120), spacing: 20), count: 2)
         LazyVGrid(columns: columns, alignment: .center, spacing: 20 ) {
-            ForEach(chips, id: \.self) { chip in
-                PhraseChip(kind: chip)
+            ForEach(0..<chips.count) { chipIndex in
+                PhraseChip(kind: chips[chipIndex])
                     .makeDraggable()
                     .frame(
                         minWidth: 0,

@@ -66,7 +66,7 @@ enum RecoveryPhraseValidationStep: Equatable {
                     phrase: phrase,
                     missingIndices: missingIndices,
                     completion: newCompletion,
-                    missingWordsChips: missingWordsChips
+                    missingWordsChips: Array(repeating: .empty, count: RecoveryPhraseValidationState.phraseChunks)
                 )
             }
         default:
