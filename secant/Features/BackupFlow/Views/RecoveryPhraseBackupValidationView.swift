@@ -23,9 +23,8 @@ struct RecoveryPhraseBackupValidationView: View {
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 10)
-                .zIndex(1)
 
-                VStack(spacing: 40) {
+                VStack(spacing: 20) {
                     let state = viewStore.state
                     let chunks = state.phrase.toChunks()
                     ForEach(Array(zip(chunks.indices, chunks)), id: \.0) { index, chunk in
@@ -98,15 +97,9 @@ extension RecoveryPhraseValidationState{
 
     func wordChips(for group: Int, groupSize: Int, from chunk: RecoveryPhrase.Chunk) -> [PhraseChip.Kind] {
         switch self.step {
-        case .initial:
-            return wordsChips(for: group, groupSize: groupSize, from: chunk, with: missingIndices[group], completing: [])
-        case .incomplete:
+        case .initial, .incomplete, .complete:
             return wordsChips(for: group, groupSize: groupSize, from: chunk, with: missingIndices[group], completing: completion)
-        case .complete:
-            return wordsChips(for: group, groupSize: groupSize, from: chunk, with: missingIndices[group], completing: completion)
-        case .valid:
-            return wordsChips(for: group, groupSize: groupSize, from: chunk, completions: completion)
-        case .invalid:
+        case .valid, .invalid:
             return wordsChips(for: group, groupSize: groupSize, from: chunk, completions: completion)
         }
     }
