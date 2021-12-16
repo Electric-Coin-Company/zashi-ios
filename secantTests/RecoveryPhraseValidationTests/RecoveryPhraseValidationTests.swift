@@ -315,7 +315,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
             RecoveryPhraseStepCompletion(groupIndex: 3, word: "pizza")
         ]
 
-        let result = RecoveryPhraseValidationStep.resultingPhrase(
+        let result = RecoveryPhraseValidationState.RecoveryPhraseValidationStep.resultingPhrase(
             from: completion,
             missingIndices: missingIndices,
             originalPhrase: phrase,
@@ -344,7 +344,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let phrase = RecoveryPhrase(words: words)
 
-        let currentStep = RecoveryPhraseValidationStep.incomplete(
+        let currentStep = RecoveryPhraseValidationState.RecoveryPhraseValidationStep.incomplete(
             phrase: phrase,
             missingIndices: missingIndices,
             completion: [
@@ -402,7 +402,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let phrase = RecoveryPhrase(words: words)
 
-        let currentStep = RecoveryPhraseValidationStep.incomplete(
+        let currentStep = RecoveryPhraseValidationState.RecoveryPhraseValidationStep.incomplete(
             phrase: phrase,
             missingIndices: missingIndices,
             completion: [
