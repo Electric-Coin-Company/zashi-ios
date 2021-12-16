@@ -23,7 +23,6 @@ struct RecoveryPhraseValidationState: Equatable {
         case complete(phrase: RecoveryPhrase, missingIndices: [Int], completion: [RecoveryPhraseStepCompletion], missingWordsChips: [PhraseChip.Kind])
         case valid(phrase: RecoveryPhrase, missingIndices: [Int], completion: [RecoveryPhraseStepCompletion], missingWordsChips: [PhraseChip.Kind])
         case invalid(phrase: RecoveryPhrase, missingIndices: [Int], completion: [RecoveryPhraseStepCompletion], missingWordsChips: [PhraseChip.Kind])
-
     }
 
     static let wordGroupSize = 6
@@ -57,7 +56,7 @@ extension RecoveryPhraseValidationState {
         phrase: RecoveryPhrase,
         missingIndices: [Int],
         missingWordsChips: [PhraseChip.Kind]
-    ) -> RecoveryPhraseValidationState {
+    ) -> Self {
         RecoveryPhraseValidationState(
             phrase: phrase,
             missingIndices: missingIndices,
@@ -65,9 +64,7 @@ extension RecoveryPhraseValidationState {
             completion: []
         )
     }
-}
 
-extension RecoveryPhraseValidationState {
     /// creates an initial `RecoveryPhraseValidationState` with no completions and random missing indices.
     /// - Note: Use this function to create a random validation puzzle for a given phrase.
     static func random(phrase: RecoveryPhrase) -> Self {
