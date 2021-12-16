@@ -23,17 +23,20 @@ struct RecoveryPhraseBackupValidationView: View {
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 10)
+                .zIndex(1)
 
                 VStack(spacing: 40) {
                     let state = viewStore.state
                     let chunks = state.phrase.toChunks()
                     ForEach(Array(zip(chunks.indices, chunks)), id: \.0) { index, chunk in
                         WordChipGrid(chips: state.wordChips(for: index, groupSize: RecoveryPhraseValidationState.wordGroupSize, from: chunk))
+                            .background(Asset.Colors.BackgroundColors.phraseGridDarkGray.color)
                             .whenIsDroppable(!state.groupCompleted(index: index), dropDelegate: state.dropDelegate(for: viewStore, group: index))
                     }
                 }
                 .padding()
                 .background(Asset.Colors.BackgroundColors.phraseGridDarkGray.color)
+
             }
             .applyScreenBackground()
         }
@@ -112,6 +115,7 @@ extension RecoveryPhraseValidationState{
 extension RecoveryPhraseValidationState {
     static let placeholder = RecoveryPhraseValidationState.random(phrase: RecoveryPhrase.placeholder)
 }
+
 extension RecoveryPhraseValidationStore {
     private static let scheduler = DispatchQueue.main
 
