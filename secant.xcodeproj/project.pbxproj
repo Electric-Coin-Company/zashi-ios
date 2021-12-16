@@ -840,7 +840,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1320;
 				TargetAttributes = {
 					0D4E7A0426B364170058B01E = {
 						CreatedOnToolsVersion = 12.5;
@@ -1048,7 +1048,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0DFE93DF272C6D4B000FCCA5 /* RecoveryPhraseBackupTests.swift in Sources */,
 				0DFE93DF272C6D4B000FCCA5 /* RecoveryPhraseBackupTests.swift in Sources */,
 				6654C7442715A4AC00901167 /* OnboardingStoreTests.swift in Sources */,
 				0D1C1AA327611EFD0004AF6A /* RecoveryPhraseDisplayReducerTests.swift in Sources */,
