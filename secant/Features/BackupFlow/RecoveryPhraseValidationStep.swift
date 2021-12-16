@@ -74,6 +74,9 @@ enum RecoveryPhraseValidationStep: Equatable {
         }
     }
 
+    /// Given an an array of RecoveryPhraseStepCompletion, missing indices, original phrase and the number of groups it was split into,
+    /// assembly the resulting phrase. This comes up with the "proposed solution" for the recovery phrase validation challenge.
+    /// - returns:an array of String containing the recovery phrase words ordered by the original phrase order.
     static func resultingPhrase(
         from completion: [RecoveryPhraseStepCompletion],
         missingIndices: [Int],
@@ -102,11 +105,10 @@ enum RecoveryPhraseValidationStep: Equatable {
 
         return words
     }
-    /**
-    validates that the resulting word on the complete state matches the original word and moves the state into either valid or invalid
-    */
-    mutating func validate() {
-        switch self {
+
+    /// validates that the resulting word on the complete state matches the original word and moves the state into either valid or invalid
+    static func validateAndProceed(_ step: RecoveryPhraseValidationStep) -> RecoveryPhraseValidationStep {
+        switch step {
         case let .complete(phrase, missingIndices, completion, missingWordsChips):
             let resultingPhrase = Self.resultingPhrase(
                 from: completion,
@@ -116,22 +118,36 @@ enum RecoveryPhraseValidationStep: Equatable {
             )
 
             if resultingPhrase == phrase.words {
-                self = .valid(
+                return .valid(
                     phrase: phrase,
                     missingIndices: missingIndices,
                     completion: completion,
                     missingWordsChips: missingWordsChips
                 )
             } else {
-                self = .invalid(
+                return .invalid(
                     phrase: phrase,
                     missingIndices: missingIndices,
                     completion: completion,
                     missingWordsChips: missingWordsChips
                 )
             }
-        default:
-            break
+        case let .incomplete(phrase, missingIndices, completion, missingWordsChips):
+            return .invalid(
+                phrase: phrase,
+                missingIndices: missingIndices,
+                completion: completion,
+                missingWordsChips: missingWordsChips
+            )
+        case .initial(phrase: let phrase, missingIndices: let missingIndices, missingWordsChips: let missingWordsChips):
+            return .invalid(
+                phrase: phrase,
+                missingIndices: missingIndices,
+                completion: [],
+                missingWordsChips: missingWordsChips
+            )
+        case .valid, .invalid:
+            return step
         }
     }
 }
