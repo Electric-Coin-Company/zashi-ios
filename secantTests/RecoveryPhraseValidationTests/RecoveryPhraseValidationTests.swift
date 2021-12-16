@@ -275,7 +275,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.empty,
-                PhraseChip.Kind.unassigned(word: "pizza")
+                PhraseChip.Kind.empty
             ]
         )
 
