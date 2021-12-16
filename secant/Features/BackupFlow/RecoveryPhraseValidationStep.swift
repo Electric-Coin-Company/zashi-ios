@@ -7,12 +7,51 @@
 
 import Foundation
 
-/**
-Represents the completion of a group of recovery words by de addition of one word into the given group
-*/
+
+/// Represents the completion of a group of recovery words by de addition of one word into the given group
 struct RecoveryPhraseStepCompletion: Equatable {
     var groupIndex: Int
     var word: String
+}
+
+struct RecoveryPhraseValidationStepState: Equatable {
+    var phrase: RecoveryPhrase
+    var missingIndices: [Int]
+    var missingWordChips: [PhraseChip.Kind]
+    var completion: [RecoveryPhraseStepCompletion]
+
+    var state: RecoveryPhraseValidationStep {
+        guard !completion.isEmpty else {
+            return  .initial(phrase: phrase, missingIndices: missingIndices, missingWordsChips: missingWordChips)
+        }
+
+        guard completion.count >= missingIndices.count else {
+            return .complete(phrase: phrase, missingIndices: missingIndices, completion: completion, missingWordsChips: missingWordChips)
+        }
+
+        return isValid ?
+            .valid(phrase: phrase, missingIndices: missingIndices, completion: completion, missingWordsChips: missingWordChips) :
+            .invalid(phrase: phrase, missingIndices: missingIndices, completion: completion, missingWordsChips: missingWordChips)
+    }
+
+    var isValid: Bool {
+        RecoveryPhraseValidationStep.resultingPhrase(from: completion, missingIndices: missingIndices, originalPhrase: phrase, numberOfGroups: missingIndices.count) == phrase.words
+    }
+}
+
+extension RecoveryPhraseValidationStepState {
+    static func initial(
+        phrase: RecoveryPhrase,
+        missingIndices: [Int],
+        missingWordsChips: [PhraseChip.Kind]
+    ) -> RecoveryPhraseValidationStepState {
+        RecoveryPhraseValidationStepState(
+            phrase: phrase,
+            missingIndices: missingIndices,
+            missingWordChips: missingWordsChips,
+            completion: []
+        )
+    }
 }
 
 enum RecoveryPhraseValidationStep: Equatable {
