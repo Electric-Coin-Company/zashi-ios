@@ -105,21 +105,25 @@ class RecoveryPhraseValidationTests: XCTestCase {
             missingWordsChips: missingWordChips
         )
 
+        let expectedMissingChips = [
+            PhraseChip.Kind.unassigned(word: "salute"),
+            PhraseChip.Kind.unassigned(word: "boil"),
+            PhraseChip.Kind.unassigned(word: "cancel"),
+            PhraseChip.Kind.empty
+        ]
+
+        let expectedCompletion = [RecoveryPhraseStepCompletion(groupIndex: 0, word: "pizza")]
         let expectedStep = RecoveryPhraseValidationState(
             phrase: phrase,
             missingIndices: missingIndices,
-            missingWordChips: [
-                PhraseChip.Kind.unassigned(word: "salute"),
-                PhraseChip.Kind.unassigned(word: "boil"),
-                PhraseChip.Kind.unassigned(word: "cancel"),
-                PhraseChip.Kind.empty
-            ],
-            completion: [RecoveryPhraseStepCompletion(groupIndex: 0, word: "pizza")]
+            missingWordChips: expectedMissingChips,
+            completion: expectedCompletion
         )
 
         let result = RecoveryPhraseValidationState.given(initialStep, apply: missingWordChips[3], into: 0)
 
         XCTAssertEqual(expectedStep, result)
+        XCTAssertEqual(result.step, .incomplete(phrase: phrase, missingIndices: missingIndices, completion: expectedCompletion, missingWordsChips: expectedMissingChips))
     }
 
     func testWhenInIncompleteWith2CompletionsAndAChipIsDroppedInGroup3NextStateIsIncomplete() {
@@ -152,7 +156,6 @@ class RecoveryPhraseValidationTests: XCTestCase {
             ],
             completion: [RecoveryPhraseStepCompletion(groupIndex: 0, word: "salute")]
         )
-
         let expected = RecoveryPhraseValidationState(
             phrase: phrase,
             missingIndices: missingIndices,
