@@ -315,7 +315,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
             RecoveryPhraseStepCompletion(groupIndex: 3, word: "pizza")
         ]
 
-        let result = RecoveryPhraseValidationState.Step.resultingPhrase(
+        let result = RecoveryPhraseValidationState.resultingPhrase(
             from: completion,
             missingIndices: missingIndices,
             originalPhrase: phrase,

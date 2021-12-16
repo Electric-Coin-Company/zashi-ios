@@ -14,21 +14,6 @@ struct RecoveryPhraseStepCompletion: Equatable {
     var word: String
 }
 
-extension RecoveryPhraseValidationState {
-    static func initial(
-        phrase: RecoveryPhrase,
-        missingIndices: [Int],
-        missingWordsChips: [PhraseChip.Kind]
-    ) -> RecoveryPhraseValidationState {
-        RecoveryPhraseValidationState(
-            phrase: phrase,
-            missingIndices: missingIndices,
-            missingWordChips: missingWordsChips,
-            completion: []
-        )
-    }
-}
-
 extension RecoveryPhrase.Chunk {
     func words(with missingIndex: Int) -> [String] {
         var wordsApplyingMissing = self.words
