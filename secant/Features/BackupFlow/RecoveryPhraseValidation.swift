@@ -79,15 +79,10 @@ enum RecoveryPhraseValidationAction: Equatable {
     case fail
 }
 
-typealias RecoveryPhraseValidationReducer = Reducer<RecoveryPhraseValidationState, RecoveryPhraseValidationAction, RecoveryPhraseValidationEnvironment>
-
-struct RecoveryPhraseValidationEnvironment {
-    let mainQueue: AnySchedulerOf<DispatchQueue>
-    let validateStep: (RecoveryPhraseValidationStep) -> Effect<RecoveryPhraseValidationStep, Error>
-}
+typealias RecoveryPhraseValidationReducer = Reducer<RecoveryPhraseValidationState, RecoveryPhraseValidationAction, Void>
 
 extension RecoveryPhraseValidationReducer {
-    static let `default` = RecoveryPhraseValidationReducer { state, action, environment in
+    static let `default` = RecoveryPhraseValidationReducer { state, action, _ in
         switch action {
         case .reset:
             state.step = RecoveryPhraseValidationState.reset(state.step)
