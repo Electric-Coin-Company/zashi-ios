@@ -30,12 +30,26 @@ struct AppView: View {
                     StartupView(sendAction: viewStore.send)
                 }
             case .phraseValidation:
-                RecoveryPhraseBackupValidationView(
-                    store: store.scope(
-                        state: \.phraseValidationState,
-                        action: AppAction.phraseValidation
+                NavigationView {
+                    RecoveryPhraseBackupValidationView(
+                        store: store.scope(
+                            state: \.phraseValidationState,
+                            action: AppAction.phraseValidation
+                        )
                     )
-                )
+                        .toolbar(content: {
+                            ToolbarItem(
+                                placement: .navigationBarLeading,
+                                content: {
+                                    Button(action: {
+                                        viewStore.send(.updateRoute(.startup))
+                                    }) {
+                                        Text("Back")
+                                    }
+                                })
+                        })
+                        .navigationViewStyle(StackNavigationViewStyle())
+                }
             }
         }
     }
