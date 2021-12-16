@@ -16,6 +16,12 @@ struct RecoveryPhraseEnvironment {
     var newPhrase: () -> Effect<RecoveryPhrase, AppError>
 }
 
+/// Represents the completion of a group of recovery words by de addition of one word into the given group
+struct RecoveryPhraseStepCompletion: Equatable {
+    var groupIndex: Int
+    var word: String
+}
+
 struct RecoveryPhraseValidationState: Equatable {
     enum Step: Equatable {
         case initial
@@ -174,6 +180,17 @@ extension RecoveryPhraseValidationState {
 
     static func randomIndices() -> [Int] {
         Array(repeating: Int.random(in: 0...wordGroupSize - 1), count: phraseChunks)
+    }
+}
+
+extension RecoveryPhrase.Chunk {
+    /// Returns an array of words where the word at the missing index will be an empty string
+    func words(with missingIndex: Int) -> [String] {
+        precondition(missingIndex >= 0)
+        precondition(missingIndex < self.words.count)
+        var wordsApplyingMissing = self.words
+        wordsApplyingMissing[missingIndex] = ""
+        return wordsApplyingMissing
     }
 }
 

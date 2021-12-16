@@ -18,7 +18,6 @@
 		0D354A0B26D5A9D000315F45 /* MnemonicSeedPhraseHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D354A0826D5A9D000315F45 /* MnemonicSeedPhraseHandling.swift */; };
 		0D3D04082728B3440032ABC1 /* RecoveryPhraseDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3D04072728B3440032ABC1 /* RecoveryPhraseDisplayView.swift */; };
 		0D3D040A2728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3D04092728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift */; };
-		0D4377C22731E10E001EF204 /* RecoveryPhraseValidationStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4377C12731E10E001EF204 /* RecoveryPhraseValidationStep.swift */; };
 		0D4E7A0926B364170058B01E /* SecantApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0826B364170058B01E /* SecantApp.swift */; };
 		0D4E7A0B26B364170058B01E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0A26B364170058B01E /* ContentView.swift */; };
 		0D4E7A0D26B364180058B01E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0C26B364180058B01E /* Assets.xcassets */; };
@@ -135,7 +134,6 @@
 		0D354A0826D5A9D000315F45 /* MnemonicSeedPhraseHandling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MnemonicSeedPhraseHandling.swift; sourceTree = "<group>"; };
 		0D3D04072728B3440032ABC1 /* RecoveryPhraseDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseDisplayView.swift; sourceTree = "<group>"; };
 		0D3D04092728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseDisplayStore.swift; sourceTree = "<group>"; };
-		0D4377C12731E10E001EF204 /* RecoveryPhraseValidationStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseValidationStep.swift; sourceTree = "<group>"; };
 		0D4E7A0526B364170058B01E /* secant-testnet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "secant-testnet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D4E7A0826B364170058B01E /* SecantApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecantApp.swift; sourceTree = "<group>"; };
 		0D4E7A0A26B364170058B01E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -299,7 +297,6 @@
 				0D3D04062728B2EC0032ABC1 /* Views */,
 				0D3D04092728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift */,
 				0DFE93E2272CA1AA000FCCA5 /* RecoveryPhraseValidation.swift */,
-				0D4377C12731E10E001EF204 /* RecoveryPhraseValidationStep.swift */,
 				0D7CE63327349B5D0020E050 /* View+WhenDraggable.swift */,
 			);
 			path = BackupFlow;
@@ -1002,7 +999,6 @@
 				F9971A4E27680DC400A2DB75 /* AppView.swift in Sources */,
 				0DA13CA526C1963000E3B610 /* Balance.swift in Sources */,
 				2EA11F5B27467EF800709571 /* OnboardingFooterView.swift in Sources */,
-				0D4377C22731E10E001EF204 /* RecoveryPhraseValidationStep.swift in Sources */,
 				66D50668271D9B6100E51F0D /* NavigationButtonStyle.swift in Sources */,
 				0D1922F826BDEB3500052649 /* MockServices.swift in Sources */,
 				0D3D040A2728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift in Sources */,
