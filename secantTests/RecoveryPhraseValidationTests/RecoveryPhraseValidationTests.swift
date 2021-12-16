@@ -123,7 +123,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
         let result = RecoveryPhraseValidationState.given(initialStep, apply: missingWordChips[3], into: 0)
 
         XCTAssertEqual(expectedStep, result)
-        XCTAssertEqual(result.step, .incomplete(phrase: phrase, missingIndices: missingIndices, completion: expectedCompletion, missingWordsChips: expectedMissingChips))
+        XCTAssertEqual(result.step, .incomplete)
     }
 
     func testWhenInIncompleteWith2CompletionsAndAChipIsDroppedInGroup3NextStateIsIncomplete() {
@@ -344,19 +344,19 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let phrase = RecoveryPhrase(words: words)
 
-        let currentStep = RecoveryPhraseValidationState.Step.incomplete(
+        let currentStep = RecoveryPhraseValidationState(
             phrase: phrase,
             missingIndices: missingIndices,
-            completion: [
-                RecoveryPhraseStepCompletion(groupIndex: 0, word: "salute"),
-                RecoveryPhraseStepCompletion(groupIndex: 1, word: "boil"),
-                RecoveryPhraseStepCompletion(groupIndex: 2, word: "cancel")
-            ],
-            missingWordsChips: [
+            missingWordChips: [
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.unassigned(word: "pizza")
+            ],
+            completion: [
+                RecoveryPhraseStepCompletion(groupIndex: 0, word: "salute"),
+                RecoveryPhraseStepCompletion(groupIndex: 1, word: "boil"),
+                RecoveryPhraseStepCompletion(groupIndex: 2, word: "cancel")
             ]
         )
 
@@ -402,19 +402,19 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let phrase = RecoveryPhrase(words: words)
 
-        let currentStep = RecoveryPhraseValidationState.Step.incomplete(
+        let currentStep = RecoveryPhraseValidationState(
             phrase: phrase,
             missingIndices: missingIndices,
-            completion: [
-                RecoveryPhraseStepCompletion(groupIndex: 0, word: "salute"),
-                RecoveryPhraseStepCompletion(groupIndex: 1, word: "boil"),
-                RecoveryPhraseStepCompletion(groupIndex: 2, word: "cancel")
-            ],
-            missingWordsChips: [
+            missingWordChips: [
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.unassigned(word: "pizza")
+            ],
+            completion: [
+                RecoveryPhraseStepCompletion(groupIndex: 0, word: "salute"),
+                RecoveryPhraseStepCompletion(groupIndex: 1, word: "boil"),
+                RecoveryPhraseStepCompletion(groupIndex: 2, word: "cancel")
             ]
         )
 

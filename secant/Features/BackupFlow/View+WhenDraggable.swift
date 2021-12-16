@@ -26,13 +26,13 @@ extension PhraseChip {
 
 extension View {
     func onDrop(
-        for step: RecoveryPhraseValidationState.Step,
+        for state: RecoveryPhraseValidationState,
         group: Int,
         viewStore: RecoveryPhraseValidationViewStore
     ) -> some View {
         self.onDrop(
             of: [PhraseChip.completionTypeIdentifier],
-            delegate: step.dropDelegate(for: viewStore, group: group)
+            delegate: state.dropDelegate(for: viewStore, group: group)
         )
     }
 }

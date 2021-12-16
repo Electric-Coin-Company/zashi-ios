@@ -18,18 +18,18 @@ struct RecoveryPhraseBackupValidationView: View {
                     Text("Drag the words below to match your backed-up copy.")
                         .bodyText()
 
-                    viewStore.state.step.completionWords
+                    viewStore.state.missingWordGrid()
                         .padding(.horizontal, 30)
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 10)
 
                 VStack(spacing: 40) {
-                    let step = viewStore.state.step
-                    let chunks = step.phrase.toChunks()
+                    let state = viewStore.state
+                    let chunks = state.phrase.toChunks()
                     ForEach(Array(zip(chunks.indices, chunks)), id: \.0) { index, chunk in
-                        WordChipGrid(chips: step.wordChips(for: index, groupSize: RecoveryPhraseValidationState.wordGroupSize, from: chunk))
-                            .whenIsDroppable(!step.groupCompleted(index: index), dropDelegate: step.dropDelegate(for: viewStore, group: index))
+                        WordChipGrid(chips: state.wordChips(for: index, groupSize: RecoveryPhraseValidationState.wordGroupSize, from: chunk))
+                            .whenIsDroppable(!state.groupCompleted(index: index), dropDelegate: state.dropDelegate(for: viewStore, group: index))
                     }
                 }
                 .padding()
@@ -42,27 +42,12 @@ struct RecoveryPhraseBackupValidationView: View {
     }
 }
 
-private extension RecoveryPhraseValidationState.Step {
-    @ViewBuilder var completionWords: some View {
-        switch self {
-        case .initial(_, _, let missingWordsChips):
-            missingWordGrid(for: missingWordsChips)
-        case .incomplete(_, _, _, let missingWordsChips):
-            missingWordGrid(for: missingWordsChips)
-        case .complete(_, _, _, let missingWordsChips):
-            missingWordGrid(for: missingWordsChips)
-        case .valid(_, _, _, let missingWordsChips):
-            missingWordGrid(for: missingWordsChips)
-        case .invalid(_, _, _, let missingWordsChips):
-            missingWordGrid(for: missingWordsChips)
-        }
-    }
-
-    @ViewBuilder func missingWordGrid(for chips: [PhraseChip.Kind]) -> some View {
+private extension RecoveryPhraseValidationState {
+    @ViewBuilder func missingWordGrid() -> some View {
         let columns = Array(repeating: GridItem(.flexible(minimum: 40, maximum: 120), spacing: 20), count: 2)
         LazyVGrid(columns: columns, alignment: .center, spacing: 20 ) {
-            ForEach(0..<chips.count) { chipIndex in
-                PhraseChip(kind: chips[chipIndex])
+            ForEach(0..<missingWordChips.count) { chipIndex in
+                PhraseChip(kind: missingWordChips[chipIndex])
                     .makeDraggable()
                     .frame(
                         minWidth: 0,
@@ -75,7 +60,7 @@ private extension RecoveryPhraseValidationState.Step {
     }
 }
 
-extension RecoveryPhraseValidationState.Step {
+extension RecoveryPhraseValidationState{
     func wordsChips(for group: Int, groupSize: Int, from chunk: RecoveryPhrase.Chunk, with missingIndex: Int, completing completions: [RecoveryPhraseStepCompletion]) -> [PhraseChip.Kind] {
         let completion = completions.first(where: { $0.groupIndex == group })
 
@@ -109,34 +94,17 @@ extension RecoveryPhraseValidationState.Step {
     }
 
     func wordChips(for group: Int, groupSize: Int, from chunk: RecoveryPhrase.Chunk) -> [PhraseChip.Kind] {
-        switch self {
-        case .initial(_, let missingIndices, _):
+        switch self.step {
+        case .initial:
             return wordsChips(for: group, groupSize: groupSize, from: chunk, with: missingIndices[group], completing: [])
-        case let .incomplete(_, missingIndices, completion, _):
+        case .incomplete:
             return wordsChips(for: group, groupSize: groupSize, from: chunk, with: missingIndices[group], completing: completion)
-        case let .complete(_, missingIndices, completion, _):
+        case .complete:
             return wordsChips(for: group, groupSize: groupSize, from: chunk, with: missingIndices[group], completing: completion)
-        case .valid(_, _, let completion, _):
+        case .valid:
             return wordsChips(for: group, groupSize: groupSize, from: chunk, completions: completion)
-        case .invalid(_, _, let completion, _):
+        case .invalid:
             return wordsChips(for: group, groupSize: groupSize, from: chunk, completions: completion)
-        }
-    }
-}
-
-private extension RecoveryPhraseValidationState.Step {
-    var phrase: RecoveryPhrase {
-        switch self {
-        case .initial(let phrase, _, _):
-            return phrase
-        case .incomplete(let phrase, _, _, _):
-            return phrase
-        case .complete(let phrase, _, _, _):
-            return phrase
-        case .invalid(let phrase, _, _, _):
-            return phrase
-        case .valid(let phrase, _, _, _):
-            return phrase
         }
     }
 }

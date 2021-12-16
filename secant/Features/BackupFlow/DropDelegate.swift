@@ -47,12 +47,12 @@ struct WordChipDropDelegate: DropDelegate {
     }
 }
 
-extension RecoveryPhraseValidationState.Step {
+extension RecoveryPhraseValidationState {
     func dropDelegate(
         for viewStore: RecoveryPhraseValidationViewStore,
         group: Int
     ) -> DropDelegate {
-        switch self {
+        switch self.step {
         case .initial:
             return WordChipDropDelegate { chipKind in
                 switch chipKind {
@@ -62,7 +62,7 @@ extension RecoveryPhraseValidationState.Step {
                     break
                 }
             }
-        case .incomplete(_, _, completion: let completion, _):
+        case .incomplete:
             guard completion.first(where: { $0.groupIndex == group }) == nil else { return NullDelegate() }
 
             return WordChipDropDelegate { chipKind in
@@ -74,15 +74,8 @@ extension RecoveryPhraseValidationState.Step {
     }
 }
 
-extension RecoveryPhraseValidationState.Step {
+extension RecoveryPhraseValidationState {
     func groupCompleted(index: Int) -> Bool {
-        switch self {
-        case .valid, .invalid, .complete:
-            return true
-        case .initial:
-            return false
-        case .incomplete(_, _, let completion, _):
-            return completion.first(where: { $0.groupIndex == index }) != nil
-        }
+        completion.first(where: { $0.groupIndex == index }) != nil
     }
 }
