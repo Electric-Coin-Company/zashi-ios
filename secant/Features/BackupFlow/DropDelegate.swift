@@ -47,7 +47,7 @@ struct WordChipDropDelegate: DropDelegate {
     }
 }
 
-extension RecoveryPhraseValidationState.RecoveryPhraseValidationStep {
+extension RecoveryPhraseValidationState.Step {
     func dropDelegate(
         for viewStore: RecoveryPhraseValidationViewStore,
         group: Int
@@ -74,7 +74,7 @@ extension RecoveryPhraseValidationState.RecoveryPhraseValidationStep {
     }
 }
 
-extension RecoveryPhraseValidationState.RecoveryPhraseValidationStep {
+extension RecoveryPhraseValidationState.Step {
     func groupCompleted(index: Int) -> Bool {
         switch self {
         case .valid, .invalid, .complete:

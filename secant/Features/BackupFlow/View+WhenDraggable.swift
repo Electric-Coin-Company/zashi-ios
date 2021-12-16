@@ -26,7 +26,7 @@ extension PhraseChip {
 
 extension View {
     func onDrop(
-        for step: RecoveryPhraseValidationState.RecoveryPhraseValidationStep,
+        for step: RecoveryPhraseValidationState.Step,
         group: Int,
         viewStore: RecoveryPhraseValidationViewStore
     ) -> some View {

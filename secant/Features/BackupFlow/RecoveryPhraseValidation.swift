@@ -17,7 +17,7 @@ struct RecoveryPhraseEnvironment {
 }
 
 struct RecoveryPhraseValidationState: Equatable {
-    enum RecoveryPhraseValidationStep: Equatable {
+    enum Step: Equatable {
         case initial(phrase: RecoveryPhrase, missingIndices: [Int], missingWordsChips: [PhraseChip.Kind])
         case incomplete(phrase: RecoveryPhrase, missingIndices: [Int], completion: [RecoveryPhraseStepCompletion], missingWordsChips: [PhraseChip.Kind])
         case complete(phrase: RecoveryPhrase, missingIndices: [Int], completion: [RecoveryPhraseStepCompletion], missingWordsChips: [PhraseChip.Kind])
@@ -59,7 +59,7 @@ struct RecoveryPhraseValidationState: Equatable {
         }
 
         /// validates that the resulting word on the complete state matches the original word and moves the state into either valid or invalid
-        static func validateAndProceed(_ step: RecoveryPhraseValidationState.RecoveryPhraseValidationStep) -> RecoveryPhraseValidationState.RecoveryPhraseValidationStep {
+        static func validateAndProceed(_ step: RecoveryPhraseValidationState.Step) -> RecoveryPhraseValidationState.Step {
             switch step {
             case let .complete(phrase, missingIndices, completion, missingWordsChips):
                 let resultingPhrase = Self.resultingPhrase(
@@ -112,7 +112,7 @@ struct RecoveryPhraseValidationState: Equatable {
     var missingWordChips: [PhraseChip.Kind]
     var completion: [RecoveryPhraseStepCompletion]
 
-    var step: RecoveryPhraseValidationStep {
+    var step: Step {
         guard !completion.isEmpty else {
             return  .initial(phrase: phrase, missingIndices: missingIndices, missingWordsChips: missingWordChips)
         }
@@ -125,7 +125,7 @@ struct RecoveryPhraseValidationState: Equatable {
     }
 
     var isValid: Bool {
-        RecoveryPhraseValidationStep.resultingPhrase(from: completion, missingIndices: missingIndices, originalPhrase: phrase, numberOfGroups: missingIndices.count) == phrase.words
+        Step.resultingPhrase(from: completion, missingIndices: missingIndices, originalPhrase: phrase, numberOfGroups: missingIndices.count) == phrase.words
     }
 }
 
@@ -211,14 +211,14 @@ extension RecoveryPhraseValidationState {
         Array(repeating: Int.random(in: 0...wordGroupSize - 1), count: phraseChunks)
     }
 
-    static func firstStep(phrase: RecoveryPhrase) -> RecoveryPhraseValidationStep {
+    static func firstStep(phrase: RecoveryPhrase) -> Step {
         let missingIndices = Self.randomIndices()
         let missingWordChipKind = Self.pickWordsFromMissingIndices(indices: missingIndices, phrase: phrase).shuffled()
         return .initial(phrase: phrase, missingIndices: missingIndices, missingWordsChips: missingWordChipKind)
     }
 
     /// reset the state to the initial step
-    static func reset(_ step: RecoveryPhraseValidationStep) -> RecoveryPhraseValidationStep {
+    static func reset(_ step: Step) -> Step {
         switch step {
         case let .initial(phrase, _, _):
             return Self.firstStep(phrase: phrase)

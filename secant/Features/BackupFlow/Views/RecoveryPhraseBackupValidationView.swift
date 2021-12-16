@@ -42,7 +42,7 @@ struct RecoveryPhraseBackupValidationView: View {
     }
 }
 
-private extension RecoveryPhraseValidationState.RecoveryPhraseValidationStep {
+private extension RecoveryPhraseValidationState.Step {
     @ViewBuilder var completionWords: some View {
         switch self {
         case .initial(_, _, let missingWordsChips):
@@ -75,7 +75,7 @@ private extension RecoveryPhraseValidationState.RecoveryPhraseValidationStep {
     }
 }
 
-extension RecoveryPhraseValidationState.RecoveryPhraseValidationStep {
+extension RecoveryPhraseValidationState.Step {
     func wordsChips(for group: Int, groupSize: Int, from chunk: RecoveryPhrase.Chunk, with missingIndex: Int, completing completions: [RecoveryPhraseStepCompletion]) -> [PhraseChip.Kind] {
         let completion = completions.first(where: { $0.groupIndex == group })
 
@@ -124,7 +124,7 @@ extension RecoveryPhraseValidationState.RecoveryPhraseValidationStep {
     }
 }
 
-private extension RecoveryPhraseValidationState.RecoveryPhraseValidationStep {
+private extension RecoveryPhraseValidationState.Step {
     var phrase: RecoveryPhrase {
         switch self {
         case .initial(let phrase, _, _):
