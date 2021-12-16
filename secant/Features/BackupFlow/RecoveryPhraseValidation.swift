@@ -80,51 +80,6 @@ extension RecoveryPhraseValidationState {
 }
 
 extension RecoveryPhraseValidationState {
-    /// validates that the resulting word on the complete state matches the original word and moves the state into either valid or invalid
-    static func validateAndProceed(_ step: RecoveryPhraseValidationState.Step) -> RecoveryPhraseValidationState.Step {
-        switch step {
-        case let .complete(phrase, missingIndices, completion, missingWordsChips):
-            let resultingPhrase = Self.resultingPhrase(
-                from: completion,
-                missingIndices: missingIndices,
-                originalPhrase: phrase,
-                numberOfGroups: RecoveryPhraseValidationState.phraseChunks
-            )
-
-            if resultingPhrase == phrase.words {
-                return .valid(
-                    phrase: phrase,
-                    missingIndices: missingIndices,
-                    completion: completion,
-                    missingWordsChips: missingWordsChips
-                )
-            } else {
-                return .invalid(
-                    phrase: phrase,
-                    missingIndices: missingIndices,
-                    completion: completion,
-                    missingWordsChips: missingWordsChips
-                )
-            }
-        case let .incomplete(phrase, missingIndices, completion, missingWordsChips):
-            return .invalid(
-                phrase: phrase,
-                missingIndices: missingIndices,
-                completion: completion,
-                missingWordsChips: missingWordsChips
-            )
-        case .initial(phrase: let phrase, missingIndices: let missingIndices, missingWordsChips: let missingWordsChips):
-            return .invalid(
-                phrase: phrase,
-                missingIndices: missingIndices,
-                completion: [],
-                missingWordsChips: missingWordsChips
-            )
-        case .valid, .invalid:
-            return step
-        }
-    }
-
     /// Given an array of RecoveryPhraseStepCompletion, missing indices, original phrase and the number of groups it was split into,
     /// assembly the resulting phrase. This comes up with the "proposed solution" for the recovery phrase validation challenge.
     /// - returns:an array of String containing the recovery phrase words ordered by the original phrase order.
@@ -220,32 +175,6 @@ extension RecoveryPhraseValidationState {
     static func randomIndices() -> [Int] {
         Array(repeating: Int.random(in: 0...wordGroupSize - 1), count: phraseChunks)
     }
-
-    static func firstStep(phrase: RecoveryPhrase) -> Step {
-        let missingIndices = Self.randomIndices()
-        let missingWordChipKind = Self.pickWordsFromMissingIndices(indices: missingIndices, phrase: phrase).shuffled()
-        return .initial(phrase: phrase, missingIndices: missingIndices, missingWordsChips: missingWordChipKind)
-    }
-
-    /// reset the state to the initial step
-    static func reset(_ step: Step) -> Step {
-        switch step {
-        case let .initial(phrase, _, _):
-            return Self.firstStep(phrase: phrase)
-
-        case .incomplete(let phrase, _, _, _):
-            return Self.firstStep(phrase: phrase)
-
-        case .complete(let phrase, _, _, _):
-            return Self.firstStep(phrase: phrase)
-
-        case .valid(let phrase, _, _, _):
-            return Self.firstStep(phrase: phrase)
-
-        case .invalid(let phrase, _, _, _):
-            return Self.firstStep(phrase: phrase)
-        }
-    }
 }
 
 enum RecoveryPhraseValidationAction: Equatable {
@@ -270,7 +199,6 @@ extension RecoveryPhraseValidationReducer {
             return .none
 
         case .validate:
-//            state.step = .validateAndProceed(state.step)
             return .none
 
         case .succeed:
