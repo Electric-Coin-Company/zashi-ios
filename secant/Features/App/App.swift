@@ -32,7 +32,8 @@ extension AppReducer {
         [
             routeReducer,
             homeReducer,
-            onboardingReducer
+            onboardingReducer,
+            phraseValidationReducer.debug()
         ]
     )
 
@@ -91,7 +92,7 @@ extension AppState {
         .init(
             homeState: .placeholder,
             onboardingState: .init(),
-            phraseValidationState: RecoveryPhraseValidationState.init(phrase: RecoveryPhrase.placeholder)
+            phraseValidationState: RecoveryPhraseValidationState.placeholder
         )
     }
 }

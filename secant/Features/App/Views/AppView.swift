@@ -30,7 +30,12 @@ struct AppView: View {
                     StartupView(sendAction: viewStore.send)
                 }
             case .phraseValidation:
-                RecoveryPhraseBackupValidationView(store: .demo)
+                RecoveryPhraseBackupValidationView(
+                    store: store.scope(
+                        state: \.phraseValidationState,
+                        action: AppAction.phraseValidation
+                    )
+                )
             }
         }
     }
