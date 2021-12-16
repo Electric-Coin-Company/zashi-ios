@@ -14,38 +14,13 @@ struct RecoveryPhraseStepCompletion: Equatable {
     var word: String
 }
 
-struct RecoveryPhraseValidationStepState: Equatable {
-    var phrase: RecoveryPhrase
-    var missingIndices: [Int]
-    var missingWordChips: [PhraseChip.Kind]
-    var completion: [RecoveryPhraseStepCompletion]
-
-    var state: RecoveryPhraseValidationStep {
-        guard !completion.isEmpty else {
-            return  .initial(phrase: phrase, missingIndices: missingIndices, missingWordsChips: missingWordChips)
-        }
-
-        guard completion.count >= missingIndices.count else {
-            return .complete(phrase: phrase, missingIndices: missingIndices, completion: completion, missingWordsChips: missingWordChips)
-        }
-
-        return isValid ?
-            .valid(phrase: phrase, missingIndices: missingIndices, completion: completion, missingWordsChips: missingWordChips) :
-            .invalid(phrase: phrase, missingIndices: missingIndices, completion: completion, missingWordsChips: missingWordChips)
-    }
-
-    var isValid: Bool {
-        RecoveryPhraseValidationStep.resultingPhrase(from: completion, missingIndices: missingIndices, originalPhrase: phrase, numberOfGroups: missingIndices.count) == phrase.words
-    }
-}
-
-extension RecoveryPhraseValidationStepState {
+extension RecoveryPhraseValidationState {
     static func initial(
         phrase: RecoveryPhrase,
         missingIndices: [Int],
         missingWordsChips: [PhraseChip.Kind]
-    ) -> RecoveryPhraseValidationStepState {
-        RecoveryPhraseValidationStepState(
+    ) -> RecoveryPhraseValidationState {
+        RecoveryPhraseValidationState(
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordChips: missingWordsChips,
@@ -61,57 +36,7 @@ enum RecoveryPhraseValidationStep: Equatable {
     case valid(phrase: RecoveryPhrase, missingIndices: [Int], completion: [RecoveryPhraseStepCompletion], missingWordsChips: [PhraseChip.Kind])
     case invalid(phrase: RecoveryPhrase, missingIndices: [Int], completion: [RecoveryPhraseStepCompletion], missingWordsChips: [PhraseChip.Kind])
 
-    /**
-    drives the state machine represented on this Enum by the action of applying a chip into a group of words containing an empty slot that has to be completed
-    */
-    static func given(step: RecoveryPhraseValidationStep, apply chip: PhraseChip.Kind, into group: Int) -> RecoveryPhraseValidationStep {
-        guard case let PhraseChip.Kind.unassigned(word) = chip else { return step }
 
-        switch step {
-        case let .initial(phrase, missingIndices, missingWordsChips):
-            guard let missingChipIndex = missingWordsChips.firstIndex(of: chip) else { return step }
-
-            var newMissingWords = missingWordsChips
-            newMissingWords[missingChipIndex] = .empty
-
-            return .incomplete(
-                phrase: phrase,
-                missingIndices: missingIndices,
-                completion: [RecoveryPhraseStepCompletion(groupIndex: group, word: word)],
-                missingWordsChips: newMissingWords
-            )
-
-        case let .incomplete(phrase, missingIndices, completion, missingWordsChips):
-            guard let missingChipIndex = missingWordsChips.firstIndex(of: chip) else { return step }
-
-            if completion.count < (RecoveryPhraseValidationState.phraseChunks - 1) {
-                var newMissingWords = missingWordsChips
-                newMissingWords[missingChipIndex] = .empty
-
-                var newCompletionState = Array(completion)
-                newCompletionState.append(RecoveryPhraseStepCompletion(groupIndex: group, word: word))
-
-                return .incomplete(
-                    phrase: phrase,
-                    missingIndices: missingIndices,
-                    completion: newCompletionState,
-                    missingWordsChips: newMissingWords
-                )
-            } else {
-                var newCompletion = completion
-                newCompletion.append(RecoveryPhraseStepCompletion(groupIndex: group, word: word))
-
-                return .complete(
-                    phrase: phrase,
-                    missingIndices: missingIndices,
-                    completion: newCompletion,
-                    missingWordsChips: Array(repeating: .empty, count: RecoveryPhraseValidationState.phraseChunks)
-                )
-            }
-        default:
-            return step
-        }
-    }
 
     /// Given an an array of RecoveryPhraseStepCompletion, missing indices, original phrase and the number of groups it was split into,
     /// assembly the resulting phrase. This comes up with the "proposed solution" for the recovery phrase validation challenge.

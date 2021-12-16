@@ -20,16 +20,96 @@ struct RecoveryPhraseValidationState: Equatable {
     static let wordGroupSize = 6
     static let phraseChunks = 4
 
-    var step: RecoveryPhraseValidationStep
+    var phrase: RecoveryPhrase
+    var missingIndices: [Int]
+    var missingWordChips: [PhraseChip.Kind]
+    var completion: [RecoveryPhraseStepCompletion]
 
-    init(phrase: RecoveryPhrase) {
-        let missingIndices = Self.randomIndices()
-        let missingWordChipKind = Self.pickWordsFromMissingIndices(indices: missingIndices, phrase: phrase).shuffled()
-        self.step = .initial(phrase: phrase, missingIndices: missingIndices, missingWordsChips: missingWordChipKind)
+    var step: RecoveryPhraseValidationStep {
+        guard !completion.isEmpty else {
+            return  .initial(phrase: phrase, missingIndices: missingIndices, missingWordsChips: missingWordChips)
+        }
+
+        guard completion.count >= missingIndices.count else {
+            return .incomplete(phrase: phrase, missingIndices: missingIndices, completion: completion, missingWordsChips: missingWordChips)
+        }
+
+        return .complete(phrase: phrase, missingIndices: missingIndices, completion: completion, missingWordsChips: missingWordChips)
+    }
+
+    var isValid: Bool {
+        RecoveryPhraseValidationStep.resultingPhrase(from: completion, missingIndices: missingIndices, originalPhrase: phrase, numberOfGroups: missingIndices.count) == phrase.words
     }
 }
 
 extension RecoveryPhraseValidationState {
+    /// creates an initial `RecoveryPhraseValidationState` with no completions and random missing indices.
+    /// - Note: Use this function to create a random validation puzzle for a given phrase.
+    static func random(phrase: RecoveryPhrase) -> Self {
+        let missingIndices = Self.randomIndices()
+        let missingWordChipKind = Self.pickWordsFromMissingIndices(indices: missingIndices, phrase: phrase).shuffled()
+        return RecoveryPhraseValidationState(
+            phrase: phrase,
+            missingIndices: missingIndices,
+            missingWordChips: missingWordChipKind,
+            completion: []
+        )
+    }
+}
+
+extension RecoveryPhraseValidationState {
+
+
+    /// drives the state machine represented on this Enum by the action of applying a chip into a group of words containing an empty slot that has to be completed
+    static func given(_ state: RecoveryPhraseValidationState, apply chip: PhraseChip.Kind, into group: Int) -> Self {
+        guard case let PhraseChip.Kind.unassigned(word) = chip else { return state }
+
+        switch state.step {
+        case let .initial(phrase, missingIndices, missingWordsChips):
+            guard let missingChipIndex = missingWordsChips.firstIndex(of: chip) else { return state }
+
+            var newMissingWords = missingWordsChips
+            newMissingWords[missingChipIndex] = .empty
+
+            return RecoveryPhraseValidationState(
+                phrase: phrase,
+                missingIndices: missingIndices,
+                missingWordChips: newMissingWords,
+                completion: [RecoveryPhraseStepCompletion(groupIndex: group, word: word)]
+            )
+
+        case let .incomplete(phrase, missingIndices, completion, missingWordsChips):
+            guard let missingChipIndex = missingWordsChips.firstIndex(of: chip) else { return state }
+
+            if completion.count < (RecoveryPhraseValidationState.phraseChunks - 1) {
+                var newMissingWords = missingWordsChips
+                newMissingWords[missingChipIndex] = .empty
+
+                var newCompletionState = Array(completion)
+                newCompletionState.append(RecoveryPhraseStepCompletion(groupIndex: group, word: word))
+
+                return RecoveryPhraseValidationState(
+                    phrase: phrase,
+                    missingIndices: missingIndices,
+                    missingWordChips: newMissingWords,
+                    completion: newCompletionState
+                )
+            } else {
+                var newCompletion = completion
+                newCompletion.append(RecoveryPhraseStepCompletion(groupIndex: group, word: word))
+
+                return RecoveryPhraseValidationState(
+                    phrase: phrase,
+                    missingIndices: missingIndices,
+                    missingWordChips: Array(repeating: .empty, count: RecoveryPhraseValidationState.phraseChunks),
+                    completion: newCompletion
+                )
+            }
+        default:
+            return state
+        }
+    }
+
     static func pickWordsFromMissingIndices(indices: [Int], phrase: RecoveryPhrase) -> [PhraseChip.Kind] {
         precondition((indices.count - 1) * wordGroupSize <= phrase.words.count)
         var words: [PhraseChip.Kind] = []
@@ -85,22 +165,22 @@ extension RecoveryPhraseValidationReducer {
     static let `default` = RecoveryPhraseValidationReducer { state, action, _ in
         switch action {
         case .reset:
-            state.step = RecoveryPhraseValidationState.reset(state.step)
+            state = RecoveryPhraseValidationState.random(phrase: state.phrase)
             return .none
 
         case let .drag(wordChip, group):
-            state.step = .given(step: state.step, apply: wordChip, into: group)
+            state = .given(state, apply: wordChip, into: group)
             return .none
 
         case .validate:
-            state.step = .validateAndProceed(state.step)
+//            state.step = .validateAndProceed(state.step)
             return .none
 
         case .succeed:
             return .none
 
         case .fail:
-            state.step = RecoveryPhraseValidationState.reset(state.step)
+            state = RecoveryPhraseValidationState.random(phrase: state.phrase)
             return .none
         }
     }

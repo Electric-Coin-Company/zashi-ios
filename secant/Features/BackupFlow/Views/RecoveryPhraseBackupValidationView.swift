@@ -142,7 +142,7 @@ private extension RecoveryPhraseValidationStep {
 }
 
 extension RecoveryPhraseValidationState {
-    static let placeholder = RecoveryPhraseValidationState(phrase: RecoveryPhrase.placeholder)
+    static let placeholder = RecoveryPhraseValidationState.random(phrase: RecoveryPhrase.placeholder)
 }
 extension RecoveryPhraseValidationStore {
     private static let scheduler = DispatchQueue.main
