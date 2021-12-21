@@ -40,6 +40,7 @@ internal enum Asset {
     internal enum BackgroundColors {
       internal static let numberedChip = ColorAsset(name: "numberedChip")
       internal static let phraseGridDarkGray = ColorAsset(name: "phraseGridDarkGray")
+      internal static let red = ColorAsset(name: "red")
     }
     internal enum Buttons {
       internal static let activeButton = ColorAsset(name: "ActiveButton")
