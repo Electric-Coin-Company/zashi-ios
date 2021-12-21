@@ -32,6 +32,7 @@ struct RecoveryPhraseBackupValidationView: View {
                         .whenIsDroppable(!state.groupCompleted(index: index), dropDelegate: state.dropDelegate(for: viewStore, group: index))
                     }
                 }
+                .navigationLinkEmpty(isActive: viewStore.bindingForRoute(.success), destination: { view(for: .success) })
                 .padding()
                 .background(Asset.Colors.BackgroundColors.phraseGridDarkGray.color)
             }
@@ -49,8 +50,8 @@ struct RecoveryPhraseBackupValidationView: View {
                     .bodyText()
 
                 viewStore.state.missingWordGrid()
-                    .padding(.horizontal, 30)
             }
+            .padding(.horizontal, 30)
         case .complete:
             VStack {
                 completeHeader(for: viewStore.state)
@@ -60,7 +61,7 @@ struct RecoveryPhraseBackupValidationView: View {
     
     @ViewBuilder func completeHeader(for state: RecoveryPhraseValidationState) -> some View {
         if state.isValid {
-            Text("Valid - TODO")
+            Text("Congratulations! You validated your secret recovery phrase.")
                 .bodyText()
         } else {
             Text("Your placed words did not match your secret recovery phrase")
@@ -74,6 +75,13 @@ struct RecoveryPhraseBackupValidationView: View {
             return Text("Verify Your Backup")
         case .complete:
             return store.state.isValid ? Text("Success!") : Text("Ouch, sorry, no.")
+        }
+    }
+
+    @ViewBuilder func view(for route: RecoveryPhraseValidationState.Route) -> some View {
+        switch route {
+        case .success:
+            SuccessView()
         }
     }
 }
@@ -126,7 +134,7 @@ extension RecoveryPhraseValidationStore {
     static let demo = Store(
         initialState: RecoveryPhraseValidationState.placeholder,
         reducer: .default,
-        environment: ()
+        environment: BackupPhraseEnvironment.demo
     )
 }
 
@@ -148,7 +156,7 @@ private extension RecoveryPhraseValidationState {
         case .initial, .incomplete:
             return Asset.Colors.Buttons.activeButton.color
         case .complete:
-            return isValid ? Asset.Colors.Text.activeButtonText.color : .red
+            return isValid ? Asset.Colors.Buttons.activeButton.color : .red
         }
     }
 }

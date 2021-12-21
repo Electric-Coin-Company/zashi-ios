@@ -7,14 +7,10 @@
 
 import Foundation
 import ComposableArchitecture
+import SwiftUI
 
 typealias RecoveryPhraseValidationStore = Store<RecoveryPhraseValidationState, RecoveryPhraseValidationAction>
 typealias RecoveryPhraseValidationViewStore = ViewStore<RecoveryPhraseValidationState, RecoveryPhraseValidationAction>
-
-struct RecoveryPhraseEnvironment {
-    var mainQueue: AnySchedulerOf<DispatchQueue>
-    var newPhrase: () -> Effect<RecoveryPhrase, AppError>
-}
 
 /// Represents the completion of a group of recovery words by de addition of one word into the given group
 struct RecoveryPhraseStepCompletion: Equatable {
@@ -29,6 +25,10 @@ struct RecoveryPhraseValidationState: Equatable {
         case complete
     }
 
+    enum Route: Equatable, CaseIterable {
+        case success
+    }
+
     static let wordGroupSize = 6
     static let phraseChunks = 4
 
@@ -36,7 +36,7 @@ struct RecoveryPhraseValidationState: Equatable {
     var missingIndices: [Int]
     var missingWordChips: [PhraseChip.Kind]
     var completion: [RecoveryPhraseStepCompletion]
-
+    var route: Route?
     var step: Step {
         guard !completion.isEmpty else {
             return  .initial
@@ -51,6 +51,17 @@ struct RecoveryPhraseValidationState: Equatable {
 
     var isValid: Bool {
         Self.resultingPhrase(from: completion, missingIndices: missingIndices, originalPhrase: phrase, numberOfGroups: missingIndices.count) == phrase.words
+    }
+}
+
+extension RecoveryPhraseValidationViewStore {
+    func bindingForRoute(_ route: RecoveryPhraseValidationState.Route) -> Binding<Bool> {
+        self.binding(
+            get: { $0.route == route },
+            send: { isActive in
+                return .updateRoute(isActive ? route : nil)
+            }
+        )
     }
 }
 
@@ -184,16 +195,17 @@ extension RecoveryPhrase.Chunk {
 }
 
 enum RecoveryPhraseValidationAction: Equatable {
+    case updateRoute(RecoveryPhraseValidationState.Route?)
     case reset
     case drag(wordChip: PhraseChip.Kind, intoGroup: Int)
     case succeed
     case fail
 }
 
-typealias RecoveryPhraseValidationReducer = Reducer<RecoveryPhraseValidationState, RecoveryPhraseValidationAction, Void>
+typealias RecoveryPhraseValidationReducer = Reducer<RecoveryPhraseValidationState, RecoveryPhraseValidationAction, BackupPhraseEnvironment>
 
 extension RecoveryPhraseValidationReducer {
-    static let `default` = RecoveryPhraseValidationReducer { state, action, _ in
+    static let `default` = RecoveryPhraseValidationReducer { state, action, environment in
         switch action {
         case .reset:
             state = RecoveryPhraseValidationState.random(phrase: state.phrase)
@@ -201,13 +213,26 @@ extension RecoveryPhraseValidationReducer {
 
         case let .drag(wordChip, group):
             state = state.apply(chip: wordChip, into: group)
+
+            // Trigger a delayed effect to proceed to the next step
+            if case .complete = state.step {
+                if state.isValid {
+                    return Effect(value: .succeed).delay(for: 1, scheduler: environment.mainQueue).eraseToEffect()
+                } else {
+                    return Effect(value: .fail).delay(for: 3, scheduler: environment.mainQueue).eraseToEffect()
+                }
+            }
             return .none
 
         case .succeed:
+            state.route = .success
             return .none
 
         case .fail:
             state = RecoveryPhraseValidationState.random(phrase: state.phrase)
+            return .none
+        case .updateRoute(let route):
+            state.route = route
             return .none
         }
     }

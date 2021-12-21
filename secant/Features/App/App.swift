@@ -66,9 +66,8 @@ extension AppReducer {
     private static let phraseValidationReducer: AppReducer = RecoveryPhraseValidationReducer.default.pullback(
         state: \AppState.phraseValidationState,
         action: /AppAction.phraseValidation,
-        environment: { _ in }
+        environment: { _ in BackupPhraseEnvironment.demo }
     )
-
 }
 
 // MARK: - AppStore
