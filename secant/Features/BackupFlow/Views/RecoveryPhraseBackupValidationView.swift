@@ -42,9 +42,18 @@ struct RecoveryPhraseBackupValidationView: View {
                 .background(Asset.Colors.BackgroundColors.phraseGridDarkGray.color)
             }
             .applyScreenBackground()
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle(viewTitle(for: viewStore))
         }
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle(Text("Verify Your Backup"))
+    }
+
+    func viewTitle(for store: RecoveryPhraseValidationViewStore) -> Text {
+        switch store.state.step {
+        case .initial, .incomplete:
+            return Text("Verify Your Backup")
+        case .complete:
+            return store.state.isValid ? Text("Success!") : Text("Ouch, sorry, no.")
+        }
     }
 }
 
