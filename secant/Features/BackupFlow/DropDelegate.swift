@@ -68,7 +68,7 @@ extension RecoveryPhraseValidationState {
             return WordChipDropDelegate { chipKind in
                 viewStore.send(.drag(wordChip: chipKind, intoGroup: group))
             }
-        case .complete, .valid, .invalid:
+        case .complete:
             return NullDelegate()
         }
     }

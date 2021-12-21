@@ -356,7 +356,6 @@ class RecoveryPhraseValidationTests: XCTestCase {
                 PhraseChip.Kind.unassigned(word: "pizza")
             ],
             completion: [
-                RecoveryPhraseStepCompletion(groupIndex: 0, word: "salute"),
                 RecoveryPhraseStepCompletion(groupIndex: 1, word: "boil"),
                 RecoveryPhraseStepCompletion(groupIndex: 2, word: "cancel")
             ]
@@ -365,12 +364,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
         let result = currentStep.wordsChips(
             for: 0,
             groupSize: 6,
-            from: phrase.toChunks()[0],
-            with: 1,
-            completing: [
-                RecoveryPhraseStepCompletion(groupIndex: 1, word: "boil"),
-                RecoveryPhraseStepCompletion(groupIndex: 2, word: "cancel")
-            ]
+            from: phrase.toChunks()[0]
         )
 
         let expected = [
@@ -423,13 +417,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
         let result = currentStep.wordsChips(
             for: 0,
             groupSize: 6,
-            from: phrase.toChunks()[0],
-            with: 1,
-            completing: [
-                RecoveryPhraseStepCompletion(groupIndex: 0, word: "salute"),
-                RecoveryPhraseStepCompletion(groupIndex: 1, word: "boil"),
-                RecoveryPhraseStepCompletion(groupIndex: 2, word: "cancel")
-            ]
+            from: phrase.toChunks()[0]
         )
 
         let expected = [

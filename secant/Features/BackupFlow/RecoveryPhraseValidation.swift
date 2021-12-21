@@ -27,8 +27,6 @@ struct RecoveryPhraseValidationState: Equatable {
         case initial
         case incomplete
         case complete
-        case valid
-        case invalid
     }
 
     static let wordGroupSize = 6
@@ -184,7 +182,6 @@ extension RecoveryPhrase.Chunk {
 enum RecoveryPhraseValidationAction: Equatable {
     case reset
     case drag(wordChip: PhraseChip.Kind, intoGroup: Int)
-    case validate
     case succeed
     case fail
 }
@@ -200,9 +197,6 @@ extension RecoveryPhraseValidationReducer {
 
         case let .drag(wordChip, group):
             state = state.apply(chip: wordChip, into: group)
-            return .none
-
-        case .validate:
             return .none
 
         case .succeed:

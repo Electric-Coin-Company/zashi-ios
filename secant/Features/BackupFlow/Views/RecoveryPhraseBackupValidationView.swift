@@ -28,14 +28,18 @@ struct RecoveryPhraseBackupValidationView: View {
                     let state = viewStore.state
                     let chunks = state.phrase.toChunks()
                     ForEach(Array(zip(chunks.indices, chunks)), id: \.0) { index, chunk in
-                        WordChipGrid(chips: state.wordChips(for: index, groupSize: RecoveryPhraseValidationState.wordGroupSize, from: chunk))
-                            .background(Asset.Colors.BackgroundColors.phraseGridDarkGray.color)
-                            .whenIsDroppable(!state.groupCompleted(index: index), dropDelegate: state.dropDelegate(for: viewStore, group: index))
+                        WordChipGrid(
+                            state: state,
+                            group: index,
+                            chunk: chunk,
+                            misingIndex: index
+                        )
+                        .background(Asset.Colors.BackgroundColors.phraseGridDarkGray.color)
+                        .whenIsDroppable(!state.groupCompleted(index: index), dropDelegate: state.dropDelegate(for: viewStore, group: index))
                     }
                 }
                 .padding()
                 .background(Asset.Colors.BackgroundColors.phraseGridDarkGray.color)
-
             }
             .applyScreenBackground()
         }
@@ -62,14 +66,14 @@ private extension RecoveryPhraseValidationState {
     }
 }
 
-extension RecoveryPhraseValidationState{
-    func wordsChips(for group: Int, groupSize: Int, from chunk: RecoveryPhrase.Chunk, with missingIndex: Int, completing completions: [RecoveryPhraseStepCompletion]) -> [PhraseChip.Kind] {
-        let completion = completions.first(where: { $0.groupIndex == group })
+extension RecoveryPhraseValidationState {
+    func wordsChips(for group: Int, groupSize: Int, from chunk: RecoveryPhrase.Chunk) -> [PhraseChip.Kind] {
+        let wordCompletion = completion.first(where: { $0.groupIndex == group })
 
         var chips: [PhraseChip.Kind] = []
         for (i, word) in chunk.words.enumerated() {
-            if i == missingIndex {
-                if let completedWord = completion?.word {
+            if i == missingIndices[group] {
+                if let completedWord = wordCompletion?.word {
                     chips.append(.unassigned(word: completedWord))
                 } else {
                     chips.append(.empty)
@@ -79,29 +83,6 @@ extension RecoveryPhraseValidationState{
             }
         }
         return chips
-    }
-
-    func wordsChips(for group: Int, groupSize: Int, from chunk: RecoveryPhrase.Chunk, completions: [RecoveryPhraseStepCompletion]) -> [PhraseChip.Kind] {
-        let completion = completions.first(where: { $0.groupIndex == group })
-        precondition(completion != nil, "there is no completion for group \(group). This is probably a programming error")
-        var chips: [PhraseChip.Kind] = []
-        for (i, word) in chunk.words.enumerated() {
-            if let completedWord = completion?.word {
-                chips.append(.unassigned(word: completedWord))
-            } else {
-                chips.append(.ordered(position: (groupSize * group) + i + 1, word: word))
-            }
-        }
-        return chips
-    }
-
-    func wordChips(for group: Int, groupSize: Int, from chunk: RecoveryPhrase.Chunk) -> [PhraseChip.Kind] {
-        switch self.step {
-        case .initial, .incomplete, .complete:
-            return wordsChips(for: group, groupSize: groupSize, from: chunk, with: missingIndices[group], completing: completion)
-        case .valid, .invalid:
-            return wordsChips(for: group, groupSize: groupSize, from: chunk, completions: completion)
-        }
     }
 }
 
@@ -117,6 +98,18 @@ extension RecoveryPhraseValidationStore {
         reducer: .default,
         environment: ()
     )
+}
+
+private extension WordChipGrid {
+    init(
+        state: RecoveryPhraseValidationState,
+        group: Int,
+        chunk: RecoveryPhrase.Chunk,
+        misingIndex: Int
+    ) {
+        let chips = state.wordsChips(for: group, groupSize: RecoveryPhraseValidationState.wordGroupSize, from: chunk)
+        self.init(chips: chips)
+    }
 }
 
 struct RecoveryPhraseBackupView_Previews: PreviewProvider {

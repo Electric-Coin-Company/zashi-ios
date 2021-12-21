@@ -39,8 +39,7 @@ struct WordChipGrid: View {
             }
         }
     }
-
-    init(chips: [PhraseChip.Kind]) {
+     init(chips: [PhraseChip.Kind]) {
         self.chips = chips
     }
 
