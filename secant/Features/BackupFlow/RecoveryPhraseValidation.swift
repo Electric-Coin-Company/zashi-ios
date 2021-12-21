@@ -164,7 +164,11 @@ extension RecoveryPhraseValidationState {
     }
 
     static func randomIndices() -> [Int] {
-        Array(repeating: Int.random(in: 0...wordGroupSize - 1), count: phraseChunks)
+        var indices = [Int]()
+        for _ in (0 ..< phraseChunks) {
+            indices.append(Int.random(in: 0 ..< wordGroupSize))
+        }
+        return indices
     }
 }
 
