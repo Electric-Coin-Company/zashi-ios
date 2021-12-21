@@ -34,7 +34,7 @@ struct PhraseChip: View {
         case let .ordered(position, word):
             EnumeratedChip(index: position, text: word)
         case .unassigned(let word):
-            BlueChip(word: word)
+            ColoredChip(word: word)
         }
     }
 }

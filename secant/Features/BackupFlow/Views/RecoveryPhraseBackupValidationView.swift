@@ -40,6 +40,7 @@ struct RecoveryPhraseBackupValidationView: View {
             .navigationTitle(viewTitle(for: viewStore))
         }
     }
+
     @ViewBuilder func header(for viewStore: RecoveryPhraseValidationViewStore) -> some View {
         switch viewStore.step {
         case .initial, .incomplete:
@@ -137,7 +138,18 @@ private extension WordChipGrid {
         misingIndex: Int
     ) {
         let chips = state.wordsChips(for: group, groupSize: RecoveryPhraseValidationState.wordGroupSize, from: chunk)
-        self.init(chips: chips)
+        self.init(chips: chips, coloredChipColor: state.coloredChipColor)
+    }
+}
+
+private extension RecoveryPhraseValidationState {
+    var coloredChipColor: Color {
+        switch self.step {
+        case .initial, .incomplete:
+            return Asset.Colors.Buttons.activeButton.color
+        case .complete:
+            return isValid ? Asset.Colors.Text.activeButtonText.color : .red
+        }
     }
 }
 

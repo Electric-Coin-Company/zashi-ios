@@ -7,8 +7,9 @@
 
 import SwiftUI
 
-struct BlueChip: View {
+struct ColoredChip: View {
     var word: String
+    var color = Asset.Colors.Buttons.activeButton.color
     var body: some View {
         Text(word)
             .font(FontFamily.Rubik.regular.textStyle(.body))
@@ -21,14 +22,22 @@ struct BlueChip: View {
             .foregroundColor(Asset.Colors.Text.activeButtonText.color)
             .padding(.horizontal, 4)
             .padding(.vertical, 4)
-            .background(Asset.Colors.Buttons.activeButton.color)
+            .background(color)
             .cornerRadius(6)
     }
 }
 
-struct BlueChip_Previews: PreviewProvider {
+//extension ColoredChip {
+//    func background<Background>(_ background: Background, alignment: Alignment = .center) -> some View where Background : Color {
+//        var colored = self
+//        colored.color = background
+//        return colored
+//    }
+//}
+
+struct ColoredChip_Previews: PreviewProvider {
     static var previews: some View {
-        BlueChip(word: "negative")
+        ColoredChip(word: "negative")
             .applyScreenBackground()
     }
 }

@@ -13,7 +13,7 @@ A 3x2 grid of numbered or empty chips.
 struct WordChipGrid: View {
     static let spacing: CGFloat = 10
     var chips: [PhraseChip.Kind]
-
+    var coloredChipColor: Color
     var threeColumnGrid = Array(
         repeating: GridItem(
             .flexible(minimum: 60, maximum: 120),
@@ -39,15 +39,16 @@ struct WordChipGrid: View {
             }
         }
     }
-     init(chips: [PhraseChip.Kind]) {
+    init(chips: [PhraseChip.Kind], coloredChipColor: Color) {
         self.chips = chips
+        self.coloredChipColor = coloredChipColor
     }
 
-    init(words: [String], startingAt index: Int) {
+    init(words: [String], startingAt index: Int, coloredChipColor: Color = .clear) {
         let chips = zip(words, index..<index + words.count).map({ word, index in
             word.isEmpty ? PhraseChip.Kind.empty : .ordered(position: index, word: word)
         })
-        self.init(chips: chips)
+        self.init(chips: chips, coloredChipColor: coloredChipColor)
     }
 
     @ViewBuilder func chipView(for chipKind: PhraseChip.Kind) -> some View {
@@ -59,7 +60,7 @@ struct WordChipGrid: View {
             EnumeratedChip(index: position, text: word)
 
         case .unassigned(let word):
-            BlueChip(word: word)
+            ColoredChip(word: word, color: coloredChipColor)
         }
     }
 }

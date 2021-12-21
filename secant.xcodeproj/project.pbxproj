@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0D185819272723FF0046B928 /* BlueChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D185818272723FF0046B928 /* BlueChip.swift */; };
+		0D185819272723FF0046B928 /* ColoredChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D185818272723FF0046B928 /* ColoredChip.swift */; };
 		0D18581B272728D60046B928 /* PhraseChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D18581A272728D60046B928 /* PhraseChip.swift */; };
 		0D1922F226BDE29300052649 /* ZcashSDKStubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922F126BDE29300052649 /* ZcashSDKStubs.swift */; };
 		0D1922F826BDEB3500052649 /* MockServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922F726BDEB3500052649 /* MockServices.swift */; };
@@ -123,7 +123,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0D185818272723FF0046B928 /* BlueChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueChip.swift; sourceTree = "<group>"; };
+		0D185818272723FF0046B928 /* ColoredChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColoredChip.swift; sourceTree = "<group>"; };
 		0D18581A272728D60046B928 /* PhraseChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhraseChip.swift; sourceTree = "<group>"; };
 		0D1922F126BDE29300052649 /* ZcashSDKStubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZcashSDKStubs.swift; sourceTree = "<group>"; };
 		0D1922F726BDEB3500052649 /* MockServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServices.swift; sourceTree = "<group>"; };
@@ -399,7 +399,7 @@
 			children = (
 				0D535FE1271F9476009A9E3E /* EnumeratedChip.swift */,
 				0DF2DC50272344E400FA31E2 /* EmptyChip.swift */,
-				0D185818272723FF0046B928 /* BlueChip.swift */,
+				0D185818272723FF0046B928 /* ColoredChip.swift */,
 				0D18581A272728D60046B928 /* PhraseChip.swift */,
 			);
 			path = Chips;
@@ -1017,7 +1017,7 @@
 				F9C165C02740403600592F76 /* ApproveView.swift in Sources */,
 				0DF2DC5427235E3E00FA31E2 /* View+InnerShadow.swift in Sources */,
 				F9971A6B27680E1000A2DB75 /* WalletInfo.swift in Sources */,
-				0D185819272723FF0046B928 /* BlueChip.swift in Sources */,
+				0D185819272723FF0046B928 /* ColoredChip.swift in Sources */,
 				2EA11F5D27467F7700709571 /* OnboardingContentView.swift in Sources */,
 				2E58E73B274679F000B2B84B /* OnboardingHeaderView.swift in Sources */,
 				0D8A43C6272B129C005A6414 /* WordChipGrid.swift in Sources */,
