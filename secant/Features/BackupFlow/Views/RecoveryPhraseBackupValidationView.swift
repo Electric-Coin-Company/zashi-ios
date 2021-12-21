@@ -14,15 +14,9 @@ struct RecoveryPhraseBackupValidationView: View {
     var body: some View {
         WithViewStore(self.store) { viewStore in
             VStack {
-                VStack {
-                    Text("Drag the words below to match your backed-up copy.")
-                        .bodyText()
-
-                    viewStore.state.missingWordGrid()
-                        .padding(.horizontal, 30)
-                }
-                .padding(.horizontal)
-                .padding(.bottom, 10)
+                header(for: viewStore)
+                    .padding(.horizontal)
+                    .padding(.bottom, 10)
 
                 VStack(spacing: 20) {
                     let state = viewStore.state
@@ -46,7 +40,33 @@ struct RecoveryPhraseBackupValidationView: View {
             .navigationTitle(viewTitle(for: viewStore))
         }
     }
+    @ViewBuilder func header(for viewStore: RecoveryPhraseValidationViewStore) -> some View {
+        switch viewStore.step {
+        case .initial, .incomplete:
+            VStack {
+                Text("Drag the words below to match your backed-up copy.")
+                    .bodyText()
 
+                viewStore.state.missingWordGrid()
+                    .padding(.horizontal, 30)
+            }
+        case .complete:
+            VStack {
+                completeHeader(for: viewStore.state)
+            }
+        }
+    }
+    
+    @ViewBuilder func completeHeader(for state: RecoveryPhraseValidationState) -> some View {
+        if state.isValid {
+            Text("Valid - TODO")
+                .bodyText()
+        } else {
+            Text("Your placed words did not match your secret recovery phrase")
+                .bodyText()
+        }
+    }
+    
     func viewTitle(for store: RecoveryPhraseValidationViewStore) -> Text {
         switch store.state.step {
         case .initial, .incomplete:
