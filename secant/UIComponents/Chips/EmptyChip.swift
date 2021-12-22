@@ -49,10 +49,10 @@ struct EmptyChip_Previews: PreviewProvider {
 
         Group {
             ZStack {
-                ScreenBackground()
                 EmptyChip()
                     .frame(width: 100, height: 40, alignment: .leading)
             }
+            .applyScreenBackground()
         }
         .previewLayout(.fixed(width: 200, height: 100))
         .preferredColorScheme(.dark)

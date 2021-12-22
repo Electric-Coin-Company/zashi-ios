@@ -68,6 +68,8 @@ internal enum Asset {
     internal enum ScreenBackground {
       internal static let gradientEnd = ColorAsset(name: "gradientEnd")
       internal static let gradientStart = ColorAsset(name: "gradientStart")
+      internal static let redGradientEnd = ColorAsset(name: "redGradientEnd")
+      internal static let redGradientStart = ColorAsset(name: "redGradientStart")
     }
     internal enum Shadow {
       internal static let emptyChipInnerShadow = ColorAsset(name: "emptyChipInnerShadow")

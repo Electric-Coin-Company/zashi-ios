@@ -32,13 +32,20 @@ struct RecoveryPhraseBackupValidationView: View {
                         .whenIsDroppable(!state.groupCompleted(index: index), dropDelegate: state.dropDelegate(for: viewStore, group: index))
                     }
                 }
-                .navigationLinkEmpty(isActive: viewStore.bindingForRoute(.success), destination: { view(for: .success) })
                 .padding()
                 .background(Asset.Colors.BackgroundColors.phraseGridDarkGray.color)
+                .navigationLinkEmpty(
+                    isActive: viewStore.bindingForRoute(.success),
+                    destination: { view(for: .success) }
+                )
+                .navigationLinkEmpty(
+                    isActive: viewStore.bindingForRoute(.failure),
+                    destination: { view(for: .failure) }
+                )
             }
             .applyScreenBackground()
             .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle(viewTitle(for: viewStore))
+            .navigationTitle(Text("Verify Your Backup"))
         }
     }
 
@@ -68,20 +75,13 @@ struct RecoveryPhraseBackupValidationView: View {
                 .bodyText()
         }
     }
-    
-    func viewTitle(for store: RecoveryPhraseValidationViewStore) -> Text {
-        switch store.state.step {
-        case .initial, .incomplete:
-            return Text("Verify Your Backup")
-        case .complete:
-            return store.state.isValid ? Text("Success!") : Text("Ouch, sorry, no.")
-        }
-    }
 
     @ViewBuilder func view(for route: RecoveryPhraseValidationState.Route) -> some View {
         switch route {
         case .success:
             SuccessView()
+        case .failure:
+            ValidationFailed(store: store)
         }
     }
 }
@@ -156,7 +156,7 @@ private extension RecoveryPhraseValidationState {
         case .initial, .incomplete:
             return Asset.Colors.Buttons.activeButton.color
         case .complete:
-            return isValid ? Asset.Colors.Buttons.activeButton.color : .red
+            return isValid ? Asset.Colors.Buttons.activeButton.color : Asset.Colors.BackgroundColors.red.color
         }
     }
 }

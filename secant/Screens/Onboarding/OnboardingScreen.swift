@@ -15,9 +15,6 @@ struct OnboardingScreen: View {
     var body: some View {
         GeometryReader { proxy in
             ZStack {
-                ScreenBackground()
-                    .edgesIgnoringSafeArea(.all)
-                
                 OnboardingHeaderView(
                     store: store.scope(
                         state: { state in
@@ -45,6 +42,7 @@ struct OnboardingScreen: View {
                 OnboardingFooterView(store: store)
             }
         }
+        .applyScreenBackground()
     }
 }
 

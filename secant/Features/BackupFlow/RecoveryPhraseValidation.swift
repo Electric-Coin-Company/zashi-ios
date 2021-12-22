@@ -27,6 +27,7 @@ struct RecoveryPhraseValidationState: Equatable {
 
     enum Route: Equatable, CaseIterable {
         case success
+        case failure
     }
 
     static let wordGroupSize = 6
@@ -229,7 +230,7 @@ extension RecoveryPhraseValidationReducer {
             return .none
 
         case .fail:
-            state = RecoveryPhraseValidationState.random(phrase: state.phrase)
+            state.route = .failure
             return .none
         case .updateRoute(let route):
             state.route = route

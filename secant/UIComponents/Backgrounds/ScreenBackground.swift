@@ -10,10 +10,7 @@ import SwiftUI
     A Vertical LinearGradient that takes an array of Colors and renders them vertically in a centered fashion mostly used as a background for Screen views..
 */
 struct ScreenBackground: View {
-    var colors = [
-        Asset.Colors.ScreenBackground.gradientStart.color,
-        Asset.Colors.ScreenBackground.gradientEnd.color
-    ]
+    var colors: [Color]
     var body: some View {
         LinearGradient(
             colors: colors,
@@ -24,9 +21,10 @@ struct ScreenBackground: View {
 }
 
 struct ScreenBackgroundModifier: ViewModifier {
+    var colors: [Color]
     func body(content: Content) -> some View {
         ZStack {
-            ScreenBackground()
+            ScreenBackground(colors: colors)
                 .edgesIgnoringSafeArea(.all)
             content
         }
@@ -39,7 +37,23 @@ extension View {
     */
     func applyScreenBackground() -> some View {
         self.modifier(
-            ScreenBackgroundModifier()
+            ScreenBackgroundModifier(
+                colors: [
+                    Asset.Colors.ScreenBackground.gradientStart.color,
+                    Asset.Colors.ScreenBackground.gradientEnd.color
+                ]
+            )
+        )
+    }
+
+    func applyErredScreenBackground() -> some View {
+        self.modifier(
+            ScreenBackgroundModifier(
+                colors: [
+                    Asset.Colors.ScreenBackground.redGradientStart.color,
+                    Asset.Colors.ScreenBackground.redGradientEnd.color
+                ]
+            )
         )
     }
 }
