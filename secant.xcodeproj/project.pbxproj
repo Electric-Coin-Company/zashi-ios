@@ -49,7 +49,7 @@
 		0DACFA9A27209FA70039EEA5 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0DACFA8D27209FA70039EEA5 /* Roboto-Light.ttf */; };
 		0DACFA9C27209FA70039EEA5 /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0DACFA8F27209FA70039EEA5 /* Roboto-ThinItalic.ttf */; };
 		0DB8AA81271DC7520035BC9D /* DesignGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB8AA80271DC7520035BC9D /* DesignGuide.swift */; };
-		0DC487C32772574C00BE6A63 /* SuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC487C22772574C00BE6A63 /* SuccessView.swift */; };
+		0DC487C32772574C00BE6A63 /* ValidationSuccededView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC487C22772574C00BE6A63 /* ValidationSuccededView.swift */; };
 		0DDB6A5127737D4A0012A410 /* ValidationFailed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDB6A5027737D4A0012A410 /* ValidationFailed.swift */; };
 		0DF2DC51272344E400FA31E2 /* EmptyChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF2DC50272344E400FA31E2 /* EmptyChip.swift */; };
 		0DF2DC5427235E3E00FA31E2 /* View+InnerShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF2DC5327235E3E00FA31E2 /* View+InnerShadow.swift */; };
@@ -173,7 +173,7 @@
 		0DACFA8D27209FA70039EEA5 /* Roboto-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Light.ttf"; sourceTree = "<group>"; };
 		0DACFA8F27209FA70039EEA5 /* Roboto-ThinItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-ThinItalic.ttf"; sourceTree = "<group>"; };
 		0DB8AA80271DC7520035BC9D /* DesignGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignGuide.swift; sourceTree = "<group>"; };
-		0DC487C22772574C00BE6A63 /* SuccessView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuccessView.swift; sourceTree = "<group>"; };
+		0DC487C22772574C00BE6A63 /* ValidationSuccededView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValidationSuccededView.swift; sourceTree = "<group>"; };
 		0DDB6A5027737D4A0012A410 /* ValidationFailed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationFailed.swift; sourceTree = "<group>"; };
 		0DF2DC50272344E400FA31E2 /* EmptyChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyChip.swift; sourceTree = "<group>"; };
 		0DF2DC5327235E3E00FA31E2 /* View+InnerShadow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+InnerShadow.swift"; sourceTree = "<group>"; };
@@ -308,7 +308,7 @@
 		0D3D04062728B2EC0032ABC1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				0DC487C22772574C00BE6A63 /* SuccessView.swift */,
+				0DC487C22772574C00BE6A63 /* ValidationSuccededView.swift */,
 				0D3D04072728B3440032ABC1 /* RecoveryPhraseDisplayView.swift */,
 				0D8A43C5272B129C005A6414 /* WordChipGrid.swift */,
 				0DFE93E0272C9ECB000FCCA5 /* RecoveryPhraseBackupValidationView.swift */,
@@ -968,7 +968,7 @@
 				669FDAE9272C23B3007B9422 /* CircularFrame.swift in Sources */,
 				F96B41E8273B501F0021B49A /* TransactionDetailView.swift in Sources */,
 				663FABA2271D876C00E495F8 /* SecondaryButton.swift in Sources */,
-				0DC487C32772574C00BE6A63 /* SuccessView.swift in Sources */,
+				0DC487C32772574C00BE6A63 /* ValidationSuccededView.swift in Sources */,
 				0D8A43C4272AEEDE005A6414 /* SecantTextStyles.swift in Sources */,
 				0D1922F226BDE29300052649 /* ZcashSDKStubs.swift in Sources */,
 				0DACFA7F27208CE00039EEA5 /* Clamped.swift in Sources */,

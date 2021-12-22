@@ -43,7 +43,7 @@ extension AppReducer {
             state.route = route
         case .home(.reset):
             state.route = .startup
-        case .onboarding(.createNewWallet):
+        case .onboarding(.createNewWallet), .phraseValidation(.proceedToHome):
             state.route = .home
         default:
             break

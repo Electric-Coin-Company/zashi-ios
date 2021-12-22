@@ -79,7 +79,7 @@ struct RecoveryPhraseBackupValidationView: View {
     @ViewBuilder func view(for route: RecoveryPhraseValidationState.Route) -> some View {
         switch route {
         case .success:
-            SuccessView()
+            ValidationSuccededView(store: store)
         case .failure:
             ValidationFailed(store: store)
         }
