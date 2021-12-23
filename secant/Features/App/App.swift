@@ -1,15 +1,17 @@
 import ComposableArchitecture
 
 struct AppState: Equatable {
-    enum Route {
+    enum Route: Equatable {
         case startup
         case onboarding
         case home
         case phraseValidation
+        case phraseDisplay
     }
     var homeState: HomeState
     var onboardingState: OnboardingState
     var phraseValidationState: RecoveryPhraseValidationState
+    var phraseDisplayState: RecoveryPhraseDisplayState
     var route: Route = .startup
 }
 
@@ -17,6 +19,7 @@ enum AppAction: Equatable {
     case updateRoute(AppState.Route)
     case home(HomeAction)
     case onboarding(OnboardingAction)
+    case phraseDisplay(RecoveryPhraseDisplayAction)
     case phraseValidation(RecoveryPhraseValidationAction)
 }
 
@@ -33,7 +36,8 @@ extension AppReducer {
             routeReducer,
             homeReducer,
             onboardingReducer,
-            phraseValidationReducer.debug()
+            phraseValidationReducer.debug(),
+            phraseDisplayReducer.debug()
         ]
     )
 
@@ -43,8 +47,14 @@ extension AppReducer {
             state.route = route
         case .home(.reset):
             state.route = .startup
-        case .onboarding(.createNewWallet), .phraseValidation(.proceedToHome):
+        case .onboarding(.createNewWallet),
+                .phraseValidation(.proceedToHome):
             state.route = .home
+        case .phraseValidation(.displayBackedUpPhrase),
+                .phraseDisplay(.createPhrase):
+            state.route = .phraseDisplay
+        case .phraseDisplay(.finishedPressed):
+            state.route = .phraseValidation
         default:
             break
         }
@@ -66,6 +76,12 @@ extension AppReducer {
     private static let phraseValidationReducer: AppReducer = RecoveryPhraseValidationReducer.default.pullback(
         state: \AppState.phraseValidationState,
         action: /AppAction.phraseValidation,
+        environment: { _ in BackupPhraseEnvironment.demo }
+    )
+
+    private static let phraseDisplayReducer: AppReducer = RecoveryPhraseDisplayReducer.default.pullback(
+        state: \AppState.phraseDisplayState,
+        action: /AppAction.phraseDisplay,
         environment: { _ in BackupPhraseEnvironment.demo }
     )
 }
@@ -91,7 +107,10 @@ extension AppState {
         .init(
             homeState: .placeholder,
             onboardingState: .init(),
-            phraseValidationState: RecoveryPhraseValidationState.placeholder
+            phraseValidationState: RecoveryPhraseValidationState.placeholder,
+            phraseDisplayState: RecoveryPhraseDisplayState(
+                phrase: RecoveryPhrase.placeholder
+            )
         )
     }
 }

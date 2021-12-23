@@ -202,6 +202,7 @@ enum RecoveryPhraseValidationAction: Equatable {
     case succeed
     case fail
     case proceedToHome
+    case displayBackedUpPhrase
 }
 
 typealias RecoveryPhraseValidationReducer = Reducer<RecoveryPhraseValidationState, RecoveryPhraseValidationAction, BackupPhraseEnvironment>
@@ -233,10 +234,15 @@ extension RecoveryPhraseValidationReducer {
         case .fail:
             state.route = .failure
             return .none
+
         case .updateRoute(let route):
             state.route = route
             return .none
+
         case .proceedToHome:
+            return .none
+            
+        case .displayBackedUpPhrase:
             return .none
         }
     }

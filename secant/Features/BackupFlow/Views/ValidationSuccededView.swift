@@ -18,6 +18,7 @@ struct ValidationSuccededView: View {
                     VStack(spacing: 10) {
                         Text("Success!")
                             .font(.custom(FontFamily.Rubik.regular.name, size: 36))
+
                         Text("Place that backup somewhere safe and venture forth in security.")
                             .font(.custom(FontFamily.Rubik.regular.name, size: 17))
                             .multilineTextAlignment(.center)
@@ -52,7 +53,7 @@ struct ValidationSuccededView: View {
                         )
 
                         Button(
-                            action: { () },
+                            action: { viewStore.send(.displayBackedUpPhrase, animation: .easeIn(duration: 1)) },
                             label: { Text("Show me my phrase again") }
                         )
                         .secondaryButtonStyle

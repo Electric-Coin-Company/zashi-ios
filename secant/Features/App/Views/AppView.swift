@@ -18,6 +18,7 @@ struct AppView: View {
                     )
                 }
                 .navigationViewStyle(StackNavigationViewStyle())
+
             case .onboarding:
                 OnboardingScreen(
                     store: store.scope(
@@ -25,10 +26,12 @@ struct AppView: View {
                         action: AppAction.onboarding
                     )
                 )
+
             case .startup:
                 ZStack(alignment: .topTrailing) {
                     StartupView(sendAction: viewStore.send)
                 }
+
             case .phraseValidation:
                 NavigationView {
                     RecoveryPhraseBackupValidationView(
@@ -49,6 +52,16 @@ struct AppView: View {
                                 })
                         })
                         .navigationViewStyle(StackNavigationViewStyle())
+                }
+
+            case .phraseDisplay:
+                NavigationView {
+                    RecoveryPhraseDisplayView(
+                        store: store.scope(
+                            state: \.phraseDisplayState,
+                            action: AppAction.phraseDisplay
+                        )
+                    )
                 }
             }
         }
@@ -71,6 +84,10 @@ private struct StartupView: View {
 
                 Button("Go To Phrase Validation Demo") {
                     sendAction(.updateRoute(.phraseValidation))
+                }
+
+                Button("Go To Phrase Display Demo") {
+                    sendAction(.updateRoute(.phraseDisplay))
                 }
             }
         }
