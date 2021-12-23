@@ -57,8 +57,8 @@ struct ValidationFailed: View {
                 .frame(width: proxy.size.width)
             }
             .padding()
-
             .applyErredScreenBackground()
+            .navigationBarBackButtonHidden(true)
         }
     }
 }
