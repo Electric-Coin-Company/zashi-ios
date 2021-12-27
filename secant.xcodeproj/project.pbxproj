@@ -16,6 +16,7 @@
 		0D354A0926D5A9D000315F45 /* Services.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D354A0626D5A9D000315F45 /* Services.swift */; };
 		0D354A0A26D5A9D000315F45 /* KeyStoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D354A0726D5A9D000315F45 /* KeyStoring.swift */; };
 		0D354A0B26D5A9D000315F45 /* MnemonicSeedPhraseHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D354A0826D5A9D000315F45 /* MnemonicSeedPhraseHandling.swift */; };
+		0D35CC46277A36E00074316A /* ScrollableWhenScaled.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D35CC45277A36E00074316A /* ScrollableWhenScaled.swift */; };
 		0D3D04082728B3440032ABC1 /* RecoveryPhraseDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3D04072728B3440032ABC1 /* RecoveryPhraseDisplayView.swift */; };
 		0D3D040A2728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3D04092728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift */; };
 		0D4E7A0926B364170058B01E /* SecantApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0826B364170058B01E /* SecantApp.swift */; };
@@ -134,6 +135,7 @@
 		0D354A0626D5A9D000315F45 /* Services.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Services.swift; sourceTree = "<group>"; };
 		0D354A0726D5A9D000315F45 /* KeyStoring.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyStoring.swift; sourceTree = "<group>"; };
 		0D354A0826D5A9D000315F45 /* MnemonicSeedPhraseHandling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MnemonicSeedPhraseHandling.swift; sourceTree = "<group>"; };
+		0D35CC45277A36E00074316A /* ScrollableWhenScaled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableWhenScaled.swift; sourceTree = "<group>"; };
 		0D3D04072728B3440032ABC1 /* RecoveryPhraseDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseDisplayView.swift; sourceTree = "<group>"; };
 		0D3D04092728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseDisplayStore.swift; sourceTree = "<group>"; };
 		0D4E7A0526B364170058B01E /* secant-testnet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "secant-testnet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -458,6 +460,7 @@
 				F9C165B3274031F600592F76 /* Bindings.swift */,
 				F9EEB8152742C2210032EEB8 /* WithStateBinding.swift */,
 				F93673D52742CB840099C6AF /* Previews.swift */,
+				0D35CC45277A36E00074316A /* ScrollableWhenScaled.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -964,6 +967,7 @@
 			files = (
 				2EB660E02747EAB900A06A07 /* OnboardingScreen.swift in Sources */,
 				660558F8270C862F009D6954 /* XCAssets+Generated.swift in Sources */,
+				0D35CC46277A36E00074316A /* ScrollableWhenScaled.swift in Sources */,
 				F96B41E9273B501F0021B49A /* TransactionHistoryView.swift in Sources */,
 				669FDAE9272C23B3007B9422 /* CircularFrame.swift in Sources */,
 				F96B41E8273B501F0021B49A /* TransactionDetailView.swift in Sources */,
