@@ -14,13 +14,13 @@ struct RecoveryPhraseDisplayView: View {
     var body: some View {
         WithViewStore(self.store) { viewStore in
             ScrollView {
-                VStack {
+                VStack(spacing: 0) {
                     if let chunks = viewStore.phrase?.toChunks() {
                         VStack(spacing: 20) {
                             Text("Your Secret Recovery Phrase")
                                 .titleText()
                                 .multilineTextAlignment(.center)
-                            VStack(alignment: .leading, spacing: 4) {
+                            VStack(alignment: .center, spacing: 4) {
                                 Text("The following 24 words represent your funds and the security used to protect them.")
                                     .bodyText()
 
@@ -28,10 +28,13 @@ struct RecoveryPhraseDisplayView: View {
                                     .bodyText()
                             }
                         }
+                        .padding(.top, 0)
+                        .padding(.bottom, 20)
 
-                        VStack(alignment: .leading, spacing: 20) {
+                        VStack(alignment: .leading, spacing: 30) {
                             ForEach(chunks, id: \.startIndex) { chunk in
                                 WordChipGrid(words: chunk.words, startingAt: chunk.startIndex)
+                                    .padding(.horizontal, 5)
                             }
                         }
 
@@ -55,18 +58,22 @@ struct RecoveryPhraseDisplayView: View {
                             .frame(height: 60)
                         }
                         .padding()
+                        .padding(.top, 20)
                     } else {
                         Text("Oops no words")
                     }
+                    Spacer()
                 }
-                .padding()
             }
+            .padding(.bottom, 20)
             .padding(.horizontal)
+            .padding(.top, 0)
+            .applyScreenBackground()
         }
 
         // TODO: NavigationBar Style
         .navigationBarTitleDisplayMode(.inline)
-        .applyScreenBackground()
+        .navigationBarHidden(true)
     }
 }
 // TODO: This should have a #DEBUG tag, but if so, it's not possible to compile this on release mode and submit it to testflight
