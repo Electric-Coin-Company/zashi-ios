@@ -44,6 +44,7 @@ struct RecoveryPhraseBackupValidationView: View {
                 )
             }
             .applyScreenBackground()
+            .scrollableWhenScaledUp()
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle(Text("Verify Your Backup"))
         }
@@ -126,6 +127,64 @@ extension RecoveryPhraseValidationState {
 
 extension RecoveryPhraseValidationState {
     static let placeholder = RecoveryPhraseValidationState.random(phrase: RecoveryPhrase.placeholder)
+
+    static let placeholderStep1 = RecoveryPhraseValidationState(
+        phrase: RecoveryPhrase.placeholder, missingIndices: [2,0,3,5], missingWordChips: [
+            .unassigned(word: "thank"),
+            .empty,
+            .unassigned(word: "boil"),
+            .unassigned(word: "garlic")
+        ],
+        completion: [
+            RecoveryPhraseStepCompletion(groupIndex: 2, word: "morning")
+        ],
+        route: nil
+    )
+
+    static let placeholderStep2 = RecoveryPhraseValidationState(
+        phrase: RecoveryPhrase.placeholder, missingIndices: [2,0,3,5], missingWordChips: [
+            .empty,
+            .empty,
+            .unassigned(word: "boil"),
+            .unassigned(word: "garlic")
+        ],
+        completion: [
+            RecoveryPhraseStepCompletion(groupIndex: 2, word: "morning"),
+            RecoveryPhraseStepCompletion(groupIndex: 0, word: "thank"),
+        ],
+        route: nil
+    )
+
+    static let placeholderStep3 = RecoveryPhraseValidationState(
+        phrase: RecoveryPhrase.placeholder, missingIndices: [2,0,3,5], missingWordChips: [
+            .empty,
+            .empty,
+            .unassigned(word: "boil"),
+            .empty
+        ],
+        completion: [
+            RecoveryPhraseStepCompletion(groupIndex: 2, word: "morning"),
+            RecoveryPhraseStepCompletion(groupIndex: 0, word: "thank"),
+            RecoveryPhraseStepCompletion(groupIndex: 3, word: "garlic")
+        ],
+        route: nil
+    )
+
+    static let placeholderStep4 = RecoveryPhraseValidationState(
+        phrase: RecoveryPhrase.placeholder, missingIndices: [2,0,3,5], missingWordChips: [
+            .empty,
+            .empty,
+            .empty,
+            .empty
+        ],
+        completion: [
+            RecoveryPhraseStepCompletion(groupIndex: 2, word: "morning"),
+            RecoveryPhraseStepCompletion(groupIndex: 0, word: "thank"),
+            RecoveryPhraseStepCompletion(groupIndex: 3, word: "garlic"),
+            RecoveryPhraseStepCompletion(groupIndex: 1, word: "boil")
+        ],
+        route: nil
+    )
 }
 
 extension RecoveryPhraseValidationStore {
@@ -133,6 +192,30 @@ extension RecoveryPhraseValidationStore {
 
     static let demo = Store(
         initialState: RecoveryPhraseValidationState.placeholder,
+        reducer: .default,
+        environment: BackupPhraseEnvironment.demo
+    )
+
+    static let demoStep1 = Store(
+        initialState: RecoveryPhraseValidationState.placeholderStep1,
+        reducer: .default,
+        environment: BackupPhraseEnvironment.demo
+    )
+
+    static let demoStep2 = Store(
+        initialState: RecoveryPhraseValidationState.placeholderStep1,
+        reducer: .default,
+        environment: BackupPhraseEnvironment.demo
+    )
+
+    static let demoStep3 = Store(
+        initialState: RecoveryPhraseValidationState.placeholderStep3,
+        reducer: .default,
+        environment: BackupPhraseEnvironment.demo
+    )
+
+    static let demoStep4 = Store(
+        initialState: RecoveryPhraseValidationState.placeholderStep4,
         reducer: .default,
         environment: BackupPhraseEnvironment.demo
     )
@@ -163,6 +246,13 @@ private extension RecoveryPhraseValidationState {
 
 struct RecoveryPhraseBackupView_Previews: PreviewProvider {
     static var previews: some View {
-        RecoveryPhraseBackupValidationView(store: RecoveryPhraseValidationStore.demo)
+        NavigationView {
+            RecoveryPhraseBackupValidationView(store: RecoveryPhraseValidationStore.demoStep1)
+                .environment(\.sizeCategory, .accessibilityLarge)
+        }
+
+        NavigationView {
+            RecoveryPhraseBackupValidationView(store: RecoveryPhraseValidationStore.demoStep1)
+        }
     }
 }
