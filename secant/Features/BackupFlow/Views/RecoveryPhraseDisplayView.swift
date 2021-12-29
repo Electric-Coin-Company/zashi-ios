@@ -31,10 +31,13 @@ struct RecoveryPhraseDisplayView: View {
                         .padding(.top, 0)
                         .padding(.bottom, 20)
 
-                        VStack(alignment: .leading, spacing: 30) {
+                        VStack(alignment: .leading, spacing: 10) {
                             ForEach(chunks, id: \.startIndex) { chunk in
+                                VStack {
                                 WordChipGrid(words: chunk.words, startingAt: chunk.startIndex)
-                                    .padding(.horizontal, 5)
+                                }
+                                Spacer(minLength: 20)
+
                             }
                         }
 
@@ -116,6 +119,7 @@ struct RecoveryPhraseDisplayView_Previews: PreviewProvider {
         NavigationView {
             RecoveryPhraseDisplayView(store: store)
         }
+        .environment(\.sizeCategory, .accessibilityLarge)
 
         NavigationView {
             RecoveryPhraseDisplayView(store: store)

@@ -8,25 +8,25 @@
 import SwiftUI
 
 struct EnumeratedChip: View {
+    let basePadding: CGFloat = 14
     @Clamped(1...24)
     var index: Int = 1
     var text: String
+    var overlayPadding: CGFloat = 20
 
     var body: some View {
-        GeometryReader { geometry in
-        (Text("\(index)")
-            .baselineOffset(geometry.size.height / 4)
-            .foregroundColor(Asset.Colors.Text.highlightedSuperscriptText.color)
-            .font(.custom(FontFamily.Roboto.bold.name, size: 12)) +
-
-        Text(" \(text)")
+         Text(text)
             .foregroundColor(Asset.Colors.Text.button.color)
             .font(.custom(FontFamily.Rubik.regular.name, size: 14))
-        )
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .padding(.leading, 14)
-                .padding([.trailing, .vertical], 4)
-                .fixedSize(horizontal: false, vertical: true)
+            .frame(
+                maxWidth: .infinity,
+                minHeight: 30,
+                maxHeight: .infinity,
+                alignment: .leading
+            )
+            .padding(.leading, basePadding + overlayPadding)
+            .padding([.trailing, .vertical], 4)
+            .fixedSize(horizontal: false, vertical: true)
             .shadow(
                 color: Asset.Colors.Shadow.numberedTextShadow.color,
                 radius: 1,
@@ -36,7 +36,16 @@ struct EnumeratedChip: View {
             .background(Asset.Colors.BackgroundColors.numberedChip.color)
             .cornerRadius(6)
             .shadow(color: Asset.Colors.Shadow.numberedTextShadow.color, radius: 3, x: 0, y: 1)
-        }
+            .overlay(
+                GeometryReader { g in
+                    Text("\(index)")
+                        .foregroundColor(Asset.Colors.Text.highlightedSuperscriptText.color)
+                        .font(.custom(FontFamily.Roboto.bold.name, size: 10))
+                        .frame(width: g.size.width, height: g.size.height, alignment: .topLeading)
+                        .padding(.leading, basePadding)
+                        .padding(.top, 4)
+                }
+            )
     }
 }
 
