@@ -17,31 +17,36 @@ struct RecoveryPhraseBackupValidationView: View {
                 header(for: viewStore)
                     .padding(.horizontal)
                     .padding(.bottom, 10)
-
-                VStack(spacing: 20) {
-                    let state = viewStore.state
-                    let chunks = state.phrase.toChunks()
-                    ForEach(Array(zip(chunks.indices, chunks)), id: \.0) { index, chunk in
-                        WordChipGrid(
-                            state: state,
-                            group: index,
-                            chunk: chunk,
-                            misingIndex: index
-                        )
-                        .background(Asset.Colors.BackgroundColors.phraseGridDarkGray.color)
-                        .whenIsDroppable(!state.groupCompleted(index: index), dropDelegate: state.dropDelegate(for: viewStore, group: index))
+                ZStack {
+                    Asset.Colors.BackgroundColors.phraseGridDarkGray.color
+                        .edgesIgnoringSafeArea(.bottom)
+                    VStack(spacing: 35) {
+                        let state = viewStore.state
+                        let chunks = state.phrase.toChunks()
+                        ForEach(Array(zip(chunks.indices, chunks)), id: \.0) { index, chunk in
+                            WordChipGrid(
+                                state: state,
+                                group: index,
+                                chunk: chunk,
+                                misingIndex: index
+                            )
+                            .background(Asset.Colors.BackgroundColors.phraseGridDarkGray.color)
+                            .whenIsDroppable(!state.groupCompleted(index: index), dropDelegate: state.dropDelegate(for: viewStore, group: index))
+                        }
+                        Spacer()
                     }
+                    .padding()
+                    .padding(.top, 0)
+                    .navigationLinkEmpty(
+                        isActive: viewStore.bindingForRoute(.success),
+                        destination: { view(for: .success) }
+                    )
+                    .navigationLinkEmpty(
+                        isActive: viewStore.bindingForRoute(.failure),
+                        destination: { view(for: .failure) }
+                    )
                 }
-                .padding()
-                .background(Asset.Colors.BackgroundColors.phraseGridDarkGray.color)
-                .navigationLinkEmpty(
-                    isActive: viewStore.bindingForRoute(.success),
-                    destination: { view(for: .success) }
-                )
-                .navigationLinkEmpty(
-                    isActive: viewStore.bindingForRoute(.failure),
-                    destination: { view(for: .failure) }
-                )
+                .frame(alignment: .top)
             }
             .applyScreenBackground()
             .scrollableWhenScaledUp()
