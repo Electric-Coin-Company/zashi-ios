@@ -12,7 +12,7 @@ struct ColoredChip: View {
     var color = Asset.Colors.Buttons.activeButton.color
     var body: some View {
         Text(word)
-            .font(FontFamily.Rubik.regular.textStyle(.body))
+            .font(.custom(FontFamily.Rubik.regular.name, size: 15))
             .frame(
                 minWidth: 0,
                 maxWidth: .infinity,
@@ -39,6 +39,7 @@ struct ColoredChip: View {
 struct ColoredChip_Previews: PreviewProvider {
     static var previews: some View {
         ColoredChip(word: "negative")
+            .frame(width: 115)
             .applyScreenBackground()
     }
 }
