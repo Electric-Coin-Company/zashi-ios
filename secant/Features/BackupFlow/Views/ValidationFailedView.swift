@@ -58,10 +58,10 @@ struct ValidationFailedView: View {
                     Spacer()
                 }
                 .frame(width: proxy.size.width)
+                .scrollableWhenScaledUp()
             }
             .padding()
             .navigationBarBackButtonHidden(true)
-            .scrollableWhenScaledUp()
             .applyErredScreenBackground()
         }
     }
