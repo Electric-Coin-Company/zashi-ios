@@ -254,5 +254,11 @@ struct RecoveryPhraseBackupView_Previews: PreviewProvider {
         NavigationView {
             RecoveryPhraseBackupValidationView(store: RecoveryPhraseValidationStore.demoStep1)
         }
+
+
+        NavigationView {
+            RecoveryPhraseBackupValidationView(store: RecoveryPhraseValidationStore.demoStep1)
+        }
+        .preferredColorScheme(.dark)
     }
 }

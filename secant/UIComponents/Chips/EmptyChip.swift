@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct EmptyChip: View {
+    @Environment(\.colorScheme) var colorScheme
+
     var body: some View {
         RoundedRectangle(cornerRadius: 6, style: RoundedCornerStyle.continuous)
             .stroke(Asset.Colors.Text.activeButtonText.color, lineWidth: 0.5)
@@ -24,14 +26,24 @@ struct EmptyChip: View {
                 width: 4,
                 blur: 2
             )
+            .background(chipBackground)
             .frame(
                 minWidth: 0,
                 maxWidth: .infinity,
                 minHeight: 40,
-                idealHeight: 40,
+//                idealHeight: 40,
                 maxHeight: .infinity,
                 alignment: .leading
             )
+    }
+
+    @ViewBuilder var chipBackground: some View {
+        if colorScheme == .dark {
+            RoundedRectangle(cornerRadius: 6, style: RoundedCornerStyle.continuous)
+                .fill(Asset.Colors.ScreenBackground.gradientEnd.color)
+        } else {
+            Color.clear
+        }
     }
 }
 
@@ -49,10 +61,11 @@ struct EmptyChip_Previews: PreviewProvider {
 
         Group {
             ZStack {
+                Color.gray
                 EmptyChip()
                     .frame(width: 100, height: 40, alignment: .leading)
             }
-            .applyScreenBackground()
+
         }
         .previewLayout(.fixed(width: 200, height: 100))
         .preferredColorScheme(.dark)
