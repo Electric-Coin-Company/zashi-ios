@@ -15,12 +15,13 @@ struct ColoredChip: View {
             .font(FontFamily.Rubik.regular.textStyle(.body))
             .frame(
                 minWidth: 0,
-                maxWidth: 120,
+                maxWidth: .infinity,
                 minHeight: 30,
-                idealHeight: 40
+                maxHeight: .infinity
             )
+            .fixedSize(horizontal: false, vertical: true)
             .foregroundColor(Asset.Colors.Text.activeButtonText.color)
-            .padding(.horizontal, 4)
+            .padding(.horizontal, 8)
             .padding(.vertical, 4)
             .background(color)
             .cornerRadius(6)
