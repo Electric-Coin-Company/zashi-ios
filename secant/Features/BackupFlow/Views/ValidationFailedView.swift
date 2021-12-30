@@ -8,7 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 
-struct ValidationFailed: View {
+struct ValidationFailedView: View {
     var store: RecoveryPhraseValidationStore
 
     var body: some View {
@@ -70,9 +70,9 @@ struct ValidationFailed: View {
 struct ValidationFailed_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            ValidationFailed(store: RecoveryPhraseValidationStore.demo)
+            ValidationFailedView(store: RecoveryPhraseValidationStore.demo)
 
-            ValidationFailed(store: RecoveryPhraseValidationStore.demo)
+            ValidationFailedView(store: RecoveryPhraseValidationStore.demo)
                 .environment(\.sizeCategory, .accessibilityLarge)
         }
     }

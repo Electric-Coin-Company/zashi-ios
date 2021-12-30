@@ -82,7 +82,7 @@ struct RecoveryPhraseBackupValidationView: View {
         case .success:
             ValidationSuccededView(store: store)
         case .failure:
-            ValidationFailed(store: store)
+            ValidationFailedView(store: store)
         }
     }
 }
