@@ -31,7 +31,7 @@ struct RecoveryPhraseDisplayView: View {
                         .padding(.top, 0)
                         .padding(.bottom, 20)
 
-                        VStack(alignment: .leading, spacing: 10) {
+                        VStack(alignment: .leading, spacing: 5) {
                             ForEach(chunks, id: \.startIndex) { chunk in
                                 VStack {
                                 WordChipGrid(words: chunk.words, startingAt: chunk.startIndex)
@@ -61,11 +61,10 @@ struct RecoveryPhraseDisplayView: View {
                             .frame(height: 60)
                         }
                         .padding()
-                        .padding(.top, 20)
                     } else {
                         Text("Oops no words")
                     }
-                    Spacer()
+//                    Spacer()
                 }
             }
             .padding(.bottom, 20)
