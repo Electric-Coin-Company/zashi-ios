@@ -18,6 +18,7 @@ struct ValidationFailed: View {
                     VStack(alignment: .center, spacing: 20) {
                         Text("Ouch, sorry, no.")
                             .font(.custom(FontFamily.Rubik.regular.name, size: 30))
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     .padding(.bottom, 20)
 
@@ -37,9 +38,11 @@ struct ValidationFailed: View {
                         VStack(alignment: .center, spacing: 20) {
                             Text("Your placed words did not match your secret recovery phrase.")
                                 .bodyText()
+                                .fixedSize(horizontal: false, vertical: true)
 
                             Text("Remember, you can't recover your funds if you lose (or incorrectly save) these 24 words.")
                                 .bodyText()
+                                .fixedSize(horizontal: false, vertical: true)
                         }
 
                         Button(
@@ -57,14 +60,20 @@ struct ValidationFailed: View {
                 .frame(width: proxy.size.width)
             }
             .padding()
-            .applyErredScreenBackground()
             .navigationBarBackButtonHidden(true)
+            .scrollableWhenScaledUp()
+            .applyErredScreenBackground()
         }
     }
 }
 
 struct ValidationFailed_Previews: PreviewProvider {
     static var previews: some View {
-        ValidationFailed(store: RecoveryPhraseValidationStore.demo)
+        Group {
+            ValidationFailed(store: RecoveryPhraseValidationStore.demo)
+
+            ValidationFailed(store: RecoveryPhraseValidationStore.demo)
+                .environment(\.sizeCategory, .accessibilityLarge)
+        }
     }
 }
