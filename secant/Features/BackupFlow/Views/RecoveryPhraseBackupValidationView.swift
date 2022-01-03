@@ -56,20 +56,17 @@ struct RecoveryPhraseBackupValidationView: View {
     }
 
     @ViewBuilder func header(for viewStore: RecoveryPhraseValidationViewStore) -> some View {
-        switch viewStore.step {
-        case .initial, .incomplete:
-            VStack {
-                Text("Drag the words below to match your backed-up copy.")
-                    .bodyText()
-
-                viewStore.state.missingWordGrid()
+        VStack {
+            switch viewStore.step {
+            case .initial, .incomplete:
+                    Text("Drag the words below to match your backed-up copy.")
+                        .bodyText()
+            case .complete:
+                    completeHeader(for: viewStore.state)
             }
-            .padding(.horizontal, 30)
-        case .complete:
-            VStack {
-                completeHeader(for: viewStore.state)
-            }
+            viewStore.state.missingWordGrid()
         }
+        .padding(.horizontal, 30)
     }
     
     @ViewBuilder func completeHeader(for state: RecoveryPhraseValidationState) -> some View {
@@ -252,8 +249,8 @@ private extension RecoveryPhraseValidationState {
 struct RecoveryPhraseBackupView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            RecoveryPhraseBackupValidationView(store: RecoveryPhraseValidationStore.demoStep1)
-                .environment(\.sizeCategory, .accessibilityLarge)
+            RecoveryPhraseBackupValidationView(store: RecoveryPhraseValidationStore.demoStep4)
+//                .environment(\.sizeCategory, .accessibilityLarge)
         }
 
         NavigationView {
