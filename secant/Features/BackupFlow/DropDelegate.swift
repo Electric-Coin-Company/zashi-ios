@@ -21,17 +21,17 @@ struct NullDelegate: DropDelegate {
     }
 }
 
-/// Drop delegate that accepts items conforming to `PhraseChip.completionTypeIdentifier`
+/// Drop delegate that accepts items conforming to `PhraseChip.fulfillmentTypeIdentifier`
 struct WordChipDropDelegate: DropDelegate {
     var dropAction: ((PhraseChip.Kind) -> Void)?
 
     func validateDrop(info: DropInfo) -> Bool {
-        return  info.hasItemsConforming(to: [PhraseChip.completionTypeIdentifier])
+        return  info.hasItemsConforming(to: [PhraseChip.fulfillmentTypeIdentifier])
     }
 
     func performDrop(info: DropInfo) -> Bool {
-        if let item = info.itemProviders(for: [PhraseChip.completionTypeIdentifier]).first {
-            item.loadItem(forTypeIdentifier: PhraseChip.completionTypeIdentifier, options: nil) { text, _ in
+        if let item = info.itemProviders(for: [PhraseChip.fulfillmentTypeIdentifier]).first {
+            item.loadItem(forTypeIdentifier: PhraseChip.fulfillmentTypeIdentifier, options: nil) { text, _ in
                 DispatchQueue.main.async {
                     if let data = text as? Data {
                         //  Extract string from data
@@ -63,7 +63,7 @@ extension RecoveryPhraseValidationState {
                 }
             }
         case .incomplete:
-            guard completion.first(where: { $0.groupIndex == group }) == nil else { return NullDelegate() }
+            guard fulfillments.first(where: { $0.groupIndex == group }) == nil else { return NullDelegate() }
 
             return WordChipDropDelegate { chipKind in
                 viewStore.send(.drag(wordChip: chipKind, intoGroup: group))
@@ -76,6 +76,6 @@ extension RecoveryPhraseValidationState {
 
 extension RecoveryPhraseValidationState {
     func groupCompleted(index: Int) -> Bool {
-        completion.first(where: { $0.groupIndex == index }) != nil
+        fulfillments.first(where: { $0.groupIndex == index }) != nil
     }
 }

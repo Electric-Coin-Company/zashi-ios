@@ -109,7 +109,7 @@ private extension RecoveryPhraseValidationState {
 
 extension RecoveryPhraseValidationState {
     func wordsChips(for group: Int, groupSize: Int, from chunk: RecoveryPhrase.Chunk) -> [PhraseChip.Kind] {
-        let wordCompletion = completion.first(where: { $0.groupIndex == group })
+        let wordCompletion = fulfillments.first(where: { $0.groupIndex == group })
 
         var chips: [PhraseChip.Kind] = []
         for (i, word) in chunk.words.enumerated() {
@@ -137,8 +137,8 @@ extension RecoveryPhraseValidationState {
             .unassigned(word: "boil"),
             .unassigned(word: "garlic")
         ],
-        completion: [
-            RecoveryPhraseStepCompletion(groupIndex: 2, word: "morning")
+        fulfillments: [
+            RecoveryPhraseStepFulfillment(groupIndex: 2, word: "morning")
         ],
         route: nil
     )
@@ -150,9 +150,9 @@ extension RecoveryPhraseValidationState {
             .unassigned(word: "boil"),
             .unassigned(word: "garlic")
         ],
-        completion: [
-            RecoveryPhraseStepCompletion(groupIndex: 2, word: "morning"),
-            RecoveryPhraseStepCompletion(groupIndex: 0, word: "thank"),
+        fulfillments: [
+            RecoveryPhraseStepFulfillment(groupIndex: 2, word: "morning"),
+            RecoveryPhraseStepFulfillment(groupIndex: 0, word: "thank"),
         ],
         route: nil
     )
@@ -164,10 +164,10 @@ extension RecoveryPhraseValidationState {
             .unassigned(word: "boil"),
             .empty
         ],
-        completion: [
-            RecoveryPhraseStepCompletion(groupIndex: 2, word: "morning"),
-            RecoveryPhraseStepCompletion(groupIndex: 0, word: "thank"),
-            RecoveryPhraseStepCompletion(groupIndex: 3, word: "garlic")
+        fulfillments: [
+            RecoveryPhraseStepFulfillment(groupIndex: 2, word: "morning"),
+            RecoveryPhraseStepFulfillment(groupIndex: 0, word: "thank"),
+            RecoveryPhraseStepFulfillment(groupIndex: 3, word: "garlic")
         ],
         route: nil
     )
@@ -179,11 +179,11 @@ extension RecoveryPhraseValidationState {
             .empty,
             .empty
         ],
-        completion: [
-            RecoveryPhraseStepCompletion(groupIndex: 2, word: "morning"),
-            RecoveryPhraseStepCompletion(groupIndex: 0, word: "thank"),
-            RecoveryPhraseStepCompletion(groupIndex: 3, word: "garlic"),
-            RecoveryPhraseStepCompletion(groupIndex: 1, word: "boil")
+        fulfillments: [
+            RecoveryPhraseStepFulfillment(groupIndex: 2, word: "morning"),
+            RecoveryPhraseStepFulfillment(groupIndex: 0, word: "thank"),
+            RecoveryPhraseStepFulfillment(groupIndex: 3, word: "garlic"),
+            RecoveryPhraseStepFulfillment(groupIndex: 1, word: "boil")
         ],
         route: nil
     )
