@@ -48,10 +48,8 @@ struct ValidationFailedView: View {
                             action: { viewStore.send(.reset) },
                             label: { Text("I'm ready to try again") }
                         )
-                        .activeButtonStyle
-                        .frame(
-                            height: 60
-                        )
+                            .activeButtonStyle
+                            .frame(height: 60)
                     }
                     .padding()
                     Spacer()
@@ -69,9 +67,9 @@ struct ValidationFailedView: View {
 struct ValidationFailed_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            ValidationFailedView(store: RecoveryPhraseValidationStore.demo)
+            ValidationFailedView(store: .demo)
 
-            ValidationFailedView(store: RecoveryPhraseValidationStore.demo)
+            ValidationFailedView(store: .demo)
                 .environment(\.sizeCategory, .accessibilityLarge)
         }
     }

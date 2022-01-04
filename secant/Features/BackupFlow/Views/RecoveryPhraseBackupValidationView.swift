@@ -112,15 +112,15 @@ extension RecoveryPhraseValidationState {
         let wordCompletion = validationWords.first(where: { $0.groupIndex == group })
 
         var chips: [PhraseChip.Kind] = []
-        for (i, word) in chunk.words.enumerated() {
-            if i == missingIndices[group] {
+        for (index, word) in chunk.words.enumerated() {
+            if index == missingIndices[group] {
                 if let completedWord = wordCompletion?.word {
                     chips.append(.unassigned(word: completedWord))
                 } else {
                     chips.append(.empty)
                 }
             } else {
-                chips.append(.ordered(position: (groupSize * group) + i + 1, word: word))
+                chips.append(.ordered(position: (groupSize * group) + index + 1, word: word))
             }
         }
         return chips

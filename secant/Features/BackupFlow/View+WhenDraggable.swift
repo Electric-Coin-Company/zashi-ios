@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import ComposableArchitecture
+
 extension PhraseChip {
     static let validationWordTypeIdentifier = "public.text"
 
@@ -47,6 +48,7 @@ extension View {
 struct MakeDroppableModifier: ViewModifier {
     var isDroppable: Bool
     var drop: DropDelegate
+    
     func body(content: Content) -> some View {
         if isDroppable {
             content.onDrop(of: [PhraseChip.validationWordTypeIdentifier], delegate: drop)

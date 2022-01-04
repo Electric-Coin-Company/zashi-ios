@@ -40,19 +40,19 @@ struct AppView: View {
                             action: AppAction.phraseValidation
                         )
                     )
-                        .toolbar(content: {
-                            ToolbarItem(
-                                placement: .navigationBarLeading,
-                                content: {
-                                    Button(action: {
-                                        viewStore.send(.updateRoute(.startup))
-                                    }) {
-                                        Text("Back")
-                                    }
+                    .toolbar(content: {
+                        ToolbarItem(
+                            placement: .navigationBarLeading,
+                            content: {
+                                Button(action: {
+                                    viewStore.send(.updateRoute(.startup))
+                                }) {
+                                    Text("Back")
                                 }
-                            )
-                        })
-                        .navigationViewStyle(StackNavigationViewStyle())
+                            }
+                        )
+                    })
+                    .navigationViewStyle(StackNavigationViewStyle())
                 }
 
             case .phraseDisplay:

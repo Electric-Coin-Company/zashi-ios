@@ -86,8 +86,8 @@ extension RecoveryPhraseValidationState {
     /// assembly the resulting phrase. This comes up with the "proposed solution" for the recovery phrase validation challenge.
     /// - returns:an array of String containing the recovery phrase words ordered by the original phrase order.
     var resultingPhrase: [String] {
-        precondition(missingIndices.count == validationWords.count)
-        precondition(validationWords.count == Self.phraseChunks)
+        assert(missingIndices.count == validationWords.count)
+        assert(validationWords.count == Self.phraseChunks)
 
         var words = phrase.words
         let groupLength = words.count / Self.phraseChunks
@@ -96,12 +96,12 @@ extension RecoveryPhraseValidationState {
             // figure out which phrase group (chunk) this completion belongs to
             let i = wordCompletion.groupIndex
             // validate that's the right number
-            precondition(i < Self.phraseChunks)
+            assert(i < Self.phraseChunks)
             // get the missing index that the user did this completion for on the given group
             let missingIndex = missingIndices[i]
             // figure out what this means in terms of the whole recovery phrase
             let concreteIndex = i * groupLength + missingIndex
-            precondition(concreteIndex < words.count)
+            assert(concreteIndex < words.count)
             // replace the word on the copy of the original phrase with the completion the user did
             words[concreteIndex] = wordCompletion.word
         }
@@ -160,29 +160,25 @@ extension RecoveryPhraseValidationState {
     }
 
     static func pickWords(fromMissingIndices indices: [Int], phrase: RecoveryPhrase) -> [PhraseChip.Kind] {
-        precondition((indices.count - 1) * Self.wordGroupSize <= phrase.words.count)
-        var words: [PhraseChip.Kind] = []
-        indices.enumerated().forEach({ index, position in
-            let realIndex = (index * Self.wordGroupSize) + position
-            words.append(.unassigned(word: phrase.words[realIndex]))
+        assert((indices.count - 1) * Self.wordGroupSize <= phrase.words.count)
+
+        return indices.enumerated().map({ index, position in
+            .unassigned(word: phrase.words[(index * Self.wordGroupSize) + position])
         })
-        return words
     }
 
     static func randomIndices() -> [Int] {
-        var indices: [Int] = []
-        for _ in (0..<phraseChunks) {
-            indices.append(Int.random(in: 0 ..< wordGroupSize))
+        return (0..<phraseChunks).map { _ in
+            Int.random(in: 0 ..< wordGroupSize)
         }
-        return indices
     }
 }
 
 extension RecoveryPhrase.Chunk {
     /// Returns an array of words where the word at the missing index will be an empty string
     func words(with missingIndex: Int) -> [String] {
-        precondition(missingIndex >= 0)
-        precondition(missingIndex < self.words.count)
+        assert(missingIndex >= 0)
+        assert(missingIndex < self.words.count)
         var wordsApplyingMissing = self.words
         wordsApplyingMissing[missingIndex] = ""
         return wordsApplyingMissing

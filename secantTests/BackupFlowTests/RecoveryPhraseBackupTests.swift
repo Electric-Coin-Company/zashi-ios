@@ -7,6 +7,7 @@
 
 import XCTest
 @testable import secant_testnet
+
 class RecoveryPhraseBackupTests: XCTestCase {
     func testGiven24WordsBIP39ChunkItIntoQuarters() throws {
         let words = [

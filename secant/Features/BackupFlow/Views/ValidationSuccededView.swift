@@ -10,8 +10,10 @@ import ComposableArchitecture
 
 struct ValidationSuccededView: View {
     var store: RecoveryPhraseValidationStore
+    
     @ScaledMetric var scaledPadding: CGFloat = 10
     @ScaledMetric var scaledButtonHeight: CGFloat = 130
+
     var body: some View {
         WithViewStore(store) { viewStore in
             GeometryReader { proxy in
