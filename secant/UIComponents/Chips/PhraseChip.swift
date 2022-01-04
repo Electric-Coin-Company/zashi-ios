@@ -32,13 +32,13 @@ struct PhraseChip_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             PhraseChip(kind: .unassigned(word: "negative"))
-//                .frame(height: 40)
+                .frame(width: 120, height: 40)
 
             PhraseChip(kind: .empty)
-//                .frame(height: 40)
+                .frame(width: 120, height: 40)
 
             PhraseChip(kind: .ordered(position: 23, word: "mutual"))
-//                .frame(height: 40)
+                .frame(width: 120, height: 40)
         }
         .applyScreenBackground()
     }
