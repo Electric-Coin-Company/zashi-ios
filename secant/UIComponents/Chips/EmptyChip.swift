@@ -31,7 +31,6 @@ struct EmptyChip: View {
                 minWidth: 0,
                 maxWidth: .infinity,
                 minHeight: 40,
-//                idealHeight: 40,
                 maxHeight: .infinity,
                 alignment: .leading
             )

@@ -28,14 +28,6 @@ struct ColoredChip: View {
     }
 }
 
-//extension ColoredChip {
-//    func background<Background>(_ background: Background, alignment: Alignment = .center) -> some View where Background : Color {
-//        var colored = self
-//        colored.color = background
-//        return colored
-//    }
-//}
-
 struct ColoredChip_Previews: PreviewProvider {
     static var previews: some View {
         ColoredChip(word: "negative")

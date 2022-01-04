@@ -9,8 +9,10 @@ import SwiftUI
 
 struct EnumeratedChip: View {
     let basePadding: CGFloat = 14
+
     @Clamped(1...24)
     var index: Int = 1
+    
     var text: String
     var overlayPadding: CGFloat = 20
 
