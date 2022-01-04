@@ -49,7 +49,8 @@ struct AppView: View {
                                     }) {
                                         Text("Back")
                                     }
-                                })
+                                }
+                            )
                         })
                         .navigationViewStyle(StackNavigationViewStyle())
                 }

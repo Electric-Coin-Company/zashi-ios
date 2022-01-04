@@ -29,7 +29,6 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let expected = ["salute", "boil", "cancel", "pizza"].map({ PhraseChip.Kind.unassigned(word: $0) })
 
-
         let result = RecoveryPhraseValidationState.pickWordsFromMissingIndices(indices: indices, phrase: phrase)
 
         XCTAssertEqual(expected, result)
@@ -317,8 +316,13 @@ class RecoveryPhraseValidationTests: XCTestCase {
             RecoveryPhraseStepFulfillment(groupIndex: 3, word: "pizza")
         ]
 
-        let result = RecoveryPhraseValidationState(phrase: phrase, missingIndices: missingIndices, missingWordChips: RecoveryPhraseValidationState.pickWordsFromMissingIndices(indices: missingIndices, phrase: phrase), fulfillments: completion, route: nil)
-
+        let result = RecoveryPhraseValidationState(
+            phrase: phrase,
+            missingIndices: missingIndices,
+            missingWordChips: RecoveryPhraseValidationState.pickWordsFromMissingIndices(indices: missingIndices, phrase: phrase),
+            fulfillments: completion,
+            route: nil
+        )
 
         XCTAssertEqual(words, result.resultingPhrase)
     }

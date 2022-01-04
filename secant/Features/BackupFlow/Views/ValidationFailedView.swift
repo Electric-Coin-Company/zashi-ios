@@ -32,7 +32,6 @@ struct ValidationFailedView: View {
                         )
                         .badgeIcon(.error)
 
-
                     Spacer()
                     VStack(alignment: .center, spacing: 40) {
                         VStack(alignment: .center, spacing: 20) {

@@ -66,7 +66,6 @@ extension RecoveryPhraseValidationViewStore {
     }
 }
 
-
 extension RecoveryPhraseValidationState {
     /// creates an initial `RecoveryPhraseValidationState` with no completions and random missing indices.
     /// - Note: Use this function to create a random validation puzzle for a given phrase.
@@ -171,8 +170,8 @@ extension RecoveryPhraseValidationState {
     }
 
     static func randomIndices() -> [Int] {
-        var indices = [Int]()
-        for _ in (0 ..< phraseChunks) {
+        var indices: [Int] = []
+        for _ in (0..<phraseChunks) {
             indices.append(Int.random(in: 0 ..< wordGroupSize))
         }
         return indices

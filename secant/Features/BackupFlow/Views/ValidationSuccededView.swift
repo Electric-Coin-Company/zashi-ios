@@ -66,7 +66,6 @@ struct ValidationSuccededView: View {
                             label: {
                                 Text("Show me my phrase again")
                                     .fixedSize(horizontal: false, vertical: true)
-
                             }
                         )
                         .secondaryButtonStyle

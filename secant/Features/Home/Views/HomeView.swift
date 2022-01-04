@@ -24,7 +24,8 @@ struct HomeView: View {
                     initialState: .placeholder,
                     reducer: SendReducer.default(
                         whenDone: { HomeViewStore(store).send(.updateRoute(nil)) }
-                    ).debug(),
+                    )
+                        .debug(),
                     environment: ()
                 )
             )
@@ -45,13 +46,13 @@ struct HomeView: View {
                 List {
                     Section(header: Text("Navigation Stack Routes")) {
                         ForEach(navigationRouteValues) { routeValue in
-                             Text("\(String(describing: routeValue.route))")
-                            .navigationLink(
-                                isActive: viewStore.bindingForRoute(routeValue.route),
-                                destination: {
-                                    view(for: routeValue.route)
-                                }
-                            )
+                            Text("\(String(describing: routeValue.route))")
+                                .navigationLink(
+                                    isActive: viewStore.bindingForRoute(routeValue.route),
+                                    destination: {
+                                        view(for: routeValue.route)
+                                    }
+                                )
                         }
                     }
 

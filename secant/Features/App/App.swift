@@ -48,10 +48,10 @@ extension AppReducer {
         case .home(.reset):
             state.route = .startup
         case .onboarding(.createNewWallet),
-                .phraseValidation(.proceedToHome):
+            .phraseValidation(.proceedToHome):
             state.route = .home
         case .phraseValidation(.displayBackedUpPhrase),
-                .phraseDisplay(.createPhrase):
+            .phraseDisplay(.createPhrase):
             state.route = .phraseDisplay
         case .phraseDisplay(.finishedPressed):
             state.route = .phraseValidation

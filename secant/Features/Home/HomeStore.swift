@@ -45,7 +45,8 @@ extension HomeReducer {
                     action: /HomeAction.profile,
                     environment: { _ in
                         return ProfileEnvironment()
-                    })
+                    }
+                )
                 .run(&state, action, ())
         case .reset:
             return .none

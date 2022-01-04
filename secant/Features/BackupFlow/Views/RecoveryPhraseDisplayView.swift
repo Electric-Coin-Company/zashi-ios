@@ -10,7 +10,7 @@ import ComposableArchitecture
 
 struct RecoveryPhraseDisplayView: View {
     let store: RecoveryPhraseDisplayStore
-
+    
     var body: some View {
         WithViewStore(self.store) { viewStore in
             ScrollView {
@@ -23,31 +23,31 @@ struct RecoveryPhraseDisplayView: View {
                             VStack(alignment: .center, spacing: 4) {
                                 Text("The following 24 words represent your funds and the security used to protect them.")
                                     .bodyText()
-
+                                
                                 Text("Back them up now! There will be a test.")
                                     .bodyText()
                             }
                         }
                         .padding(.top, 0)
                         .padding(.bottom, 20)
-
+                        
                         VStack(alignment: .leading, spacing: 35) {
                             ForEach(chunks, id: \.startIndex) { chunk in
                                 VStack {
-                                WordChipGrid(words: chunk.words, startingAt: chunk.startIndex)
+                                    WordChipGrid(words: chunk.words, startingAt: chunk.startIndex)
                                 }
                             }
                         }
                         .padding(.horizontal, 5)
-
+                        
                         VStack {
                             Button(
                                 action: { viewStore.send(.finishedPressed) },
                                 label: { Text("Finished!") }
                             )
-                            .activeButtonStyle
-                            .frame(height: 60)
-
+                                .activeButtonStyle
+                                .frame(height: 60)
+                            
                             Button(
                                 action: {
                                     viewStore.send(.copyToBufferPressed)
@@ -57,13 +57,12 @@ struct RecoveryPhraseDisplayView: View {
                                         .bodyText()
                                 }
                             )
-                            .frame(height: 60)
+                                .frame(height: 60)
                         }
                         .padding()
                     } else {
                         Text("Oops no words")
                     }
-//                    Spacer()
                 }
             }
             .padding(.bottom, 20)
@@ -71,7 +70,7 @@ struct RecoveryPhraseDisplayView: View {
             .padding(.top, 0)
             .applyScreenBackground()
         }
-
+        
         // TODO: NavigationBar Style
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarHidden(true)

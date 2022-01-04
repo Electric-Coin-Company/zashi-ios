@@ -59,10 +59,10 @@ struct RecoveryPhraseBackupValidationView: View {
         VStack {
             switch viewStore.step {
             case .initial, .incomplete:
-                    Text("Drag the words below to match your backed-up copy.")
-                        .bodyText()
+                Text("Drag the words below to match your backed-up copy.")
+                    .bodyText()
             case .complete:
-                    completeHeader(for: viewStore.state)
+                completeHeader(for: viewStore.state)
             }
             viewStore.state.missingWordGrid()
         }
@@ -131,7 +131,9 @@ extension RecoveryPhraseValidationState {
     static let placeholder = RecoveryPhraseValidationState.random(phrase: RecoveryPhrase.placeholder)
 
     static let placeholderStep1 = RecoveryPhraseValidationState(
-        phrase: RecoveryPhrase.placeholder, missingIndices: [2,0,3,5], missingWordChips: [
+        phrase: RecoveryPhrase.placeholder,
+        missingIndices: [2, 0, 3, 5],
+        missingWordChips: [
             .unassigned(word: "thank"),
             .empty,
             .unassigned(word: "boil"),
@@ -144,7 +146,9 @@ extension RecoveryPhraseValidationState {
     )
 
     static let placeholderStep2 = RecoveryPhraseValidationState(
-        phrase: RecoveryPhrase.placeholder, missingIndices: [2,0,3,5], missingWordChips: [
+        phrase: RecoveryPhrase.placeholder,
+        missingIndices: [2, 0, 3, 5],
+        missingWordChips: [
             .empty,
             .empty,
             .unassigned(word: "boil"),
@@ -152,13 +156,15 @@ extension RecoveryPhraseValidationState {
         ],
         fulfillments: [
             RecoveryPhraseStepFulfillment(groupIndex: 2, word: "morning"),
-            RecoveryPhraseStepFulfillment(groupIndex: 0, word: "thank"),
+            RecoveryPhraseStepFulfillment(groupIndex: 0, word: "thank")
         ],
         route: nil
     )
 
     static let placeholderStep3 = RecoveryPhraseValidationState(
-        phrase: RecoveryPhrase.placeholder, missingIndices: [2,0,3,5], missingWordChips: [
+        phrase: RecoveryPhrase.placeholder,
+        missingIndices: [2, 0, 3, 5],
+        missingWordChips: [
             .empty,
             .empty,
             .unassigned(word: "boil"),
@@ -173,7 +179,9 @@ extension RecoveryPhraseValidationState {
     )
 
     static let placeholderStep4 = RecoveryPhraseValidationState(
-        phrase: RecoveryPhrase.placeholder, missingIndices: [2,0,3,5], missingWordChips: [
+        phrase: RecoveryPhrase.placeholder,
+        missingIndices: [2, 0, 3, 5],
+        missingWordChips: [
             .empty,
             .empty,
             .empty,
@@ -250,13 +258,11 @@ struct RecoveryPhraseBackupView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             RecoveryPhraseBackupValidationView(store: RecoveryPhraseValidationStore.demoStep4)
-//                .environment(\.sizeCategory, .accessibilityLarge)
         }
 
         NavigationView {
             RecoveryPhraseBackupValidationView(store: RecoveryPhraseValidationStore.demoStep1)
         }
-
 
         NavigationView {
             RecoveryPhraseBackupValidationView(store: RecoveryPhraseValidationStore.demoStep1)

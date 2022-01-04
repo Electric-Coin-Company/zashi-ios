@@ -64,7 +64,6 @@ struct EmptyChip_Previews: PreviewProvider {
                 EmptyChip()
                     .frame(width: 100, height: 40, alignment: .leading)
             }
-
         }
         .previewLayout(.fixed(width: 200, height: 100))
         .preferredColorScheme(.dark)

@@ -9,15 +9,15 @@ import SwiftUI
 
 struct EnumeratedChip: View {
     let basePadding: CGFloat = 14
-
+    
     @Clamped(1...24)
     var index: Int = 1
     
     var text: String
     var overlayPadding: CGFloat = 20
-
+    
     var body: some View {
-         Text(text)
+        Text(text)
             .foregroundColor(Asset.Colors.Text.button.color)
             .font(.custom(FontFamily.Rubik.regular.name, size: 14))
             .frame(
@@ -39,11 +39,11 @@ struct EnumeratedChip: View {
             .cornerRadius(6)
             .shadow(color: Asset.Colors.Shadow.numberedTextShadow.color, radius: 3, x: 0, y: 1)
             .overlay(
-                GeometryReader { g in
+                GeometryReader { geometry in
                     Text("\(index)")
                         .foregroundColor(Asset.Colors.Text.highlightedSuperscriptText.color)
                         .font(.custom(FontFamily.Roboto.bold.name, size: 10))
-                        .frame(width: g.size.width, height: g.size.height, alignment: .topLeading)
+                        .frame(width: geometry.size.width, height: geometry.size.height, alignment: .topLeading)
                         .padding(.leading, basePadding)
                         .padding(.top, 4)
                 }

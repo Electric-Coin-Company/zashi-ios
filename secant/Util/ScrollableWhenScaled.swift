@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-fileprivate struct ScrollableWhenScaledUpModifier: ViewModifier {
+struct ScrollableWhenScaledUpModifier: ViewModifier {
     @ScaledMetric var scale: CGFloat = 1
 
     func body(content: Content) -> some View {
