@@ -12,8 +12,8 @@ import SwiftUI
 typealias RecoveryPhraseValidationStore = Store<RecoveryPhraseValidationState, RecoveryPhraseValidationAction>
 typealias RecoveryPhraseValidationViewStore = ViewStore<RecoveryPhraseValidationState, RecoveryPhraseValidationAction>
 
-/// Represents the fulfillment (completion) of a group of recovery words by the addition of one word into the given group
-struct RecoveryPhraseStepFulfillment: Equatable {
+/// Represents the completion of a group of recovery words by the addition of one word into the given group
+struct ValidationWord: Equatable {
     var groupIndex: Int
     var word: String
 }
@@ -36,14 +36,14 @@ struct RecoveryPhraseValidationState: Equatable {
     var phrase: RecoveryPhrase
     var missingIndices: [Int]
     var missingWordChips: [PhraseChip.Kind]
-    var fulfillments: [RecoveryPhraseStepFulfillment]
+    var validationWords: [ValidationWord]
     var route: Route?
     var step: Step {
-        guard !fulfillments.isEmpty else {
+        guard !validationWords.isEmpty else {
             return  .initial
         }
 
-        guard fulfillments.count >= missingIndices.count else {
+        guard validationWords.count >= missingIndices.count else {
             return .incomplete
         }
 
@@ -76,7 +76,7 @@ extension RecoveryPhraseValidationState {
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordChips: missingWordChipKind,
-            fulfillments: []
+            validationWords: []
         )
     }
 }
@@ -86,13 +86,13 @@ extension RecoveryPhraseValidationState {
     /// assembly the resulting phrase. This comes up with the "proposed solution" for the recovery phrase validation challenge.
     /// - returns:an array of String containing the recovery phrase words ordered by the original phrase order.
     var resultingPhrase: [String] {
-        precondition(missingIndices.count == fulfillments.count)
-        precondition(fulfillments.count == Self.phraseChunks)
+        precondition(missingIndices.count == validationWords.count)
+        precondition(validationWords.count == Self.phraseChunks)
 
         var words = phrase.words
         let groupLength = words.count / Self.phraseChunks
         // iterate based on the completions the user did on the UI
-        for wordCompletion in fulfillments {
+        for wordCompletion in validationWords {
             // figure out which phrase group (chunk) this completion belongs to
             let i = wordCompletion.groupIndex
             // validate that's the right number
@@ -124,34 +124,34 @@ extension RecoveryPhraseValidationState {
                 phrase: phrase,
                 missingIndices: missingIndices,
                 missingWordChips: newMissingWords,
-                fulfillments: [RecoveryPhraseStepFulfillment(groupIndex: group, word: word)]
+                validationWords: [ValidationWord(groupIndex: group, word: word)]
             )
 
         case .incomplete:
             guard let missingChipIndex = missingWordChips.firstIndex(of: chip) else { return self }
 
-            if fulfillments.count < (RecoveryPhraseValidationState.phraseChunks - 1) {
+            if validationWords.count < (RecoveryPhraseValidationState.phraseChunks - 1) {
                 var newMissingWords = missingWordChips
                 newMissingWords[missingChipIndex] = .empty
 
-                var newCompletionState = Array(fulfillments)
-                newCompletionState.append(RecoveryPhraseStepFulfillment(groupIndex: group, word: word))
+                var newCompletionState = Array(validationWords)
+                newCompletionState.append(ValidationWord(groupIndex: group, word: word))
 
                 return RecoveryPhraseValidationState(
                     phrase: phrase,
                     missingIndices: missingIndices,
                     missingWordChips: newMissingWords,
-                    fulfillments: newCompletionState
+                    validationWords: newCompletionState
                 )
             } else {
-                var newCompletion = fulfillments
-                newCompletion.append(RecoveryPhraseStepFulfillment(groupIndex: group, word: word))
+                var newCompletion = validationWords
+                newCompletion.append(ValidationWord(groupIndex: group, word: word))
 
                 return RecoveryPhraseValidationState(
                     phrase: phrase,
                     missingIndices: missingIndices,
                     missingWordChips: Array(repeating: .empty, count: RecoveryPhraseValidationState.phraseChunks),
-                    fulfillments: newCompletion
+                    validationWords: newCompletion
                 )
             }
         default:

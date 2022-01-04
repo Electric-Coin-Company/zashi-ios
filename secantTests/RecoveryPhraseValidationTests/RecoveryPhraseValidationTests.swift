@@ -59,7 +59,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordChips: missingWordChips,
-            fulfillments: []
+            validationWords: []
         )
 
         let expectedStep = RecoveryPhraseValidationState(
@@ -71,7 +71,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
                 PhraseChip.Kind.unassigned(word: "cancel"),
                 PhraseChip.Kind.unassigned(word: "pizza")
             ],
-            fulfillments: [RecoveryPhraseStepFulfillment(groupIndex: 1, word: "salute")]
+            validationWords: [ValidationWord(groupIndex: 1, word: "salute")]
         )
 
         let result = initialStep.apply(chip: missingWordChips[0], into: 1)
@@ -113,12 +113,12 @@ class RecoveryPhraseValidationTests: XCTestCase {
             PhraseChip.Kind.empty
         ]
 
-        let expectedCompletion = [RecoveryPhraseStepFulfillment(groupIndex: 0, word: "pizza")]
+        let expectedCompletion = [ValidationWord(groupIndex: 0, word: "pizza")]
         let expectedStep = RecoveryPhraseValidationState(
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordChips: expectedMissingChips,
-            fulfillments: expectedCompletion
+            validationWords: expectedCompletion
         )
 
         let result = initialStep.apply(chip: missingWordChips[3], into: 0)
@@ -155,7 +155,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
                 PhraseChip.Kind.unassigned(word: "cancel"),
                 PhraseChip.Kind.unassigned(word: "pizza")
             ],
-            fulfillments: [RecoveryPhraseStepFulfillment(groupIndex: 0, word: "salute")]
+            validationWords: [ValidationWord(groupIndex: 0, word: "salute")]
         )
         let expected = RecoveryPhraseValidationState(
             phrase: phrase,
@@ -166,9 +166,9 @@ class RecoveryPhraseValidationTests: XCTestCase {
                 PhraseChip.Kind.unassigned(word: "cancel"),
                 PhraseChip.Kind.unassigned(word: "pizza")
             ],
-            fulfillments: [
-                RecoveryPhraseStepFulfillment(groupIndex: 0, word: "salute"),
-                RecoveryPhraseStepFulfillment(groupIndex: 1, word: "boil")
+            validationWords: [
+                ValidationWord(groupIndex: 0, word: "salute"),
+                ValidationWord(groupIndex: 1, word: "boil")
             ]
         )
 
@@ -206,9 +206,9 @@ class RecoveryPhraseValidationTests: XCTestCase {
                 PhraseChip.Kind.unassigned(word: "cancel"),
                 PhraseChip.Kind.unassigned(word: "pizza")
             ],
-            fulfillments: [
-                RecoveryPhraseStepFulfillment(groupIndex: 0, word: "salute"),
-                RecoveryPhraseStepFulfillment(groupIndex: 1, word: "boil")
+            validationWords: [
+                ValidationWord(groupIndex: 0, word: "salute"),
+                ValidationWord(groupIndex: 1, word: "boil")
             ]
         )
 
@@ -221,10 +221,10 @@ class RecoveryPhraseValidationTests: XCTestCase {
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.unassigned(word: "pizza")
             ],
-            fulfillments: [
-                RecoveryPhraseStepFulfillment(groupIndex: 0, word: "salute"),
-                RecoveryPhraseStepFulfillment(groupIndex: 1, word: "boil"),
-                RecoveryPhraseStepFulfillment(groupIndex: 2, word: "cancel")
+            validationWords: [
+                ValidationWord(groupIndex: 0, word: "salute"),
+                ValidationWord(groupIndex: 1, word: "boil"),
+                ValidationWord(groupIndex: 2, word: "cancel")
             ]
         )
 
@@ -261,10 +261,10 @@ class RecoveryPhraseValidationTests: XCTestCase {
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.unassigned(word: "pizza")
             ],
-            fulfillments: [
-                RecoveryPhraseStepFulfillment(groupIndex: 0, word: "salute"),
-                RecoveryPhraseStepFulfillment(groupIndex: 1, word: "boil"),
-                RecoveryPhraseStepFulfillment(groupIndex: 2, word: "cancel")
+            validationWords: [
+                ValidationWord(groupIndex: 0, word: "salute"),
+                ValidationWord(groupIndex: 1, word: "boil"),
+                ValidationWord(groupIndex: 2, word: "cancel")
             ]
         )
 
@@ -277,11 +277,11 @@ class RecoveryPhraseValidationTests: XCTestCase {
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.empty
             ],
-            fulfillments: [
-                RecoveryPhraseStepFulfillment(groupIndex: 0, word: "salute"),
-                RecoveryPhraseStepFulfillment(groupIndex: 1, word: "boil"),
-                RecoveryPhraseStepFulfillment(groupIndex: 2, word: "cancel"),
-                RecoveryPhraseStepFulfillment(groupIndex: 3, word: "pizza")
+            validationWords: [
+                ValidationWord(groupIndex: 0, word: "salute"),
+                ValidationWord(groupIndex: 1, word: "boil"),
+                ValidationWord(groupIndex: 2, word: "cancel"),
+                ValidationWord(groupIndex: 3, word: "pizza")
             ]
         )
 
@@ -310,17 +310,17 @@ class RecoveryPhraseValidationTests: XCTestCase {
         let phrase = RecoveryPhrase(words: words)
 
         let completion = [
-            RecoveryPhraseStepFulfillment(groupIndex: 0, word: "salute"),
-            RecoveryPhraseStepFulfillment(groupIndex: 1, word: "boil"),
-            RecoveryPhraseStepFulfillment(groupIndex: 2, word: "cancel"),
-            RecoveryPhraseStepFulfillment(groupIndex: 3, word: "pizza")
+            ValidationWord(groupIndex: 0, word: "salute"),
+            ValidationWord(groupIndex: 1, word: "boil"),
+            ValidationWord(groupIndex: 2, word: "cancel"),
+            ValidationWord(groupIndex: 3, word: "pizza")
         ]
 
         let result = RecoveryPhraseValidationState(
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordChips: RecoveryPhraseValidationState.pickWordsFromMissingIndices(indices: missingIndices, phrase: phrase),
-            fulfillments: completion,
+            validationWords: completion,
             route: nil
         )
 
@@ -355,9 +355,9 @@ class RecoveryPhraseValidationTests: XCTestCase {
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.unassigned(word: "pizza")
             ],
-            fulfillments: [
-                RecoveryPhraseStepFulfillment(groupIndex: 1, word: "boil"),
-                RecoveryPhraseStepFulfillment(groupIndex: 2, word: "cancel")
+            validationWords: [
+                ValidationWord(groupIndex: 1, word: "boil"),
+                ValidationWord(groupIndex: 2, word: "cancel")
             ]
         )
 
@@ -407,10 +407,10 @@ class RecoveryPhraseValidationTests: XCTestCase {
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.unassigned(word: "pizza")
             ],
-            fulfillments: [
-                RecoveryPhraseStepFulfillment(groupIndex: 0, word: "salute"),
-                RecoveryPhraseStepFulfillment(groupIndex: 1, word: "boil"),
-                RecoveryPhraseStepFulfillment(groupIndex: 2, word: "cancel")
+            validationWords: [
+                ValidationWord(groupIndex: 0, word: "salute"),
+                ValidationWord(groupIndex: 1, word: "boil"),
+                ValidationWord(groupIndex: 2, word: "cancel")
             ]
         )
 
@@ -443,7 +443,7 @@ extension RecoveryPhraseValidationState {
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordChips: missingWordsChips,
-            fulfillments: []
+            validationWords: []
         )
     }
 }

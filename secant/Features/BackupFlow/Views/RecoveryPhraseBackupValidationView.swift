@@ -109,7 +109,7 @@ private extension RecoveryPhraseValidationState {
 
 extension RecoveryPhraseValidationState {
     func wordsChips(for group: Int, groupSize: Int, from chunk: RecoveryPhrase.Chunk) -> [PhraseChip.Kind] {
-        let wordCompletion = fulfillments.first(where: { $0.groupIndex == group })
+        let wordCompletion = validationWords.first(where: { $0.groupIndex == group })
 
         var chips: [PhraseChip.Kind] = []
         for (i, word) in chunk.words.enumerated() {
@@ -139,8 +139,8 @@ extension RecoveryPhraseValidationState {
             .unassigned(word: "boil"),
             .unassigned(word: "garlic")
         ],
-        fulfillments: [
-            RecoveryPhraseStepFulfillment(groupIndex: 2, word: "morning")
+        validationWords: [
+            ValidationWord(groupIndex: 2, word: "morning")
         ],
         route: nil
     )
@@ -154,9 +154,9 @@ extension RecoveryPhraseValidationState {
             .unassigned(word: "boil"),
             .unassigned(word: "garlic")
         ],
-        fulfillments: [
-            RecoveryPhraseStepFulfillment(groupIndex: 2, word: "morning"),
-            RecoveryPhraseStepFulfillment(groupIndex: 0, word: "thank")
+        validationWords: [
+            ValidationWord(groupIndex: 2, word: "morning"),
+            ValidationWord(groupIndex: 0, word: "thank")
         ],
         route: nil
     )
@@ -170,10 +170,10 @@ extension RecoveryPhraseValidationState {
             .unassigned(word: "boil"),
             .empty
         ],
-        fulfillments: [
-            RecoveryPhraseStepFulfillment(groupIndex: 2, word: "morning"),
-            RecoveryPhraseStepFulfillment(groupIndex: 0, word: "thank"),
-            RecoveryPhraseStepFulfillment(groupIndex: 3, word: "garlic")
+        validationWords: [
+            ValidationWord(groupIndex: 2, word: "morning"),
+            ValidationWord(groupIndex: 0, word: "thank"),
+            ValidationWord(groupIndex: 3, word: "garlic")
         ],
         route: nil
     )
@@ -187,11 +187,11 @@ extension RecoveryPhraseValidationState {
             .empty,
             .empty
         ],
-        fulfillments: [
-            RecoveryPhraseStepFulfillment(groupIndex: 2, word: "morning"),
-            RecoveryPhraseStepFulfillment(groupIndex: 0, word: "thank"),
-            RecoveryPhraseStepFulfillment(groupIndex: 3, word: "garlic"),
-            RecoveryPhraseStepFulfillment(groupIndex: 1, word: "boil")
+        validationWords: [
+            ValidationWord(groupIndex: 2, word: "morning"),
+            ValidationWord(groupIndex: 0, word: "thank"),
+            ValidationWord(groupIndex: 3, word: "garlic"),
+            ValidationWord(groupIndex: 1, word: "boil")
         ],
         route: nil
     )

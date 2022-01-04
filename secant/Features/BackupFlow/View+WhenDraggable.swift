@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import ComposableArchitecture
 extension PhraseChip {
-    static let fulfillmentTypeIdentifier = "public.text"
+    static let validationWordTypeIdentifier = "public.text"
 
     /// Makes a PhraseChip draggable when it is of kind .unassigned
     @ViewBuilder func makeDraggable() -> some View {
@@ -31,14 +31,14 @@ extension View {
         viewStore: RecoveryPhraseValidationViewStore
     ) -> some View {
         self.onDrop(
-            of: [PhraseChip.fulfillmentTypeIdentifier],
+            of: [PhraseChip.validationWordTypeIdentifier],
             delegate: state.dropDelegate(for: viewStore, group: group)
         )
     }
 }
 
 extension View {
-    /// Makes a View accept drop types Self.fulfillmentTypeIdentifier when it is of kind .empty
+    /// Makes a View accept drop types Self.validationWordTypeIdentifier when it is of kind .empty
     func whenIsDroppable(_ isDroppable: Bool, dropDelegate: DropDelegate) -> some View {
         self.modifier(MakeDroppableModifier(isDroppable: isDroppable, drop: dropDelegate))
     }
@@ -49,7 +49,7 @@ struct MakeDroppableModifier: ViewModifier {
     var drop: DropDelegate
     func body(content: Content) -> some View {
         if isDroppable {
-            content.onDrop(of: [PhraseChip.fulfillmentTypeIdentifier], delegate: drop)
+            content.onDrop(of: [PhraseChip.validationWordTypeIdentifier], delegate: drop)
         } else {
             content
         }
