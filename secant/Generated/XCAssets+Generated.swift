@@ -84,7 +84,18 @@ internal enum Asset {
       internal static let regular = ColorAsset(name: "Regular")
       internal static let secondaryButtonText = ColorAsset(name: "SecondaryButtonText")
       internal static let titleText = ColorAsset(name: "TitleText")
+      internal static let captionText = ColorAsset(name: "captionText")
+      internal static let captionTextShadow = ColorAsset(name: "captionTextShadow")
       internal static let highlightedSuperscriptText = ColorAsset(name: "highlightedSuperscriptText")
+    }
+    internal enum ZcashBadge {
+      internal static let zcashLogoFill = ColorAsset(name: "ZcashLogoFill")
+      internal static let innerCircle = ColorAsset(name: "innerCircle")
+      internal static let outerRingGradientEnd = ColorAsset(name: "outerRingGradientEnd")
+      internal static let outerRingGradientStart = ColorAsset(name: "outerRingGradientStart")
+      internal static let shadowColor = ColorAsset(name: "shadowColor")
+      internal static let thickRing = ColorAsset(name: "thickRing")
+      internal static let thinRing = ColorAsset(name: "thinRing")
     }
   }
 }

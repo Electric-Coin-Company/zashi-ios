@@ -2,6 +2,7 @@ import ComposableArchitecture
 
 struct AppState: Equatable {
     enum Route: Equatable {
+        case welcome
         case startup
         case onboarding
         case home
@@ -13,7 +14,7 @@ struct AppState: Equatable {
     var onboardingState: OnboardingState
     var phraseValidationState: RecoveryPhraseValidationState
     var phraseDisplayState: RecoveryPhraseDisplayState
-    var route: Route = .startup
+    var route: Route = .welcome
 }
 
 enum AppAction: Equatable {
