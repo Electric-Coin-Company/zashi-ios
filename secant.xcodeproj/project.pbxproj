@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D0781C4278750E30083ACD7 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0781C3278750E30083ACD7 /* WelcomeView.swift */; };
+		0D0781C8278776D20083ACD7 /* Ring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0781C6278776D10083ACD7 /* Ring.swift */; };
+		0D0781C9278776D20083ACD7 /* ZcashSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0781C7278776D20083ACD7 /* ZcashSymbol.swift */; };
 		0D185819272723FF0046B928 /* ColoredChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D185818272723FF0046B928 /* ColoredChip.swift */; };
 		0D18581B272728D60046B928 /* PhraseChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D18581A272728D60046B928 /* PhraseChip.swift */; };
 		0D1922F226BDE29300052649 /* ZcashSDKStubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922F126BDE29300052649 /* ZcashSDKStubs.swift */; };
@@ -54,6 +57,7 @@
 		0DDB6A5127737D4A0012A410 /* ValidationFailedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDB6A5027737D4A0012A410 /* ValidationFailedView.swift */; };
 		0DF2DC51272344E400FA31E2 /* EmptyChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF2DC50272344E400FA31E2 /* EmptyChip.swift */; };
 		0DF2DC5427235E3E00FA31E2 /* View+InnerShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF2DC5327235E3E00FA31E2 /* View+InnerShadow.swift */; };
+		0DF482BA2787ADA800EB37D6 /* ConditionalModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF482B92787ADA800EB37D6 /* ConditionalModifier.swift */; };
 		0DFE93DF272C6D4B000FCCA5 /* RecoveryPhraseBackupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DFE93DE272C6D4B000FCCA5 /* RecoveryPhraseBackupTests.swift */; };
 		0DFE93E1272C9ECB000FCCA5 /* RecoveryPhraseBackupValidationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DFE93E0272C9ECB000FCCA5 /* RecoveryPhraseBackupValidationView.swift */; };
 		0DFE93E3272CA1AA000FCCA5 /* RecoveryPhraseValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DFE93E2272CA1AA000FCCA5 /* RecoveryPhraseValidation.swift */; };
@@ -126,6 +130,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0D0781C3278750E30083ACD7 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		0D0781C6278776D10083ACD7 /* Ring.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ring.swift; sourceTree = "<group>"; };
+		0D0781C7278776D20083ACD7 /* ZcashSymbol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZcashSymbol.swift; sourceTree = "<group>"; };
 		0D185818272723FF0046B928 /* ColoredChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColoredChip.swift; sourceTree = "<group>"; };
 		0D18581A272728D60046B928 /* PhraseChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhraseChip.swift; sourceTree = "<group>"; };
 		0D1922F126BDE29300052649 /* ZcashSDKStubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZcashSDKStubs.swift; sourceTree = "<group>"; };
@@ -179,6 +186,7 @@
 		0DDB6A5027737D4A0012A410 /* ValidationFailedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationFailedView.swift; sourceTree = "<group>"; };
 		0DF2DC50272344E400FA31E2 /* EmptyChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyChip.swift; sourceTree = "<group>"; };
 		0DF2DC5327235E3E00FA31E2 /* View+InnerShadow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+InnerShadow.swift"; sourceTree = "<group>"; };
+		0DF482B92787ADA800EB37D6 /* ConditionalModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionalModifier.swift; sourceTree = "<group>"; };
 		0DFE93DE272C6D4B000FCCA5 /* RecoveryPhraseBackupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseBackupTests.swift; sourceTree = "<group>"; };
 		0DFE93E0272C9ECB000FCCA5 /* RecoveryPhraseBackupValidationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseBackupValidationView.swift; sourceTree = "<group>"; };
 		0DFE93E2272CA1AA000FCCA5 /* RecoveryPhraseValidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseValidation.swift; sourceTree = "<group>"; };
@@ -258,6 +266,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0D0781C2278750C00083ACD7 /* Welcome */ = {
+			isa = PBXGroup;
+			children = (
+				0D0781C3278750E30083ACD7 /* WelcomeView.swift */,
+			);
+			path = Welcome;
+			sourceTree = "<group>";
+		};
+		0D0781C5278776B90083ACD7 /* Shapes */ = {
+			isa = PBXGroup;
+			children = (
+				0D0781C6278776D10083ACD7 /* Ring.swift */,
+				0D0781C7278776D20083ACD7 /* ZcashSymbol.swift */,
+			);
+			path = Shapes;
+			sourceTree = "<group>";
+		};
 		0D170A7426BC9B7500EB6A46 /* MockedDependencies */ = {
 			isa = PBXGroup;
 			children = (
@@ -430,6 +455,7 @@
 		0DA13C9126C15E1900E3B610 /* UIComponents */ = {
 			isa = PBXGroup;
 			children = (
+				0D0781C5278776B90083ACD7 /* Shapes */,
 				0D8A43C2272AEEA7005A6414 /* FontStyles */,
 				669FDAE7272C239D007B9422 /* CircularFrame */,
 				0DB8AA80271DC7520035BC9D /* DesignGuide.swift */,
@@ -488,6 +514,7 @@
 			isa = PBXGroup;
 			children = (
 				0DF2DC5327235E3E00FA31E2 /* View+InnerShadow.swift */,
+				0DF482B92787ADA800EB37D6 /* ConditionalModifier.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -545,6 +572,7 @@
 		6654C73B2715A3F000901167 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				0D0781C2278750C00083ACD7 /* Welcome */,
 				F9971A4927680DC400A2DB75 /* App */,
 				F93874EC273C4DE200F0E875 /* Home */,
 				F9971A4F27680DD000A2DB75 /* Profile */,
@@ -990,6 +1018,7 @@
 				F93673D62742CB840099C6AF /* Previews.swift in Sources */,
 				0D5D16F526E24CCF00AD33D1 /* AppError.swift in Sources */,
 				0D18581B272728D60046B928 /* PhraseChip.swift in Sources */,
+				0DF482BA2787ADA800EB37D6 /* ConditionalModifier.swift in Sources */,
 				665C963F272C26E600BC04FB /* CircularFrameBackground.swift in Sources */,
 				0DB8AA81271DC7520035BC9D /* DesignGuide.swift in Sources */,
 				F9971A4D27680DC400A2DB75 /* App.swift in Sources */,
@@ -1018,6 +1047,7 @@
 				663FAB9C271D874D00E495F8 /* ActiveButton.swift in Sources */,
 				F9C165C02740403600592F76 /* ApproveView.swift in Sources */,
 				0DF2DC5427235E3E00FA31E2 /* View+InnerShadow.swift in Sources */,
+				0D0781C8278776D20083ACD7 /* Ring.swift in Sources */,
 				F9971A6B27680E1000A2DB75 /* WalletInfo.swift in Sources */,
 				0D185819272723FF0046B928 /* ColoredChip.swift in Sources */,
 				2EA11F5D27467F7700709571 /* OnboardingContentView.swift in Sources */,
@@ -1035,7 +1065,9 @@
 				F9971A6027680DF600A2DB75 /* Scan.swift in Sources */,
 				0DFE93E1272C9ECB000FCCA5 /* RecoveryPhraseBackupValidationView.swift in Sources */,
 				F9C165CB2741AB5D00592F76 /* SendView.swift in Sources */,
+				0D0781C4278750E30083ACD7 /* WelcomeView.swift in Sources */,
 				F9971A6527680DFE00A2DB75 /* Settings.swift in Sources */,
+				0D0781C9278776D20083ACD7 /* ZcashSymbol.swift in Sources */,
 				6654C7412715A47300901167 /* Onboarding.swift in Sources */,
 				F9C165C42740403600592F76 /* SentView.swift in Sources */,
 				F9971A5927680DDE00A2DB75 /* Request.swift in Sources */,

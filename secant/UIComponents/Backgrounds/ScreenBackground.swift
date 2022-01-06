@@ -20,6 +20,14 @@ struct ScreenBackground: View {
     }
 }
 
+extension ScreenBackground {
+    static let `default` = ScreenBackground(
+        colors: [
+            Asset.Colors.ScreenBackground.gradientStart.color,
+            Asset.Colors.ScreenBackground.gradientEnd.color
+        ]
+    )
+}
 struct ScreenBackgroundModifier: ViewModifier {
     var colors: [Color]
     func body(content: Content) -> some View {

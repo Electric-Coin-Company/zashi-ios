@@ -86,6 +86,15 @@ internal enum Asset {
       internal static let titleText = ColorAsset(name: "TitleText")
       internal static let highlightedSuperscriptText = ColorAsset(name: "highlightedSuperscriptText")
     }
+    internal enum ZcashBadge {
+      internal static let zcashLogoFill = ColorAsset(name: "ZcashLogoFill")
+      internal static let innerCircle = ColorAsset(name: "innerCircle")
+      internal static let outerRingGradientEnd = ColorAsset(name: "outerRingGradientEnd")
+      internal static let outerRingGradientStart = ColorAsset(name: "outerRingGradientStart")
+      internal static let shadowColor = ColorAsset(name: "shadowColor")
+      internal static let thickRing = ColorAsset(name: "thickRing")
+      internal static let thinRing = ColorAsset(name: "thinRing")
+    }
   }
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name
