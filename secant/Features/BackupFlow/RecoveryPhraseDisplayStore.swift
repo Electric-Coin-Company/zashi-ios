@@ -83,6 +83,14 @@ struct RecoveryPhrase: Equatable {
     func toString() -> String {
         words.joined(separator: " ")
     }
+
+    func words(fromMissingIndices indices: [Int]) -> [PhraseChip.Kind] {
+        assert((indices.count - 1) * chunkSize <= self.words.count)
+
+        return indices.enumerated().map({ index, position in
+            .unassigned(word: self.words[(index * chunkSize) + position])
+        })
+    }
 }
 
 struct RecoveryPhraseDisplayState: Equatable {

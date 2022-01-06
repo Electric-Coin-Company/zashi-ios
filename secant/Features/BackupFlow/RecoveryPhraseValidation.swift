@@ -71,7 +71,7 @@ extension RecoveryPhraseValidationState {
     /// - Note: Use this function to create a random validation puzzle for a given phrase.
     static func random(phrase: RecoveryPhrase) -> Self {
         let missingIndices = Self.randomIndices()
-        let missingWordChipKind = Self.pickWords(fromMissingIndices: missingIndices, phrase: phrase).shuffled()
+        let missingWordChipKind = phrase.words(fromMissingIndices: missingIndices)
         return RecoveryPhraseValidationState(
             phrase: phrase,
             missingIndices: missingIndices,
@@ -157,14 +157,6 @@ extension RecoveryPhraseValidationState {
         case .complete:
             return self
         }
-    }
-
-    static func pickWords(fromMissingIndices indices: [Int], phrase: RecoveryPhrase) -> [PhraseChip.Kind] {
-        assert((indices.count - 1) * Self.wordGroupSize <= phrase.words.count)
-
-        return indices.enumerated().map({ index, position in
-            .unassigned(word: phrase.words[(index * Self.wordGroupSize) + position])
-        })
     }
 
     static func randomIndices() -> [Int] {
