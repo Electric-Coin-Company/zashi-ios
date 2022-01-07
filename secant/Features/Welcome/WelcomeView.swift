@@ -22,7 +22,7 @@ struct WelcomeView: View {
                         )
 
                     VStack {
-                        Text("Welcome")
+                        Text("Welcome!")
                             .titleText()
                         Text("Just Loading, one sec")
                             .captionText()
@@ -88,7 +88,7 @@ struct ZcashBadge: View {
 struct WelcomeView_Previews: PreviewProvider {
     static let squarePreviewSize: CGFloat = 360
     static var previews: some View {
-        // These lines are commented out because Xcode goes centennial and says "preview took more than 5 seconds
+        // These lines are commented out because Xcode goes centennial and says "preview took more than 5 seconds"
 
         //        ZcashBadge()
         //            .applyScreenBackground()
@@ -104,6 +104,7 @@ struct WelcomeView_Previews: PreviewProvider {
 
         Group {
             WelcomeView()
+                .preferredColorScheme(.dark)
             WelcomeView()
                 .previewDevice("iPhone SE (2nd generation)")
         }
