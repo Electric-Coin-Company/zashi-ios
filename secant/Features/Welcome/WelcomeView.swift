@@ -25,6 +25,7 @@ struct WelcomeView: View {
                         Text("Welcome")
                             .titleText()
                         Text("Just Loading, one sec")
+                            .captionText()
                     }
                 }
             }
