@@ -30,6 +30,7 @@ struct AppView: View {
             case .startup:
                 ZStack(alignment: .topTrailing) {
                     StartupView(sendAction: viewStore.send)
+                        .transition(.opacity)
                 }
 
             case .phraseValidation:
@@ -64,6 +65,16 @@ struct AppView: View {
                         )
                     )
                 }
+            case .welcome:
+                WelcomeView()
+                    .transition(.opacity)
+                    .onAppear(perform: {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                            withAnimation(.easeInOut(duration: 1)) {
+                                viewStore.send(.updateRoute(.startup))
+                            }
+                        }
+                    })
             }
         }
     }
@@ -87,8 +98,8 @@ private struct StartupView: View {
                     sendAction(.updateRoute(.phraseValidation))
                 }
 
-                Button("Go To Phrase Display Demo") {
-                    sendAction(.updateRoute(.phraseDisplay))
+                Button("Go To Welcome Screen") {
+                    sendAction(.updateRoute(.welcome))
                 }
             }
         }

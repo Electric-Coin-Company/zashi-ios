@@ -31,6 +31,7 @@ struct WelcomeView: View {
             }
             .frame(alignment: .center)
             .applyScreenBackground()
+            .animation(.easeInOut, value: 3)
         }
     }
 }
