@@ -25,7 +25,7 @@ struct HomeView: View {
                     reducer: SendReducer.default(
                         whenDone: { HomeViewStore(store).send(.updateRoute(nil)) }
                     )
-                        .debug(),
+                    .debug(),
                     environment: ()
                 )
             )
