@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct EnumeratedChip: View {
-    @Clamped(1...24)
+    @SeedIndex
     var index: Int = 1
 
     var text: String
