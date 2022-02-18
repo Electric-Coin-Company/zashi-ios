@@ -9,6 +9,10 @@ import Foundation
 import SwiftUI
 
 extension Text {
+    func captionText() -> some View {
+        self.modifier(CaptionTextStyle())
+    }
+
     func bodyText() -> some View {
         self.modifier(BodyTextStyle())
     }
@@ -16,6 +20,7 @@ extension Text {
     func titleText() -> some View {
         self.modifier(TitleTextStyle())
     }
+
     /// Body text style. Used for content.  Roboto-Regular 18pt
     private struct BodyTextStyle: ViewModifier {
         func body(content: Content) -> some View {
@@ -28,8 +33,18 @@ extension Text {
     private struct TitleTextStyle: ViewModifier {
         func body(content: Content) -> some View {
             content
-                .foregroundColor(Asset.Colors.Text.body.color)
-                .font(.custom(FontFamily.Roboto.medium.name, size: 24))
+                .foregroundColor(Asset.Colors.Text.heading.color)
+                .font(.custom(FontFamily.Rubik.regular.name, size: 33))
+                .shadow(color: Asset.Colors.Text.captionTextShadow.color, radius: 1, x: 0, y: 1)
+        }
+    }
+
+    private struct CaptionTextStyle: ViewModifier {
+        func body(content: Content) -> some View {
+            content
+                .foregroundColor(Asset.Colors.Text.captionText.color)
+                .font(.custom(FontFamily.Rubik.regular.name, size: 16))
+                .shadow(color: Asset.Colors.Text.captionTextShadow.color, radius: 1, x: 0, y: 1)
         }
     }
 }
