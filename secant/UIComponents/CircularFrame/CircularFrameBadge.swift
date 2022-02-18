@@ -12,13 +12,36 @@ enum Badge: Equatable {
     case shield
     case list
     case person
+    case error
 
-    var image: Image {
+    @ViewBuilder var image: some View {
         switch self {
-        case .shield: return Asset.Assets.Icons.shield.image
-        case .list: return Asset.Assets.Icons.list.image
-        case .person: return Asset.Assets.Icons.profile.image
+        case .shield:
+            Asset.Assets.Icons.shield.image
+                .resizable()
+                .renderingMode(.none)
+        case .list:
+            Asset.Assets.Icons.list.image
+                .resizable()
+                .renderingMode(.none)
+        case .person:
+            Asset.Assets.Icons.profile.image
+                .resizable()
+                .renderingMode(.none)
+        case .error:
+            ErrorBadge()
         }
+    }
+}
+
+struct ErrorBadge: View {
+    var body: some View {
+        Text("X")
+            .font(.custom(FontFamily.Rubik.bold.name, size: 36))
+            .foregroundColor(Asset.Colors.BackgroundColors.red.color)
+            .frame(width: 60, height: 55, alignment: .center)
+            .background(Asset.Colors.BackgroundColors.numberedChip.color)
+            .cornerRadius(10)
     }
 }
 
@@ -44,8 +67,6 @@ struct BadgesOverlay: Animatable, ViewModifier {
                                 ZStack {
                                     ForEach(0..<viewStore.badges.count) { badgeIndex in
                                         viewStore.badges[viewStore.index].image
-                                            .resizable()
-                                            .renderingMode(.none)
                                             .frame(
                                                 width: proxy.size.width * 0.35,
                                                 height: proxy.size.height * 0.35,
@@ -82,7 +103,6 @@ struct BadgeOverlay: Animatable, ViewModifier {
                             Spacer()
 
                             badge.image
-                                .resizable()
                                 .frame(
                                     width: proxy.size.width * 0.35,
                                     height: proxy.size.height * 0.35,
@@ -128,6 +148,10 @@ struct Badge_Previews: PreviewProvider {
             CircularFrame()
                 .frame(width: size, height: size)
                 .badgeIcon(.person)
+
+            CircularFrame()
+                .frame(width: size, height: size)
+                .badgeIcon(.error)
         }
         .preferredColorScheme(.light)
         .previewLayout(.fixed(width: size + 50, height: size + 50))
