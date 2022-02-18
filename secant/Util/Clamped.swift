@@ -15,13 +15,13 @@ struct Clamped<Value: Comparable> {
     var value: Value
     let range: ClosedRange<Value>
     var wrappedValue: Value {
-        get { value }
-        set {
-            value = min(
-                max(range.lowerBound, newValue),
+        get {
+            min(
+                max(range.lowerBound, value),
                 range.upperBound
             )
         }
+        set { value = newValue }
     }
 
     init(wrappedValue: Value, _ range: ClosedRange<Value>) {
