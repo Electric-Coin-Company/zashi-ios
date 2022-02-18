@@ -16,14 +16,14 @@ struct Clamped<Value: Comparable> {
     let range: ClosedRange<Value>
     var wrappedValue: Value {
         get { value }
-        set { value = clamp(value: newValue, range: range) }
+        set { value = clamp(newValue, using: range) }
     }
 
     init(wrappedValue: Value, _ range: ClosedRange<Value>) {
         self.value = wrappedValue
         self.range = range
         
-        value = clamp(value: wrappedValue, range: range)
+        value = clamp(wrappedValue, using: range)
     }
     
     private func clamp(_ value: Value, using range: ClosedRange<Value>) -> Value {
