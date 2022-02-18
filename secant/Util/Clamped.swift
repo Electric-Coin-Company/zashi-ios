@@ -15,17 +15,18 @@ struct Clamped<Value: Comparable> {
     var value: Value
     let range: ClosedRange<Value>
     var wrappedValue: Value {
-        get {
-            min(
-                max(range.lowerBound, value),
-                range.upperBound
-            )
-        }
-        set { value = newValue }
+        get { value }
+        set { value = clamp(value: newValue, range: range) }
     }
 
     init(wrappedValue: Value, _ range: ClosedRange<Value>) {
         self.value = wrappedValue
         self.range = range
+        
+        value = clamp(value: wrappedValue, range: range)
+    }
+    
+    private func clamp(value: Value, range: ClosedRange<Value>) -> Value {
+        min(range.upperBound, max(range.lowerBound, wrappedValue))
     }
 }
