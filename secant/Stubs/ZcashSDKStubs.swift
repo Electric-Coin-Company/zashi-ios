@@ -93,7 +93,7 @@ public enum ZcashSDK {
     public static var defaultRetrie: Int = 5
 
     /**
-    The default maximum amount of time to wait during retry backoff intervals. Failed loops will never wait longer than this before retyring.
+    The default maximum amount of time to wait during retry backoff intervals. Failed loops will never wait longer than this before retrying.
     */
     public static var defaultMaxBackoffInterval: TimeInterval = 600
 
