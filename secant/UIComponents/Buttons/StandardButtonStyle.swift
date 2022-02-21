@@ -8,12 +8,16 @@
 import SwiftUI
 
 struct StandardButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled: Bool
+    
     let foregroundColor: Color
     let background: Color
     let pressedBackgroundColor: Color
-    
+    let disabledBackgroundColor: Color
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
+            .shadow(color: Asset.Colors.Buttons.buttonsTitleShadow.color, radius: 2, x: 0, y: 2)
             .frame(
                 minWidth: 0,
                 maxWidth: .infinity,
@@ -22,9 +26,12 @@ struct StandardButtonStyle: ButtonStyle {
             )
             .foregroundColor(foregroundColor)
             .background(
-                configuration.isPressed ? pressedBackgroundColor : background
+                isEnabled ?
+                (configuration.isPressed ? pressedBackgroundColor : background)
+                : disabledBackgroundColor
             )
             .cornerRadius(12)
+            .neumorphicButtonDesign(configuration.isPressed)
     }
 }
 
@@ -34,7 +41,8 @@ private extension Button {
             StandardButtonStyle(
                 foregroundColor: Asset.Colors.Text.button.color,
                 background: Asset.Colors.Buttons.createButton.color,
-                pressedBackgroundColor: Asset.Colors.Buttons.createButtonPressed.color
+                pressedBackgroundColor: Asset.Colors.Buttons.createButtonPressed.color,
+                disabledBackgroundColor: Asset.Colors.Buttons.createButtonDisabled.color
             )
         )
     }

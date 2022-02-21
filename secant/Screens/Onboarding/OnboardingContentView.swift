@@ -41,7 +41,7 @@ struct OnboardingContentView: View {
                                 }
                             )
                         )
-                        .frame(width: width * 0.85, height: width * 0.85)
+                        .frame(width: circularFrameUniformSize(), height: circularFrameUniformSize())
                         .badgeIcons(
                             store.actionless.scope(
                                 state: { state in
@@ -52,7 +52,7 @@ struct OnboardingContentView: View {
                                 }
                             )
                         )
-                        .offset(y: viewStore.offset - height / 7)
+                        .offset(y: viewStore.offset - height / circularFrameOffsetCoeff())
                         .transition(.scale(scale: 2).combined(with: .opacity))
                 }
             }
@@ -61,34 +61,76 @@ struct OnboardingContentView: View {
                     VStack(spacing: viewStore.isFinalStep ? 50 : 15) {
                         HStack {
                             Text(viewStore.steps[stepIndex].title)
-                                .font(.custom(FontFamily.Roboto.bold.name, size: 30))
-                                .fontWeight(.regular)
+                                .titleText()
+                                .lineLimit(0)
+                                .minimumScaleFactor(0.1)
                             if !viewStore.isFinalStep {
                                 Spacer()
                             }
                         }
                         
                         Text(viewStore.steps[stepIndex].description)
-                            .font(.custom(FontFamily.Roboto.regular.name, size: 15))
-                            .lineSpacing(5)
+                            .synopsisText()
+                            .lineSpacing(2)
+                            .opacity(0.53)
                     }
                     .opacity(stepIndex == viewStore.index ? 1: 0)
                     .padding(.horizontal, 35)
                     .frame(width: width, height: height)
                 }
             }
-            .offset(y: viewStore.isFinalStep ? width / 2.3 : viewStore.offset + width / 2.3)
+            .offset(y: viewStore.isFinalStep ? width / 2.5 : viewStore.offset + height / descriptionOffsetCoeff())
         }
+    }
+}
+
+/// Following computations are necessary to handle properly sizing and positioning of elements
+/// on different devices (apects). iPhone SE and iPhone 8 are similar aspect family devices
+/// while iPhone X, 11, etc are different family devices, capable to use more of the space.
+extension OnboardingContentView {
+    func circularFrameUniformSize() -> CGFloat {
+        let aspect = height / width
+        let deviceMultiplier = 1.0 + (((aspect / 1.725) - 1.0) * 2.0)
+        
+        return width * (0.6 * deviceMultiplier)
+    }
+
+    func circularFrameOffsetCoeff() -> CGFloat {
+        let aspect = height / width
+        let deviceMultiplier = aspect / 1.725
+
+        return 4.4 * deviceMultiplier
+    }
+
+    func descriptionOffsetCoeff() -> Double {
+        let aspect = height / width
+        let deviceMultiplier = 1.0 + (((aspect / 1.725) - 1.0) * 2.5)
+
+        return 8.0 / deviceMultiplier
     }
 }
 
 struct OnboardingContentView_Previews: PreviewProvider {
     static var previews: some View {
         let store = Store(
-            initialState: OnboardingState(index: 2),
+            initialState: OnboardingState(index: 0),
             reducer: OnboardingReducer.default,
             environment: ()
         )
+        
+        OnboardingContentView_Previews.example(store)
+            .previewDevice(PreviewDevice(rawValue: "iPhone SE (2nd generation)"))
+
+        OnboardingContentView_Previews.example(store)
+            .previewDevice(PreviewDevice(rawValue: "iPhone 8"))
+
+        OnboardingContentView_Previews.example(store)
+            .previewDevice(PreviewDevice(rawValue: "iPhone 12 Pro"))
+    }
+}
+
+extension OnboardingContentView_Previews {
+    static func example(_ store: Store<OnboardingState, OnboardingAction>) -> some View {
         GeometryReader { proxy in
             ZStack {
                 OnboardingHeaderView(
@@ -114,8 +156,9 @@ struct OnboardingContentView_Previews: PreviewProvider {
                     width: proxy.size.width,
                     height: proxy.size.height
                 )
-                .preferredColorScheme(.light)
             }
         }
+        .applyScreenBackground()
+        .preferredColorScheme(.light)
     }
 }

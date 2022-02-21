@@ -39,6 +39,7 @@ enum OnboardingAction: Equatable {
     case back
     case skip
     case createNewWallet
+    case importExistingWallet
 }
 
 typealias OnboardingReducer = Reducer<OnboardingState, OnboardingAction, Void>
@@ -68,6 +69,9 @@ extension OnboardingReducer {
             return .none
             
         case .createNewWallet:
+            return .none
+
+        case .importExistingWallet:
             return .none
         }
     }
