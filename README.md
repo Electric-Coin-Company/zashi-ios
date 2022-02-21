@@ -32,6 +32,25 @@ This a reference wallet for the following set of features:
 
 note: z means sapling shielded addresses.
 
+# Installation of Swiftgen & Swiftlint on Apple Silicon chip
+
+## Swiftgen
+Install it using homebrew
+```
+$ brew install swiftgen
+```
+and create a symbolic link
+```
+ln -s /opt/homebrew/bin/swiftgen /usr/local/bin
+```
+## Swiftlint
+The project is setup to work with `0.45.0` version. We recommend to install it directly using [the official 0.45.0 package](https://github.com/realm/SwiftLint/releases/download/0.45.0/SwiftLint.pkg). If you follow this step there is no symbolic link needed.
+
+In case you already have swiftlint 0.45.0 ready on your machine and installed via homebrew, create a symbolic link
+```
+ln -s /opt/homebrew/bin/swiftlint /usr/local/bin
+```
+
 # Contributing
 
 Contributions are very much welcomed! Please read our [Contributing Guidelines](/CONTRIBUTING.md) and [Code of Conduct](/CONDUCT.md). Our backlog has many Issues tagged with the `good first issue` label. Please fork the repo and make a pull request for us to review.
