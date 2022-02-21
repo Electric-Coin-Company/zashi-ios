@@ -14,6 +14,7 @@ struct StandardButtonStyle: ButtonStyle {
     
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
+            .shadow(color: Asset.Colors.Buttons.buttonsTitleShadow.color, radius: 2, x: 0, y: 2)
             .frame(
                 minWidth: 0,
                 maxWidth: .infinity,
@@ -25,6 +26,7 @@ struct StandardButtonStyle: ButtonStyle {
                 configuration.isPressed ? pressedBackgroundColor : background
             )
             .cornerRadius(12)
+            .neumorphicDesign(configuration.isPressed)
     }
 }
 

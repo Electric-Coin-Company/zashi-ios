@@ -41,7 +41,7 @@ struct OnboardingContentView: View {
                                 }
                             )
                         )
-                        .frame(width: width * 0.85, height: width * 0.85)
+                        .frame(width: width * 0.82, height: width * 0.82)
                         .badgeIcons(
                             store.actionless.scope(
                                 state: { state in
@@ -61,16 +61,15 @@ struct OnboardingContentView: View {
                     VStack(spacing: viewStore.isFinalStep ? 50 : 15) {
                         HStack {
                             Text(viewStore.steps[stepIndex].title)
-                                .font(.custom(FontFamily.Roboto.bold.name, size: 30))
-                                .fontWeight(.regular)
+                                .titleText()
                             if !viewStore.isFinalStep {
                                 Spacer()
                             }
                         }
                         
                         Text(viewStore.steps[stepIndex].description)
-                            .font(.custom(FontFamily.Roboto.regular.name, size: 15))
-                            .lineSpacing(5)
+                            .bodyText()
+                            .opacity(0.53)
                     }
                     .opacity(stepIndex == viewStore.index ? 1: 0)
                     .padding(.horizontal, 35)
@@ -85,7 +84,7 @@ struct OnboardingContentView: View {
 struct OnboardingContentView_Previews: PreviewProvider {
     static var previews: some View {
         let store = Store(
-            initialState: OnboardingState(index: 2),
+            initialState: OnboardingState(index: 0),
             reducer: OnboardingReducer.default,
             environment: ()
         )
@@ -114,8 +113,9 @@ struct OnboardingContentView_Previews: PreviewProvider {
                     width: proxy.size.width,
                     height: proxy.size.height
                 )
-                .preferredColorScheme(.light)
             }
         }
+        .applyScreenBackground()
+        .preferredColorScheme(.light)
     }
 }

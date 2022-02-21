@@ -35,18 +35,18 @@ struct OnboardingFooterView: View {
                             }
                         }
                         .primaryButtonStyle
-                        .frame(height: proxy.size.height / 12)
-                        .padding(.horizontal, 15)
+                        .frame(height: 69)
+                        .padding(.horizontal, 28)
                         .transition(.opacity)
                     }
                     
                     ProgressView(
-                        "\(viewStore.index + 1)/\(viewStore.steps.count)",
+                        "0\(viewStore.index + 1)",
                         value: Double(viewStore.index + 1),
                         total: Double(viewStore.steps.count)
                     )
                     .onboardingProgressStyle
-                    .padding(.horizontal, 30)
+                    .padding(.horizontal, 28)
                     .padding([.vertical], 20)
                 }
             }
@@ -64,10 +64,17 @@ struct OnboardingFooterView_Previews: PreviewProvider {
         
         Group {
             OnboardingFooterView(store: store)
+                .applyScreenBackground()
+                .preferredColorScheme(.light)
+                .previewDevice("iPhone 13 Pro Max")
+
+            OnboardingFooterView(store: store)
+                .applyScreenBackground()
                 .preferredColorScheme(.dark)
                 .previewDevice("iPhone 13 Pro Max")
             
             OnboardingFooterView(store: store)
+                .applyScreenBackground()
                 .preferredColorScheme(.dark)
                 .previewDevice("iPhone 13 mini")
         }

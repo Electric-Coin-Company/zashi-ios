@@ -26,11 +26,13 @@ struct PrimaryButton_Previews: PreviewProvider {
             .frame(width: 250, height: 50)
             .previewLayout(.fixed(width: 300, height: 100))
             .preferredColorScheme(.light)
+            .applyScreenBackground()
         
         Button("Primary Button") { dump("Primary button") }
             .primaryButtonStyle
             .frame(width: 250, height: 50)
             .previewLayout(.fixed(width: 300, height: 100))
             .preferredColorScheme(.dark)
+            .applyScreenBackground()
     }
 }
