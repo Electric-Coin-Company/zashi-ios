@@ -44,6 +44,8 @@ internal enum Asset {
     }
     internal enum Buttons {
       internal static let activeButton = ColorAsset(name: "ActiveButton")
+      internal static let activeButtonDisabled = ColorAsset(name: "ActiveButtonDisabled")
+      internal static let activeButtonPressed = ColorAsset(name: "ActiveButtonPressed")
       internal static let buttonsTitleShadow = ColorAsset(name: "ButtonsTitleShadow")
       internal static let createButton = ColorAsset(name: "CreateButton")
       internal static let createButtonDisabled = ColorAsset(name: "CreateButtonDisabled")

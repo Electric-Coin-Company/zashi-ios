@@ -28,6 +28,16 @@ struct OnboardingFooterView: View {
                         .frame(height: proxy.size.height / 12)
                         .padding(.horizontal, 15)
                         .transition(.opacity)
+
+                        Button("Import an Existing Wallet") {
+                            withAnimation(.easeInOut(duration: animationDuration)) {
+                                viewStore.send(.createNewWallet)
+                            }
+                        }
+                        .secondaryButtonStyle
+                        .frame(height: proxy.size.height / 12)
+                        .padding(.horizontal, 15)
+                        .transition(.opacity)
                     } else {
                         Button("Next") {
                             withAnimation(.easeInOut(duration: animationDuration)) {
@@ -38,16 +48,16 @@ struct OnboardingFooterView: View {
                         .frame(height: 60)
                         .padding(.horizontal, 28)
                         .transition(.opacity)
-                    }
                     
-                    ProgressView(
-                        "0\(viewStore.index + 1)",
-                        value: Double(viewStore.index + 1),
-                        total: Double(viewStore.steps.count)
-                    )
-                    .onboardingProgressStyle
-                    .padding(.horizontal, 30)
-                    .padding(.vertical, 20)
+                        ProgressView(
+                            "0\(viewStore.index + 1)",
+                            value: Double(viewStore.index + 1),
+                            total: Double(viewStore.steps.count)
+                        )
+                            .onboardingProgressStyle
+                            .padding(.horizontal, 30)
+                            .padding(.vertical, 20)
+                    }
                 }
             }
         }
@@ -57,7 +67,7 @@ struct OnboardingFooterView: View {
 struct OnboardingFooterView_Previews: PreviewProvider {
     static var previews: some View {
         let store = Store<OnboardingState, OnboardingAction>(
-            initialState: OnboardingState(index: 0),
+            initialState: OnboardingState(index: 3),
             reducer: OnboardingReducer.default,
             environment: ()
         )

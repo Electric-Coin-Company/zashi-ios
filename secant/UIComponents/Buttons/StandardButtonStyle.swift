@@ -13,7 +13,8 @@ struct StandardButtonStyle: ButtonStyle {
     let foregroundColor: Color
     let background: Color
     let pressedBackgroundColor: Color
-    
+    let disabledBackgroundColor: Color
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .shadow(color: Asset.Colors.Buttons.buttonsTitleShadow.color, radius: 2, x: 0, y: 2)
@@ -27,7 +28,7 @@ struct StandardButtonStyle: ButtonStyle {
             .background(
                 isEnabled ?
                 (configuration.isPressed ? pressedBackgroundColor : background)
-                : .red
+                : disabledBackgroundColor
             )
             .cornerRadius(12)
             .neumorphicButtonDesign(configuration.isPressed)
@@ -40,7 +41,8 @@ private extension Button {
             StandardButtonStyle(
                 foregroundColor: Asset.Colors.Text.button.color,
                 background: Asset.Colors.Buttons.createButton.color,
-                pressedBackgroundColor: Asset.Colors.Buttons.createButtonPressed.color
+                pressedBackgroundColor: Asset.Colors.Buttons.createButtonPressed.color,
+                disabledBackgroundColor: Asset.Colors.Buttons.createButtonDisabled.color
             )
         )
     }
