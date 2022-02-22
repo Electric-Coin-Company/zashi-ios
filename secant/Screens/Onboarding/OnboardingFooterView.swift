@@ -35,7 +35,7 @@ struct OnboardingFooterView: View {
                             }
                         }
                         .primaryButtonStyle
-                        .frame(height: 69)
+                        .frame(height: 60)
                         .padding(.horizontal, 28)
                         .transition(.opacity)
                     }
@@ -46,8 +46,8 @@ struct OnboardingFooterView: View {
                         total: Double(viewStore.steps.count)
                     )
                     .onboardingProgressStyle
-                    .padding(.horizontal, 28)
-                    .padding([.vertical], 20)
+                    .padding(.horizontal, 30)
+                    .padding(.vertical, 20)
                 }
             }
         }

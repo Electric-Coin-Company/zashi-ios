@@ -74,9 +74,10 @@ struct BadgesOverlay: Animatable, ViewModifier {
                                             )
                                             .offset(
                                                 x: 4.0,
-                                                y: proxy.size.height * 0.15
+                                                y: proxy.size.height * 0.18
                                             )
                                             .opacity(badgeIndex == viewStore.index ? 1 : 0)
+                                            .shadow(color: .white, radius: 10, x: 0, y: 0)
                                     }
                                 }
                                
@@ -110,10 +111,11 @@ struct BadgeOverlay: Animatable, ViewModifier {
                                 )
                                 .offset(
                                     x: 4.0,
-                                    y: proxy.size.height * 0.15
+                                    y: proxy.size.height * 0.18
                                 )
                                 .transition(.scale(scale: 2))
                                 .transition(.opacity)
+                                .shadow(color: .white, radius: 10, x: 0, y: 0)
                             Spacer()
                         }
                     }

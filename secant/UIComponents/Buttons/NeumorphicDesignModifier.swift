@@ -24,15 +24,15 @@ struct NeumorphicDesign: ViewModifier {
         content
             .shadow(
                 color: Asset.Colors.Buttons.neumorphicDarkSide.color,
-                radius: 10,
+                radius: 15,
                 x: colorScheme == .light && !isPressed ? 10 : 0,
                 y: colorScheme == .light && !isPressed ? 10 : 0
             )
             .shadow(
                 color: Asset.Colors.Buttons.neumorphicLightSide.color,
                 radius: 10,
-                x: colorScheme == .light && !isPressed ? -5 : 0,
-                y: colorScheme == .light && !isPressed ? -5 : 0
+                x: colorScheme == .light && !isPressed ? -12 : 0,
+                y: colorScheme == .light && !isPressed ? -12 : 0
             )
     }
 }

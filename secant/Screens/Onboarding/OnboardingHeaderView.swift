@@ -55,7 +55,7 @@ struct OnboardingHeaderView: View {
                 
                 Spacer()
             }
-            .padding(.top, 20)
+            .padding(.top, 5)
         }
     }
 }
@@ -85,5 +85,6 @@ struct OnboardingHeaderView_Previews: PreviewProvider {
             )
         )
         .preferredColorScheme(.light)
+        .applyScreenBackground()
     }
 }

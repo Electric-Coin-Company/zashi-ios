@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct StandardButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled: Bool
+    
     let foregroundColor: Color
     let background: Color
     let pressedBackgroundColor: Color
@@ -23,7 +25,9 @@ struct StandardButtonStyle: ButtonStyle {
             )
             .foregroundColor(foregroundColor)
             .background(
-                configuration.isPressed ? pressedBackgroundColor : background
+                isEnabled ?
+                (configuration.isPressed ? pressedBackgroundColor : background)
+                : .red
             )
             .cornerRadius(12)
             .neumorphicDesign(configuration.isPressed)

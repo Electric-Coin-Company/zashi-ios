@@ -26,6 +26,7 @@ struct CircularFrameBackgroundImages: Animatable, ViewModifier {
                         .opacity(imageIndex == viewStore.index ? 1 : 0)
                         .offset(x: imageIndex <= viewStore.index ? 0 : 25)
                         .mask(Circle())
+                        .neumorphicDesign()
                 }
                 
                 content
@@ -43,6 +44,7 @@ struct CircularFrameBackgroundImage: Animatable, ViewModifier {
                 .resizable()
                 .aspectRatio(1.3, contentMode: .fill)
                 .mask(Circle())
+                .neumorphicDesign()
             
             content
         }
@@ -66,18 +68,26 @@ struct CircularFrameBackground_Previews: PreviewProvider {
             CircularFrame()
                 .backgroundImage(Asset.Assets.Backgrounds.callout0.image)
                 .frame(width: 300, height: 300)
-            
+                .applyScreenBackground()
+                .neumorphicDesign()
+
             CircularFrame()
                 .backgroundImage(Asset.Assets.Backgrounds.callout1.image)
                 .frame(width: 300, height: 300)
-            
+                .applyScreenBackground()
+                .neumorphicDesign()
+
             CircularFrame()
                 .backgroundImage(Asset.Assets.Backgrounds.callout2.image)
                 .frame(width: 300, height: 300)
-            
+                .applyScreenBackground()
+                .neumorphicDesign()
+
             CircularFrame()
                 .backgroundImage(Asset.Assets.Backgrounds.callout3.image)
                 .frame(width: 300, height: 300)
+                .applyScreenBackground()
+                .neumorphicDesign()
         }
         .preferredColorScheme(.light)
         .previewLayout(.fixed(width: size + 50, height: size + 50))

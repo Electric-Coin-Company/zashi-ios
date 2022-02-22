@@ -9,28 +9,20 @@ import SwiftUI
 
 struct CircularFrame: View {
     private let gradient = LinearGradient(
-        gradient: Gradient(colors: [
-            Asset.Colors.Onboarding.circularFrameGradientStart.color, Asset.Colors.Onboarding.circularFrameGradientEnd.color
-        ]),
-        startPoint: .leading,
-        endPoint: .trailing
+        colors: [
+            Asset.Colors.Onboarding.circularFrameGradientStart.color,
+            Asset.Colors.Onboarding.circularFrameGradientEnd.color
+        ],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
     )
     
     var body: some View {
         GeometryReader { proxy in
-            let lineWidth = proxy.size.width * 0.05
-
+            let lineWidth = proxy.size.width * 0.06
+            
             Circle()
-                .stroke(gradient, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
-            // Add two points to the frame to properly mask edges
-                .frame(
-                    width: proxy.size.width - lineWidth + 2,
-                    height: proxy.size.height - lineWidth + 2,
-                    alignment: .center
-                )
-            // Update the offset to account for the 2 extra points
-                .offset(x: lineWidth / 2 - 1, y: lineWidth / 2 - 1)
-                .shadow(radius: 10)
+                .stroke(gradient, style: StrokeStyle(lineWidth: lineWidth))
         }
     }
 }
@@ -123,5 +115,6 @@ struct CircularFrame_Previews: PreviewProvider {
         CircularFramePreviewHelper()
             .preferredColorScheme(.light)
             .previewLayout(.device)
+            .applyScreenBackground()
     }
 }
