@@ -4,7 +4,7 @@
 //
 //  Created by Francisco Gindre on 8/6/21.
 //
-// TODO: Move this to diferent Target when real functionality is developed.
+// TODO: Move this to different Target when real functionality is developed.
 import Foundation
 
 // swiftlint:disable line_length
