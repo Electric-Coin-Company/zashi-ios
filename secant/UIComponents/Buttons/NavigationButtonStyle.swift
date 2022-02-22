@@ -25,7 +25,7 @@ struct NavigationButtonStyle: ButtonStyle {
                     Asset.Colors.Buttons.onboardingNavigation.color
             )
             .cornerRadius(.infinity)
-            .neumorphicDesign(configuration.isPressed)
+            .neumorphicButtonDesign(configuration.isPressed)
     }
 }
 

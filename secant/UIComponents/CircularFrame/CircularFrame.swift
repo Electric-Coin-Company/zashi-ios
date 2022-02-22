@@ -8,21 +8,44 @@
 import SwiftUI
 
 struct CircularFrame: View {
-    private let gradient = LinearGradient(
-        colors: [
-            Asset.Colors.Onboarding.circularFrameGradientStart.color,
-            Asset.Colors.Onboarding.circularFrameGradientEnd.color
-        ],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
+    @Environment(\.colorScheme) var colorScheme
+
     var body: some View {
         GeometryReader { proxy in
             let lineWidth = proxy.size.width * 0.06
             
             Circle()
-                .stroke(gradient, style: StrokeStyle(lineWidth: lineWidth))
+                .stroke(
+                    LinearGradient(
+                        colors: [
+                            Asset.Colors.Onboarding.circularFrameGradientStart.color,
+                            Asset.Colors.Onboarding.circularFrameGradientEnd.color
+                        ],
+                        startPoint: colorScheme == .light ? .topLeading : .top,
+                        endPoint: colorScheme == .light ? .bottomTrailing : .bottom
+                    ),
+                    style: StrokeStyle(
+                        lineWidth: lineWidth
+                    )
+                )
+                .padding(colorScheme == .light ? 0 : 10)
+
+            if colorScheme == .dark {
+                Circle()
+                    .stroke(
+                        LinearGradient(
+                            colors: [
+                                Asset.Colors.Onboarding.circularFrameDarkOutlineGradientStart.color,
+                                Asset.Colors.Onboarding.circularFrameDarkOutlineGradientEnd.color
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        ),
+                        style: StrokeStyle(
+                            lineWidth: lineWidth * 0.15
+                        )
+                    )
+            }
         }
     }
 }
@@ -113,7 +136,7 @@ struct CircularFramePreviewHelper: View {
 struct CircularFrame_Previews: PreviewProvider {
     static var previews: some View {
         CircularFramePreviewHelper()
-            .preferredColorScheme(.light)
+            .preferredColorScheme(.dark)
             .previewLayout(.device)
             .applyScreenBackground()
     }

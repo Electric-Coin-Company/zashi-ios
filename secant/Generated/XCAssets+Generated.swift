@@ -48,6 +48,8 @@ internal enum Asset {
       internal static let createButton = ColorAsset(name: "CreateButton")
       internal static let createButtonDisabled = ColorAsset(name: "CreateButtonDisabled")
       internal static let createButtonPressed = ColorAsset(name: "CreateButtonPressed")
+      internal static let neumorphicButtonDarkSide = ColorAsset(name: "NeumorphicButtonDarkSide")
+      internal static let neumorphicButtonLightSide = ColorAsset(name: "NeumorphicButtonLightSide")
       internal static let neumorphicDarkSide = ColorAsset(name: "NeumorphicDarkSide")
       internal static let neumorphicLightSide = ColorAsset(name: "NeumorphicLightSide")
       internal static let onboardingNavigation = ColorAsset(name: "OnboardingNavigation")
@@ -59,6 +61,9 @@ internal enum Asset {
       internal static let secondaryButtonPressed = ColorAsset(name: "SecondaryButtonPressed")
     }
     internal enum Onboarding {
+      internal static let badgeShadow = ColorAsset(name: "BadgeShadow")
+      internal static let circularFrameDarkOutlineGradientEnd = ColorAsset(name: "CircularFrameDarkOutlineGradientEnd")
+      internal static let circularFrameDarkOutlineGradientStart = ColorAsset(name: "CircularFrameDarkOutlineGradientStart")
       internal static let circularFrameGradientEnd = ColorAsset(name: "CircularFrameGradientEnd")
       internal static let circularFrameGradientStart = ColorAsset(name: "CircularFrameGradientStart")
       internal static let navigationButtonDisabled = ColorAsset(name: "NavigationButtonDisabled")
