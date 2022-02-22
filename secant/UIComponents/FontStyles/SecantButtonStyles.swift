@@ -2,7 +2,7 @@
 //  SecantButtonStyles.swift
 //  secant-testnet
 //
-//  Created by Lukáš Korba on 22.02.2022.
+//  Created by Lukáš Korba on 02/22/22.
 //
 
 import SwiftUI

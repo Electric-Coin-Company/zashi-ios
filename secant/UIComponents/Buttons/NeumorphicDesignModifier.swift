@@ -2,7 +2,7 @@
 //  NeumorphicDesignModifier.swift
 //  secant-testnet
 //
-//  Created by Lukáš Korba on 21.02.2022.
+//  Created by Lukáš Korba on 02/21/22.
 //
 
 import SwiftUI
@@ -12,6 +12,7 @@ import SwiftUI
 /// - Parameters:
 ///   - colorScheme: The light is using full neumorphic design while dark is limited to soft shadow only
 ///   - isPressed: When the button is pressed, there are different behaviours for light vs. dark colorScheme
+/// This design is mostly used for CircularFrame, not designed for a button (see NeumorphicButtonDesign)
 struct NeumorphicDesign: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
     let isPressed: Bool
@@ -42,6 +43,7 @@ struct NeumorphicDesign: ViewModifier {
 /// - Parameters:
 ///   - colorScheme: The light is using full neumorphic design while dark is limited to soft shadow only
 ///   - isPressed: When the button is pressed, there are different behaviours for light vs. dark colorScheme
+/// This design is specifically crafted for buttons. The colors and positions of the shadows are different.
 struct NeumorphicButtonDesign: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
     let isPressed: Bool
