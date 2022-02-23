@@ -36,7 +36,7 @@ Please provide a general summary of the issue you're experiencing
 Tell us what should happen
 
 ### Actual behaviour + errors
-Tell us what happens instead including any noticable error output (any messages
+Tell us what happens instead including any noticeable error output (any messages
 displayed on-screen when e.g. a crash occurred)
 <!-- Note: please do not include sensitive information. blur, scratch or annotate any
 information like addresses, usernames, amounts or anything other that you might consider sensitive and it's not relevant to the problem you are reporting.  -->

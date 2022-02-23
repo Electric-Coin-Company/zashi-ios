@@ -75,7 +75,7 @@ extension RecoveryPhraseValidationState {
     /// Given an array of RecoveryPhraseStepCompletion, missing indices, original phrase and the number of groups it was split into,
     /// assembly the resulting phrase. This comes up with the "proposed solution" for the recovery phrase validation challenge.
     /// - returns:an array of String containing the recovery phrase words ordered by the original phrase order, or `nil`
-    /// if a resulting phrase can't be formed becasue the validation state is not complete.
+    /// if a resulting phrase can't be formed because the validation state is not complete.
     var resultingPhrase: [String]? {
         guard missingIndices.count == validationWords.count else { return nil }
 
