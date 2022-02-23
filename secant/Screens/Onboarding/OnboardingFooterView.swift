@@ -13,54 +13,61 @@ struct OnboardingFooterView: View {
     let animationDuration: CGFloat = 0.8
 
     var body: some View {
-        GeometryReader { proxy in
-            WithViewStore(self.store) { viewStore in
-                VStack(spacing: 5) {
-                    Spacer()
-                    
-                    if viewStore.isFinalStep {
-                        Button("Create New Wallet") {
-                            withAnimation(.easeInOut(duration: animationDuration)) {
-                                viewStore.send(.createNewWallet)
-                            }
+        WithViewStore(self.store) { viewStore in
+            VStack(spacing: 5) {
+                Spacer()
+                
+                if viewStore.isFinalStep {
+                    Button("Create New Wallet") {
+                        withAnimation(.easeInOut(duration: animationDuration)) {
+                            viewStore.send(.createNewWallet)
                         }
-                        .primaryButtonStyle
-                        .frame(height: proxy.size.height / 12)
-                        .padding(.horizontal, 15)
-                        .transition(.opacity)
-
-                        Button("Import an Existing Wallet") {
-                            withAnimation(.easeInOut(duration: animationDuration)) {
-                                viewStore.send(.createNewWallet)
-                            }
-                        }
-                        .secondaryButtonStyle
-                        .frame(height: proxy.size.height / 12)
-                        .padding(.horizontal, 15)
-                        .transition(.opacity)
-                    } else {
-                        Button("Next") {
-                            withAnimation(.easeInOut(duration: animationDuration)) {
-                                viewStore.send(.next)
-                            }
-                        }
-                        .primaryButtonStyle
-                        .frame(height: 60)
-                        .padding(.horizontal, 28)
-                        .transition(.opacity)
-                    
-                        ProgressView(
-                            "0\(viewStore.index + 1)",
-                            value: Double(viewStore.index + 1),
-                            total: Double(viewStore.steps.count)
-                        )
-                            .onboardingProgressStyle
-                            .padding(.horizontal, 30)
-                            .padding(.vertical, 20)
                     }
+                    .createButtonStyle
+                    .buttonLayout()
+                    
+                    Button("Import an Existing Wallet") {
+                        withAnimation(.easeInOut(duration: animationDuration)) {
+                            viewStore.send(.createNewWallet)
+                        }
+                    }
+                    .secondaryButtonStyle
+                    .buttonLayout()
+                } else {
+                    Button("Next") {
+                        withAnimation(.easeInOut(duration: animationDuration)) {
+                            viewStore.send(.next)
+                        }
+                    }
+                    .primaryButtonStyle
+                    .buttonLayout()
+                    
+                    ProgressView(
+                        "0\(viewStore.index + 1)",
+                        value: Double(viewStore.index + 1),
+                        total: Double(viewStore.steps.count)
+                    )
+                        .onboardingProgressStyle
+                        .padding(.horizontal, 30)
+                        .padding(.vertical, 20)
                 }
             }
         }
+    }
+}
+
+struct OnboardingFooterButtonLayout: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .frame(height: 60)
+            .padding(.horizontal, 28)
+            .transition(.opacity)
+    }
+}
+
+extension View {
+    func buttonLayout() -> some View {
+        modifier(OnboardingFooterButtonLayout())
     }
 }
 
