@@ -120,7 +120,12 @@ struct BadgeOverlay: Animatable, ViewModifier {
                                 )
                                 .transition(.scale(scale: 2))
                                 .transition(.opacity)
-                                .shadow(color: Asset.Colors.Onboarding.badgeShadow.color, radius: 10, x: 0, y: 0)
+                                .shadow(
+                                    color: Asset.Colors.Onboarding.badgeShadow.color,
+                                    radius: 10,
+                                    x: 0,
+                                    y: 0
+                                )
                             Spacer()
                         }
                     }
