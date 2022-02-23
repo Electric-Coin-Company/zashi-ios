@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct NavigationButtonStyle: ButtonStyle {
-    @Environment(\.colorScheme) var colorScheme
-    
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .frame(
@@ -25,7 +23,7 @@ struct NavigationButtonStyle: ButtonStyle {
                     Asset.Colors.Buttons.onboardingNavigation.color
             )
             .cornerRadius(.infinity)
-            .neumorphicButtonDesign(configuration.isPressed)
+            .neumorphicButton(configuration.isPressed)
     }
 }
 

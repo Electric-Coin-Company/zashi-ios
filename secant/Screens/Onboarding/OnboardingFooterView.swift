@@ -24,7 +24,7 @@ struct OnboardingFooterView: View {
                         }
                     }
                     .createButtonStyle
-                    .buttonLayout()
+                    .onboardingFooterButtonLayout()
                     
                     Button("Import an Existing Wallet") {
                         withAnimation(.easeInOut(duration: animationDuration)) {
@@ -32,7 +32,7 @@ struct OnboardingFooterView: View {
                         }
                     }
                     .secondaryButtonStyle
-                    .buttonLayout()
+                    .onboardingFooterButtonLayout()
                 } else {
                     Button("Next") {
                         withAnimation(.easeInOut(duration: animationDuration)) {
@@ -40,23 +40,24 @@ struct OnboardingFooterView: View {
                         }
                     }
                     .primaryButtonStyle
-                    .buttonLayout()
+                    .onboardingFooterButtonLayout()
                     
                     ProgressView(
-                        "0\(viewStore.index + 1)",
+                        String(format: "%02d", viewStore.index + 1),
                         value: Double(viewStore.index + 1),
                         total: Double(viewStore.steps.count)
                     )
-                        .onboardingProgressStyle
-                        .padding(.horizontal, 30)
-                        .padding(.vertical, 20)
+                    .onboardingProgressStyle
+                    .padding(.horizontal, 30)
+                    .padding(.vertical, 20)
                 }
             }
         }
     }
 }
 
-struct OnboardingFooterButtonLayout: ViewModifier {
+// swiftlint:disable:next private_over_fileprivate strict_fileprivate
+fileprivate struct OnboardingFooterButtonLayout: ViewModifier {
     func body(content: Content) -> some View {
         content
             .frame(height: 60)
@@ -66,7 +67,7 @@ struct OnboardingFooterButtonLayout: ViewModifier {
 }
 
 extension View {
-    func buttonLayout() -> some View {
+    func onboardingFooterButtonLayout() -> some View {
         modifier(OnboardingFooterButtonLayout())
     }
 }

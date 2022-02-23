@@ -13,8 +13,10 @@ import SwiftUI
 ///   - colorScheme: The light is using full neumorphic design while dark is limited to soft shadow only
 ///   - isPressed: When the button is pressed, there are different behaviours for light vs. dark colorScheme
 /// This design is mostly used for CircularFrame, not designed for a button (see NeumorphicButtonDesign)
-struct NeumorphicDesign: ViewModifier {
+// swiftlint:disable:next private_over_fileprivate strict_fileprivate
+fileprivate struct Neumorphic: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
+
     let isPressed: Bool
     
     init(_ isPressed: Bool) {
@@ -24,13 +26,13 @@ struct NeumorphicDesign: ViewModifier {
     func body(content: Content) -> some View {
         content
             .shadow(
-                color: Asset.Colors.Buttons.neumorphicDarkSide.color,
+                color: Asset.Colors.Onboarding.neumorphicDarkSide.color,
                 radius: 15,
                 x: colorScheme == .light && !isPressed ? 10 : -10,
                 y: colorScheme == .light && !isPressed ? 10 : 10
             )
             .shadow(
-                color: Asset.Colors.Buttons.neumorphicLightSide.color,
+                color: Asset.Colors.Onboarding.neumorphicLightSide.color,
                 radius: 10,
                 x: colorScheme == .light && !isPressed ? -12 : 12,
                 y: colorScheme == .light && !isPressed ? -12 : -12
@@ -44,8 +46,10 @@ struct NeumorphicDesign: ViewModifier {
 ///   - colorScheme: The light is using full neumorphic design while dark is limited to soft shadow only
 ///   - isPressed: When the button is pressed, there are different behaviours for light vs. dark colorScheme
 /// This design is specifically crafted for buttons. The colors and positions of the shadows are different.
-struct NeumorphicButtonDesign: ViewModifier {
+// swiftlint:disable:next private_over_fileprivate strict_fileprivate
+fileprivate struct NeumorphicButton: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
+    
     let isPressed: Bool
     
     init(_ isPressed: Bool) {
@@ -68,12 +72,13 @@ struct NeumorphicButtonDesign: ViewModifier {
             )
     }
 }
+
 extension View {
-    func neumorphicDesign(_ isPressed: Bool = false) -> some View {
-        self.modifier(NeumorphicDesign(isPressed))
+    func neumorphic(_ isPressed: Bool = false) -> some View {
+        self.modifier(Neumorphic(isPressed))
     }
 
-    func neumorphicButtonDesign(_ isPressed: Bool = false) -> some View {
-        self.modifier(NeumorphicButtonDesign(isPressed))
+    func neumorphicButton(_ isPressed: Bool = false) -> some View {
+        self.modifier(NeumorphicButton(isPressed))
     }
 }

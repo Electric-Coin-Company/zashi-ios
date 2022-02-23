@@ -41,7 +41,7 @@ struct OnboardingContentView: View {
                                 }
                             )
                         )
-                        .frame(width: circularFrameUniformSize(), height: circularFrameUniformSize())
+                        .frame(width: circularFrameUniformSize, height: circularFrameUniformSize)
                         .badgeIcons(
                             store.actionless.scope(
                                 state: { state in
@@ -52,7 +52,7 @@ struct OnboardingContentView: View {
                                 }
                             )
                         )
-                        .offset(y: viewStore.offset - height / circularFrameOffsetCoeff())
+                        .offset(y: viewStore.offset - height / circularFrameOffsetCoeffcient)
                         .transition(.scale(scale: 2).combined(with: .opacity))
                 }
             }
@@ -79,7 +79,7 @@ struct OnboardingContentView: View {
                     .frame(width: width, height: height)
                 }
             }
-            .offset(y: viewStore.isFinalStep ? width / 2.5 : viewStore.offset + height / descriptionOffsetCoeff())
+            .offset(y: viewStore.isFinalStep ? width / 2.5 : viewStore.offset + height / descriptionOffsetCoefficient)
         }
     }
 }
@@ -88,21 +88,21 @@ struct OnboardingContentView: View {
 /// on different devices (apects). iPhone SE and iPhone 8 are similar aspect family devices
 /// while iPhone X, 11, etc are different family devices, capable to use more of the space.
 extension OnboardingContentView {
-    func circularFrameUniformSize() -> CGFloat {
+    var circularFrameUniformSize: CGFloat {
         let aspect = height / width
         let deviceMultiplier = 1.0 + (((aspect / 1.725) - 1.0) * 2.0)
         
         return width * (0.6 * deviceMultiplier)
     }
 
-    func circularFrameOffsetCoeff() -> CGFloat {
+    var circularFrameOffsetCoeffcient: CGFloat {
         let aspect = height / width
         let deviceMultiplier = aspect / 1.725
 
         return 4.4 * deviceMultiplier
     }
 
-    func descriptionOffsetCoeff() -> Double {
+    var descriptionOffsetCoefficient: Double {
         let aspect = height / width
         let deviceMultiplier = 1.0 + (((aspect / 1.725) - 1.0) * 2.5)
 

@@ -31,7 +31,7 @@ struct StandardButtonStyle: ButtonStyle {
                 : disabledBackgroundColor
             )
             .cornerRadius(12)
-            .neumorphicButtonDesign(configuration.isPressed)
+            .neumorphicButton(configuration.isPressed)
     }
 }
 

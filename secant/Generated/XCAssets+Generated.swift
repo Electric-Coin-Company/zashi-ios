@@ -52,8 +52,6 @@ internal enum Asset {
       internal static let createButtonPressed = ColorAsset(name: "CreateButtonPressed")
       internal static let neumorphicButtonDarkSide = ColorAsset(name: "NeumorphicButtonDarkSide")
       internal static let neumorphicButtonLightSide = ColorAsset(name: "NeumorphicButtonLightSide")
-      internal static let neumorphicDarkSide = ColorAsset(name: "NeumorphicDarkSide")
-      internal static let neumorphicLightSide = ColorAsset(name: "NeumorphicLightSide")
       internal static let onboardingNavigation = ColorAsset(name: "OnboardingNavigation")
       internal static let onboardingNavigationPressed = ColorAsset(name: "OnboardingNavigationPressed")
       internal static let primaryButton = ColorAsset(name: "PrimaryButton")
@@ -70,6 +68,8 @@ internal enum Asset {
       internal static let circularFrameGradientStart = ColorAsset(name: "CircularFrameGradientStart")
       internal static let navigationButtonDisabled = ColorAsset(name: "NavigationButtonDisabled")
       internal static let navigationButtonEnabled = ColorAsset(name: "NavigationButtonEnabled")
+      internal static let neumorphicDarkSide = ColorAsset(name: "NeumorphicDarkSide")
+      internal static let neumorphicLightSide = ColorAsset(name: "NeumorphicLightSide")
     }
     internal enum ProgressIndicator {
       internal static let gradientLeft = ColorAsset(name: "GradientLeft")

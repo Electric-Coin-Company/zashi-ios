@@ -22,7 +22,7 @@ extension Text {
     }
 
     func synopsisText() -> some View {
-        self.modifier(SynopsisStyle())
+        self.modifier(ParagraphStyle())
     }
 
     /// Body text style. Used for content.  Roboto-Regular 18pt
@@ -35,7 +35,7 @@ extension Text {
     }
 
     /// Used for additional information, explanations, context (usually paragraphs)
-    private struct SynopsisStyle: ViewModifier {
+    private struct ParagraphStyle: ViewModifier {
         func body(content: Content) -> some View {
             content
                 .foregroundColor(Asset.Colors.Text.heading.color)
