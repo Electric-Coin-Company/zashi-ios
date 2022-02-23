@@ -89,24 +89,38 @@ struct OnboardingContentView: View {
 /// while iPhone X, 11, etc are different family devices, capable to use more of the space.
 extension OnboardingContentView {
     var circularFrameUniformSize: CGFloat {
-        let aspect = height / width
-        let deviceMultiplier = 1.0 + (((aspect / 1.725) - 1.0) * 2.0)
+        var deviceMultiplier = 1.0
         
-        return width * (0.6 * deviceMultiplier)
+        if width > 0.0 {
+            let aspect = height / width
+            deviceMultiplier = 1.0 + (((aspect / 1.725) - 1.0) * 2.0)
+        }
+        
+        return width * 0.6 * deviceMultiplier
     }
 
     var circularFrameOffsetCoeffcient: CGFloat {
-        let aspect = height / width
-        let deviceMultiplier = aspect / 1.725
+        var deviceMultiplier = 1.0
+
+        if width > 0.0 {
+            let aspect = height / width
+            deviceMultiplier = aspect / 1.725
+        }
 
         return 4.4 * deviceMultiplier
     }
 
     var descriptionOffsetCoefficient: Double {
-        let aspect = height / width
-        let deviceMultiplier = 1.0 + (((aspect / 1.725) - 1.0) * 2.5)
-
-        return 8.0 / deviceMultiplier
+        if width > 0.0 {
+            let aspect = height / width
+            let deviceMultiplier = 1.0 + (((aspect / 1.725) - 1.0) * 2.5)
+            
+            if abs(deviceMultiplier) > 0.0 {
+                return 8.0 / deviceMultiplier
+            }
+        }
+        
+        return 8.0
     }
 }
 

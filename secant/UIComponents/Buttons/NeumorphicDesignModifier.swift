@@ -29,13 +29,13 @@ fileprivate struct Neumorphic: ViewModifier {
                 color: Asset.Colors.Onboarding.neumorphicDarkSide.color,
                 radius: 15,
                 x: colorScheme == .light && !isPressed ? 10 : -10,
-                y: colorScheme == .light && !isPressed ? 10 : 10
+                y: 10
             )
             .shadow(
                 color: Asset.Colors.Onboarding.neumorphicLightSide.color,
                 radius: 10,
                 x: colorScheme == .light && !isPressed ? -12 : 12,
-                y: colorScheme == .light && !isPressed ? -12 : -12
+                y: -12
             )
     }
 }
