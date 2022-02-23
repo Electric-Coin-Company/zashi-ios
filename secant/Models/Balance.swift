@@ -28,13 +28,13 @@ protocol Funds {
 }
 
 /**
-Wallet Balance that condenses transpant, Sapling and Orchard funds
+Wallet Balance that condenses transparent, Sapling and Orchard funds
 */
 protocol WalletBalance {
     /**
     Transparent funds. This is the sum of the UTXOs of the user found at a given time
     */
-    var transaparent: Funds { get }
+    var transparent: Funds { get }
 
     /**
     Funds on the Sapling shielded pool for a given user.
@@ -70,18 +70,18 @@ protocol WalletBalance {
 extension WalletBalance {
     static var nullBalance: WalletBalance {
         Balance(
-            transaparent: ZcashFunds.noFunds,
+            transparent: ZcashFunds.noFunds,
             sapling: ZcashFunds.noFunds,
             orchard: ZcashFunds.noFunds
         )
     }
 
     var totalAvailableBalance: Int64 {
-        transaparent.confirmed + sapling.confirmed + orchard.confirmed
+        transparent.confirmed + sapling.confirmed + orchard.confirmed
     }
 
     var totalUnconfirmedBalance: Int64 {
-        transaparent.unconfirmed + sapling.unconfirmed + orchard.unconfirmed
+        transparent.unconfirmed + sapling.unconfirmed + orchard.unconfirmed
     }
 
     var totalBalance: Int64 {
@@ -93,7 +93,7 @@ extension WalletBalance {
 Concrete Wallet Balance.
 */
 struct Balance: WalletBalance {
-    var transaparent: Funds
+    var transparent: Funds
     var sapling: Funds
     var orchard: Funds
 }
