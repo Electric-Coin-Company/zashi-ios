@@ -7,20 +7,16 @@
 
 import UIKit
 
-protocol FeedbackGenerator {
-    func generateFeedback()
+struct FeedbackGenerator {
+    let generateFeedback: () -> Void
 }
 
-/// use in case of testing or when real haptic feedback is not appropriate
-class SilentFeedbackGenerator: FeedbackGenerator {
-    func generateFeedback() { }
-}
-
-/// haptic feedback for the failures (when we want to amplify importance of the failure)
-class ImpactFeedbackGenerator: FeedbackGenerator {
-    let generator = UINotificationFeedbackGenerator()
+extension FeedbackGenerator {
+    static let haptic = FeedbackGenerator(
+        generateFeedback: { UINotificationFeedbackGenerator().notificationOccurred(.error) }
+    )
     
-    func generateFeedback() {
-        generator.notificationOccurred(.error)
-    }
+    static let silent = FeedbackGenerator(
+        generateFeedback: { }
+    )
 }

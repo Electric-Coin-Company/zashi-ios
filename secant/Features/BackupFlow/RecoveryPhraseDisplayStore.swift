@@ -53,14 +53,14 @@ extension BackupPhraseEnvironment {
         mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
         newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
         pasteboard: .test,
-        feedbackGenerator: SilentFeedbackGenerator()
+        feedbackGenerator: .silent
     )
         
     static let live = Self(
         mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
         newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
         pasteboard: .live,
-        feedbackGenerator: ImpactFeedbackGenerator()
+        feedbackGenerator: .haptic
     )
 }
 
