@@ -14,6 +14,20 @@ enum RecoveryPhraseError: Error {
     case unableToGeneratePhrase
 }
 
+struct FeedbackGenerator {
+    let generateFeedback: () -> Void
+}
+
+extension FeedbackGenerator {
+    static let haptic = FeedbackGenerator(
+        generateFeedback: { UINotificationFeedbackGenerator().notificationOccurred(.error) }
+    )
+    
+    static let silent = FeedbackGenerator(
+        generateFeedback: { }
+    )
+}
+
 struct Pasteboard {
     let setString: (String) -> Void
     let getString: () -> String?
