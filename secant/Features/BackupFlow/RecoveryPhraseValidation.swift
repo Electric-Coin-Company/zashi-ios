@@ -133,6 +133,7 @@ enum RecoveryPhraseValidationAction: Equatable {
     case move(wordChip: PhraseChip.Kind, intoGroup: Int)
     case succeed
     case fail
+    case failureFeedback
     case proceedToHome
     case displayBackedUpPhrase
 }
@@ -147,7 +148,7 @@ extension RecoveryPhraseValidationReducer {
 
         case let .move(wordChip, group):
             guard
-                case let PhraseChip.Kind.unassigned(word) = wordChip,
+                case let PhraseChip.Kind.unassigned(word, color) = wordChip,
                 let missingChipIndex = state.missingWordChips.firstIndex(of: wordChip)
             else { return .none }
 
@@ -156,9 +157,13 @@ extension RecoveryPhraseValidationReducer {
 
             if state.isComplete {
                 let value: RecoveryPhraseValidationAction = state.isValid ? .succeed : .fail
-                return Effect(value: value)
-                    .delay(for: 1, scheduler: environment.mainQueue)
-                    .eraseToEffect()
+                
+                return .concatenate(
+                    .init(value: .failureFeedback),
+                    Effect(value: value)
+                        .delay(for: 1, scheduler: environment.mainQueue)
+                        .eraseToEffect()
+                )
             }
             return .none
 
@@ -167,6 +172,9 @@ extension RecoveryPhraseValidationReducer {
 
         case .fail:
             state.route = .failure
+
+        case .failureFeedback:
+            environment.feedbackGenerator.generateFeedback()
 
         case .updateRoute(let route):
             state.route = route

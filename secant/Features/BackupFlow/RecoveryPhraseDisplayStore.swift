@@ -40,6 +40,7 @@ struct BackupPhraseEnvironment {
     let mainQueue: AnySchedulerOf<DispatchQueue>
     let newPhrase: () -> Effect<RecoveryPhrase, RecoveryPhraseError>
     let pasteboard: Pasteboard
+    let feedbackGenerator: FeedbackGenerator
 }
 
 extension BackupPhraseEnvironment {
@@ -51,13 +52,15 @@ extension BackupPhraseEnvironment {
     static let demo = Self(
         mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
         newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
-        pasteboard: .test
+        pasteboard: .test,
+        feedbackGenerator: SilentFeedbackGenerator()
     )
         
     static let live = Self(
         mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
         newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
-        pasteboard: .live
+        pasteboard: .live,
+        feedbackGenerator: ImpactFeedbackGenerator()
     )
 }
 

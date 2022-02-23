@@ -15,7 +15,7 @@ extension PhraseChip {
     /// Makes a PhraseChip draggable when it is of kind .unassigned
     @ViewBuilder func makeDraggable() -> some View {
         switch self.kind {
-        case .unassigned(let word):
+        case let .unassigned(word, _):
             self.onDrag {
                 NSItemProvider(object: word as NSString)
             }

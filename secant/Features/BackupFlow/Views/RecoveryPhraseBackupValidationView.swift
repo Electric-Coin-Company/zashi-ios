@@ -116,7 +116,8 @@ extension RecoveryPhraseValidationState {
     func wordsChips(
         for groupIndex: Int,
         groupSize: Int,
-        from wordGroup: RecoveryPhrase.Group
+        from wordGroup: RecoveryPhrase.Group,
+        state: RecoveryPhraseValidationState
     ) -> [PhraseChip.Kind] {
         let validationWord = validationWords.first(where: { $0.groupIndex == groupIndex })
 
@@ -126,7 +127,7 @@ extension RecoveryPhraseValidationState {
             }
             
             if let completedWord = validationWord?.word {
-                return .unassigned(word: completedWord)
+                return .unassigned(word: completedWord, color: state.coloredChipColor)
             }
 
             return .empty
@@ -247,8 +248,9 @@ private extension WordChipGrid {
     ) {
         let chips = state.wordsChips(
             for: groupIndex,
-            groupSize: RecoveryPhraseValidationState.wordGroupSize,
-            from: wordGroup
+               groupSize: RecoveryPhraseValidationState.wordGroupSize,
+               from: wordGroup,
+               state: state
         )
 
         self.init(chips: chips, coloredChipColor: state.coloredChipColor)
