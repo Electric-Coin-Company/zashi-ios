@@ -14,6 +14,20 @@ enum RecoveryPhraseError: Error {
     case unableToGeneratePhrase
 }
 
+struct FeedbackGenerator {
+    let generateFeedback: () -> Void
+}
+
+extension FeedbackGenerator {
+    static let haptic = FeedbackGenerator(
+        generateFeedback: { UINotificationFeedbackGenerator().notificationOccurred(.error) }
+    )
+    
+    static let silent = FeedbackGenerator(
+        generateFeedback: { }
+    )
+}
+
 struct Pasteboard {
     let setString: (String) -> Void
     let getString: () -> String?
@@ -40,6 +54,7 @@ struct BackupPhraseEnvironment {
     let mainQueue: AnySchedulerOf<DispatchQueue>
     let newPhrase: () -> Effect<RecoveryPhrase, RecoveryPhraseError>
     let pasteboard: Pasteboard
+    let feedbackGenerator: FeedbackGenerator
 }
 
 extension BackupPhraseEnvironment {
@@ -51,13 +66,15 @@ extension BackupPhraseEnvironment {
     static let demo = Self(
         mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
         newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
-        pasteboard: .test
+        pasteboard: .test,
+        feedbackGenerator: .silent
     )
         
     static let live = Self(
         mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
         newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
-        pasteboard: .live
+        pasteboard: .live,
+        feedbackGenerator: .haptic
     )
 }
 

@@ -10,7 +10,7 @@ import SwiftUI
 struct PhraseChip: View {
     enum Kind: Hashable {
         case empty
-        case unassigned(word: String)
+        case unassigned(word: String, color: Color = Asset.Colors.Buttons.activeButton.color)
         case ordered(position: Int, word: String)
     }
 
@@ -22,8 +22,8 @@ struct PhraseChip: View {
             EmptyChip()
         case let .ordered(position, word):
             EnumeratedChip(index: position, text: word)
-        case .unassigned(let word):
-            ColoredChip(word: word)
+        case let .unassigned(word, color):
+            ColoredChip(word: word, color: color)
         }
     }
 }

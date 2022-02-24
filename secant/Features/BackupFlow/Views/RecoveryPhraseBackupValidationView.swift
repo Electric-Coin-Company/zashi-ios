@@ -126,7 +126,7 @@ extension RecoveryPhraseValidationState {
             }
             
             if let completedWord = validationWord?.word {
-                return .unassigned(word: completedWord)
+                return .unassigned(word: completedWord, color: self.coloredChipColor)
             }
 
             return .empty

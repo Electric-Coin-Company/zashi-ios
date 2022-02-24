@@ -15,7 +15,8 @@ class RecoveryPhraseValidationTests: XCTestCase {
     let testEnvironment = BackupPhraseEnvironment(
         mainQueue: testScheduler.eraseToAnyScheduler(),
         newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
-        pasteboard: .test
+        pasteboard: .test,
+        feedbackGenerator: .silent
     )
 
     func testPickWordsFromMissingIndices() throws {
@@ -373,6 +374,10 @@ class RecoveryPhraseValidationTests: XCTestCase {
         }
 
         Self.testScheduler.advance(by: 2)
+
+        store.receive(.failureFeedback) {
+            XCTAssertTrue($0.isComplete)
+        }
 
         store.receive(.fail) {
             $0.route = .failure
