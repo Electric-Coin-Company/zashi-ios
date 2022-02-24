@@ -159,7 +159,7 @@ extension RecoveryPhraseValidationReducer {
                 let value: RecoveryPhraseValidationAction = state.isValid ? .succeed : .fail
                 
                 return .concatenate(
-                    .init(value: .failureFeedback),
+                    Effect(value: .failureFeedback),
                     Effect(value: value)
                         .delay(for: 1, scheduler: environment.mainQueue)
                         .eraseToEffect()
