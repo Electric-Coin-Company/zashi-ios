@@ -21,7 +21,7 @@ extension Text {
         self.modifier(TitleTextStyle())
     }
 
-    func synopsisText() -> some View {
+    func paragraphText() -> some View {
         self.modifier(ParagraphStyle())
     }
 

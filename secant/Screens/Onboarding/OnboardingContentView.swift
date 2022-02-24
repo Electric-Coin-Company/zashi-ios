@@ -70,7 +70,7 @@ struct OnboardingContentView: View {
                         }
                         
                         Text(viewStore.steps[stepIndex].description)
-                            .synopsisText()
+                            .paragraphText()
                             .lineSpacing(2)
                             .opacity(0.53)
                     }
