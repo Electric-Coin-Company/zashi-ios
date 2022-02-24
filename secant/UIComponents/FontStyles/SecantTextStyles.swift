@@ -21,6 +21,10 @@ extension Text {
         self.modifier(TitleTextStyle())
     }
 
+    func paragraphText() -> some View {
+        self.modifier(ParagraphStyle())
+    }
+
     /// Body text style. Used for content.  Roboto-Regular 18pt
     private struct BodyTextStyle: ViewModifier {
         func body(content: Content) -> some View {
@@ -30,11 +34,20 @@ extension Text {
         }
     }
 
+    /// Used for additional information, explanations, context (usually paragraphs)
+    private struct ParagraphStyle: ViewModifier {
+        func body(content: Content) -> some View {
+            content
+                .foregroundColor(Asset.Colors.Text.heading.color)
+                .font(.custom(FontFamily.Rubik.regular.name, size: 16))
+        }
+    }
+
     private struct TitleTextStyle: ViewModifier {
         func body(content: Content) -> some View {
             content
                 .foregroundColor(Asset.Colors.Text.heading.color)
-                .font(.custom(FontFamily.Rubik.regular.name, size: 33))
+                .font(.custom(FontFamily.Rubik.regular.name, size: 33, relativeTo: .callout))
                 .shadow(color: Asset.Colors.Text.captionTextShadow.color, radius: 1, x: 0, y: 1)
         }
     }

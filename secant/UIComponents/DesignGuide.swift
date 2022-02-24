@@ -118,11 +118,11 @@ struct ButtonGuide: View {
             .primaryButtonStyle
             .frame(height: buttonHeight)
 
-            // TODO: Pressed Primary Button
+            // Pressed Primary Button
             Button(action: {}) {
                 Text("Pressed Primary Button")
             }
-            .primaryButtonStyle
+            .primaryButtonPressedStyle
             .frame(height: buttonHeight)
 
             // Disabled Primary Button
@@ -140,14 +140,14 @@ struct ButtonGuide: View {
             .activeButtonStyle
             .frame(height: buttonHeight)
 
-            // TODO: Pressed Active Button
+            // Pressed Active Button
             Button(action: {}) {
                 Text("Pressed Active Button")
             }
-            .activeButtonStyle
+            .activeButtonPressedStyle
             .frame(height: buttonHeight)
 
-            // TODO: Disabled Active Button
+            // Disabled Active Button
             Button(action: {}) {
                 Text("Disabled Active Button")
             }
@@ -187,5 +187,31 @@ struct DesignGuide_Previews: PreviewProvider {
                 .preferredColorScheme(.light)
         }
         .previewLayout(.fixed(width: 1086, height: 1080))
+    }
+}
+
+// MARK: - Pressed Simulated
+
+extension Button {
+    var primaryButtonPressedStyle: some View {
+        buttonStyle(
+            StandardButtonStyle(
+                foregroundColor: Asset.Colors.Text.button.color,
+                background: Asset.Colors.Buttons.primaryButtonPressed.color,
+                pressedBackgroundColor: Asset.Colors.Buttons.primaryButtonPressed.color,
+                disabledBackgroundColor: Asset.Colors.Buttons.primaryButtonDisabled.color
+            )
+        )
+    }
+    
+    var activeButtonPressedStyle: some View {
+        buttonStyle(
+            StandardButtonStyle(
+                foregroundColor: Asset.Colors.Text.activeButtonText.color,
+                background: Asset.Colors.Buttons.activeButtonPressed.color,
+                pressedBackgroundColor: Asset.Colors.Buttons.activeButtonPressed.color,
+                disabledBackgroundColor: Asset.Colors.Buttons.activeButtonDisabled.color
+            )
+        )
     }
 }

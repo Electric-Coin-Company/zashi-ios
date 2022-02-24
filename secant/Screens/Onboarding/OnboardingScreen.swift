@@ -56,5 +56,56 @@ struct OnboardingScreen_Previews: PreviewProvider {
             )
         )
         .preferredColorScheme(.light)
+        .previewDevice(PreviewDevice(rawValue: "iPhone SE (2nd generation)"))
+
+        OnboardingScreen(
+            store: Store(
+                initialState: OnboardingState(),
+                reducer: OnboardingReducer.default,
+                environment: ()
+            )
+        )
+        .preferredColorScheme(.light)
+        .previewDevice(PreviewDevice(rawValue: "iPhone 8"))
+
+        OnboardingScreen(
+            store: Store(
+                initialState: OnboardingState(),
+                reducer: OnboardingReducer.default,
+                environment: ()
+            )
+        )
+        .preferredColorScheme(.light)
+        .previewDevice(PreviewDevice(rawValue: "iPhone 12 Pro"))
+
+        OnboardingScreen(
+            store: Store(
+                initialState: OnboardingState(),
+                reducer: OnboardingReducer.default,
+                environment: ()
+            )
+        )
+        .preferredColorScheme(.dark)
+        .previewDevice(PreviewDevice(rawValue: "iPhone SE (2nd generation)"))
+
+        OnboardingScreen(
+            store: Store(
+                initialState: OnboardingState(),
+                reducer: OnboardingReducer.default,
+                environment: ()
+            )
+        )
+        .preferredColorScheme(.dark)
+        .previewDevice(PreviewDevice(rawValue: "iPhone 8"))
+
+        OnboardingScreen(
+            store: Store(
+                initialState: OnboardingState(),
+                reducer: OnboardingReducer.default,
+                environment: ()
+            )
+        )
+        .preferredColorScheme(.dark)
+        .previewDevice(PreviewDevice(rawValue: "iPhone 12 Pro"))
     }
 }

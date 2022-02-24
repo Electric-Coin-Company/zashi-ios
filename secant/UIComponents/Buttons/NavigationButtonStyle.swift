@@ -23,6 +23,7 @@ struct NavigationButtonStyle: ButtonStyle {
                     Asset.Colors.Buttons.onboardingNavigation.color
             )
             .cornerRadius(.infinity)
+            .neumorphicButton(configuration.isPressed)
     }
 }
 
@@ -39,12 +40,14 @@ struct NavigationModifier_Previews: PreviewProvider {
         Button("Back") { dump("Example button") }
             .navigationButtonStyle
             .frame(width: 80, height: 40)
+            .applyScreenBackground()
             .previewLayout(.fixed(width: 300, height: 100))
             .preferredColorScheme(.dark)
-        
+
         Button("Skip") { dump("Example button") }
             .navigationButtonStyle
             .frame(width: 80, height: 40)
+            .applyScreenBackground()
             .previewLayout(.fixed(width: 300, height: 100))
             .preferredColorScheme(.light)
     }

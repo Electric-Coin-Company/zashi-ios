@@ -13,7 +13,8 @@ extension Button {
             StandardButtonStyle(
                 foregroundColor: Asset.Colors.Text.activeButtonText.color,
                 background: Asset.Colors.Buttons.activeButton.color,
-                pressedBackgroundColor: Asset.Colors.Buttons.activeButton.color
+                pressedBackgroundColor: Asset.Colors.Buttons.activeButtonPressed.color,
+                disabledBackgroundColor: Asset.Colors.Buttons.activeButtonDisabled.color
             )
         )
     }

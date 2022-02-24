@@ -8,22 +8,44 @@
 import SwiftUI
 
 struct CircularFrame: View {
+    @Environment(\.colorScheme) var colorScheme
+
     var body: some View {
         GeometryReader { proxy in
-            let lineWidth = proxy.size.width * 0.05
+            let lineWidth = proxy.size.width * 0.06
 
             Circle()
-                .stroke(lineWidth: lineWidth)
-                .foregroundColor(Asset.Colors.Onboarding.circularFrame.color)
-                // Add two points to the frame to properly mask edges
-                .frame(
-                    width: proxy.size.width - lineWidth + 2,
-                    height: proxy.size.height - lineWidth + 2,
-                    alignment: .center
+                .stroke(
+                    LinearGradient(
+                        colors: [
+                            Asset.Colors.Onboarding.circularFrameGradientStart.color,
+                            Asset.Colors.Onboarding.circularFrameGradientEnd.color
+                        ],
+                        startPoint: colorScheme == .light ? .topLeading : .top,
+                        endPoint: colorScheme == .light ? .bottomTrailing : .bottom
+                    ),
+                    style: StrokeStyle(
+                        lineWidth: lineWidth
+                    )
                 )
-                // Update the offset to account for the 2 extra points
-                .offset(x: lineWidth / 2 - 1, y: lineWidth / 2 - 1)
-                .shadow(radius: 10)
+                .padding(colorScheme == .light ? 0 : 10)
+
+            if colorScheme == .dark {
+                Circle()
+                    .stroke(
+                        LinearGradient(
+                            colors: [
+                                Asset.Colors.Onboarding.circularFrameDarkOutlineGradientStart.color,
+                                Asset.Colors.Onboarding.circularFrameDarkOutlineGradientEnd.color
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        ),
+                        style: StrokeStyle(
+                            lineWidth: lineWidth * 0.15
+                        )
+                    )
+            }
         }
     }
 }
@@ -114,7 +136,8 @@ struct CircularFramePreviewHelper: View {
 struct CircularFrame_Previews: PreviewProvider {
     static var previews: some View {
         CircularFramePreviewHelper()
-            .preferredColorScheme(.light)
+            .preferredColorScheme(.dark)
             .previewLayout(.device)
+            .applyScreenBackground()
     }
 }

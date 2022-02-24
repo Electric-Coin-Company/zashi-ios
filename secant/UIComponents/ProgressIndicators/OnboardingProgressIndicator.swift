@@ -15,8 +15,8 @@ struct OnboardingProgressStyle: ProgressViewStyle {
             Asset.Colors.ProgressIndicator.gradientLeft.color,
             Asset.Colors.ProgressIndicator.gradientRight.color
         ],
-        startPoint: UnitPoint(x: 0.00, y: 0.00),
-        endPoint: UnitPoint(x: 1.00, y: 0.00)
+        startPoint: .leading,
+        endPoint: .trailing
     )
     
     func makeBody(configuration: Configuration) -> some View {
@@ -25,7 +25,9 @@ struct OnboardingProgressStyle: ProgressViewStyle {
         return VStack {
             HStack {
                 configuration.label
-                    .foregroundColor(Asset.Colors.ProgressIndicator.negativeSpace.color)
+                    .foregroundColor(Asset.Colors.Text.heading.color)
+                    .font(.custom(FontFamily.Rubik.regular.name, size: 16))
+                    .opacity(0.3)
                 
                 Spacer()
             }
