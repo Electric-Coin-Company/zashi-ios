@@ -1,0 +1,48 @@
+// MARK: - Welcome Screen
+"welcomeScreen.title" = "Welcome!";
+"welcomeScreen.subtitle" = "Just Loading, one sec";
+
+// MARK: - Onboarding Flow
+"onboarding.step1.title" = "Shielded by Default";
+"onboarding.step1.description" = "Tired of worrying about which wallet you used last? US TOO! Now you don't have to, as all funds will automatically be moved to your shielded wallet (and migrated for you).";
+
+"onboarding.step2.title" = "Unified Addresses";
+"onboarding.step2.description" = "Tired of worrying about which wallet you used last? US TOO! Now you don't have to, as all funds will automatically be moved to your shielded wallet (and migrated for you).";
+
+"onboarding.step3.title" = "And so much more...";
+"onboarding.step3.description" = "Faster reverse syncing (yes it's a thing).  Liberated Payments, Social Payments, Address Books, in-line ZEC requests, wrapped Bitcoin, fractionalize NFTs, you providing liquidity for anything you want, getting that Defi, and going to Mexico.";
+
+"onboarding.step4.title" = "Ready for the Future";
+"onboarding.step4.description" = "Lets get you set up!";
+
+"onboarding.button.newWallet" = "Create New Wallet";
+"onboarding.button.importWallet" = "Import an Existing Wallet";
+
+// MARK: - Secret Recovery Phrase Display
+"recoveryPhraseDisplay.title" = "Your Secret Recovery Phrase";
+"recoveryPhraseDisplay.description" = "The following 24 words represent your funds and the security used to protect them.";
+"recoveryPhraseDisplay.backItUp" = "Back them up now! There will be a test.";
+"recoveryPhraseDisplay.button.finished" = "Finished!";
+"recoveryPhraseDisplay.button.copyToBuffer" = "Copy To Buffer";
+"recoveryPhraseDisplay.noWords" = "Oops no words";
+
+// MARK: - Recovery Phrase Backup Validation & Success/Failed
+"recoveryPhraseBackupValidation.title" = "Verify Your Backup";
+"recoveryPhraseBackupValidation.description" = "Drag the words below to match your backed-up copy.";
+"recoveryPhraseBackupValidation.successResult" = "Congratulations! You validated your secret recovery phrase.";
+"recoveryPhraseBackupValidation.failedResult" = "Your placed words did not match your secret recovery phrase";
+
+"validationSuccess.title" = "Success!";
+"validationSuccess.description" = "Place that backup somewhere safe and venture forth in security.";
+"validationSuccess.button.goToWallet" = "Take me to my wallet!";
+"validationSuccess.button.phraseAgain" = "Show me my phrase again";
+
+"validationFailed.title" = "Ouch, sorry, no.";
+"validationFailed.description" = "Your placed words did not match your secret recovery phrase.";
+"validationFailed.incorrectBackupDescription" = "Remember, you can't recover your funds if you lose (or incorrectly save) these 24 words.";
+"validationFailed.button.tryAgain" = "I'm ready to try again";
+        
+// MARK: - Common & Shared
+"Back" = "Back";
+"Skip" = "Skip";
+"Next" = "Next";

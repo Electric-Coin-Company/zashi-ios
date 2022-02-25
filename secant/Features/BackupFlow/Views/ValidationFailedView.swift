@@ -16,7 +16,7 @@ struct ValidationFailedView: View {
             GeometryReader { proxy in
                 VStack {
                     VStack(alignment: .center, spacing: 20) {
-                        Text("Ouch, sorry, no.")
+                        Text("validationFailed.title")
                             .font(.custom(FontFamily.Rubik.regular.name, size: 30))
                             .fixedSize(horizontal: false, vertical: true)
                     }
@@ -36,18 +36,18 @@ struct ValidationFailedView: View {
 
                     VStack(alignment: .center, spacing: 40) {
                         VStack(alignment: .center, spacing: 20) {
-                            Text("Your placed words did not match your secret recovery phrase.")
+                            Text("validationFailed.description")
                                 .bodyText()
                                 .fixedSize(horizontal: false, vertical: true)
 
-                            Text("Remember, you can't recover your funds if you lose (or incorrectly save) these 24 words.")
+                            Text("validationFailed.incorrectBackupDescription")
                                 .bodyText()
                                 .fixedSize(horizontal: false, vertical: true)
                         }
 
                         Button(
                             action: { viewStore.send(.reset) },
-                            label: { Text("I'm ready to try again") }
+                            label: { Text("validationFailed.button.tryAgain") }
                         )
                         .activeButtonStyle
                         .frame(height: 60)

@@ -18,7 +18,7 @@ struct OnboardingFooterView: View {
                 Spacer()
                 
                 if viewStore.isFinalStep {
-                    Button("Create New Wallet") {
+                    Button("onboarding.button.newWallet") {
                         withAnimation(.easeInOut(duration: animationDuration)) {
                             viewStore.send(.createNewWallet)
                         }
@@ -26,7 +26,7 @@ struct OnboardingFooterView: View {
                     .createButtonStyle
                     .onboardingFooterButtonLayout()
                     
-                    Button("Import an Existing Wallet") {
+                    Button("onboarding.button.importWallet") {
                         withAnimation(.easeInOut(duration: animationDuration)) {
                             viewStore.send(.createNewWallet)
                         }

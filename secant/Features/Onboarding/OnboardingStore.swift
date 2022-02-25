@@ -12,8 +12,8 @@ import ComposableArchitecture
 struct OnboardingState: Equatable {
     struct Step: Equatable, Identifiable {
         let id: UUID
-        let title: String
-        let description: String
+        let title: LocalizedStringKey
+        let description: LocalizedStringKey
         let background: Image
         let badge: Badge
     }
