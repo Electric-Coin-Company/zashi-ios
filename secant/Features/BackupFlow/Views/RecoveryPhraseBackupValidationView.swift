@@ -61,7 +61,7 @@ struct RecoveryPhraseBackupValidationView: View {
             .applyScreenBackground()
             .scrollableWhenScaledUp()
             .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle(Text("Verify Your Backup"))
+            .navigationTitle(Text("recoveryPhraseBackupValidation.title"))
         }
     }
 
@@ -70,7 +70,7 @@ struct RecoveryPhraseBackupValidationView: View {
             if viewStore.isComplete {
                 completeHeader(for: viewStore.state)
             } else {
-                Text("Drag the words below to match your backed-up copy.")
+                Text("recoveryPhraseBackupValidation.description")
                     .bodyText()
             }
 
@@ -81,10 +81,10 @@ struct RecoveryPhraseBackupValidationView: View {
     
     @ViewBuilder func completeHeader(for state: RecoveryPhraseValidationState) -> some View {
         if state.isValid {
-            Text("Congratulations! You validated your secret recovery phrase.")
+            Text("recoveryPhraseBackupValidation.successResult")
                 .bodyText()
         } else {
-            Text("Your placed words did not match your secret recovery phrase")
+            Text("recoveryPhraseBackupValidation.failedResult")
                 .bodyText()
         }
     }

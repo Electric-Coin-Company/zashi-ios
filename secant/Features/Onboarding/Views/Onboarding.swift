@@ -53,35 +53,34 @@ struct OnboardingView: View {
     }
 }
 
-// swiftlint:disable line_length
 extension OnboardingState {
     static let onboardingSteps = IdentifiedArray(
         uniqueElements: [
             Step(
                 id: UUID(),
-                title: "Shielded by Default",
-                description: "Tired of worrying about which wallet you used last? US TOO! Now you don't have to, as all funds will automatically be moved to your shielded wallet (and migrated for you).",
+                title: "onboarding.step1.title",
+                description: "onboarding.step1.description",
                 background: Asset.Assets.Backgrounds.callout1.image,
                 badge: .shield
             ),
             Step(
                 id: UUID(),
-                title: "Unified Addresses",
-                description: "Tired of worrying about which wallet you used last? US TOO! Now you don't have to, as all funds will automatically be moved to your shielded wallet (and migrated for you).",
+                title: "onboarding.step2.title",
+                description: "onboarding.step2.description",
                 background: Asset.Assets.Backgrounds.callout2.image,
                 badge: .person
             ),
             Step(
                 id: UUID(),
-                title: "And so much more...",
-                description: "Faster reverse syncing (yes it's a thing).  Liberated Payments, Social Payments, Address Books, in-line ZEC requests, wrapped Bitcoin, fractionalize NFTs, you providing liquidity for anything you want, getting that Defi, and going to Mexico.",
+                title: "onboarding.step3.title",
+                description: "onboarding.step3.description",
                 background: Asset.Assets.Backgrounds.callout3.image,
                 badge: .list
             ),
             Step(
                 id: UUID(),
-                title: "Ready for the Future",
-                description: "Lets get you set up!",
+                title: "onboarding.step4.title",
+                description: "onboarding.step4.description",
                 background: Asset.Assets.Backgrounds.callout4.image,
                 badge: .shield
             )
