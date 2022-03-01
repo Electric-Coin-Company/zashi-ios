@@ -9,7 +9,6 @@ import SwiftUI
 
 struct OnboardingProgressStyle: ProgressViewStyle {
     let height: CGFloat = 3
-    let animation: Animation = .easeInOut
     let gradient = LinearGradient(
         colors: [
             Asset.Colors.ProgressIndicator.gradientLeft.color,
@@ -53,7 +52,6 @@ struct OnboardingProgressStyle: ProgressViewStyle {
                     }
                 }
                 .frame(height: height)
-                .animation(animation)
             }
         }
     }

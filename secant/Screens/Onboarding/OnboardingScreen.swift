@@ -10,7 +10,6 @@ import ComposableArchitecture
 
 struct OnboardingScreen: View {
     let store: Store<OnboardingState, OnboardingAction>
-    let animationDuration: CGFloat = 0.8
 
     var body: some View {
         GeometryReader { proxy in
