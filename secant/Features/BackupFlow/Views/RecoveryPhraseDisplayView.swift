@@ -17,15 +17,15 @@ struct RecoveryPhraseDisplayView: View {
                 VStack(alignment: .center, spacing: 0) {
                     if let groups = viewStore.phrase?.toGroups() {
                         VStack(spacing: 20) {
-                            Text("Your Secret Recovery Phrase")
+                            Text("recoveryPhraseDisplay.title")
                                 .titleText()
                                 .multilineTextAlignment(.center)
 
                             VStack(alignment: .center, spacing: 4) {
-                                Text("The following 24 words represent your funds and the security used to protect them.")
+                                Text("recoveryPhraseDisplay.description")
                                     .bodyText()
                                 
-                                Text("Back them up now! There will be a test.")
+                                Text("recoveryPhraseDisplay.backItUp")
                                     .bodyText()
                             }
                         }
@@ -44,7 +44,7 @@ struct RecoveryPhraseDisplayView: View {
                         VStack {
                             Button(
                                 action: { viewStore.send(.finishedPressed) },
-                                label: { Text("Finished!") }
+                                label: { Text("recoveryPhraseDisplay.button.finished") }
                             )
                             .activeButtonStyle
                             .frame(height: 60)
@@ -54,7 +54,7 @@ struct RecoveryPhraseDisplayView: View {
                                     viewStore.send(.copyToBufferPressed)
                                 },
                                 label: {
-                                    Text("Copy To Buffer")
+                                    Text("recoveryPhraseDisplay.button.copyToBuffer")
                                         .bodyText()
                                 }
                             )
@@ -62,7 +62,7 @@ struct RecoveryPhraseDisplayView: View {
                         }
                         .padding()
                     } else {
-                        Text("Oops no words")
+                        Text("recoveryPhraseDisplay.noWords")
                     }
                 }
             }

@@ -19,10 +19,10 @@ struct ValidationSucceededView: View {
             GeometryReader { proxy in
                 VStack {
                     VStack(spacing: 20) {
-                        Text("Success!")
+                        Text("validationSuccess.title")
                             .font(.custom(FontFamily.Rubik.regular.name, size: 36))
 
-                        Text("Place that backup somewhere safe and venture forth in security.")
+                        Text("validationSuccess.description")
                             .bodyText()
                             .multilineTextAlignment(.center)
                             .lineSpacing(2)
@@ -52,7 +52,7 @@ struct ValidationSucceededView: View {
                                 viewStore.send(.proceedToHome, animation: .easeIn(duration: 1))
                             },
                             label: {
-                                Text("Take me to my wallet!")
+                                Text("validationSuccess.button.goToWallet")
                                     .fixedSize(horizontal: false, vertical: true)
                             }
                         )
@@ -71,7 +71,7 @@ struct ValidationSucceededView: View {
                                 )
                             },
                             label: {
-                                Text("Show me my phrase again")
+                                Text("validationSuccess.button.phraseAgain")
                                     .fixedSize(horizontal: false, vertical: true)
                             }
                         )

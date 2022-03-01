@@ -23,10 +23,10 @@ struct WelcomeView: View {
                         )
 
                     VStack {
-                        Text("Welcome!")
+                        Text("welcomeScreen.title")
                             .titleText()
 
-                        Text("Just Loading, one sec")
+                        Text("welcomeScreen.subtitle")
                             .captionText()
                     }
                 }
