@@ -8,21 +8,11 @@
 import SwiftUI
 import ComposableArchitecture
 
-//      jeste udelat scaledWhenBigFont
-//      fix button height
-//      zmena tlacitek na action pro dark
-//      navigaci, back nejak
-//      napojit na button v onboardingu
-// texty do strings file
-//      back button at je jak ma byt
-//      action button ma spatnou barvu title v onboardingu
-// progress bar se animuje skocenim dolu, protoze je animated
-
 struct ImportWalletView: View {
     @Environment(\.presentationMode) var presentationMode
     
     var store: ImportWalletStore
-    
+
     var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
@@ -32,11 +22,11 @@ struct ImportWalletView: View {
                         .navigationButtonStyle
                         .frame(width: 75, height: 40)
                         
-                        Text("Wallet Import")
+                        Text("importWallet.title")
                             .titleText()
                     }
                     
-                    Text("You can import your backed up wallet by entering your backup recovery phrase (aka seed phrase) now.")
+                    Text("importWallet.description")
                         .paragraphText()
                         .lineSpacing(4)
                         .opacity(0.53)
@@ -46,13 +36,13 @@ struct ImportWalletView: View {
                 ImportSeedEditor(store: store)
                     .frame(width: nil, height: 200, alignment: .center)
                 
-                Button("Import Recovery Phrase") {
+                Button("importWallet.button.importPhrase") {
                     viewStore.send(.importRecoveryPhrase)
                 }
                 .activeButtonStyle
                 .importWalletButtonLayout()
 
-                Button("Import a private or viewing key") {
+                Button("importWallet.button.importPrivateKey") {
                     viewStore.send(.importPrivateOrViewingKey)
                 }
                 .secondaryButtonStyle
@@ -74,7 +64,7 @@ fileprivate struct ImportWalletButtonLayout: ViewModifier {
             .frame(
                 minWidth: 0,
                 maxWidth: .infinity,
-                minHeight: 60,
+                minHeight: 64,
                 maxHeight: .infinity,
                 alignment: .center
             )

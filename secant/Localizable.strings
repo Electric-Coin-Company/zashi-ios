@@ -42,6 +42,12 @@
 "validationFailed.incorrectBackupDescription" = "Remember, you can't recover your funds if you lose (or incorrectly save) these 24 words.";
 "validationFailed.button.tryAgain" = "I'm ready to try again";
         
+// MARK: - Import Wallet Screen
+"importWallet.title" = "Wallet Import";
+"importWallet.description" = "You can import your backed up wallet by entering your backup recovery phrase (aka seed phrase) now.";
+"importWallet.button.importPhrase" = "Import Recovery Phrase";
+"importWallet.button.importPrivateKey" = "Import a private or viewing key";
+
 // MARK: - Common & Shared
 "Back" = "Back";
 "Skip" = "Skip";
