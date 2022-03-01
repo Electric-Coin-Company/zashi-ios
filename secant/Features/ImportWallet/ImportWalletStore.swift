@@ -33,7 +33,7 @@ extension ImportWalletReducer {
     static let `default` = ImportWalletReducer { _, action, _ in
         switch action {
         case .importRecoveryPhrase:
-            // TODO: once connected to SDK, use the state.importedSeedPhrase
+            // TODO: once connected to SDK, use the state.importedSeedPhrase (Issue #166)
             return .none
             
         case .importPrivateOrViewingKey:
