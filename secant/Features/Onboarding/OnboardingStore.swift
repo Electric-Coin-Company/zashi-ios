@@ -9,7 +9,14 @@ import Foundation
 import SwiftUI
 import ComposableArchitecture
 
+typealias OnboardingViewStore = ViewStore<OnboardingState, OnboardingAction>
+
 struct OnboardingState: Equatable {
+    enum Route: Equatable, CaseIterable {
+        case createNewWallet
+        case importExistingWallet
+    }
+    
     struct Step: Equatable, Identifiable {
         let id: UUID
         let title: LocalizedStringKey
@@ -21,7 +28,8 @@ struct OnboardingState: Equatable {
     var steps: IdentifiedArrayOf<Step> = Self.onboardingSteps
     var index = 0
     var skippedAtindex: Int?
-    
+    var route: Route?
+
     var currentStep: Step { steps[index] }
     var isFinalStep: Bool { steps.count == index + 1 }
     var isInitialStep: Bool { index == 0 }
@@ -32,20 +40,43 @@ struct OnboardingState: Equatable {
         guard index != 0 else { return .zero }
         return stepOffset * CGFloat(index)
     }
+    
+    /// Import Wallet
+    var importWalletState: ImportWalletState
+}
+
+extension OnboardingViewStore {
+    func bindingForRoute(_ route: OnboardingState.Route) -> Binding<Bool> {
+        self.binding(
+            get: { $0.route == route },
+            send: { isActive in
+                return .updateRoute(isActive ? route : nil)
+            }
+        )
+    }
 }
 
 enum OnboardingAction: Equatable {
     case next
     case back
     case skip
+    case updateRoute(OnboardingState.Route?)
     case createNewWallet
     case importExistingWallet
+    case importWallet(ImportWalletAction)
 }
 
 typealias OnboardingReducer = Reducer<OnboardingState, OnboardingAction, Void>
 
 extension OnboardingReducer {
-    static let `default` = Reducer<OnboardingState, OnboardingAction, Void> { state, action, _ in
+    static let `default` = OnboardingReducer.combine(
+        [
+            onboardingReducer,
+            importWalletReducer
+        ]
+    )
+
+    private static let onboardingReducer = OnboardingReducer { state, action, _ in
         switch action {
         case .back:
             guard state.index > 0 else { return .none }
@@ -68,11 +99,26 @@ extension OnboardingReducer {
             state.index = state.steps.count - 1
             return .none
             
+        case .updateRoute(let route):
+            state.route = route
+            return .none
+
         case .createNewWallet:
+            state.route = .createNewWallet
             return .none
 
         case .importExistingWallet:
+            state.route = .importExistingWallet
+            return .none
+            
+        case .importWallet(let route):
             return .none
         }
     }
+    
+    private static let importWalletReducer: OnboardingReducer = ImportWalletReducer.default.pullback(
+        state: \OnboardingState.importWalletState,
+        action: /OnboardingAction.importWallet,
+        environment: { _ in ImportWalletEnvironment.live }
+    )
 }

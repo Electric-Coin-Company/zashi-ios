@@ -93,7 +93,9 @@ struct Onboarding_Previews: PreviewProvider {
         Group {
             OnboardingView(
                 store: Store(
-                    initialState: OnboardingState(),
+                    initialState: OnboardingState(
+                        importWalletState: .placeholder
+                    ),
                     reducer: .default,
                     environment: ()
                 )

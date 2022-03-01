@@ -12,7 +12,9 @@ import ComposableArchitecture
 class OnboardingStoreTests: XCTestCase {
     func testIncrementingOnboarding() {
         let store = TestStore(
-            initialState: OnboardingState(),
+            initialState: OnboardingState(
+                importWalletState: .placeholder
+            ),
             reducer: OnboardingReducer.default,
             environment: ()
         )
@@ -50,7 +52,10 @@ class OnboardingStoreTests: XCTestCase {
     
     func testIncrementingPastTotalStepsDoesNothing() {
         let store = TestStore(
-            initialState: OnboardingState(index: 3),
+            initialState: OnboardingState(
+                index: 3,
+                importWalletState: .placeholder
+            ),
             reducer: OnboardingReducer.default,
             environment: ()
         )
@@ -74,7 +79,10 @@ class OnboardingStoreTests: XCTestCase {
     
     func testDecrementingOnboarding() {
         let store = TestStore(
-            initialState: OnboardingState(index: 2),
+            initialState: OnboardingState(
+                index: 2,
+                importWalletState: .placeholder
+            ),
             reducer: OnboardingReducer.default,
             environment: ()
         )
@@ -102,7 +110,9 @@ class OnboardingStoreTests: XCTestCase {
     
     func testDecrementingPastFirstStepDoesNothing() {
         let store = TestStore(
-            initialState: OnboardingState(),
+            initialState: OnboardingState(
+                importWalletState: .placeholder
+            ),
             reducer: OnboardingReducer.default,
             environment: ()
         )
@@ -128,7 +138,10 @@ class OnboardingStoreTests: XCTestCase {
         let initialIndex = 1
 
         let store = TestStore(
-            initialState: OnboardingState(index: initialIndex),
+            initialState: OnboardingState(
+                index: initialIndex,
+                importWalletState: .placeholder
+            ),
             reducer: OnboardingReducer.default,
             environment: ()
         )
