@@ -9,7 +9,6 @@ import SwiftUI
 import ComposableArchitecture
 
 struct ImportSeedEditor: View {
-//    @State var state: String = "moose moose moose chicken chicken moose moose moose moose moose chicken chicken moose moose moose moose moose chicken chicken moose moose"
     var store: ImportWalletStore
     
     /// Clearance of the black color for the TextEditor under the text (.dark colorScheme)
