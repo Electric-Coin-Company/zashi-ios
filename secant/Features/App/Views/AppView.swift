@@ -20,12 +20,15 @@ struct AppView: View {
                 .navigationViewStyle(StackNavigationViewStyle())
 
             case .onboarding:
-                OnboardingScreen(
-                    store: store.scope(
-                        state: \.onboardingState,
-                        action: AppAction.onboarding
+                NavigationView {
+                    OnboardingScreen(
+                        store: store.scope(
+                            state: \.onboardingState,
+                            action: AppAction.onboarding
+                        )
                     )
-                )
+                }
+                .navigationViewStyle(StackNavigationViewStyle())
 
             case .startup:
                 ZStack(alignment: .topTrailing) {

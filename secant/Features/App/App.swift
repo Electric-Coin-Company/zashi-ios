@@ -113,7 +113,9 @@ extension AppState {
     static var placeholder: Self {
         .init(
             homeState: .placeholder,
-            onboardingState: .init(),
+            onboardingState: .init(
+                importWalletState: .placeholder
+            ),
             phraseValidationState: RecoveryPhraseValidationState.placeholder,
             phraseDisplayState: RecoveryPhraseDisplayState(
                 phrase: .placeholder
