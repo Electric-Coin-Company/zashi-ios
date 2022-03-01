@@ -21,6 +21,7 @@ struct ValidationWord: Equatable {
 
 struct RecoveryPhraseValidationState: Equatable {
     enum Route: Equatable, CaseIterable {
+        case recoveryBackupPhraseValidation
         case success
         case failure
     }
@@ -128,6 +129,7 @@ extension RecoveryPhrase.Group {
 }
 
 enum RecoveryPhraseValidationAction: Equatable {
+    case recoveryBackupPhraseValidation
     case updateRoute(RecoveryPhraseValidationState.Route?)
     case reset
     case move(wordChip: PhraseChip.Kind, intoGroup: Int)
@@ -189,6 +191,9 @@ extension RecoveryPhraseValidationReducer {
 
         case .displayBackedUpPhrase:
             break
+            
+        case .recoveryBackupPhraseValidation:
+            state.route = .recoveryBackupPhraseValidation
         }
         return .none
     }
