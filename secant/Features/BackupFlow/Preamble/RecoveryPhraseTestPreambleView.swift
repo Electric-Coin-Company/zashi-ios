@@ -30,13 +30,13 @@ struct RecoveryPhraseTestPreambleView: View {
 
                     CircularFrame()
                         .backgroundImage(
-                            Asset.Assets.Backgrounds.callout1.image
+                            Asset.Assets.Backgrounds.calloutBackupFlow1.image
                         )
                         .frame(
-                            width: proxy.size.width * 0.84,
-                            height: proxy.size.width * 0.84
+                            width: circularFrameUniformSize(width: proxy.size.width, height: proxy.size.height),
+                            height: circularFrameUniformSize(width: proxy.size.width, height: proxy.size.height)
                         )
-                        .badgeIcon(.error)
+                        .badgeIcon(.person)
 
                     Spacer()
 
@@ -59,7 +59,13 @@ struct RecoveryPhraseTestPreambleView: View {
                             label: { Text("recoveryPhraseTestPreamble.button.goNext") }
                         )
                         .activeButtonStyle
-                        .frame(width: nil, height: 60)
+                        .frame(
+                            minWidth: 0,
+                            maxWidth: .infinity,
+                            minHeight: 64,
+                            maxHeight: .infinity,
+                            alignment: .center
+                        )
                         .fixedSize(horizontal: false, vertical: true)
                     }
                     .padding()
@@ -74,9 +80,25 @@ struct RecoveryPhraseTestPreambleView: View {
                 )
             }
             .padding()
-            .navigationBarBackButtonHidden(true)
+            .navigationBarHidden(true)
             .applyScreenBackground()
         }
+    }
+}
+
+/// Following computations are necessary to handle properly sizing and positioning of elements
+/// on different devices (apects). iPhone SE and iPhone 8 are similar aspect family devices
+/// while iPhone X, 11, etc are different family devices, capable to use more of the space.
+extension RecoveryPhraseTestPreambleView {
+    func circularFrameUniformSize(width: CGFloat, height: CGFloat) -> CGFloat {
+        var deviceMultiplier = 1.0
+        
+        if width > 0.0 {
+            let aspect = height / width
+            deviceMultiplier = 1.0 + (((aspect / 1.51) - 1.0) * 2.8)
+        }
+        
+        return width * 0.4 * deviceMultiplier
     }
 }
 
@@ -84,6 +106,9 @@ struct RecoveryPhraseTestPreambleView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             RecoveryPhraseTestPreambleView(store: .demo)
+
+            RecoveryPhraseTestPreambleView(store: .demo)
+                .preferredColorScheme(.dark)
 
             RecoveryPhraseTestPreambleView(store: .demo)
                 .previewDevice(PreviewDevice(rawValue: "iPhone SE (2nd generation)"))
