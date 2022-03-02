@@ -41,7 +41,14 @@
 "validationFailed.description" = "Your placed words did not match your secret recovery phrase.";
 "validationFailed.incorrectBackupDescription" = "Remember, you can't recover your funds if you lose (or incorrectly save) these 24 words.";
 "validationFailed.button.tryAgain" = "I'm ready to try again";
-        
+
+// MARK: - Recovery Phrase Test Preamble
+"recoveryPhraseTestPreamble.title" = "First things first";
+"recoveryPhraseTestPreamble.paragraph1" = "It is important to understand that you are in charge here. Great, right? YOU get to be the bank!";
+"recoveryPhraseTestPreamble.paragraph2" = "But it also means that YOU are the customer, and you need to be self-reliant.";
+"recoveryPhraseTestPreamble.paragraph3" = "So how do you recover funds that you've hidden on a completely decentralized and private block-chain?";
+"recoveryPhraseTestPreamble.button.goNext" = "By understanding and preparing";
+
 // MARK: - Import Wallet Screen
 "importWallet.title" = "Wallet Import";
 "importWallet.description" = "You can import your backed up wallet by entering your backup recovery phrase (aka seed phrase) now.";

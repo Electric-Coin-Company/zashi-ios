@@ -37,10 +37,11 @@ extension AppReducer {
             routeReducer,
             homeReducer,
             onboardingReducer,
-            phraseValidationReducer.debug(),
-            phraseDisplayReducer.debug()
+            phraseValidationReducer,
+            phraseDisplayReducer
         ]
     )
+    .debug()
 
     private static let routeReducer = AppReducer { state, action, _ in
         switch action {

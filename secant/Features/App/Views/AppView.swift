@@ -38,8 +38,6 @@ struct AppView: View {
 
             case .phraseValidation:
                 NavigationView {
-//                    RecoveryPhraseTestPreambleView
-//                    RecoveryPhraseBackupValidationView
                     RecoveryPhraseTestPreambleView(
                         store: store.scope(
                             state: \.phraseValidationState,

@@ -19,9 +19,11 @@ struct ValidationWord: Equatable {
     var word: String
 }
 
+// MARK: - State
+
 struct RecoveryPhraseValidationState: Equatable {
     enum Route: Equatable, CaseIterable {
-        case recoveryBackupPhraseValidation
+        case validation
         case success
         case failure
     }
@@ -42,17 +44,6 @@ struct RecoveryPhraseValidationState: Equatable {
     var isValid: Bool {
         guard let resultingPhrase = self.resultingPhrase else { return false }
         return resultingPhrase == phrase.words
-    }
-}
-
-extension RecoveryPhraseValidationViewStore {
-    func bindingForRoute(_ route: RecoveryPhraseValidationState.Route) -> Binding<Bool> {
-        self.binding(
-            get: { $0.route == route },
-            send: { isActive in
-                return .updateRoute(isActive ? route : nil)
-            }
-        )
     }
 }
 
@@ -128,8 +119,9 @@ extension RecoveryPhrase.Group {
     }
 }
 
+// MARK: - Action
+
 enum RecoveryPhraseValidationAction: Equatable {
-    case recoveryBackupPhraseValidation
     case updateRoute(RecoveryPhraseValidationState.Route?)
     case reset
     case move(wordChip: PhraseChip.Kind, intoGroup: Int)
@@ -140,6 +132,8 @@ enum RecoveryPhraseValidationAction: Equatable {
     case displayBackedUpPhrase
 }
 
+// MARK: - Reducer
+
 typealias RecoveryPhraseValidationReducer = Reducer<RecoveryPhraseValidationState, RecoveryPhraseValidationAction, BackupPhraseEnvironment>
 
 extension RecoveryPhraseValidationReducer {
@@ -147,6 +141,7 @@ extension RecoveryPhraseValidationReducer {
         switch action {
         case .reset:
             state = RecoveryPhraseValidationState.random(phrase: state.phrase)
+            state.route = .validation
 
         case let .move(wordChip, group):
             guard
@@ -162,7 +157,7 @@ extension RecoveryPhraseValidationReducer {
                 let effect = Effect<RecoveryPhraseValidationAction, Never>(value: value)
                     .delay(for: 1, scheduler: environment.mainQueue)
                     .eraseToEffect()
-                
+
                 if value == .succeed {
                     return effect
                 } else {
@@ -184,6 +179,10 @@ extension RecoveryPhraseValidationReducer {
             environment.feedbackGenerator.generateFeedback()
 
         case .updateRoute(let route):
+            guard let route = route else {
+                state = RecoveryPhraseValidationState.random(phrase: state.phrase)
+                return .none
+            }
             state.route = route
 
         case .proceedToHome:
@@ -191,10 +190,49 @@ extension RecoveryPhraseValidationReducer {
 
         case .displayBackedUpPhrase:
             break
-            
-        case .recoveryBackupPhraseValidation:
-            state.route = .recoveryBackupPhraseValidation
         }
         return .none
+    }
+}
+
+// MARK: - ViewStore
+
+extension RecoveryPhraseValidationViewStore {
+    func bindingForRoute(_ route: RecoveryPhraseValidationState.Route) -> Binding<Bool> {
+        self.binding(
+            get: { $0.route == route },
+            send: { isActive in
+                return .updateRoute(isActive ? route : nil)
+            }
+        )
+    }
+}
+
+extension RecoveryPhraseValidationViewStore {
+    var bindingForValidation: Binding<Bool> {
+        self.binding(
+            get: { $0.route != nil },
+            send: { isActive in
+                return .updateRoute(isActive ? .validation : nil)
+            }
+        )
+    }
+
+    var bindingForSuccess: Binding<Bool> {
+        self.binding(
+            get: { $0.route == .success },
+            send: { isActive in
+                return .updateRoute(isActive ? .success : .validation)
+            }
+        )
+    }
+
+    var bindingForFailure: Binding<Bool> {
+        self.binding(
+            get: { $0.route == .failure },
+            send: { isActive in
+                return .updateRoute(isActive ? .failure : .validation)
+            }
+        )
     }
 }

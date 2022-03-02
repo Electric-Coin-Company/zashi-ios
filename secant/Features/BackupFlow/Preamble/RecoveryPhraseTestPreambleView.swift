@@ -55,7 +55,7 @@ struct RecoveryPhraseTestPreambleView: View {
                         }
 
                         Button(
-                            action: { viewStore.send(.recoveryBackupPhraseValidation) },
+                            action: { viewStore.send(.updateRoute(.validation)) },
                             label: { Text("recoveryPhraseTestPreamble.button.goNext") }
                         )
                         .activeButtonStyle
@@ -75,8 +75,10 @@ struct RecoveryPhraseTestPreambleView: View {
                 .frame(width: proxy.size.width)
                 .scrollableWhenScaledUp()
                 .navigationLinkEmpty(
-                    isActive: viewStore.bindingForRoute(.recoveryBackupPhraseValidation),
-                    destination: { RecoveryPhraseBackupValidationView(store: store) }
+                    isActive: viewStore.bindingForValidation,
+                    destination: {
+                        RecoveryPhraseBackupValidationView(store: store)
+                    }
                 )
             }
             .padding()
@@ -105,7 +107,9 @@ extension RecoveryPhraseTestPreambleView {
 struct RecoveryPhraseTestPreambleView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            RecoveryPhraseTestPreambleView(store: .demo)
+            NavigationView {
+                RecoveryPhraseTestPreambleView(store: .demo)
+            }
 
             RecoveryPhraseTestPreambleView(store: .demo)
                 .preferredColorScheme(.dark)
