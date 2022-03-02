@@ -23,12 +23,12 @@ struct OnboardingFooterView: View {
                             viewStore.send(.createNewWallet)
                         }
                     }
-                    .createButtonStyle
+                    .activeButtonStyle
                     .onboardingFooterButtonLayout()
                     
                     Button("onboarding.button.importWallet") {
                         withAnimation(.easeInOut(duration: animationDuration)) {
-                            viewStore.send(.createNewWallet)
+                            viewStore.send(.importExistingWallet)
                         }
                     }
                     .secondaryButtonStyle
@@ -52,6 +52,17 @@ struct OnboardingFooterView: View {
                     .padding(.vertical, 20)
                 }
             }
+            .navigationLinkEmpty(
+                isActive: viewStore.bindingForRoute(.importExistingWallet),
+                destination: {
+                    ImportWalletView(
+                        store: store.scope(
+                            state: \.importWalletState,
+                            action: OnboardingAction.importWallet
+                        )
+                    )
+                }
+            )
         }
     }
 }
@@ -75,7 +86,10 @@ extension View {
 struct OnboardingFooterView_Previews: PreviewProvider {
     static var previews: some View {
         let store = Store<OnboardingState, OnboardingAction>(
-            initialState: OnboardingState(index: 3),
+            initialState: OnboardingState(
+                index: 3,
+                importWalletState: .placeholder
+            ),
             reducer: OnboardingReducer.default,
             environment: ()
         )

@@ -10,7 +10,6 @@ import ComposableArchitecture
 
 struct OnboardingScreen: View {
     let store: Store<OnboardingState, OnboardingAction>
-    let animationDuration: CGFloat = 0.8
 
     var body: some View {
         GeometryReader { proxy in
@@ -42,6 +41,7 @@ struct OnboardingScreen: View {
                 OnboardingFooterView(store: store)
             }
         }
+        .navigationBarHidden(true)
         .applyScreenBackground()
     }
 }
@@ -50,7 +50,9 @@ struct OnboardingScreen_Previews: PreviewProvider {
     static var previews: some View {
         OnboardingScreen(
             store: Store(
-                initialState: OnboardingState(),
+                initialState: OnboardingState(
+                    importWalletState: .placeholder
+                ),
                 reducer: OnboardingReducer.default,
                 environment: ()
             )
@@ -60,7 +62,9 @@ struct OnboardingScreen_Previews: PreviewProvider {
 
         OnboardingScreen(
             store: Store(
-                initialState: OnboardingState(),
+                initialState: OnboardingState(
+                    importWalletState: .placeholder
+                ),
                 reducer: OnboardingReducer.default,
                 environment: ()
             )
@@ -70,7 +74,9 @@ struct OnboardingScreen_Previews: PreviewProvider {
 
         OnboardingScreen(
             store: Store(
-                initialState: OnboardingState(),
+                initialState: OnboardingState(
+                    importWalletState: .placeholder
+                ),
                 reducer: OnboardingReducer.default,
                 environment: ()
             )
@@ -80,7 +86,9 @@ struct OnboardingScreen_Previews: PreviewProvider {
 
         OnboardingScreen(
             store: Store(
-                initialState: OnboardingState(),
+                initialState: OnboardingState(
+                    importWalletState: .placeholder
+                ),
                 reducer: OnboardingReducer.default,
                 environment: ()
             )
@@ -90,7 +98,9 @@ struct OnboardingScreen_Previews: PreviewProvider {
 
         OnboardingScreen(
             store: Store(
-                initialState: OnboardingState(),
+                initialState: OnboardingState(
+                    importWalletState: .placeholder
+                ),
                 reducer: OnboardingReducer.default,
                 environment: ()
             )
@@ -100,7 +110,9 @@ struct OnboardingScreen_Previews: PreviewProvider {
 
         OnboardingScreen(
             store: Store(
-                initialState: OnboardingState(),
+                initialState: OnboardingState(
+                    importWalletState: .placeholder
+                ),
                 reducer: OnboardingReducer.default,
                 environment: ()
             )

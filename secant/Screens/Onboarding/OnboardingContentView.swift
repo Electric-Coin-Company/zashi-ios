@@ -127,7 +127,10 @@ extension OnboardingContentView {
 struct OnboardingContentView_Previews: PreviewProvider {
     static var previews: some View {
         let store = Store(
-            initialState: OnboardingState(index: 0),
+            initialState: OnboardingState(
+                index: 0,
+                importWalletState: .placeholder
+            ),
             reducer: OnboardingReducer.default,
             environment: ()
         )

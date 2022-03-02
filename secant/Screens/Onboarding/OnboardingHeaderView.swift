@@ -63,7 +63,10 @@ struct OnboardingHeaderView: View {
 struct OnboardingHeaderView_Previews: PreviewProvider {
     static var previews: some View {
         let store = Store<OnboardingState, OnboardingAction>(
-            initialState: OnboardingState(index: 0),
+            initialState: OnboardingState(
+                index: 0,
+                importWalletState: .placeholder
+            ),
             reducer: OnboardingReducer.default,
             environment: ()
         )
