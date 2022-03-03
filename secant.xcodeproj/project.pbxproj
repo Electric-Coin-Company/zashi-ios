@@ -69,7 +69,6 @@
 		660558F7270C862F009D6954 /* Fonts+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660558F5270C862F009D6954 /* Fonts+Generated.swift */; };
 		660558F8270C862F009D6954 /* XCAssets+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660558F6270C862F009D6954 /* XCAssets+Generated.swift */; };
 		663FAB9C271D874D00E495F8 /* ActiveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663FAB9B271D874D00E495F8 /* ActiveButton.swift */; };
-		663FAB9E271D875700E495F8 /* CreateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663FAB9D271D875700E495F8 /* CreateButton.swift */; };
 		663FABA0271D876200E495F8 /* PrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663FAB9F271D876200E495F8 /* PrimaryButton.swift */; };
 		663FABA2271D876C00E495F8 /* SecondaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663FABA1271D876C00E495F8 /* SecondaryButton.swift */; };
 		6654C73A2715A38000901167 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 6654C7392715A38000901167 /* ComposableArchitecture */; };
@@ -203,7 +202,6 @@
 		660558F5270C862F009D6954 /* Fonts+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Fonts+Generated.swift"; sourceTree = "<group>"; };
 		660558F6270C862F009D6954 /* XCAssets+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "XCAssets+Generated.swift"; sourceTree = "<group>"; };
 		663FAB9B271D874D00E495F8 /* ActiveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveButton.swift; sourceTree = "<group>"; };
-		663FAB9D271D875700E495F8 /* CreateButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateButton.swift; sourceTree = "<group>"; };
 		663FAB9F271D876200E495F8 /* PrimaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButton.swift; sourceTree = "<group>"; };
 		663FABA1271D876C00E495F8 /* SecondaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondaryButton.swift; sourceTree = "<group>"; };
 		6654C73D2715A41300901167 /* OnboardingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStore.swift; sourceTree = "<group>"; };
@@ -572,7 +570,6 @@
 			children = (
 				66DC733E271D88CC0053CBB6 /* StandardButtonStyle.swift */,
 				663FAB9B271D874D00E495F8 /* ActiveButton.swift */,
-				663FAB9D271D875700E495F8 /* CreateButton.swift */,
 				663FAB9F271D876200E495F8 /* PrimaryButton.swift */,
 				663FABA1271D876C00E495F8 /* SecondaryButton.swift */,
 				66D50667271D9B6100E51F0D /* NavigationButtonStyle.swift */,
@@ -1089,7 +1086,6 @@
 				2E58E73B274679F000B2B84B /* OnboardingHeaderView.swift in Sources */,
 				0D8A43C6272B129C005A6414 /* WordChipGrid.swift in Sources */,
 				66A0807B271993C500118B79 /* OnboardingProgressIndicator.swift in Sources */,
-				663FAB9E271D875700E495F8 /* CreateButton.swift in Sources */,
 				0D7DF08C271DCC0E00530046 /* ScreenBackground.swift in Sources */,
 				F9C165C22740403600592F76 /* CreateView.swift in Sources */,
 				F9C165B4274031F600592F76 /* Bindings.swift in Sources */,

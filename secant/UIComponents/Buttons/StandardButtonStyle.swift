@@ -40,9 +40,9 @@ private extension Button {
         buttonStyle(
             StandardButtonStyle(
                 foregroundColor: Asset.Colors.Text.button.color,
-                background: Asset.Colors.Buttons.createButton.color,
-                pressedBackgroundColor: Asset.Colors.Buttons.createButtonPressed.color,
-                disabledBackgroundColor: Asset.Colors.Buttons.createButtonDisabled.color
+                background: Asset.Colors.Buttons.activeButton.color,
+                pressedBackgroundColor: Asset.Colors.Buttons.activeButtonPressed.color,
+                disabledBackgroundColor: Asset.Colors.Buttons.activeButtonDisabled.color
             )
         )
     }
