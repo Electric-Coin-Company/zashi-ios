@@ -142,6 +142,7 @@ extension RecoveryPhraseValidationReducer {
         case .reset:
             state = RecoveryPhraseValidationState.random(phrase: state.phrase)
             state.route = .validation
+            // FIXME: Resetting causes route to be nil = preamble screen, hence setting the .validation. The transition back is not animated though (issue 186)
 
         case let .move(wordChip, group):
             guard
