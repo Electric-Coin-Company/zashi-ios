@@ -44,19 +44,6 @@ struct AppView: View {
                             action: AppAction.phraseValidation
                         )
                     )
-                    .toolbar(
-                        content: {
-                            ToolbarItem(
-                                placement: .navigationBarLeading,
-                                content: {
-                                    Button(
-                                        action: { viewStore.send(.updateRoute(.startup)) },
-                                        label: { Text("Back") }
-                                    )
-                                }
-                            )
-                        }
-                    )
                     .navigationViewStyle(StackNavigationViewStyle())
                 }
 
