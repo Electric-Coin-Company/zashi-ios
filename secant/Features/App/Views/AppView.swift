@@ -38,24 +38,11 @@ struct AppView: View {
 
             case .phraseValidation:
                 NavigationView {
-                    RecoveryPhraseBackupValidationView(
+                    RecoveryPhraseTestPreambleView(
                         store: store.scope(
                             state: \.phraseValidationState,
                             action: AppAction.phraseValidation
                         )
-                    )
-                    .toolbar(
-                        content: {
-                            ToolbarItem(
-                                placement: .navigationBarLeading,
-                                content: {
-                                    Button(
-                                        action: { viewStore.send(.updateRoute(.startup)) },
-                                        label: { Text("Back") }
-                                    )
-                                }
-                            )
-                        }
                     )
                     .navigationViewStyle(StackNavigationViewStyle())
                 }

@@ -11,28 +11,31 @@ import ComposableArchitecture
 struct RecoveryPhraseBackupValidationView: View {
     let store: RecoveryPhraseValidationStore
 
+    var viewStore: RecoveryPhraseValidationViewStore {
+        ViewStore(store)
+    }
+    
     var body: some View {
-        WithViewStore(self.store) { viewStore in
-            VStack(alignment: .center) {
-                header(for: viewStore)
-                    .padding(.horizontal)
-                    .padding(.bottom, 10)
-
-                ZStack {
-                    Asset.Colors.BackgroundColors.phraseGridDarkGray.color
-                        .edgesIgnoringSafeArea(.bottom)
-
-                    VStack(alignment: .center, spacing: 35) {
-                        let state = viewStore.state
-                        let groups = state.phrase.toGroups()
-
-                        ForEach(Array(zip(groups.indices, groups)), id: \.0) { index, group in
-                            WordChipGrid(
-                                state: state,
-                                groupIndex: index,
-                                wordGroup: group,
-                                misingIndex: index
-                            )
+        VStack(alignment: .center) {
+            header(for: viewStore)
+                .padding(.horizontal)
+                .padding(.bottom, 10)
+            
+            ZStack {
+                Asset.Colors.BackgroundColors.phraseGridDarkGray.color
+                    .edgesIgnoringSafeArea(.bottom)
+                
+                VStack(alignment: .center, spacing: 35) {
+                    let state = viewStore.state
+                    let groups = state.phrase.toGroups()
+                    
+                    ForEach(Array(zip(groups.indices, groups)), id: \.0) { index, group in
+                        WordChipGrid(
+                            state: state,
+                            groupIndex: index,
+                            wordGroup: group,
+                            misingIndex: index
+                        )
                             .frame(alignment: .center)
                             .background(Asset.Colors.BackgroundColors.phraseGridDarkGray.color)
                             .whenIsDroppable(
@@ -41,28 +44,27 @@ struct RecoveryPhraseBackupValidationView: View {
                                     viewStore.send(.move(wordChip: chipKind, intoGroup: index))
                                 }
                             )
-                        }
-
-                        Spacer()
                     }
-                    .padding()
-                    .padding(.top, 0)
-                    .navigationLinkEmpty(
-                        isActive: viewStore.bindingForRoute(.success),
-                        destination: { ValidationSucceededView(store: store) }
-                    )
-                    .navigationLinkEmpty(
-                        isActive: viewStore.bindingForRoute(.failure),
-                        destination: { ValidationFailedView(store: store) }
-                    )
+                    
+                    Spacer()
                 }
-                .frame(alignment: .top)
+                .padding()
+                .padding(.top, 0)
+                .navigationLinkEmpty(
+                    isActive: viewStore.bindingForSuccess,
+                    destination: { ValidationSucceededView(store: store) }
+                )
+                .navigationLinkEmpty(
+                    isActive: viewStore.bindingForFailure,
+                    destination: { ValidationFailedView(store: store) }
+                )
             }
-            .applyScreenBackground()
-            .scrollableWhenScaledUp()
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle(Text("recoveryPhraseBackupValidation.title"))
+            .frame(alignment: .top)
         }
+        .applyScreenBackground()
+        .scrollableWhenScaledUp()
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(Text("recoveryPhraseBackupValidation.title"))
     }
 
     @ViewBuilder func header(for viewStore: RecoveryPhraseValidationViewStore) -> some View {

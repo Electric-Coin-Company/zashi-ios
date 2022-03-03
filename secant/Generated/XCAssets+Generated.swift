@@ -29,6 +29,7 @@ internal enum Asset {
       internal static let callout2 = ImageAsset(name: "callout2")
       internal static let callout3 = ImageAsset(name: "callout3")
       internal static let callout4 = ImageAsset(name: "callout4")
+      internal static let calloutBackupFlow1 = ImageAsset(name: "calloutBackupFlow1")
     }
     internal enum Icons {
       internal static let list = ImageAsset(name: "list")
