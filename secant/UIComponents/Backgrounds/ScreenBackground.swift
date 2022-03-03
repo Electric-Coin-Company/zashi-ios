@@ -66,6 +66,17 @@ extension View {
             )
         )
     }
+
+    func applySucceededScreenBackground() -> some View {
+        self.modifier(
+            ScreenBackgroundModifier(
+                colors: [
+                    Asset.Colors.ScreenBackground.greenGradientStart.color,
+                    Asset.Colors.ScreenBackground.greenGradientEnd.color
+                ]
+            )
+        )
+    }
 }
 
 struct ScreenBackground_Previews: PreviewProvider {

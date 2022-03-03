@@ -30,6 +30,7 @@ internal enum Asset {
       internal static let callout3 = ImageAsset(name: "callout3")
       internal static let callout4 = ImageAsset(name: "callout4")
       internal static let calloutBackupFlow1 = ImageAsset(name: "calloutBackupFlow1")
+      internal static let calloutBackupSucceeded = ImageAsset(name: "calloutBackupSucceeded")
     }
     internal enum Icons {
       internal static let list = ImageAsset(name: "list")
@@ -77,6 +78,8 @@ internal enum Asset {
     internal enum ScreenBackground {
       internal static let gradientEnd = ColorAsset(name: "gradientEnd")
       internal static let gradientStart = ColorAsset(name: "gradientStart")
+      internal static let greenGradientEnd = ColorAsset(name: "greenGradientEnd")
+      internal static let greenGradientStart = ColorAsset(name: "greenGradientStart")
       internal static let redGradientEnd = ColorAsset(name: "redGradientEnd")
       internal static let redGradientStart = ColorAsset(name: "redGradientStart")
     }
