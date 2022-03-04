@@ -11,38 +11,34 @@ import ComposableArchitecture
 struct ValidationSucceededView: View {
     var store: RecoveryPhraseValidationStore
     
-    @ScaledMetric var scaledPadding: CGFloat = 10
-    @ScaledMetric var scaledButtonHeight: CGFloat = 130
-
     var body: some View {
         WithViewStore(store) { viewStore in
             GeometryReader { proxy in
                 VStack {
                     VStack(spacing: 20) {
                         Text("validationSuccess.title")
-                            .font(.custom(FontFamily.Rubik.regular.name, size: 36))
+                            .titleText()
+                            .multilineTextAlignment(.center)
 
                         Text("validationSuccess.description")
-                            .bodyText()
+                            .paragraphText()
                             .multilineTextAlignment(.center)
-                            .lineSpacing(2)
-                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(.horizontal, 45)
                     }
-
-                    Spacer()
+                    .padding(.vertical, 40)
 
                     VStack {
                         CircularFrame()
                             .backgroundImage(
-                                Asset.Assets.Backgrounds.callout1.image
+                                Asset.Assets.Backgrounds.calloutBackupSucceeded.image
                             )
                             .frame(
-                                width: proxy.size.width * 0.84,
-                                height: proxy.size.width * 0.84
+                                width: circularFrameUniformSize(width: proxy.size.width, height: proxy.size.height),
+                                height: circularFrameUniformSize(width: proxy.size.width, height: proxy.size.height)
                             )
                             .badgeIcon(.shield)
                     }
-                    .padding(.vertical, 20)
+                    .padding(.bottom, 40)
 
                     Spacer()
 
@@ -57,12 +53,8 @@ struct ValidationSucceededView: View {
                             }
                         )
                         .activeButtonStyle
-                        .frame(
-                            minHeight: 60,
-                            idealHeight: 60,
-                            maxHeight: .infinity
-                        )
-
+                        .validationSucceededViewLayout()
+                        
                         Button(
                             action: {
                                 viewStore.send(
@@ -76,30 +68,77 @@ struct ValidationSucceededView: View {
                             }
                         )
                         .secondaryButtonStyle
-                        .frame(
-                            minHeight: 60,
-                            idealHeight: 60,
-                            maxHeight: .infinity
-                        )
+                        .validationSucceededViewLayout()
                     }
-                    .frame(height: scaledButtonHeight)
-                    .padding(.vertical, scaledPadding)
                 }
                 .padding(.horizontal)
                 .scrollableWhenScaledUp()
             }
         }
-        .navigationBarBackButtonHidden(true)
-        .applyScreenBackground()
+        .navigationBarHidden(true)
+        .applySucceededScreenBackground()
+        .preferredColorScheme(.light)
+    }
+}
+
+/// Following computations are necessary to handle properly sizing and positioning of elements
+/// on different devices (apects). iPhone SE and iPhone 8 are similar aspect family devices
+/// while iPhone X, 11, etc are different family devices, capable to use more of the space.
+extension ValidationSucceededView {
+    func circularFrameUniformSize(width: CGFloat, height: CGFloat) -> CGFloat {
+        var deviceMultiplier = 1.0
+        
+        if width > 0.0 {
+            let aspect = height / width
+            deviceMultiplier = 1.0 + (((aspect / 1.51) - 1.0) * 2.0)
+        }
+        
+        return width * 0.48 * deviceMultiplier
+    }
+}
+
+// swiftlint:disable:next private_over_fileprivate strict_fileprivate
+fileprivate struct ValidationSucceededViewLayout: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .frame(
+                minWidth: 0,
+                maxWidth: .infinity,
+                minHeight: 64,
+                maxHeight: .infinity,
+                alignment: .center
+            )
+            .fixedSize(horizontal: false, vertical: true)
+            .padding(.horizontal, 28)
+            .transition(.opacity)
+    }
+}
+
+extension View {
+    func validationSucceededViewLayout() -> some View {
+        modifier(ValidationSucceededViewLayout())
     }
 }
 
 struct ValidationSuccededView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
+            NavigationView {
+                ValidationSucceededView(store: .demo)
+            }
+            
             ValidationSucceededView(store: .demo)
+                .preferredColorScheme(.dark)
+            
             ValidationSucceededView(store: .demo)
-                .environment(\.sizeCategory, .accessibilityExtraLarge)
+                .previewDevice(PreviewDevice(rawValue: "iPhone SE (2nd generation)"))
+            
+            ValidationSucceededView(store: .demo)
+                .environment(\.sizeCategory, .accessibilityLarge)
+
+            ValidationSucceededView(store: .demo)
+                .environment(\.sizeCategory, .accessibilityLarge)
+                .previewDevice(PreviewDevice(rawValue: "iPhone SE (2nd generation)"))
         }
     }
 }
