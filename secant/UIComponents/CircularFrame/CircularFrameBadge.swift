@@ -14,22 +14,28 @@ enum Badge: Equatable {
     case person
     case error
 
-    @ViewBuilder var image: some View {
+    private func getImage() -> Image? {
         switch self {
         case .shield:
-            Asset.Assets.Icons.shield.image
-                .resizable()
-                .renderingMode(.none)
+            return Asset.Assets.Icons.shield.image
         case .list:
-            Asset.Assets.Icons.list.image
-                .resizable()
-                .renderingMode(.none)
+            return Asset.Assets.Icons.list.image
         case .person:
-            Asset.Assets.Icons.profile.image
-                .resizable()
-                .renderingMode(.none)
-        case .error:
+            return Asset.Assets.Icons.profile.image
+        default:
+            return nil
+        }
+    }
+    
+    @ViewBuilder var image: some View {
+        if self == .error {
             ErrorBadge()
+        } else {
+            if let image = getImage() {
+                image
+                    .resizable()
+                    .renderingMode(.none)
+            }
         }
     }
 }
