@@ -9,6 +9,8 @@ import SwiftUI
 import ComposableArchitecture
 
 struct ValidationFailedView: View {
+    @Environment(\.presentationMode) var presentationMode
+
     var store: RecoveryPhraseValidationStore
 
     var body: some View {
@@ -48,7 +50,10 @@ struct ValidationFailedView: View {
                         }
 
                         Button(
-                            action: { viewStore.send(.reset) },
+                            action: {
+                                viewStore.send(.reset)
+                                presentationMode.wrappedValue.dismiss()
+                            },
                             label: { Text("validationFailed.button.tryAgain") }
                         )
                         .activeButtonStyle
