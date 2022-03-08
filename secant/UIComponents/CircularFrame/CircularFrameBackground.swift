@@ -88,6 +88,7 @@ struct CircularFrameBackground_Previews: PreviewProvider {
                 .frame(width: 300, height: 300)
                 .applyScreenBackground()
                 .neumorphic()
+                .preferredColorScheme(.dark)
         }
         .preferredColorScheme(.light)
         .previewLayout(.fixed(width: size + 50, height: size + 50))

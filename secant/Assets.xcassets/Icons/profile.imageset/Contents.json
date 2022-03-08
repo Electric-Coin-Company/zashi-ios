@@ -1,16 +1,50 @@
 {
   "images" : [
     {
-      "filename" : "icon_person.png",
+      "filename" : "iconperson_lighttheme.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "icon_person@2x.png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "iconperson_darktheme.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "iconperson_lighttheme@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "iconperson_darktheme@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "iconperson_lighttheme@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "iconperson_darktheme@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

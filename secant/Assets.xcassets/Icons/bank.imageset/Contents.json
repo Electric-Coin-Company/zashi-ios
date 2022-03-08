@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "iconshield_lighttheme.png",
+      "filename" : "iconbank_lighttheme.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,12 +12,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "iconshield_darktheme.png",
+      "filename" : "iconbank_darktheme.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "iconshield_lighttheme@2x.png",
+      "filename" : "iconbank_lighttheme@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,12 +28,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "iconshield_darktheme@2x.png",
+      "filename" : "iconbank_darktheme@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "iconshield_lighttheme@3x.png",
+      "filename" : "iconbank_lighttheme@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -44,7 +44,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "iconshield_darktheme@3x.png",
+      "filename" : "iconbank_darktheme@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -14,7 +14,7 @@ enum Badge: Equatable {
     case person
     case error
 
-    private func getImage() -> Image? {
+    private func badgeSymbol() -> Image? {
         switch self {
         case .shield:
             return Asset.Assets.Icons.shield.image
@@ -31,10 +31,8 @@ enum Badge: Equatable {
         if self == .error {
             ErrorBadge()
         } else {
-            if let image = getImage() {
-                image
-                    .resizable()
-                    .renderingMode(.none)
+            if let symbol = badgeSymbol() {
+                IconBadge(image: symbol)
             }
         }
     }
@@ -45,9 +43,48 @@ struct ErrorBadge: View {
         Text("X")
             .font(.custom(FontFamily.Rubik.bold.name, size: 36))
             .foregroundColor(Asset.Colors.BackgroundColors.red.color)
-            .frame(width: 60, height: 55, alignment: .center)
-            .background(Asset.Colors.BackgroundColors.numberedChip.color)
+            .frame(width: 60, height: 60, alignment: .center)
+            .background(Asset.Colors.Onboarding.badgeBackground.color)
             .cornerRadius(10)
+    }
+}
+
+struct IconBadge: View {
+    let image: Image
+    
+    var body: some View {
+        ZStack {
+            Rectangle()
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Asset.Colors.Onboarding.circularFrameGradientStart.color,
+                            Asset.Colors.Onboarding.circularFrameGradientEnd.color
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .frame(width: 60, height: 60, alignment: .center)
+                .cornerRadius(10)
+
+            Rectangle()
+                .fill(Asset.Colors.Onboarding.badgeBackground.color)
+                .frame(width: 55, height: 55, alignment: .center)
+                .cornerRadius(10)
+                .shadow(
+                    color: Asset.Colors.Onboarding.badgeShadow.color,
+                    radius: 10,
+                    x: 0,
+                    y: 0
+                )
+
+            image
+                .resizable()
+                .renderingMode(.none)
+                .scaledToFill()
+                .frame(width: 60, height: 60)
+        }
     }
 }
 
@@ -78,17 +115,8 @@ struct BadgesOverlay: Animatable, ViewModifier {
                                                 height: proxy.size.height * 0.35,
                                                 alignment: .center
                                             )
-                                            .offset(
-                                                x: 4.0,
-                                                y: proxy.size.height * 0.15
-                                            )
+                                            .offset(y: proxy.size.height * 0.16)
                                             .opacity(badgeIndex == viewStore.index ? 1 : 0)
-                                            .shadow(
-                                                color: Asset.Colors.Onboarding.badgeShadow.color,
-                                                radius: 10,
-                                                x: 0,
-                                                y: 0
-                                            )
                                     }
                                 }
                                
@@ -120,18 +148,9 @@ struct BadgeOverlay: Animatable, ViewModifier {
                                     height: proxy.size.height * 0.35,
                                     alignment: .center
                                 )
-                                .offset(
-                                    x: 4.0,
-                                    y: proxy.size.height * 0.15
-                                )
+                                .offset(y: proxy.size.height * 0.16)
                                 .transition(.scale(scale: 2))
                                 .transition(.opacity)
-                                .shadow(
-                                    color: Asset.Colors.Onboarding.badgeShadow.color,
-                                    radius: 10,
-                                    x: 0,
-                                    y: 0
-                                )
                             Spacer()
                         }
                     }
@@ -162,7 +181,7 @@ struct Badge_Previews: PreviewProvider {
             CircularFrame()
                 .frame(width: size, height: size)
                 .badgeIcon(.list)
-            
+
             CircularFrame()
                 .frame(width: size, height: size)
                 .badgeIcon(.person)
@@ -172,6 +191,26 @@ struct Badge_Previews: PreviewProvider {
                 .badgeIcon(.error)
         }
         .preferredColorScheme(.light)
+        .previewLayout(.fixed(width: size + 50, height: size + 50))
+
+        Group {
+            CircularFrame()
+                .frame(width: size, height: size)
+                .badgeIcon(.shield)
+            
+            CircularFrame()
+                .frame(width: size, height: size)
+                .badgeIcon(.list)
+
+            CircularFrame()
+                .frame(width: size, height: size)
+                .badgeIcon(.person)
+
+            CircularFrame()
+                .frame(width: size, height: size)
+                .badgeIcon(.error)
+        }
+        .preferredColorScheme(.dark)
         .previewLayout(.fixed(width: size + 50, height: size + 50))
     }
 }

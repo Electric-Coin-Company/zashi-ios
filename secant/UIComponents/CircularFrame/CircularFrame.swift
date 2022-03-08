@@ -8,12 +8,11 @@
 import SwiftUI
 
 struct CircularFrame: View {
-    @Environment(\.colorScheme) var colorScheme
-
     var body: some View {
         GeometryReader { proxy in
-            let lineWidth = proxy.size.width * 0.06
-
+            let lineWidth = 20.0
+            let lineHalfwidth = lineWidth * 0.5
+            
             Circle()
                 .stroke(
                     LinearGradient(
@@ -21,31 +20,34 @@ struct CircularFrame: View {
                             Asset.Colors.Onboarding.circularFrameGradientStart.color,
                             Asset.Colors.Onboarding.circularFrameGradientEnd.color
                         ],
-                        startPoint: colorScheme == .light ? .topLeading : .top,
-                        endPoint: colorScheme == .light ? .bottomTrailing : .bottom
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
                     ),
                     style: StrokeStyle(
                         lineWidth: lineWidth
                     )
                 )
-                .padding(colorScheme == .light ? 0 : 10)
-
-            if colorScheme == .dark {
-                Circle()
-                    .stroke(
-                        LinearGradient(
-                            colors: [
-                                Asset.Colors.Onboarding.circularFrameDarkOutlineGradientStart.color,
-                                Asset.Colors.Onboarding.circularFrameDarkOutlineGradientEnd.color
-                            ],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        ),
-                        style: StrokeStyle(
-                            lineWidth: lineWidth * 0.15
-                        )
+            
+            Circle()
+                .stroke(
+                    LinearGradient(
+                        colors: [
+                            Asset.Colors.Onboarding.circularFrameDarkOutlineGradientStart.color,
+                            Asset.Colors.Onboarding.circularFrameDarkOutlineGradientEnd.color
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    style: StrokeStyle(
+                        lineWidth: lineWidth * 0.2
                     )
-            }
+                )
+                .frame(
+                    width: proxy.size.width + lineWidth,
+                    height: proxy.size.height + lineWidth,
+                    alignment: .center
+                )
+                .offset(x: -lineHalfwidth, y: -lineHalfwidth)
         }
     }
 }
@@ -135,6 +137,11 @@ struct CircularFramePreviewHelper: View {
 
 struct CircularFrame_Previews: PreviewProvider {
     static var previews: some View {
+        CircularFramePreviewHelper()
+            .preferredColorScheme(.light)
+            .previewLayout(.device)
+            .applyScreenBackground()
+
         CircularFramePreviewHelper()
             .preferredColorScheme(.dark)
             .previewLayout(.device)
