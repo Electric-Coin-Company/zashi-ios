@@ -29,11 +29,12 @@ internal enum Asset {
       internal static let callout2 = ImageAsset(name: "callout2")
       internal static let callout3 = ImageAsset(name: "callout3")
       internal static let callout4 = ImageAsset(name: "callout4")
+      internal static let calloutBackupFailed = ImageAsset(name: "calloutBackupFailed")
       internal static let calloutBackupFlow1 = ImageAsset(name: "calloutBackupFlow1")
       internal static let calloutBackupSucceeded = ImageAsset(name: "calloutBackupSucceeded")
-      internal static let calloutBackupFailed = ImageAsset(name: "calloutBackupFailed")
     }
     internal enum Icons {
+      internal static let bank = ImageAsset(name: "bank")
       internal static let list = ImageAsset(name: "list")
       internal static let profile = ImageAsset(name: "profile")
       internal static let shield = ImageAsset(name: "shield")
@@ -70,6 +71,7 @@ internal enum Asset {
       internal static let navigationButtonEnabled = ColorAsset(name: "NavigationButtonEnabled")
       internal static let neumorphicDarkSide = ColorAsset(name: "NeumorphicDarkSide")
       internal static let neumorphicLightSide = ColorAsset(name: "NeumorphicLightSide")
+      internal static let badgeBackground = ColorAsset(name: "badgeBackground")
     }
     internal enum ProgressIndicator {
       internal static let gradientLeft = ColorAsset(name: "GradientLeft")
