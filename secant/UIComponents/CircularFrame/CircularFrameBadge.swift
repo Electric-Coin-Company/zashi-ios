@@ -40,12 +40,36 @@ enum Badge: Equatable {
 
 struct ErrorBadge: View {
     var body: some View {
-        Text("X")
-            .font(.custom(FontFamily.Rubik.bold.name, size: 36))
-            .foregroundColor(Asset.Colors.BackgroundColors.red.color)
-            .frame(width: 60, height: 60, alignment: .center)
-            .background(Asset.Colors.Onboarding.badgeBackground.color)
-            .cornerRadius(10)
+        ZStack {
+            Rectangle()
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Asset.Colors.Onboarding.circularFrameGradientStart.color,
+                            Asset.Colors.Onboarding.circularFrameGradientEnd.color
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .frame(width: 60, height: 60, alignment: .center)
+                .cornerRadius(10)
+            
+            Rectangle()
+                .fill(Asset.Colors.Onboarding.badgeBackground.color)
+                .frame(width: 55, height: 55, alignment: .center)
+                .cornerRadius(10)
+                .shadow(
+                    color: Asset.Colors.Onboarding.badgeShadow.color,
+                    radius: 10,
+                    x: 0,
+                    y: 0
+                )
+            
+            Text("X")
+                .font(.custom(FontFamily.Rubik.bold.name, size: 36))
+                .foregroundColor(Asset.Colors.BackgroundColors.red.color)
+        }
     }
 }
 

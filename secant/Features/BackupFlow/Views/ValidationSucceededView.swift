@@ -77,7 +77,6 @@ struct ValidationSucceededView: View {
         }
         .navigationBarHidden(true)
         .applySucceededScreenBackground()
-        .preferredColorScheme(.light)
     }
 }
 

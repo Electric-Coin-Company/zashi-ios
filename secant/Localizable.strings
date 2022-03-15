@@ -40,7 +40,7 @@
 "validationFailed.title" = "Ouch, sorry, no.";
 "validationFailed.description" = "Your placed words did not match your secret recovery phrase.";
 "validationFailed.incorrectBackupDescription" = "Remember, you can't recover your funds if you lose (or incorrectly save) these 24 words.";
-"validationFailed.button.tryAgain" = "I'm ready to try again";
+"validationFailed.button.tryAgain" = "Try again";
 
 // MARK: - Recovery Phrase Test Preamble
 "recoveryPhraseTestPreamble.title" = "First things first";

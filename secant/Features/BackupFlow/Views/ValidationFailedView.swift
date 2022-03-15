@@ -76,7 +76,6 @@ struct ValidationFailedView: View {
             .navigationBarHidden(true)
             .applyErredScreenBackground()
         }
-        .preferredColorScheme(.light)
     }
 }
 

@@ -10,13 +10,16 @@ import SwiftUI
 /// A Vertical LinearGradient that takes an array of Colors and renders them vertically
 /// in a centered fashion mostly used as a background for Screen views..
 struct ScreenBackground: View {
+    @Environment(\.colorScheme) var colorScheme
+
     var colors: [Color]
+    var darkGradientEndPointY = 1.0
 
     var body: some View {
         LinearGradient(
             colors: colors,
             startPoint: UnitPoint(x: 0.5, y: 0),
-            endPoint: UnitPoint(x: 0.5, y: 1)
+            endPoint: UnitPoint(x: 0.5, y: colorScheme == .dark ? darkGradientEndPointY : 1)
         )
     }
 }
@@ -31,11 +34,15 @@ extension ScreenBackground {
 }
 struct ScreenBackgroundModifier: ViewModifier {
     var colors: [Color]
+    var darkGradientEndPointY = 1.0
 
     func body(content: Content) -> some View {
         ZStack {
-            ScreenBackground(colors: colors)
-                .edgesIgnoringSafeArea(.all)
+            ScreenBackground(
+                colors: colors,
+                darkGradientEndPointY: darkGradientEndPointY
+            )
+            .edgesIgnoringSafeArea(.all)
             
             content
         }
@@ -62,7 +69,8 @@ extension View {
                 colors: [
                     Asset.Colors.ScreenBackground.redGradientStart.color,
                     Asset.Colors.ScreenBackground.redGradientEnd.color
-                ]
+                ],
+                darkGradientEndPointY: 0.4
             )
         )
     }
@@ -73,7 +81,8 @@ extension View {
                 colors: [
                     Asset.Colors.ScreenBackground.greenGradientStart.color,
                     Asset.Colors.ScreenBackground.greenGradientEnd.color
-                ]
+                ],
+                darkGradientEndPointY: 0.6
             )
         )
     }
