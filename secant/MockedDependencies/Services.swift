@@ -9,7 +9,7 @@ import Foundation
 
 protocol Services {
     var networkProvider: ZcashNetworkProvider { get }
-    var seedHandler: MnemonicSeedPhraseHandling { get }
+    var seedHandler: MnemonicSeedPhraseProvider { get }
     var keyStorage: KeyStoring { get }
 }
 

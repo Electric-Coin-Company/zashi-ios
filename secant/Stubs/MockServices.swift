@@ -7,11 +7,10 @@
 // TODO: Move this to different Target when real functionality is developed.
 import Foundation
 
-// swiftlint:disable line_length
 class MockServices: Services {
     var networkProvider: ZcashNetworkProvider = MockNetworkProvider()
         
-    var seedHandler: MnemonicSeedPhraseHandling = MockMnemonicPhraseHandling()
+    var seedHandler: MnemonicSeedPhraseProvider = .mock
     
     var keyStorage: KeyStoring = MockKeyStoring()
 }
@@ -20,41 +19,6 @@ class MockNetworkProvider: ZcashNetworkProvider {
     func currentNetwork() -> ZcashNetwork {
         ZcashMainnet()
     }
-}
-
-class MockMnemonicPhraseHandling: MnemonicSeedPhraseHandling {
-    class TestSeed {
-        /**
-        Test account: "still champion voice habit trend flight survey between bitter process artefact blind carbon truly provide dizzy crush flush breeze blouse charge solid fish spread"
-        */
-        let seedString = Data(
-            base64Encoded: "9VDVOZZZOWWHpZtq1Ebridp3Qeux5C+HwiRR0g7Oi7HgnMs8Gfln83+/Q1NnvClcaSwM4ADFL1uZHxypEWlWXg=="
-        )!// swiftlint:disable:this force_unwrapping
-
-        func seed() -> [UInt8] {
-            [UInt8](seedString)
-        }
-    }
-
-    func randomMnemonic() throws -> String {
-        "still champion voice habit trend flight survey between bitter process artefact blind carbon truly provide dizzy crush flush breeze blouse charge solid fish spread"
-    }
-
-    func randomMnemonicWords() throws -> [String] {
-        "still champion voice habit trend flight survey between bitter process artefact blind carbon truly provide dizzy crush flush breeze blouse charge solid fish spread"
-        .components(separatedBy: " ")
-    }
-
-    func toSeed(mnemonic: String) throws -> [UInt8] {
-        TestSeed().seed()
-    }
-
-    func asWords(mnemonic: String) throws -> [String] {
-        "still champion voice habit trend flight survey between bitter process artefact blind carbon truly provide dizzy crush flush breeze blouse charge solid fish spread"
-        .components(separatedBy: " ")
-    }
-
-    func isValid(mnemonic: String) throws {}
 }
 
 class KeysPresentStub: KeyStoring {

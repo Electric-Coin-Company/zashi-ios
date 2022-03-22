@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "MnemonicSwift",
+        "repositoryURL": "https://github.com/zcash-hackworks/MnemonicSwift",
+        "state": {
+          "branch": null,
+          "revision": "27711179a75a1172d6f04ceb5d86419cf0cba401",
+          "version": "2.1.0"
+        }
+      },
+      {
         "package": "swift-case-paths",
         "repositoryURL": "https://github.com/pointfreeco/swift-case-paths",
         "state": {
@@ -35,6 +44,15 @@
           "branch": null,
           "revision": "599a2398adaaa7a4e3f5420cde7728c39e33677e",
           "version": "0.28.1"
+        }
+      },
+      {
+        "package": "swift-crypto",
+        "repositoryURL": "https://github.com/apple/swift-crypto.git",
+        "state": {
+          "branch": null,
+          "revision": "a8911e0fadc25aef1071d582355bd1037a176060",
+          "version": "2.0.4"
         }
       },
       {
