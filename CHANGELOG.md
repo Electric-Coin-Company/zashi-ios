@@ -1,4 +1,9 @@
 # Changelog
+## 0.0.1 build 17
+- Issue #196: User Preferences Storage
+- Issue #157: Keystoring protocol
+- Issue #155: Add MnemonicSwift to the project
+
 ## 0.0.1 build 16
 - Issue #205: Validation Failure/Success updated to handle dark mode
 - Issue #191: Badges updated to use symbols
