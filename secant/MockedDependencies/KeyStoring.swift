@@ -31,7 +31,7 @@ protocol KeyStoring {
     /**
     Check if the wallet representation `StoredWallet` is present in the persistent storage.
     */
-    func areKeysPresent() throws -> Bool
+    func areKeysPresent() -> Bool
 
     /**
     Update the birthday in the securely stored wallet.
