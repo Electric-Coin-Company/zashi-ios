@@ -34,20 +34,20 @@ enum AppAction: Equatable {
 struct AppEnvironment {
     let scheduler: AnySchedulerOf<DispatchQueue>
     let mnemonicSeedPhraseProvider: MnemonicSeedPhraseProvider
-    let walletStorage: RecoveryPhraseStorage
+    let walletStorage: WalletStorageInteractor
 }
 
 extension AppEnvironment {
     static let live = AppEnvironment(
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         mnemonicSeedPhraseProvider: .live,
-        walletStorage: RecoveryPhraseStorage()
+        walletStorage: .live(walletStorage: WalletStorage())
     )
 
     static let mock = AppEnvironment(
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         mnemonicSeedPhraseProvider: .mock,
-        walletStorage: RecoveryPhraseStorage()
+        walletStorage: .live(walletStorage: WalletStorage())
     )
 }
 
@@ -78,7 +78,7 @@ extension AppReducer {
                 // TODO: - Get birthday from the integrated SDK, issue 228 (https://github.com/zcash/secant-ios-wallet/issues/228)
                 let birthday = BlockHeight(12345678)
                 
-                try environment.walletStorage.importRecoveryPhrase(bip39: randomPhrase, birthday: birthday)
+                try environment.walletStorage.importWallet(randomPhrase, birthday, .english, false)
             } catch {
                 // TODO: - merge with issue 201 (https://github.com/zcash/secant-ios-wallet/issues/201) and its Error States
                 return .none
@@ -94,8 +94,6 @@ extension AppReducer {
         case .checkWalletInitialization:
             // TODO: Create a dependency to handle database files for the SDK, issue #220 (https://github.com/zcash/secant-ios-wallet/issues/220)
             let fileManager = FileManager()
-            // TODO: use updated dependency from PR #217 (https://github.com/zcash/secant-ios-wallet/pull/217)
-            let keysPresent = environment.walletStorage.areKeysPresent()
             
             do {
                 // TODO: use database URL from the same issue #220
@@ -103,12 +101,11 @@ extension AppReducer {
                 let dataDatabaseURL = documentsURL.appendingPathComponent("ZcashSDK.defaultDataDbName", isDirectory: false)
                 let attributes = try fileManager.attributesOfItem(atPath: dataDatabaseURL.path)
                 let databaseFilesPresent = attributes.isEmpty
-                
+                let keysPresent = try environment.walletStorage.areKeysPresent()
+
                 switch (keysPresent, databaseFilesPresent) {
                 case (false, false):
-                    return Effect(value: .updateRoute(.onboarding))
-                        .delay(for: 3, scheduler: environment.scheduler)
-                        .eraseToEffect()
+                    state.appInitializationState = .uninitialized
                 case (false, true):
                     state.appInitializationState = .keysMissing
                     // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
@@ -116,11 +113,18 @@ extension AppReducer {
                     return Effect(value: .initializeApp)
                 }
             } catch CocoaError.fileNoSuchFile, CocoaError.fileReadNoSuchFile {
-                state.appInitializationState = keysPresent ? .filesMissing : .uninitialized
+                state.appInitializationState = .filesMissing
             } catch {
                 state.appInitializationState = .failed
                 // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
             }
+            
+            if state.appInitializationState == .uninitialized || state.appInitializationState == .filesMissing {
+                return Effect(value: .updateRoute(.onboarding))
+                    .delay(for: 3, scheduler: environment.scheduler)
+                    .eraseToEffect()
+            }
+            
             return .none
 
             /// Stored wallet is present, database files may or may not be present, trying to initialize app state variables and environments.
