@@ -58,14 +58,7 @@ struct AppView: View {
                 }
             case .welcome:
                 WelcomeView()
-                    .transition(.opacity)
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                            withAnimation(.easeInOut(duration: 1)) {
-                                viewStore.send(.updateRoute(.startup))
-                            }
-                        }
-                    }
+                    .onAppear(perform: { viewStore.send(.checkWalletInitialisation) })
             }
         }
     }
@@ -105,7 +98,7 @@ struct AppView_Previews: PreviewProvider {
                 store: AppStore(
                     initialState: .placeholder,
                     reducer: .default,
-                    environment: .init()
+                    environment: .demo
                 )
             )
         }
