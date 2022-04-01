@@ -23,7 +23,7 @@ extension AppStore {
         AppStore(
             initialState: .placeholder,
             reducer: .default,
-            environment: .init()
+            environment: .mock
         )
     }
 }
