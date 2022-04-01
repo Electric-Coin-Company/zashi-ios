@@ -35,7 +35,6 @@ enum AppAction: Equatable {
 struct AppEnvironment {
     let mainQueue: AnySchedulerOf<DispatchQueue>
     let mnemonicSeedPhraseProvider: MnemonicSeedPhraseProvider
-    var recoveryPhraseStorage: RecoveryPhraseStorage
     let walletStorage: RecoveryPhraseStorage
 }
 
@@ -43,7 +42,6 @@ extension AppEnvironment {
     static let live = AppEnvironment(
         mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
         mnemonicSeedPhraseProvider: .live,
-        recoveryPhraseStorage: RecoveryPhraseStorage()
         walletStorage: RecoveryPhraseStorage()
     )
 
@@ -51,7 +49,6 @@ extension AppEnvironment {
         mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
         mnemonicSeedPhraseProvider: .mock,
         walletStorage: RecoveryPhraseStorage()
-        recoveryPhraseStorage: RecoveryPhraseStorage()
     )
 }
 
@@ -101,7 +98,7 @@ extension AppReducer {
             // TODO: Create a dependency to handle database files for the SDK, issue #220 (https://github.com/zcash/secant-ios-wallet/issues/220)
             let fileManager = FileManager()
             // TODO: use updated dependency from PR #217 (https://github.com/zcash/secant-ios-wallet/pull/217)
-            let keysPresent = environment.recoveryPhraseStorage.areKeysPresent()
+            let keysPresent = environment.walletStorage.areKeysPresent()
             
             do {
                 // TODO: use database URL from the same issue #220
@@ -152,7 +149,7 @@ extension AppReducer {
             /// When initialization succeeds user is taken to the home screen.
         case .initializeApp:
             do {
-                state.storedWallet = try environment.recoveryPhraseStorage.exportWallet()
+                state.storedWallet = try environment.walletStorage.exportWallet()
             } catch {
                 state.appInitialisationState = .failure(ErrorWrapper(error: error))
                 // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
@@ -231,7 +228,7 @@ extension AppStore {
         AppStore(
             initialState: .placeholder,
             reducer: .default,
-            environment: .demo
+            environment: .mock
         )
     }
 }
