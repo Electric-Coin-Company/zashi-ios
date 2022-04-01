@@ -18,6 +18,7 @@ struct AppState: Equatable {
 }
 
 enum AppAction: Equatable {
+    case createNewWallet
     case updateRoute(AppState.Route)
     case home(HomeAction)
     case onboarding(OnboardingAction)
@@ -25,7 +26,22 @@ enum AppAction: Equatable {
     case phraseValidation(RecoveryPhraseValidationAction)
 }
 
-struct AppEnvironment: Equatable {}
+struct AppEnvironment {
+    let mnemonicSeedPhraseProvider: MnemonicSeedPhraseProvider
+    let walletStorage: RecoveryPhraseStorage
+}
+
+extension AppEnvironment {
+    static let live = AppEnvironment(
+        mnemonicSeedPhraseProvider: .live,
+        walletStorage: RecoveryPhraseStorage()
+    )
+
+    static let mock = AppEnvironment(
+        mnemonicSeedPhraseProvider: .mock,
+        walletStorage: RecoveryPhraseStorage()
+    )
+}
 
 // MARK: - AppReducer
 
@@ -34,6 +50,7 @@ typealias AppReducer = Reducer<AppState, AppAction, AppEnvironment>
 extension AppReducer {
     static let `default` = AppReducer.combine(
         [
+            appReducer,
             routeReducer,
             homeReducer,
             onboardingReducer,
@@ -43,6 +60,33 @@ extension AppReducer {
     )
     .debug()
 
+    private static let appReducer = AppReducer { state, action, environment in
+        switch action {
+        case .createNewWallet:
+            let randomPhraseWords: [String]
+            do {
+                let randomPhrase = try environment.mnemonicSeedPhraseProvider.randomMnemonic()
+                randomPhraseWords = try environment.mnemonicSeedPhraseProvider.asWords(randomPhrase)
+                // TODO: - Get birthday from the integrated SDK, issue 228 (https://github.com/zcash/secant-ios-wallet/issues/228)
+                let birthday = BlockHeight(12345678)
+                
+                try environment.walletStorage.importRecoveryPhrase(bip39: randomPhrase, birthday: birthday)
+            } catch {
+                // TODO: - merge with issue 201 (https://github.com/zcash/secant-ios-wallet/issues/201) and its Error States
+                return .none
+            }
+            
+            let recoveryPhrase = RecoveryPhrase(words: randomPhraseWords)
+            state.phraseDisplayState.phrase = recoveryPhrase
+            state.phraseValidationState = RecoveryPhraseValidationState.random(phrase: recoveryPhrase)
+            
+            return Effect(value: .phraseValidation(.displayBackedUpPhrase))
+
+        default:
+            return .none
+        }
+    }
+    
     private static let routeReducer = AppReducer { state, action, _ in
         switch action {
         case let .updateRoute(route):
@@ -51,8 +95,10 @@ extension AppReducer {
         case .home(.reset):
             state.route = .startup
 
-        case .onboarding(.createNewWallet),
-            .phraseValidation(.proceedToHome):
+        case .onboarding(.createNewWallet):
+            return Effect(value: .createNewWallet)
+
+        case .phraseValidation(.proceedToHome):
             state.route = .home
 
         case .phraseValidation(.displayBackedUpPhrase),

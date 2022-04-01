@@ -105,7 +105,7 @@ struct AppView_Previews: PreviewProvider {
                 store: AppStore(
                     initialState: .placeholder,
                     reducer: .default,
-                    environment: .init()
+                    environment: .mock
                 )
             )
         }
