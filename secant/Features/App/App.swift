@@ -15,29 +15,37 @@ struct AppState: Equatable {
     var phraseValidationState: RecoveryPhraseValidationState
     var phraseDisplayState: RecoveryPhraseDisplayState
     var route: Route = .welcome
+    var storedWallet: StoredWallet?
+    var appInitializationState: InitializationState = .uninitialized
 }
 
 enum AppAction: Equatable {
+    case appDelegate(AppDelegateAction)
+    case checkWalletInitialization
     case createNewWallet
-    case updateRoute(AppState.Route)
     case home(HomeAction)
+    case initializeApp
     case onboarding(OnboardingAction)
     case phraseDisplay(RecoveryPhraseDisplayAction)
     case phraseValidation(RecoveryPhraseValidationAction)
+    case updateRoute(AppState.Route)
 }
 
 struct AppEnvironment {
+    let scheduler: AnySchedulerOf<DispatchQueue>
     let mnemonicSeedPhraseProvider: MnemonicSeedPhraseProvider
     let walletStorage: RecoveryPhraseStorage
 }
 
 extension AppEnvironment {
     static let live = AppEnvironment(
+        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         mnemonicSeedPhraseProvider: .live,
         walletStorage: RecoveryPhraseStorage()
     )
 
     static let mock = AppEnvironment(
+        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         mnemonicSeedPhraseProvider: .mock,
         walletStorage: RecoveryPhraseStorage()
     )
@@ -82,11 +90,61 @@ extension AppReducer {
             
             return Effect(value: .phraseValidation(.displayBackedUpPhrase))
 
+            /// Checking presense of stored wallet in the keychain and presense of database files in documents directory.
+        case .checkWalletInitialization:
+            // TODO: Create a dependency to handle database files for the SDK, issue #220 (https://github.com/zcash/secant-ios-wallet/issues/220)
+            let fileManager = FileManager()
+            // TODO: use updated dependency from PR #217 (https://github.com/zcash/secant-ios-wallet/pull/217)
+            let keysPresent = environment.walletStorage.areKeysPresent()
+            
+            do {
+                // TODO: use database URL from the same issue #220
+                let documentsURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+                let dataDatabaseURL = documentsURL.appendingPathComponent("ZcashSDK.defaultDataDbName", isDirectory: false)
+                let attributes = try fileManager.attributesOfItem(atPath: dataDatabaseURL.path)
+                let databaseFilesPresent = attributes.isEmpty
+                
+                switch (keysPresent, databaseFilesPresent) {
+                case (false, false):
+                    return Effect(value: .updateRoute(.onboarding))
+                        .delay(for: 3, scheduler: environment.scheduler)
+                        .eraseToEffect()
+                case (false, true):
+                    state.appInitializationState = .keysMissing
+                    // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+                case (true, false), (true, true):
+                    return Effect(value: .initializeApp)
+                }
+            } catch CocoaError.fileNoSuchFile, CocoaError.fileReadNoSuchFile {
+                state.appInitializationState = keysPresent ? .filesMissing : .uninitialized
+            } catch {
+                state.appInitializationState = .failed
+                // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+            }
+            return .none
+
+            /// Stored wallet is present, database files may or may not be present, trying to initialize app state variables and environments.
+            /// When initialization succeeds user is taken to the home screen.
+        case .initializeApp:
+            do {
+                state.storedWallet = try environment.walletStorage.exportWallet()
+            } catch {
+                state.appInitializationState = .failed
+                // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+                return .none
+            }
+            
+            state.appInitializationState = .initialized
+            return Effect(value: .updateRoute(.startup))
+                .delay(for: 3, scheduler: environment.scheduler)
+                .eraseToEffect()
+
+            /// Default is meaningful here because there's `routeReducer` handling routes and this reducer is handling only actions. We don't here plenty of unused cases.
         default:
             return .none
         }
     }
-    
+
     private static let routeReducer = AppReducer { state, action, _ in
         switch action {
         case let .updateRoute(route):
@@ -108,6 +166,7 @@ extension AppReducer {
         case .phraseDisplay(.finishedPressed):
             state.route = .phraseValidation
 
+            /// Default is meaningful here because there's `appReducer` handling actions and this reducer is handling only routes. We don't here plenty of unused cases.
         default:
             break
         }
@@ -145,6 +204,13 @@ extension AppReducer {
 typealias AppStore = Store<AppState, AppAction>
 
 extension AppStore {
+    static var placeholder: AppStore {
+        AppStore(
+            initialState: .placeholder,
+            reducer: .default,
+            environment: .mock
+        )
+    }
 }
 
 // MARK: - AppViewStore

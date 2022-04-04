@@ -220,7 +220,7 @@ extension RecoveryPhraseStorage: KeyStoring {
         }
     }
     
-    func areKeysPresent() throws -> Bool {
+    func areKeysPresent() -> Bool {
         do {
             _ = try exportWallet()
         } catch KeyStoringError.uninitializedWallet {
