@@ -1,5 +1,5 @@
 //
-//  RecoveryPhraseStorage.swift
+//  WalletStorage.swift
 //  secant-testnet
 //
 //  Created by Lukáš Korba on 03/10/2022.
@@ -7,12 +7,12 @@
 
 import Foundation
 import MnemonicSwift
+import Security
 
 /// Zcash implementation of the keychain that is not universal but designed to deliver functionality needed by the wallet itself.
 /// All the APIs should be thread safe according to official doc:
 /// https://developer.apple.com/documentation/security/certificate_key_and_trust_services/working_with_concurrency?language=objc
-// swiftlint:disable convenience_type
-final class RecoveryPhraseStorage {
+struct WalletStorage {
     enum Constants {
         static let zcashStoredWallet = "zcashStoredWallet"
         /// Versioning of the stored data
@@ -25,13 +25,112 @@ final class RecoveryPhraseStorage {
         case encoding
         case noDataFound
         case unknown(OSStatus)
+    }
+
+    enum WalletStorageError: Error {
+        case alreadyImported
+        case uninitializedWallet
+        case storageError(Error)
         case unsupportedVersion(Int)
         case unsupportedLanguage(MnemonicLanguageType)
     }
+
+    func importWallet(
+        bip39 phrase: String,
+        birthday: BlockHeight?,
+        language: MnemonicLanguageType = .english,
+        hasUserPassedPhraseBackupTest: Bool = false
+    ) throws {
+        // Future-proof of the bundle to potentialy avoid migration. We enforce english mnemonic.
+        guard language == .english else {
+            throw WalletStorageError.unsupportedLanguage(language)
+        }
+
+        let wallet = StoredWallet(
+            language: language,
+            seedPhrase: phrase,
+            version: Constants.zcashKeychainVersion,
+            birthday: birthday,
+            hasUserPassedPhraseBackupTest: hasUserPassedPhraseBackupTest
+        )
+
+        do {
+            guard let data = try encode(object: wallet) else {
+                throw KeychainError.encoding
+            }
+            
+            try setData(data, forKey: Constants.zcashStoredWallet)
+        } catch KeychainError.duplicate {
+            throw WalletStorageError.alreadyImported
+        } catch {
+            throw WalletStorageError.storageError(error)
+        }
+    }
     
-    // MARK: - Codable helpers
+    func exportWallet() throws -> StoredWallet {
+        guard let data = data(forKey: Constants.zcashStoredWallet) else {
+            throw WalletStorageError.uninitializedWallet
+        }
+        
+        guard let wallet = try decode(json: data, as: StoredWallet.self) else {
+            throw WalletStorageError.uninitializedWallet
+        }
+        
+        guard wallet.version == Constants.zcashKeychainVersion else {
+            throw WalletStorageError.unsupportedVersion(wallet.version)
+        }
+        
+        return wallet
+    }
     
-    static func decode<T: Decodable>(json: Data, as clazz: T.Type) throws -> T? {
+    func areKeysPresent() throws -> Bool {
+        do {
+            _ = try exportWallet()
+        } catch {
+            // TODO: - report & log error.localizedDescription [Issue #219, https://github.com/zcash/secant-ios-wallet/issues/219]
+            throw error
+        }
+        
+        return true
+    }
+    
+    func updateBirthday(_ height: BlockHeight) throws {
+        do {
+            var wallet = try exportWallet()
+            wallet.birthday = height
+            
+            guard let data = try encode(object: wallet) else {
+                throw KeychainError.encoding
+            }
+            
+            try updateData(data, forKey: Constants.zcashStoredWallet)
+        } catch {
+            throw error
+        }
+    }
+    
+    func markUserPassedPhraseBackupTest() throws {
+        do {
+            var wallet = try exportWallet()
+            wallet.hasUserPassedPhraseBackupTest = true
+            
+            guard let data = try encode(object: wallet) else {
+                throw KeychainError.encoding
+            }
+            
+            try updateData(data, forKey: WalletStorage.Constants.zcashStoredWallet)
+        } catch {
+            throw error
+        }
+    }
+    
+    func nukeWallet() {
+        deleteData(forKey: Constants.zcashStoredWallet)
+    }
+    
+    // MARK: - Wallet Storage Codable & Query helpers
+    
+    func decode<T: Decodable>(json: Data, as clazz: T.Type) throws -> T? {
         do {
             let decoder = JSONDecoder()
             let data = try decoder.decode(T.self, from: json)
@@ -41,7 +140,7 @@ final class RecoveryPhraseStorage {
         }
     }
 
-    static func encode<T: Codable>(object: T) throws -> Data? {
+    func encode<T: Codable>(object: T) throws -> Data? {
         do {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
@@ -51,9 +150,7 @@ final class RecoveryPhraseStorage {
         }
     }
     
-    // MARK: - Query Helpers
-
-    static func baseQuery(forAccount account: String = "", andKey forKey: String) -> [String: Any] {
+    func baseQuery(forAccount account: String = "", andKey forKey: String) -> [String: Any] {
         let query:[ String: AnyObject ] = [
             /// Uniquely identify this keychain accessor
             kSecAttrService as String: forKey as AnyObject,
@@ -69,7 +166,7 @@ final class RecoveryPhraseStorage {
         return query
     }
     
-    static func restoreQuery(forAccount account: String = "", andKey forKey: String) -> [String: Any] {
+    func restoreQuery(forAccount account: String = "", andKey forKey: String) -> [String: Any] {
         var query = baseQuery(forAccount: account, andKey: forKey)
         query[kSecMatchLimit as String] = kSecMatchLimitOne
         query[kSecReturnData as String] = kCFBooleanTrue
@@ -81,45 +178,15 @@ final class RecoveryPhraseStorage {
     }
 }
 
-// MARK: - Recovery Phrase Helper Functions
+// MARK: - Wallet Storage Helper Functions
 
-private extension RecoveryPhraseStorage {
-    func setWallet(_ wallet: StoredWallet) throws {
-        guard let data = try RecoveryPhraseStorage.encode(object: wallet) else {
-            throw KeychainError.encoding
-        }
-        
-        try setData(data, forKey: Constants.zcashStoredWallet)
-    }
-
-    func wallet() throws -> StoredWallet {
-        guard let data = data(forKey: Constants.zcashStoredWallet) else {
-            throw KeychainError.noDataFound
-        }
-        
-        guard let wallet = try RecoveryPhraseStorage.decode(json: data, as: StoredWallet.self) else {
-            throw KeychainError.decoding
-        }
-        
-        guard wallet.version == Constants.zcashKeychainVersion else {
-            throw KeychainError.unsupportedVersion(wallet.version)
-        }
-        
-        return wallet
-    }
-
-    /// Use carefully:  Deletes seed phrase from the keychain!!!
-    @discardableResult
-    func deleteWallet() -> Bool {
-        deleteData(forKey: Constants.zcashStoredWallet)
-    }
-    
+private extension WalletStorage {
     /// Restore data for key
     func data(
         forKey: String,
         account: String = ""
     ) -> Data? {
-        let query = RecoveryPhraseStorage.restoreQuery(forAccount: account, andKey: forKey)
+        let query = restoreQuery(forAccount: account, andKey: forKey)
 
         var result: AnyObject?
         _ = SecItemCopyMatching(query as CFDictionary, &result)
@@ -128,11 +195,12 @@ private extension RecoveryPhraseStorage {
     }
     
     /// Use carefully:  Deletes data for key
+    @discardableResult
     func deleteData(
         forKey: String,
         account: String = ""
     ) -> Bool {
-        let query = RecoveryPhraseStorage.baseQuery(forAccount: account, andKey: forKey)
+        let query = baseQuery(forAccount: account, andKey: forKey)
 
         let status = SecItemDelete(query as CFDictionary)
 
@@ -145,7 +213,7 @@ private extension RecoveryPhraseStorage {
         forKey: String,
         account: String = ""
     ) throws {
-        var query = RecoveryPhraseStorage.baseQuery(forAccount: account, andKey: forKey)
+        var query = baseQuery(forAccount: account, andKey: forKey)
         query[kSecValueData as String] = data as AnyObject
 
         let status = SecItemAdd(query as CFDictionary, nil)
@@ -165,7 +233,7 @@ private extension RecoveryPhraseStorage {
         forKey: String,
         account: String = ""
     ) throws {
-        let query = RecoveryPhraseStorage.baseQuery(forAccount: account, andKey: forKey)
+        let query = baseQuery(forAccount: account, andKey: forKey)
         
         let attributes:[ String: AnyObject ] = [
             kSecValueData as String: data as AnyObject
@@ -180,75 +248,5 @@ private extension RecoveryPhraseStorage {
         guard status == errSecSuccess else {
             throw KeychainError.unknown(status)
         }
-    }
-}
-
-// MARK: - KeyStoring
-
-extension RecoveryPhraseStorage: KeyStoring {
-    func importRecoveryPhrase(bip39 phrase: String, birthday: BlockHeight?, language: MnemonicLanguageType = .english) throws {
-        // Future-proof of the bundle to potentialy avoid migration. We enforce english mnemonic.
-        guard language == .english else {
-            throw KeyStoringError.unsupportedLanguage(language)
-        }
-        
-        do {
-            let wallet = StoredWallet(
-                birthday: birthday,
-                language: language,
-                seedPhrase: phrase,
-                version: Constants.zcashKeychainVersion
-            )
-            
-            try setWallet(wallet)
-        } catch KeychainError.duplicate {
-            throw KeyStoringError.alreadyImported
-        } catch {
-            throw KeyStoringError.storageError(error)
-        }
-    }
-    
-    func exportWallet() throws -> StoredWallet {
-        do {
-            return try wallet()
-        } catch KeychainError.noDataFound, KeychainError.decoding {
-            throw KeyStoringError.uninitializedWallet
-        } catch KeychainError.unsupportedVersion(let version) {
-            throw KeyStoringError.unsupportedVersion(version)
-        } catch {
-            throw KeyStoringError.storageError(error)
-        }
-    }
-    
-    func areKeysPresent() -> Bool {
-        do {
-            _ = try exportWallet()
-        } catch KeyStoringError.uninitializedWallet {
-            return false
-        } catch {
-            // TODO: - report & log error.localizedDescription
-            return false
-        }
-        
-        return true
-    }
-    
-    func updateBirthday(_ height: BlockHeight) throws {
-        do {
-            var wallet = try exportWallet()
-            wallet.birthday = height
-            
-            guard let data = try RecoveryPhraseStorage.encode(object: wallet) else {
-                throw KeychainError.encoding
-            }
-
-            try updateData(data, forKey: Constants.zcashStoredWallet)
-        } catch {
-            throw error
-        }
-    }
-    
-    func nukeWallet() {
-        deleteWallet()
     }
 }
