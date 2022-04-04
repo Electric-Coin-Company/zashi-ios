@@ -57,8 +57,13 @@ struct AppView: View {
                     )
                 }
             case .welcome:
-                WelcomeView()
-                    .onAppear(perform: { viewStore.send(.checkWalletInitialization) })
+                WelcomeView(
+                    store: store.scope(
+                        state: \.welcomeState,
+                        action: AppAction.welcome
+                    )
+                )
+                .onAppear(perform: { viewStore.send(.checkWalletInitialization) })
             }
         }
     }

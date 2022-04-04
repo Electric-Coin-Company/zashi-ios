@@ -86,6 +86,7 @@
 		9E37A2B827C8F59F00AE57B3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E37A2B727C8F59F00AE57B3 /* Localizable.strings */; };
 		9E4DC6E027C409A100E657F4 /* NeumorphicDesignModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DC6DF27C409A100E657F4 /* NeumorphicDesignModifier.swift */; };
 		9E4DC6E227C4C6B700E657F4 /* SecantButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */; };
+		9E69A24D27FB002800A55317 /* Welcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E69A24C27FB002800A55317 /* Welcome.swift */; };
 		9E80B47227E4B34B008FF493 /* UserPreferencesStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E80B47127E4B34B008FF493 /* UserPreferencesStorage.swift */; };
 		9EBEF87A27CE369800B4F343 /* RecoveryPhraseTestPreambleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBEF87927CE369800B4F343 /* RecoveryPhraseTestPreambleView.swift */; };
 		9EF8135C27ECC25E0075AF48 /* WalletStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF8135A27ECC25E0075AF48 /* WalletStorageTests.swift */; };
@@ -225,6 +226,7 @@
 		9E37A2B727C8F59F00AE57B3 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		9E4DC6DF27C409A100E657F4 /* NeumorphicDesignModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeumorphicDesignModifier.swift; sourceTree = "<group>"; };
 		9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecantButtonStyles.swift; sourceTree = "<group>"; };
+		9E69A24C27FB002800A55317 /* Welcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Welcome.swift; sourceTree = "<group>"; };
 		9E80B47127E4B34B008FF493 /* UserPreferencesStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreferencesStorage.swift; sourceTree = "<group>"; };
 		9EBEF87927CE369800B4F343 /* RecoveryPhraseTestPreambleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseTestPreambleView.swift; sourceTree = "<group>"; };
 		9EF8135A27ECC25E0075AF48 /* WalletStorageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletStorageTests.swift; sourceTree = "<group>"; };
@@ -292,6 +294,7 @@
 		0D0781C2278750C00083ACD7 /* Welcome */ = {
 			isa = PBXGroup;
 			children = (
+				9E69A24C27FB002800A55317 /* Welcome.swift */,
 				0D0781C3278750E30083ACD7 /* WelcomeView.swift */,
 			);
 			path = Welcome;
@@ -1147,6 +1150,7 @@
 				F9971A6027680DF600A2DB75 /* Scan.swift in Sources */,
 				9EF8139127F191BF0075AF48 /* WalletStorageInteractor.swift in Sources */,
 				0DFE93E1272C9ECB000FCCA5 /* RecoveryPhraseBackupValidationView.swift in Sources */,
+				9E69A24D27FB002800A55317 /* Welcome.swift in Sources */,
 				F9C165CB2741AB5D00592F76 /* SendView.swift in Sources */,
 				0D0781C4278750E30083ACD7 /* WelcomeView.swift in Sources */,
 				F9971A6527680DFE00A2DB75 /* Settings.swift in Sources */,
