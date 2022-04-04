@@ -58,7 +58,7 @@ struct AppView: View {
                 }
             case .welcome:
                 WelcomeView()
-                    .onAppear(perform: { viewStore.send(.checkWalletInitialisation) })
+                    .onAppear(perform: { viewStore.send(.checkWalletInitialization) })
             }
         }
     }

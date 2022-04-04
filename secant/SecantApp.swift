@@ -11,7 +11,7 @@ import ComposableArchitecture
 final class AppDelegate: NSObject, UIApplicationDelegate {
     var appStore: AppStore = .placeholder
     lazy var appViewStore = ViewStore(
-        appStore.scope(state: { _ in () }),
+        appStore.stateless,
         removeDuplicates: ==
     )
 
