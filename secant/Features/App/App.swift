@@ -14,6 +14,7 @@ struct AppState: Equatable {
     var onboardingState: OnboardingState
     var phraseValidationState: RecoveryPhraseValidationState
     var phraseDisplayState: RecoveryPhraseDisplayState
+    var welcomeState: WelcomeState
     var route: Route = .welcome
     var storedWallet: StoredWallet?
     var appInitializationState: InitializationState = .uninitialized
@@ -29,6 +30,7 @@ enum AppAction: Equatable {
     case phraseDisplay(RecoveryPhraseDisplayAction)
     case phraseValidation(RecoveryPhraseValidationAction)
     case updateRoute(AppState.Route)
+    case welcome(WelcomeAction)
 }
 
 struct AppEnvironment {
@@ -52,6 +54,8 @@ extension AppEnvironment {
 }
 
 // MARK: - AppReducer
+
+private struct ListenerId: Hashable {}
 
 typealias AppReducer = Reducer<AppState, AppAction, AppEnvironment>
 
@@ -123,6 +127,7 @@ extension AppReducer {
                 return Effect(value: .updateRoute(.onboarding))
                     .delay(for: 3, scheduler: environment.scheduler)
                     .eraseToEffect()
+                    .cancellable(id: ListenerId(), cancelInFlight: true)
             }
             
             return .none
@@ -142,6 +147,18 @@ extension AppReducer {
             return Effect(value: .updateRoute(.startup))
                 .delay(for: 3, scheduler: environment.scheduler)
                 .eraseToEffect()
+
+        case .welcome(.debugMenuHome):
+            return .concatenate(
+                Effect.cancel(id: ListenerId()),
+                Effect(value: .updateRoute(.home))
+            )
+            
+        case .welcome(.debugMenuStartup):
+            return .concatenate(
+                Effect.cancel(id: ListenerId()),
+                Effect(value: .updateRoute(.startup))
+            )
 
             /// Default is meaningful here because there's `routeReducer` handling routes and this reducer is handling only actions. We don't here plenty of unused cases.
         default:
@@ -201,6 +218,12 @@ extension AppReducer {
         action: /AppAction.phraseDisplay,
         environment: { _ in BackupPhraseEnvironment.demo }
     )
+    
+    private static let welcomeReducer: AppReducer = WelcomeReducer.default.pullback(
+        state: \AppState.welcomeState,
+        action: /AppAction.welcome,
+        environment: { _ in }
+    )
 }
 
 // MARK: - AppStore
@@ -236,7 +259,8 @@ extension AppState {
             phraseValidationState: RecoveryPhraseValidationState.placeholder,
             phraseDisplayState: RecoveryPhraseDisplayState(
                 phrase: .placeholder
-            )
+            ),
+            welcomeState: .placeholder
         )
     }
 }
