@@ -34,6 +34,7 @@ enum AppAction: Equatable {
 }
 
 struct AppEnvironment {
+    let databaseFiles: DatabaseFilesInteractor
     let scheduler: AnySchedulerOf<DispatchQueue>
     let mnemonicSeedPhraseProvider: MnemonicSeedPhraseProvider
     let walletStorage: WalletStorageInteractor
@@ -41,15 +42,17 @@ struct AppEnvironment {
 
 extension AppEnvironment {
     static let live = AppEnvironment(
+        databaseFiles: .live(),
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         mnemonicSeedPhraseProvider: .live,
-        walletStorage: .live(walletStorage: WalletStorage())
+        walletStorage: .live()
     )
 
     static let mock = AppEnvironment(
+        databaseFiles: .live(),
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         mnemonicSeedPhraseProvider: .mock,
-        walletStorage: .live(walletStorage: WalletStorage())
+        walletStorage: .live()
     )
 }
 
@@ -96,15 +99,9 @@ extension AppReducer {
 
             /// Checking presense of stored wallet in the keychain and presense of database files in documents directory.
         case .checkWalletInitialization:
-            // TODO: Create a dependency to handle database files for the SDK, issue #220 (https://github.com/zcash/secant-ios-wallet/issues/220)
-            let fileManager = FileManager()
-            
             do {
-                // TODO: use database URL from the same issue #220
-                let documentsURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-                let dataDatabaseURL = documentsURL.appendingPathComponent("ZcashSDK.defaultDataDbName", isDirectory: false)
-                let attributes = try fileManager.attributesOfItem(atPath: dataDatabaseURL.path)
-                let databaseFilesPresent = attributes.isEmpty
+                // TODO: replace the hardcoded network with the environmental value, issue 239 (https://github.com/zcash/secant-ios-wallet/issues/239)
+                let databaseFilesPresent = try environment.databaseFiles.areDbFilesPresentFor("mainnet")
                 let keysPresent = try environment.walletStorage.areKeysPresent()
 
                 switch (keysPresent, databaseFilesPresent) {
