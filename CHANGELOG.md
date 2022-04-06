@@ -1,4 +1,9 @@
 # Changelog
+## 0.0.1 build 18
+- Issue #200: Move Debug Menus to a hidden screen
+- Issue #197: Ability to know whether wallet has been initialized
+- Issue #202: Connect onboarding flow to Recovery Phrase backup on Create New wallet
+
 ## 0.0.1 build 17
 - Issue #196: User Preferences Storage
 - Issue #157: Keystoring protocol
