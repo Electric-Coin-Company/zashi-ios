@@ -37,7 +37,9 @@ internal enum Asset {
       internal static let bank = ImageAsset(name: "bank")
       internal static let list = ImageAsset(name: "list")
       internal static let profile = ImageAsset(name: "profile")
+      internal static let qrCode = ImageAsset(name: "qr-code")
       internal static let shield = ImageAsset(name: "shield")
+      internal static let swap = ImageAsset(name: "swap")
     }
   }
   internal enum Colors {
@@ -60,6 +62,9 @@ internal enum Asset {
       internal static let primaryButtonPressed = ColorAsset(name: "PrimaryButtonPressed")
       internal static let secondaryButton = ColorAsset(name: "SecondaryButton")
       internal static let secondaryButtonPressed = ColorAsset(name: "SecondaryButtonPressed")
+    }
+    internal enum Cursor {
+      internal static let bar = ColorAsset(name: "Bar")
     }
     internal enum Onboarding {
       internal static let badgeShadow = ColorAsset(name: "BadgeShadow")
@@ -103,6 +108,14 @@ internal enum Asset {
       internal static let captionText = ColorAsset(name: "captionText")
       internal static let captionTextShadow = ColorAsset(name: "captionTextShadow")
       internal static let highlightedSuperscriptText = ColorAsset(name: "highlightedSuperscriptText")
+    }
+    internal enum TextField {
+      internal static let titleAccessoryButton = ColorAsset(name: "TitleAccessoryButton")
+      internal static let titleAccessoryButtonPressed = ColorAsset(name: "TitleAccessoryButtonPressed")
+      internal enum Underline {
+        internal static let gray = ColorAsset(name: "Gray")
+        internal static let purple = ColorAsset(name: "Purple")
+      }
     }
     internal enum ZcashBadge {
       internal static let zcashLogoFill = ColorAsset(name: "ZcashLogoFill")
