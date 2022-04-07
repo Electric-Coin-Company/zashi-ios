@@ -1,4 +1,6 @@
 # Changelog
+## 0.0.1 build 19
+- Issue #242: NukeWallet in the debug menus for testing purposes
 ## 0.0.1 build 18
 - Issue #200: Move Debug Menus to a hidden screen
 - Issue #197: Ability to know whether wallet has been initialized
