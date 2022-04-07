@@ -90,6 +90,10 @@ private struct StartupView: View {
                 Button("Go To Welcome Screen") {
                     sendAction(.updateRoute(.welcome))
                 }
+
+                Button("[Be careful] Nuke Wallet") {
+                    sendAction(.nukeWallet)
+                }
             }
         }
         .navigationBarTitle("Startup")

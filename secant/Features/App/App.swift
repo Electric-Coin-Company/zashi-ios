@@ -26,6 +26,7 @@ enum AppAction: Equatable {
     case createNewWallet
     case home(HomeAction)
     case initializeApp
+    case nukeWallet
     case onboarding(OnboardingAction)
     case phraseDisplay(RecoveryPhraseDisplayAction)
     case phraseValidation(RecoveryPhraseValidationAction)
@@ -99,11 +100,12 @@ extension AppReducer {
 
             /// Checking presense of stored wallet in the keychain and presense of database files in documents directory.
         case .checkWalletInitialization:
+            var keysPresent = false
             do {
                 // TODO: replace the hardcoded network with the environmental value, issue 239 (https://github.com/zcash/secant-ios-wallet/issues/239)
+                keysPresent = try environment.walletStorage.areKeysPresent()
                 let databaseFilesPresent = try environment.databaseFiles.areDbFilesPresentFor("mainnet")
-                let keysPresent = try environment.walletStorage.areKeysPresent()
-
+                
                 switch (keysPresent, databaseFilesPresent) {
                 case (false, false):
                     state.appInitializationState = .uninitialized
@@ -113,14 +115,22 @@ extension AppReducer {
                 case (true, false), (true, true):
                     return Effect(value: .initializeApp)
                 }
-            } catch CocoaError.fileNoSuchFile, CocoaError.fileReadNoSuchFile {
-                state.appInitializationState = .filesMissing
+            } catch DatabaseFiles.DatabaseFilesError.filesPresentCheck {
+                if keysPresent {
+                    /// This state is not an error as long as wallet keys are present. The process to initialize the missing files  is handled by `.initializeApp` action.
+                    state.appInitializationState = .filesMissing
+                    return Effect(value: .initializeApp)
+                } else {
+                    state.appInitializationState = .uninitialized
+                }
+            } catch WalletStorage.WalletStorageError.uninitializedWallet {
+                state.appInitializationState = .uninitialized
             } catch {
                 state.appInitializationState = .failed
                 // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
             }
             
-            if state.appInitializationState == .uninitialized || state.appInitializationState == .filesMissing {
+            if state.appInitializationState == .uninitialized {
                 return Effect(value: .updateRoute(.onboarding))
                     .delay(for: 3, scheduler: environment.scheduler)
                     .eraseToEffect()
@@ -140,11 +150,48 @@ extension AppReducer {
                 return .none
             }
             
+            guard let storedWallet = state.storedWallet else {
+                return Effect(value: .updateRoute(.onboarding))
+                    .delay(for: 3, scheduler: environment.scheduler)
+                    .eraseToEffect()
+                    .cancellable(id: ListenerId(), cancelInFlight: true)
+            }
+
+            var landingRoute: AppState.Route = .startup
+            
+            if !storedWallet.hasUserPassedPhraseBackupTest {
+                let phraseWords: [String]
+                do {
+                    phraseWords = try environment.mnemonicSeedPhraseProvider.asWords(storedWallet.seedPhrase)
+                } catch {
+                    // TODO: - merge with issue 201 (https://github.com/zcash/secant-ios-wallet/issues/201) and its Error States
+                    return .none
+                }
+                let recoveryPhrase = RecoveryPhrase(words: phraseWords)
+                state.phraseDisplayState.phrase = recoveryPhrase
+                state.phraseValidationState = RecoveryPhraseValidationState.random(phrase: recoveryPhrase)
+                landingRoute = .phraseDisplay
+            }
+            
             state.appInitializationState = .initialized
-            return Effect(value: .updateRoute(.startup))
+            return Effect(value: .updateRoute(landingRoute))
                 .delay(for: 3, scheduler: environment.scheduler)
                 .eraseToEffect()
+                .cancellable(id: ListenerId(), cancelInFlight: true)
 
+        case .phraseValidation(.succeed):
+            do {
+                try environment.walletStorage.markUserPassedPhraseBackupTest()
+            } catch {
+                // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+            }
+            return .none
+            
+        case .nukeWallet:
+            environment.walletStorage.nukeWallet()
+            // TODO: - when DatabaseFiles dependency is merged, nukeFiles as well, issue #220 (https://github.com/zcash/secant-ios-wallet/issues/220)
+            return .none
+            
         case .welcome(.debugMenuHome):
             return .concatenate(
                 Effect.cancel(id: ListenerId()),
