@@ -10,6 +10,7 @@ extension String {
 }
 
 extension String {
+    // TODO: Issue #245 Add Validation Regex that support localization 
     private static let floatingPointRegex = "^[0-9]*.?[0-9]+"
     private static let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}"
     private static let phoneRegex = "^^\\+(?:[0-9]?){6,14}[0-9]$"
