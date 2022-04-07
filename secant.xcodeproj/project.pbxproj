@@ -244,7 +244,6 @@
 		9E02B56B27FED475005B809B /* DatabaseFilesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseFilesTests.swift; sourceTree = "<group>"; };
 		9E2AC10027D8EF0B0042AA47 /* MnemonicSeedPhraseProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicSeedPhraseProvider.swift; sourceTree = "<group>"; };
 		9E2AC10227DA28200042AA47 /* WalletStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletStorage.swift; sourceTree = "<group>"; };
-		9E2AC10527DA34610042AA47 /* RecoveryPhraseStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseStorageTests.swift; sourceTree = "<group>"; };
 		9E2DF99827CF704D00649636 /* ImportWalletStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportWalletStore.swift; sourceTree = "<group>"; };
 		9E2DF99A27CF704D00649636 /* ImportSeedEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportSeedEditor.swift; sourceTree = "<group>"; };
 		9E2DF99B27CF704D00649636 /* ImportWalletView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportWalletView.swift; sourceTree = "<group>"; };
@@ -400,7 +399,6 @@
 				0D4E7A1926B364180058B01E /* secantTests */,
 				0D4E7A2426B364180058B01E /* secantUITests */,
 				0D4E7A0626B364170058B01E /* Products */,
-				9EF8135627ECAFF50075AF48 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -417,8 +415,6 @@
 		0D4E7A0726B364170058B01E /* secant */ = {
 			isa = PBXGroup;
 			children = (
-				0D4E7A0826B364170058B01E /* SecantApp.swift */,
-				0D4E7A0A26B364170058B01E /* ContentView.swift */,
 				9E02B56827FED42D005B809B /* Wrappers */,
 				0DACFA7D27208CC80039EEA5 /* Util */,
 				6654C73B2715A3F000901167 /* Features */,
@@ -759,14 +755,6 @@
 				9EBEF87927CE369800B4F343 /* RecoveryPhraseTestPreambleView.swift */,
 			);
 			path = Preamble;
-			sourceTree = "<group>";
-		};
-		9EF8135627ECAFF50075AF48 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				9E2AC10527DA34610042AA47 /* RecoveryPhraseStorageTests.swift */,
-			);
-			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		9EF8135927ECC25E0075AF48 /* Util */ = {
@@ -1313,6 +1301,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1374,6 +1363,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1403,6 +1393,7 @@
 				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
 				DEVELOPMENT_TEAM = RLPRR8CPQG;
+				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = secant/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -1427,6 +1418,7 @@
 				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
 				DEVELOPMENT_TEAM = RLPRR8CPQG;
+				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = secant/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
