@@ -52,7 +52,7 @@ extension RecoveryPhraseValidationState {
     /// - Note: Use this function to create a random validation puzzle for a given phrase.
     static func random(phrase: RecoveryPhrase) -> Self {
         let missingIndices = Self.randomIndices()
-        let missingWordChipKind = phrase.words(fromMissingIndices: missingIndices)
+        let missingWordChipKind = phrase.words(fromMissingIndices: missingIndices).shuffled()
 
         return RecoveryPhraseValidationState(
             phrase: phrase,
