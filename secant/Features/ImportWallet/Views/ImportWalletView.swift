@@ -53,6 +53,7 @@ struct ImportWalletView: View {
             .navigationBarHidden(true)
             .applyScreenBackground()
             .scrollableWhenScaledUp()
+            .alert(self.store.scope(state: \.alert), dismiss: .dismissAlert)
         }
     }
 }

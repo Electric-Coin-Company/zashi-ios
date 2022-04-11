@@ -87,7 +87,7 @@ private struct StartupView: View {
                     sendAction(.updateRoute(.phraseValidation))
                 }
 
-                Button("Go To Welcome Screen") {
+                Button("Restart the app") {
                     sendAction(.updateRoute(.welcome))
                 }
 

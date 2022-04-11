@@ -16,7 +16,7 @@ class OnboardingStoreTests: XCTestCase {
                 importWalletState: .placeholder
             ),
             reducer: OnboardingReducer.default,
-            environment: ()
+            environment: .demo
         )
         
         store.send(.next) {
@@ -57,7 +57,7 @@ class OnboardingStoreTests: XCTestCase {
                 importWalletState: .placeholder
             ),
             reducer: OnboardingReducer.default,
-            environment: ()
+            environment: .demo
         )
         
         store.send(.next) {
@@ -84,7 +84,7 @@ class OnboardingStoreTests: XCTestCase {
                 importWalletState: .placeholder
             ),
             reducer: OnboardingReducer.default,
-            environment: ()
+            environment: .demo
         )
         
         store.send(.back) {
@@ -114,7 +114,7 @@ class OnboardingStoreTests: XCTestCase {
                 importWalletState: .placeholder
             ),
             reducer: OnboardingReducer.default,
-            environment: ()
+            environment: .demo
         )
         
         store.send(.back) {
@@ -143,7 +143,7 @@ class OnboardingStoreTests: XCTestCase {
                 importWalletState: .placeholder
             ),
             reducer: OnboardingReducer.default,
-            environment: ()
+            environment: .demo
         )
         
         store.send(.skip) {

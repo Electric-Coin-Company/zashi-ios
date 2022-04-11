@@ -97,7 +97,7 @@ struct Onboarding_Previews: PreviewProvider {
                         importWalletState: .placeholder
                     ),
                     reducer: .default,
-                    environment: ()
+                    environment: (.demo)
                 )
             )
         }

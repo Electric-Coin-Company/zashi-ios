@@ -91,7 +91,7 @@ struct OnboardingFooterView_Previews: PreviewProvider {
                 importWalletState: .placeholder
             ),
             reducer: OnboardingReducer.default,
-            environment: ()
+            environment: (.demo)
         )
         
         Group {

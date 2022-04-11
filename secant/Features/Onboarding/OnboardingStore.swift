@@ -66,7 +66,24 @@ enum OnboardingAction: Equatable {
     case importWallet(ImportWalletAction)
 }
 
-typealias OnboardingReducer = Reducer<OnboardingState, OnboardingAction, Void>
+struct OnboardingEnvironment {
+    let mnemonicSeedPhraseProvider: MnemonicSeedPhraseProvider
+    let walletStorage: WalletStorageInteractor
+}
+
+extension OnboardingEnvironment {
+    static let live = OnboardingEnvironment(
+        mnemonicSeedPhraseProvider: .live,
+        walletStorage: .live()
+    )
+
+    static let demo = OnboardingEnvironment(
+        mnemonicSeedPhraseProvider: .mock,
+        walletStorage: .live()
+    )
+}
+
+typealias OnboardingReducer = Reducer<OnboardingState, OnboardingAction, OnboardingEnvironment>
 
 extension OnboardingReducer {
     static let `default` = OnboardingReducer.combine(
@@ -119,6 +136,11 @@ extension OnboardingReducer {
     private static let importWalletReducer: OnboardingReducer = ImportWalletReducer.default.pullback(
         state: \OnboardingState.importWalletState,
         action: /OnboardingAction.importWallet,
-        environment: { _ in ImportWalletEnvironment.live }
+        environment: { environment in
+            ImportWalletEnvironment(
+                mnemonicSeedPhraseProvider: environment.mnemonicSeedPhraseProvider,
+                walletStorage: environment.walletStorage
+            )
+        }
     )
 }
