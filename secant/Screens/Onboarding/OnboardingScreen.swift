@@ -54,7 +54,7 @@ struct OnboardingScreen_Previews: PreviewProvider {
                     importWalletState: .placeholder
                 ),
                 reducer: OnboardingReducer.default,
-                environment: ()
+                environment: (.demo)
             )
         )
         .preferredColorScheme(.light)
@@ -66,7 +66,7 @@ struct OnboardingScreen_Previews: PreviewProvider {
                     importWalletState: .placeholder
                 ),
                 reducer: OnboardingReducer.default,
-                environment: ()
+                environment: (.demo)
             )
         )
         .preferredColorScheme(.light)
@@ -78,7 +78,7 @@ struct OnboardingScreen_Previews: PreviewProvider {
                     importWalletState: .placeholder
                 ),
                 reducer: OnboardingReducer.default,
-                environment: ()
+                environment: (.demo)
             )
         )
         .preferredColorScheme(.light)
@@ -90,7 +90,7 @@ struct OnboardingScreen_Previews: PreviewProvider {
                     importWalletState: .placeholder
                 ),
                 reducer: OnboardingReducer.default,
-                environment: ()
+                environment: (.demo)
             )
         )
         .preferredColorScheme(.dark)
@@ -102,7 +102,7 @@ struct OnboardingScreen_Previews: PreviewProvider {
                     importWalletState: .placeholder
                 ),
                 reducer: OnboardingReducer.default,
-                environment: ()
+                environment: (.demo)
             )
         )
         .preferredColorScheme(.dark)
@@ -114,7 +114,7 @@ struct OnboardingScreen_Previews: PreviewProvider {
                     importWalletState: .placeholder
                 ),
                 reducer: OnboardingReducer.default,
-                environment: ()
+                environment: (.demo)
             )
         )
         .preferredColorScheme(.dark)

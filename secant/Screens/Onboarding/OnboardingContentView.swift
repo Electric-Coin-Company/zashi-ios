@@ -132,7 +132,7 @@ struct OnboardingContentView_Previews: PreviewProvider {
                 importWalletState: .placeholder
             ),
             reducer: OnboardingReducer.default,
-            environment: ()
+            environment: (.demo)
         )
         
         OnboardingContentView_Previews.example(store)

@@ -68,7 +68,7 @@ struct OnboardingHeaderView_Previews: PreviewProvider {
                 importWalletState: .placeholder
             ),
             reducer: OnboardingReducer.default,
-            environment: ()
+            environment: (.demo)
         )
         
         OnboardingHeaderView(

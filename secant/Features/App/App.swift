@@ -203,7 +203,10 @@ extension AppReducer {
                 Effect.cancel(id: ListenerId()),
                 Effect(value: .updateRoute(.startup))
             )
-
+            
+        case .onboarding(.importWallet(.successfullyRecovered)):
+            return Effect(value: .updateRoute(.home))
+        
             /// Default is meaningful here because there's `routeReducer` handling routes and this reducer is handling only actions. We don't here plenty of unused cases.
         default:
             return .none
@@ -248,7 +251,12 @@ extension AppReducer {
     private static let onboardingReducer: AppReducer = OnboardingReducer.default.pullback(
         state: \AppState.onboardingState,
         action: /AppAction.onboarding,
-        environment: { _ in }
+        environment: { environment in
+            OnboardingEnvironment(
+                mnemonicSeedPhraseProvider: environment.mnemonicSeedPhraseProvider,
+                walletStorage: environment.walletStorage
+            )
+        }
     )
 
     private static let phraseValidationReducer: AppReducer = RecoveryPhraseValidationReducer.default.pullback(
