@@ -76,7 +76,7 @@ struct WalletStorageInteractor {
 }
 
 extension WalletStorageInteractor {
-    public static func live(walletStorage: WalletStorage = WalletStorage()) -> Self {
+    public static func live(walletStorage: WalletStorage = WalletStorage(secItem: .live)) -> Self {
         Self(
             importWallet: { bip39, birthday, language, hasUserPassedPhraseBackupTest  in
                 try walletStorage.importWallet(

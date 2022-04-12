@@ -7,7 +7,6 @@
 
 import Foundation
 import MnemonicSwift
-import Security
 
 /// Zcash implementation of the keychain that is not universal but designed to deliver functionality needed by the wallet itself.
 /// All the APIs should be thread safe according to official doc:
@@ -33,6 +32,12 @@ struct WalletStorage {
         case storageError(Error)
         case unsupportedVersion(Int)
         case unsupportedLanguage(MnemonicLanguageType)
+    }
+
+    private let secItem: WrappedSecItem
+    
+    init(secItem: WrappedSecItem) {
+        self.secItem = secItem
     }
 
     func importWallet(
@@ -176,11 +181,7 @@ struct WalletStorage {
         
         return query
     }
-}
 
-// MARK: - Wallet Storage Helper Functions
-
-private extension WalletStorage {
     /// Restore data for key
     func data(
         forKey: String,
@@ -189,7 +190,7 @@ private extension WalletStorage {
         let query = restoreQuery(forAccount: account, andKey: forKey)
 
         var result: AnyObject?
-        _ = SecItemCopyMatching(query as CFDictionary, &result)
+        _ = secItem.copyMatching(query as CFDictionary, &result)
         
         return result as? Data
     }
@@ -202,7 +203,7 @@ private extension WalletStorage {
     ) -> Bool {
         let query = baseQuery(forAccount: account, andKey: forKey)
 
-        let status = SecItemDelete(query as CFDictionary)
+        let status = secItem.delete(query as CFDictionary)
 
         return status == noErr
     }
@@ -216,7 +217,8 @@ private extension WalletStorage {
         var query = baseQuery(forAccount: account, andKey: forKey)
         query[kSecValueData as String] = data as AnyObject
 
-        let status = SecItemAdd(query as CFDictionary, nil)
+        var result: AnyObject?
+        let status = secItem.add(query as CFDictionary, &result)
         
         guard status != errSecDuplicateItem else {
             throw KeychainError.duplicate
@@ -239,7 +241,7 @@ private extension WalletStorage {
             kSecValueData as String: data as AnyObject
         ]
 
-        let status = SecItemUpdate(query as CFDictionary, attributes as CFDictionary)
+        let status = secItem.update(query as CFDictionary, attributes as CFDictionary)
         
         guard status != errSecItemNotFound else {
             throw KeychainError.noDataFound
