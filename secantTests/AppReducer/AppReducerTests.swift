@@ -16,7 +16,8 @@ class AppReducerTests: XCTestCase {
         databaseFiles: .throwing,
         scheduler: testScheduler.eraseToAnyScheduler(),
         mnemonicSeedPhraseProvider: .mock,
-        walletStorage: .throwing
+        walletStorage: .throwing,
+        wrappedDerivationTool: .live()
     )
 
     func testWalletInitializationState_Uninitialized() throws {
@@ -24,7 +25,8 @@ class AppReducerTests: XCTestCase {
             databaseFiles: .throwing,
             scheduler: DispatchQueue.test.eraseToAnyScheduler(),
             mnemonicSeedPhraseProvider: .mock,
-            walletStorage: .throwing
+            walletStorage: .throwing,
+            wrappedDerivationTool: .live()
         )
 
         let walletState = AppReducer.walletInitializationState(uninitializedEnvironment)
@@ -43,7 +45,8 @@ class AppReducerTests: XCTestCase {
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
             scheduler: Self.testScheduler.eraseToAnyScheduler(),
             mnemonicSeedPhraseProvider: .mock,
-            walletStorage: .throwing
+            walletStorage: .throwing,
+            wrappedDerivationTool: .live()
         )
 
         let walletState = AppReducer.walletInitializationState(keysMissingEnvironment)
