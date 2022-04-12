@@ -25,7 +25,7 @@ class WalletStorageTests: XCTestCase {
     let birthday = BlockHeight(12345678)
     let seedPhrase = "one two three"
     let language = MnemonicLanguageType.english
-    var storage = WalletStorage()
+    var storage = WalletStorage(secItem: .live)
 
     override func setUp() {
         super.setUp()
