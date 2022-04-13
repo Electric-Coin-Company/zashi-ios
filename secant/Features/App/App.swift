@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import ZcashLightClientKit
 
 struct AppState: Equatable {
     enum Route: Equatable {
@@ -40,6 +41,7 @@ struct AppEnvironment {
     let scheduler: AnySchedulerOf<DispatchQueue>
     let mnemonicSeedPhraseProvider: MnemonicSeedPhraseProvider
     let walletStorage: WalletStorageInteractor
+    let wrappedDerivationTool: WrappedDerivationTool
 }
 
 extension AppEnvironment {
@@ -47,14 +49,16 @@ extension AppEnvironment {
         databaseFiles: .live(),
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         mnemonicSeedPhraseProvider: .live,
-        walletStorage: .live()
+        walletStorage: .live(),
+        wrappedDerivationTool: .live()
     )
 
     static let mock = AppEnvironment(
         databaseFiles: .live(),
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         mnemonicSeedPhraseProvider: .mock,
-        walletStorage: .live()
+        walletStorage: .live(),
+        wrappedDerivationTool: .live(derivationTool: DerivationTool(networkType: .testnet))
     )
 }
 
