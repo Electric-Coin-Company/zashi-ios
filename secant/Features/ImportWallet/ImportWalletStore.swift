@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import ZcashLightClientKit
 
 typealias ImportWalletStore = Store<ImportWalletState, ImportWalletAction>
 
@@ -19,23 +20,27 @@ enum ImportWalletAction: Equatable, BindableAction {
     case dismissAlert
     case importRecoveryPhrase
     case importPrivateOrViewingKey
+    case initializeSDK
     case successfullyRecovered
 }
 
 struct ImportWalletEnvironment {
     let mnemonicSeedPhraseProvider: MnemonicSeedPhraseProvider
     let walletStorage: WalletStorageInteractor
+    let zcashSDKEnvironment: ZCashSDKEnvironment
 }
 
 extension ImportWalletEnvironment {
     static let live = ImportWalletEnvironment(
         mnemonicSeedPhraseProvider: .live,
-        walletStorage: .live()
+        walletStorage: .live(),
+        zcashSDKEnvironment: .mainnet
     )
 
     static let demo = ImportWalletEnvironment(
         mnemonicSeedPhraseProvider: .mock,
-        walletStorage: .live()
+        walletStorage: .live(),
+        zcashSDKEnvironment: .testnet
     )
 }
 
@@ -57,15 +62,12 @@ extension ImportWalletReducer {
                 try environment.mnemonicSeedPhraseProvider.isValid(state.importedSeedPhrase)
                 
                 // store it to the keychain
-                // TODO: - Get the latest block number, initialization of the SDK = Issue #239 (https://github.com/zcash/secant-ios-wallet/issues/239)
-                let birthday = BlockHeight(1386000)
+                let birthday = environment.zcashSDKEnvironment.defaultBirthday
                 try environment.walletStorage.importWallet(state.importedSeedPhrase, birthday, .english, false)
                 
                 // update the backup phrase validation flag
                 try environment.walletStorage.markUserPassedPhraseBackupTest()
 
-                // TODO: - Initialize the SDK with the new seed, initialization of the SDK = Issue #239 (https://github.com/zcash/secant-ios-wallet/issues/239)
-                
                 // notify user
                 // TODO: Proper Error/Success handling, issue 221 (https://github.com/zcash/secant-ios-wallet/issues/221)
                 state.alert = AlertState(
@@ -76,6 +78,8 @@ extension ImportWalletReducer {
                         action: .send(.successfullyRecovered)
                     )
                 )
+
+                return Effect(value: .initializeSDK)
             } catch {
                 // TODO: Proper Error/Success handling, issue 221 (https://github.com/zcash/secant-ios-wallet/issues/221)
                 state.alert = AlertState(
@@ -95,6 +99,9 @@ extension ImportWalletReducer {
             
         case .successfullyRecovered:
             return Effect(value: .dismissAlert)
+        
+        case .initializeSDK:
+            return .none
         }
     }
     .binding()

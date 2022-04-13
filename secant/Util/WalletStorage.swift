@@ -7,6 +7,7 @@
 
 import Foundation
 import MnemonicSwift
+import ZcashLightClientKit
 
 /// Zcash implementation of the keychain that is not universal but designed to deliver functionality needed by the wallet itself.
 /// All the APIs should be thread safe according to official doc:
@@ -35,6 +36,7 @@ struct WalletStorage {
     }
 
     private let secItem: WrappedSecItem
+    var zcashStoredWalletPrefix = ""
     
     init(secItem: WrappedSecItem) {
         self.secItem = secItem
@@ -123,7 +125,7 @@ struct WalletStorage {
                 throw KeychainError.encoding
             }
             
-            try updateData(data, forKey: WalletStorage.Constants.zcashStoredWallet)
+            try updateData(data, forKey: Constants.zcashStoredWallet)
         } catch {
             throw error
         }
@@ -158,7 +160,7 @@ struct WalletStorage {
     func baseQuery(forAccount account: String = "", andKey forKey: String) -> [String: Any] {
         let query:[ String: AnyObject ] = [
             /// Uniquely identify this keychain accessor
-            kSecAttrService as String: forKey as AnyObject,
+            kSecAttrService as String: (zcashStoredWalletPrefix + forKey) as AnyObject,
             kSecAttrAccount as String: account as AnyObject,
             kSecClass as String: kSecClassGenericPassword,
             /// The data in the keychain item can be accessed only while the device is unlocked by the user.

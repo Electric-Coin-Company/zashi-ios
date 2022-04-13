@@ -13,20 +13,24 @@ class AppReducerTests: XCTestCase {
     static let testScheduler = DispatchQueue.test
 
     let testEnvironment = AppEnvironment(
+        combineSynchronizer: MockCombineSynchronizer(),
         databaseFiles: .throwing,
-        scheduler: testScheduler.eraseToAnyScheduler(),
         mnemonicSeedPhraseProvider: .mock,
+        scheduler: testScheduler.eraseToAnyScheduler(),
         walletStorage: .throwing,
-        wrappedDerivationTool: .live()
+        wrappedDerivationTool: .live(),
+        zcashSDKEnvironment: .mainnet
     )
 
     func testWalletInitializationState_Uninitialized() throws {
         let uninitializedEnvironment = AppEnvironment(
+            combineSynchronizer: MockCombineSynchronizer(),
             databaseFiles: .throwing,
-            scheduler: DispatchQueue.test.eraseToAnyScheduler(),
             mnemonicSeedPhraseProvider: .mock,
+            scheduler: DispatchQueue.test.eraseToAnyScheduler(),
             walletStorage: .throwing,
-            wrappedDerivationTool: .live()
+            wrappedDerivationTool: .live(),
+            zcashSDKEnvironment: .mainnet
         )
 
         let walletState = AppReducer.walletInitializationState(uninitializedEnvironment)
@@ -42,11 +46,13 @@ class AppReducerTests: XCTestCase {
         )
 
         let keysMissingEnvironment = AppEnvironment(
+            combineSynchronizer: MockCombineSynchronizer(),
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
-            scheduler: Self.testScheduler.eraseToAnyScheduler(),
             mnemonicSeedPhraseProvider: .mock,
+            scheduler: Self.testScheduler.eraseToAnyScheduler(),
             walletStorage: .throwing,
-            wrappedDerivationTool: .live()
+            wrappedDerivationTool: .live(),
+            zcashSDKEnvironment: .mainnet
         )
 
         let walletState = AppReducer.walletInitializationState(keysMissingEnvironment)
@@ -62,11 +68,13 @@ class AppReducerTests: XCTestCase {
         )
 
         let keysMissingEnvironment = AppEnvironment(
+            combineSynchronizer: MockCombineSynchronizer(),
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
-            scheduler: Self.testScheduler.eraseToAnyScheduler(),
             mnemonicSeedPhraseProvider: .mock,
+            scheduler: Self.testScheduler.eraseToAnyScheduler(),
             walletStorage: .throwing,
-            wrappedDerivationTool: .live()
+            wrappedDerivationTool: .live(),
+            zcashSDKEnvironment: .testnet
         )
 
         let walletState = AppReducer.walletInitializationState(keysMissingEnvironment)
@@ -118,7 +126,12 @@ class AppReducerTests: XCTestCase {
             state.appInitializationState = .filesMissing
         }
         
-        store.receive(.initializeApp) { state in
+        store.receive(.initializeSDK) { state in
+            // failed is expected because environment is throwing errors
+            state.appInitializationState = .failed
+        }
+
+        store.receive(.checkBackupPhraseValidation) { state in
             // failed is expected because environment is throwing errors
             state.appInitializationState = .failed
         }
@@ -133,7 +146,12 @@ class AppReducerTests: XCTestCase {
         
         store.send(.respondToWalletInitializationState(.initialized))
         
-        store.receive(.initializeApp) { state in
+        store.receive(.initializeSDK) { state in
+            // failed is expected because environment is throwing errors
+            state.appInitializationState = .failed
+        }
+        
+        store.receive(.checkBackupPhraseValidation) { state in
             // failed is expected because environment is throwing errors
             state.appInitializationState = .failed
         }

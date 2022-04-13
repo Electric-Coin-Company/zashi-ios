@@ -7,6 +7,7 @@
 
 import XCTest
 import MnemonicSwift
+import ZcashLightClientKit
 @testable import secant_testnet
 
 extension WalletStorage.WalletStorageError {
@@ -26,9 +27,10 @@ class WalletStorageTests: XCTestCase {
     let seedPhrase = "one two three"
     let language = MnemonicLanguageType.english
     var storage = WalletStorage(secItem: .live)
-
+    
     override func setUp() {
         super.setUp()
+        storage.zcashStoredWalletPrefix = "test_"
         deleteData(forKey: WalletStorage.Constants.zcashStoredWallet)
     }
     

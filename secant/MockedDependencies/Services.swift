@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ZcashLightClientKit
 
 protocol Services {
     var networkProvider: ZcashNetworkProvider { get }
