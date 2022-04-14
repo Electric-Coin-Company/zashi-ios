@@ -9,11 +9,19 @@ struct AppView: View {
         WithViewStore(store) { viewStore in
             switch viewStore.route {
             case .home:
+                HomeView(
+                    store: store.scope(
+                        state: \.homeState,
+                        action: AppAction.home
+                    )
+                )
+                
+            case .sandbox:
                 NavigationView {
-                    HomeView(
+                    SandboxView(
                         store: store.scope(
-                            state: \.homeState,
-                            action: AppAction.home
+                            state: \.sandboxState,
+                            action: AppAction.sandbox
                         )
                     )
                 }
@@ -75,8 +83,8 @@ private struct StartupView: View {
     var body: some View {
         List {
             Section(header: Text("Navigation Stack Routes")) {
-                Button("Go To Home") {
-                    sendAction(.updateRoute(.home))
+                Button("Go To Sandbox (navigation proof)") {
+                    sendAction(.updateRoute(.sandbox))
                 }
 
                 Button("Go To Onboarding") {

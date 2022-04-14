@@ -41,9 +41,7 @@ struct WelcomeView: View {
             .onEnded { value in
                 guard case .second(true, let drag?) = value else { return }
                 
-                if drag.translation.height < 0 {
-                    ViewStore(store).send(.debugMenuHome)
-                } else {
+                if drag.translation.height > 0 {
                     ViewStore(store).send(.debugMenuStartup)
                 }
             }
