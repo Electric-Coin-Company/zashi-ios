@@ -34,7 +34,7 @@ class AppReducerTests: XCTestCase {
         XCTAssertEqual(walletState, .uninitialized)
     }
 
-    func testWalletInitializationState_KeysMissing() throws {
+    func testWalletInitializationState_FilesPresentKeysMissing() throws {
         let wfmMock = WrappedFileManager(
             url: { _, _, _, _ in URL(fileURLWithPath: "") },
             fileExists: { _ in return true },
@@ -52,6 +52,26 @@ class AppReducerTests: XCTestCase {
         let walletState = AppReducer.walletInitializationState(keysMissingEnvironment)
         
         XCTAssertEqual(walletState, .keysMissing)
+    }
+
+    func testWalletInitializationState_FilesMissingKeysMissing() throws {
+        let wfmMock = WrappedFileManager(
+            url: { _, _, _, _ in URL(fileURLWithPath: "") },
+            fileExists: { _ in return false },
+            removeItem: { _ in }
+        )
+
+        let keysMissingEnvironment = AppEnvironment(
+            databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
+            scheduler: Self.testScheduler.eraseToAnyScheduler(),
+            mnemonicSeedPhraseProvider: .mock,
+            walletStorage: .throwing,
+            wrappedDerivationTool: .live()
+        )
+
+        let walletState = AppReducer.walletInitializationState(keysMissingEnvironment)
+        
+        XCTAssertEqual(walletState, .uninitialized)
     }
 
     // TODO: - Implement testWalletInitializationState_FilesMissing when WalletStorage mock is available, issue 231 (https://github.com/zcash/secant-ios-wallet/issues/231)

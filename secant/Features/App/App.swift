@@ -308,9 +308,9 @@ extension AppReducer {
         } catch WalletStorage.WalletStorageError.uninitializedWallet {
             do {
                 // TODO: replace the hardcoded network with the environmental value, issue 239 (https://github.com/zcash/secant-ios-wallet/issues/239)
-                _ = try environment.databaseFiles.areDbFilesPresentFor("mainnet")
-                
-                return .keysMissing
+                if try environment.databaseFiles.areDbFilesPresentFor("mainnet") {
+                    return .keysMissing
+                }
             } catch {
                 return .uninitialized
             }
