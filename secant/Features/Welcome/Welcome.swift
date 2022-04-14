@@ -16,7 +16,6 @@ extension WelcomeState {
 
 enum WelcomeAction: Equatable {
     case debugMenuStartup
-    case debugMenuHome
 }
 
 typealias WelcomeReducer = Reducer<WelcomeState, WelcomeAction, Void>

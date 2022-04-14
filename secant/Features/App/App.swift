@@ -6,19 +6,21 @@ struct AppState: Equatable {
         case welcome
         case startup
         case onboarding
+        case sandbox
         case home
         case phraseValidation
         case phraseDisplay
     }
     
+    var appInitializationState: InitializationState = .uninitialized
     var homeState: HomeState
     var onboardingState: OnboardingState
     var phraseValidationState: RecoveryPhraseValidationState
     var phraseDisplayState: RecoveryPhraseDisplayState
-    var welcomeState: WelcomeState
     var route: Route = .welcome
+    var sandboxState: SandboxState
     var storedWallet: StoredWallet?
-    var appInitializationState: InitializationState = .uninitialized
+    var welcomeState: WelcomeState
 }
 
 enum AppAction: Equatable {
@@ -32,6 +34,7 @@ enum AppAction: Equatable {
     case phraseDisplay(RecoveryPhraseDisplayAction)
     case phraseValidation(RecoveryPhraseValidationAction)
     case respondToWalletInitializationState(InitializationState)
+    case sandbox(SandboxAction)
     case updateRoute(AppState.Route)
     case welcome(WelcomeAction)
 }
@@ -72,11 +75,12 @@ extension AppReducer {
     static let `default` = AppReducer.combine(
         [
             appReducer,
-            routeReducer,
             homeReducer,
             onboardingReducer,
             phraseValidationReducer,
-            phraseDisplayReducer
+            phraseDisplayReducer,
+            routeReducer,
+            sandboxReducer
         ]
     )
     .debug()
@@ -136,7 +140,7 @@ extension AppReducer {
                     .cancellable(id: ListenerId(), cancelInFlight: true)
             }
 
-            var landingRoute: AppState.Route = .startup
+            var landingRoute: AppState.Route = .home
             
             if !storedWallet.hasUserPassedPhraseBackupTest {
                 let phraseWords: [String]
@@ -195,12 +199,6 @@ extension AppReducer {
             // TODO: - when DatabaseFiles dependency is merged, nukeFiles as well, issue #220 (https://github.com/zcash/secant-ios-wallet/issues/220)
             return .none
             
-        case .welcome(.debugMenuHome):
-            return .concatenate(
-                Effect.cancel(id: ListenerId()),
-                Effect(value: .updateRoute(.home))
-            )
-            
         case .welcome(.debugMenuStartup):
             return .concatenate(
                 Effect.cancel(id: ListenerId()),
@@ -208,7 +206,7 @@ extension AppReducer {
             )
             
         case .onboarding(.importWallet(.successfullyRecovered)):
-            return Effect(value: .updateRoute(.home))
+            return Effect(value: .updateRoute(.sandbox))
         
             /// Default is meaningful here because there's `routeReducer` handling routes and this reducer is handling only actions. We don't here plenty of unused cases.
         default:
@@ -221,7 +219,7 @@ extension AppReducer {
         case let .updateRoute(route):
             state.route = route
 
-        case .home(.reset):
+        case .sandbox(.reset):
             state.route = .startup
 
         case .onboarding(.createNewWallet):
@@ -274,6 +272,12 @@ extension AppReducer {
         environment: { _ in BackupPhraseEnvironment.demo }
     )
     
+    private static let sandboxReducer: AppReducer = SandboxReducer.default.pullback(
+        state: \AppState.sandboxState,
+        action: /AppAction.sandbox,
+        environment: { _ in }
+    )
+
     private static let welcomeReducer: AppReducer = WelcomeReducer.default.pullback(
         state: \AppState.welcomeState,
         action: /AppAction.welcome,
@@ -356,6 +360,7 @@ extension AppState {
             phraseDisplayState: RecoveryPhraseDisplayState(
                 phrase: .placeholder
             ),
+            sandboxState: .placeholder,
             welcomeState: .placeholder
         )
     }
