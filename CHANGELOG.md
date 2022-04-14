@@ -1,4 +1,14 @@
 # Changelog
+## 0.0.1 build 20
+- Issue #256: [Recovery Phrase Display] Dark mode word chips' color does not match the designs
+- Issue #268: [Critical] App get stuck after start
+- Issue #260: Wrapped Derivation Tool
+- Issue #255: Missing chips order randomized
+- Issue #254: Testable and more readable structure for the AppReducer
+- Issue #231: Wallet Storage unit tests vs. integration tests
+- Issue #166: [Functional] Wallet Import Screen
+- Issue #250: Recovery Phrase Validation, words to complete puzzle are not shuffled
+
 ## 0.0.1 build 19
 - Issue #242: NukeWallet in the debug menus for testing purposes
 ## 0.0.1 build 18
