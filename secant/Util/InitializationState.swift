@@ -14,3 +14,7 @@ enum InitializationState: Equatable {
     case filesMissing
     case uninitialized
 }
+
+enum SDKInitializationError: Error {
+    case failed
+}

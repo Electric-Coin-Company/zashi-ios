@@ -6,9 +6,14 @@ struct HomeView: View {
 
     var body: some View {
         WithViewStore(store) { viewStore in
-            VStack {
-                Text("balance \(viewStore.balance)")
+            VStack(alignment: .center, spacing: 30.0) {
+                Text("totalBalance \(viewStore.totalBalance)")
+                Text("verifiedBalance \(viewStore.verifiedBalance)")
+                    .accessDebugMenuWithHiddenGesture {
+                        viewStore.send(.debugMenuStartup)
+                    }
             }
+            .onAppear(perform: { viewStore.send(.preparePublishers) })
         }
     }
 }
@@ -20,7 +25,9 @@ extension HomeStore {
         HomeStore(
             initialState: .placeholder,
             reducer: .default.debug(),
-            environment: ()
+            environment: HomeEnvironment(
+                combineSynchronizer: LiveCombineSynchronizer()
+            )
         )
     }
 }

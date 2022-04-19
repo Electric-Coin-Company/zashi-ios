@@ -69,17 +69,20 @@ enum OnboardingAction: Equatable {
 struct OnboardingEnvironment {
     let mnemonicSeedPhraseProvider: MnemonicSeedPhraseProvider
     let walletStorage: WalletStorageInteractor
+    let zcashSDKEnvironment: ZCashSDKEnvironment
 }
 
 extension OnboardingEnvironment {
     static let live = OnboardingEnvironment(
         mnemonicSeedPhraseProvider: .live,
-        walletStorage: .live()
+        walletStorage: .live(),
+        zcashSDKEnvironment: .mainnet
     )
 
     static let demo = OnboardingEnvironment(
         mnemonicSeedPhraseProvider: .mock,
-        walletStorage: .live()
+        walletStorage: .live(),
+        zcashSDKEnvironment: .testnet
     )
 }
 
@@ -139,7 +142,8 @@ extension OnboardingReducer {
         environment: { environment in
             ImportWalletEnvironment(
                 mnemonicSeedPhraseProvider: environment.mnemonicSeedPhraseProvider,
-                walletStorage: environment.walletStorage
+                walletStorage: environment.walletStorage,
+                zcashSDKEnvironment: environment.zcashSDKEnvironment
             )
         }
     )

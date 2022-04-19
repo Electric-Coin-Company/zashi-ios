@@ -10,43 +10,9 @@ import ComposableArchitecture
 
 struct WelcomeView: View {
     var store: WelcomeStore
-    
-    enum DragState {
-        case inactive
-        case pressing
-        case dragging(translation: CGSize)
-    }
-    
-    let topPaddingRatio: Double = 0.18
-    let horizontalPaddingRatio: Double = 0.07
-
-    @GestureState var dragState = DragState.inactive
-    
-    var body: some View {
-        let longPressDrag = LongPressGesture(minimumDuration: 0.75)
-            .sequenced(before: DragGesture())
-            .updating($dragState) { value, state, _ in
-                switch value {
-                    // Long press begins.
-                case .first(true):
-                    state = .pressing
-                    // Long press confirmed, dragging may begin.
-                case .second(true, let drag):
-                    state = .dragging(translation: drag?.translation ?? .zero)
-                    // Dragging ended or the long press cancelled.
-                default:
-                    state = .inactive
-                }
-            }
-            .onEnded { value in
-                guard case .second(true, let drag?) = value else { return }
-                
-                if drag.translation.height > 0 {
-                    ViewStore(store).send(.debugMenuStartup)
-                }
-            }
         
-        return GeometryReader { proxy in
+    var body: some View {
+        GeometryReader { proxy in
             ZStack(alignment: .top) {
                 VStack(alignment: .center, spacing: 80) {
                     let diameter = proxy.size.width - 40
@@ -55,7 +21,9 @@ struct WelcomeView: View {
                             width: diameter,
                             height: diameter
                         )
-                        .gesture(longPressDrag)
+                        .accessDebugMenuWithHiddenGesture {
+                            ViewStore(store).send(.debugMenuStartup)
+                        }
 
                     VStack {
                         Text("welcomeScreen.title")

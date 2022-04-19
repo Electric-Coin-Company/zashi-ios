@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import ZcashLightClientKit
 @testable import secant_testnet
 
 extension String: Error {}
@@ -14,7 +15,11 @@ extension DatabaseFiles.DatabaseFilesError {
     var debugValue: String {
         switch self {
         case .getDocumentsURL: return "getDocumentsURL"
+        case .getCacheURL: return "getCacheURL"
         case .getDataURL: return "getDataURL"
+        case .getOutputParamsURL: return "getOutputParamsURL"
+        case .getPendingURL: return "getPendingURL"
+        case .getSpendParamsURL: return "getSpendParamsURL"
         case .nukeFiles: return "nukeFiles"
         case .filesPresentCheck: return "filesPresentCheck"
         }
@@ -22,6 +27,8 @@ extension DatabaseFiles.DatabaseFilesError {
 }
 
 class DatabaseFilesTests: XCTestCase {
+    let network = ZcashNetworkBuilder.network(for: .testnet)
+    
     func testFailingDocumentsDirectory() throws {
         let mockedFileManager = WrappedFileManager(
             url: { _, _, _, _ in throw "some error" },
@@ -60,7 +67,7 @@ class DatabaseFilesTests: XCTestCase {
         let dfInteractor = DatabaseFilesInteractor.live(databaseFiles: DatabaseFiles(fileManager: mockedFileManager))
         
         do {
-            _ = try dfInteractor.dataDbURLFor("")
+            _ = try dfInteractor.dataDbURLFor(network)
             
             XCTFail("DatabaseFiles: `testFailingDataDbURL` expected to fail but passed with no error.")
         } catch {
@@ -88,7 +95,7 @@ class DatabaseFilesTests: XCTestCase {
         let dfInteractor = DatabaseFilesInteractor.live(databaseFiles: DatabaseFiles(fileManager: mockedFileManager))
         
         do {
-            let areFilesPresent = try dfInteractor.areDbFilesPresentFor("")
+            let areFilesPresent = try dfInteractor.areDbFilesPresentFor(network)
             
             XCTAssertTrue(areFilesPresent, "DatabaseFiles: `testDatabaseFilesPresent` is expected to be true but it's \(areFilesPresent)")
         } catch {
@@ -106,7 +113,7 @@ class DatabaseFilesTests: XCTestCase {
         let dfInteractor = DatabaseFilesInteractor.live(databaseFiles: DatabaseFiles(fileManager: mockedFileManager))
         
         do {
-            let areFilesPresent = try dfInteractor.areDbFilesPresentFor("")
+            let areFilesPresent = try dfInteractor.areDbFilesPresentFor(network)
             
             XCTAssertFalse(areFilesPresent, "DatabaseFiles: `testDatabaseFilesNotPresent` is expected to be false but it's \(areFilesPresent)")
         } catch {
@@ -124,7 +131,7 @@ class DatabaseFilesTests: XCTestCase {
         let dfInteractor = DatabaseFilesInteractor.live(databaseFiles: DatabaseFiles(fileManager: mockedFileManager))
         
         do {
-            _ = try dfInteractor.areDbFilesPresentFor("")
+            _ = try dfInteractor.areDbFilesPresentFor(network)
             
             XCTFail("DatabaseFiles: `testDatabaseFilesPresentFailure` expected to fail but passed with no error.")
         } catch {
@@ -152,7 +159,7 @@ class DatabaseFilesTests: XCTestCase {
         let dfInteractor = DatabaseFilesInteractor.live(databaseFiles: DatabaseFiles(fileManager: mockedFileManager))
         
         do {
-            _ = try dfInteractor.nukeDbFilesFor("")
+            _ = try dfInteractor.nukeDbFilesFor(network)
             
             XCTFail("DatabaseFiles: `testNukeFiles_RemoveFileFailure` expected to fail but passed with no error.")
         } catch {
@@ -180,7 +187,7 @@ class DatabaseFilesTests: XCTestCase {
         let dfInteractor = DatabaseFilesInteractor.live(databaseFiles: DatabaseFiles(fileManager: mockedFileManager))
         
         do {
-            _ = try dfInteractor.nukeDbFilesFor("")
+            _ = try dfInteractor.nukeDbFilesFor(network)
             
             XCTFail("DatabaseFiles: `testNukeFiles_URLFailure` expected to fail but passed with no error.")
         } catch {

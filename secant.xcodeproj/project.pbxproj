@@ -11,7 +11,6 @@
 		0D0781C9278776D20083ACD7 /* ZcashSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0781C7278776D20083ACD7 /* ZcashSymbol.swift */; };
 		0D185819272723FF0046B928 /* ColoredChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D185818272723FF0046B928 /* ColoredChip.swift */; };
 		0D18581B272728D60046B928 /* PhraseChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D18581A272728D60046B928 /* PhraseChip.swift */; };
-		0D1922F226BDE29300052649 /* ZcashSDKStubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1922F126BDE29300052649 /* ZcashSDKStubs.swift */; };
 		0D1C1AA327611EFD0004AF6A /* RecoveryPhraseDisplayReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1C1AA227611EFD0004AF6A /* RecoveryPhraseDisplayReducerTests.swift */; };
 		0D2ACE8026C2C67100D62E3C /* Zboto.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0D2ACE7F26C2C67100D62E3C /* Zboto.otf */; };
 		0D354A0926D5A9D000315F45 /* Services.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D354A0626D5A9D000315F45 /* Services.swift */; };
@@ -32,7 +31,6 @@
 		0D7DF08C271DCC0E00530046 /* ScreenBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7DF08B271DCC0E00530046 /* ScreenBackground.swift */; };
 		0D8A43C4272AEEDE005A6414 /* SecantTextStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8A43C3272AEEDE005A6414 /* SecantTextStyles.swift */; };
 		0D8A43C6272B129C005A6414 /* WordChipGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8A43C5272B129C005A6414 /* WordChipGrid.swift */; };
-		0DA13CA526C1963000E3B610 /* Balance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA13CA426C1963000E3B610 /* Balance.swift */; };
 		0DACFA7F27208CE00039EEA5 /* Clamped.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DACFA7E27208CE00039EEA5 /* Clamped.swift */; };
 		0DACFA8127208D940039EEA5 /* UInt+SuperscriptText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DACFA8027208D940039EEA5 /* UInt+SuperscriptText.swift */; };
 		0DACFA9027209FA70039EEA5 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0DACFA8327209FA60039EEA5 /* Roboto-Bold.ttf */; };
@@ -96,6 +94,8 @@
 		9E2DF99C27CF704D00649636 /* ImportWalletStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2DF99827CF704D00649636 /* ImportWalletStore.swift */; };
 		9E2DF99D27CF704D00649636 /* ImportSeedEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2DF99A27CF704D00649636 /* ImportSeedEditor.swift */; };
 		9E2DF99E27CF704D00649636 /* ImportWalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2DF99B27CF704D00649636 /* ImportWalletView.swift */; };
+		9E2F1C8228095AFE004E65FE /* Int64+Zcash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2F1C8128095AFE004E65FE /* Int64+Zcash.swift */; };
+		9E2F1C842809B606004E65FE /* DebugMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2F1C832809B606004E65FE /* DebugMenu.swift */; };
 		9E37A2B827C8F59F00AE57B3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E37A2B727C8F59F00AE57B3 /* Localizable.strings */; };
 		9E4DC6E027C409A100E657F4 /* NeumorphicDesignModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DC6DF27C409A100E657F4 /* NeumorphicDesignModifier.swift */; };
 		9E4DC6E227C4C6B700E657F4 /* SecantButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */; };
@@ -104,6 +104,8 @@
 		9EAFEB822805793200199FC9 /* AppReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB812805793200199FC9 /* AppReducerTests.swift */; };
 		9EAFEB84280597B700199FC9 /* WrappedSecItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB83280597B700199FC9 /* WrappedSecItem.swift */; };
 		9EAFEB862805A23100199FC9 /* WrappedSecItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB852805A23100199FC9 /* WrappedSecItemTests.swift */; };
+		9EAFEB882806E5AE00199FC9 /* CombineSynchronizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB872806E5AE00199FC9 /* CombineSynchronizer.swift */; };
+		9EAFEB8A2806F48100199FC9 /* ZCashSDKEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB892806F48100199FC9 /* ZCashSDKEnvironment.swift */; };
 		9EAFEB8F2808183D00199FC9 /* SandboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB8D2808183D00199FC9 /* SandboxView.swift */; };
 		9EAFEB902808183D00199FC9 /* SandboxStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB8E2808183D00199FC9 /* SandboxStore.swift */; };
 		9EAFEB9128081E9400199FC9 /* HomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93874ED273C4DE200F0E875 /* HomeStore.swift */; };
@@ -165,7 +167,6 @@
 		0D0781C7278776D20083ACD7 /* ZcashSymbol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZcashSymbol.swift; sourceTree = "<group>"; };
 		0D185818272723FF0046B928 /* ColoredChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColoredChip.swift; sourceTree = "<group>"; };
 		0D18581A272728D60046B928 /* PhraseChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhraseChip.swift; sourceTree = "<group>"; };
-		0D1922F126BDE29300052649 /* ZcashSDKStubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZcashSDKStubs.swift; sourceTree = "<group>"; };
 		0D1C1AA227611EFD0004AF6A /* RecoveryPhraseDisplayReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseDisplayReducerTests.swift; sourceTree = "<group>"; };
 		0D2ACE7F26C2C67100D62E3C /* Zboto.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zboto.otf; sourceTree = "<group>"; };
 		0D354A0626D5A9D000315F45 /* Services.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Services.swift; sourceTree = "<group>"; };
@@ -254,6 +255,8 @@
 		9E2DF99827CF704D00649636 /* ImportWalletStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportWalletStore.swift; sourceTree = "<group>"; };
 		9E2DF99A27CF704D00649636 /* ImportSeedEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportSeedEditor.swift; sourceTree = "<group>"; };
 		9E2DF99B27CF704D00649636 /* ImportWalletView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportWalletView.swift; sourceTree = "<group>"; };
+		9E2F1C8128095AFE004E65FE /* Int64+Zcash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int64+Zcash.swift"; sourceTree = "<group>"; };
+		9E2F1C832809B606004E65FE /* DebugMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMenu.swift; sourceTree = "<group>"; };
 		9E37A2B727C8F59F00AE57B3 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		9E4DC6DF27C409A100E657F4 /* NeumorphicDesignModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeumorphicDesignModifier.swift; sourceTree = "<group>"; };
 		9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecantButtonStyles.swift; sourceTree = "<group>"; };
@@ -262,6 +265,8 @@
 		9EAFEB812805793200199FC9 /* AppReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReducerTests.swift; sourceTree = "<group>"; };
 		9EAFEB83280597B700199FC9 /* WrappedSecItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedSecItem.swift; sourceTree = "<group>"; };
 		9EAFEB852805A23100199FC9 /* WrappedSecItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedSecItemTests.swift; sourceTree = "<group>"; };
+		9EAFEB872806E5AE00199FC9 /* CombineSynchronizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineSynchronizer.swift; sourceTree = "<group>"; };
+		9EAFEB892806F48100199FC9 /* ZCashSDKEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZCashSDKEnvironment.swift; sourceTree = "<group>"; };
 		9EAFEB8D2808183D00199FC9 /* SandboxView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SandboxView.swift; sourceTree = "<group>"; };
 		9EAFEB8E2808183D00199FC9 /* SandboxStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SandboxStore.swift; sourceTree = "<group>"; };
 		9EBEF87927CE369800B4F343 /* RecoveryPhraseTestPreambleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseTestPreambleView.swift; sourceTree = "<group>"; };
@@ -361,14 +366,6 @@
 			path = Screens;
 			sourceTree = "<group>";
 		};
-		0D1922F026BDE27D00052649 /* Stubs */ = {
-			isa = PBXGroup;
-			children = (
-				0D1922F126BDE29300052649 /* ZcashSDKStubs.swift */,
-			);
-			path = Stubs;
-			sourceTree = "<group>";
-		};
 		0D2ACE7E26C2C65E00D62E3C /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -435,7 +432,6 @@
 				0D2ACE7E26C2C65E00D62E3C /* Fonts */,
 				0DA13CA326C1960A00E3B610 /* Models */,
 				0DA13C9126C15E1900E3B610 /* UIComponents */,
-				0D1922F026BDE27D00052649 /* Stubs */,
 				0D1922EB26BDD9A500052649 /* Screens */,
 				0D170A7426BC9B7500EB6A46 /* MockedDependencies */,
 				0D4E7A0826B364170058B01E /* SecantApp.swift */,
@@ -559,6 +555,10 @@
 				9EF8139B27F47AED0075AF48 /* InitializationState.swift */,
 				9EF8139027F191BF0075AF48 /* WalletStorageInteractor.swift */,
 				9ECAE56727FC713C0089A0EF /* DatabaseFiles.swift */,
+				9EAFEB872806E5AE00199FC9 /* CombineSynchronizer.swift */,
+				9EAFEB892806F48100199FC9 /* ZCashSDKEnvironment.swift */,
+				9E2F1C8128095AFE004E65FE /* Int64+Zcash.swift */,
+				9E2F1C832809B606004E65FE /* DebugMenu.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -1180,12 +1180,13 @@
 				9EF8136027F043CC0075AF48 /* AppDelegate.swift in Sources */,
 				9E80B47227E4B34B008FF493 /* UserPreferencesStorage.swift in Sources */,
 				F96B41E8273B501F0021B49A /* TransactionDetailView.swift in Sources */,
+				9E2F1C8228095AFE004E65FE /* Int64+Zcash.swift in Sources */,
 				9E02B56A27FED43E005B809B /* WrappedFileManager.swift in Sources */,
 				663FABA2271D876C00E495F8 /* SecondaryButton.swift in Sources */,
 				0DC487C32772574C00BE6A63 /* ValidationSucceededView.swift in Sources */,
 				2EB1C5E827D77F6100BC43D7 /* TextFieldStore.swift in Sources */,
+				9EAFEB8A2806F48100199FC9 /* ZCashSDKEnvironment.swift in Sources */,
 				0D8A43C4272AEEDE005A6414 /* SecantTextStyles.swift in Sources */,
-				0D1922F226BDE29300052649 /* ZcashSDKStubs.swift in Sources */,
 				9E4DC6E027C409A100E657F4 /* NeumorphicDesignModifier.swift in Sources */,
 				0DACFA7F27208CE00039EEA5 /* Clamped.swift in Sources */,
 				0DFE93E3272CA1AA000FCCA5 /* RecoveryPhraseValidation.swift in Sources */,
@@ -1208,6 +1209,7 @@
 				0D18581B272728D60046B928 /* PhraseChip.swift in Sources */,
 				0DF482BA2787ADA800EB37D6 /* ConditionalModifier.swift in Sources */,
 				665C963F272C26E600BC04FB /* CircularFrameBackground.swift in Sources */,
+				9EAFEB882806E5AE00199FC9 /* CombineSynchronizer.swift in Sources */,
 				0DB8AA81271DC7520035BC9D /* DesignGuide.swift in Sources */,
 				F9971A4D27680DC400A2DB75 /* App.swift in Sources */,
 				9EAFEB9228081E9400199FC9 /* HomeView.swift in Sources */,
@@ -1217,7 +1219,6 @@
 				0D3D04082728B3440032ABC1 /* RecoveryPhraseDisplayView.swift in Sources */,
 				F9971A5F27680DF600A2DB75 /* ScanView.swift in Sources */,
 				F9971A4E27680DC400A2DB75 /* AppView.swift in Sources */,
-				0DA13CA526C1963000E3B610 /* Balance.swift in Sources */,
 				2EA11F5B27467EF800709571 /* OnboardingFooterView.swift in Sources */,
 				66D50668271D9B6100E51F0D /* NavigationButtonStyle.swift in Sources */,
 				2EDA07A427EDE2A900D6F09B /* DebugFrame.swift in Sources */,
@@ -1235,6 +1236,7 @@
 				66DC733F271D88CC0053CBB6 /* StandardButtonStyle.swift in Sources */,
 				663FABA0271D876200E495F8 /* PrimaryButton.swift in Sources */,
 				663FAB9C271D874D00E495F8 /* ActiveButton.swift in Sources */,
+				9E2F1C842809B606004E65FE /* DebugMenu.swift in Sources */,
 				9E02B5C3280458D2005B809B /* WrappedDerivationTool.swift in Sources */,
 				F9C165C02740403600592F76 /* ApproveView.swift in Sources */,
 				0DF2DC5427235E3E00FA31E2 /* View+InnerShadow.swift in Sources */,
