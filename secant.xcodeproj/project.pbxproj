@@ -96,6 +96,7 @@
 		9E2DF99E27CF704D00649636 /* ImportWalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2DF99B27CF704D00649636 /* ImportWalletView.swift */; };
 		9E2F1C8228095AFE004E65FE /* Int64+Zcash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2F1C8128095AFE004E65FE /* Int64+Zcash.swift */; };
 		9E2F1C842809B606004E65FE /* DebugMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2F1C832809B606004E65FE /* DebugMenu.swift */; };
+		9E2F1C8F280EDE09004E65FE /* Drawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2F1C8E280EDE09004E65FE /* Drawer.swift */; };
 		9E37A2B827C8F59F00AE57B3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E37A2B727C8F59F00AE57B3 /* Localizable.strings */; };
 		9E4DC6E027C409A100E657F4 /* NeumorphicDesignModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DC6DF27C409A100E657F4 /* NeumorphicDesignModifier.swift */; };
 		9E4DC6E227C4C6B700E657F4 /* SecantButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */; };
@@ -257,6 +258,7 @@
 		9E2DF99B27CF704D00649636 /* ImportWalletView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportWalletView.swift; sourceTree = "<group>"; };
 		9E2F1C8128095AFE004E65FE /* Int64+Zcash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int64+Zcash.swift"; sourceTree = "<group>"; };
 		9E2F1C832809B606004E65FE /* DebugMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMenu.swift; sourceTree = "<group>"; };
+		9E2F1C8E280EDE09004E65FE /* Drawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drawer.swift; sourceTree = "<group>"; };
 		9E37A2B727C8F59F00AE57B3 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		9E4DC6DF27C409A100E657F4 /* NeumorphicDesignModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeumorphicDesignModifier.swift; sourceTree = "<group>"; };
 		9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecantButtonStyles.swift; sourceTree = "<group>"; };
@@ -515,6 +517,7 @@
 		0DA13C9126C15E1900E3B610 /* UIComponents */ = {
 			isa = PBXGroup;
 			children = (
+				9E2F1C8D280EDDEF004E65FE /* Drawer */,
 				2E35F99027B28E6800EB79CD /* TextFields */,
 				0D0781C5278776B90083ACD7 /* Shapes */,
 				0D8A43C2272AEEA7005A6414 /* FontStyles */,
@@ -763,6 +766,14 @@
 				9E2DF99B27CF704D00649636 /* ImportWalletView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		9E2F1C8D280EDDEF004E65FE /* Drawer */ = {
+			isa = PBXGroup;
+			children = (
+				9E2F1C8E280EDE09004E65FE /* Drawer.swift */,
+			);
+			path = Drawer;
 			sourceTree = "<group>";
 		};
 		9EAFEB802805791400199FC9 /* AppReducer */ = {
@@ -1208,6 +1219,7 @@
 				0D5D16F526E24CCF00AD33D1 /* AppError.swift in Sources */,
 				0D18581B272728D60046B928 /* PhraseChip.swift in Sources */,
 				0DF482BA2787ADA800EB37D6 /* ConditionalModifier.swift in Sources */,
+				9E2F1C8F280EDE09004E65FE /* Drawer.swift in Sources */,
 				665C963F272C26E600BC04FB /* CircularFrameBackground.swift in Sources */,
 				9EAFEB882806E5AE00199FC9 /* CombineSynchronizer.swift in Sources */,
 				0DB8AA81271DC7520035BC9D /* DesignGuide.swift in Sources */,
