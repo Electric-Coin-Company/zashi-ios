@@ -41,12 +41,14 @@ internal enum Asset {
       internal static let shield = ImageAsset(name: "shield")
       internal static let swap = ImageAsset(name: "swap")
     }
+    internal static let welcomeScreenLogo = ImageAsset(name: "WelcomeScreenLogo")
   }
   internal enum Colors {
     internal enum BackgroundColors {
       internal static let numberedChip = ColorAsset(name: "numberedChip")
       internal static let phraseGridDarkGray = ColorAsset(name: "phraseGridDarkGray")
       internal static let red = ColorAsset(name: "red")
+      internal static let staticWelcomeScreen = ColorAsset(name: "staticWelcomeScreen")
     }
     internal enum Buttons {
       internal static let activeButton = ColorAsset(name: "ActiveButton")
