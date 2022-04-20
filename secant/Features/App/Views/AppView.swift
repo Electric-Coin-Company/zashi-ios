@@ -9,13 +9,16 @@ struct AppView: View {
         WithViewStore(store) { viewStore in
             switch viewStore.route {
             case .home:
-                HomeView(
-                    store: store.scope(
-                        state: \.homeState,
-                        action: AppAction.home
+                NavigationView {
+                    HomeView(
+                        store: store.scope(
+                            state: \.homeState,
+                            action: AppAction.home
+                        )
                     )
-                )
-                
+                }
+                .navigationViewStyle(StackNavigationViewStyle())
+
             case .sandbox:
                 NavigationView {
                     SandboxView(

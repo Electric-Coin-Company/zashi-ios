@@ -6,12 +6,29 @@ struct HomeView: View {
 
     var body: some View {
         WithViewStore(store) { viewStore in
-            VStack(alignment: .center, spacing: 30.0) {
-                Text("totalBalance \(viewStore.totalBalance)")
-                Text("verifiedBalance \(viewStore.verifiedBalance)")
-                    .accessDebugMenuWithHiddenGesture {
-                        viewStore.send(.debugMenuStartup)
+            GeometryReader { proxy in
+                ZStack {
+                    VStack {
+                        Text("totalBalance \(viewStore.totalBalance)")
+                        Text("verifiedBalance \(viewStore.verifiedBalance)")
+                            .accessDebugMenuWithHiddenGesture {
+                                viewStore.send(.debugMenuStartup)
+                            }
+
+                        Spacer()
                     }
+                    
+                    Drawer(overlay: viewStore.bindingForDrawer(), maxHeight: proxy.size.height) {
+                        VStack {
+                            TransactionHistoryView(store: store.historyStore())
+                                .padding(.top, 10)
+                            
+                            Spacer()
+                        }
+                        .applyScreenBackground()
+                    }
+                }
+                .applyScreenBackground()
             }
             .onAppear(perform: { viewStore.send(.preparePublishers) })
         }

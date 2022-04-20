@@ -92,6 +92,7 @@ internal enum Asset {
       internal static let redGradientStart = ColorAsset(name: "redGradientStart")
     }
     internal enum Shadow {
+      internal static let drawerShadow = ColorAsset(name: "drawerShadow")
       internal static let emptyChipInnerShadow = ColorAsset(name: "emptyChipInnerShadow")
       internal static let numberedTextShadow = ColorAsset(name: "numberedTextShadow")
     }

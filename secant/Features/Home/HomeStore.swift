@@ -2,15 +2,20 @@ import ComposableArchitecture
 import SwiftUI
 
 struct HomeState: Equatable {
-    var totalBalance: Double
-    var verifiedBalance: Double
     var arePublishersPrepared = false
+
+    var drawerOverlay: DrawerOverlay
+    var totalBalance: Double
+    var transactionHistoryState: TransactionHistoryState
+    var verifiedBalance: Double
 }
 
 enum HomeAction: Equatable {
     case debugMenuStartup
     case preparePublishers
+    case transactionHistory(TransactionHistoryAction)
     case updateBalance(Balance)
+    case updateDrawer(DrawerOverlay)
 }
 
 struct HomeEnvironment {
@@ -43,6 +48,16 @@ extension HomeReducer {
             
         case .debugMenuStartup:
             return .none
+
+        case .updateDrawer(let drawerOverlay):
+            state.drawerOverlay = drawerOverlay
+            return .none
+            
+        case .transactionHistory(let historyAction):
+            return TransactionHistoryReducer
+                .default
+                .run(&state.transactionHistoryState, historyAction, ())
+                .map(HomeAction.transactionHistory)
         }
     }
 }
@@ -51,11 +66,36 @@ extension HomeReducer {
 
 typealias HomeStore = Store<HomeState, HomeAction>
 
+extension HomeStore {
+    func historyStore() -> TransactionHistoryStore {
+        self.scope(
+            state: \.transactionHistoryState,
+            action: HomeAction.transactionHistory
+        )
+    }
+}
+
+// MARK: - HomeViewStore
+
+typealias HomeViewStore = ViewStore<HomeState, HomeAction>
+
+extension HomeViewStore {
+    func bindingForDrawer() -> Binding<DrawerOverlay> {
+        self.binding(
+            get: { $0.drawerOverlay },
+            send: { .updateDrawer($0) }
+        )
+    }
+}
+
 // MARK: PlaceHolders
+
 extension HomeState {
     static var placeholder: Self {
         .init(
+            drawerOverlay: .partial,
             totalBalance: 0.0,
+            transactionHistoryState: .placeHolder,
             verifiedBalance: 0.0
         )
     }
