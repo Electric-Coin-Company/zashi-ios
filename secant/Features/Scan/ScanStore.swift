@@ -7,7 +7,7 @@ enum ScanAction: Equatable {
     case noOp
 }
 
-struct ScanEnvironment: Equatable {
+struct ScanEnvironment {
 }
 
 // MARK: - ScanReducer
@@ -28,6 +28,11 @@ extension ScanReducer {
 typealias ScanStore = Store<ScanState, ScanAction>
 
 extension ScanStore {
+    static let placeholder = ScanStore(
+        initialState: .placeholder,
+        reducer: .default,
+        environment: ScanEnvironment()
+    )
 }
 
 // MARK: - ScanViewStore
@@ -35,4 +40,12 @@ extension ScanStore {
 typealias ScanViewStore = ViewStore<ScanState, ScanAction>
 
 extension ScanViewStore {
+}
+
+// MARK: PlaceHolders
+
+extension ScanState {
+    static var placeholder: Self {
+        .init()
+    }
 }

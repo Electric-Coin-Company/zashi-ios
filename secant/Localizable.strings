@@ -55,7 +55,11 @@
 "importWallet.button.importPhrase" = "Import Recovery Phrase";
 "importWallet.button.importPrivateKey" = "Import a private or viewing key";
 
+// MARK: - Home Screen
+"home.request" = "Request ZEC";
+
 // MARK: - Common & Shared
 "Back" = "Back";
 "Skip" = "Skip";
 "Next" = "Next";
+"Send" = "Send";

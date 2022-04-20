@@ -7,7 +7,7 @@ enum RequestAction: Equatable {
     case noOp
 }
 
-struct RequestEnvironment: Equatable {
+struct RequestEnvironment {
 }
 
 // MARK: - RequestReducer
@@ -28,6 +28,11 @@ extension RequestReducer {
 typealias RequestStore = Store<RequestState, RequestAction>
 
 extension RequestStore {
+    static let placeholder = RequestStore(
+        initialState: .placeholder,
+        reducer: .default,
+        environment: RequestEnvironment()
+    )
 }
 
 // MARK: - RequestViewStore
@@ -35,4 +40,12 @@ extension RequestStore {
 typealias RequestViewStore = ViewStore<RequestState, RequestAction>
 
 extension RequestViewStore {
+}
+
+// MARK: PlaceHolders
+
+extension RequestState {
+    static var placeholder: Self {
+        .init()
+    }
 }

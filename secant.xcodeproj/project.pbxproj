@@ -127,12 +127,12 @@
 		F96B41EB273B50520021B49A /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41EA273B50520021B49A /* Strings.swift */; };
 		F9971A4D27680DC400A2DB75 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A4A27680DC400A2DB75 /* App.swift */; };
 		F9971A4E27680DC400A2DB75 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A4C27680DC400A2DB75 /* AppView.swift */; };
-		F9971A5327680DD000A2DB75 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A5027680DD000A2DB75 /* Profile.swift */; };
+		F9971A5327680DD000A2DB75 /* ProfileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A5027680DD000A2DB75 /* ProfileStore.swift */; };
 		F9971A5427680DD000A2DB75 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A5227680DD000A2DB75 /* ProfileView.swift */; };
-		F9971A5927680DDE00A2DB75 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A5627680DDE00A2DB75 /* Request.swift */; };
+		F9971A5927680DDE00A2DB75 /* RequestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A5627680DDE00A2DB75 /* RequestStore.swift */; };
 		F9971A5A27680DDE00A2DB75 /* RequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A5827680DDE00A2DB75 /* RequestView.swift */; };
 		F9971A5F27680DF600A2DB75 /* ScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A5D27680DF600A2DB75 /* ScanView.swift */; };
-		F9971A6027680DF600A2DB75 /* Scan.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A5E27680DF600A2DB75 /* Scan.swift */; };
+		F9971A6027680DF600A2DB75 /* ScanStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A5E27680DF600A2DB75 /* ScanStore.swift */; };
 		F9971A6527680DFE00A2DB75 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A6227680DFE00A2DB75 /* Settings.swift */; };
 		F9971A6627680DFE00A2DB75 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A6427680DFE00A2DB75 /* SettingsView.swift */; };
 		F9971A6B27680E1000A2DB75 /* WalletInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A6827680E1000A2DB75 /* WalletInfo.swift */; };
@@ -288,12 +288,12 @@
 		F96B41EA273B50520021B49A /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		F9971A4A27680DC400A2DB75 /* App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		F9971A4C27680DC400A2DB75 /* AppView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
-		F9971A5027680DD000A2DB75 /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		F9971A5027680DD000A2DB75 /* ProfileStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileStore.swift; sourceTree = "<group>"; };
 		F9971A5227680DD000A2DB75 /* ProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
-		F9971A5627680DDE00A2DB75 /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
+		F9971A5627680DDE00A2DB75 /* RequestStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestStore.swift; sourceTree = "<group>"; };
 		F9971A5827680DDE00A2DB75 /* RequestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestView.swift; sourceTree = "<group>"; };
 		F9971A5D27680DF600A2DB75 /* ScanView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanView.swift; sourceTree = "<group>"; };
-		F9971A5E27680DF600A2DB75 /* Scan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scan.swift; sourceTree = "<group>"; };
+		F9971A5E27680DF600A2DB75 /* ScanStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanStore.swift; sourceTree = "<group>"; };
 		F9971A6227680DFE00A2DB75 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		F9971A6427680DFE00A2DB75 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F9971A6827680E1000A2DB75 /* WalletInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletInfo.swift; sourceTree = "<group>"; };
@@ -876,7 +876,7 @@
 		F9971A4F27680DD000A2DB75 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
-				F9971A5027680DD000A2DB75 /* Profile.swift */,
+				F9971A5027680DD000A2DB75 /* ProfileStore.swift */,
 				F9971A5127680DD000A2DB75 /* Views */,
 			);
 			path = Profile;
@@ -893,7 +893,7 @@
 		F9971A5527680DDE00A2DB75 /* Request */ = {
 			isa = PBXGroup;
 			children = (
-				F9971A5627680DDE00A2DB75 /* Request.swift */,
+				F9971A5627680DDE00A2DB75 /* RequestStore.swift */,
 				F9971A5727680DDE00A2DB75 /* Views */,
 			);
 			path = Request;
@@ -910,8 +910,8 @@
 		F9971A5B27680DF600A2DB75 /* Scan */ = {
 			isa = PBXGroup;
 			children = (
+				F9971A5E27680DF600A2DB75 /* ScanStore.swift */,
 				F9971A5C27680DF600A2DB75 /* Views */,
-				F9971A5E27680DF600A2DB75 /* Scan.swift */,
 			);
 			path = Scan;
 			sourceTree = "<group>";
@@ -1210,7 +1210,7 @@
 				0DDB6A5127737D4A0012A410 /* ValidationFailedView.swift in Sources */,
 				0D6D628B276A528E002FB4CC /* DropDelegate.swift in Sources */,
 				9E2DF99D27CF704D00649636 /* ImportSeedEditor.swift in Sources */,
-				F9971A5327680DD000A2DB75 /* Profile.swift in Sources */,
+				F9971A5327680DD000A2DB75 /* ProfileStore.swift in Sources */,
 				669FDAEB272C23C2007B9422 /* CircularFrameBadge.swift in Sources */,
 				2E8719CD27FB0D3B0082C926 /* TransactionCurrencySelector.swift in Sources */,
 				F9971A6C27680E1000A2DB75 /* WalletInfoView.swift in Sources */,
@@ -1271,7 +1271,7 @@
 				F96B41EB273B50520021B49A /* Strings.swift in Sources */,
 				2EDA07A227EDE1AE00D6F09B /* TextFieldFooter.swift in Sources */,
 				F9971A5427680DD000A2DB75 /* ProfileView.swift in Sources */,
-				F9971A6027680DF600A2DB75 /* Scan.swift in Sources */,
+				F9971A6027680DF600A2DB75 /* ScanStore.swift in Sources */,
 				9EF8139127F191BF0075AF48 /* WalletStorageInteractor.swift in Sources */,
 				0DFE93E1272C9ECB000FCCA5 /* RecoveryPhraseBackupValidationView.swift in Sources */,
 				9E69A24D27FB002800A55317 /* Welcome.swift in Sources */,
@@ -1283,7 +1283,7 @@
 				2E8719CB27FB09990082C926 /* TransactionTextField.swift in Sources */,
 				6654C7412715A47300901167 /* Onboarding.swift in Sources */,
 				F9C165C42740403600592F76 /* SentView.swift in Sources */,
-				F9971A5927680DDE00A2DB75 /* Request.swift in Sources */,
+				F9971A5927680DDE00A2DB75 /* RequestStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

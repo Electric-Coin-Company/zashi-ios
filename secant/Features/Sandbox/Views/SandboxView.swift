@@ -32,11 +32,11 @@ struct SandboxView: View {
         case .recoveryPhraseDisplay:
             RecoveryPhraseDisplayView(store: .demo)
         case .scan:
-            ScanView()
+            ScanView(store: .placeholder)
         case .profile:
             ProfileView(store: store.profileStore())
         case .request:
-            RequestView()
+            RequestView(store: .placeholder)
         }
     }
 
