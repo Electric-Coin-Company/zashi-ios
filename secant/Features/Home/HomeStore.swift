@@ -2,9 +2,21 @@ import ComposableArchitecture
 import SwiftUI
 
 struct HomeState: Equatable {
+    enum Route: Equatable {
+        case profile
+        case request
+        case send
+        case scan
+    }
+
     var arePublishersPrepared = false
+    var route: Route?
 
     var drawerOverlay: DrawerOverlay
+    var profileState: ProfileState
+    var requestState: RequestState
+    var sendState: SendState
+    var scanState: ScanState
     var totalBalance: Double
     var transactionHistoryState: TransactionHistoryState
     var verifiedBalance: Double
@@ -13,9 +25,14 @@ struct HomeState: Equatable {
 enum HomeAction: Equatable {
     case debugMenuStartup
     case preparePublishers
+    case profile(ProfileAction)
+    case request(RequestAction)
+    case send(SendAction)
+    case scan(ScanAction)
     case transactionHistory(TransactionHistoryAction)
     case updateBalance(Balance)
     case updateDrawer(DrawerOverlay)
+    case updateRoute(HomeState.Route?)
 }
 
 struct HomeEnvironment {
@@ -58,7 +75,45 @@ extension HomeReducer {
                 .default
                 .run(&state.transactionHistoryState, historyAction, ())
                 .map(HomeAction.transactionHistory)
+            
+        case .updateRoute(let route):
+            state.route = route
+            return .none
+            
+        case .profile(let action):
+            return .none
+
+        case .request(let action):
+            return .none
+
+        case .send(let action):
+            return .none
+
+        case .scan(let action):
+            return .none
         }
+    }
+}
+
+// MARK: - HomeViewStore
+
+typealias HomeViewStore = ViewStore<HomeState, HomeAction>
+
+extension HomeViewStore {
+    func bindingForRoute(_ route: HomeState.Route) -> Binding<Bool> {
+        self.binding(
+            get: { $0.route == route },
+            send: { isActive in
+                return .updateRoute(isActive ? route : nil)
+            }
+        )
+    }
+    
+    func bindingForDrawer() -> Binding<DrawerOverlay> {
+        self.binding(
+            get: { $0.drawerOverlay },
+            send: { .updateDrawer($0) }
+        )
     }
 }
 
@@ -73,17 +128,32 @@ extension HomeStore {
             action: HomeAction.transactionHistory
         )
     }
-}
+    
+    func profileStore() -> ProfileStore {
+        self.scope(
+            state: \.profileState,
+            action: HomeAction.profile
+        )
+    }
 
-// MARK: - HomeViewStore
+    func requestStore() -> RequestStore {
+        self.scope(
+            state: \.requestState,
+            action: HomeAction.request
+        )
+    }
 
-typealias HomeViewStore = ViewStore<HomeState, HomeAction>
+    func sendStore() -> SendStore {
+        self.scope(
+            state: \.sendState,
+            action: HomeAction.send
+        )
+    }
 
-extension HomeViewStore {
-    func bindingForDrawer() -> Binding<DrawerOverlay> {
-        self.binding(
-            get: { $0.drawerOverlay },
-            send: { .updateDrawer($0) }
+    func scanStore() -> ScanStore {
+        self.scope(
+            state: \.scanState,
+            action: HomeAction.scan
         )
     }
 }
@@ -94,6 +164,10 @@ extension HomeState {
     static var placeholder: Self {
         .init(
             drawerOverlay: .partial,
+            profileState: .placeholder,
+            requestState: .placeholder,
+            sendState: .placeholder,
+            scanState: .placeholder,
             totalBalance: 0.0,
             transactionHistoryState: .placeHolder,
             verifiedBalance: 0.0

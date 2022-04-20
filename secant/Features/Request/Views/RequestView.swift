@@ -1,13 +1,18 @@
 import SwiftUI
+import ComposableArchitecture
 
 struct RequestView: View {
+    let store: RequestStore
+
     var body: some View {
-        Text("\(String(describing: Self.self)) PlaceHolder")
+        WithViewStore(store) { _ in
+            Text("\(String(describing: Self.self)) PlaceHolder")
+        }
     }
 }
 
 struct RequestView_Previews: PreviewProvider {
     static var previews: some View {
-        RequestView()
+        RequestView(store: .placeholder)
     }
 }

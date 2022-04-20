@@ -8,12 +8,21 @@ struct HomeView: View {
         WithViewStore(store) { viewStore in
             GeometryReader { proxy in
                 ZStack {
+                    scanButton(viewStore)
+                    
+                    profileButton(viewStore)
+                    
+                    sendButton(viewStore)
+                    
+                    requestButton(viewStore)
+                        .padding(.top, 140)
+                    
                     VStack {
-                        Text("totalBalance \(viewStore.totalBalance)")
-                        Text("verifiedBalance \(viewStore.verifiedBalance)")
+                        Text("balance: \(viewStore.totalBalance)")
                             .accessDebugMenuWithHiddenGesture {
                                 viewStore.send(.debugMenuStartup)
                             }
+                            .padding(.top, 180)
 
                         Spacer()
                     }
@@ -29,8 +38,115 @@ struct HomeView: View {
                     }
                 }
                 .applyScreenBackground()
+                .navigationBarHidden(true)
+                .applyScreenBackground()
+                .onAppear(perform: { viewStore.send(.preparePublishers) })
             }
-            .onAppear(perform: { viewStore.send(.preparePublishers) })
+        }
+    }
+}
+
+// MARK: - Buttons
+
+extension HomeView {
+    func profileButton(_ viewStore: HomeViewStore) -> some View {
+        VStack {
+            HStack {
+                Spacer()
+                
+                Image(Asset.Assets.Icons.profile.name)
+                    .resizable()
+                    .frame(width: 60, height: 60)
+                    .padding(.trailing, 15)
+                    .navigationLink(
+                        isActive: viewStore.bindingForRoute(.profile),
+                        destination: {
+                            ProfileView(store: store.profileStore())
+                        }
+                    )
+            }
+            
+            Spacer()
+        }
+    }
+
+    func requestButton(_ viewStore: HomeViewStore) -> some View {
+        VStack {
+            Spacer()
+            
+            Text("home.request")
+                .shadow(color: Asset.Colors.Buttons.buttonsTitleShadow.color, radius: 2, x: 0, y: 2)
+                .frame(
+                    minWidth: 0,
+                    maxWidth: .infinity,
+                    minHeight: 0,
+                    maxHeight: .infinity
+                )
+                .foregroundColor(Asset.Colors.Text.secondaryButtonText.color)
+                .background(Asset.Colors.Buttons.secondaryButton.color)
+                .cornerRadius(12)
+                .frame(height: 60)
+                .padding(.horizontal, 50)
+                .neumorphicButton()
+                .navigationLink(
+                    isActive: viewStore.bindingForRoute(.request),
+                    destination: {
+                        RequestView(store: store.requestStore())
+                    }
+                )
+
+            Spacer()
+        }
+    }
+
+    func sendButton(_ viewStore: HomeViewStore) -> some View {
+        VStack {
+            Spacer()
+            
+            Text("Send")
+                .shadow(color: Asset.Colors.Buttons.buttonsTitleShadow.color, radius: 2, x: 0, y: 2)
+                .frame(
+                    minWidth: 0,
+                    maxWidth: .infinity,
+                    minHeight: 0,
+                    maxHeight: .infinity
+                )
+                .foregroundColor(Asset.Colors.Text.activeButtonText.color)
+                .background(Asset.Colors.Buttons.activeButton.color)
+                .cornerRadius(12)
+                .frame(height: 60)
+                .padding(.horizontal, 50)
+                .neumorphicButton()
+                .navigationLink(
+                    isActive: viewStore.bindingForRoute(.send),
+                    destination: {
+                        SendView(store: store.sendStore())
+                    }
+                )
+
+            Spacer()
+        }
+    }
+
+    func scanButton(_ viewStore: HomeViewStore) -> some View {
+        VStack {
+            HStack {
+                Image(Asset.Assets.Icons.qrCode.name)
+                    .resizable()
+                    .frame(width: 40, height: 40)
+                    .padding(.top, 7)
+                    .padding(.leading, 22)
+                    .navigationLink(
+                        isActive: viewStore.bindingForRoute(.scan),
+                        destination: {
+                            ScanView(store: store.scanStore())
+                        }
+                    )
+                
+                Spacer()
+            }
+            
+            Spacer()
         }
     }
 }
@@ -53,6 +169,11 @@ struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             HomeView(store: .placeholder)
+        }
+
+        NavigationView {
+            HomeView(store: .placeholder)
+                .preferredColorScheme(.dark)
         }
     }
 }
