@@ -1,6 +1,22 @@
 # Changelog
+## 0.0.1 build 21
+- Issue #258: User can take the backup test successfully more than once (#282)\
+- Issue #279: update swiftlint (#280)
+- Issue #283: drawer animation fixed (#283)
+- Issue #284: Static welcome screen (#274)
+- Issue #276: [Scaffold] Drawer for the Home Screen (#275)
+- Issue #239: [Functional] Integration of the ZcashSDK
+- Issue #266: Placeholder home screen/refactor previous home to debug screen
+- Issue #256: [Recovery Phrase Display] Dark mode word chips' color does not match the designs
+- Issue #268: [Critical] App get stuck after start #268
+- Issue #260: Wrapped Derivation Tool 
+- Issue #254: Testable and more readable structure for the AppReducer
+- Issue #231: Wallet Storage unit tests vs. integration tests
+- Issue #253: [Functional] Import wallet
+- Issue #250: Recovery Phrase Validation, words to complete puzzle are not shuffled
 ## 0.0.1 build 19
 - Issue #242: NukeWallet in the debug menus for testing purposes
+
 ## 0.0.1 build 18
 - Issue #200: Move Debug Menus to a hidden screen
 - Issue #197: Ability to know whether wallet has been initialized
