@@ -250,7 +250,7 @@ extension AppReducer {
         }
     }
 
-    private static let routeReducer = AppReducer { state, action, _ in
+    private static let routeReducer = AppReducer { state, action, environment in
         switch action {
         case let .updateRoute(route):
             state.route = route
@@ -269,7 +269,14 @@ extension AppReducer {
             state.route = .phraseDisplay
 
         case .phraseDisplay(.finishedPressed):
-            state.route = .phraseValidation
+            //TODO: Advanced Routing: setting a route may vary depending on the originating context #285
+            // see https://github.com/zcash/secant-ios-wallet/issues/285
+            if let storedWallet = try? environment.walletStorage.exportWallet(),
+               storedWallet.hasUserPassedPhraseBackupTest {
+                state.route = .home
+            } else {
+                state.route = .phraseValidation
+            }
 
             /// Default is meaningful here because there's `appReducer` handling actions and this reducer is handling only routes. We don't here plenty of unused cases.
         default:
