@@ -14,8 +14,10 @@ struct TransactionHistoryState: Equatable {
         case showTransaction(Transaction)
     }
 
-    var transactions: IdentifiedArrayOf<Transaction>
     var route: Route?
+
+    var isScrollable = false
+    var transactions: IdentifiedArrayOf<Transaction>
 }
 
 enum TransactionHistoryAction: Equatable {
@@ -73,7 +75,7 @@ extension Transaction {
 
 extension TransactionHistoryState {
     static var placeHolder: Self {
-        .init(transactions: .placeholder, route: nil)
+        .init(transactions: .placeholder)
     }
 }
 
@@ -90,8 +92,8 @@ extension TransactionHistoryStore {
         let transactions = IdentifiedArrayOf<Transaction>.placeholder
         return Store(
             initialState: TransactionHistoryState(
-                transactions: transactions,
-                route: .showTransaction(transactions[3])
+                route: .showTransaction(transactions[3]),
+                transactions: transactions
             ),
             reducer: .default.debug(),
             environment: ()
@@ -102,7 +104,7 @@ extension TransactionHistoryStore {
 extension IdentifiedArrayOf where Element == Transaction {
     static var placeholder: IdentifiedArrayOf<Transaction> {
         return .init(
-            uniqueElements: (0..<10).map {
+            uniqueElements: (0..<30).map {
                 Transaction(
                     id: $0,
                     amount: 25,
