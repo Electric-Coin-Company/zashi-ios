@@ -27,19 +27,20 @@ struct HomeView: View {
                         Spacer()
                     }
                     
-                    Drawer(overlay: viewStore.bindingForDrawer(), maxHeight: proxy.size.height) {
-                        VStack {
-                            TransactionHistoryView(store: store.historyStore())
-                                .padding(.top, 10)
-                            
-                            Spacer()
+                    if proxy.size.height > 0 {
+                        Drawer(overlay: viewStore.bindingForDrawer(), maxHeight: proxy.size.height) {
+                            VStack {
+                                TransactionHistoryView(store: store.historyStore())
+                                    .padding(.top, 10)
+                                
+                                Spacer()
+                            }
+                            .applyScreenBackground()
                         }
-                        .applyScreenBackground()
                     }
                 }
                 .applyScreenBackground()
                 .navigationBarHidden(true)
-                .applyScreenBackground()
                 .onAppear(perform: { viewStore.send(.preparePublishers) })
             }
         }
