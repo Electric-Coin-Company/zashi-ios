@@ -68,6 +68,7 @@ extension HomeReducer {
 
         case .updateDrawer(let drawerOverlay):
             state.drawerOverlay = drawerOverlay
+            state.transactionHistoryState.isScrollable = drawerOverlay == .full ? true : false
             return .none
             
         case .transactionHistory(let historyAction):
