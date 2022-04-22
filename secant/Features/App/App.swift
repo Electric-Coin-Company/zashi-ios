@@ -269,10 +269,10 @@ extension AppReducer {
             state.route = .phraseDisplay
 
         case .phraseDisplay(.finishedPressed):
-            //TODO: Advanced Routing: setting a route may vary depending on the originating context #285
+            // TODO: Advanced Routing: setting a route may vary depending on the originating context #285
             // see https://github.com/zcash/secant-ios-wallet/issues/285
             if let storedWallet = try? environment.walletStorage.exportWallet(),
-               storedWallet.hasUserPassedPhraseBackupTest {
+                storedWallet.hasUserPassedPhraseBackupTest {
                 state.route = .home
             } else {
                 state.route = .phraseValidation
