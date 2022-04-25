@@ -9,7 +9,6 @@ struct HomeState: Equatable {
         case scan
     }
 
-    var arePublishersPrepared = false
     var route: Route?
 
     var drawerOverlay: DrawerOverlay
@@ -24,11 +23,13 @@ struct HomeState: Equatable {
 
 enum HomeAction: Equatable {
     case debugMenuStartup
-    case preparePublishers
+    case onAppear
+    case onDisappear
     case profile(ProfileAction)
     case request(RequestAction)
     case send(SendAction)
     case scan(ScanAction)
+    case synchronizerStateChanged(WrappedSDKSynchronizerState)
     case transactionHistory(TransactionHistoryAction)
     case updateBalance(Balance)
     case updateDrawer(DrawerOverlay)
@@ -36,26 +37,35 @@ enum HomeAction: Equatable {
 }
 
 struct HomeEnvironment {
-    let combineSynchronizer: CombineSynchronizer
+    let wrappedSDKSynchronizer: WrappedSDKSynchronizer
 }
 
 // MARK: - HomeReducer
+
+private struct ListenerId: Hashable {}
 
 typealias HomeReducer = Reducer<HomeState, HomeAction, HomeEnvironment>
 
 extension HomeReducer {
     static let `default` = HomeReducer { state, action, environment in
         switch action {
-        case .preparePublishers:
-            if !state.arePublishersPrepared {
-                state.arePublishersPrepared = true
-                
-                return environment.combineSynchronizer.shieldedBalance
-                    .receive(on: DispatchQueue.main)
-                    .map({ Balance(verified: $0.verified, total: $0.total) })
-                    .map(HomeAction.updateBalance)
-                    .eraseToEffect()
-            }
+        case .onAppear:
+            return environment.wrappedSDKSynchronizer.stateChanged
+                .map(HomeAction.synchronizerStateChanged)
+                .eraseToEffect()
+                .cancellable(id: ListenerId(), cancelInFlight: true)
+
+        case .onDisappear:
+            return Effect.cancel(id: ListenerId())
+
+        case .synchronizerStateChanged(.synced):
+            return environment.wrappedSDKSynchronizer.getShieldedBalance()
+                .receive(on: DispatchQueue.main)
+                .map({ Balance(verified: $0.verified, total: $0.total) })
+                .map(HomeAction.updateBalance)
+                .eraseToEffect()
+            
+        case .synchronizerStateChanged(let synchronizerState):
             return .none
             
         case .updateBalance(let balance):

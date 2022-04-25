@@ -41,7 +41,8 @@ struct HomeView: View {
                 }
                 .applyScreenBackground()
                 .navigationBarHidden(true)
-                .onAppear(perform: { viewStore.send(.preparePublishers) })
+                .onAppear(perform: { viewStore.send(.onAppear) })
+                .onDisappear(perform: { viewStore.send(.onDisappear) })
             }
         }
     }
@@ -160,7 +161,7 @@ extension HomeStore {
             initialState: .placeholder,
             reducer: .default.debug(),
             environment: HomeEnvironment(
-                combineSynchronizer: LiveCombineSynchronizer()
+                wrappedSDKSynchronizer: LiveWrappedSDKSynchronizer()
             )
         )
     }
