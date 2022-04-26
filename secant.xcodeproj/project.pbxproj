@@ -106,7 +106,7 @@
 		9EAFEB822805793200199FC9 /* AppReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB812805793200199FC9 /* AppReducerTests.swift */; };
 		9EAFEB84280597B700199FC9 /* WrappedSecItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB83280597B700199FC9 /* WrappedSecItem.swift */; };
 		9EAFEB862805A23100199FC9 /* WrappedSecItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB852805A23100199FC9 /* WrappedSecItemTests.swift */; };
-		9EAFEB882806E5AE00199FC9 /* CombineSynchronizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB872806E5AE00199FC9 /* CombineSynchronizer.swift */; };
+		9EAFEB882806E5AE00199FC9 /* WrappedSDKSynchronizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB872806E5AE00199FC9 /* WrappedSDKSynchronizer.swift */; };
 		9EAFEB8A2806F48100199FC9 /* ZCashSDKEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB892806F48100199FC9 /* ZCashSDKEnvironment.swift */; };
 		9EAFEB8F2808183D00199FC9 /* SandboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB8D2808183D00199FC9 /* SandboxView.swift */; };
 		9EAFEB902808183D00199FC9 /* SandboxStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB8E2808183D00199FC9 /* SandboxStore.swift */; };
@@ -269,7 +269,7 @@
 		9EAFEB812805793200199FC9 /* AppReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReducerTests.swift; sourceTree = "<group>"; };
 		9EAFEB83280597B700199FC9 /* WrappedSecItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedSecItem.swift; sourceTree = "<group>"; };
 		9EAFEB852805A23100199FC9 /* WrappedSecItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedSecItemTests.swift; sourceTree = "<group>"; };
-		9EAFEB872806E5AE00199FC9 /* CombineSynchronizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineSynchronizer.swift; sourceTree = "<group>"; };
+		9EAFEB872806E5AE00199FC9 /* WrappedSDKSynchronizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedSDKSynchronizer.swift; sourceTree = "<group>"; };
 		9EAFEB892806F48100199FC9 /* ZCashSDKEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZCashSDKEnvironment.swift; sourceTree = "<group>"; };
 		9EAFEB8D2808183D00199FC9 /* SandboxView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SandboxView.swift; sourceTree = "<group>"; };
 		9EAFEB8E2808183D00199FC9 /* SandboxStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SandboxStore.swift; sourceTree = "<group>"; };
@@ -561,7 +561,6 @@
 				9EF8139B27F47AED0075AF48 /* InitializationState.swift */,
 				9EF8139027F191BF0075AF48 /* WalletStorageInteractor.swift */,
 				9ECAE56727FC713C0089A0EF /* DatabaseFiles.swift */,
-				9EAFEB872806E5AE00199FC9 /* CombineSynchronizer.swift */,
 				9EAFEB892806F48100199FC9 /* ZCashSDKEnvironment.swift */,
 				9E2F1C8128095AFE004E65FE /* Int64+Zcash.swift */,
 				9E2F1C832809B606004E65FE /* DebugMenu.swift */,
@@ -749,6 +748,7 @@
 				9E02B56927FED43E005B809B /* WrappedFileManager.swift */,
 				9EAFEB83280597B700199FC9 /* WrappedSecItem.swift */,
 				9E02B5C2280458D2005B809B /* WrappedDerivationTool.swift */,
+				9EAFEB872806E5AE00199FC9 /* WrappedSDKSynchronizer.swift */,
 			);
 			path = Wrappers;
 			sourceTree = "<group>";
@@ -1225,7 +1225,7 @@
 				0DF482BA2787ADA800EB37D6 /* ConditionalModifier.swift in Sources */,
 				9E2F1C8F280EDE09004E65FE /* Drawer.swift in Sources */,
 				665C963F272C26E600BC04FB /* CircularFrameBackground.swift in Sources */,
-				9EAFEB882806E5AE00199FC9 /* CombineSynchronizer.swift in Sources */,
+				9EAFEB882806E5AE00199FC9 /* WrappedSDKSynchronizer.swift in Sources */,
 				0DB8AA81271DC7520035BC9D /* DesignGuide.swift in Sources */,
 				F9971A4D27680DC400A2DB75 /* App.swift in Sources */,
 				9EAFEB9228081E9400199FC9 /* HomeView.swift in Sources */,

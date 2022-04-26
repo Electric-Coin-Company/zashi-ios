@@ -1,5 +1,5 @@
 //
-//  CombineSynchronizer.swift
+//  WrappedSDKSynchronizer.swift
 //  secant-testnet
 //
 //  Created by Lukáš Korba on 13.04.2022.
@@ -8,26 +8,51 @@
 import Foundation
 import ZcashLightClientKit
 import Combine
+import ComposableArchitecture
+
+enum WrappedSDKSynchronizerState: Equatable {
+    case unknown
+    
+    case transactionsUpdated
+    case started
+    case progressUpdated
+    case statusWillUpdate
+    case synced
+    case stopped
+    case disconnected
+    case syncing
+    case downloading
+    case validating
+    case scanning
+    case enhancing
+    case fetching
+    case minedTransaction
+    case foundTransactions
+    case failed
+    case connectionStateChanged
+}
 
 struct Balance: WalletBalance, Equatable {
     var verified: Int64
     var total: Int64
 }
 
-protocol CombineSynchronizer {
+protocol WrappedSDKSynchronizer {
     var synchronizer: SDKSynchronizer? { get }
-    var shieldedBalance: CurrentValueSubject<WalletBalance, Never> { get }
+    var stateChanged: CurrentValueSubject<WrappedSDKSynchronizerState, Never> { get }
     
     func prepareWith(initializer: Initializer) throws
     func start(retry: Bool) throws
     func stop()
-    func updatePublishers()
+    func synchronizerSynced()
+
+    func getShieldedBalance() -> Effect<Balance, Never>
 
     func getTransparentAddress(account: Int) -> TransparentAddress?
     func getShieldedAddress(account: Int) -> SaplingShieldedAddress?
 }
 
-extension CombineSynchronizer {
+extension WrappedSDKSynchronizer {
     func start() throws {
         try start(retry: false)
     }
@@ -41,13 +66,17 @@ extension CombineSynchronizer {
     }
 }
 
-class LiveCombineSynchronizer: CombineSynchronizer {
+class LiveWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     private var cancellables: [AnyCancellable] = []
     private(set) var synchronizer: SDKSynchronizer?
-    private(set) var shieldedBalance: CurrentValueSubject<WalletBalance, Never>
+    private(set) var stateChanged: CurrentValueSubject<WrappedSDKSynchronizerState, Never>
 
     init() {
-        self.shieldedBalance = CurrentValueSubject<WalletBalance, Never>(Balance(verified: 0, total: 0))
+        self.stateChanged = CurrentValueSubject<WrappedSDKSynchronizerState, Never>(.unknown)
+    }
+    
+    deinit {
+        synchronizer?.stop()
     }
 
     func prepareWith(initializer: Initializer) throws {
@@ -56,7 +85,7 @@ class LiveCombineSynchronizer: CombineSynchronizer {
         NotificationCenter.default.publisher(for: .synchronizerSynced)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
-                self?.updatePublishers()
+                self?.synchronizerSynced()
             })
             .store(in: &cancellables)
         
@@ -71,15 +100,19 @@ class LiveCombineSynchronizer: CombineSynchronizer {
         synchronizer?.stop()
     }
 
-    func updatePublishers() {
-        if let shieldedVerifiedBalance = synchronizer?.getShieldedVerifiedBalance(),
-        let shieldedTotalBalance = synchronizer?.getShieldedBalance(accountIndex: 0) {
-            shieldedBalance.send(Balance(verified: shieldedVerifiedBalance, total: shieldedTotalBalance))
-        } else {
-            shieldedBalance.send(Balance(verified: 0, total: 0))
-        }
+    func synchronizerSynced() {
+        stateChanged.send(.synced)
     }
 
+    func getShieldedBalance() -> Effect<Balance, Never> {
+        if let shieldedVerifiedBalance = synchronizer?.getShieldedVerifiedBalance(),
+        let shieldedTotalBalance = synchronizer?.getShieldedBalance(accountIndex: 0) {
+            return Effect(value: Balance(verified: shieldedVerifiedBalance, total: shieldedTotalBalance))
+        }
+        
+        return .none
+    }
+    
     func getTransparentAddress(account: Int) -> TransparentAddress? {
         synchronizer?.getTransparentAddress(accountIndex: account)
     }
@@ -89,38 +122,27 @@ class LiveCombineSynchronizer: CombineSynchronizer {
     }
 }
 
-class MockCombineSynchronizer: CombineSynchronizer {
+class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     private(set) var synchronizer: SDKSynchronizer?
-    private(set) var shieldedBalance: CurrentValueSubject<WalletBalance, Never>
+    private(set) var stateChanged: CurrentValueSubject<WrappedSDKSynchronizerState, Never>
 
     init() {
-        self.shieldedBalance = CurrentValueSubject<WalletBalance, Never>(Balance(verified: 0, total: 0))
+        self.stateChanged = CurrentValueSubject<WrappedSDKSynchronizerState, Never>(.unknown)
     }
 
-    func prepareWith(initializer: Initializer) throws {
-        synchronizer = try SDKSynchronizer(initializer: initializer)
-        shieldedBalance = CurrentValueSubject<WalletBalance, Never>(
-            Balance(verified: 0, total: 0)
-        )
-        try synchronizer?.prepare()
-    }
+    func prepareWith(initializer: Initializer) throws { }
 
-    func start(retry: Bool) throws {
-        try synchronizer?.start(retry: retry)
-    }
+    func start(retry: Bool) throws { }
 
-    func stop() {
-        synchronizer?.stop()
-    }
+    func stop() { }
 
-    func updatePublishers() {
-    }
+    func synchronizerSynced() { }
 
-    func getTransparentAddress(account: Int) -> TransparentAddress? {
-        synchronizer?.getTransparentAddress(accountIndex: account)
+    func getShieldedBalance() -> Effect<Balance, Never> {
+        return .none
     }
     
-    func getShieldedAddress(account: Int) -> SaplingShieldedAddress? {
-        synchronizer?.getShieldedAddress(accountIndex: account)
-    }
+    func getTransparentAddress(account: Int) -> TransparentAddress? { nil }
+    
+    func getShieldedAddress(account: Int) -> SaplingShieldedAddress? { nil }
 }

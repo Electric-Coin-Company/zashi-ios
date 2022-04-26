@@ -13,7 +13,7 @@ class AppReducerTests: XCTestCase {
     static let testScheduler = DispatchQueue.test
 
     let testEnvironment = AppEnvironment(
-        combineSynchronizer: MockCombineSynchronizer(),
+        wrappedSDKSynchronizer: MockWrappedSDKSynchronizer(),
         databaseFiles: .throwing,
         mnemonicSeedPhraseProvider: .mock,
         scheduler: testScheduler.eraseToAnyScheduler(),
@@ -24,7 +24,7 @@ class AppReducerTests: XCTestCase {
 
     func testWalletInitializationState_Uninitialized() throws {
         let uninitializedEnvironment = AppEnvironment(
-            combineSynchronizer: MockCombineSynchronizer(),
+            wrappedSDKSynchronizer: MockWrappedSDKSynchronizer(),
             databaseFiles: .throwing,
             mnemonicSeedPhraseProvider: .mock,
             scheduler: DispatchQueue.test.eraseToAnyScheduler(),
@@ -46,7 +46,7 @@ class AppReducerTests: XCTestCase {
         )
 
         let keysMissingEnvironment = AppEnvironment(
-            combineSynchronizer: MockCombineSynchronizer(),
+            wrappedSDKSynchronizer: MockWrappedSDKSynchronizer(),
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
             mnemonicSeedPhraseProvider: .mock,
             scheduler: Self.testScheduler.eraseToAnyScheduler(),
@@ -68,7 +68,7 @@ class AppReducerTests: XCTestCase {
         )
 
         let keysMissingEnvironment = AppEnvironment(
-            combineSynchronizer: MockCombineSynchronizer(),
+            wrappedSDKSynchronizer: MockWrappedSDKSynchronizer(),
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
             mnemonicSeedPhraseProvider: .mock,
             scheduler: Self.testScheduler.eraseToAnyScheduler(),

@@ -41,7 +41,7 @@ enum AppAction: Equatable {
 }
 
 struct AppEnvironment {
-    let combineSynchronizer: CombineSynchronizer
+    let wrappedSDKSynchronizer: WrappedSDKSynchronizer
     let databaseFiles: DatabaseFilesInteractor
     let mnemonicSeedPhraseProvider: MnemonicSeedPhraseProvider
     let scheduler: AnySchedulerOf<DispatchQueue>
@@ -52,7 +52,7 @@ struct AppEnvironment {
 
 extension AppEnvironment {
     static let live = AppEnvironment(
-        combineSynchronizer: LiveCombineSynchronizer(),
+        wrappedSDKSynchronizer: LiveWrappedSDKSynchronizer(),
         databaseFiles: .live(),
         mnemonicSeedPhraseProvider: .live,
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
@@ -62,7 +62,7 @@ extension AppEnvironment {
     )
 
     static let mock = AppEnvironment(
-        combineSynchronizer: LiveCombineSynchronizer(),
+        wrappedSDKSynchronizer: LiveWrappedSDKSynchronizer(),
         databaseFiles: .live(),
         mnemonicSeedPhraseProvider: .mock,
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
@@ -153,8 +153,8 @@ extension AppReducer {
                     birthday: birthday,
                     with: environment
                 )
-                try environment.combineSynchronizer.prepareWith(initializer: initializer)
-                try environment.combineSynchronizer.start()
+                try environment.wrappedSDKSynchronizer.prepareWith(initializer: initializer)
+                try environment.wrappedSDKSynchronizer.start()
             } catch {
                 state.appInitializationState = .failed
                 // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
@@ -291,7 +291,7 @@ extension AppReducer {
         action: /AppAction.home,
         environment: { environment in
             HomeEnvironment(
-                combineSynchronizer: environment.combineSynchronizer
+                wrappedSDKSynchronizer: environment.wrappedSDKSynchronizer
             )
         }
     )
