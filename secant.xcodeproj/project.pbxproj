@@ -101,6 +101,8 @@
 		9E37A2B827C8F59F00AE57B3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E37A2B727C8F59F00AE57B3 /* Localizable.strings */; };
 		9E4DC6E027C409A100E657F4 /* NeumorphicDesignModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DC6DF27C409A100E657F4 /* NeumorphicDesignModifier.swift */; };
 		9E4DC6E227C4C6B700E657F4 /* SecantButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */; };
+		9E5BF63C2818305D00BA3F17 /* TransactionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF63B2818305D00BA3F17 /* TransactionState.swift */; };
+		9E5BF63F2819542C00BA3F17 /* TransactionHistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF63E2819542C00BA3F17 /* TransactionHistoryTests.swift */; };
 		9E69A24D27FB002800A55317 /* Welcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E69A24C27FB002800A55317 /* Welcome.swift */; };
 		9E80B47227E4B34B008FF493 /* UserPreferencesStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E80B47127E4B34B008FF493 /* UserPreferencesStorage.swift */; };
 		9EAFEB822805793200199FC9 /* AppReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB812805793200199FC9 /* AppReducerTests.swift */; };
@@ -264,6 +266,8 @@
 		9E37A2B727C8F59F00AE57B3 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		9E4DC6DF27C409A100E657F4 /* NeumorphicDesignModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeumorphicDesignModifier.swift; sourceTree = "<group>"; };
 		9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecantButtonStyles.swift; sourceTree = "<group>"; };
+		9E5BF63B2818305D00BA3F17 /* TransactionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionState.swift; sourceTree = "<group>"; };
+		9E5BF63E2819542C00BA3F17 /* TransactionHistoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoryTests.swift; sourceTree = "<group>"; };
 		9E69A24C27FB002800A55317 /* Welcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Welcome.swift; sourceTree = "<group>"; };
 		9E80B47127E4B34B008FF493 /* UserPreferencesStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreferencesStorage.swift; sourceTree = "<group>"; };
 		9EAFEB812805793200199FC9 /* AppReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReducerTests.swift; sourceTree = "<group>"; };
@@ -460,8 +464,9 @@
 		0D4E7A1926B364180058B01E /* secantTests */ = {
 			isa = PBXGroup;
 			children = (
-				9EAFEB802805791400199FC9 /* AppReducer */,
-				9EF8135927ECC25E0075AF48 /* Util */,
+				9E5BF63D281953F900BA3F17 /* TransactionHistoryTests */,
+				9EAFEB802805791400199FC9 /* AppReducerTests */,
+				9EF8135927ECC25E0075AF48 /* UtilTests */,
 				0DFE93E4272CB6D0000FCCA5 /* RecoveryPhraseValidationTests */,
 				0DFE93DD272C6D4B000FCCA5 /* BackupFlowTests */,
 				6654C7422715A48E00901167 /* OnboardingTests */,
@@ -779,12 +784,20 @@
 			path = Drawer;
 			sourceTree = "<group>";
 		};
-		9EAFEB802805791400199FC9 /* AppReducer */ = {
+		9E5BF63D281953F900BA3F17 /* TransactionHistoryTests */ = {
+			isa = PBXGroup;
+			children = (
+				9E5BF63E2819542C00BA3F17 /* TransactionHistoryTests.swift */,
+			);
+			path = TransactionHistoryTests;
+			sourceTree = "<group>";
+		};
+		9EAFEB802805791400199FC9 /* AppReducerTests */ = {
 			isa = PBXGroup;
 			children = (
 				9EAFEB812805793200199FC9 /* AppReducerTests.swift */,
 			);
-			path = AppReducer;
+			path = AppReducerTests;
 			sourceTree = "<group>";
 		};
 		9EAFEB8B2808174900199FC9 /* Sandbox */ = {
@@ -812,7 +825,7 @@
 			path = Preamble;
 			sourceTree = "<group>";
 		};
-		9EF8135927ECC25E0075AF48 /* Util */ = {
+		9EF8135927ECC25E0075AF48 /* UtilTests */ = {
 			isa = PBXGroup;
 			children = (
 				9EF8135A27ECC25E0075AF48 /* WalletStorageTests.swift */,
@@ -820,7 +833,7 @@
 				9EF8135B27ECC25E0075AF48 /* UserPreferencesStorageTests.swift */,
 				9E02B56B27FED475005B809B /* DatabaseFilesTests.swift */,
 			);
-			path = Util;
+			path = UtilTests;
 			sourceTree = "<group>";
 		};
 		F93874EC273C4DE200F0E875 /* Home */ = {
@@ -844,6 +857,7 @@
 			isa = PBXGroup;
 			children = (
 				F96B41E3273B501F0021B49A /* TransactionHistoryStore.swift */,
+				9E5BF63B2818305D00BA3F17 /* TransactionState.swift */,
 				F96B41E4273B501F0021B49A /* Views */,
 			);
 			path = TransactionHistory;
@@ -1273,6 +1287,7 @@
 				9E2DF99C27CF704D00649636 /* ImportWalletStore.swift in Sources */,
 				F9971A6627680DFE00A2DB75 /* SettingsView.swift in Sources */,
 				F96B41EB273B50520021B49A /* Strings.swift in Sources */,
+				9E5BF63C2818305D00BA3F17 /* TransactionState.swift in Sources */,
 				2EDA07A227EDE1AE00D6F09B /* TextFieldFooter.swift in Sources */,
 				F9971A5427680DD000A2DB75 /* ProfileView.swift in Sources */,
 				F9971A6027680DF600A2DB75 /* ScanStore.swift in Sources */,
@@ -1300,6 +1315,7 @@
 				9EAFEB862805A23100199FC9 /* WrappedSecItemTests.swift in Sources */,
 				0D1C1AA327611EFD0004AF6A /* RecoveryPhraseDisplayReducerTests.swift in Sources */,
 				9EAFEB822805793200199FC9 /* AppReducerTests.swift in Sources */,
+				9E5BF63F2819542C00BA3F17 /* TransactionHistoryTests.swift in Sources */,
 				0D4E7A1B26B364180058B01E /* secantTests.swift in Sources */,
 				0DFE93E6272CB6F7000FCCA5 /* RecoveryPhraseValidationTests.swift in Sources */,
 				9EF8135C27ECC25E0075AF48 /* WalletStorageTests.swift in Sources */,

@@ -1,6 +1,26 @@
 import SwiftUI
 import ComposableArchitecture
 
+struct Transaction: Identifiable, Equatable, Hashable {
+    var id: Int
+    var amount: UInt
+    var memo: String
+    var toAddress: String
+    var fromAddress: String
+}
+
+extension Transaction {
+    static var placeholder: Self {
+        .init(
+            id: 2,
+            amount: 123,
+            memo: "defaultMemo",
+            toAddress: "ToAddress",
+            fromAddress: "FromAddress"
+        )
+    }
+}
+
 struct SendView: View {
     enum Route: Equatable {
         case showApprove

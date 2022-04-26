@@ -27,7 +27,7 @@ enum SandboxAction: Equatable {
 typealias SandboxReducer = Reducer<SandboxState, SandboxAction, Void>
 
 extension SandboxReducer {
-    static let `default` = SandboxReducer { state, action, _ in
+    static let `default` = SandboxReducer { state, action, environment in
         switch action {
         case let .updateRoute(route):
             state.route = route
@@ -35,7 +35,14 @@ extension SandboxReducer {
         case let .transactionHistory(transactionHistoryAction):
             return TransactionHistoryReducer
                 .default
-                .run(&state.transactionHistoryState, transactionHistoryAction, ())
+                .run(
+                    &state.transactionHistoryState,
+                    transactionHistoryAction,
+                    TransactionHistoryEnvironment(
+                        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
+                        wrappedSDKSynchronizer: LiveWrappedSDKSynchronizer()
+                    )
+                )
                 .map(SandboxAction.transactionHistory)
         case let .profile(profileAction):
             return ProfileReducer
@@ -83,10 +90,10 @@ extension SandboxViewStore {
         let isAlreadySelected = (self.selectedTranactionID != nil)
         let transcation = self.transactionHistoryState.transactions[5]
         let newRoute = isAlreadySelected ? nil : TransactionHistoryState.Route.showTransaction(transcation)
-        send(.transactionHistory(.setRoute(newRoute)))
+        send(.transactionHistory(.updateRoute(newRoute)))
     }
 
-    var selectedTranactionID: Int? {
+    var selectedTranactionID: String? {
         self.transactionHistoryState
             .route
             .flatMap(/TransactionHistoryState.Route.showTransaction)

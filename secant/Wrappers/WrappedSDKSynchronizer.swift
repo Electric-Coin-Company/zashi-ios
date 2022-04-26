@@ -47,6 +47,9 @@ protocol WrappedSDKSynchronizer {
     func synchronizerSynced()
 
     func getShieldedBalance() -> Effect<Balance, Never>
+    func getAllClearedTransactions() -> Effect<[TransactionState], Never>
+    func getAllPendingTransactions() -> Effect<[TransactionState], Never>
+    func getAllTransactions() -> Effect<[TransactionState], Never>
 
     func getTransparentAddress(account: Int) -> TransparentAddress?
     func getShieldedAddress(account: Int) -> SaplingShieldedAddress?
@@ -88,7 +91,7 @@ class LiveWrappedSDKSynchronizer: WrappedSDKSynchronizer {
                 self?.synchronizerSynced()
             })
             .store(in: &cancellables)
-        
+                
         try synchronizer?.prepare()
     }
 
@@ -113,6 +116,38 @@ class LiveWrappedSDKSynchronizer: WrappedSDKSynchronizer {
         return .none
     }
     
+    func getAllClearedTransactions() -> Effect<[TransactionState], Never> {
+        if let clearedTransactions = try? synchronizer?.allClearedTransactions() {
+            return Effect(value: clearedTransactions.map {
+                TransactionState.init(confirmedTransaction: $0, sent: ($0.toAddress != nil))
+            })
+        }
+        
+        return .none
+    }
+    
+    func getAllPendingTransactions() -> Effect<[TransactionState], Never> {
+        if let pendingTransactions = try? synchronizer?.allPendingTransactions(),
+        let syncedBlockHeight = synchronizer?.latestScannedHeight {
+            return Effect(value: pendingTransactions.map {
+                // TODO: - can we initialize it with latestBlockHeight: = nil?
+                TransactionState.init(pendingTransaction: $0, latestBlockHeight: syncedBlockHeight)
+            })
+        }
+        
+        return .none
+    }
+
+    func getAllTransactions() -> Effect<[TransactionState], Never> {
+        return .merge(
+            getAllClearedTransactions(),
+            getAllPendingTransactions()
+        )
+        .flatMap(Publishers.Sequence.init(sequence:))
+        .collect()
+        .eraseToEffect()
+    }
+
     func getTransparentAddress(account: Int) -> TransparentAddress? {
         synchronizer?.getTransparentAddress(accountIndex: account)
     }
@@ -123,6 +158,108 @@ class LiveWrappedSDKSynchronizer: WrappedSDKSynchronizer {
 }
 
 class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
+    private var cancellables: [AnyCancellable] = []
+    private(set) var synchronizer: SDKSynchronizer?
+    private(set) var stateChanged: CurrentValueSubject<WrappedSDKSynchronizerState, Never>
+
+    init() {
+        self.stateChanged = CurrentValueSubject<WrappedSDKSynchronizerState, Never>(.unknown)
+    }
+
+    deinit {
+        synchronizer?.stop()
+    }
+
+    func prepareWith(initializer: Initializer) throws {
+        synchronizer = try SDKSynchronizer(initializer: initializer)
+
+        NotificationCenter.default.publisher(for: .synchronizerSynced)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.synchronizerSynced()
+            })
+            .store(in: &cancellables)
+        
+        try synchronizer?.prepare()
+    }
+
+    func start(retry: Bool) throws {
+        try synchronizer?.start(retry: retry)
+    }
+
+    func stop() {
+        synchronizer?.stop()
+    }
+
+    func synchronizerSynced() {
+        stateChanged.send(.synced)
+    }
+
+    func getShieldedBalance() -> Effect<Balance, Never> {
+        return Effect(value: Balance(verified: 12345000, total: 12345000))
+    }
+    
+    func getAllClearedTransactions() -> Effect<[TransactionState], Never> {
+        let mocked: [TransactionStateMockHelper] = [
+            TransactionStateMockHelper(date: 1651039202, amount: 1, status: .paid(success: false)),
+            TransactionStateMockHelper(date: 1651039101, amount: 2),
+            TransactionStateMockHelper(date: 1651039000, amount: 3, status: .paid(success: true)),
+            TransactionStateMockHelper(date: 1651039505, amount: 4),
+            TransactionStateMockHelper(date: 1651039404, amount: 5)
+        ]
+        
+        return Effect(
+            value:
+                mocked.map {
+                    TransactionState.placeholder(
+                        date: Date.init(timeIntervalSince1970: $0.date),
+                        amount: $0.amount * 100000000,
+                        shielded: $0.shielded,
+                        status: $0.status,
+                        subtitle: $0.subtitle
+                    )
+                }
+        )
+    }
+
+    func getAllPendingTransactions() -> Effect<[TransactionState], Never> {
+        let mocked: [TransactionStateMockHelper] = [
+            TransactionStateMockHelper(date: 1651039606, amount: 6, status: .paid(success: false), subtitle: "pending"),
+            TransactionStateMockHelper(date: 1651039303, amount: 7, subtitle: "pending"),
+            TransactionStateMockHelper(date: 1651039707, amount: 8, status: .paid(success: true), subtitle: "pending"),
+            TransactionStateMockHelper(date: 1651039808, amount: 9, subtitle: "pending")
+        ]
+        
+        return Effect(
+            value:
+                mocked.map {
+                    TransactionState.placeholder(
+                        date: Date.init(timeIntervalSince1970: $0.date),
+                        amount: $0.amount * 100000000,
+                        shielded: $0.shielded,
+                        status: $0.status,
+                        subtitle: $0.subtitle
+                    )
+                }
+        )
+    }
+
+    func getAllTransactions() -> Effect<[TransactionState], Never> {
+        return .merge(
+            getAllClearedTransactions(),
+            getAllPendingTransactions()
+        )
+        .flatMap(Publishers.Sequence.init(sequence:))
+        .collect()
+        .eraseToEffect()
+    }
+
+    func getTransparentAddress(account: Int) -> TransparentAddress? { nil }
+    
+    func getShieldedAddress(account: Int) -> SaplingShieldedAddress? { nil }
+}
+
+class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     private(set) var synchronizer: SDKSynchronizer?
     private(set) var stateChanged: CurrentValueSubject<WrappedSDKSynchronizerState, Never>
 
@@ -142,6 +279,63 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
         return .none
     }
     
+    func getAllClearedTransactions() -> Effect<[TransactionState], Never> {
+        let mocked: [TransactionStateMockHelper] = [
+            TransactionStateMockHelper(date: 1651039202, amount: 1, status: .paid(success: false), uuid: "aa11"),
+            TransactionStateMockHelper(date: 1651039101, amount: 2, uuid: "bb22"),
+            TransactionStateMockHelper(date: 1651039000, amount: 3, status: .paid(success: true), uuid: "cc33"),
+            TransactionStateMockHelper(date: 1651039505, amount: 4, uuid: "dd44"),
+            TransactionStateMockHelper(date: 1651039404, amount: 5, uuid: "ee55")
+        ]
+        
+        return Effect(
+            value:
+                mocked.map {
+                    TransactionState.placeholder(
+                        date: Date.init(timeIntervalSince1970: $0.date),
+                        amount: $0.amount * 100000000,
+                        shielded: $0.shielded,
+                        status: $0.status,
+                        subtitle: $0.subtitle,
+                        uuid: $0.uuid
+                    )
+                }
+        )
+    }
+
+    func getAllPendingTransactions() -> Effect<[TransactionState], Never> {
+        let mocked: [TransactionStateMockHelper] = [
+            TransactionStateMockHelper(date: 1651039606, amount: 6, status: .paid(success: false), subtitle: "pending", uuid: "ff66"),
+            TransactionStateMockHelper(date: 1651039303, amount: 7, subtitle: "pending", uuid: "gg77"),
+            TransactionStateMockHelper(date: 1651039707, amount: 8, status: .paid(success: true), subtitle: "pending", uuid: "hh88"),
+            TransactionStateMockHelper(date: 1651039808, amount: 9, subtitle: "pending", uuid: "ii99")
+        ]
+        
+        return Effect(
+            value:
+                mocked.map {
+                    TransactionState.placeholder(
+                        date: Date.init(timeIntervalSince1970: $0.date),
+                        amount: $0.amount * 100000000,
+                        shielded: $0.shielded,
+                        status: $0.status,
+                        subtitle: $0.subtitle,
+                        uuid: $0.uuid
+                    )
+                }
+        )
+    }
+
+    func getAllTransactions() -> Effect<[TransactionState], Never> {
+        return .merge(
+            getAllClearedTransactions(),
+            getAllPendingTransactions()
+        )
+        .flatMap(Publishers.Sequence.init(sequence:))
+        .collect()
+        .eraseToEffect()
+    }
+
     func getTransparentAddress(account: Int) -> TransparentAddress? { nil }
     
     func getShieldedAddress(account: Int) -> SaplingShieldedAddress? { nil }

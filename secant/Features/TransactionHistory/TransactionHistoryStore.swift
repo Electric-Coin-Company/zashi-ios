@@ -1,37 +1,79 @@
 import ComposableArchitecture
 import SwiftUI
 
-struct Transaction: Identifiable, Equatable, Hashable {
-    var id: Int
-    var amount: UInt
-    var memo: String
-    var toAddress: String
-    var fromAddress: String
+extension Date {
+    func asHumanReadable() -> String {
+        let dateFormatter = DateFormatter()
+        
+        dateFormatter.dateStyle = .short
+        dateFormatter.timeStyle = .short
+        
+        return dateFormatter.string(from: self)
+    }
 }
 
 struct TransactionHistoryState: Equatable {
     enum Route: Equatable {
-        case showTransaction(Transaction)
+        case latest
+        case all
+        case showTransaction(TransactionState)
     }
 
     var route: Route?
 
     var isScrollable = false
-    var transactions: IdentifiedArrayOf<Transaction>
+    var transactions: IdentifiedArrayOf<TransactionState>
 }
 
 enum TransactionHistoryAction: Equatable {
-    case setRoute(TransactionHistoryState.Route?)
+    case onAppear
+    case onDisappear
+    case updateRoute(TransactionHistoryState.Route?)
+    case synchronizerStateChanged(WrappedSDKSynchronizerState)
+    case updateTransactions([TransactionState])
+}
+
+struct TransactionHistoryEnvironment {
+    let scheduler: AnySchedulerOf<DispatchQueue>
+    let wrappedSDKSynchronizer: WrappedSDKSynchronizer
 }
 
 // MARK: - TransactionHistoryReducer
 
-typealias TransactionHistoryReducer = Reducer<TransactionHistoryState, TransactionHistoryAction, Void>
+private struct ListenerId: Hashable {}
+
+typealias TransactionHistoryReducer = Reducer<TransactionHistoryState, TransactionHistoryAction, TransactionHistoryEnvironment>
 
 extension TransactionHistoryReducer {
-    static let `default` = TransactionHistoryReducer { state, action, _ in
+    static let `default` = TransactionHistoryReducer { state, action, environment in
         switch action {
-        case let .setRoute(route):
+        case .onAppear:
+            return environment.wrappedSDKSynchronizer.stateChanged
+                .map(TransactionHistoryAction.synchronizerStateChanged)
+                .eraseToEffect()
+                .cancellable(id: ListenerId(), cancelInFlight: true)
+
+        case .onDisappear:
+            return Effect.cancel(id: ListenerId())
+
+        case .synchronizerStateChanged(.synced):
+            return environment.wrappedSDKSynchronizer.getAllTransactions()
+                .receive(on: environment.scheduler)
+                .map(TransactionHistoryAction.updateTransactions)
+                .eraseToEffect()
+            
+        case .synchronizerStateChanged(let synchronizerState):
+            return .none
+            
+        case .updateTransactions(let transactions):
+            let sortedTransactions = transactions
+                .sorted(by: { lhs, rhs in
+                    lhs.date > rhs.date
+                })
+            state.transactions = IdentifiedArrayOf(uniqueElements: sortedTransactions)
+            return .none
+
+        case let .updateRoute(route):
             state.route = route
             return .none
         }
@@ -49,11 +91,11 @@ typealias TransactionHistoryViewStore = ViewStore<TransactionHistoryState, Trans
 extension TransactionHistoryViewStore {
     private typealias Route = TransactionHistoryState.Route
 
-    func bindingForSelectingTransaction(_ transaction: Transaction) -> Binding<Bool> {
+    func bindingForSelectingTransaction(_ transaction: TransactionState) -> Binding<Bool> {
         self.binding(
             get: { $0.route.map(/TransactionHistoryState.Route.showTransaction) == transaction },
             send: { isActive in
-                TransactionHistoryAction.setRoute( isActive ? TransactionHistoryState.Route.showTransaction(transaction) : nil)
+                TransactionHistoryAction.updateRoute( isActive ? TransactionHistoryState.Route.showTransaction(transaction) : nil)
             }
         )
     }
@@ -61,14 +103,14 @@ extension TransactionHistoryViewStore {
 
 // MARK: PlaceHolders
 
-extension Transaction {
+extension TransactionState {
     static var placeholder: Self {
         .init(
-            id: 2,
-            amount: 123,
-            memo: "defaultMemo",
-            toAddress: "ToAddress",
-            fromAddress: "FromAddress"
+            date: Date.init(timeIntervalSince1970: 1234567),
+            id: "2",
+            status: .paid(success: true),
+            subtitle: "",
+            zecAmount: 25
         )
     }
 }
@@ -77,6 +119,10 @@ extension TransactionHistoryState {
     static var placeHolder: Self {
         .init(transactions: .placeholder)
     }
+
+    static var emptyPlaceHolder: Self {
+        .init(transactions: [])
+    }
 }
 
 extension TransactionHistoryStore {
@@ -84,33 +130,39 @@ extension TransactionHistoryStore {
         return Store(
             initialState: .placeHolder,
             reducer: .default,
-            environment: ()
+            environment: TransactionHistoryEnvironment(
+                scheduler: DispatchQueue.main.eraseToAnyScheduler(),
+                wrappedSDKSynchronizer: LiveWrappedSDKSynchronizer()
+            )
         )
     }
 
     static var demoWithSelectedTransaction: Store<TransactionHistoryState, TransactionHistoryAction> {
-        let transactions = IdentifiedArrayOf<Transaction>.placeholder
+        let transactions = IdentifiedArrayOf<TransactionState>.placeholder
         return Store(
             initialState: TransactionHistoryState(
                 route: .showTransaction(transactions[3]),
                 transactions: transactions
             ),
             reducer: .default.debug(),
-            environment: ()
+            environment: TransactionHistoryEnvironment(
+                scheduler: DispatchQueue.main.eraseToAnyScheduler(),
+                wrappedSDKSynchronizer: LiveWrappedSDKSynchronizer()
+            )
         )
     }
 }
 
-extension IdentifiedArrayOf where Element == Transaction {
-    static var placeholder: IdentifiedArrayOf<Transaction> {
+extension IdentifiedArrayOf where Element == TransactionState {
+    static var placeholder: IdentifiedArrayOf<TransactionState> {
         return .init(
             uniqueElements: (0..<30).map {
-                Transaction(
-                    id: $0,
-                    amount: 25,
-                    memo: "defaultMemo",
-                    toAddress: "ToAddress",
-                    fromAddress: "FromAddress"
+                TransactionState(
+                    date: Date.init(timeIntervalSince1970: 1234567),
+                    id: String($0),
+                    status: .paid(success: true),
+                    subtitle: "",
+                    zecAmount: 25
                 )
             }
         )
