@@ -161,6 +161,7 @@ extension HomeStore {
             initialState: .placeholder,
             reducer: .default.debug(),
             environment: HomeEnvironment(
+                scheduler: DispatchQueue.main.eraseToAnyScheduler(),
                 wrappedSDKSynchronizer: LiveWrappedSDKSynchronizer()
             )
         )

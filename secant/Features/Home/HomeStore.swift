@@ -34,9 +34,11 @@ enum HomeAction: Equatable {
     case updateBalance(Balance)
     case updateDrawer(DrawerOverlay)
     case updateRoute(HomeState.Route?)
+    case updateTransactions([TransactionState])
 }
 
 struct HomeEnvironment {
+    let scheduler: AnySchedulerOf<DispatchQueue>
     let wrappedSDKSynchronizer: WrappedSDKSynchronizer
 }
 
@@ -47,7 +49,15 @@ private struct ListenerId: Hashable {}
 typealias HomeReducer = Reducer<HomeState, HomeAction, HomeEnvironment>
 
 extension HomeReducer {
-    static let `default` = HomeReducer { state, action, environment in
+    static let `default` = HomeReducer.combine(
+        [
+            homeReducer,
+            historyReducer
+        ]
+    )
+    .debug()
+
+    private static let homeReducer = HomeReducer { state, action, environment in
         switch action {
         case .onAppear:
             return environment.wrappedSDKSynchronizer.stateChanged
@@ -59,11 +69,18 @@ extension HomeReducer {
             return Effect.cancel(id: ListenerId())
 
         case .synchronizerStateChanged(.synced):
-            return environment.wrappedSDKSynchronizer.getShieldedBalance()
-                .receive(on: DispatchQueue.main)
-                .map({ Balance(verified: $0.verified, total: $0.total) })
-                .map(HomeAction.updateBalance)
-                .eraseToEffect()
+            return .merge(
+                environment.wrappedSDKSynchronizer.getAllClearedTransactions()
+                    .receive(on: environment.scheduler)
+                    .map(HomeAction.updateTransactions)
+                    .eraseToEffect(),
+                
+                environment.wrappedSDKSynchronizer.getShieldedBalance()
+                    .receive(on: environment.scheduler)
+                    .map({ Balance(verified: $0.verified, total: $0.total) })
+                    .map(HomeAction.updateBalance)
+                    .eraseToEffect()
+            )
             
         case .synchronizerStateChanged(let synchronizerState):
             return .none
@@ -81,11 +98,8 @@ extension HomeReducer {
             state.transactionHistoryState.isScrollable = drawerOverlay == .full ? true : false
             return .none
             
-        case .transactionHistory(let historyAction):
-            return TransactionHistoryReducer
-                .default
-                .run(&state.transactionHistoryState, historyAction, ())
-                .map(HomeAction.transactionHistory)
+        case .updateTransactions(let transactions):
+            return .none
             
         case .updateRoute(let route):
             state.route = route
@@ -102,8 +116,28 @@ extension HomeReducer {
 
         case .scan(let action):
             return .none
+            
+        case .transactionHistory(.updateRoute(.all)):
+            return state.drawerOverlay != .full ? Effect(value: .updateDrawer(.full)) : .none
+
+        case .transactionHistory(.updateRoute(.latest)):
+            return state.drawerOverlay != .partial ? Effect(value: .updateDrawer(.partial)) : .none
+
+        case .transactionHistory(let historyAction):
+            return .none
         }
     }
+    
+    private static let historyReducer: HomeReducer = TransactionHistoryReducer.default.pullback(
+        state: \HomeState.transactionHistoryState,
+        action: /HomeAction.transactionHistory,
+        environment: { environment in
+            TransactionHistoryEnvironment(
+                scheduler: environment.scheduler,
+                wrappedSDKSynchronizer: environment.wrappedSDKSynchronizer
+            )
+        }
+    )
 }
 
 // MARK: - HomeViewStore
@@ -180,7 +214,7 @@ extension HomeState {
             sendState: .placeholder,
             scanState: .placeholder,
             totalBalance: 0.0,
-            transactionHistoryState: .placeHolder,
+            transactionHistoryState: .emptyPlaceHolder,
             verifiedBalance: 0.0
         )
     }

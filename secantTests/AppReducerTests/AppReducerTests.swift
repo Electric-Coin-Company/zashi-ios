@@ -13,7 +13,7 @@ class AppReducerTests: XCTestCase {
     static let testScheduler = DispatchQueue.test
 
     let testEnvironment = AppEnvironment(
-        wrappedSDKSynchronizer: MockWrappedSDKSynchronizer(),
+        wrappedSDKSynchronizer: TestWrappedSDKSynchronizer(),
         databaseFiles: .throwing,
         mnemonicSeedPhraseProvider: .mock,
         scheduler: testScheduler.eraseToAnyScheduler(),
@@ -24,7 +24,7 @@ class AppReducerTests: XCTestCase {
 
     func testWalletInitializationState_Uninitialized() throws {
         let uninitializedEnvironment = AppEnvironment(
-            wrappedSDKSynchronizer: MockWrappedSDKSynchronizer(),
+            wrappedSDKSynchronizer: TestWrappedSDKSynchronizer(),
             databaseFiles: .throwing,
             mnemonicSeedPhraseProvider: .mock,
             scheduler: DispatchQueue.test.eraseToAnyScheduler(),
@@ -46,7 +46,7 @@ class AppReducerTests: XCTestCase {
         )
 
         let keysMissingEnvironment = AppEnvironment(
-            wrappedSDKSynchronizer: MockWrappedSDKSynchronizer(),
+            wrappedSDKSynchronizer: TestWrappedSDKSynchronizer(),
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
             mnemonicSeedPhraseProvider: .mock,
             scheduler: Self.testScheduler.eraseToAnyScheduler(),
@@ -68,7 +68,7 @@ class AppReducerTests: XCTestCase {
         )
 
         let keysMissingEnvironment = AppEnvironment(
-            wrappedSDKSynchronizer: MockWrappedSDKSynchronizer(),
+            wrappedSDKSynchronizer: TestWrappedSDKSynchronizer(),
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
             mnemonicSeedPhraseProvider: .mock,
             scheduler: Self.testScheduler.eraseToAnyScheduler(),
@@ -150,7 +150,7 @@ class AppReducerTests: XCTestCase {
             // failed is expected because environment is throwing errors
             state.appInitializationState = .failed
         }
-        
+
         store.receive(.checkBackupPhraseValidation) { state in
             // failed is expected because environment is throwing errors
             state.appInitializationState = .failed
