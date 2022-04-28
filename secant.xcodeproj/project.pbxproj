@@ -142,7 +142,7 @@
 		F9971A6C27680E1000A2DB75 /* WalletInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A6A27680E1000A2DB75 /* WalletInfoView.swift */; };
 		F9C165B4274031F600592F76 /* Bindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165B3274031F600592F76 /* Bindings.swift */; };
 		F9C165BF2740403600592F76 /* SendStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165B72740403600592F76 /* SendStore.swift */; };
-		F9C165C02740403600592F76 /* ApproveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165B92740403600592F76 /* ApproveView.swift */; };
+		F9C165C02740403600592F76 /* ConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165B92740403600592F76 /* ConfirmationView.swift */; };
 		F9C165C22740403600592F76 /* CreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165BB2740403600592F76 /* CreateView.swift */; };
 		F9C165C42740403600592F76 /* SentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165BD2740403600592F76 /* SentView.swift */; };
 		F9C165CB2741AB5D00592F76 /* SendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165CA2741AB5D00592F76 /* SendView.swift */; };
@@ -306,7 +306,7 @@
 		F9971A6A27680E1000A2DB75 /* WalletInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletInfoView.swift; sourceTree = "<group>"; };
 		F9C165B3274031F600592F76 /* Bindings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bindings.swift; sourceTree = "<group>"; };
 		F9C165B72740403600592F76 /* SendStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendStore.swift; sourceTree = "<group>"; };
-		F9C165B92740403600592F76 /* ApproveView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApproveView.swift; sourceTree = "<group>"; };
+		F9C165B92740403600592F76 /* ConfirmationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmationView.swift; sourceTree = "<group>"; };
 		F9C165BB2740403600592F76 /* CreateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateView.swift; sourceTree = "<group>"; };
 		F9C165BD2740403600592F76 /* SentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SentView.swift; sourceTree = "<group>"; };
 		F9C165CA2741AB5D00592F76 /* SendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendView.swift; sourceTree = "<group>"; };
@@ -989,7 +989,7 @@
 			children = (
 				F9C165CA2741AB5D00592F76 /* SendView.swift */,
 				F9C165BB2740403600592F76 /* CreateView.swift */,
-				F9C165B92740403600592F76 /* ApproveView.swift */,
+				F9C165B92740403600592F76 /* ConfirmationView.swift */,
 				F9C165BD2740403600592F76 /* SentView.swift */,
 			);
 			path = Views;
@@ -1268,7 +1268,7 @@
 				663FAB9C271D874D00E495F8 /* ActiveButton.swift in Sources */,
 				9E2F1C842809B606004E65FE /* DebugMenu.swift in Sources */,
 				9E02B5C3280458D2005B809B /* WrappedDerivationTool.swift in Sources */,
-				F9C165C02740403600592F76 /* ApproveView.swift in Sources */,
+				F9C165C02740403600592F76 /* ConfirmationView.swift in Sources */,
 				0DF2DC5427235E3E00FA31E2 /* View+InnerShadow.swift in Sources */,
 				9EAFEB84280597B700199FC9 /* WrappedSecItem.swift in Sources */,
 				9E2AC10327DA28200042AA47 /* WalletStorage.swift in Sources */,

@@ -6,38 +6,62 @@ struct Create: View {
     @Binding var isComplete: Bool
 
     var body: some View {
-        VStack {
+        UITextView.appearance().backgroundColor = .clear
+        
+        return VStack {
+            VStack {
+                Text("Zatoshi Amount")
+
+                TextField(
+                    "Zatoshi Amount",
+                    text: $transaction
+                        .amount
+                        .compactMap(
+                            extract: String.init,
+                            embed: UInt.init
+                        )
+                )
+                .padding()
+                .background(Color.white)
+                .foregroundColor(Asset.Colors.Text.importSeedEditor.color)
+            }
+            .padding()
+
+            VStack {
+                Text("To Address")
+                
+                TextField(
+                    "Address",
+                    text: $transaction.toAddress
+                )
+                .font(.system(size: 14))
+                .padding()
+                .background(Color.white)
+                .foregroundColor(Asset.Colors.Text.importSeedEditor.color)
+            }
+            .padding()
+            
+            VStack {
+                Text("Memo")
+                
+                TextEditor(text: $transaction.memo)
+                    .frame(maxWidth: .infinity, maxHeight: 150, alignment: .center)
+                    .importSeedEditorModifier()
+            }
+            .padding()
+
             Button(
                 action: { isComplete = true },
-                label: { Text("Go To Approve") }
+                label: { Text("Send") }
             )
-            .primaryButtonStyle
+            .activeButtonStyle
             .frame(height: 50)
             .padding()
-
-            TextField(
-                "Amount",
-                text: $transaction
-                    .amount
-                    .compactMap(
-                        extract: String.init,
-                        embed: UInt.init
-                    )
-            )
-            .padding()
-
-            TextField(
-                "Address",
-                text: $transaction.toAddress
-            )
-
-            Text("\(String(dumping: transaction))")
-            Text("\(String(dumping: isComplete))")
 
             Spacer()
         }
         .padding()
-        .navigationTitle(Text("1. Create"))
+        .applyScreenBackground()
     }
 }
 
@@ -46,13 +70,19 @@ struct Create: View {
 struct Create_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            StateContainer(initialState: (Transaction.placeholder, false)) {
+            StateContainer(
+                initialState: (
+                    Transaction.placeholder,
+                    false
+                )
+            ) {
                 Create(
                     transaction: $0.0,
                     isComplete: $0.1
                 )
             }
             .navigationBarTitleDisplayMode(.inline)
+            .preferredColorScheme(.dark)
         }
     }
 }
@@ -66,7 +96,10 @@ extension SendStore {
                 route: nil
             ),
             reducer: .default,
-            environment: ()
+            environment: SendEnvironment(
+                scheduler: DispatchQueue.main.eraseToAnyScheduler(),
+                wrappedSDKSynchronizer: LiveWrappedSDKSynchronizer()
+            )
         )
     }
 }

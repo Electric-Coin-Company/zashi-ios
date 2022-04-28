@@ -1,41 +1,75 @@
 import SwiftUI
 import ComposableArchitecture
 
+struct Transaction: Equatable {
+    var amount: UInt
+    var memo: String
+    var toAddress: String
+}
+
+extension Transaction {
+    static var placeholder: Self {
+        .init(
+            amount: 10000,
+            memo: "Hi, sending you lorem ipsum",
+            toAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
+        )
+    }
+}
+
 struct SendState: Equatable {
+    enum Route: Equatable {
+        case showConfirmation
+        case showSent
+        case done
+    }
+
     var transaction: Transaction
-    var route: SendView.Route?
+    var route: Route?
 }
 
 enum SendAction: Equatable {
+    case sendConfirmationPressed
     case updateTransaction(Transaction)
-    case updateRoute(SendView.Route?)
+    case updateRoute(SendState.Route?)
+}
+
+struct SendEnvironment {
+    let scheduler: AnySchedulerOf<DispatchQueue>
+    let wrappedSDKSynchronizer: WrappedSDKSynchronizer
 }
 
 // MARK: - SendReducer
 
-typealias SendReducer = Reducer<SendState, SendAction, Void>
+typealias SendReducer = Reducer<SendState, SendAction, SendEnvironment>
 
 extension SendReducer {
     private struct SyncStatusUpdatesID: Hashable {}
 
-    static let `default` = Reducer<SendState, SendAction, Void> { state, action, _ in
+    static let `default` = Reducer<SendState, SendAction, SendEnvironment> { state, action, environment in
         switch action {
         case let .updateTransaction(transaction):
             state.transaction = transaction
             return .none
+            
         case let .updateRoute(route):
             state.route = route
+            return .none
+            
+        case .sendConfirmationPressed:
+            print("sending")
+            //environment.wrappedSDKSynchronizer.
             return .none
         }
     }
 
     static func `default`(whenDone: @escaping () -> Void) -> SendReducer {
-        SendReducer { state, action, _ in
+        SendReducer { state, action, environment in
             switch action {
             case let .updateRoute(route) where route == .done:
                 return Effect.fireAndForget(whenDone)
             default:
-                return Self.default.run(&state, action, ())
+                return Self.default.run(&state, action, environment)
             }
         }
     }
@@ -57,31 +91,17 @@ extension SendViewStore {
         )
     }
 
-    var routeBinding: Binding<SendView.Route?> {
+    var routeBinding: Binding<SendState.Route?> {
         self.binding(
             get: \.route,
             send: SendAction.updateRoute
         )
     }
 
-    var bindingForApprove: Binding<Bool> {
+    var bindingForConfirmation: Binding<Bool> {
         self.routeBinding.map(
-            extract: { $0 == .showApprove || self.bindingForSent.wrappedValue },
-            embed: { $0 ? SendView.Route.showApprove : nil }
-        )
-    }
-
-    var bindingForSent: Binding<Bool> {
-        self.routeBinding.map(
-            extract: { $0 == .showSent || self.bindingForDone.wrappedValue },
-            embed: { $0 ? SendView.Route.showSent : SendView.Route.showApprove }
-        )
-    }
-
-    var bindingForDone: Binding<Bool> {
-        self.routeBinding.map(
-            extract: { $0 == .done },
-            embed: { $0 ? SendView.Route.done : SendView.Route.showSent }
+            extract: { $0 == .showConfirmation },
+            embed: { $0 ? SendState.Route.showConfirmation : nil }
         )
     }
 }
@@ -91,5 +111,16 @@ extension SendViewStore {
 extension SendState {
     static var placeholder: Self {
         .init(transaction: .placeholder, route: nil)
+    }
+
+    static var emptyPlaceholder: Self {
+        .init(
+            transaction: .init(
+                amount: 0,
+                memo: "",
+                toAddress: ""
+            ),
+            route: nil
+        )
     }
 }

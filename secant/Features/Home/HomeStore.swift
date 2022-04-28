@@ -52,7 +52,8 @@ extension HomeReducer {
     static let `default` = HomeReducer.combine(
         [
             homeReducer,
-            historyReducer
+            historyReducer,
+            sendReducer
         ]
     )
     .debug()
@@ -133,6 +134,17 @@ extension HomeReducer {
         action: /HomeAction.transactionHistory,
         environment: { environment in
             TransactionHistoryEnvironment(
+                scheduler: environment.scheduler,
+                wrappedSDKSynchronizer: environment.wrappedSDKSynchronizer
+            )
+        }
+    )
+    
+    private static let sendReducer: HomeReducer = SendReducer.default.pullback(
+        state: \HomeState.sendState,
+        action: /HomeAction.send,
+        environment: { environment in
+            SendEnvironment(
                 scheduler: environment.scheduler,
                 wrappedSDKSynchronizer: environment.wrappedSDKSynchronizer
             )

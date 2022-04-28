@@ -26,7 +26,10 @@ struct SandboxView: View {
                         whenDone: { SandboxViewStore(store).send(.updateRoute(nil)) }
                     )
                     .debug(),
-                    environment: ()
+                    environment: SendEnvironment(
+                        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
+                        wrappedSDKSynchronizer: LiveWrappedSDKSynchronizer()
+                    )
                 )
             )
         case .recoveryPhraseDisplay:
