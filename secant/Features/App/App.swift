@@ -52,7 +52,7 @@ struct AppEnvironment {
 
 extension AppEnvironment {
     static let live = AppEnvironment(
-        wrappedSDKSynchronizer: MockWrappedSDKSynchronizer(),
+        wrappedSDKSynchronizer: LiveWrappedSDKSynchronizer(),
         databaseFiles: .live(),
         mnemonicSeedPhraseProvider: .live,
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
@@ -291,7 +291,10 @@ extension AppReducer {
         action: /AppAction.home,
         environment: { environment in
             HomeEnvironment(
+                mnemonicSeedPhraseProvider: environment.mnemonicSeedPhraseProvider,
                 scheduler: environment.scheduler,
+                walletStorage: environment.walletStorage,
+                wrappedDerivationTool: environment.wrappedDerivationTool,
                 wrappedSDKSynchronizer: environment.wrappedSDKSynchronizer
             )
         }

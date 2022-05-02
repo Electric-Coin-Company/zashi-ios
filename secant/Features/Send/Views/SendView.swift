@@ -1,57 +1,27 @@
 import SwiftUI
 import ComposableArchitecture
 
-struct Transaction: Identifiable, Equatable, Hashable {
-    var id: Int
-    var amount: UInt
-    var memo: String
-    var toAddress: String
-    var fromAddress: String
-}
-
-extension Transaction {
-    static var placeholder: Self {
-        .init(
-            id: 2,
-            amount: 123,
-            memo: "defaultMemo",
-            toAddress: "ToAddress",
-            fromAddress: "FromAddress"
-        )
-    }
-}
-
 struct SendView: View {
-    enum Route: Equatable {
-        case showApprove
-        case showSent
-        case done
-    }
-
     let store: Store<SendState, SendAction>
 
     var body: some View {
         WithViewStore(store) { viewStore in
-            Create(
+            CreateTransaction(
                 transaction: viewStore.bindingForTransaction,
-                isComplete: viewStore.bindingForApprove
+                isComplete: viewStore.bindingForConfirmation
             )
             .navigationLinkEmpty(
-                isActive: viewStore.bindingForApprove,
+                isActive: viewStore.bindingForConfirmation,
                 destination: {
-                    Approve(
-                        transaction: viewStore.transaction,
-                        isComplete: viewStore.bindingForSent
-                    )
-                    .navigationLinkEmpty(
-                        isActive: viewStore.bindingForSent,
-                        destination: {
-                            Sent(
-                                transaction: viewStore.transaction,
-                                isComplete: viewStore.bindingForDone
-                            )
-                        }
-                    )
+                    TransactionConfirmation(viewStore: viewStore)
+                        .navigationLinkEmpty(
+                            isActive: viewStore.bindingForSuccess,
+                            destination: { TransactionSent(viewStore: viewStore) }
+                        )
+                        .navigationLinkEmpty(
+                            isActive: viewStore.bindingForFailure,
+                            destination: { TransactionFailed(viewStore: viewStore) }
+                        )
                 }
             )
         }
@@ -64,11 +34,17 @@ struct SendView_Previews: PreviewProvider {
             SendView(
                 store: .init(
                     initialState: .init(
-                        transaction: .placeholder,
-                        route: nil
+                        route: nil,
+                        transaction: .placeholder
                     ),
                     reducer: .default,
-                    environment: ()
+                    environment: SendEnvironment(
+                        mnemonicSeedPhraseProvider: .live,
+                        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
+                        walletStorage: .live(),
+                        wrappedDerivationTool: .live(),
+                        wrappedSDKSynchronizer: LiveWrappedSDKSynchronizer()
+                    )
                 )
             )
             .navigationBarTitleDisplayMode(.inline)
