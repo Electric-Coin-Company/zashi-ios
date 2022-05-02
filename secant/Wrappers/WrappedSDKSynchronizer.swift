@@ -53,6 +53,14 @@ protocol WrappedSDKSynchronizer {
 
     func getTransparentAddress(account: Int) -> TransparentAddress?
     func getShieldedAddress(account: Int) -> SaplingShieldedAddress?
+    
+    func sendTransaction(
+        with spendingKey: String,
+        zatoshi: Int64,
+        to recipientAddress: String,
+        memo: String?,
+        from account: Int
+    ) -> Effect<Result<TransactionState, NSError>, Never>
 }
 
 extension WrappedSDKSynchronizer {
@@ -139,13 +147,31 @@ class LiveWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     }
 
     func getAllTransactions() -> Effect<[TransactionState], Never> {
-        return .merge(
-            getAllClearedTransactions(),
-            getAllPendingTransactions()
-        )
-        .flatMap(Publishers.Sequence.init(sequence:))
-        .collect()
-        .eraseToEffect()
+        if let pendingTransactions = try? synchronizer?.allPendingTransactions(),
+        let clearedTransactions = try? synchronizer?.allClearedTransactions(),
+        let syncedBlockHeight = synchronizer?.latestScannedHeight {
+            let clearedTxs = clearedTransactions.map {
+                TransactionState.init(confirmedTransaction: $0, sent: ($0.toAddress != nil))
+            }
+            let pendingTxs = pendingTransactions.map {
+                TransactionState.init(pendingTransaction: $0, latestBlockHeight: syncedBlockHeight)
+            }
+            
+            let txs = clearedTxs.filter { cleared in
+                pendingTxs.first { pending in
+                    pending.id == cleared.id
+                } == nil
+            }
+            return .merge(
+                Effect(value: txs),
+                Effect(value: pendingTxs)
+            )
+            .flatMap(Publishers.Sequence.init(sequence:))
+            .collect()
+            .eraseToEffect()
+        }
+        
+        return .none
     }
 
     func getTransparentAddress(account: Int) -> TransparentAddress? {
@@ -154,6 +180,34 @@ class LiveWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     
     func getShieldedAddress(account: Int) -> SaplingShieldedAddress? {
         synchronizer?.getShieldedAddress(accountIndex: account)
+    }
+    
+    func sendTransaction(
+        with spendingKey: String,
+        zatoshi: Int64,
+        to recipientAddress: String,
+        memo: String?,
+        from account: Int
+    ) -> Effect<Result<TransactionState, NSError>, Never> {
+        Deferred {
+            Future { [weak self] promise in
+                self?.synchronizer?.sendToAddress(
+                    spendingKey: spendingKey,
+                    zatoshi: zatoshi,
+                    toAddress: recipientAddress,
+                    memo: memo,
+                    from: account) { result in
+                        switch result {
+                        case .failure(let error as NSError):
+                            promise(.failure(error))
+                        case .success(let pendingTx):
+                            promise(.success(TransactionState(pendingTransaction: pendingTx)))
+                        }
+                }
+            }
+        }
+        .mapError { $0 as NSError }
+        .catchToEffect()
     }
 }
 
@@ -257,6 +311,29 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     func getTransparentAddress(account: Int) -> TransparentAddress? { nil }
     
     func getShieldedAddress(account: Int) -> SaplingShieldedAddress? { nil }
+    
+    func sendTransaction(
+        with spendingKey: String,
+        zatoshi: Int64,
+        to recipientAddress: String,
+        memo: String?,
+        from account: Int
+    ) -> Effect<Result<TransactionState, NSError>, Never> {
+        let transactionState = TransactionState(
+            expirationHeight: 40,
+            memo: "test",
+            minedHeight: 50,
+            shielded: true,
+            zAddress: "tteafadlamnelkqe",
+            date: Date.init(timeIntervalSince1970: 1234567),
+            id: "id",
+            status: .paid(success: true),
+            subtitle: "sub",
+            zecAmount: 10
+        )
+        
+        return Effect(value: Result.success(transactionState))
+    }
 }
 
 class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
@@ -339,4 +416,14 @@ class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     func getTransparentAddress(account: Int) -> TransparentAddress? { nil }
     
     func getShieldedAddress(account: Int) -> SaplingShieldedAddress? { nil }
+    
+    func sendTransaction(
+        with spendingKey: String,
+        zatoshi: Int64,
+        to recipientAddress: String,
+        memo: String?,
+        from account: Int
+    ) -> Effect<Result<TransactionState, NSError>, Never> {
+        return Effect(value: Result.failure(SynchronizerError.criticalError as NSError))
+    }
 }

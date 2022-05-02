@@ -6,14 +6,22 @@ struct SendView: View {
 
     var body: some View {
         WithViewStore(store) { viewStore in
-            Create(
+            CreateTransaction(
                 transaction: viewStore.bindingForTransaction,
                 isComplete: viewStore.bindingForConfirmation
             )
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForConfirmation,
                 destination: {
-                    Confirmation(viewStore: viewStore)
+                    TransactionConfirmation(viewStore: viewStore)
+                        .navigationLinkEmpty(
+                            isActive: viewStore.bindingForSuccess,
+                            destination: { TransactionSent(viewStore: viewStore) }
+                        )
+                        .navigationLinkEmpty(
+                            isActive: viewStore.bindingForFailure,
+                            destination: { TransactionFailed(viewStore: viewStore) }
+                        )
                 }
             )
         }
@@ -26,12 +34,15 @@ struct SendView_Previews: PreviewProvider {
             SendView(
                 store: .init(
                     initialState: .init(
-                        transaction: .placeholder,
-                        route: nil
+                        route: nil,
+                        transaction: .placeholder
                     ),
                     reducer: .default,
                     environment: SendEnvironment(
+                        mnemonicSeedPhraseProvider: .live,
                         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
+                        walletStorage: .live(),
+                        wrappedDerivationTool: .live(),
                         wrappedSDKSynchronizer: LiveWrappedSDKSynchronizer()
                     )
                 )

@@ -129,7 +129,10 @@ extension HomeStore {
             initialState: .placeholder,
             reducer: .default.debug(),
             environment: HomeEnvironment(
+                mnemonicSeedPhraseProvider: .live,
                 scheduler: DispatchQueue.main.eraseToAnyScheduler(),
+                walletStorage: .live(),
+                wrappedDerivationTool: .live(),
                 wrappedSDKSynchronizer: LiveWrappedSDKSynchronizer()
             )
         )

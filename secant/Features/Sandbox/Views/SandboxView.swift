@@ -19,6 +19,7 @@ struct SandboxView: View {
         case .history:
             TransactionHistoryView(store: store.historyStore())
         case .send:
+            EmptyView()
             SendView(
                 store: .init(
                     initialState: .placeholder,
@@ -27,7 +28,10 @@ struct SandboxView: View {
                     )
                     .debug(),
                     environment: SendEnvironment(
+                        mnemonicSeedPhraseProvider: .live,
                         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
+                        walletStorage: .live(),
+                        wrappedDerivationTool: .live(),
                         wrappedSDKSynchronizer: LiveWrappedSDKSynchronizer()
                     )
                 )

@@ -1,7 +1,7 @@
 import SwiftUI
 import ComposableArchitecture
 
-struct Confirmation: View {
+struct TransactionConfirmation: View {
     let viewStore: SendViewStore
 
     var body: some View {
@@ -37,7 +37,7 @@ struct Confirmation_Previews: PreviewProvider {
                     false
                 )
             ) { _ in
-                Confirmation(
+                TransactionConfirmation(
                     viewStore: ViewStore(.placeholder)
                 )
             }

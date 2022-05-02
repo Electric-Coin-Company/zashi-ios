@@ -1,7 +1,7 @@
 import SwiftUI
 import ComposableArchitecture
 
-struct Create: View {
+struct CreateTransaction: View {
     @Binding var transaction: Transaction
     @Binding var isComplete: Bool
 
@@ -10,16 +10,11 @@ struct Create: View {
         
         return VStack {
             VStack {
-                Text("Zatoshi Amount")
+                Text("ZEC Amount")
 
                 TextField(
-                    "Zatoshi Amount",
-                    text: $transaction
-                        .amount
-                        .compactMap(
-                            extract: String.init,
-                            embed: UInt.init
-                        )
+                    "ZEC Amount",
+                    text: $transaction.amountString
                 )
                 .padding()
                 .background(Color.white)
@@ -76,7 +71,7 @@ struct Create_Previews: PreviewProvider {
                     false
                 )
             ) {
-                Create(
+                CreateTransaction(
                     transaction: $0.0,
                     isComplete: $0.1
                 )
@@ -92,12 +87,15 @@ extension SendStore {
     static var placeholder: SendStore {
         return SendStore(
             initialState: .init(
-                transaction: .placeholder,
-                route: nil
+                route: nil,
+                transaction: .placeholder
             ),
             reducer: .default,
             environment: SendEnvironment(
+                mnemonicSeedPhraseProvider: .live,
                 scheduler: DispatchQueue.main.eraseToAnyScheduler(),
+                walletStorage: .live(),
+                wrappedDerivationTool: .live(),
                 wrappedSDKSynchronizer: LiveWrappedSDKSynchronizer()
             )
         )

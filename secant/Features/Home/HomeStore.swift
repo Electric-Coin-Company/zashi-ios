@@ -38,7 +38,10 @@ enum HomeAction: Equatable {
 }
 
 struct HomeEnvironment {
+    let mnemonicSeedPhraseProvider: MnemonicSeedPhraseProvider
     let scheduler: AnySchedulerOf<DispatchQueue>
+    let walletStorage: WalletStorageInteractor
+    let wrappedDerivationTool: WrappedDerivationTool
     let wrappedSDKSynchronizer: WrappedSDKSynchronizer
 }
 
@@ -112,9 +115,6 @@ extension HomeReducer {
         case .request(let action):
             return .none
 
-        case .send(let action):
-            return .none
-
         case .scan(let action):
             return .none
             
@@ -125,6 +125,12 @@ extension HomeReducer {
             return state.drawerOverlay != .partial ? Effect(value: .updateDrawer(.partial)) : .none
 
         case .transactionHistory(let historyAction):
+            return .none
+            
+        case .send(.updateRoute(.done)):
+            return Effect(value: .updateRoute(nil))
+            
+        case .send(let action):
             return .none
         }
     }
@@ -145,7 +151,10 @@ extension HomeReducer {
         action: /HomeAction.send,
         environment: { environment in
             SendEnvironment(
+                mnemonicSeedPhraseProvider: environment.mnemonicSeedPhraseProvider,
                 scheduler: environment.scheduler,
+                walletStorage: environment.walletStorage,
+                wrappedDerivationTool: environment.wrappedDerivationTool,
                 wrappedSDKSynchronizer: environment.wrappedSDKSynchronizer
             )
         }

@@ -291,7 +291,10 @@ extension AppReducer {
         action: /AppAction.home,
         environment: { environment in
             HomeEnvironment(
+                mnemonicSeedPhraseProvider: environment.mnemonicSeedPhraseProvider,
                 scheduler: environment.scheduler,
+                walletStorage: environment.walletStorage,
+                wrappedDerivationTool: environment.wrappedDerivationTool,
                 wrappedSDKSynchronizer: environment.wrappedSDKSynchronizer
             )
         }
