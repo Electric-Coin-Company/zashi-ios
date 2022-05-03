@@ -6,25 +6,12 @@
 //
 
 import Foundation
-
-/// Representation of the user preferences stored in the local persistent storage (non-encrypted, no security needed)
-protocol UserPreferences {
-    /// From when the app is on and uninterrupted
-    var activeAppSessionFrom: TimeInterval { get set }
-    /// What is the set up currency
-    var currency: String { get set }
-    /// Whether the fiat conversion is on/off
-    var isFiatConverted: Bool { get set }
-    /// Whether user finished recovery phrase backup test
-    var isRecoveryPhraseTestCompleted: Bool { get set }
-    /// Whether the user has been autoshielded in the running session
-    var isSessionAutoshielded: Bool { get set }
-}
+import ComposableArchitecture
 
 /// Live implementation of the `UserPreferences` using User Defaults
 /// according to https://developer.apple.com/documentation/foundation/userdefaults
 /// the UserDefaults class is thread-safe.
-struct UserPreferencesStorage: UserPreferences {
+struct UserPreferencesStorage {
     enum Constants: String, CaseIterable {
         case zcashActiveAppSessionFrom
         case zcashCurrency
@@ -32,15 +19,6 @@ struct UserPreferencesStorage: UserPreferences {
         case zcashRecoveryPhraseTestCompleted
         case zcashSessionAutoshielded
     }
-
-    static let `default` = UserPreferencesStorage(
-        appSessionFrom: Date().timeIntervalSince1970,
-        convertedCurrency: "USD",
-        fiatConvertion: true,
-        recoveryPhraseTestCompleted: false,
-        sessionAutoshielded: true,
-        userDefaults: UserDefaults.standard
-    )
     
     /// Default values for all preferences in case there is no value stored (counterparts to `Constants`)
     private let appSessionFrom: TimeInterval
@@ -49,7 +27,7 @@ struct UserPreferencesStorage: UserPreferences {
     private let recoveryPhraseTestCompleted: Bool
     private let sessionAutoshielded: Bool
     
-    private let userDefaults: UserDefaults
+    private let userDefaults: WrappedUserDefaults
     
     init(
         appSessionFrom: TimeInterval,
@@ -57,7 +35,7 @@ struct UserPreferencesStorage: UserPreferences {
         fiatConvertion: Bool,
         recoveryPhraseTestCompleted: Bool,
         sessionAutoshielded: Bool,
-        userDefaults: UserDefaults
+        userDefaults: WrappedUserDefaults
     ) {
         self.appSessionFrom = appSessionFrom
         self.convertedCurrency = convertedCurrency
@@ -69,47 +47,88 @@ struct UserPreferencesStorage: UserPreferences {
     
     /// From when the app is on and uninterrupted
     var activeAppSessionFrom: TimeInterval {
-        get { getValue(forKey: Constants.zcashActiveAppSessionFrom.rawValue, default: appSessionFrom) }
-        set { setValue(newValue, forKey: Constants.zcashActiveAppSessionFrom.rawValue) }
+        getValue(forKey: Constants.zcashActiveAppSessionFrom.rawValue, default: appSessionFrom)
+    }
+    
+    func setActiveAppSessionFrom(_ timeInterval: TimeInterval) -> Effect<Never, Never> {
+        setValue(timeInterval, forKey: Constants.zcashActiveAppSessionFrom.rawValue)
     }
 
     /// What is the set up currency
     var currency: String {
-        get { getValue(forKey: Constants.zcashCurrency.rawValue, default: convertedCurrency) }
-        set { setValue(newValue, forKey: Constants.zcashCurrency.rawValue) }
+        getValue(forKey: Constants.zcashCurrency.rawValue, default: convertedCurrency)
+    }
+    
+    func setCurrency(_ string: String) -> Effect<Never, Never> {
+        setValue(string, forKey: Constants.zcashCurrency.rawValue)
     }
 
     /// Whether the fiat conversion is on/off
     var isFiatConverted: Bool {
-        get { getValue(forKey: Constants.zcashFiatConverted.rawValue, default: fiatConvertion) }
-        set { setValue(newValue, forKey: Constants.zcashFiatConverted.rawValue) }
+        getValue(forKey: Constants.zcashFiatConverted.rawValue, default: fiatConvertion)
+    }
+
+    func setIsFiatConverted(_ bool: Bool) -> Effect<Never, Never> {
+        setValue(bool, forKey: Constants.zcashFiatConverted.rawValue)
     }
 
     /// Whether user finished recovery phrase backup test
     var isRecoveryPhraseTestCompleted: Bool {
-        get { getValue(forKey: Constants.zcashRecoveryPhraseTestCompleted.rawValue, default: recoveryPhraseTestCompleted) }
-        set { setValue(newValue, forKey: Constants.zcashRecoveryPhraseTestCompleted.rawValue) }
+        getValue(forKey: Constants.zcashRecoveryPhraseTestCompleted.rawValue, default: recoveryPhraseTestCompleted)
+    }
+
+    func setIsRecoveryPhraseTestCompleted(_ bool: Bool) -> Effect<Never, Never> {
+        setValue(bool, forKey: Constants.zcashRecoveryPhraseTestCompleted.rawValue)
     }
 
     /// Whether the user has been autoshielded in the running session
     var isSessionAutoshielded: Bool {
-        get { getValue(forKey: Constants.zcashSessionAutoshielded.rawValue, default: sessionAutoshielded) }
-        set { setValue(newValue, forKey: Constants.zcashSessionAutoshielded.rawValue) }
+        getValue(forKey: Constants.zcashSessionAutoshielded.rawValue, default: sessionAutoshielded)
+    }
+
+    func setIsSessionAutoshielded(_ bool: Bool) -> Effect<Never, Never> {
+        setValue(bool, forKey: Constants.zcashSessionAutoshielded.rawValue)
     }
 
     /// Use carefully: Deletes all user preferences from the User Defaults
-    func removeAll() {
-        Constants.allCases.forEach { userDefaults.removeObject(forKey: $0.rawValue) }
+    func removeAll() -> Effect<Never, Never> {
+        var removals: [Effect<Never, Never>] = []
+
+        Constants.allCases.forEach { removals.append(userDefaults.remove($0.rawValue)) }
+        
+        return Effect.concatenate(removals)
     }
 }
 
 private extension UserPreferencesStorage {
     func getValue<Value>(forKey: String, default defaultIfNil: Value) -> Value {
-        userDefaults.object(forKey: forKey) as? Value ?? defaultIfNil
+        userDefaults.objectForKey(forKey) as? Value ?? defaultIfNil
     }
 
-    func setValue<Value>(_ value: Value, forKey: String) {
-        userDefaults.set(value, forKey: forKey)
-        userDefaults.synchronize()
+    func setValue<Value>(_ value: Value, forKey: String) -> Effect<Never, Never> {
+        let effect = userDefaults.setValue(value, forKey)
+        _ = userDefaults.synchronize()
+        
+        return effect
     }
+}
+
+extension UserPreferencesStorage {
+    static let live = UserPreferencesStorage(
+        appSessionFrom: Date().timeIntervalSince1970,
+        convertedCurrency: "USD",
+        fiatConvertion: true,
+        recoveryPhraseTestCompleted: false,
+        sessionAutoshielded: true,
+        userDefaults: .live()
+    )
+    
+    static let mock = UserPreferencesStorage(
+        appSessionFrom: 1651039606.0,
+        convertedCurrency: "USD",
+        fiatConvertion: true,
+        recoveryPhraseTestCompleted: false,
+        sessionAutoshielded: true,
+        userDefaults: .mock
+    )
 }
