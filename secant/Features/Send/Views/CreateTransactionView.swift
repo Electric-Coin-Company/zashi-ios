@@ -2,61 +2,76 @@ import SwiftUI
 import ComposableArchitecture
 
 struct CreateTransaction: View {
+    let store: TransactionInputStore
+
     @Binding var transaction: Transaction
     @Binding var isComplete: Bool
+    @Binding var totalBalance: Double
 
     var body: some View {
         UITextView.appearance().backgroundColor = .clear
         
-        return VStack {
+        return WithViewStore(store) { viewStore in
             VStack {
-                Text("ZEC Amount")
-
-                TextField(
-                    "ZEC Amount",
-                    text: $transaction.amountString
-                )
+                VStack {
+                    Text("Balance \(totalBalance)")
+                    
+                    SingleLineTextField(
+                        placeholderText: "0",
+                        title: "How much ZEC would you like to send?",
+                        store: store.scope(
+                            state: \.textFieldState,
+                            action: TransactionInputAction.textField
+                        ),
+                        titleAccessoryView: {
+                            Button(
+                                action: { viewStore.send(.setMax(viewStore.maxValue)) },
+                                label: { Text("Max") }
+                            )
+                                .textFieldTitleAccessoryButtonStyle
+                        },
+                        inputAccessoryView: {
+                        }
+                    )
+                }
                 .padding()
-                .background(Color.white)
-                .foregroundColor(Asset.Colors.Text.importSeedEditor.color)
-            }
-            .padding()
-
-            VStack {
-                Text("To Address")
                 
-                TextField(
-                    "Address",
-                    text: $transaction.toAddress
-                )
-                .font(.system(size: 14))
+                VStack {
+                    Text("To Address")
+                    
+                    TextField(
+                        "Address",
+                        text: $transaction.toAddress
+                    )
+                        .font(.system(size: 14))
+                        .padding()
+                        .background(Color.white)
+                        .foregroundColor(Asset.Colors.Text.importSeedEditor.color)
+                }
                 .padding()
-                .background(Color.white)
-                .foregroundColor(Asset.Colors.Text.importSeedEditor.color)
-            }
-            .padding()
-            
-            VStack {
-                Text("Memo")
                 
-                TextEditor(text: $transaction.memo)
-                    .frame(maxWidth: .infinity, maxHeight: 150, alignment: .center)
-                    .importSeedEditorModifier()
+                VStack {
+                    Text("Memo")
+                    
+                    TextEditor(text: $transaction.memo)
+                        .frame(maxWidth: .infinity, maxHeight: 150, alignment: .center)
+                        .importSeedEditorModifier()
+                }
+                .padding()
+                
+                Button(
+                    action: { isComplete = true },
+                    label: { Text("Send") }
+                )
+                    .activeButtonStyle
+                    .frame(height: 50)
+                    .padding()
+                
+                Spacer()
             }
             .padding()
-
-            Button(
-                action: { isComplete = true },
-                label: { Text("Send") }
-            )
-            .activeButtonStyle
-            .frame(height: 50)
-            .padding()
-
-            Spacer()
+            .applyScreenBackground()
         }
-        .padding()
-        .applyScreenBackground()
     }
 }
 
@@ -68,12 +83,15 @@ struct Create_Previews: PreviewProvider {
             StateContainer(
                 initialState: (
                     Transaction.placeholder,
-                    false
+                    false,
+                    0.0
                 )
             ) {
                 CreateTransaction(
+                    store: .placeholder,
                     transaction: $0.0,
-                    isComplete: $0.1
+                    isComplete: $0.1,
+                    totalBalance: $0.2
                 )
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -88,7 +106,8 @@ extension SendStore {
         return SendStore(
             initialState: .init(
                 route: nil,
-                transaction: .placeholder
+                transaction: .placeholder,
+                transactionInputState: .placeholer
             ),
             reducer: .default,
             environment: SendEnvironment(

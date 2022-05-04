@@ -19,7 +19,6 @@ struct SandboxView: View {
         case .history:
             TransactionHistoryView(store: store.historyStore())
         case .send:
-            EmptyView()
             SendView(
                 store: .init(
                     initialState: .placeholder,

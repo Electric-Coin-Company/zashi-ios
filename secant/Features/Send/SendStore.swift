@@ -35,12 +35,19 @@ struct SendState: Equatable {
     var route: Route?
     
     var isSendingTransaction = false
+    var totalBalance = 0.0
     var transaction: Transaction
+    var transactionInputState: TransactionInputState
 }
 
 enum SendAction: Equatable {
+    case onAppear
+    case onDisappear
     case sendConfirmationPressed
     case sendTransactionResult(Result<TransactionState, NSError>)
+    case synchronizerStateChanged(WrappedSDKSynchronizerState)
+    case transactionInput(TransactionInputAction)
+    case updateBalance(Double)
     case updateTransaction(Transaction)
     case updateRoute(SendState.Route?)
 }
@@ -55,12 +62,23 @@ struct SendEnvironment {
 
 // MARK: - SendReducer
 
+private struct ListenerId: Hashable {}
+
 typealias SendReducer = Reducer<SendState, SendAction, SendEnvironment>
 
 extension SendReducer {
     private struct SyncStatusUpdatesID: Hashable {}
 
-    static let `default` = Reducer<SendState, SendAction, SendEnvironment> { state, action, environment in
+    static let `default` = SendReducer.combine(
+        [
+            balanceReducer,
+            sendReducer,
+            transactionInputReducer
+        ]
+    )
+    .debug()
+
+    private static let sendReducer = SendReducer { state, action, environment in
         switch action {
         case let .updateTransaction(transaction):
             state.transaction = transaction
@@ -111,8 +129,50 @@ extension SendReducer {
             } catch {
                 return Effect(value: .updateRoute(.failure))
             }
+        case .transactionInput(let transactionInput):
+            return .none
+            
+        default:
+            return .none
         }
     }
+    
+    private static let balanceReducer = SendReducer { state, action, environment in
+        switch action {
+        case .onAppear:
+            return environment.wrappedSDKSynchronizer.stateChanged
+                .map(SendAction.synchronizerStateChanged)
+                .eraseToEffect()
+                .cancellable(id: ListenerId(), cancelInFlight: true)
+            
+        case .onDisappear:
+            return Effect.cancel(id: ListenerId())
+            
+        case .synchronizerStateChanged(.synced):
+            return environment.wrappedSDKSynchronizer.getShieldedBalance()
+                .receive(on: environment.scheduler)
+                .map({ Double($0.total) / Double(100_000_000) })
+                .map(SendAction.updateBalance)
+                .eraseToEffect()
+            
+        case .synchronizerStateChanged(let synchronizerState):
+            return .none
+            
+        case .updateBalance(let balance):
+            state.totalBalance = balance
+            state.transactionInputState.maxValue = Int64(balance * 100_000_000)
+            return .none
+            
+        default:
+            return .none
+        }
+    }
+
+    private static let transactionInputReducer: SendReducer = TransactionInputReducer.default.pullback(
+        state: \SendState.transactionInputState,
+        action: /SendAction.transactionInput,
+        environment: { _ in TransactionInputEnvironment() }
+    )
     
     static func `default`(whenDone: @escaping () -> Void) -> SendReducer {
         SendReducer { state, action, environment in
@@ -176,13 +236,24 @@ extension SendViewStore {
             embed: { $0 ? SendState.Route.done : SendState.Route.showConfirmation }
         )
     }
+
+    var bindingForBalance: Binding<Double> {
+        self.binding(
+            get: \.totalBalance,
+            send: SendAction.updateBalance
+        )
+    }
 }
 
 // MARK: PlaceHolders
 
 extension SendState {
     static var placeholder: Self {
-        .init(route: nil, transaction: .placeholder)
+        .init(
+            route: nil,
+            transaction: .placeholder,
+            transactionInputState: .placeholer
+        )
     }
 
     static var emptyPlaceholder: Self {
@@ -192,7 +263,8 @@ extension SendState {
                 amount: 0,
                 memo: "",
                 toAddress: ""
-            )
+            ),
+            transactionInputState: .placeholer
         )
     }
 }

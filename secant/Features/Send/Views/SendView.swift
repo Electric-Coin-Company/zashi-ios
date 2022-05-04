@@ -7,9 +7,16 @@ struct SendView: View {
     var body: some View {
         WithViewStore(store) { viewStore in
             CreateTransaction(
+                store: store.scope(
+                    state: \.transactionInputState,
+                    action: SendAction.transactionInput
+                ),
                 transaction: viewStore.bindingForTransaction,
-                isComplete: viewStore.bindingForConfirmation
+                isComplete: viewStore.bindingForConfirmation,
+                totalBalance: viewStore.bindingForBalance
             )
+            .onAppear { viewStore.send(.onAppear) }
+            .onDisappear { viewStore.send(.onDisappear) }
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForConfirmation,
                 destination: {
@@ -35,7 +42,8 @@ struct SendView_Previews: PreviewProvider {
                 store: .init(
                     initialState: .init(
                         route: nil,
-                        transaction: .placeholder
+                        transaction: .placeholder,
+                        transactionInputState: .placeholer
                     ),
                     reducer: .default,
                     environment: SendEnvironment(

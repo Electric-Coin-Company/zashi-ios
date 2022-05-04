@@ -18,29 +18,20 @@ typealias TransactionInputStore = Store<TransactionInputState, TransactionInputA
 struct TransactionInputState: Equatable {
     var textFieldState: TextFieldState
     var currencySelectionState: CurrencySelectionState
+    var maxValue: Int64 = 0
+    
+    var amount: Int64 {
+        Int64((Double(textFieldState.text) ?? 0.0) * 100_000_000)
+    }
 }
 
-enum TransactionInputAction {
-    case setMax(Double)
+enum TransactionInputAction: Equatable {
+    case setMax(Int64)
     case textField(TextFieldAction)
     case currencySelection(CurrencySelectionAction)
 }
 
 struct TransactionInputEnvironment: Equatable {}
-
-func maxOverride(_ reducer: @escaping (TransactionReducerData)) -> TransactionReducerData {
-    return { state, action in
-        switch action {
-        case .setMax(let value):
-            state.textFieldState.text = "\(value)"
-            state.currencySelectionState.currencyType = .usd
-
-        default: break
-        }
-
-        reducer(&state, action)
-    }
-}
 
 extension TransactionInputReducer {
     static let `default` = TransactionInputReducer.combine(
@@ -56,7 +47,7 @@ extension TransactionInputReducer {
         switch action {
         case .setMax(let value):
             state.currencySelectionState.currencyType = .zec
-            state.textFieldState.text = "\(value)"
+            state.textFieldState.text = "\(value.asHumanReadableZecBalance())"
 
         default: break
         }
@@ -97,5 +88,20 @@ extension TransactionInputReducer {
         state: \TransactionInputState.currencySelectionState,
         action: /TransactionInputAction.currencySelection,
         environment: { _ in return .init() }
+    )
+}
+
+extension TransactionInputState {
+    static let placeholer = TransactionInputState(
+        textFieldState: .placeholder,
+        currencySelectionState: CurrencySelectionState()
+    )
+}
+
+extension TransactionInputStore {
+    static let placeholder = TransactionInputStore(
+        initialState: .placeholer,
+        reducer: .default,
+        environment: TransactionInputEnvironment()
     )
 }
