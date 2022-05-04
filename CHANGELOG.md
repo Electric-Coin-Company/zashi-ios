@@ -1,4 +1,16 @@
 # Changelog
+
+## 0.0.1 build 23
+This version allows users to sync their wallet and (when doing so very carefully)
+sending funds. 
+
+- Issue #302: Synchronizer status on Home Screen (#304)
+- Issue #212: Wrapped user defaults (#298)
+- Issue #295: Update "Commit Messages" section of CONTRIBUTING.md (#296)
+- Issue #293: first draft of history of transactions (#293)
+- Issue #290: Swiftlint 0.45.0 -> 0.47.0 (#290)
+- Issue #284: (Non)scrollable Transactions list based on Drawer
+
 ## 0.0.1 build 21
 - Issue #258: User can take the backup test successfully more than once (#282)\
 - Issue #279: update swiftlint (#280)
