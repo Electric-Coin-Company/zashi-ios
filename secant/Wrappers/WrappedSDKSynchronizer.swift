@@ -40,11 +40,12 @@ struct Balance: WalletBalance, Equatable {
 protocol WrappedSDKSynchronizer {
     var synchronizer: SDKSynchronizer? { get }
     var stateChanged: CurrentValueSubject<WrappedSDKSynchronizerState, Never> { get }
+    var notificationCenter: WrappedNotificationCenter { get }
     
     func prepareWith(initializer: Initializer) throws
     func start(retry: Bool) throws
     func stop()
-    func synchronizerSynced()
+    func status() -> String
 
     func getShieldedBalance() -> Effect<Balance, Never>
     func getAllClearedTransactions() -> Effect<[TransactionState], Never>
@@ -81,8 +82,10 @@ class LiveWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     private var cancellables: [AnyCancellable] = []
     private(set) var synchronizer: SDKSynchronizer?
     private(set) var stateChanged: CurrentValueSubject<WrappedSDKSynchronizerState, Never>
+    private(set) var notificationCenter: WrappedNotificationCenter
 
-    init() {
+    init(notificationCenter: WrappedNotificationCenter = .live) {
+        self.notificationCenter = notificationCenter
         self.stateChanged = CurrentValueSubject<WrappedSDKSynchronizerState, Never>(.unknown)
     }
     
@@ -93,16 +96,29 @@ class LiveWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     func prepareWith(initializer: Initializer) throws {
         synchronizer = try SDKSynchronizer(initializer: initializer)
 
-        NotificationCenter.default.publisher(for: .synchronizerSynced)
+        notificationCenter.publisherFor(.synchronizerStarted)?
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] _ in
-                self?.synchronizerSynced()
-            })
+            .sink { [weak self] _ in self?.synchronizerStarted() }
             .store(in: &cancellables)
-                
+
+        notificationCenter.publisherFor(.synchronizerSynced)?
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in self?.synchronizerSynced() }
+            .store(in: &cancellables)
+
+        notificationCenter.publisherFor(.synchronizerProgressUpdated)?
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in self?.synchronizerProgressUpdated() }
+            .store(in: &cancellables)
+
+        notificationCenter.publisherFor(.synchronizerStopped)?
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in self?.synchronizerStopped() }
+            .store(in: &cancellables)
+
         try synchronizer?.prepare()
     }
-
+    
     func start(retry: Bool) throws {
         try synchronizer?.start(retry: retry)
     }
@@ -111,8 +127,28 @@ class LiveWrappedSDKSynchronizer: WrappedSDKSynchronizer {
         synchronizer?.stop()
     }
 
+    func synchronizerStarted() {
+        stateChanged.send(.started)
+    }
+
     func synchronizerSynced() {
         stateChanged.send(.synced)
+    }
+
+    func synchronizerProgressUpdated() {
+        stateChanged.send(.progressUpdated)
+    }
+
+    func synchronizerStopped() {
+        stateChanged.send(.stopped)
+    }
+
+    func status() -> String {
+        guard let synchronizer = synchronizer else {
+            return ""
+        }
+        
+        return SDKSynchronizer.textFor(state: synchronizer.status)
     }
 
     func getShieldedBalance() -> Effect<Balance, Never> {
@@ -215,11 +251,13 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     private var cancellables: [AnyCancellable] = []
     private(set) var synchronizer: SDKSynchronizer?
     private(set) var stateChanged: CurrentValueSubject<WrappedSDKSynchronizerState, Never>
+    private(set) var notificationCenter: WrappedNotificationCenter
 
-    init() {
+    init(notificationCenter: WrappedNotificationCenter = .mock) {
+        self.notificationCenter = notificationCenter
         self.stateChanged = CurrentValueSubject<WrappedSDKSynchronizerState, Never>(.unknown)
     }
-
+    
     deinit {
         synchronizer?.stop()
     }
@@ -247,6 +285,14 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
 
     func synchronizerSynced() {
         stateChanged.send(.synced)
+    }
+
+    func status() -> String {
+        guard let synchronizer = synchronizer else {
+            return ""
+        }
+        
+        return SDKSynchronizer.textFor(state: synchronizer.status)
     }
 
     func getShieldedBalance() -> Effect<Balance, Never> {
@@ -339,8 +385,10 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
 class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     private(set) var synchronizer: SDKSynchronizer?
     private(set) var stateChanged: CurrentValueSubject<WrappedSDKSynchronizerState, Never>
+    private(set) var notificationCenter: WrappedNotificationCenter
 
-    init() {
+    init(notificationCenter: WrappedNotificationCenter = .mock) {
+        self.notificationCenter = notificationCenter
         self.stateChanged = CurrentValueSubject<WrappedSDKSynchronizerState, Never>(.unknown)
     }
 
@@ -351,6 +399,8 @@ class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     func stop() { }
 
     func synchronizerSynced() { }
+
+    func status() -> String { "" }
 
     func getShieldedBalance() -> Effect<Balance, Never> {
         return .none
