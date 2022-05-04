@@ -19,7 +19,7 @@ class UserPreferencesStorageTests: XCTestCase {
         super.setUp()
         
         guard let userDefaults = UserDefaults.init(suiteName: "test") else {
-            XCTFail("UserPreferencesStorageTests: UserDefaults.init(suiteName: "test") failed to initialize")
+            XCTFail("UserPreferencesStorageTests: UserDefaults.init(suiteName: \"test\") failed to initialize")
             return
         }
         
@@ -214,7 +214,7 @@ class UserPreferencesStorageTests: XCTestCase {
     
     func testRemoveAll() throws {
         guard let userDefaults = UserDefaults.init(suiteName: "test") else {
-            XCTFail("User Preferences: UserDefaults.init(suiteName: "test") failed to initialize")
+            XCTFail("User Preferences: UserDefaults.init(suiteName: \"test\") failed to initialize")
             return
         }
 

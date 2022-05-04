@@ -15,11 +15,14 @@ struct HomeView: View {
                     sendButton(viewStore)
                     
                     VStack {
+                        Text("\(viewStore.synchronizerStatus)")
+                            .padding(.top, 60)
+
                         Text("balance: \(viewStore.totalBalance)")
                             .accessDebugMenuWithHiddenGesture {
                                 viewStore.send(.debugMenuStartup)
                             }
-                            .padding(.top, 180)
+                            .padding(.top, 120)
 
                         Spacer()
                     }

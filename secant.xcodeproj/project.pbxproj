@@ -106,6 +106,7 @@
 		9E5BF641281FD7B600BA3F17 /* TransactionFailedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF640281FD7B600BA3F17 /* TransactionFailedView.swift */; };
 		9E5BF644281FEC9900BA3F17 /* SendTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF643281FEC9900BA3F17 /* SendTests.swift */; };
 		9E5BF6462821028C00BA3F17 /* WrappedUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF6452821028C00BA3F17 /* WrappedUserDefaults.swift */; };
+		9E5BF648282277BE00BA3F17 /* WrappedNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF647282277BE00BA3F17 /* WrappedNotificationCenter.swift */; };
 		9E69A24D27FB002800A55317 /* Welcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E69A24C27FB002800A55317 /* Welcome.swift */; };
 		9E80B47227E4B34B008FF493 /* UserPreferencesStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E80B47127E4B34B008FF493 /* UserPreferencesStorage.swift */; };
 		9EAFEB822805793200199FC9 /* AppReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB812805793200199FC9 /* AppReducerTests.swift */; };
@@ -274,6 +275,7 @@
 		9E5BF640281FD7B600BA3F17 /* TransactionFailedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionFailedView.swift; sourceTree = "<group>"; };
 		9E5BF643281FEC9900BA3F17 /* SendTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendTests.swift; sourceTree = "<group>"; };
 		9E5BF6452821028C00BA3F17 /* WrappedUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedUserDefaults.swift; sourceTree = "<group>"; };
+		9E5BF647282277BE00BA3F17 /* WrappedNotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedNotificationCenter.swift; sourceTree = "<group>"; };
 		9E69A24C27FB002800A55317 /* Welcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Welcome.swift; sourceTree = "<group>"; };
 		9E80B47127E4B34B008FF493 /* UserPreferencesStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreferencesStorage.swift; sourceTree = "<group>"; };
 		9EAFEB812805793200199FC9 /* AppReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReducerTests.swift; sourceTree = "<group>"; };
@@ -762,6 +764,7 @@
 				9E02B5C2280458D2005B809B /* WrappedDerivationTool.swift */,
 				9EAFEB872806E5AE00199FC9 /* WrappedSDKSynchronizer.swift */,
 				9E5BF6452821028C00BA3F17 /* WrappedUserDefaults.swift */,
+				9E5BF647282277BE00BA3F17 /* WrappedNotificationCenter.swift */,
 			);
 			path = Wrappers;
 			sourceTree = "<group>";
@@ -1232,6 +1235,7 @@
 				0DC487C32772574C00BE6A63 /* ValidationSucceededView.swift in Sources */,
 				2EB1C5E827D77F6100BC43D7 /* TextFieldStore.swift in Sources */,
 				9EAFEB8A2806F48100199FC9 /* ZCashSDKEnvironment.swift in Sources */,
+				9E5BF648282277BE00BA3F17 /* WrappedNotificationCenter.swift in Sources */,
 				0D8A43C4272AEEDE005A6414 /* SecantTextStyles.swift in Sources */,
 				9E5BF641281FD7B600BA3F17 /* TransactionFailedView.swift in Sources */,
 				9E4DC6E027C409A100E657F4 /* NeumorphicDesignModifier.swift in Sources */,

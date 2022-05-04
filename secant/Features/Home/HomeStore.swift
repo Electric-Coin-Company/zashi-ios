@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import SwiftUI
+import ZcashLightClientKit
 
 struct HomeState: Equatable {
     enum Route: Equatable {
@@ -16,6 +17,7 @@ struct HomeState: Equatable {
     var requestState: RequestState
     var sendState: SendState
     var scanState: ScanState
+    var synchronizerStatus: String
     var totalBalance: Double
     var transactionHistoryState: TransactionHistoryState
     var verifiedBalance: Double
@@ -34,6 +36,7 @@ enum HomeAction: Equatable {
     case updateBalance(Balance)
     case updateDrawer(DrawerOverlay)
     case updateRoute(HomeState.Route?)
+    case updateSynchronizerStatus
     case updateTransactions([TransactionState])
 }
 
@@ -83,26 +86,29 @@ extension HomeReducer {
                     .receive(on: environment.scheduler)
                     .map({ Balance(verified: $0.verified, total: $0.total) })
                     .map(HomeAction.updateBalance)
-                    .eraseToEffect()
+                    .eraseToEffect(),
+                
+                Effect(value: .updateSynchronizerStatus)
             )
             
         case .synchronizerStateChanged(let synchronizerState):
-            return .none
+            return Effect(value: .updateSynchronizerStatus)
             
         case .updateBalance(let balance):
             state.totalBalance = balance.total.asHumanReadableZecBalance()
             state.verifiedBalance = balance.verified.asHumanReadableZecBalance()
             return .none
             
-        case .debugMenuStartup:
-            return .none
-
         case .updateDrawer(let drawerOverlay):
             state.drawerOverlay = drawerOverlay
             state.transactionHistoryState.isScrollable = drawerOverlay == .full ? true : false
             return .none
             
         case .updateTransactions(let transactions):
+            return .none
+            
+        case .updateSynchronizerStatus:
+            state.synchronizerStatus = environment.wrappedSDKSynchronizer.status()
             return .none
             
         case .updateRoute(let route):
@@ -131,6 +137,9 @@ extension HomeReducer {
             return Effect(value: .updateRoute(nil))
             
         case .send(let action):
+            return .none
+            
+        case .debugMenuStartup:
             return .none
         }
     }
@@ -234,9 +243,46 @@ extension HomeState {
             requestState: .placeholder,
             sendState: .placeholder,
             scanState: .placeholder,
+            synchronizerStatus: "",
             totalBalance: 0.0,
             transactionHistoryState: .emptyPlaceHolder,
             verifiedBalance: 0.0
         )
+    }
+}
+
+extension SDKSynchronizer {
+    static func textFor(state: SyncStatus) -> String {
+        switch state {
+        case .downloading(let progress):
+            return "Downloading \(progress.progressHeight)/\(progress.targetHeight)"
+
+        case .enhancing(let enhanceProgress):
+            return "Enhancing tx \(enhanceProgress.enhancedTransactions) of \(enhanceProgress.totalTransactions)"
+
+        case .fetching:
+            return "fetching UTXOs"
+
+        case .scanning(let scanProgress):
+            return "Scanning: \(scanProgress.progressHeight)/\(scanProgress.targetHeight)"
+
+        case .disconnected:
+            return "disconnected 💔"
+
+        case .stopped:
+            return "Stopped 🚫"
+
+        case .synced:
+            return "Synced 😎"
+
+        case .unprepared:
+            return "Unprepared 😅"
+
+        case .validating:
+            return "Validating"
+
+        case .error(let err):
+            return "Error: \(err.localizedDescription)"
+        }
     }
 }
