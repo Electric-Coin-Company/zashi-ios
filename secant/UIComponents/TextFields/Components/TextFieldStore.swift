@@ -31,9 +31,9 @@ struct TextFieldEnvironment: Equatable { }
 extension TextFieldReducer {
     static let `default` = TextFieldReducer { state, action, _ in
         switch action {
-//        case .apply(let action):
-//            state.text = action(state.text)
-//            state.valid = state.text.isValid(for: state.validationType)
+            //        case .apply(let action):
+            //            state.text = action(state.text)
+            //            state.valid = state.text.isValid(for: state.validationType)
         case .set(let text):
             state.text = text
             state.valid = state.text.isValid(for: state.validationType)

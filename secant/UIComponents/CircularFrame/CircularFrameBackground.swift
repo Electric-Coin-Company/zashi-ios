@@ -19,7 +19,7 @@ struct CircularFrameBackgroundImages: Animatable, ViewModifier {
     func body(content: Content) -> some View {
         WithViewStore(self.store) { viewStore in
             ZStack {
-                ForEach(0..<viewStore.images.count - 1) { imageIndex in
+                ForEach(0..<viewStore.images.count - 1, id: \.self) { imageIndex in
                     viewStore.images[imageIndex]
                         .resizable()
                         .aspectRatio(1.3, contentMode: .fill)

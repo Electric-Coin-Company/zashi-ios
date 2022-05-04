@@ -100,7 +100,7 @@ private extension RecoveryPhraseValidationState {
         )
 
         LazyVGrid(columns: columns, alignment: .center, spacing: 20) {
-            ForEach(0..<missingWordChips.count) { chipIndex in
+            ForEach(0..<missingWordChips.count, id: \.self) { chipIndex in
                 PhraseChip(kind: missingWordChips[chipIndex])
                     .makeDraggable()
                     .frame(
