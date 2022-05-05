@@ -6,7 +6,7 @@ struct TransactionConfirmation: View {
 
     var body: some View {
         VStack {
-            Text("Send \(String(format: "%.7f", Int64(viewStore.transactionInputState.amount).asHumanReadableZecBalance())) ZEC")
+            Text("Send \(viewStore.transaction.amount.asZecString()) ZEC")
                 .padding()
 
             Text("To \(viewStore.transaction.toAddress)")
@@ -25,6 +25,14 @@ struct TransactionConfirmation: View {
             Spacer()
         }
         .applyScreenBackground()
+        .navigationLinkEmpty(
+            isActive: viewStore.bindingForSuccess,
+            destination: { TransactionSent(viewStore: viewStore) }
+        )
+        .navigationLinkEmpty(
+            isActive: viewStore.bindingForFailure,
+            destination: { TransactionFailed(viewStore: viewStore) }
+        )
     }
 }
 

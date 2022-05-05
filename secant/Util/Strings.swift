@@ -9,9 +9,24 @@ extension String {
     }
 }
 
+extension NumberFormatter {
+    static let zcashFormatter: NumberFormatter = {
+        var formatter = NumberFormatter()
+        formatter.maximumFractionDigits = 8
+        formatter.maximumIntegerDigits = 8
+        formatter.numberStyle = .decimal
+        formatter.usesGroupingSeparator = true
+        return formatter
+    }()
+}
+
 extension String {
-    // TODO: Issue #245 Add Validation Regex that support localization 
-    private static let floatingPointRegex = "^[0-9]*.?[0-9]+"
+    var doubleValue: Double? {
+        return NumberFormatter.zcashFormatter.number(from: self)?.doubleValue
+    }
+}
+
+extension String {
     private static let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}"
     private static let phoneRegex = "^^\\+(?:[0-9]?){6,14}[0-9]$"
 
@@ -32,7 +47,7 @@ extension String {
                 return text.validate(using: .emailRegex)
 
             case .floatingPoint:
-                return text.validate(using: .floatingPointRegex)
+                return text.doubleValue != nil
 
             case .maxLength(let length):
                 return text.count <= length && !text.isEmpty

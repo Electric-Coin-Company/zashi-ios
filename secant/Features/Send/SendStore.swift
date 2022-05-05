@@ -6,11 +6,6 @@ struct Transaction: Equatable {
     var amount: Int64
     var memo: String
     var toAddress: String
-    
-    var amountString: String {
-        get { amount == 0 ? "" : String(format: "%.7f", amount.asHumanReadableZecBalance()) }
-        set { amount = Int64((newValue as NSString).doubleValue * 100_000_000) }
-    }
 }
 
 extension Transaction {
@@ -25,8 +20,7 @@ extension Transaction {
 
 struct SendState: Equatable {
     enum Route: Equatable {
-        case showConfirmation
-        case showSent
+        case confirmation
         case success
         case failure
         case done
@@ -35,9 +29,35 @@ struct SendState: Equatable {
     var route: Route?
     
     var isSendingTransaction = false
-    var totalBalance = 0.0
+    var memo = ""
+    var totalBalance: Int64 = 0
     var transaction: Transaction
-    var transactionInputState: TransactionInputState
+    var transactionAddressInputState: TransactionAddressInputState
+    var transactionAmountInputState: TransactionAmountInputState
+
+    var isInvalidAddressFormat: Bool {
+        !transactionAddressInputState.isValidAddress
+        && !transactionAddressInputState.textFieldState.text.isEmpty
+    }
+
+    var isInvalidAmountFormat: Bool {
+        !transactionAmountInputState.textFieldState.valid
+        && !transactionAmountInputState.textFieldState.text.isEmpty
+    }
+    
+    var isValidForm: Bool {
+        transactionAmountInputState.amount > 0
+        && transactionAddressInputState.isValidAddress
+        && !isInsufficientFunds
+    }
+    
+    var isInsufficientFunds: Bool {
+        transactionAmountInputState.amount > transactionAmountInputState.maxValue
+    }
+
+    var totalCurrencyBalance: Int64 {
+        (totalBalance.asHumanReadableZecBalance() * transactionAmountInputState.zecPrice).asZec()
+    }
 }
 
 enum SendAction: Equatable {
@@ -46,8 +66,10 @@ enum SendAction: Equatable {
     case sendConfirmationPressed
     case sendTransactionResult(Result<TransactionState, NSError>)
     case synchronizerStateChanged(WrappedSDKSynchronizerState)
-    case transactionInput(TransactionInputAction)
-    case updateBalance(Double)
+    case transactionAddressInput(TransactionAddressInputAction)
+    case transactionAmountInput(TransactionAmountInputAction)
+    case updateBalance(Int64)
+    case updateMemo(String)
     case updateTransaction(Transaction)
     case updateRoute(SendState.Route?)
 }
@@ -71,9 +93,9 @@ extension SendReducer {
 
     static let `default` = SendReducer.combine(
         [
-            balanceReducer,
             sendReducer,
-            transactionInputReducer
+            transactionAddressInputReducer,
+            transactionAmountInputReducer
         ]
     )
     .debug()
@@ -89,6 +111,11 @@ extension SendReducer {
             state.isSendingTransaction = false
             return .none
 
+        case .updateRoute(.confirmation):
+            state.transaction.amount = state.transactionAmountInputState.amount
+            state.transaction.toAddress = state.transactionAddressInputState.textFieldState.text
+            return .none
+            
         case let .updateRoute(route):
             state.route = route
             return .none
@@ -129,16 +156,13 @@ extension SendReducer {
             } catch {
                 return Effect(value: .updateRoute(.failure))
             }
-        case .transactionInput(let transactionInput):
-            return .none
             
-        default:
+        case .transactionAmountInput(let transactionInput):
             return .none
-        }
-    }
-    
-    private static let balanceReducer = SendReducer { state, action, environment in
-        switch action {
+
+        case .transactionAddressInput(let transactionInput):
+            return .none
+
         case .onAppear:
             return environment.wrappedSDKSynchronizer.stateChanged
                 .map(SendAction.synchronizerStateChanged)
@@ -151,7 +175,7 @@ extension SendReducer {
         case .synchronizerStateChanged(.synced):
             return environment.wrappedSDKSynchronizer.getShieldedBalance()
                 .receive(on: environment.scheduler)
-                .map({ Double($0.total) / Double(100_000_000) })
+                .map({ $0.total })
                 .map(SendAction.updateBalance)
                 .eraseToEffect()
             
@@ -160,18 +184,29 @@ extension SendReducer {
             
         case .updateBalance(let balance):
             state.totalBalance = balance
-            state.transactionInputState.maxValue = Int64(balance * 100_000_000)
+            state.transactionAmountInputState.maxValue = balance
             return .none
-            
-        default:
+
+        case .updateMemo(let memo):
+            state.memo = memo
             return .none
         }
     }
 
-    private static let transactionInputReducer: SendReducer = TransactionInputReducer.default.pullback(
-        state: \SendState.transactionInputState,
-        action: /SendAction.transactionInput,
-        environment: { _ in TransactionInputEnvironment() }
+    private static let transactionAddressInputReducer: SendReducer = TransactionAddressInputReducer.default.pullback(
+        state: \SendState.transactionAddressInputState,
+        action: /SendAction.transactionAddressInput,
+        environment: { environment in
+            TransactionAddressInputEnvironment(
+                wrappedDerivationTool: environment.wrappedDerivationTool
+            )
+        }
+    )
+
+    private static let transactionAmountInputReducer: SendReducer = TransactionAmountInputReducer.default.pullback(
+        state: \SendState.transactionAmountInputState,
+        action: /SendAction.transactionAmountInput,
+        environment: { _ in TransactionAmountInputEnvironment() }
     )
     
     static func `default`(whenDone: @escaping () -> Void) -> SendReducer {
@@ -211,36 +246,36 @@ extension SendViewStore {
 
     var bindingForConfirmation: Binding<Bool> {
         self.routeBinding.map(
-            extract: { $0 == .showConfirmation || self.bindingForSuccess.wrappedValue || self.bindingForFailure.wrappedValue },
-            embed: { $0 ? SendState.Route.showConfirmation : nil }
+            extract: { $0 == .confirmation || self.bindingForSuccess.wrappedValue || self.bindingForFailure.wrappedValue },
+            embed: { $0 ? SendState.Route.confirmation : nil }
         )
     }
 
     var bindingForSuccess: Binding<Bool> {
         self.routeBinding.map(
             extract: { $0 == .success || self.bindingForDone.wrappedValue },
-            embed: { $0 ? SendState.Route.success : SendState.Route.showConfirmation }
+            embed: { $0 ? SendState.Route.success : SendState.Route.confirmation }
         )
     }
 
     var bindingForFailure: Binding<Bool> {
         self.routeBinding.map(
             extract: { $0 == .failure || self.bindingForDone.wrappedValue },
-            embed: { $0 ? SendState.Route.failure : SendState.Route.showConfirmation }
+            embed: { $0 ? SendState.Route.failure : SendState.Route.confirmation }
         )
     }
     
     var bindingForDone: Binding<Bool> {
         self.routeBinding.map(
             extract: { $0 == .done },
-            embed: { $0 ? SendState.Route.done : SendState.Route.showConfirmation }
+            embed: { $0 ? SendState.Route.done : SendState.Route.confirmation }
         )
     }
 
-    var bindingForBalance: Binding<Double> {
+    var bindingForMemo: Binding<String> {
         self.binding(
-            get: \.totalBalance,
-            send: SendAction.updateBalance
+            get: \.memo,
+            send: SendAction.updateMemo
         )
     }
 }
@@ -252,7 +287,8 @@ extension SendState {
         .init(
             route: nil,
             transaction: .placeholder,
-            transactionInputState: .placeholer
+            transactionAddressInputState: .placeholder,
+            transactionAmountInputState: .amount
         )
     }
 
@@ -264,7 +300,8 @@ extension SendState {
                 memo: "",
                 toAddress: ""
             ),
-            transactionInputState: .placeholer
+            transactionAddressInputState: .placeholder,
+            transactionAmountInputState: .placeholder
         )
     }
 }

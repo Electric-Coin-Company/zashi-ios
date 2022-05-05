@@ -18,9 +18,9 @@ struct HomeState: Equatable {
     var sendState: SendState
     var scanState: ScanState
     var synchronizerStatus: String
-    var totalBalance: Double
+    var totalBalance: Int64
     var transactionHistoryState: TransactionHistoryState
-    var verifiedBalance: Double
+    var verifiedBalance: Int64
 }
 
 enum HomeAction: Equatable {
@@ -95,8 +95,8 @@ extension HomeReducer {
             return Effect(value: .updateSynchronizerStatus)
             
         case .updateBalance(let balance):
-            state.totalBalance = balance.total.asHumanReadableZecBalance()
-            state.verifiedBalance = balance.verified.asHumanReadableZecBalance()
+            state.totalBalance = balance.total
+            state.verifiedBalance = balance.verified
             return .none
             
         case .updateDrawer(let drawerOverlay):
@@ -244,9 +244,9 @@ extension HomeState {
             sendState: .placeholder,
             scanState: .placeholder,
             synchronizerStatus: "",
-            totalBalance: 0.0,
+            totalBalance: 0,
             transactionHistoryState: .emptyPlaceHolder,
-            verifiedBalance: 0.0
+            verifiedBalance: 0
         )
     }
 }

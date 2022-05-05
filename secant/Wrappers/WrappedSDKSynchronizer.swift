@@ -313,7 +313,7 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
                 mocked.map {
                     TransactionState.placeholder(
                         date: Date.init(timeIntervalSince1970: $0.date),
-                        amount: $0.amount * 100000000,
+                        amount: $0.amount,
                         shielded: $0.shielded,
                         status: $0.status,
                         subtitle: $0.subtitle
@@ -335,7 +335,7 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
                 mocked.map {
                     TransactionState.placeholder(
                         date: Date.init(timeIntervalSince1970: $0.date),
-                        amount: $0.amount * 100000000,
+                        amount: $0.amount,
                         shielded: $0.shielded,
                         status: $0.status,
                         subtitle: $0.subtitle
@@ -420,7 +420,7 @@ class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
                 mocked.map {
                     TransactionState.placeholder(
                         date: Date.init(timeIntervalSince1970: $0.date),
-                        amount: $0.amount * 100000000,
+                        amount: $0.amount,
                         shielded: $0.shielded,
                         status: $0.status,
                         subtitle: $0.subtitle,
@@ -443,7 +443,7 @@ class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
                 mocked.map {
                     TransactionState.placeholder(
                         date: Date.init(timeIntervalSince1970: $0.date),
-                        amount: $0.amount * 100000000,
+                        amount: $0.amount,
                         shielded: $0.shielded,
                         status: $0.status,
                         subtitle: $0.subtitle,

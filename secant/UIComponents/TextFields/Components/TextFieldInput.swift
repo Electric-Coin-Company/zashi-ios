@@ -21,6 +21,8 @@ struct TextFieldInput: View {
                     set: { viewStore.send(.set($0)) }
                 )
             )
+            .autocapitalization(.none)
+            .font(.system(size: 13))
             .lineLimit(1)
             .truncationMode(.middle)
             .accentColor(Asset.Colors.Cursor.bar.color)

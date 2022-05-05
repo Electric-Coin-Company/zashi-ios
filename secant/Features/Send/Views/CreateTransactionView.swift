@@ -2,73 +2,89 @@ import SwiftUI
 import ComposableArchitecture
 
 struct CreateTransaction: View {
-    let store: TransactionInputStore
-
-    @Binding var transaction: Transaction
-    @Binding var isComplete: Bool
-    @Binding var totalBalance: Double
+    let store: SendStore
 
     var body: some View {
         UITextView.appearance().backgroundColor = .clear
         
         return WithViewStore(store) { viewStore in
             VStack {
-                VStack {
-                    Text("Balance \(totalBalance)")
-                    
-                    SingleLineTextField(
-                        placeholderText: "0",
-                        title: "How much ZEC would you like to send?",
-                        store: store.scope(
-                            state: \.textFieldState,
-                            action: TransactionInputAction.textField
-                        ),
-                        titleAccessoryView: {
-                            Button(
-                                action: { viewStore.send(.setMax(viewStore.maxValue)) },
-                                label: { Text("Max") }
-                            )
-                                .textFieldTitleAccessoryButtonStyle
-                        },
-                        inputAccessoryView: {
-                        }
-                    )
+                VStack(spacing: 0) {
+                    Text("Balance \(viewStore.totalBalance.asZecString()) ZEC")
+                    Text("($\(viewStore.totalCurrencyBalance.asZecString()))")
+                        .font(.system(size: 13))
+                        .opacity(0.6)
                 }
                 .padding()
-                
+
                 VStack {
-                    Text("To Address")
-                    
-                    TextField(
-                        "Address",
-                        text: $transaction.toAddress
+                    TransactionAmountTextField(
+                        store: store.scope(
+                            state: \.transactionAmountInputState,
+                            action: SendAction.transactionAmountInput
+                        )
                     )
-                        .font(.system(size: 14))
-                        .padding()
-                        .background(Color.white)
-                        .foregroundColor(Asset.Colors.Text.importSeedEditor.color)
+                    
+                    if viewStore.isInvalidAmountFormat {
+                        HStack {
+                            Text("invalid amount")
+                                .foregroundColor(.red)
+                            
+                            Spacer()
+                        }
+                    }
+
+                    if viewStore.isInsufficientFunds {
+                        HStack {
+                            Text("insufficient funds")
+                                .foregroundColor(.red)
+                            
+                            Spacer()
+                        }
+                    }
+                }
+                .padding()
+
+                VStack {
+                    TransactionAddressTextField(
+                        store: store.scope(
+                            state: \.transactionAddressInputState,
+                            action: SendAction.transactionAddressInput
+                        )
+                    )
+                    
+                    if viewStore.isInvalidAddressFormat {
+                        HStack {
+                            Text("invalid address")
+                                .foregroundColor(.red)
+                            
+                            Spacer()
+                        }
+                    }
                 }
                 .padding()
                 
                 VStack {
                     Text("Memo")
                     
-                    TextEditor(text: $transaction.memo)
+                    TextEditor(text: viewStore.bindingForMemo)
                         .frame(maxWidth: .infinity, maxHeight: 150, alignment: .center)
-                        .importSeedEditorModifier()
+                        .importSeedEditorModifier(Asset.Colors.Text.activeButtonText.color)
                 }
                 .padding()
                 
                 Button(
-                    action: { isComplete = true },
+                    action: { viewStore.send(.updateRoute(.confirmation)) },
                     label: { Text("Send") }
                 )
-                    .activeButtonStyle
-                    .frame(height: 50)
-                    .padding()
-                
+                .activeButtonStyle
+                .frame(height: 50)
+                .padding()
+                .disabled(!viewStore.isValidForm)
+
                 Spacer()
             }
+            .navigationBarTitleDisplayMode(.inline)
             .padding()
             .applyScreenBackground()
         }
@@ -81,18 +97,9 @@ struct Create_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             StateContainer(
-                initialState: (
-                    Transaction.placeholder,
-                    false,
-                    0.0
-                )
-            ) {
-                CreateTransaction(
-                    store: .placeholder,
-                    transaction: $0.0,
-                    isComplete: $0.1,
-                    totalBalance: $0.2
-                )
+                initialState: ( false )
+            ) { _ in
+                CreateTransaction(store: .placeholder)
             }
             .navigationBarTitleDisplayMode(.inline)
             .preferredColorScheme(.dark)
@@ -107,7 +114,8 @@ extension SendStore {
             initialState: .init(
                 route: nil,
                 transaction: .placeholder,
-                transactionInputState: .placeholer
+                transactionAddressInputState: .placeholder,
+                transactionAmountInputState: .placeholder
             ),
             reducer: .default,
             environment: SendEnvironment(
