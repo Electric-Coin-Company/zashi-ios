@@ -132,7 +132,7 @@ struct BadgesOverlay: Animatable, ViewModifier {
                                 Spacer()
 
                                 ZStack {
-                                    ForEach(0..<viewStore.badges.count) { badgeIndex in
+                                    ForEach(0..<viewStore.badges.count, id: \.self) { badgeIndex in
                                         viewStore.badges[viewStore.index].image
                                             .frame(
                                                 width: proxy.size.width * 0.35,

@@ -100,7 +100,7 @@ struct Create_Previews: PreviewProvider {
     }
 }
 
-#if DEBUG
+// #if DEBUG // FIX: Issue #306 - Release build is broken
 extension SendStore {
     static var placeholder: SendStore {
         return SendStore(
@@ -120,4 +120,4 @@ extension SendStore {
         )
     }
 }
-#endif
+// #endif

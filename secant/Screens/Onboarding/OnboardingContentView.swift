@@ -57,7 +57,7 @@ struct OnboardingContentView: View {
                 }
             }
             ZStack {
-                ForEach(0..<viewStore.steps.count) { stepIndex in
+                ForEach(0..<viewStore.steps.count, id: \.self) { stepIndex in
                     VStack(spacing: viewStore.isFinalStep ? 50 : 15) {
                         HStack {
                             Text(viewStore.steps[stepIndex].title)
