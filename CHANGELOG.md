@@ -4,51 +4,53 @@
 This version allows users to sync their wallet and (when doing so very carefully)
 sending funds. 
 
-- Issue #302: Synchronizer status on Home Screen (#304)
-- Issue #212: Wrapped user defaults (#298)
-- Issue #295: Update "Commit Messages" section of CONTRIBUTING.md (#296)
-- Issue #293: first draft of history of transactions (#293)
-- Issue #290: Swiftlint 0.45.0 -> 0.47.0 (#290)
-- Issue #284: (Non)scrollable Transactions list based on Drawer
+- [#306]: Release build is broken because placeholder is not compiled
+- [#215]: Warning: Non-constant range: argument must be an integer literal
+- [#302]: Synchronizer status on Home Screen (#304)
+- [#212]: Wrapped user defaults (#298)
+- [#295]: Update "Commit Messages" section of CONTRIBUTING.md (#296)
+- [#293]: first draft of history of transactions (#293)
+- [#290]: Swiftlint 0.45.0 -> 0.47.0 (#290)
+- [#284]: (Non)scrollable Transactions list based on Drawer
 
 ## 0.0.1 build 21
-- Issue #258: User can take the backup test successfully more than once (#282)\
-- Issue #279: update swiftlint (#280)
-- Issue #283: drawer animation fixed (#283)
-- Issue #284: Static welcome screen (#274)
-- Issue #276: [Scaffold] Drawer for the Home Screen (#275)
-- Issue #239: [Functional] Integration of the ZcashSDK
-- Issue #266: Placeholder home screen/refactor previous home to debug screen
-- Issue #256: [Recovery Phrase Display] Dark mode word chips' color does not match the designs
-- Issue #268: [Critical] App get stuck after start #268
-- Issue #260: Wrapped Derivation Tool 
-- Issue #254: Testable and more readable structure for the AppReducer
-- Issue #231: Wallet Storage unit tests vs. integration tests
-- Issue #253: [Functional] Import wallet
-- Issue #250: Recovery Phrase Validation, words to complete puzzle are not shuffled
+- [#258]: User can take the backup test successfully more than once (#282)\
+- [#279]: update swiftlint (#280)
+- [#283]: drawer animation fixed (#283)
+- [#284]: Static welcome screen (#274)
+- [#276]: [Scaffold] Drawer for the Home Screen (#275)
+- [#239]: [Functional] Integration of the ZcashSDK
+- [#266]: Placeholder home screen/refactor previous home to debug screen
+- [#256]: [Recovery Phrase Display] Dark mode word chips' color does not match the designs
+- [#268]: [Critical] App get stuck after start #268
+- [#260]: Wrapped Derivation Tool 
+- [#254]: Testable and more readable structure for the AppReducer
+- [#231]: Wallet Storage unit tests vs. integration tests
+- [#253]: [Functional] Import wallet
+- [#250]: Recovery Phrase Validation, words to complete puzzle are not shuffled
 ## 0.0.1 build 19
-- Issue #242: NukeWallet in the debug menus for testing purposes
+- [#242]: NukeWallet in the debug menus for testing purposes
 
 ## 0.0.1 build 18
-- Issue #200: Move Debug Menus to a hidden screen
-- Issue #197: Ability to know whether wallet has been initialized
-- Issue #202: Connect onboarding flow to Recovery Phrase backup on Create New wallet
+- [#200]: Move Debug Menus to a hidden screen
+- [#197]: Ability to know whether wallet has been initialized
+- [#202]: Connect onboarding flow to Recovery Phrase backup on Create New wallet
 
 ## 0.0.1 build 17
-- Issue #196: User Preferences Storage
-- Issue #157: Keystoring protocol
-- Issue #155: Add MnemonicSwift to the project
+- [#196]: User Preferences Storage
+- [#157]: Keystoring protocol
+- [#155]: Add MnemonicSwift to the project
 
 ## 0.0.1 build 16
-- Issue #205: Validation Failure/Success updated to handle dark mode
-- Issue #191: Badges updated to use symbols
-- Issue #181: Badge animation fix
-- Issue #140: Validation Failed Screen Design updates
-- Issue #139: Validation Success Screen Design updates
-- Issue #183: remove Create new button style
-- Issue #147: Recovery Phrase Validation PreambleScreen
-- Issue #165: [Scaffold] wallet import screen
-- Issue #174: Wallet localization preparation
+- [#205]: Validation Failure/Success updated to handle dark mode
+- [#191]: Badges updated to use symbols
+- [#181]: Badge animation fix
+- [#140]: Validation Failed Screen Design updates
+- [#139]: Validation Success Screen Design updates
+- [#183]: remove Create new button style
+- [#147]: Recovery Phrase Validation PreambleScreen
+- [#165]: [Scaffold] wallet import screen
+- [#174]: Wallet localization preparation
 ## 0.0.1 Build 15
 - Issue #163: Recovery Phrase validation feedback
 - Issue #138: Enhancements to Onboarding Flows
