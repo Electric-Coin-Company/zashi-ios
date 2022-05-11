@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SupportsSwiftPackage</key>
+	<true/>
+	<key>Kind</key>
+	<string>Xcode.IDEFoundation.TextSubstitutionFileTemplateKind</string>
+	<key>Description</key>
+	<string>The Composable Architecture pre-filled swift file.</string>
+	<key>Summary</key>
+	<string>The Composable Architecture pre-filled swift file.</string>
+	<key>SortOrder</key>
+	<string>1</string>
+	<key>Image</key>
+	<dict>
+		<key>FileTypeIcon</key>
+		<string>swift</string>
+	</dict>
+	<key>AllowedTypes</key>
+	<array>
+		<string>public.swift-source</string>
+	</array>
+	<key>Platforms</key>
+	<array/>
+	<key>DefaultCompletionName</key>
+	<string>File</string>
+	<key>Options</key>
+	<array>
+		<dict>
+			<key>Description</key>
+			<string>The name of the module to create</string>
+			<key>Identifier</key>
+			<string>productName</string>
+			<key>Name</key>
+			<string>TCA Store</string>
+			<key>Required</key>
+			<string>YES</string>
+			<key>Type</key>
+			<string>text</string>
+			<key>Default</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>viewType</string>
+			<key>Required</key>
+			<true/>
+			<key>Name</key>
+			<string>View type:</string>
+			<key>Description</key>
+			<string>The type of store to create</string>
+			<key>Type</key>
+			<string>popup</string>
+			<key>Default</key>
+			<string>Empty</string>
+			<key>Values</key>
+			<array>
+				<string>Empty</string>
+				<string>Navigation</string>
+			</array>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>reducerType</string>
+			<key>Required</key>
+			<true/>
+			<key>Name</key>
+			<string>Reducer type:</string>
+			<key>Description</key>
+			<string>The type of the reducer to be pre-generated.</string>
+			<key>Type</key>
+			<string>popup</string>
+			<key>Default</key>
+			<string>Standalone</string>
+			<key>Values</key>
+			<array>
+				<string>Standalone</string>
+				<string>Combined</string>
+			</array>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>generateViewFile</string>
+			<key>Name</key>
+			<string>Also create a view TCA file</string>
+			<key>Description</key>
+			<string>Create a TCA file with the same name</string>
+			<key>Type</key>
+			<string>checkbox</string>
+			<key>RequiredOptions</key>
+			<dict>
+				<key>viewType</key>
+				<array>
+					<string>Empty</string>
+					<string>Navigation</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>
