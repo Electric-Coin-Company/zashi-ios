@@ -22,7 +22,6 @@ struct TextFieldState: Equatable {
 }
 
 enum TextFieldAction: Equatable {
-//    case apply((String) -> String)
     case set(String)
 }
 
@@ -31,9 +30,6 @@ struct TextFieldEnvironment: Equatable { }
 extension TextFieldReducer {
     static let `default` = TextFieldReducer { state, action, _ in
         switch action {
-            //        case .apply(let action):
-            //            state.text = action(state.text)
-            //            state.valid = state.text.isValid(for: state.validationType)
         case .set(let text):
             state.text = text
             state.valid = state.text.isValid(for: state.validationType)
@@ -63,6 +59,11 @@ extension TextFieldStore {
 extension TextFieldState {
     static let placeholder = TextFieldState(
         validationType: nil,
+        text: ""
+    )
+
+    static let amount = TextFieldState(
+        validationType: .floatingPoint,
         text: ""
     )
 }

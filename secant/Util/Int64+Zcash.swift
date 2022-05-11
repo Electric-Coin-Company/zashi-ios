@@ -12,4 +12,8 @@ extension Int64 {
     func asHumanReadableZecBalance() -> Double {
         Double(self) / Double(100_000_000)
     }
+
+    func asZecString() -> String {
+        NumberFormatter.zcashFormatter.string(from: NSNumber(value: self.asHumanReadableZecBalance())) ?? ""
+    }
 }

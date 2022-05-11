@@ -2,33 +2,17 @@ import SwiftUI
 import ComposableArchitecture
 
 struct SendView: View {
-    let store: Store<SendState, SendAction>
+    let store: SendStore
 
     var body: some View {
         WithViewStore(store) { viewStore in
-            CreateTransaction(
-                store: store.scope(
-                    state: \.transactionInputState,
-                    action: SendAction.transactionInput
-                ),
-                transaction: viewStore.bindingForTransaction,
-                isComplete: viewStore.bindingForConfirmation,
-                totalBalance: viewStore.bindingForBalance
-            )
+            CreateTransaction(store: store)
             .onAppear { viewStore.send(.onAppear) }
             .onDisappear { viewStore.send(.onDisappear) }
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForConfirmation,
                 destination: {
                     TransactionConfirmation(viewStore: viewStore)
-                        .navigationLinkEmpty(
-                            isActive: viewStore.bindingForSuccess,
-                            destination: { TransactionSent(viewStore: viewStore) }
-                        )
-                        .navigationLinkEmpty(
-                            isActive: viewStore.bindingForFailure,
-                            destination: { TransactionFailed(viewStore: viewStore) }
-                        )
                 }
             )
         }
@@ -43,7 +27,8 @@ struct SendView_Previews: PreviewProvider {
                     initialState: .init(
                         route: nil,
                         transaction: .placeholder,
-                        transactionInputState: .placeholer
+                        transactionAddressInputState: .placeholder,
+                        transactionAmountInputState: .placeholder
                     ),
                     reducer: .default,
                     environment: SendEnvironment(

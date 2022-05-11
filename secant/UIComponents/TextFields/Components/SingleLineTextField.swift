@@ -8,13 +8,14 @@
 import SwiftUI
 import ComposableArchitecture
 
-struct SingleLineTextField<TitleAccessoryContent, InputAccessoryContent>: View
-    where TitleAccessoryContent: View, InputAccessoryContent: View {
+struct SingleLineTextField<TitleAccessoryContent, InputPrefixContent, InputAccessoryContent>: View
+    where TitleAccessoryContent: View, InputPrefixContent: View, InputAccessoryContent: View {
     let placeholderText: String
     let title: String
     let store: TextFieldStore
 
     @ViewBuilder let titleAccessoryView: TitleAccessoryContent
+    @ViewBuilder let inputPrefixView: InputPrefixContent
     @ViewBuilder let inputAccessoryView: InputAccessoryContent
 
     var body: some View {
@@ -23,6 +24,7 @@ struct SingleLineTextField<TitleAccessoryContent, InputAccessoryContent>: View
                 Text(title)
                     .lineLimit(1)
                     .truncationMode(.middle)
+                    .font(.system(size: 13))
 
                 Spacer()
 
@@ -30,6 +32,8 @@ struct SingleLineTextField<TitleAccessoryContent, InputAccessoryContent>: View
             }
 
             HStack {
+                inputPrefixView
+                
                 TextFieldInput(
                     placeholder: placeholderText,
                     store: store
@@ -67,6 +71,7 @@ struct SingleLineTextField_Previews: PreviewProvider {
                             )
                             .textFieldTitleAccessoryButtonStyle
                         },
+                        inputPrefixView: { EmptyView() },
                         inputAccessoryView: { EmptyView() }
                     )
                 }
@@ -84,6 +89,7 @@ struct SingleLineTextField_Previews: PreviewProvider {
                     title: "Who would you like to deal with really long text today?",
                     store: store,
                     titleAccessoryView: { EmptyView() },
+                    inputPrefixView: { EmptyView() },
                     inputAccessoryView: { EmptyView() }
                 )
             }

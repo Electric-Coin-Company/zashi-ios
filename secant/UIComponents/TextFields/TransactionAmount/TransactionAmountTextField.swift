@@ -1,5 +1,5 @@
 //
-//  TransactionTextField.swift
+//  TransactionAmountTextField.swift
 //  secant-testnet
 //
 //  Created by Adam Stener on 4/4/22.
@@ -8,38 +8,43 @@
 import SwiftUI
 import ComposableArchitecture
 
-struct TransactionTextField: View {
-    let store: TransactionInputStore
-
-    // Constant example used here, this could be injected by a dependency
-    // Access to this value could also be injected into the store as a dependency
-    // with a function to prouce this value.
-    let maxTransactionValue: Int64 = 500
-
+struct TransactionAmountTextField: View {
+    let store: TransactionAmountInputStore
+    
     var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
                 SingleLineTextField(
-                    placeholderText: "$0",
-                    title: "How much?",
+                    placeholderText: "0",
+                    title: "How much ZEC would you like to send?",
                     store: store.scope(
                         state: \.textFieldState,
-                        action: TransactionInputAction.textField
+                        action: TransactionAmountInputAction.textField
                     ),
                     titleAccessoryView: {
                         Button(
                             action: {
-                                viewStore.send(.setMax(maxTransactionValue))
+                                viewStore.send(viewStore.isMax ? .clearValue : .setMax)
                             },
-                            label: { Text("Max") }
+                            label: {
+                                Text(viewStore.isMax ? "Clear" : "Max")
+                            }
                         )
                         .textFieldTitleAccessoryButtonStyle
+                    },
+                    inputPrefixView: {
+                        if viewStore.currencySelectionState.currencyType == .zec {
+                            ZcashSymbol()
+                                .frame(width: 12, height: 12, alignment: .center)
+                        } else {
+                            Text("$")
+                        }
                     },
                     inputAccessoryView: {
                         TransactionCurrencySelector(
                             store: store.scope(
                                 state: \.currencySelectionState,
-                                action: TransactionInputAction.currencySelection
+                                action: TransactionAmountInputAction.currencySelection
                             )
                         )
                     }
@@ -49,10 +54,10 @@ struct TransactionTextField: View {
     }
 }
 
-struct TransactionTextField_Previews: PreviewProvider {
+struct TransactionAmountTextField_Previews: PreviewProvider {
     static var previews: some View {
-        TransactionTextField(
-            store: TransactionInputStore(
+        TransactionAmountTextField(
+            store: TransactionAmountInputStore(
                 initialState: .init(
                     textFieldState: .init(
                         validationType: .floatingPoint,
@@ -80,8 +85,8 @@ struct TransactionTextField_Previews: PreviewProvider {
                 )
                 .textFieldTitleAccessoryButtonStyle
             },
-            inputAccessoryView: {
-            }
+            inputPrefixView: { EmptyView() },
+            inputAccessoryView: { EmptyView() }
         )
         .preferredColorScheme(.dark)
         .padding(.horizontal, 50)
@@ -92,8 +97,8 @@ struct TransactionTextField_Previews: PreviewProvider {
             placeholderText: "",
             title: "Address",
             store: .address,
-            titleAccessoryView: {
-            },
+            titleAccessoryView: { EmptyView() },
+            inputPrefixView: { EmptyView() },
             inputAccessoryView: {
                 Image(Asset.Assets.Icons.qrCode.name)
                     .resizable()

@@ -124,6 +124,11 @@ struct WrappedDerivationTool {
     Checks validity of the shielded address.
     */
     let isValidShieldedAddress: (String) throws -> Bool
+    
+    /**
+    Checks if given address is a valid zcash address.
+    */
+    let isValidZcashAddress: (String) throws -> Bool
 }
 
 extension WrappedDerivationTool {
@@ -170,6 +175,10 @@ extension WrappedDerivationTool {
             },
             isValidShieldedAddress: { zAddress in
                 try derivationTool.isValidShieldedAddress(zAddress)
+            },
+            isValidZcashAddress: { address in
+                try derivationTool.isValidTransparentAddress(address) ? true :
+                try derivationTool.isValidShieldedAddress(address) ? true : false
             }
         )
     }

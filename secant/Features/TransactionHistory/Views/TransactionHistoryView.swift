@@ -52,7 +52,7 @@ extension TransactionHistoryView {
                         Spacer()
                         
                         Text(transaction.status == .received ? "+" : "")
-                        + Text("\(String(format: "%.7f", transaction.zecAmount.asHumanReadableZecBalance())) ZEC")
+                        + Text("\(transaction.zecAmount.asZecString()) ZEC")
                     }
                 }
                 .navigationLink(

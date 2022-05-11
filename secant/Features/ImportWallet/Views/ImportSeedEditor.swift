@@ -20,6 +20,7 @@ struct ImportSeedEditor: View {
     var body: some View {
         WithViewStore(store) { viewStore in
             TextEditor(text: viewStore.binding(\.$importedSeedPhrase))
+                .autocapitalization(.none)
                 .importSeedEditorModifier()
                 .padding(28)
         }
@@ -27,11 +28,13 @@ struct ImportSeedEditor: View {
 }
 
 struct ImportSeedEditorModifier: ViewModifier {
+    var backgroundColor = Color.white
+    
     func body(content: Content) -> some View {
         content
             .foregroundColor(Asset.Colors.Text.importSeedEditor.color)
             .padding()
-            .background(Color.white)
+            .background(backgroundColor)
             .cornerRadius(4)
             .overlay(
                 RoundedRectangle(cornerRadius: 4)
@@ -41,8 +44,8 @@ struct ImportSeedEditorModifier: ViewModifier {
 }
 
 extension View {
-    func importSeedEditorModifier() -> some View {
-        modifier(ImportSeedEditorModifier())
+    func importSeedEditorModifier(_ backgroundColor: Color = .white) -> some View {
+        modifier(ImportSeedEditorModifier(backgroundColor: backgroundColor))
     }
 }
 
