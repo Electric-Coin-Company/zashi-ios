@@ -1,17 +1,17 @@
 # Changelog
 
+## 0.0.1 build 24
+[#294] Send Screen - amount + address fields (#308)
 ## 0.0.1 build 23
-This version allows users to sync their wallet and (when doing so very carefully)
-sending funds. 
-
-- [#306]: Release build is broken because placeholder is not compiled
-- [#215]: Warning: Non-constant range: argument must be an integer literal
-- [#302]: Synchronizer status on Home Screen (#304)
-- [#212]: Wrapped user defaults (#298)
-- [#295]: Update "Commit Messages" section of CONTRIBUTING.md (#296)
-- [#293]: first draft of history of transactions (#293)
-- [#290]: Swiftlint 0.45.0 -> 0.47.0 (#290)
-- [#284]: (Non)scrollable Transactions list based on Drawer
+[#287] updated changelog with issues that fixed the broken build (#309)
+[#306] [#215] Swiftlint and other warnings + build errors (#307)
+[#287] CHANGELOG and build number bump for 0.0.1-23 (#305)
+[#302] Synchronizer status on Home Screen (#304)
+[#212] Wrapped user defaults (#298)
+[#80] Scaffold - Send functionality (#297)
+[#295] Update "Commit Messages" section of CONTRIBUTING.md (#296)
+[#293] first draft of history of transactions (#293)
+[#284]: (Non)scrollable Transactions list based on Drawer
 
 ## 0.0.1 build 21
 - [#258]: User can take the backup test successfully more than once (#282)\
