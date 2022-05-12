@@ -12,7 +12,7 @@ import ComposableArchitecture
 class RecoveryPhraseValidationTests: XCTestCase {
     static let testScheduler = DispatchQueue.test
 
-    let testEnvironment = BackupPhraseEnvironment(
+    let testEnvironment = RecoveryPhraseValidationFlowEnvironment(
         mainQueue: testScheduler.eraseToAnyScheduler(),
         newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
         pasteboard: .test,
@@ -66,14 +66,14 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let missingWordChips: [PhraseChip.Kind] = ["salute", "boil", "cancel", "pizza"].map({ PhraseChip.Kind.unassigned(word: $0) })
 
-        let initialStep = RecoveryPhraseValidationState(
+        let initialStep = RecoveryPhraseValidationFlowState(
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordChips: missingWordChips,
             validationWords: []
         )
 
-        let store = TestStore(initialState: initialStep, reducer: RecoveryPhraseValidationReducer.default, environment: testEnvironment)
+        let store = TestStore(initialState: initialStep, reducer: RecoveryPhraseValidationFlowReducer.default, environment: testEnvironment)
 
         let expectedMissingChips = [
             PhraseChip.Kind.empty,
@@ -113,13 +113,13 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let missingWordChips = ["salute", "boil", "cancel", "pizza"].map({ PhraseChip.Kind.unassigned(word: $0) })
 
-        let initialStep = RecoveryPhraseValidationState.initial(
+        let initialStep = RecoveryPhraseValidationFlowState.initial(
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordsChips: missingWordChips
         )
 
-        let store = TestStore(initialState: initialStep, reducer: RecoveryPhraseValidationReducer.default, environment: testEnvironment)
+        let store = TestStore(initialState: initialStep, reducer: RecoveryPhraseValidationFlowReducer.default, environment: testEnvironment)
 
         let expectedMissingChips = [
             PhraseChip.Kind.unassigned(word: "salute"),
@@ -157,7 +157,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let phrase = RecoveryPhrase(words: words)
 
-        let currentStep = RecoveryPhraseValidationState(
+        let currentStep = RecoveryPhraseValidationFlowState(
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordChips: [
@@ -169,7 +169,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
             validationWords: [ValidationWord(groupIndex: 0, word: "salute")]
         )
 
-        let store = TestStore(initialState: currentStep, reducer: RecoveryPhraseValidationReducer.default, environment: testEnvironment)
+        let store = TestStore(initialState: currentStep, reducer: RecoveryPhraseValidationFlowReducer.default, environment: testEnvironment)
 
         let expectedMissingWordChips = [
             PhraseChip.Kind.empty,
@@ -210,7 +210,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let phrase = RecoveryPhrase(words: words)
 
-        let currentStep = RecoveryPhraseValidationState(
+        let currentStep = RecoveryPhraseValidationFlowState(
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordChips: [
@@ -225,7 +225,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
             ]
         )
 
-        let store = TestStore(initialState: currentStep, reducer: RecoveryPhraseValidationReducer.default, environment: testEnvironment)
+        let store = TestStore(initialState: currentStep, reducer: RecoveryPhraseValidationFlowReducer.default, environment: testEnvironment)
 
         let expectedMissingWordChips = [
             PhraseChip.Kind.empty,
@@ -267,7 +267,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let phrase = RecoveryPhrase(words: words)
 
-        let currentStep = RecoveryPhraseValidationState(
+        let currentStep = RecoveryPhraseValidationFlowState(
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordChips: [
@@ -283,7 +283,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
             ]
         )
 
-        let store = TestStore(initialState: currentStep, reducer: RecoveryPhraseValidationReducer.default, environment: testEnvironment)
+        let store = TestStore(initialState: currentStep, reducer: RecoveryPhraseValidationFlowReducer.default, environment: testEnvironment)
 
         let expectedMissingWordChips = [
             PhraseChip.Kind.empty,
@@ -334,7 +334,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let phrase = RecoveryPhrase(words: words)
 
-        let currentStep = RecoveryPhraseValidationState(
+        let currentStep = RecoveryPhraseValidationFlowState(
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordChips: [
@@ -350,7 +350,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
             ]
         )
 
-        let store = TestStore(initialState: currentStep, reducer: RecoveryPhraseValidationReducer.default, environment: testEnvironment)
+        let store = TestStore(initialState: currentStep, reducer: RecoveryPhraseValidationFlowReducer.default, environment: testEnvironment)
 
         let expectedMissingWordChips = [
             PhraseChip.Kind.empty,
@@ -404,7 +404,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let phrase = RecoveryPhrase(words: words)
 
-        let currentStep = RecoveryPhraseValidationState(
+        let currentStep = RecoveryPhraseValidationFlowState(
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordChips: [
@@ -456,7 +456,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let phrase = RecoveryPhrase(words: words)
 
-        let currentStep = RecoveryPhraseValidationState(
+        let currentStep = RecoveryPhraseValidationFlowState(
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordChips: [
@@ -509,7 +509,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let phrase = RecoveryPhrase(words: words)
 
-        let currentStep = RecoveryPhraseValidationState(
+        let currentStep = RecoveryPhraseValidationFlowState(
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordChips: [
@@ -547,7 +547,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let phrase = RecoveryPhrase(words: words)
 
-        let currentStep = RecoveryPhraseValidationState(
+        let currentStep = RecoveryPhraseValidationFlowState(
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordChips: [
@@ -593,7 +593,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
             ValidationWord(groupIndex: 3, word: "pizza")
         ]
 
-        let result = RecoveryPhraseValidationState(
+        let result = RecoveryPhraseValidationFlowState(
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordChips: phrase.words(fromMissingIndices: missingIndices),
@@ -632,7 +632,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
             ValidationWord(groupIndex: 2, word: "pizza")
         ]
 
-        let result = RecoveryPhraseValidationState(
+        let result = RecoveryPhraseValidationFlowState(
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordChips: phrase.words(fromMissingIndices: missingIndices),
@@ -646,13 +646,13 @@ class RecoveryPhraseValidationTests: XCTestCase {
     }
 }
 
-extension RecoveryPhraseValidationState {
+extension RecoveryPhraseValidationFlowState {
     static func initial(
         phrase: RecoveryPhrase,
         missingIndices: [Int],
         missingWordsChips: [PhraseChip.Kind]
     ) -> Self {
-        RecoveryPhraseValidationState(
+        RecoveryPhraseValidationFlowState(
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordChips: missingWordsChips,

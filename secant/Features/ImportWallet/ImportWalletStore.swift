@@ -8,12 +8,18 @@
 import ComposableArchitecture
 import ZcashLightClientKit
 
+typealias ImportWalletReducer = Reducer<ImportWalletState, ImportWalletAction, ImportWalletEnvironment>
 typealias ImportWalletStore = Store<ImportWalletState, ImportWalletAction>
+typealias ImportWalletViewStore = ViewStore<ImportWalletState, ImportWalletAction>
+
+// MARK: - State
 
 struct ImportWalletState: Equatable {
     @BindableState var alert: AlertState<ImportWalletAction>?
     @BindableState var importedSeedPhrase: String = ""
 }
+
+// MARK: - Action
 
 enum ImportWalletAction: Equatable, BindableAction {
     case binding(BindingAction<ImportWalletState>)
@@ -24,9 +30,11 @@ enum ImportWalletAction: Equatable, BindableAction {
     case successfullyRecovered
 }
 
+// MARK: - Environment
+
 struct ImportWalletEnvironment {
-    let mnemonicSeedPhraseProvider: MnemonicSeedPhraseProvider
-    let walletStorage: WalletStorageInteractor
+    let mnemonicSeedPhraseProvider: WrappedMnemonic
+    let walletStorage: WrappedWalletStorage
     let zcashSDKEnvironment: ZCashSDKEnvironment
 }
 
@@ -44,7 +52,7 @@ extension ImportWalletEnvironment {
     )
 }
 
-typealias ImportWalletReducer = Reducer<ImportWalletState, ImportWalletAction, ImportWalletEnvironment>
+// MARK: - Reducer
 
 extension ImportWalletReducer {
     static let `default` = ImportWalletReducer { state, action, environment in
@@ -105,4 +113,20 @@ extension ImportWalletReducer {
         }
     }
     .binding()
+}
+
+// MARK: - Placeholders
+
+extension ImportWalletState {
+    static let placeholder = ImportWalletState(importedSeedPhrase: "")
+
+    static let live = ImportWalletState(importedSeedPhrase: "")
+}
+
+extension ImportWalletStore {
+    static let demo = Store(
+        initialState: .placeholder,
+        reducer: .default,
+        environment: .demo
+    )
 }

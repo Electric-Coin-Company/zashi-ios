@@ -1,18 +1,25 @@
 import ComposableArchitecture
 
+typealias ScanReducer = Reducer<ScanState, ScanAction, ScanEnvironment>
+typealias ScanStore = Store<ScanState, ScanAction>
+typealias ScanViewStore = ViewStore<ScanState, ScanAction>
+
+// MARK: - State
+
 struct ScanState: Equatable {
 }
+
+// MARK: - Action
 
 enum ScanAction: Equatable {
     case noOp
 }
 
-struct ScanEnvironment {
-}
+// MARK: - Environment
 
-// MARK: - ScanReducer
+struct ScanEnvironment { }
 
-typealias ScanReducer = Reducer<ScanState, ScanAction, ScanEnvironment>
+// MARK: - Reducer
 
 extension ScanReducer {
     static let `default` = ScanReducer { _, action, _ in
@@ -23,9 +30,13 @@ extension ScanReducer {
     }
 }
 
-// MARK: - ScanStore
+// MARK: Placeholders
 
-typealias ScanStore = Store<ScanState, ScanAction>
+extension ScanState {
+    static var placeholder: Self {
+        .init()
+    }
+}
 
 extension ScanStore {
     static let placeholder = ScanStore(
@@ -33,19 +44,4 @@ extension ScanStore {
         reducer: .default,
         environment: ScanEnvironment()
     )
-}
-
-// MARK: - ScanViewStore
-
-typealias ScanViewStore = ViewStore<ScanState, ScanAction>
-
-extension ScanViewStore {
-}
-
-// MARK: PlaceHolders
-
-extension ScanState {
-    static var placeholder: Self {
-        .init()
-    }
 }
