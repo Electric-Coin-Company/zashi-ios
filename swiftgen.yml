@@ -1,5 +1,5 @@
-input_dir: secant/
-output_dir: secant/Generated/
+input_dir: secant/Resources/
+output_dir: secant/Resources/Generated/
 
 xcassets:
   inputs:

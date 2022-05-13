@@ -1,6 +1,12 @@
 import ComposableArchitecture
 import SwiftUI
 
+typealias SandboxReducer = Reducer<SandboxState, SandboxAction, SandboxEnvironment>
+typealias SandboxStore = Store<SandboxState, SandboxAction>
+typealias SandboxViewStore = ViewStore<SandboxState, SandboxAction>
+
+// MARK: - State
+
 struct SandboxState: Equatable {
     enum Route: Equatable, CaseIterable {
         case history
@@ -10,21 +16,25 @@ struct SandboxState: Equatable {
         case scan
         case request
     }
-    var transactionHistoryState: TransactionHistoryState
+    var transactionHistoryState: TransactionHistoryFlowState
     var profileState: ProfileState
     var route: Route?
 }
 
+// MARK: - Action
+
 enum SandboxAction: Equatable {
     case updateRoute(SandboxState.Route?)
-    case transactionHistory(TransactionHistoryAction)
+    case transactionHistory(TransactionHistoryFlowAction)
     case profile(ProfileAction)
     case reset
 }
 
-// MARK: - SandboxReducer
+// MARK: - Environment
 
-typealias SandboxReducer = Reducer<SandboxState, SandboxAction, Void>
+struct SandboxEnvironment { }
+
+// MARK: - Reducer
 
 extension SandboxReducer {
     static let `default` = SandboxReducer { state, action, environment in
@@ -33,14 +43,14 @@ extension SandboxReducer {
             state.route = route
             return .none
         case let .transactionHistory(transactionHistoryAction):
-            return TransactionHistoryReducer
+            return TransactionHistoryFlowReducer
                 .default
                 .run(
                     &state.transactionHistoryState,
                     transactionHistoryAction,
-                    TransactionHistoryEnvironment(
+                    TransactionHistoryFlowEnvironment(
                         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
-                        wrappedSDKSynchronizer: LiveWrappedSDKSynchronizer()
+                        SDKSynchronizer: LiveWrappedSDKSynchronizer()
                     )
                 )
                 .map(SandboxAction.transactionHistory)
@@ -61,12 +71,10 @@ extension SandboxReducer {
     }
 }
 
-// MARK: - SandboxStore
-
-typealias SandboxStore = Store<SandboxState, SandboxAction>
+// MARK: - Store
 
 extension SandboxStore {
-    func historyStore() -> TransactionHistoryStore {
+    func historyStore() -> TransactionHistoryFlowStore {
         self.scope(
             state: \.transactionHistoryState,
             action: SandboxAction.transactionHistory
@@ -81,22 +89,20 @@ extension SandboxStore {
     }
 }
 
-// MARK: - SandboxViewStore
-
-typealias SandboxViewStore = ViewStore<SandboxState, SandboxAction>
+// MARK: - ViewStore
 
 extension SandboxViewStore {
     func toggleSelectedTransaction() {
         let isAlreadySelected = (self.selectedTranactionID != nil)
         let transcation = self.transactionHistoryState.transactions[5]
-        let newRoute = isAlreadySelected ? nil : TransactionHistoryState.Route.showTransaction(transcation)
+        let newRoute = isAlreadySelected ? nil : TransactionHistoryFlowState.Route.showTransaction(transcation)
         send(.transactionHistory(.updateRoute(newRoute)))
     }
 
     var selectedTranactionID: String? {
         self.transactionHistoryState
             .route
-            .flatMap(/TransactionHistoryState.Route.showTransaction)
+            .flatMap(/TransactionHistoryFlowState.Route.showTransaction)
             .map(\.id)
     }
 
@@ -110,13 +116,28 @@ extension SandboxViewStore {
     }
 }
 
-// MARK: PlaceHolders
+// MARK: - PlaceHolders
+
 extension SandboxState {
     static var placeholder: Self {
         .init(
             transactionHistoryState: .placeHolder,
             profileState: .placeholder,
             route: nil
+        )
+    }
+}
+
+extension SandboxStore {
+    static var placeholder: SandboxStore {
+        SandboxStore(
+            initialState: SandboxState(
+                transactionHistoryState: .placeHolder,
+                profileState: .placeholder,
+                route: nil
+            ),
+            reducer: .default.debug(),
+            environment: SandboxEnvironment()
         )
     }
 }

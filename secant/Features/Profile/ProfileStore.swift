@@ -1,6 +1,12 @@
 import ComposableArchitecture
 import SwiftUI
 
+typealias ProfileReducer = Reducer<ProfileState, ProfileAction, ProfileEnvironment>
+typealias ProfileStore = Store<ProfileState, ProfileAction>
+typealias ProfileViewStore = ViewStore<ProfileState, ProfileAction>
+
+// MARK: - State
+
 struct ProfileState: Equatable {
     enum Route {
         case settings
@@ -12,16 +18,17 @@ struct ProfileState: Equatable {
     var route: Route?
 }
 
+// MARK: - Action
+
 enum ProfileAction: Equatable {
     case updateRoute(ProfileState.Route?)
 }
 
-struct ProfileEnvironment {
-}
+// MARK: - Environment
 
-// MARK: - ProfileReducer
+struct ProfileEnvironment { }
 
-typealias ProfileReducer = Reducer<ProfileState, ProfileAction, ProfileEnvironment>
+// MARK: - Reducer
 
 extension ProfileReducer {
     static let `default` = ProfileReducer { state, action, _ in
@@ -33,16 +40,7 @@ extension ProfileReducer {
     }
 }
 
-// MARK: - ProfileStore
-
-typealias ProfileStore = Store<ProfileState, ProfileAction>
-
-extension ProfileStore {
-}
-
-// MARK: - ProfileViewStore
-
-typealias ProfileViewStore = ViewStore<ProfileState, ProfileAction>
+// MARK: - ViewStore
 
 extension ProfileViewStore {
     var routeBinding: Binding<ProfileState.Route?> {
@@ -67,7 +65,7 @@ extension ProfileViewStore {
     }
 }
 
-// MARK: PlaceHolders
+// MARK: Placeholders
 
 extension ProfileState {
     static var placeholder: Self {

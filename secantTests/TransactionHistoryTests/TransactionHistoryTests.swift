@@ -12,19 +12,19 @@ import ComposableArchitecture
 class TransactionHistoryTests: XCTestCase {
     static let testScheduler = DispatchQueue.test
     
-    let testEnvironment = TransactionHistoryEnvironment(
+    let testEnvironment = TransactionHistoryFlowEnvironment(
         scheduler: testScheduler.eraseToAnyScheduler(),
-        wrappedSDKSynchronizer: TestWrappedSDKSynchronizer()
+        SDKSynchronizer: TestWrappedSDKSynchronizer()
     )
     
     func testSynchronizerSubscription() throws {
         let store = TestStore(
-            initialState: TransactionHistoryState(
+            initialState: TransactionHistoryFlowState(
                 route: .latest,
                 isScrollable: true,
                 transactions: []
             ),
-            reducer: TransactionHistoryReducer.default,
+            reducer: TransactionHistoryFlowReducer.default,
             environment: testEnvironment
         )
         
@@ -63,12 +63,12 @@ class TransactionHistoryTests: XCTestCase {
         let identifiedTransactions = IdentifiedArrayOf(uniqueElements: transactions)
         
         let store = TestStore(
-            initialState: TransactionHistoryState(
+            initialState: TransactionHistoryFlowState(
                 route: .latest,
                 isScrollable: true,
                 transactions: identifiedTransactions
             ),
-            reducer: TransactionHistoryReducer.default,
+            reducer: TransactionHistoryFlowReducer.default,
             environment: testEnvironment
         )
         

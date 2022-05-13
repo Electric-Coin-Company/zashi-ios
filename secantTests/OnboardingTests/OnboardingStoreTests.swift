@@ -12,10 +12,10 @@ import ComposableArchitecture
 class OnboardingStoreTests: XCTestCase {
     func testIncrementingOnboarding() {
         let store = TestStore(
-            initialState: OnboardingState(
+            initialState: OnboardingFlowState(
                 importWalletState: .placeholder
             ),
-            reducer: OnboardingReducer.default,
+            reducer: OnboardingFlowReducer.default,
             environment: .demo
         )
         
@@ -52,11 +52,11 @@ class OnboardingStoreTests: XCTestCase {
     
     func testIncrementingPastTotalStepsDoesNothing() {
         let store = TestStore(
-            initialState: OnboardingState(
+            initialState: OnboardingFlowState(
                 index: 3,
                 importWalletState: .placeholder
             ),
-            reducer: OnboardingReducer.default,
+            reducer: OnboardingFlowReducer.default,
             environment: .demo
         )
         
@@ -79,11 +79,11 @@ class OnboardingStoreTests: XCTestCase {
     
     func testDecrementingOnboarding() {
         let store = TestStore(
-            initialState: OnboardingState(
+            initialState: OnboardingFlowState(
                 index: 2,
                 importWalletState: .placeholder
             ),
-            reducer: OnboardingReducer.default,
+            reducer: OnboardingFlowReducer.default,
             environment: .demo
         )
         
@@ -110,10 +110,10 @@ class OnboardingStoreTests: XCTestCase {
     
     func testDecrementingPastFirstStepDoesNothing() {
         let store = TestStore(
-            initialState: OnboardingState(
+            initialState: OnboardingFlowState(
                 importWalletState: .placeholder
             ),
-            reducer: OnboardingReducer.default,
+            reducer: OnboardingFlowReducer.default,
             environment: .demo
         )
         
@@ -138,11 +138,11 @@ class OnboardingStoreTests: XCTestCase {
         let initialIndex = 1
 
         let store = TestStore(
-            initialState: OnboardingState(
+            initialState: OnboardingFlowState(
                 index: initialIndex,
                 importWalletState: .placeholder
             ),
-            reducer: OnboardingReducer.default,
+            reducer: OnboardingFlowReducer.default,
             environment: .demo
         )
         

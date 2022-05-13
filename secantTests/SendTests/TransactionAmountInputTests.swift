@@ -1,5 +1,5 @@
 //
-//  TransactionAmountInputTests.swift
+//  TransactionAmountTextFieldTests.swift
 //  secantTests
 //
 //  Created by Lukáš Korba on 06.05.2022.
@@ -13,23 +13,23 @@ import ComposableArchitecture
 
 // TODO: these test will be updated with the NumberFormater dependency to handle locale, issue #312 (https://github.com/zcash/secant-ios-wallet/issues/312)
 
-class TransactionAmountInputTests: XCTestCase {
+class TransactionAmountTextFieldTests: XCTestCase {
     func testMaxValue() throws {
         try XCTSkipUnless(Locale.current.regionCode == "US", "testMaxValue is designed to test US locale only")
 
         let store = TestStore(
             initialState:
-                TransactionAmountInputState(
+                TransactionAmountTextFieldState(
                     textFieldState:
-                        TextFieldState(
+                        TCATextFieldState(
                             validationType: .floatingPoint,
                             text: "0.002"
                         ),
                     currencySelectionState: CurrencySelectionState(),
                     maxValue: 501_301
                 ),
-            reducer: TransactionAmountInputReducer.default,
-            environment: TransactionAmountInputEnvironment()
+            reducer: TransactionAmountTextFieldReducer.default,
+            environment: TransactionAmountTextFieldEnvironment()
         )
 
         store.send(.setMax) { state in
@@ -41,17 +41,17 @@ class TransactionAmountInputTests: XCTestCase {
     func testClearValue() throws {
         let store = TestStore(
             initialState:
-                TransactionAmountInputState(
+                TransactionAmountTextFieldState(
                     textFieldState:
-                        TextFieldState(
+                        TCATextFieldState(
                             validationType: .floatingPoint,
                             text: "0.002"
                         ),
                     currencySelectionState: CurrencySelectionState(),
                     maxValue: 501_301
                 ),
-            reducer: TransactionAmountInputReducer.default,
-            environment: TransactionAmountInputEnvironment()
+            reducer: TransactionAmountTextFieldReducer.default,
+            environment: TransactionAmountTextFieldEnvironment()
         )
 
         store.send(.clearValue) { state in
@@ -65,9 +65,9 @@ class TransactionAmountInputTests: XCTestCase {
 
         let store = TestStore(
             initialState:
-                TransactionAmountInputState(
+                TransactionAmountTextFieldState(
                     textFieldState:
-                        TextFieldState(
+                        TCATextFieldState(
                             validationType: .floatingPoint,
                             text: "1.0"
                         ),
@@ -77,8 +77,8 @@ class TransactionAmountInputTests: XCTestCase {
                         ),
                     zecPrice: 1000.0
                 ),
-            reducer: TransactionAmountInputReducer.default,
-            environment: TransactionAmountInputEnvironment()
+            reducer: TransactionAmountTextFieldReducer.default,
+            environment: TransactionAmountTextFieldEnvironment()
         )
 
         store.send(.currencySelection(.swapCurrencyType)) { state in
@@ -97,9 +97,9 @@ class TransactionAmountInputTests: XCTestCase {
 
         let store = TestStore(
             initialState:
-                TransactionAmountInputState(
+                TransactionAmountTextFieldState(
                     textFieldState:
-                        TextFieldState(
+                        TCATextFieldState(
                             validationType: .floatingPoint,
                             text: "1 000"
                         ),
@@ -109,8 +109,8 @@ class TransactionAmountInputTests: XCTestCase {
                         ),
                     zecPrice: 1000.0
                 ),
-            reducer: TransactionAmountInputReducer.default,
-            environment: TransactionAmountInputEnvironment()
+            reducer: TransactionAmountTextFieldReducer.default,
+            environment: TransactionAmountTextFieldEnvironment()
         )
 
         store.send(.currencySelection(.swapCurrencyType)) { state in
@@ -129,9 +129,9 @@ class TransactionAmountInputTests: XCTestCase {
 
         let store = TestStore(
             initialState:
-                TransactionAmountInputState(
+                TransactionAmountTextFieldState(
                     textFieldState:
-                        TextFieldState(
+                        TCATextFieldState(
                             validationType: .floatingPoint,
                             text: "5"
                         ),
@@ -142,8 +142,8 @@ class TransactionAmountInputTests: XCTestCase {
                     maxValue: 100_000_000,
                     zecPrice: 1000.0
                 ),
-            reducer: TransactionAmountInputReducer.default,
-            environment: TransactionAmountInputEnvironment()
+            reducer: TransactionAmountTextFieldReducer.default,
+            environment: TransactionAmountTextFieldEnvironment()
         )
 
         store.send(.textField(.set("1 000"))) { state in
@@ -162,9 +162,9 @@ class TransactionAmountInputTests: XCTestCase {
 
         let store = TestStore(
             initialState:
-                TransactionAmountInputState(
+                TransactionAmountTextFieldState(
                     textFieldState:
-                        TextFieldState(
+                        TCATextFieldState(
                             validationType: .floatingPoint,
                             text: "5"
                         ),
@@ -175,8 +175,8 @@ class TransactionAmountInputTests: XCTestCase {
                     maxValue: 200_000_000,
                     zecPrice: 1000.0
                 ),
-            reducer: TransactionAmountInputReducer.default,
-            environment: TransactionAmountInputEnvironment()
+            reducer: TransactionAmountTextFieldReducer.default,
+            environment: TransactionAmountTextFieldEnvironment()
         )
 
         store.send(.setMax) { state in
@@ -194,9 +194,9 @@ class TransactionAmountInputTests: XCTestCase {
 
         let store = TestStore(
             initialState:
-                TransactionAmountInputState(
+                TransactionAmountTextFieldState(
                     textFieldState:
-                        TextFieldState(
+                        TCATextFieldState(
                             validationType: .floatingPoint,
                             text: "5"
                         ),
@@ -207,8 +207,8 @@ class TransactionAmountInputTests: XCTestCase {
                     maxValue: 200_000_000,
                     zecPrice: 1000.0
                 ),
-            reducer: TransactionAmountInputReducer.default,
-            environment: TransactionAmountInputEnvironment()
+            reducer: TransactionAmountTextFieldReducer.default,
+            environment: TransactionAmountTextFieldEnvironment()
         )
 
         store.send(.setMax) { state in

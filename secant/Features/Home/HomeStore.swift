@@ -2,6 +2,12 @@ import ComposableArchitecture
 import SwiftUI
 import ZcashLightClientKit
 
+typealias HomeReducer = Reducer<HomeState, HomeAction, HomeEnvironment>
+typealias HomeStore = Store<HomeState, HomeAction>
+typealias HomeViewStore = ViewStore<HomeState, HomeAction>
+
+// MARK: State
+
 struct HomeState: Equatable {
     enum Route: Equatable {
         case profile
@@ -15,13 +21,15 @@ struct HomeState: Equatable {
     var drawerOverlay: DrawerOverlay
     var profileState: ProfileState
     var requestState: RequestState
-    var sendState: SendState
+    var sendState: SendFlowState
     var scanState: ScanState
     var synchronizerStatus: String
     var totalBalance: Int64
-    var transactionHistoryState: TransactionHistoryState
+    var transactionHistoryState: TransactionHistoryFlowState
     var verifiedBalance: Int64
 }
+
+// MARK: Action
 
 enum HomeAction: Equatable {
     case debugMenuStartup
@@ -29,10 +37,10 @@ enum HomeAction: Equatable {
     case onDisappear
     case profile(ProfileAction)
     case request(RequestAction)
-    case send(SendAction)
+    case send(SendFlowAction)
     case scan(ScanAction)
     case synchronizerStateChanged(WrappedSDKSynchronizerState)
-    case transactionHistory(TransactionHistoryAction)
+    case transactionHistory(TransactionHistoryFlowAction)
     case updateBalance(Balance)
     case updateDrawer(DrawerOverlay)
     case updateRoute(HomeState.Route?)
@@ -40,21 +48,21 @@ enum HomeAction: Equatable {
     case updateTransactions([TransactionState])
 }
 
+// MARK: Environment
+
 struct HomeEnvironment {
-    let mnemonicSeedPhraseProvider: MnemonicSeedPhraseProvider
+    let mnemonicSeedPhraseProvider: WrappedMnemonic
     let scheduler: AnySchedulerOf<DispatchQueue>
-    let walletStorage: WalletStorageInteractor
-    let wrappedDerivationTool: WrappedDerivationTool
-    let wrappedSDKSynchronizer: WrappedSDKSynchronizer
+    let walletStorage: WrappedWalletStorage
+    let derivationTool: WrappedDerivationTool
+    let SDKSynchronizer: WrappedSDKSynchronizer
 }
 
-// MARK: - HomeReducer
-
-private struct ListenerId: Hashable {}
-
-typealias HomeReducer = Reducer<HomeState, HomeAction, HomeEnvironment>
+// MARK: - Reducer
 
 extension HomeReducer {
+    private struct ListenerId: Hashable {}
+    
     static let `default` = HomeReducer.combine(
         [
             homeReducer,
@@ -67,7 +75,7 @@ extension HomeReducer {
     private static let homeReducer = HomeReducer { state, action, environment in
         switch action {
         case .onAppear:
-            return environment.wrappedSDKSynchronizer.stateChanged
+            return environment.SDKSynchronizer.stateChanged
                 .map(HomeAction.synchronizerStateChanged)
                 .eraseToEffect()
                 .cancellable(id: ListenerId(), cancelInFlight: true)
@@ -77,12 +85,12 @@ extension HomeReducer {
 
         case .synchronizerStateChanged(.synced):
             return .merge(
-                environment.wrappedSDKSynchronizer.getAllClearedTransactions()
+                environment.SDKSynchronizer.getAllClearedTransactions()
                     .receive(on: environment.scheduler)
                     .map(HomeAction.updateTransactions)
                     .eraseToEffect(),
                 
-                environment.wrappedSDKSynchronizer.getShieldedBalance()
+                environment.SDKSynchronizer.getShieldedBalance()
                     .receive(on: environment.scheduler)
                     .map({ Balance(verified: $0.verified, total: $0.total) })
                     .map(HomeAction.updateBalance)
@@ -108,7 +116,7 @@ extension HomeReducer {
             return .none
             
         case .updateSynchronizerStatus:
-            state.synchronizerStatus = environment.wrappedSDKSynchronizer.status()
+            state.synchronizerStatus = environment.SDKSynchronizer.status()
             return .none
             
         case .updateRoute(let route):
@@ -144,60 +152,36 @@ extension HomeReducer {
         }
     }
     
-    private static let historyReducer: HomeReducer = TransactionHistoryReducer.default.pullback(
+    private static let historyReducer: HomeReducer = TransactionHistoryFlowReducer.default.pullback(
         state: \HomeState.transactionHistoryState,
         action: /HomeAction.transactionHistory,
         environment: { environment in
-            TransactionHistoryEnvironment(
+            TransactionHistoryFlowEnvironment(
                 scheduler: environment.scheduler,
-                wrappedSDKSynchronizer: environment.wrappedSDKSynchronizer
+                SDKSynchronizer: environment.SDKSynchronizer
             )
         }
     )
     
-    private static let sendReducer: HomeReducer = SendReducer.default.pullback(
+    private static let sendReducer: HomeReducer = SendFlowReducer.default.pullback(
         state: \HomeState.sendState,
         action: /HomeAction.send,
         environment: { environment in
-            SendEnvironment(
+            SendFlowEnvironment(
                 mnemonicSeedPhraseProvider: environment.mnemonicSeedPhraseProvider,
                 scheduler: environment.scheduler,
                 walletStorage: environment.walletStorage,
-                wrappedDerivationTool: environment.wrappedDerivationTool,
-                wrappedSDKSynchronizer: environment.wrappedSDKSynchronizer
+                derivationTool: environment.derivationTool,
+                SDKSynchronizer: environment.SDKSynchronizer
             )
         }
     )
 }
 
-// MARK: - HomeViewStore
-
-typealias HomeViewStore = ViewStore<HomeState, HomeAction>
-
-extension HomeViewStore {
-    func bindingForRoute(_ route: HomeState.Route) -> Binding<Bool> {
-        self.binding(
-            get: { $0.route == route },
-            send: { isActive in
-                return .updateRoute(isActive ? route : nil)
-            }
-        )
-    }
-    
-    func bindingForDrawer() -> Binding<DrawerOverlay> {
-        self.binding(
-            get: { $0.drawerOverlay },
-            send: { .updateDrawer($0) }
-        )
-    }
-}
-
-// MARK: - HomeStore
-
-typealias HomeStore = Store<HomeState, HomeAction>
+// MARK: - Store
 
 extension HomeStore {
-    func historyStore() -> TransactionHistoryStore {
+    func historyStore() -> TransactionHistoryFlowStore {
         self.scope(
             state: \.transactionHistoryState,
             action: HomeAction.transactionHistory
@@ -218,7 +202,7 @@ extension HomeStore {
         )
     }
 
-    func sendStore() -> SendStore {
+    func sendStore() -> SendFlowStore {
         self.scope(
             state: \.sendState,
             action: HomeAction.send
@@ -233,7 +217,27 @@ extension HomeStore {
     }
 }
 
-// MARK: PlaceHolders
+// MARK: - ViewStore
+
+extension HomeViewStore {
+    func bindingForRoute(_ route: HomeState.Route) -> Binding<Bool> {
+        self.binding(
+            get: { $0.route == route },
+            send: { isActive in
+                return .updateRoute(isActive ? route : nil)
+            }
+        )
+    }
+    
+    func bindingForDrawer() -> Binding<DrawerOverlay> {
+        self.binding(
+            get: { $0.drawerOverlay },
+            send: { .updateDrawer($0) }
+        )
+    }
+}
+
+// MARK: Placeholders
 
 extension HomeState {
     static var placeholder: Self {
@@ -251,38 +255,18 @@ extension HomeState {
     }
 }
 
-extension SDKSynchronizer {
-    static func textFor(state: SyncStatus) -> String {
-        switch state {
-        case .downloading(let progress):
-            return "Downloading \(progress.progressHeight)/\(progress.targetHeight)"
-
-        case .enhancing(let enhanceProgress):
-            return "Enhancing tx \(enhanceProgress.enhancedTransactions) of \(enhanceProgress.totalTransactions)"
-
-        case .fetching:
-            return "fetching UTXOs"
-
-        case .scanning(let scanProgress):
-            return "Scanning: \(scanProgress.progressHeight)/\(scanProgress.targetHeight)"
-
-        case .disconnected:
-            return "disconnected 💔"
-
-        case .stopped:
-            return "Stopped 🚫"
-
-        case .synced:
-            return "Synced 😎"
-
-        case .unprepared:
-            return "Unprepared 😅"
-
-        case .validating:
-            return "Validating"
-
-        case .error(let err):
-            return "Error: \(err.localizedDescription)"
-        }
+extension HomeStore {
+    static var placeholder: HomeStore {
+        HomeStore(
+            initialState: .placeholder,
+            reducer: .default.debug(),
+            environment: HomeEnvironment(
+                mnemonicSeedPhraseProvider: .live,
+                scheduler: DispatchQueue.main.eraseToAnyScheduler(),
+                walletStorage: .live(),
+                derivationTool: .live(),
+                SDKSynchronizer: LiveWrappedSDKSynchronizer()
+            )
+        )
     }
 }

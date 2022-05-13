@@ -13,23 +13,23 @@ class AppReducerTests: XCTestCase {
     static let testScheduler = DispatchQueue.test
 
     let testEnvironment = AppEnvironment(
-        wrappedSDKSynchronizer: TestWrappedSDKSynchronizer(),
+        SDKSynchronizer: TestWrappedSDKSynchronizer(),
         databaseFiles: .throwing,
         mnemonicSeedPhraseProvider: .mock,
         scheduler: testScheduler.eraseToAnyScheduler(),
         walletStorage: .throwing,
-        wrappedDerivationTool: .live(),
+        derivationTool: .live(),
         zcashSDKEnvironment: .mainnet
     )
 
     func testWalletInitializationState_Uninitialized() throws {
         let uninitializedEnvironment = AppEnvironment(
-            wrappedSDKSynchronizer: TestWrappedSDKSynchronizer(),
+            SDKSynchronizer: TestWrappedSDKSynchronizer(),
             databaseFiles: .throwing,
             mnemonicSeedPhraseProvider: .mock,
             scheduler: DispatchQueue.test.eraseToAnyScheduler(),
             walletStorage: .throwing,
-            wrappedDerivationTool: .live(),
+            derivationTool: .live(),
             zcashSDKEnvironment: .mainnet
         )
 
@@ -46,12 +46,12 @@ class AppReducerTests: XCTestCase {
         )
 
         let keysMissingEnvironment = AppEnvironment(
-            wrappedSDKSynchronizer: TestWrappedSDKSynchronizer(),
+            SDKSynchronizer: TestWrappedSDKSynchronizer(),
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
             mnemonicSeedPhraseProvider: .mock,
             scheduler: Self.testScheduler.eraseToAnyScheduler(),
             walletStorage: .throwing,
-            wrappedDerivationTool: .live(),
+            derivationTool: .live(),
             zcashSDKEnvironment: .mainnet
         )
 
@@ -68,12 +68,12 @@ class AppReducerTests: XCTestCase {
         )
 
         let keysMissingEnvironment = AppEnvironment(
-            wrappedSDKSynchronizer: TestWrappedSDKSynchronizer(),
+            SDKSynchronizer: TestWrappedSDKSynchronizer(),
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
             mnemonicSeedPhraseProvider: .mock,
             scheduler: Self.testScheduler.eraseToAnyScheduler(),
             walletStorage: .throwing,
-            wrappedDerivationTool: .live(),
+            derivationTool: .live(),
             zcashSDKEnvironment: .testnet
         )
 

@@ -1,5 +1,5 @@
 //
-//  TransactionAddressInputTests.swift
+//  TransactionAddressTextFieldTests.swift
 //  secantTests
 //
 //  Created by Lukáš Korba on 06.05.2022.
@@ -9,21 +9,21 @@ import XCTest
 @testable import secant_testnet
 import ComposableArchitecture
 
-class TransactionAddressInputTests: XCTestCase {
+class TransactionAddressTextFieldTests: XCTestCase {
     func testClearValue() throws {
         let store = TestStore(
             initialState:
-                TransactionAddressInputState(
+                TransactionAddressTextFieldState(
                     textFieldState:
-                        TextFieldState(
+                        TCATextFieldState(
                             validationType: nil,
                             text: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
                         )
                 ),
-            reducer: TransactionAddressInputReducer.default,
+            reducer: TransactionAddressTextFieldReducer.default,
             environment:
-                TransactionAddressInputEnvironment(
-                    wrappedDerivationTool: .live()
+                TransactionAddressTextFieldEnvironment(
+                    derivationTool: .live()
                 )
         )
 

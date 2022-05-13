@@ -31,17 +31,17 @@ class SendTests: XCTestCase {
         // setup the store and environment to be fully mocked
         let testScheduler = DispatchQueue.test
 
-        let testEnvironment = SendEnvironment(
+        let testEnvironment = SendFlowEnvironment(
             mnemonicSeedPhraseProvider: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: storage),
-            wrappedDerivationTool: .live(),
-            wrappedSDKSynchronizer: MockWrappedSDKSynchronizer()
+            derivationTool: .live(),
+            SDKSynchronizer: MockWrappedSDKSynchronizer()
         )
 
         let store = TestStore(
             initialState: .placeholder,
-            reducer: SendReducer.default,
+            reducer: SendFlowReducer.default,
             environment: testEnvironment
         )
 
@@ -87,17 +87,17 @@ class SendTests: XCTestCase {
         // setup the store and environment to be fully mocked
         let testScheduler = DispatchQueue.test
 
-        let testEnvironment = SendEnvironment(
+        let testEnvironment = SendFlowEnvironment(
             mnemonicSeedPhraseProvider: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: storage),
-            wrappedDerivationTool: .live(),
-            wrappedSDKSynchronizer: TestWrappedSDKSynchronizer()
+            derivationTool: .live(),
+            SDKSynchronizer: TestWrappedSDKSynchronizer()
         )
 
         let store = TestStore(
             initialState: .placeholder,
-            reducer: SendReducer.default,
+            reducer: SendFlowReducer.default,
             environment: testEnvironment
         )
 
@@ -126,17 +126,17 @@ class SendTests: XCTestCase {
     func testAddressValidation() throws {
         let testScheduler = DispatchQueue.test
         
-        let testEnvironment = SendEnvironment(
+        let testEnvironment = SendFlowEnvironment(
             mnemonicSeedPhraseProvider: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
-            wrappedDerivationTool: .live(),
-            wrappedSDKSynchronizer: TestWrappedSDKSynchronizer()
+            derivationTool: .live(),
+            SDKSynchronizer: TestWrappedSDKSynchronizer()
         )
 
         let store = TestStore(
             initialState: .placeholder,
-            reducer: SendReducer.default,
+            reducer: SendFlowReducer.default,
             environment: testEnvironment
         )
         
@@ -168,17 +168,17 @@ class SendTests: XCTestCase {
     func testInvalidAmountFormatEmptyInput() throws {
         let testScheduler = DispatchQueue.test
         
-        let testEnvironment = SendEnvironment(
+        let testEnvironment = SendFlowEnvironment(
             mnemonicSeedPhraseProvider: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
-            wrappedDerivationTool: .live(),
-            wrappedSDKSynchronizer: TestWrappedSDKSynchronizer()
+            derivationTool: .live(),
+            SDKSynchronizer: TestWrappedSDKSynchronizer()
         )
 
         let store = TestStore(
             initialState: .placeholder,
-            reducer: SendReducer.default,
+            reducer: SendFlowReducer.default,
             environment: testEnvironment
         )
 
@@ -197,17 +197,17 @@ class SendTests: XCTestCase {
     func testInvalidAddressFormatEmptyInput() throws {
         let testScheduler = DispatchQueue.test
         
-        let testEnvironment = SendEnvironment(
+        let testEnvironment = SendFlowEnvironment(
             mnemonicSeedPhraseProvider: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
-            wrappedDerivationTool: .live(),
-            wrappedSDKSynchronizer: TestWrappedSDKSynchronizer()
+            derivationTool: .live(),
+            SDKSynchronizer: TestWrappedSDKSynchronizer()
         )
 
         let store = TestStore(
             initialState: .placeholder,
-            reducer: SendReducer.default,
+            reducer: SendFlowReducer.default,
             environment: testEnvironment
         )
         
@@ -228,11 +228,11 @@ class SendTests: XCTestCase {
     func testFundsSufficiency() throws {
         try XCTSkipUnless(Locale.current.regionCode == "US", "testFundsSufficiency is designed to test US locale only")
 
-        let sendState = SendState(
+        let sendState = SendFlowState(
             transaction: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
-                TransactionAmountInputState(
+                TransactionAmountTextFieldState(
                     textFieldState: .amount,
                     currencySelectionState: CurrencySelectionState(),
                     maxValue: 501_300
@@ -241,17 +241,17 @@ class SendTests: XCTestCase {
         
         let testScheduler = DispatchQueue.test
         
-        let testEnvironment = SendEnvironment(
+        let testEnvironment = SendFlowEnvironment(
             mnemonicSeedPhraseProvider: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
-            wrappedDerivationTool: .live(),
-            wrappedSDKSynchronizer: TestWrappedSDKSynchronizer()
+            derivationTool: .live(),
+            SDKSynchronizer: TestWrappedSDKSynchronizer()
         )
 
         let store = TestStore(
             initialState: sendState,
-            reducer: SendReducer.default,
+            reducer: SendFlowReducer.default,
             environment: testEnvironment
         )
         
@@ -279,17 +279,17 @@ class SendTests: XCTestCase {
 
         let testScheduler = DispatchQueue.test
         
-        let testEnvironment = SendEnvironment(
+        let testEnvironment = SendFlowEnvironment(
             mnemonicSeedPhraseProvider: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
-            wrappedDerivationTool: .live(),
-            wrappedSDKSynchronizer: TestWrappedSDKSynchronizer()
+            derivationTool: .live(),
+            SDKSynchronizer: TestWrappedSDKSynchronizer()
         )
 
         let store = TestStore(
             initialState: .placeholder,
-            reducer: SendReducer.default,
+            reducer: SendFlowReducer.default,
             environment: testEnvironment
         )
                 
@@ -310,13 +310,13 @@ class SendTests: XCTestCase {
     func testValidForm() throws {
         try XCTSkipUnless(Locale.current.regionCode == "US", "testValidForm is designed to test US locale only")
 
-        let sendState = SendState(
+        let sendState = SendFlowState(
             transaction: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
-                TransactionAmountInputState(
+                TransactionAmountTextFieldState(
                     textFieldState:
-                        TextFieldState(
+                        TCATextFieldState(
                             validationType: .floatingPoint,
                             text: "0.00501301"
                         ),
@@ -327,17 +327,17 @@ class SendTests: XCTestCase {
 
         let testScheduler = DispatchQueue.test
         
-        let testEnvironment = SendEnvironment(
+        let testEnvironment = SendFlowEnvironment(
             mnemonicSeedPhraseProvider: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
-            wrappedDerivationTool: .live(),
-            wrappedSDKSynchronizer: TestWrappedSDKSynchronizer()
+            derivationTool: .live(),
+            SDKSynchronizer: TestWrappedSDKSynchronizer()
         )
 
         let store = TestStore(
             initialState: sendState,
-            reducer: SendReducer.default,
+            reducer: SendFlowReducer.default,
             environment: testEnvironment
         )
         
@@ -355,13 +355,13 @@ class SendTests: XCTestCase {
     }
     
     func testInvalidForm_InsufficientFunds() throws {
-        let sendState = SendState(
+        let sendState = SendFlowState(
             transaction: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
-                TransactionAmountInputState(
+                TransactionAmountTextFieldState(
                     textFieldState:
-                        TextFieldState(
+                        TCATextFieldState(
                             validationType: .floatingPoint,
                             text: "0.00501301"
                         ),
@@ -372,17 +372,17 @@ class SendTests: XCTestCase {
 
         let testScheduler = DispatchQueue.test
         
-        let testEnvironment = SendEnvironment(
+        let testEnvironment = SendFlowEnvironment(
             mnemonicSeedPhraseProvider: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
-            wrappedDerivationTool: .live(),
-            wrappedSDKSynchronizer: TestWrappedSDKSynchronizer()
+            derivationTool: .live(),
+            SDKSynchronizer: TestWrappedSDKSynchronizer()
         )
 
         let store = TestStore(
             initialState: sendState,
-            reducer: SendReducer.default,
+            reducer: SendFlowReducer.default,
             environment: testEnvironment
         )
         
@@ -400,13 +400,13 @@ class SendTests: XCTestCase {
     }
     
     func testInvalidForm_AddressFormat() throws {
-        let sendState = SendState(
+        let sendState = SendFlowState(
             transaction: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
-                TransactionAmountInputState(
+                TransactionAmountTextFieldState(
                     textFieldState:
-                        TextFieldState(
+                        TCATextFieldState(
                             validationType: .floatingPoint,
                             text: "0.00501301"
                         ),
@@ -417,17 +417,17 @@ class SendTests: XCTestCase {
 
         let testScheduler = DispatchQueue.test
         
-        let testEnvironment = SendEnvironment(
+        let testEnvironment = SendFlowEnvironment(
             mnemonicSeedPhraseProvider: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
-            wrappedDerivationTool: .live(),
-            wrappedSDKSynchronizer: TestWrappedSDKSynchronizer()
+            derivationTool: .live(),
+            SDKSynchronizer: TestWrappedSDKSynchronizer()
         )
 
         let store = TestStore(
             initialState: sendState,
-            reducer: SendReducer.default,
+            reducer: SendFlowReducer.default,
             environment: testEnvironment
         )
         
@@ -445,13 +445,13 @@ class SendTests: XCTestCase {
     }
     
     func testInvalidForm_AmountFormat() throws {
-        let sendState = SendState(
+        let sendState = SendFlowState(
             transaction: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
-                TransactionAmountInputState(
+                TransactionAmountTextFieldState(
                     textFieldState:
-                        TextFieldState(
+                        TCATextFieldState(
                             validationType: .floatingPoint,
                             text: "0.0.0501301"
                         ),
@@ -462,17 +462,17 @@ class SendTests: XCTestCase {
 
         let testScheduler = DispatchQueue.test
         
-        let testEnvironment = SendEnvironment(
+        let testEnvironment = SendFlowEnvironment(
             mnemonicSeedPhraseProvider: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
-            wrappedDerivationTool: .live(),
-            wrappedSDKSynchronizer: TestWrappedSDKSynchronizer()
+            derivationTool: .live(),
+            SDKSynchronizer: TestWrappedSDKSynchronizer()
         )
 
         let store = TestStore(
             initialState: sendState,
-            reducer: SendReducer.default,
+            reducer: SendFlowReducer.default,
             environment: testEnvironment
         )
         
@@ -495,7 +495,7 @@ private extension SendTests {
         _ amount: String,
         _ expectedValidationResult: Bool,
         _ expectedAmount: Int64,
-        _ store: TestStore<SendState, SendState, SendAction, SendAction, SendEnvironment>
+        _ store: TestStore<SendFlowState, SendFlowState, SendFlowAction, SendFlowAction, SendFlowEnvironment>
     ) throws {
         store.send(.transactionAmountInput(.textField(.set(amount)))) { state in
             state.transactionAmountInputState.textFieldState.text = amount
