@@ -329,7 +329,7 @@ extension AppReducer {
     private static let phraseDisplayReducer: AppReducer = RecoveryPhraseDisplayReducer.default.pullback(
         state: \AppState.phraseDisplayState,
         action: /AppAction.phraseDisplay,
-        environment: { _ in RecoveryPhraseDisplayEnvironment.demo }
+        environment: { _ in RecoveryPhraseDisplayEnvironment.live }
     )
     
     private static let sandboxReducer: AppReducer = SandboxReducer.default.pullback(
