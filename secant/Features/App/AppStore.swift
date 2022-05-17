@@ -60,33 +60,39 @@ enum AppAction: Equatable {
 // MARK: - Environment
 
 struct AppEnvironment {
-    let SDKSynchronizer: WrappedSDKSynchronizer
+    let audioServices: WrappedAudioServices
     let databaseFiles: WrappedDatabaseFiles
+    let derivationTool: WrappedDerivationTool
+    let feedbackGenerator: WrappedFeedbackGenerator
     let mnemonic: WrappedMnemonic
     let scheduler: AnySchedulerOf<DispatchQueue>
+    let SDKSynchronizer: WrappedSDKSynchronizer
     let walletStorage: WrappedWalletStorage
-    let derivationTool: WrappedDerivationTool
     let zcashSDKEnvironment: ZCashSDKEnvironment
 }
 
 extension AppEnvironment {
     static let live = AppEnvironment(
-        SDKSynchronizer: LiveWrappedSDKSynchronizer(),
+        audioServices: .haptic,
         databaseFiles: .live(),
+        derivationTool: .live(),
+        feedbackGenerator: .haptic,
         mnemonic: .live,
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
+        SDKSynchronizer: LiveWrappedSDKSynchronizer(),
         walletStorage: .live(),
-        derivationTool: .live(),
         zcashSDKEnvironment: .mainnet
     )
 
     static let mock = AppEnvironment(
-        SDKSynchronizer: LiveWrappedSDKSynchronizer(),
+        audioServices: .silent,
         databaseFiles: .live(),
+        derivationTool: .live(derivationTool: DerivationTool(networkType: .mainnet)),
+        feedbackGenerator: .silent,
         mnemonic: .mock,
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
+        SDKSynchronizer: LiveWrappedSDKSynchronizer(),
         walletStorage: .live(),
-        derivationTool: .live(derivationTool: DerivationTool(networkType: .mainnet)),
         zcashSDKEnvironment: .mainnet
     )
 }
@@ -94,7 +100,7 @@ extension AppEnvironment {
 // MARK: - Reducer
 
 extension AppReducer {
-    private struct ListenerId: Hashable {}
+    private struct CancelId: Hashable {}
 
     static let `default` = AppReducer.combine(
         [
@@ -144,7 +150,7 @@ extension AppReducer {
                 return Effect(value: .updateRoute(.onboarding))
                     .delay(for: 3, scheduler: environment.scheduler)
                     .eraseToEffect()
-                    .cancellable(id: ListenerId(), cancelInFlight: true)
+                    .cancellable(id: CancelId(), cancelInFlight: true)
             }
             
             return .none
@@ -205,7 +211,7 @@ extension AppReducer {
             return Effect(value: .updateRoute(landingRoute))
                 .delay(for: 3, scheduler: environment.scheduler)
                 .eraseToEffect()
-                .cancellable(id: ListenerId(), cancelInFlight: true)
+                .cancellable(id: CancelId(), cancelInFlight: true)
             
         case .createNewWallet:
             do {
@@ -251,7 +257,7 @@ extension AppReducer {
 
         case .welcome(.debugMenuStartup), .home(.debugMenuStartup):
             return .concatenate(
-                Effect.cancel(id: ListenerId()),
+                Effect.cancel(id: CancelId()),
                 Effect(value: .updateRoute(.startup))
             )
 
@@ -308,11 +314,13 @@ extension AppReducer {
         action: /AppAction.home,
         environment: { environment in
             HomeEnvironment(
+                audioServices: environment.audioServices,
+                derivationTool: environment.derivationTool,
+                feedbackGenerator: environment.feedbackGenerator,
                 mnemonic: environment.mnemonic,
                 scheduler: environment.scheduler,
-                walletStorage: environment.walletStorage,
-                derivationTool: environment.derivationTool,
-                SDKSynchronizer: environment.SDKSynchronizer
+                SDKSynchronizer: environment.SDKSynchronizer,
+                walletStorage: environment.walletStorage
             )
         }
     )
@@ -338,7 +346,14 @@ extension AppReducer {
     private static let phraseDisplayReducer: AppReducer = RecoveryPhraseDisplayReducer.default.pullback(
         state: \AppState.phraseDisplayState,
         action: /AppAction.phraseDisplay,
-        environment: { _ in RecoveryPhraseDisplayEnvironment.live }
+        environment: { environment in
+            RecoveryPhraseDisplayEnvironment(
+                scheduler: environment.scheduler,
+                newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
+                pasteboard: .live,
+                feedbackGenerator: environment.feedbackGenerator
+            )
+        }
     )
     
     private static let sandboxReducer: AppReducer = SandboxReducer.default.pullback(

@@ -2,6 +2,9 @@ import ComposableArchitecture
 import SwiftUI
 import ZcashLightClientKit
 
+import UIKit
+import AVFoundation
+
 typealias HomeReducer = Reducer<HomeState, HomeAction, HomeEnvironment>
 typealias HomeStore = Store<HomeState, HomeAction>
 typealias HomeViewStore = ViewStore<HomeState, HomeAction>
@@ -51,23 +54,26 @@ enum HomeAction: Equatable {
 // MARK: Environment
 
 struct HomeEnvironment {
+    let audioServices: WrappedAudioServices
+    let derivationTool: WrappedDerivationTool
+    let feedbackGenerator: WrappedFeedbackGenerator
     let mnemonic: WrappedMnemonic
     let scheduler: AnySchedulerOf<DispatchQueue>
-    let walletStorage: WrappedWalletStorage
-    let derivationTool: WrappedDerivationTool
     let SDKSynchronizer: WrappedSDKSynchronizer
+    let walletStorage: WrappedWalletStorage
 }
 
 // MARK: - Reducer
 
 extension HomeReducer {
-    private struct ListenerId: Hashable {}
+    private struct CancelId: Hashable {}
     
     static let `default` = HomeReducer.combine(
         [
             homeReducer,
             historyReducer,
             sendReducer,
+            scanReducer,
             profileReducer
         ]
     )
@@ -79,10 +85,10 @@ extension HomeReducer {
             return environment.SDKSynchronizer.stateChanged
                 .map(HomeAction.synchronizerStateChanged)
                 .eraseToEffect()
-                .cancellable(id: ListenerId(), cancelInFlight: true)
+                .cancellable(id: CancelId(), cancelInFlight: true)
 
         case .onDisappear:
-            return Effect.cancel(id: ListenerId())
+            return Effect.cancel(id: CancelId())
 
         case .synchronizerStateChanged(.synced):
             return .merge(
@@ -119,7 +125,7 @@ extension HomeReducer {
         case .updateSynchronizerStatus:
             state.synchronizerStatus = environment.SDKSynchronizer.status()
             return .none
-            
+
         case .updateRoute(let route):
             state.route = route
             return .none
@@ -128,9 +134,6 @@ extension HomeReducer {
             return .none
 
         case .request(let action):
-            return .none
-
-        case .scan(let action):
             return .none
             
         case .transactionHistory(.updateRoute(.all)):
@@ -148,6 +151,13 @@ extension HomeReducer {
         case .send(let action):
             return .none
             
+        case .scan(.found(let code)):
+            environment.audioServices.systemSoundVibrate()
+            return Effect(value: .updateRoute(nil))
+            
+        case .scan(let action):
+            return .none
+
         case .debugMenuStartup:
             return .none
         }
@@ -178,6 +188,18 @@ extension HomeReducer {
         }
     )
     
+    private static let scanReducer: HomeReducer = ScanReducer.default.pullback(
+        state: \HomeState.scanState,
+        action: /HomeAction.scan,
+        environment: { environment in
+            ScanEnvironment(
+                captureDevice: .real,
+                scheduler: environment.scheduler,
+                uriParser: .live(uriParser: URIParser(derivationTool: environment.derivationTool))
+            )
+        }
+    )
+
     private static let profileReducer: HomeReducer = ProfileReducer.default.pullback(
         state: \HomeState.profileState,
         action: /HomeAction.profile,
@@ -273,11 +295,13 @@ extension HomeStore {
             initialState: .placeholder,
             reducer: .default.debug(),
             environment: HomeEnvironment(
+                audioServices: .silent,
+                derivationTool: .live(),
+                feedbackGenerator: .silent,
                 mnemonic: .live,
                 scheduler: DispatchQueue.main.eraseToAnyScheduler(),
-                walletStorage: .live(),
-                derivationTool: .live(),
-                SDKSynchronizer: LiveWrappedSDKSynchronizer()
+                SDKSynchronizer: LiveWrappedSDKSynchronizer(),
+                walletStorage: .live()
             )
         )
     }

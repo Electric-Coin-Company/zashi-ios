@@ -133,7 +133,7 @@ enum RecoveryPhraseValidationFlowAction: Equatable {
 // MARK: - Environment
 
 struct RecoveryPhraseValidationFlowEnvironment {
-    let mainQueue: AnySchedulerOf<DispatchQueue>
+    let scheduler: AnySchedulerOf<DispatchQueue>
     let newPhrase: () -> Effect<RecoveryPhrase, RecoveryPhraseError>
     let pasteboard: WrappedPasteboard
     let feedbackGenerator: WrappedFeedbackGenerator
@@ -146,14 +146,14 @@ extension RecoveryPhraseValidationFlowEnvironment {
     }
 
     static let demo = Self(
-        mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
+        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
         pasteboard: .test,
         feedbackGenerator: .silent
     )
         
     static let live = Self(
-        mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
+        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
         pasteboard: .live,
         feedbackGenerator: .haptic
@@ -182,7 +182,7 @@ extension RecoveryPhraseValidationFlowReducer {
             if state.isComplete {
                 let value: RecoveryPhraseValidationFlowAction = state.isValid ? .succeed : .fail
                 let effect = Effect<RecoveryPhraseValidationFlowAction, Never>(value: value)
-                    .delay(for: 1, scheduler: environment.mainQueue)
+                    .delay(for: 1, scheduler: environment.scheduler)
                     .eraseToEffect()
 
                 if value == .succeed {

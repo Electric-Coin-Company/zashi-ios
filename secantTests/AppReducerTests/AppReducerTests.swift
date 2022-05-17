@@ -13,23 +13,27 @@ class AppReducerTests: XCTestCase {
     static let testScheduler = DispatchQueue.test
 
     let testEnvironment = AppEnvironment(
-        SDKSynchronizer: TestWrappedSDKSynchronizer(),
+        audioServices: .silent,
         databaseFiles: .throwing,
+        derivationTool: .live(),
+        feedbackGenerator: .silent,
         mnemonic: .mock,
         scheduler: testScheduler.eraseToAnyScheduler(),
+        SDKSynchronizer: TestWrappedSDKSynchronizer(),
         walletStorage: .throwing,
-        derivationTool: .live(),
         zcashSDKEnvironment: .mainnet
     )
 
     func testWalletInitializationState_Uninitialized() throws {
         let uninitializedEnvironment = AppEnvironment(
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
+            audioServices: .silent,
             databaseFiles: .throwing,
+            derivationTool: .live(),
+            feedbackGenerator: .silent,
             mnemonic: .mock,
             scheduler: DispatchQueue.test.eraseToAnyScheduler(),
+            SDKSynchronizer: TestWrappedSDKSynchronizer(),
             walletStorage: .throwing,
-            derivationTool: .live(),
             zcashSDKEnvironment: .mainnet
         )
 
@@ -46,12 +50,14 @@ class AppReducerTests: XCTestCase {
         )
 
         let keysMissingEnvironment = AppEnvironment(
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
+            audioServices: .silent,
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
+            derivationTool: .live(),
+            feedbackGenerator: .silent,
             mnemonic: .mock,
             scheduler: Self.testScheduler.eraseToAnyScheduler(),
+            SDKSynchronizer: TestWrappedSDKSynchronizer(),
             walletStorage: .throwing,
-            derivationTool: .live(),
             zcashSDKEnvironment: .mainnet
         )
 
@@ -68,12 +74,14 @@ class AppReducerTests: XCTestCase {
         )
 
         let keysMissingEnvironment = AppEnvironment(
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
+            audioServices: .silent,
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
+            derivationTool: .live(),
+            feedbackGenerator: .silent,
             mnemonic: .mock,
             scheduler: Self.testScheduler.eraseToAnyScheduler(),
+            SDKSynchronizer: TestWrappedSDKSynchronizer(),
             walletStorage: .throwing,
-            derivationTool: .live(),
             zcashSDKEnvironment: .testnet
         )
 

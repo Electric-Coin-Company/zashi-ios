@@ -31,7 +31,7 @@ enum RecoveryPhraseDisplayAction: Equatable {
 // MARK: - Environment
 
 struct RecoveryPhraseDisplayEnvironment {
-    let mainQueue: AnySchedulerOf<DispatchQueue>
+    let scheduler: AnySchedulerOf<DispatchQueue>
     let newPhrase: () -> Effect<RecoveryPhrase, RecoveryPhraseError>
     let pasteboard: WrappedPasteboard
     let feedbackGenerator: WrappedFeedbackGenerator
@@ -44,17 +44,10 @@ extension RecoveryPhraseDisplayEnvironment {
     }
 
     static let demo = Self(
-        mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
+        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
         pasteboard: .test,
         feedbackGenerator: .silent
-    )
-        
-    static let live = Self(
-        mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
-        newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
-        pasteboard: .live,
-        feedbackGenerator: .haptic
     )
 }
 
@@ -65,7 +58,7 @@ extension RecoveryPhraseDisplayReducer {
         switch action {
         case .createPhrase:
             return environment.newPhrase()
-                .receive(on: environment.mainQueue)
+                .receive(on: environment.scheduler)
                 .catchToEffect(RecoveryPhraseDisplayAction.phraseResponse)
         case .copyToBufferPressed:
             guard let phrase = state.phrase?.toString() else { return .none }

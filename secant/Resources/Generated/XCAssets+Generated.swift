@@ -85,6 +85,9 @@ internal enum Asset {
       internal static let gradientRight = ColorAsset(name: "GradientRight")
       internal static let negativeSpace = ColorAsset(name: "NegativeSpace")
     }
+    internal enum QRScan {
+      internal static let frame = ColorAsset(name: "frame")
+    }
     internal enum ScreenBackground {
       internal static let gradientEnd = ColorAsset(name: "gradientEnd")
       internal static let gradientStart = ColorAsset(name: "gradientStart")

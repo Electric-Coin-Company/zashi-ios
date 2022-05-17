@@ -40,7 +40,7 @@ struct TransactionHistoryFlowEnvironment {
 // MARK: - Reducer
 
 extension TransactionHistoryFlowReducer {
-    private struct ListenerId: Hashable {}
+    private struct CancelId: Hashable {}
     
     static let `default` = TransactionHistoryFlowReducer { state, action, environment in
         switch action {
@@ -48,10 +48,10 @@ extension TransactionHistoryFlowReducer {
             return environment.SDKSynchronizer.stateChanged
                 .map(TransactionHistoryFlowAction.synchronizerStateChanged)
                 .eraseToEffect()
-                .cancellable(id: ListenerId(), cancelInFlight: true)
+                .cancellable(id: CancelId(), cancelInFlight: true)
 
         case .onDisappear:
-            return Effect.cancel(id: ListenerId())
+            return Effect.cancel(id: CancelId())
 
         case .synchronizerStateChanged(.synced):
             return environment.SDKSynchronizer.getAllTransactions()
