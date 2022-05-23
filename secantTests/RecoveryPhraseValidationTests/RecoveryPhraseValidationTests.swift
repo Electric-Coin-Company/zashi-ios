@@ -375,9 +375,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         Self.testScheduler.advance(by: 2)
 
-        store.receive(.failureFeedback) {
-            XCTAssertTrue($0.isComplete)
-        }
+        store.receive(.failureFeedback)
 
         store.receive(.fail) {
             $0.route = .failure
