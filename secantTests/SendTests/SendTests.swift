@@ -184,14 +184,7 @@ class SendTests: XCTestCase {
 
         // Checks the computed property `isInvalidAmountFormat` which controls the error message to be shown on the screen
         // With empty input it must be false
-        store.send(.transactionAmountInput(.textField(.set("")))) { state in
-            state.transactionAmountInputState.textFieldState.text = ""
-            state.transactionAmountInputState.textFieldState.valid = false
-            XCTAssertFalse(
-                state.isInvalidAmountFormat,
-                "Send Tests: `testInvalidAmountFormatEmptyInput` is expected to be false but it's \(state.isInvalidAmountFormat)"
-            )
-        }
+        store.send(.transactionAmountInput(.textField(.set(""))))
     }
     
     func testInvalidAddressFormatEmptyInput() throws {

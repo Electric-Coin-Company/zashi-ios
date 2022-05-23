@@ -60,21 +60,8 @@ class OnboardingStoreTests: XCTestCase {
             environment: .demo
         )
         
-        store.send(.next) {
-            XCTAssertTrue($0.isFinalStep)
-            XCTAssertFalse($0.isInitialStep)
-            XCTAssertEqual($0.currentStep, $0.steps[3])
-            XCTAssertEqual($0.offset, -60.0)
-            XCTAssertEqual($0.progress, 100)
-        }
-                
-        store.send(.next) {
-            XCTAssertTrue($0.isFinalStep)
-            XCTAssertFalse($0.isInitialStep)
-            XCTAssertEqual($0.currentStep, $0.steps[3])
-            XCTAssertEqual($0.offset, -60.0)
-            XCTAssertEqual($0.progress, 100)
-        }
+        store.send(.next)
+        store.send(.next)
     }
     
     func testDecrementingOnboarding() {
@@ -117,21 +104,8 @@ class OnboardingStoreTests: XCTestCase {
             environment: .demo
         )
         
-        store.send(.back) {
-            XCTAssertFalse($0.isFinalStep)
-            XCTAssertTrue($0.isInitialStep)
-            XCTAssertEqual($0.currentStep, $0.steps[0])
-            XCTAssertEqual($0.offset, 0.0)
-            XCTAssertEqual($0.progress, 25)
-        }
-                
-        store.send(.back) {
-            XCTAssertFalse($0.isFinalStep)
-            XCTAssertTrue($0.isInitialStep)
-            XCTAssertEqual($0.currentStep, $0.steps[0])
-            XCTAssertEqual($0.offset, 0.0)
-            XCTAssertEqual($0.progress, 25)
-        }
+        store.send(.back)
+        store.send(.back)
     }
     
     func testSkipOnboarding() {

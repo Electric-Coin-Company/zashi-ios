@@ -131,10 +131,7 @@ class AppReducerTests: XCTestCase {
             state.appInitializationState = .failed
         }
 
-        store.receive(.checkBackupPhraseValidation) { state in
-            // failed is expected because environment is throwing errors
-            state.appInitializationState = .failed
-        }
+        store.receive(.checkBackupPhraseValidation)
     }
     
     func testRespondToWalletInitializationState_Initialized() throws {
@@ -151,9 +148,6 @@ class AppReducerTests: XCTestCase {
             state.appInitializationState = .failed
         }
 
-        store.receive(.checkBackupPhraseValidation) { state in
-            // failed is expected because environment is throwing errors
-            state.appInitializationState = .failed
-        }
+        store.receive(.checkBackupPhraseValidation)
     }
 }
