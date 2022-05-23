@@ -33,20 +33,20 @@ enum ImportWalletAction: Equatable, BindableAction {
 // MARK: - Environment
 
 struct ImportWalletEnvironment {
-    let mnemonicSeedPhraseProvider: WrappedMnemonic
+    let mnemonic: WrappedMnemonic
     let walletStorage: WrappedWalletStorage
     let zcashSDKEnvironment: ZCashSDKEnvironment
 }
 
 extension ImportWalletEnvironment {
     static let live = ImportWalletEnvironment(
-        mnemonicSeedPhraseProvider: .live,
+        mnemonic: .live,
         walletStorage: .live(),
         zcashSDKEnvironment: .mainnet
     )
 
     static let demo = ImportWalletEnvironment(
-        mnemonicSeedPhraseProvider: .mock,
+        mnemonic: .mock,
         walletStorage: .live(),
         zcashSDKEnvironment: .testnet
     )
@@ -67,7 +67,7 @@ extension ImportWalletReducer {
         case .importRecoveryPhrase:
             do {
                 // validate the seed
-                try environment.mnemonicSeedPhraseProvider.isValid(state.importedSeedPhrase)
+                try environment.mnemonic.isValid(state.importedSeedPhrase)
                 
                 // store it to the keychain
                 let birthday = environment.zcashSDKEnvironment.defaultBirthday

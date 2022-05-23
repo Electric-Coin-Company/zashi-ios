@@ -76,7 +76,7 @@ enum SendFlowAction: Equatable {
 // MARK: - Environment
 
 struct SendFlowEnvironment {
-    let mnemonicSeedPhraseProvider: WrappedMnemonic
+    let mnemonic: WrappedMnemonic
     let scheduler: AnySchedulerOf<DispatchQueue>
     let walletStorage: WrappedWalletStorage
     let derivationTool: WrappedDerivationTool
@@ -124,7 +124,7 @@ extension SendFlowReducer {
 
             do {
                 let storedWallet = try environment.walletStorage.exportWallet()
-                let seedBytes = try environment.mnemonicSeedPhraseProvider.toSeed(storedWallet.seedPhrase)
+                let seedBytes = try environment.mnemonic.toSeed(storedWallet.seedPhrase)
                 guard let spendingKey = try environment.derivationTool.deriveSpendingKeys(seedBytes, 1).first else {
                     return Effect(value: .updateRoute(.failure))
                 }
@@ -309,7 +309,7 @@ extension SendFlowStore {
             ),
             reducer: .default,
             environment: SendFlowEnvironment(
-                mnemonicSeedPhraseProvider: .live,
+                mnemonic: .live,
                 scheduler: DispatchQueue.main.eraseToAnyScheduler(),
                 walletStorage: .live(),
                 derivationTool: .live(),

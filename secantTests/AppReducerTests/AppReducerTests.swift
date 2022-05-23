@@ -15,7 +15,7 @@ class AppReducerTests: XCTestCase {
     let testEnvironment = AppEnvironment(
         SDKSynchronizer: TestWrappedSDKSynchronizer(),
         databaseFiles: .throwing,
-        mnemonicSeedPhraseProvider: .mock,
+        mnemonic: .mock,
         scheduler: testScheduler.eraseToAnyScheduler(),
         walletStorage: .throwing,
         derivationTool: .live(),
@@ -26,7 +26,7 @@ class AppReducerTests: XCTestCase {
         let uninitializedEnvironment = AppEnvironment(
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             databaseFiles: .throwing,
-            mnemonicSeedPhraseProvider: .mock,
+            mnemonic: .mock,
             scheduler: DispatchQueue.test.eraseToAnyScheduler(),
             walletStorage: .throwing,
             derivationTool: .live(),
@@ -48,7 +48,7 @@ class AppReducerTests: XCTestCase {
         let keysMissingEnvironment = AppEnvironment(
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
-            mnemonicSeedPhraseProvider: .mock,
+            mnemonic: .mock,
             scheduler: Self.testScheduler.eraseToAnyScheduler(),
             walletStorage: .throwing,
             derivationTool: .live(),
@@ -70,7 +70,7 @@ class AppReducerTests: XCTestCase {
         let keysMissingEnvironment = AppEnvironment(
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
-            mnemonicSeedPhraseProvider: .mock,
+            mnemonic: .mock,
             scheduler: Self.testScheduler.eraseToAnyScheduler(),
             walletStorage: .throwing,
             derivationTool: .live(),

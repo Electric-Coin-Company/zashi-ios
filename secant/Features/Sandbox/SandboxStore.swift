@@ -60,9 +60,7 @@ extension SandboxReducer {
                 .pullback(
                     state: \.profileState,
                     action: /SandboxAction.profile,
-                    environment: { _ in
-                        return ProfileEnvironment()
-                    }
+                    environment: { _ in ProfileEnvironment.live }
                 )
                 .run(&state, action, ())
         case .reset:

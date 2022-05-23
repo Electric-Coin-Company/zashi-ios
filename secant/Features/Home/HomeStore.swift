@@ -51,7 +51,7 @@ enum HomeAction: Equatable {
 // MARK: Environment
 
 struct HomeEnvironment {
-    let mnemonicSeedPhraseProvider: WrappedMnemonic
+    let mnemonic: WrappedMnemonic
     let scheduler: AnySchedulerOf<DispatchQueue>
     let walletStorage: WrappedWalletStorage
     let derivationTool: WrappedDerivationTool
@@ -67,7 +67,8 @@ extension HomeReducer {
         [
             homeReducer,
             historyReducer,
-            sendReducer
+            sendReducer,
+            profileReducer
         ]
     )
     .debug()
@@ -168,11 +169,22 @@ extension HomeReducer {
         action: /HomeAction.send,
         environment: { environment in
             SendFlowEnvironment(
-                mnemonicSeedPhraseProvider: environment.mnemonicSeedPhraseProvider,
+                mnemonic: environment.mnemonic,
                 scheduler: environment.scheduler,
                 walletStorage: environment.walletStorage,
                 derivationTool: environment.derivationTool,
                 SDKSynchronizer: environment.SDKSynchronizer
+            )
+        }
+    )
+    
+    private static let profileReducer: HomeReducer = ProfileReducer.default.pullback(
+        state: \HomeState.profileState,
+        action: /HomeAction.profile,
+        environment: { environment in
+            ProfileEnvironment(
+                mnemonic: environment.mnemonic,
+                walletStorage: environment.walletStorage
             )
         }
     )
@@ -261,7 +273,7 @@ extension HomeStore {
             initialState: .placeholder,
             reducer: .default.debug(),
             environment: HomeEnvironment(
-                mnemonicSeedPhraseProvider: .live,
+                mnemonic: .live,
                 scheduler: DispatchQueue.main.eraseToAnyScheduler(),
                 walletStorage: .live(),
                 derivationTool: .live(),

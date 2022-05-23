@@ -32,7 +32,7 @@ class SendTests: XCTestCase {
         let testScheduler = DispatchQueue.test
 
         let testEnvironment = SendFlowEnvironment(
-            mnemonicSeedPhraseProvider: .mock,
+            mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: storage),
             derivationTool: .live(),
@@ -88,7 +88,7 @@ class SendTests: XCTestCase {
         let testScheduler = DispatchQueue.test
 
         let testEnvironment = SendFlowEnvironment(
-            mnemonicSeedPhraseProvider: .mock,
+            mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: storage),
             derivationTool: .live(),
@@ -127,7 +127,7 @@ class SendTests: XCTestCase {
         let testScheduler = DispatchQueue.test
         
         let testEnvironment = SendFlowEnvironment(
-            mnemonicSeedPhraseProvider: .mock,
+            mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
             derivationTool: .live(),
@@ -169,7 +169,7 @@ class SendTests: XCTestCase {
         let testScheduler = DispatchQueue.test
         
         let testEnvironment = SendFlowEnvironment(
-            mnemonicSeedPhraseProvider: .mock,
+            mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
             derivationTool: .live(),
@@ -198,7 +198,7 @@ class SendTests: XCTestCase {
         let testScheduler = DispatchQueue.test
         
         let testEnvironment = SendFlowEnvironment(
-            mnemonicSeedPhraseProvider: .mock,
+            mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
             derivationTool: .live(),
@@ -242,7 +242,7 @@ class SendTests: XCTestCase {
         let testScheduler = DispatchQueue.test
         
         let testEnvironment = SendFlowEnvironment(
-            mnemonicSeedPhraseProvider: .mock,
+            mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
             derivationTool: .live(),
@@ -280,7 +280,7 @@ class SendTests: XCTestCase {
         let testScheduler = DispatchQueue.test
         
         let testEnvironment = SendFlowEnvironment(
-            mnemonicSeedPhraseProvider: .mock,
+            mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
             derivationTool: .live(),
@@ -328,7 +328,7 @@ class SendTests: XCTestCase {
         let testScheduler = DispatchQueue.test
         
         let testEnvironment = SendFlowEnvironment(
-            mnemonicSeedPhraseProvider: .mock,
+            mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
             derivationTool: .live(),
@@ -373,7 +373,7 @@ class SendTests: XCTestCase {
         let testScheduler = DispatchQueue.test
         
         let testEnvironment = SendFlowEnvironment(
-            mnemonicSeedPhraseProvider: .mock,
+            mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
             derivationTool: .live(),
@@ -418,7 +418,7 @@ class SendTests: XCTestCase {
         let testScheduler = DispatchQueue.test
         
         let testEnvironment = SendFlowEnvironment(
-            mnemonicSeedPhraseProvider: .mock,
+            mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
             derivationTool: .live(),
@@ -463,7 +463,7 @@ class SendTests: XCTestCase {
         let testScheduler = DispatchQueue.test
         
         let testEnvironment = SendFlowEnvironment(
-            mnemonicSeedPhraseProvider: .mock,
+            mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
             derivationTool: .live(),

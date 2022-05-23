@@ -32,7 +32,7 @@ struct SandboxView: View {
                     )
                     .debug(),
                     environment: SendFlowEnvironment(
-                        mnemonicSeedPhraseProvider: .live,
+                        mnemonic: .live,
                         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
                         walletStorage: .live(),
                         derivationTool: .live(),
