@@ -23,10 +23,19 @@ struct AppState: Equatable {
     var onboardingState: OnboardingFlowState
     var phraseValidationState: RecoveryPhraseValidationFlowState
     var phraseDisplayState: RecoveryPhraseDisplayState
-    var route: Route = .welcome
+    var prevRoute: Route?
+    var internalRoute: Route = .welcome
     var sandboxState: SandboxState
     var storedWallet: StoredWallet?
     var welcomeState: WelcomeState
+    
+    var route: Route {
+        get { internalRoute }
+        set {
+            prevRoute = internalRoute
+            internalRoute = newValue
+        }
+    }
 }
 
 // MARK: - Action
@@ -53,7 +62,7 @@ enum AppAction: Equatable {
 struct AppEnvironment {
     let SDKSynchronizer: WrappedSDKSynchronizer
     let databaseFiles: WrappedDatabaseFiles
-    let mnemonicSeedPhraseProvider: WrappedMnemonic
+    let mnemonic: WrappedMnemonic
     let scheduler: AnySchedulerOf<DispatchQueue>
     let walletStorage: WrappedWalletStorage
     let derivationTool: WrappedDerivationTool
@@ -64,7 +73,7 @@ extension AppEnvironment {
     static let live = AppEnvironment(
         SDKSynchronizer: LiveWrappedSDKSynchronizer(),
         databaseFiles: .live(),
-        mnemonicSeedPhraseProvider: .live,
+        mnemonic: .live,
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         walletStorage: .live(),
         derivationTool: .live(),
@@ -74,7 +83,7 @@ extension AppEnvironment {
     static let mock = AppEnvironment(
         SDKSynchronizer: LiveWrappedSDKSynchronizer(),
         databaseFiles: .live(),
-        mnemonicSeedPhraseProvider: .mock,
+        mnemonic: .mock,
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         walletStorage: .live(),
         derivationTool: .live(derivationTool: DerivationTool(networkType: .mainnet)),
@@ -152,7 +161,7 @@ extension AppReducer {
                     return .none
                 }
                 
-                try environment.mnemonicSeedPhraseProvider.isValid(storedWallet.seedPhrase)
+                try environment.mnemonic.isValid(storedWallet.seedPhrase)
                 
                 let birthday = state.storedWallet?.birthday ?? environment.zcashSDKEnvironment.defaultBirthday
                 
@@ -180,7 +189,7 @@ extension AppReducer {
             
             if !storedWallet.hasUserPassedPhraseBackupTest {
                 do {
-                    let phraseWords = try environment.mnemonicSeedPhraseProvider.asWords(storedWallet.seedPhrase)
+                    let phraseWords = try environment.mnemonic.asWords(storedWallet.seedPhrase)
                     
                     let recoveryPhrase = RecoveryPhrase(words: phraseWords)
                     state.phraseDisplayState.phrase = recoveryPhrase
@@ -201,14 +210,14 @@ extension AppReducer {
         case .createNewWallet:
             do {
                 // get the random english mnemonic
-                let randomPhrase = try environment.mnemonicSeedPhraseProvider.randomMnemonic()
+                let randomPhrase = try environment.mnemonic.randomMnemonic()
                 let birthday = try environment.zcashSDKEnvironment.lightWalletService.latestBlockHeight()
                 
                 // store the wallet to the keychain
                 try environment.walletStorage.importWallet(randomPhrase, birthday, .english, false)
                 
                 // start the backup phrase validation test
-                let randomPhraseWords = try environment.mnemonicSeedPhraseProvider.asWords(randomPhrase)
+                let randomPhraseWords = try environment.mnemonic.asWords(randomPhrase)
                 let recoveryPhrase = RecoveryPhrase(words: randomPhraseWords)
                 state.phraseDisplayState.phrase = recoveryPhrase
                 state.phraseValidationState = RecoveryPhraseValidationFlowState.random(phrase: recoveryPhrase)
@@ -258,7 +267,7 @@ extension AppReducer {
         }
     }
 
-    private static let routeReducer = AppReducer { state, action, environment in
+    private static let routeReducer = AppReducer { state, action, _ in
         switch action {
         case let .updateRoute(route):
             state.route = route
@@ -277,13 +286,13 @@ extension AppReducer {
             state.route = .phraseDisplay
 
         case .phraseDisplay(.finishedPressed):
-            // TODO: Advanced Routing: setting a route may vary depending on the originating context #285
-            // see https://github.com/zcash/secant-ios-wallet/issues/285
-            if let storedWallet = try? environment.walletStorage.exportWallet(),
-                storedWallet.hasUserPassedPhraseBackupTest {
-                state.route = .home
-            } else {
+            // user is still supposed to do the backup phrase validation test
+            if state.prevRoute == .welcome || state.prevRoute == .onboarding {
                 state.route = .phraseValidation
+            }
+            // user wanted to see the backup phrase once again (at validation finished screen)
+            if state.prevRoute == .phraseValidation {
+                state.route = .home
             }
 
             /// Default is meaningful here because there's `appReducer` handling actions and this reducer is handling only routes. We don't here plenty of unused cases.
@@ -299,7 +308,7 @@ extension AppReducer {
         action: /AppAction.home,
         environment: { environment in
             HomeEnvironment(
-                mnemonicSeedPhraseProvider: environment.mnemonicSeedPhraseProvider,
+                mnemonic: environment.mnemonic,
                 scheduler: environment.scheduler,
                 walletStorage: environment.walletStorage,
                 derivationTool: environment.derivationTool,
@@ -313,7 +322,7 @@ extension AppReducer {
         action: /AppAction.onboarding,
         environment: { environment in
             OnboardingFlowEnvironment(
-                mnemonicSeedPhraseProvider: environment.mnemonicSeedPhraseProvider,
+                mnemonic: environment.mnemonic,
                 walletStorage: environment.walletStorage,
                 zcashSDKEnvironment: environment.zcashSDKEnvironment
             )
@@ -391,7 +400,7 @@ extension AppReducer {
         with environment: AppEnvironment
     ) throws -> Initializer {
         do {
-            let seedBytes = try environment.mnemonicSeedPhraseProvider.toSeed(seedPhrase)
+            let seedBytes = try environment.mnemonic.toSeed(seedPhrase)
             let viewingKeys = try environment.derivationTool.deriveUnifiedViewingKeysFromSeed(seedBytes, 1)
             
             let network = environment.zcashSDKEnvironment.network

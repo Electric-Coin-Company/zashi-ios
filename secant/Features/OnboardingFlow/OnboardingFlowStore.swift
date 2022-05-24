@@ -99,20 +99,20 @@ enum OnboardingFlowAction: Equatable {
 // MARK: - Environment
 
 struct OnboardingFlowEnvironment {
-    let mnemonicSeedPhraseProvider: WrappedMnemonic
+    let mnemonic: WrappedMnemonic
     let walletStorage: WrappedWalletStorage
     let zcashSDKEnvironment: ZCashSDKEnvironment
 }
 
 extension OnboardingFlowEnvironment {
     static let live = OnboardingFlowEnvironment(
-        mnemonicSeedPhraseProvider: .live,
+        mnemonic: .live,
         walletStorage: .live(),
         zcashSDKEnvironment: .mainnet
     )
 
     static let demo = OnboardingFlowEnvironment(
-        mnemonicSeedPhraseProvider: .mock,
+        mnemonic: .mock,
         walletStorage: .live(),
         zcashSDKEnvironment: .testnet
     )
@@ -173,7 +173,7 @@ extension OnboardingFlowReducer {
         action: /OnboardingFlowAction.importWallet,
         environment: { environment in
             ImportWalletEnvironment(
-                mnemonicSeedPhraseProvider: environment.mnemonicSeedPhraseProvider,
+                mnemonic: environment.mnemonic,
                 walletStorage: environment.walletStorage,
                 zcashSDKEnvironment: environment.zcashSDKEnvironment
             )

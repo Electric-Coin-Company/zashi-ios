@@ -41,7 +41,7 @@ struct SendFLowView_Previews: PreviewProvider {
                     ),
                     reducer: .default,
                     environment: SendFlowEnvironment(
-                        mnemonicSeedPhraseProvider: .live,
+                        mnemonic: .live,
                         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
                         walletStorage: .live(),
                         derivationTool: .live(),

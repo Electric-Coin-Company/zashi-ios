@@ -15,6 +15,19 @@ struct ProfileView: View {
                     }
                 )
 
+                Text("Show me backup phrase")
+                .navigationLink(
+                    isActive: viewStore.bindingForPhraseDisplay,
+                    destination: {
+                        RecoveryPhraseDisplayView(
+                            store: store.scope(
+                                state: \.phraseDisplayState,
+                                action: ProfileAction.phraseDisplay
+                            )
+                        )
+                    }
+                )
+
                 Text("Go To Settings")
                 .navigationLink(
                     isActive: viewStore.bindingForSettings,
@@ -36,11 +49,12 @@ struct ProfileView_Previews: PreviewProvider {
             ProfileView(
                 store: .init(
                     initialState: .init(
-                        walletInfoState: .init(),
-                        settingsState: .init()
+                        phraseDisplayState: .init(),
+                        settingsState: .init(),
+                        walletInfoState: .init()
                     ),
                     reducer: .default,
-                    environment: .init()
+                    environment: .live
                 )
             )
         }
