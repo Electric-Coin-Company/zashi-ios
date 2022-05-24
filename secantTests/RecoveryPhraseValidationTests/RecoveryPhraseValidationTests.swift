@@ -13,7 +13,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
     static let testScheduler = DispatchQueue.test
 
     let testEnvironment = RecoveryPhraseValidationFlowEnvironment(
-        mainQueue: testScheduler.eraseToAnyScheduler(),
+        scheduler: testScheduler.eraseToAnyScheduler(),
         newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
         pasteboard: .test,
         feedbackGenerator: .silent

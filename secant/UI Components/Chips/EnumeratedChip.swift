@@ -39,11 +39,11 @@ struct EnumeratedChip: View {
             .cornerRadius(6)
             .shadow(color: Asset.Colors.Shadow.numberedTextShadow.color, radius: 3, x: 0, y: 1)
             .overlay(
-                GeometryReader { geometry in
+                GeometryReader { proxy in
                     Text("\(index)")
                         .foregroundColor(Asset.Colors.Text.highlightedSuperscriptText.color)
                         .font(.custom(FontFamily.Roboto.bold.name, size: 10))
-                        .frame(width: geometry.size.width, height: geometry.size.height, alignment: .topLeading)
+                        .frame(width: proxy.size.width, height: proxy.size.height, alignment: .topLeading)
                         .padding(.leading, basePadding)
                         .padding(.top, 4)
                 }
