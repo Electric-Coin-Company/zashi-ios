@@ -20,7 +20,7 @@ class SendTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        storage.zcashStoredWalletPrefix = "test_"
+        storage.zcashStoredWalletPrefix = "test_send_"
         storage.deleteData(forKey: WalletStorage.Constants.zcashStoredWallet)
     }
 

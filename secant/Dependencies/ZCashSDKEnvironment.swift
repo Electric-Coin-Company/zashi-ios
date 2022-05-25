@@ -14,6 +14,7 @@ fileprivate enum ZcashSDKConstants {
     static let endpointTestnetAddress = "lightwalletd.testnet.electriccoin.co"
     static let endpointPort = 9067
     static let defaultBlockHeight = 1_629_724
+    static let mnemonicWordsMaxCount = 24
 }
 
 struct ZCashSDKEnvironment {
@@ -21,6 +22,7 @@ struct ZCashSDKEnvironment {
     let endpoint: LightWalletEndpoint
     let lightWalletService: LightWalletService
     let network: ZcashNetwork
+    let mnemonicWordsMaxCount: Int
     let isMainnet: () -> Bool
 }
 
@@ -32,6 +34,7 @@ extension ZCashSDKEnvironment {
             endpoint: LightWalletEndpoint(address: ZcashSDKConstants.endpointMainnetAddress, port: ZcashSDKConstants.endpointPort)
         ),
         network: ZcashNetworkBuilder.network(for: .mainnet),
+        mnemonicWordsMaxCount: ZcashSDKConstants.mnemonicWordsMaxCount,
         isMainnet: { true }
     )
 
@@ -42,6 +45,7 @@ extension ZCashSDKEnvironment {
             endpoint: LightWalletEndpoint(address: ZcashSDKConstants.endpointTestnetAddress, port: ZcashSDKConstants.endpointPort)
         ),
         network: ZcashNetworkBuilder.network(for: .testnet),
+        mnemonicWordsMaxCount: ZcashSDKConstants.mnemonicWordsMaxCount,
         isMainnet: { false }
     )
 }
