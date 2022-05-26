@@ -52,8 +52,11 @@
 // MARK: - Import Wallet Screen
 "importWallet.title" = "Wallet Import";
 "importWallet.description" = "You can import your backed up wallet by entering your backup recovery phrase (aka seed phrase) now.";
-"importWallet.button.importPhrase" = "Import Recovery Phrase";
+"importWallet.button.restoreWallet" = "Restore wallet";
 "importWallet.button.importPrivateKey" = "Import a private or viewing key";
+"importWallet.birthday.description" = "Add your wallet's birthday to sync up quicker. Leave it blank if you don't know it.";
+"importWallet.birthday.placeholder" = "Enter birthday height";
+
 
 // MARK: - Home Screen
 "home.request" = "Request ZEC";

@@ -17,6 +17,26 @@ typealias ImportWalletViewStore = ViewStore<ImportWalletState, ImportWalletActio
 struct ImportWalletState: Equatable {
     @BindableState var alert: AlertState<ImportWalletAction>?
     @BindableState var importedSeedPhrase: String = ""
+    @BindableState var birthdayHeight: String = ""
+    var wordsCount = 0
+    var maxWordsCount = 0
+    var isValidMnemonic = false
+    var isValidNumberOfWords = false
+    var birthdayHeightValue: BlockHeight?
+    
+    var mnemonicStatus: String {
+        if isValidMnemonic {
+            return "VALID SEED PHRASE"
+        } else {
+            return "\(wordsCount)/\(maxWordsCount)"
+        }
+    }
+    
+    var isValidForm: Bool {
+        isValidMnemonic &&
+        (birthdayHeight.isEmpty ||
+        (!birthdayHeight.isEmpty && birthdayHeightValue != nil))
+    }
 }
 
 // MARK: - Action
@@ -24,9 +44,10 @@ struct ImportWalletState: Equatable {
 enum ImportWalletAction: Equatable, BindableAction {
     case binding(BindingAction<ImportWalletState>)
     case dismissAlert
-    case importRecoveryPhrase
+    case restoreWallet
     case importPrivateOrViewingKey
     case initializeSDK
+    case onAppear
     case successfullyRecovered
 }
 
@@ -57,6 +78,31 @@ extension ImportWalletEnvironment {
 extension ImportWalletReducer {
     static let `default` = ImportWalletReducer { state, action, environment in
         switch action {
+        case .onAppear:
+            state.maxWordsCount = environment.zcashSDKEnvironment.mnemonicWordsMaxCount
+            return .none
+            
+        case .binding(\.$importedSeedPhrase):
+            state.wordsCount = state.importedSeedPhrase.split(separator: " ").count
+            state.isValidNumberOfWords = state.wordsCount == state.maxWordsCount
+            // is the mnemonic valid one?
+            do {
+                try environment.mnemonic.isValid(state.importedSeedPhrase)
+            } catch {
+                state.isValidMnemonic = false
+                return .none
+            }
+            state.isValidMnemonic = true
+            return .none
+
+        case .binding(\.$birthdayHeight):
+            if let birthdayHeight = BlockHeight(state.birthdayHeight), birthdayHeight >= environment.zcashSDKEnvironment.defaultBirthday {
+                state.birthdayHeightValue = birthdayHeight
+            } else {
+                state.birthdayHeightValue = nil
+            }
+            return .none
+
         case .binding:
             return .none
 
@@ -64,13 +110,13 @@ extension ImportWalletReducer {
             state.alert = nil
             return .none
             
-        case .importRecoveryPhrase:
+        case .restoreWallet:
             do {
                 // validate the seed
                 try environment.mnemonic.isValid(state.importedSeedPhrase)
                 
                 // store it to the keychain
-                let birthday = environment.zcashSDKEnvironment.defaultBirthday
+                var birthday = state.birthdayHeightValue ?? environment.zcashSDKEnvironment.defaultBirthday
                 try environment.walletStorage.importWallet(state.importedSeedPhrase, birthday, .english, false)
                 
                 // update the backup phrase validation flag
@@ -118,9 +164,9 @@ extension ImportWalletReducer {
 // MARK: - Placeholders
 
 extension ImportWalletState {
-    static let placeholder = ImportWalletState(importedSeedPhrase: "")
+    static let placeholder = ImportWalletState()
 
-    static let live = ImportWalletState(importedSeedPhrase: "")
+    static let live = ImportWalletState()
 }
 
 extension ImportWalletStore {

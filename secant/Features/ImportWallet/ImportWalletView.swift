@@ -33,14 +33,30 @@ struct ImportWalletView: View {
                 }
                 .padding(18)
                 
-                ImportSeedEditor(store: store)
-                    .frame(width: nil, height: 200, alignment: .center)
-                
-                Button("importWallet.button.importPhrase") {
-                    viewStore.send(.importRecoveryPhrase)
+                ZStack {
+                    ImportSeedEditor(store: store)
+                    
+                    mnemonicStatus(viewStore)
+                }
+                .frame(width: nil, height: 200, alignment: .center)
+
+                VStack {
+                    Text("importWallet.birthday.description")
+                        .paragraphText()
+
+                    TextField("importWallet.birthday.placeholder", text: viewStore.binding(\.$birthdayHeight))
+                        .keyboardType(.numberPad)
+                        .autocapitalization(.none)
+                        .importSeedEditorModifier()
+                }
+                .padding(28)
+
+                Button("importWallet.button.restoreWallet") {
+                    viewStore.send(.restoreWallet)
                 }
                 .activeButtonStyle
                 .importWalletButtonLayout()
+                .disabled(!viewStore.isValidForm)
 
                 Button("importWallet.button.importPrivateKey") {
                     viewStore.send(.importPrivateOrViewingKey)
@@ -53,7 +69,29 @@ struct ImportWalletView: View {
             .navigationBarHidden(true)
             .applyScreenBackground()
             .scrollableWhenScaledUp()
+            .onAppear(perform: { viewStore.send(.onAppear) })
             .alert(self.store.scope(state: \.alert), dismiss: .dismissAlert)
+        }
+    }
+}
+
+extension ImportWalletView {
+    func mnemonicStatus(_ viewStore: ImportWalletViewStore) -> some View {
+        VStack {
+            Spacer()
+            HStack {
+                Spacer()
+                Text(viewStore.mnemonicStatus)
+                    .font(.custom(FontFamily.Rubik.regular.name, size: 14))
+                    .foregroundColor(
+                        viewStore.isValidNumberOfWords ?
+                        Asset.Colors.Text.validMnemonic.color :
+                            Asset.Colors.Text.heading.color
+                    )
+                    .padding(.trailing, 35)
+                    .padding(.bottom, 15)
+                    .zIndex(1)
+            }
         }
     }
 }

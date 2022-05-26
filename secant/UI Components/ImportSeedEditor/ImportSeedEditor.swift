@@ -22,7 +22,8 @@ struct ImportSeedEditor: View {
             TextEditor(text: viewStore.binding(\.$importedSeedPhrase))
                 .autocapitalization(.none)
                 .importSeedEditorModifier()
-                .padding(28)
+                .padding(.horizontal, 28)
+                .padding(.vertical, 10)
         }
     }
 }
