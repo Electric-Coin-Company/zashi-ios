@@ -101,6 +101,9 @@
 		9E2F1C8F280EDE09004E65FE /* Drawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2F1C8E280EDE09004E65FE /* Drawer.swift */; };
 		9E37A2B827C8F59F00AE57B3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E37A2B727C8F59F00AE57B3 /* Localizable.strings */; };
 		9E391124283E4CAC0073DD9A /* ImportWalletTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E391123283E4CAC0073DD9A /* ImportWalletTests.swift */; };
+		9E391129283F74590073DD9A /* Zatoshi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E391128283F74590073DD9A /* Zatoshi.swift */; };
+		9E39112A283F90F10073DD9A /* Double+Zcash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDDEA8B28250F9C00B4100C /* Double+Zcash.swift */; };
+		9E39112E283F91600073DD9A /* ZatoshiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E39112D283F91600073DD9A /* ZatoshiTests.swift */; };
 		9E4DC6E027C409A100E657F4 /* NeumorphicDesignModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DC6DF27C409A100E657F4 /* NeumorphicDesignModifier.swift */; };
 		9E4DC6E227C4C6B700E657F4 /* SecantButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */; };
 		9E5BF63F2819542C00BA3F17 /* TransactionHistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF63E2819542C00BA3F17 /* TransactionHistoryTests.swift */; };
@@ -138,7 +141,6 @@
 		9EAFEB9228081E9400199FC9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93874EF273C4DE200F0E875 /* HomeView.swift */; };
 		9EBEF87A27CE369800B4F343 /* RecoveryPhraseValidationFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBEF87927CE369800B4F343 /* RecoveryPhraseValidationFlowView.swift */; };
 		9ECAE56827FC713C0089A0EF /* DatabaseFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECAE56727FC713C0089A0EF /* DatabaseFiles.swift */; };
-		9EDDEA8C28250F9C00B4100C /* Double+Zcash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDDEA8B28250F9C00B4100C /* Double+Zcash.swift */; };
 		9EDDEAA22829610D00B4100C /* CurrencySelectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDDEA9F2829610D00B4100C /* CurrencySelectionTests.swift */; };
 		9EDDEAA32829610D00B4100C /* TransactionAmountInputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDDEAA02829610D00B4100C /* TransactionAmountInputTests.swift */; };
 		9EDDEAA42829610D00B4100C /* TransactionAddressInputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDDEAA12829610D00B4100C /* TransactionAddressInputTests.swift */; };
@@ -291,6 +293,8 @@
 		9E2F1C8E280EDE09004E65FE /* Drawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drawer.swift; sourceTree = "<group>"; };
 		9E37A2B727C8F59F00AE57B3 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		9E391123283E4CAC0073DD9A /* ImportWalletTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportWalletTests.swift; sourceTree = "<group>"; };
+		9E391128283F74590073DD9A /* Zatoshi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Zatoshi.swift; sourceTree = "<group>"; };
+		9E39112D283F91600073DD9A /* ZatoshiTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZatoshiTests.swift; sourceTree = "<group>"; };
 		9E4DC6DF27C409A100E657F4 /* NeumorphicDesignModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeumorphicDesignModifier.swift; sourceTree = "<group>"; };
 		9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecantButtonStyles.swift; sourceTree = "<group>"; };
 		9E5BF63B2818305D00BA3F17 /* TransactionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionState.swift; sourceTree = "<group>"; };
@@ -834,6 +838,7 @@
 				0D35CC45277A36E00074316A /* ScrollableWhenScaled.swift */,
 				2EDA07A327EDE2A900D6F09B /* DebugFrame.swift */,
 				9E2F1C832809B606004E65FE /* DebugMenu.swift */,
+				9E391128283F74590073DD9A /* Zatoshi.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -956,6 +961,7 @@
 				9EAFEB852805A23100199FC9 /* WrappedSecItemTests.swift */,
 				9EF8135B27ECC25E0075AF48 /* UserPreferencesStorageTests.swift */,
 				9E02B56B27FED475005B809B /* DatabaseFilesTests.swift */,
+				9E39112D283F91600073DD9A /* ZatoshiTests.swift */,
 			);
 			path = UtilTests;
 			sourceTree = "<group>";
@@ -1302,7 +1308,9 @@
 				9EBEF87A27CE369800B4F343 /* RecoveryPhraseValidationFlowView.swift in Sources */,
 				9E4DC6E227C4C6B700E657F4 /* SecantButtonStyles.swift in Sources */,
 				0DDB6A5127737D4A0012A410 /* RecoveryPhraseBackupFailedView.swift in Sources */,
+				9E391129283F74590073DD9A /* Zatoshi.swift in Sources */,
 				0D6D628B276A528E002FB4CC /* DropDelegate.swift in Sources */,
+				9E39112A283F90F10073DD9A /* Double+Zcash.swift in Sources */,
 				9E2DF99D27CF704D00649636 /* ImportSeedEditor.swift in Sources */,
 				F9971A5327680DD000A2DB75 /* ProfileStore.swift in Sources */,
 				669FDAEB272C23C2007B9422 /* CircularFrameBadge.swift in Sources */,
@@ -1354,7 +1362,6 @@
 				0DF2DC5427235E3E00FA31E2 /* View+InnerShadow.swift in Sources */,
 				9EAFEB84280597B700199FC9 /* WrappedSecItem.swift in Sources */,
 				9E2AC10327DA28200042AA47 /* WalletStorage.swift in Sources */,
-				9EDDEA8C28250F9C00B4100C /* Double+Zcash.swift in Sources */,
 				9ECAE56827FC713C0089A0EF /* DatabaseFiles.swift in Sources */,
 				9E5BF6462821028C00BA3F17 /* WrappedUserDefaults.swift in Sources */,
 				F9971A6B27680E1000A2DB75 /* WalletInfoStore.swift in Sources */,
@@ -1403,6 +1410,7 @@
 				9E01F8282833CDA0000EFC57 /* ScanTests.swift in Sources */,
 				9EDDEAA42829610D00B4100C /* TransactionAddressInputTests.swift in Sources */,
 				6654C7442715A4AC00901167 /* OnboardingStoreTests.swift in Sources */,
+				9E39112E283F91600073DD9A /* ZatoshiTests.swift in Sources */,
 				9EDDEAA32829610D00B4100C /* TransactionAmountInputTests.swift in Sources */,
 				9EAFEB862805A23100199FC9 /* WrappedSecItemTests.swift in Sources */,
 				9E5BF644281FEC9900BA3F17 /* SendTests.swift in Sources */,

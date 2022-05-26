@@ -14,6 +14,6 @@ extension Double {
     }
 
     func asZecString() -> String {
-        NumberFormatter.zcashFormatter.string(from: NSNumber(value: self)) ?? ""
+        NumberFormatter.zcashNumberFormatter.string(from: NSNumber(value: self)) ?? ""
     }
 }

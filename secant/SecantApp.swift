@@ -19,6 +19,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
+        // set the default behavior for the NSDecimalNumber
+        NSDecimalNumber.defaultBehavior = Zatoshi.decimalHandler
         appViewStore.send(.appDelegate(.didFinishLaunching))
         return true
     }

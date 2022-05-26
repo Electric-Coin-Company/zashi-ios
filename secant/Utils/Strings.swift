@@ -10,7 +10,7 @@ extension String {
 }
 
 extension NumberFormatter {
-    static let zcashFormatter: NumberFormatter = {
+    static let zcashNumberFormatter: NumberFormatter = {
         var formatter = NumberFormatter()
         formatter.maximumFractionDigits = 8
         formatter.maximumIntegerDigits = 8
@@ -22,7 +22,7 @@ extension NumberFormatter {
 
 extension String {
     var doubleValue: Double? {
-        return NumberFormatter.zcashFormatter.number(from: self)?.doubleValue
+        return NumberFormatter.zcashNumberFormatter.number(from: self)?.doubleValue
     }
 }
 
