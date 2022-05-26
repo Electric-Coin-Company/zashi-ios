@@ -1,17 +1,28 @@
 # Changelog
 
+## 0.0.1 build 25
+- [#180] Project Structure & TCA Code Consistency Document (#314)
+This is a huge refactor in the project structure. Please see related
+issue for more details.
+- [#300] Use .live pasteboard on live views of the app. (#320)
+- [#319] Update TCA to 0.35.0 (#326)
+- [#285] Advanced Routing: setting a route may vary depending on the originating context (#325)
+- [#106] [Scaffold] Scan QR Screen (#321)
+- [#301] Import Wallet does not have a Birthday input field (#328)
+- [#331] Update Secant ZcashLightClientKit 0.14.0-beta
+
 ## 0.0.1 build 24
-[#294] Send Screen - amount + address fields (#308)
+- [#294] Send Screen - amount + address fields (#308)
 ## 0.0.1 build 23
-[#287] updated changelog with issues that fixed the broken build (#309)
-[#306] [#215] Swiftlint and other warnings + build errors (#307)
-[#287] CHANGELOG and build number bump for 0.0.1-23 (#305)
-[#302] Synchronizer status on Home Screen (#304)
-[#212] Wrapped user defaults (#298)
-[#80] Scaffold - Send functionality (#297)
-[#295] Update "Commit Messages" section of CONTRIBUTING.md (#296)
-[#293] first draft of history of transactions (#293)
-[#284]: (Non)scrollable Transactions list based on Drawer
+- [#287] updated changelog with issues that fixed the broken build (#309)
+- [#306] [#215] Swiftlint and other warnings + build errors (#307)
+- [#287] CHANGELOG and build number bump for 0.0.1-23 (#305)
+- [#302] Synchronizer status on Home Screen (#304)
+- [#212] Wrapped user defaults (#298)
+- [#80] Scaffold - Send functionality (#297)
+- [#295] Update "Commit Messages" section of CONTRIBUTING.md (#296)
+- [#293] first draft of history of transactions (#293)
+- [#284]: (Non)scrollable Transactions list based on Drawer
 
 ## 0.0.1 build 21
 - [#258]: User can take the backup test successfully more than once (#282)\
