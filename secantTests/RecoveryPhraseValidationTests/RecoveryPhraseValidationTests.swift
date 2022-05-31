@@ -16,7 +16,8 @@ class RecoveryPhraseValidationTests: XCTestCase {
         scheduler: testScheduler.eraseToAnyScheduler(),
         newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
         pasteboard: .test,
-        feedbackGenerator: .silent
+        feedbackGenerator: .silent,
+        recoveryPhraseRandomizer: .live
     )
 
     func testPickWordsFromMissingIndices() throws {

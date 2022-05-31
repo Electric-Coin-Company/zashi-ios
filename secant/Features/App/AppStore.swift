@@ -65,6 +65,7 @@ struct AppEnvironment {
     let derivationTool: WrappedDerivationTool
     let feedbackGenerator: WrappedFeedbackGenerator
     let mnemonic: WrappedMnemonic
+    let recoveryPhraseRandomizer: WrappedRecoveryPhraseRandomizer
     let scheduler: AnySchedulerOf<DispatchQueue>
     let SDKSynchronizer: WrappedSDKSynchronizer
     let walletStorage: WrappedWalletStorage
@@ -78,6 +79,7 @@ extension AppEnvironment {
         derivationTool: .live(),
         feedbackGenerator: .haptic,
         mnemonic: .live,
+        recoveryPhraseRandomizer: .live,
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         SDKSynchronizer: LiveWrappedSDKSynchronizer(),
         walletStorage: .live(),
@@ -90,6 +92,7 @@ extension AppEnvironment {
         derivationTool: .live(derivationTool: DerivationTool(networkType: .mainnet)),
         feedbackGenerator: .silent,
         mnemonic: .mock,
+        recoveryPhraseRandomizer: .live,
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         SDKSynchronizer: LiveWrappedSDKSynchronizer(),
         walletStorage: .live(),
@@ -199,7 +202,7 @@ extension AppReducer {
                     
                     let recoveryPhrase = RecoveryPhrase(words: phraseWords)
                     state.phraseDisplayState.phrase = recoveryPhrase
-                    state.phraseValidationState = RecoveryPhraseValidationFlowState.random(phrase: recoveryPhrase)
+                    state.phraseValidationState = environment.recoveryPhraseRandomizer.random(recoveryPhrase)
                     landingRoute = .phraseDisplay
                 } catch {
                     // TODO: - merge with issue 201 (https://github.com/zcash/secant-ios-wallet/issues/201) and its Error States
@@ -226,7 +229,7 @@ extension AppReducer {
                 let randomPhraseWords = try environment.mnemonic.asWords(randomPhrase)
                 let recoveryPhrase = RecoveryPhrase(words: randomPhraseWords)
                 state.phraseDisplayState.phrase = recoveryPhrase
-                state.phraseValidationState = RecoveryPhraseValidationFlowState.random(phrase: recoveryPhrase)
+                state.phraseValidationState = environment.recoveryPhraseRandomizer.random(recoveryPhrase)
                 
                 return .concatenate(
                     Effect(value: .initializeSDK),
@@ -340,7 +343,15 @@ extension AppReducer {
     private static let phraseValidationReducer: AppReducer = RecoveryPhraseValidationFlowReducer.default.pullback(
         state: \AppState.phraseValidationState,
         action: /AppAction.phraseValidation,
-        environment: { _ in RecoveryPhraseValidationFlowEnvironment.demo }
+        environment: { environment in
+            RecoveryPhraseValidationFlowEnvironment(
+                scheduler: environment.scheduler,
+                newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
+                pasteboard: .test,
+                feedbackGenerator: .silent,
+                recoveryPhraseRandomizer: environment.recoveryPhraseRandomizer
+            )
+        }
     )
 
     private static let phraseDisplayReducer: AppReducer = RecoveryPhraseDisplayReducer.default.pullback(
@@ -448,7 +459,7 @@ extension AppState {
             onboardingState: .init(
                 importWalletState: .placeholder
             ),
-            phraseValidationState: RecoveryPhraseValidationFlowState.placeholder,
+            phraseValidationState: .placeholder,
             phraseDisplayState: RecoveryPhraseDisplayState(
                 phrase: .placeholder
             ),

@@ -38,11 +38,6 @@ struct RecoveryPhraseDisplayEnvironment {
 }
 
 extension RecoveryPhraseDisplayEnvironment {
-    private struct DemoPasteboard {
-        static var general = Self()
-        var string: String?
-    }
-
     static let demo = Self(
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },

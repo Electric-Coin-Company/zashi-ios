@@ -46,22 +46,6 @@ struct RecoveryPhraseValidationFlowState: Equatable {
 }
 
 extension RecoveryPhraseValidationFlowState {
-    /// creates an initial `RecoveryPhraseValidationState` with no completions and random missing indices.
-    /// - Note: Use this function to create a random validation puzzle for a given phrase.
-    static func random(phrase: RecoveryPhrase) -> Self {
-        let missingIndices = Self.randomIndices()
-        let missingWordChipKind = phrase.words(fromMissingIndices: missingIndices).shuffled()
-
-        return RecoveryPhraseValidationFlowState(
-            phrase: phrase,
-            missingIndices: missingIndices,
-            missingWordChips: missingWordChipKind,
-            validationWords: []
-        )
-    }
-}
-
-extension RecoveryPhraseValidationFlowState {
     /// Given an array of RecoveryPhraseStepCompletion, missing indices, original phrase and the number of groups it was split into,
     /// assembly the resulting phrase. This comes up with the "proposed solution" for the recovery phrase validation challenge.
     /// - returns:an array of String containing the recovery phrase words ordered by the original phrase order, or `nil`
@@ -94,12 +78,6 @@ extension RecoveryPhraseValidationFlowState {
         }
 
         return words
-    }
-
-    static func randomIndices() -> [Int] {
-        return (0..<phraseChunks).map { _ in
-            Int.random(in: 0 ..< wordGroupSize)
-        }
     }
 }
 
@@ -137,26 +115,24 @@ struct RecoveryPhraseValidationFlowEnvironment {
     let newPhrase: () -> Effect<RecoveryPhrase, RecoveryPhraseError>
     let pasteboard: WrappedPasteboard
     let feedbackGenerator: WrappedFeedbackGenerator
+    let recoveryPhraseRandomizer: WrappedRecoveryPhraseRandomizer
 }
 
 extension RecoveryPhraseValidationFlowEnvironment {
-    private struct DemoPasteboard {
-        static var general = Self()
-        var string: String?
-    }
-
     static let demo = Self(
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
         pasteboard: .test,
-        feedbackGenerator: .silent
+        feedbackGenerator: .silent,
+        recoveryPhraseRandomizer: .live
     )
         
     static let live = Self(
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
         pasteboard: .live,
-        feedbackGenerator: .haptic
+        feedbackGenerator: .haptic,
+        recoveryPhraseRandomizer: .live
     )
 }
 
@@ -166,7 +142,7 @@ extension RecoveryPhraseValidationFlowReducer {
     static let `default` = RecoveryPhraseValidationFlowReducer { state, action, environment in
         switch action {
         case .reset:
-            state = RecoveryPhraseValidationFlowState.random(phrase: state.phrase)
+            state = environment.recoveryPhraseRandomizer.random(state.phrase)
             state.route = .validation
             // FIXME: Resetting causes route to be nil = preamble screen, hence setting the .validation. The transition back is not animated though (issue 186)
 
@@ -207,7 +183,7 @@ extension RecoveryPhraseValidationFlowReducer {
 
         case .updateRoute(let route):
             guard let route = route else {
-                state = RecoveryPhraseValidationFlowState.random(phrase: state.phrase)
+                state = environment.recoveryPhraseRandomizer.random(state.phrase)
                 return .none
             }
             state.route = route
@@ -267,7 +243,18 @@ extension RecoveryPhraseValidationFlowViewStore {
 // MARK: - Placeholders
 
 extension RecoveryPhraseValidationFlowState {
-    static let placeholder = RecoveryPhraseValidationFlowState.random(phrase: .placeholder)
+    static let placeholder = RecoveryPhraseValidationFlowState(
+        phrase: .placeholder,
+        missingIndices: [2, 0, 3, 5],
+        missingWordChips: [
+            .unassigned(word: "thank"),
+            .unassigned(word: "morning"),
+            .unassigned(word: "boil"),
+            .unassigned(word: "garlic")
+        ],
+        validationWords: [],
+        route: nil
+    )
 
     static let placeholderStep1 = RecoveryPhraseValidationFlowState(
         phrase: .placeholder,
@@ -337,8 +324,6 @@ extension RecoveryPhraseValidationFlowState {
 }
 
 extension RecoveryPhraseValidationFlowStore {
-    private static let scheduler = DispatchQueue.main
-
     static let demo = Store(
         initialState: .placeholder,
         reducer: .default,
