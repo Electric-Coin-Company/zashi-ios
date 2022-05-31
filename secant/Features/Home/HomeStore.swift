@@ -27,9 +27,9 @@ struct HomeState: Equatable {
     var sendState: SendFlowState
     var scanState: ScanState
     var synchronizerStatus: String
-    var totalBalance: Int64
+    var totalBalance: Zatoshi
     var transactionHistoryState: TransactionHistoryFlowState
-    var verifiedBalance: Int64
+    var verifiedBalance: Zatoshi
 }
 
 // MARK: Action
@@ -110,8 +110,8 @@ extension HomeReducer {
             return Effect(value: .updateSynchronizerStatus)
             
         case .updateBalance(let balance):
-            state.totalBalance = balance.total
-            state.verifiedBalance = balance.verified
+            state.totalBalance = Zatoshi(amount: balance.total)
+            state.verifiedBalance = Zatoshi(amount: balance.verified)
             return .none
             
         case .updateDrawer(let drawerOverlay):
@@ -179,11 +179,11 @@ extension HomeReducer {
         action: /HomeAction.send,
         environment: { environment in
             SendFlowEnvironment(
-                mnemonic: environment.mnemonic,
-                scheduler: environment.scheduler,
-                walletStorage: environment.walletStorage,
                 derivationTool: environment.derivationTool,
-                SDKSynchronizer: environment.SDKSynchronizer
+                mnemonic: environment.mnemonic,
+                SDKSynchronizer: environment.SDKSynchronizer,
+                scheduler: environment.scheduler,
+                walletStorage: environment.walletStorage
             )
         }
     )
@@ -282,9 +282,9 @@ extension HomeState {
             sendState: .placeholder,
             scanState: .placeholder,
             synchronizerStatus: "",
-            totalBalance: 0,
+            totalBalance: Zatoshi.zero,
             transactionHistoryState: .emptyPlaceHolder,
-            verifiedBalance: 0
+            verifiedBalance: Zatoshi.zero
         )
     }
 }

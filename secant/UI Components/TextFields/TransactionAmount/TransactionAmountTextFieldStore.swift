@@ -16,29 +16,12 @@ typealias TransactionAmountTextFieldReducer = Reducer<
 typealias TransactionAmountTextFieldStore = Store<TransactionAmountTextFieldState, TransactionAmountTextFieldAction>
 
 struct TransactionAmountTextFieldState: Equatable {
-    var textFieldState: TCATextFieldState
+    var amount: Int64 = 0
     var currencySelectionState: CurrencySelectionState
     var maxValue: Int64 = 0
+    var textFieldState: TCATextFieldState
     // TODO: - Get the ZEC price from the SDK, issue 311, https://github.com/zcash/secant-ios-wallet/issues/311
-    var zecPrice = 140.0
-    
-    var amount: Int64 {
-        switch currencySelectionState.currencyType {
-        case .zec:
-            return (textFieldState.text.doubleValue ?? 0.0).asZec()
-        case .usd:
-            return ((textFieldState.text.doubleValue ?? 0.0) / zecPrice).asZec()
-        }
-    }
-
-    var maxCurrencyConvertedValue: Int64 {
-        switch currencySelectionState.currencyType {
-        case .zec:
-            return maxValue
-        case .usd:
-            return (maxValue.asHumanReadableZecBalance() * zecPrice).asZec()
-        }
-    }
+    var zecPrice = Decimal(140.0)
 
     var isMax: Bool {
         return amount == maxValue
@@ -47,9 +30,10 @@ struct TransactionAmountTextFieldState: Equatable {
 
 enum TransactionAmountTextFieldAction: Equatable {
     case clearValue
+    case currencySelection(CurrencySelectionAction)
     case setMax
     case textField(TCATextFieldAction)
-    case currencySelection(CurrencySelectionAction)
+    case updateAmount
 }
 
 struct TransactionAmountTextFieldEnvironment: Equatable {}
@@ -59,43 +43,65 @@ extension TransactionAmountTextFieldReducer {
         [
             textFieldReducer,
             currencySelectionReducer,
-            maxOverride,
-            currencyUpdate
+            amountTextFieldReducer
         ]
     )
 
-    static let maxOverride = TransactionAmountTextFieldReducer { state, action, _ in
+    static let amountTextFieldReducer = TransactionAmountTextFieldReducer { state, action, _ in
         switch action {
         case .setMax:
-            state.textFieldState.text = "\(state.maxCurrencyConvertedValue.asZecString())"
+            let maxValueAsZec = Decimal(state.maxValue) / Decimal(Zatoshi.Constants.oneZecInZatoshi)
+            let currencyType = state.currencySelectionState.currencyType
+            let maxCurrencyConvertedValue: NSDecimalNumber = currencyType == .zec ?
+            NSDecimalNumber(decimal: maxValueAsZec).roundedZec :
+            NSDecimalNumber(decimal: maxValueAsZec * state.zecPrice).roundedZec
+            
+            // TODO: these test will be updated with the NumberFormater dependency to handle locale, issue #312 (https://github.com/zcash/secant-ios-wallet/issues/312)
+            let decimalString = NumberFormatter.zcashNumberFormatter.string(from: maxCurrencyConvertedValue) ?? ""
+            
+            state.textFieldState.text = "\(decimalString)"
+            return Effect(value: .updateAmount)
 
         case .clearValue:
             state.textFieldState.text = ""
+            return .none
+
+        case .textField(.set(let amount)):
+            return Effect(value: .updateAmount)
             
-        default: break
-        }
-
-        return .none
-    }
-
-    static let currencyUpdate = TransactionAmountTextFieldReducer { state, action, _ in
-        switch action {
-        case .currencySelection:
-            guard let currentDoubleValue = state.textFieldState.text.doubleValue else {
+        case .updateAmount:
+            // TODO: these test will be updated with the NumberFormater dependency to handle locale, issue #312 (https://github.com/zcash/secant-ios-wallet/issues/312)
+            guard var number = NumberFormatter.zcashNumberFormatter.number(from: state.textFieldState.text) else {
+                state.amount = 0
                 return .none
             }
-
+            switch state.currencySelectionState.currencyType {
+            case .zec:
+                state.amount = NSDecimalNumber(decimal: number.decimalValue * Decimal(Zatoshi.Constants.oneZecInZatoshi)).roundedZec.int64Value
+            case .usd:
+                let decimal = (number.decimalValue / state.zecPrice) * Decimal(Zatoshi.Constants.oneZecInZatoshi)
+                state.amount = NSDecimalNumber(decimal: decimal).roundedZec.int64Value
+            }
+            return .none
+            
+        case .currencySelection:
+            // TODO: these test will be updated with the NumberFormater dependency to handle locale, issue #312 (https://github.com/zcash/secant-ios-wallet/issues/312)
+            guard let number = NumberFormatter.zcashNumberFormatter.number(from: state.textFieldState.text) else {
+                state.amount = 0
+                return .none
+            }
+            
             let currencyType = state.currencySelectionState.currencyType
-
+            
             let newValue = currencyType == .zec ?
-            currentDoubleValue / state.zecPrice :
-            currentDoubleValue * state.zecPrice
-            state.textFieldState.text = "\(newValue.asZecString())"
-
-        default: break
+            number.decimalValue / state.zecPrice :
+            number.decimalValue * state.zecPrice
+            
+            // TODO: these test will be updated with the NumberFormater dependency to handle locale, issue #312 (https://github.com/zcash/secant-ios-wallet/issues/312)
+            let decimalString = NumberFormatter.zcashNumberFormatter.string(from: NSDecimalNumber(decimal: newValue)) ?? ""
+            state.textFieldState.text = "\(decimalString)"
+            return Effect(value: .updateAmount)
         }
-
-        return .none
     }
 
     private static let textFieldReducer: TransactionAmountTextFieldReducer = TCATextFieldReducer.default.pullback(
@@ -113,13 +119,13 @@ extension TransactionAmountTextFieldReducer {
 
 extension TransactionAmountTextFieldState {
     static let placeholder = TransactionAmountTextFieldState(
-        textFieldState: .placeholder,
-        currencySelectionState: CurrencySelectionState()
+        currencySelectionState: CurrencySelectionState(),
+        textFieldState: .placeholder
     )
 
     static let amount = TransactionAmountTextFieldState(
-        textFieldState: .amount,
-        currencySelectionState: CurrencySelectionState()
+        currencySelectionState: CurrencySelectionState(),
+        textFieldState: .amount
     )
 }
 

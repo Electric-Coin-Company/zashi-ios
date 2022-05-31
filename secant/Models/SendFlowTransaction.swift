@@ -9,7 +9,7 @@ import Foundation
 
 /// Simple model that holds data throughout the `SendFlow` feature
 struct SendFlowTransaction: Equatable {
-    var amount: Int64
+    var amount: Zatoshi
     var memo: String
     var toAddress: String
 }
@@ -17,7 +17,7 @@ struct SendFlowTransaction: Equatable {
 extension SendFlowTransaction {
     static var placeholder: Self {
         .init(
-            amount: 0,
+            amount: Zatoshi.zero,
             memo: "",
             toAddress: ""
         )

@@ -122,9 +122,9 @@ class ZatoshiTests: XCTestCase {
         // so we convert it to string, in that case we are prooving it to be rendered
         //    to the user exactly the way we want
         XCTAssertEqual(
-            number.decimalString,
+            number.decimalString(),
             "1.42857143",
-            "Zatoshi tests: the value is expected to be 1.42857143 but it's \(number.decimalString)"
+            "Zatoshi tests: the value is expected to be 1.42857143 but it's \(number.decimalString())"
         )
     }
 
@@ -151,9 +151,9 @@ class ZatoshiTests: XCTestCase {
     func testStringToZatoshi() throws {
         if let number = Zatoshi.from(decimalString: "200.0") {
             XCTAssertEqual(
-                number.decimalString,
+                number.decimalString(),
                 "200",
-                "Zatoshi tests: `testStringToZec` the value is expected to be 200 but it's \(number.decimalString)"
+                "Zatoshi tests: `testStringToZec` the value is expected to be 200 but it's \(number.decimalString())"
             )
         } else {
             XCTFail("Zatoshi tests: `testStringToZatoshi` failed to convert number.")

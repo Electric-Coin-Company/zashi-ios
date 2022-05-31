@@ -59,11 +59,11 @@ struct TransactionAmountTextField_Previews: PreviewProvider {
         TransactionAmountTextField(
             store: TransactionAmountTextFieldStore(
                 initialState: .init(
+                    currencySelectionState: .init(currencyType: .usd),
                     textFieldState: .init(
                         validationType: .floatingPoint,
                         text: ""
-                    ),
-                    currencySelectionState: .init(currencyType: .usd)
+                    )
                 ),
                 reducer: .default,
                 environment: .init()

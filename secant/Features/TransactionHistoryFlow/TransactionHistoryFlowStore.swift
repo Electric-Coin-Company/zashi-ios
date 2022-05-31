@@ -101,7 +101,7 @@ extension TransactionState {
             id: "2",
             status: .paid(success: true),
             subtitle: "",
-            zecAmount: 25
+            zecAmount: Zatoshi(amount: 25)
         )
     }
 }
@@ -153,7 +153,7 @@ extension IdentifiedArrayOf where Element == TransactionState {
                     id: String($0),
                     status: .paid(success: true),
                     subtitle: "",
-                    zecAmount: 25
+                    zecAmount: Zatoshi(amount: 25)
                 )
             }
         )

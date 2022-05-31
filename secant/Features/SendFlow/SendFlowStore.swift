@@ -23,11 +23,10 @@ struct SendFlowState: Equatable {
         case done
     }
 
-    var route: Route?
-    
     var isSendingTransaction = false
     var memo = ""
-    var totalBalance: Int64 = 0
+    var route: Route?
+    var totalBalance = Zatoshi.zero
     var transaction: SendFlowTransaction
     var transactionAddressInputState: TransactionAddressTextFieldState
     var transactionAmountInputState: TransactionAmountTextFieldState
@@ -52,8 +51,8 @@ struct SendFlowState: Equatable {
         transactionAmountInputState.amount > transactionAmountInputState.maxValue
     }
 
-    var totalCurrencyBalance: Int64 {
-        (totalBalance.asHumanReadableZecBalance() * transactionAmountInputState.zecPrice).asZec()
+    var totalCurrencyBalance: Zatoshi {
+        Zatoshi.from(decimal: totalBalance.decimalValue.decimalValue * transactionAmountInputState.zecPrice)
     }
 }
 
@@ -67,7 +66,7 @@ enum SendFlowAction: Equatable {
     case synchronizerStateChanged(WrappedSDKSynchronizerState)
     case transactionAddressInput(TransactionAddressTextFieldAction)
     case transactionAmountInput(TransactionAmountTextFieldAction)
-    case updateBalance(Int64)
+    case updateBalance(Zatoshi)
     case updateMemo(String)
     case updateTransaction(SendFlowTransaction)
     case updateRoute(SendFlowState.Route?)
@@ -76,11 +75,11 @@ enum SendFlowAction: Equatable {
 // MARK: - Environment
 
 struct SendFlowEnvironment {
+    let derivationTool: WrappedDerivationTool
     let mnemonic: WrappedMnemonic
+    let SDKSynchronizer: WrappedSDKSynchronizer
     let scheduler: AnySchedulerOf<DispatchQueue>
     let walletStorage: WrappedWalletStorage
-    let derivationTool: WrappedDerivationTool
-    let SDKSynchronizer: WrappedSDKSynchronizer
 }
 
 // MARK: - Reducer
@@ -109,7 +108,7 @@ extension SendFlowReducer {
             return .none
 
         case .updateRoute(.confirmation):
-            state.transaction.amount = state.transactionAmountInputState.amount
+            state.transaction.amount = Zatoshi(amount: state.transactionAmountInputState.amount)
             state.transaction.toAddress = state.transactionAddressInputState.textFieldState.text
             return .none
             
@@ -133,7 +132,7 @@ extension SendFlowReducer {
                 
                 return environment.SDKSynchronizer.sendTransaction(
                     with: spendingKey,
-                    zatoshi: Int64(state.transaction.amount),
+                    zatoshi: state.transaction.amount,
                     to: state.transaction.toAddress,
                     memo: state.transaction.memo,
                     from: 0
@@ -172,7 +171,7 @@ extension SendFlowReducer {
         case .synchronizerStateChanged(.synced):
             return environment.SDKSynchronizer.getShieldedBalance()
                 .receive(on: environment.scheduler)
-                .map({ $0.total })
+                .map({ Zatoshi(amount: $0.total) })
                 .map(SendFlowAction.updateBalance)
                 .eraseToEffect()
             
@@ -181,7 +180,7 @@ extension SendFlowReducer {
             
         case .updateBalance(let balance):
             state.totalBalance = balance
-            state.transactionAmountInputState.maxValue = balance
+            state.transactionAmountInputState.maxValue = balance.amount
             return .none
 
         case .updateMemo(let memo):
@@ -287,7 +286,7 @@ extension SendFlowState {
         .init(
             route: nil,
             transaction: .init(
-                amount: 0,
+                amount: Zatoshi.zero,
                 memo: "",
                 toAddress: ""
             ),
@@ -309,11 +308,11 @@ extension SendFlowStore {
             ),
             reducer: .default,
             environment: SendFlowEnvironment(
-                mnemonic: .live,
-                scheduler: DispatchQueue.main.eraseToAnyScheduler(),
-                walletStorage: .live(),
                 derivationTool: .live(),
-                SDKSynchronizer: LiveWrappedSDKSynchronizer()
+                mnemonic: .live,
+                SDKSynchronizer: LiveWrappedSDKSynchronizer(),
+                scheduler: DispatchQueue.main.eraseToAnyScheduler(),
+                walletStorage: .live()
             )
         )
     }

@@ -32,11 +32,11 @@ struct SandboxView: View {
                     )
                     .debug(),
                     environment: SendFlowEnvironment(
-                        mnemonic: .live,
-                        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
-                        walletStorage: .live(),
                         derivationTool: .live(),
-                        SDKSynchronizer: LiveWrappedSDKSynchronizer()
+                        mnemonic: .live,
+                        SDKSynchronizer: LiveWrappedSDKSynchronizer(),
+                        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
+                        walletStorage: .live()
                     )
                 )
             )
