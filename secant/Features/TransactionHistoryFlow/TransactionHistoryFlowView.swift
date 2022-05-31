@@ -52,7 +52,7 @@ extension TransactionHistoryFlowView {
                         Spacer()
                         
                         Text(transaction.status == .received ? "+" : "")
-                        + Text("\(transaction.zecAmount.asZecString()) ZEC")
+                        + Text("\(transaction.zecAmount.decimalString()) ZEC")
                     }
                 }
                 .navigationLink(

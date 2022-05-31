@@ -9,8 +9,6 @@ import XCTest
 @testable import secant_testnet
 import ComposableArchitecture
 
-// TODO: these tests will be updated with the Zatoshi/Balance representative once done, issue #272 https://github.com/zcash/secant-ios-wallet/issues/272
-
 // TODO: these test will be updated with the NumberFormater dependency to handle locale, issue #312 (https://github.com/zcash/secant-ios-wallet/issues/312)
 
 class TransactionAmountTextFieldTests: XCTestCase {
@@ -20,13 +18,13 @@ class TransactionAmountTextFieldTests: XCTestCase {
         let store = TestStore(
             initialState:
                 TransactionAmountTextFieldState(
+                    currencySelectionState: CurrencySelectionState(),
+                    maxValue: 501_301,
                     textFieldState:
                         TCATextFieldState(
                             validationType: .floatingPoint,
                             text: "0.002"
-                        ),
-                    currencySelectionState: CurrencySelectionState(),
-                    maxValue: 501_301
+                        )
                 ),
             reducer: TransactionAmountTextFieldReducer.default,
             environment: TransactionAmountTextFieldEnvironment()
@@ -34,7 +32,10 @@ class TransactionAmountTextFieldTests: XCTestCase {
 
         store.send(.setMax) { state in
             state.textFieldState.text = "0.00501301"
-            XCTAssertEqual(501_301, state.amount, "AmountInput Tests: `testMaxValue` expected \(501_301) but received \(state.amount)")
+        }
+        
+        store.receive(.updateAmount) { state in
+            state.amount = 501_301
         }
     }
     
@@ -42,13 +43,13 @@ class TransactionAmountTextFieldTests: XCTestCase {
         let store = TestStore(
             initialState:
                 TransactionAmountTextFieldState(
+                    currencySelectionState: CurrencySelectionState(),
+                    maxValue: 501_301,
                     textFieldState:
                         TCATextFieldState(
                             validationType: .floatingPoint,
                             text: "0.002"
-                        ),
-                    currencySelectionState: CurrencySelectionState(),
-                    maxValue: 501_301
+                        )
                 ),
             reducer: TransactionAmountTextFieldReducer.default,
             environment: TransactionAmountTextFieldEnvironment()
@@ -60,20 +61,20 @@ class TransactionAmountTextFieldTests: XCTestCase {
         }
     }
     
-    func testZecUsdConvertedAmount() throws {
-        try XCTSkipUnless(Locale.current.regionCode == "US", "testZecUsdConvertedAmount is designed to test US locale only")
+    func testZec_to_UsdConvertedAmount() throws {
+        try XCTSkipUnless(Locale.current.regionCode == "US", "testZec_to_UsdConvertedAmount is designed to test US locale only")
 
         let store = TestStore(
             initialState:
                 TransactionAmountTextFieldState(
+                    currencySelectionState:
+                        CurrencySelectionState(
+                            currencyType: .zec
+                        ),
                     textFieldState:
                         TCATextFieldState(
                             validationType: .floatingPoint,
                             text: "1.0"
-                        ),
-                    currencySelectionState:
-                        CurrencySelectionState(
-                            currencyType: .zec
                         ),
                     zecPrice: 1000.0
                 ),
@@ -84,28 +85,58 @@ class TransactionAmountTextFieldTests: XCTestCase {
         store.send(.currencySelection(.swapCurrencyType)) { state in
             state.textFieldState.text = "1,000"
             state.currencySelectionState.currencyType = .usd
-            XCTAssertEqual(
-                100_000_000,
-                state.amount,
-                "AmountInput Tests: `testZecUsdConvertedAmount` expected \(100_000_000) but received \(state.amount)"
-            )
+        }
+        
+        store.receive(.updateAmount) { state in
+            state.amount = 100_000_000
         }
     }
     
-    func testUsdZecConvertedAmount() throws {
-        try XCTSkipUnless(Locale.current.regionCode == "US", "testUsdZecConvertedAmount is designed to test US locale only")
+    func testBigZecAmount_to_UsdConvertedAmount() throws {
+        try XCTSkipUnless(Locale.current.regionCode == "US", "testBigZecAmount_to_UsdConvertedAmount is designed to test US locale only")
 
         let store = TestStore(
             initialState:
                 TransactionAmountTextFieldState(
+                    currencySelectionState:
+                        CurrencySelectionState(
+                            currencyType: .zec
+                        ),
+                    textFieldState:
+                        TCATextFieldState(
+                            validationType: .floatingPoint,
+                            text: "25000"
+                        ),
+                    zecPrice: 1000.0
+                ),
+            reducer: TransactionAmountTextFieldReducer.default,
+            environment: TransactionAmountTextFieldEnvironment()
+        )
+
+        store.send(.currencySelection(.swapCurrencyType)) { state in
+            state.textFieldState.text = "25,000,000"
+            state.currencySelectionState.currencyType = .usd
+        }
+        
+        store.receive(.updateAmount) { state in
+            state.amount = 2_500_000_000_000
+        }
+    }
+    
+    func testUsd_to_ZecConvertedAmount() throws {
+        try XCTSkipUnless(Locale.current.regionCode == "US", "testUsd_to_ZecConvertedAmount is designed to test US locale only")
+
+        let store = TestStore(
+            initialState:
+                TransactionAmountTextFieldState(
+                    currencySelectionState:
+                        CurrencySelectionState(
+                            currencyType: .usd
+                        ),
                     textFieldState:
                         TCATextFieldState(
                             validationType: .floatingPoint,
                             text: "1 000"
-                        ),
-                    currencySelectionState:
-                        CurrencySelectionState(
-                            currencyType: .usd
                         ),
                     zecPrice: 1000.0
                 ),
@@ -116,11 +147,10 @@ class TransactionAmountTextFieldTests: XCTestCase {
         store.send(.currencySelection(.swapCurrencyType)) { state in
             state.textFieldState.text = "1"
             state.currencySelectionState.currencyType = .zec
-            XCTAssertEqual(
-                100_000_000,
-                state.amount,
-                "AmountInput Tests: `testZecUsdConvertedAmount` expected \(100_000_000) but received \(state.amount)"
-            )
+        }
+        
+        store.receive(.updateAmount) { state in
+            state.amount = 100_000_000
         }
     }
     
@@ -130,16 +160,16 @@ class TransactionAmountTextFieldTests: XCTestCase {
         let store = TestStore(
             initialState:
                 TransactionAmountTextFieldState(
-                    textFieldState:
-                        TCATextFieldState(
-                            validationType: .floatingPoint,
-                            text: "5"
-                        ),
                     currencySelectionState:
                         CurrencySelectionState(
                             currencyType: .usd
                         ),
                     maxValue: 100_000_000,
+                    textFieldState:
+                        TCATextFieldState(
+                            validationType: .floatingPoint,
+                            text: "5"
+                        ),
                     zecPrice: 1000.0
                 ),
             reducer: TransactionAmountTextFieldReducer.default,
@@ -150,6 +180,14 @@ class TransactionAmountTextFieldTests: XCTestCase {
             state.textFieldState.text = "1 000"
             state.textFieldState.valid = true
             state.currencySelectionState.currencyType = .usd
+            XCTAssertFalse(
+                state.isMax,
+                "AmountInput Tests: `testIfAmountIsMax` is expected to be false but it's \(state.isMax)"
+            )
+        }
+        
+        store.receive(.updateAmount) { state in
+            state.amount = 100_000_000
             XCTAssertTrue(
                 state.isMax,
                 "AmountInput Tests: `testIfAmountIsMax` is expected to be true but it's \(state.isMax)"
@@ -163,16 +201,16 @@ class TransactionAmountTextFieldTests: XCTestCase {
         let store = TestStore(
             initialState:
                 TransactionAmountTextFieldState(
-                    textFieldState:
-                        TCATextFieldState(
-                            validationType: .floatingPoint,
-                            text: "5"
-                        ),
                     currencySelectionState:
                         CurrencySelectionState(
                             currencyType: .zec
                         ),
                     maxValue: 200_000_000,
+                    textFieldState:
+                        TCATextFieldState(
+                            validationType: .floatingPoint,
+                            text: "5"
+                        ),
                     zecPrice: 1000.0
                 ),
             reducer: TransactionAmountTextFieldReducer.default,
@@ -181,11 +219,10 @@ class TransactionAmountTextFieldTests: XCTestCase {
 
         store.send(.setMax) { state in
             state.textFieldState.text = "2"
-            XCTAssertEqual(
-                200_000_000,
-                state.maxCurrencyConvertedValue,
-                "AmountInput Tests: `testMaxZecValue` expected \(200_000_000) but received \(state.maxCurrencyConvertedValue)"
-            )
+        }
+        
+        store.receive(.updateAmount) { state in
+            state.amount = 200_000_000
         }
     }
     
@@ -195,16 +232,16 @@ class TransactionAmountTextFieldTests: XCTestCase {
         let store = TestStore(
             initialState:
                 TransactionAmountTextFieldState(
-                    textFieldState:
-                        TCATextFieldState(
-                            validationType: .floatingPoint,
-                            text: "5"
-                        ),
                     currencySelectionState:
                         CurrencySelectionState(
                             currencyType: .usd
                         ),
                     maxValue: 200_000_000,
+                    textFieldState:
+                        TCATextFieldState(
+                            validationType: .floatingPoint,
+                            text: "5"
+                        ),
                     zecPrice: 1000.0
                 ),
             reducer: TransactionAmountTextFieldReducer.default,
@@ -213,11 +250,10 @@ class TransactionAmountTextFieldTests: XCTestCase {
 
         store.send(.setMax) { state in
             state.textFieldState.text = "2,000"
-            XCTAssertEqual(
-                200_000_000_000,
-                state.maxCurrencyConvertedValue,
-                "AmountInput Tests: `testMaxUsdValue` expected \(200_000_000_000) but received \(state.maxCurrencyConvertedValue)"
-            )
+        }
+        
+        store.receive(.updateAmount) { state in
+            state.amount = 200_000_000
         }
     }
 }

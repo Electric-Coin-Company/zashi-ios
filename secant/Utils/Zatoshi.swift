@@ -14,6 +14,8 @@ struct Zatoshi {
         static let maxZatoshi: Int64 = Constants.oneZecInZatoshi * Constants.maxZecSupply
     }
     
+    static var zero: Zatoshi { Zatoshi() }
+    
     static var decimalHandler = NSDecimalNumberHandler(
         roundingMode: NSDecimalNumber.RoundingMode.bankers,
         scale: 8,
@@ -32,8 +34,8 @@ struct Zatoshi {
     }
 
     /// Converts `Zatoshi` to human readable format, up to 8 fraction digits
-    var decimalString: String {
-        decimalValue.roundedZec.stringValue
+    func decimalString(formatter: NumberFormatter = NumberFormatter.zcashNumberFormatter) -> String {
+        formatter.string(from: decimalValue.roundedZec) ?? ""
     }
 
     /// Converts `Decimal` to `Zatoshi`
@@ -61,14 +63,20 @@ struct Zatoshi {
     }
 }
 
-extension NSDecimalNumber {
-    /// Converts `NSDecimalNumber` to human readable format, up to 8 fraction digits
-    var decimalString: String {
-        self.rounding(accordingToBehavior: Zatoshi.decimalHandler).stringValue
+extension Zatoshi: Equatable {
+    static func == (lhs: Zatoshi, rhs: Zatoshi) -> Bool {
+        lhs.amount == rhs.amount
     }
-    
+}
+
+extension NSDecimalNumber {
     /// Round the decimal to 8 fraction digits
     var roundedZec: NSDecimalNumber {
         self.rounding(accordingToBehavior: Zatoshi.decimalHandler)
+    }
+
+    /// Converts `NSDecimalNumber` to human readable format, up to 8 fraction digits
+    var decimalString: String {
+        self.roundedZec.stringValue
     }
 }

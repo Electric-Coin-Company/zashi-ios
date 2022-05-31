@@ -17,8 +17,8 @@ typealias TransactionAddressTextFieldReducer = Reducer<
 typealias TransactionAddressTextFieldStore = Store<TransactionAddressTextFieldState, TransactionAddressTextFieldAction>
 
 struct TransactionAddressTextFieldState: Equatable {
-    var textFieldState: TCATextFieldState
     var isValidAddress = false
+    var textFieldState: TCATextFieldState
 }
 
 enum TransactionAddressTextFieldAction: Equatable {

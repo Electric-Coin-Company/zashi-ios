@@ -6,7 +6,7 @@ struct TransactionConfirmation: View {
 
     var body: some View {
         VStack {
-            Text("Send \(viewStore.transaction.amount.asZecString()) ZEC")
+            Text("Send \(viewStore.transaction.amount.decimalString()) ZEC")
                 .padding()
 
             Text("To \(viewStore.transaction.toAddress)")

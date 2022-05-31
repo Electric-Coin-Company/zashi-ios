@@ -10,8 +10,8 @@ struct CreateTransaction: View {
         return WithViewStore(store) { viewStore in
             VStack {
                 VStack(spacing: 0) {
-                    Text("Balance \(viewStore.totalBalance.asZecString()) ZEC")
-                    Text("($\(viewStore.totalCurrencyBalance.asZecString()))")
+                    Text("Balance \(viewStore.totalBalance.decimalString()) ZEC")
+                    Text("($\(viewStore.totalCurrencyBalance.decimalString()))")
                         .font(.system(size: 13))
                         .opacity(0.6)
                 }
@@ -32,9 +32,7 @@ struct CreateTransaction: View {
                             
                             Spacer()
                         }
-                    }
-
-                    if viewStore.isInsufficientFunds {
+                    } else if viewStore.isInsufficientFunds {
                         HStack {
                             Text("insufficient funds")
                                 .foregroundColor(.red)

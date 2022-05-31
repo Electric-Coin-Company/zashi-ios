@@ -41,11 +41,11 @@ struct SendFLowView_Previews: PreviewProvider {
                     ),
                     reducer: .default,
                     environment: SendFlowEnvironment(
-                        mnemonic: .live,
-                        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
-                        walletStorage: .live(),
                         derivationTool: .live(),
-                        SDKSynchronizer: LiveWrappedSDKSynchronizer()
+                        mnemonic: .live,
+                        SDKSynchronizer: LiveWrappedSDKSynchronizer(),
+                        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
+                        walletStorage: .live()
                     )
                 )
             )

@@ -18,7 +18,7 @@ struct HomeView: View {
                         Text("\(viewStore.synchronizerStatus)")
                             .padding(.top, 60)
 
-                        Text("balance \(viewStore.totalBalance.asZecString()) ZEC")
+                        Text("balance \(viewStore.totalBalance.decimalString()) ZEC")
                             .accessDebugMenuWithHiddenGesture {
                                 viewStore.send(.debugMenuStartup)
                             }

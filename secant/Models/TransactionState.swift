@@ -25,7 +25,7 @@ struct TransactionState: Equatable, Identifiable {
     var id: String
     var status: Status
     var subtitle: String
-    var zecAmount: Int64
+    var zecAmount: Zatoshi
 }
 
 extension TransactionState {
@@ -36,7 +36,7 @@ extension TransactionState {
         status = sent ? .paid(success: confirmedTransaction.minedHeight > 0) : .received
         subtitle = "sent"
         zAddress = confirmedTransaction.toAddress
-        zecAmount = (sent ? -Int64(confirmedTransaction.value) : Int64(confirmedTransaction.value))
+        zecAmount = sent ? Zatoshi(amount: -Int64(confirmedTransaction.value)) : Zatoshi(amount: Int64(confirmedTransaction.value))
         if let memo = confirmedTransaction.memo {
             self.memo = memo.asZcashTransactionMemo()
         }
@@ -51,7 +51,7 @@ extension TransactionState {
         expirationHeight = pendingTransaction.expiryHeight
         subtitle = "pending"
         zAddress = pendingTransaction.toAddress
-        zecAmount = -Int64(pendingTransaction.value)
+        zecAmount = Zatoshi(amount: -Int64(pendingTransaction.value))
         if let memo = pendingTransaction.memo {
             self.memo = memo.asZcashTransactionMemo()
         }
@@ -64,7 +64,7 @@ extension TransactionState {
 extension TransactionState {
     static func placeholder(
         date: Date,
-        amount: Int64,
+        amount: Zatoshi,
         shielded: Bool = true,
         status: Status = .received,
         subtitle: String = "",
@@ -80,14 +80,14 @@ extension TransactionState {
             id: uuid,
             status: status,
             subtitle: subtitle,
-            zecAmount: status == .received ? amount : -amount
+            zecAmount: status == .received ? amount : Zatoshi(amount: -amount.amount)
         )
     }
 }
 
 struct TransactionStateMockHelper {
     var date: TimeInterval
-    var amount: Int64
+    var amount: Zatoshi
     var shielded = true
     var status: TransactionState.Status = .received
     var subtitle = "cleared"
