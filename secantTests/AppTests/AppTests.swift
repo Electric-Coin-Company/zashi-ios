@@ -1,5 +1,5 @@
 //
-//  AppReducerTests.swift
+//  AppTests.swift
 //  secantTests
 //
 //  Created by Lukáš Korba on 12.04.2022.
@@ -9,7 +9,7 @@ import XCTest
 @testable import secant_testnet
 import ComposableArchitecture
 
-class AppReducerTests: XCTestCase {
+class AppTests: XCTestCase {
     static let testScheduler = DispatchQueue.test
 
     let testEnvironment = AppEnvironment(
