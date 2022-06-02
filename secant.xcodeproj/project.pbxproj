@@ -103,6 +103,7 @@
 		9E391129283F74590073DD9A /* Zatoshi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E391128283F74590073DD9A /* Zatoshi.swift */; };
 		9E39112E283F91600073DD9A /* ZatoshiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E39112D283F91600073DD9A /* ZatoshiTests.swift */; };
 		9E3911392848AD500073DD9A /* HomeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3911382848AD500073DD9A /* HomeTests.swift */; };
+		9E39113B2848D5180073DD9A /* WrappedNumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E39113A2848D5180073DD9A /* WrappedNumberFormatter.swift */; };
 		9E4DC6E027C409A100E657F4 /* NeumorphicDesignModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DC6DF27C409A100E657F4 /* NeumorphicDesignModifier.swift */; };
 		9E4DC6E227C4C6B700E657F4 /* SecantButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */; };
 		9E5BF63F2819542C00BA3F17 /* TransactionHistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF63E2819542C00BA3F17 /* TransactionHistoryTests.swift */; };
@@ -294,6 +295,7 @@
 		9E391128283F74590073DD9A /* Zatoshi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Zatoshi.swift; sourceTree = "<group>"; };
 		9E39112D283F91600073DD9A /* ZatoshiTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZatoshiTests.swift; sourceTree = "<group>"; };
 		9E3911382848AD500073DD9A /* HomeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTests.swift; sourceTree = "<group>"; };
+		9E39113A2848D5180073DD9A /* WrappedNumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedNumberFormatter.swift; sourceTree = "<group>"; };
 		9E4DC6DF27C409A100E657F4 /* NeumorphicDesignModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeumorphicDesignModifier.swift; sourceTree = "<group>"; };
 		9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecantButtonStyles.swift; sourceTree = "<group>"; };
 		9E5BF63B2818305D00BA3F17 /* TransactionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionState.swift; sourceTree = "<group>"; };
@@ -731,6 +733,7 @@
 				9E01F81F2833861A000EFC57 /* WrappedCaptureDevice.swift */,
 				9E01F8232833C0D8000EFC57 /* WrappedURIParser.swift */,
 				9E87ADF028363DE400122FCC /* WrappedAudioServices.swift */,
+				9E39113A2848D5180073DD9A /* WrappedNumberFormatter.swift */,
 			);
 			path = Wrappers;
 			sourceTree = "<group>";
@@ -1317,6 +1320,7 @@
 				9E2DF99D27CF704D00649636 /* ImportSeedEditor.swift in Sources */,
 				F9971A5327680DD000A2DB75 /* ProfileStore.swift in Sources */,
 				669FDAEB272C23C2007B9422 /* CircularFrameBadge.swift in Sources */,
+				9E39113B2848D5180073DD9A /* WrappedNumberFormatter.swift in Sources */,
 				2E8719CD27FB0D3B0082C926 /* CurrencySelectionView.swift in Sources */,
 				F9971A6C27680E1000A2DB75 /* WalletInfoView.swift in Sources */,
 				9E5BF6502823E94900BA3F17 /* TransactionAddressTextFieldStore.swift in Sources */,

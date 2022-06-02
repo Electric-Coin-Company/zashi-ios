@@ -17,7 +17,7 @@ enum WalletInfoAction: Equatable {
 
 // MARK: - Environment
 
-struct WalletInfoEnvironment: Equatable {
+struct WalletInfoEnvironment {
 }
 
 // MARK: - Reducer

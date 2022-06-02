@@ -10,16 +10,21 @@ import XCTest
 import ComposableArchitecture
 import ZcashLightClientKit
 
-// TODO: these test will be updated with the NumberFormater dependency to handle locale, issue #312 (https://github.com/zcash/secant-ios-wallet/issues/312)
-
 // swiftlint:disable type_body_length
 class SendTests: XCTestCase {
     var storage = WalletStorage(secItem: .live)
+    let usNumberFormatter = NumberFormatter()
     
     override func setUp() {
         super.setUp()
         storage.zcashStoredWalletPrefix = "test_send_"
         storage.deleteData(forKey: WalletStorage.Constants.zcashStoredWallet)
+        
+        usNumberFormatter.maximumFractionDigits = 8
+        usNumberFormatter.maximumIntegerDigits = 8
+        usNumberFormatter.numberStyle = .decimal
+        usNumberFormatter.usesGroupingSeparator = true
+        usNumberFormatter.locale = Locale(identifier: "en_US")
     }
 
     func testSendSucceeded() throws {
@@ -32,6 +37,7 @@ class SendTests: XCTestCase {
         let testEnvironment = SendFlowEnvironment(
             derivationTool: .live(),
             mnemonic: .mock,
+            numberFormatter: .live(),
             SDKSynchronizer: MockWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: storage)
@@ -88,6 +94,7 @@ class SendTests: XCTestCase {
         let testEnvironment = SendFlowEnvironment(
             derivationTool: .live(),
             mnemonic: .mock,
+            numberFormatter: .live(),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: storage)
@@ -127,6 +134,7 @@ class SendTests: XCTestCase {
         let testEnvironment = SendFlowEnvironment(
             derivationTool: .live(),
             mnemonic: .mock,
+            numberFormatter: .live(),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live))
@@ -169,6 +177,7 @@ class SendTests: XCTestCase {
         let testEnvironment = SendFlowEnvironment(
             derivationTool: .live(),
             mnemonic: .mock,
+            numberFormatter: .live(),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live))
@@ -193,6 +202,7 @@ class SendTests: XCTestCase {
         let testEnvironment = SendFlowEnvironment(
             derivationTool: .live(),
             mnemonic: .mock,
+            numberFormatter: .live(),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live))
@@ -219,8 +229,6 @@ class SendTests: XCTestCase {
     }
     
     func testFundsSufficiency() throws {
-        try XCTSkipUnless(Locale.current.regionCode == "US", "testFundsSufficiency is designed to test US locale only")
-
         let sendState = SendFlowState(
             transaction: .placeholder,
             transactionAddressInputState: .placeholder,
@@ -228,7 +236,11 @@ class SendTests: XCTestCase {
                 TransactionAmountTextFieldState(
                     currencySelectionState: CurrencySelectionState(),
                     maxValue: 501_300,
-                    textFieldState: .amount
+                    textFieldState:
+                        TCATextFieldState(
+                            validationType: .customFloatingPoint(usNumberFormatter),
+                            text: ""
+                        )
                 )
         )
         
@@ -237,6 +249,7 @@ class SendTests: XCTestCase {
         let testEnvironment = SendFlowEnvironment(
             derivationTool: .live(),
             mnemonic: .mock,
+            numberFormatter: .live(numberFormatter: usNumberFormatter),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live))
@@ -280,20 +293,32 @@ class SendTests: XCTestCase {
     }
     
     func testDifferentAmountFormats() throws {
-        try XCTSkipUnless(Locale.current.regionCode == "US", "testDifferentAmountFormats is designed to test US locale only")
-
         let testScheduler = DispatchQueue.test
         
         let testEnvironment = SendFlowEnvironment(
             derivationTool: .live(),
             mnemonic: .mock,
+            numberFormatter: .live(numberFormatter: usNumberFormatter),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live))
         )
 
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .init(
+                route: nil,
+                transaction: .placeholder,
+                transactionAddressInputState: .placeholder,
+                transactionAmountInputState:
+                    TransactionAmountTextFieldState(
+                        currencySelectionState: CurrencySelectionState(),
+                        textFieldState:
+                            TCATextFieldState(
+                                validationType: .customFloatingPoint(usNumberFormatter),
+                                text: ""
+                            )
+                    )
+            ),
             reducer: SendFlowReducer.default,
             environment: testEnvironment
         )
@@ -313,8 +338,6 @@ class SendTests: XCTestCase {
     }
     
     func testValidForm() throws {
-        try XCTSkipUnless(Locale.current.regionCode == "US", "testValidForm is designed to test US locale only")
-
         let sendState = SendFlowState(
             transaction: .placeholder,
             transactionAddressInputState: .placeholder,
@@ -325,7 +348,7 @@ class SendTests: XCTestCase {
                     maxValue: 501_302,
                     textFieldState:
                         TCATextFieldState(
-                            validationType: .floatingPoint,
+                            validationType: .customFloatingPoint(usNumberFormatter),
                             text: "0.00501301"
                         )
                 )
@@ -336,6 +359,7 @@ class SendTests: XCTestCase {
         let testEnvironment = SendFlowEnvironment(
             derivationTool: .live(),
             mnemonic: .mock,
+            numberFormatter: .live(),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live))
@@ -381,6 +405,7 @@ class SendTests: XCTestCase {
         let testEnvironment = SendFlowEnvironment(
             derivationTool: .live(),
             mnemonic: .mock,
+            numberFormatter: .live(),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live))
@@ -426,6 +451,7 @@ class SendTests: XCTestCase {
         let testEnvironment = SendFlowEnvironment(
             derivationTool: .live(),
             mnemonic: .mock,
+            numberFormatter: .live(),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live))
@@ -471,6 +497,7 @@ class SendTests: XCTestCase {
         let testEnvironment = SendFlowEnvironment(
             derivationTool: .live(),
             mnemonic: .mock,
+            numberFormatter: .live(),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .live(walletStorage: WalletStorage(secItem: .live))

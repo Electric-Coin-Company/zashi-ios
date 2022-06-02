@@ -9,12 +9,19 @@ import XCTest
 @testable import secant_testnet
 import ComposableArchitecture
 
-// TODO: these test will be updated with the NumberFormater dependency to handle locale, issue #312 (https://github.com/zcash/secant-ios-wallet/issues/312)
-
 class TransactionAmountTextFieldTests: XCTestCase {
-    func testMaxValue() throws {
-        try XCTSkipUnless(Locale.current.regionCode == "US", "testMaxValue is designed to test US locale only")
+    let usNumberFormatter = NumberFormatter()
+    
+    override func setUp() {
+        super.setUp()
+        usNumberFormatter.maximumFractionDigits = 8
+        usNumberFormatter.maximumIntegerDigits = 8
+        usNumberFormatter.numberStyle = .decimal
+        usNumberFormatter.usesGroupingSeparator = true
+        usNumberFormatter.locale = Locale(identifier: "en_US")
+    }
 
+    func testMaxValue() throws {
         let store = TestStore(
             initialState:
                 TransactionAmountTextFieldState(
@@ -22,12 +29,15 @@ class TransactionAmountTextFieldTests: XCTestCase {
                     maxValue: 501_301,
                     textFieldState:
                         TCATextFieldState(
-                            validationType: .floatingPoint,
+                            validationType: .customFloatingPoint(usNumberFormatter),
                             text: "0.002"
                         )
                 ),
             reducer: TransactionAmountTextFieldReducer.default,
-            environment: TransactionAmountTextFieldEnvironment()
+            environment:
+                TransactionAmountTextFieldEnvironment(
+                    numberFormatter: .live(numberFormatter: usNumberFormatter)
+                )
         )
 
         store.send(.setMax) { state in
@@ -52,7 +62,10 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         )
                 ),
             reducer: TransactionAmountTextFieldReducer.default,
-            environment: TransactionAmountTextFieldEnvironment()
+            environment:
+                TransactionAmountTextFieldEnvironment(
+                    numberFormatter: .live()
+                )
         )
 
         store.send(.clearValue) { state in
@@ -62,8 +75,6 @@ class TransactionAmountTextFieldTests: XCTestCase {
     }
     
     func testZec_to_UsdConvertedAmount() throws {
-        try XCTSkipUnless(Locale.current.regionCode == "US", "testZec_to_UsdConvertedAmount is designed to test US locale only")
-
         let store = TestStore(
             initialState:
                 TransactionAmountTextFieldState(
@@ -73,13 +84,16 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         ),
                     textFieldState:
                         TCATextFieldState(
-                            validationType: .floatingPoint,
+                            validationType: .customFloatingPoint(usNumberFormatter),
                             text: "1.0"
                         ),
                     zecPrice: 1000.0
                 ),
             reducer: TransactionAmountTextFieldReducer.default,
-            environment: TransactionAmountTextFieldEnvironment()
+            environment:
+                TransactionAmountTextFieldEnvironment(
+                    numberFormatter: .live(numberFormatter: usNumberFormatter)
+                )
         )
 
         store.send(.currencySelection(.swapCurrencyType)) { state in
@@ -93,8 +107,6 @@ class TransactionAmountTextFieldTests: XCTestCase {
     }
     
     func testBigZecAmount_to_UsdConvertedAmount() throws {
-        try XCTSkipUnless(Locale.current.regionCode == "US", "testBigZecAmount_to_UsdConvertedAmount is designed to test US locale only")
-
         let store = TestStore(
             initialState:
                 TransactionAmountTextFieldState(
@@ -104,13 +116,16 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         ),
                     textFieldState:
                         TCATextFieldState(
-                            validationType: .floatingPoint,
+                            validationType: .customFloatingPoint(usNumberFormatter),
                             text: "25000"
                         ),
                     zecPrice: 1000.0
                 ),
             reducer: TransactionAmountTextFieldReducer.default,
-            environment: TransactionAmountTextFieldEnvironment()
+            environment:
+                TransactionAmountTextFieldEnvironment(
+                    numberFormatter: .live(numberFormatter: usNumberFormatter)
+                )
         )
 
         store.send(.currencySelection(.swapCurrencyType)) { state in
@@ -124,8 +139,6 @@ class TransactionAmountTextFieldTests: XCTestCase {
     }
     
     func testUsd_to_ZecConvertedAmount() throws {
-        try XCTSkipUnless(Locale.current.regionCode == "US", "testUsd_to_ZecConvertedAmount is designed to test US locale only")
-
         let store = TestStore(
             initialState:
                 TransactionAmountTextFieldState(
@@ -135,13 +148,16 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         ),
                     textFieldState:
                         TCATextFieldState(
-                            validationType: .floatingPoint,
+                            validationType: .customFloatingPoint(usNumberFormatter),
                             text: "1 000"
                         ),
                     zecPrice: 1000.0
                 ),
             reducer: TransactionAmountTextFieldReducer.default,
-            environment: TransactionAmountTextFieldEnvironment()
+            environment:
+                TransactionAmountTextFieldEnvironment(
+                    numberFormatter: .live(numberFormatter: usNumberFormatter)
+                )
         )
 
         store.send(.currencySelection(.swapCurrencyType)) { state in
@@ -155,8 +171,6 @@ class TransactionAmountTextFieldTests: XCTestCase {
     }
     
     func testIfAmountIsMax() throws {
-        try XCTSkipUnless(Locale.current.regionCode == "US", "testIfAmountIsMax is designed to test US locale only")
-
         let store = TestStore(
             initialState:
                 TransactionAmountTextFieldState(
@@ -167,13 +181,16 @@ class TransactionAmountTextFieldTests: XCTestCase {
                     maxValue: 100_000_000,
                     textFieldState:
                         TCATextFieldState(
-                            validationType: .floatingPoint,
+                            validationType: .customFloatingPoint(usNumberFormatter),
                             text: "5"
                         ),
                     zecPrice: 1000.0
                 ),
             reducer: TransactionAmountTextFieldReducer.default,
-            environment: TransactionAmountTextFieldEnvironment()
+            environment:
+                TransactionAmountTextFieldEnvironment(
+                    numberFormatter: .live(numberFormatter: usNumberFormatter)
+                )
         )
 
         store.send(.textField(.set("1 000"))) { state in
@@ -196,8 +213,6 @@ class TransactionAmountTextFieldTests: XCTestCase {
     }
     
     func testMaxZecValue() throws {
-        try XCTSkipUnless(Locale.current.regionCode == "US", "testMaxZecValue is designed to test US locale only")
-
         let store = TestStore(
             initialState:
                 TransactionAmountTextFieldState(
@@ -208,13 +223,16 @@ class TransactionAmountTextFieldTests: XCTestCase {
                     maxValue: 200_000_000,
                     textFieldState:
                         TCATextFieldState(
-                            validationType: .floatingPoint,
+                            validationType: .customFloatingPoint(usNumberFormatter),
                             text: "5"
                         ),
                     zecPrice: 1000.0
                 ),
             reducer: TransactionAmountTextFieldReducer.default,
-            environment: TransactionAmountTextFieldEnvironment()
+            environment:
+                TransactionAmountTextFieldEnvironment(
+                    numberFormatter: .live(numberFormatter: usNumberFormatter)
+                )
         )
 
         store.send(.setMax) { state in
@@ -227,8 +245,6 @@ class TransactionAmountTextFieldTests: XCTestCase {
     }
     
     func testMaxUsdValue() throws {
-        try XCTSkipUnless(Locale.current.regionCode == "US", "testMaxUsdValue is designed to test US locale only")
-
         let store = TestStore(
             initialState:
                 TransactionAmountTextFieldState(
@@ -239,13 +255,16 @@ class TransactionAmountTextFieldTests: XCTestCase {
                     maxValue: 200_000_000,
                     textFieldState:
                         TCATextFieldState(
-                            validationType: .floatingPoint,
+                            validationType: .customFloatingPoint(usNumberFormatter),
                             text: "5"
                         ),
                     zecPrice: 1000.0
                 ),
             reducer: TransactionAmountTextFieldReducer.default,
-            environment: TransactionAmountTextFieldEnvironment()
+            environment:
+                TransactionAmountTextFieldEnvironment(
+                    numberFormatter: .live(numberFormatter: usNumberFormatter)
+                )
         )
 
         store.send(.setMax) { state in

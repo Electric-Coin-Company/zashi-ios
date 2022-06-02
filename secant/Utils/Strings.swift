@@ -9,28 +9,12 @@ extension String {
     }
 }
 
-extension NumberFormatter {
-    static let zcashNumberFormatter: NumberFormatter = {
-        var formatter = NumberFormatter()
-        formatter.maximumFractionDigits = 8
-        formatter.maximumIntegerDigits = 8
-        formatter.numberStyle = .decimal
-        formatter.usesGroupingSeparator = true
-        return formatter
-    }()
-}
-
-extension String {
-    var doubleValue: Double? {
-        return NumberFormatter.zcashNumberFormatter.number(from: self)?.doubleValue
-    }
-}
-
 extension String {
     private static let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}"
     private static let phoneRegex = "^^\\+(?:[0-9]?){6,14}[0-9]$"
 
     public enum ValidationType: Equatable {
+        case customFloatingPoint(NumberFormatter)
         case custom(String)
         case email
         case floatingPoint
@@ -40,6 +24,9 @@ extension String {
 
         func isValid(text: String) -> Bool {
             switch self {
+            case .customFloatingPoint(let numberFormatter):
+                return text.validate(using: numberFormatter)
+
             case .custom(let regex):
                 return text.validate(using: regex)
 
@@ -47,7 +34,7 @@ extension String {
                 return text.validate(using: .emailRegex)
 
             case .floatingPoint:
-                return text.doubleValue != nil
+                return NumberFormatter.zcashNumberFormatter.number(from: text) != nil
 
             case .maxLength(let length):
                 return text.count <= length && !text.isEmpty
@@ -59,6 +46,10 @@ extension String {
                 return text.validate(using: .phoneRegex)
             }
         }
+    }
+
+    private func validate(using numberFormatter: NumberFormatter) -> Bool {
+        numberFormatter.number(from: self) != nil
     }
 
     private func validate(using regex: String) -> Bool {

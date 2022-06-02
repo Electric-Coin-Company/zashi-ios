@@ -66,7 +66,9 @@ struct TransactionAmountTextField_Previews: PreviewProvider {
                     )
                 ),
                 reducer: .default,
-                environment: .init()
+                environment: .init(
+                    numberFormatter: .live()
+                )
             )
         )
         .preferredColorScheme(.dark)
