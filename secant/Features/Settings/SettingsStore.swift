@@ -17,7 +17,7 @@ enum SettingsAction: Equatable {
 
 // MARK: - Environment
 
-struct SettingsEnvironment: Equatable { }
+struct SettingsEnvironment { }
 
 // MARK: - Reducer
 

@@ -32,7 +32,7 @@ enum TCATextFieldAction: Equatable {
 
 // MARK: - Environment
 
-struct TCATextFieldEnvironment: Equatable { }
+struct TCATextFieldEnvironment { }
 
 // MARK: - Reducer
 
@@ -52,7 +52,7 @@ extension TCATextFieldReducer {
 extension TCATextFieldStore {
     static var transaction: Self {
         .init(
-            initialState: .init(validationType: .floatingPoint, text: ""),
+            initialState: .init(validationType: .customFloatingPoint(.zcashNumberFormatter), text: ""),
             reducer: .default,
             environment: .init()
         )

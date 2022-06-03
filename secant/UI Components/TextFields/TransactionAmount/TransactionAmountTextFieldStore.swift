@@ -36,7 +36,9 @@ enum TransactionAmountTextFieldAction: Equatable {
     case updateAmount
 }
 
-struct TransactionAmountTextFieldEnvironment: Equatable {}
+struct TransactionAmountTextFieldEnvironment {
+    let numberFormatter: WrappedNumberFormatter
+}
 
 extension TransactionAmountTextFieldReducer {
     static let `default` = TransactionAmountTextFieldReducer.combine(
@@ -47,7 +49,7 @@ extension TransactionAmountTextFieldReducer {
         ]
     )
 
-    static let amountTextFieldReducer = TransactionAmountTextFieldReducer { state, action, _ in
+    static let amountTextFieldReducer = TransactionAmountTextFieldReducer { state, action, environment in
         switch action {
         case .setMax:
             let maxValueAsZec = Decimal(state.maxValue) / Decimal(Zatoshi.Constants.oneZecInZatoshi)
@@ -56,8 +58,7 @@ extension TransactionAmountTextFieldReducer {
             NSDecimalNumber(decimal: maxValueAsZec).roundedZec :
             NSDecimalNumber(decimal: maxValueAsZec * state.zecPrice).roundedZec
             
-            // TODO: these test will be updated with the NumberFormater dependency to handle locale, issue #312 (https://github.com/zcash/secant-ios-wallet/issues/312)
-            let decimalString = NumberFormatter.zcashNumberFormatter.string(from: maxCurrencyConvertedValue) ?? ""
+            let decimalString = environment.numberFormatter.string(maxCurrencyConvertedValue) ?? ""
             
             state.textFieldState.text = "\(decimalString)"
             return Effect(value: .updateAmount)
@@ -70,8 +71,7 @@ extension TransactionAmountTextFieldReducer {
             return Effect(value: .updateAmount)
             
         case .updateAmount:
-            // TODO: these test will be updated with the NumberFormater dependency to handle locale, issue #312 (https://github.com/zcash/secant-ios-wallet/issues/312)
-            guard var number = NumberFormatter.zcashNumberFormatter.number(from: state.textFieldState.text) else {
+            guard var number = environment.numberFormatter.number(state.textFieldState.text) else {
                 state.amount = 0
                 return .none
             }
@@ -85,8 +85,7 @@ extension TransactionAmountTextFieldReducer {
             return .none
             
         case .currencySelection:
-            // TODO: these test will be updated with the NumberFormater dependency to handle locale, issue #312 (https://github.com/zcash/secant-ios-wallet/issues/312)
-            guard let number = NumberFormatter.zcashNumberFormatter.number(from: state.textFieldState.text) else {
+            guard let number = environment.numberFormatter.number(state.textFieldState.text) else {
                 state.amount = 0
                 return .none
             }
@@ -97,8 +96,7 @@ extension TransactionAmountTextFieldReducer {
             number.decimalValue / state.zecPrice :
             number.decimalValue * state.zecPrice
             
-            // TODO: these test will be updated with the NumberFormater dependency to handle locale, issue #312 (https://github.com/zcash/secant-ios-wallet/issues/312)
-            let decimalString = NumberFormatter.zcashNumberFormatter.string(from: NSDecimalNumber(decimal: newValue)) ?? ""
+            let decimalString = environment.numberFormatter.string(NSDecimalNumber(decimal: newValue)) ?? ""
             state.textFieldState.text = "\(decimalString)"
             return Effect(value: .updateAmount)
         }
@@ -133,6 +131,9 @@ extension TransactionAmountTextFieldStore {
     static let placeholder = TransactionAmountTextFieldStore(
         initialState: .placeholder,
         reducer: .default,
-        environment: TransactionAmountTextFieldEnvironment()
+        environment:
+            TransactionAmountTextFieldEnvironment(
+                numberFormatter: .live()
+            )
     )
 }

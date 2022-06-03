@@ -34,6 +34,7 @@ struct SandboxView: View {
                     environment: SendFlowEnvironment(
                         derivationTool: .live(),
                         mnemonic: .live,
+                        numberFormatter: .live(),
                         SDKSynchronizer: LiveWrappedSDKSynchronizer(),
                         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
                         walletStorage: .live()

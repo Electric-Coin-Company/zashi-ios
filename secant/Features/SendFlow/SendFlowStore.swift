@@ -77,6 +77,7 @@ enum SendFlowAction: Equatable {
 struct SendFlowEnvironment {
     let derivationTool: WrappedDerivationTool
     let mnemonic: WrappedMnemonic
+    let numberFormatter: WrappedNumberFormatter
     let SDKSynchronizer: WrappedSDKSynchronizer
     let scheduler: AnySchedulerOf<DispatchQueue>
     let walletStorage: WrappedWalletStorage
@@ -202,7 +203,11 @@ extension SendFlowReducer {
     private static let transactionAmountInputReducer: SendFlowReducer = TransactionAmountTextFieldReducer.default.pullback(
         state: \SendFlowState.transactionAmountInputState,
         action: /SendFlowAction.transactionAmountInput,
-        environment: { _ in TransactionAmountTextFieldEnvironment() }
+        environment: { environment in
+            TransactionAmountTextFieldEnvironment(
+                numberFormatter: environment.numberFormatter
+            )
+        }
     )
     
     static func `default`(whenDone: @escaping () -> Void) -> SendFlowReducer {
@@ -310,6 +315,7 @@ extension SendFlowStore {
             environment: SendFlowEnvironment(
                 derivationTool: .live(),
                 mnemonic: .live,
+                numberFormatter: .live(),
                 SDKSynchronizer: LiveWrappedSDKSynchronizer(),
                 scheduler: DispatchQueue.main.eraseToAnyScheduler(),
                 walletStorage: .live()

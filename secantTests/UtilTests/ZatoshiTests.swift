@@ -9,6 +9,17 @@ import XCTest
 @testable import secant_testnet
 
 class ZatoshiTests: XCTestCase {
+    let usNumberFormatter = NumberFormatter()
+    
+    override func setUp() {
+        super.setUp()
+        usNumberFormatter.maximumFractionDigits = 8
+        usNumberFormatter.maximumIntegerDigits = 8
+        usNumberFormatter.numberStyle = .decimal
+        usNumberFormatter.usesGroupingSeparator = true
+        usNumberFormatter.locale = Locale(identifier: "en_US")
+    }
+
     func testLowerBound() throws {
         let number = Zatoshi(amount: -Zatoshi.Constants.maxZatoshi - 1)
         
@@ -122,7 +133,7 @@ class ZatoshiTests: XCTestCase {
         // so we convert it to string, in that case we are prooving it to be rendered
         //    to the user exactly the way we want
         XCTAssertEqual(
-            number.decimalString(),
+            number.decimalString(formatter: usNumberFormatter),
             "1.42857143",
             "Zatoshi tests: the value is expected to be 1.42857143 but it's \(number.decimalString())"
         )
@@ -149,9 +160,9 @@ class ZatoshiTests: XCTestCase {
     }
     
     func testStringToZatoshi() throws {
-        if let number = Zatoshi.from(decimalString: "200.0") {
+        if let number = Zatoshi.from(decimalString: "200.0", formatter: usNumberFormatter) {
             XCTAssertEqual(
-                number.decimalString(),
+                number.decimalString(formatter: usNumberFormatter),
                 "200",
                 "Zatoshi tests: `testStringToZec` the value is expected to be 200 but it's \(number.decimalString())"
             )
@@ -159,7 +170,7 @@ class ZatoshiTests: XCTestCase {
             XCTFail("Zatoshi tests: `testStringToZatoshi` failed to convert number.")
         }
 
-        if let number = Zatoshi.from(decimalString: "0.02836478949923") {
+        if let number = Zatoshi.from(decimalString: "0.02836478949923", formatter: usNumberFormatter) {
             XCTAssertEqual(
                 number.amount,
                 2_836_479,

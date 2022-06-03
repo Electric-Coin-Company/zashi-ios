@@ -181,6 +181,7 @@ extension HomeReducer {
             SendFlowEnvironment(
                 derivationTool: environment.derivationTool,
                 mnemonic: environment.mnemonic,
+                numberFormatter: .live(),
                 SDKSynchronizer: environment.SDKSynchronizer,
                 scheduler: environment.scheduler,
                 walletStorage: environment.walletStorage
