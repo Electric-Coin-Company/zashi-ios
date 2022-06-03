@@ -263,15 +263,6 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     }
 
     func prepareWith(initializer: Initializer) throws {
-        synchronizer = try SDKSynchronizer(initializer: initializer)
-
-        NotificationCenter.default.publisher(for: .synchronizerSynced)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] _ in
-                self?.synchronizerSynced()
-            })
-            .store(in: &cancellables)
-        
         try synchronizer?.prepare()
     }
 
