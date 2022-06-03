@@ -301,11 +301,11 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     
     func getAllClearedTransactions() -> Effect<[TransactionState], Never> {
         let mocked: [TransactionStateMockHelper] = [
-            TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(amount: 1), status: .paid(success: false)),
-            TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(amount: 2)),
-            TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(amount: 3), status: .paid(success: true)),
-            TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(amount: 4)),
-            TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(amount: 5))
+            TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(amount: 1), status: .paid(success: false), uuid: "1"),
+            TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(amount: 2), uuid: "2"),
+            TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(amount: 3), status: .paid(success: true), uuid: "3"),
+            TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(amount: 4), uuid: "4"),
+            TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(amount: 5), uuid: "5")
         ]
         
         return Effect(
@@ -316,7 +316,8 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
                         amount: $0.amount,
                         shielded: $0.shielded,
                         status: $0.status,
-                        subtitle: $0.subtitle
+                        subtitle: $0.subtitle,
+                        uuid: $0.uuid
                     )
                 }
         )
