@@ -100,9 +100,9 @@
 		9E391124283E4CAC0073DD9A /* ImportWalletTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E391123283E4CAC0073DD9A /* ImportWalletTests.swift */; };
 		9E391129283F74590073DD9A /* Zatoshi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E391128283F74590073DD9A /* Zatoshi.swift */; };
 		9E39112E283F91600073DD9A /* ZatoshiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E39112D283F91600073DD9A /* ZatoshiTests.swift */; };
+		9E391132284644580073DD9A /* AppInitializationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E391131284644580073DD9A /* AppInitializationTests.swift */; };
 		9E3911392848AD500073DD9A /* HomeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3911382848AD500073DD9A /* HomeTests.swift */; };
 		9E39113B2848D5180073DD9A /* WrappedNumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E39113A2848D5180073DD9A /* WrappedNumberFormatter.swift */; };
-		9E391132284644580073DD9A /* AppInitializationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E391131284644580073DD9A /* AppInitializationTests.swift */; };
 		9E39113F2848EC360073DD9A /* WrappedRecoveryPhraseRandomizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E39113E2848EC350073DD9A /* WrappedRecoveryPhraseRandomizer.swift */; };
 		9E3911482848EEB90073DD9A /* RecoveryPhraseRandomizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3911422848EEB90073DD9A /* RecoveryPhraseRandomizer.swift */; };
 		9E3911492848EEB90073DD9A /* URIParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3911432848EEB90073DD9A /* URIParser.swift */; };
@@ -295,9 +295,9 @@
 		9E391123283E4CAC0073DD9A /* ImportWalletTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportWalletTests.swift; sourceTree = "<group>"; };
 		9E391128283F74590073DD9A /* Zatoshi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Zatoshi.swift; sourceTree = "<group>"; };
 		9E39112D283F91600073DD9A /* ZatoshiTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZatoshiTests.swift; sourceTree = "<group>"; };
+		9E391131284644580073DD9A /* AppInitializationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInitializationTests.swift; sourceTree = "<group>"; };
 		9E3911382848AD500073DD9A /* HomeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTests.swift; sourceTree = "<group>"; };
 		9E39113A2848D5180073DD9A /* WrappedNumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedNumberFormatter.swift; sourceTree = "<group>"; };
-		9E391131284644580073DD9A /* AppInitializationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInitializationTests.swift; sourceTree = "<group>"; };
 		9E39113E2848EC350073DD9A /* WrappedRecoveryPhraseRandomizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WrappedRecoveryPhraseRandomizer.swift; sourceTree = "<group>"; };
 		9E3911422848EEB90073DD9A /* RecoveryPhraseRandomizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseRandomizer.swift; sourceTree = "<group>"; };
 		9E3911432848EEB90073DD9A /* URIParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URIParser.swift; sourceTree = "<group>"; };
@@ -1594,7 +1594,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 25;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
 				DEVELOPMENT_TEAM = RLPRR8CPQG;
 				ENABLE_BITCODE = NO;
@@ -1619,7 +1619,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 25;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
 				DEVELOPMENT_TEAM = RLPRR8CPQG;
 				ENABLE_BITCODE = NO;

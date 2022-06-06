@@ -1,5 +1,10 @@
 # Changelog
-
+## 0.0.1 build 27
+- [#222] Tests for the initialisation check and process (#334)
+- [#312] WrappedNumberFormatter (#336)
+- [#323] Unit/Integration tests for Home (#335)
+- [#329] Update wallet to use Zatoshi type (#333)
+- [#272] Decimals and Zatoshi type (#330)
 ## 0.0.1 build 25
 - [#180] Project Structure & TCA Code Consistency Document (#314)
 This is a huge refactor in the project structure. Please see related
