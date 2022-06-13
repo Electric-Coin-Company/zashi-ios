@@ -179,7 +179,7 @@ extension RecoveryPhraseValidationFlowReducer {
             state.route = .failure
 
         case .failureFeedback:
-            environment.feedbackGenerator.generateFeedback()
+            environment.feedbackGenerator.generateErrorFeedback()
 
         case .updateRoute(let route):
             guard let route = route else {
