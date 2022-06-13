@@ -63,6 +63,18 @@ struct HomeEnvironment {
     let walletStorage: WrappedWalletStorage
 }
 
+extension HomeEnvironment {
+    static let demo = HomeEnvironment(
+        audioServices: .silent,
+        derivationTool: .live(),
+        feedbackGenerator: .silent,
+        mnemonic: .mock,
+        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
+        SDKSynchronizer: MockWrappedSDKSynchronizer(),
+        walletStorage: .throwing
+    )
+}
+
 // MARK: - Reducer
 
 extension HomeReducer {
