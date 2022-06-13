@@ -137,6 +137,7 @@
 		9E7FE0F92832824C00C374E8 /* QRCodeScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0F82832824C00C374E8 /* QRCodeScanView.swift */; };
 		9E87ADF128363DE400122FCC /* WrappedAudioServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E87ADF028363DE400122FCC /* WrappedAudioServices.swift */; };
 		9E92AF0828530EBF007367AD /* View+UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AF0728530EBF007367AD /* View+UIImage.swift */; };
+		9E9ECC6C2857350F0099D5A2 /* OnboardingSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ECC6B2857350F0099D5A2 /* OnboardingSnapshotTests.swift */; };
 		9EAFEB822805793200199FC9 /* AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB812805793200199FC9 /* AppTests.swift */; };
 		9EAFEB84280597B700199FC9 /* WrappedSecItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB83280597B700199FC9 /* WrappedSecItem.swift */; };
 		9EAFEB862805A23100199FC9 /* WrappedSecItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB852805A23100199FC9 /* WrappedSecItemTests.swift */; };
@@ -334,6 +335,7 @@
 		9E7FE0F82832824C00C374E8 /* QRCodeScanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeScanView.swift; sourceTree = "<group>"; };
 		9E87ADF028363DE400122FCC /* WrappedAudioServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedAudioServices.swift; sourceTree = "<group>"; };
 		9E92AF0728530EBF007367AD /* View+UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+UIImage.swift"; sourceTree = "<group>"; };
+		9E9ECC6B2857350F0099D5A2 /* OnboardingSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSnapshotTests.swift; sourceTree = "<group>"; };
 		9EAFEB812805793200199FC9 /* AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTests.swift; sourceTree = "<group>"; };
 		9EAFEB83280597B700199FC9 /* WrappedSecItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedSecItem.swift; sourceTree = "<group>"; };
 		9EAFEB852805A23100199FC9 /* WrappedSecItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedSecItemTests.swift; sourceTree = "<group>"; };
@@ -786,6 +788,7 @@
 		9E391162284E3ECF0073DD9A /* SnapshotTests */ = {
 			isa = PBXGroup;
 			children = (
+				9E9ECC6A285734F20099D5A2 /* OnboardingSnapshotTests */,
 				9E391163284E3EDE0073DD9A /* WelcomeSnapshotTests */,
 				9E92AF0728530EBF007367AD /* View+UIImage.swift */,
 			);
@@ -973,6 +976,14 @@
 				9E7FE0F82832824C00C374E8 /* QRCodeScanView.swift */,
 			);
 			path = UIKitBridge;
+			sourceTree = "<group>";
+		};
+		9E9ECC6A285734F20099D5A2 /* OnboardingSnapshotTests */ = {
+			isa = PBXGroup;
+			children = (
+				9E9ECC6B2857350F0099D5A2 /* OnboardingSnapshotTests.swift */,
+			);
+			path = OnboardingSnapshotTests;
 			sourceTree = "<group>";
 		};
 		9EAFEB802805791400199FC9 /* AppTests */ = {
@@ -1468,6 +1479,7 @@
 				9E3911392848AD500073DD9A /* HomeTests.swift in Sources */,
 				9EF8135C27ECC25E0075AF48 /* WalletStorageTests.swift in Sources */,
 				9E02B56C27FED475005B809B /* DatabaseFilesTests.swift in Sources */,
+				9E9ECC6C2857350F0099D5A2 /* OnboardingSnapshotTests.swift in Sources */,
 				9EF8135D27ECC25E0075AF48 /* UserPreferencesStorageTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
