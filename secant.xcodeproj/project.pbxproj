@@ -110,7 +110,6 @@
 		9E39114C2848EEB90073DD9A /* DatabaseFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3911462848EEB90073DD9A /* DatabaseFiles.swift */; };
 		9E39114D2848EEB90073DD9A /* WalletStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3911472848EEB90073DD9A /* WalletStorage.swift */; };
 		9E39115E284E3E350073DD9A /* secantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A2526B364180058B01E /* secantUITests.swift */; };
-		9E391165284E3EEA0073DD9A /* WelcomeSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E391164284E3EEA0073DD9A /* WelcomeSnapshotTests.swift */; };
 		9E4DC6E027C409A100E657F4 /* NeumorphicDesignModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DC6DF27C409A100E657F4 /* NeumorphicDesignModifier.swift */; };
 		9E4DC6E227C4C6B700E657F4 /* SecantButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */; };
 		9E5BF63F2819542C00BA3F17 /* TransactionHistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF63E2819542C00BA3F17 /* TransactionHistoryTests.swift */; };
@@ -137,11 +136,12 @@
 		9E7FE0F92832824C00C374E8 /* QRCodeScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0F82832824C00C374E8 /* QRCodeScanView.swift */; };
 		9E87ADF128363DE400122FCC /* WrappedAudioServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E87ADF028363DE400122FCC /* WrappedAudioServices.swift */; };
 		9E92AF0828530EBF007367AD /* View+UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AF0728530EBF007367AD /* View+UIImage.swift */; };
-		9E9ECC6C2857350F0099D5A2 /* OnboardingSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ECC6B2857350F0099D5A2 /* OnboardingSnapshotTests.swift */; };
-		9E9ECC6F285741980099D5A2 /* ImportWalletSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ECC6E285741980099D5A2 /* ImportWalletSnapshotTests.swift */; };
-		9E9ECC72285749750099D5A2 /* RecoveryPhraseDisplaySnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ECC71285749750099D5A2 /* RecoveryPhraseDisplaySnapshotTests.swift */; };
-		9E9ECC7528574B590099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ECC7428574B590099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests.swift */; };
-		9E9ECC7828575F6D0099D5A2 /* HomeSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ECC7728575F6D0099D5A2 /* HomeSnapshotTests.swift */; };
+		9E9ECC9728589E150099D5A2 /* HomeSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ECC8C28589E150099D5A2 /* HomeSnapshotTests.swift */; };
+		9E9ECC9828589E150099D5A2 /* WelcomeSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ECC8E28589E150099D5A2 /* WelcomeSnapshotTests.swift */; };
+		9E9ECC9928589E150099D5A2 /* RecoveryPhraseDisplaySnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ECC9028589E150099D5A2 /* RecoveryPhraseDisplaySnapshotTests.swift */; };
+		9E9ECC9A28589E150099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ECC9228589E150099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests.swift */; };
+		9E9ECC9B28589E150099D5A2 /* ImportWalletSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ECC9428589E150099D5A2 /* ImportWalletSnapshotTests.swift */; };
+		9E9ECC9C28589E150099D5A2 /* OnboardingSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ECC9628589E150099D5A2 /* OnboardingSnapshotTests.swift */; };
 		9EAFEB822805793200199FC9 /* AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB812805793200199FC9 /* AppTests.swift */; };
 		9EAFEB84280597B700199FC9 /* WrappedSecItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB83280597B700199FC9 /* WrappedSecItem.swift */; };
 		9EAFEB862805A23100199FC9 /* WrappedSecItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB852805A23100199FC9 /* WrappedSecItemTests.swift */; };
@@ -312,7 +312,6 @@
 		9E3911452848EEB90073DD9A /* ZCashSDKEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZCashSDKEnvironment.swift; sourceTree = "<group>"; };
 		9E3911462848EEB90073DD9A /* DatabaseFiles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseFiles.swift; sourceTree = "<group>"; };
 		9E3911472848EEB90073DD9A /* WalletStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletStorage.swift; sourceTree = "<group>"; };
-		9E391164284E3EEA0073DD9A /* WelcomeSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeSnapshotTests.swift; sourceTree = "<group>"; };
 		9E4DC6DF27C409A100E657F4 /* NeumorphicDesignModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeumorphicDesignModifier.swift; sourceTree = "<group>"; };
 		9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecantButtonStyles.swift; sourceTree = "<group>"; };
 		9E5BF63B2818305D00BA3F17 /* TransactionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionState.swift; sourceTree = "<group>"; };
@@ -339,11 +338,12 @@
 		9E7FE0F82832824C00C374E8 /* QRCodeScanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeScanView.swift; sourceTree = "<group>"; };
 		9E87ADF028363DE400122FCC /* WrappedAudioServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedAudioServices.swift; sourceTree = "<group>"; };
 		9E92AF0728530EBF007367AD /* View+UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+UIImage.swift"; sourceTree = "<group>"; };
-		9E9ECC6B2857350F0099D5A2 /* OnboardingSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSnapshotTests.swift; sourceTree = "<group>"; };
-		9E9ECC6E285741980099D5A2 /* ImportWalletSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportWalletSnapshotTests.swift; sourceTree = "<group>"; };
-		9E9ECC71285749750099D5A2 /* RecoveryPhraseDisplaySnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseDisplaySnapshotTests.swift; sourceTree = "<group>"; };
-		9E9ECC7428574B590099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseValidationFlowSnapshotTests.swift; sourceTree = "<group>"; };
-		9E9ECC7728575F6D0099D5A2 /* HomeSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSnapshotTests.swift; sourceTree = "<group>"; };
+		9E9ECC8C28589E150099D5A2 /* HomeSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSnapshotTests.swift; sourceTree = "<group>"; };
+		9E9ECC8E28589E150099D5A2 /* WelcomeSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeSnapshotTests.swift; sourceTree = "<group>"; };
+		9E9ECC9028589E150099D5A2 /* RecoveryPhraseDisplaySnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseDisplaySnapshotTests.swift; sourceTree = "<group>"; };
+		9E9ECC9228589E150099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseValidationFlowSnapshotTests.swift; sourceTree = "<group>"; };
+		9E9ECC9428589E150099D5A2 /* ImportWalletSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportWalletSnapshotTests.swift; sourceTree = "<group>"; };
+		9E9ECC9628589E150099D5A2 /* OnboardingSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingSnapshotTests.swift; sourceTree = "<group>"; };
 		9EAFEB812805793200199FC9 /* AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTests.swift; sourceTree = "<group>"; };
 		9EAFEB83280597B700199FC9 /* WrappedSecItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedSecItem.swift; sourceTree = "<group>"; };
 		9EAFEB852805A23100199FC9 /* WrappedSecItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedSecItemTests.swift; sourceTree = "<group>"; };
@@ -796,23 +796,15 @@
 		9E391162284E3ECF0073DD9A /* SnapshotTests */ = {
 			isa = PBXGroup;
 			children = (
-				9E9ECC6A285734F20099D5A2 /* OnboardingSnapshotTests */,
-				9E9ECC6D2857417F0099D5A2 /* ImportWalletSnapshotTests */,
-				9E9ECC702857495B0099D5A2 /* RecoveryPhraseDisplaySnapshotTests */,
-				9E9ECC7328574B470099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests */,
-				9E9ECC7628575F5E0099D5A2 /* HomeSnapshotTests */,
-				9E391163284E3EDE0073DD9A /* WelcomeSnapshotTests */,
+				9E9ECC8B28589E150099D5A2 /* HomeSnapshotTests */,
+				9E9ECC9328589E150099D5A2 /* ImportWalletSnapshotTests */,
+				9E9ECC9528589E150099D5A2 /* OnboardingSnapshotTests */,
+				9E9ECC8F28589E150099D5A2 /* RecoveryPhraseDisplaySnapshotTests */,
+				9E9ECC9128589E150099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests */,
+				9E9ECC8D28589E150099D5A2 /* WelcomeSnapshotTests */,
 				9E92AF0728530EBF007367AD /* View+UIImage.swift */,
 			);
 			path = SnapshotTests;
-			sourceTree = "<group>";
-		};
-		9E391163284E3EDE0073DD9A /* WelcomeSnapshotTests */ = {
-			isa = PBXGroup;
-			children = (
-				9E391164284E3EEA0073DD9A /* WelcomeSnapshotTests.swift */,
-			);
-			path = WelcomeSnapshotTests;
 			sourceTree = "<group>";
 		};
 		9E5BF63D281953F900BA3F17 /* TransactionHistoryTests */ = {
@@ -990,36 +982,52 @@
 			path = UIKitBridge;
 			sourceTree = "<group>";
 		};
-		9E9ECC6A285734F20099D5A2 /* OnboardingSnapshotTests */ = {
+		9E9ECC8B28589E150099D5A2 /* HomeSnapshotTests */ = {
 			isa = PBXGroup;
 			children = (
-				9E9ECC6B2857350F0099D5A2 /* OnboardingSnapshotTests.swift */,
-			);
-			path = OnboardingSnapshotTests;
-		9E9ECC6D2857417F0099D5A2 /* ImportWalletSnapshotTests */ = {
-			isa = PBXGroup;
-			children = (
-				9E9ECC6E285741980099D5A2 /* ImportWalletSnapshotTests.swift */,
-			);
-			path = ImportWalletSnapshotTests;
-		9E9ECC702857495B0099D5A2 /* RecoveryPhraseDisplaySnapshotTests */ = {
-			isa = PBXGroup;
-			children = (
-				9E9ECC71285749750099D5A2 /* RecoveryPhraseDisplaySnapshotTests.swift */,
-			);
-			path = RecoveryPhraseDisplaySnapshotTests;
-		9E9ECC7328574B470099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests */ = {
-			isa = PBXGroup;
-			children = (
-				9E9ECC7428574B590099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests.swift */,
-			);
-			path = RecoveryPhraseValidationFlowSnapshotTests;
-		9E9ECC7628575F5E0099D5A2 /* HomeSnapshotTests */ = {
-			isa = PBXGroup;
-			children = (
-				9E9ECC7728575F6D0099D5A2 /* HomeSnapshotTests.swift */,
+				9E9ECC8C28589E150099D5A2 /* HomeSnapshotTests.swift */,
 			);
 			path = HomeSnapshotTests;
+			sourceTree = "<group>";
+		};
+		9E9ECC8D28589E150099D5A2 /* WelcomeSnapshotTests */ = {
+			isa = PBXGroup;
+			children = (
+				9E9ECC8E28589E150099D5A2 /* WelcomeSnapshotTests.swift */,
+			);
+			path = WelcomeSnapshotTests;
+			sourceTree = "<group>";
+		};
+		9E9ECC8F28589E150099D5A2 /* RecoveryPhraseDisplaySnapshotTests */ = {
+			isa = PBXGroup;
+			children = (
+				9E9ECC9028589E150099D5A2 /* RecoveryPhraseDisplaySnapshotTests.swift */,
+			);
+			path = RecoveryPhraseDisplaySnapshotTests;
+			sourceTree = "<group>";
+		};
+		9E9ECC9128589E150099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests */ = {
+			isa = PBXGroup;
+			children = (
+				9E9ECC9228589E150099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests.swift */,
+			);
+			path = RecoveryPhraseValidationFlowSnapshotTests;
+			sourceTree = "<group>";
+		};
+		9E9ECC9328589E150099D5A2 /* ImportWalletSnapshotTests */ = {
+			isa = PBXGroup;
+			children = (
+				9E9ECC9428589E150099D5A2 /* ImportWalletSnapshotTests.swift */,
+			);
+			path = ImportWalletSnapshotTests;
+			sourceTree = "<group>";
+		};
+		9E9ECC9528589E150099D5A2 /* OnboardingSnapshotTests */ = {
+			isa = PBXGroup;
+			children = (
+				9E9ECC9628589E150099D5A2 /* OnboardingSnapshotTests.swift */,
+			);
+			path = OnboardingSnapshotTests;
 			sourceTree = "<group>";
 		};
 		9EAFEB802805791400199FC9 /* AppTests */ = {
@@ -1494,32 +1502,32 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E9ECC7828575F6D0099D5A2 /* HomeSnapshotTests.swift in Sources */,
 				0DFE93DF272C6D4B000FCCA5 /* RecoveryPhraseBackupTests.swift in Sources */,
 				9EDDEAA22829610D00B4100C /* CurrencySelectionTests.swift in Sources */,
 				9E01F8282833CDA0000EFC57 /* ScanTests.swift in Sources */,
 				9EDDEAA42829610D00B4100C /* TransactionAddressInputTests.swift in Sources */,
-				9E9ECC6F285741980099D5A2 /* ImportWalletSnapshotTests.swift in Sources */,
 				9E92AF0828530EBF007367AD /* View+UIImage.swift in Sources */,
 				6654C7442715A4AC00901167 /* OnboardingStoreTests.swift in Sources */,
 				9E39112E283F91600073DD9A /* ZatoshiTests.swift in Sources */,
+				9E9ECC9B28589E150099D5A2 /* ImportWalletSnapshotTests.swift in Sources */,
 				9EDDEAA32829610D00B4100C /* TransactionAmountInputTests.swift in Sources */,
 				9EAFEB862805A23100199FC9 /* WrappedSecItemTests.swift in Sources */,
+				9E9ECC9828589E150099D5A2 /* WelcomeSnapshotTests.swift in Sources */,
 				9E5BF644281FEC9900BA3F17 /* SendTests.swift in Sources */,
 				0D1C1AA327611EFD0004AF6A /* RecoveryPhraseDisplayReducerTests.swift in Sources */,
-				9E9ECC7528574B590099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests.swift in Sources */,
+				9E9ECC9A28589E150099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests.swift in Sources */,
 				9EAFEB822805793200199FC9 /* AppTests.swift in Sources */,
 				9E391132284644580073DD9A /* AppInitializationTests.swift in Sources */,
+				9E9ECC9928589E150099D5A2 /* RecoveryPhraseDisplaySnapshotTests.swift in Sources */,
 				9E391124283E4CAC0073DD9A /* ImportWalletTests.swift in Sources */,
 				9E5BF63F2819542C00BA3F17 /* TransactionHistoryTests.swift in Sources */,
-				9E391165284E3EEA0073DD9A /* WelcomeSnapshotTests.swift in Sources */,
 				0D4E7A1B26B364180058B01E /* secantTests.swift in Sources */,
 				0DFE93E6272CB6F7000FCCA5 /* RecoveryPhraseValidationTests.swift in Sources */,
-				9E9ECC72285749750099D5A2 /* RecoveryPhraseDisplaySnapshotTests.swift in Sources */,
 				9E3911392848AD500073DD9A /* HomeTests.swift in Sources */,
+				9E9ECC9C28589E150099D5A2 /* OnboardingSnapshotTests.swift in Sources */,
+				9E9ECC9728589E150099D5A2 /* HomeSnapshotTests.swift in Sources */,
 				9EF8135C27ECC25E0075AF48 /* WalletStorageTests.swift in Sources */,
 				9E02B56C27FED475005B809B /* DatabaseFilesTests.swift in Sources */,
-				9E9ECC6C2857350F0099D5A2 /* OnboardingSnapshotTests.swift in Sources */,
 				9EF8135D27ECC25E0075AF48 /* UserPreferencesStorageTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
