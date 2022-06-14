@@ -9,15 +9,21 @@ import Foundation
 import UIKit
 
 struct WrappedFeedbackGenerator {
-    let generateFeedback: () -> Void
+    let generateSuccessFeedback: () -> Void
+    let generateWarningFeedback: () -> Void
+    let generateErrorFeedback: () -> Void
 }
 
 extension WrappedFeedbackGenerator {
     static let haptic = WrappedFeedbackGenerator(
-        generateFeedback: { UINotificationFeedbackGenerator().notificationOccurred(.error) }
+        generateSuccessFeedback: { UINotificationFeedbackGenerator().notificationOccurred(.success) },
+        generateWarningFeedback: { UINotificationFeedbackGenerator().notificationOccurred(.warning) },
+        generateErrorFeedback: { UINotificationFeedbackGenerator().notificationOccurred(.error) }
     )
     
     static let silent = WrappedFeedbackGenerator(
-        generateFeedback: { }
+        generateSuccessFeedback: { },
+        generateWarningFeedback: { },
+        generateErrorFeedback: { }
     )
 }
