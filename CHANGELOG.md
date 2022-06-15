@@ -1,4 +1,14 @@
 # Changelog
+## 0.0.1 build 29
+- [#358] Xcode project broken (#360)
+- [#324] WrappedFeedbackGenerator refactor (#357)
+- [#346] Take Synced home screen snapshot (#356)
+- [#342] Take empty validation puzzle snapshot (#355)
+- [#341] Take Phrase Display Snapshots (#354)
+- [#345] Take wallet import snapshot (#353)
+- [#340] Take Onboarding Snapshots (#352)
+- [#337] Set up Snapshot Testing (#350)
+- [#318] Build 0.0.1-27 + changelog (#349)
 ## 0.0.1 build 27
 - [#222] Tests for the initialisation check and process (#334)
 - [#312] WrappedNumberFormatter (#336)
