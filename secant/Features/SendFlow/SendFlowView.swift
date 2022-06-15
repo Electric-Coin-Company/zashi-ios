@@ -35,7 +35,6 @@ struct SendFLowView_Previews: PreviewProvider {
                 store: .init(
                     initialState: .init(
                         route: nil,
-                        transaction: .placeholder,
                         transactionAddressInputState: .placeholder,
                         transactionAmountInputState: .placeholder
                     ),

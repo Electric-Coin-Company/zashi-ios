@@ -474,4 +474,8 @@ class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     ) -> Effect<Result<TransactionState, NSError>, Never> {
         return Effect(value: Result.failure(SynchronizerError.criticalError as NSError))
     }
+    
+    func updateStateChanged(_ newState: WrappedSDKSynchronizerState) {
+        stateChanged = CurrentValueSubject<WrappedSDKSynchronizerState, Never>(newState)
+    }
 }

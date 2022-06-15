@@ -27,9 +27,23 @@ struct SendFlowState: Equatable {
     var memo = ""
     var route: Route?
     var totalBalance = Zatoshi.zero
-    var transaction: SendFlowTransaction
     var transactionAddressInputState: TransactionAddressTextFieldState
     var transactionAmountInputState: TransactionAmountTextFieldState
+
+    var address: String {
+        get { transactionAddressInputState.textFieldState.text }
+        set { transactionAddressInputState.textFieldState.text = newValue }
+    }
+
+    var amount: Zatoshi {
+        get { Zatoshi(amount: transactionAmountInputState.amount) }
+        set {
+            transactionAmountInputState.amount = newValue.amount
+            transactionAmountInputState.textFieldState.text = newValue.amount == 0 ?
+            "" :
+            newValue.decimalString()
+        }
+    }
 
     var isInvalidAddressFormat: Bool {
         !transactionAddressInputState.isValidAddress
@@ -68,7 +82,7 @@ enum SendFlowAction: Equatable {
     case transactionAmountInput(TransactionAmountTextFieldAction)
     case updateBalance(Zatoshi)
     case updateMemo(String)
-    case updateTransaction(SendFlowTransaction)
+//    case updateTransaction(SendFlowTransaction)
     case updateRoute(SendFlowState.Route?)
 }
 
@@ -99,18 +113,14 @@ extension SendFlowReducer {
 
     private static let sendReducer = SendFlowReducer { state, action, environment in
         switch action {
-        case let .updateTransaction(transaction):
-            state.transaction = transaction
-            return .none
-
         case .updateRoute(.failure):
             state.route = .failure
             state.isSendingTransaction = false
             return .none
 
         case .updateRoute(.confirmation):
-            state.transaction.amount = Zatoshi(amount: state.transactionAmountInputState.amount)
-            state.transaction.toAddress = state.transactionAddressInputState.textFieldState.text
+            state.amount = Zatoshi(amount: state.transactionAmountInputState.amount)
+            state.address = state.transactionAddressInputState.textFieldState.text
             return .none
             
         case let .updateRoute(route):
@@ -133,9 +143,9 @@ extension SendFlowReducer {
                 
                 return environment.SDKSynchronizer.sendTransaction(
                     with: spendingKey,
-                    zatoshi: state.transaction.amount,
-                    to: state.transaction.toAddress,
-                    memo: state.transaction.memo,
+                    zatoshi: state.amount,
+                    to: state.address,
+                    memo: state.memo,
                     from: 0
                 )
                 .receive(on: environment.scheduler)
@@ -225,13 +235,6 @@ extension SendFlowReducer {
 // MARK: - ViewStore
 
 extension SendFlowViewStore {
-    var bindingForTransaction: Binding<SendFlowTransaction> {
-        self.binding(
-            get: \.transaction,
-            send: SendFlowAction.updateTransaction
-        )
-    }
-
     var routeBinding: Binding<SendFlowState.Route?> {
         self.binding(
             get: \.route,
@@ -281,7 +284,6 @@ extension SendFlowState {
     static var placeholder: Self {
         .init(
             route: nil,
-            transaction: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState: .amount
         )
@@ -290,11 +292,6 @@ extension SendFlowState {
     static var emptyPlaceholder: Self {
         .init(
             route: nil,
-            transaction: .init(
-                amount: Zatoshi.zero,
-                memo: "",
-                toAddress: ""
-            ),
             transactionAddressInputState: .placeholder,
             transactionAmountInputState: .placeholder
         )
@@ -307,7 +304,6 @@ extension SendFlowStore {
         return SendFlowStore(
             initialState: .init(
                 route: nil,
-                transaction: .placeholder,
                 transactionAddressInputState: .placeholder,
                 transactionAmountInputState: .placeholder
             ),

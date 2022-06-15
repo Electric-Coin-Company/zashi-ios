@@ -230,7 +230,6 @@ class SendTests: XCTestCase {
     
     func testFundsSufficiency() throws {
         let sendState = SendFlowState(
-            transaction: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldState(
@@ -307,7 +306,6 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: .init(
                 route: nil,
-                transaction: .placeholder,
                 transactionAddressInputState: .placeholder,
                 transactionAmountInputState:
                     TransactionAmountTextFieldState(
@@ -339,7 +337,6 @@ class SendTests: XCTestCase {
     
     func testValidForm() throws {
         let sendState = SendFlowState(
-            transaction: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldState(
@@ -386,7 +383,6 @@ class SendTests: XCTestCase {
     
     func testInvalidForm_InsufficientFunds() throws {
         let sendState = SendFlowState(
-            transaction: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldState(
@@ -432,7 +428,6 @@ class SendTests: XCTestCase {
     
     func testInvalidForm_AddressFormat() throws {
         let sendState = SendFlowState(
-            transaction: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldState(
@@ -478,7 +473,6 @@ class SendTests: XCTestCase {
     
     func testInvalidForm_AmountFormat() throws {
         let sendState = SendFlowState(
-            transaction: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldState(

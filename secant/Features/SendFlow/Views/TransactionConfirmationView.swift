@@ -6,10 +6,10 @@ struct TransactionConfirmation: View {
 
     var body: some View {
         VStack {
-            Text("Send \(viewStore.transaction.amount.decimalString()) ZEC")
+            Text("Send \(viewStore.amount.decimalString()) ZEC")
                 .padding()
 
-            Text("To \(viewStore.transaction.toAddress)")
+            Text("To \(viewStore.address)")
                 .padding()
 
             Spacer()
@@ -42,10 +42,7 @@ struct Confirmation_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             StateContainer(
-                initialState: (
-                    SendFlowTransaction.placeholder,
-                    false
-                )
+                initialState: (false)
             ) { _ in
                 TransactionConfirmation(
                     viewStore: ViewStore(.placeholder)

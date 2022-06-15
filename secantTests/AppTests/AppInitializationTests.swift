@@ -109,6 +109,7 @@ class AppInitializationTests: XCTestCase {
         let testEnvironment = AppEnvironment(
             audioServices: .silent,
             databaseFiles: dbFiles,
+            deeplinkHandler: .live,
             derivationTool: .live(),
             feedbackGenerator: .silent,
             mnemonic: .mock,
@@ -183,6 +184,7 @@ class AppInitializationTests: XCTestCase {
         let testEnvironment = AppEnvironment(
             audioServices: .silent,
             databaseFiles: dbFiles,
+            deeplinkHandler: .live,
             derivationTool: .live(),
             feedbackGenerator: .silent,
             mnemonic: .mock,
@@ -225,6 +227,7 @@ class AppInitializationTests: XCTestCase {
         let testEnvironment = AppEnvironment(
             audioServices: .silent,
             databaseFiles: .throwing,
+            deeplinkHandler: .live,
             derivationTool: .live(),
             feedbackGenerator: .silent,
             mnemonic: .mock,
