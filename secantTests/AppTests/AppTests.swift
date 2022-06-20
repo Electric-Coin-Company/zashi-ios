@@ -15,6 +15,7 @@ class AppTests: XCTestCase {
     let testEnvironment = AppEnvironment(
         audioServices: .silent,
         databaseFiles: .throwing,
+        deeplinkHandler: .live,
         derivationTool: .live(),
         feedbackGenerator: .silent,
         mnemonic: .mock,
@@ -29,6 +30,7 @@ class AppTests: XCTestCase {
         let uninitializedEnvironment = AppEnvironment(
             audioServices: .silent,
             databaseFiles: .throwing,
+            deeplinkHandler: .live,
             derivationTool: .live(),
             feedbackGenerator: .silent,
             mnemonic: .mock,
@@ -54,6 +56,7 @@ class AppTests: XCTestCase {
         let keysMissingEnvironment = AppEnvironment(
             audioServices: .silent,
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
+            deeplinkHandler: .live,
             derivationTool: .live(),
             feedbackGenerator: .silent,
             mnemonic: .mock,
@@ -79,6 +82,7 @@ class AppTests: XCTestCase {
         let keysMissingEnvironment = AppEnvironment(
             audioServices: .silent,
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
+            deeplinkHandler: .live,
             derivationTool: .live(),
             feedbackGenerator: .silent,
             mnemonic: .mock,

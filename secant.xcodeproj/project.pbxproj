@@ -131,7 +131,6 @@
 		9E7FE0E6282E7B1100C374E8 /* StoredWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0E5282E7B1100C374E8 /* StoredWallet.swift */; };
 		9E7FE0E8282E7B7C00C374E8 /* WrappedDatabaseFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0E7282E7B7C00C374E8 /* WrappedDatabaseFiles.swift */; };
 		9E7FE0EC282E7D9400C374E8 /* TransactionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF63B2818305D00BA3F17 /* TransactionState.swift */; };
-		9E7FE0EE282E7E8700C374E8 /* SendFlowTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0D0282D26BD00C374E8 /* SendFlowTransaction.swift */; };
 		9E7FE0F628327F6F00C374E8 /* ScanUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0F528327F6F00C374E8 /* ScanUIView.swift */; };
 		9E7FE0F92832824C00C374E8 /* QRCodeScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0F82832824C00C374E8 /* QRCodeScanView.swift */; };
 		9E87ADF128363DE400122FCC /* WrappedAudioServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E87ADF028363DE400122FCC /* WrappedAudioServices.swift */; };
@@ -142,6 +141,11 @@
 		9E9ECC9A28589E150099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ECC9228589E150099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests.swift */; };
 		9E9ECC9B28589E150099D5A2 /* ImportWalletSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ECC9428589E150099D5A2 /* ImportWalletSnapshotTests.swift */; };
 		9E9ECC9C28589E150099D5A2 /* OnboardingSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ECC9628589E150099D5A2 /* OnboardingSnapshotTests.swift */; };
+		9EAB466A2859F42E002904A0 /* WrappedDeeplinkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAB46692859F42E002904A0 /* WrappedDeeplinkHandler.swift */; };
+		9EAB466D285A0468002904A0 /* Parsing in Frameworks */ = {isa = PBXBuildFile; productRef = 9EAB466C285A0468002904A0 /* Parsing */; };
+		9EAB466F285A0468002904A0 /* _URLRouting in Frameworks */ = {isa = PBXBuildFile; productRef = 9EAB466E285A0468002904A0 /* _URLRouting */; };
+		9EAB4671285A1C77002904A0 /* DeeplinkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAB4670285A1C77002904A0 /* DeeplinkHandler.swift */; };
+		9EAB4676285B5C7C002904A0 /* DeeplinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAB4675285B5C7C002904A0 /* DeeplinkTests.swift */; };
 		9EAFEB822805793200199FC9 /* AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB812805793200199FC9 /* AppTests.swift */; };
 		9EAFEB84280597B700199FC9 /* WrappedSecItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB83280597B700199FC9 /* WrappedSecItem.swift */; };
 		9EAFEB862805A23100199FC9 /* WrappedSecItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB852805A23100199FC9 /* WrappedSecItemTests.swift */; };
@@ -324,7 +328,6 @@
 		9E5BF64E2823E94900BA3F17 /* TransactionAddressTextFieldStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAddressTextFieldStore.swift; sourceTree = "<group>"; };
 		9E69A24C27FB002800A55317 /* WelcomeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeStore.swift; sourceTree = "<group>"; };
 		9E7FE0CE282D257400C374E8 /* SDKSynchronizer+SyncStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SDKSynchronizer+SyncStatus.swift"; sourceTree = "<group>"; };
-		9E7FE0D0282D26BD00C374E8 /* SendFlowTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendFlowTransaction.swift; sourceTree = "<group>"; };
 		9E7FE0D2282D274E00C374E8 /* Date+Readable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Readable.swift"; sourceTree = "<group>"; };
 		9E7FE0D4282D281800C374E8 /* Array+Chunked.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Chunked.swift"; sourceTree = "<group>"; };
 		9E7FE0D6282D286500C374E8 /* RecoveryPhrase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhrase.swift; sourceTree = "<group>"; };
@@ -344,6 +347,9 @@
 		9E9ECC9228589E150099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseValidationFlowSnapshotTests.swift; sourceTree = "<group>"; };
 		9E9ECC9428589E150099D5A2 /* ImportWalletSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportWalletSnapshotTests.swift; sourceTree = "<group>"; };
 		9E9ECC9628589E150099D5A2 /* OnboardingSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingSnapshotTests.swift; sourceTree = "<group>"; };
+		9EAB46692859F42E002904A0 /* WrappedDeeplinkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedDeeplinkHandler.swift; sourceTree = "<group>"; };
+		9EAB4670285A1C77002904A0 /* DeeplinkHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeeplinkHandler.swift; sourceTree = "<group>"; };
+		9EAB4675285B5C7C002904A0 /* DeeplinkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeeplinkTests.swift; sourceTree = "<group>"; };
 		9EAFEB812805793200199FC9 /* AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTests.swift; sourceTree = "<group>"; };
 		9EAFEB83280597B700199FC9 /* WrappedSecItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedSecItem.swift; sourceTree = "<group>"; };
 		9EAFEB852805A23100199FC9 /* WrappedSecItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedSecItemTests.swift; sourceTree = "<group>"; };
@@ -396,6 +402,8 @@
 				9EF8139827F1FAEC0075AF48 /* ZcashLightClientKit in Frameworks */,
 				9E2AC0FF27D8EC120042AA47 /* MnemonicSwift in Frameworks */,
 				6654C73A2715A38000901167 /* ComposableArchitecture in Frameworks */,
+				9EAB466F285A0468002904A0 /* _URLRouting in Frameworks */,
+				9EAB466D285A0468002904A0 /* Parsing in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -502,6 +510,7 @@
 		0D4E7A1926B364180058B01E /* secantTests */ = {
 			isa = PBXGroup;
 			children = (
+				9EAB4674285B5C68002904A0 /* DeeplinkTests */,
 				9E391162284E3ECF0073DD9A /* SnapshotTests */,
 				9E3911372848AD3A0073DD9A /* HomeTests */,
 				9E391122283E4C970073DD9A /* ImportWalletTests */,
@@ -565,7 +574,6 @@
 				9EF8139B27F47AED0075AF48 /* InitializationState.swift */,
 				0D6D628A276A528D002FB4CC /* DropDelegate.swift */,
 				9E5BF63B2818305D00BA3F17 /* TransactionState.swift */,
-				9E7FE0D0282D26BD00C374E8 /* SendFlowTransaction.swift */,
 				9E7FE0D6282D286500C374E8 /* RecoveryPhrase.swift */,
 				9E7FE0DC282D298900C374E8 /* ValidationWord.swift */,
 				9E7FE0E5282E7B1100C374E8 /* StoredWallet.swift */,
@@ -756,6 +764,7 @@
 				9E87ADF028363DE400122FCC /* WrappedAudioServices.swift */,
 				9E39113A2848D5180073DD9A /* WrappedNumberFormatter.swift */,
 				9E39113E2848EC350073DD9A /* WrappedRecoveryPhraseRandomizer.swift */,
+				9EAB46692859F42E002904A0 /* WrappedDeeplinkHandler.swift */,
 			);
 			path = Wrappers;
 			sourceTree = "<group>";
@@ -896,6 +905,7 @@
 				9E3911442848EEB90073DD9A /* UserPreferencesStorage.swift */,
 				9E3911472848EEB90073DD9A /* WalletStorage.swift */,
 				9E3911452848EEB90073DD9A /* ZCashSDKEnvironment.swift */,
+				9EAB4670285A1C77002904A0 /* DeeplinkHandler.swift */,
 			);
 			path = Dependencies;
 			sourceTree = "<group>";
@@ -1028,6 +1038,14 @@
 				9E9ECC9628589E150099D5A2 /* OnboardingSnapshotTests.swift */,
 			);
 			path = OnboardingSnapshotTests;
+			sourceTree = "<group>";
+		};
+		9EAB4674285B5C68002904A0 /* DeeplinkTests */ = {
+			isa = PBXGroup;
+			children = (
+				9EAB4675285B5C7C002904A0 /* DeeplinkTests.swift */,
+			);
+			path = DeeplinkTests;
 			sourceTree = "<group>";
 		};
 		9EAFEB802805791400199FC9 /* AppTests */ = {
@@ -1185,6 +1203,8 @@
 				6654C7392715A38000901167 /* ComposableArchitecture */,
 				9E2AC0FE27D8EC120042AA47 /* MnemonicSwift */,
 				9EF8139727F1FAEC0075AF48 /* ZcashLightClientKit */,
+				9EAB466C285A0468002904A0 /* Parsing */,
+				9EAB466E285A0468002904A0 /* _URLRouting */,
 			);
 			productName = secant;
 			productReference = 0D4E7A0526B364170058B01E /* secant-testnet.app */;
@@ -1263,6 +1283,7 @@
 				6654C7382715A38000901167 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 				9E2AC0FD27D8EC120042AA47 /* XCRemoteSwiftPackageReference "MnemonicSwift" */,
 				9EF8139627F1FAEC0075AF48 /* XCRemoteSwiftPackageReference "ZcashLightClientKit" */,
+				9EAB466B285A0468002904A0 /* XCRemoteSwiftPackageReference "swift-parsing" */,
 			);
 			productRefGroup = 0D4E7A0626B364170058B01E /* Products */;
 			projectDirPath = "";
@@ -1374,6 +1395,7 @@
 				9EAFEB902808183D00199FC9 /* SandboxStore.swift in Sources */,
 				0D35CC46277A36E00074316A /* ScrollableWhenScaled.swift in Sources */,
 				9E39114A2848EEB90073DD9A /* UserPreferencesStorage.swift in Sources */,
+				9EAB466A2859F42E002904A0 /* WrappedDeeplinkHandler.swift in Sources */,
 				F96B41E9273B501F0021B49A /* TransactionHistoryFlowView.swift in Sources */,
 				9E01F8202833861A000EFC57 /* WrappedCaptureDevice.swift in Sources */,
 				2EDA07A027EDE18C00D6F09B /* TCATextField.swift in Sources */,
@@ -1439,6 +1461,7 @@
 				66D50668271D9B6100E51F0D /* NavigationButtonStyle.swift in Sources */,
 				2EDA07A427EDE2A900D6F09B /* DebugFrame.swift in Sources */,
 				0D3D040A2728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift in Sources */,
+				9EAB4671285A1C77002904A0 /* DeeplinkHandler.swift in Sources */,
 				9E2AC10127D8EF0B0042AA47 /* WrappedMnemonic.swift in Sources */,
 				9E7FE0D7282D286500C374E8 /* RecoveryPhrase.swift in Sources */,
 				660558F7270C862F009D6954 /* Fonts+Generated.swift in Sources */,
@@ -1465,7 +1488,6 @@
 				9E7FE0F628327F6F00C374E8 /* ScanUIView.swift in Sources */,
 				0D185819272723FF0046B928 /* ColoredChip.swift in Sources */,
 				2EA11F5D27467F7700709571 /* OnboardingContentView.swift in Sources */,
-				9E7FE0EE282E7E8700C374E8 /* SendFlowTransaction.swift in Sources */,
 				2E58E73B274679F000B2B84B /* OnboardingHeaderView.swift in Sources */,
 				9E5BF64F2823E94900BA3F17 /* TransactionAddressTextField.swift in Sources */,
 				2E35F99227B28E7600EB79CD /* SingleLineTextField.swift in Sources */,
@@ -1523,6 +1545,7 @@
 				9E5BF63F2819542C00BA3F17 /* TransactionHistoryTests.swift in Sources */,
 				0D4E7A1B26B364180058B01E /* secantTests.swift in Sources */,
 				0DFE93E6272CB6F7000FCCA5 /* RecoveryPhraseValidationTests.swift in Sources */,
+				9EAB4676285B5C7C002904A0 /* DeeplinkTests.swift in Sources */,
 				9E3911392848AD500073DD9A /* HomeTests.swift in Sources */,
 				9E9ECC9C28589E150099D5A2 /* OnboardingSnapshotTests.swift in Sources */,
 				9E9ECC9728589E150099D5A2 /* HomeSnapshotTests.swift in Sources */,
@@ -1862,6 +1885,14 @@
 				minimumVersion = 2.0.0;
 			};
 		};
+		9EAB466B285A0468002904A0 /* XCRemoteSwiftPackageReference "swift-parsing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-parsing";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.2;
+			};
+		};
 		9EF8139627F1FAEC0075AF48 /* XCRemoteSwiftPackageReference "ZcashLightClientKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/zcash/ZcashLightClientKit";
@@ -1882,6 +1913,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9E2AC0FD27D8EC120042AA47 /* XCRemoteSwiftPackageReference "MnemonicSwift" */;
 			productName = MnemonicSwift;
+		};
+		9EAB466C285A0468002904A0 /* Parsing */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9EAB466B285A0468002904A0 /* XCRemoteSwiftPackageReference "swift-parsing" */;
+			productName = Parsing;
+		};
+		9EAB466E285A0468002904A0 /* _URLRouting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9EAB466B285A0468002904A0 /* XCRemoteSwiftPackageReference "swift-parsing" */;
+			productName = _URLRouting;
 		};
 		9EF8139727F1FAEC0075AF48 /* ZcashLightClientKit */ = {
 			isa = XCSwiftPackageProductDependency;

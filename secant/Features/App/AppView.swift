@@ -7,75 +7,78 @@ struct AppView: View {
 
     var body: some View {
         WithViewStore(store) { viewStore in
-            switch viewStore.route {
-            case .home:
-                NavigationView {
-                    HomeView(
-                        store: store.scope(
-                            state: \.homeState,
-                            action: AppAction.home
+            Group {
+                switch viewStore.route {
+                case .home:
+                    NavigationView {
+                        HomeView(
+                            store: store.scope(
+                                state: \.homeState,
+                                action: AppAction.home
+                            )
                         )
-                    )
-                }
-                .navigationViewStyle(StackNavigationViewStyle())
-
-            case .sandbox:
-                NavigationView {
-                    SandboxView(
-                        store: store.scope(
-                            state: \.sandboxState,
-                            action: AppAction.sandbox
-                        )
-                    )
-                }
-                .navigationViewStyle(StackNavigationViewStyle())
-
-            case .onboarding:
-                NavigationView {
-                    OnboardingScreen(
-                        store: store.scope(
-                            state: \.onboardingState,
-                            action: AppAction.onboarding
-                        )
-                    )
-                }
-                .navigationViewStyle(StackNavigationViewStyle())
-
-            case .startup:
-                ZStack(alignment: .topTrailing) {
-                    DebugView(sendAction: viewStore.send)
-                        .transition(.opacity)
-                }
-
-            case .phraseValidation:
-                NavigationView {
-                    RecoveryPhraseValidationFlowView(
-                        store: store.scope(
-                            state: \.phraseValidationState,
-                            action: AppAction.phraseValidation
-                        )
-                    )
+                    }
                     .navigationViewStyle(StackNavigationViewStyle())
-                }
-
-            case .phraseDisplay:
-                NavigationView {
-                    RecoveryPhraseDisplayView(
+                    
+                case .sandbox:
+                    NavigationView {
+                        SandboxView(
+                            store: store.scope(
+                                state: \.sandboxState,
+                                action: AppAction.sandbox
+                            )
+                        )
+                    }
+                    .navigationViewStyle(StackNavigationViewStyle())
+                    
+                case .onboarding:
+                    NavigationView {
+                        OnboardingScreen(
+                            store: store.scope(
+                                state: \.onboardingState,
+                                action: AppAction.onboarding
+                            )
+                        )
+                    }
+                    .navigationViewStyle(StackNavigationViewStyle())
+                    
+                case .startup:
+                    ZStack(alignment: .topTrailing) {
+                        DebugView(sendAction: viewStore.send)
+                            .transition(.opacity)
+                    }
+                    
+                case .phraseValidation:
+                    NavigationView {
+                        RecoveryPhraseValidationFlowView(
+                            store: store.scope(
+                                state: \.phraseValidationState,
+                                action: AppAction.phraseValidation
+                            )
+                        )
+                    }
+                    .navigationViewStyle(StackNavigationViewStyle())
+                    
+                case .phraseDisplay:
+                    NavigationView {
+                        RecoveryPhraseDisplayView(
+                            store: store.scope(
+                                state: \.phraseDisplayState,
+                                action: AppAction.phraseDisplay
+                            )
+                        )
+                    }
+                    
+                case .welcome:
+                    WelcomeView(
                         store: store.scope(
-                            state: \.phraseDisplayState,
-                            action: AppAction.phraseDisplay
+                            state: \.welcomeState,
+                            action: AppAction.welcome
                         )
                     )
                 }
-            case .welcome:
-                WelcomeView(
-                    store: store.scope(
-                        state: \.welcomeState,
-                        action: AppAction.welcome
-                    )
-                )
-                .onAppear(perform: { viewStore.send(.checkWalletInitialization) })
             }
+            .onOpenURL(perform: { viewStore.send(.deeplink($0)) })
         }
     }
 }

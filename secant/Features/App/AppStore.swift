@@ -45,6 +45,9 @@ enum AppAction: Equatable {
     case checkBackupPhraseValidation
     case checkWalletInitialization
     case createNewWallet
+    case deeplink(URL)
+    case deeplinkHome
+    case deeplinkSend(Zatoshi, String, String)
     case home(HomeAction)
     case initializeSDK
     case nukeWallet
@@ -62,6 +65,7 @@ enum AppAction: Equatable {
 struct AppEnvironment {
     let audioServices: WrappedAudioServices
     let databaseFiles: WrappedDatabaseFiles
+    let deeplinkHandler: WrappedDeeplinkHandler
     let derivationTool: WrappedDerivationTool
     let feedbackGenerator: WrappedFeedbackGenerator
     let mnemonic: WrappedMnemonic
@@ -76,6 +80,7 @@ extension AppEnvironment {
     static let live = AppEnvironment(
         audioServices: .haptic,
         databaseFiles: .live(),
+        deeplinkHandler: .live,
         derivationTool: .live(),
         feedbackGenerator: .haptic,
         mnemonic: .live,
@@ -89,6 +94,7 @@ extension AppEnvironment {
     static let mock = AppEnvironment(
         audioServices: .silent,
         databaseFiles: .live(),
+        deeplinkHandler: .live,
         derivationTool: .live(derivationTool: DerivationTool(networkType: .mainnet)),
         feedbackGenerator: .silent,
         mnemonic: .mock,
@@ -211,6 +217,7 @@ extension AppReducer {
             }
             
             state.appInitializationState = .initialized
+            
             return Effect(value: .updateRoute(landingRoute))
                 .delay(for: 3, scheduler: environment.scheduler)
                 .eraseToEffect()
@@ -276,7 +283,7 @@ extension AppReducer {
         }
     }
 
-    private static let routeReducer = AppReducer { state, action, _ in
+    private static let routeReducer = AppReducer { state, action, environment in
         switch action {
         case let .updateRoute(route):
             state.route = route
@@ -304,6 +311,37 @@ extension AppReducer {
                 state.route = .home
             }
 
+        case .deeplink(let url):
+            // get the latest synchronizer state
+            var synchronizerStatus = WrappedSDKSynchronizerState.unknown
+            _ = environment.SDKSynchronizer.stateChanged.sink { synchronizerStatus = $0 }
+            
+            // process the deeplink only if app is initialized and synchronizer synced
+            guard state.appInitializationState == .initialized && synchronizerStatus == .synced else {
+                // TODO: There are many different states and edge cases we need to handle here, issue 370
+                // (https://github.com/zcash/secant-ios-wallet/issues/370)
+                return .none
+            }
+            do {
+                return try process(url: url, with: environment)
+            } catch {
+                // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+                return .none
+            }
+
+        case .deeplinkHome:
+            state.route = .home
+            state.homeState.route = nil
+            return .none
+
+        case let .deeplinkSend(amount, address, memo):
+            state.route = .home
+            state.homeState.route = .send
+            state.homeState.sendState.amount = amount
+            state.homeState.sendState.address = address
+            state.homeState.sendState.memo = memo
+            return .none
+            
             /// Default is meaningful here because there's `appReducer` handling actions and this reducer is handling only routes. We don't here plenty of unused cases.
         default:
             break
@@ -446,6 +484,17 @@ extension AppReducer {
             return initializer
         } catch {
             throw SDKInitializationError.failed
+        }
+    }
+    
+    static func process(url: URL, with environment: AppEnvironment) throws -> Effect<AppAction, Never> {
+        let deeplink = try environment.deeplinkHandler.resolveDeeplinkURL(url, environment.derivationTool)
+        
+        switch deeplink {
+        case .home:
+            return Effect(value: .deeplinkHome)
+        case let .send(amount, address, memo):
+            return Effect(value: .deeplinkSend(Zatoshi(amount: amount), address, memo))
         }
     }
 }

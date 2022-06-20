@@ -18,7 +18,9 @@ struct TransactionSent: View {
             .frame(height: 50)
             .padding()
 
-            Text("\(String(dumping: viewStore.transaction))")
+            Text("amount: \(viewStore.amount.decimalString())")
+            + Text(" address: \(viewStore.address)")
+            + Text(" memo: \(viewStore.memo)")
 
             Spacer()
         }
