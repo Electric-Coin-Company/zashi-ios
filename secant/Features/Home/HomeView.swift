@@ -30,7 +30,7 @@ struct HomeView: View {
                     if proxy.size.height > 0 {
                         Drawer(overlay: viewStore.bindingForDrawer(), maxHeight: proxy.size.height) {
                             VStack {
-                                TransactionHistoryFlowView(store: store.historyStore())
+                                WalletEventsFlowView(store: store.historyStore())
                                     .padding(.top, 10)
                                 
                                 Spacer()

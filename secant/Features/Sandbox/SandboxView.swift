@@ -22,7 +22,7 @@ struct SandboxView: View {
     @ViewBuilder func view(for route: SandboxState.Route) -> some View {
         switch route {
         case .history:
-            TransactionHistoryFlowView(store: store.historyStore())
+            WalletEventsFlowView(store: store.historyStore())
         case .send:
             SendFlowView(
                 store: .init(
@@ -94,7 +94,7 @@ struct SandboxView: View {
                 isPresented: viewStore.bindingForRoute(.history),
                 content: {
                     NavigationView {
-                        TransactionHistoryFlowView(store: store.historyStore())
+                        WalletEventsFlowView(store: store.historyStore())
                             .toolbar {
                                 ToolbarItem {
                                     Button("Done") { viewStore.send(.updateRoute(nil)) }

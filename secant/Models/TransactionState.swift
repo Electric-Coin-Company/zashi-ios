@@ -13,6 +13,7 @@ struct TransactionState: Equatable, Identifiable {
     enum Status: Equatable {
         case paid(success: Bool)
         case received
+        case failed
     }
 
     var expirationHeight = -1
@@ -21,16 +22,18 @@ struct TransactionState: Equatable, Identifiable {
     var shielded = true
     var zAddress: String?
 
-    var date: Date
     var id: String
     var status: Status
     var subtitle: String
+    var timestamp: TimeInterval
     var zecAmount: Zatoshi
+    
+    var address: String { zAddress ?? "" }
 }
 
 extension TransactionState {
     init(confirmedTransaction: ConfirmedTransactionEntity, sent: Bool = false) {
-        date = Date(timeIntervalSince1970: confirmedTransaction.blockTimeInSeconds)
+        timestamp = confirmedTransaction.blockTimeInSeconds
         id = confirmedTransaction.transactionEntity.transactionId.toHexStringTxId()
         shielded = true
         status = sent ? .paid(success: confirmedTransaction.minedHeight > 0) : .received
@@ -44,7 +47,7 @@ extension TransactionState {
     }
     
     init(pendingTransaction: PendingTransactionEntity, latestBlockHeight: BlockHeight? = nil) {
-        date = Date(timeIntervalSince1970: pendingTransaction.createTime)
+        timestamp = pendingTransaction.createTime
         id = pendingTransaction.rawTransactionId?.toHexStringTxId() ?? String(pendingTransaction.createTime)
         shielded = true
         status = .paid(success: pendingTransaction.isSubmitSuccess)
@@ -63,11 +66,11 @@ extension TransactionState {
 
 extension TransactionState {
     static func placeholder(
-        date: Date,
         amount: Zatoshi,
         shielded: Bool = true,
         status: Status = .received,
         subtitle: String = "",
+        timestamp: TimeInterval,
         uuid: String = UUID().debugDescription
     ) -> TransactionState {
         .init(
@@ -76,10 +79,10 @@ extension TransactionState {
             minedHeight: -1,
             shielded: shielded,
             zAddress: nil,
-            date: date,
             id: uuid,
             status: status,
             subtitle: subtitle,
+            timestamp: timestamp,
             zecAmount: status == .received ? amount : Zatoshi(amount: -amount.amount)
         )
     }

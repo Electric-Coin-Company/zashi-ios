@@ -1,5 +1,5 @@
 //
-//  TransactionHistoryTests.swift
+//  WalletEventsTests.swift
 //  secantTests
 //
 //  Created by Lukáš Korba on 27.04.2022.
@@ -9,22 +9,22 @@ import XCTest
 @testable import secant_testnet
 import ComposableArchitecture
 
-class TransactionHistoryTests: XCTestCase {
+class WalletEventsTests: XCTestCase {
     static let testScheduler = DispatchQueue.test
     
-    let testEnvironment = TransactionHistoryFlowEnvironment(
+    let testEnvironment = WalletEventsFlowEnvironment(
         scheduler: testScheduler.eraseToAnyScheduler(),
         SDKSynchronizer: TestWrappedSDKSynchronizer()
     )
     
     func testSynchronizerSubscription() throws {
         let store = TestStore(
-            initialState: TransactionHistoryFlowState(
+            initialState: WalletEventsFlowState(
                 route: .latest,
                 isScrollable: true,
-                transactions: []
+                walletEvents: []
             ),
-            reducer: TransactionHistoryFlowReducer.default,
+            reducer: WalletEventsFlowReducer.default,
             environment: testEnvironment
         )
         
@@ -55,26 +55,31 @@ class TransactionHistoryTests: XCTestCase {
             TransactionStateMockHelper(date: 1651039808, amount: Zatoshi(amount: 9), subtitle: "pending", uuid: "ii99")
         ]
 
-        let transactions = mocked.map {
-            TransactionState.placeholder(
-                date: Date.init(timeIntervalSince1970: $0.date),
+        let walletEvents: [WalletEvent] = mocked.map {
+            let transaction = TransactionState.placeholder(
                 amount: $0.amount,
                 shielded: $0.shielded,
                 status: $0.status,
                 subtitle: $0.subtitle,
+                timestamp: $0.date,
                 uuid: $0.uuid
+            )
+            return WalletEvent(
+                id: transaction.id,
+                state: transaction.subtitle == "pending" ? .pending(transaction) : .send(transaction),
+                timestamp: transaction.timestamp
             )
         }
 
-        let identifiedTransactions = IdentifiedArrayOf(uniqueElements: transactions)
+        let identifiedTransactions = IdentifiedArrayOf(uniqueElements: walletEvents)
         
         let store = TestStore(
-            initialState: TransactionHistoryFlowState(
+            initialState: WalletEventsFlowState(
                 route: .latest,
                 isScrollable: true,
-                transactions: identifiedTransactions
+                walletEvents: identifiedTransactions
             ),
-            reducer: TransactionHistoryFlowReducer.default,
+            reducer: WalletEventsFlowReducer.default,
             environment: testEnvironment
         )
         
@@ -82,16 +87,16 @@ class TransactionHistoryTests: XCTestCase {
         
         Self.testScheduler.advance(by: 0.01)
 
-        store.receive(.updateTransactions(transactions)) { state in
+        store.receive(.updateWalletEvents(walletEvents)) { state in
             let receivedTransactions = IdentifiedArrayOf(
                 uniqueElements:
-                    transactions
+                    walletEvents
                     .sorted(by: { lhs, rhs in
-                        lhs.date > rhs.date
+                        lhs.timestamp > rhs.timestamp
                     })
             )
             
-            state.transactions = receivedTransactions
+            state.walletEvents = receivedTransactions
         }
     }
 }

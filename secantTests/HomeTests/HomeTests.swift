@@ -74,18 +74,19 @@ class HomeTests: XCTestCase {
             TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(amount: 4), uuid: "4"),
             TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(amount: 5), uuid: "5")
         ]
-        let transactions = transactionsHelper.map {
-            TransactionState.placeholder(
-                date: Date.init(timeIntervalSince1970: $0.date),
+        let walletEvents: [WalletEvent] = transactionsHelper.map {
+            let transaction = TransactionState.placeholder(
                 amount: $0.amount,
                 shielded: $0.shielded,
                 status: $0.status,
                 subtitle: $0.subtitle,
+                timestamp: $0.date,
                 uuid: $0.uuid
             )
+            return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
         }
         
-        store.receive(.updateTransactions(transactions))
+        store.receive(.updateWalletEvents(walletEvents))
         
         // ad 3.
         let balance = Balance(verified: 12_345_000, total: 12_345_000)
@@ -96,7 +97,7 @@ class HomeTests: XCTestCase {
         }
     }
     
-    func testTransactionHistoryPartial_to_FullDrawer() throws {
+    func testWalletEventsPartial_to_FullDrawer() throws {
         // setup the store and environment to be fully mocked
         let testScheduler = DispatchQueue.test
 
@@ -118,7 +119,7 @@ class HomeTests: XCTestCase {
             scanState: .placeholder,
             synchronizerStatus: "",
             totalBalance: Zatoshi.zero,
-            transactionHistoryState: .emptyPlaceHolder,
+            walletEventsState: .emptyPlaceHolder,
             verifiedBalance: Zatoshi.zero
         )
         
@@ -128,17 +129,17 @@ class HomeTests: XCTestCase {
             environment: testEnvironment
         )
         
-        store.send(.transactionHistory(.updateRoute(.all))) { state in
-            state.transactionHistoryState.route = .all
+        store.send(.walletEvents(.updateRoute(.all))) { state in
+            state.walletEventsState.route = .all
         }
                    
         store.receive(.updateDrawer(.full)) { state in
             state.drawerOverlay = .full
-            state.transactionHistoryState.isScrollable = true
+            state.walletEventsState.isScrollable = true
         }
     }
     
-    func testTransactionHistoryFull_to_PartialDrawer() throws {
+    func testWalletEventsFull_to_PartialDrawer() throws {
         // setup the store and environment to be fully mocked
         let testScheduler = DispatchQueue.test
 
@@ -160,7 +161,7 @@ class HomeTests: XCTestCase {
             scanState: .placeholder,
             synchronizerStatus: "",
             totalBalance: Zatoshi.zero,
-            transactionHistoryState: .emptyPlaceHolder,
+            walletEventsState: .emptyPlaceHolder,
             verifiedBalance: Zatoshi.zero
         )
         
@@ -170,13 +171,13 @@ class HomeTests: XCTestCase {
             environment: testEnvironment
         )
         
-        store.send(.transactionHistory(.updateRoute(.latest))) { state in
-            state.transactionHistoryState.route = .latest
+        store.send(.walletEvents(.updateRoute(.latest))) { state in
+            state.walletEventsState.route = .latest
         }
                    
         store.receive(.updateDrawer(.partial)) { state in
             state.drawerOverlay = .partial
-            state.transactionHistoryState.isScrollable = false
+            state.walletEventsState.isScrollable = false
         }
     }
     

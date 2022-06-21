@@ -16,7 +16,7 @@ struct SandboxState: Equatable {
         case scan
         case request
     }
-    var transactionHistoryState: TransactionHistoryFlowState
+    var walletEventsState: WalletEventsFlowState
     var profileState: ProfileState
     var route: Route?
 }
@@ -25,7 +25,7 @@ struct SandboxState: Equatable {
 
 enum SandboxAction: Equatable {
     case updateRoute(SandboxState.Route?)
-    case transactionHistory(TransactionHistoryFlowAction)
+    case walletEvents(WalletEventsFlowAction)
     case profile(ProfileAction)
     case reset
 }
@@ -42,18 +42,18 @@ extension SandboxReducer {
         case let .updateRoute(route):
             state.route = route
             return .none
-        case let .transactionHistory(transactionHistoryAction):
-            return TransactionHistoryFlowReducer
+        case let .walletEvents(walletEventsAction):
+            return WalletEventsFlowReducer
                 .default
                 .run(
-                    &state.transactionHistoryState,
-                    transactionHistoryAction,
-                    TransactionHistoryFlowEnvironment(
+                    &state.walletEventsState,
+                    walletEventsAction,
+                    WalletEventsFlowEnvironment(
                         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
                         SDKSynchronizer: LiveWrappedSDKSynchronizer()
                     )
                 )
-                .map(SandboxAction.transactionHistory)
+                .map(SandboxAction.walletEvents)
         case let .profile(profileAction):
             return ProfileReducer
                 .default
@@ -72,10 +72,10 @@ extension SandboxReducer {
 // MARK: - Store
 
 extension SandboxStore {
-    func historyStore() -> TransactionHistoryFlowStore {
+    func historyStore() -> WalletEventsFlowStore {
         self.scope(
-            state: \.transactionHistoryState,
-            action: SandboxAction.transactionHistory
+            state: \.walletEventsState,
+            action: SandboxAction.walletEvents
         )
     }
 
@@ -92,15 +92,15 @@ extension SandboxStore {
 extension SandboxViewStore {
     func toggleSelectedTransaction() {
         let isAlreadySelected = (self.selectedTranactionID != nil)
-        let transcation = self.transactionHistoryState.transactions[5]
-        let newRoute = isAlreadySelected ? nil : TransactionHistoryFlowState.Route.showTransaction(transcation)
-        send(.transactionHistory(.updateRoute(newRoute)))
+        let walletEvent = self.walletEventsState.walletEvents[5]
+        let newRoute = isAlreadySelected ? nil : WalletEventsFlowState.Route.showWalletEvent(walletEvent)
+        send(.walletEvents(.updateRoute(newRoute)))
     }
 
     var selectedTranactionID: String? {
-        self.transactionHistoryState
+        self.walletEventsState
             .route
-            .flatMap(/TransactionHistoryFlowState.Route.showTransaction)
+            .flatMap(/WalletEventsFlowState.Route.showWalletEvent)
             .map(\.id)
     }
 
@@ -119,7 +119,7 @@ extension SandboxViewStore {
 extension SandboxState {
     static var placeholder: Self {
         .init(
-            transactionHistoryState: .placeHolder,
+            walletEventsState: .placeHolder,
             profileState: .placeholder,
             route: nil
         )
@@ -130,7 +130,7 @@ extension SandboxStore {
     static var placeholder: SandboxStore {
         SandboxStore(
             initialState: SandboxState(
-                transactionHistoryState: .placeHolder,
+                walletEventsState: .placeHolder,
                 profileState: .placeholder,
                 route: nil
             ),
