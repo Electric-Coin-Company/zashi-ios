@@ -64,10 +64,10 @@ class SendTests: XCTestCase {
             minedHeight: 50,
             shielded: true,
             zAddress: "tteafadlamnelkqe",
-            date: Date.init(timeIntervalSince1970: 1234567),
             id: "id",
             status: .paid(success: true),
             subtitle: "sub",
+            timestamp: 1234567,
             zecAmount: Zatoshi(amount: 10)
         )
 

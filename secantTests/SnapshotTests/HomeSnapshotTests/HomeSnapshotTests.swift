@@ -18,15 +18,16 @@ class HomeSnapshotTests: XCTestCase {
             TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(amount: 4), uuid: "4"),
             TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(amount: 5), uuid: "5")
         ]
-        let transactions = transactionsHelper.map {
-            TransactionState.placeholder(
-                date: Date.init(timeIntervalSince1970: $0.date),
+        let transactions: [WalletEvent] = transactionsHelper.map {
+            let transaction = TransactionState.placeholder(
                 amount: $0.amount,
                 shielded: $0.shielded,
                 status: $0.status,
                 subtitle: $0.subtitle,
+                timestamp: $0.date,
                 uuid: $0.uuid
             )
+            return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
         }
         
         let balance = Balance(verified: 12_345_000, total: 12_345_000)
@@ -40,7 +41,7 @@ class HomeSnapshotTests: XCTestCase {
                 scanState: .placeholder,
                 synchronizerStatus: "",
                 totalBalance: Zatoshi(amount: balance.total),
-                transactionHistoryState: .init(transactions: IdentifiedArrayOf(uniqueElements: transactions)),
+                walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: transactions)),
                 verifiedBalance: Zatoshi(amount: balance.verified)
             ),
             reducer: .default,
@@ -56,7 +57,7 @@ class HomeSnapshotTests: XCTestCase {
         // all transactions
         ViewStore(store).send(.updateDrawer(.full))
         addAttachments(
-            name: "\(#function)_fullTransactionHistory",
+            name: "\(#function)_fullWalletEvents",
             HomeView(store: store)
         )
     }

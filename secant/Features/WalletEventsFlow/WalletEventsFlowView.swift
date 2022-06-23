@@ -1,8 +1,8 @@
 import SwiftUI
 import ComposableArchitecture
 
-struct TransactionHistoryFlowView: View {
-    let store: TransactionHistoryFlowStore
+struct WalletEventsFlowView: View {
+    let store: WalletEventsFlowStore
 
     var body: some View {
         UITableView.appearance().backgroundColor = .clear
@@ -14,11 +14,11 @@ struct TransactionHistoryFlowView: View {
                 
                 if viewStore.isScrollable {
                     List {
-                        transactionsList(with: viewStore)
+                        walletEventsList(with: viewStore)
                     }
                     .listStyle(.sidebar)
                 } else {
-                    transactionsList(with: viewStore)
+                    walletEventsList(with: viewStore)
                         .padding(.horizontal, 32)
                 }
             }
@@ -28,36 +28,16 @@ struct TransactionHistoryFlowView: View {
     }
 }
 
-extension TransactionHistoryFlowView {
-    func transactionsList(with viewStore: TransactionHistoryFlowViewStore) -> some View {
-        ForEach(viewStore.transactions) { transaction in
-            WithStateBinding(binding: viewStore.bindingForSelectingTransaction(transaction)) { active in
+extension WalletEventsFlowView {
+    func walletEventsList(with viewStore: WalletEventsFlowViewStore) -> some View {
+        ForEach(viewStore.walletEvents) { walletEvent in
+            WithStateBinding(binding: viewStore.bindingForSelectingWalletEvent(walletEvent)) { active in
                 VStack {
-                    HStack {
-                        Text(transaction.date.asHumanReadable())
-                            .font(.system(size: 12))
-                            .fontWeight(.thin)
-                        
-                        Spacer()
-                        
-                        Text(transaction.subtitle)
-                            .font(.system(size: 12))
-                            .fontWeight(.thin)
-                            .foregroundColor(transaction.subtitle == "pending" ? .red : .green)
-                    }
-                    
-                    HStack {
-                        Text(transaction.status == .received ? "Recevied" : "Sent")
-                        
-                        Spacer()
-                        
-                        Text(transaction.status == .received ? "+" : "")
-                        + Text("\(transaction.zecAmount.decimalString()) ZEC")
-                    }
+                    walletEvent.rowView()
                 }
                 .navigationLink(
                     isActive: active,
-                    destination: { TransactionDetailView(transaction: transaction) }
+                    destination: { walletEvent.detailView() }
                 )
                 .foregroundColor(Asset.Colors.Text.body.color)
                 .listRowBackground(Color.clear)
@@ -65,7 +45,7 @@ extension TransactionHistoryFlowView {
         }
     }
     
-    func header(with viewStore: TransactionHistoryFlowViewStore) -> some View {
+    func header(with viewStore: WalletEventsFlowViewStore) -> some View {
         HStack(spacing: 0) {
             VStack {
                 Button("Latest") {
@@ -95,7 +75,7 @@ extension TransactionHistoryFlowView {
 struct TransactionView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            TransactionHistoryFlowView(store: .placeholder)
+            WalletEventsFlowView(store: .placeholder)
                 .preferredColorScheme(.dark)
         }
     }

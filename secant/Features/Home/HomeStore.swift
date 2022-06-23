@@ -28,7 +28,7 @@ struct HomeState: Equatable {
     var scanState: ScanState
     var synchronizerStatus: String
     var totalBalance: Zatoshi
-    var transactionHistoryState: TransactionHistoryFlowState
+    var walletEventsState: WalletEventsFlowState
     var verifiedBalance: Zatoshi
 }
 
@@ -43,12 +43,12 @@ enum HomeAction: Equatable {
     case send(SendFlowAction)
     case scan(ScanAction)
     case synchronizerStateChanged(WrappedSDKSynchronizerState)
-    case transactionHistory(TransactionHistoryFlowAction)
+    case walletEvents(WalletEventsFlowAction)
     case updateBalance(Balance)
     case updateDrawer(DrawerOverlay)
     case updateRoute(HomeState.Route?)
     case updateSynchronizerStatus
-    case updateTransactions([TransactionState])
+    case updateWalletEvents([WalletEvent])
 }
 
 // MARK: Environment
@@ -106,7 +106,7 @@ extension HomeReducer {
             return .merge(
                 environment.SDKSynchronizer.getAllClearedTransactions()
                     .receive(on: environment.scheduler)
-                    .map(HomeAction.updateTransactions)
+                    .map(HomeAction.updateWalletEvents)
                     .eraseToEffect(),
                 
                 environment.SDKSynchronizer.getShieldedBalance()
@@ -128,10 +128,10 @@ extension HomeReducer {
             
         case .updateDrawer(let drawerOverlay):
             state.drawerOverlay = drawerOverlay
-            state.transactionHistoryState.isScrollable = drawerOverlay == .full ? true : false
+            state.walletEventsState.isScrollable = drawerOverlay == .full ? true : false
             return .none
             
-        case .updateTransactions(let transactions):
+        case .updateWalletEvents(let walletEvents):
             return .none
             
         case .updateSynchronizerStatus:
@@ -148,13 +148,13 @@ extension HomeReducer {
         case .request(let action):
             return .none
             
-        case .transactionHistory(.updateRoute(.all)):
+        case .walletEvents(.updateRoute(.all)):
             return state.drawerOverlay != .full ? Effect(value: .updateDrawer(.full)) : .none
 
-        case .transactionHistory(.updateRoute(.latest)):
+        case .walletEvents(.updateRoute(.latest)):
             return state.drawerOverlay != .partial ? Effect(value: .updateDrawer(.partial)) : .none
 
-        case .transactionHistory(let historyAction):
+        case .walletEvents(let historyAction):
             return .none
             
         case .send(.updateRoute(.done)):
@@ -175,11 +175,11 @@ extension HomeReducer {
         }
     }
     
-    private static let historyReducer: HomeReducer = TransactionHistoryFlowReducer.default.pullback(
-        state: \HomeState.transactionHistoryState,
-        action: /HomeAction.transactionHistory,
+    private static let historyReducer: HomeReducer = WalletEventsFlowReducer.default.pullback(
+        state: \HomeState.walletEventsState,
+        action: /HomeAction.walletEvents,
         environment: { environment in
-            TransactionHistoryFlowEnvironment(
+            WalletEventsFlowEnvironment(
                 scheduler: environment.scheduler,
                 SDKSynchronizer: environment.SDKSynchronizer
             )
@@ -228,10 +228,10 @@ extension HomeReducer {
 // MARK: - Store
 
 extension HomeStore {
-    func historyStore() -> TransactionHistoryFlowStore {
+    func historyStore() -> WalletEventsFlowStore {
         self.scope(
-            state: \.transactionHistoryState,
-            action: HomeAction.transactionHistory
+            state: \.walletEventsState,
+            action: HomeAction.walletEvents
         )
     }
     
@@ -296,7 +296,7 @@ extension HomeState {
             scanState: .placeholder,
             synchronizerStatus: "",
             totalBalance: Zatoshi.zero,
-            transactionHistoryState: .emptyPlaceHolder,
+            walletEventsState: .emptyPlaceHolder,
             verifiedBalance: Zatoshi.zero
         )
     }
