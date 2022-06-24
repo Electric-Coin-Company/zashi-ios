@@ -307,6 +307,7 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
                 mocked.map {
                     let transaction = TransactionState.placeholder(
                         amount: $0.amount,
+                        fee: Zatoshi(amount: 10),
                         shielded: $0.shielded,
                         status: $0.status,
                         subtitle: $0.subtitle,
@@ -331,6 +332,7 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
                 mocked.map {
                     let transaction = TransactionState.placeholder(
                         amount: $0.amount,
+                        fee: Zatoshi(amount: 10),
                         shielded: $0.shielded,
                         status: $0.status,
                         subtitle: $0.subtitle,
@@ -368,6 +370,7 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
             minedHeight: 50,
             shielded: true,
             zAddress: "tteafadlamnelkqe",
+            fee: Zatoshi(amount: 10),
             id: "id",
             status: .paid(success: true),
             subtitle: "sub",
@@ -417,6 +420,7 @@ class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
                 mocked.map {
                     let transaction = TransactionState.placeholder(
                         amount: $0.amount,
+                        fee: Zatoshi(amount: 10),
                         shielded: $0.shielded,
                         status: $0.status,
                         subtitle: $0.subtitle,
@@ -447,6 +451,7 @@ class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
                 mocked.map {
                     let transaction = TransactionState.placeholder(
                         amount: $0.amount,
+                        fee: Zatoshi(amount: 10),
                         shielded: $0.shielded,
                         status: $0.status,
                         subtitle: $0.subtitle,

@@ -33,11 +33,11 @@ extension WalletEventsFlowView {
         ForEach(viewStore.walletEvents) { walletEvent in
             WithStateBinding(binding: viewStore.bindingForSelectingWalletEvent(walletEvent)) { active in
                 VStack {
-                    walletEvent.rowView()
+                    walletEvent.rowView(viewStore)
                 }
                 .navigationLink(
                     isActive: active,
-                    destination: { walletEvent.detailView() }
+                    destination: { walletEvent.detailView(viewStore) }
                 )
                 .foregroundColor(Asset.Colors.Text.body.color)
                 .listRowBackground(Color.clear)

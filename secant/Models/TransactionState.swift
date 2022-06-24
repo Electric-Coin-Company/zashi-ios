@@ -16,19 +16,26 @@ struct TransactionState: Equatable, Identifiable {
         case failed
     }
 
+    var confirmations = 0
     var expirationHeight = -1
     var memo: String?
     var minedHeight = -1
     var shielded = true
     var zAddress: String?
 
+    var fee: Zatoshi
     var id: String
     var status: Status
     var subtitle: String
     var timestamp: TimeInterval
     var zecAmount: Zatoshi
-    
+
     var address: String { zAddress ?? "" }
+    var date: Date { Date(timeIntervalSince1970: timestamp) }
+    var totalAmount: Zatoshi { Zatoshi(amount: zecAmount.amount + fee.amount) }
+    var viewOnlineURL: URL? {
+        URL(string: "https://blockchair.com/zcash/transaction/\(id)")
+    }
 }
 
 extension TransactionState {
@@ -40,6 +47,7 @@ extension TransactionState {
         subtitle = "sent"
         zAddress = confirmedTransaction.toAddress
         zecAmount = sent ? Zatoshi(amount: -Int64(confirmedTransaction.value)) : Zatoshi(amount: Int64(confirmedTransaction.value))
+        fee = Zatoshi(amount: 10)
         if let memo = confirmedTransaction.memo {
             self.memo = memo.asZcashTransactionMemo()
         }
@@ -55,6 +63,7 @@ extension TransactionState {
         subtitle = "pending"
         zAddress = pendingTransaction.toAddress
         zecAmount = Zatoshi(amount: -Int64(pendingTransaction.value))
+        fee = Zatoshi(amount: 10)
         if let memo = pendingTransaction.memo {
             self.memo = memo.asZcashTransactionMemo()
         }
@@ -67,6 +76,7 @@ extension TransactionState {
 extension TransactionState {
     static func placeholder(
         amount: Zatoshi,
+        fee: Zatoshi,
         shielded: Bool = true,
         status: Status = .received,
         subtitle: String = "",
@@ -79,6 +89,7 @@ extension TransactionState {
             minedHeight: -1,
             shielded: shielded,
             zAddress: nil,
+            fee: fee,
             id: uuid,
             status: status,
             subtitle: subtitle,

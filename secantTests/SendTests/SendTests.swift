@@ -64,6 +64,7 @@ class SendTests: XCTestCase {
             minedHeight: 50,
             shielded: true,
             zAddress: "tteafadlamnelkqe",
+            fee: Zatoshi(amount: 10),
             id: "id",
             status: .paid(success: true),
             subtitle: "sub",

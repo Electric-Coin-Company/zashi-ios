@@ -14,7 +14,8 @@ class WalletEventsTests: XCTestCase {
     
     let testEnvironment = WalletEventsFlowEnvironment(
         scheduler: testScheduler.eraseToAnyScheduler(),
-        SDKSynchronizer: TestWrappedSDKSynchronizer()
+        SDKSynchronizer: TestWrappedSDKSynchronizer(),
+        pasteboard: .test
     )
     
     func testSynchronizerSubscription() throws {
@@ -58,6 +59,7 @@ class WalletEventsTests: XCTestCase {
         let walletEvents: [WalletEvent] = mocked.map {
             let transaction = TransactionState.placeholder(
                 amount: $0.amount,
+                fee: Zatoshi(amount: 10),
                 shielded: $0.shielded,
                 status: $0.status,
                 subtitle: $0.subtitle,
@@ -71,13 +73,13 @@ class WalletEventsTests: XCTestCase {
             )
         }
 
-        let identifiedTransactions = IdentifiedArrayOf(uniqueElements: walletEvents)
+        let identifiedWalletEvents = IdentifiedArrayOf(uniqueElements: walletEvents)
         
         let store = TestStore(
             initialState: WalletEventsFlowState(
                 route: .latest,
                 isScrollable: true,
-                walletEvents: identifiedTransactions
+                walletEvents: identifiedWalletEvents
             ),
             reducer: WalletEventsFlowReducer.default,
             environment: testEnvironment
@@ -88,7 +90,7 @@ class WalletEventsTests: XCTestCase {
         Self.testScheduler.advance(by: 0.01)
 
         store.receive(.updateWalletEvents(walletEvents)) { state in
-            let receivedTransactions = IdentifiedArrayOf(
+            let receivedWalletEvents = IdentifiedArrayOf(
                 uniqueElements:
                     walletEvents
                     .sorted(by: { lhs, rhs in
@@ -96,7 +98,32 @@ class WalletEventsTests: XCTestCase {
                     })
             )
             
-            state.walletEvents = receivedTransactions
+            state.walletEvents = receivedWalletEvents
         }
+    }
+    
+    func testCopyToPasteboard() throws {
+        let pasteboard = WrappedPasteboard.test
+        
+        let testEnvironment = WalletEventsFlowEnvironment(
+            scheduler: DispatchQueue.test.eraseToAnyScheduler(),
+            SDKSynchronizer: TestWrappedSDKSynchronizer(),
+            pasteboard: pasteboard
+        )
+        
+        let store = TestStore(
+            initialState: WalletEventsFlowState(
+                route: .latest,
+                isScrollable: true,
+                walletEvents: []
+            ),
+            reducer: WalletEventsFlowReducer.default,
+            environment: testEnvironment
+        )
+
+        let testText = "test text"
+        store.send(.copyToPastboard(testText))
+        
+        XCTAssertEqual(pasteboard.getString(), testText, "WalletEvetns: `testCopyToPasteboard` is expected to match the input `\(testText)`")
     }
 }

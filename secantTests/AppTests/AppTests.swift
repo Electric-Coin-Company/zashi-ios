@@ -166,4 +166,19 @@ class AppTests: XCTestCase {
 
         store.receive(.checkBackupPhraseValidation)
     }
+    
+    func testWalletEventReplyTo_validAddress() throws {
+        let store = TestStore(
+            initialState: .placeholder,
+            reducer: AppReducer.default,
+            environment: testEnvironment
+        )
+        
+        let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
+        store.send(.home(.walletEvents(.replyTo(address))))
+        
+        if let url = URL(string: "zcash:\(address)") {
+            store.receive(.deeplink(url))
+        }
+    }
 }
