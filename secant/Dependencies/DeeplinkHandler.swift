@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import _URLRouting
+import URLRouting
 import ComposableArchitecture
 import ZcashLightClientKit
 

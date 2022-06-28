@@ -45,7 +45,7 @@ protocol WrappedSDKSynchronizer {
     func prepareWith(initializer: Initializer) throws
     func start(retry: Bool) throws
     func stop()
-    func status() -> String
+    func statusSnapshot() -> SyncStatusSnapshot
 
     func getShieldedBalance() -> Effect<Balance, Never>
     func getAllClearedTransactions() -> Effect<[WalletEvent], Never>
@@ -143,12 +143,12 @@ class LiveWrappedSDKSynchronizer: WrappedSDKSynchronizer {
         stateChanged.send(.stopped)
     }
 
-    func status() -> String {
+    func statusSnapshot() -> SyncStatusSnapshot {
         guard let synchronizer = synchronizer else {
-            return ""
+            return .default
         }
         
-        return SDKSynchronizer.textFor(state: synchronizer.status)
+        return SyncStatusSnapshot.snapshotFor(state: synchronizer.status)
     }
 
     func getShieldedBalance() -> Effect<Balance, Never> {
@@ -281,12 +281,12 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
         stateChanged.send(.synced)
     }
 
-    func status() -> String {
+    func statusSnapshot() -> SyncStatusSnapshot {
         guard let synchronizer = synchronizer else {
-            return ""
+            return .default
         }
         
-        return SDKSynchronizer.textFor(state: synchronizer.status)
+        return SyncStatusSnapshot.snapshotFor(state: synchronizer.status)
     }
 
     func getShieldedBalance() -> Effect<Balance, Never> {
@@ -397,7 +397,7 @@ class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
 
     func synchronizerSynced() { }
 
-    func status() -> String { "" }
+    func statusSnapshot() -> SyncStatusSnapshot { .default }
 
     func getShieldedBalance() -> Effect<Balance, Never> {
         return .none
