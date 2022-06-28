@@ -30,7 +30,7 @@ struct WalletEvent: Equatable, Identifiable {
 // MARK: - Rows
 
 extension WalletEvent {
-    @ViewBuilder func rowView() -> some View {
+    @ViewBuilder func rowView(_ viewStore: WalletEventsFlowViewStore) -> some View {
         switch state {
         case .send(let transaction):
             TransactionRowView(transaction: transaction)
@@ -51,10 +51,10 @@ extension WalletEvent {
 // MARK: - Details
 
 extension WalletEvent {
-    @ViewBuilder func detailView() -> some View {
+    @ViewBuilder func detailView(_ viewStore: WalletEventsFlowViewStore) -> some View {
         switch state {
         case .send(let transaction):
-            TransactionDetailView(transaction: transaction)
+            TransactionDetailView(transaction: transaction, viewStore: viewStore)
         case .pending:
             Text("pending transaction detail")
         case .received:

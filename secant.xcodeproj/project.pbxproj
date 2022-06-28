@@ -120,6 +120,7 @@
 		9E5BF64F2823E94900BA3F17 /* TransactionAddressTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF64D2823E94900BA3F17 /* TransactionAddressTextField.swift */; };
 		9E5BF6502823E94900BA3F17 /* TransactionAddressTextFieldStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF64E2823E94900BA3F17 /* TransactionAddressTextFieldStore.swift */; };
 		9E69A24D27FB002800A55317 /* WelcomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E69A24C27FB002800A55317 /* WelcomeStore.swift */; };
+		9E7CB6122869882D00A02233 /* WalletEventsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6112869882D00A02233 /* WalletEventsSnapshotTests.swift */; };
 		9E7FE0CF282D257400C374E8 /* SDKSynchronizer+SyncStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0CE282D257400C374E8 /* SDKSynchronizer+SyncStatus.swift */; };
 		9E7FE0D3282D274E00C374E8 /* Date+Readable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0D2282D274E00C374E8 /* Date+Readable.swift */; };
 		9E7FE0D5282D281800C374E8 /* Array+Chunked.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0D4282D281800C374E8 /* Array+Chunked.swift */; };
@@ -329,6 +330,7 @@
 		9E5BF64D2823E94900BA3F17 /* TransactionAddressTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAddressTextField.swift; sourceTree = "<group>"; };
 		9E5BF64E2823E94900BA3F17 /* TransactionAddressTextFieldStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAddressTextFieldStore.swift; sourceTree = "<group>"; };
 		9E69A24C27FB002800A55317 /* WelcomeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeStore.swift; sourceTree = "<group>"; };
+		9E7CB6112869882D00A02233 /* WalletEventsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletEventsSnapshotTests.swift; sourceTree = "<group>"; };
 		9E7FE0CE282D257400C374E8 /* SDKSynchronizer+SyncStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SDKSynchronizer+SyncStatus.swift"; sourceTree = "<group>"; };
 		9E7FE0D2282D274E00C374E8 /* Date+Readable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Readable.swift"; sourceTree = "<group>"; };
 		9E7FE0D4282D281800C374E8 /* Array+Chunked.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Chunked.swift"; sourceTree = "<group>"; };
@@ -810,6 +812,7 @@
 		9E391162284E3ECF0073DD9A /* SnapshotTests */ = {
 			isa = PBXGroup;
 			children = (
+				9E7CB6102869881300A02233 /* WalletEventsSnapshotTests */,
 				9E9ECC8B28589E150099D5A2 /* HomeSnapshotTests */,
 				9E9ECC9328589E150099D5A2 /* ImportWalletSnapshotTests */,
 				9E9ECC9528589E150099D5A2 /* OnboardingSnapshotTests */,
@@ -856,6 +859,14 @@
 				9E5BF64D2823E94900BA3F17 /* TransactionAddressTextField.swift */,
 			);
 			path = TransactionAddress;
+			sourceTree = "<group>";
+		};
+		9E7CB6102869881300A02233 /* WalletEventsSnapshotTests */ = {
+			isa = PBXGroup;
+			children = (
+				9E7CB6112869882D00A02233 /* WalletEventsSnapshotTests.swift */,
+			);
+			path = WalletEventsSnapshotTests;
 			sourceTree = "<group>";
 		};
 		9E7FE0B6282D1D9800C374E8 /* Resources */ = {
@@ -1543,6 +1554,7 @@
 				9EDDEAA32829610D00B4100C /* TransactionAmountInputTests.swift in Sources */,
 				9EAFEB862805A23100199FC9 /* WrappedSecItemTests.swift in Sources */,
 				9E9ECC9828589E150099D5A2 /* WelcomeSnapshotTests.swift in Sources */,
+				9E7CB6122869882D00A02233 /* WalletEventsSnapshotTests.swift in Sources */,
 				9E5BF644281FEC9900BA3F17 /* SendTests.swift in Sources */,
 				0D1C1AA327611EFD0004AF6A /* RecoveryPhraseDisplayReducerTests.swift in Sources */,
 				9E9ECC9A28589E150099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests.swift in Sources */,

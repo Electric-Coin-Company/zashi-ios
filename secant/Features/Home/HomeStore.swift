@@ -181,7 +181,8 @@ extension HomeReducer {
         environment: { environment in
             WalletEventsFlowEnvironment(
                 scheduler: environment.scheduler,
-                SDKSynchronizer: environment.SDKSynchronizer
+                SDKSynchronizer: environment.SDKSynchronizer,
+                pasteboard: .live
             )
         }
     )

@@ -23,9 +23,11 @@ struct WalletEventsFlowState: Equatable {
 // MARK: - Action
 
 enum WalletEventsFlowAction: Equatable {
+    case copyToPastboard(String)
     case onAppear
     case onDisappear
     case updateRoute(WalletEventsFlowState.Route?)
+    case replyTo(String)
     case synchronizerStateChanged(WrappedSDKSynchronizerState)
     case updateWalletEvents([WalletEvent])
 }
@@ -35,6 +37,7 @@ enum WalletEventsFlowAction: Equatable {
 struct WalletEventsFlowEnvironment {
     let scheduler: AnySchedulerOf<DispatchQueue>
     let SDKSynchronizer: WrappedSDKSynchronizer
+    let pasteboard: WrappedPasteboard
 }
 
 // MARK: - Reducer
@@ -70,8 +73,15 @@ extension WalletEventsFlowReducer {
             state.walletEvents = IdentifiedArrayOf(uniqueElements: sortedWalletEvents)
             return .none
 
-        case let .updateRoute(route):
+        case .updateRoute(let route):
             state.route = route
+            return .none
+            
+        case .copyToPastboard(let value):
+            environment.pasteboard.setString(value)
+            return .none
+            
+        case .replyTo(let address):
             return .none
         }
     }
@@ -97,6 +107,7 @@ extension WalletEventsFlowViewStore {
 extension TransactionState {
     static var placeholder: Self {
         .init(
+            fee: Zatoshi(amount: 10),
             id: "2",
             status: .paid(success: true),
             subtitle: "",
@@ -123,7 +134,8 @@ extension WalletEventsFlowStore {
             reducer: .default,
             environment: WalletEventsFlowEnvironment(
                 scheduler: DispatchQueue.main.eraseToAnyScheduler(),
-                SDKSynchronizer: LiveWrappedSDKSynchronizer()
+                SDKSynchronizer: LiveWrappedSDKSynchronizer(),
+                pasteboard: .live
             )
         )
     }
@@ -134,6 +146,7 @@ extension IdentifiedArrayOf where Element == TransactionState {
         return .init(
             uniqueElements: (0..<30).map {
                 TransactionState(
+                    fee: Zatoshi(amount: 10),
                     id: String($0),
                     status: .paid(success: true),
                     subtitle: "",

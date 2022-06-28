@@ -342,6 +342,12 @@ extension AppReducer {
             state.homeState.sendState.memo = memo
             return .none
             
+        case .home(.walletEvents(.replyTo(let address))):
+            guard let url = URL(string: "zcash:\(address)") else {
+                return .none
+            }
+            return Effect(value: .deeplink(url))
+            
             /// Default is meaningful here because there's `appReducer` handling actions and this reducer is handling only routes. We don't here plenty of unused cases.
         default:
             break

@@ -77,6 +77,7 @@ class HomeTests: XCTestCase {
         let walletEvents: [WalletEvent] = transactionsHelper.map {
             let transaction = TransactionState.placeholder(
                 amount: $0.amount,
+                fee: Zatoshi(amount: 10),
                 shielded: $0.shielded,
                 status: $0.status,
                 subtitle: $0.subtitle,
