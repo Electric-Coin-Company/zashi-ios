@@ -67,7 +67,6 @@ class SendTests: XCTestCase {
             fee: Zatoshi(amount: 10),
             id: "id",
             status: .paid(success: true),
-            subtitle: "sub",
             timestamp: 1234567,
             zecAmount: Zatoshi(amount: 10)
         )

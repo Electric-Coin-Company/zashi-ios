@@ -14,9 +14,10 @@ struct TransactionState: Equatable, Identifiable {
         case paid(success: Bool)
         case received
         case failed
+        case pending
     }
 
-    var confirmations = 0
+    var errorMessage: String?
     var expirationHeight = -1
     var memo: String?
     var minedHeight = -1
@@ -26,7 +27,6 @@ struct TransactionState: Equatable, Identifiable {
     var fee: Zatoshi
     var id: String
     var status: Status
-    var subtitle: String
     var timestamp: TimeInterval
     var zecAmount: Zatoshi
 
@@ -36,6 +36,14 @@ struct TransactionState: Equatable, Identifiable {
     var viewOnlineURL: URL? {
         URL(string: "https://blockchair.com/zcash/transaction/\(id)")
     }
+
+    func confirmationsWith(_ latestMinedHeight: BlockHeight?) -> BlockHeight {
+        guard let latestMinedHeight = latestMinedHeight, minedHeight > 0, latestMinedHeight > 0 else {
+            return 0
+        }
+        
+        return latestMinedHeight - minedHeight
+    }
 }
 
 extension TransactionState {
@@ -44,7 +52,6 @@ extension TransactionState {
         id = confirmedTransaction.transactionEntity.transactionId.toHexStringTxId()
         shielded = true
         status = sent ? .paid(success: confirmedTransaction.minedHeight > 0) : .received
-        subtitle = "sent"
         zAddress = confirmedTransaction.toAddress
         zecAmount = sent ? Zatoshi(amount: -Int64(confirmedTransaction.value)) : Zatoshi(amount: Int64(confirmedTransaction.value))
         fee = Zatoshi(amount: 10)
@@ -58,9 +65,11 @@ extension TransactionState {
         timestamp = pendingTransaction.createTime
         id = pendingTransaction.rawTransactionId?.toHexStringTxId() ?? String(pendingTransaction.createTime)
         shielded = true
-        status = .paid(success: pendingTransaction.isSubmitSuccess)
+        status = pendingTransaction.errorMessage != nil ? .failed :
+        pendingTransaction.minedHeight > 0 ?
+            .paid(success: pendingTransaction.isSubmitSuccess) :
+            .pending
         expirationHeight = pendingTransaction.expiryHeight
-        subtitle = "pending"
         zAddress = pendingTransaction.toAddress
         zecAmount = Zatoshi(amount: -Int64(pendingTransaction.value))
         fee = Zatoshi(amount: 10)
@@ -68,6 +77,7 @@ extension TransactionState {
             self.memo = memo.asZcashTransactionMemo()
         }
         minedHeight = pendingTransaction.minedHeight
+        errorMessage = pendingTransaction.errorMessage
     }
 }
 
@@ -79,7 +89,6 @@ extension TransactionState {
         fee: Zatoshi,
         shielded: Bool = true,
         status: Status = .received,
-        subtitle: String = "",
         timestamp: TimeInterval,
         uuid: String = UUID().debugDescription
     ) -> TransactionState {
@@ -92,7 +101,6 @@ extension TransactionState {
             fee: fee,
             id: uuid,
             status: status,
-            subtitle: subtitle,
             timestamp: timestamp,
             zecAmount: status == .received ? amount : Zatoshi(amount: -amount.amount)
         )
@@ -104,6 +112,5 @@ struct TransactionStateMockHelper {
     var amount: Zatoshi
     var shielded = true
     var status: TransactionState.Status = .received
-    var subtitle = "cleared"
     var uuid = ""
 }

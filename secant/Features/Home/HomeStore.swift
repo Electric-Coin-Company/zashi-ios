@@ -61,6 +61,7 @@ struct HomeEnvironment {
     let scheduler: AnySchedulerOf<DispatchQueue>
     let SDKSynchronizer: WrappedSDKSynchronizer
     let walletStorage: WrappedWalletStorage
+    let zcashSDKEnvironment: ZCashSDKEnvironment
 }
 
 extension HomeEnvironment {
@@ -71,7 +72,8 @@ extension HomeEnvironment {
         mnemonic: .mock,
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         SDKSynchronizer: MockWrappedSDKSynchronizer(),
-        walletStorage: .throwing
+        walletStorage: .throwing,
+        zcashSDKEnvironment: .testnet
     )
 }
 
@@ -180,9 +182,10 @@ extension HomeReducer {
         action: /HomeAction.walletEvents,
         environment: { environment in
             WalletEventsFlowEnvironment(
+                pasteboard: .live,
                 scheduler: environment.scheduler,
                 SDKSynchronizer: environment.SDKSynchronizer,
-                pasteboard: .live
+                zcashSDKEnvironment: environment.zcashSDKEnvironment
             )
         }
     )
@@ -315,7 +318,8 @@ extension HomeStore {
                 mnemonic: .live,
                 scheduler: DispatchQueue.main.eraseToAnyScheduler(),
                 SDKSynchronizer: LiveWrappedSDKSynchronizer(),
-                walletStorage: .live()
+                walletStorage: .live(),
+                zcashSDKEnvironment: .testnet
             )
         )
     }

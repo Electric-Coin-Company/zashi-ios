@@ -125,6 +125,13 @@ internal enum Asset {
         internal static let purple = ColorAsset(name: "Purple")
       }
     }
+    internal enum TransactionDetail {
+      internal static let failedMark = ColorAsset(name: "FailedMark")
+      internal static let highlightMark = ColorAsset(name: "HighlightMark")
+      internal static let inactiveMark = ColorAsset(name: "InactiveMark")
+      internal static let neutralMark = ColorAsset(name: "NeutralMark")
+      internal static let succeededMark = ColorAsset(name: "SucceededMark")
+    }
     internal enum ZcashBadge {
       internal static let zcashLogoFill = ColorAsset(name: "ZcashLogoFill")
       internal static let innerCircle = ColorAsset(name: "innerCircle")

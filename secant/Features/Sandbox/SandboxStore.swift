@@ -49,9 +49,10 @@ extension SandboxReducer {
                     &state.walletEventsState,
                     walletEventsAction,
                     WalletEventsFlowEnvironment(
+                        pasteboard: .live,
                         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
                         SDKSynchronizer: LiveWrappedSDKSynchronizer(),
-                        pasteboard: .live
+                        zcashSDKEnvironment: .testnet
                     )
                 )
                 .map(SandboxAction.walletEvents)
