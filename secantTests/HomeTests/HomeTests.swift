@@ -21,7 +21,8 @@ class HomeTests: XCTestCase {
             mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             SDKSynchronizer: MockWrappedSDKSynchronizer(),
-            walletStorage: .throwing
+            walletStorage: .throwing,
+            zcashSDKEnvironment: .testnet
         )
         
         let store = TestStore(
@@ -50,7 +51,8 @@ class HomeTests: XCTestCase {
             mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             SDKSynchronizer: MockWrappedSDKSynchronizer(),
-            walletStorage: .throwing
+            walletStorage: .throwing,
+            zcashSDKEnvironment: .testnet
         )
         
         let store = TestStore(
@@ -80,7 +82,6 @@ class HomeTests: XCTestCase {
                 fee: Zatoshi(amount: 10),
                 shielded: $0.shielded,
                 status: $0.status,
-                subtitle: $0.subtitle,
                 timestamp: $0.date,
                 uuid: $0.uuid
             )
@@ -109,7 +110,8 @@ class HomeTests: XCTestCase {
             mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             SDKSynchronizer: MockWrappedSDKSynchronizer(),
-            walletStorage: .throwing
+            walletStorage: .throwing,
+            zcashSDKEnvironment: .testnet
         )
         
         let homeState = HomeState(
@@ -151,7 +153,8 @@ class HomeTests: XCTestCase {
             mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             SDKSynchronizer: MockWrappedSDKSynchronizer(),
-            walletStorage: .throwing
+            walletStorage: .throwing,
+            zcashSDKEnvironment: .testnet
         )
         
         let homeState = HomeState(
@@ -195,7 +198,8 @@ class HomeTests: XCTestCase {
             mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
             SDKSynchronizer: MockWrappedSDKSynchronizer(),
-            walletStorage: .throwing
+            walletStorage: .throwing,
+            zcashSDKEnvironment: .testnet
         )
         
         let store = TestStore(

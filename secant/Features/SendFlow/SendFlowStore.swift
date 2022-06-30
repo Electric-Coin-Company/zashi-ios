@@ -121,6 +121,7 @@ extension SendFlowReducer {
         case .updateRoute(.confirmation):
             state.amount = Zatoshi(amount: state.transactionAmountInputState.amount)
             state.address = state.transactionAddressInputState.textFieldState.text
+            state.route = .confirmation
             return .none
             
         case let .updateRoute(route):

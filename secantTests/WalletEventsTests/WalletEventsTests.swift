@@ -13,9 +13,10 @@ class WalletEventsTests: XCTestCase {
     static let testScheduler = DispatchQueue.test
     
     let testEnvironment = WalletEventsFlowEnvironment(
+        pasteboard: .test,
         scheduler: testScheduler.eraseToAnyScheduler(),
         SDKSynchronizer: TestWrappedSDKSynchronizer(),
-        pasteboard: .test
+        zcashSDKEnvironment: .testnet
     )
     
     func testSynchronizerSubscription() throws {
@@ -48,12 +49,11 @@ class WalletEventsTests: XCTestCase {
                 date: 1651039606,
                 amount: Zatoshi(amount: 6),
                 status: .paid(success: false),
-                subtitle: "pending",
                 uuid: "ff66"
             ),
-            TransactionStateMockHelper(date: 1651039303, amount: Zatoshi(amount: 7), subtitle: "pending", uuid: "gg77"),
-            TransactionStateMockHelper(date: 1651039707, amount: Zatoshi(amount: 8), status: .paid(success: true), subtitle: "pending", uuid: "hh88"),
-            TransactionStateMockHelper(date: 1651039808, amount: Zatoshi(amount: 9), subtitle: "pending", uuid: "ii99")
+            TransactionStateMockHelper(date: 1651039303, amount: Zatoshi(amount: 7), uuid: "gg77"),
+            TransactionStateMockHelper(date: 1651039707, amount: Zatoshi(amount: 8), status: .paid(success: true), uuid: "hh88"),
+            TransactionStateMockHelper(date: 1651039808, amount: Zatoshi(amount: 9), uuid: "ii99")
         ]
 
         let walletEvents: [WalletEvent] = mocked.map {
@@ -61,14 +61,13 @@ class WalletEventsTests: XCTestCase {
                 amount: $0.amount,
                 fee: Zatoshi(amount: 10),
                 shielded: $0.shielded,
-                status: $0.status,
-                subtitle: $0.subtitle,
+                status: $0.amount.amount > 5 ? .pending : $0.status,
                 timestamp: $0.date,
                 uuid: $0.uuid
             )
             return WalletEvent(
                 id: transaction.id,
-                state: transaction.subtitle == "pending" ? .pending(transaction) : .send(transaction),
+                state: transaction.status == .pending ? .pending(transaction) : .send(transaction),
                 timestamp: transaction.timestamp
             )
         }
@@ -106,9 +105,10 @@ class WalletEventsTests: XCTestCase {
         let pasteboard = WrappedPasteboard.test
         
         let testEnvironment = WalletEventsFlowEnvironment(
+            pasteboard: pasteboard,
             scheduler: DispatchQueue.test.eraseToAnyScheduler(),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            pasteboard: pasteboard
+            zcashSDKEnvironment: .testnet
         )
         
         let store = TestStore(

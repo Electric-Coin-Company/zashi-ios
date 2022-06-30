@@ -25,7 +25,6 @@ class HomeSnapshotTests: XCTestCase {
                 fee: Zatoshi(amount: 10),
                 shielded: $0.shielded,
                 status: $0.status,
-                subtitle: $0.subtitle,
                 timestamp: $0.date,
                 uuid: $0.uuid
             )
@@ -77,7 +76,6 @@ class HomeSnapshotTests: XCTestCase {
             fee: Zatoshi(amount: 1_000_000),
             id: "ff3927e1f83df9b1b0dc75540ddc59ee435eecebae914d2e6dfe8576fbedc9a8",
             status: .paid(success: true),
-            subtitle: "",
             timestamp: 1234567,
             zecAmount: Zatoshi(amount: 25_000_000)
         )
@@ -103,9 +101,10 @@ class HomeSnapshotTests: XCTestCase {
 
         // wallet event detail
         let testEnvironment = WalletEventsFlowEnvironment(
+            pasteboard: .test,
             scheduler: DispatchQueue.test.eraseToAnyScheduler(),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            pasteboard: .test
+            zcashSDKEnvironment: .testnet
         )
         
         ViewStore(store).send(.walletEvents(.updateRoute(.showWalletEvent(walletEvent))))

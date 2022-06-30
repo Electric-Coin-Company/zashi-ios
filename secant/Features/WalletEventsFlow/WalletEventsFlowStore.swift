@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import SwiftUI
+import ZcashLightClientKit
 
 typealias WalletEventsFlowReducer = Reducer<WalletEventsFlowState, WalletEventsFlowAction, WalletEventsFlowEnvironment>
 typealias WalletEventsFlowStore = Store<WalletEventsFlowState, WalletEventsFlowAction>
@@ -16,7 +17,9 @@ struct WalletEventsFlowState: Equatable {
 
     var route: Route?
 
+    var latestMinedHeight: BlockHeight?
     var isScrollable = false
+    var requiredTransactionConfirmations = 0
     var walletEvents = IdentifiedArrayOf<WalletEvent>.placeholder
 }
 
@@ -35,9 +38,10 @@ enum WalletEventsFlowAction: Equatable {
 // MARK: - Environment
 
 struct WalletEventsFlowEnvironment {
+    let pasteboard: WrappedPasteboard
     let scheduler: AnySchedulerOf<DispatchQueue>
     let SDKSynchronizer: WrappedSDKSynchronizer
-    let pasteboard: WrappedPasteboard
+    let zcashSDKEnvironment: ZCashSDKEnvironment
 }
 
 // MARK: - Reducer
@@ -48,6 +52,7 @@ extension WalletEventsFlowReducer {
     static let `default` = WalletEventsFlowReducer { state, action, environment in
         switch action {
         case .onAppear:
+            state.requiredTransactionConfirmations = environment.zcashSDKEnvironment.requiredTransactionConfirmations
             return environment.SDKSynchronizer.stateChanged
                 .map(WalletEventsFlowAction.synchronizerStateChanged)
                 .eraseToEffect()
@@ -57,6 +62,9 @@ extension WalletEventsFlowReducer {
             return Effect.cancel(id: CancelId())
 
         case .synchronizerStateChanged(.synced):
+            if let latestMinedHeight = environment.SDKSynchronizer.synchronizer?.latestScannedHeight {
+                state.latestMinedHeight = latestMinedHeight
+            }
             return environment.SDKSynchronizer.getAllTransactions()
                 .receive(on: environment.scheduler)
                 .map(WalletEventsFlowAction.updateWalletEvents)
@@ -110,7 +118,6 @@ extension TransactionState {
             fee: Zatoshi(amount: 10),
             id: "2",
             status: .paid(success: true),
-            subtitle: "",
             timestamp: 1234567,
             zecAmount: Zatoshi(amount: 25)
         )
@@ -133,9 +140,10 @@ extension WalletEventsFlowStore {
             initialState: .placeHolder,
             reducer: .default,
             environment: WalletEventsFlowEnvironment(
+                pasteboard: .live,
                 scheduler: DispatchQueue.main.eraseToAnyScheduler(),
                 SDKSynchronizer: LiveWrappedSDKSynchronizer(),
-                pasteboard: .live
+                zcashSDKEnvironment: .testnet
             )
         )
     }
@@ -149,7 +157,6 @@ extension IdentifiedArrayOf where Element == TransactionState {
                     fee: Zatoshi(amount: 10),
                     id: String($0),
                     status: .paid(success: true),
-                    subtitle: "",
                     timestamp: 1234567,
                     zecAmount: Zatoshi(amount: 25)
                 )

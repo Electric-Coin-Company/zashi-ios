@@ -32,14 +32,11 @@ struct WalletEvent: Equatable, Identifiable {
 extension WalletEvent {
     @ViewBuilder func rowView(_ viewStore: WalletEventsFlowViewStore) -> some View {
         switch state {
-        case .send(let transaction):
+        case .send(let transaction),
+            .pending(let transaction),
+            .received(let transaction),
+            .failed(let transaction):
             TransactionRowView(transaction: transaction)
-        case .pending:
-            Text("pending wallet event")
-        case .received:
-            Text("received wallet event")
-        case .failed:
-            Text("failed wallet event")
         case .shielded(let zatoshi):
             Text("shielded wallet event \(zatoshi.decimalString())")
         case .walletImport:
@@ -53,14 +50,11 @@ extension WalletEvent {
 extension WalletEvent {
     @ViewBuilder func detailView(_ viewStore: WalletEventsFlowViewStore) -> some View {
         switch state {
-        case .send(let transaction):
+        case .send(let transaction),
+            .pending(let transaction),
+            .received(let transaction),
+            .failed(let transaction):
             TransactionDetailView(transaction: transaction, viewStore: viewStore)
-        case .pending:
-            Text("pending transaction detail")
-        case .received:
-            Text("received transaction detail")
-        case .failed:
-            Text("failed transaction detail")
         case .shielded(let zatoshi):
             Text("shielded \(zatoshi.decimalString()) detail")
         case .walletImport:

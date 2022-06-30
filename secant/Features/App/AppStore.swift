@@ -367,7 +367,8 @@ extension AppReducer {
                 mnemonic: environment.mnemonic,
                 scheduler: environment.scheduler,
                 SDKSynchronizer: environment.SDKSynchronizer,
-                walletStorage: environment.walletStorage
+                walletStorage: environment.walletStorage,
+                zcashSDKEnvironment: environment.zcashSDKEnvironment
             )
         }
     )

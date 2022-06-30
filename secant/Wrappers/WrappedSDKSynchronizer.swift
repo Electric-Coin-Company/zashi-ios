@@ -310,7 +310,6 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
                         fee: Zatoshi(amount: 10),
                         shielded: $0.shielded,
                         status: $0.status,
-                        subtitle: $0.subtitle,
                         timestamp: $0.date,
                         uuid: $0.uuid
                     )
@@ -321,10 +320,10 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
 
     func getAllPendingTransactions() -> Effect<[WalletEvent], Never> {
         let mocked: [TransactionStateMockHelper] = [
-            TransactionStateMockHelper(date: 1651039606, amount: Zatoshi(amount: 6), status: .paid(success: false), subtitle: "pending"),
-            TransactionStateMockHelper(date: 1651039303, amount: Zatoshi(amount: 7), subtitle: "pending"),
-            TransactionStateMockHelper(date: 1651039707, amount: Zatoshi(amount: 8), status: .paid(success: true), subtitle: "pending"),
-            TransactionStateMockHelper(date: 1651039808, amount: Zatoshi(amount: 9), subtitle: "pending")
+            TransactionStateMockHelper(date: 1651039606, amount: Zatoshi(amount: 6), status: .paid(success: false)),
+            TransactionStateMockHelper(date: 1651039303, amount: Zatoshi(amount: 7)),
+            TransactionStateMockHelper(date: 1651039707, amount: Zatoshi(amount: 8), status: .paid(success: true)),
+            TransactionStateMockHelper(date: 1651039808, amount: Zatoshi(amount: 9))
         ]
         
         return Effect(
@@ -335,7 +334,6 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
                         fee: Zatoshi(amount: 10),
                         shielded: $0.shielded,
                         status: $0.status,
-                        subtitle: $0.subtitle,
                         timestamp: $0.date
                     )
                     return WalletEvent(id: transaction.id, state: .pending(transaction), timestamp: transaction.timestamp)
@@ -373,7 +371,6 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
             fee: Zatoshi(amount: 10),
             id: "id",
             status: .paid(success: true),
-            subtitle: "sub",
             timestamp: 1234567,
             zecAmount: Zatoshi(amount: 10)
         )
@@ -423,7 +420,6 @@ class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
                         fee: Zatoshi(amount: 10),
                         shielded: $0.shielded,
                         status: $0.status,
-                        subtitle: $0.subtitle,
                         timestamp: $0.date,
                         uuid: $0.uuid
                     )
@@ -438,12 +434,11 @@ class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
                 date: 1651039606,
                 amount: Zatoshi(amount: 6),
                 status: .paid(success: false),
-                subtitle: "pending",
                 uuid: "ff66"
             ),
-            TransactionStateMockHelper(date: 1651039303, amount: Zatoshi(amount: 7), subtitle: "pending", uuid: "gg77"),
-            TransactionStateMockHelper(date: 1651039707, amount: Zatoshi(amount: 8), status: .paid(success: true), subtitle: "pending", uuid: "hh88"),
-            TransactionStateMockHelper(date: 1651039808, amount: Zatoshi(amount: 9), subtitle: "pending", uuid: "ii99")
+            TransactionStateMockHelper(date: 1651039303, amount: Zatoshi(amount: 7), uuid: "gg77"),
+            TransactionStateMockHelper(date: 1651039707, amount: Zatoshi(amount: 8), status: .paid(success: true), uuid: "hh88"),
+            TransactionStateMockHelper(date: 1651039808, amount: Zatoshi(amount: 9), uuid: "ii99")
         ]
         
         return Effect(
@@ -453,8 +448,7 @@ class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
                         amount: $0.amount,
                         fee: Zatoshi(amount: 10),
                         shielded: $0.shielded,
-                        status: $0.status,
-                        subtitle: $0.subtitle,
+                        status: $0.amount.amount > 5 ? .pending : $0.status,
                         timestamp: $0.date,
                         uuid: $0.uuid
                     )

@@ -2,72 +2,160 @@ import SwiftUI
 import ComposableArchitecture
 
 struct TransactionDetailView: View {
+    enum RowMark {
+        case neutral
+        case success
+        case fail
+        case inactive
+        case highlight
+    }
+
     var transaction: TransactionState
     var viewStore: WalletEventsFlowViewStore
     
     var body: some View {
         ScrollView {
-            HStack {
+            header
+
+            switch transaction.status {
+            case .paid(success: _):
+                plainText("You sent \(transaction.zecAmount.decimalString()) ZEC")
+                plainText("fee \(transaction.fee.decimalString()) ZEC", mark: .inactive)
+                plainText("total amount \(transaction.totalAmount.decimalString()) ZEC", mark: .inactive)
+                address(mark: .inactive)
+                if let text = transaction.memo { memo(text, viewStore, mark: .highlight) }
+                confirmed(mark: .success)
+            case .pending:
+                plainText("You are sending \(transaction.zecAmount.decimalString()) ZEC")
+                plainText("Includes network fee \(transaction.fee.decimalString()) ZEC", mark: .inactive)
+                plainText("total amount \(transaction.totalAmount.decimalString()) ZEC", mark: .inactive)
+                if let text = transaction.memo { memo(text, viewStore, mark: .inactive) }
+                confirming(mark: .highlight)
+            case .received:
+                plainText("You received \(transaction.zecAmount.decimalString()) ZEC")
+                plainText("fee \(transaction.fee.decimalString()) ZEC")
+                plainText("total amount \(transaction.totalAmount.decimalString()) ZEC")
+                address(mark: .inactive)
+                if let text = transaction.memo { memo(text, viewStore, mark: .highlight) }
+                confirmed(mark: .success)
+            case .failed:
+                plainText("You DID NOT send \(transaction.zecAmount.decimalString()) ZEC", mark: .fail)
+                plainText("Includes network fee \(transaction.fee.decimalString()) ZEC", mark: .inactive)
+                plainText("total amount \(transaction.totalAmount.decimalString()) ZEC", mark: .inactive)
+                if let text = transaction.memo { memo(text, viewStore, mark: .inactive) }
+                if let errorMessage = transaction.errorMessage {
+                    plainTwoColumnText(left: "Failed", right: errorMessage, mark: .fail)
+                }
+            }
+
+            Spacer()
+            
+            footer
+        }
+        .applyScreenBackground()
+        .navigationTitle("Transaction detail")
+    }
+}
+
+extension TransactionDetailView {
+    var header: some View {
+        HStack {
+            switch transaction.status {
+            case .pending:
+                Text("PENDING")
+                Spacer()
+            case .failed:
+                Text("\(transaction.date.asHumanReadable())")
+                Spacer()
+                Text("FAILED")
+            default:
                 Text("\(transaction.date.asHumanReadable())")
                 Spacer()
                 Text("HEIGHT \(heightText)")
             }
-            .padding()
+        }
+        .padding()
+    }
+    
+    func plainText(_ text: String, mark: RowMark = .neutral) -> some View {
+        Text(text)
+            .transactionDetailRow(mark: mark)
+    }
 
-            Text("\(amountPrefixText) \(transaction.zecAmount.decimalString()) ZEC")
-                .transactionDetailRow()
-            
-            Text("fee \(transaction.fee.decimalString()) ZEC")
-                .transactionDetailRow()
+    func plainTwoColumnText(left: String, right: String, mark: RowMark = .neutral) -> some View {
+        HStack {
+            Text(left)
+            Spacer()
+            Text(right)
+        }
+        .transactionDetailRow(mark: mark)
+    }
 
-            Text("total amount \(transaction.totalAmount.decimalString()) ZEC")
-                .transactionDetailRow()
-
-            Button {
-                viewStore.send(.copyToPastboard(transaction.address))
-            } label: {
-                Text("\(addressPrefixText) \(transaction.address)")
-                    .lineLimit(1)
-                    .truncationMode(.middle)
-                    .transactionDetailRow()
-            }
-
-            if let memo = transaction.memo {
-                Button {
-                    viewStore.send(.copyToPastboard(memo))
-                } label: {
-                    VStack {
-                        Text("\(memo)")
-                            .multilineTextAlignment(.leading)
-                        
-                        HStack {
-                            Text("reply-to address included")
-                            Spacer()
-                            Button {
-                                viewStore.send(.replyTo(transaction.address))
-                            } label: {
-                                Text("reply now")
-                                    .padding(5)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 6)
-                                            .stroke(Asset.Colors.Text.transactionDetailText.color, lineWidth: 1)
-                                    )
-                            }
-                        }
+    func address(mark: RowMark = .neutral) -> some View {
+        Button {
+            viewStore.send(.copyToPastboard(transaction.address))
+        } label: {
+            Text("\(addressPrefixText) \(transaction.address)")
+                .lineLimit(1)
+                .truncationMode(.middle)
+                .transactionDetailRow(mark: mark)
+        }
+    }
+    
+    func memo(
+        _ memo: String,
+        _ viewStore: WalletEventsFlowViewStore,
+        mark: RowMark = .neutral
+    ) -> some View {
+        Button {
+            viewStore.send(.copyToPastboard(memo))
+        } label: {
+            VStack {
+                HStack {
+                    Text("\(memo)")
+                        .multilineTextAlignment(.leading)
+                    Spacer()
+                }
+                
+                HStack {
+                    Text("reply-to address included")
+                    Spacer()
+                    Button {
+                        viewStore.send(.replyTo(transaction.address))
+                    } label: {
+                        Text("reply now")
+                            .padding(5)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .stroke(Asset.Colors.Text.transactionDetailText.color, lineWidth: 1)
+                            )
                     }
-                    .transactionDetailRow()
                 }
             }
-
-            HStack {
-                Text("Confirmed")
-                Spacer()
-                Text("\(transaction.confirmations) times")
-            }
-            .transactionDetailRow()
-
+            .transactionDetailRow(mark: mark)
+        }
+    }
+    
+    func confirmed(mark: RowMark = .neutral) -> some View {
+        HStack {
+            Text("Confirmed")
             Spacer()
-            
+            Text("\(transaction.confirmationsWith(viewStore.latestMinedHeight)) times")
+        }
+        .transactionDetailRow(mark: mark)
+    }
+
+    func confirming(mark: RowMark = .neutral) -> some View {
+        HStack {
+            Text("Confirming ~\(viewStore.requiredTransactionConfirmations)mins")
+            Spacer()
+            Text("\(transaction.confirmationsWith(viewStore.latestMinedHeight))/\(viewStore.requiredTransactionConfirmations)")
+        }
+        .transactionDetailRow(mark: mark)
+    }
+
+    var footer: some View {
+        VStack {
             Button {
                 viewStore.send(.copyToPastboard(transaction.id))
             } label: {
@@ -81,7 +169,7 @@ struct TransactionDetailView: View {
                     .background(Asset.Colors.BackgroundColors.numberedChip.color)
                     .padding(.vertical, 30)
             }
-
+            
             Button { } label: {
                 // TODO: Warn users that they will leave the App when they follow a Block explorer
                 // https://github.com/zcash/secant-ios-wallet/issues/379
@@ -93,16 +181,10 @@ struct TransactionDetailView: View {
             .frame(height: 50)
             .padding(.horizontal, 30)
         }
-        .applyScreenBackground()
-        .navigationTitle("Transaction detail")
     }
 }
 
 extension TransactionDetailView {
-    var amountPrefixText: String {
-        transaction.status == .received ? "You received" : "You sent"
-    }
-
     var addressPrefixText: String {
         transaction.status == .received ? "from" : "to"
     }
@@ -112,11 +194,13 @@ extension TransactionDetailView {
     }
 }
 
+// MARK: - Row modifier
+
 struct TransactionDetailRow: ViewModifier {
-    let tint: Color
+    let mark: TransactionDetailView.RowMark
     let textColor: Color
     let backgroundColor: Color
-
+    
     func body(content: Content) -> some View {
         content
             .foregroundColor(textColor)
@@ -124,21 +208,35 @@ struct TransactionDetailRow: ViewModifier {
             .padding()
             .background(backgroundColor)
             .padding(.leading, 20)
-            .background(tint)
+            .background(markColor(mark))
+    }
+    
+    private func markColor(_ mark: TransactionDetailView.RowMark) -> Color {
+        let markColor: Color
+        
+        switch mark {
+        case .neutral: markColor = Asset.Colors.TransactionDetail.neutralMark.color
+        case .success: markColor = Asset.Colors.TransactionDetail.succeededMark.color
+        case .fail:  markColor = Asset.Colors.TransactionDetail.failedMark.color
+        case .inactive:  markColor = Asset.Colors.TransactionDetail.inactiveMark.color
+        case .highlight:  markColor = Asset.Colors.TransactionDetail.highlightMark.color
+        }
+        
+        return markColor
     }
 }
 
 extension View {
     func transactionDetailRow(
-        _ tint: Color = Asset.Colors.BackgroundColors.red.color,
-        _ textColor: Color = Asset.Colors.Text.transactionDetailText.color,
-        _ backgroundColor: Color = Asset.Colors.BackgroundColors.numberedChip.color
+        mark: TransactionDetailView.RowMark = .neutral
     ) -> some View {
         modifier(
             TransactionDetailRow(
-                tint: tint,
-                textColor: textColor,
-                backgroundColor: backgroundColor
+                mark: mark,
+                textColor: mark == .inactive ?
+                Asset.Colors.TransactionDetail.inactiveMark.color :
+                Asset.Colors.Text.transactionDetailText.color,
+                backgroundColor: Asset.Colors.BackgroundColors.numberedChip.color
             )
         )
     }
@@ -152,6 +250,7 @@ struct TransactionDetail_Previews: PreviewProvider {
             TransactionDetailView(
                 transaction:
                     TransactionState(
+                        errorMessage: "possible roll back",
                         memo:
                         """
                         Testing some long memo so I can see many lines of text \
@@ -163,7 +262,6 @@ struct TransactionDetail_Previews: PreviewProvider {
                         fee: Zatoshi(amount: 1_000_000),
                         id: "ff3927e1f83df9b1b0dc75540ddc59ee435eecebae914d2e6dfe8576fbedc9a8",
                         status: .paid(success: true),
-                        subtitle: "",
                         timestamp: 1234567,
                         zecAmount: Zatoshi(amount: 25_000_000)
                     ),
@@ -173,9 +271,10 @@ struct TransactionDetail_Previews: PreviewProvider {
                         reducer: .default,
                         environment:
                             WalletEventsFlowEnvironment(
+                                pasteboard: .test,
                                 scheduler: DispatchQueue.main.eraseToAnyScheduler(),
                                 SDKSynchronizer: MockWrappedSDKSynchronizer(),
-                                pasteboard: .test
+                                zcashSDKEnvironment: .testnet
                             )
                     )
                 )
