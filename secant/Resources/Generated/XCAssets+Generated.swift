@@ -116,6 +116,7 @@ internal enum Asset {
       internal static let captionText = ColorAsset(name: "captionText")
       internal static let captionTextShadow = ColorAsset(name: "captionTextShadow")
       internal static let highlightedSuperscriptText = ColorAsset(name: "highlightedSuperscriptText")
+      internal static let moreInfoText = ColorAsset(name: "moreInfoText")
     }
     internal enum TextField {
       internal static let titleAccessoryButton = ColorAsset(name: "TitleAccessoryButton")

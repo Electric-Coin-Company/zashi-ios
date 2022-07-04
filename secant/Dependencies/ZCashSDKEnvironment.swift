@@ -26,6 +26,7 @@ struct ZCashSDKEnvironment {
     let mnemonicWordsMaxCount: Int
     let network: ZcashNetwork
     let requiredTransactionConfirmations: Int
+    let sdkVersion: String
 }
 
 extension ZCashSDKEnvironment {
@@ -38,7 +39,8 @@ extension ZCashSDKEnvironment {
         ),
         mnemonicWordsMaxCount: ZcashSDKConstants.mnemonicWordsMaxCount,
         network: ZcashNetworkBuilder.network(for: .mainnet),
-        requiredTransactionConfirmations: ZcashSDKConstants.requiredTransactionConfirmations
+        requiredTransactionConfirmations: ZcashSDKConstants.requiredTransactionConfirmations,
+        sdkVersion: "0.14.0-beta"
     )
 
     static let testnet = ZCashSDKEnvironment(
@@ -50,6 +52,7 @@ extension ZCashSDKEnvironment {
         ),
         mnemonicWordsMaxCount: ZcashSDKConstants.mnemonicWordsMaxCount,
         network: ZcashNetworkBuilder.network(for: .testnet),
-        requiredTransactionConfirmations: ZcashSDKConstants.requiredTransactionConfirmations
+        requiredTransactionConfirmations: ZcashSDKConstants.requiredTransactionConfirmations,
+        sdkVersion: "0.14.0-beta"
     )
 }

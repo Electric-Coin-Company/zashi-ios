@@ -9,74 +9,97 @@ typealias ProfileViewStore = ViewStore<ProfileState, ProfileAction>
 
 struct ProfileState: Equatable {
     enum Route {
-        case phraseDisplay
+        case addressDetails
         case settings
-        case walletInfo
     }
 
-    var phraseDisplayState: RecoveryPhraseDisplayState
+    var address = ""
+    var addressDetailsState: AddressDetailsState
+    var appBuild = ""
+    var appVersion = ""
     var route: Route?
+    var sdkVersion = ""
     var settingsState: SettingsState
-    var walletInfoState: WalletInfoState
 }
 
 // MARK: - Action
 
 enum ProfileAction: Equatable {
-    case phraseDisplay(RecoveryPhraseDisplayAction)
+    case addressDetails(AddressDetailsAction)
+    case back
+    case onAppear
     case updateRoute(ProfileState.Route?)
 }
 
 // MARK: - Environment
 
 struct ProfileEnvironment {
+    let appVersionHandler: AppVersionHandler
     let mnemonic: WrappedMnemonic
+    let SDKSynchronizer: WrappedSDKSynchronizer
     let walletStorage: WrappedWalletStorage
+    let zcashSDKEnvironment: ZCashSDKEnvironment
 }
 
 extension ProfileEnvironment {
     static let live = ProfileEnvironment(
+        appVersionHandler: .live,
         mnemonic: .live,
-        walletStorage: .live()
+        SDKSynchronizer: LiveWrappedSDKSynchronizer(),
+        walletStorage: .live(),
+        zcashSDKEnvironment: .mainnet
     )
 
     static let mock = ProfileEnvironment(
+        appVersionHandler: .test,
         mnemonic: .mock,
-        walletStorage: .live()
+        SDKSynchronizer: MockWrappedSDKSynchronizer(),
+        walletStorage: .live(),
+        zcashSDKEnvironment: .testnet
     )
 }
 
 // MARK: - Reducer
 
 extension ProfileReducer {
-    static let `default` = ProfileReducer { state, action, environment in
-        switch action {
-        case .updateRoute(.phraseDisplay):
-            do {
-                let storedWallet = try environment.walletStorage.exportWallet()
-                let phraseWords = try environment.mnemonic.asWords(storedWallet.seedPhrase)
-                
-                let recoveryPhrase = RecoveryPhrase(words: phraseWords)
-                state.phraseDisplayState.phrase = recoveryPhrase
-                state.route = .phraseDisplay
-            } catch {
-                // TODO: - merge with issue 201 (https://github.com/zcash/secant-ios-wallet/issues/201) and its Error States
-                return .none
-            }
-            return .none
+    static let `default` = ProfileReducer.combine(
+        [
+            profileReducer,
+            addressDetailsReducer
+        ]
+    )
+    .debug()
 
+    private static let profileReducer = ProfileReducer { state, action, environment in
+        switch action {
+        case .onAppear:
+            state.address = environment.SDKSynchronizer.getShieldedAddress() ?? ""
+            state.appBuild = environment.appVersionHandler.appBuild()
+            state.appVersion = environment.appVersionHandler.appVersion()
+            state.sdkVersion = environment.zcashSDKEnvironment.sdkVersion
+            return .none
+            
+        case .back:
+            return .none
+            
         case let .updateRoute(route):
             state.route = route
             return .none
-        
-        case .phraseDisplay(.finishedPressed):
-            state.route = nil
-            return .none
             
-        case .phraseDisplay:
+        case .addressDetails:
             return .none
         }
     }
+    
+    private static let addressDetailsReducer: ProfileReducer = AddressDetailsReducer.default.pullback(
+        state: \ProfileState.addressDetailsState,
+        action: /ProfileAction.addressDetails,
+        environment: { _ in
+            AddressDetailsEnvironment(
+                pasteboard: .live
+            )
+        }
+    )
 }
 
 // MARK: - ViewStore
@@ -89,10 +112,10 @@ extension ProfileViewStore {
         )
     }
 
-    var bindingForWalletInfo: Binding<Bool> {
+    var bindingForAddressDetails: Binding<Bool> {
         self.routeBinding.map(
-            extract: { $0 == .walletInfo },
-            embed: { $0 ? .walletInfo : nil }
+            extract: { $0 == .addressDetails },
+            embed: { $0 ? .addressDetails : nil }
         )
     }
 
@@ -102,13 +125,6 @@ extension ProfileViewStore {
             embed: { $0 ? .settings : nil }
         )
     }
-
-    var bindingForPhraseDisplay: Binding<Bool> {
-        self.routeBinding.map(
-            extract: { $0 == .phraseDisplay },
-            embed: { $0 ? .phraseDisplay : nil }
-        )
-    }
 }
 
 // MARK: Placeholders
@@ -116,10 +132,9 @@ extension ProfileViewStore {
 extension ProfileState {
     static var placeholder: Self {
         .init(
-            phraseDisplayState: .init(),
+            addressDetailsState: .placeholder,
             route: nil,
-            settingsState: .init(),
-            walletInfoState: .init()
+            settingsState: .init()
         )
     }
 }

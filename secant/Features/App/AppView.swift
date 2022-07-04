@@ -18,7 +18,7 @@ struct AppView: View {
                             )
                         )
                     }
-                    .navigationViewStyle(StackNavigationViewStyle())
+                    .navigationViewStyle(.stack)
                     
                 case .sandbox:
                     NavigationView {
@@ -29,7 +29,7 @@ struct AppView: View {
                             )
                         )
                     }
-                    .navigationViewStyle(StackNavigationViewStyle())
+                    .navigationViewStyle(.stack)
                     
                 case .onboarding:
                     NavigationView {
@@ -40,7 +40,7 @@ struct AppView: View {
                             )
                         )
                     }
-                    .navigationViewStyle(StackNavigationViewStyle())
+                    .navigationViewStyle(.stack)
                     
                 case .startup:
                     ZStack(alignment: .topTrailing) {
@@ -57,7 +57,7 @@ struct AppView: View {
                             )
                         )
                     }
-                    .navigationViewStyle(StackNavigationViewStyle())
+                    .navigationViewStyle(.stack)
                     
                 case .phraseDisplay:
                     NavigationView {
