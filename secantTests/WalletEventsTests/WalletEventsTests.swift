@@ -30,7 +30,9 @@ class WalletEventsTests: XCTestCase {
             environment: testEnvironment
         )
         
-        store.send(.onAppear)
+        store.send(.onAppear) { state in
+            state.requiredTransactionConfirmations = 10
+        }
 
         store.receive(.synchronizerStateChanged(.unknown))
 
