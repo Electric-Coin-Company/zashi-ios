@@ -469,7 +469,7 @@ class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
 
     func getTransparentAddress(account: Int) -> TransparentAddress? { nil }
     
-    func getShieldedAddress(account: Int) -> SaplingShieldedAddress? { nil }
+    func getShieldedAddress(account: Int) -> SaplingShieldedAddress? { "ff3927e1f83df9b1b0dc75540ddc59ee435eecebae914d2e6dfe8576fbedc9a8" }
     
     func sendTransaction(
         with spendingKey: String,

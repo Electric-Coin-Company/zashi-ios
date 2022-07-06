@@ -121,6 +121,12 @@
 		9E5BF6502823E94900BA3F17 /* TransactionAddressTextFieldStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF64E2823E94900BA3F17 /* TransactionAddressTextFieldStore.swift */; };
 		9E69A24D27FB002800A55317 /* WelcomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E69A24C27FB002800A55317 /* WelcomeStore.swift */; };
 		9E7CB6122869882D00A02233 /* WalletEventsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6112869882D00A02233 /* WalletEventsSnapshotTests.swift */; };
+		9E7CB61A287310EC00A02233 /* QRCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB619287310EC00A02233 /* QRCodeGenerator.swift */; };
+		9E7CB6202874143800A02233 /* AddressDetailsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB61F2874143800A02233 /* AddressDetailsStore.swift */; };
+		9E7CB6212874143800A02233 /* AddressDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB61E2874143800A02233 /* AddressDetailsView.swift */; };
+		9E7CB6242874246800A02233 /* ProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6232874246800A02233 /* ProfileTests.swift */; };
+		9E7CB6272874269F00A02233 /* ProfileSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6262874269F00A02233 /* ProfileSnapshotTests.swift */; };
+		9E7CB6292875AC2D00A02233 /* AppVersionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6282875AC2D00A02233 /* AppVersionHandler.swift */; };
 		9E7FE0CF282D257400C374E8 /* SDKSynchronizer+SyncStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0CE282D257400C374E8 /* SDKSynchronizer+SyncStatus.swift */; };
 		9E7FE0D3282D274E00C374E8 /* Date+Readable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0D2282D274E00C374E8 /* Date+Readable.swift */; };
 		9E7FE0D5282D281800C374E8 /* Array+Chunked.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0D4282D281800C374E8 /* Array+Chunked.swift */; };
@@ -331,6 +337,12 @@
 		9E5BF64E2823E94900BA3F17 /* TransactionAddressTextFieldStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAddressTextFieldStore.swift; sourceTree = "<group>"; };
 		9E69A24C27FB002800A55317 /* WelcomeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeStore.swift; sourceTree = "<group>"; };
 		9E7CB6112869882D00A02233 /* WalletEventsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletEventsSnapshotTests.swift; sourceTree = "<group>"; };
+		9E7CB619287310EC00A02233 /* QRCodeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeGenerator.swift; sourceTree = "<group>"; };
+		9E7CB61E2874143800A02233 /* AddressDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressDetailsView.swift; sourceTree = "<group>"; };
+		9E7CB61F2874143800A02233 /* AddressDetailsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressDetailsStore.swift; sourceTree = "<group>"; };
+		9E7CB6232874246800A02233 /* ProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTests.swift; sourceTree = "<group>"; };
+		9E7CB6262874269F00A02233 /* ProfileSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSnapshotTests.swift; sourceTree = "<group>"; };
+		9E7CB6282875AC2D00A02233 /* AppVersionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionHandler.swift; sourceTree = "<group>"; };
 		9E7FE0CE282D257400C374E8 /* SDKSynchronizer+SyncStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SDKSynchronizer+SyncStatus.swift"; sourceTree = "<group>"; };
 		9E7FE0D2282D274E00C374E8 /* Date+Readable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Readable.swift"; sourceTree = "<group>"; };
 		9E7FE0D4282D281800C374E8 /* Array+Chunked.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Chunked.swift"; sourceTree = "<group>"; };
@@ -516,8 +528,9 @@
 		0D4E7A1926B364180058B01E /* secantTests */ = {
 			isa = PBXGroup;
 			children = (
-				9EAB4674285B5C68002904A0 /* DeeplinkTests */,
 				9E391162284E3ECF0073DD9A /* SnapshotTests */,
+				9E7CB6222874245400A02233 /* ProfileTests */,
+				9EAB4674285B5C68002904A0 /* DeeplinkTests */,
 				9E3911372848AD3A0073DD9A /* HomeTests */,
 				9E391122283E4C970073DD9A /* ImportWalletTests */,
 				9E01F8262833CD84000EFC57 /* ScanTests */,
@@ -676,6 +689,7 @@
 				F9971A4927680DC400A2DB75 /* App */,
 				F93874EC273C4DE200F0E875 /* Home */,
 				F9971A4F27680DD000A2DB75 /* Profile */,
+				9E7CB61B2874140900A02233 /* AddressDetails */,
 				F9971A5527680DDE00A2DB75 /* Request */,
 				F9971A5B27680DF600A2DB75 /* Scan */,
 				F9C165B62740403600592F76 /* SendFlow */,
@@ -812,6 +826,7 @@
 		9E391162284E3ECF0073DD9A /* SnapshotTests */ = {
 			isa = PBXGroup;
 			children = (
+				9E7CB6252874267B00A02233 /* ProfileSnapshotTests */,
 				9E7CB6102869881300A02233 /* WalletEventsSnapshotTests */,
 				9E9ECC8B28589E150099D5A2 /* HomeSnapshotTests */,
 				9E9ECC9328589E150099D5A2 /* ImportWalletSnapshotTests */,
@@ -869,6 +884,31 @@
 			path = WalletEventsSnapshotTests;
 			sourceTree = "<group>";
 		};
+		9E7CB61B2874140900A02233 /* AddressDetails */ = {
+			isa = PBXGroup;
+			children = (
+				9E7CB61F2874143800A02233 /* AddressDetailsStore.swift */,
+				9E7CB61E2874143800A02233 /* AddressDetailsView.swift */,
+			);
+			path = AddressDetails;
+			sourceTree = "<group>";
+		};
+		9E7CB6222874245400A02233 /* ProfileTests */ = {
+			isa = PBXGroup;
+			children = (
+				9E7CB6232874246800A02233 /* ProfileTests.swift */,
+			);
+			path = ProfileTests;
+			sourceTree = "<group>";
+		};
+		9E7CB6252874267B00A02233 /* ProfileSnapshotTests */ = {
+			isa = PBXGroup;
+			children = (
+				9E7CB6262874269F00A02233 /* ProfileSnapshotTests.swift */,
+			);
+			path = ProfileSnapshotTests;
+			sourceTree = "<group>";
+		};
 		9E7FE0B6282D1D9800C374E8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -908,6 +948,7 @@
 				2EDA07A327EDE2A900D6F09B /* DebugFrame.swift */,
 				9E2F1C832809B606004E65FE /* DebugMenu.swift */,
 				9E391128283F74590073DD9A /* Zatoshi.swift */,
+				9E7CB619287310EC00A02233 /* QRCodeGenerator.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -922,6 +963,7 @@
 				9E3911472848EEB90073DD9A /* WalletStorage.swift */,
 				9E3911452848EEB90073DD9A /* ZCashSDKEnvironment.swift */,
 				9EAB4670285A1C77002904A0 /* DeeplinkHandler.swift */,
+				9E7CB6282875AC2D00A02233 /* AppVersionHandler.swift */,
 			);
 			path = Dependencies;
 			sourceTree = "<group>";
@@ -1423,6 +1465,7 @@
 				F96B41E8273B501F0021B49A /* TransactionDetailView.swift in Sources */,
 				9E02B56A27FED43E005B809B /* WrappedFileManager.swift in Sources */,
 				663FABA2271D876C00E495F8 /* SecondaryButton.swift in Sources */,
+				9E7CB6202874143800A02233 /* AddressDetailsStore.swift in Sources */,
 				0DC487C32772574C00BE6A63 /* RecoveryPhraseBackupSucceededView.swift in Sources */,
 				2EB1C5E827D77F6100BC43D7 /* TCATextFieldStore.swift in Sources */,
 				9E5BF648282277BE00BA3F17 /* WrappedNotificationCenter.swift in Sources */,
@@ -1430,6 +1473,7 @@
 				9E5BF641281FD7B600BA3F17 /* TransactionFailedView.swift in Sources */,
 				9E7FE0CF282D257400C374E8 /* SDKSynchronizer+SyncStatus.swift in Sources */,
 				9E4DC6E027C409A100E657F4 /* NeumorphicDesignModifier.swift in Sources */,
+				9E7CB6292875AC2D00A02233 /* AppVersionHandler.swift in Sources */,
 				0DACFA7F27208CE00039EEA5 /* Clamped.swift in Sources */,
 				9EAB467A2861EA6A002904A0 /* TransactionRowView.swift in Sources */,
 				0DFE93E3272CA1AA000FCCA5 /* RecoveryPhraseValidationFlowStore.swift in Sources */,
@@ -1487,6 +1531,7 @@
 				9E7FE0E6282E7B1100C374E8 /* StoredWallet.swift in Sources */,
 				9EAFEB9128081E9400199FC9 /* HomeStore.swift in Sources */,
 				F9971A5A27680DDE00A2DB75 /* RequestView.swift in Sources */,
+				9E7CB61A287310EC00A02233 /* QRCodeGenerator.swift in Sources */,
 				9E7FE0D5282D281800C374E8 /* Array+Chunked.swift in Sources */,
 				0DACFA8127208D940039EEA5 /* UInt+SuperscriptText.swift in Sources */,
 				0DF2DC51272344E400FA31E2 /* EmptyChip.swift in Sources */,
@@ -1534,6 +1579,7 @@
 				9EF8139C27F47AED0075AF48 /* InitializationState.swift in Sources */,
 				0D0781C9278776D20083ACD7 /* ZcashSymbol.swift in Sources */,
 				2E8719CB27FB09990082C926 /* TransactionAmountTextField.swift in Sources */,
+				9E7CB6212874143800A02233 /* AddressDetailsView.swift in Sources */,
 				F9C165C42740403600592F76 /* TransactionSentView.swift in Sources */,
 				F9971A5927680DDE00A2DB75 /* RequestStore.swift in Sources */,
 			);
@@ -1547,11 +1593,13 @@
 				9EDDEAA22829610D00B4100C /* CurrencySelectionTests.swift in Sources */,
 				9E01F8282833CDA0000EFC57 /* ScanTests.swift in Sources */,
 				9EDDEAA42829610D00B4100C /* TransactionAddressInputTests.swift in Sources */,
+				9E7CB6272874269F00A02233 /* ProfileSnapshotTests.swift in Sources */,
 				9E92AF0828530EBF007367AD /* View+UIImage.swift in Sources */,
 				6654C7442715A4AC00901167 /* OnboardingStoreTests.swift in Sources */,
 				9E39112E283F91600073DD9A /* ZatoshiTests.swift in Sources */,
 				9E9ECC9B28589E150099D5A2 /* ImportWalletSnapshotTests.swift in Sources */,
 				9EDDEAA32829610D00B4100C /* TransactionAmountInputTests.swift in Sources */,
+				9E7CB6242874246800A02233 /* ProfileTests.swift in Sources */,
 				9EAFEB862805A23100199FC9 /* WrappedSecItemTests.swift in Sources */,
 				9E9ECC9828589E150099D5A2 /* WelcomeSnapshotTests.swift in Sources */,
 				9E7CB6122869882D00A02233 /* WalletEventsSnapshotTests.swift in Sources */,

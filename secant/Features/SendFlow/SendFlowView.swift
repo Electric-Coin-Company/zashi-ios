@@ -50,7 +50,7 @@ struct SendFLowView_Previews: PreviewProvider {
                 )
             )
             .navigationBarTitleDisplayMode(.inline)
-            .navigationViewStyle(StackNavigationViewStyle())
+            .navigationViewStyle(.stack)
         }
     }
 }

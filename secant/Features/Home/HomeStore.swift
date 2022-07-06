@@ -144,6 +144,10 @@ extension HomeReducer {
             state.route = route
             return .none
             
+        case .profile(.back):
+            state.route = nil
+            return .none
+
         case .profile(let action):
             return .none
 
@@ -171,7 +175,7 @@ extension HomeReducer {
             
         case .scan(let action):
             return .none
-
+            
         case .debugMenuStartup:
             return .none
         }
@@ -222,8 +226,11 @@ extension HomeReducer {
         action: /HomeAction.profile,
         environment: { environment in
             ProfileEnvironment(
+                appVersionHandler: .live,
                 mnemonic: environment.mnemonic,
-                walletStorage: environment.walletStorage
+                SDKSynchronizer: environment.SDKSynchronizer,
+                walletStorage: environment.walletStorage,
+                zcashSDKEnvironment: environment.zcashSDKEnvironment
             )
         }
     )
