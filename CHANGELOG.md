@@ -1,10 +1,13 @@
 # Changelog
+## 0.0.1 build 32
+- [#73] [Scaffold] Profile Screen (#386)
+- [#384] Update to ComposableArchitecture 0.38.2 (#385)
 ## 0.0.1 build 31
 - [#362] [scaffold] Pending Transaction Details (#381)
-- [96] [Scaffold] Received Transaction Details (#378)
-- [98] [Scaffold] Full Wallet History (#376)
-- [375] Update ComposableArchitecure to 0.37.0 (#377)
-- [327] Navigation/Routing for the deeplinks (#371)
+- [#96] [Scaffold] Received Transaction Details (#378)
+- [#98] [Scaffold] Full Wallet History (#376)
+- [#375] Update ComposableArchitecure to 0.37.0 (#377)
+- [#327] Navigation/Routing for the deeplinks (#371)
 
 ## 0.0.1 build 29
 - [#358] Xcode project broken (#360)
