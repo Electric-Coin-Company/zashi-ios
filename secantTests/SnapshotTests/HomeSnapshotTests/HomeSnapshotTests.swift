@@ -40,7 +40,7 @@ class HomeSnapshotTests: XCTestCase {
                 requestState: .placeholder,
                 sendState: .placeholder,
                 scanState: .placeholder,
-                synchronizerStatus: "",
+                synchronizerStatusSnapshot: .default,
                 totalBalance: Zatoshi(amount: balance.total),
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: walletEvents)),
                 verifiedBalance: Zatoshi(amount: balance.verified)
@@ -90,7 +90,7 @@ class HomeSnapshotTests: XCTestCase {
                 requestState: .placeholder,
                 sendState: .placeholder,
                 scanState: .placeholder,
-                synchronizerStatus: "",
+                synchronizerStatusSnapshot: .default,
                 totalBalance: Zatoshi(amount: balance.total),
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent])),
                 verifiedBalance: Zatoshi(amount: balance.verified)

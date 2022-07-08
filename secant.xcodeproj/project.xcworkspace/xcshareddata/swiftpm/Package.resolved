@@ -163,6 +163,15 @@
       }
     },
     {
+      "identity" : "swift-url-routing",
+      "kind" : "remoteSourceControl",
+      "location" : "http://github.com/pointfreeco/swift-url-routing",
+      "state" : {
+        "revision" : "5bf79bb370015e43842a61d558a9ee053171124e",
+        "version" : "0.3.0"
+      }
+    },
+    {
       "identity" : "xctest-dynamic-overlay",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",

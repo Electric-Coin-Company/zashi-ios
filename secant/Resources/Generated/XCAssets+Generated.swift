@@ -113,6 +113,7 @@ internal enum Asset {
       internal static let titleText = ColorAsset(name: "TitleText")
       internal static let transactionDetailText = ColorAsset(name: "TransactionDetailText")
       internal static let validMnemonic = ColorAsset(name: "ValidMnemonic")
+      internal static let balanceText = ColorAsset(name: "balanceText")
       internal static let captionText = ColorAsset(name: "captionText")
       internal static let captionTextShadow = ColorAsset(name: "captionTextShadow")
       internal static let highlightedSuperscriptText = ColorAsset(name: "highlightedSuperscriptText")

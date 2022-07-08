@@ -33,7 +33,15 @@ class HomeTests: XCTestCase {
         
         store.send(.synchronizerStateChanged(.downloading))
         
+        testScheduler.advance(by: 0.01)
+        
         store.receive(.updateSynchronizerStatus)
+        
+        let balance = Balance(verified: 12_345_000, total: 12_345_000)
+        store.receive(.updateBalance(balance)) { state in
+            state.totalBalance = Zatoshi(amount: 12_345_000)
+            state.verifiedBalance = Zatoshi(amount: 12_345_000)
+        }
     }
 
     /// When the synchronizer status change to .synced, several things happen
@@ -120,7 +128,7 @@ class HomeTests: XCTestCase {
             requestState: .placeholder,
             sendState: .placeholder,
             scanState: .placeholder,
-            synchronizerStatus: "",
+            synchronizerStatusSnapshot: .default,
             totalBalance: Zatoshi.zero,
             walletEventsState: .emptyPlaceHolder,
             verifiedBalance: Zatoshi.zero
@@ -163,7 +171,7 @@ class HomeTests: XCTestCase {
             requestState: .placeholder,
             sendState: .placeholder,
             scanState: .placeholder,
-            synchronizerStatus: "",
+            synchronizerStatusSnapshot: .default,
             totalBalance: Zatoshi.zero,
             walletEventsState: .emptyPlaceHolder,
             verifiedBalance: Zatoshi.zero
@@ -208,7 +216,9 @@ class HomeTests: XCTestCase {
             environment: testEnvironment
         )
         
-        store.send(.onAppear)
+        store.send(.onAppear) { state in
+            state.requiredTransactionConfirmations = 10
+        }
         
         testScheduler.advance(by: 0.01)
         
@@ -216,6 +226,12 @@ class HomeTests: XCTestCase {
         store.receive(.synchronizerStateChanged(.unknown))
         store.receive(.updateSynchronizerStatus)
         
+        let balance = Balance(verified: 12_345_000, total: 12_345_000)
+        store.receive(.updateBalance(balance)) { state in
+            state.totalBalance = Zatoshi(amount: 12_345_000)
+            state.verifiedBalance = Zatoshi(amount: 12_345_000)
+        }
+
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancles the observer of the synchronizer status change.
         store.send(.onDisappear)

@@ -119,15 +119,18 @@
 		9E5BF648282277BE00BA3F17 /* WrappedNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF647282277BE00BA3F17 /* WrappedNotificationCenter.swift */; };
 		9E5BF64F2823E94900BA3F17 /* TransactionAddressTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF64D2823E94900BA3F17 /* TransactionAddressTextField.swift */; };
 		9E5BF6502823E94900BA3F17 /* TransactionAddressTextFieldStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF64E2823E94900BA3F17 /* TransactionAddressTextFieldStore.swift */; };
+		9E66122A287717A900C75B70 /* HomeCircularProgressSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E661229287717A900C75B70 /* HomeCircularProgressSnapshotTests.swift */; };
+		9E66122C2877188700C75B70 /* SyncStatusSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E66122B2877188700C75B70 /* SyncStatusSnapshot.swift */; };
 		9E69A24D27FB002800A55317 /* WelcomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E69A24C27FB002800A55317 /* WelcomeStore.swift */; };
 		9E7CB6122869882D00A02233 /* WalletEventsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6112869882D00A02233 /* WalletEventsSnapshotTests.swift */; };
+		9E7CB6152869E8C300A02233 /* CircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6142869E8C300A02233 /* CircularProgress.swift */; };
 		9E7CB61A287310EC00A02233 /* QRCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB619287310EC00A02233 /* QRCodeGenerator.swift */; };
 		9E7CB6202874143800A02233 /* AddressDetailsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB61F2874143800A02233 /* AddressDetailsStore.swift */; };
 		9E7CB6212874143800A02233 /* AddressDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB61E2874143800A02233 /* AddressDetailsView.swift */; };
 		9E7CB6242874246800A02233 /* ProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6232874246800A02233 /* ProfileTests.swift */; };
 		9E7CB6272874269F00A02233 /* ProfileSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6262874269F00A02233 /* ProfileSnapshotTests.swift */; };
 		9E7CB6292875AC2D00A02233 /* AppVersionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6282875AC2D00A02233 /* AppVersionHandler.swift */; };
-		9E7FE0CF282D257400C374E8 /* SDKSynchronizer+SyncStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0CE282D257400C374E8 /* SDKSynchronizer+SyncStatus.swift */; };
+		9E7CB62C2875C6E700A02233 /* URLRouting in Frameworks */ = {isa = PBXBuildFile; productRef = 9E7CB62B2875C6E700A02233 /* URLRouting */; };
 		9E7FE0D3282D274E00C374E8 /* Date+Readable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0D2282D274E00C374E8 /* Date+Readable.swift */; };
 		9E7FE0D5282D281800C374E8 /* Array+Chunked.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0D4282D281800C374E8 /* Array+Chunked.swift */; };
 		9E7FE0D7282D286500C374E8 /* RecoveryPhrase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0D6282D286500C374E8 /* RecoveryPhrase.swift */; };
@@ -335,15 +338,17 @@
 		9E5BF647282277BE00BA3F17 /* WrappedNotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedNotificationCenter.swift; sourceTree = "<group>"; };
 		9E5BF64D2823E94900BA3F17 /* TransactionAddressTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAddressTextField.swift; sourceTree = "<group>"; };
 		9E5BF64E2823E94900BA3F17 /* TransactionAddressTextFieldStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAddressTextFieldStore.swift; sourceTree = "<group>"; };
+		9E661229287717A900C75B70 /* HomeCircularProgressSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCircularProgressSnapshotTests.swift; sourceTree = "<group>"; };
+		9E66122B2877188700C75B70 /* SyncStatusSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStatusSnapshot.swift; sourceTree = "<group>"; };
 		9E69A24C27FB002800A55317 /* WelcomeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeStore.swift; sourceTree = "<group>"; };
 		9E7CB6112869882D00A02233 /* WalletEventsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletEventsSnapshotTests.swift; sourceTree = "<group>"; };
+		9E7CB6142869E8C300A02233 /* CircularProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgress.swift; sourceTree = "<group>"; };
 		9E7CB619287310EC00A02233 /* QRCodeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeGenerator.swift; sourceTree = "<group>"; };
 		9E7CB61E2874143800A02233 /* AddressDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressDetailsView.swift; sourceTree = "<group>"; };
 		9E7CB61F2874143800A02233 /* AddressDetailsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressDetailsStore.swift; sourceTree = "<group>"; };
 		9E7CB6232874246800A02233 /* ProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTests.swift; sourceTree = "<group>"; };
 		9E7CB6262874269F00A02233 /* ProfileSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSnapshotTests.swift; sourceTree = "<group>"; };
 		9E7CB6282875AC2D00A02233 /* AppVersionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionHandler.swift; sourceTree = "<group>"; };
-		9E7FE0CE282D257400C374E8 /* SDKSynchronizer+SyncStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SDKSynchronizer+SyncStatus.swift"; sourceTree = "<group>"; };
 		9E7FE0D2282D274E00C374E8 /* Date+Readable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Readable.swift"; sourceTree = "<group>"; };
 		9E7FE0D4282D281800C374E8 /* Array+Chunked.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Chunked.swift"; sourceTree = "<group>"; };
 		9E7FE0D6282D286500C374E8 /* RecoveryPhrase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhrase.swift; sourceTree = "<group>"; };
@@ -418,6 +423,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9EF8139827F1FAEC0075AF48 /* ZcashLightClientKit in Frameworks */,
+				9E7CB62C2875C6E700A02233 /* URLRouting in Frameworks */,
 				9E2AC0FF27D8EC120042AA47 /* MnemonicSwift in Frameworks */,
 				6654C73A2715A38000901167 /* ComposableArchitecture in Frameworks */,
 				9EAB466F285A0468002904A0 /* _URLRouting in Frameworks */,
@@ -597,6 +603,7 @@
 				9E7FE0DC282D298900C374E8 /* ValidationWord.swift */,
 				9E7FE0E5282E7B1100C374E8 /* StoredWallet.swift */,
 				9EAB46772860A1D2002904A0 /* WalletEvent.swift */,
+				9E66122B2877188700C75B70 /* SyncStatusSnapshot.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -884,6 +891,14 @@
 			path = WalletEventsSnapshotTests;
 			sourceTree = "<group>";
 		};
+		9E7CB6132869E8A700A02233 /* CircularProgress */ = {
+			isa = PBXGroup;
+			children = (
+				9E7CB6142869E8C300A02233 /* CircularProgress.swift */,
+			);
+			path = CircularProgress;
+			sourceTree = "<group>";
+		};
 		9E7CB61B2874140900A02233 /* AddressDetails */ = {
 			isa = PBXGroup;
 			children = (
@@ -938,7 +953,6 @@
 				0DACFA8027208D940039EEA5 /* UInt+SuperscriptText.swift */,
 				0D7CE63327349B5D0020E050 /* View+WhenDraggable.swift */,
 				9E7FE0D2282D274E00C374E8 /* Date+Readable.swift */,
-				9E7FE0CE282D257400C374E8 /* SDKSynchronizer+SyncStatus.swift */,
 				0DACFA7E27208CE00039EEA5 /* Clamped.swift */,
 				F9322DBF273B555C00C105B5 /* NavigationLinks.swift */,
 				F9C165B3274031F600592F76 /* Bindings.swift */,
@@ -971,6 +985,7 @@
 		9E7FE0BE282D1DFE00C374E8 /* UI Components */ = {
 			isa = PBXGroup;
 			children = (
+				9E7CB6132869E8A700A02233 /* CircularProgress */,
 				0DF2DC5227235E1F00FA31E2 /* Extensions */,
 				0DB8AA80271DC7520035BC9D /* DesignGuide.swift */,
 				9E7FE0E9282E7CF800C374E8 /* ImportSeedEditor */,
@@ -1054,6 +1069,7 @@
 			isa = PBXGroup;
 			children = (
 				9E9ECC8C28589E150099D5A2 /* HomeSnapshotTests.swift */,
+				9E661229287717A900C75B70 /* HomeCircularProgressSnapshotTests.swift */,
 			);
 			path = HomeSnapshotTests;
 			sourceTree = "<group>";
@@ -1264,6 +1280,7 @@
 				9EF8139727F1FAEC0075AF48 /* ZcashLightClientKit */,
 				9EAB466C285A0468002904A0 /* Parsing */,
 				9EAB466E285A0468002904A0 /* _URLRouting */,
+				9E7CB62B2875C6E700A02233 /* URLRouting */,
 			);
 			productName = secant;
 			productReference = 0D4E7A0526B364170058B01E /* secant-testnet.app */;
@@ -1343,6 +1360,7 @@
 				9E2AC0FD27D8EC120042AA47 /* XCRemoteSwiftPackageReference "MnemonicSwift" */,
 				9EF8139627F1FAEC0075AF48 /* XCRemoteSwiftPackageReference "ZcashLightClientKit" */,
 				9EAB466B285A0468002904A0 /* XCRemoteSwiftPackageReference "swift-parsing" */,
+				9E7CB62A2875C6E700A02233 /* XCRemoteSwiftPackageReference "swift-url-routing" */,
 			);
 			productRefGroup = 0D4E7A0626B364170058B01E /* Products */;
 			projectDirPath = "";
@@ -1471,7 +1489,6 @@
 				9E5BF648282277BE00BA3F17 /* WrappedNotificationCenter.swift in Sources */,
 				0D8A43C4272AEEDE005A6414 /* SecantTextStyles.swift in Sources */,
 				9E5BF641281FD7B600BA3F17 /* TransactionFailedView.swift in Sources */,
-				9E7FE0CF282D257400C374E8 /* SDKSynchronizer+SyncStatus.swift in Sources */,
 				9E4DC6E027C409A100E657F4 /* NeumorphicDesignModifier.swift in Sources */,
 				9E7CB6292875AC2D00A02233 /* AppVersionHandler.swift in Sources */,
 				0DACFA7F27208CE00039EEA5 /* Clamped.swift in Sources */,
@@ -1484,6 +1501,7 @@
 				9E7FE0D9282D289B00C374E8 /* WrappedFeedbackGenerator.swift in Sources */,
 				2E6CF8DD27D78319004DCD7A /* CurrencySelectionStore.swift in Sources */,
 				9EBEF87A27CE369800B4F343 /* RecoveryPhraseValidationFlowView.swift in Sources */,
+				9E66122C2877188700C75B70 /* SyncStatusSnapshot.swift in Sources */,
 				9E4DC6E227C4C6B700E657F4 /* SecantButtonStyles.swift in Sources */,
 				0DDB6A5127737D4A0012A410 /* RecoveryPhraseBackupFailedView.swift in Sources */,
 				9E391129283F74590073DD9A /* Zatoshi.swift in Sources */,
@@ -1551,6 +1569,7 @@
 				9E7FE0F628327F6F00C374E8 /* ScanUIView.swift in Sources */,
 				0D185819272723FF0046B928 /* ColoredChip.swift in Sources */,
 				2EA11F5D27467F7700709571 /* OnboardingContentView.swift in Sources */,
+				9E7CB6152869E8C300A02233 /* CircularProgress.swift in Sources */,
 				2E58E73B274679F000B2B84B /* OnboardingHeaderView.swift in Sources */,
 				9E5BF64F2823E94900BA3F17 /* TransactionAddressTextField.swift in Sources */,
 				2E35F99227B28E7600EB79CD /* SingleLineTextField.swift in Sources */,
@@ -1613,6 +1632,7 @@
 				9E5BF63F2819542C00BA3F17 /* WalletEventsTests.swift in Sources */,
 				0D4E7A1B26B364180058B01E /* secantTests.swift in Sources */,
 				0DFE93E6272CB6F7000FCCA5 /* RecoveryPhraseValidationTests.swift in Sources */,
+				9E66122A287717A900C75B70 /* HomeCircularProgressSnapshotTests.swift in Sources */,
 				9EAB4676285B5C7C002904A0 /* DeeplinkTests.swift in Sources */,
 				9E3911392848AD500073DD9A /* HomeTests.swift in Sources */,
 				9E9ECC9C28589E150099D5A2 /* OnboardingSnapshotTests.swift in Sources */,
@@ -1953,6 +1973,14 @@
 				minimumVersion = 2.0.0;
 			};
 		};
+		9E7CB62A2875C6E700A02233 /* XCRemoteSwiftPackageReference "swift-url-routing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "http://github.com/pointfreeco/swift-url-routing";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.0;
+			};
+		};
 		9EAB466B285A0468002904A0 /* XCRemoteSwiftPackageReference "swift-parsing" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-parsing";
@@ -1981,6 +2009,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9E2AC0FD27D8EC120042AA47 /* XCRemoteSwiftPackageReference "MnemonicSwift" */;
 			productName = MnemonicSwift;
+		};
+		9E7CB62B2875C6E700A02233 /* URLRouting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9E7CB62A2875C6E700A02233 /* XCRemoteSwiftPackageReference "swift-url-routing" */;
+			productName = URLRouting;
 		};
 		9EAB466C285A0468002904A0 /* Parsing */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -24,12 +24,33 @@ struct HomeState: Equatable {
     var drawerOverlay: DrawerOverlay
     var profileState: ProfileState
     var requestState: RequestState
+    var requiredTransactionConfirmations = 0
     var sendState: SendFlowState
     var scanState: ScanState
-    var synchronizerStatus: String
+    var synchronizerStatusSnapshot: SyncStatusSnapshot
     var totalBalance: Zatoshi
     var walletEventsState: WalletEventsFlowState
     var verifiedBalance: Zatoshi
+    // TODO: - Get the ZEC price from the SDK, issue 311, https://github.com/zcash/secant-ios-wallet/issues/311
+    var zecPrice = Decimal(140.0)
+
+    var totalCurrencyBalance: Zatoshi {
+        Zatoshi.from(decimal: totalBalance.decimalValue.decimalValue * zecPrice)
+    }
+    
+    var isDownloading: Bool {
+        if case .downloading = synchronizerStatusSnapshot.syncStatus {
+            return true
+        }
+        return false
+    }
+    
+    var isUpToDate: Bool {
+        if case .synced = synchronizerStatusSnapshot.syncStatus {
+            return true
+        }
+        return false
+    }
 }
 
 // MARK: Action
@@ -96,6 +117,7 @@ extension HomeReducer {
     private static let homeReducer = HomeReducer { state, action, environment in
         switch action {
         case .onAppear:
+            state.requiredTransactionConfirmations = environment.zcashSDKEnvironment.requiredTransactionConfirmations
             return environment.SDKSynchronizer.stateChanged
                 .map(HomeAction.synchronizerStateChanged)
                 .eraseToEffect()
@@ -110,13 +132,6 @@ extension HomeReducer {
                     .receive(on: environment.scheduler)
                     .map(HomeAction.updateWalletEvents)
                     .eraseToEffect(),
-                
-                environment.SDKSynchronizer.getShieldedBalance()
-                    .receive(on: environment.scheduler)
-                    .map({ Balance(verified: $0.verified, total: $0.total) })
-                    .map(HomeAction.updateBalance)
-                    .eraseToEffect(),
-                
                 Effect(value: .updateSynchronizerStatus)
             )
             
@@ -137,8 +152,12 @@ extension HomeReducer {
             return .none
             
         case .updateSynchronizerStatus:
-            state.synchronizerStatus = environment.SDKSynchronizer.status()
-            return .none
+            state.synchronizerStatusSnapshot = environment.SDKSynchronizer.statusSnapshot()
+            return environment.SDKSynchronizer.getShieldedBalance()
+                .receive(on: environment.scheduler)
+                .map({ Balance(verified: $0.verified, total: $0.total) })
+                .map(HomeAction.updateBalance)
+                .eraseToEffect()
 
         case .updateRoute(let route):
             state.route = route
@@ -305,7 +324,7 @@ extension HomeState {
             requestState: .placeholder,
             sendState: .placeholder,
             scanState: .placeholder,
-            synchronizerStatus: "",
+            synchronizerStatusSnapshot: .default,
             totalBalance: Zatoshi.zero,
             walletEventsState: .emptyPlaceHolder,
             verifiedBalance: Zatoshi.zero

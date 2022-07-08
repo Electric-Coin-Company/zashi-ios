@@ -11,21 +11,10 @@ struct HomeView: View {
                     scanButton(viewStore)
                     
                     profileButton(viewStore)
-                    
+
+                    circularArea(viewStore, proxy.size)
+
                     sendButton(viewStore)
-                    
-                    VStack {
-                        Text("\(viewStore.synchronizerStatus)")
-                            .padding(.top, 60)
-
-                        Text("balance \(viewStore.totalBalance.decimalString()) ZEC")
-                            .accessDebugMenuWithHiddenGesture {
-                                viewStore.send(.debugMenuStartup)
-                            }
-                            .padding(.top, 120)
-
-                        Spacer()
-                    }
                     
                     if proxy.size.height > 0 {
                         Drawer(overlay: viewStore.bindingForDrawer(), maxHeight: proxy.size.height) {
@@ -117,6 +106,40 @@ extension HomeView {
                     )
                 
                 Spacer()
+            }
+            
+            Spacer()
+        }
+    }
+    
+    func circularArea(_ viewStore: HomeViewStore, _ size: CGSize) -> some View {
+        VStack {
+            ZStack {
+                CircularProgress(
+                    outerCircleProgress: viewStore.isDownloading ? 0 : viewStore.synchronizerStatusSnapshot.progress,
+                    innerCircleProgress: viewStore.isDownloading ? viewStore.synchronizerStatusSnapshot.progress : 1,
+                    maxSegments: viewStore.requiredTransactionConfirmations,
+                    innerCircleHidden: viewStore.isUpToDate
+                )
+                .frame(width: size.width * 0.65, height: size.width * 0.65)
+                .padding(.top, 50)
+                
+                VStack {
+                    Text("$\(viewStore.totalBalance.decimalString())")
+                        .font(.custom(FontFamily.Zboto.regular.name, size: 40))
+                        .foregroundColor(Asset.Colors.Text.balanceText.color)
+                        .accessDebugMenuWithHiddenGesture {
+                            viewStore.send(.debugMenuStartup)
+                        }
+                        .padding(.top, 80)
+                    
+                    Text("$\(viewStore.totalCurrencyBalance.decimalString())")
+                        .font(.custom(FontFamily.Rubik.regular.name, size: 13))
+                        .opacity(0.6)
+                        .padding(.bottom, 50)
+
+                    Text("\(viewStore.synchronizerStatusSnapshot.message)")
+                }
             }
             
             Spacer()
