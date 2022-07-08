@@ -124,6 +124,12 @@
 		9E69A24D27FB002800A55317 /* WelcomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E69A24C27FB002800A55317 /* WelcomeStore.swift */; };
 		9E7CB6122869882D00A02233 /* WalletEventsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6112869882D00A02233 /* WalletEventsSnapshotTests.swift */; };
 		9E7CB6152869E8C300A02233 /* CircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6142869E8C300A02233 /* CircularProgress.swift */; };
+		9E6612312878337F00C75B70 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 9E6612302878337F00C75B70 /* Lottie */; };
+		9E6612332878338C00C75B70 /* LottieAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6612322878338C00C75B70 /* LottieAnimation.swift */; };
+		9E6612362878345000C75B70 /* endlessCircleProgress.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E6612352878345000C75B70 /* endlessCircleProgress.json */; };
+		9E69A24D27FB002800A55317 /* WelcomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E69A24C27FB002800A55317 /* WelcomeStore.swift */; };
+		9E7CB6122869882D00A02233 /* WalletEventsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6112869882D00A02233 /* WalletEventsSnapshotTests.swift */; };
+		9E7CB6182872D3DF00A02233 /* URLRouting in Frameworks */ = {isa = PBXBuildFile; productRef = 9E7CB6172872D3DF00A02233 /* URLRouting */; };
 		9E7CB61A287310EC00A02233 /* QRCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB619287310EC00A02233 /* QRCodeGenerator.swift */; };
 		9E7CB6202874143800A02233 /* AddressDetailsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB61F2874143800A02233 /* AddressDetailsStore.swift */; };
 		9E7CB6212874143800A02233 /* AddressDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB61E2874143800A02233 /* AddressDetailsView.swift */; };
@@ -340,6 +346,8 @@
 		9E5BF64E2823E94900BA3F17 /* TransactionAddressTextFieldStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAddressTextFieldStore.swift; sourceTree = "<group>"; };
 		9E661229287717A900C75B70 /* HomeCircularProgressSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCircularProgressSnapshotTests.swift; sourceTree = "<group>"; };
 		9E66122B2877188700C75B70 /* SyncStatusSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStatusSnapshot.swift; sourceTree = "<group>"; };
+		9E6612322878338C00C75B70 /* LottieAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LottieAnimation.swift; sourceTree = "<group>"; };
+		9E6612352878345000C75B70 /* endlessCircleProgress.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = endlessCircleProgress.json; sourceTree = "<group>"; };
 		9E69A24C27FB002800A55317 /* WelcomeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeStore.swift; sourceTree = "<group>"; };
 		9E7CB6112869882D00A02233 /* WalletEventsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletEventsSnapshotTests.swift; sourceTree = "<group>"; };
 		9E7CB6142869E8C300A02233 /* CircularProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgress.swift; sourceTree = "<group>"; };
@@ -423,7 +431,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9EF8139827F1FAEC0075AF48 /* ZcashLightClientKit in Frameworks */,
-				9E7CB62C2875C6E700A02233 /* URLRouting in Frameworks */,
+				9E6612312878337F00C75B70 /* Lottie in Frameworks */,
+				9E7CB6182872D3DF00A02233 /* URLRouting in Frameworks */,
 				9E2AC0FF27D8EC120042AA47 /* MnemonicSwift in Frameworks */,
 				6654C73A2715A38000901167 /* ComposableArchitecture in Frameworks */,
 				9EAB466F285A0468002904A0 /* _URLRouting in Frameworks */,
@@ -883,6 +892,14 @@
 			path = TransactionAddress;
 			sourceTree = "<group>";
 		};
+		9E6612342878341F00C75B70 /* Lotties */ = {
+			isa = PBXGroup;
+			children = (
+				9E6612352878345000C75B70 /* endlessCircleProgress.json */,
+			);
+			path = Lotties;
+			sourceTree = "<group>";
+		};
 		9E7CB6102869881300A02233 /* WalletEventsSnapshotTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -927,6 +944,7 @@
 		9E7FE0B6282D1D9800C374E8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9E6612342878341F00C75B70 /* Lotties */,
 				0D4E7A0C26B364180058B01E /* Assets.xcassets */,
 				660558E8270C7A54009D6954 /* Colors.xcassets */,
 				9E37A2B727C8F59F00AE57B3 /* Localizable.strings */,
@@ -955,6 +973,7 @@
 				9E7FE0D2282D274E00C374E8 /* Date+Readable.swift */,
 				0DACFA7E27208CE00039EEA5 /* Clamped.swift */,
 				F9322DBF273B555C00C105B5 /* NavigationLinks.swift */,
+				9E6612322878338C00C75B70 /* LottieAnimation.swift */,
 				F9C165B3274031F600592F76 /* Bindings.swift */,
 				F9EEB8152742C2210032EEB8 /* WithStateBinding.swift */,
 				F93673D52742CB840099C6AF /* Previews.swift */,
@@ -1280,7 +1299,8 @@
 				9EF8139727F1FAEC0075AF48 /* ZcashLightClientKit */,
 				9EAB466C285A0468002904A0 /* Parsing */,
 				9EAB466E285A0468002904A0 /* _URLRouting */,
-				9E7CB62B2875C6E700A02233 /* URLRouting */,
+				9E7CB6172872D3DF00A02233 /* URLRouting */,
+				9E6612302878337F00C75B70 /* Lottie */,
 			);
 			productName = secant;
 			productReference = 0D4E7A0526B364170058B01E /* secant-testnet.app */;
@@ -1360,7 +1380,8 @@
 				9E2AC0FD27D8EC120042AA47 /* XCRemoteSwiftPackageReference "MnemonicSwift" */,
 				9EF8139627F1FAEC0075AF48 /* XCRemoteSwiftPackageReference "ZcashLightClientKit" */,
 				9EAB466B285A0468002904A0 /* XCRemoteSwiftPackageReference "swift-parsing" */,
-				9E7CB62A2875C6E700A02233 /* XCRemoteSwiftPackageReference "swift-url-routing" */,
+				9E7CB6162872D3DF00A02233 /* XCRemoteSwiftPackageReference "swift-url-routing" */,
+				9E66122F2878337F00C75B70 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			productRefGroup = 0D4E7A0626B364170058B01E /* Products */;
 			projectDirPath = "";
@@ -1381,6 +1402,7 @@
 				0DACFA9327209FA70039EEA5 /* Roboto-Medium.ttf in Resources */,
 				0DACFA9827209FA70039EEA5 /* Roboto-MediumItalic.ttf in Resources */,
 				0DACFA9427209FA70039EEA5 /* Roboto-BoldItalic.ttf in Resources */,
+				9E6612362878345000C75B70 /* endlessCircleProgress.json in Resources */,
 				0DACFA9027209FA70039EEA5 /* Roboto-Bold.ttf in Resources */,
 				0DACFA9227209FA70039EEA5 /* Roboto-Italic.ttf in Resources */,
 				0D535FDE271F4214009A9E3E /* Rubik-Italic-VariableFont_wght.ttf in Resources */,
@@ -1540,6 +1562,7 @@
 				2EA11F5B27467EF800709571 /* OnboardingFooterView.swift in Sources */,
 				66D50668271D9B6100E51F0D /* NavigationButtonStyle.swift in Sources */,
 				2EDA07A427EDE2A900D6F09B /* DebugFrame.swift in Sources */,
+				9E6612332878338C00C75B70 /* LottieAnimation.swift in Sources */,
 				0D3D040A2728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift in Sources */,
 				9EAB4671285A1C77002904A0 /* DeeplinkHandler.swift in Sources */,
 				9E2AC10127D8EF0B0042AA47 /* WrappedMnemonic.swift in Sources */,
@@ -1973,7 +1996,15 @@
 				minimumVersion = 2.0.0;
 			};
 		};
-		9E7CB62A2875C6E700A02233 /* XCRemoteSwiftPackageReference "swift-url-routing" */ = {
+		9E66122F2878337F00C75B70 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+		9E7CB6162872D3DF00A02233 /* XCRemoteSwiftPackageReference "swift-url-routing" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "http://github.com/pointfreeco/swift-url-routing";
 			requirement = {
@@ -2010,9 +2041,14 @@
 			package = 9E2AC0FD27D8EC120042AA47 /* XCRemoteSwiftPackageReference "MnemonicSwift" */;
 			productName = MnemonicSwift;
 		};
-		9E7CB62B2875C6E700A02233 /* URLRouting */ = {
+		9E6612302878337F00C75B70 /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9E7CB62A2875C6E700A02233 /* XCRemoteSwiftPackageReference "swift-url-routing" */;
+			package = 9E66122F2878337F00C75B70 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
+		};
+		9E7CB6172872D3DF00A02233 /* URLRouting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9E7CB6162872D3DF00A02233 /* XCRemoteSwiftPackageReference "swift-url-routing" */;
 			productName = URLRouting;
 		};
 		9EAB466C285A0468002904A0 /* Parsing */ = {

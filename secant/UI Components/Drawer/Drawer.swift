@@ -23,7 +23,7 @@ struct Drawer<Content: View>: View {
     private var offset: CGFloat {
         switch overlay {
         case .full: return 70.0
-        case .partial: return maxHeight * 0.75
+        case .partial: return maxHeight - 230.0
         case .bottom: return maxHeight
         }
     }
@@ -86,7 +86,7 @@ struct Drawer_Previews: PreviewProvider {
         return Drawer(overlay: $overlay, maxHeight: 800.0) {
             VStack {
                 Text("Transaction History")
-                
+
                 Spacer()
             }
         }
