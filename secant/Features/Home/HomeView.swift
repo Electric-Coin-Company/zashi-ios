@@ -18,13 +18,8 @@ struct HomeView: View {
                     
                     if proxy.size.height > 0 {
                         Drawer(overlay: viewStore.bindingForDrawer(), maxHeight: proxy.size.height) {
-                            VStack {
-                                WalletEventsFlowView(store: store.historyStore())
-                                    .padding(.top, 10)
-                                
-                                Spacer()
-                            }
-                            .applyScreenBackground()
+                            WalletEventsFlowView(store: store.historyStore())
+                                .applyScreenBackground()
                         }
                     }
                 }

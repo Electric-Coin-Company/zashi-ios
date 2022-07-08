@@ -38,8 +38,12 @@ extension WalletEvent {
             .failed(let transaction):
             TransactionRowView(transaction: transaction)
         case .shielded(let zatoshi):
+            // TODO: implement design once shielding is supported, issue 390
+            // https://github.com/zcash/secant-ios-wallet/issues/390
             Text("shielded wallet event \(zatoshi.decimalString())")
         case .walletImport:
+            // TODO: implement design once shielding is supported, issue 391
+            // https://github.com/zcash/secant-ios-wallet/issues/391
             Text("wallet import wallet event")
         }
     }
@@ -56,8 +60,12 @@ extension WalletEvent {
             .failed(let transaction):
             TransactionDetailView(transaction: transaction, viewStore: viewStore)
         case .shielded(let zatoshi):
+            // TODO: implement design once shielding is supported, issue 390
+            // https://github.com/zcash/secant-ios-wallet/issues/390
             Text("shielded \(zatoshi.decimalString()) detail")
         case .walletImport:
+            // TODO: implement design once shielding is supported, issue 391
+            // https://github.com/zcash/secant-ios-wallet/issues/391
             Text("wallet import wallet event")
         }
     }
@@ -67,11 +75,12 @@ extension WalletEvent {
 
 private extension WalletEvent {
     static func randomWalletEventState() -> WalletEvent.WalletEventState {
-        switch Int.random(in: 0..<5) {
-        case 1: return .received(.placeholder)
-        case 2: return .failed(.placeholder)
+        switch Int.random(in: 0..<6) {
+        case 1: return .received(.statePlaceholder(.received))
+        case 2: return .failed(.statePlaceholder(.failed))
         case 3: return .shielded(Zatoshi(amount: 234_000_000))
         case 4: return .walletImport(BlockHeight(1_629_724))
+        case 5: return .pending(.statePlaceholder(.pending))
         default: return .send(.placeholder)
         }
     }

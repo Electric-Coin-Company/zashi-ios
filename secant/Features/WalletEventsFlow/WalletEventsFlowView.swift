@@ -3,27 +3,36 @@ import ComposableArchitecture
 
 struct WalletEventsFlowView: View {
     let store: WalletEventsFlowStore
-
+    @State var flag = true
+    
     var body: some View {
-        UITableView.appearance().backgroundColor = .clear
-        UITableViewCell.appearance().backgroundColor = .clear
-
         return WithViewStore(store) { viewStore in
-            Group {
+            VStack {
                 header(with: viewStore)
                 
                 if viewStore.isScrollable {
                     List {
                         walletEventsList(with: viewStore)
                     }
-                    .listStyle(.sidebar)
+                    .listStyle(.plain)
+                    .padding(.bottom, 60)
                 } else {
                     walletEventsList(with: viewStore)
-                        .padding(.horizontal, 32)
                 }
+                
+                Spacer()
             }
-            .onAppear(perform: { viewStore.send(.onAppear) })
+            .onAppear(
+                perform: {
+                    UITableView.appearance().backgroundColor = .clear
+                    UITableView.appearance().separatorColor = .clear
+                    viewStore.send(.onAppear)
+                }
+            )
             .onDisappear(perform: { viewStore.send(.onDisappear) })
+            .navigationLinkEmpty(isActive: viewStore.bindingForSelectedWalletEvent(viewStore.selectedWalletEvent)) {
+                viewStore.selectedWalletEvent?.detailView(viewStore)
+            }
         }
     }
 }
@@ -31,42 +40,58 @@ struct WalletEventsFlowView: View {
 extension WalletEventsFlowView {
     func walletEventsList(with viewStore: WalletEventsFlowViewStore) -> some View {
         ForEach(viewStore.walletEvents) { walletEvent in
-            WithStateBinding(binding: viewStore.bindingForSelectingWalletEvent(walletEvent)) { active in
-                VStack {
-                    walletEvent.rowView(viewStore)
+            walletEvent.rowView(viewStore)
+                .onTapGesture {
+                    viewStore.send(.updateRoute(.showWalletEvent(walletEvent)))
                 }
-                .navigationLink(
-                    isActive: active,
-                    destination: { walletEvent.detailView(viewStore) }
-                )
+                .listRowInsets(EdgeInsets())
                 .foregroundColor(Asset.Colors.Text.body.color)
                 .listRowBackground(Color.clear)
-            }
         }
     }
     
     func header(with viewStore: WalletEventsFlowViewStore) -> some View {
         HStack(spacing: 0) {
             VStack {
-                Button("Latest") {
+                Button {
                     viewStore.send(.updateRoute(.latest))
+                } label: {
+                    Text("Latest")
+                        .font(.custom(FontFamily.Rubik.regular.name, size: 18))
                 }
+                .frame(width: 100)
+                .foregroundColor(Asset.Colors.Text.drawerTabsText.color)
+                .opacity(viewStore.isScrollable ? 0.23 : 1.0)
                 
                 Rectangle()
                     .frame(height: 1.5)
-                    .foregroundColor(Asset.Colors.TextField.Underline.purple.color)
+                    .foregroundColor(latestUnderline(viewStore))
             }
 
             VStack {
-                Button("All") {
+                Button {
                     viewStore.send(.updateRoute(.all))
+                } label: {
+                    Text("All")
+                        .font(.custom(FontFamily.Rubik.regular.name, size: 18))
                 }
+                .frame(width: 100)
+                .foregroundColor(Asset.Colors.Text.drawerTabsText.color)
+                .opacity(viewStore.isScrollable ? 1.0 : 0.23)
 
                 Rectangle()
                     .frame(height: 1.5)
-                    .foregroundColor(Asset.Colors.TextField.Underline.gray.color)
+                    .foregroundColor(allUnderline(viewStore))
             }
         }
+    }
+    
+    private func latestUnderline(_ viewStore: WalletEventsFlowViewStore) -> Color {
+        viewStore.isScrollable ? Asset.Colors.TextField.Underline.gray.color :  Asset.Colors.TextField.Underline.purple.color
+    }
+
+    private func allUnderline(_ viewStore: WalletEventsFlowViewStore) -> Color {
+        viewStore.isScrollable ? Asset.Colors.TextField.Underline.purple.color : Asset.Colors.TextField.Underline.gray.color
     }
 }
 

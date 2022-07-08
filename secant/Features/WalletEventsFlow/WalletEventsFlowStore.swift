@@ -21,6 +21,7 @@ struct WalletEventsFlowState: Equatable {
     var isScrollable = false
     var requiredTransactionConfirmations = 0
     var walletEvents = IdentifiedArrayOf<WalletEvent>.placeholder
+    var selectedWalletEvent: WalletEvent?
 }
 
 // MARK: - Action
@@ -81,8 +82,16 @@ extension WalletEventsFlowReducer {
             state.walletEvents = IdentifiedArrayOf(uniqueElements: sortedWalletEvents)
             return .none
 
+        case .updateRoute(.showWalletEvent(let walletEvent)):
+            state.selectedWalletEvent = walletEvent
+            state.route = .showWalletEvent(walletEvent)
+            return .none
+
         case .updateRoute(let route):
             state.route = route
+            if route == nil {
+                state.selectedWalletEvent = nil
+            }
             return .none
             
         case .copyToPastboard(let value):
@@ -100,11 +109,21 @@ extension WalletEventsFlowReducer {
 extension WalletEventsFlowViewStore {
     private typealias Route = WalletEventsFlowState.Route
 
-    func bindingForSelectingWalletEvent(_ walletEvent: WalletEvent) -> Binding<Bool> {
+    func bindingForSelectedWalletEvent(_ walletEvent: WalletEvent?) -> Binding<Bool> {
         self.binding(
-            get: { $0.route.map(/WalletEventsFlowState.Route.showWalletEvent) == walletEvent },
+            get: {
+                guard let walletEvent = walletEvent else {
+                    return false
+                }
+                
+                return $0.route.map(/WalletEventsFlowState.Route.showWalletEvent) == walletEvent
+            },
             send: { isActive in
-                WalletEventsFlowAction.updateRoute( isActive ? WalletEventsFlowState.Route.showWalletEvent(walletEvent) : nil)
+                guard let walletEvent = walletEvent else {
+                    return WalletEventsFlowAction.updateRoute(nil)
+                }
+                
+                return WalletEventsFlowAction.updateRoute( isActive ? WalletEventsFlowState.Route.showWalletEvent(walletEvent) : nil)
             }
         )
     }
@@ -115,11 +134,23 @@ extension WalletEventsFlowViewStore {
 extension TransactionState {
     static var placeholder: Self {
         .init(
+            zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
             fee: Zatoshi(amount: 10),
             id: "2",
             status: .paid(success: true),
             timestamp: 1234567,
-            zecAmount: Zatoshi(amount: 25)
+            zecAmount: Zatoshi(amount: 123_000_000)
+        )
+    }
+    
+    static func statePlaceholder(_ status: Status) -> Self {
+        .init(
+            zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
+            fee: Zatoshi(amount: 10),
+            id: "2",
+            status: status,
+            timestamp: 1234567,
+            zecAmount: Zatoshi(amount: 123_000_000)
         )
     }
 }
