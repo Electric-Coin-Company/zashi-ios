@@ -1,4 +1,7 @@
 # Changelog
+## 0.0.1 build 33
+- [#102] [Functional] Full Wallet History
+- [#153] [Scaffold] Progress Status Circular Bar (#389)
 ## 0.0.1 build 32
 - [#73] [Scaffold] Profile Screen (#386)
 - [#384] Update to ComposableArchitecture 0.38.2 (#385)
