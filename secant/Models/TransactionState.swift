@@ -32,7 +32,7 @@ struct TransactionState: Equatable, Identifiable {
 
     var address: String { zAddress ?? "" }
     var date: Date { Date(timeIntervalSince1970: timestamp) }
-    var totalAmount: Zatoshi { Zatoshi(amount: zecAmount.amount + fee.amount) }
+    var totalAmount: Zatoshi { Zatoshi(zecAmount.amount + fee.amount) }
     var viewOnlineURL: URL? {
         URL(string: "https://blockchair.com/zcash/transaction/\(id)")
     }
@@ -53,8 +53,8 @@ extension TransactionState {
         shielded = true
         status = sent ? .paid(success: confirmedTransaction.minedHeight > 0) : .received
         zAddress = confirmedTransaction.toAddress
-        zecAmount = sent ? Zatoshi(amount: -Int64(confirmedTransaction.value)) : Zatoshi(amount: Int64(confirmedTransaction.value))
-        fee = Zatoshi(amount: 10)
+        zecAmount = sent ? Zatoshi(-confirmedTransaction.value.amount) : confirmedTransaction.value
+        fee = Zatoshi(10)
         if let memo = confirmedTransaction.memo {
             self.memo = memo.asZcashTransactionMemo()
         }
@@ -71,8 +71,8 @@ extension TransactionState {
             .pending
         expirationHeight = pendingTransaction.expiryHeight
         zAddress = pendingTransaction.toAddress
-        zecAmount = Zatoshi(amount: -Int64(pendingTransaction.value))
-        fee = Zatoshi(amount: 10)
+        zecAmount = pendingTransaction.value
+        fee = Zatoshi(10)
         if let memo = pendingTransaction.memo {
             self.memo = memo.asZcashTransactionMemo()
         }
@@ -102,7 +102,7 @@ extension TransactionState {
             id: uuid,
             status: status,
             timestamp: timestamp,
-            zecAmount: status == .received ? amount : Zatoshi(amount: -amount.amount)
+            zecAmount: status == .received ? amount : Zatoshi(-amount.amount)
         )
     }
 }

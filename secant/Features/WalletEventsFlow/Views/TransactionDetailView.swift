@@ -1,5 +1,6 @@
 import SwiftUI
 import ComposableArchitecture
+import ZcashLightClientKit
 
 struct TransactionDetailView: View {
     enum RowMark {
@@ -259,11 +260,11 @@ struct TransactionDetail_Previews: PreviewProvider {
                         """,
                         minedHeight: 1_875_256,
                         zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
-                        fee: Zatoshi(amount: 1_000_000),
+                        fee: Zatoshi(1_000_000),
                         id: "ff3927e1f83df9b1b0dc75540ddc59ee435eecebae914d2e6dfe8576fbedc9a8",
                         status: .paid(success: true),
                         timestamp: 1234567,
-                        zecAmount: Zatoshi(amount: 25_000_000)
+                        zecAmount: Zatoshi(25_000_000)
                     ),
                 viewStore: ViewStore(
                     WalletEventsFlowStore(

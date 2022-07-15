@@ -12,7 +12,6 @@ import ComposableArchitecture
 
 enum WrappedSDKSynchronizerState: Equatable {
     case unknown
-    
     case transactionsUpdated
     case started
     case progressUpdated
@@ -32,11 +31,6 @@ enum WrappedSDKSynchronizerState: Equatable {
     case connectionStateChanged
 }
 
-struct Balance: WalletBalance, Equatable {
-    var verified: Int64
-    var total: Int64
-}
-
 protocol WrappedSDKSynchronizer {
     var synchronizer: SDKSynchronizer? { get }
     var stateChanged: CurrentValueSubject<WrappedSDKSynchronizerState, Never> { get }
@@ -47,7 +41,7 @@ protocol WrappedSDKSynchronizer {
     func stop()
     func statusSnapshot() -> SyncStatusSnapshot
 
-    func getShieldedBalance() -> Effect<Balance, Never>
+    func getShieldedBalance() -> Effect<WalletBalance, Never>
     func getAllClearedTransactions() -> Effect<[WalletEvent], Never>
     func getAllPendingTransactions() -> Effect<[WalletEvent], Never>
     func getAllTransactions() -> Effect<[WalletEvent], Never>
@@ -151,10 +145,10 @@ class LiveWrappedSDKSynchronizer: WrappedSDKSynchronizer {
         return SyncStatusSnapshot.snapshotFor(state: synchronizer.status)
     }
 
-    func getShieldedBalance() -> Effect<Balance, Never> {
-        if let shieldedVerifiedBalance = synchronizer?.getShieldedVerifiedBalance(),
-        let shieldedTotalBalance = synchronizer?.getShieldedBalance(accountIndex: 0) {
-            return Effect(value: Balance(verified: shieldedVerifiedBalance, total: shieldedTotalBalance))
+    func getShieldedBalance() -> Effect<WalletBalance, Never> {
+        if let shieldedVerifiedBalance: Zatoshi = synchronizer?.getShieldedVerifiedBalance(),
+            let shieldedTotalBalance: Zatoshi = synchronizer?.getShieldedBalance(accountIndex: 0) {
+            return Effect(value: WalletBalance(verified: shieldedVerifiedBalance, total: shieldedTotalBalance))
         }
         
         return .none
@@ -232,7 +226,7 @@ class LiveWrappedSDKSynchronizer: WrappedSDKSynchronizer {
             Future { [weak self] promise in
                 self?.synchronizer?.sendToAddress(
                     spendingKey: spendingKey,
-                    zatoshi: zatoshi.amount,
+                    zatoshi: zatoshi,
                     toAddress: recipientAddress,
                     memo: memo,
                     from: account) { result in
@@ -289,17 +283,17 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
         return SyncStatusSnapshot.snapshotFor(state: synchronizer.status)
     }
 
-    func getShieldedBalance() -> Effect<Balance, Never> {
-        return Effect(value: Balance(verified: 12345000, total: 12345000))
+    func getShieldedBalance() -> Effect<WalletBalance, Never> {
+        return Effect(value: WalletBalance(verified: Zatoshi(12345000), total: Zatoshi(12345000)))
     }
     
     func getAllClearedTransactions() -> Effect<[WalletEvent], Never> {
         let mocked: [TransactionStateMockHelper] = [
-            TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(amount: 1), status: .paid(success: false), uuid: "1"),
-            TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(amount: 2), uuid: "2"),
-            TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(amount: 3), status: .paid(success: true), uuid: "3"),
-            TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(amount: 4), uuid: "4"),
-            TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(amount: 5), uuid: "5")
+            TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "1"),
+            TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "2"),
+            TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(3), status: .paid(success: true), uuid: "3"),
+            TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(4), uuid: "4"),
+            TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(5), uuid: "5")
         ]
         
         return Effect(
@@ -307,7 +301,7 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
                 mocked.map {
                     let transaction = TransactionState.placeholder(
                         amount: $0.amount,
-                        fee: Zatoshi(amount: 10),
+                        fee: Zatoshi(10),
                         shielded: $0.shielded,
                         status: $0.status,
                         timestamp: $0.date,
@@ -320,10 +314,10 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
 
     func getAllPendingTransactions() -> Effect<[WalletEvent], Never> {
         let mocked: [TransactionStateMockHelper] = [
-            TransactionStateMockHelper(date: 1651039606, amount: Zatoshi(amount: 6), status: .paid(success: false)),
-            TransactionStateMockHelper(date: 1651039303, amount: Zatoshi(amount: 7)),
-            TransactionStateMockHelper(date: 1651039707, amount: Zatoshi(amount: 8), status: .paid(success: true)),
-            TransactionStateMockHelper(date: 1651039808, amount: Zatoshi(amount: 9))
+            TransactionStateMockHelper(date: 1651039606, amount: Zatoshi(6), status: .paid(success: false)),
+            TransactionStateMockHelper(date: 1651039303, amount: Zatoshi(7)),
+            TransactionStateMockHelper(date: 1651039707, amount: Zatoshi(8), status: .paid(success: true)),
+            TransactionStateMockHelper(date: 1651039808, amount: Zatoshi(9))
         ]
         
         return Effect(
@@ -331,7 +325,7 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
                 mocked.map {
                     let transaction = TransactionState.placeholder(
                         amount: $0.amount,
-                        fee: Zatoshi(amount: 10),
+                        fee: Zatoshi(10),
                         shielded: $0.shielded,
                         status: $0.status,
                         timestamp: $0.date
@@ -368,11 +362,11 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
             minedHeight: 50,
             shielded: true,
             zAddress: "tteafadlamnelkqe",
-            fee: Zatoshi(amount: 10),
+            fee: Zatoshi(10),
             id: "id",
             status: .paid(success: true),
             timestamp: 1234567,
-            zecAmount: Zatoshi(amount: 10)
+            zecAmount: Zatoshi(10)
         )
         
         return Effect(value: Result.success(transactionState))
@@ -399,17 +393,17 @@ class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
 
     func statusSnapshot() -> SyncStatusSnapshot { .default }
 
-    func getShieldedBalance() -> Effect<Balance, Never> {
+    func getShieldedBalance() -> Effect<WalletBalance, Never> {
         return .none
     }
     
     func getAllClearedTransactions() -> Effect<[WalletEvent], Never> {
         let mocked: [TransactionStateMockHelper] = [
-            TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(amount: 1), status: .paid(success: false), uuid: "aa11"),
-            TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(amount: 2), uuid: "bb22"),
-            TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(amount: 3), status: .paid(success: true), uuid: "cc33"),
-            TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(amount: 4), uuid: "dd44"),
-            TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(amount: 5), uuid: "ee55")
+            TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "aa11"),
+            TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),
+            TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(3), status: .paid(success: true), uuid: "cc33"),
+            TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(4), uuid: "dd44"),
+            TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(5), uuid: "ee55")
         ]
         
         return Effect(
@@ -417,7 +411,7 @@ class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
                 mocked.map {
                     let transaction = TransactionState.placeholder(
                         amount: $0.amount,
-                        fee: Zatoshi(amount: 10),
+                        fee: Zatoshi(10),
                         shielded: $0.shielded,
                         status: $0.status,
                         timestamp: $0.date,
@@ -432,13 +426,13 @@ class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
         let mocked: [TransactionStateMockHelper] = [
             TransactionStateMockHelper(
                 date: 1651039606,
-                amount: Zatoshi(amount: 6),
+                amount: Zatoshi(6),
                 status: .paid(success: false),
                 uuid: "ff66"
             ),
-            TransactionStateMockHelper(date: 1651039303, amount: Zatoshi(amount: 7), uuid: "gg77"),
-            TransactionStateMockHelper(date: 1651039707, amount: Zatoshi(amount: 8), status: .paid(success: true), uuid: "hh88"),
-            TransactionStateMockHelper(date: 1651039808, amount: Zatoshi(amount: 9), uuid: "ii99")
+            TransactionStateMockHelper(date: 1651039303, amount: Zatoshi(7), uuid: "gg77"),
+            TransactionStateMockHelper(date: 1651039707, amount: Zatoshi(8), status: .paid(success: true), uuid: "hh88"),
+            TransactionStateMockHelper(date: 1651039808, amount: Zatoshi(9), uuid: "ii99")
         ]
         
         return Effect(
@@ -446,7 +440,7 @@ class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
                 mocked.map {
                     let transaction = TransactionState.placeholder(
                         amount: $0.amount,
-                        fee: Zatoshi(amount: 10),
+                        fee: Zatoshi(10),
                         shielded: $0.shielded,
                         status: $0.amount.amount > 5 ? .pending : $0.status,
                         timestamp: $0.date,

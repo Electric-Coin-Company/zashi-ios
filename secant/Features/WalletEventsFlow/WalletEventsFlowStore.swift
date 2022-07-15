@@ -135,22 +135,22 @@ extension TransactionState {
     static var placeholder: Self {
         .init(
             zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
-            fee: Zatoshi(amount: 10),
+            fee: Zatoshi(10),
             id: "2",
             status: .paid(success: true),
             timestamp: 1234567,
-            zecAmount: Zatoshi(amount: 123_000_000)
+            zecAmount: Zatoshi(123_000_000)
         )
     }
     
     static func statePlaceholder(_ status: Status) -> Self {
         .init(
             zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
-            fee: Zatoshi(amount: 10),
+            fee: Zatoshi(10),
             id: "2",
             status: status,
             timestamp: 1234567,
-            zecAmount: Zatoshi(amount: 123_000_000)
+            zecAmount: Zatoshi(123_000_000)
         )
     }
 }
@@ -185,11 +185,11 @@ extension IdentifiedArrayOf where Element == TransactionState {
         return .init(
             uniqueElements: (0..<30).map {
                 TransactionState(
-                    fee: Zatoshi(amount: 10),
+                    fee: Zatoshi(10),
                     id: String($0),
                     status: .paid(success: true),
                     timestamp: 1234567,
-                    zecAmount: Zatoshi(amount: 25)
+                    zecAmount: Zatoshi(25)
                 )
             }
         )

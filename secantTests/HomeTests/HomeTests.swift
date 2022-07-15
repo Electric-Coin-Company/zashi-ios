@@ -8,6 +8,7 @@
 import XCTest
 @testable import secant_testnet
 import ComposableArchitecture
+import ZcashLightClientKit
 
 class HomeTests: XCTestCase {
     func testSynchronizerStateChanged_AnyButSynced() throws {
@@ -37,10 +38,10 @@ class HomeTests: XCTestCase {
         
         store.receive(.updateSynchronizerStatus)
         
-        let balance = Balance(verified: 12_345_000, total: 12_345_000)
+        let balance = WalletBalance(verified: Zatoshi(12_345_000), total: Zatoshi(12_345_000))
         store.receive(.updateBalance(balance)) { state in
-            state.totalBalance = Zatoshi(amount: 12_345_000)
-            state.verifiedBalance = Zatoshi(amount: 12_345_000)
+            state.totalBalance = Zatoshi(12_345_000)
+            state.verifiedBalance = Zatoshi(12_345_000)
         }
     }
 
@@ -78,16 +79,16 @@ class HomeTests: XCTestCase {
 
         // ad 2.
         let transactionsHelper: [TransactionStateMockHelper] = [
-            TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(amount: 1), status: .paid(success: false), uuid: "1"),
-            TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(amount: 2), uuid: "2"),
-            TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(amount: 3), status: .paid(success: true), uuid: "3"),
-            TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(amount: 4), uuid: "4"),
-            TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(amount: 5), uuid: "5")
+            TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "1"),
+            TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "2"),
+            TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(3), status: .paid(success: true), uuid: "3"),
+            TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(4), uuid: "4"),
+            TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(5), uuid: "5")
         ]
         let walletEvents: [WalletEvent] = transactionsHelper.map {
             let transaction = TransactionState.placeholder(
                 amount: $0.amount,
-                fee: Zatoshi(amount: 10),
+                fee: Zatoshi(10),
                 shielded: $0.shielded,
                 status: $0.status,
                 timestamp: $0.date,
@@ -99,11 +100,11 @@ class HomeTests: XCTestCase {
         store.receive(.updateWalletEvents(walletEvents))
         
         // ad 3.
-        let balance = Balance(verified: 12_345_000, total: 12_345_000)
+        let balance = WalletBalance(verified: Zatoshi(12_345_000), total: Zatoshi(12_345_000))
 
         store.receive(.updateBalance(balance)) { state in
-            state.verifiedBalance = Zatoshi(amount: 12_345_000)
-            state.totalBalance = Zatoshi(amount: 12_345_000)
+            state.verifiedBalance = Zatoshi(12_345_000)
+            state.totalBalance = Zatoshi(12_345_000)
         }
     }
     
@@ -226,10 +227,10 @@ class HomeTests: XCTestCase {
         store.receive(.synchronizerStateChanged(.unknown))
         store.receive(.updateSynchronizerStatus)
         
-        let balance = Balance(verified: 12_345_000, total: 12_345_000)
+        let balance = WalletBalance(verified: Zatoshi(12_345_000), total: Zatoshi(12_345_000))
         store.receive(.updateBalance(balance)) { state in
-            state.totalBalance = Zatoshi(amount: 12_345_000)
-            state.verifiedBalance = Zatoshi(amount: 12_345_000)
+            state.totalBalance = Zatoshi(12_345_000)
+            state.verifiedBalance = Zatoshi(12_345_000)
         }
 
         // long-living (cancelable) effects need to be properly canceled.

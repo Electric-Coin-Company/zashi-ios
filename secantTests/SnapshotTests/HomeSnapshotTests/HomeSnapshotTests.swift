@@ -8,20 +8,21 @@
 import XCTest
 @testable import secant_testnet
 import ComposableArchitecture
+import ZcashLightClientKit
 
 class HomeSnapshotTests: XCTestCase {
     func testHomeSnapshot() throws {
         let transactionsHelper: [TransactionStateMockHelper] = [
-            TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(amount: 1), status: .paid(success: true), uuid: "1"),
-            TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(amount: 2), status: .pending, uuid: "2"),
-            TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(amount: 3), status: .received, uuid: "3"),
-            TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(amount: 4), status: .failed, uuid: "4")
+            TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: true), uuid: "1"),
+            TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), status: .pending, uuid: "2"),
+            TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(3), status: .received, uuid: "3"),
+            TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(4), status: .failed, uuid: "4")
         ]
         
         let walletEvents: [WalletEvent] = transactionsHelper.map {
             var transaction = TransactionState.placeholder(
                 amount: $0.amount,
-                fee: Zatoshi(amount: 10),
+                fee: Zatoshi(10),
                 shielded: $0.shielded,
                 status: $0.status,
                 timestamp: $0.date,
@@ -32,7 +33,7 @@ class HomeSnapshotTests: XCTestCase {
             return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
         }
         
-        let balance = Balance(verified: 12_345_000, total: 12_345_000)
+        let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
 
         let store = HomeStore(
             initialState: .init(
@@ -42,9 +43,9 @@ class HomeSnapshotTests: XCTestCase {
                 sendState: .placeholder,
                 scanState: .placeholder,
                 synchronizerStatusSnapshot: .default,
-                totalBalance: Zatoshi(amount: balance.total),
+                totalBalance: balance.total,
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: walletEvents)),
-                verifiedBalance: Zatoshi(amount: balance.verified)
+                verifiedBalance: balance.verified
             ),
             reducer: .default,
             environment: .demo
