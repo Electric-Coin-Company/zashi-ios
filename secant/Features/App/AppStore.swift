@@ -501,7 +501,7 @@ extension AppReducer {
         case .home:
             return Effect(value: .deeplinkHome)
         case let .send(amount, address, memo):
-            return Effect(value: .deeplinkSend(Zatoshi(amount: amount), address, memo))
+            return Effect(value: .deeplinkSend(Zatoshi(amount), address, memo))
         }
     }
 }

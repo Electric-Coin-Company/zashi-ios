@@ -78,7 +78,7 @@ private extension WalletEvent {
         switch Int.random(in: 0..<6) {
         case 1: return .received(.statePlaceholder(.received))
         case 2: return .failed(.statePlaceholder(.failed))
-        case 3: return .shielded(Zatoshi(amount: 234_000_000))
+        case 3: return .shielded(Zatoshi(234_000_000))
         case 4: return .walletImport(BlockHeight(1_629_724))
         case 5: return .pending(.statePlaceholder(.pending))
         default: return .send(.placeholder)

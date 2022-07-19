@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ZcashLightClientKit
 
 struct TransactionRowView: View {
     var transaction: TransactionState
@@ -107,11 +108,11 @@ struct TransactionRowView_Previews: PreviewProvider {
             transaction:
                 .init(
                     zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
-                    fee: Zatoshi(amount: 10),
+                    fee: Zatoshi(10),
                     id: "2",
                     status: .paid(success: true),
                     timestamp: 1234567,
-                    zecAmount: Zatoshi(amount: 123_000_000)
+                    zecAmount: Zatoshi(123_000_000)
                 )
         )
         .preferredColorScheme(.dark)

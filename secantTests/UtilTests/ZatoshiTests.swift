@@ -7,6 +7,7 @@
 
 import XCTest
 @testable import secant_testnet
+import ZcashLightClientKit
 
 class ZatoshiTests: XCTestCase {
     let usNumberFormatter = NumberFormatter()
@@ -21,7 +22,7 @@ class ZatoshiTests: XCTestCase {
     }
 
     func testLowerBound() throws {
-        let number = Zatoshi(amount: -Zatoshi.Constants.maxZatoshi - 1)
+        let number = Zatoshi(-Zatoshi.Constants.maxZatoshi - 1)
         
         XCTAssertEqual(
             -Zatoshi.Constants.maxZatoshi,
@@ -31,7 +32,7 @@ class ZatoshiTests: XCTestCase {
     }
 
     func testUpperBound() throws {
-        let number = Zatoshi(amount: Zatoshi.Constants.maxZatoshi + 1)
+        let number = Zatoshi(Zatoshi.Constants.maxZatoshi + 1)
 
         XCTAssertEqual(
             Zatoshi.Constants.maxZatoshi,
@@ -41,37 +42,37 @@ class ZatoshiTests: XCTestCase {
     }
     
     func testAddingZatoshi() throws {
-        let numberA1 = Zatoshi(amount: 100_000)
-        let numberB1 = Zatoshi(amount: 200_000)
+        let numberA1 = Zatoshi(100_000)
+        let numberB1 = Zatoshi(200_000)
         let result1 = numberA1 + numberB1
         
         XCTAssertEqual(
             result1.amount,
-            Zatoshi(amount: 300_000).amount,
+            Zatoshi(300_000).amount,
             "Zatoshi tests: `testAddingZatoshi` the value is expected to be 300_000 but it's \(result1.amount)"
         )
 
-        let numberA2 = Zatoshi(amount: -100_000)
-        let numberB2 = Zatoshi(amount: 200_000)
+        let numberA2 = Zatoshi(-100_000)
+        let numberB2 = Zatoshi(200_000)
         let result2 = numberA2 + numberB2
         
         XCTAssertEqual(
             result2.amount,
-            Zatoshi(amount: 100_000).amount,
+            Zatoshi(100_000).amount,
             "Zatoshi tests: `testAddingZatoshi` the value is expected to be 100_000 but it's \(result2.amount)"
         )
         
-        let numberA3 = Zatoshi(amount: 100_000)
-        let numberB3 = Zatoshi(amount: -200_000)
+        let numberA3 = Zatoshi(100_000)
+        let numberB3 = Zatoshi(-200_000)
         let result3 = numberA3 + numberB3
         
         XCTAssertEqual(
             result3.amount,
-            Zatoshi(amount: -100_000).amount,
+            Zatoshi(-100_000).amount,
             "Zatoshi tests: `testAddingZatoshi` the value is expected to be -100_000 but it's \(result3.amount)"
         )
 
-        let number = Zatoshi(amount: Zatoshi.Constants.maxZatoshi)
+        let number = Zatoshi(Zatoshi.Constants.maxZatoshi)
         let result4 = number + number
         
         XCTAssertEqual(
@@ -82,37 +83,37 @@ class ZatoshiTests: XCTestCase {
     }
     
     func testSubtractingZatoshi() throws {
-        let numberA1 = Zatoshi(amount: 100_000)
-        let numberB1 = Zatoshi(amount: 200_000)
+        let numberA1 = Zatoshi(100_000)
+        let numberB1 = Zatoshi(200_000)
         let result1 = numberA1 - numberB1
         
         XCTAssertEqual(
             result1.amount,
-            Zatoshi(amount: -100_000).amount,
+            Zatoshi(-100_000).amount,
             "Zatoshi tests: `testSubtractingZatoshi` the value is expected to be -100_000 but it's \(result1.amount)"
         )
 
-        let numberA2 = Zatoshi(amount: -100_000)
-        let numberB2 = Zatoshi(amount: 200_000)
+        let numberA2 = Zatoshi(-100_000)
+        let numberB2 = Zatoshi(200_000)
         let result2 = numberA2 - numberB2
         
         XCTAssertEqual(
             result2.amount,
-            Zatoshi(amount: -300_000).amount,
+            Zatoshi(-300_000).amount,
             "Zatoshi tests: `testSubtractingZatoshi` the value is expected to be -300_000 but it's \(result2.amount)"
         )
         
-        let numberA3 = Zatoshi(amount: 100_000)
-        let numberB3 = Zatoshi(amount: -200_000)
+        let numberA3 = Zatoshi(100_000)
+        let numberB3 = Zatoshi(-200_000)
         let result3 = numberA3 - numberB3
         
         XCTAssertEqual(
             result3.amount,
-            Zatoshi(amount: 300_000).amount,
+            Zatoshi(300_000).amount,
             "Zatoshi tests: `testSubtractingZatoshi` the value is expected to be 300_000 but it's \(result3.amount)"
         )
 
-        let number = Zatoshi(amount: -Zatoshi.Constants.maxZatoshi)
+        let number = Zatoshi(-Zatoshi.Constants.maxZatoshi)
         let result4 = number + number
         
         XCTAssertEqual(

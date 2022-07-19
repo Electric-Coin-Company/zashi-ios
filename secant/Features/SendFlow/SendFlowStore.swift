@@ -36,7 +36,7 @@ struct SendFlowState: Equatable {
     }
 
     var amount: Zatoshi {
-        get { Zatoshi(amount: transactionAmountInputState.amount) }
+        get { Zatoshi(transactionAmountInputState.amount) }
         set {
             transactionAmountInputState.amount = newValue.amount
             transactionAmountInputState.textFieldState.text = newValue.amount == 0 ?
@@ -119,7 +119,7 @@ extension SendFlowReducer {
             return .none
 
         case .updateRoute(.confirmation):
-            state.amount = Zatoshi(amount: state.transactionAmountInputState.amount)
+            state.amount = Zatoshi(state.transactionAmountInputState.amount)
             state.address = state.transactionAddressInputState.textFieldState.text
             state.route = .confirmation
             return .none
@@ -183,7 +183,7 @@ extension SendFlowReducer {
         case .synchronizerStateChanged(.synced):
             return environment.SDKSynchronizer.getShieldedBalance()
                 .receive(on: environment.scheduler)
-                .map({ Zatoshi(amount: $0.total) })
+                .map({ $0.total })
                 .map(SendFlowAction.updateBalance)
                 .eraseToEffect()
             

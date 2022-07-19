@@ -60,7 +60,7 @@ class DeeplinkTests: XCTestCase {
             environment: testEnvironment
         )
         
-        let amount = Zatoshi(amount: 123_000_000)
+        let amount = Zatoshi(123_000_000)
         let address = "address"
         let memo = "testing some memo"
         
@@ -150,7 +150,7 @@ class DeeplinkTests: XCTestCase {
         
         store.send(.deeplink(url))
         
-        let amount = Zatoshi(amount: 123_000_000)
+        let amount = Zatoshi(123_000_000)
         let address = ""
         let memo = ""
 
@@ -199,7 +199,7 @@ class DeeplinkTests: XCTestCase {
         
         store.send(.deeplink(url))
         
-        let amount = Zatoshi(amount: 123_000_000)
+        let amount = Zatoshi(123_000_000)
         let address = "address"
         let memo = "some text"
 

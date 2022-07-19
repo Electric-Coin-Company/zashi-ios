@@ -25,7 +25,7 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
             }
         }
 
-        let balance = Balance(verified: 15_345_000, total: 15_345_000)
+        let balance = WalletBalance(verified: Zatoshi(15_345_000), total: Zatoshi(15_345_000))
 
         let testScheduler = DispatchQueue.test
 
@@ -48,9 +48,9 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
                 sendState: .placeholder,
                 scanState: .placeholder,
                 synchronizerStatusSnapshot: .default,
-                totalBalance: Zatoshi(amount: balance.total),
+                totalBalance: balance.total,
                 walletEventsState: .emptyPlaceHolder,
-                verifiedBalance: Zatoshi(amount: balance.verified)
+                verifiedBalance: balance.verified
             ),
             reducer: .default,
             environment: testEnvironment
@@ -73,7 +73,7 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
             }
         }
 
-        let balance = Balance(verified: 15_345_000, total: 15_345_000)
+        let balance = WalletBalance(verified: 15_345_000, total: 15_345_000)
 
         let testScheduler = DispatchQueue.test
 
@@ -96,9 +96,9 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
                 sendState: .placeholder,
                 scanState: .placeholder,
                 synchronizerStatusSnapshot: .default,
-                totalBalance: Zatoshi(amount: balance.total),
+                totalBalance: balance.total,
                 walletEventsState: .emptyPlaceHolder,
-                verifiedBalance: Zatoshi(amount: balance.verified)
+                verifiedBalance: balance.verified
             ),
             reducer: .default,
             environment: testEnvironment
@@ -114,7 +114,7 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
             }
         }
 
-        let balance = Balance(verified: 15_345_000, total: 15_345_000)
+        let balance = WalletBalance(verified: 15_345_000, total: 15_345_000)
 
         let testScheduler = DispatchQueue.test
 
@@ -137,9 +137,9 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
                 sendState: .placeholder,
                 scanState: .placeholder,
                 synchronizerStatusSnapshot: .default,
-                totalBalance: Zatoshi(amount: balance.total),
+                totalBalance: balance.total,
                 walletEventsState: .emptyPlaceHolder,
-                verifiedBalance: Zatoshi(amount: balance.verified)
+                verifiedBalance: balance.verified
             ),
             reducer: .default,
             environment: testEnvironment

@@ -65,7 +65,7 @@ enum HomeAction: Equatable {
     case scan(ScanAction)
     case synchronizerStateChanged(WrappedSDKSynchronizerState)
     case walletEvents(WalletEventsFlowAction)
-    case updateBalance(Balance)
+    case updateBalance(WalletBalance)
     case updateDrawer(DrawerOverlay)
     case updateRoute(HomeState.Route?)
     case updateSynchronizerStatus
@@ -139,8 +139,8 @@ extension HomeReducer {
             return Effect(value: .updateSynchronizerStatus)
             
         case .updateBalance(let balance):
-            state.totalBalance = Zatoshi(amount: balance.total)
-            state.verifiedBalance = Zatoshi(amount: balance.verified)
+            state.totalBalance = balance.total
+            state.verifiedBalance = balance.verified
             return .none
             
         case .updateDrawer(let drawerOverlay):
@@ -155,7 +155,7 @@ extension HomeReducer {
             state.synchronizerStatusSnapshot = environment.SDKSynchronizer.statusSnapshot()
             return environment.SDKSynchronizer.getShieldedBalance()
                 .receive(on: environment.scheduler)
-                .map({ Balance(verified: $0.verified, total: $0.total) })
+                .map({ WalletBalance(verified: $0.verified, total: $0.total) })
                 .map(HomeAction.updateBalance)
                 .eraseToEffect()
 

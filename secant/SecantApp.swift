@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import ZcashLightClientKit
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
     var appStore: AppStore = .placeholder

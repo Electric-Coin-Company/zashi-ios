@@ -64,11 +64,11 @@ class SendTests: XCTestCase {
             minedHeight: 50,
             shielded: true,
             zAddress: "tteafadlamnelkqe",
-            fee: Zatoshi(amount: 10),
+            fee: Zatoshi(10),
             id: "id",
             status: .paid(success: true),
             timestamp: 1234567,
-            zecAmount: Zatoshi(amount: 10)
+            zecAmount: Zatoshi(10)
         )
 
         // check the success transaction to be received back
