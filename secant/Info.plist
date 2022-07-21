@@ -42,6 +42,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Scan zAddress Qr Codes</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>To access sensitive wallet data which should never be shared with anyone. For example backup phrase seed that can restore the wallet and gain access to funds.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Zboto.otf</string>
@@ -91,7 +93,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSFaceIDUsageDescription</key>
-	<string>To access sensitive wallet data which should never be shared with anyone. For example backup phrase seed that can restore the wallet and gain access to funds.</string>
 </dict>
 </plist>

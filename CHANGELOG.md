@@ -1,4 +1,7 @@
 # Changelog
+## 0.0.1 build 34
+- [#75] [Scaffold] Settings Screen (#398)
+- [#394] adopt ZcashLightClientKit 0.16.x-beta (#397)
 ## 0.0.1 build 33
 - [#102] [Functional] Full Wallet History
 - [#153] [Scaffold] Progress Status Circular Bar (#389)
