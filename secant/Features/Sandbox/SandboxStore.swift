@@ -136,7 +136,7 @@ extension SandboxStore {
                 profileState: .placeholder,
                 route: nil
             ),
-            reducer: .default.debug(),
+            reducer: .default,
             environment: SandboxEnvironment()
         )
     }

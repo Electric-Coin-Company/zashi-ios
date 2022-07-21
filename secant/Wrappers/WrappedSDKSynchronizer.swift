@@ -32,15 +32,19 @@ enum WrappedSDKSynchronizerState: Equatable {
 }
 
 protocol WrappedSDKSynchronizer {
+    var blockProcessor: CompactBlockProcessor? { get }
+    var notificationCenter: WrappedNotificationCenter { get }
     var synchronizer: SDKSynchronizer? { get }
     var stateChanged: CurrentValueSubject<WrappedSDKSynchronizerState, Never> { get }
-    var notificationCenter: WrappedNotificationCenter { get }
-    
+    var walletBirthday: BlockHeight? { get }
+
     func prepareWith(initializer: Initializer) throws
     func start(retry: Bool) throws
     func stop()
     func statusSnapshot() -> SyncStatusSnapshot
 
+    func rewind(_ policy: RewindPolicy) throws
+    
     func getShieldedBalance() -> Effect<WalletBalance, Never>
     func getAllClearedTransactions() -> Effect<[WalletEvent], Never>
     func getAllPendingTransactions() -> Effect<[WalletEvent], Never>
@@ -74,9 +78,11 @@ extension WrappedSDKSynchronizer {
 
 class LiveWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     private var cancellables: [AnyCancellable] = []
+    private(set) var blockProcessor: CompactBlockProcessor?
     private(set) var synchronizer: SDKSynchronizer?
     private(set) var stateChanged: CurrentValueSubject<WrappedSDKSynchronizerState, Never>
     private(set) var notificationCenter: WrappedNotificationCenter
+    private(set) var walletBirthday: BlockHeight?
 
     init(notificationCenter: WrappedNotificationCenter = .live) {
         self.notificationCenter = notificationCenter
@@ -111,6 +117,8 @@ class LiveWrappedSDKSynchronizer: WrappedSDKSynchronizer {
             .store(in: &cancellables)
 
         try synchronizer?.prepare()
+        blockProcessor = CompactBlockProcessor(initializer: initializer)
+        walletBirthday = initializer.walletBirthday
     }
     
     func start(retry: Bool) throws {
@@ -145,9 +153,32 @@ class LiveWrappedSDKSynchronizer: WrappedSDKSynchronizer {
         return SyncStatusSnapshot.snapshotFor(state: synchronizer.status)
     }
 
+    func rewind(_ policy: RewindPolicy) throws {
+        stop()
+        
+        var height: BlockHeight?
+        
+        switch policy {
+        case .quick, .transaction:
+            break
+            
+        case .birthday:
+            height = walletBirthday
+            
+        case .height(let blockheight):
+            height = blockheight
+        }
+        
+        do {
+            _ = try blockProcessor?.rewindTo(height)
+        } catch {
+            throw SynchronizerError.rewindError(underlyingError: error)
+        }
+    }
+    
     func getShieldedBalance() -> Effect<WalletBalance, Never> {
         if let shieldedVerifiedBalance: Zatoshi = synchronizer?.getShieldedVerifiedBalance(),
-            let shieldedTotalBalance: Zatoshi = synchronizer?.getShieldedBalance(accountIndex: 0) {
+        let shieldedTotalBalance: Zatoshi = synchronizer?.getShieldedBalance(accountIndex: 0) {
             return Effect(value: WalletBalance(verified: shieldedVerifiedBalance, total: shieldedTotalBalance))
         }
         
@@ -246,9 +277,11 @@ class LiveWrappedSDKSynchronizer: WrappedSDKSynchronizer {
 
 class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     private var cancellables: [AnyCancellable] = []
+    private(set) var blockProcessor: CompactBlockProcessor?
+    private(set) var notificationCenter: WrappedNotificationCenter
     private(set) var synchronizer: SDKSynchronizer?
     private(set) var stateChanged: CurrentValueSubject<WrappedSDKSynchronizerState, Never>
-    private(set) var notificationCenter: WrappedNotificationCenter
+    private(set) var walletBirthday: BlockHeight?
 
     init(notificationCenter: WrappedNotificationCenter = .mock) {
         self.notificationCenter = notificationCenter
@@ -283,6 +316,8 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
         return SyncStatusSnapshot.snapshotFor(state: synchronizer.status)
     }
 
+    func rewind(_ policy: RewindPolicy) throws { }
+    
     func getShieldedBalance() -> Effect<WalletBalance, Never> {
         return Effect(value: WalletBalance(verified: Zatoshi(12345000), total: Zatoshi(12345000)))
     }
@@ -374,9 +409,11 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
 }
 
 class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
+    private(set) var blockProcessor: CompactBlockProcessor?
+    private(set) var notificationCenter: WrappedNotificationCenter
     private(set) var synchronizer: SDKSynchronizer?
     private(set) var stateChanged: CurrentValueSubject<WrappedSDKSynchronizerState, Never>
-    private(set) var notificationCenter: WrappedNotificationCenter
+    private(set) var walletBirthday: BlockHeight?
 
     init(notificationCenter: WrappedNotificationCenter = .mock) {
         self.notificationCenter = notificationCenter
@@ -393,6 +430,8 @@ class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
 
     func statusSnapshot() -> SyncStatusSnapshot { .default }
 
+    func rewind(_ policy: RewindPolicy) throws { }
+    
     func getShieldedBalance() -> Effect<WalletBalance, Never> {
         return .none
     }

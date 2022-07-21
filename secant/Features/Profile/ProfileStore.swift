@@ -28,6 +28,7 @@ enum ProfileAction: Equatable {
     case addressDetails(AddressDetailsAction)
     case back
     case onAppear
+    case settings(SettingsAction)
     case updateRoute(ProfileState.Route?)
 }
 
@@ -37,6 +38,7 @@ struct ProfileEnvironment {
     let appVersionHandler: AppVersionHandler
     let mnemonic: WrappedMnemonic
     let SDKSynchronizer: WrappedSDKSynchronizer
+    let scheduler: AnySchedulerOf<DispatchQueue>
     let walletStorage: WrappedWalletStorage
     let zcashSDKEnvironment: ZCashSDKEnvironment
 }
@@ -46,6 +48,7 @@ extension ProfileEnvironment {
         appVersionHandler: .live,
         mnemonic: .live,
         SDKSynchronizer: LiveWrappedSDKSynchronizer(),
+        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         walletStorage: .live(),
         zcashSDKEnvironment: .mainnet
     )
@@ -54,6 +57,7 @@ extension ProfileEnvironment {
         appVersionHandler: .test,
         mnemonic: .mock,
         SDKSynchronizer: MockWrappedSDKSynchronizer(),
+        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         walletStorage: .live(),
         zcashSDKEnvironment: .testnet
     )
@@ -65,10 +69,10 @@ extension ProfileReducer {
     static let `default` = ProfileReducer.combine(
         [
             profileReducer,
-            addressDetailsReducer
+            addressDetailsReducer,
+            settingsReducer
         ]
     )
-    .debug()
 
     private static let profileReducer = ProfileReducer { state, action, environment in
         switch action {
@@ -88,6 +92,9 @@ extension ProfileReducer {
             
         case .addressDetails:
             return .none
+            
+        case .settings:
+            return .none
         }
     }
     
@@ -100,6 +107,32 @@ extension ProfileReducer {
             )
         }
     )
+
+    private static let settingsReducer: ProfileReducer = SettingsReducer.default.pullback(
+        state: \ProfileState.settingsState,
+        action: /ProfileAction.settings,
+        environment: { environment in
+            SettingsEnvironment(
+                localAuthenticationHandler: .live,
+                mnemonic: environment.mnemonic,
+                SDKSynchronizer: environment.SDKSynchronizer,
+                scheduler: environment.scheduler,
+                userPreferencesStorage: .live,
+                walletStorage: environment.walletStorage
+            )
+        }
+    )
+}
+
+// MARK: - Store
+
+extension ProfileStore {
+    func settingsStore() -> SettingsStore {
+        self.scope(
+            state: \.settingsState,
+            action: ProfileAction.settings
+        )
+    }
 }
 
 // MARK: - ViewStore
@@ -134,7 +167,7 @@ extension ProfileState {
         .init(
             addressDetailsState: .placeholder,
             route: nil,
-            settingsState: .init()
+            settingsState: .placeholder
         )
     }
 }

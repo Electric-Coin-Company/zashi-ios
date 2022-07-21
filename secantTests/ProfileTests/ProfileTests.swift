@@ -11,10 +11,13 @@ import ComposableArchitecture
 
 class ProfileTests: XCTestCase {
     func testSynchronizerStateChanged_AnyButSynced() throws {
+        let testScheduler = DispatchQueue.test
+
         let testEnvironment = ProfileEnvironment(
             appVersionHandler: .test,
             mnemonic: .mock,
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
+            scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .throwing,
             zcashSDKEnvironment: .testnet
         )

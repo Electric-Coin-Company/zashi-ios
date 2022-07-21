@@ -112,7 +112,6 @@ extension HomeReducer {
             profileReducer
         ]
     )
-    .debug()
 
     private static let homeReducer = HomeReducer { state, action, environment in
         switch action {
@@ -164,6 +163,24 @@ extension HomeReducer {
             return .none
             
         case .profile(.back):
+            state.route = nil
+            return .none
+
+        case .profile(.settings(.quickRescan)):
+            do {
+                try environment.SDKSynchronizer.rewind(.quick)
+            } catch {
+                // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+            }
+            state.route = nil
+            return .none
+
+        case .profile(.settings(.fullRescan)):
+            do {
+                try environment.SDKSynchronizer.rewind(.birthday)
+            } catch {
+                // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+            }
             state.route = nil
             return .none
 
@@ -248,6 +265,7 @@ extension HomeReducer {
                 appVersionHandler: .live,
                 mnemonic: environment.mnemonic,
                 SDKSynchronizer: environment.SDKSynchronizer,
+                scheduler: environment.scheduler,
                 walletStorage: environment.walletStorage,
                 zcashSDKEnvironment: environment.zcashSDKEnvironment
             )
@@ -336,7 +354,7 @@ extension HomeStore {
     static var placeholder: HomeStore {
         HomeStore(
             initialState: .placeholder,
-            reducer: .default.debug(),
+            reducer: .default,
             environment: HomeEnvironment(
                 audioServices: .silent,
                 derivationTool: .live(),

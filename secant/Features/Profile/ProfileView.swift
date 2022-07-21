@@ -67,7 +67,7 @@ struct ProfileView: View {
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForSettings,
                 destination: {
-                    SettingsView()
+                    SettingsView(store: store.settingsStore())
                 }
             )
             .navigationLinkEmpty(
@@ -114,7 +114,7 @@ struct ProfileView_Previews: PreviewProvider {
                 store: .init(
                     initialState: .init(
                         addressDetailsState: .placeholder,
-                        settingsState: .init()
+                        settingsState: .placeholder
                     ),
                     reducer: .default,
                     environment: .live
