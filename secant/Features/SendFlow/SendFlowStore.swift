@@ -109,7 +109,6 @@ extension SendFlowReducer {
             transactionAmountInputReducer
         ]
     )
-    .debug()
 
     private static let sendReducer = SendFlowReducer { state, action, environment in
         switch action {

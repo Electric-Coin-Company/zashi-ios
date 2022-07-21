@@ -125,7 +125,10 @@
 		9E6612312878337F00C75B70 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 9E6612302878337F00C75B70 /* Lottie */; };
 		9E6612332878338C00C75B70 /* LottieAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6612322878338C00C75B70 /* LottieAnimation.swift */; };
 		9E6612362878345000C75B70 /* endlessCircleProgress.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E6612352878345000C75B70 /* endlessCircleProgress.json */; };
+		9E66129B28884BFB00C75B70 /* LocalAuthenticationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E66129A28884BFB00C75B70 /* LocalAuthenticationHandler.swift */; };
+		9E66129E288938A300C75B70 /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E66129D288938A300C75B70 /* SettingsTests.swift */; };
 		9E69A24D27FB002800A55317 /* WelcomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E69A24C27FB002800A55317 /* WelcomeStore.swift */; };
+		9E7225F12889539300DF7F17 /* SettingsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7225F02889539300DF7F17 /* SettingsSnapshotTests.swift */; };
 		9E7CB6122869882D00A02233 /* WalletEventsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6112869882D00A02233 /* WalletEventsSnapshotTests.swift */; };
 		9E7CB6152869E8C300A02233 /* CircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6142869E8C300A02233 /* CircularProgress.swift */; };
 		9E7CB6182872D3DF00A02233 /* URLRouting in Frameworks */ = {isa = PBXBuildFile; productRef = 9E7CB6172872D3DF00A02233 /* URLRouting */; };
@@ -346,7 +349,10 @@
 		9E66122B2877188700C75B70 /* SyncStatusSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStatusSnapshot.swift; sourceTree = "<group>"; };
 		9E6612322878338C00C75B70 /* LottieAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LottieAnimation.swift; sourceTree = "<group>"; };
 		9E6612352878345000C75B70 /* endlessCircleProgress.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = endlessCircleProgress.json; sourceTree = "<group>"; };
+		9E66129A28884BFB00C75B70 /* LocalAuthenticationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAuthenticationHandler.swift; sourceTree = "<group>"; };
+		9E66129D288938A300C75B70 /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
 		9E69A24C27FB002800A55317 /* WelcomeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeStore.swift; sourceTree = "<group>"; };
+		9E7225F02889539300DF7F17 /* SettingsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSnapshotTests.swift; sourceTree = "<group>"; };
 		9E7CB6112869882D00A02233 /* WalletEventsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletEventsSnapshotTests.swift; sourceTree = "<group>"; };
 		9E7CB6142869E8C300A02233 /* CircularProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgress.swift; sourceTree = "<group>"; };
 		9E7CB619287310EC00A02233 /* QRCodeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeGenerator.swift; sourceTree = "<group>"; };
@@ -547,6 +553,7 @@
 				9EAB4674285B5C68002904A0 /* DeeplinkTests */,
 				9E3911372848AD3A0073DD9A /* HomeTests */,
 				9E391122283E4C970073DD9A /* ImportWalletTests */,
+				9E66129C2889388C00C75B70 /* SettingsTests */,
 				9E01F8262833CD84000EFC57 /* ScanTests */,
 				9E5BF642281FEC8700BA3F17 /* SendTests */,
 				9E5BF63D281953F900BA3F17 /* WalletEventsTests */,
@@ -841,6 +848,7 @@
 		9E391162284E3ECF0073DD9A /* SnapshotTests */ = {
 			isa = PBXGroup;
 			children = (
+				9E7225EF2889537E00DF7F17 /* SettingsSnapshotTests */,
 				9E7CB6252874267B00A02233 /* ProfileSnapshotTests */,
 				9E7CB6102869881300A02233 /* WalletEventsSnapshotTests */,
 				9E9ECC8B28589E150099D5A2 /* HomeSnapshotTests */,
@@ -897,6 +905,22 @@
 				9E6612352878345000C75B70 /* endlessCircleProgress.json */,
 			);
 			path = Lotties;
+			sourceTree = "<group>";
+		};
+		9E66129C2889388C00C75B70 /* SettingsTests */ = {
+			isa = PBXGroup;
+			children = (
+				9E66129D288938A300C75B70 /* SettingsTests.swift */,
+			);
+			path = SettingsTests;
+			sourceTree = "<group>";
+		};
+		9E7225EF2889537E00DF7F17 /* SettingsSnapshotTests */ = {
+			isa = PBXGroup;
+			children = (
+				9E7225F02889539300DF7F17 /* SettingsSnapshotTests.swift */,
+			);
+			path = SettingsSnapshotTests;
 			sourceTree = "<group>";
 		};
 		9E7CB6102869881300A02233 /* WalletEventsSnapshotTests */ = {
@@ -995,6 +1019,7 @@
 				9E3911452848EEB90073DD9A /* ZCashSDKEnvironment.swift */,
 				9EAB4670285A1C77002904A0 /* DeeplinkHandler.swift */,
 				9E7CB6282875AC2D00A02233 /* AppVersionHandler.swift */,
+				9E66129A28884BFB00C75B70 /* LocalAuthenticationHandler.swift */,
 			);
 			path = Dependencies;
 			sourceTree = "<group>";
@@ -1588,6 +1613,7 @@
 				9E39113F2848EC360073DD9A /* WrappedRecoveryPhraseRandomizer.swift in Sources */,
 				9EAFEB84280597B700199FC9 /* WrappedSecItem.swift in Sources */,
 				9E5BF6462821028C00BA3F17 /* WrappedUserDefaults.swift in Sources */,
+				9E66129B28884BFB00C75B70 /* LocalAuthenticationHandler.swift in Sources */,
 				F9971A6B27680E1000A2DB75 /* WalletInfoStore.swift in Sources */,
 				9E7FE0F628327F6F00C374E8 /* ScanUIView.swift in Sources */,
 				0D185819272723FF0046B928 /* ColoredChip.swift in Sources */,
@@ -1631,9 +1657,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E7225F12889539300DF7F17 /* SettingsSnapshotTests.swift in Sources */,
 				0DFE93DF272C6D4B000FCCA5 /* RecoveryPhraseBackupTests.swift in Sources */,
 				9EDDEAA22829610D00B4100C /* CurrencySelectionTests.swift in Sources */,
 				9E01F8282833CDA0000EFC57 /* ScanTests.swift in Sources */,
+				9E66129E288938A300C75B70 /* SettingsTests.swift in Sources */,
 				9EDDEAA42829610D00B4100C /* TransactionAddressInputTests.swift in Sources */,
 				9E7CB6272874269F00A02233 /* ProfileSnapshotTests.swift in Sources */,
 				9E92AF0828530EBF007367AD /* View+UIImage.swift in Sources */,

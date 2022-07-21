@@ -10,6 +10,7 @@ import XCTest
 import ComposableArchitecture
 import ZcashLightClientKit
 
+// swiftlint:disable type_body_length
 class HomeTests: XCTestCase {
     func testSynchronizerStateChanged_AnyButSynced() throws {
         // setup the store and environment to be fully mocked
@@ -236,5 +237,83 @@ class HomeTests: XCTestCase {
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancles the observer of the synchronizer status change.
         store.send(.onDisappear)
+    }
+    
+    func testQuickRescan_ResetToHomeScreen() throws {
+        // setup the store and environment to be fully mocked
+        let testScheduler = DispatchQueue.test
+
+        let testEnvironment = HomeEnvironment(
+            audioServices: .silent,
+            derivationTool: .live(),
+            feedbackGenerator: .silent,
+            mnemonic: .mock,
+            scheduler: testScheduler.eraseToAnyScheduler(),
+            SDKSynchronizer: MockWrappedSDKSynchronizer(),
+            walletStorage: .throwing,
+            zcashSDKEnvironment: .testnet
+        )
+        
+        let homeState = HomeState(
+            route: .profile,
+            drawerOverlay: .full,
+            profileState: .placeholder,
+            requestState: .placeholder,
+            sendState: .placeholder,
+            scanState: .placeholder,
+            synchronizerStatusSnapshot: .default,
+            totalBalance: Zatoshi.zero,
+            walletEventsState: .emptyPlaceHolder,
+            verifiedBalance: Zatoshi.zero
+        )
+        
+        let store = TestStore(
+            initialState: homeState,
+            reducer: HomeReducer.default,
+            environment: testEnvironment
+        )
+        
+        store.send(.profile(.settings(.quickRescan))) { state in
+            state.route = nil
+        }
+    }
+    
+    func testFullRescan_ResetToHomeScreen() throws {
+        // setup the store and environment to be fully mocked
+        let testScheduler = DispatchQueue.test
+
+        let testEnvironment = HomeEnvironment(
+            audioServices: .silent,
+            derivationTool: .live(),
+            feedbackGenerator: .silent,
+            mnemonic: .mock,
+            scheduler: testScheduler.eraseToAnyScheduler(),
+            SDKSynchronizer: MockWrappedSDKSynchronizer(),
+            walletStorage: .throwing,
+            zcashSDKEnvironment: .testnet
+        )
+        
+        let homeState = HomeState(
+            route: .profile,
+            drawerOverlay: .full,
+            profileState: .placeholder,
+            requestState: .placeholder,
+            sendState: .placeholder,
+            scanState: .placeholder,
+            synchronizerStatusSnapshot: .default,
+            totalBalance: Zatoshi.zero,
+            walletEventsState: .emptyPlaceHolder,
+            verifiedBalance: Zatoshi.zero
+        )
+        
+        let store = TestStore(
+            initialState: homeState,
+            reducer: HomeReducer.default,
+            environment: testEnvironment
+        )
+        
+        store.send(.profile(.settings(.fullRescan))) { state in
+            state.route = nil
+        }
     }
 }
