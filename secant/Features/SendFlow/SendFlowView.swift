@@ -34,6 +34,7 @@ struct SendFLowView_Previews: PreviewProvider {
             SendFlowView(
                 store: .init(
                     initialState: .init(
+                        memoState: .placeholder,
                         route: nil,
                         transactionAddressInputState: .placeholder,
                         transactionAmountInputState: .placeholder
@@ -45,7 +46,8 @@ struct SendFLowView_Previews: PreviewProvider {
                         numberFormatter: .live(),
                         SDKSynchronizer: LiveWrappedSDKSynchronizer(),
                         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
-                        walletStorage: .live()
+                        walletStorage: .live(),
+                        zcashSDKEnvironment: .mainnet
                     )
                 )
             )

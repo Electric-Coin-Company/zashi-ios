@@ -36,7 +36,8 @@ struct SandboxView: View {
                         numberFormatter: .live(),
                         SDKSynchronizer: LiveWrappedSDKSynchronizer(),
                         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
-                        walletStorage: .live()
+                        walletStorage: .live(),
+                        zcashSDKEnvironment: .mainnet
                     )
                 )
             )

@@ -339,7 +339,7 @@ extension AppReducer {
             state.homeState.route = .send
             state.homeState.sendState.amount = amount
             state.homeState.sendState.address = address
-            state.homeState.sendState.memo = memo
+            state.homeState.sendState.memoState.text = memo
             return .none
             
         case .home(.walletEvents(.replyTo(let address))):

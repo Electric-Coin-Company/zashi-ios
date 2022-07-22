@@ -24,7 +24,7 @@ struct SendFlowState: Equatable {
     }
 
     var isSendingTransaction = false
-    var memo = ""
+    var memoState: MultiLineTextFieldState
     var route: Route?
     var totalBalance = Zatoshi.zero
     var transactionAddressInputState: TransactionAddressTextFieldState
@@ -59,6 +59,7 @@ struct SendFlowState: Equatable {
         transactionAmountInputState.amount > 0
         && transactionAddressInputState.isValidAddress
         && !isInsufficientFunds
+        && memoState.isValid
     }
     
     var isInsufficientFunds: Bool {
@@ -73,6 +74,7 @@ struct SendFlowState: Equatable {
 // MARK: - Action
 
 enum SendFlowAction: Equatable {
+    case memo(MultiLineTextFieldAction)
     case onAppear
     case onDisappear
     case sendConfirmationPressed
@@ -81,8 +83,6 @@ enum SendFlowAction: Equatable {
     case transactionAddressInput(TransactionAddressTextFieldAction)
     case transactionAmountInput(TransactionAmountTextFieldAction)
     case updateBalance(Zatoshi)
-    case updateMemo(String)
-//    case updateTransaction(SendFlowTransaction)
     case updateRoute(SendFlowState.Route?)
 }
 
@@ -95,6 +95,7 @@ struct SendFlowEnvironment {
     let SDKSynchronizer: WrappedSDKSynchronizer
     let scheduler: AnySchedulerOf<DispatchQueue>
     let walletStorage: WrappedWalletStorage
+    let zcashSDKEnvironment: ZCashSDKEnvironment
 }
 
 // MARK: - Reducer
@@ -106,7 +107,8 @@ extension SendFlowReducer {
         [
             sendReducer,
             transactionAddressInputReducer,
-            transactionAmountInputReducer
+            transactionAmountInputReducer,
+            memoReducer
         ]
     )
 
@@ -145,7 +147,7 @@ extension SendFlowReducer {
                     with: spendingKey,
                     zatoshi: state.amount,
                     to: state.address,
-                    memo: state.memo,
+                    memo: state.memoState.text,
                     from: 0
                 )
                 .receive(on: environment.scheduler)
@@ -171,6 +173,7 @@ extension SendFlowReducer {
             return .none
 
         case .onAppear:
+            state.memoState.charLimit = environment.zcashSDKEnvironment.memoCharLimit
             return environment.SDKSynchronizer.stateChanged
                 .map(SendFlowAction.synchronizerStateChanged)
                 .eraseToEffect()
@@ -194,8 +197,7 @@ extension SendFlowReducer {
             state.transactionAmountInputState.maxValue = balance.amount
             return .none
 
-        case .updateMemo(let memo):
-            state.memo = memo
+        case .memo:
             return .none
         }
     }
@@ -219,7 +221,13 @@ extension SendFlowReducer {
             )
         }
     )
-    
+
+    private static let memoReducer: SendFlowReducer = MultiLineTextFieldReducer.default.pullback(
+        state: \SendFlowState.memoState,
+        action: /SendFlowAction.memo,
+        environment: { _ in MultiLineTextFieldEnvironment() }
+    )
+
     static func `default`(whenDone: @escaping () -> Void) -> SendFlowReducer {
         SendFlowReducer { state, action, environment in
             switch action {
@@ -229,6 +237,17 @@ extension SendFlowReducer {
                 return Self.default.run(&state, action, environment)
             }
         }
+    }
+}
+
+// MARK: - Store
+
+extension SendFlowStore {
+    func memoStore() -> MultiLineTextFieldStore {
+        self.scope(
+            state: \.memoState,
+            action: SendFlowAction.memo
+        )
     }
 }
 
@@ -269,13 +288,6 @@ extension SendFlowViewStore {
             embed: { $0 ? SendFlowState.Route.done : SendFlowState.Route.confirmation }
         )
     }
-
-    var bindingForMemo: Binding<String> {
-        self.binding(
-            get: \.memo,
-            send: SendFlowAction.updateMemo
-        )
-    }
 }
 
 // MARK: Placeholders
@@ -283,6 +295,7 @@ extension SendFlowViewStore {
 extension SendFlowState {
     static var placeholder: Self {
         .init(
+            memoState: .placeholder,
             route: nil,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState: .amount
@@ -291,6 +304,7 @@ extension SendFlowState {
 
     static var emptyPlaceholder: Self {
         .init(
+            memoState: .placeholder,
             route: nil,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState: .placeholder
@@ -303,6 +317,7 @@ extension SendFlowStore {
     static var placeholder: SendFlowStore {
         return SendFlowStore(
             initialState: .init(
+                memoState: .placeholder,
                 route: nil,
                 transactionAddressInputState: .placeholder,
                 transactionAmountInputState: .placeholder
@@ -314,7 +329,8 @@ extension SendFlowStore {
                 numberFormatter: .live(),
                 SDKSynchronizer: LiveWrappedSDKSynchronizer(),
                 scheduler: DispatchQueue.main.eraseToAnyScheduler(),
-                walletStorage: .live()
+                walletStorage: .live(),
+                zcashSDKEnvironment: .mainnet
             )
         )
     }

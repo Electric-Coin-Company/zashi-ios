@@ -204,7 +204,7 @@
       "location" : "https://github.com/zcash/ZcashLightClientKit",
       "state" : {
         "branch" : "master",
-        "revision" : "5c1e283837df46d734101885010185d4e093337c"
+        "revision" : "fba4cecbe61cce424ada9fe1f98b05b88d5c8920"
       }
     }
   ],
