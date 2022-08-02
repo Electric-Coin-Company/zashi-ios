@@ -40,7 +40,8 @@ class SendTests: XCTestCase {
             numberFormatter: .live(),
             SDKSynchronizer: MockWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
-            walletStorage: .live(walletStorage: storage)
+            walletStorage: .live(walletStorage: storage),
+            zcashSDKEnvironment: .testnet
         )
 
         let store = TestStore(
@@ -97,7 +98,8 @@ class SendTests: XCTestCase {
             numberFormatter: .live(),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
-            walletStorage: .live(walletStorage: storage)
+            walletStorage: .live(walletStorage: storage),
+            zcashSDKEnvironment: .testnet
         )
 
         let store = TestStore(
@@ -137,7 +139,8 @@ class SendTests: XCTestCase {
             numberFormatter: .live(),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
-            walletStorage: .live(walletStorage: WalletStorage(secItem: .live))
+            walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
+            zcashSDKEnvironment: .testnet
         )
 
         let store = TestStore(
@@ -180,7 +183,8 @@ class SendTests: XCTestCase {
             numberFormatter: .live(),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
-            walletStorage: .live(walletStorage: WalletStorage(secItem: .live))
+            walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
+            zcashSDKEnvironment: .testnet
         )
 
         let store = TestStore(
@@ -205,7 +209,8 @@ class SendTests: XCTestCase {
             numberFormatter: .live(),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
-            walletStorage: .live(walletStorage: WalletStorage(secItem: .live))
+            walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
+            zcashSDKEnvironment: .testnet
         )
 
         let store = TestStore(
@@ -230,6 +235,7 @@ class SendTests: XCTestCase {
     
     func testFundsSufficiency() throws {
         let sendState = SendFlowState(
+            memoState: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldState(
@@ -251,7 +257,8 @@ class SendTests: XCTestCase {
             numberFormatter: .live(numberFormatter: usNumberFormatter),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
-            walletStorage: .live(walletStorage: WalletStorage(secItem: .live))
+            walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
+            zcashSDKEnvironment: .testnet
         )
 
         let store = TestStore(
@@ -300,11 +307,13 @@ class SendTests: XCTestCase {
             numberFormatter: .live(numberFormatter: usNumberFormatter),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
-            walletStorage: .live(walletStorage: WalletStorage(secItem: .live))
+            walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
+            zcashSDKEnvironment: .testnet
         )
 
         let store = TestStore(
             initialState: .init(
+                memoState: .placeholder,
                 route: nil,
                 transactionAddressInputState: .placeholder,
                 transactionAmountInputState:
@@ -337,6 +346,7 @@ class SendTests: XCTestCase {
     
     func testValidForm() throws {
         let sendState = SendFlowState(
+            memoState: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldState(
@@ -359,7 +369,8 @@ class SendTests: XCTestCase {
             numberFormatter: .live(),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
-            walletStorage: .live(walletStorage: WalletStorage(secItem: .live))
+            walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
+            zcashSDKEnvironment: .testnet
         )
 
         let store = TestStore(
@@ -383,6 +394,7 @@ class SendTests: XCTestCase {
     
     func testInvalidForm_InsufficientFunds() throws {
         let sendState = SendFlowState(
+            memoState: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldState(
@@ -404,7 +416,8 @@ class SendTests: XCTestCase {
             numberFormatter: .live(),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
-            walletStorage: .live(walletStorage: WalletStorage(secItem: .live))
+            walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
+            zcashSDKEnvironment: .testnet
         )
 
         let store = TestStore(
@@ -428,6 +441,7 @@ class SendTests: XCTestCase {
     
     func testInvalidForm_AddressFormat() throws {
         let sendState = SendFlowState(
+            memoState: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldState(
@@ -449,7 +463,8 @@ class SendTests: XCTestCase {
             numberFormatter: .live(),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
-            walletStorage: .live(walletStorage: WalletStorage(secItem: .live))
+            walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
+            zcashSDKEnvironment: .testnet
         )
 
         let store = TestStore(
@@ -473,6 +488,7 @@ class SendTests: XCTestCase {
     
     func testInvalidForm_AmountFormat() throws {
         let sendState = SendFlowState(
+            memoState: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldState(
@@ -494,7 +510,8 @@ class SendTests: XCTestCase {
             numberFormatter: .live(),
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
             scheduler: testScheduler.eraseToAnyScheduler(),
-            walletStorage: .live(walletStorage: WalletStorage(secItem: .live))
+            walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
+            zcashSDKEnvironment: .testnet
         )
 
         let store = TestStore(
@@ -514,6 +531,104 @@ class SendTests: XCTestCase {
                 "Send Tests: `testValidForm` is expected to be false but it's \(state.isValidForm)"
             )
         }
+    }
+    
+    func testInvalidForm_ExceededMemoCharLimit() throws {
+        let sendState = SendFlowState(
+            memoState: MultiLineTextFieldState(charLimit: 3),
+            totalBalance: Zatoshi(1),
+            transactionAddressInputState:
+                TransactionAddressTextFieldState(
+                    isValidAddress: true,
+                    textFieldState:
+                        TCATextFieldState(
+                            validationType: .none,
+                            text: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
+                        )
+                ),
+            transactionAmountInputState:
+                TransactionAmountTextFieldState(
+                    amount: 100,
+                    currencySelectionState: CurrencySelectionState(),
+                    maxValue: 501_302,
+                    textFieldState:
+                        TCATextFieldState(
+                            validationType: .floatingPoint,
+                            text: "0.0.0501301"
+                        )
+                )
+        )
+
+        let testScheduler = DispatchQueue.test
+        
+        let testEnvironment = SendFlowEnvironment(
+            derivationTool: .live(),
+            mnemonic: .mock,
+            numberFormatter: .live(),
+            SDKSynchronizer: TestWrappedSDKSynchronizer(),
+            scheduler: testScheduler.eraseToAnyScheduler(),
+            walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
+            zcashSDKEnvironment: .testnet
+        )
+
+        let store = TestStore(
+            initialState: sendState,
+            reducer: SendFlowReducer.default,
+            environment: testEnvironment
+        )
+        
+        store.send(.memo(.binding(.set(\.$text, "test")))) { state in
+            state.memoState.text = "test"
+            XCTAssertFalse(
+                state.isValidForm,
+                "Send Tests: `testValidForm` is expected to be false but it's \(state.isValidForm)"
+            )
+        }
+    }
+    
+    func testMemoCharLimitSet() throws {
+        let sendState = SendFlowState(
+            memoState: .placeholder,
+            transactionAddressInputState: .placeholder,
+            transactionAmountInputState:
+                TransactionAmountTextFieldState(
+                    currencySelectionState: CurrencySelectionState(),
+                    maxValue: 501_302,
+                    textFieldState:
+                        TCATextFieldState(
+                            validationType: .floatingPoint,
+                            text: "0.0.0501301"
+                        )
+                )
+        )
+
+        let testScheduler = DispatchQueue.test
+        
+        let testEnvironment = SendFlowEnvironment(
+            derivationTool: .live(),
+            mnemonic: .mock,
+            numberFormatter: .live(),
+            SDKSynchronizer: TestWrappedSDKSynchronizer(),
+            scheduler: testScheduler.eraseToAnyScheduler(),
+            walletStorage: .live(walletStorage: WalletStorage(secItem: .live)),
+            zcashSDKEnvironment: .testnet
+        )
+
+        let store = TestStore(
+            initialState: sendState,
+            reducer: SendFlowReducer.default,
+            environment: testEnvironment
+        )
+
+        store.send(.onAppear) { state in
+            state.memoState.charLimit = 512
+        }
+
+        store.receive(.synchronizerStateChanged(.unknown))
+        
+        // .onAppear action starts long living cancelable action .synchronizerStateChanged
+        // .onDisappear cancels it, must have for the test to pass
+        store.send(.onDisappear)
     }
 }
 

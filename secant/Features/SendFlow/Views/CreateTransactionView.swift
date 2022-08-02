@@ -62,13 +62,12 @@ struct CreateTransaction: View {
                 }
                 .padding()
                 
-                VStack {
-                    Text("Memo")
-                    
-                    TextEditor(text: viewStore.bindingForMemo)
-                        .frame(maxWidth: .infinity, maxHeight: 150, alignment: .center)
-                        .importSeedEditorModifier(Asset.Colors.Text.activeButtonText.color)
-                }
+                MultipleLineTextField(
+                    store: store.memoStore(),
+                    title: "Memo",
+                    titleAccessoryView: {}
+                )
+                .frame(height: 200)
                 .padding()
                 
                 Button(

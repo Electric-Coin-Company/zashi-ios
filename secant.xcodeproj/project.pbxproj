@@ -127,8 +127,11 @@
 		9E6612362878345000C75B70 /* endlessCircleProgress.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E6612352878345000C75B70 /* endlessCircleProgress.json */; };
 		9E66129B28884BFB00C75B70 /* LocalAuthenticationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E66129A28884BFB00C75B70 /* LocalAuthenticationHandler.swift */; };
 		9E66129E288938A300C75B70 /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E66129D288938A300C75B70 /* SettingsTests.swift */; };
+		9E6713F12897F81B00A6796F /* MultiLineTextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6713F02897F81B00A6796F /* MultiLineTextFieldTests.swift */; };
 		9E69A24D27FB002800A55317 /* WelcomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E69A24C27FB002800A55317 /* WelcomeStore.swift */; };
 		9E7225F12889539300DF7F17 /* SettingsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7225F02889539300DF7F17 /* SettingsSnapshotTests.swift */; };
+		9E7225F3288AB6DD00DF7F17 /* MultipleLineTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7225F2288AB6DD00DF7F17 /* MultipleLineTextField.swift */; };
+		9E7225F6288AC71A00DF7F17 /* MultiLineTextFieldStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7225F5288AC71A00DF7F17 /* MultiLineTextFieldStore.swift */; };
 		9E7CB6122869882D00A02233 /* WalletEventsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6112869882D00A02233 /* WalletEventsSnapshotTests.swift */; };
 		9E7CB6152869E8C300A02233 /* CircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6142869E8C300A02233 /* CircularProgress.swift */; };
 		9E7CB6182872D3DF00A02233 /* URLRouting in Frameworks */ = {isa = PBXBuildFile; productRef = 9E7CB6172872D3DF00A02233 /* URLRouting */; };
@@ -351,8 +354,11 @@
 		9E6612352878345000C75B70 /* endlessCircleProgress.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = endlessCircleProgress.json; sourceTree = "<group>"; };
 		9E66129A28884BFB00C75B70 /* LocalAuthenticationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAuthenticationHandler.swift; sourceTree = "<group>"; };
 		9E66129D288938A300C75B70 /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
+		9E6713F02897F81B00A6796F /* MultiLineTextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiLineTextFieldTests.swift; sourceTree = "<group>"; };
 		9E69A24C27FB002800A55317 /* WelcomeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeStore.swift; sourceTree = "<group>"; };
 		9E7225F02889539300DF7F17 /* SettingsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSnapshotTests.swift; sourceTree = "<group>"; };
+		9E7225F2288AB6DD00DF7F17 /* MultipleLineTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleLineTextField.swift; sourceTree = "<group>"; };
+		9E7225F5288AC71A00DF7F17 /* MultiLineTextFieldStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiLineTextFieldStore.swift; sourceTree = "<group>"; };
 		9E7CB6112869882D00A02233 /* WalletEventsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletEventsSnapshotTests.swift; sourceTree = "<group>"; };
 		9E7CB6142869E8C300A02233 /* CircularProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgress.swift; sourceTree = "<group>"; };
 		9E7CB619287310EC00A02233 /* QRCodeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeGenerator.swift; sourceTree = "<group>"; };
@@ -549,6 +555,7 @@
 			isa = PBXGroup;
 			children = (
 				9E391162284E3ECF0073DD9A /* SnapshotTests */,
+				9E6713EF2897F80A00A6796F /* MultiLineTextFieldTests */,
 				9E7CB6222874245400A02233 /* ProfileTests */,
 				9EAB4674285B5C68002904A0 /* DeeplinkTests */,
 				9E3911372848AD3A0073DD9A /* HomeTests */,
@@ -671,6 +678,7 @@
 		2E35F99027B28E6800EB79CD /* TextFields */ = {
 			isa = PBXGroup;
 			children = (
+				9E7225F4288AC6F300DF7F17 /* MultiLineTextField */,
 				9E7FE0F0282E80C100C374E8 /* TCATextField */,
 				2E35F99127B28E7600EB79CD /* SingleLineTextField.swift */,
 				9E5BF64C2823E84300BA3F17 /* TransactionAddress */,
@@ -915,12 +923,29 @@
 			path = SettingsTests;
 			sourceTree = "<group>";
 		};
+		9E6713EF2897F80A00A6796F /* MultiLineTextFieldTests */ = {
+			isa = PBXGroup;
+			children = (
+				9E6713F02897F81B00A6796F /* MultiLineTextFieldTests.swift */,
+			);
+			path = MultiLineTextFieldTests;
+			sourceTree = "<group>";
+		};
 		9E7225EF2889537E00DF7F17 /* SettingsSnapshotTests */ = {
 			isa = PBXGroup;
 			children = (
 				9E7225F02889539300DF7F17 /* SettingsSnapshotTests.swift */,
 			);
 			path = SettingsSnapshotTests;
+			sourceTree = "<group>";
+		};
+		9E7225F4288AC6F300DF7F17 /* MultiLineTextField */ = {
+			isa = PBXGroup;
+			children = (
+				9E7225F5288AC71A00DF7F17 /* MultiLineTextFieldStore.swift */,
+				9E7225F2288AB6DD00DF7F17 /* MultipleLineTextField.swift */,
+			);
+			path = MultiLineTextField;
 			sourceTree = "<group>";
 		};
 		9E7CB6102869881300A02233 /* WalletEventsSnapshotTests */ = {
@@ -1568,6 +1593,7 @@
 				9E7FE0F92832824C00C374E8 /* QRCodeScanView.swift in Sources */,
 				9E3911482848EEB90073DD9A /* RecoveryPhraseRandomizer.swift in Sources */,
 				0DF482BA2787ADA800EB37D6 /* ConditionalModifier.swift in Sources */,
+				9E7225F3288AB6DD00DF7F17 /* MultipleLineTextField.swift in Sources */,
 				9E7FE0EC282E7D9400C374E8 /* TransactionState.swift in Sources */,
 				9E2F1C8F280EDE09004E65FE /* Drawer.swift in Sources */,
 				665C963F272C26E600BC04FB /* CircularFrameBackground.swift in Sources */,
@@ -1586,6 +1612,7 @@
 				9E87ADF128363DE400122FCC /* WrappedAudioServices.swift in Sources */,
 				2EA11F5B27467EF800709571 /* OnboardingFooterView.swift in Sources */,
 				66D50668271D9B6100E51F0D /* NavigationButtonStyle.swift in Sources */,
+				9E7225F6288AC71A00DF7F17 /* MultiLineTextFieldStore.swift in Sources */,
 				2EDA07A427EDE2A900D6F09B /* DebugFrame.swift in Sources */,
 				9E6612332878338C00C75B70 /* LottieAnimation.swift in Sources */,
 				0D3D040A2728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift in Sources */,
@@ -1660,6 +1687,7 @@
 				9E7225F12889539300DF7F17 /* SettingsSnapshotTests.swift in Sources */,
 				0DFE93DF272C6D4B000FCCA5 /* RecoveryPhraseBackupTests.swift in Sources */,
 				9EDDEAA22829610D00B4100C /* CurrencySelectionTests.swift in Sources */,
+				9E6713F12897F81B00A6796F /* MultiLineTextFieldTests.swift in Sources */,
 				9E01F8282833CDA0000EFC57 /* ScanTests.swift in Sources */,
 				9E66129E288938A300C75B70 /* SettingsTests.swift in Sources */,
 				9EDDEAA42829610D00B4100C /* TransactionAddressInputTests.swift in Sources */,

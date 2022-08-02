@@ -110,6 +110,7 @@ internal enum Asset {
       internal static let drawerTabsText = ColorAsset(name: "DrawerTabsText")
       internal static let heading = ColorAsset(name: "Heading")
       internal static let importSeedEditor = ColorAsset(name: "ImportSeedEditor")
+      internal static let invalidEntry = ColorAsset(name: "InvalidEntry")
       internal static let medium = ColorAsset(name: "Medium")
       internal static let regular = ColorAsset(name: "Regular")
       internal static let secondaryButtonText = ColorAsset(name: "SecondaryButtonText")
@@ -124,6 +125,7 @@ internal enum Asset {
       internal static let moreInfoText = ColorAsset(name: "moreInfoText")
     }
     internal enum TextField {
+      internal static let multilineOutline = ColorAsset(name: "MultilineOutline")
       internal static let titleAccessoryButton = ColorAsset(name: "TitleAccessoryButton")
       internal static let titleAccessoryButtonPressed = ColorAsset(name: "TitleAccessoryButtonPressed")
       internal enum Underline {

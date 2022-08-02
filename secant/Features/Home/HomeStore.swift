@@ -240,7 +240,8 @@ extension HomeReducer {
                 numberFormatter: .live(),
                 SDKSynchronizer: environment.SDKSynchronizer,
                 scheduler: environment.scheduler,
-                walletStorage: environment.walletStorage
+                walletStorage: environment.walletStorage,
+                zcashSDKEnvironment: environment.zcashSDKEnvironment
             )
         }
     )

@@ -23,6 +23,7 @@ struct ZCashSDKEnvironment {
     let endpoint: LightWalletEndpoint
     let isMainnet: () -> Bool
     let lightWalletService: LightWalletService
+    let memoCharLimit: Int
     let mnemonicWordsMaxCount: Int
     let network: ZcashNetwork
     let requiredTransactionConfirmations: Int
@@ -37,6 +38,7 @@ extension ZCashSDKEnvironment {
         lightWalletService: LightWalletGRPCService(
             endpoint: LightWalletEndpoint(address: ZcashSDKConstants.endpointMainnetAddress, port: ZcashSDKConstants.endpointPort)
         ),
+        memoCharLimit: 512,
         mnemonicWordsMaxCount: ZcashSDKConstants.mnemonicWordsMaxCount,
         network: ZcashNetworkBuilder.network(for: .mainnet),
         requiredTransactionConfirmations: ZcashSDKConstants.requiredTransactionConfirmations,
@@ -50,6 +52,7 @@ extension ZCashSDKEnvironment {
         lightWalletService: LightWalletGRPCService(
             endpoint: LightWalletEndpoint(address: ZcashSDKConstants.endpointTestnetAddress, port: ZcashSDKConstants.endpointPort)
         ),
+        memoCharLimit: 512,
         mnemonicWordsMaxCount: ZcashSDKConstants.mnemonicWordsMaxCount,
         network: ZcashNetworkBuilder.network(for: .testnet),
         requiredTransactionConfirmations: ZcashSDKConstants.requiredTransactionConfirmations,
