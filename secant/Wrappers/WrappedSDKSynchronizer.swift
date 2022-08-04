@@ -37,15 +37,18 @@ protocol WrappedSDKSynchronizer {
     var synchronizer: SDKSynchronizer? { get }
     var stateChanged: CurrentValueSubject<WrappedSDKSynchronizerState, Never> { get }
     var walletBirthday: BlockHeight? { get }
+    var latestScannedSynchronizerState: SDKSynchronizer.SynchronizerState? { get }
 
     func prepareWith(initializer: Initializer) throws
     func start(retry: Bool) throws
     func stop()
+    func synchronizerSynced(_ synchronizerState: SDKSynchronizer.SynchronizerState?)
     func statusSnapshot() -> SyncStatusSnapshot
 
     func rewind(_ policy: RewindPolicy) throws
     
-    func getShieldedBalance() -> Effect<WalletBalance, Never>
+    func getShieldedBalance() -> WalletBalance?
+    func getTransparentBalance() -> WalletBalance?
     func getAllClearedTransactions() -> Effect<[WalletEvent], Never>
     func getAllPendingTransactions() -> Effect<[WalletEvent], Never>
     func getAllTransactions() -> Effect<[WalletEvent], Never>
@@ -83,6 +86,7 @@ class LiveWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     private(set) var stateChanged: CurrentValueSubject<WrappedSDKSynchronizerState, Never>
     private(set) var notificationCenter: WrappedNotificationCenter
     private(set) var walletBirthday: BlockHeight?
+    private(set) var latestScannedSynchronizerState: SDKSynchronizer.SynchronizerState?
 
     init(notificationCenter: WrappedNotificationCenter = .live) {
         self.notificationCenter = notificationCenter
@@ -103,7 +107,10 @@ class LiveWrappedSDKSynchronizer: WrappedSDKSynchronizer {
 
         notificationCenter.publisherFor(.synchronizerSynced)?
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in self?.synchronizerSynced() }
+            .sink { [weak self] output in
+                let synchronizerState = output.userInfo?[SDKSynchronizer.NotificationKeys.synchronizerState] as? SDKSynchronizer.SynchronizerState
+                self?.synchronizerSynced(synchronizerState)
+            }
             .store(in: &cancellables)
 
         notificationCenter.publisherFor(.synchronizerProgressUpdated)?
@@ -133,8 +140,9 @@ class LiveWrappedSDKSynchronizer: WrappedSDKSynchronizer {
         stateChanged.send(.started)
     }
 
-    func synchronizerSynced() {
+    func synchronizerSynced(_ synchronizerState: SDKSynchronizer.SynchronizerState?) {
         stateChanged.send(.synced)
+        latestScannedSynchronizerState = synchronizerState
     }
 
     func synchronizerProgressUpdated() {
@@ -176,15 +184,14 @@ class LiveWrappedSDKSynchronizer: WrappedSDKSynchronizer {
         }
     }
     
-    func getShieldedBalance() -> Effect<WalletBalance, Never> {
-        if let shieldedVerifiedBalance: Zatoshi = synchronizer?.getShieldedVerifiedBalance(),
-        let shieldedTotalBalance: Zatoshi = synchronizer?.getShieldedBalance(accountIndex: 0) {
-            return Effect(value: WalletBalance(verified: shieldedVerifiedBalance, total: shieldedTotalBalance))
-        }
-        
-        return .none
+    func getShieldedBalance() -> WalletBalance? {
+        latestScannedSynchronizerState?.shieldedBalance
     }
-    
+
+    func getTransparentBalance() -> WalletBalance? {
+        latestScannedSynchronizerState?.transparentBalance
+    }
+
     func getAllClearedTransactions() -> Effect<[WalletEvent], Never> {
         if let clearedTransactions = try? synchronizer?.allClearedTransactions() {
             return Effect(value: clearedTransactions.map {
@@ -282,6 +289,7 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     private(set) var synchronizer: SDKSynchronizer?
     private(set) var stateChanged: CurrentValueSubject<WrappedSDKSynchronizerState, Never>
     private(set) var walletBirthday: BlockHeight?
+    private(set) var latestScannedSynchronizerState: SDKSynchronizer.SynchronizerState?
 
     init(notificationCenter: WrappedNotificationCenter = .mock) {
         self.notificationCenter = notificationCenter
@@ -304,7 +312,7 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
         synchronizer?.stop()
     }
 
-    func synchronizerSynced() {
+    func synchronizerSynced(_ synchronizerState: SDKSynchronizer.SynchronizerState?) {
         stateChanged.send(.synced)
     }
 
@@ -318,10 +326,14 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
 
     func rewind(_ policy: RewindPolicy) throws { }
     
-    func getShieldedBalance() -> Effect<WalletBalance, Never> {
-        return Effect(value: WalletBalance(verified: Zatoshi(12345000), total: Zatoshi(12345000)))
+    func getShieldedBalance() -> WalletBalance? {
+        WalletBalance(verified: Zatoshi(12345000), total: Zatoshi(12345000))
     }
-    
+
+    func getTransparentBalance() -> WalletBalance? {
+        WalletBalance(verified: Zatoshi(12345000), total: Zatoshi(12345000))
+    }
+
     func getAllClearedTransactions() -> Effect<[WalletEvent], Never> {
         let mocked: [TransactionStateMockHelper] = [
             TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "1"),
@@ -414,6 +426,7 @@ class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     private(set) var synchronizer: SDKSynchronizer?
     private(set) var stateChanged: CurrentValueSubject<WrappedSDKSynchronizerState, Never>
     private(set) var walletBirthday: BlockHeight?
+    private(set) var latestScannedSynchronizerState: SDKSynchronizer.SynchronizerState?
 
     init(notificationCenter: WrappedNotificationCenter = .mock) {
         self.notificationCenter = notificationCenter
@@ -426,16 +439,16 @@ class TestWrappedSDKSynchronizer: WrappedSDKSynchronizer {
 
     func stop() { }
 
-    func synchronizerSynced() { }
+    func synchronizerSynced(_ synchronizerState: SDKSynchronizer.SynchronizerState?) { }
 
     func statusSnapshot() -> SyncStatusSnapshot { .default }
 
     func rewind(_ policy: RewindPolicy) throws { }
     
-    func getShieldedBalance() -> Effect<WalletBalance, Never> {
-        return .none
-    }
+    func getShieldedBalance() -> WalletBalance? { nil }
     
+    func getTransparentBalance() -> WalletBalance? { nil }
+
     func getAllClearedTransactions() -> Effect<[WalletEvent], Never> {
         let mocked: [TransactionStateMockHelper] = [
             TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "aa11"),

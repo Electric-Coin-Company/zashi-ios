@@ -10,7 +10,7 @@ struct CreateTransaction: View {
         return WithViewStore(store) { viewStore in
             VStack {
                 VStack(spacing: 0) {
-                    Text("WalletBalance \(viewStore.totalBalance.decimalString()) ZEC")
+                    Text("WalletBalance \(viewStore.shieldedBalance.total.decimalString()) ZEC")
                     Text("($\(viewStore.totalCurrencyBalance.decimalString()))")
                         .font(.system(size: 13))
                         .opacity(0.6)

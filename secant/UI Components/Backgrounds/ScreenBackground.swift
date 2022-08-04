@@ -86,6 +86,17 @@ extension View {
             )
         )
     }
+    
+    func applySemiTransparentScreenBackground() -> some View {
+        self.modifier(
+            ScreenBackgroundModifier(
+                colors: [
+                    Asset.Colors.ScreenBackground.semiTransparentGradientStart.color,
+                    Asset.Colors.ScreenBackground.semiTransparentGradientEnd.color
+                ]
+            )
+        )
+    }
 }
 
 struct ScreenBackground_Previews: PreviewProvider {

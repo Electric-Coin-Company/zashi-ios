@@ -37,15 +37,15 @@ class HomeSnapshotTests: XCTestCase {
 
         let store = HomeStore(
             initialState: .init(
+                balanceBreakdown: .placeholder,
                 drawerOverlay: .partial,
                 profileState: .placeholder,
                 requestState: .placeholder,
-                sendState: .placeholder,
                 scanState: .placeholder,
+                sendState: .placeholder,
+                shieldedBalance: balance,
                 synchronizerStatusSnapshot: .default,
-                totalBalance: balance.total,
-                walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: walletEvents)),
-                verifiedBalance: balance.verified
+                walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: walletEvents))
             ),
             reducer: .default,
             environment: .demo

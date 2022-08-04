@@ -17,25 +17,26 @@ struct HomeState: Equatable {
         case request
         case send
         case scan
+        case balanceBreakdown
     }
 
     var route: Route?
 
+    var balanceBreakdown: BalanceBreakdownState
     var drawerOverlay: DrawerOverlay
     var profileState: ProfileState
     var requestState: RequestState
     var requiredTransactionConfirmations = 0
-    var sendState: SendFlowState
     var scanState: ScanState
+    var sendState: SendFlowState
+    var shieldedBalance: WalletBalance
     var synchronizerStatusSnapshot: SyncStatusSnapshot
-    var totalBalance: Zatoshi
     var walletEventsState: WalletEventsFlowState
-    var verifiedBalance: Zatoshi
     // TODO: - Get the ZEC price from the SDK, issue 311, https://github.com/zcash/secant-ios-wallet/issues/311
     var zecPrice = Decimal(140.0)
 
     var totalCurrencyBalance: Zatoshi {
-        Zatoshi.from(decimal: totalBalance.decimalValue.decimalValue * zecPrice)
+        Zatoshi.from(decimal: shieldedBalance.total.decimalValue.decimalValue * zecPrice)
     }
     
     var isDownloading: Bool {
@@ -56,6 +57,7 @@ struct HomeState: Equatable {
 // MARK: Action
 
 enum HomeAction: Equatable {
+    case balanceBreakdown(BalanceBreakdownAction)
     case debugMenuStartup
     case onAppear
     case onDisappear
@@ -65,7 +67,6 @@ enum HomeAction: Equatable {
     case scan(ScanAction)
     case synchronizerStateChanged(WrappedSDKSynchronizerState)
     case walletEvents(WalletEventsFlowAction)
-    case updateBalance(WalletBalance)
     case updateDrawer(DrawerOverlay)
     case updateRoute(HomeState.Route?)
     case updateSynchronizerStatus
@@ -109,7 +110,8 @@ extension HomeReducer {
             historyReducer,
             sendReducer,
             scanReducer,
-            profileReducer
+            profileReducer,
+            balanceBreakdownReducer
         ]
     )
 
@@ -137,11 +139,6 @@ extension HomeReducer {
         case .synchronizerStateChanged(let synchronizerState):
             return Effect(value: .updateSynchronizerStatus)
             
-        case .updateBalance(let balance):
-            state.totalBalance = balance.total
-            state.verifiedBalance = balance.verified
-            return .none
-            
         case .updateDrawer(let drawerOverlay):
             state.drawerOverlay = drawerOverlay
             state.walletEventsState.isScrollable = drawerOverlay == .full ? true : false
@@ -152,11 +149,10 @@ extension HomeReducer {
             
         case .updateSynchronizerStatus:
             state.synchronizerStatusSnapshot = environment.SDKSynchronizer.statusSnapshot()
-            return environment.SDKSynchronizer.getShieldedBalance()
-                .receive(on: environment.scheduler)
-                .map({ WalletBalance(verified: $0.verified, total: $0.total) })
-                .map(HomeAction.updateBalance)
-                .eraseToEffect()
+            if let shieldedBalance = environment.SDKSynchronizer.latestScannedSynchronizerState?.shieldedBalance {
+                state.shieldedBalance = shieldedBalance
+            }
+            return .none
 
         case .updateRoute(let route):
             state.route = route
@@ -212,6 +208,13 @@ extension HomeReducer {
         case .scan(let action):
             return .none
             
+        case .balanceBreakdown(.onDisappear):
+            state.route = nil
+            return .none
+
+        case .balanceBreakdown:
+            return .none
+
         case .debugMenuStartup:
             return .none
         }
@@ -272,6 +275,18 @@ extension HomeReducer {
             )
         }
     )
+    
+    private static let balanceBreakdownReducer: HomeReducer = BalanceBreakdownReducer.default.pullback(
+        state: \HomeState.balanceBreakdown,
+        action: /HomeAction.balanceBreakdown,
+        environment: { environment in
+            BalanceBreakdownEnvironment(
+                numberFormatter: .live(),
+                SDKSynchronizer: environment.SDKSynchronizer,
+                scheduler: environment.scheduler
+            )
+        }
+    )
 }
 
 // MARK: - Store
@@ -311,6 +326,13 @@ extension HomeStore {
             action: HomeAction.scan
         )
     }
+
+    func balanceBreakdownStore() -> BalanceBreakdownStore {
+        self.scope(
+            state: \.balanceBreakdown,
+            action: HomeAction.balanceBreakdown
+        )
+    }
 }
 
 // MARK: - ViewStore
@@ -338,15 +360,15 @@ extension HomeViewStore {
 extension HomeState {
     static var placeholder: Self {
         .init(
+            balanceBreakdown: .placeholder,
             drawerOverlay: .partial,
             profileState: .placeholder,
             requestState: .placeholder,
-            sendState: .placeholder,
             scanState: .placeholder,
+            sendState: .placeholder,
+            shieldedBalance: WalletBalance.zero,
             synchronizerStatusSnapshot: .default,
-            totalBalance: Zatoshi.zero,
-            walletEventsState: .emptyPlaceHolder,
-            verifiedBalance: Zatoshi.zero
+            walletEventsState: .emptyPlaceHolder
         )
     }
 }

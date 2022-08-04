@@ -27,6 +27,9 @@ struct HomeView: View {
                 .navigationBarHidden(true)
                 .onAppear(perform: { viewStore.send(.onAppear) })
                 .onDisappear(perform: { viewStore.send(.onDisappear) })
+                .fullScreenCover(isPresented: viewStore.bindingForRoute(.balanceBreakdown)) {
+                    BalanceBreakdown(store: store.balanceBreakdownStore())
+                }
             }
         }
     }
@@ -120,20 +123,24 @@ extension HomeView {
                 .padding(.top, 50)
                 
                 VStack {
-                    Text("$\(viewStore.totalBalance.decimalString())")
-                        .font(.custom(FontFamily.Zboto.regular.name, size: 40))
-                        .foregroundColor(Asset.Colors.Text.balanceText.color)
-                        .accessDebugMenuWithHiddenGesture {
-                            viewStore.send(.debugMenuStartup)
-                        }
-                        .padding(.top, 80)
-                    
+                    Button {
+                        viewStore.send(.updateRoute(.balanceBreakdown))
+                    } label: {
+                        Text("$\(viewStore.shieldedBalance.total.decimalString())")
+                            .font(.custom(FontFamily.Zboto.regular.name, size: 40))
+                            .foregroundColor(Asset.Colors.Text.balanceText.color)
+                            .padding(.top, 80)
+                    }
+
                     Text("$\(viewStore.totalCurrencyBalance.decimalString())")
                         .font(.custom(FontFamily.Rubik.regular.name, size: 13))
                         .opacity(0.6)
                         .padding(.bottom, 50)
 
                     Text("\(viewStore.synchronizerStatusSnapshot.message)")
+                        .accessDebugMenuWithHiddenGesture {
+                            viewStore.send(.debugMenuStartup)
+                        }
                 }
             }
             
