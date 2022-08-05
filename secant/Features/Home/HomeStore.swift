@@ -265,7 +265,7 @@ extension HomeReducer {
             ProfileEnvironment(
                 appVersionHandler: .live,
                 mnemonic: environment.mnemonic,
-                SDKSynchronizer: environment.SDKSynchronizer,
+                shieldedAddress: environment.SDKSynchronizer.getShieldedAddress,
                 scheduler: environment.scheduler,
                 walletStorage: environment.walletStorage,
                 zcashSDKEnvironment: environment.zcashSDKEnvironment

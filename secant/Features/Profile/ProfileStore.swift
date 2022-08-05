@@ -35,9 +35,11 @@ enum ProfileAction: Equatable {
 // MARK: - Environment
 
 struct ProfileEnvironment {
+    typealias ShieldedAddressSource = () -> String?
+
     let appVersionHandler: AppVersionHandler
     let mnemonic: WrappedMnemonic
-    let SDKSynchronizer: WrappedSDKSynchronizer
+    let shieldedAddress: ShieldedAddressSource
     let scheduler: AnySchedulerOf<DispatchQueue>
     let walletStorage: WrappedWalletStorage
     let zcashSDKEnvironment: ZCashSDKEnvironment
@@ -47,7 +49,7 @@ extension ProfileEnvironment {
     static let live = ProfileEnvironment(
         appVersionHandler: .live,
         mnemonic: .live,
-        SDKSynchronizer: LiveWrappedSDKSynchronizer(),
+        shieldedAddress: LiveWrappedSDKSynchronizer().getShieldedAddress,
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         walletStorage: .live(),
         zcashSDKEnvironment: .mainnet
@@ -56,7 +58,7 @@ extension ProfileEnvironment {
     static let mock = ProfileEnvironment(
         appVersionHandler: .test,
         mnemonic: .mock,
-        SDKSynchronizer: MockWrappedSDKSynchronizer(),
+        shieldedAddress: MockWrappedSDKSynchronizer().getShieldedAddress,
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         walletStorage: .live(),
         zcashSDKEnvironment: .testnet
@@ -77,7 +79,7 @@ extension ProfileReducer {
     private static let profileReducer = ProfileReducer { state, action, environment in
         switch action {
         case .onAppear:
-            state.address = environment.SDKSynchronizer.getShieldedAddress() ?? ""
+            state.address = environment.shieldedAddress() ?? ""
             state.appBuild = environment.appVersionHandler.appBuild()
             state.appVersion = environment.appVersionHandler.appVersion()
             state.sdkVersion = environment.zcashSDKEnvironment.sdkVersion
@@ -115,7 +117,7 @@ extension ProfileReducer {
             SettingsEnvironment(
                 localAuthenticationHandler: .live,
                 mnemonic: environment.mnemonic,
-                SDKSynchronizer: environment.SDKSynchronizer,
+                SDKSynchronizer: LiveWrappedSDKSynchronizer(),
                 scheduler: environment.scheduler,
                 userPreferencesStorage: .live,
                 walletStorage: environment.walletStorage

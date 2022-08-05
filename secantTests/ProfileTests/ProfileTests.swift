@@ -12,11 +12,12 @@ import ComposableArchitecture
 class ProfileTests: XCTestCase {
     func testSynchronizerStateChanged_AnyButSynced() throws {
         let testScheduler = DispatchQueue.test
+        let shieldedAddress = "ff3927e1f83df9b1b0dc75540ddc59ee435eecebae914d2e6dfe8576fbedc9a8"
 
         let testEnvironment = ProfileEnvironment(
             appVersionHandler: .test,
             mnemonic: .mock,
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
+            shieldedAddress: { shieldedAddress },
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .throwing,
             zcashSDKEnvironment: .testnet
@@ -29,7 +30,7 @@ class ProfileTests: XCTestCase {
         )
         
         store.send(.onAppear) { state in
-            state.address = "ff3927e1f83df9b1b0dc75540ddc59ee435eecebae914d2e6dfe8576fbedc9a8"
+            state.address = shieldedAddress
             state.appVersion = "0.0.1"
             state.appBuild = "31"
             state.sdkVersion = "0.14.0-beta"

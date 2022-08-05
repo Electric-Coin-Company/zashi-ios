@@ -17,7 +17,7 @@ class ProfileSnapshotTests: XCTestCase {
         let testEnvironment = ProfileEnvironment(
             appVersionHandler: .test,
             mnemonic: .mock,
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
+            shieldedAddress: { "ff3927e1f83df9b1b0dc75540ddc59ee435eecebae914d2e6dfe8576fbedc9a8" },
             scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .throwing,
             zcashSDKEnvironment: .testnet
