@@ -28,22 +28,18 @@ struct OnboardingHeaderView: View {
                 HStack {
                     if !viewStore.isInitialStep {
                         Button("Back") {
-                            withAnimation(.easeInOut(duration: animationDuration)) {
-                                viewStore.send(.back)
-                            }
+                            viewStore.send(.back, animation: .easeInOut(duration: animationDuration))
                         }
                         .navigationButtonStyle
-                        .disabled(viewStore.isInitialStep)
                         .frame(width: 75)
+                        .disabled(viewStore.isInitialStep)
                     }
                     
                     Spacer()
                     
                     if !viewStore.isFinalStep {
                         Button("Skip") {
-                            withAnimation(.easeInOut(duration: animationDuration)) {
-                                viewStore.send(.skip)
-                            }
+                            viewStore.send(.skip, animation: .easeInOut(duration: animationDuration))
                         }
                         .navigationButtonStyle
                         .disabled(viewStore.isFinalStep)

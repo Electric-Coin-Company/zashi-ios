@@ -44,7 +44,7 @@ struct AppView: View {
                     
                 case .startup:
                     ZStack(alignment: .topTrailing) {
-                        DebugView(sendAction: viewStore.send)
+                        debugView(viewStore)
                             .transition(.opacity)
                     }
                     
@@ -84,35 +84,31 @@ struct AppView: View {
 }
 
 private extension AppView {
-    struct DebugView: View {
-        var sendAction: (AppAction) -> Void
-        
-        var body: some View {
-            List {
-                Section(header: Text("Navigation Stack Routes")) {
-                    Button("Go To Sandbox (navigation proof)") {
-                        sendAction(.updateRoute(.sandbox))
-                    }
-                    
-                    Button("Go To Onboarding") {
-                        sendAction(.updateRoute(.onboarding))
-                    }
-                    
-                    Button("Go To Phrase Validation Demo") {
-                        sendAction(.updateRoute(.phraseValidation))
-                    }
-                    
-                    Button("Restart the app") {
-                        sendAction(.updateRoute(.welcome))
-                    }
-                    
-                    Button("[Be careful] Nuke Wallet") {
-                        sendAction(.nukeWallet)
-                    }
+    @ViewBuilder func debugView(_ viewStore: AppViewStore) -> some View {
+        List {
+            Section(header: Text("Navigation Stack Routes")) {
+                Button("Go To Sandbox (navigation proof)") {
+                    viewStore.send(.updateRoute(.sandbox))
+                }
+                
+                Button("Go To Onboarding") {
+                    viewStore.send(.updateRoute(.onboarding))
+                }
+                
+                Button("Go To Phrase Validation Demo") {
+                    viewStore.send(.updateRoute(.phraseValidation))
+                }
+                
+                Button("Restart the app") {
+                    viewStore.send(.updateRoute(.welcome))
+                }
+                
+                Button("[Be careful] Nuke Wallet") {
+                    viewStore.send(.nukeWallet)
                 }
             }
-            .navigationBarTitle("Startup")
         }
+        .navigationBarTitle("Startup")
     }
 }
 
