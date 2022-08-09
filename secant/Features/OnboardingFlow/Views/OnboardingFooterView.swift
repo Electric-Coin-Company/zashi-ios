@@ -19,25 +19,19 @@ struct OnboardingFooterView: View {
                 
                 if viewStore.isFinalStep {
                     Button("onboarding.button.newWallet") {
-                        withAnimation(.easeInOut(duration: animationDuration)) {
-                            viewStore.send(.createNewWallet)
-                        }
+                        viewStore.send(.createNewWallet, animation: .easeInOut(duration: animationDuration))
                     }
                     .activeButtonStyle
                     .onboardingFooterButtonLayout()
                     
                     Button("onboarding.button.importWallet") {
-                        withAnimation(.easeInOut(duration: animationDuration)) {
-                            viewStore.send(.importExistingWallet)
-                        }
+                        viewStore.send(.importExistingWallet, animation: .easeInOut(duration: animationDuration))
                     }
                     .secondaryButtonStyle
                     .onboardingFooterButtonLayout()
                 } else {
                     Button("Next") {
-                        withAnimation(.easeInOut(duration: animationDuration)) {
-                            viewStore.send(.next)
-                        }
+                        viewStore.send(.next, animation: .easeInOut(duration: animationDuration))
                     }
                     .primaryButtonStyle
                     .onboardingFooterButtonLayout()
