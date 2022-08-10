@@ -266,7 +266,6 @@ extension HomeReducer {
                 appVersionHandler: .live,
                 mnemonic: environment.mnemonic,
                 SDKSynchronizer: environment.SDKSynchronizer,
-                scheduler: environment.scheduler,
                 walletStorage: environment.walletStorage,
                 zcashSDKEnvironment: environment.zcashSDKEnvironment
             )

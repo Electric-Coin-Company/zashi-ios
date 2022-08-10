@@ -20,7 +20,6 @@ struct SettingsState: Equatable {
 // MARK: - Action
 
 enum SettingsAction: Equatable {
-    case authenticate(Result<Bool, Never>)
     case backupWallet
     case backupWalletAccessRequest
     case cancelRescan
@@ -37,7 +36,6 @@ struct SettingsEnvironment {
     let localAuthenticationHandler: LocalAuthenticationHandler
     let mnemonic: WrappedMnemonic
     let SDKSynchronizer: WrappedSDKSynchronizer
-    let scheduler: AnySchedulerOf<DispatchQueue>
     let userPreferencesStorage: UserPreferencesStorage
     let walletStorage: WrappedWalletStorage
 }
@@ -54,16 +52,12 @@ extension SettingsReducer {
     
     private static let settingsReducer = SettingsReducer { state, action, environment in
         switch action {
-        case .authenticate(let result):
-            return result == .success(false)
-            ? .none
-            : Effect(value: .backupWallet)
-            
         case .backupWalletAccessRequest:
-            return environment.localAuthenticationHandler.authenticate()
-                .receive(on: environment.scheduler)
-                .map(SettingsAction.authenticate)
-                .eraseToEffect()
+            return .run { send in
+                if await environment.localAuthenticationHandler.authenticate() {
+                    await send(.backupWallet)
+                }
+            }
             
         case .backupWallet:
             do {
@@ -157,7 +151,6 @@ extension SettingsStore {
             localAuthenticationHandler: .live,
             mnemonic: .live,
             SDKSynchronizer: MockWrappedSDKSynchronizer(),
-            scheduler: DispatchQueue.main.eraseToAnyScheduler(),
             userPreferencesStorage: .live,
             walletStorage: .live()
         )

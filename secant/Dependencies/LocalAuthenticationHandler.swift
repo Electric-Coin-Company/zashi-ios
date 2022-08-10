@@ -7,47 +7,39 @@
 
 import Foundation
 import LocalAuthentication
-import ComposableArchitecture
-import Combine
 
 struct LocalAuthenticationHandler {
-    let authenticate: () -> Effect<Result<Bool, Never>, Never>
+    let authenticate: @Sendable () async -> Bool
 }
 
-/// The `Result` of live implementation of `LocalAuthentication` has been purposely simplified to Never fails (never returns a .failure)
-/// Instead, we care only about `Bool` result of authentication.
 extension LocalAuthenticationHandler {
-    enum LocalAuthenticationNotAvailable: Error {}
-    
-    static let live = LocalAuthenticationHandler {
-        Deferred {
-            Future { promise in
-                let context = LAContext()
-                var error: NSError?
-                let reason = "Folowing content requires authentication."
-
+    static let live = LocalAuthenticationHandler(
+        authenticate: {
+            let context = LAContext()
+            var error: NSError?
+            let reason = "The Following content requires authentication."
+            
+            do {
                 /// Biometrics validation
                 if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-                    context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, _ in
-                        promise(.success(success))
-                    }
+                    return try await context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason)
                 } else {
                     /// Biometrics not supported by the device, fallback to passcode
                     if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
-                        context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason) { success, _ in
-                            promise(.success(success))
-                        }
+                        return try await context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason)
                     } else {
                         /// No local authentication available, user's device is not protected, fallback to allow access to sensetive content
-                        promise(.success(true))
+                        return true
                     }
                 }
+            } catch {
+                /// Some interuption occured during the authentication, access to the sensitive content is therefore forbiden
+                return false
             }
         }
-        .catchToEffect()
-    }
+    )
     
     static let unimplemented = LocalAuthenticationHandler(
-        authenticate: { Effect(value: Result.success(false)) }
+        authenticate: { false }
     )
 }

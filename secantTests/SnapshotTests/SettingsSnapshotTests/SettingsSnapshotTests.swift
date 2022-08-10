@@ -16,7 +16,6 @@ class SettingsSnapshotTests: XCTestCase {
             localAuthenticationHandler: .unimplemented,
             mnemonic: .mock,
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            scheduler: DispatchQueue.main.eraseToAnyScheduler(),
             userPreferencesStorage: .mock,
             walletStorage: .throwing
         )

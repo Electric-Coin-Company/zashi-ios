@@ -9,9 +9,9 @@ import XCTest
 @testable import secant_testnet
 import ComposableArchitecture
 
+@MainActor
 class SettingsTests: XCTestCase {
-    func testBackupWalletAccessRequest_AuthenticateSuccessPath() throws {
-        let testScheduler = DispatchQueue.test
+    func testBackupWalletAccessRequest_AuthenticateSuccessPath() async throws {
         let mnemonic =
             """
             still champion voice habit trend flight \
@@ -45,12 +45,9 @@ class SettingsTests: XCTestCase {
         )
         
         let testEnvironment = SettingsEnvironment(
-            localAuthenticationHandler: LocalAuthenticationHandler(authenticate: {
-                Effect(value: Result.success(true))
-            }),
+            localAuthenticationHandler: LocalAuthenticationHandler(authenticate: { true }),
             mnemonic: .live,
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            scheduler: testScheduler.eraseToAnyScheduler(),
             userPreferencesStorage: .mock,
             walletStorage: mockedWalletStorage
         )
@@ -61,27 +58,21 @@ class SettingsTests: XCTestCase {
             environment: testEnvironment
         )
         
-        store.send(.backupWalletAccessRequest)
+        await store.send(.backupWalletAccessRequest)
         
-        testScheduler.advance(by: 0.1)
-        
-        store.receive(.authenticate(.success(true)))
-        store.receive(.backupWallet) { state in
+        await store.receive(.backupWallet) { state in
             state.phraseDisplayState.phrase = RecoveryPhrase(words: mnemonic.components(separatedBy: " "))
         }
-        store.receive(.updateRoute(.backupPhrase)) { state in
+        await store.receive(.updateRoute(.backupPhrase)) { state in
             state.route = .backupPhrase
         }
     }
     
-    func testBackupWalletAccessRequest_AuthenticateFailedPath() throws {
-        let testScheduler = DispatchQueue.test
-
+    func testBackupWalletAccessRequest_AuthenticateFailedPath() async throws {
         let testEnvironment = SettingsEnvironment(
             localAuthenticationHandler: .unimplemented,
             mnemonic: .mock,
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            scheduler: testScheduler.eraseToAnyScheduler(),
             userPreferencesStorage: .mock,
             walletStorage: .throwing
         )
@@ -92,21 +83,16 @@ class SettingsTests: XCTestCase {
             environment: testEnvironment
         )
         
-        store.send(.backupWalletAccessRequest)
+        await store.send(.backupWalletAccessRequest)
         
-        testScheduler.advance(by: 0.1)
-        
-        store.receive(.authenticate(.success(false)))
+        await store.finish()
     }
     
-    func testRescanBlockchain() throws {
-        let testScheduler = DispatchQueue.test
-
+    func testRescanBlockchain() async throws {
         let testEnvironment = SettingsEnvironment(
             localAuthenticationHandler: .unimplemented,
             mnemonic: .mock,
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            scheduler: testScheduler.eraseToAnyScheduler(),
             userPreferencesStorage: .mock,
             walletStorage: .throwing
         )
@@ -117,7 +103,7 @@ class SettingsTests: XCTestCase {
             environment: testEnvironment
         )
         
-        store.send(.rescanBlockchain) { state in
+        await store.send(.rescanBlockchain) { state in
             state.rescanDialog = .init(
                 title: TextState("Rescan"),
                 message: TextState("Select the rescan you want"),
@@ -130,14 +116,11 @@ class SettingsTests: XCTestCase {
         }
     }
     
-    func testRescanBlockchain_Cancelling() throws {
-        let testScheduler = DispatchQueue.test
-
+    func testRescanBlockchain_Cancelling() async throws {
         let testEnvironment = SettingsEnvironment(
             localAuthenticationHandler: .unimplemented,
             mnemonic: .mock,
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            scheduler: testScheduler.eraseToAnyScheduler(),
             userPreferencesStorage: .mock,
             walletStorage: .throwing
         )
@@ -160,19 +143,16 @@ class SettingsTests: XCTestCase {
             environment: testEnvironment
         )
         
-        store.send(.cancelRescan) { state in
+        await store.send(.cancelRescan) { state in
             state.rescanDialog = nil
         }
     }
     
-    func testRescanBlockchain_QuickRescanClearance() throws {
-        let testScheduler = DispatchQueue.test
-
+    func testRescanBlockchain_QuickRescanClearance() async throws {
         let testEnvironment = SettingsEnvironment(
             localAuthenticationHandler: .unimplemented,
             mnemonic: .mock,
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            scheduler: testScheduler.eraseToAnyScheduler(),
             userPreferencesStorage: .mock,
             walletStorage: .throwing
         )
@@ -195,19 +175,16 @@ class SettingsTests: XCTestCase {
             environment: testEnvironment
         )
         
-        store.send(.quickRescan) { state in
+        await store.send(.quickRescan) { state in
             state.rescanDialog = nil
         }
     }
     
-    func testRescanBlockchain_FullRescanClearance() throws {
-        let testScheduler = DispatchQueue.test
-
+    func testRescanBlockchain_FullRescanClearance() async throws {
         let testEnvironment = SettingsEnvironment(
             localAuthenticationHandler: .unimplemented,
             mnemonic: .mock,
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            scheduler: testScheduler.eraseToAnyScheduler(),
             userPreferencesStorage: .mock,
             walletStorage: .throwing
         )
@@ -230,7 +207,7 @@ class SettingsTests: XCTestCase {
             environment: testEnvironment
         )
         
-        store.send(.fullRescan) { state in
+        await store.send(.fullRescan) { state in
             state.rescanDialog = nil
         }
     }
