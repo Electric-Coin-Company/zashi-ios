@@ -14,7 +14,6 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
     let testEnvironment = RecoveryPhraseValidationFlowEnvironment(
         scheduler: testScheduler.eraseToAnyScheduler(),
-        newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
         pasteboard: .test,
         feedbackGenerator: .silent,
         recoveryPhraseRandomizer: .live

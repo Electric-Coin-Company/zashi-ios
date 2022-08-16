@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import ComposableArchitecture
 
 /// Live implementation of the `UserPreferences` using User Defaults
 /// according to https://developer.apple.com/documentation/foundation/userdefaults
@@ -50,8 +49,8 @@ struct UserPreferencesStorage {
         getValue(forKey: Constants.zcashActiveAppSessionFrom.rawValue, default: appSessionFrom)
     }
     
-    func setActiveAppSessionFrom(_ timeInterval: TimeInterval) -> Effect<Never, Never> {
-        setValue(timeInterval, forKey: Constants.zcashActiveAppSessionFrom.rawValue)
+    func setActiveAppSessionFrom(_ timeInterval: TimeInterval) async {
+        await setValue(timeInterval, forKey: Constants.zcashActiveAppSessionFrom.rawValue)
     }
 
     /// What is the set up currency
@@ -59,8 +58,8 @@ struct UserPreferencesStorage {
         getValue(forKey: Constants.zcashCurrency.rawValue, default: convertedCurrency)
     }
     
-    func setCurrency(_ string: String) -> Effect<Never, Never> {
-        setValue(string, forKey: Constants.zcashCurrency.rawValue)
+    func setCurrency(_ string: String) async {
+        await setValue(string, forKey: Constants.zcashCurrency.rawValue)
     }
 
     /// Whether the fiat conversion is on/off
@@ -68,8 +67,8 @@ struct UserPreferencesStorage {
         getValue(forKey: Constants.zcashFiatConverted.rawValue, default: fiatConvertion)
     }
 
-    func setIsFiatConverted(_ bool: Bool) -> Effect<Never, Never> {
-        setValue(bool, forKey: Constants.zcashFiatConverted.rawValue)
+    func setIsFiatConverted(_ bool: Bool) async {
+        await setValue(bool, forKey: Constants.zcashFiatConverted.rawValue)
     }
 
     /// Whether user finished recovery phrase backup test
@@ -77,8 +76,8 @@ struct UserPreferencesStorage {
         getValue(forKey: Constants.zcashRecoveryPhraseTestCompleted.rawValue, default: recoveryPhraseTestCompleted)
     }
 
-    func setIsRecoveryPhraseTestCompleted(_ bool: Bool) -> Effect<Never, Never> {
-        setValue(bool, forKey: Constants.zcashRecoveryPhraseTestCompleted.rawValue)
+    func setIsRecoveryPhraseTestCompleted(_ bool: Bool) async {
+        await setValue(bool, forKey: Constants.zcashRecoveryPhraseTestCompleted.rawValue)
     }
 
     /// Whether the user has been autoshielded in the running session
@@ -86,17 +85,15 @@ struct UserPreferencesStorage {
         getValue(forKey: Constants.zcashSessionAutoshielded.rawValue, default: sessionAutoshielded)
     }
 
-    func setIsSessionAutoshielded(_ bool: Bool) -> Effect<Never, Never> {
-        setValue(bool, forKey: Constants.zcashSessionAutoshielded.rawValue)
+    func setIsSessionAutoshielded(_ bool: Bool) async {
+        await setValue(bool, forKey: Constants.zcashSessionAutoshielded.rawValue)
     }
 
     /// Use carefully: Deletes all user preferences from the User Defaults
-    func removeAll() -> Effect<Never, Never> {
-        var removals: [Effect<Never, Never>] = []
-
-        Constants.allCases.forEach { removals.append(userDefaults.remove($0.rawValue)) }
-        
-        return Effect.concatenate(removals)
+    func removeAll() async {
+        for key in Constants.allCases {
+            await userDefaults.remove(key.rawValue)
+        }
     }
 }
 
@@ -105,11 +102,9 @@ private extension UserPreferencesStorage {
         userDefaults.objectForKey(forKey) as? Value ?? defaultIfNil
     }
 
-    func setValue<Value>(_ value: Value, forKey: String) -> Effect<Never, Never> {
-        let effect = userDefaults.setValue(value, forKey)
-        _ = userDefaults.synchronize()
-        
-        return effect
+    func setValue<Value>(_ value: Value, forKey: String) async {
+        await userDefaults.setValue(value, forKey)
+        _ = await userDefaults.synchronize()
     }
 }
 
