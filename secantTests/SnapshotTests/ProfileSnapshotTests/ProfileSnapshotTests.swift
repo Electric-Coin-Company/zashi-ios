@@ -12,13 +12,10 @@ import SwiftUI
 
 class ProfileSnapshotTests: XCTestCase {
     func testProfileSnapshot_sent() throws {
-        let testScheduler = DispatchQueue.test
-
         let testEnvironment = ProfileEnvironment(
             appVersionHandler: .test,
             mnemonic: .mock,
             SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            scheduler: testScheduler.eraseToAnyScheduler(),
             walletStorage: .throwing,
             zcashSDKEnvironment: .testnet
         )

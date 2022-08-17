@@ -38,7 +38,6 @@ struct ProfileEnvironment {
     let appVersionHandler: AppVersionHandler
     let mnemonic: WrappedMnemonic
     let SDKSynchronizer: WrappedSDKSynchronizer
-    let scheduler: AnySchedulerOf<DispatchQueue>
     let walletStorage: WrappedWalletStorage
     let zcashSDKEnvironment: ZCashSDKEnvironment
 }
@@ -48,7 +47,6 @@ extension ProfileEnvironment {
         appVersionHandler: .live,
         mnemonic: .live,
         SDKSynchronizer: LiveWrappedSDKSynchronizer(),
-        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         walletStorage: .live(),
         zcashSDKEnvironment: .mainnet
     )
@@ -57,7 +55,6 @@ extension ProfileEnvironment {
         appVersionHandler: .test,
         mnemonic: .mock,
         SDKSynchronizer: MockWrappedSDKSynchronizer(),
-        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         walletStorage: .live(),
         zcashSDKEnvironment: .testnet
     )
@@ -116,7 +113,6 @@ extension ProfileReducer {
                 localAuthenticationHandler: .live,
                 mnemonic: environment.mnemonic,
                 SDKSynchronizer: environment.SDKSynchronizer,
-                scheduler: environment.scheduler,
                 userPreferencesStorage: .live,
                 walletStorage: environment.walletStorage
             )
