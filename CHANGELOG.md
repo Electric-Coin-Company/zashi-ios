@@ -1,4 +1,10 @@
 # Changelog
+## 0.0.1 build 35
+- [#409] Rewrite LocalAuthenticationHandler so it supports new concurrency (#410)
+- [#224] [Scaffold] Balance Breakdown (#412)
+- [#408] Reduce dependency on TCA in the dependencies (#413)
+- [#404] Update to ComposableArchitecture 0.39.0 (#406)
+- [#146] [UI Component] multiple line textfield (#400)
 ## 0.0.1 build 34
 - [#75] [Scaffold] Settings Screen (#398)
 - [#394] adopt ZcashLightClientKit 0.16.x-beta (#397)
