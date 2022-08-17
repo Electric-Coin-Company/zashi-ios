@@ -16,6 +16,15 @@ extension NumberFormatter {
         formatter.usesGroupingSeparator = true
         return formatter
     }()
+
+    static let zcashNumberFormatter8FractionDigits: NumberFormatter = {
+        var formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 8
+        formatter.maximumIntegerDigits = 8
+        formatter.numberStyle = .decimal
+        formatter.usesGroupingSeparator = true
+        return formatter
+    }()
 }
 
 struct WrappedNumberFormatter {

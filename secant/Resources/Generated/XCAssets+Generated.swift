@@ -95,8 +95,11 @@ internal enum Asset {
       internal static let gradientStart = ColorAsset(name: "gradientStart")
       internal static let greenGradientEnd = ColorAsset(name: "greenGradientEnd")
       internal static let greenGradientStart = ColorAsset(name: "greenGradientStart")
+      internal static let modalDialog = ColorAsset(name: "modalDialog")
       internal static let redGradientEnd = ColorAsset(name: "redGradientEnd")
       internal static let redGradientStart = ColorAsset(name: "redGradientStart")
+      internal static let semiTransparentGradientEnd = ColorAsset(name: "semiTransparentGradientEnd")
+      internal static let semiTransparentGradientStart = ColorAsset(name: "semiTransparentGradientStart")
     }
     internal enum Shadow {
       internal static let drawerShadow = ColorAsset(name: "drawerShadow")

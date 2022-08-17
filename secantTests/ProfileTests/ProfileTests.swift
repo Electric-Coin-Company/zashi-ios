@@ -32,7 +32,7 @@ class ProfileTests: XCTestCase {
             state.address = "ff3927e1f83df9b1b0dc75540ddc59ee435eecebae914d2e6dfe8576fbedc9a8"
             state.appVersion = "0.0.1"
             state.appBuild = "31"
-            state.sdkVersion = "0.14.0-beta"
+            state.sdkVersion = "0.16.5-beta"
         }
     }
 }

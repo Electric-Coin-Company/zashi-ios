@@ -536,7 +536,7 @@ class SendTests: XCTestCase {
     func testInvalidForm_ExceededMemoCharLimit() throws {
         let sendState = SendFlowState(
             memoState: MultiLineTextFieldState(charLimit: 3),
-            totalBalance: Zatoshi(1),
+            shieldedBalance: WalletBalance(verified: Zatoshi(1), total: Zatoshi(1)),
             transactionAddressInputState:
                 TransactionAddressTextFieldState(
                     isValidAddress: true,

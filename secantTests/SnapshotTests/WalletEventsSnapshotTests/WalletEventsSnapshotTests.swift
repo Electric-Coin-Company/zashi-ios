@@ -38,15 +38,15 @@ class WalletEventsSnapshotTests: XCTestCase {
 
         let store = HomeStore(
             initialState: .init(
+                balanceBreakdown: .placeholder,
                 drawerOverlay: .partial,
                 profileState: .placeholder,
                 requestState: .placeholder,
-                sendState: .placeholder,
                 scanState: .placeholder,
+                sendState: .placeholder,
+                shieldedBalance: balance,
                 synchronizerStatusSnapshot: .default,
-                totalBalance: balance.total,
-                walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: walletEvents)),
-                verifiedBalance: balance.verified
+                walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: walletEvents))
             ),
             reducer: .default,
             environment: .demo
@@ -85,15 +85,15 @@ class WalletEventsSnapshotTests: XCTestCase {
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
         let store = HomeStore(
             initialState: .init(
+                balanceBreakdown: .placeholder,
                 drawerOverlay: .partial,
                 profileState: .placeholder,
                 requestState: .placeholder,
-                sendState: .placeholder,
                 scanState: .placeholder,
+                sendState: .placeholder,
+                shieldedBalance: balance,
                 synchronizerStatusSnapshot: .default,
-                totalBalance: balance.total,
-                walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent])),
-                verifiedBalance: balance.verified
+                walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent]))
             ),
             reducer: .default,
             environment: .demo
@@ -142,15 +142,15 @@ class WalletEventsSnapshotTests: XCTestCase {
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
         let store = HomeStore(
             initialState: .init(
+                balanceBreakdown: .placeholder,
                 drawerOverlay: .partial,
                 profileState: .placeholder,
                 requestState: .placeholder,
-                sendState: .placeholder,
                 scanState: .placeholder,
+                sendState: .placeholder,
+                shieldedBalance: balance,
                 synchronizerStatusSnapshot: .default,
-                totalBalance: balance.total,
-                walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent])),
-                verifiedBalance: balance.verified
+                walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent]))
             ),
             reducer: .default,
             environment: .demo
@@ -199,15 +199,15 @@ class WalletEventsSnapshotTests: XCTestCase {
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
         let store = HomeStore(
             initialState: .init(
+                balanceBreakdown: .placeholder,
                 drawerOverlay: .partial,
                 profileState: .placeholder,
                 requestState: .placeholder,
-                sendState: .placeholder,
                 scanState: .placeholder,
+                sendState: .placeholder,
+                shieldedBalance: balance,
                 synchronizerStatusSnapshot: .default,
-                totalBalance: balance.total,
-                walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent])),
-                verifiedBalance: balance.verified
+                walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent]))
             ),
             reducer: .default,
             environment: .demo
@@ -262,15 +262,15 @@ class WalletEventsSnapshotTests: XCTestCase {
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
         let store = HomeStore(
             initialState: .init(
+                balanceBreakdown: .placeholder,
                 drawerOverlay: .partial,
                 profileState: .placeholder,
                 requestState: .placeholder,
-                sendState: .placeholder,
                 scanState: .placeholder,
+                sendState: .placeholder,
+                shieldedBalance: balance,
                 synchronizerStatusSnapshot: .default,
-                totalBalance: balance.total,
-                walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent])),
-                verifiedBalance: balance.verified
+                walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent]))
             ),
             reducer: .default,
             environment: .demo

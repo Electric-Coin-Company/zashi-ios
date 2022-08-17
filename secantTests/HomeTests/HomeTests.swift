@@ -10,7 +10,6 @@ import XCTest
 import ComposableArchitecture
 import ZcashLightClientKit
 
-// swiftlint:disable type_body_length
 class HomeTests: XCTestCase {
     func testSynchronizerStateChanged_AnyButSynced() throws {
         // setup the store and environment to be fully mocked
@@ -38,18 +37,11 @@ class HomeTests: XCTestCase {
         testScheduler.advance(by: 0.01)
         
         store.receive(.updateSynchronizerStatus)
-        
-        let balance = WalletBalance(verified: Zatoshi(12_345_000), total: Zatoshi(12_345_000))
-        store.receive(.updateBalance(balance)) { state in
-            state.totalBalance = Zatoshi(12_345_000)
-            state.verifiedBalance = Zatoshi(12_345_000)
-        }
     }
 
     /// When the synchronizer status change to .synced, several things happen
     /// 1. the .updateSynchronizerStatus is called
     /// 2. the side effect to update the transactions history is called
-    /// 3. the side effect to update the balance is called
     func testSynchronizerStateChanged_Synced() throws {
         // setup the store and environment to be fully mocked
         let testScheduler = DispatchQueue.test
@@ -99,14 +91,6 @@ class HomeTests: XCTestCase {
         }
         
         store.receive(.updateWalletEvents(walletEvents))
-        
-        // ad 3.
-        let balance = WalletBalance(verified: Zatoshi(12_345_000), total: Zatoshi(12_345_000))
-
-        store.receive(.updateBalance(balance)) { state in
-            state.verifiedBalance = Zatoshi(12_345_000)
-            state.totalBalance = Zatoshi(12_345_000)
-        }
     }
     
     func testWalletEventsPartial_to_FullDrawer() throws {
@@ -125,15 +109,15 @@ class HomeTests: XCTestCase {
         )
         
         let homeState = HomeState(
+            balanceBreakdown: .placeholder,
             drawerOverlay: .partial,
             profileState: .placeholder,
             requestState: .placeholder,
-            sendState: .placeholder,
             scanState: .placeholder,
+            sendState: .placeholder,
+            shieldedBalance: WalletBalance.zero,
             synchronizerStatusSnapshot: .default,
-            totalBalance: Zatoshi.zero,
-            walletEventsState: .emptyPlaceHolder,
-            verifiedBalance: Zatoshi.zero
+            walletEventsState: .emptyPlaceHolder
         )
         
         let store = TestStore(
@@ -168,15 +152,15 @@ class HomeTests: XCTestCase {
         )
         
         let homeState = HomeState(
+            balanceBreakdown: .placeholder,
             drawerOverlay: .full,
             profileState: .placeholder,
             requestState: .placeholder,
-            sendState: .placeholder,
             scanState: .placeholder,
+            sendState: .placeholder,
+            shieldedBalance: WalletBalance.zero,
             synchronizerStatusSnapshot: .default,
-            totalBalance: Zatoshi.zero,
-            walletEventsState: .emptyPlaceHolder,
-            verifiedBalance: Zatoshi.zero
+            walletEventsState: .emptyPlaceHolder
         )
         
         let store = TestStore(
@@ -227,12 +211,6 @@ class HomeTests: XCTestCase {
         // expected side effects as a result of .onAppear registration
         store.receive(.synchronizerStateChanged(.unknown))
         store.receive(.updateSynchronizerStatus)
-        
-        let balance = WalletBalance(verified: Zatoshi(12_345_000), total: Zatoshi(12_345_000))
-        store.receive(.updateBalance(balance)) { state in
-            state.totalBalance = Zatoshi(12_345_000)
-            state.verifiedBalance = Zatoshi(12_345_000)
-        }
 
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancles the observer of the synchronizer status change.
@@ -256,15 +234,15 @@ class HomeTests: XCTestCase {
         
         let homeState = HomeState(
             route: .profile,
+            balanceBreakdown: .placeholder,
             drawerOverlay: .full,
             profileState: .placeholder,
             requestState: .placeholder,
-            sendState: .placeholder,
             scanState: .placeholder,
+            sendState: .placeholder,
+            shieldedBalance: WalletBalance.zero,
             synchronizerStatusSnapshot: .default,
-            totalBalance: Zatoshi.zero,
-            walletEventsState: .emptyPlaceHolder,
-            verifiedBalance: Zatoshi.zero
+            walletEventsState: .emptyPlaceHolder
         )
         
         let store = TestStore(
@@ -295,15 +273,15 @@ class HomeTests: XCTestCase {
         
         let homeState = HomeState(
             route: .profile,
+            balanceBreakdown: .placeholder,
             drawerOverlay: .full,
             profileState: .placeholder,
             requestState: .placeholder,
-            sendState: .placeholder,
             scanState: .placeholder,
+            sendState: .placeholder,
+            shieldedBalance: WalletBalance.zero,
             synchronizerStatusSnapshot: .default,
-            totalBalance: Zatoshi.zero,
-            walletEventsState: .emptyPlaceHolder,
-            verifiedBalance: Zatoshi.zero
+            walletEventsState: .emptyPlaceHolder
         )
         
         let store = TestStore(

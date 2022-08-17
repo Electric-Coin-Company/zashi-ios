@@ -42,15 +42,15 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
 
         let store = HomeStore(
             initialState: .init(
+                balanceBreakdown: .placeholder,
                 drawerOverlay: .partial,
                 profileState: .placeholder,
                 requestState: .placeholder,
-                sendState: .placeholder,
                 scanState: .placeholder,
+                sendState: .placeholder,
+                shieldedBalance: balance,
                 synchronizerStatusSnapshot: .default,
-                totalBalance: balance.total,
-                walletEventsState: .emptyPlaceHolder,
-                verifiedBalance: balance.verified
+                walletEventsState: .emptyPlaceHolder
             ),
             reducer: .default,
             environment: testEnvironment
@@ -90,15 +90,15 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
 
         let store = HomeStore(
             initialState: .init(
+                balanceBreakdown: .placeholder,
                 drawerOverlay: .partial,
                 profileState: .placeholder,
                 requestState: .placeholder,
-                sendState: .placeholder,
                 scanState: .placeholder,
+                sendState: .placeholder,
+                shieldedBalance: balance,
                 synchronizerStatusSnapshot: .default,
-                totalBalance: balance.total,
-                walletEventsState: .emptyPlaceHolder,
-                verifiedBalance: balance.verified
+                walletEventsState: .emptyPlaceHolder
             ),
             reducer: .default,
             environment: testEnvironment
@@ -131,15 +131,15 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
 
         let store = HomeStore(
             initialState: .init(
+                balanceBreakdown: .placeholder,
                 drawerOverlay: .partial,
                 profileState: .placeholder,
                 requestState: .placeholder,
-                sendState: .placeholder,
                 scanState: .placeholder,
+                sendState: .placeholder,
+                shieldedBalance: balance,
                 synchronizerStatusSnapshot: .default,
-                totalBalance: balance.total,
-                walletEventsState: .emptyPlaceHolder,
-                verifiedBalance: balance.verified
+                walletEventsState: .emptyPlaceHolder
             ),
             reducer: .default,
             environment: testEnvironment

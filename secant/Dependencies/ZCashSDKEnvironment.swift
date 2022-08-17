@@ -16,6 +16,7 @@ fileprivate enum ZcashSDKConstants {
     static let endpointPort = 9067
     static let mnemonicWordsMaxCount = 24
     static let requiredTransactionConfirmations = 10
+    static let streamingCallTimeoutInMillis = Int64(10 * 60 * 60 * 1000) // ten hours
 }
 
 struct ZCashSDKEnvironment {
@@ -33,29 +34,49 @@ struct ZCashSDKEnvironment {
 extension ZCashSDKEnvironment {
     static let mainnet = ZCashSDKEnvironment(
         defaultBirthday: BlockHeight(ZcashSDKConstants.defaultBlockHeight),
-        endpoint: LightWalletEndpoint(address: ZcashSDKConstants.endpointMainnetAddress, port: ZcashSDKConstants.endpointPort),
+        endpoint: LightWalletEndpoint(
+            address: ZcashSDKConstants.endpointMainnetAddress,
+            port: ZcashSDKConstants.endpointPort,
+            secure: true,
+            streamingCallTimeoutInMillis: ZcashSDKConstants.streamingCallTimeoutInMillis
+        ),
         isMainnet: { true },
         lightWalletService: LightWalletGRPCService(
-            endpoint: LightWalletEndpoint(address: ZcashSDKConstants.endpointMainnetAddress, port: ZcashSDKConstants.endpointPort)
+            endpoint: LightWalletEndpoint(
+                address: ZcashSDKConstants.endpointMainnetAddress,
+                port: ZcashSDKConstants.endpointPort,
+                secure: true,
+                streamingCallTimeoutInMillis: ZcashSDKConstants.streamingCallTimeoutInMillis
+            )
         ),
         memoCharLimit: 512,
         mnemonicWordsMaxCount: ZcashSDKConstants.mnemonicWordsMaxCount,
         network: ZcashNetworkBuilder.network(for: .mainnet),
         requiredTransactionConfirmations: ZcashSDKConstants.requiredTransactionConfirmations,
-        sdkVersion: "0.14.0-beta"
+        sdkVersion: "0.16.5-beta"
     )
 
     static let testnet = ZCashSDKEnvironment(
         defaultBirthday: BlockHeight(ZcashSDKConstants.defaultBlockHeight),
-        endpoint: LightWalletEndpoint(address: ZcashSDKConstants.endpointTestnetAddress, port: ZcashSDKConstants.endpointPort),
+        endpoint: LightWalletEndpoint(
+            address: ZcashSDKConstants.endpointTestnetAddress,
+            port: ZcashSDKConstants.endpointPort,
+            secure: true,
+            streamingCallTimeoutInMillis: ZcashSDKConstants.streamingCallTimeoutInMillis
+        ),
         isMainnet: { false },
         lightWalletService: LightWalletGRPCService(
-            endpoint: LightWalletEndpoint(address: ZcashSDKConstants.endpointTestnetAddress, port: ZcashSDKConstants.endpointPort)
+            endpoint: LightWalletEndpoint(
+                address: ZcashSDKConstants.endpointTestnetAddress,
+                port: ZcashSDKConstants.endpointPort,
+                secure: true,
+                streamingCallTimeoutInMillis: ZcashSDKConstants.streamingCallTimeoutInMillis
+            )
         ),
         memoCharLimit: 512,
         mnemonicWordsMaxCount: ZcashSDKConstants.mnemonicWordsMaxCount,
         network: ZcashNetworkBuilder.network(for: .testnet),
         requiredTransactionConfirmations: ZcashSDKConstants.requiredTransactionConfirmations,
-        sdkVersion: "0.14.0-beta"
+        sdkVersion: "0.16.5-beta"
     )
 }

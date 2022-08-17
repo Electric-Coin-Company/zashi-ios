@@ -26,7 +26,7 @@ struct SendFlowState: Equatable {
     var isSendingTransaction = false
     var memoState: MultiLineTextFieldState
     var route: Route?
-    var totalBalance = Zatoshi.zero
+    var shieldedBalance = WalletBalance.zero
     var transactionAddressInputState: TransactionAddressTextFieldState
     var transactionAmountInputState: TransactionAmountTextFieldState
 
@@ -67,7 +67,7 @@ struct SendFlowState: Equatable {
     }
 
     var totalCurrencyBalance: Zatoshi {
-        Zatoshi.from(decimal: totalBalance.decimalValue.decimalValue * transactionAmountInputState.zecPrice)
+        Zatoshi.from(decimal: shieldedBalance.total.decimalValue.decimalValue * transactionAmountInputState.zecPrice)
     }
 }
 
@@ -82,7 +82,6 @@ enum SendFlowAction: Equatable {
     case synchronizerStateChanged(WrappedSDKSynchronizerState)
     case transactionAddressInput(TransactionAddressTextFieldAction)
     case transactionAmountInput(TransactionAmountTextFieldAction)
-    case updateBalance(Zatoshi)
     case updateRoute(SendFlowState.Route?)
 }
 
@@ -183,18 +182,13 @@ extension SendFlowReducer {
             return Effect.cancel(id: SyncStatusUpdatesID())
             
         case .synchronizerStateChanged(.synced):
-            return environment.SDKSynchronizer.getShieldedBalance()
-                .receive(on: environment.scheduler)
-                .map({ $0.total })
-                .map(SendFlowAction.updateBalance)
-                .eraseToEffect()
-            
-        case .synchronizerStateChanged(let synchronizerState):
+            if let shieldedBalance = environment.SDKSynchronizer.latestScannedSynchronizerState?.shieldedBalance {
+                state.shieldedBalance = shieldedBalance
+                state.transactionAmountInputState.maxValue = shieldedBalance.total.amount
+            }
             return .none
             
-        case .updateBalance(let balance):
-            state.totalBalance = balance
-            state.transactionAmountInputState.maxValue = balance.amount
+        case .synchronizerStateChanged(let synchronizerState):
             return .none
 
         case .memo:
