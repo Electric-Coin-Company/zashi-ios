@@ -9,8 +9,8 @@ import XCTest
 @testable import secant_testnet
 import ComposableArchitecture
 import ZcashLightClientKit
-import Combine
 
+@MainActor
 class DeeplinkTests: XCTestCase {
     func testActionDeeplinkHome_SameRouteLevel() throws {
         let testEnvironment = AppEnvironment.mock
@@ -73,7 +73,7 @@ class DeeplinkTests: XCTestCase {
         }
     }
 
-    func testDeeplinkRequest_homeURL() throws {
+    func testDeeplinkRequest_homeURL() async throws {
         let synchronizer = TestWrappedSDKSynchronizer()
         synchronizer.updateStateChanged(.synced)
         
@@ -107,14 +107,16 @@ class DeeplinkTests: XCTestCase {
             return XCTFail("Deeplink: 'testDeeplinkRequest_homeURL' URL is expected to be valid.")
         }
         
-        store.send(.deeplink(url))
+        await store.send(.deeplink(url))
         
-        store.receive(.deeplinkHome) { state in
+        await store.receive(.deeplinkHome) { state in
             state.route = .home
         }
+        
+        await store.finish()
     }
     
-    func testDeeplinkRequest_sendURL_amount() throws {
+    func testDeeplinkRequest_sendURL_amount() async throws {
         let synchronizer = TestWrappedSDKSynchronizer()
         synchronizer.updateStateChanged(.synced)
         
@@ -148,22 +150,24 @@ class DeeplinkTests: XCTestCase {
             return XCTFail("Deeplink: 'testDeeplinkRequest_sendURL_amount' URL is expected to be valid.")
         }
         
-        store.send(.deeplink(url))
+        await store.send(.deeplink(url))
         
         let amount = Zatoshi(123_000_000)
         let address = ""
         let memo = ""
 
-        store.receive(.deeplinkSend(amount, address, memo)) { state in
+        await store.receive(.deeplinkSend(amount, address, memo)) { state in
             state.route = .home
             state.homeState.route = .send
             state.homeState.sendState.amount = amount
             state.homeState.sendState.address = address
             state.homeState.sendState.memoState.text = memo
         }
+        
+        await store.finish()
     }
     
-    func testDeeplinkRequest_sendURL_allFields() throws {
+    func testDeeplinkRequest_sendURL_allFields() async throws {
         let synchronizer = TestWrappedSDKSynchronizer()
         synchronizer.updateStateChanged(.synced)
         
@@ -197,18 +201,20 @@ class DeeplinkTests: XCTestCase {
             return XCTFail("Deeplink: 'testDeeplinkRequest_sendURL_amount' URL is expected to be valid.")
         }
         
-        store.send(.deeplink(url))
+        await store.send(.deeplink(url))
         
         let amount = Zatoshi(123_000_000)
         let address = "address"
         let memo = "some text"
 
-        store.receive(.deeplinkSend(amount, address, memo)) { state in
+        await store.receive(.deeplinkSend(amount, address, memo)) { state in
             state.route = .home
             state.homeState.route = .send
             state.homeState.sendState.amount = amount
             state.homeState.sendState.address = address
             state.homeState.sendState.memoState.text = memo
         }
+        
+        await store.finish()
     }
 }

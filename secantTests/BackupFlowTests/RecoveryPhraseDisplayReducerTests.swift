@@ -35,7 +35,7 @@ class RecoveryPhraseDisplayReducerTests: XCTestCase {
             environment: .demo
         )
                 
-        store.send(.phraseResponse(.success(.placeholder))) {
+        store.send(.phraseResponse(.placeholder)) {
             $0.phrase = .placeholder
             $0.showCopyToBufferAlert = false
         }

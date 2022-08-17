@@ -322,11 +322,12 @@ extension AppReducer {
                 // (https://github.com/zcash/secant-ios-wallet/issues/370)
                 return .none
             }
-            do {
-                return try process(url: url, with: environment)
-            } catch {
-                // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
-                return .none
+            return .run { send in
+                do {
+                    await send(try await process(url: url, with: environment))
+                } catch {
+                    // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+                }
             }
 
         case .deeplinkHome:
@@ -391,7 +392,6 @@ extension AppReducer {
         environment: { environment in
             RecoveryPhraseValidationFlowEnvironment(
                 scheduler: environment.scheduler,
-                newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
                 pasteboard: .test,
                 feedbackGenerator: .silent,
                 recoveryPhraseRandomizer: environment.recoveryPhraseRandomizer
@@ -405,7 +405,7 @@ extension AppReducer {
         environment: { environment in
             RecoveryPhraseDisplayEnvironment(
                 scheduler: environment.scheduler,
-                newPhrase: { Effect(value: .init(words: RecoveryPhrase.placeholder.words)) },
+                newPhrase: { .init(words: RecoveryPhrase.placeholder.words) },
                 pasteboard: .live,
                 feedbackGenerator: environment.feedbackGenerator
             )
@@ -493,15 +493,15 @@ extension AppReducer {
             throw SDKInitializationError.failed
         }
     }
-    
-    static func process(url: URL, with environment: AppEnvironment) throws -> Effect<AppAction, Never> {
+
+    static func process(url: URL, with environment: AppEnvironment) async throws -> AppAction {
         let deeplink = try environment.deeplinkHandler.resolveDeeplinkURL(url, environment.derivationTool)
         
         switch deeplink {
         case .home:
-            return Effect(value: .deeplinkHome)
+            return .deeplinkHome
         case let .send(amount, address, memo):
-            return Effect(value: .deeplinkSend(Zatoshi(amount), address, memo))
+            return .deeplinkSend(Zatoshi(amount), address, memo)
         }
     }
 }

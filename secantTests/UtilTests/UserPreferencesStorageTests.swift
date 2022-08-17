@@ -7,16 +7,13 @@
 
 import XCTest
 @testable import secant_testnet
-import Combine
 
 class UserPreferencesStorageTests: XCTestCase {
-    private var cancellables: [AnyCancellable] = []
-    
     // swiftlint:disable:next implicitly_unwrapped_optional
     var storage: UserPreferencesStorage!
 
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try await super.setUp()
         
         guard let userDefaults = UserDefaults.init(suiteName: "test") else {
             XCTFail("UserPreferencesStorageTests: UserDefaults.init(suiteName: \"test\") failed to initialize")
@@ -31,16 +28,12 @@ class UserPreferencesStorageTests: XCTestCase {
             sessionAutoshielded: false,
             userDefaults: .live(userDefaults: userDefaults)
         )
-        storage.removeAll()
-            .sink(receiveValue: { _ in })
-            .store(in: &cancellables)
+        await storage.removeAll()
     }
     
-    override func tearDown() {
-        super.tearDown()
-        storage.removeAll()
-            .sink(receiveValue: { _ in })
-            .store(in: &cancellables)
+    override func tearDown() async throws {
+        try await super.tearDown()
+        await storage.removeAll()
         storage = nil
     }
     
@@ -68,42 +61,32 @@ class UserPreferencesStorageTests: XCTestCase {
 
     // MARK: - Set new values in the live UserDefaults environment
 
-    func testAppSessionFrom_setNewValue() throws {
-        storage.setActiveAppSessionFrom(87654321.0)
-            .sink(receiveValue: { _ in })
-            .store(in: &cancellables)
+    func testAppSessionFrom_setNewValue() async throws {
+        await storage.setActiveAppSessionFrom(87654321.0)
 
         XCTAssertEqual(87654321.0, storage.activeAppSessionFrom, "User Preferences: `activeAppSessionFrom` default doesn't match.")
     }
 
-    func testConvertedCurrency_setNewValue() throws {
-        storage.setCurrency("CZK")
-            .sink(receiveValue: { _ in })
-            .store(in: &cancellables)
+    func testConvertedCurrency_setNewValue() async throws {
+        await storage.setCurrency("CZK")
 
         XCTAssertEqual("CZK", storage.currency, "User Preferences: `currency` default doesn't match.")
     }
 
-    func testFiatConvertion_setNewValue() throws {
-        storage.setIsFiatConverted(false)
-            .sink(receiveValue: { _ in })
-            .store(in: &cancellables)
+    func testFiatConvertion_setNewValue() async throws {
+        await storage.setIsFiatConverted(false)
 
         XCTAssertEqual(false, storage.isFiatConverted, "User Preferences: `isFiatConverted` default doesn't match.")
     }
 
-    func testRecoveryPhraseTestCompleted_setNewValue() throws {
-        storage.setIsRecoveryPhraseTestCompleted(false)
-            .sink(receiveValue: { _ in })
-            .store(in: &cancellables)
+    func testRecoveryPhraseTestCompleted_setNewValue() async throws {
+        await storage.setIsRecoveryPhraseTestCompleted(false)
 
         XCTAssertEqual(false, storage.isRecoveryPhraseTestCompleted, "User Preferences: `isRecoveryPhraseTestCompleted` default doesn't match.")
     }
 
-    func testSessionAutoshielded_setNewValue() throws {
-        storage.setIsSessionAutoshielded(true)
-            .sink(receiveValue: { _ in })
-            .store(in: &cancellables)
+    func testSessionAutoshielded_setNewValue() async throws {
+        await storage.setIsSessionAutoshielded(true)
 
         XCTAssertEqual(true, storage.isSessionAutoshielded, "User Preferences: `isSessionAutoshielded` default doesn't match.")
     }
@@ -113,8 +96,8 @@ class UserPreferencesStorageTests: XCTestCase {
     func testAppSessionFrom_mocked() throws {
         let mockedUD = WrappedUserDefaults(
             objectForKey: { _ in 87654321.0 },
-            remove: { _ in .none },
-            setValue: { _, _ in .none },
+            remove: { _ in },
+            setValue: { _, _ in },
             synchronize: { true }
         )
         
@@ -133,8 +116,8 @@ class UserPreferencesStorageTests: XCTestCase {
     func testConvertedCurrency_mocked() throws {
         let mockedUD = WrappedUserDefaults(
             objectForKey: { _ in "CZK" },
-            remove: { _ in .none },
-            setValue: { _, _ in .none },
+            remove: { _ in },
+            setValue: { _, _ in },
             synchronize: { true }
         )
         
@@ -153,8 +136,8 @@ class UserPreferencesStorageTests: XCTestCase {
     func testFiatConvertion_mocked() throws {
         let mockedUD = WrappedUserDefaults(
             objectForKey: { _ in false },
-            remove: { _ in .none },
-            setValue: { _, _ in .none },
+            remove: { _ in },
+            setValue: { _, _ in },
             synchronize: { true }
         )
         
@@ -173,8 +156,8 @@ class UserPreferencesStorageTests: XCTestCase {
     func testRecoveryPhraseTestCompleted_mocked() throws {
         let mockedUD = WrappedUserDefaults(
             objectForKey: { _ in false },
-            remove: { _ in .none },
-            setValue: { _, _ in .none },
+            remove: { _ in },
+            setValue: { _, _ in },
             synchronize: { true }
         )
         
@@ -193,8 +176,8 @@ class UserPreferencesStorageTests: XCTestCase {
     func testSessionAutoshielded_mocked() throws {
         let mockedUD = WrappedUserDefaults(
             objectForKey: { _ in true },
-            remove: { _ in .none },
-            setValue: { _, _ in .none },
+            remove: { _ in },
+            setValue: { _, _ in },
             synchronize: { true }
         )
         
@@ -212,7 +195,7 @@ class UserPreferencesStorageTests: XCTestCase {
 
     // MARK: - Remove all keys from the live UD environment
     
-    func testRemoveAll() throws {
+    func testRemoveAll() async throws {
         guard let userDefaults = UserDefaults.init(suiteName: "test") else {
             XCTFail("User Preferences: UserDefaults.init(suiteName: \"test\") failed to initialize")
             return
@@ -224,9 +207,7 @@ class UserPreferencesStorageTests: XCTestCase {
         }
 
         // remove it
-        storage?.removeAll()
-            .sink(receiveValue: { _ in })
-            .store(in: &cancellables)
+        await storage?.removeAll()
 
         // check the presence
         UserPreferencesStorage.Constants.allCases.forEach {
