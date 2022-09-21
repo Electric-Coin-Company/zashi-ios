@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import Foundation
 
 typealias ScanReducer = Reducer<ScanState, ScanAction, ScanEnvironment>
 typealias ScanStore = Store<ScanState, ScanAction>
