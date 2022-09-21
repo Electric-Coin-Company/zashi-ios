@@ -81,28 +81,28 @@ extension AppEnvironment {
         audioServices: .haptic,
         databaseFiles: .live(),
         deeplinkHandler: .live,
-        derivationTool: .live(),
+        derivationTool: .live(derivationTool: DerivationTool(networkType: .testnet)),
         feedbackGenerator: .haptic,
         mnemonic: .live,
         recoveryPhraseRandomizer: .live,
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         SDKSynchronizer: LiveWrappedSDKSynchronizer(),
         walletStorage: .live(),
-        zcashSDKEnvironment: .mainnet
+        zcashSDKEnvironment: .testnet
     )
 
     static let mock = AppEnvironment(
         audioServices: .silent,
         databaseFiles: .live(),
         deeplinkHandler: .live,
-        derivationTool: .live(derivationTool: DerivationTool(networkType: .mainnet)),
+        derivationTool: .live(derivationTool: DerivationTool(networkType: .testnet)),
         feedbackGenerator: .silent,
         mnemonic: .mock,
         recoveryPhraseRandomizer: .live,
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
         SDKSynchronizer: LiveWrappedSDKSynchronizer(),
         walletStorage: .live(),
-        zcashSDKEnvironment: .mainnet
+        zcashSDKEnvironment: .testnet
     )
 }
 
