@@ -12,49 +12,51 @@ struct TransactionDetailView: View {
     }
 
     var transaction: TransactionState
-    var viewStore: WalletEventsFlowViewStore
+    var store: WalletEventsFlowStore
     
     var body: some View {
-        ScrollView {
-            header
+        WithViewStore(store) { viewStore in
+            ScrollView {
+                header
 
-            switch transaction.status {
-            case .paid(success: _):
-                plainText("You sent \(transaction.zecAmount.decimalString()) ZEC")
-                plainText("fee \(transaction.fee.decimalString()) ZEC", mark: .inactive)
-                plainText("total amount \(transaction.totalAmount.decimalString()) ZEC", mark: .inactive)
-                address(mark: .inactive)
-                if let text = transaction.memo { memo(text, viewStore, mark: .highlight) }
-                confirmed(mark: .success)
-            case .pending:
-                plainText("You are sending \(transaction.zecAmount.decimalString()) ZEC")
-                plainText("Includes network fee \(transaction.fee.decimalString()) ZEC", mark: .inactive)
-                plainText("total amount \(transaction.totalAmount.decimalString()) ZEC", mark: .inactive)
-                if let text = transaction.memo { memo(text, viewStore, mark: .inactive) }
-                confirming(mark: .highlight)
-            case .received:
-                plainText("You received \(transaction.zecAmount.decimalString()) ZEC")
-                plainText("fee \(transaction.fee.decimalString()) ZEC")
-                plainText("total amount \(transaction.totalAmount.decimalString()) ZEC")
-                address(mark: .inactive)
-                if let text = transaction.memo { memo(text, viewStore, mark: .highlight) }
-                confirmed(mark: .success)
-            case .failed:
-                plainText("You DID NOT send \(transaction.zecAmount.decimalString()) ZEC", mark: .fail)
-                plainText("Includes network fee \(transaction.fee.decimalString()) ZEC", mark: .inactive)
-                plainText("total amount \(transaction.totalAmount.decimalString()) ZEC", mark: .inactive)
-                if let text = transaction.memo { memo(text, viewStore, mark: .inactive) }
-                if let errorMessage = transaction.errorMessage {
-                    plainTwoColumnText(left: "Failed", right: errorMessage, mark: .fail)
+                switch transaction.status {
+                case .paid(success: _):
+                    plainText("You sent \(transaction.zecAmount.decimalString()) ZEC")
+                    plainText("fee \(transaction.fee.decimalString()) ZEC", mark: .inactive)
+                    plainText("total amount \(transaction.totalAmount.decimalString()) ZEC", mark: .inactive)
+                    address(mark: .inactive, viewStore: viewStore)
+                    if let text = transaction.memo { memo(text, viewStore, mark: .highlight) }
+                    confirmed(mark: .success, viewStore: viewStore)
+                case .pending:
+                    plainText("You are sending \(transaction.zecAmount.decimalString()) ZEC")
+                    plainText("Includes network fee \(transaction.fee.decimalString()) ZEC", mark: .inactive)
+                    plainText("total amount \(transaction.totalAmount.decimalString()) ZEC", mark: .inactive)
+                    if let text = transaction.memo { memo(text, viewStore, mark: .inactive) }
+                    confirming(mark: .highlight, viewStore: viewStore)
+                case .received:
+                    plainText("You received \(transaction.zecAmount.decimalString()) ZEC")
+                    plainText("fee \(transaction.fee.decimalString()) ZEC")
+                    plainText("total amount \(transaction.totalAmount.decimalString()) ZEC")
+                    address(mark: .inactive, viewStore: viewStore)
+                    if let text = transaction.memo { memo(text, viewStore, mark: .highlight) }
+                    confirmed(mark: .success, viewStore: viewStore)
+                case .failed:
+                    plainText("You DID NOT send \(transaction.zecAmount.decimalString()) ZEC", mark: .fail)
+                    plainText("Includes network fee \(transaction.fee.decimalString()) ZEC", mark: .inactive)
+                    plainText("total amount \(transaction.totalAmount.decimalString()) ZEC", mark: .inactive)
+                    if let text = transaction.memo { memo(text, viewStore, mark: .inactive) }
+                    if let errorMessage = transaction.errorMessage {
+                        plainTwoColumnText(left: "Failed", right: errorMessage, mark: .fail)
+                    }
                 }
-            }
 
-            Spacer()
-            
-            footer
+                Spacer()
+
+                footer
+            }
+            .applyScreenBackground()
+            .navigationTitle("Transaction detail")
         }
-        .applyScreenBackground()
-        .navigationTitle("Transaction detail")
     }
 }
 
@@ -92,7 +94,7 @@ extension TransactionDetailView {
         .transactionDetailRow(mark: mark)
     }
 
-    func address(mark: RowMark = .neutral) -> some View {
+    func address(mark: RowMark = .neutral, viewStore: WalletEventsFlowViewStore) -> some View {
         Button {
             viewStore.send(.copyToPastboard(transaction.address))
         } label: {
@@ -137,7 +139,7 @@ extension TransactionDetailView {
         }
     }
     
-    func confirmed(mark: RowMark = .neutral) -> some View {
+    func confirmed(mark: RowMark = .neutral, viewStore: WalletEventsFlowViewStore) -> some View {
         HStack {
             Text("Confirmed")
             Spacer()
@@ -146,7 +148,7 @@ extension TransactionDetailView {
         .transactionDetailRow(mark: mark)
     }
 
-    func confirming(mark: RowMark = .neutral) -> some View {
+    func confirming(mark: RowMark = .neutral, viewStore: WalletEventsFlowViewStore) -> some View {
         HStack {
             Text("Confirming ~\(viewStore.requiredTransactionConfirmations)mins")
             Spacer()
@@ -156,31 +158,30 @@ extension TransactionDetailView {
     }
 
     var footer: some View {
-        VStack {
-            Button {
-                viewStore.send(.copyToPastboard(transaction.id))
-            } label: {
-                Text("txn: \(transaction.id)")
-                    .foregroundColor(Asset.Colors.Text.transactionDetailText.color)
-                    .font(.system(size: 14))
-                    .fontWeight(.thin)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.horizontal, 60)
-                    .padding(.vertical, 10)
-                    .background(Asset.Colors.BackgroundColors.numberedChip.color)
-                    .padding(.vertical, 30)
-            }
-            
-            Button { } label: {
-                // TODO: Warn users that they will leave the App when they follow a Block explorer
-                // https://github.com/zcash/secant-ios-wallet/issues/379
-                if let viewOnlineURL = transaction.viewOnlineURL {
-                    Link("View online", destination: viewOnlineURL)
+        WithViewStore(store) { viewStore in
+            VStack {
+                Button {
+                    viewStore.send(.copyToPastboard(transaction.id))
+                } label: {
+                    Text("txn: \(transaction.id)")
+                        .foregroundColor(Asset.Colors.Text.transactionDetailText.color)
+                        .font(.system(size: 14))
+                        .fontWeight(.thin)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.horizontal, 60)
+                        .padding(.vertical, 10)
+                        .background(Asset.Colors.BackgroundColors.numberedChip.color)
+                        .padding(.vertical, 30)
                 }
+
+                Button("View online") {
+                    viewStore.send(.warnBeforeLeavingApp(transaction.viewOnlineURL))
+                }
+                .activeButtonStyle
+                .frame(height: 50)
+                .padding(.horizontal, 30)
             }
-            .activeButtonStyle
-            .frame(height: 50)
-            .padding(.horizontal, 30)
+            .alert(self.store.scope(state: \.alert), dismiss: .dismissAlert)
         }
     }
 }
@@ -266,19 +267,7 @@ struct TransactionDetail_Previews: PreviewProvider {
                         timestamp: 1234567,
                         zecAmount: Zatoshi(25_000_000)
                     ),
-                viewStore: ViewStore(
-                    WalletEventsFlowStore(
-                        initialState: .placeHolder,
-                        reducer: .default,
-                        environment:
-                            WalletEventsFlowEnvironment(
-                                pasteboard: .test,
-                                scheduler: DispatchQueue.main.eraseToAnyScheduler(),
-                                SDKSynchronizer: MockWrappedSDKSynchronizer(),
-                                zcashSDKEnvironment: .testnet
-                            )
-                    )
-                )
+                store: WalletEventsFlowStore.placeholder
             )
             .preferredColorScheme(.dark)
         }

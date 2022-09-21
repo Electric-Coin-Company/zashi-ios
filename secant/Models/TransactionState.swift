@@ -34,7 +34,7 @@ struct TransactionState: Equatable, Identifiable {
     var date: Date { Date(timeIntervalSince1970: timestamp) }
     var totalAmount: Zatoshi { Zatoshi(zecAmount.amount + fee.amount) }
     var viewOnlineURL: URL? {
-        URL(string: "https://blockchair.com/zcash/transaction/\(id)")
+        URL(string: "https://zcashblockexplorer.com/transactions/\(id)")
     }
 
     func confirmationsWith(_ latestMinedHeight: BlockHeight?) -> BlockHeight {
