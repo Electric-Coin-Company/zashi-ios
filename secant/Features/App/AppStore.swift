@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import ZcashLightClientKit
+import Foundation
 
 typealias AppReducer = Reducer<AppState, AppAction, AppEnvironment>
 typealias AppStore = Store<AppState, AppAction>

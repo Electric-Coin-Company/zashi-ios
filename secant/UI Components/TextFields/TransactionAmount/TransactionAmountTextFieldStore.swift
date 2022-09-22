@@ -7,6 +7,8 @@
 
 import ComposableArchitecture
 import ZcashLightClientKit
+import Foundation
+
 typealias TransactionAmountTextFieldReducer = Reducer<
     TransactionAmountTextFieldState,
     TransactionAmountTextFieldAction,
