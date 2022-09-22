@@ -98,9 +98,9 @@ class AppTests: XCTestCase {
         XCTAssertEqual(walletState, .uninitialized)
     }
 
-    // TODO: - Implement testWalletInitializationState_FilesMissing when WalletStorage mock is available, issue 231 (https://github.com/zcash/secant-ios-wallet/issues/231)
+    // TODO [#231]: - Implement testWalletInitializationState_FilesMissing when WalletStorage mock is available (https://github.com/zcash/secant-ios-wallet/issues/231)
 
-    // TODO: - Implement testWalletInitializationState_Initialized when WalletStorage mock is available, issue 231 (https://github.com/zcash/secant-ios-wallet/issues/231)
+    // TODO [#231]: - Implement testWalletInitializationState_Initialized when WalletStorage mock is available (https://github.com/zcash/secant-ios-wallet/issues/231)
 
     func testRespondToWalletInitializationState_Uninitialized() throws {
         let store = TestStore(

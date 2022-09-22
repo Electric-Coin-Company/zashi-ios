@@ -7,7 +7,7 @@
 
 import ComposableArchitecture
 
-// TODO: Reimplement this into multicurrency supporter, issue #315 (https://github.com/zcash/secant-ios-wallet/issues/315)
+// TODO [#315]: Reimplement this into multicurrency supporter (https://github.com/zcash/secant-ios-wallet/issues/315)
 
 typealias CurrencySelectionReducer = Reducer<
     CurrencySelectionState,

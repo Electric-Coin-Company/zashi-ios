@@ -22,7 +22,7 @@ struct TransactionAmountTextFieldState: Equatable {
     var currencySelectionState: CurrencySelectionState
     var maxValue: Int64 = 0
     var textFieldState: TCATextFieldState
-    // TODO: - Get the ZEC price from the SDK, issue 311, https://github.com/zcash/secant-ios-wallet/issues/311
+    // TODO [#311]: - Get the ZEC price from the SDK, https://github.com/zcash/secant-ios-wallet/issues/311
     var zecPrice = Decimal(140.0)
 
     var isMax: Bool {

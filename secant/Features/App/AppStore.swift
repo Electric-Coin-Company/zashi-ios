@@ -142,10 +142,10 @@ extension AppReducer {
         case .respondToWalletInitializationState(let walletState):
             switch walletState {
             case .failed:
-                // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+                // TODO [#221]: error we need to handle (https://github.com/zcash/secant-ios-wallet/issues/221)
                 state.appInitializationState = .failed
             case .keysMissing:
-                // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+                // TODO [#221]: error we need to handle (https://github.com/zcash/secant-ios-wallet/issues/221)
                 state.appInitializationState = .keysMissing
             case .initialized, .filesMissing:
                 if walletState == .filesMissing {
@@ -173,7 +173,7 @@ extension AppReducer {
                 
                 guard let storedWallet = state.storedWallet else {
                     state.appInitializationState = .failed
-                    // TODO: fatal error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+                    // TODO [#221]: fatal error we need to handle (https://github.com/zcash/secant-ios-wallet/issues/221)
                     return .none
                 }
                 
@@ -190,14 +190,14 @@ extension AppReducer {
                 try environment.SDKSynchronizer.start()
             } catch {
                 state.appInitializationState = .failed
-                // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+                // TODO [#221]: error we need to handle (https://github.com/zcash/secant-ios-wallet/issues/221)
             }
             return .none
 
         case .checkBackupPhraseValidation:
             guard let storedWallet = state.storedWallet else {
                 state.appInitializationState = .failed
-                // TODO: fatal error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+                // TODO [#221]: fatal error we need to handle (https://github.com/zcash/secant-ios-wallet/issues/221)
                 return .none
             }
 
@@ -212,7 +212,7 @@ extension AppReducer {
                     state.phraseValidationState = environment.recoveryPhraseRandomizer.random(recoveryPhrase)
                     landingRoute = .phraseDisplay
                 } catch {
-                    // TODO: - merge with issue 201 (https://github.com/zcash/secant-ios-wallet/issues/201) and its Error States
+                    // TODO [#201]: - merge with issue 201 (https://github.com/zcash/secant-ios-wallet/issues/201) and its Error States
                     return .none
                 }
             }
@@ -244,7 +244,7 @@ extension AppReducer {
                     Effect(value: .phraseValidation(.displayBackedUpPhrase))
                 )
             } catch {
-                // TODO: - merge with issue 201 (https://github.com/zcash/secant-ios-wallet/issues/201) and its Error States
+                // TODO [#201]: - merge with issue 201 (https://github.com/zcash/secant-ios-wallet/issues/201) and its Error States
             }
 
             return .none
@@ -253,7 +253,7 @@ extension AppReducer {
             do {
                 try environment.walletStorage.markUserPassedPhraseBackupTest()
             } catch {
-                // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+                // TODO [#221]: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
             }
             return .none
 
@@ -262,7 +262,7 @@ extension AppReducer {
             do {
                 try environment.databaseFiles.nukeDbFilesFor(environment.zcashSDKEnvironment.network)
             } catch {
-                // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+                // TODO [#221]: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
             }
             return .none
 
@@ -319,7 +319,7 @@ extension AppReducer {
             
             // process the deeplink only if app is initialized and synchronizer synced
             guard state.appInitializationState == .initialized && synchronizerStatus == .synced else {
-                // TODO: There are many different states and edge cases we need to handle here, issue 370
+                // TODO [#370]: There are many different states and edge cases we need to handle here
                 // (https://github.com/zcash/secant-ios-wallet/issues/370)
                 return .none
             }
@@ -327,7 +327,7 @@ extension AppReducer {
                 do {
                     await send(try await process(url: url, with: environment))
                 } catch {
-                    // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+                    // TODO [#221]: error we need to handle (https://github.com/zcash/secant-ios-wallet/issues/221)
                 }
             }
 

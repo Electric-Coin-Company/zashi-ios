@@ -56,7 +56,7 @@ extension RecoveryPhraseDisplayReducer {
                 do {
                     await send(.phraseResponse(try await environment.newPhrase()))
                 } catch {
-                    // TODO: remove this when feature is implemented in https://github.com/zcash/secant-ios-wallet/issues/129
+                    // TODO [#129]: remove this when feature is implemented in https://github.com/zcash/secant-ios-wallet/issues/129
                 }
             }
             
@@ -67,7 +67,7 @@ extension RecoveryPhraseDisplayReducer {
             return .none
             
         case .finishedPressed:
-            // TODO: remove this when feature is implemented in https://github.com/zcash/secant-ios-wallet/issues/47
+            // TODO [#47]: remove this when feature is implemented in https://github.com/zcash/secant-ios-wallet/issues/47
             return .none
             
         case let .phraseResponse(phrase):

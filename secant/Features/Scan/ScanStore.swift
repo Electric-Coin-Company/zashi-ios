@@ -70,7 +70,7 @@ extension ScanReducer {
             do {
                 state.isTorchAvailable = try environment.captureDevice.isTorchAvailable()
             } catch {
-                // TODO: handle torch errors, issue #322 (https://github.com/zcash/secant-ios-wallet/issues/322)
+                // TODO [#322]: handle torch errors (https://github.com/zcash/secant-ios-wallet/issues/322)
             }
             return .none
         
@@ -114,7 +114,7 @@ extension ScanReducer {
                 try environment.captureDevice.torch(!state.isTorchOn)
                 state.isTorchOn.toggle()
             } catch {
-                // TODO: handle torch errors, issue #322 (https://github.com/zcash/secant-ios-wallet/issues/322)
+                // TODO [#322]: handle torch errors (https://github.com/zcash/secant-ios-wallet/issues/322)
             }
             return .none
         }

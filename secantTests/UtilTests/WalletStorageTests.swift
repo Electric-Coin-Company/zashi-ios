@@ -291,7 +291,7 @@ private extension WalletStorageTests {
         var query = storage.baseQuery(forAccount: account, andKey: forKey)
         query[kSecValueData as String] = data as AnyObject
 
-        // TODO: - Mock the Keychain and write unit tests, issue 231 (https://github.com/zcash/secant-ios-wallet/issues/231)
+        // TODO [#231]: - Mock the Keychain and write unit tests (https://github.com/zcash/secant-ios-wallet/issues/231)
         SecItemAdd(query as CFDictionary, nil)
     }
     
@@ -302,7 +302,7 @@ private extension WalletStorageTests {
         let query = storage.restoreQuery(forAccount: account, andKey: forKey)
 
         var result: AnyObject?
-        // TODO: - Mock the Keychain and write unit tests, issue 231 (https://github.com/zcash/secant-ios-wallet/issues/231)
+        // TODO [#231]: - Mock the Keychain and write unit tests (https://github.com/zcash/secant-ios-wallet/issues/231)
         _ = SecItemCopyMatching(query as CFDictionary, &result)
         
         return result as? Data
@@ -315,7 +315,7 @@ private extension WalletStorageTests {
     ) -> Bool {
         let query = storage.baseQuery(forAccount: account, andKey: forKey)
 
-        // TODO: - Mock the Keychain and write unit tests, issue 231 (https://github.com/zcash/secant-ios-wallet/issues/231)
+        // TODO [#231]: - Mock the Keychain and write unit tests (https://github.com/zcash/secant-ios-wallet/issues/231)
         let status = SecItemDelete(query as CFDictionary)
 
         return status == noErr
@@ -332,7 +332,7 @@ private extension WalletStorageTests {
             kSecValueData as String: data as AnyObject
         ]
 
-        // TODO: - Mock the Keychain and write unit tests, issue 231 (https://github.com/zcash/secant-ios-wallet/issues/231)
+        // TODO [#231]: - Mock the Keychain and write unit tests (https://github.com/zcash/secant-ios-wallet/issues/231)
         _ = SecItemUpdate(query as CFDictionary, attributes as CFDictionary)
     }
 }
