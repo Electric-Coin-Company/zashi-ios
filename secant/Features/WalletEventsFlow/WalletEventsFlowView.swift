@@ -31,7 +31,7 @@ struct WalletEventsFlowView: View {
             )
             .onDisappear(perform: { viewStore.send(.onDisappear) })
             .navigationLinkEmpty(isActive: viewStore.bindingForSelectedWalletEvent(viewStore.selectedWalletEvent)) {
-                viewStore.selectedWalletEvent?.detailView(viewStore)
+                viewStore.selectedWalletEvent?.detailView(store)
             }
         }
     }

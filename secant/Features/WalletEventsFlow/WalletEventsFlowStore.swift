@@ -17,6 +17,7 @@ struct WalletEventsFlowState: Equatable {
 
     var route: Route?
 
+    @BindableState var alert: AlertState<WalletEventsFlowAction>?
     var latestMinedHeight: BlockHeight?
     var isScrollable = false
     var requiredTransactionConfirmations = 0
@@ -28,12 +29,15 @@ struct WalletEventsFlowState: Equatable {
 
 enum WalletEventsFlowAction: Equatable {
     case copyToPastboard(String)
+    case dismissAlert
     case onAppear
     case onDisappear
+    case openBlockExplorer(URL?)
     case updateRoute(WalletEventsFlowState.Route?)
     case replyTo(String)
     case synchronizerStateChanged(WrappedSDKSynchronizerState)
     case updateWalletEvents([WalletEvent])
+    case warnBeforeLeavingApp(URL?)
 }
 
 // MARK: - Environment
@@ -99,6 +103,35 @@ extension WalletEventsFlowReducer {
             return .none
             
         case .replyTo(let address):
+            return .none
+
+        case .dismissAlert:
+            state.alert = nil
+            return .none
+
+        case .warnBeforeLeavingApp(let blockExplorerURL):
+            state.alert = AlertState(
+                title: TextState("You are exiting your wallet"),
+                message: TextState("""
+                While usually an acceptable risk, you will possibly exposing your behavior and interest in this transaction by going online. \
+                OH NOES! What will you do?
+                """),
+                primaryButton: .cancel(
+                    TextState("NEVERMIND"),
+                    action: .send(.dismissAlert)
+                ),
+                secondaryButton: .default(
+                    TextState("SEE TX ONLINE"),
+                    action: .send(.openBlockExplorer(blockExplorerURL))
+                )
+            )
+            return .none
+
+        case .openBlockExplorer(let blockExplorerURL):
+            state.alert = nil
+            if let url = blockExplorerURL {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
             return .none
         }
     }

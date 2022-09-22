@@ -52,13 +52,13 @@ extension WalletEvent {
 // MARK: - Details
 
 extension WalletEvent {
-    @ViewBuilder func detailView(_ viewStore: WalletEventsFlowViewStore) -> some View {
+    @ViewBuilder func detailView(_ store: WalletEventsFlowStore) -> some View {
         switch state {
         case .send(let transaction),
             .pending(let transaction),
             .received(let transaction),
             .failed(let transaction):
-            TransactionDetailView(transaction: transaction, viewStore: viewStore)
+            TransactionDetailView(transaction: transaction, store: store)
         case .shielded(let zatoshi):
             // TODO: implement design once shielding is supported, issue 390
             // https://github.com/zcash/secant-ios-wallet/issues/390

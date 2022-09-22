@@ -116,7 +116,7 @@ class WalletEventsSnapshotTests: XCTestCase {
         
         addAttachments(
             name: "\(#function)_WalletEventDetail",
-            TransactionDetailView(transaction: transaction, viewStore: ViewStore(walletEventsStore))
+            TransactionDetailView(transaction: transaction, store: walletEventsStore)
         )
     }
     
@@ -173,7 +173,7 @@ class WalletEventsSnapshotTests: XCTestCase {
         
         addAttachments(
             name: "\(#function)_WalletEventDetail",
-            TransactionDetailView(transaction: transaction, viewStore: ViewStore(walletEventsStore))
+            TransactionDetailView(transaction: transaction, store: walletEventsStore)
         )
     }
     
@@ -235,7 +235,7 @@ class WalletEventsSnapshotTests: XCTestCase {
         
         addAttachments(
             name: "\(#function)_WalletEventDetail",
-            TransactionDetailView(transaction: transaction, viewStore: ViewStore(walletEventsStore))
+            TransactionDetailView(transaction: transaction, store: walletEventsStore)
         )
     }
     
@@ -293,7 +293,7 @@ class WalletEventsSnapshotTests: XCTestCase {
         
         addAttachments(
             name: "\(#function)_WalletEventDetail",
-            TransactionDetailView(transaction: transaction, viewStore: ViewStore(walletEventsStore))
+            TransactionDetailView(transaction: transaction, store: walletEventsStore)
         )
     }
 }
