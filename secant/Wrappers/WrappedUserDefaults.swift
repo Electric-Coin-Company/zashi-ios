@@ -14,6 +14,11 @@ struct WrappedUserDefaults {
     let synchronize: @Sendable () async -> Bool
 }
 
+/// `UserDefaults` is thread-safe class. Because of that we can mark it as `Sendable` on our own. If it's marked as `Sendable` in `Foundation` in
+/// future we can simply remove this line and be ok. This is probably simpliest and easiest way how to fix warnings about `UserDefaults` not being
+/// sendable.
+extension UserDefaults: @unchecked Sendable { }
+
 extension WrappedUserDefaults {
     static func live(
         userDefaults: UserDefaults = .standard
