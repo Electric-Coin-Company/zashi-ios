@@ -84,6 +84,67 @@ class SendTests: XCTestCase {
             state.route = .success
         }
     }
+
+    func testSendSucceededWithoutMemo() throws {
+        // the test needs to pass the exportWallet() so we simulate some in the keychain
+        try storage.importWallet(bip39: "one two three", birthday: nil)
+
+        // setup the store and environment to be fully mocked
+        let testScheduler = DispatchQueue.test
+
+        let testEnvironment = SendFlowEnvironment(
+            derivationTool: .live(),
+            mnemonic: .mock,
+            numberFormatter: .live(),
+            SDKSynchronizer: MockWrappedSDKSynchronizer(),
+            scheduler: testScheduler.eraseToAnyScheduler(),
+            walletStorage: .live(walletStorage: storage),
+            zcashSDKEnvironment: .testnet
+        )
+
+        var state = SendFlowState.placeholder
+        state.addMemoState = false
+
+        let store = TestStore(
+            initialState: state,
+            reducer: SendFlowReducer.default,
+            environment: testEnvironment
+        )
+
+        // simulate the sending confirmation button to be pressed
+        store.send(.sendConfirmationPressed) { state in
+            // once sending is confirmed, the attemts to try to send again by pressing the button
+            // needs to be eliminated, indicated by the flag `isSendingTransaction`, need to be true
+            state.isSendingTransaction = true
+        }
+
+        testScheduler.advance(by: 0.01)
+
+        let transactionState = TransactionState(
+            expirationHeight: 40,
+            memo: nil,
+            minedHeight: 50,
+            shielded: true,
+            zAddress: "tteafadlamnelkqe",
+            fee: Zatoshi(10),
+            id: "id",
+            status: .paid(success: true),
+            timestamp: 1234567,
+            zecAmount: Zatoshi(10)
+        )
+
+        // check the success transaction to be received back
+        store.receive(.sendTransactionResult(Result.success(transactionState))) { state in
+            // from this moment on the sending next transaction is allowed again
+            // the 'isSendingTransaction' needs to be false again
+            state.isSendingTransaction = false
+        }
+
+        // all went well, the success screen is triggered
+        store.receive(.updateRoute(.success)) { state in
+            state.route = .success
+        }
+    }
     
     func testSendFailed() throws {
         // the test needs to pass the exportWallet() so we simulate some in the keychain
@@ -235,6 +296,7 @@ class SendTests: XCTestCase {
     
     func testFundsSufficiency() throws {
         let sendState = SendFlowState(
+            addMemoState: true,
             memoState: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
@@ -313,6 +375,7 @@ class SendTests: XCTestCase {
 
         let store = TestStore(
             initialState: .init(
+                addMemoState: true,
                 memoState: .placeholder,
                 route: nil,
                 transactionAddressInputState: .placeholder,
@@ -346,6 +409,7 @@ class SendTests: XCTestCase {
     
     func testValidForm() throws {
         let sendState = SendFlowState(
+            addMemoState: true,
             memoState: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
@@ -394,6 +458,7 @@ class SendTests: XCTestCase {
     
     func testInvalidForm_InsufficientFunds() throws {
         let sendState = SendFlowState(
+            addMemoState: true,
             memoState: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
@@ -441,6 +506,7 @@ class SendTests: XCTestCase {
     
     func testInvalidForm_AddressFormat() throws {
         let sendState = SendFlowState(
+            addMemoState: true,
             memoState: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
@@ -488,6 +554,7 @@ class SendTests: XCTestCase {
     
     func testInvalidForm_AmountFormat() throws {
         let sendState = SendFlowState(
+            addMemoState: true,
             memoState: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
@@ -535,6 +602,7 @@ class SendTests: XCTestCase {
     
     func testInvalidForm_ExceededMemoCharLimit() throws {
         let sendState = SendFlowState(
+            addMemoState: true,
             memoState: MultiLineTextFieldState(charLimit: 3),
             shieldedBalance: WalletBalance(verified: Zatoshi(1), total: Zatoshi(1)),
             transactionAddressInputState:
@@ -588,6 +656,7 @@ class SendTests: XCTestCase {
     
     func testMemoCharLimitSet() throws {
         let sendState = SendFlowState(
+            addMemoState: true,
             memoState: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:

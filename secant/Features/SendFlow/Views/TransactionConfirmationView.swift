@@ -2,37 +2,45 @@ import SwiftUI
 import ComposableArchitecture
 
 struct TransactionConfirmation: View {
-    let viewStore: SendFlowViewStore
+    let store: SendFlowStore
 
     var body: some View {
-        VStack {
-            Text("Send \(viewStore.amount.decimalString()) ZEC")
-                .padding()
+        WithViewStore(store) { viewStore in
+            VStack {
+                Text("Send \(viewStore.amount.decimalString()) ZEC to")
+                    .padding()
+                    .foregroundColor(Asset.Colors.Text.forDarkBackground.color)
 
-            Text("To \(viewStore.address)")
-                .padding()
+                Text("\(viewStore.address)?")
+                    .truncationMode(.middle)
+                    .lineLimit(1)
+                    .padding()
+                    .foregroundColor(Asset.Colors.Text.forDarkBackground.color)
 
-            Spacer()
+                HStack {
+                    CheckCircle(viewStore: ViewStore(store.addMemoStore()))
+                    Text("Includes memo")
+                        .foregroundColor(Asset.Colors.Text.forDarkBackground.color)
+                }
 
-            Button(
-                action: { viewStore.send(.sendConfirmationPressed) },
-                label: { Text("Confirm") }
+                Spacer()
+
+                HoldToSendButton {
+                    viewStore.send(.sendConfirmationPressed)
+                }
+
+                Spacer()
+            }
+            .applyDarkScreenBackground()
+            .navigationLinkEmpty(
+                isActive: viewStore.bindingForSuccess,
+                destination: { TransactionSent(viewStore: viewStore) }
             )
-            .activeButtonStyle
-            .frame(height: 50)
-            .padding()
-
-            Spacer()
+            .navigationLinkEmpty(
+                isActive: viewStore.bindingForFailure,
+                destination: { TransactionFailed(viewStore: viewStore) }
+            )
         }
-        .applyScreenBackground()
-        .navigationLinkEmpty(
-            isActive: viewStore.bindingForSuccess,
-            destination: { TransactionSent(viewStore: viewStore) }
-        )
-        .navigationLinkEmpty(
-            isActive: viewStore.bindingForFailure,
-            destination: { TransactionFailed(viewStore: viewStore) }
-        )
     }
 }
 
@@ -44,11 +52,8 @@ struct Confirmation_Previews: PreviewProvider {
             StateContainer(
                 initialState: (false)
             ) { _ in
-                TransactionConfirmation(
-                    viewStore: ViewStore(.placeholder)
-                )
+                TransactionConfirmation(store: .placeholder)
             }
         }
-        .preferredColorScheme(.dark)
     }
 }

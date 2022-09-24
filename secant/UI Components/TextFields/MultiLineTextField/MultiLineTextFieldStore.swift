@@ -86,5 +86,9 @@ extension MultiLineTextFieldStore {
 // MARK: - Placeholders
 
 extension MultiLineTextFieldState {
-    static let placeholder = MultiLineTextFieldState()
+    static let placeholder: MultiLineTextFieldState = {
+        var state = MultiLineTextFieldState()
+        state.text = "test"
+        return state
+    }()
 }

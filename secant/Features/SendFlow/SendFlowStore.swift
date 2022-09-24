@@ -23,6 +23,7 @@ struct SendFlowState: Equatable {
         case done
     }
 
+    var addMemoState: Bool
     var isSendingTransaction = false
     var memoState: MultiLineTextFieldState
     var route: Route?
@@ -74,6 +75,7 @@ struct SendFlowState: Equatable {
 // MARK: - Action
 
 enum SendFlowAction: Equatable {
+    case addMemo(CheckCircleAction)
     case memo(MultiLineTextFieldAction)
     case onAppear
     case onDisappear
@@ -107,12 +109,16 @@ extension SendFlowReducer {
             sendReducer,
             transactionAddressInputReducer,
             transactionAmountInputReducer,
-            memoReducer
+            memoReducer,
+            addMemoReducer
         ]
     )
 
     private static let sendReducer = SendFlowReducer { state, action, environment in
         switch action {
+        case .addMemo:
+            return .none
+
         case .updateRoute(.failure):
             state.route = .failure
             state.isSendingTransaction = false
@@ -146,7 +152,7 @@ extension SendFlowReducer {
                     with: spendingKey,
                     zatoshi: state.amount,
                     to: state.address,
-                    memo: state.memoState.text,
+                    memo: state.addMemoState ? state.memoState.text : nil,
                     from: 0
                 )
                 .receive(on: environment.scheduler)
@@ -196,6 +202,12 @@ extension SendFlowReducer {
         }
     }
 
+    private static let addMemoReducer: SendFlowReducer = CheckCircleReducer.default.pullback(
+        state: \SendFlowState.addMemoState,
+        action: /SendFlowAction.addMemo,
+        environment: { _ in Void() }
+    )
+
     private static let transactionAddressInputReducer: SendFlowReducer = TransactionAddressTextFieldReducer.default.pullback(
         state: \SendFlowState.transactionAddressInputState,
         action: /SendFlowAction.transactionAddressInput,
@@ -237,6 +249,13 @@ extension SendFlowReducer {
 // MARK: - Store
 
 extension SendFlowStore {
+    func addMemoStore() -> CheckCircleStore {
+        self.scope(
+            state: \.addMemoState,
+            action: SendFlowAction.addMemo
+        )
+    }
+
     func memoStore() -> MultiLineTextFieldStore {
         self.scope(
             state: \.memoState,
@@ -289,6 +308,7 @@ extension SendFlowViewStore {
 extension SendFlowState {
     static var placeholder: Self {
         .init(
+            addMemoState: true,
             memoState: .placeholder,
             route: nil,
             transactionAddressInputState: .placeholder,
@@ -298,6 +318,7 @@ extension SendFlowState {
 
     static var emptyPlaceholder: Self {
         .init(
+            addMemoState: true,
             memoState: .placeholder,
             route: nil,
             transactionAddressInputState: .placeholder,
@@ -310,12 +331,7 @@ extension SendFlowState {
 extension SendFlowStore {
     static var placeholder: SendFlowStore {
         return SendFlowStore(
-            initialState: .init(
-                memoState: .placeholder,
-                route: nil,
-                transactionAddressInputState: .placeholder,
-                transactionAmountInputState: .placeholder
-            ),
+            initialState: .emptyPlaceholder,
             reducer: .default,
             environment: SendFlowEnvironment(
                 derivationTool: .live(),
