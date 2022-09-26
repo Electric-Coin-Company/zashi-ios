@@ -25,6 +25,13 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         appViewStore.send(.appDelegate(.didFinishLaunching))
         return true
     }
+
+    func application(
+        _ application: UIApplication,
+        shouldAllowExtensionPointIdentifier extensionPointIdentifier: UIApplication.ExtensionPointIdentifier
+    ) -> Bool {
+        return extensionPointIdentifier != UIApplication.ExtensionPointIdentifier.keyboard
+    }
 }
 
 @main
