@@ -59,7 +59,7 @@ opt_in_rules:
   - vertical_whitespace_opening_braces
   - weak_delegate
   - yoda_condition
-
+  - todos
 
 custom_rules:
   array_constructor:
@@ -92,6 +92,15 @@ custom_rules:
     regex: "NSLog\\("
     message: "The swift NSLog function should not be used."
     severity: error
+
+  todos:
+    included: ".*\\.swift"
+    name: "TODO"
+    regex: "(TODO|FIXME)\ {0,}:"
+    message: "TODO or FIXME without issue number."
+    severity: warning
+    match_kinds:
+      - comment
 
 
 attributes:

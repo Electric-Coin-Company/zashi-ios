@@ -32,7 +32,7 @@ struct HomeState: Equatable {
     var shieldedBalance: WalletBalance
     var synchronizerStatusSnapshot: SyncStatusSnapshot
     var walletEventsState: WalletEventsFlowState
-    // TODO: - Get the ZEC price from the SDK, issue 311, https://github.com/zcash/secant-ios-wallet/issues/311
+    // TODO [#311]: - Get the ZEC price from the SDK, https://github.com/zcash/secant-ios-wallet/issues/311
     var zecPrice = Decimal(140.0)
 
     var totalCurrencyBalance: Zatoshi {
@@ -166,7 +166,7 @@ extension HomeReducer {
             do {
                 try environment.SDKSynchronizer.rewind(.quick)
             } catch {
-                // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+                // TODO [#221]: error we need to handle (https://github.com/zcash/secant-ios-wallet/issues/221)
             }
             state.route = nil
             return .none
@@ -175,7 +175,7 @@ extension HomeReducer {
             do {
                 try environment.SDKSynchronizer.rewind(.birthday)
             } catch {
-                // TODO: error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+                // TODO [#221]: error we need to handle (https://github.com/zcash/secant-ios-wallet/issues/221)
             }
             state.route = nil
             return .none

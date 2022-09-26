@@ -18,7 +18,7 @@ struct DeeplinkHandler {
     
     func resolveDeeplinkURL(_ url: URL, derivationTool: WrappedDerivationTool) throws -> Deeplink {
         // simplified format zcash:<address>
-        // TODO: simplified for now until ZIP-321 is implememnted, issue 109 (https://github.com/zcash/secant-ios-wallet/issues/109)
+        // TODO [#109]: simplified for now until ZIP-321 is implememnted (https://github.com/zcash/secant-ios-wallet/issues/109)
         let address = url.absoluteString.replacingOccurrences(of: "zcash:", with: "")
         do {
             if try derivationTool.isValidZcashAddress(address) {

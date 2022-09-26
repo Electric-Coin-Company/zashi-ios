@@ -123,7 +123,7 @@ extension ImportWalletReducer {
                 try environment.walletStorage.markUserPassedPhraseBackupTest()
 
                 // notify user
-                // TODO: Proper Error/Success handling, issue 221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+                // TODO [#221]: Proper Error/Success handling (https://github.com/zcash/secant-ios-wallet/issues/221)
                 state.alert = AlertState(
                     title: TextState("Success"),
                     message: TextState("The wallet has been successfully recovered."),
@@ -135,7 +135,7 @@ extension ImportWalletReducer {
 
                 return Effect(value: .initializeSDK)
             } catch {
-                // TODO: Proper Error/Success handling, issue 221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+                // TODO [#221]: Proper Error/Success handling (https://github.com/zcash/secant-ios-wallet/issues/221)
                 state.alert = AlertState(
                     title: TextState("Wrong Seed Phrase"),
                     message: TextState("The seed phrase must be 24 words separated by space."),

@@ -67,7 +67,7 @@ extension SettingsReducer {
                 state.phraseDisplayState.phrase = recoveryPhrase
                 return Effect(value: .updateRoute(.backupPhrase))
             } catch {
-                // TODO: - merge with issue 201 (https://github.com/zcash/secant-ios-wallet/issues/201) and its Error States
+                // TODO [#201]: - merge with issue 201 (https://github.com/zcash/secant-ios-wallet/issues/201) and its Error States
                 return .none
             }
             
