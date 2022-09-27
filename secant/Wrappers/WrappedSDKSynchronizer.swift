@@ -405,7 +405,7 @@ class MockWrappedSDKSynchronizer: WrappedSDKSynchronizer {
     ) -> Effect<Result<TransactionState, NSError>, Never> {
         let transactionState = TransactionState(
             expirationHeight: 40,
-            memo: "test",
+            memo: memo,
             minedHeight: 50,
             shielded: true,
             zAddress: "tteafadlamnelkqe",

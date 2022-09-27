@@ -32,6 +32,7 @@ extension ScreenBackground {
         ]
     )
 }
+
 struct ScreenBackgroundModifier: ViewModifier {
     var colors: [Color]
     var darkGradientEndPointY = 1.0
@@ -93,6 +94,17 @@ extension View {
                 colors: [
                     Asset.Colors.ScreenBackground.semiTransparentGradientStart.color,
                     Asset.Colors.ScreenBackground.semiTransparentGradientEnd.color
+                ]
+            )
+        )
+    }
+
+    func applyDarkScreenBackground() -> some View {
+        self.modifier(
+            ScreenBackgroundModifier(
+                colors: [
+                    Asset.Colors.ScreenBackground.gradientDarkStart.color,
+                    Asset.Colors.ScreenBackground.gradientDarkEnd.color
                 ]
             )
         )

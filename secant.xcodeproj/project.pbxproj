@@ -68,6 +68,11 @@
 		2EDA07A027EDE18C00D6F09B /* TCATextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDA079F27EDE18C00D6F09B /* TCATextField.swift */; };
 		2EDA07A227EDE1AE00D6F09B /* TextFieldFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDA07A127EDE1AE00D6F09B /* TextFieldFooter.swift */; };
 		2EDA07A427EDE2A900D6F09B /* DebugFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDA07A327EDE2A900D6F09B /* DebugFrame.swift */; };
+		346715A528E2027D0035F7C4 /* CheckCircleStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346715A428E2027D0035F7C4 /* CheckCircleStore.swift */; };
+		346715A828E20FE40035F7C4 /* TransactionConfirmationSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346715A728E20FE40035F7C4 /* TransactionConfirmationSnapshotTests.swift */; };
+		346D41E428DF0B8600963F36 /* CheckCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346D41E328DF0B8600963F36 /* CheckCircle.swift */; };
+		34E0AF0F28DEE4C70034CF37 /* HoldToSendButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0AF0E28DEE4C70034CF37 /* HoldToSendButton.swift */; };
+		34E0AF1128DEE5220034CF37 /* Wedge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0AF1028DEE5220034CF37 /* Wedge.swift */; };
 		660558E9270C7A54009D6954 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 660558E8270C7A54009D6954 /* Colors.xcassets */; };
 		660558F7270C862F009D6954 /* Fonts+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660558F5270C862F009D6954 /* Fonts+Generated.swift */; };
 		660558F8270C862F009D6954 /* XCAssets+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660558F6270C862F009D6954 /* XCAssets+Generated.swift */; };
@@ -302,6 +307,11 @@
 		2EDA079F27EDE18C00D6F09B /* TCATextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCATextField.swift; sourceTree = "<group>"; };
 		2EDA07A127EDE1AE00D6F09B /* TextFieldFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFooter.swift; sourceTree = "<group>"; };
 		2EDA07A327EDE2A900D6F09B /* DebugFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugFrame.swift; sourceTree = "<group>"; };
+		346715A428E2027D0035F7C4 /* CheckCircleStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckCircleStore.swift; sourceTree = "<group>"; };
+		346715A728E20FE40035F7C4 /* TransactionConfirmationSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionConfirmationSnapshotTests.swift; sourceTree = "<group>"; };
+		346D41E328DF0B8600963F36 /* CheckCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckCircle.swift; sourceTree = "<group>"; };
+		34E0AF0E28DEE4C70034CF37 /* HoldToSendButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldToSendButton.swift; sourceTree = "<group>"; };
+		34E0AF1028DEE5220034CF37 /* Wedge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wedge.swift; sourceTree = "<group>"; };
 		660558E8270C7A54009D6954 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		660558F5270C862F009D6954 /* Fonts+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Fonts+Generated.swift"; sourceTree = "<group>"; };
 		660558F6270C862F009D6954 /* XCAssets+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "XCAssets+Generated.swift"; sourceTree = "<group>"; };
@@ -488,6 +498,7 @@
 		0D0781C5278776B90083ACD7 /* Shapes */ = {
 			isa = PBXGroup;
 			children = (
+				34E0AF1028DEE5220034CF37 /* Wedge.swift */,
 				0D0781C7278776D20083ACD7 /* ZcashSymbol.swift */,
 			);
 			path = Shapes;
@@ -707,6 +718,23 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		346715A628E20FB30035F7C4 /* SendSnapshotTests */ = {
+			isa = PBXGroup;
+			children = (
+				346715A728E20FE40035F7C4 /* TransactionConfirmationSnapshotTests.swift */,
+			);
+			path = SendSnapshotTests;
+			sourceTree = "<group>";
+		};
+		346D41E228DF0B0900963F36 /* CheckCircle */ = {
+			isa = PBXGroup;
+			children = (
+				346D41E328DF0B8600963F36 /* CheckCircle.swift */,
+				346715A428E2027D0035F7C4 /* CheckCircleStore.swift */,
+			);
+			path = CheckCircle;
+			sourceTree = "<group>";
+		};
 		663FAB9A271D873300E495F8 /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
@@ -866,17 +894,18 @@
 		9E391162284E3ECF0073DD9A /* SnapshotTests */ = {
 			isa = PBXGroup;
 			children = (
+				9E92AF0728530EBF007367AD /* View+UIImage.swift */,
 				9E94C62128AA7ECD008256E9 /* BalanceBreakdownSnapshotTests */,
-				9E7225EF2889537E00DF7F17 /* SettingsSnapshotTests */,
-				9E7CB6252874267B00A02233 /* ProfileSnapshotTests */,
-				9E7CB6102869881300A02233 /* WalletEventsSnapshotTests */,
 				9E9ECC8B28589E150099D5A2 /* HomeSnapshotTests */,
 				9E9ECC9328589E150099D5A2 /* ImportWalletSnapshotTests */,
 				9E9ECC9528589E150099D5A2 /* OnboardingSnapshotTests */,
+				9E7CB6252874267B00A02233 /* ProfileSnapshotTests */,
 				9E9ECC8F28589E150099D5A2 /* RecoveryPhraseDisplaySnapshotTests */,
 				9E9ECC9128589E150099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests */,
+				346715A628E20FB30035F7C4 /* SendSnapshotTests */,
+				9E7225EF2889537E00DF7F17 /* SettingsSnapshotTests */,
+				9E7CB6102869881300A02233 /* WalletEventsSnapshotTests */,
 				9E9ECC8D28589E150099D5A2 /* WelcomeSnapshotTests */,
-				9E92AF0728530EBF007367AD /* View+UIImage.swift */,
 			);
 			path = SnapshotTests;
 			sourceTree = "<group>";
@@ -1073,6 +1102,7 @@
 		9E7FE0BE282D1DFE00C374E8 /* UI Components */ = {
 			isa = PBXGroup;
 			children = (
+				346D41E228DF0B0900963F36 /* CheckCircle */,
 				9E7CB6132869E8A700A02233 /* CircularProgress */,
 				0DF2DC5227235E1F00FA31E2 /* Extensions */,
 				0DB8AA80271DC7520035BC9D /* DesignGuide.swift */,
@@ -1355,8 +1385,9 @@
 			children = (
 				F9C165BB2740403600592F76 /* CreateTransactionView.swift */,
 				F9C165B92740403600592F76 /* TransactionConfirmationView.swift */,
-				F9C165BD2740403600592F76 /* TransactionSentView.swift */,
 				9E5BF640281FD7B600BA3F17 /* TransactionFailedView.swift */,
+				F9C165BD2740403600592F76 /* TransactionSentView.swift */,
+				34E0AF0E28DEE4C70034CF37 /* HoldToSendButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1588,6 +1619,7 @@
 				2EB7758727FC67FD00269373 /* TransactionAmountTextFieldStore.swift in Sources */,
 				669FDAE9272C23B3007B9422 /* CircularFrame.swift in Sources */,
 				9EF8136027F043CC0075AF48 /* AppDelegate.swift in Sources */,
+				34E0AF1128DEE5220034CF37 /* Wedge.swift in Sources */,
 				F96B41E8273B501F0021B49A /* TransactionDetailView.swift in Sources */,
 				9E02B56A27FED43E005B809B /* WrappedFileManager.swift in Sources */,
 				663FABA2271D876C00E495F8 /* SecondaryButton.swift in Sources */,
@@ -1617,6 +1649,7 @@
 				9E2DF99D27CF704D00649636 /* ImportSeedEditor.swift in Sources */,
 				F9971A5327680DD000A2DB75 /* ProfileStore.swift in Sources */,
 				9E39114D2848EEB90073DD9A /* WalletStorage.swift in Sources */,
+				346D41E428DF0B8600963F36 /* CheckCircle.swift in Sources */,
 				669FDAEB272C23C2007B9422 /* CircularFrameBadge.swift in Sources */,
 				9E39113B2848D5180073DD9A /* WrappedNumberFormatter.swift in Sources */,
 				2E8719CD27FB0D3B0082C926 /* CurrencySelectionView.swift in Sources */,
@@ -1671,6 +1704,7 @@
 				663FAB9C271D874D00E495F8 /* ActiveButton.swift in Sources */,
 				9E2F1C842809B606004E65FE /* DebugMenu.swift in Sources */,
 				9E02B5C3280458D2005B809B /* WrappedDerivationTool.swift in Sources */,
+				34E0AF0F28DEE4C70034CF37 /* HoldToSendButton.swift in Sources */,
 				F9C165C02740403600592F76 /* TransactionConfirmationView.swift in Sources */,
 				0DF2DC5427235E3E00FA31E2 /* View+InnerShadow.swift in Sources */,
 				9E39113F2848EC360073DD9A /* WrappedRecoveryPhraseRandomizer.swift in Sources */,
@@ -1689,6 +1723,7 @@
 				66A0807B271993C500118B79 /* OnboardingProgressIndicator.swift in Sources */,
 				0D7DF08C271DCC0E00530046 /* ScreenBackground.swift in Sources */,
 				9E01F8242833C0D8000EFC57 /* WrappedURIParser.swift in Sources */,
+				346715A528E2027D0035F7C4 /* CheckCircleStore.swift in Sources */,
 				F9C165C22740403600592F76 /* CreateTransactionView.swift in Sources */,
 				F9C165B4274031F600592F76 /* Bindings.swift in Sources */,
 				2E35F99A27B3E99C00EB79CD /* TextFieldTitleAccessoryButtonStyle.swift in Sources */,
@@ -1747,6 +1782,7 @@
 				9E391132284644580073DD9A /* AppInitializationTests.swift in Sources */,
 				9E9ECC9928589E150099D5A2 /* RecoveryPhraseDisplaySnapshotTests.swift in Sources */,
 				9E391124283E4CAC0073DD9A /* ImportWalletTests.swift in Sources */,
+				346715A828E20FE40035F7C4 /* TransactionConfirmationSnapshotTests.swift in Sources */,
 				9E5BF63F2819542C00BA3F17 /* WalletEventsTests.swift in Sources */,
 				0D4E7A1B26B364180058B01E /* secantTests.swift in Sources */,
 				0DFE93E6272CB6F7000FCCA5 /* RecoveryPhraseValidationTests.swift in Sources */,
@@ -2082,7 +2118,7 @@
 			repositoryURL = "https://github.com/zcash/ZcashLightClientKit/";
 			requirement = {
 				kind = exactVersion;
-				version = "0.16.6-beta";
+				version = "0.16.10-beta";
 			};
 		};
 		6654C7382715A38000901167 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {

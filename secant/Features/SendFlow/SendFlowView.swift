@@ -19,7 +19,7 @@ struct SendFlowView: View {
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForConfirmation,
                 destination: {
-                    TransactionConfirmation(viewStore: viewStore)
+                    TransactionConfirmation(store: store)
                 }
             )
         }
@@ -34,6 +34,7 @@ struct SendFLowView_Previews: PreviewProvider {
             SendFlowView(
                 store: .init(
                     initialState: .init(
+                        addMemoState: true,
                         memoState: .placeholder,
                         route: nil,
                         transactionAddressInputState: .placeholder,

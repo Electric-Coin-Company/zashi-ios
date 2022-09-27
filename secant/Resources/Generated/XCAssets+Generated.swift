@@ -35,6 +35,7 @@ internal enum Asset {
     }
     internal enum Icons {
       internal static let bank = ImageAsset(name: "bank")
+      internal static let checkmark = ImageAsset(name: "checkmark")
       internal static let list = ImageAsset(name: "list")
       internal static let profile = ImageAsset(name: "profile")
       internal static let qrCode = ImageAsset(name: "qr-code")
@@ -67,6 +68,10 @@ internal enum Asset {
       internal static let secondaryButton = ColorAsset(name: "SecondaryButton")
       internal static let secondaryButtonPressed = ColorAsset(name: "SecondaryButtonPressed")
     }
+    internal enum CheckCircle {
+      internal static let externalRing = ColorAsset(name: "externalRing")
+      internal static let internalRing = ColorAsset(name: "internalRing")
+    }
     internal enum Cursor {
       internal static let bar = ColorAsset(name: "Bar")
     }
@@ -86,11 +91,14 @@ internal enum Asset {
       internal static let gradientLeft = ColorAsset(name: "GradientLeft")
       internal static let gradientRight = ColorAsset(name: "GradientRight")
       internal static let negativeSpace = ColorAsset(name: "NegativeSpace")
+      internal static let holdToSendButton = ColorAsset(name: "holdToSendButton")
     }
     internal enum QRScan {
       internal static let frame = ColorAsset(name: "frame")
     }
     internal enum ScreenBackground {
+      internal static let gradientDarkEnd = ColorAsset(name: "gradientDarkEnd")
+      internal static let gradientDarkStart = ColorAsset(name: "gradientDarkStart")
       internal static let gradientEnd = ColorAsset(name: "gradientEnd")
       internal static let gradientStart = ColorAsset(name: "gradientStart")
       internal static let greenGradientEnd = ColorAsset(name: "greenGradientEnd")
@@ -104,6 +112,7 @@ internal enum Asset {
     internal enum Shadow {
       internal static let drawerShadow = ColorAsset(name: "drawerShadow")
       internal static let emptyChipInnerShadow = ColorAsset(name: "emptyChipInnerShadow")
+      internal static let holdToSendButtonShadow = ColorAsset(name: "holdToSendButtonShadow")
       internal static let numberedTextShadow = ColorAsset(name: "numberedTextShadow")
     }
     internal enum Text {
@@ -124,6 +133,7 @@ internal enum Asset {
       internal static let balanceText = ColorAsset(name: "balanceText")
       internal static let captionText = ColorAsset(name: "captionText")
       internal static let captionTextShadow = ColorAsset(name: "captionTextShadow")
+      internal static let forDarkBackground = ColorAsset(name: "forDarkBackground")
       internal static let highlightedSuperscriptText = ColorAsset(name: "highlightedSuperscriptText")
       internal static let moreInfoText = ColorAsset(name: "moreInfoText")
     }
