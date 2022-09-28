@@ -51,9 +51,6 @@ playground.xcworkspace
 Carthage/Checkouts
 Carthage/Build
 Example/**/Carthage
-# Accio dependency management
-Dependencies/
-.accio/
 
 # fastlane
 fastlane/report.xml

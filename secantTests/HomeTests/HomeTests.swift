@@ -18,6 +18,7 @@ class HomeTests: XCTestCase {
         let testEnvironment = HomeEnvironment(
             audioServices: .silent,
             derivationTool: .live(),
+            diskSpaceChecker: .mockEmptyDisk,
             feedbackGenerator: .silent,
             mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
@@ -49,6 +50,7 @@ class HomeTests: XCTestCase {
         let testEnvironment = HomeEnvironment(
             audioServices: .silent,
             derivationTool: .live(),
+            diskSpaceChecker: .mockEmptyDisk,
             feedbackGenerator: .silent,
             mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
@@ -100,6 +102,7 @@ class HomeTests: XCTestCase {
         let testEnvironment = HomeEnvironment(
             audioServices: .silent,
             derivationTool: .live(),
+            diskSpaceChecker: .mockEmptyDisk,
             feedbackGenerator: .silent,
             mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
@@ -143,6 +146,7 @@ class HomeTests: XCTestCase {
         let testEnvironment = HomeEnvironment(
             audioServices: .silent,
             derivationTool: .live(),
+            diskSpaceChecker: .mockEmptyDisk,
             feedbackGenerator: .silent,
             mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
@@ -188,6 +192,7 @@ class HomeTests: XCTestCase {
         let testEnvironment = HomeEnvironment(
             audioServices: .silent,
             derivationTool: .live(),
+            diskSpaceChecker: .mockEmptyDisk,
             feedbackGenerator: .silent,
             mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
@@ -209,8 +214,47 @@ class HomeTests: XCTestCase {
         testScheduler.advance(by: 0.01)
         
         // expected side effects as a result of .onAppear registration
+        store.receive(.updateRoute(nil))
         store.receive(.synchronizerStateChanged(.unknown))
         store.receive(.updateSynchronizerStatus)
+
+        // long-living (cancelable) effects need to be properly canceled.
+        // the .onDisappear action cancles the observer of the synchronizer status change.
+        store.send(.onDisappear)
+    }
+
+    func testOnAppear_notEnoughSpaceOnDisk() throws {
+        // setup the store and environment to be fully mocked
+        let testScheduler = DispatchQueue.test
+
+        let testEnvironment = HomeEnvironment(
+            audioServices: .silent,
+            derivationTool: .live(),
+            diskSpaceChecker: .mockFullDisk,
+            feedbackGenerator: .silent,
+            mnemonic: .mock,
+            scheduler: testScheduler.eraseToAnyScheduler(),
+            SDKSynchronizer: MockWrappedSDKSynchronizer(),
+            walletStorage: .throwing,
+            zcashSDKEnvironment: .testnet
+        )
+
+        let store = TestStore(
+            initialState: .placeholder,
+            reducer: HomeReducer.default,
+            environment: testEnvironment
+        )
+
+        store.send(.onAppear) { state in
+            state.requiredTransactionConfirmations = 10
+        }
+
+        testScheduler.advance(by: 0.01)
+
+        // expected side effects as a result of .onAppear registration
+        store.receive(.updateRoute(.notEnoughFreeDiskSpace)) { state in
+            state.route = .notEnoughFreeDiskSpace
+        }
 
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancles the observer of the synchronizer status change.
@@ -224,6 +268,7 @@ class HomeTests: XCTestCase {
         let testEnvironment = HomeEnvironment(
             audioServices: .silent,
             derivationTool: .live(),
+            diskSpaceChecker: .mockEmptyDisk,
             feedbackGenerator: .silent,
             mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
@@ -263,6 +308,7 @@ class HomeTests: XCTestCase {
         let testEnvironment = HomeEnvironment(
             audioServices: .silent,
             derivationTool: .live(),
+            diskSpaceChecker: .mockEmptyDisk,
             feedbackGenerator: .silent,
             mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),

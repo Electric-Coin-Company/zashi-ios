@@ -13,6 +13,7 @@ typealias HomeViewStore = ViewStore<HomeState, HomeAction>
 
 struct HomeState: Equatable {
     enum Route: Equatable {
+        case notEnoughFreeDiskSpace
         case profile
         case request
         case send
@@ -78,6 +79,7 @@ enum HomeAction: Equatable {
 struct HomeEnvironment {
     let audioServices: WrappedAudioServices
     let derivationTool: WrappedDerivationTool
+    let diskSpaceChecker: WrappedDiskSpaceChecker
     let feedbackGenerator: WrappedFeedbackGenerator
     let mnemonic: WrappedMnemonic
     let scheduler: AnySchedulerOf<DispatchQueue>
@@ -90,6 +92,7 @@ extension HomeEnvironment {
     static let demo = HomeEnvironment(
         audioServices: .silent,
         derivationTool: .live(),
+        diskSpaceChecker: .mockEmptyDisk,
         feedbackGenerator: .silent,
         mnemonic: .mock,
         scheduler: DispatchQueue.main.eraseToAnyScheduler(),
@@ -119,10 +122,17 @@ extension HomeReducer {
         switch action {
         case .onAppear:
             state.requiredTransactionConfirmations = environment.zcashSDKEnvironment.requiredTransactionConfirmations
-            return environment.SDKSynchronizer.stateChanged
-                .map(HomeAction.synchronizerStateChanged)
-                .eraseToEffect()
-                .cancellable(id: CancelId(), cancelInFlight: true)
+
+            if environment.diskSpaceChecker.hasEnoughFreeSpaceForSync() {
+                let syncEffect = environment.SDKSynchronizer.stateChanged
+                    .map(HomeAction.synchronizerStateChanged)
+                    .eraseToEffect()
+                    .cancellable(id: CancelId(), cancelInFlight: true)
+
+                return .concatenate(Effect(value: .updateRoute(nil)), syncEffect)
+            } else {
+                return Effect(value: .updateRoute(.notEnoughFreeDiskSpace))
+            }
 
         case .onDisappear:
             return Effect.cancel(id: CancelId())
@@ -380,6 +390,7 @@ extension HomeStore {
             environment: HomeEnvironment(
                 audioServices: .silent,
                 derivationTool: .live(),
+                diskSpaceChecker: .mockEmptyDisk,
                 feedbackGenerator: .silent,
                 mnemonic: .live,
                 scheduler: DispatchQueue.main.eraseToAnyScheduler(),

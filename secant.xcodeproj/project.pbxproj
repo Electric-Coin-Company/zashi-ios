@@ -68,11 +68,15 @@
 		2EDA07A027EDE18C00D6F09B /* TCATextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDA079F27EDE18C00D6F09B /* TCATextField.swift */; };
 		2EDA07A227EDE1AE00D6F09B /* TextFieldFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDA07A127EDE1AE00D6F09B /* TextFieldFooter.swift */; };
 		2EDA07A427EDE2A900D6F09B /* DebugFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDA07A327EDE2A900D6F09B /* DebugFrame.swift */; };
+		3448CB3228E47666006ADEDB /* NotEnoughFreeSpaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3448CB3128E47666006ADEDB /* NotEnoughFreeSpaceView.swift */; };
+		3448CB3428E47787006ADEDB /* WrappedDiskSpaceChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3448CB3328E47787006ADEDB /* WrappedDiskSpaceChecker.swift */; };
+		3448CB3728E485CB006ADEDB /* NotEnoughFeeSpaceSnapshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3448CB3628E485CB006ADEDB /* NotEnoughFeeSpaceSnapshots.swift */; };
 		346715A528E2027D0035F7C4 /* CheckCircleStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346715A428E2027D0035F7C4 /* CheckCircleStore.swift */; };
 		346715A828E20FE40035F7C4 /* TransactionConfirmationSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346715A728E20FE40035F7C4 /* TransactionConfirmationSnapshotTests.swift */; };
 		346D41E428DF0B8600963F36 /* CheckCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346D41E328DF0B8600963F36 /* CheckCircle.swift */; };
 		34E0AF0F28DEE4C70034CF37 /* HoldToSendButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0AF0E28DEE4C70034CF37 /* HoldToSendButton.swift */; };
 		34E0AF1128DEE5220034CF37 /* Wedge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0AF1028DEE5220034CF37 /* Wedge.swift */; };
+		34E5F2F328E46DB700C17E5F /* DiskSpaceChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E5F2F228E46DB700C17E5F /* DiskSpaceChecker.swift */; };
 		660558E9270C7A54009D6954 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 660558E8270C7A54009D6954 /* Colors.xcassets */; };
 		660558F7270C862F009D6954 /* Fonts+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660558F5270C862F009D6954 /* Fonts+Generated.swift */; };
 		660558F8270C862F009D6954 /* XCAssets+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660558F6270C862F009D6954 /* XCAssets+Generated.swift */; };
@@ -307,11 +311,15 @@
 		2EDA079F27EDE18C00D6F09B /* TCATextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCATextField.swift; sourceTree = "<group>"; };
 		2EDA07A127EDE1AE00D6F09B /* TextFieldFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFooter.swift; sourceTree = "<group>"; };
 		2EDA07A327EDE2A900D6F09B /* DebugFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugFrame.swift; sourceTree = "<group>"; };
+		3448CB3128E47666006ADEDB /* NotEnoughFreeSpaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotEnoughFreeSpaceView.swift; sourceTree = "<group>"; };
+		3448CB3328E47787006ADEDB /* WrappedDiskSpaceChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedDiskSpaceChecker.swift; sourceTree = "<group>"; };
+		3448CB3628E485CB006ADEDB /* NotEnoughFeeSpaceSnapshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotEnoughFeeSpaceSnapshots.swift; sourceTree = "<group>"; };
 		346715A428E2027D0035F7C4 /* CheckCircleStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckCircleStore.swift; sourceTree = "<group>"; };
 		346715A728E20FE40035F7C4 /* TransactionConfirmationSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionConfirmationSnapshotTests.swift; sourceTree = "<group>"; };
 		346D41E328DF0B8600963F36 /* CheckCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckCircle.swift; sourceTree = "<group>"; };
 		34E0AF0E28DEE4C70034CF37 /* HoldToSendButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldToSendButton.swift; sourceTree = "<group>"; };
 		34E0AF1028DEE5220034CF37 /* Wedge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wedge.swift; sourceTree = "<group>"; };
+		34E5F2F228E46DB700C17E5F /* DiskSpaceChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskSpaceChecker.swift; sourceTree = "<group>"; };
 		660558E8270C7A54009D6954 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		660558F5270C862F009D6954 /* Fonts+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Fonts+Generated.swift"; sourceTree = "<group>"; };
 		660558F6270C862F009D6954 /* XCAssets+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "XCAssets+Generated.swift"; sourceTree = "<group>"; };
@@ -718,6 +726,14 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		3448CB3028E4764E006ADEDB /* NotEnoughFreeSpace */ = {
+			isa = PBXGroup;
+			children = (
+				3448CB3128E47666006ADEDB /* NotEnoughFreeSpaceView.swift */,
+			);
+			path = NotEnoughFreeSpace;
+			sourceTree = "<group>";
+		};
 		346715A628E20FB30035F7C4 /* SendSnapshotTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -751,23 +767,24 @@
 		6654C73B2715A3F000901167 /* Features */ = {
 			isa = PBXGroup;
 			children = (
-				9EAFEB8B2808174900199FC9 /* Sandbox */,
-				0D0781C2278750C00083ACD7 /* Welcome */,
-				F9971A4927680DC400A2DB75 /* App */,
-				F93874EC273C4DE200F0E875 /* Home */,
-				9E6713F2289BC51200A6796F /* BalanceBreakdown */,
-				F9971A4F27680DD000A2DB75 /* Profile */,
 				9E7CB61B2874140900A02233 /* AddressDetails */,
+				F9971A4927680DC400A2DB75 /* App */,
+				9E6713F2289BC51200A6796F /* BalanceBreakdown */,
+				F93874EC273C4DE200F0E875 /* Home */,
+				9E2DF99727CF704D00649636 /* ImportWallet */,
+				3448CB3028E4764E006ADEDB /* NotEnoughFreeSpace */,
+				6654C73C2715A3FA00901167 /* OnboardingFlow */,
+				F9971A4F27680DD000A2DB75 /* Profile */,
+				9E7FE0E4282E753700C374E8 /* RecoveryPhraseDisplay */,
+				9E7FE0E3282E751A00C374E8 /* RecoveryPhraseValidationFlow */,
 				F9971A5527680DDE00A2DB75 /* Request */,
+				9EAFEB8B2808174900199FC9 /* Sandbox */,
 				F9971A5B27680DF600A2DB75 /* Scan */,
 				F9C165B62740403600592F76 /* SendFlow */,
 				F9971A6127680DFE00A2DB75 /* Settings */,
 				F96B41E2273B501F0021B49A /* WalletEventsFlow */,
-				9E7FE0E4282E753700C374E8 /* RecoveryPhraseDisplay */,
-				9E7FE0E3282E751A00C374E8 /* RecoveryPhraseValidationFlow */,
-				6654C73C2715A3FA00901167 /* OnboardingFlow */,
 				F9971A6727680E1000A2DB75 /* WalletInfo */,
-				9E2DF99727CF704D00649636 /* ImportWallet */,
+				0D0781C2278750C00083ACD7 /* Welcome */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -837,23 +854,24 @@
 		9E02B56827FED42D005B809B /* Wrappers */ = {
 			isa = PBXGroup;
 			children = (
-				9E02B56927FED43E005B809B /* WrappedFileManager.swift */,
-				9EAFEB83280597B700199FC9 /* WrappedSecItem.swift */,
-				9E02B5C2280458D2005B809B /* WrappedDerivationTool.swift */,
-				9EAFEB872806E5AE00199FC9 /* WrappedSDKSynchronizer.swift */,
-				9E5BF6452821028C00BA3F17 /* WrappedUserDefaults.swift */,
-				9E5BF647282277BE00BA3F17 /* WrappedNotificationCenter.swift */,
-				9E2AC10027D8EF0B0042AA47 /* WrappedMnemonic.swift */,
-				9EF8139027F191BF0075AF48 /* WrappedWalletStorage.swift */,
-				9E7FE0D8282D289B00C374E8 /* WrappedFeedbackGenerator.swift */,
-				9E7FE0DA282D28F100C374E8 /* WrappedPasteboard.swift */,
-				9E7FE0E7282E7B7C00C374E8 /* WrappedDatabaseFiles.swift */,
-				9E01F81F2833861A000EFC57 /* WrappedCaptureDevice.swift */,
-				9E01F8232833C0D8000EFC57 /* WrappedURIParser.swift */,
 				9E87ADF028363DE400122FCC /* WrappedAudioServices.swift */,
-				9E39113A2848D5180073DD9A /* WrappedNumberFormatter.swift */,
-				9E39113E2848EC350073DD9A /* WrappedRecoveryPhraseRandomizer.swift */,
+				9E01F81F2833861A000EFC57 /* WrappedCaptureDevice.swift */,
+				9E7FE0E7282E7B7C00C374E8 /* WrappedDatabaseFiles.swift */,
 				9EAB46692859F42E002904A0 /* WrappedDeeplinkHandler.swift */,
+				9E02B5C2280458D2005B809B /* WrappedDerivationTool.swift */,
+				3448CB3328E47787006ADEDB /* WrappedDiskSpaceChecker.swift */,
+				9E7FE0D8282D289B00C374E8 /* WrappedFeedbackGenerator.swift */,
+				9E02B56927FED43E005B809B /* WrappedFileManager.swift */,
+				9E2AC10027D8EF0B0042AA47 /* WrappedMnemonic.swift */,
+				9E5BF647282277BE00BA3F17 /* WrappedNotificationCenter.swift */,
+				9E39113A2848D5180073DD9A /* WrappedNumberFormatter.swift */,
+				9E7FE0DA282D28F100C374E8 /* WrappedPasteboard.swift */,
+				9E39113E2848EC350073DD9A /* WrappedRecoveryPhraseRandomizer.swift */,
+				9EAFEB872806E5AE00199FC9 /* WrappedSDKSynchronizer.swift */,
+				9EAFEB83280597B700199FC9 /* WrappedSecItem.swift */,
+				9E01F8232833C0D8000EFC57 /* WrappedURIParser.swift */,
+				9E5BF6452821028C00BA3F17 /* WrappedUserDefaults.swift */,
+				9EF8139027F191BF0075AF48 /* WrappedWalletStorage.swift */,
 			);
 			path = Wrappers;
 			sourceTree = "<group>";
@@ -894,7 +912,6 @@
 		9E391162284E3ECF0073DD9A /* SnapshotTests */ = {
 			isa = PBXGroup;
 			children = (
-				9E92AF0728530EBF007367AD /* View+UIImage.swift */,
 				9E94C62128AA7ECD008256E9 /* BalanceBreakdownSnapshotTests */,
 				9E9ECC8B28589E150099D5A2 /* HomeSnapshotTests */,
 				9E9ECC9328589E150099D5A2 /* ImportWalletSnapshotTests */,
@@ -904,6 +921,7 @@
 				9E9ECC9128589E150099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests */,
 				346715A628E20FB30035F7C4 /* SendSnapshotTests */,
 				9E7225EF2889537E00DF7F17 /* SettingsSnapshotTests */,
+				9E92AF0728530EBF007367AD /* View+UIImage.swift */,
 				9E7CB6102869881300A02233 /* WalletEventsSnapshotTests */,
 				9E9ECC8D28589E150099D5A2 /* WelcomeSnapshotTests */,
 			);
@@ -1086,15 +1104,16 @@
 		9E7FE0BD282D1DE100C374E8 /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
+				9E7CB6282875AC2D00A02233 /* AppVersionHandler.swift */,
 				9E3911462848EEB90073DD9A /* DatabaseFiles.swift */,
+				9EAB4670285A1C77002904A0 /* DeeplinkHandler.swift */,
+				34E5F2F228E46DB700C17E5F /* DiskSpaceChecker.swift */,
+				9E66129A28884BFB00C75B70 /* LocalAuthenticationHandler.swift */,
 				9E3911422848EEB90073DD9A /* RecoveryPhraseRandomizer.swift */,
 				9E3911432848EEB90073DD9A /* URIParser.swift */,
 				9E3911442848EEB90073DD9A /* UserPreferencesStorage.swift */,
 				9E3911472848EEB90073DD9A /* WalletStorage.swift */,
 				9E3911452848EEB90073DD9A /* ZCashSDKEnvironment.swift */,
-				9EAB4670285A1C77002904A0 /* DeeplinkHandler.swift */,
-				9E7CB6282875AC2D00A02233 /* AppVersionHandler.swift */,
-				9E66129A28884BFB00C75B70 /* LocalAuthenticationHandler.swift */,
 			);
 			path = Dependencies;
 			sourceTree = "<group>";
@@ -1202,8 +1221,9 @@
 		9E9ECC8B28589E150099D5A2 /* HomeSnapshotTests */ = {
 			isa = PBXGroup;
 			children = (
-				9E9ECC8C28589E150099D5A2 /* HomeSnapshotTests.swift */,
 				9E661229287717A900C75B70 /* HomeCircularProgressSnapshotTests.swift */,
+				9E9ECC8C28589E150099D5A2 /* HomeSnapshotTests.swift */,
+				3448CB3628E485CB006ADEDB /* NotEnoughFeeSpaceSnapshots.swift */,
 			);
 			path = HomeSnapshotTests;
 			sourceTree = "<group>";
@@ -1663,6 +1683,7 @@
 				9E3911482848EEB90073DD9A /* RecoveryPhraseRandomizer.swift in Sources */,
 				0DF482BA2787ADA800EB37D6 /* ConditionalModifier.swift in Sources */,
 				9E7225F3288AB6DD00DF7F17 /* MultipleLineTextField.swift in Sources */,
+				3448CB3228E47666006ADEDB /* NotEnoughFreeSpaceView.swift in Sources */,
 				9E7FE0EC282E7D9400C374E8 /* TransactionState.swift in Sources */,
 				9E2F1C8F280EDE09004E65FE /* Drawer.swift in Sources */,
 				665C963F272C26E600BC04FB /* CircularFrameBackground.swift in Sources */,
@@ -1707,6 +1728,7 @@
 				34E0AF0F28DEE4C70034CF37 /* HoldToSendButton.swift in Sources */,
 				F9C165C02740403600592F76 /* TransactionConfirmationView.swift in Sources */,
 				0DF2DC5427235E3E00FA31E2 /* View+InnerShadow.swift in Sources */,
+				3448CB3428E47787006ADEDB /* WrappedDiskSpaceChecker.swift in Sources */,
 				9E39113F2848EC360073DD9A /* WrappedRecoveryPhraseRandomizer.swift in Sources */,
 				9EAFEB84280597B700199FC9 /* WrappedSecItem.swift in Sources */,
 				9E5BF6462821028C00BA3F17 /* WrappedUserDefaults.swift in Sources */,
@@ -1748,6 +1770,7 @@
 				2E8719CB27FB09990082C926 /* TransactionAmountTextField.swift in Sources */,
 				9E7CB6212874143800A02233 /* AddressDetailsView.swift in Sources */,
 				9E6713FA289BE0E100A6796F /* ClearBackgroundView.swift in Sources */,
+				34E5F2F328E46DB700C17E5F /* DiskSpaceChecker.swift in Sources */,
 				F9C165C42740403600592F76 /* TransactionSentView.swift in Sources */,
 				F9971A5927680DDE00A2DB75 /* RequestStore.swift in Sources */,
 			);
@@ -1773,6 +1796,7 @@
 				9EDDEAA32829610D00B4100C /* TransactionAmountInputTests.swift in Sources */,
 				9E7CB6242874246800A02233 /* ProfileTests.swift in Sources */,
 				9EAFEB862805A23100199FC9 /* WrappedSecItemTests.swift in Sources */,
+				3448CB3728E485CB006ADEDB /* NotEnoughFeeSpaceSnapshots.swift in Sources */,
 				9E9ECC9828589E150099D5A2 /* WelcomeSnapshotTests.swift in Sources */,
 				9E7CB6122869882D00A02233 /* WalletEventsSnapshotTests.swift in Sources */,
 				9E5BF644281FEC9900BA3F17 /* SendTests.swift in Sources */,

@@ -31,6 +31,10 @@ struct HomeView: View {
                     BalanceBreakdown(store: store.balanceBreakdownStore())
                 }
             }
+            .navigationLinkEmpty(
+                isActive: viewStore.bindingForRoute(.notEnoughFreeDiskSpace),
+                destination: { NotEnoughFreeSpaceView(viewStore: viewStore) }
+            )
         }
     }
 }
