@@ -97,6 +97,9 @@ internal enum Asset {
       internal static let frame = ColorAsset(name: "frame")
     }
     internal enum ScreenBackground {
+      internal static let amberGradientEnd = ColorAsset(name: "amberGradientEnd")
+      internal static let amberGradientMiddle = ColorAsset(name: "amberGradientMiddle")
+      internal static let amberGradientStart = ColorAsset(name: "amberGradientStart")
       internal static let gradientDarkEnd = ColorAsset(name: "gradientDarkEnd")
       internal static let gradientDarkStart = ColorAsset(name: "gradientDarkStart")
       internal static let gradientEnd = ColorAsset(name: "gradientEnd")

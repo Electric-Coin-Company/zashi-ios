@@ -33,12 +33,8 @@ struct TransactionConfirmation: View {
             }
             .applyDarkScreenBackground()
             .navigationLinkEmpty(
-                isActive: viewStore.bindingForSuccess,
-                destination: { TransactionSent(viewStore: viewStore) }
-            )
-            .navigationLinkEmpty(
-                isActive: viewStore.bindingForFailure,
-                destination: { TransactionFailed(viewStore: viewStore) }
+                isActive: viewStore.bindingForInProgress,
+                destination: { TransactionSendingView(viewStore: viewStore) }
             )
         }
     }
