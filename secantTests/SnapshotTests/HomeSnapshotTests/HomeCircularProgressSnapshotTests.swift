@@ -32,6 +32,7 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
         let testEnvironment = HomeEnvironment(
             audioServices: .silent,
             derivationTool: .live(),
+            diskSpaceChecker: .mockEmptyDisk,
             feedbackGenerator: .silent,
             mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
@@ -80,6 +81,7 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
         let testEnvironment = HomeEnvironment(
             audioServices: .silent,
             derivationTool: .live(),
+            diskSpaceChecker: .mockEmptyDisk,
             feedbackGenerator: .silent,
             mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),
@@ -121,6 +123,7 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
         let testEnvironment = HomeEnvironment(
             audioServices: .silent,
             derivationTool: .live(),
+            diskSpaceChecker: .mockEmptyDisk,
             feedbackGenerator: .silent,
             mnemonic: .mock,
             scheduler: testScheduler.eraseToAnyScheduler(),

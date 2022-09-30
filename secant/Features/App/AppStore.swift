@@ -68,6 +68,7 @@ struct AppEnvironment {
     let databaseFiles: WrappedDatabaseFiles
     let deeplinkHandler: WrappedDeeplinkHandler
     let derivationTool: WrappedDerivationTool
+    let diskSpaceChecker: WrappedDiskSpaceChecker
     let feedbackGenerator: WrappedFeedbackGenerator
     let mnemonic: WrappedMnemonic
     let recoveryPhraseRandomizer: WrappedRecoveryPhraseRandomizer
@@ -83,6 +84,7 @@ extension AppEnvironment {
         databaseFiles: .live(),
         deeplinkHandler: .live,
         derivationTool: .live(derivationTool: DerivationTool(networkType: .testnet)),
+        diskSpaceChecker: .live,
         feedbackGenerator: .haptic,
         mnemonic: .live,
         recoveryPhraseRandomizer: .live,
@@ -97,6 +99,7 @@ extension AppEnvironment {
         databaseFiles: .live(),
         deeplinkHandler: .live,
         derivationTool: .live(derivationTool: DerivationTool(networkType: .testnet)),
+        diskSpaceChecker: .mockEmptyDisk,
         feedbackGenerator: .silent,
         mnemonic: .mock,
         recoveryPhraseRandomizer: .live,
@@ -365,6 +368,7 @@ extension AppReducer {
             HomeEnvironment(
                 audioServices: environment.audioServices,
                 derivationTool: environment.derivationTool,
+                diskSpaceChecker: environment.diskSpaceChecker,
                 feedbackGenerator: environment.feedbackGenerator,
                 mnemonic: environment.mnemonic,
                 scheduler: environment.scheduler,
