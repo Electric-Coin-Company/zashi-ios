@@ -37,7 +37,7 @@ struct OnboardingHeaderView: View {
                     
                     Spacer()
                     
-                    if !viewStore.isFinalStep {
+                    if !viewStore.isInitialStep && !viewStore.isFinalStep {
                         Button("Skip") {
                             viewStore.send(.skip, animation: .easeInOut(duration: animationDuration))
                         }
