@@ -3,17 +3,17 @@
 "welcomeScreen.subtitle" = "Just Loading, one sec";
 
 // MARK: - Onboarding Flow
-"onboarding.step1.title" = "Shielded by Default";
-"onboarding.step1.description" = "Tired of worrying about which wallet you used last? US TOO! Now you don't have to, as all funds will automatically be moved to your shielded wallet (and migrated for you).";
+"onboarding.step1.title" = "Welcome!";
+"onboarding.step1.description" = "As a privacy focused wallet, we shield by default. Your wallet uses the shielded address for sending and moves transparent funds to that address automatically.\n\nIn other words, the 'privacy-please' sign is on the knob.";
 
 "onboarding.step2.title" = "Unified Addresses";
-"onboarding.step2.description" = "Tired of worrying about which wallet you used last? US TOO! Now you don't have to, as all funds will automatically be moved to your shielded wallet (and migrated for you).";
+"onboarding.step2.description" = "You now have a unified address that includes and up-to-date shielded address for legacy systems.\n\nThis makes your wallet friendlier, and gives you and address that you won't have to upgrade again.";
 
 "onboarding.step3.title" = "And so much more...";
-"onboarding.step3.description" = "Faster reverse syncing (yes it's a thing).  Liberated Payments, Social Payments, Address Books, in-line ZEC requests, wrapped Bitcoin, fractionalize NFTs, you providing liquidity for anything you want, getting that Defi, and going to Mexico.";
+"onboarding.step3.description" = "Due to Zcash's increased popularity, we are optimizing our syncing schemes to be faster and more efficient!\n\nThe future is fast!";
 
-"onboarding.step4.title" = "Ready for the Future";
-"onboarding.step4.description" = "Lets get you set up!";
+"onboarding.step4.title" = "Let's get started";
+"onboarding.step4.description" = "Choose between creating a new wallet and importing and existing Secret Recovery Phrase";
 
 "onboarding.button.newWallet" = "Create New Wallet";
 "onboarding.button.importWallet" = "Import an Existing Wallet";

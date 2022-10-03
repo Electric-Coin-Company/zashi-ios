@@ -15,71 +15,54 @@ struct OnboardingContentView: View {
     
     var body: some View {
         WithViewStore(self.store) { viewStore in
-            ZStack {
-                if viewStore.isFinalStep {
-                    VStack {
-                        Asset.Assets.Backgrounds.callout4.image
-                            .resizable()
-                            .frame(
-                                width: width,
-                                height: height * 0.6
-                            )
-                            .aspectRatio(contentMode: .fill)
-                            .edgesIgnoringSafeArea(.all)
-                        Spacer()
-                    }
-                    .transition(.opacity)
-                } else {
-                    CircularFrame()
-                        .backgroundImages(
-                            store.actionless.scope(
-                                state: { state in
-                                    CircularFrameBackgroundImages.ViewState(
-                                        index: state.index,
-                                        images: state.steps.map { $0.background }
-                                    )
-                                }
-                            )
-                        )
-                        .frame(width: circularFrameUniformSize, height: circularFrameUniformSize)
-                        .badgeIcons(
-                            store.actionless.scope(
-                                state: { state in
-                                    BadgesOverlay.ViewState(
-                                        index: state.index,
-                                        badges: state.steps.map { $0.badge }
-                                    )
-                                }
-                            )
-                        )
-                        .offset(y: viewStore.offset - height / circularFrameOffsetCoeffcient)
-                        .transition(.scale(scale: 2).combined(with: .opacity))
+            let scale = imageScale
+            let imageWidth: CGFloat = width * scale
+            let imageXOffset: CGFloat = (width - imageWidth) / 2
+
+            let image = viewStore.steps[viewStore.index].background
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: imageWidth)
+                .offset(x: imageXOffset)
+
+            let title = Text(viewStore.steps[viewStore.index].title)
+                .titleText()
+                .lineLimit(0)
+                .minimumScaleFactor(0.1)
+                .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
+
+            let text = Text(viewStore.steps[viewStore.index].description)
+                .paragraphText()
+                .lineSpacing(2)
+                .padding(EdgeInsets(top: 0, leading: 10, bottom: 10, trailing: 10))
+
+            if viewStore.isInitialStep {
+                VStack(alignment: .leading) {
+                    image
+                    title
+                    text
+                    Spacer()
                 }
-            }
-            ZStack {
-                ForEach(0..<viewStore.steps.count, id: \.self) { stepIndex in
-                    VStack(spacing: viewStore.isFinalStep ? 50 : 15) {
-                        HStack {
-                            Text(viewStore.steps[stepIndex].title)
-                                .titleText()
-                                .lineLimit(0)
-                                .minimumScaleFactor(0.1)
-                            if !viewStore.isFinalStep {
-                                Spacer()
-                            }
-                        }
-                        
-                        Text(viewStore.steps[stepIndex].description)
-                            .paragraphText()
-                            .lineSpacing(2)
-                            .opacity(0.53)
-                    }
-                    .opacity(stepIndex == viewStore.index ? 1: 0)
-                    .padding(.horizontal, 35)
-                    .frame(width: width, height: height)
+                .ignoresSafeArea(edges: [.top])
+            } else if viewStore.isFinalStep {
+                VStack(alignment: .leading) {
+                    title
+                        .padding(.top, 73 * imageScale)
+                    text
+                    image
+                    Spacer()
                 }
+            } else {
+                VStack(alignment: .leading) {
+                    image
+                        .padding(.top, 73 * imageScale)
+
+                    title
+                    text
+                    Spacer()
+                }
+                .ignoresSafeArea(edges: [.top])
             }
-            .offset(y: viewStore.isFinalStep ? width / 2.5 : viewStore.offset + height / descriptionOffsetCoefficient)
         }
     }
 }
@@ -88,39 +71,16 @@ struct OnboardingContentView: View {
 /// on different devices (apects). iPhone SE and iPhone 8 are similar aspect family devices
 /// while iPhone X, 11, etc are different family devices, capable to use more of the space.
 extension OnboardingContentView {
-    var circularFrameUniformSize: CGFloat {
-        var deviceMultiplier = 1.0
-        
-        if width > 0.0 {
-            let aspect = height / width
-            deviceMultiplier = 1.0 + (((aspect / 1.725) - 1.0) * 2.0)
+    var imageScale: CGFloat {
+        // Just to be sure that we counting with exactly 3 decimal points.
+        let aspectRatio = (floor(height / width * 1000)) / 1000
+
+        /// iPhone SE or iPhone 8 for example
+        if aspectRatio <= 1.725 {
+            return 0.7
+        } else {
+            return 1.0
         }
-        
-        return width * 0.6 * deviceMultiplier
-    }
-
-    var circularFrameOffsetCoeffcient: CGFloat {
-        var deviceMultiplier = 1.0
-
-        if width > 0.0 {
-            let aspect = height / width
-            deviceMultiplier = aspect / 1.725
-        }
-
-        return 4.4 * deviceMultiplier
-    }
-
-    var descriptionOffsetCoefficient: Double {
-        if width > 0.0 {
-            let aspect = height / width
-            let deviceMultiplier = 1.0 + (((aspect / 1.725) - 1.0) * 2.5)
-            
-            if abs(deviceMultiplier) > 0.0 {
-                return 8.0 / deviceMultiplier
-            }
-        }
-        
-        return 8.0
     }
 }
 
