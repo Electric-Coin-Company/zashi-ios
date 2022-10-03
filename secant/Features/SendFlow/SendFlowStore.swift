@@ -18,6 +18,7 @@ typealias SendFlowViewStore = ViewStore<SendFlowState, SendFlowAction>
 struct SendFlowState: Equatable {
     enum Route: Equatable {
         case confirmation
+        case inProgress
         case success
         case failure
         case done
@@ -145,10 +146,10 @@ extension SendFlowReducer {
                 guard let spendingKey = try environment.derivationTool.deriveSpendingKeys(seedBytes, 1).first else {
                     return Effect(value: .updateRoute(.failure))
                 }
-                
+
                 state.isSendingTransaction = true
-                
-                return environment.SDKSynchronizer.sendTransaction(
+
+                let sendTransActionEffect = environment.SDKSynchronizer.sendTransaction(
                     with: spendingKey,
                     zatoshi: state.amount,
                     to: state.address,
@@ -158,6 +159,8 @@ extension SendFlowReducer {
                 .receive(on: environment.scheduler)
                 .map(SendFlowAction.sendTransactionResult)
                 .eraseToEffect()
+
+                return .concatenate(Effect(value: .updateRoute(.inProgress)), sendTransActionEffect)
             } catch {
                 return Effect(value: .updateRoute(.failure))
             }
@@ -276,22 +279,38 @@ extension SendFlowViewStore {
 
     var bindingForConfirmation: Binding<Bool> {
         self.routeBinding.map(
-            extract: { $0 == .confirmation || self.bindingForSuccess.wrappedValue || self.bindingForFailure.wrappedValue },
+            extract: {
+                $0 == .confirmation ||
+                self.bindingForInProgress.wrappedValue ||
+                self.bindingForSuccess.wrappedValue ||
+                self.bindingForFailure.wrappedValue
+            },
             embed: { $0 ? SendFlowState.Route.confirmation : nil }
+        )
+    }
+
+    var bindingForInProgress: Binding<Bool> {
+        self.routeBinding.map(
+            extract: {
+                $0 == .inProgress ||
+                self.bindingForSuccess.wrappedValue ||
+                self.bindingForFailure.wrappedValue
+            },
+            embed: { $0 ? SendFlowState.Route.inProgress : SendFlowState.Route.confirmation }
         )
     }
 
     var bindingForSuccess: Binding<Bool> {
         self.routeBinding.map(
             extract: { $0 == .success || self.bindingForDone.wrappedValue },
-            embed: { $0 ? SendFlowState.Route.success : SendFlowState.Route.confirmation }
+            embed: { $0 ? SendFlowState.Route.success : SendFlowState.Route.inProgress }
         )
     }
 
     var bindingForFailure: Binding<Bool> {
         self.routeBinding.map(
             extract: { $0 == .failure || self.bindingForDone.wrappedValue },
-            embed: { $0 ? SendFlowState.Route.failure : SendFlowState.Route.confirmation }
+            embed: { $0 ? SendFlowState.Route.failure : SendFlowState.Route.inProgress }
         )
     }
     

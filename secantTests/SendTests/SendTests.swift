@@ -72,6 +72,11 @@ class SendTests: XCTestCase {
             zecAmount: Zatoshi(10)
         )
 
+        // first it's expected that progress screen is showed
+        store.receive(.updateRoute(.inProgress)) { state in
+            state.route = .inProgress
+        }
+
         // check the success transaction to be received back
         store.receive(.sendTransactionResult(Result.success(transactionState))) { state in
             // from this moment on the sending next transaction is allowed again
@@ -133,6 +138,11 @@ class SendTests: XCTestCase {
             zecAmount: Zatoshi(10)
         )
 
+        // first it's expected that progress screen is showed
+        store.receive(.updateRoute(.inProgress)) { state in
+            state.route = .inProgress
+        }
+
         // check the success transaction to be received back
         store.receive(.sendTransactionResult(Result.success(transactionState))) { state in
             // from this moment on the sending next transaction is allowed again
@@ -177,6 +187,11 @@ class SendTests: XCTestCase {
         }
 
         testScheduler.advance(by: 0.01)
+
+        // first it's expected that progress screen is showed
+        store.receive(.updateRoute(.inProgress)) { state in
+            state.route = .inProgress
+        }
 
         // check the failure transaction to be received back
         store.receive(.sendTransactionResult(Result.failure(SynchronizerError.criticalError as NSError))) { state in

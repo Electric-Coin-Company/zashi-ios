@@ -109,6 +109,19 @@ extension View {
             )
         )
     }
+
+    func applyAmberScreenBackground() -> some View {
+        self.modifier(
+            ScreenBackgroundModifier(
+                colors: [
+                    Asset.Colors.ScreenBackground.amberGradientStart.color,
+                    Asset.Colors.ScreenBackground.amberGradientMiddle.color,
+                    Asset.Colors.ScreenBackground.amberGradientEnd.color
+                ]
+            )
+        )
+
+    }
 }
 
 struct ScreenBackground_Previews: PreviewProvider {
