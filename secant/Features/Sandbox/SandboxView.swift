@@ -27,9 +27,7 @@ struct SandboxView: View {
             SendFlowView(
                 store: .init(
                     initialState: .placeholder,
-                    reducer: SendFlowReducer.default(
-                        whenDone: { SandboxViewStore(store).send(.updateRoute(nil)) }
-                    ),
+                    reducer: SendFlowReducer.default,
                     environment: SendFlowEnvironment(
                         derivationTool: .live(),
                         mnemonic: .live,

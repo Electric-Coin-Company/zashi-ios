@@ -120,6 +120,14 @@ extension SendFlowReducer {
         case .addMemo:
             return .none
 
+        case .updateRoute(.done):
+            state.route = nil
+            state.memoState.text = ""
+            state.transactionAmountInputState.textFieldState.text = ""
+            state.transactionAmountInputState.amount = 0
+            state.transactionAddressInputState.textFieldState.text = ""
+            return .none
+
         case .updateRoute(.failure):
             state.route = .failure
             state.isSendingTransaction = false
@@ -160,7 +168,10 @@ extension SendFlowReducer {
                 .map(SendFlowAction.sendTransactionResult)
                 .eraseToEffect()
 
-                return .concatenate(Effect(value: .updateRoute(.inProgress)), sendTransActionEffect)
+                return .concatenate(
+                    Effect(value: .updateRoute(.inProgress)),
+                    sendTransActionEffect
+                )
             } catch {
                 return Effect(value: .updateRoute(.failure))
             }
@@ -236,17 +247,6 @@ extension SendFlowReducer {
         action: /SendFlowAction.memo,
         environment: { _ in MultiLineTextFieldEnvironment() }
     )
-
-    static func `default`(whenDone: @escaping () -> Void) -> SendFlowReducer {
-        SendFlowReducer { state, action, environment in
-            switch action {
-            case let .updateRoute(route) where route == .done:
-                return Effect.fireAndForget(whenDone)
-            default:
-                return Self.default.run(&state, action, environment)
-            }
-        }
-    }
 }
 
 // MARK: - Store
@@ -281,9 +281,9 @@ extension SendFlowViewStore {
         self.routeBinding.map(
             extract: {
                 $0 == .confirmation ||
-                self.bindingForInProgress.wrappedValue ||
-                self.bindingForSuccess.wrappedValue ||
-                self.bindingForFailure.wrappedValue
+                $0 == .inProgress ||
+                $0 == .success ||
+                $0 == .failure
             },
             embed: { $0 ? SendFlowState.Route.confirmation : nil }
         )
@@ -293,8 +293,8 @@ extension SendFlowViewStore {
         self.routeBinding.map(
             extract: {
                 $0 == .inProgress ||
-                self.bindingForSuccess.wrappedValue ||
-                self.bindingForFailure.wrappedValue
+                $0 == .success ||
+                $0 == .failure
             },
             embed: { $0 ? SendFlowState.Route.inProgress : SendFlowState.Route.confirmation }
         )
@@ -302,22 +302,15 @@ extension SendFlowViewStore {
 
     var bindingForSuccess: Binding<Bool> {
         self.routeBinding.map(
-            extract: { $0 == .success || self.bindingForDone.wrappedValue },
-            embed: { $0 ? SendFlowState.Route.success : SendFlowState.Route.inProgress }
+            extract: { $0 == .success },
+            embed: { _ in SendFlowState.Route.success }
         )
     }
 
     var bindingForFailure: Binding<Bool> {
         self.routeBinding.map(
-            extract: { $0 == .failure || self.bindingForDone.wrappedValue },
-            embed: { $0 ? SendFlowState.Route.failure : SendFlowState.Route.inProgress }
-        )
-    }
-    
-    var bindingForDone: Binding<Bool> {
-        self.routeBinding.map(
-            extract: { $0 == .done },
-            embed: { $0 ? SendFlowState.Route.done : SendFlowState.Route.confirmation }
+            extract: { $0 == .failure },
+            embed: { _ in SendFlowState.Route.failure }
         )
     }
 }
