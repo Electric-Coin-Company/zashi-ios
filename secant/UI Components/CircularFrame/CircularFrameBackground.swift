@@ -22,7 +22,7 @@ struct CircularFrameBackgroundImages: Animatable, ViewModifier {
                 ForEach(0..<viewStore.images.count - 1, id: \.self) { imageIndex in
                     viewStore.images[imageIndex]
                         .resizable()
-                        .aspectRatio(1.3, contentMode: .fill)
+                        .aspectRatio(1, contentMode: .fill)
                         .opacity(imageIndex == viewStore.index ? 1 : 0)
                         .offset(x: imageIndex <= viewStore.index ? 0 : 25)
                         .mask(Circle())
@@ -42,7 +42,7 @@ struct CircularFrameBackgroundImage: Animatable, ViewModifier {
         ZStack {
             image
                 .resizable()
-                .aspectRatio(1.3, contentMode: .fill)
+                .aspectRatio(1, contentMode: .fill)
                 .mask(Circle())
                 .neumorphic()
             
