@@ -108,7 +108,7 @@ class DeeplinkTests: XCTestCase {
             return XCTFail("Deeplink: 'testDeeplinkRequest_homeURL' URL is expected to be valid.")
         }
         
-        await store.send(.deeplink(url))
+        _ = await store.send(.deeplink(url))
         
         await store.receive(.deeplinkHome) { state in
             state.route = .home
@@ -152,7 +152,7 @@ class DeeplinkTests: XCTestCase {
             return XCTFail("Deeplink: 'testDeeplinkRequest_sendURL_amount' URL is expected to be valid.")
         }
         
-        await store.send(.deeplink(url))
+        _ = await store.send(.deeplink(url))
         
         let amount = Zatoshi(123_000_000)
         let address = ""
@@ -204,7 +204,7 @@ class DeeplinkTests: XCTestCase {
             return XCTFail("Deeplink: 'testDeeplinkRequest_sendURL_amount' URL is expected to be valid.")
         }
         
-        await store.send(.deeplink(url))
+        _ = await store.send(.deeplink(url))
         
         let amount = Zatoshi(123_000_000)
         let address = "address"

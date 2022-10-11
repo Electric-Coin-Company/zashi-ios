@@ -68,10 +68,10 @@
 		2EDA07A027EDE18C00D6F09B /* TCATextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDA079F27EDE18C00D6F09B /* TCATextField.swift */; };
 		2EDA07A227EDE1AE00D6F09B /* TextFieldFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDA07A127EDE1AE00D6F09B /* TextFieldFooter.swift */; };
 		2EDA07A427EDE2A900D6F09B /* DebugFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDA07A327EDE2A900D6F09B /* DebugFrame.swift */; };
+		34429C6E28E703CD00F2B929 /* TransactionSendingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34429C6D28E703CD00F2B929 /* TransactionSendingTests.swift */; };
 		3448CB3228E47666006ADEDB /* NotEnoughFreeSpaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3448CB3128E47666006ADEDB /* NotEnoughFreeSpaceView.swift */; };
 		3448CB3428E47787006ADEDB /* WrappedDiskSpaceChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3448CB3328E47787006ADEDB /* WrappedDiskSpaceChecker.swift */; };
 		3448CB3728E485CB006ADEDB /* NotEnoughFeeSpaceSnapshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3448CB3628E485CB006ADEDB /* NotEnoughFeeSpaceSnapshots.swift */; };
-		34429C6E28E703CD00F2B929 /* TransactionSendingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34429C6D28E703CD00F2B929 /* TransactionSendingTests.swift */; };
 		346715A528E2027D0035F7C4 /* CheckCircleStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346715A428E2027D0035F7C4 /* CheckCircleStore.swift */; };
 		346715A828E20FE40035F7C4 /* TransactionConfirmationSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346715A728E20FE40035F7C4 /* TransactionConfirmationSnapshotTests.swift */; };
 		346D41E428DF0B8600963F36 /* CheckCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346D41E328DF0B8600963F36 /* CheckCircle.swift */; };
@@ -314,10 +314,10 @@
 		2EDA079F27EDE18C00D6F09B /* TCATextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCATextField.swift; sourceTree = "<group>"; };
 		2EDA07A127EDE1AE00D6F09B /* TextFieldFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFooter.swift; sourceTree = "<group>"; };
 		2EDA07A327EDE2A900D6F09B /* DebugFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugFrame.swift; sourceTree = "<group>"; };
+		34429C6D28E703CD00F2B929 /* TransactionSendingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionSendingTests.swift; sourceTree = "<group>"; };
 		3448CB3128E47666006ADEDB /* NotEnoughFreeSpaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotEnoughFreeSpaceView.swift; sourceTree = "<group>"; };
 		3448CB3328E47787006ADEDB /* WrappedDiskSpaceChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedDiskSpaceChecker.swift; sourceTree = "<group>"; };
 		3448CB3628E485CB006ADEDB /* NotEnoughFeeSpaceSnapshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotEnoughFeeSpaceSnapshots.swift; sourceTree = "<group>"; };
-		34429C6D28E703CD00F2B929 /* TransactionSendingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionSendingTests.swift; sourceTree = "<group>"; };
 		346715A428E2027D0035F7C4 /* CheckCircleStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckCircleStore.swift; sourceTree = "<group>"; };
 		346715A728E20FE40035F7C4 /* TransactionConfirmationSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionConfirmationSnapshotTests.swift; sourceTree = "<group>"; };
 		346D41E328DF0B8600963F36 /* CheckCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckCircle.swift; sourceTree = "<group>"; };
@@ -2162,7 +2162,7 @@
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
 			requirement = {
 				kind = exactVersion;
-				version = 0.40.2;
+				version = 0.41.2;
 			};
 		};
 		9E2AC0FD27D8EC120042AA47 /* XCRemoteSwiftPackageReference "MnemonicSwift" */ = {
