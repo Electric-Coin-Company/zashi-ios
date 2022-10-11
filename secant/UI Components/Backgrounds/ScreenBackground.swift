@@ -120,7 +120,6 @@ extension View {
                 ]
             )
         )
-
     }
 }
 

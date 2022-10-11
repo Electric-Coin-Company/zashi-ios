@@ -58,7 +58,7 @@ class SettingsTests: XCTestCase {
             environment: testEnvironment
         )
         
-        await store.send(.backupWalletAccessRequest)
+        _ = await store.send(.backupWalletAccessRequest)
         
         await store.receive(.backupWallet) { state in
             state.phraseDisplayState.phrase = RecoveryPhrase(words: mnemonic.components(separatedBy: " "))
@@ -83,7 +83,7 @@ class SettingsTests: XCTestCase {
             environment: testEnvironment
         )
         
-        await store.send(.backupWalletAccessRequest)
+        _ = await store.send(.backupWalletAccessRequest)
         
         await store.finish()
     }
@@ -103,7 +103,7 @@ class SettingsTests: XCTestCase {
             environment: testEnvironment
         )
         
-        await store.send(.rescanBlockchain) { state in
+        _ = await store.send(.rescanBlockchain) { state in
             state.rescanDialog = .init(
                 title: TextState("Rescan"),
                 message: TextState("Select the rescan you want"),
@@ -143,7 +143,7 @@ class SettingsTests: XCTestCase {
             environment: testEnvironment
         )
         
-        await store.send(.cancelRescan) { state in
+        _ = await store.send(.cancelRescan) { state in
             state.rescanDialog = nil
         }
     }
@@ -175,7 +175,7 @@ class SettingsTests: XCTestCase {
             environment: testEnvironment
         )
         
-        await store.send(.quickRescan) { state in
+        _ = await store.send(.quickRescan) { state in
             state.rescanDialog = nil
         }
     }
@@ -207,7 +207,7 @@ class SettingsTests: XCTestCase {
             environment: testEnvironment
         )
         
-        await store.send(.fullRescan) { state in
+        _ = await store.send(.fullRescan) { state in
             state.rescanDialog = nil
         }
     }

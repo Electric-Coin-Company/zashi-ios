@@ -722,7 +722,7 @@ private extension SendTests {
         _ expectedValidationResult: Bool,
         _ expectedAmount: Int64,
         _ expectedToReceive: Bool,
-        _ store: TestStore<SendFlowState, SendFlowState, SendFlowAction, SendFlowAction, SendFlowEnvironment>
+        _ store: TestStore<SendFlowState, SendFlowAction, SendFlowState, SendFlowAction, SendFlowEnvironment>
     ) throws {
         store.send(.transactionAmountInput(.textField(.set(amount)))) { state in
             state.transactionAmountInputState.textFieldState.text = amount
