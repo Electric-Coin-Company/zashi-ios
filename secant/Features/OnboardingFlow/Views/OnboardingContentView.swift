@@ -36,15 +36,7 @@ struct OnboardingContentView: View {
                 .lineSpacing(2)
                 .padding(EdgeInsets(top: 0, leading: 10, bottom: 10, trailing: 10))
 
-            if viewStore.isInitialStep {
-                VStack(alignment: .leading) {
-                    image
-                    title
-                    text
-                    Spacer()
-                }
-                .ignoresSafeArea(edges: [.top])
-            } else if viewStore.isFinalStep {
+            if viewStore.isFinalStep {
                 VStack(alignment: .leading) {
                     title
                         .padding(.top, 73 * imageScale)
@@ -55,13 +47,10 @@ struct OnboardingContentView: View {
             } else {
                 VStack(alignment: .leading) {
                     image
-                        .padding(.top, 73 * imageScale)
-
                     title
                     text
                     Spacer()
                 }
-                .ignoresSafeArea(edges: [.top])
             }
         }
     }

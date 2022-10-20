@@ -28,15 +28,11 @@ struct RecoveryPhraseBackupSucceededView: View {
                     .padding(.vertical, 40)
 
                     VStack {
-                        CircularFrame()
-                            .backgroundImage(
-                                Asset.Assets.Backgrounds.calloutBackupSucceeded.image
-                            )
+                        Asset.Assets.Backgrounds.calloutBackupSucceeded.image
                             .frame(
                                 width: circularFrameUniformSize(width: proxy.size.width, height: proxy.size.height),
                                 height: circularFrameUniformSize(width: proxy.size.width, height: proxy.size.height)
                             )
-                            .badgeIcon(.shield)
                     }
                     .padding(.bottom, 40)
 
@@ -76,7 +72,7 @@ struct RecoveryPhraseBackupSucceededView: View {
             }
         }
         .navigationBarHidden(true)
-        .applySucceededScreenBackground()
+        .applyScreenBackground()
     }
 }
 

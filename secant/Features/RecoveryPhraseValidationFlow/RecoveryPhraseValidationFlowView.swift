@@ -26,17 +26,13 @@ struct RecoveryPhraseValidationFlowView: View {
                             .padding(.horizontal, 44)
                             .opacity(0.53)
                     }
-                    .padding(.bottom, 20)
+                    .padding(.bottom, 40)
 
-                    CircularFrame()
-                        .backgroundImage(
-                            Asset.Assets.Backgrounds.calloutBackupFlow1.image
-                        )
+                    Asset.Assets.Backgrounds.calloutBackupFlow1.image
                         .frame(
                             width: circularFrameUniformSize(width: proxy.size.width, height: proxy.size.height),
                             height: circularFrameUniformSize(width: proxy.size.width, height: proxy.size.height)
                         )
-                        .badgeIcon(.person)
 
                     Spacer()
 

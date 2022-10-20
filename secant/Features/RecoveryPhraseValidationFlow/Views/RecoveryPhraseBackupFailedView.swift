@@ -24,15 +24,11 @@ struct RecoveryPhraseBackupFailedView: View {
                     }
                     .padding(.bottom, 40)
 
-                    CircularFrame()
-                        .backgroundImage(
-                            Asset.Assets.Backgrounds.calloutBackupFailed.image
-                        )
+                    Asset.Assets.Backgrounds.calloutBackupFailed.image
                         .frame(
                             width: circularFrameUniformSize(width: proxy.size.width, height: proxy.size.height),
                             height: circularFrameUniformSize(width: proxy.size.width, height: proxy.size.height)
                         )
-                        .badgeIcon(.error)
 
                     Spacer()
 
@@ -74,7 +70,7 @@ struct RecoveryPhraseBackupFailedView: View {
             }
             .padding()
             .navigationBarHidden(true)
-            .applyErredScreenBackground()
+            .applyScreenBackground()
         }
     }
 }
