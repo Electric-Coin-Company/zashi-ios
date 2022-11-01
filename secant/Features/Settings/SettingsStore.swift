@@ -2,6 +2,7 @@ import ComposableArchitecture
 import SwiftUI
 
 typealias SettingsReducer = Reducer<SettingsState, SettingsAction, SettingsEnvironment>
+typealias AnySettingsReducer = AnyReducer<RecoveryPhraseDisplay.State, RecoveryPhraseDisplay.Action, SettingsEnvironment>
 typealias SettingsStore = Store<SettingsState, SettingsAction>
 typealias SettingsViewStore = ViewStore<SettingsState, SettingsAction>
 
@@ -12,7 +13,7 @@ struct SettingsState: Equatable {
         case backupPhrase
     }
 
-    var phraseDisplayState: RecoveryPhraseDisplayState
+    var phraseDisplayState: RecoveryPhraseDisplay.State
     var rescanDialog: ConfirmationDialogState<SettingsAction>?
     var route: Route?
 }
@@ -24,7 +25,7 @@ enum SettingsAction: Equatable {
     case backupWalletAccessRequest
     case cancelRescan
     case fullRescan
-    case phraseDisplay(RecoveryPhraseDisplayAction)
+    case phraseDisplay(RecoveryPhraseDisplay.Action)
     case quickRescan
     case rescanBlockchain
     case updateRoute(SettingsState.Route?)
@@ -97,10 +98,13 @@ extension SettingsReducer {
         }
     }
     
-    private static let backupPhraseReducer: SettingsReducer = RecoveryPhraseDisplayReducer.default.pullback(
+    private static let backupPhraseReducer: SettingsReducer = AnySettingsReducer { _ in
+        RecoveryPhraseDisplay()
+    }
+    .pullback(
         state: \SettingsState.phraseDisplayState,
         action: /SettingsAction.phraseDisplay,
-        environment: { _ in .demo }
+        environment: { $0 }
     )
 }
 
@@ -137,7 +141,7 @@ extension SettingsStore {
 
 extension SettingsState {
     static let placeholder = SettingsState(
-        phraseDisplayState: RecoveryPhraseDisplayState(
+        phraseDisplayState: RecoveryPhraseDisplay.State(
             phrase: .placeholder
         )
     )

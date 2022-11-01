@@ -53,7 +53,7 @@ class SettingsTests: XCTestCase {
         )
         
         let store = TestStore(
-            initialState: SettingsState(phraseDisplayState: RecoveryPhraseDisplayState(phrase: nil)),
+            initialState: SettingsState(phraseDisplayState: RecoveryPhraseDisplay.State(phrase: nil)),
             reducer: SettingsReducer.default,
             environment: testEnvironment
         )

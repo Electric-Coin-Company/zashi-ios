@@ -99,7 +99,7 @@ class AppInitializationTests: XCTestCase {
                 importWalletState: .placeholder
             ),
             phraseValidationState: phraseValidationState,
-            phraseDisplayState: RecoveryPhraseDisplayState(
+            phraseDisplayState: RecoveryPhraseDisplay.State(
                 phrase: recoveryPhrase
             ),
             sandboxState: .placeholder,

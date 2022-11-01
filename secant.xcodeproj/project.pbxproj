@@ -197,6 +197,8 @@
 		9EDDEAA22829610D00B4100C /* CurrencySelectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDDEA9F2829610D00B4100C /* CurrencySelectionTests.swift */; };
 		9EDDEAA32829610D00B4100C /* TransactionAmountInputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDDEAA02829610D00B4100C /* TransactionAmountInputTests.swift */; };
 		9EDDEAA42829610D00B4100C /* TransactionAddressInputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDDEAA12829610D00B4100C /* TransactionAddressInputTests.swift */; };
+		9EF1082B29114B93003D8097 /* Pasteboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF1082A29114B93003D8097 /* Pasteboard.swift */; };
+		9EF1082D29114BCD003D8097 /* NewRecoveryPhrase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF1082C29114BCD003D8097 /* NewRecoveryPhrase.swift */; };
 		9EF8135C27ECC25E0075AF48 /* WalletStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF8135A27ECC25E0075AF48 /* WalletStorageTests.swift */; };
 		9EF8135D27ECC25E0075AF48 /* UserPreferencesStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF8135B27ECC25E0075AF48 /* UserPreferencesStorageTests.swift */; };
 		9EF8136027F043CC0075AF48 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF8135F27F043CC0075AF48 /* AppDelegate.swift */; };
@@ -434,6 +436,8 @@
 		9EDDEA9F2829610D00B4100C /* CurrencySelectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencySelectionTests.swift; sourceTree = "<group>"; };
 		9EDDEAA02829610D00B4100C /* TransactionAmountInputTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAmountInputTests.swift; sourceTree = "<group>"; };
 		9EDDEAA12829610D00B4100C /* TransactionAddressInputTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAddressInputTests.swift; sourceTree = "<group>"; };
+		9EF1082A29114B93003D8097 /* Pasteboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pasteboard.swift; sourceTree = "<group>"; };
+		9EF1082C29114BCD003D8097 /* NewRecoveryPhrase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRecoveryPhrase.swift; sourceTree = "<group>"; };
 		9EF8135A27ECC25E0075AF48 /* WalletStorageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletStorageTests.swift; sourceTree = "<group>"; };
 		9EF8135B27ECC25E0075AF48 /* UserPreferencesStorageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserPreferencesStorageTests.swift; sourceTree = "<group>"; };
 		9EF8135F27F043CC0075AF48 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -1122,6 +1126,8 @@
 				9E3911442848EEB90073DD9A /* UserPreferencesStorage.swift */,
 				9E3911472848EEB90073DD9A /* WalletStorage.swift */,
 				9E3911452848EEB90073DD9A /* ZCashSDKEnvironment.swift */,
+				9EF1082A29114B93003D8097 /* Pasteboard.swift */,
+				9EF1082C29114BCD003D8097 /* NewRecoveryPhrase.swift */,
 			);
 			path = Dependencies;
 			sourceTree = "<group>";
@@ -1658,6 +1664,7 @@
 				0DC487C32772574C00BE6A63 /* RecoveryPhraseBackupSucceededView.swift in Sources */,
 				2EB1C5E827D77F6100BC43D7 /* TCATextFieldStore.swift in Sources */,
 				9E5BF648282277BE00BA3F17 /* WrappedNotificationCenter.swift in Sources */,
+				9EF1082D29114BCD003D8097 /* NewRecoveryPhrase.swift in Sources */,
 				0D8A43C4272AEEDE005A6414 /* SecantTextStyles.swift in Sources */,
 				9E5BF641281FD7B600BA3F17 /* TransactionFailedView.swift in Sources */,
 				9E4DC6E027C409A100E657F4 /* NeumorphicDesignModifier.swift in Sources */,
@@ -1757,6 +1764,7 @@
 				0D7DF08C271DCC0E00530046 /* ScreenBackground.swift in Sources */,
 				9E01F8242833C0D8000EFC57 /* WrappedURIParser.swift in Sources */,
 				346715A528E2027D0035F7C4 /* CheckCircleStore.swift in Sources */,
+				9EF1082B29114B93003D8097 /* Pasteboard.swift in Sources */,
 				F9C165C22740403600592F76 /* CreateTransactionView.swift in Sources */,
 				F9C165B4274031F600592F76 /* Bindings.swift in Sources */,
 				2E35F99A27B3E99C00EB79CD /* TextFieldTitleAccessoryButtonStyle.swift in Sources */,
@@ -2162,7 +2170,7 @@
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
 			requirement = {
 				kind = exactVersion;
-				version = 0.41.2;
+				version = 0.44.1;
 			};
 		};
 		9E2AC0FD27D8EC120042AA47 /* XCRemoteSwiftPackageReference "MnemonicSwift" */ = {

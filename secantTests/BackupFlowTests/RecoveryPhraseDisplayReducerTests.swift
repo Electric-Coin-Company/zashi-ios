@@ -12,9 +12,8 @@ import ComposableArchitecture
 class RecoveryPhraseDisplayReducerTests: XCTestCase {
     func testCopyToBuffer() {
         let store = TestStore(
-            initialState: .test,
-            reducer: .default,
-            environment: .demo
+            initialState: RecoveryPhraseDisplayStore.test,
+            reducer: RecoveryPhraseDisplay()
         )
                 
         store.send(.copyToBufferPressed) {
@@ -23,16 +22,15 @@ class RecoveryPhraseDisplayReducerTests: XCTestCase {
         }
 
         XCTAssertEqual(
-            store.environment.pasteboard.getString(),
+            store.dependencies.pasteboard.getString(),
             RecoveryPhrase.placeholder.toString()
         )
     }
     
     func testNewPhrase() {
         let store = TestStore(
-            initialState: .empty,
-            reducer: .default,
-            environment: .demo
+            initialState: RecoveryPhraseDisplayStore.empty,
+            reducer: RecoveryPhraseDisplay()
         )
                 
         store.send(.phraseResponse(.placeholder)) {
@@ -42,13 +40,13 @@ class RecoveryPhraseDisplayReducerTests: XCTestCase {
     }
 }
 
-private extension RecoveryPhraseDisplayState {
-    static let test = RecoveryPhraseDisplayState(
+private extension RecoveryPhraseDisplayStore {
+    static let test = RecoveryPhraseDisplay.State(
         phrase: .placeholder,
         showCopyToBufferAlert: false
     )
     
-    static let empty = RecoveryPhraseDisplayState(
+    static let empty = RecoveryPhraseDisplay.State(
         phrase: .empty,
         showCopyToBufferAlert: false
     )
