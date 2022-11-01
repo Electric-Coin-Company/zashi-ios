@@ -8,61 +8,34 @@
 import Foundation
 import ComposableArchitecture
 
-typealias RecoveryPhraseDisplayReducer = Reducer<RecoveryPhraseDisplayState, RecoveryPhraseDisplayAction, RecoveryPhraseDisplayEnvironment>
-typealias RecoveryPhraseDisplayStore = Store<RecoveryPhraseDisplayState, RecoveryPhraseDisplayAction>
-typealias RecoveryPhraseDisplayViewStore = ViewStore<RecoveryPhraseDisplayState, RecoveryPhraseDisplayAction>
+typealias RecoveryPhraseDisplayStore = Store<RecoveryPhraseDisplay.State, RecoveryPhraseDisplay.Action>
 
-// MARK: - State
+struct RecoveryPhraseDisplay: ReducerProtocol {
+    struct State: Equatable {
+        var phrase: RecoveryPhrase?
+        var showCopyToBufferAlert = false
+    }
+    
+    enum Action: Equatable {
+        case createPhrase
+        case copyToBufferPressed
+        case finishedPressed
+        case phraseResponse(RecoveryPhrase)
+    }
+    
+    @Dependency(\.pasteboard) var pasteboard
+    @Dependency(\.newPhrase) var newPhrase
 
-struct RecoveryPhraseDisplayState: Equatable {
-    var phrase: RecoveryPhrase?
-    var showCopyToBufferAlert = false
-}
-
-// MARK: - Action
-
-enum RecoveryPhraseDisplayAction: Equatable {
-    case createPhrase
-    case copyToBufferPressed
-    case finishedPressed
-    case phraseResponse(RecoveryPhrase)
-}
-
-// MARK: - Environment
-
-struct RecoveryPhraseDisplayEnvironment {
-    let scheduler: AnySchedulerOf<DispatchQueue>
-    let newPhrase: () async throws -> RecoveryPhrase
-    let pasteboard: WrappedPasteboard
-    let feedbackGenerator: WrappedFeedbackGenerator
-}
-
-extension RecoveryPhraseDisplayEnvironment {
-    static let demo = Self(
-        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
-        newPhrase: { .init(words: RecoveryPhrase.placeholder.words) },
-        pasteboard: .test,
-        feedbackGenerator: .silent
-    )
-}
-
-// MARK: - Reducer
-
-extension RecoveryPhraseDisplayReducer {
-    static let `default` = RecoveryPhraseDisplayReducer { state, action, environment in
+    func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
         switch action {
         case .createPhrase:
             return .run { send in
-                do {
-                    await send(.phraseResponse(try await environment.newPhrase()))
-                } catch {
-                    // TODO [#129]: remove this when feature is implemented in https://github.com/zcash/secant-ios-wallet/issues/129
-                }
+                await send(.phraseResponse(newPhrase()))
             }
             
         case .copyToBufferPressed:
             guard let phrase = state.phrase?.toString() else { return .none }
-            environment.pasteboard.setString(phrase)
+            pasteboard.setString(phrase)
             state.showCopyToBufferAlert = true
             return .none
             
@@ -74,5 +47,11 @@ extension RecoveryPhraseDisplayReducer {
             state.phrase = phrase
             return .none
         }
+    }
+}
+
+extension RecoveryPhraseDisplay {
+    static let demo = AnyReducer<RecoveryPhraseDisplay.State, RecoveryPhraseDisplay.Action, Void> { _ in
+        RecoveryPhraseDisplay()
     }
 }

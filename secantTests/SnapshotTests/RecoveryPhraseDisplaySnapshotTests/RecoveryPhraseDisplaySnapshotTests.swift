@@ -13,8 +13,8 @@ class RecoveryPhraseDisplaySnapshotTests: XCTestCase {
     func testRecoveryPhraseDisplaySnapshot() throws {
         let store = RecoveryPhraseDisplayStore(
             initialState: .init(phrase: .placeholder),
-            reducer: .default,
-            environment: .demo
+            reducer: RecoveryPhraseDisplay.demo,
+            environment: Void()
         )
         
         addAttachments(RecoveryPhraseDisplayView(store: store))

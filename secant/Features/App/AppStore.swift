@@ -3,6 +3,7 @@ import ZcashLightClientKit
 import Foundation
 
 typealias AppReducer = Reducer<AppState, AppAction, AppEnvironment>
+typealias AnyAppReducer = AnyReducer<RecoveryPhraseDisplay.State, RecoveryPhraseDisplay.Action, AppEnvironment>
 typealias AppStore = Store<AppState, AppAction>
 typealias AppViewStore = ViewStore<AppState, AppAction>
 
@@ -23,7 +24,7 @@ struct AppState: Equatable {
     var homeState: HomeState
     var onboardingState: OnboardingFlowState
     var phraseValidationState: RecoveryPhraseValidationFlowState
-    var phraseDisplayState: RecoveryPhraseDisplayState
+    var phraseDisplayState: RecoveryPhraseDisplay.State
     var prevRoute: Route?
     var internalRoute: Route = .welcome
     var sandboxState: SandboxState
@@ -53,7 +54,7 @@ enum AppAction: Equatable {
     case initializeSDK
     case nukeWallet
     case onboarding(OnboardingFlowAction)
-    case phraseDisplay(RecoveryPhraseDisplayAction)
+    case phraseDisplay(RecoveryPhraseDisplay.Action)
     case phraseValidation(RecoveryPhraseValidationFlowAction)
     case respondToWalletInitializationState(InitializationState)
     case sandbox(SandboxAction)
@@ -116,15 +117,13 @@ extension AppReducer {
     private struct CancelId: Hashable {}
 
     static let `default` = AppReducer.combine(
-        [
-            appReducer,
-            homeReducer,
-            onboardingReducer,
-            phraseValidationReducer,
-            phraseDisplayReducer,
-            routeReducer,
-            sandboxReducer
-        ]
+        appReducer,
+        homeReducer,
+        onboardingReducer,
+        phraseValidationReducer,
+        phraseDisplayReducer,
+        routeReducer,
+        sandboxReducer
     )
     .debug()
 
@@ -404,19 +403,15 @@ extension AppReducer {
         }
     )
 
-    private static let phraseDisplayReducer: AppReducer = RecoveryPhraseDisplayReducer.default.pullback(
+    private static let phraseDisplayReducer: AppReducer = AnyAppReducer { _ in
+        RecoveryPhraseDisplay()
+    }
+    .pullback(
         state: \AppState.phraseDisplayState,
         action: /AppAction.phraseDisplay,
-        environment: { environment in
-            RecoveryPhraseDisplayEnvironment(
-                scheduler: environment.scheduler,
-                newPhrase: { .init(words: RecoveryPhrase.placeholder.words) },
-                pasteboard: .live,
-                feedbackGenerator: environment.feedbackGenerator
-            )
-        }
+        environment: { $0 }
     )
-    
+
     private static let sandboxReducer: AppReducer = SandboxReducer.default.pullback(
         state: \AppState.sandboxState,
         action: /AppAction.sandbox,
@@ -521,7 +516,7 @@ extension AppState {
                 importWalletState: .placeholder
             ),
             phraseValidationState: .placeholder,
-            phraseDisplayState: RecoveryPhraseDisplayState(
+            phraseDisplayState: RecoveryPhraseDisplay.State(
                 phrase: .placeholder
             ),
             sandboxState: .placeholder,
