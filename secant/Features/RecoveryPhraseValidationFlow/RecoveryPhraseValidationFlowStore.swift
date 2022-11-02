@@ -9,43 +9,114 @@ import Foundation
 import ComposableArchitecture
 import SwiftUI
 
-typealias RecoveryPhraseValidationFlowReducer = Reducer<
-    RecoveryPhraseValidationFlowState,
-    RecoveryPhraseValidationFlowAction,
-    RecoveryPhraseValidationFlowEnvironment
->
-typealias RecoveryPhraseValidationFlowStore = Store<RecoveryPhraseValidationFlowState, RecoveryPhraseValidationFlowAction>
-typealias RecoveryPhraseValidationFlowViewStore = ViewStore<RecoveryPhraseValidationFlowState, RecoveryPhraseValidationFlowAction>
+typealias RecoveryPhraseValidationFlowStore = Store<RecoveryPhraseValidationFlow.State, RecoveryPhraseValidationFlow.Action>
+typealias RecoveryPhraseValidationFlowViewStore = ViewStore<RecoveryPhraseValidationFlow.State, RecoveryPhraseValidationFlow.Action>
 
-// MARK: - State
+struct RecoveryPhraseValidationFlow: ReducerProtocol {
+    struct State: Equatable {
+        enum Route: Equatable, CaseIterable {
+            case validation
+            case success
+            case failure
+        }
 
-struct RecoveryPhraseValidationFlowState: Equatable {
-    enum Route: Equatable, CaseIterable {
-        case validation
-        case success
-        case failure
+        static let wordGroupSize = 6
+        static let phraseChunks = 4
+
+        var phrase: RecoveryPhrase
+        var missingIndices: [Int]
+        var missingWordChips: [PhraseChip.Kind]
+        var validationWords: [ValidationWord]
+        var route: Route?
+        
+        var isComplete: Bool {
+            !validationWords.isEmpty && validationWords.count == missingIndices.count
+        }
+
+        var isValid: Bool {
+            guard let resultingPhrase = self.resultingPhrase else { return false }
+            return resultingPhrase == phrase.words
+        }
     }
-
-    static let wordGroupSize = 6
-    static let phraseChunks = 4
-
-    var phrase: RecoveryPhrase
-    var missingIndices: [Int]
-    var missingWordChips: [PhraseChip.Kind]
-    var validationWords: [ValidationWord]
-    var route: Route?
     
-    var isComplete: Bool {
-        !validationWords.isEmpty && validationWords.count == missingIndices.count
-    }
+    @Dependency(\.randomPhrase) var randomPhrase
+    @Dependency(\.mainQueue) var mainQueue
+    @Dependency(\.pasteboard) var pasteboard
+    @Dependency(\.feedbackGenerator) var feedbackGenerator
 
-    var isValid: Bool {
-        guard let resultingPhrase = self.resultingPhrase else { return false }
-        return resultingPhrase == phrase.words
+    enum Action: Equatable {
+        case updateRoute(RecoveryPhraseValidationFlow.State.Route?)
+        case reset
+        case move(wordChip: PhraseChip.Kind, intoGroup: Int)
+        case succeed
+        case fail
+        case failureFeedback
+        case proceedToHome
+        case displayBackedUpPhrase
+    }
+    
+    // swiftlint:disable:next cyclomatic_complexity
+    func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
+        switch action {
+        case .reset:
+            state = randomPhrase.random(state.phrase)
+            state.route = .validation
+            // FIXME [#186]: Resetting causes route to be nil = preamble screen, hence setting the .validation. The transition back is not animated
+            // though
+
+        case let .move(wordChip, group):
+            guard
+                case let PhraseChip.Kind.unassigned(word, _) = wordChip,
+                let missingChipIndex = state.missingWordChips.firstIndex(of: wordChip)
+            else { return .none }
+
+            state.missingWordChips[missingChipIndex] = .empty
+            state.validationWords.append(ValidationWord(groupIndex: group, word: word))
+
+            if state.isComplete {
+                let value: RecoveryPhraseValidationFlow.Action = state.isValid ? .succeed : .fail
+                let effect = Effect<RecoveryPhraseValidationFlow.Action, Never>(value: value)
+                    .delay(for: 1, scheduler: mainQueue)
+                    .eraseToEffect()
+
+                if value == .succeed {
+                    return effect
+                } else {
+                    return .concatenate(
+                        Effect(value: .failureFeedback),
+                        effect
+                    )
+                }
+            }
+            return .none
+
+        case .succeed:
+            state.route = .success
+
+        case .fail:
+            state.route = .failure
+
+        case .failureFeedback:
+            feedbackGenerator.generateErrorFeedback()
+
+        case .updateRoute(let route):
+            guard let route = route else {
+                state = randomPhrase.random(state.phrase)
+                return .none
+            }
+            state.route = route
+
+        case .proceedToHome:
+            break
+
+        case .displayBackedUpPhrase:
+            break
+        }
+        return .none
     }
 }
 
-extension RecoveryPhraseValidationFlowState {
+extension RecoveryPhraseValidationFlow.State {
     /// Given an array of RecoveryPhraseStepCompletion, missing indices, original phrase and the number of groups it was split into,
     /// assembly the resulting phrase. This comes up with the "proposed solution" for the recovery phrase validation challenge.
     /// - returns:an array of String containing the recovery phrase words ordered by the original phrase order, or `nil`
@@ -95,111 +166,10 @@ extension RecoveryPhrase.Group {
     }
 }
 
-// MARK: - Action
-
-enum RecoveryPhraseValidationFlowAction: Equatable {
-    case updateRoute(RecoveryPhraseValidationFlowState.Route?)
-    case reset
-    case move(wordChip: PhraseChip.Kind, intoGroup: Int)
-    case succeed
-    case fail
-    case failureFeedback
-    case proceedToHome
-    case displayBackedUpPhrase
-}
-
-// MARK: - Environment
-
-struct RecoveryPhraseValidationFlowEnvironment {
-    let scheduler: AnySchedulerOf<DispatchQueue>
-    let pasteboard: WrappedPasteboard
-    let feedbackGenerator: WrappedFeedbackGenerator
-    let recoveryPhraseRandomizer: WrappedRecoveryPhraseRandomizer
-}
-
-extension RecoveryPhraseValidationFlowEnvironment {
-    static let demo = Self(
-        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
-        pasteboard: .test,
-        feedbackGenerator: .silent,
-        recoveryPhraseRandomizer: .live
-    )
-        
-    static let live = Self(
-        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
-        pasteboard: .live,
-        feedbackGenerator: .haptic,
-        recoveryPhraseRandomizer: .live
-    )
-}
-
-// MARK: - Reducer
-
-extension RecoveryPhraseValidationFlowReducer {
-    static let `default` = RecoveryPhraseValidationFlowReducer { state, action, environment in
-        switch action {
-        case .reset:
-            state = environment.recoveryPhraseRandomizer.random(state.phrase)
-            state.route = .validation
-            // FIXME [#186]: Resetting causes route to be nil = preamble screen, hence setting the .validation. The transition back is not animated
-            // though
-
-        case let .move(wordChip, group):
-            guard
-                case let PhraseChip.Kind.unassigned(word, color) = wordChip,
-                let missingChipIndex = state.missingWordChips.firstIndex(of: wordChip)
-            else { return .none }
-
-            state.missingWordChips[missingChipIndex] = .empty
-            state.validationWords.append(ValidationWord(groupIndex: group, word: word))
-
-            if state.isComplete {
-                let value: RecoveryPhraseValidationFlowAction = state.isValid ? .succeed : .fail
-                let effect = Effect<RecoveryPhraseValidationFlowAction, Never>(value: value)
-                    .delay(for: 1, scheduler: environment.scheduler)
-                    .eraseToEffect()
-
-                if value == .succeed {
-                    return effect
-                } else {
-                    return .concatenate(
-                        Effect(value: .failureFeedback),
-                        effect
-                    )
-                }
-            }
-            return .none
-
-        case .succeed:
-            state.route = .success
-
-        case .fail:
-            state.route = .failure
-
-        case .failureFeedback:
-            environment.feedbackGenerator.generateErrorFeedback()
-
-        case .updateRoute(let route):
-            guard let route = route else {
-                state = environment.recoveryPhraseRandomizer.random(state.phrase)
-                return .none
-            }
-            state.route = route
-
-        case .proceedToHome:
-            break
-
-        case .displayBackedUpPhrase:
-            break
-        }
-        return .none
-    }
-}
-
 // MARK: - ViewStore
 
 extension RecoveryPhraseValidationFlowViewStore {
-    func bindingForRoute(_ route: RecoveryPhraseValidationFlowState.Route) -> Binding<Bool> {
+    func bindingForRoute(_ route: RecoveryPhraseValidationFlow.State.Route) -> Binding<Bool> {
         self.binding(
             get: { $0.route == route },
             send: { isActive in
@@ -240,8 +210,8 @@ extension RecoveryPhraseValidationFlowViewStore {
 
 // MARK: - Placeholders
 
-extension RecoveryPhraseValidationFlowState {
-    static let placeholder = RecoveryPhraseValidationFlowState(
+extension RecoveryPhraseValidationFlow.State {
+    static let placeholder = RecoveryPhraseValidationFlow.State(
         phrase: .placeholder,
         missingIndices: [2, 0, 3, 5],
         missingWordChips: [
@@ -254,7 +224,7 @@ extension RecoveryPhraseValidationFlowState {
         route: nil
     )
 
-    static let placeholderStep1 = RecoveryPhraseValidationFlowState(
+    static let placeholderStep1 = RecoveryPhraseValidationFlow.State(
         phrase: .placeholder,
         missingIndices: [2, 0, 3, 5],
         missingWordChips: [
@@ -269,7 +239,7 @@ extension RecoveryPhraseValidationFlowState {
         route: nil
     )
 
-    static let placeholderStep2 = RecoveryPhraseValidationFlowState(
+    static let placeholderStep2 = RecoveryPhraseValidationFlow.State(
         phrase: .placeholder,
         missingIndices: [2, 0, 3, 5],
         missingWordChips: [
@@ -285,7 +255,7 @@ extension RecoveryPhraseValidationFlowState {
         route: nil
     )
 
-    static let placeholderStep3 = RecoveryPhraseValidationFlowState(
+    static let placeholderStep3 = RecoveryPhraseValidationFlow.State(
         phrase: .placeholder,
         missingIndices: [2, 0, 3, 5],
         missingWordChips: [
@@ -302,7 +272,7 @@ extension RecoveryPhraseValidationFlowState {
         route: nil
     )
 
-    static let placeholderStep4 = RecoveryPhraseValidationFlowState(
+    static let placeholderStep4 = RecoveryPhraseValidationFlow.State(
         phrase: .placeholder,
         missingIndices: [2, 0, 3, 5],
         missingWordChips: [
@@ -324,31 +294,26 @@ extension RecoveryPhraseValidationFlowState {
 extension RecoveryPhraseValidationFlowStore {
     static let demo = Store(
         initialState: .placeholder,
-        reducer: .default,
-        environment: .demo
+        reducer: RecoveryPhraseValidationFlow()
     )
-
+    
     static let demoStep1 = Store(
         initialState: .placeholderStep1,
-        reducer: .default,
-        environment: .demo
+        reducer: RecoveryPhraseValidationFlow()
     )
 
     static let demoStep2 = Store(
         initialState: .placeholderStep1,
-        reducer: .default,
-        environment: .demo
+        reducer: RecoveryPhraseValidationFlow()
     )
 
     static let demoStep3 = Store(
         initialState: .placeholderStep3,
-        reducer: .default,
-        environment: .demo
+        reducer: RecoveryPhraseValidationFlow()
     )
 
     static let demoStep4 = Store(
         initialState: .placeholderStep4,
-        reducer: .default,
-        environment: .demo
+        reducer: RecoveryPhraseValidationFlow()
     )
 }

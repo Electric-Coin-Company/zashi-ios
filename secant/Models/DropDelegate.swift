@@ -36,7 +36,7 @@ struct WordChipDropDelegate: DropDelegate {
     }
 }
 
-extension RecoveryPhraseValidationFlowState {
+extension RecoveryPhraseValidationFlow.State {
     func groupCompleted(index: Int) -> Bool {
         validationWords.first(where: { $0.groupIndex == index }) != nil
     }

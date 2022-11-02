@@ -144,6 +144,7 @@
 		9E6713F8289BC58C00A6796F /* BalanceBreakdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6713F5289BC58C00A6796F /* BalanceBreakdownView.swift */; };
 		9E6713FA289BE0E100A6796F /* ClearBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6713F9289BE0E100A6796F /* ClearBackgroundView.swift */; };
 		9E69A24D27FB002800A55317 /* WelcomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E69A24C27FB002800A55317 /* WelcomeStore.swift */; };
+		9E6EF2CB291287BB00CA007B /* FeedbackGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EF2CA291287BB00CA007B /* FeedbackGenerator.swift */; };
 		9E7225F12889539300DF7F17 /* SettingsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7225F02889539300DF7F17 /* SettingsSnapshotTests.swift */; };
 		9E7225F3288AB6DD00DF7F17 /* MultipleLineTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7225F2288AB6DD00DF7F17 /* MultipleLineTextField.swift */; };
 		9E7225F6288AC71A00DF7F17 /* MultiLineTextFieldStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7225F5288AC71A00DF7F17 /* MultiLineTextFieldStore.swift */; };
@@ -389,6 +390,7 @@
 		9E6713F6289BC58C00A6796F /* BalanceBreakdownStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceBreakdownStore.swift; sourceTree = "<group>"; };
 		9E6713F9289BE0E100A6796F /* ClearBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearBackgroundView.swift; sourceTree = "<group>"; };
 		9E69A24C27FB002800A55317 /* WelcomeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeStore.swift; sourceTree = "<group>"; };
+		9E6EF2CA291287BB00CA007B /* FeedbackGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackGenerator.swift; sourceTree = "<group>"; };
 		9E7225F02889539300DF7F17 /* SettingsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSnapshotTests.swift; sourceTree = "<group>"; };
 		9E7225F2288AB6DD00DF7F17 /* MultipleLineTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleLineTextField.swift; sourceTree = "<group>"; };
 		9E7225F5288AC71A00DF7F17 /* MultiLineTextFieldStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiLineTextFieldStore.swift; sourceTree = "<group>"; };
@@ -1128,6 +1130,7 @@
 				9E3911452848EEB90073DD9A /* ZCashSDKEnvironment.swift */,
 				9EF1082A29114B93003D8097 /* Pasteboard.swift */,
 				9EF1082C29114BCD003D8097 /* NewRecoveryPhrase.swift */,
+				9E6EF2CA291287BB00CA007B /* FeedbackGenerator.swift */,
 			);
 			path = Dependencies;
 			sourceTree = "<group>";
@@ -1671,6 +1674,7 @@
 				9E7CB6292875AC2D00A02233 /* AppVersionHandler.swift in Sources */,
 				0DACFA7F27208CE00039EEA5 /* Clamped.swift in Sources */,
 				9EAB467A2861EA6A002904A0 /* TransactionRowView.swift in Sources */,
+				9E6EF2CB291287BB00CA007B /* FeedbackGenerator.swift in Sources */,
 				0DFE93E3272CA1AA000FCCA5 /* RecoveryPhraseValidationFlowStore.swift in Sources */,
 				9E2DF99E27CF704D00649636 /* ImportWalletView.swift in Sources */,
 				0D535FE2271F9476009A9E3E /* EnumeratedChip.swift in Sources */,

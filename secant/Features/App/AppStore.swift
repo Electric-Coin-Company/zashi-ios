@@ -3,9 +3,11 @@ import ZcashLightClientKit
 import Foundation
 
 typealias AppReducer = Reducer<AppState, AppAction, AppEnvironment>
-typealias AnyAppReducer = AnyReducer<RecoveryPhraseDisplay.State, RecoveryPhraseDisplay.Action, AppEnvironment>
 typealias AppStore = Store<AppState, AppAction>
 typealias AppViewStore = ViewStore<AppState, AppAction>
+
+typealias AnyRecoveryPhraseDisplayReducer = AnyReducer<RecoveryPhraseDisplay.State, RecoveryPhraseDisplay.Action, AppEnvironment>
+typealias AnyRecoveryPhraseValidationFlowReducer = AnyReducer<RecoveryPhraseValidationFlow.State, RecoveryPhraseValidationFlow.Action, AppEnvironment>
 
 // MARK: - State
 
@@ -23,7 +25,7 @@ struct AppState: Equatable {
     var appInitializationState: InitializationState = .uninitialized
     var homeState: HomeState
     var onboardingState: OnboardingFlowState
-    var phraseValidationState: RecoveryPhraseValidationFlowState
+    var phraseValidationState: RecoveryPhraseValidationFlow.State
     var phraseDisplayState: RecoveryPhraseDisplay.State
     var prevRoute: Route?
     var internalRoute: Route = .welcome
@@ -55,7 +57,7 @@ enum AppAction: Equatable {
     case nukeWallet
     case onboarding(OnboardingFlowAction)
     case phraseDisplay(RecoveryPhraseDisplay.Action)
-    case phraseValidation(RecoveryPhraseValidationFlowAction)
+    case phraseValidation(RecoveryPhraseValidationFlow.Action)
     case respondToWalletInitializationState(InitializationState)
     case sandbox(SandboxAction)
     case updateRoute(AppState.Route)
@@ -390,20 +392,16 @@ extension AppReducer {
         }
     )
 
-    private static let phraseValidationReducer: AppReducer = RecoveryPhraseValidationFlowReducer.default.pullback(
+    private static let phraseValidationReducer: AppReducer = AnyRecoveryPhraseValidationFlowReducer { _ in
+        RecoveryPhraseValidationFlow()
+    }
+    .pullback(
         state: \AppState.phraseValidationState,
         action: /AppAction.phraseValidation,
-        environment: { environment in
-            RecoveryPhraseValidationFlowEnvironment(
-                scheduler: environment.scheduler,
-                pasteboard: .test,
-                feedbackGenerator: .silent,
-                recoveryPhraseRandomizer: environment.recoveryPhraseRandomizer
-            )
-        }
+        environment: { $0 }
     )
-
-    private static let phraseDisplayReducer: AppReducer = AnyAppReducer { _ in
+    
+    private static let phraseDisplayReducer: AppReducer = AnyRecoveryPhraseDisplayReducer { _ in
         RecoveryPhraseDisplay()
     }
     .pullback(

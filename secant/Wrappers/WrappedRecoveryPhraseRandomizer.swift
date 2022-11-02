@@ -8,7 +8,7 @@
 import Foundation
 
 struct WrappedRecoveryPhraseRandomizer {
-    let random: (RecoveryPhrase) -> RecoveryPhraseValidationFlowState
+    let random: (RecoveryPhrase) -> RecoveryPhraseValidationFlow.State
 }
 
 extension WrappedRecoveryPhraseRandomizer {
