@@ -26,7 +26,7 @@ class NoopSDKSynchronizer: SDKSynchronizerClient {
         self.stateChanged = CurrentValueSubject<SDKSynchronizerState, Never>(.unknown)
     }
 
-    func prepareWith(initializer: Initializer) throws { }
+    func prepareWith(initializer: Initializer, seedBytes: [UInt8]) throws { }
 
     func start(retry: Bool) throws { }
 
@@ -36,7 +36,7 @@ class NoopSDKSynchronizer: SDKSynchronizerClient {
 
     func statusSnapshot() -> SyncStatusSnapshot { .default }
 
-    func rewind(_ policy: RewindPolicy) throws { }
+    func rewind(_ policy: RewindPolicy) async throws { }
     
     func getShieldedBalance() -> WalletBalance? { nil }
     
@@ -50,14 +50,13 @@ class NoopSDKSynchronizer: SDKSynchronizerClient {
 
     func getTransparentAddress(account: Int) -> TransparentAddress? { nil }
     
-    func getShieldedAddress(account: Int) -> SaplingShieldedAddress? { nil }
+    func getSaplingAddress(accountIndex account: Int) -> SaplingAddress? { nil }
     
     func sendTransaction(
-        with spendingKey: String,
+        with spendingKey: UnifiedSpendingKey,
         zatoshi: Zatoshi,
-        to recipientAddress: String,
-        memo: String?,
-        from account: Int
+        to recipientAddress: Recipient,
+        memo: String?
     ) -> Effect<Result<TransactionState, NSError>, Never> {
         Effect(value: Result.failure(SynchronizerError.criticalError as NSError))
     }
@@ -67,7 +66,7 @@ class NoopSDKSynchronizer: SDKSynchronizerClient {
     }
 }
 
-class T2estSDKSynchronizerClient: SDKSynchronizerClient {
+class TestSDKSynchronizerClient: SDKSynchronizerClient {
     private(set) var blockProcessor: CompactBlockProcessor?
     private(set) var notificationCenter: NotificationCenterClient
     private(set) var synchronizer: SDKSynchronizer?
@@ -80,7 +79,7 @@ class T2estSDKSynchronizerClient: SDKSynchronizerClient {
         self.stateChanged = CurrentValueSubject<SDKSynchronizerState, Never>(.unknown)
     }
 
-    func prepareWith(initializer: Initializer) throws { }
+    func prepareWith(initializer: Initializer, seedBytes: [UInt8]) throws { }
 
     func start(retry: Bool) throws { }
 
@@ -161,15 +160,17 @@ class T2estSDKSynchronizerClient: SDKSynchronizerClient {
     }
 
     func getTransparentAddress(account: Int) -> TransparentAddress? { nil }
-    
-    func getShieldedAddress(account: Int) -> SaplingShieldedAddress? { "ff3927e1f83df9b1b0dc75540ddc59ee435eecebae914d2e6dfe8576fbedc9a8" }
+
+    func getSaplingAddress(accountIndex account: Int) -> SaplingAddress? {
+        // swiftlint:disable:next force_try
+        try! SaplingAddress(encoding: "ztestsapling1edm52k336nk70gxqxedd89slrrf5xwnnp5rt6gqnk0tgw4mynv6fcx42ym6x27yac5amvfvwypz", network: .testnet)
+    }
     
     func sendTransaction(
-        with spendingKey: String,
+        with spendingKey: UnifiedSpendingKey,
         zatoshi: Zatoshi,
-        to recipientAddress: String,
-        memo: String?,
-        from account: Int
+        to recipientAddress: Recipient,
+        memo: String?
     ) -> Effect<Result<TransactionState, NSError>, Never> {
         return Effect(value: Result.failure(SynchronizerError.criticalError as NSError))
     }

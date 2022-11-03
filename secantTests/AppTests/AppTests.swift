@@ -88,43 +88,76 @@ class AppTests: XCTestCase {
     }
 
     func testRespondToWalletInitializationState_FilesMissing() throws {
+        let testScheduler = DispatchQueue.test
+
         let store = TestStore(
             initialState: .placeholder,
             reducer: AppReducer()
         )
-        
+
+        store.dependencies.derivationTool = .liveValue
         store.dependencies.walletStorage = .noOp
-        store.dependencies.walletStorage.exportWallet = { throw "export failed" }
+        store.dependencies.mnemonic = .liveValue
+        store.dependencies.databaseFiles = .noOp
+        store.dependencies.randomRecoveryPhrase = .placeholderMock
+        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
 
         store.send(.respondToWalletInitializationState(.filesMissing)) { state in
             state.appInitializationState = .filesMissing
         }
-        
+
+        testScheduler.advance(by: 3.0)
+
         store.receive(.initializeSDK) { state in
-            // failed is expected because environment is throwing errors
-            state.appInitializationState = .failed
+            state.storedWallet = .placeholder
         }
 
-        store.receive(.checkBackupPhraseValidation)
+        testScheduler.advance(by: 1.0)
+
+        store.receive(.checkBackupPhraseValidation) { state in
+            state.appInitializationState = .initialized
+            state.phraseValidationState = .placeholder
+        }
+
+        store.receive(.updateRoute(.phraseDisplay)) { state in
+            state.prevRoute = .welcome
+            state.internalRoute = .phraseDisplay
+        }
+
+        testScheduler.advance(by: 1.0)
     }
     
     func testRespondToWalletInitializationState_Initialized() throws {
+        let testScheduler = DispatchQueue.test
+
         let store = TestStore(
             initialState: .placeholder,
             reducer: AppReducer()
         )
         
+        store.dependencies.derivationTool = .liveValue
         store.dependencies.walletStorage = .noOp
-        store.dependencies.walletStorage.exportWallet = { throw "export failed" }
-        
+        store.dependencies.mnemonic = .liveValue
+        store.dependencies.databaseFiles = .noOp
+        store.dependencies.randomRecoveryPhrase = .placeholderMock
+        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+
         store.send(.respondToWalletInitializationState(.initialized))
+
+        testScheduler.advance(by: 3.0)
         
         store.receive(.initializeSDK) { state in
-            // failed is expected because environment is throwing errors
-            state.appInitializationState = .failed
+            state.storedWallet = .placeholder
         }
 
-        store.receive(.checkBackupPhraseValidation)
+        store.receive(.checkBackupPhraseValidation) { state in
+            state.appInitializationState = .initialized
+        }
+
+        store.receive(.updateRoute(.phraseDisplay)) { state in
+            state.prevRoute = .welcome
+            state.internalRoute = .phraseDisplay
+        }
     }
     
     func testWalletEventReplyTo_validAddress() throws {

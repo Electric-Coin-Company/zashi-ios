@@ -16,12 +16,12 @@ class AppInitializationTests: XCTestCase {
     /// 3. The .initializeSDK is triggered to set the state of the app and preparing the synchronizer.
     /// 4. The .checkBackupPhraseValidation is triggered to check the validation state.
     /// 5. The user hasn't finished the backup phrase test so the display phrase is presented.
-    func testDidFinishLaunching_to_InitializedWallet() throws {
+    @MainActor func testDidFinishLaunching_to_InitializedWallet() async throws {
         // setup the store and environment to be fully mocked
         let testScheduler = DispatchQueue.test
 
         let recoveryPhrase = RecoveryPhrase(words: try MnemonicClient.mock.randomMnemonicWords())
-        
+
         let phraseValidationState = RecoveryPhraseValidationFlowReducer.State(
             phrase: recoveryPhrase,
             missingIndices: [2, 0, 3, 5],
@@ -36,23 +36,23 @@ class AppInitializationTests: XCTestCase {
             ],
             route: nil
         )
-        
+
         let recoveryPhraseRandomizer = RecoveryPhraseRandomizerClient(
             random: { _ in
                 let missingIndices = [2, 0, 3, 5]
                 let missingWordChipKind = [
                     PhraseChip.Kind.unassigned(
-                    word: "voice",
-                    color: Asset.Colors.Buttons.activeButton.color
+                        word: "voice",
+                        color: Asset.Colors.Buttons.activeButton.color
                     ),
                     PhraseChip.Kind.empty,
                     PhraseChip.Kind.unassigned(
-                    word: "survey",
-                    color: Asset.Colors.Buttons.activeButton.color
+                        word: "survey",
+                        color: Asset.Colors.Buttons.activeButton.color
                     ),
                     PhraseChip.Kind.unassigned(
-                    word: "spread",
-                    color: Asset.Colors.Buttons.activeButton.color
+                        word: "spread",
+                        color: Asset.Colors.Buttons.activeButton.color
                     )
                 ]
 
@@ -69,7 +69,7 @@ class AppInitializationTests: XCTestCase {
                 )
             }
         )
-        
+
         let appState = AppReducer.State(
             homeState: .placeholder,
             onboardingState: .init(
@@ -82,15 +82,15 @@ class AppInitializationTests: XCTestCase {
             sandboxState: .placeholder,
             welcomeState: .placeholder
         )
-        
+
         let store = TestStore(
             initialState: appState,
             reducer: AppReducer()
         )
-        
+
         store.dependencies.databaseFiles = .noOp
         store.dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
-        store.dependencies.derivationTool = .noOp
+        store.dependencies.derivationTool = .liveValue
         store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
         store.dependencies.mnemonic = .mock
         store.dependencies.randomRecoveryPhrase = recoveryPhraseRandomizer
@@ -98,40 +98,36 @@ class AppInitializationTests: XCTestCase {
         store.dependencies.walletStorage.areKeysPresent = { true }
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
-        store.send(.appDelegate(.didFinishLaunching))
-        
+        _ = await store.send(.appDelegate(.didFinishLaunching))
+
         // the 0.02 delay ensures keychain is ready
-        testScheduler.advance(by: 0.02)
-        
+        await testScheduler.advance(by: 0.02)
+
         // ad 1.
-        store.receive(.checkWalletInitialization)
+        await store.receive(.checkWalletInitialization)
 
         // ad 2.
-        store.receive(.respondToWalletInitializationState(.initialized))
+        await store.receive(.respondToWalletInitializationState(.initialized))
 
         // ad 3.
-        store.receive(.initializeSDK) { state in
-            state.storedWallet = StoredWallet(
-                language: .english,
-                seedPhrase: "",
-                version: 0,
-                birthday: 0,
-                hasUserPassedPhraseBackupTest: false
-            )
+        await store.receive(.initializeSDK) { state in
+            state.storedWallet = .placeholder
         }
         // ad 4.
-        store.receive(.checkBackupPhraseValidation) { state in
+        await store.receive(.checkBackupPhraseValidation) { state in
             state.appInitializationState = .initialized
         }
 
         // the 3.0 delay ensures the welcome screen is visible till the initialization is done
-        testScheduler.advance(by: 3.00)
+        await testScheduler.advance(by: 3.00)
 
         // ad 5.
-        store.receive(.updateRoute(.phraseDisplay)) { state in
+        await store.receive(.updateRoute(.phraseDisplay)) { state in
             state.prevRoute = .welcome
             state.internalRoute = .phraseDisplay
         }
+
+        await store.finish(timeout: NSEC_PER_SEC * 5)
     }
     
     /// Integration test validating the side effects work together properly when no wallet is stored but database files are present.

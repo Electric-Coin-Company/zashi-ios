@@ -24,6 +24,7 @@ struct ProfileReducer: ReducerProtocol {
         case addressDetails(AddressDetailsReducer.Action)
         case back
         case onAppear
+        case onAppearFinished(String)
         case settings(SettingsReducer.Action)
         case updateRoute(ProfileReducer.State.Route?)
     }
@@ -44,12 +45,18 @@ struct ProfileReducer: ReducerProtocol {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                state.address = sdkSynchronizer.getShieldedAddress() ?? ""
+                return Effect.task {
+                    let saplingAddress = await self.sdkSynchronizer.getSaplingAddress()?.stringEncoded ?? ""
+                    return .onAppearFinished(saplingAddress)
+                }
+
+            case let .onAppearFinished(saplingAddress):
+                state.address = saplingAddress
                 state.appBuild = appVersion.appBuild()
                 state.appVersion = appVersion.appVersion()
                 state.sdkVersion = zcashSDKEnvironment.sdkVersion
                 return .none
-                
+
             case .back:
                 return .none
                 

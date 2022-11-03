@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/combine-schedulers",
       "state" : {
-        "revision" : "aa3e575929f2bcc5bad012bd2575eae716cbcdf7",
-        "version" : "0.8.0"
+        "revision" : "882ac01eb7ef9e36d4467eb4b1151e74fcef85ab",
+        "version" : "0.9.1"
       }
     },
     {
@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/grpc/grpc-swift.git",
       "state" : {
-        "revision" : "4c63368b7462305903507e8acebd77264c0fb695",
-        "version" : "1.8.2"
+        "revision" : "3e17f2b847da39b50329b7a11c5ad23453190e8b",
+        "version" : "1.13.0"
       }
     },
     {
@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/airbnb/lottie-ios",
       "state" : {
-        "revision" : "246bab7ef72bad56abefb88e84a08871cecf9cb8",
-        "version" : "3.4.0"
+        "revision" : "b4bd0604ded9574807f41b4004b57dd1226a30a4",
+        "version" : "3.5.0"
       }
     },
     {
@@ -46,6 +46,15 @@
       }
     },
     {
+      "identity" : "swift-atomics",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-atomics.git",
+      "state" : {
+        "revision" : "919eb1d83e02121cdb434c7bfc1f0c66ef17febe",
+        "version" : "1.0.2"
+      }
+    },
+    {
       "identity" : "swift-case-paths",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-case-paths",
@@ -59,8 +68,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-clocks",
       "state" : {
-        "revision" : "692ec4f5429a667bdd968c7260dfa2b23adfeffc",
-        "version" : "0.1.4"
+        "revision" : "20b25ca0dd88ebfb9111ec937814ddc5a8880172",
+        "version" : "0.2.0"
       }
     },
     {
@@ -68,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections",
       "state" : {
-        "revision" : "48254824bb4248676bf7ce56014ff57b142b77eb",
-        "version" : "1.0.2"
+        "revision" : "f504716c27d2e5d4144fa4794b12129301d17729",
+        "version" : "1.0.3"
       }
     },
     {
@@ -86,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-crypto.git",
       "state" : {
-        "revision" : "d9825fa541df64b1a7b182178d61b9a82730d01f",
-        "version" : "2.1.0"
+        "revision" : "f652300628eb2003449e627f1f394a27ea2af9a8",
+        "version" : "2.2.0"
       }
     },
     {
@@ -95,8 +104,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-custom-dump",
       "state" : {
-        "revision" : "819d9d370cd721c9d87671e29d947279292e4541",
-        "version" : "0.6.0"
+        "revision" : "ead7d30cc224c3642c150b546f4f1080d1c411a8",
+        "version" : "0.6.1"
       }
     },
     {
@@ -104,8 +113,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-identified-collections",
       "state" : {
-        "revision" : "bfb0d43e75a15b6dfac770bf33479e8393884a36",
-        "version" : "0.4.1"
+        "revision" : "a08887de589e3829d488e0b4b707b2ca804b1060",
+        "version" : "0.5.0"
       }
     },
     {
@@ -113,8 +122,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "revision" : "5d66f7ba25daf4f94100e7022febf3c75e37a6c7",
-        "version" : "1.4.2"
+        "revision" : "6fe203dc33195667ce1759bf0182975e4653ba1c",
+        "version" : "1.4.4"
       }
     },
     {
@@ -122,8 +131,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio.git",
       "state" : {
-        "revision" : "124119f0bb12384cef35aa041d7c3a686108722d",
-        "version" : "2.40.0"
+        "revision" : "edfceecba13d68c1c993382806e72f7e96feaa86",
+        "version" : "2.44.0"
       }
     },
     {
@@ -131,8 +140,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio-extras.git",
       "state" : {
-        "revision" : "a75e92bde3683241c15df3dd905b7a6dcac4d551",
-        "version" : "1.12.1"
+        "revision" : "91dd2d61fb772e1311bb5f13b59266b579d77e42",
+        "version" : "1.15.0"
       }
     },
     {
@@ -140,8 +149,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio-http2.git",
       "state" : {
-        "revision" : "108ac15087ea9b79abb6f6742699cf31de0e8772",
-        "version" : "1.22.0"
+        "revision" : "d6656967f33ed8b368b38e4b198631fc7c484a40",
+        "version" : "1.23.1"
       }
     },
     {
@@ -149,8 +158,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio-ssl.git",
       "state" : {
-        "revision" : "c30c680c78c99afdabf84805a83c8745387c4ac7",
-        "version" : "2.20.2"
+        "revision" : "4fb7ead803e38949eb1d6fabb849206a72c580f3",
+        "version" : "2.23.0"
       }
     },
     {
@@ -158,8 +167,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio-transport-services.git",
       "state" : {
-        "revision" : "2cb54f91ddafc90832c5fa247faf5798d0a7c204",
-        "version" : "1.13.0"
+        "revision" : "c0d9a144cfaec8d3d596aadde3039286a266c15c",
+        "version" : "1.15.0"
       }
     },
     {
@@ -176,17 +185,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-protobuf.git",
       "state" : {
-        "revision" : "e1499bc69b9040b29184f7f2996f7bab467c1639",
-        "version" : "1.19.0"
+        "revision" : "ab3a58b7209a17d781c0d1dbb3e1ff3da306bae8",
+        "version" : "1.20.3"
       }
     },
     {
       "identity" : "swift-url-routing",
       "kind" : "remoteSourceControl",
-      "location" : "http://github.com/pointfreeco/swift-url-routing",
+      "location" : "https://github.com/pointfreeco/swift-url-routing",
       "state" : {
-        "revision" : "5bf79bb370015e43842a61d558a9ee053171124e",
-        "version" : "0.3.0"
+        "revision" : "f54c4f74e7884f7930560c08387817ce28271770",
+        "version" : "0.4.0"
       }
     },
     {
@@ -194,17 +203,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",
       "state" : {
-        "revision" : "16e6409ee82e1b81390bdffbf217b9c08ab32784",
-        "version" : "0.5.0"
+        "revision" : "5a5457a744239896e9b0b03a8e1a5069c3e7b91f",
+        "version" : "0.6.0"
       }
     },
     {
       "identity" : "zcash-light-client-ffi",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/zcash-hackworks/zcash-light-client-ffi.git",
+      "location" : "https://github.com/zcash-hackworks/zcash-light-client-ffi",
       "state" : {
-        "revision" : "b7e8a2abab84c44046b4afe4ee4522a0fa2fcc7f",
-        "version" : "0.0.3"
+        "revision" : "fad9802b907822d5a1877584c91f3786824521b7",
+        "version" : "0.1.0"
       }
     },
     {
@@ -212,8 +221,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/zcash/ZcashLightClientKit",
       "state" : {
-        "revision" : "9e41fb43757fd7b0eb8e817320537230774258cf",
-        "version" : "0.16.10-beta"
+        "revision" : "d9b85b40ad36ac5183f44b6db9805e44171ee988",
+        "version" : "0.17.0-beta"
       }
     }
   ],

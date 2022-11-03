@@ -30,7 +30,7 @@ extension ZcashSDKEnvironment {
 struct ZcashSDKEnvironment {
     let defaultBirthday: BlockHeight
     let endpoint: LightWalletEndpoint
-    let isMainnet: () -> Bool
+    var isMainnet: Bool { return network.networkType == .mainnet }
     let lightWalletService: LightWalletService
     let memoCharLimit: Int
     let mnemonicWordsMaxCount: Int

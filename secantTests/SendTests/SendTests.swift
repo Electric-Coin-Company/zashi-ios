@@ -27,30 +27,41 @@ class SendTests: XCTestCase {
         usNumberFormatter.locale = Locale(identifier: "en_US")
     }
 
-    func testSendSucceeded() throws {
+    @MainActor func testSendSucceeded() async throws {
+        // the test needs to pass the exportWallet() so we simulate some in the keychain
+        try storage.importWallet(bip39: "one two three", birthday: nil)
+
         // setup the store and environment to be fully mocked
         let testScheduler = DispatchQueue.test
 
+        var initialState = SendFlowReducer.State.placeholder
+        initialState.transactionAddressInputState = TransactionAddressTextFieldReducer.State(
+            textFieldState:
+                TCATextFieldReducer.State(
+                    validationType: nil,
+                    text: "ztestsapling1psqa06alcfj9t6s246hht3n7kcw5h900r6z40qnuu7l58qs55kzeqa98879z9hzy596dca4hmsr"
+                )
+        )
+
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: initialState,
             reducer: SendFlowReducer()
         )
 
-        store.dependencies.derivationTool = .noOp
-        store.dependencies.derivationTool.deriveSpendingKeys = { _, _ in [""] }
+        store.dependencies.derivationTool = .liveValue
         store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-        store.dependencies.mnemonic = .mock
+        store.dependencies.mnemonic = .liveValue
         store.dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
-        store.dependencies.walletStorage.exportWallet = { .placeholder }
+        store.dependencies.walletStorage = .noOp
 
         // simulate the sending confirmation button to be pressed
-        store.send(.sendConfirmationPressed) { state in
+        _ = await store.send(.sendConfirmationPressed) { state in
             // once sending is confirmed, the attemts to try to send again by pressing the button
             // needs to be eliminated, indicated by the flag `isSendingTransaction`, need to be true
             state.isSendingTransaction = true
         }
 
-        testScheduler.advance(by: 0.01)
+        await testScheduler.advance(by: 0.01)
 
         let transactionState = TransactionState(
             expirationHeight: 40,
@@ -66,50 +77,61 @@ class SendTests: XCTestCase {
         )
 
         // first it's expected that progress screen is showed
-        store.receive(.updateRoute(.inProgress)) { state in
+        await store.receive(.updateRoute(.inProgress)) { state in
             state.route = .inProgress
         }
 
         // check the success transaction to be received back
-        store.receive(.sendTransactionResult(Result.success(transactionState))) { state in
+        await store.receive(.sendTransactionResult(Result.success(transactionState))) { state in
             // from this moment on the sending next transaction is allowed again
             // the 'isSendingTransaction' needs to be false again
             state.isSendingTransaction = false
         }
         
         // all went well, the success screen is triggered
-        store.receive(.updateRoute(.success)) { state in
+        await store.receive(.updateRoute(.success)) { state in
             state.route = .success
         }
+
+        await store.finish(timeout: NSEC_PER_SEC * 5)
     }
 
-    func testSendSucceededWithoutMemo() throws {
+    @MainActor func testSendSucceededWithoutMemo() async throws {
+        // the test needs to pass the exportWallet() so we simulate some in the keychain
+        try storage.importWallet(bip39: "one two three", birthday: nil)
+
         // setup the store and environment to be fully mocked
         let testScheduler = DispatchQueue.test
 
         var state = SendFlowReducer.State.placeholder
         state.addMemoState = false
+        state.transactionAddressInputState = TransactionAddressTextFieldReducer.State(
+            textFieldState:
+                TCATextFieldReducer.State(
+                    validationType: nil,
+                    text: "ztestsapling1psqa06alcfj9t6s246hht3n7kcw5h900r6z40qnuu7l58qs55kzeqa98879z9hzy596dca4hmsr"
+                )
+        )
 
         let store = TestStore(
             initialState: state,
             reducer: SendFlowReducer()
         )
         
-        store.dependencies.derivationTool = .noOp
-        store.dependencies.derivationTool.deriveSpendingKeys = { _, _ in [""] }
+        store.dependencies.derivationTool = .liveValue
         store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-        store.dependencies.mnemonic = .mock
+        store.dependencies.mnemonic = .liveValue
         store.dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
-        store.dependencies.walletStorage.exportWallet = { .placeholder }
+        store.dependencies.walletStorage = .noOp
 
         // simulate the sending confirmation button to be pressed
-        store.send(.sendConfirmationPressed) { state in
+        _ = await store.send(.sendConfirmationPressed) { state in
             // once sending is confirmed, the attemts to try to send again by pressing the button
             // needs to be eliminated, indicated by the flag `isSendingTransaction`, need to be true
             state.isSendingTransaction = true
         }
 
-        testScheduler.advance(by: 0.01)
+        await testScheduler.advance(by: 0.01)
 
         let transactionState = TransactionState(
             expirationHeight: 40,
@@ -125,63 +147,78 @@ class SendTests: XCTestCase {
         )
 
         // first it's expected that progress screen is showed
-        store.receive(.updateRoute(.inProgress)) { state in
+        await store.receive(.updateRoute(.inProgress)) { state in
             state.route = .inProgress
         }
 
         // check the success transaction to be received back
-        store.receive(.sendTransactionResult(Result.success(transactionState))) { state in
+        await store.receive(.sendTransactionResult(Result.success(transactionState))) { state in
             // from this moment on the sending next transaction is allowed again
             // the 'isSendingTransaction' needs to be false again
             state.isSendingTransaction = false
         }
 
         // all went well, the success screen is triggered
-        store.receive(.updateRoute(.success)) { state in
+        await store.receive(.updateRoute(.success)) { state in
             state.route = .success
         }
+
+        await store.finish(timeout: NSEC_PER_SEC * 5)
     }
     
-    func testSendFailed() throws {
+    @MainActor func testSendFailed() async throws {
+        // the test needs to pass the exportWallet() so we simulate some in the keychain
+        try storage.importWallet(bip39: "one two three", birthday: nil)
+        
         // setup the store and environment to be fully mocked
         let testScheduler = DispatchQueue.test
 
+        var initialState = SendFlowReducer.State.placeholder
+        initialState.transactionAddressInputState = TransactionAddressTextFieldReducer.State(
+            textFieldState:
+                TCATextFieldReducer.State(
+                    validationType: nil,
+                    text: "ztestsapling1psqa06alcfj9t6s246hht3n7kcw5h900r6z40qnuu7l58qs55kzeqa98879z9hzy596dca4hmsr"
+                )
+        )
+
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: initialState,
             reducer: SendFlowReducer()
         )
 
-        store.dependencies.derivationTool = .noOp
-        store.dependencies.derivationTool.deriveSpendingKeys = { _, _ in [""] }
+        store.dependencies.derivationTool = .liveValue
         store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-        store.dependencies.mnemonic = .mock
-        store.dependencies.walletStorage.exportWallet = { .placeholder }
+        store.dependencies.mnemonic = .liveValue
+        store.dependencies.walletStorage = .noOp
 
         // simulate the sending confirmation button to be pressed
-        store.send(.sendConfirmationPressed) { state in
+        _ = await store.send(.sendConfirmationPressed) { state in
             // once sending is confirmed, the attemts to try to send again by pressing the button
             // needs to be eliminated, indicated by the flag `isSendingTransaction`, need to be true
             state.isSendingTransaction = true
         }
 
-        testScheduler.advance(by: 0.01)
+        await testScheduler.advance(by: 0.01)
 
         // first it's expected that progress screen is showed
-        store.receive(.updateRoute(.inProgress)) { state in
+        await store.receive(.updateRoute(.inProgress)) { state in
             state.route = .inProgress
         }
 
         // check the failure transaction to be received back
-        store.receive(.sendTransactionResult(Result.failure(SynchronizerError.criticalError as NSError))) { state in
+        await store.receive(.sendTransactionResult(Result.failure(SynchronizerError.criticalError as NSError))) { state in
             // from this moment on the sending next transaction is allowed again
             // the 'isSendingTransaction' needs to be false again
             state.isSendingTransaction = false
         }
         
         // the failure screen is triggered as expected
-        store.receive(.updateRoute(.failure)) { state in
+        await store.receive(.updateRoute(.failure)) { state in
             state.route = .failure
         }
+
+        await store.finish(timeout: NSEC_PER_SEC * 5)
     }
     
     func testAddressValidation() throws {

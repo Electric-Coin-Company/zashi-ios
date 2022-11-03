@@ -70,7 +70,6 @@ extension TransactionState {
             .paid(success: pendingTransaction.isSubmitSuccess) :
             .pending
         expirationHeight = pendingTransaction.expiryHeight
-        zAddress = pendingTransaction.toAddress
         zecAmount = pendingTransaction.value
         fee = Zatoshi(10)
         if let memo = pendingTransaction.memo {
@@ -78,6 +77,13 @@ extension TransactionState {
         }
         minedHeight = pendingTransaction.minedHeight
         errorMessage = pendingTransaction.errorMessage
+
+        switch pendingTransaction.recipient {
+        case let .address(recipient):
+            zAddress = recipient.stringEncoded
+        case .internalAccount:
+            zAddress = nil
+        }
     }
 }
 

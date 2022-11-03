@@ -27,7 +27,9 @@ class MockSDKSynchronizerClient: SDKSynchronizerClient {
         self.stateChanged = CurrentValueSubject<SDKSynchronizerState, Never>(.unknown)
     }
 
-    func prepareWith(initializer: Initializer) throws { }
+    func prepareWith(initializer: Initializer, seedBytes: [UInt8]) throws {
+        print("a")
+    }
 
     func start(retry: Bool) throws { }
 
@@ -113,14 +115,16 @@ class MockSDKSynchronizerClient: SDKSynchronizerClient {
 
     func getTransparentAddress(account: Int) -> TransparentAddress? { nil }
     
-    func getShieldedAddress(account: Int) -> SaplingShieldedAddress? { "ff3927e1f83df9b1b0dc75540ddc59ee435eecebae914d2e6dfe8576fbedc9a8" }
+    func getSaplingAddress(accountIndex account: Int) -> SaplingAddress? {
+        // swiftlint:disable:next force_try
+        try! SaplingAddress(encoding: "ztestsapling1edm52k336nk70gxqxedd89slrrf5xwnnp5rt6gqnk0tgw4mynv6fcx42ym6x27yac5amvfvwypz", network: .testnet)
+    }
     
     func sendTransaction(
-        with spendingKey: String,
+        with spendingKey: UnifiedSpendingKey,
         zatoshi: Zatoshi,
-        to recipientAddress: String,
-        memo: String?,
-        from account: Int
+        to recipientAddress: Recipient,
+        memo: String?
     ) -> Effect<Result<TransactionState, NSError>, Never> {
         let transactionState = TransactionState(
             expirationHeight: 40,

@@ -38,6 +38,10 @@ enum SDKSynchronizerState: Equatable {
     case connectionStateChanged
 }
 
+enum SDKSynchronizerClientError: Error {
+    case synchronizedNotInitialized
+}
+
 protocol SDKSynchronizerClient {
     var notificationCenter: NotificationCenterClient { get }
     var synchronizer: SDKSynchronizer? { get }
@@ -45,14 +49,14 @@ protocol SDKSynchronizerClient {
     var walletBirthday: BlockHeight? { get }
     var latestScannedSynchronizerState: SDKSynchronizer.SynchronizerState? { get }
 
-    func prepareWith(initializer: Initializer) throws
+    func prepareWith(initializer: Initializer, seedBytes: [UInt8]) throws
     func start(retry: Bool) throws
     func stop()
     func synchronizerSynced(_ synchronizerState: SDKSynchronizer.SynchronizerState?)
     func statusSnapshot() -> SyncStatusSnapshot
 
-    func rewind(_ policy: RewindPolicy) throws
-    
+    func rewind(_ policy: RewindPolicy) async throws
+
     func getShieldedBalance() -> WalletBalance?
     func getTransparentBalance() -> WalletBalance?
     func getAllClearedTransactions() -> Effect<[WalletEvent], Never>
@@ -60,14 +64,13 @@ protocol SDKSynchronizerClient {
     func getAllTransactions() -> Effect<[WalletEvent], Never>
 
     func getTransparentAddress(account: Int) -> TransparentAddress?
-    func getShieldedAddress(account: Int) -> SaplingShieldedAddress?
+    func getSaplingAddress(accountIndex: Int) async -> SaplingAddress?
     
     func sendTransaction(
-        with spendingKey: String,
+        with spendingKey: UnifiedSpendingKey,
         zatoshi: Zatoshi,
-        to recipientAddress: String,
-        memo: String?,
-        from account: Int
+        to recipientAddress: Recipient,
+        memo: String?
     ) -> Effect<Result<TransactionState, NSError>, Never>
 }
 
@@ -80,7 +83,7 @@ extension SDKSynchronizerClient {
         getTransparentAddress(account: 0)
     }
 
-    func getShieldedAddress() -> SaplingShieldedAddress? {
-        getShieldedAddress(account: 0)
+    func getSaplingAddress() async -> SaplingAddress? {
+        await getSaplingAddress(accountIndex: 0)
     }
 }

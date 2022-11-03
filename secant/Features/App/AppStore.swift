@@ -227,9 +227,10 @@ struct AppReducer: ReducerProtocol {
                     }
                     
                     try mnemonic.isValid(storedWallet.seedPhrase)
-                    
+                    let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase)
+
                     let birthday = state.storedWallet?.birthday ?? zcashSDKEnvironment.defaultBirthday
-                    
+
                     let initializer = try AppReducer.prepareInitializer(
                         for: storedWallet.seedPhrase,
                         birthday: birthday,
@@ -238,13 +239,16 @@ struct AppReducer: ReducerProtocol {
                         mnemonic: mnemonic,
                         zcashSDKEnvironment: zcashSDKEnvironment
                     )
-                    try sdkSynchronizer.prepareWith(initializer: initializer)
+
+                    try sdkSynchronizer.prepareWith(initializer: initializer, seedBytes: seedBytes)
                     try sdkSynchronizer.start()
+
+                    return .none
                 } catch {
-                    state.appInitializationState = .failed
                     // TODO [#221]: error we need to handle (https://github.com/zcash/secant-ios-wallet/issues/221)
+                    state.appInitializationState = .failed
+                    return .none
                 }
-                return .none
 
             case .checkBackupPhraseValidation:
                 guard let storedWallet = state.storedWallet else {
@@ -393,10 +397,10 @@ extension AppReducer {
     ) throws -> Initializer {
         do {
             let seedBytes = try mnemonic.toSeed(seedPhrase)
-            let viewingKeys = try derivationTool.deriveUnifiedViewingKeysFromSeed(seedBytes, 1)
-            
+            let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0)
+            let viewingKey = try derivationTool.deriveUnifiedViewingKeyFromSpendingKey(spendingKey)
             let network = zcashSDKEnvironment.network
-            
+
             let initializer = Initializer(
                 cacheDbURL: try databaseFiles.cacheDbURLFor(network),
                 dataDbURL: try databaseFiles.dataDbURLFor(network),
@@ -405,7 +409,7 @@ extension AppReducer {
                 network: zcashSDKEnvironment.network,
                 spendParamsURL: try databaseFiles.spendParamsURLFor(network),
                 outputParamsURL: try databaseFiles.outputParamsURLFor(network),
-                viewingKeys: viewingKeys,
+                viewingKeys: [viewingKey],
                 walletBirthday: birthday
             )
             

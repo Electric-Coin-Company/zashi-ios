@@ -17,6 +17,9 @@ enum SDKSynchronizerDependency: DependencyKey {
 class LiveSDKSynchronizerClient: SDKSynchronizerClient {
     private var cancellables: [AnyCancellable] = []
     private(set) var synchronizer: SDKSynchronizer?
+    /// TODO: Since 0.17.0-beta SDKSynchronizer has `lastState` property which does exactly the same as `stateChanged`. Problem is that we have
+    /// synchronizer as optional. And now it would be complicated to handle the situation when `lastState` isn't always available. Let's handle this
+    /// in future.
     private(set) var stateChanged: CurrentValueSubject<SDKSynchronizerState, Never>
     private(set) var notificationCenter: NotificationCenterClient
     private(set) var walletBirthday: BlockHeight?
@@ -31,8 +34,8 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
         synchronizer?.stop()
     }
 
-    func prepareWith(initializer: Initializer) throws {
-        synchronizer = try SDKSynchronizer(initializer: initializer)
+    func prepareWith(initializer: Initializer, seedBytes: [UInt8]) throws {
+        let synchronizer = try SDKSynchronizer(initializer: initializer)
 
         notificationCenter.publisherFor(.synchronizerStarted)?
             .receive(on: DispatchQueue.main)
@@ -57,7 +60,11 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
             .sink { [weak self] _ in self?.synchronizerStopped() }
             .store(in: &cancellables)
 
-        try synchronizer?.prepare()
+        guard try synchronizer.prepare(with: seedBytes) == .success else {
+            throw SynchronizerError.initFailed(message: "")
+        }
+
+        self.synchronizer = synchronizer
         walletBirthday = initializer.walletBirthday
     }
     
@@ -94,8 +101,8 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
         return SyncStatusSnapshot.snapshotFor(state: synchronizer.status)
     }
 
-    func rewind(_ policy: RewindPolicy) throws {
-        try synchronizer?.rewind(policy)
+    func rewind(_ policy: RewindPolicy) async throws {
+        try await synchronizer?.rewind(policy)
     }
     
     func getShieldedBalance() -> WalletBalance? {
@@ -163,35 +170,41 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
         synchronizer?.getTransparentAddress(accountIndex: account)
     }
     
-    func getShieldedAddress(account: Int) -> SaplingShieldedAddress? {
-        synchronizer?.getShieldedAddress(accountIndex: account)
+    func getSaplingAddress(accountIndex: Int) async -> SaplingAddress? {
+        await synchronizer?.getSaplingAddress(accountIndex: accountIndex)
     }
     
     func sendTransaction(
-        with spendingKey: String,
+        with spendingKey: UnifiedSpendingKey,
         zatoshi: Zatoshi,
-        to recipientAddress: String,
-        memo: String?,
-        from account: Int
+        to recipientAddress: Recipient,
+        memo: String?
     ) -> Effect<Result<TransactionState, NSError>, Never> {
-        Deferred {
-            Future { [weak self] promise in
-                self?.synchronizer?.sendToAddress(
+        return Effect.run { [weak self] send in
+            do {
+                guard let synchronizer = self?.synchronizer else {
+                    await send(.failure(SDKSynchronizerClientError.synchronizedNotInitialized as NSError))
+                    return
+                }
+
+                let finalMemo: Memo?
+                if let memoText = memo {
+                    finalMemo = try Memo(string: memoText)
+                } else {
+                    finalMemo = nil
+                }
+
+                let pendingTransaction = try await synchronizer.sendToAddress(
                     spendingKey: spendingKey,
                     zatoshi: zatoshi,
                     toAddress: recipientAddress,
-                    memo: memo,
-                    from: account) { result in
-                        switch result {
-                        case .failure(let error as NSError):
-                            promise(.failure(error))
-                        case .success(let pendingTx):
-                            promise(.success(TransactionState(pendingTransaction: pendingTx)))
-                        }
-                }
+                    memo: finalMemo
+                )
+
+                await send(.success(TransactionState(pendingTransaction: pendingTransaction)))
+            } catch {
+                await send(.failure(error as NSError))
             }
         }
-        .mapError { $0 as NSError }
-        .catchToEffect()
     }
 }

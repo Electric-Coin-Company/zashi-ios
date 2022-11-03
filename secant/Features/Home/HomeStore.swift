@@ -39,7 +39,7 @@ struct HomeReducer: ReducerProtocol {
         var totalCurrencyBalance: Zatoshi {
             Zatoshi.from(decimal: shieldedBalance.total.decimalValue.decimalValue * zecPrice)
         }
-        
+
         var isDownloading: Bool {
             if case .downloading = synchronizerStatusSnapshot.syncStatus {
                 return true
@@ -62,6 +62,7 @@ struct HomeReducer: ReducerProtocol {
         case onDisappear
         case profile(ProfileReducer.Action)
         case request(RequestReducer.Action)
+        case rewindDone(Bool, SettingsReducer.Action)
         case send(SendFlowReducer.Action)
         case scan(ScanReducer.Action)
         case synchronizerStateChanged(SDKSynchronizerState)
@@ -109,7 +110,6 @@ struct HomeReducer: ReducerProtocol {
                         .map(HomeReducer.Action.synchronizerStateChanged)
                         .eraseToEffect()
                         .cancellable(id: CancelId.self, cancelInFlight: true)
-
                     return .concatenate(Effect(value: .updateRoute(nil)), syncEffect)
                 } else {
                     return Effect(value: .updateRoute(.notEnoughFreeDiskSpace))
@@ -154,27 +154,35 @@ struct HomeReducer: ReducerProtocol {
                 return .none
 
             case .profile(.settings(.quickRescan)):
-                do {
-                    try sdkSynchronizer.rewind(.quick)
-                } catch {
-                    // TODO [#221]: error we need to handle (https://github.com/zcash/secant-ios-wallet/issues/221)
-                }
                 state.route = nil
-                return .none
+                return Effect.task {
+                    do {
+                        try await sdkSynchronizer.rewind(.quick)
+                        return .rewindDone(true, .quickRescan)
+                    } catch {
+                        return .rewindDone(false, .quickRescan)
+                    }
+                }
 
             case .profile(.settings(.fullRescan)):
-                do {
-                    try sdkSynchronizer.rewind(.birthday)
-                } catch {
-                    // TODO [#221]: error we need to handle (https://github.com/zcash/secant-ios-wallet/issues/221)
-                }
                 state.route = nil
-                return .none
+                return Effect.task {
+                    do {
+                        try await sdkSynchronizer.rewind(.birthday)
+                        return .rewindDone(true, .fullRescan)
+                    } catch {
+                        return .rewindDone(false, .fullRescan)
+                    }
+                }
 
             case .profile:
                 return .none
 
             case .request:
+                return .none
+
+            case .rewindDone:
+                // TODO [#221]: error we need to handle (https://github.com/zcash/secant-ios-wallet/issues/221)
                 return .none
                 
             case .walletEvents(.updateRoute(.all)):

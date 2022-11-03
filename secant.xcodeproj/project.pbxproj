@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -23,6 +23,7 @@
 		0D535FDE271F4214009A9E3E /* Rubik-Italic-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D535FDC271F4214009A9E3E /* Rubik-Italic-VariableFont_wght.ttf */; };
 		0D535FDF271F4214009A9E3E /* Rubik-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D535FDD271F4214009A9E3E /* Rubik-VariableFont_wght.ttf */; };
 		0D535FE2271F9476009A9E3E /* EnumeratedChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D535FE1271F9476009A9E3E /* EnumeratedChip.swift */; };
+		0D5D9B8F2914620700DBD03F /* URLRouting in Frameworks */ = {isa = PBXBuildFile; productRef = 0D5D9B8E2914620700DBD03F /* URLRouting */; };
 		0D6D628B276A528E002FB4CC /* DropDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6D628A276A528D002FB4CC /* DropDelegate.swift */; };
 		0D7CE63427349B5D0020E050 /* View+WhenDraggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7CE63327349B5D0020E050 /* View+WhenDraggable.swift */; };
 		0D7DF08C271DCC0E00530046 /* ScreenBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7DF08B271DCC0E00530046 /* ScreenBackground.swift */; };
@@ -74,6 +75,7 @@
 		346715A528E2027D0035F7C4 /* CheckCircleStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346715A428E2027D0035F7C4 /* CheckCircleStore.swift */; };
 		346715A828E20FE40035F7C4 /* TransactionConfirmationSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346715A728E20FE40035F7C4 /* TransactionConfirmationSnapshotTests.swift */; };
 		346D41E428DF0B8600963F36 /* CheckCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346D41E328DF0B8600963F36 /* CheckCircle.swift */; };
+		34746ABF292690FF00C9D0F2 /* RecoveryPhraseRandomizerMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34746ABE292690FF00C9D0F2 /* RecoveryPhraseRandomizerMocks.swift */; };
 		34DA414728E4385800F8CC61 /* TransactionSendingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34DA414628E4385800F8CC61 /* TransactionSendingView.swift */; };
 		34DA414928E439CD00F8CC61 /* sendingTransaction.json in Resources */ = {isa = PBXBuildFile; fileRef = 34DA414828E439CD00F8CC61 /* sendingTransaction.json */; };
 		34E0AF0F28DEE4C70034CF37 /* HoldToSendButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0AF0E28DEE4C70034CF37 /* HoldToSendButton.swift */; };
@@ -149,7 +151,6 @@
 		9E7225F6288AC71A00DF7F17 /* MultiLineTextFieldStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7225F5288AC71A00DF7F17 /* MultiLineTextFieldStore.swift */; };
 		9E7CB6122869882D00A02233 /* WalletEventsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6112869882D00A02233 /* WalletEventsSnapshotTests.swift */; };
 		9E7CB6152869E8C300A02233 /* CircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6142869E8C300A02233 /* CircularProgress.swift */; };
-		9E7CB6182872D3DF00A02233 /* URLRouting in Frameworks */ = {isa = PBXBuildFile; productRef = 9E7CB6172872D3DF00A02233 /* URLRouting */; };
 		9E7CB61A287310EC00A02233 /* QRCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB619287310EC00A02233 /* QRCodeGenerator.swift */; };
 		9E7CB6202874143800A02233 /* AddressDetailsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB61F2874143800A02233 /* AddressDetailsStore.swift */; };
 		9E7CB6212874143800A02233 /* AddressDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB61E2874143800A02233 /* AddressDetailsView.swift */; };
@@ -174,7 +175,6 @@
 		9E9ECC9B28589E150099D5A2 /* ImportWalletSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ECC9428589E150099D5A2 /* ImportWalletSnapshotTests.swift */; };
 		9E9ECC9C28589E150099D5A2 /* OnboardingSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ECC9628589E150099D5A2 /* OnboardingSnapshotTests.swift */; };
 		9EAB466D285A0468002904A0 /* Parsing in Frameworks */ = {isa = PBXBuildFile; productRef = 9EAB466C285A0468002904A0 /* Parsing */; };
-		9EAB466F285A0468002904A0 /* _URLRouting in Frameworks */ = {isa = PBXBuildFile; productRef = 9EAB466E285A0468002904A0 /* _URLRouting */; };
 		9EAB4671285A1C77002904A0 /* Deeplink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAB4670285A1C77002904A0 /* Deeplink.swift */; };
 		9EAB4676285B5C7C002904A0 /* DeeplinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAB4675285B5C7C002904A0 /* DeeplinkTests.swift */; };
 		9EAB46782860A1D2002904A0 /* WalletEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAB46772860A1D2002904A0 /* WalletEvent.swift */; };
@@ -368,6 +368,7 @@
 		346715A428E2027D0035F7C4 /* CheckCircleStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckCircleStore.swift; sourceTree = "<group>"; };
 		346715A728E20FE40035F7C4 /* TransactionConfirmationSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionConfirmationSnapshotTests.swift; sourceTree = "<group>"; };
 		346D41E328DF0B8600963F36 /* CheckCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckCircle.swift; sourceTree = "<group>"; };
+		34746ABE292690FF00C9D0F2 /* RecoveryPhraseRandomizerMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseRandomizerMocks.swift; sourceTree = "<group>"; };
 		34DA414628E4385800F8CC61 /* TransactionSendingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionSendingView.swift; sourceTree = "<group>"; };
 		34DA414828E439CD00F8CC61 /* sendingTransaction.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sendingTransaction.json; sourceTree = "<group>"; };
 		34E0AF0E28DEE4C70034CF37 /* HoldToSendButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldToSendButton.swift; sourceTree = "<group>"; };
@@ -570,11 +571,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E6612312878337F00C75B70 /* Lottie in Frameworks */,
-				9E7CB6182872D3DF00A02233 /* URLRouting in Frameworks */,
+				0D5D9B8F2914620700DBD03F /* URLRouting in Frameworks */,
 				0DB4E0B42881FD9100947B78 /* ZcashLightClientKit in Frameworks */,
 				9E2AC0FF27D8EC120042AA47 /* MnemonicSwift in Frameworks */,
 				6654C73A2715A38000901167 /* ComposableArchitecture in Frameworks */,
-				9EAB466F285A0468002904A0 /* _URLRouting in Frameworks */,
 				9EAB466D285A0468002904A0 /* Parsing in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1200,22 +1200,22 @@
 		9E7FE0BB282D1DC200C374E8 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				F96B41EA273B50520021B49A /* Strings.swift */,
 				9E7FE0D4282D281800C374E8 /* Array+Chunked.swift */,
-				0DACFA8027208D940039EEA5 /* UInt+SuperscriptText.swift */,
-				0D7CE63327349B5D0020E050 /* View+WhenDraggable.swift */,
-				9E7FE0D2282D274E00C374E8 /* Date+Readable.swift */,
-				0DACFA7E27208CE00039EEA5 /* Clamped.swift */,
-				F9322DBF273B555C00C105B5 /* NavigationLinks.swift */,
-				9E6612322878338C00C75B70 /* LottieAnimation.swift */,
 				F9C165B3274031F600592F76 /* Bindings.swift */,
-				F9EEB8152742C2210032EEB8 /* WithStateBinding.swift */,
-				F93673D52742CB840099C6AF /* Previews.swift */,
-				0D35CC45277A36E00074316A /* ScrollableWhenScaled.swift */,
+				0DACFA7E27208CE00039EEA5 /* Clamped.swift */,
+				9E6713F9289BE0E100A6796F /* ClearBackgroundView.swift */,
+				9E7FE0D2282D274E00C374E8 /* Date+Readable.swift */,
 				2EDA07A327EDE2A900D6F09B /* DebugFrame.swift */,
 				9E2F1C832809B606004E65FE /* DebugMenu.swift */,
+				9E6612322878338C00C75B70 /* LottieAnimation.swift */,
+				F9322DBF273B555C00C105B5 /* NavigationLinks.swift */,
+				F93673D52742CB840099C6AF /* Previews.swift */,
 				9E7CB619287310EC00A02233 /* QRCodeGenerator.swift */,
-				9E6713F9289BE0E100A6796F /* ClearBackgroundView.swift */,
+				0D35CC45277A36E00074316A /* ScrollableWhenScaled.swift */,
+				F96B41EA273B50520021B49A /* Strings.swift */,
+				0DACFA8027208D940039EEA5 /* UInt+SuperscriptText.swift */,
+				0D7CE63327349B5D0020E050 /* View+WhenDraggable.swift */,
+				F9EEB8152742C2210032EEB8 /* WithStateBinding.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1474,6 +1474,7 @@
 				9EB863A629239DCB003D0F8B /* RecoveryPhraseRandomizerInterface.swift */,
 				9EB863A529239DCB003D0F8B /* RecoveryPhraseRandomizerLiveKey.swift */,
 				9EB863A429239DCB003D0F8B /* RecoveryPhraseRandomizerTestKey.swift */,
+				34746ABE292690FF00C9D0F2 /* RecoveryPhraseRandomizerMocks.swift */,
 			);
 			path = RecoveryPhraseRandomizer;
 			sourceTree = "<group>";
@@ -1755,10 +1756,9 @@
 				6654C7392715A38000901167 /* ComposableArchitecture */,
 				9E2AC0FE27D8EC120042AA47 /* MnemonicSwift */,
 				9EAB466C285A0468002904A0 /* Parsing */,
-				9EAB466E285A0468002904A0 /* _URLRouting */,
-				9E7CB6172872D3DF00A02233 /* URLRouting */,
 				9E6612302878337F00C75B70 /* Lottie */,
 				0DB4E0B32881FD9100947B78 /* ZcashLightClientKit */,
+				0D5D9B8E2914620700DBD03F /* URLRouting */,
 			);
 			productName = secant;
 			productReference = 0D4E7A0526B364170058B01E /* secant-testnet.app */;
@@ -1825,7 +1825,7 @@
 				};
 			};
 			buildConfigurationList = 0D4E7A0026B364170058B01E /* Build configuration list for PBXProject "secant" */;
-			compatibilityVersion = "Xcode 9.3";
+			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -1837,9 +1837,9 @@
 				6654C7382715A38000901167 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 				9E2AC0FD27D8EC120042AA47 /* XCRemoteSwiftPackageReference "MnemonicSwift" */,
 				9EAB466B285A0468002904A0 /* XCRemoteSwiftPackageReference "swift-parsing" */,
-				9E7CB6162872D3DF00A02233 /* XCRemoteSwiftPackageReference "swift-url-routing" */,
 				9E66122F2878337F00C75B70 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				0DB4E0B22881FD9100947B78 /* XCRemoteSwiftPackageReference "ZcashLightClientKit" */,
+				0D5D9B8D2914620700DBD03F /* XCRemoteSwiftPackageReference "swift-url-routing" */,
 			);
 			productRefGroup = 0D4E7A0626B364170058B01E /* Products */;
 			projectDirPath = "";
@@ -2019,6 +2019,7 @@
 				9EB863932922D036003D0F8B /* NumberFormatterInterface.swift in Sources */,
 				F9EEB8162742C2210032EEB8 /* WithStateBinding.swift in Sources */,
 				9E7FE0D3282D274E00C374E8 /* Date+Readable.swift in Sources */,
+				34746ABF292690FF00C9D0F2 /* RecoveryPhraseRandomizerMocks.swift in Sources */,
 				F93673D62742CB840099C6AF /* Previews.swift in Sources */,
 				9EB8638E2922CD4A003D0F8B /* FeedbackGeneratorInterface.swift in Sources */,
 				0D18581B272728D60046B928 /* PhraseChip.swift in Sources */,
@@ -2509,12 +2510,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		0D5D9B8D2914620700DBD03F /* XCRemoteSwiftPackageReference "swift-url-routing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-url-routing";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.1;
+			};
+		};
 		0DB4E0B22881FD9100947B78 /* XCRemoteSwiftPackageReference "ZcashLightClientKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/zcash/ZcashLightClientKit/";
 			requirement = {
-				kind = exactVersion;
-				version = "0.16.10-beta";
+				kind = upToNextMajorVersion;
+				minimumVersion = "0.17.0-beta";
 			};
 		};
 		6654C7382715A38000901167 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
@@ -2541,14 +2550,6 @@
 				minimumVersion = 3.0.0;
 			};
 		};
-		9E7CB6162872D3DF00A02233 /* XCRemoteSwiftPackageReference "swift-url-routing" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "http://github.com/pointfreeco/swift-url-routing";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.3.0;
-			};
-		};
 		9EAB466B285A0468002904A0 /* XCRemoteSwiftPackageReference "swift-parsing" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-parsing";
@@ -2560,6 +2561,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0D5D9B8E2914620700DBD03F /* URLRouting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0D5D9B8D2914620700DBD03F /* XCRemoteSwiftPackageReference "swift-url-routing" */;
+			productName = URLRouting;
+		};
 		0DB4E0B32881FD9100947B78 /* ZcashLightClientKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 0DB4E0B22881FD9100947B78 /* XCRemoteSwiftPackageReference "ZcashLightClientKit" */;
@@ -2580,20 +2586,10 @@
 			package = 9E66122F2878337F00C75B70 /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
 		};
-		9E7CB6172872D3DF00A02233 /* URLRouting */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9E7CB6162872D3DF00A02233 /* XCRemoteSwiftPackageReference "swift-url-routing" */;
-			productName = URLRouting;
-		};
 		9EAB466C285A0468002904A0 /* Parsing */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9EAB466B285A0468002904A0 /* XCRemoteSwiftPackageReference "swift-parsing" */;
 			productName = Parsing;
-		};
-		9EAB466E285A0468002904A0 /* _URLRouting */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9EAB466B285A0468002904A0 /* XCRemoteSwiftPackageReference "swift-parsing" */;
-			productName = _URLRouting;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -146,18 +146,16 @@ struct SendFlowReducer: ReducerProtocol {
                 do {
                     let storedWallet = try walletStorage.exportWallet()
                     let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase)
-                    guard let spendingKey = try derivationTool.deriveSpendingKeys(seedBytes, 1).first else {
-                        return Effect(value: .updateRoute(.failure))
-                    }
+                    let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0)
 
                     state.isSendingTransaction = true
 
+                    let recipient = try Recipient(state.address, network: zcashSDKEnvironment.network.networkType)
                     let sendTransActionEffect = sdkSynchronizer.sendTransaction(
                         with: spendingKey,
                         zatoshi: state.amount,
-                        to: state.address,
-                        memo: state.addMemoState ? state.memoState.text : nil,
-                        from: 0
+                        to: recipient,
+                        memo: state.addMemoState ? state.memoState.text : nil
                     )
                     .receive(on: mainQueue)
                     .map(SendFlowReducer.Action.sendTransactionResult)

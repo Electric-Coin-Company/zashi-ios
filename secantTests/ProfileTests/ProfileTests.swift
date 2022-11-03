@@ -10,20 +10,24 @@ import XCTest
 import ComposableArchitecture
 
 class ProfileTests: XCTestCase {
-    func testSynchronizerStateChanged_AnyButSynced() throws {
+    @MainActor func testSynchronizerStateChanged_AnyButSynced() async throws {
         let store = TestStore(
             initialState: .placeholder,
             reducer: ProfileReducer()
         )
-        
+
         store.dependencies.appVersion = .mock
         store.dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
 
-        store.send(.onAppear) { state in
-            state.address = "ff3927e1f83df9b1b0dc75540ddc59ee435eecebae914d2e6dfe8576fbedc9a8"
+        _ = await store.send(.onAppear)
+
+        await store.receive(.onAppearFinished("ztestsapling1edm52k336nk70gxqxedd89slrrf5xwnnp5rt6gqnk0tgw4mynv6fcx42ym6x27yac5amvfvwypz")) { state in
+            state.address = "ztestsapling1edm52k336nk70gxqxedd89slrrf5xwnnp5rt6gqnk0tgw4mynv6fcx42ym6x27yac5amvfvwypz"
             state.appVersion = "0.0.1"
             state.appBuild = "31"
-            state.sdkVersion = "0.16.5-beta"
+            state.sdkVersion = "0.17.0-beta"
         }
+
+        await store.finish(timeout: NSEC_PER_SEC * 5)
     }
 }
