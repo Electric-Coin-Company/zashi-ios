@@ -14,15 +14,14 @@ extension ZcashSDKEnvironment: DependencyKey {
     static let liveValue = Self(
         defaultBirthday: BlockHeight(ZcashSDKConstants.defaultBlockHeight),
         endpoint: LightWalletEndpoint(
-            address: ZcashSDKConstants.endpointMainnetAddress,
+            address: ZcashSDKConstants.endpointTestnetAddress,
             port: ZcashSDKConstants.endpointPort,
             secure: true,
             streamingCallTimeoutInMillis: ZcashSDKConstants.streamingCallTimeoutInMillis
         ),
-        isMainnet: { true },
         lightWalletService: LightWalletGRPCService(
             endpoint: LightWalletEndpoint(
-                address: ZcashSDKConstants.endpointMainnetAddress,
+                address: ZcashSDKConstants.endpointTestnetAddress,
                 port: ZcashSDKConstants.endpointPort,
                 secure: true,
                 streamingCallTimeoutInMillis: ZcashSDKConstants.streamingCallTimeoutInMillis
@@ -30,8 +29,8 @@ extension ZcashSDKEnvironment: DependencyKey {
         ),
         memoCharLimit: 512,
         mnemonicWordsMaxCount: ZcashSDKConstants.mnemonicWordsMaxCount,
-        network: ZcashNetworkBuilder.network(for: .mainnet),
+        network: ZcashNetworkBuilder.network(for: .testnet),
         requiredTransactionConfirmations: ZcashSDKConstants.requiredTransactionConfirmations,
-        sdkVersion: "0.16.5-beta"
+        sdkVersion: "0.17.0-beta"
     )
 }

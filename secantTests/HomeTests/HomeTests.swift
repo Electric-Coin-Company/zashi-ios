@@ -168,8 +168,8 @@ class HomeTests: XCTestCase {
         // the .onDisappear action cancles the observer of the synchronizer status change.
         store.send(.onDisappear)
     }
-    
-    func testQuickRescan_ResetToHomeScreen() throws {
+
+    @MainActor func testQuickRescan_ResetToHomeScreen() async throws {
         let homeState = HomeReducer.State(
             route: .profile,
             balanceBreakdownState: .placeholder,
@@ -182,18 +182,20 @@ class HomeTests: XCTestCase {
             synchronizerStatusSnapshot: .default,
             walletEventsState: .emptyPlaceHolder
         )
-        
+
         let store = TestStore(
             initialState: homeState,
             reducer: HomeReducer()
         )
-        
-        store.send(.profile(.settings(.quickRescan))) { state in
+
+        _ = await store.send(.profile(.settings(.quickRescan))) { state in
             state.route = nil
         }
+
+        await store.receive(.rewindDone(true, .quickRescan))
     }
-    
-    func testFullRescan_ResetToHomeScreen() throws {
+
+    @MainActor func testFullRescan_ResetToHomeScreen() async throws {
         let homeState = HomeReducer.State(
             route: .profile,
             balanceBreakdownState: .placeholder,
@@ -206,14 +208,16 @@ class HomeTests: XCTestCase {
             synchronizerStatusSnapshot: .default,
             walletEventsState: .emptyPlaceHolder
         )
-        
+
         let store = TestStore(
             initialState: homeState,
             reducer: HomeReducer()
         )
-        
-        store.send(.profile(.settings(.fullRescan))) { state in
+
+        _ = await store.send(.profile(.settings(.fullRescan))) { state in
             state.route = nil
         }
+
+        await store.receive(.rewindDone(true, .fullRescan))
     }
 }

@@ -64,12 +64,12 @@ class WalletEventsSnapshotTests: XCTestCase {
     
     func testWalletEventDetailSnapshot_sent() throws {
         let transaction = TransactionState(
-            memo:
+            memo: try? Memo(string:
                 """
                 Testing some long memo so I can see many lines of text \
                 instead of just one. This can take some time and I'm \
                 bored to write all this stuff.
-                """,
+                """),
             minedHeight: 1_875_256,
             zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
             fee: Zatoshi(1_000_000),
@@ -111,12 +111,12 @@ class WalletEventsSnapshotTests: XCTestCase {
     
     func testWalletEventDetailSnapshot_received() throws {
         let transaction = TransactionState(
-            memo:
+            memo: try? Memo(string:
                 """
                 Testing some long memo so I can see many lines of text \
                 instead of just one. This can take some time and I'm \
                 bored to write all this stuff.
-                """,
+                """),
             minedHeight: 1_875_256,
             zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
             fee: Zatoshi(1_000_000),
@@ -158,12 +158,12 @@ class WalletEventsSnapshotTests: XCTestCase {
     
     func testWalletEventDetailSnapshot_pending() throws {
         let transaction = TransactionState(
-            memo:
+            memo: try? Memo(string:
                 """
                 Testing some long memo so I can see many lines of text \
                 instead of just one. This can take some time and I'm \
                 bored to write all this stuff.
-                """,
+                """),
             minedHeight: 1_875_256,
             zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
             fee: Zatoshi(1_000_000),
@@ -211,12 +211,12 @@ class WalletEventsSnapshotTests: XCTestCase {
     func testWalletEventDetailSnapshot_failed() throws {
         let transaction = TransactionState(
             errorMessage: "possible roll back",
-            memo:
+            memo: try? Memo(string:
                 """
                 Testing some long memo so I can see many lines of text \
                 instead of just one. This can take some time and I'm \
                 bored to write all this stuff.
-                """,
+                """),
             minedHeight: 1_875_256,
             zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
             fee: Zatoshi(1_000_000),

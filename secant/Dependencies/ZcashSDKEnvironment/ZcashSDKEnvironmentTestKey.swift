@@ -20,7 +20,6 @@ extension ZcashSDKEnvironment: TestDependencyKey {
             secure: true,
             streamingCallTimeoutInMillis: ZcashSDKConstants.streamingCallTimeoutInMillis
         ),
-        isMainnet: { false },
         lightWalletService: LightWalletGRPCService(
             endpoint: LightWalletEndpoint(
                 address: ZcashSDKConstants.endpointTestnetAddress,
@@ -33,6 +32,6 @@ extension ZcashSDKEnvironment: TestDependencyKey {
         mnemonicWordsMaxCount: ZcashSDKConstants.mnemonicWordsMaxCount,
         network: ZcashNetworkBuilder.network(for: .testnet),
         requiredTransactionConfirmations: ZcashSDKConstants.requiredTransactionConfirmations,
-        sdkVersion: "0.16.5-beta"
+        sdkVersion: "0.17.0-beta"
     )
 }

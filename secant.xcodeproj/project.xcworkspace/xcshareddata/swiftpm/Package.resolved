@@ -185,8 +185,8 @@
       "kind" : "remoteSourceControl",
       "location" : "http://github.com/pointfreeco/swift-url-routing",
       "state" : {
-        "revision" : "5bf79bb370015e43842a61d558a9ee053171124e",
-        "version" : "0.3.0"
+        "revision" : "80e8a0257ccdd639e31f709954ceca6b690fdc67",
+        "version" : "0.3.1"
       }
     },
     {
@@ -201,10 +201,10 @@
     {
       "identity" : "zcash-light-client-ffi",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/zcash-hackworks/zcash-light-client-ffi.git",
+      "location" : "https://github.com/zcash-hackworks/zcash-light-client-ffi",
       "state" : {
-        "revision" : "b7e8a2abab84c44046b4afe4ee4522a0fa2fcc7f",
-        "version" : "0.0.3"
+        "revision" : "fad9802b907822d5a1877584c91f3786824521b7",
+        "version" : "0.1.0"
       }
     },
     {
@@ -212,8 +212,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/zcash/ZcashLightClientKit",
       "state" : {
-        "revision" : "9e41fb43757fd7b0eb8e817320537230774258cf",
-        "version" : "0.16.10-beta"
+        "revision" : "d9b85b40ad36ac5183f44b6db9805e44171ee988",
+        "version" : "0.17.0-beta"
       }
     }
   ],

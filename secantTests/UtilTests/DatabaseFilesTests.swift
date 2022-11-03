@@ -9,8 +9,6 @@ import XCTest
 import ZcashLightClientKit
 @testable import secant_testnet
 
-extension String: Error {}
-
 extension DatabaseFiles.DatabaseFilesError {
     var debugValue: String {
         switch self {
