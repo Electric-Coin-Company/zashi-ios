@@ -17,13 +17,8 @@ class BalanceBreakdownTests: XCTestCase {
 
         let store = TestStore(
             initialState: .placeholder,
-            reducer: BalanceBreakdownReducer.default,
-            environment:
-                BalanceBreakdownEnvironment(
-                    numberFormatter: .live(),
-                    SDKSynchronizer: MockWrappedSDKSynchronizer(),
-                    scheduler: testScheduler.eraseToAnyScheduler()
-                )
+            reducer: BalanceBreakdown()
+                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
         )
         
         store.send(.onAppear)

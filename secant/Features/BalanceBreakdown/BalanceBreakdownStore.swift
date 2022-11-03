@@ -9,65 +9,38 @@ import Foundation
 import ComposableArchitecture
 import ZcashLightClientKit
 
-typealias BalanceBreakdownReducer = Reducer<BalanceBreakdownState, BalanceBreakdownAction, BalanceBreakdownEnvironment>
-typealias BalanceBreakdownStore = Store<BalanceBreakdownState, BalanceBreakdownAction>
-typealias BalanceBreakdownViewStore = ViewStore<BalanceBreakdownState, BalanceBreakdownAction>
+typealias BalanceBreakdownStore = Store<BalanceBreakdown.State, BalanceBreakdown.Action>
 
-// MARK: - State
-
-struct BalanceBreakdownState: Equatable {
-    var autoShieldingTreshold: Zatoshi
-    var latestBlock: String
-    var shieldedBalance: WalletBalance
-    var transparentBalance: WalletBalance
-    
-    var totalBalance: Zatoshi {
-        shieldedBalance.total + transparentBalance.total
-    }
-}
-
-// MARK: - Action
-
-enum BalanceBreakdownAction: Equatable {
-    case onAppear
-    case onDisappear
-    case synchronizerStateChanged(WrappedSDKSynchronizerState)
-    case updateLatestBlock
-    case updateSynchronizerStatus
-}
-
-// MARK: - Environment
-
-struct BalanceBreakdownEnvironment {
-    let numberFormatter: WrappedNumberFormatter
-    let SDKSynchronizer: WrappedSDKSynchronizer
-    let scheduler: AnySchedulerOf<DispatchQueue>
-}
-
-extension BalanceBreakdownEnvironment {
-    static let live = BalanceBreakdownEnvironment(
-        numberFormatter: .live(),
-        SDKSynchronizer: LiveWrappedSDKSynchronizer(),
-        scheduler: DispatchQueue.main.eraseToAnyScheduler()
-    )
-
-    static let mock = BalanceBreakdownEnvironment(
-        numberFormatter: .live(),
-        SDKSynchronizer: MockWrappedSDKSynchronizer(),
-        scheduler: DispatchQueue.main.eraseToAnyScheduler()
-    )
-}
-
-// MARK: - Reducer
-
-extension BalanceBreakdownReducer {
+struct BalanceBreakdown: ReducerProtocol {
     private enum CancelId {}
+    
+    struct State: Equatable {
+        var autoShieldingTreshold: Zatoshi
+        var latestBlock: String
+        var shieldedBalance: WalletBalance
+        var transparentBalance: WalletBalance
+        
+        var totalBalance: Zatoshi {
+            shieldedBalance.total + transparentBalance.total
+        }
+    }
 
-    static let `default` = BalanceBreakdownReducer { state, action, environment in
+    @Dependency(\.numberFormatter) var numberFormatter
+    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+
+    enum Action: Equatable {
+        case onAppear
+        case onDisappear
+        case synchronizerStateChanged(WrappedSDKSynchronizerState)
+        case updateLatestBlock
+        case updateSynchronizerStatus
+    }
+
+    func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
         switch action {
         case .onAppear:
-            return environment.SDKSynchronizer.stateChanged
-                .map(BalanceBreakdownAction.synchronizerStateChanged)
+            return sdkSynchronizer.stateChanged
+                .map(BalanceBreakdown.Action.synchronizerStateChanged)
                 .eraseToEffect()
                 .cancellable(id: CancelId.self, cancelInFlight: true)
 
@@ -77,21 +50,21 @@ extension BalanceBreakdownReducer {
         case .synchronizerStateChanged(.synced):
             return Effect(value: .updateSynchronizerStatus)
             
-        case .synchronizerStateChanged(let synchronizerState):
+        case .synchronizerStateChanged:
             return Effect(value: .updateSynchronizerStatus)
             
         case .updateSynchronizerStatus:
-            if let shieldedBalance = environment.SDKSynchronizer.latestScannedSynchronizerState?.shieldedBalance {
+            if let shieldedBalance = sdkSynchronizer.latestScannedSynchronizerState?.shieldedBalance {
                 state.shieldedBalance = shieldedBalance
             }
-            if let transparentBalance = environment.SDKSynchronizer.latestScannedSynchronizerState?.transparentBalance {
+            if let transparentBalance = sdkSynchronizer.latestScannedSynchronizerState?.transparentBalance {
                 state.transparentBalance = transparentBalance
             }
             return Effect(value: .updateLatestBlock)
             
         case .updateLatestBlock:
-            guard let latestBlockNumber = environment.SDKSynchronizer.latestScannedSynchronizerState?.latestScannedHeight,
-            let latestBlock = environment.numberFormatter.string(NSDecimalNumber(value: latestBlockNumber)) else {
+            guard let latestBlockNumber = sdkSynchronizer.latestScannedSynchronizerState?.latestScannedHeight,
+            let latestBlock = numberFormatter.string(NSDecimalNumber(value: latestBlockNumber)) else {
                 state.latestBlock = "unknown"
                 return .none
             }
@@ -103,8 +76,8 @@ extension BalanceBreakdownReducer {
 
 // MARK: - Placeholders
 
-extension BalanceBreakdownState {
-    static let placeholder = BalanceBreakdownState(
+extension BalanceBreakdown.State {
+    static let placeholder = BalanceBreakdown.State(
         autoShieldingTreshold: Zatoshi(1_000_000),
         latestBlock: "unknown",
         shieldedBalance: WalletBalance.zero,
@@ -115,7 +88,6 @@ extension BalanceBreakdownState {
 extension BalanceBreakdownStore {
     static let placeholder = BalanceBreakdownStore(
         initialState: .placeholder,
-        reducer: .default,
-        environment: .live
+        reducer: BalanceBreakdown()
     )
 }

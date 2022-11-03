@@ -24,13 +24,13 @@ struct RecoveryPhraseDisplay: ReducerProtocol {
     }
     
     @Dependency(\.pasteboard) var pasteboard
-    @Dependency(\.newPhrase) var newPhrase
+    @Dependency(\.newRecoveryPhrase) var newRecoveryPhrase
 
     func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
         switch action {
         case .createPhrase:
             return .run { send in
-                await send(.phraseResponse(newPhrase()))
+                await send(.phraseResponse(newRecoveryPhrase()))
             }
             
         case .copyToBufferPressed:

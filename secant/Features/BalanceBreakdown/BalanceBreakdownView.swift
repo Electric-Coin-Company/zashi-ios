@@ -9,7 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import ZcashLightClientKit
 
-struct BalanceBreakdown: View {
+struct BalanceBreakdownView: View {
     let store: BalanceBreakdownStore
     
     var body: some View {
@@ -48,7 +48,7 @@ struct BalanceBreakdown: View {
     }
 }
 
-extension BalanceBreakdown {
+extension BalanceBreakdownView {
     func balanceView(title: String, _ balance: Zatoshi, titleColor: Color = .white) -> some View {
         VStack(alignment: .leading) {
             Text("\(title)")
@@ -62,7 +62,7 @@ extension BalanceBreakdown {
 
 struct BalanceBreakdown_Previews: PreviewProvider {
     static var previews: some View {
-        BalanceBreakdown(store: .placeholder)
+        BalanceBreakdownView(store: .placeholder)
             .preferredColorScheme(.dark)
     }
 }
