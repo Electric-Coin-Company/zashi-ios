@@ -28,7 +28,7 @@ struct HomeView: View {
                 .onAppear(perform: { viewStore.send(.onAppear) })
                 .onDisappear(perform: { viewStore.send(.onDisappear) })
                 .fullScreenCover(isPresented: viewStore.bindingForRoute(.balanceBreakdown)) {
-                    BalanceBreakdown(store: store.balanceBreakdownStore())
+                    BalanceBreakdownView(store: store.balanceBreakdownStore())
                 }
             }
             .navigationLinkEmpty(

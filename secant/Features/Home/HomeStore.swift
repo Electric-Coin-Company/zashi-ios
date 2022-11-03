@@ -9,6 +9,8 @@ typealias HomeReducer = Reducer<HomeState, HomeAction, HomeEnvironment>
 typealias HomeStore = Store<HomeState, HomeAction>
 typealias HomeViewStore = ViewStore<HomeState, HomeAction>
 
+typealias AnyBalanceBreakdownReducer = AnyReducer<BalanceBreakdown.State, BalanceBreakdown.Action, HomeEnvironment>
+
 // MARK: State
 
 struct HomeState: Equatable {
@@ -23,7 +25,7 @@ struct HomeState: Equatable {
 
     var route: Route?
 
-    var balanceBreakdown: BalanceBreakdownState
+    var balanceBreakdown: BalanceBreakdown.State
     var drawerOverlay: DrawerOverlay
     var profileState: ProfileState
     var requestState: RequestState
@@ -58,7 +60,7 @@ struct HomeState: Equatable {
 // MARK: Action
 
 enum HomeAction: Equatable {
-    case balanceBreakdown(BalanceBreakdownAction)
+    case balanceBreakdown(BalanceBreakdown.Action)
     case debugMenuStartup
     case onAppear
     case onDisappear
@@ -285,16 +287,13 @@ extension HomeReducer {
         }
     )
     
-    private static let balanceBreakdownReducer: HomeReducer = BalanceBreakdownReducer.default.pullback(
+    private static let balanceBreakdownReducer: HomeReducer = AnyBalanceBreakdownReducer { _ in
+        BalanceBreakdown()
+    }
+    .pullback(
         state: \HomeState.balanceBreakdown,
         action: /HomeAction.balanceBreakdown,
-        environment: { environment in
-            BalanceBreakdownEnvironment(
-                numberFormatter: .live(),
-                SDKSynchronizer: environment.SDKSynchronizer,
-                scheduler: environment.scheduler
-            )
-        }
+        environment: { $0 }
     )
 }
 

@@ -1,5 +1,5 @@
 //
-//  FeedbackGenerator.swift
+//  FeedbackGeneratorKey.swift
 //  secant-testnet
 //
 //  Created by Lukáš Korba on 02.11.2022.
@@ -7,14 +7,14 @@
 
 import ComposableArchitecture
 
-private enum FeedbackGenerator: DependencyKey {
+private enum FeedbackGeneratorKey: DependencyKey {
     static let liveValue = WrappedFeedbackGenerator.haptic
     static let testValue = WrappedFeedbackGenerator.silent
 }
 
 extension DependencyValues {
     var feedbackGenerator: WrappedFeedbackGenerator {
-        get { self[FeedbackGenerator.self] }
-        set { self[FeedbackGenerator.self] = newValue }
+        get { self[FeedbackGeneratorKey.self] }
+        set { self[FeedbackGeneratorKey.self] = newValue }
     }
 }
