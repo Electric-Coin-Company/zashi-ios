@@ -13,6 +13,8 @@ typealias OnboardingFlowReducer = Reducer<OnboardingFlowState, OnboardingFlowAct
 typealias OnboardingFlowStore = Store<OnboardingFlowState, OnboardingFlowAction>
 typealias OnboardingFlowViewStore = ViewStore<OnboardingFlowState, OnboardingFlowAction>
 
+typealias AnyImportWalletReducer = AnyReducer<ImportWallet.State, ImportWallet.Action, OnboardingFlowEnvironment>
+
 // MARK: - State
 
 struct OnboardingFlowState: Equatable {
@@ -46,7 +48,7 @@ struct OnboardingFlowState: Equatable {
     }
     
     /// Import Wallet
-    var importWalletState: ImportWalletState
+    var importWalletState: ImportWallet.State
 }
 
 extension OnboardingFlowState {
@@ -93,7 +95,7 @@ enum OnboardingFlowAction: Equatable {
     case updateRoute(OnboardingFlowState.Route?)
     case createNewWallet
     case importExistingWallet
-    case importWallet(ImportWalletAction)
+    case importWallet(ImportWallet.Action)
 }
 
 // MARK: - Environment
@@ -168,16 +170,13 @@ extension OnboardingFlowReducer {
         }
     }
     
-    private static let importWalletReducer: OnboardingFlowReducer = ImportWalletReducer.default.pullback(
+    private static let importWalletReducer: OnboardingFlowReducer = AnyImportWalletReducer { _ in
+        ImportWallet()
+    }
+    .pullback(
         state: \OnboardingFlowState.importWalletState,
         action: /OnboardingFlowAction.importWallet,
-        environment: { environment in
-            ImportWalletEnvironment(
-                mnemonic: environment.mnemonic,
-                walletStorage: environment.walletStorage,
-                zcashSDKEnvironment: environment.zcashSDKEnvironment
-            )
-        }
+        environment: { $0 }
     )
 }
 
