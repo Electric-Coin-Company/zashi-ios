@@ -7,6 +7,7 @@
 
 import Foundation
 import ZcashLightClientKit
+import ComposableArchitecture
 
 // swiftlint:disable:next private_over_fileprivate strict_fileprivate
 fileprivate enum ZcashSDKConstants {
@@ -79,4 +80,16 @@ extension ZCashSDKEnvironment {
         requiredTransactionConfirmations: ZcashSDKConstants.requiredTransactionConfirmations,
         sdkVersion: "0.16.5-beta"
     )
+}
+
+private enum ZCashSDKEnvironmentKey: DependencyKey {
+    static let liveValue = ZCashSDKEnvironment.mainnet
+    static let testValue = ZCashSDKEnvironment.testnet
+}
+
+extension DependencyValues {
+    var zcashSDKEnvironment: ZCashSDKEnvironment {
+        get { self[ZCashSDKEnvironmentKey.self] }
+        set { self[ZCashSDKEnvironmentKey.self] = newValue }
+    }
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ComposableArchitecture
 
 struct RecoveryPhraseRandomizer {
     func random(phrase: RecoveryPhrase) -> RecoveryPhraseValidationFlow.State {
@@ -26,8 +27,6 @@ struct RecoveryPhraseRandomizer {
         }
     }
 }
-
-import ComposableArchitecture
 
 private enum RecoveryPhraseRandomKey: DependencyKey {
     static let liveValue = WrappedRecoveryPhraseRandomizer.live

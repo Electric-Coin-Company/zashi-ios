@@ -12,16 +12,9 @@ import ComposableArchitecture
 // swiftlint:disable type_body_length
 class ImportWalletTests: XCTestCase {
     func testOnAppear() throws {
-        let testEnvironment = ImportWalletEnvironment(
-            mnemonic: .mock,
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
-        )
-
         let store = TestStore(
             initialState: .placeholder,
-            reducer: ImportWalletReducer.default,
-            environment: testEnvironment
+            reducer: ImportWallet()
         )
         
         store.send(.onAppear) { state in
@@ -30,16 +23,10 @@ class ImportWalletTests: XCTestCase {
     }
     
     func testWordsCount() throws {
-        let testEnvironment = ImportWalletEnvironment(
-            mnemonic: .live,
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
-        )
-
         let store = TestStore(
             initialState: .placeholder,
-            reducer: ImportWalletReducer.default,
-            environment: testEnvironment
+            reducer: ImportWallet()
+                .dependency(\.mnemonic, .live)
         )
         
         store.send(.binding(.set(\.$importedSeedPhrase, "one two three"))) { state in
@@ -50,18 +37,12 @@ class ImportWalletTests: XCTestCase {
     }
 
     func testMaxWordsInvalidMnemonic() throws {
-        let testEnvironment = ImportWalletEnvironment(
-            mnemonic: .live,
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
+        let store = TestStore(
+            initialState: ImportWallet.State(maxWordsCount: 24),
+            reducer: ImportWallet()
+                .dependency(\.mnemonic, .live)
         )
 
-        let store = TestStore(
-            initialState: ImportWalletState(maxWordsCount: 24),
-            reducer: ImportWalletReducer.default,
-            environment: testEnvironment
-        )
-        
         store.send(.binding(.set(\.$importedSeedPhrase, "a a a a a a a a a a a a a a a a a a a a a a a a"))) { state in
             state.importedSeedPhrase = "a a a a a a a a a a a a a a a a a a a a a a a a"
             state.wordsCount = 24
@@ -71,18 +52,12 @@ class ImportWalletTests: XCTestCase {
     }
 
     func testValidMnemonic() throws {
-        let testEnvironment = ImportWalletEnvironment(
-            mnemonic: .live,
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
+        let store = TestStore(
+            initialState: ImportWallet.State(maxWordsCount: 24),
+            reducer: ImportWallet()
+                .dependency(\.mnemonic, .live)
         )
 
-        let store = TestStore(
-            initialState: ImportWalletState(maxWordsCount: 24),
-            reducer: ImportWalletReducer.default,
-            environment: testEnvironment
-        )
-        
         store.send(
             .binding(
                 .set(
@@ -109,16 +84,9 @@ class ImportWalletTests: XCTestCase {
     }
     
     func testInvalidBirthdayHeight_lessThanDefault() throws {
-        let testEnvironment = ImportWalletEnvironment(
-            mnemonic: .mock,
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
-        )
-
         let store = TestStore(
             initialState: .placeholder,
-            reducer: ImportWalletReducer.default,
-            environment: testEnvironment
+            reducer: ImportWallet()
         )
         
         store.send(.binding(.set(\.$birthdayHeight, "1600000"))) { state in
@@ -127,16 +95,9 @@ class ImportWalletTests: XCTestCase {
     }
 
     func testInvalidBirthdayHeight_invalidInput() throws {
-        let testEnvironment = ImportWalletEnvironment(
-            mnemonic: .mock,
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
-        )
-
         let store = TestStore(
             initialState: .placeholder,
-            reducer: ImportWalletReducer.default,
-            environment: testEnvironment
+            reducer: ImportWallet()
         )
         
         store.send(.binding(.set(\.$birthdayHeight, "abc"))) { state in
@@ -145,16 +106,9 @@ class ImportWalletTests: XCTestCase {
     }
 
     func testInvalidBirthdayHeight_validInput() throws {
-        let testEnvironment = ImportWalletEnvironment(
-            mnemonic: .mock,
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
-        )
-
         let store = TestStore(
             initialState: .placeholder,
-            reducer: ImportWalletReducer.default,
-            environment: testEnvironment
+            reducer: ImportWallet()
         )
         
         store.send(.binding(.set(\.$birthdayHeight, "1700000"))) { state in
@@ -164,15 +118,9 @@ class ImportWalletTests: XCTestCase {
     }
     
     func testDismissAlert() throws {
-        let testEnvironment = ImportWalletEnvironment(
-            mnemonic: .mock,
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
-        )
-
         let store = TestStore(
             initialState:
-                ImportWalletState(
+                ImportWallet.State(
                     alert: AlertState(
                         title: TextState("Success"),
                         message: TextState("The wallet has been successfully recovered."),
@@ -182,8 +130,7 @@ class ImportWalletTests: XCTestCase {
                         )
                     )
                 ),
-            reducer: ImportWalletReducer.default,
-            environment: testEnvironment
+            reducer: ImportWallet()
         )
         
         store.send(.dismissAlert) { state in
@@ -192,16 +139,10 @@ class ImportWalletTests: XCTestCase {
     }
     
     func testFormValidity_validBirthday_invalidMnemonic() throws {
-        let testEnvironment = ImportWalletEnvironment(
-            mnemonic: .live,
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
-        )
-
         let store = TestStore(
-            initialState: ImportWalletState(maxWordsCount: 24),
-            reducer: ImportWalletReducer.default,
-            environment: testEnvironment
+            initialState: ImportWallet.State(maxWordsCount: 24),
+            reducer: ImportWallet()
+                .dependency(\.mnemonic, .live)
         )
         
         store.send(.binding(.set(\.$birthdayHeight, "1700000"))) { state in
@@ -222,18 +163,12 @@ class ImportWalletTests: XCTestCase {
     }
     
     func testFormValidity_invalidBirthday_invalidMnemonic() throws {
-        let testEnvironment = ImportWalletEnvironment(
-            mnemonic: .live,
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
+        let store = TestStore(
+            initialState: ImportWallet.State(maxWordsCount: 24),
+            reducer: ImportWallet()
+                .dependency(\.mnemonic, .live)
         )
 
-        let store = TestStore(
-            initialState: ImportWalletState(maxWordsCount: 24),
-            reducer: ImportWalletReducer.default,
-            environment: testEnvironment
-        )
-        
         store.send(.binding(.set(\.$birthdayHeight, "1600000"))) { state in
             state.birthdayHeight = "1600000"
         }
@@ -251,18 +186,12 @@ class ImportWalletTests: XCTestCase {
     }
     
     func testFormValidity_invalidBirthday_validMnemonic() throws {
-        let testEnvironment = ImportWalletEnvironment(
-            mnemonic: .live,
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
+        let store = TestStore(
+            initialState: ImportWallet.State(maxWordsCount: 24),
+            reducer: ImportWallet()
+                .dependency(\.mnemonic, .live)
         )
 
-        let store = TestStore(
-            initialState: ImportWalletState(maxWordsCount: 24),
-            reducer: ImportWalletReducer.default,
-            environment: testEnvironment
-        )
-        
         store.send(.binding(.set(\.$birthdayHeight, "1600000"))) { state in
             state.birthdayHeight = "1600000"
         }
@@ -297,18 +226,12 @@ class ImportWalletTests: XCTestCase {
     }
     
     func testFormValidity_validBirthday_validMnemonic() throws {
-        let testEnvironment = ImportWalletEnvironment(
-            mnemonic: .live,
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
+        let store = TestStore(
+            initialState: ImportWallet.State(maxWordsCount: 24),
+            reducer: ImportWallet()
+                .dependency(\.mnemonic, .live)
         )
 
-        let store = TestStore(
-            initialState: ImportWalletState(maxWordsCount: 24),
-            reducer: ImportWalletReducer.default,
-            environment: testEnvironment
-        )
-        
         store.send(.binding(.set(\.$birthdayHeight, "1700000"))) { state in
             state.birthdayHeight = "1700000"
             state.birthdayHeightValue = 1_700_000
@@ -344,18 +267,12 @@ class ImportWalletTests: XCTestCase {
     }
     
     func testFormValidity_noBirthday_validMnemonic() throws {
-        let testEnvironment = ImportWalletEnvironment(
-            mnemonic: .live,
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
+        let store = TestStore(
+            initialState: ImportWallet.State(maxWordsCount: 24),
+            reducer: ImportWallet()
+                .dependency(\.mnemonic, .live)
         )
 
-        let store = TestStore(
-            initialState: ImportWalletState(maxWordsCount: 24),
-            reducer: ImportWalletReducer.default,
-            environment: testEnvironment
-        )
-        
         store.send(
             .binding(
                 .set(
@@ -384,20 +301,14 @@ class ImportWalletTests: XCTestCase {
             )
         }
     }
-    
+
     func testRestoreWallet() throws {
         var storage = WalletStorage(secItem: .live)
         storage.zcashStoredWalletPrefix = "test_importWallet_"
         storage.deleteData(forKey: WalletStorage.Constants.zcashStoredWallet)
 
-        let testEnvironment = ImportWalletEnvironment(
-            mnemonic: .live,
-            walletStorage: .live(walletStorage: storage),
-            zcashSDKEnvironment: .testnet
-        )
-
         let store = TestStore(
-            initialState: ImportWalletState(
+            initialState: ImportWallet.State(
                 alert: nil,
                 importedSeedPhrase: """
             still champion voice habit trend flight \
@@ -412,8 +323,9 @@ class ImportWalletTests: XCTestCase {
                 isValidNumberOfWords: true,
                 birthdayHeightValue: 1_700_000
             ),
-            reducer: ImportWalletReducer.default,
-            environment: testEnvironment
+            reducer: ImportWallet()
+                .dependency(\.mnemonic, .live)
+                .dependency(\.walletStorage, .live(walletStorage: storage))
         )
         
         store.send(.restoreWallet) { state in
