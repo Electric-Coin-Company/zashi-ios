@@ -5,6 +5,8 @@ typealias ProfileReducer = Reducer<ProfileState, ProfileAction, ProfileEnvironme
 typealias ProfileStore = Store<ProfileState, ProfileAction>
 typealias ProfileViewStore = ViewStore<ProfileState, ProfileAction>
 
+typealias AnySettingsReducer = AnyReducer<SettingsReducer.State, SettingsReducer.Action, ProfileEnvironment>
+
 // MARK: - State
 
 struct ProfileState: Equatable {
@@ -19,7 +21,7 @@ struct ProfileState: Equatable {
     var appVersion = ""
     var route: Route?
     var sdkVersion = ""
-    var settingsState: SettingsState
+    var settingsState: SettingsReducer.State
 }
 
 // MARK: - Action
@@ -28,7 +30,7 @@ enum ProfileAction: Equatable {
     case addressDetails(AddressDetailsAction)
     case back
     case onAppear
-    case settings(SettingsAction)
+    case settings(SettingsReducer.Action)
     case updateRoute(ProfileState.Route?)
 }
 
@@ -105,18 +107,13 @@ extension ProfileReducer {
         }
     )
 
-    private static let settingsReducer: ProfileReducer = SettingsReducer.default.pullback(
+    private static let settingsReducer: ProfileReducer = AnySettingsReducer { _ in
+        SettingsReducer()
+    }
+    .pullback(
         state: \ProfileState.settingsState,
         action: /ProfileAction.settings,
-        environment: { environment in
-            SettingsEnvironment(
-                localAuthenticationHandler: .live,
-                mnemonic: environment.mnemonic,
-                SDKSynchronizer: environment.SDKSynchronizer,
-                userPreferencesStorage: .live,
-                walletStorage: environment.walletStorage
-            )
-        }
+        environment: { $0 }
     )
 }
 
