@@ -38,11 +38,6 @@ struct RecoveryPhraseValidationFlowReducer: ReducerProtocol {
             return resultingPhrase == phrase.words
         }
     }
-    
-    @Dependency(\.randomPhrase) var randomPhrase
-    @Dependency(\.mainQueue) var mainQueue
-    @Dependency(\.pasteboard) var pasteboard
-    @Dependency(\.feedbackGenerator) var feedbackGenerator
 
     enum Action: Equatable {
         case updateRoute(RecoveryPhraseValidationFlowReducer.State.Route?)
@@ -54,6 +49,12 @@ struct RecoveryPhraseValidationFlowReducer: ReducerProtocol {
         case proceedToHome
         case displayBackedUpPhrase
     }
+    
+    @Dependency(\.randomPhrase) var randomPhrase
+    @Dependency(\.mainQueue) var mainQueue
+    @Dependency(\.pasteboard) var pasteboard
+    @Dependency(\.feedbackGenerator) var feedbackGenerator
+
     
     // swiftlint:disable:next cyclomatic_complexity
     func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {

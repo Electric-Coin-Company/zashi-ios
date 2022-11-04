@@ -16,7 +16,7 @@ struct SandboxState: Equatable {
         case scan
         case request
     }
-    var walletEventsState: WalletEventsFlowState
+    var walletEventsState: WalletEventsFlowReducer.State
     var profileState: ProfileState
     var route: Route?
 }
@@ -25,7 +25,7 @@ struct SandboxState: Equatable {
 
 enum SandboxAction: Equatable {
     case updateRoute(SandboxState.Route?)
-    case walletEvents(WalletEventsFlowAction)
+    case walletEvents(WalletEventsFlowReducer.Action)
     case profile(ProfileAction)
     case reset
 }
@@ -42,20 +42,12 @@ extension SandboxReducer {
         case let .updateRoute(route):
             state.route = route
             return .none
+            
         case let .walletEvents(walletEventsAction):
-            return WalletEventsFlowReducer
-                .default
-                .run(
-                    &state.walletEventsState,
-                    walletEventsAction,
-                    WalletEventsFlowEnvironment(
-                        pasteboard: .live,
-                        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
-                        SDKSynchronizer: LiveWrappedSDKSynchronizer(),
-                        zcashSDKEnvironment: .testnet
-                    )
-                )
+            return WalletEventsFlowReducer()
+                .reduce(into: &state.walletEventsState, action: walletEventsAction)
                 .map(SandboxAction.walletEvents)
+
         case let .profile(profileAction):
             return ProfileReducer
                 .default
@@ -65,6 +57,7 @@ extension SandboxReducer {
                     environment: { _ in ProfileEnvironment.live }
                 )
                 .run(&state, action, ())
+            
         case .reset:
             return .none
         }
@@ -95,14 +88,14 @@ extension SandboxViewStore {
     func toggleSelectedTransaction() {
         let isAlreadySelected = (self.selectedTranactionID != nil)
         let walletEvent = self.walletEventsState.walletEvents[5]
-        let newRoute = isAlreadySelected ? nil : WalletEventsFlowState.Route.showWalletEvent(walletEvent)
+        let newRoute = isAlreadySelected ? nil : WalletEventsFlowReducer.State.Route.showWalletEvent(walletEvent)
         send(.walletEvents(.updateRoute(newRoute)))
     }
 
     var selectedTranactionID: String? {
         self.walletEventsState
             .route
-            .flatMap(/WalletEventsFlowState.Route.showWalletEvent)
+            .flatMap(/WalletEventsFlowReducer.State.Route.showWalletEvent)
             .map(\.id)
     }
 

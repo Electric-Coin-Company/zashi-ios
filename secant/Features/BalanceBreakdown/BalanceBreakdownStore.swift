@@ -25,9 +25,6 @@ struct BalanceBreakdownReducer: ReducerProtocol {
         }
     }
 
-    @Dependency(\.numberFormatter) var numberFormatter
-    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
-
     enum Action: Equatable {
         case onAppear
         case onDisappear
@@ -35,6 +32,9 @@ struct BalanceBreakdownReducer: ReducerProtocol {
         case updateLatestBlock
         case updateSynchronizerStatus
     }
+    
+    @Dependency(\.numberFormatter) var numberFormatter
+    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
 
     func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
         switch action {

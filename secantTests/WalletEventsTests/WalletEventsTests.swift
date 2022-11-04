@@ -13,22 +13,14 @@ import ZcashLightClientKit
 class WalletEventsTests: XCTestCase {
     static let testScheduler = DispatchQueue.test
     
-    let testEnvironment = WalletEventsFlowEnvironment(
-        pasteboard: .test,
-        scheduler: testScheduler.eraseToAnyScheduler(),
-        SDKSynchronizer: TestWrappedSDKSynchronizer(),
-        zcashSDKEnvironment: .testnet
-    )
-    
     func testSynchronizerSubscription() throws {
         let store = TestStore(
-            initialState: WalletEventsFlowState(
+            initialState: WalletEventsFlowReducer.State(
                 route: .latest,
                 isScrollable: true,
                 walletEvents: []
             ),
-            reducer: WalletEventsFlowReducer.default,
-            environment: testEnvironment
+            reducer: WalletEventsFlowReducer()
         )
         
         store.send(.onAppear) { state in
@@ -78,13 +70,14 @@ class WalletEventsTests: XCTestCase {
         let identifiedWalletEvents = IdentifiedArrayOf(uniqueElements: walletEvents)
         
         let store = TestStore(
-            initialState: WalletEventsFlowState(
+            initialState: WalletEventsFlowReducer.State(
                 route: .latest,
                 isScrollable: true,
                 walletEvents: identifiedWalletEvents
             ),
-            reducer: WalletEventsFlowReducer.default,
-            environment: testEnvironment
+            reducer: WalletEventsFlowReducer()
+                .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
+                .dependency(\.mainQueue, WalletEventsTests.testScheduler.eraseToAnyScheduler())
         )
         
         store.send(.synchronizerStateChanged(.synced))
@@ -107,21 +100,13 @@ class WalletEventsTests: XCTestCase {
     func testCopyToPasteboard() throws {
         let pasteboard = WrappedPasteboard.test
         
-        let testEnvironment = WalletEventsFlowEnvironment(
-            pasteboard: pasteboard,
-            scheduler: DispatchQueue.test.eraseToAnyScheduler(),
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            zcashSDKEnvironment: .testnet
-        )
-        
         let store = TestStore(
-            initialState: WalletEventsFlowState(
+            initialState: WalletEventsFlowReducer.State(
                 route: .latest,
                 isScrollable: true,
                 walletEvents: []
             ),
-            reducer: WalletEventsFlowReducer.default,
-            environment: testEnvironment
+            reducer: WalletEventsFlowReducer()
         )
 
         let testText = "test text"
