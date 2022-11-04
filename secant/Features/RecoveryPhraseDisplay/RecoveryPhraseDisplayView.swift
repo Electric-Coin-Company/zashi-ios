@@ -80,7 +80,7 @@ extension RecoveryPhraseDisplayStore {
     static var demo: RecoveryPhraseDisplayStore {
         RecoveryPhraseDisplayStore(
             initialState: .init(phrase: .placeholder),
-            reducer: RecoveryPhraseDisplay.demo,
+            reducer: RecoveryPhraseDisplayReducer.demo,
             environment: Void()
         )
     }

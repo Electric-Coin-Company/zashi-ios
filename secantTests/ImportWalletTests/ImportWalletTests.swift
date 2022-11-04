@@ -14,7 +14,7 @@ class ImportWalletTests: XCTestCase {
     func testOnAppear() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: ImportWallet()
+            reducer: ImportWalletReducer()
         )
         
         store.send(.onAppear) { state in
@@ -25,7 +25,7 @@ class ImportWalletTests: XCTestCase {
     func testWordsCount() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: ImportWallet()
+            reducer: ImportWalletReducer()
                 .dependency(\.mnemonic, .live)
         )
         
@@ -38,8 +38,8 @@ class ImportWalletTests: XCTestCase {
 
     func testMaxWordsInvalidMnemonic() throws {
         let store = TestStore(
-            initialState: ImportWallet.State(maxWordsCount: 24),
-            reducer: ImportWallet()
+            initialState: ImportWalletReducer.State(maxWordsCount: 24),
+            reducer: ImportWalletReducer()
                 .dependency(\.mnemonic, .live)
         )
 
@@ -53,8 +53,8 @@ class ImportWalletTests: XCTestCase {
 
     func testValidMnemonic() throws {
         let store = TestStore(
-            initialState: ImportWallet.State(maxWordsCount: 24),
-            reducer: ImportWallet()
+            initialState: ImportWalletReducer.State(maxWordsCount: 24),
+            reducer: ImportWalletReducer()
                 .dependency(\.mnemonic, .live)
         )
 
@@ -86,7 +86,7 @@ class ImportWalletTests: XCTestCase {
     func testInvalidBirthdayHeight_lessThanDefault() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: ImportWallet()
+            reducer: ImportWalletReducer()
         )
         
         store.send(.binding(.set(\.$birthdayHeight, "1600000"))) { state in
@@ -97,7 +97,7 @@ class ImportWalletTests: XCTestCase {
     func testInvalidBirthdayHeight_invalidInput() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: ImportWallet()
+            reducer: ImportWalletReducer()
         )
         
         store.send(.binding(.set(\.$birthdayHeight, "abc"))) { state in
@@ -108,7 +108,7 @@ class ImportWalletTests: XCTestCase {
     func testInvalidBirthdayHeight_validInput() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: ImportWallet()
+            reducer: ImportWalletReducer()
         )
         
         store.send(.binding(.set(\.$birthdayHeight, "1700000"))) { state in
@@ -120,7 +120,7 @@ class ImportWalletTests: XCTestCase {
     func testDismissAlert() throws {
         let store = TestStore(
             initialState:
-                ImportWallet.State(
+                ImportWalletReducer.State(
                     alert: AlertState(
                         title: TextState("Success"),
                         message: TextState("The wallet has been successfully recovered."),
@@ -130,7 +130,7 @@ class ImportWalletTests: XCTestCase {
                         )
                     )
                 ),
-            reducer: ImportWallet()
+            reducer: ImportWalletReducer()
         )
         
         store.send(.dismissAlert) { state in
@@ -140,8 +140,8 @@ class ImportWalletTests: XCTestCase {
     
     func testFormValidity_validBirthday_invalidMnemonic() throws {
         let store = TestStore(
-            initialState: ImportWallet.State(maxWordsCount: 24),
-            reducer: ImportWallet()
+            initialState: ImportWalletReducer.State(maxWordsCount: 24),
+            reducer: ImportWalletReducer()
                 .dependency(\.mnemonic, .live)
         )
         
@@ -164,8 +164,8 @@ class ImportWalletTests: XCTestCase {
     
     func testFormValidity_invalidBirthday_invalidMnemonic() throws {
         let store = TestStore(
-            initialState: ImportWallet.State(maxWordsCount: 24),
-            reducer: ImportWallet()
+            initialState: ImportWalletReducer.State(maxWordsCount: 24),
+            reducer: ImportWalletReducer()
                 .dependency(\.mnemonic, .live)
         )
 
@@ -187,8 +187,8 @@ class ImportWalletTests: XCTestCase {
     
     func testFormValidity_invalidBirthday_validMnemonic() throws {
         let store = TestStore(
-            initialState: ImportWallet.State(maxWordsCount: 24),
-            reducer: ImportWallet()
+            initialState: ImportWalletReducer.State(maxWordsCount: 24),
+            reducer: ImportWalletReducer()
                 .dependency(\.mnemonic, .live)
         )
 
@@ -227,8 +227,8 @@ class ImportWalletTests: XCTestCase {
     
     func testFormValidity_validBirthday_validMnemonic() throws {
         let store = TestStore(
-            initialState: ImportWallet.State(maxWordsCount: 24),
-            reducer: ImportWallet()
+            initialState: ImportWalletReducer.State(maxWordsCount: 24),
+            reducer: ImportWalletReducer()
                 .dependency(\.mnemonic, .live)
         )
 
@@ -268,8 +268,8 @@ class ImportWalletTests: XCTestCase {
     
     func testFormValidity_noBirthday_validMnemonic() throws {
         let store = TestStore(
-            initialState: ImportWallet.State(maxWordsCount: 24),
-            reducer: ImportWallet()
+            initialState: ImportWalletReducer.State(maxWordsCount: 24),
+            reducer: ImportWalletReducer()
                 .dependency(\.mnemonic, .live)
         )
 
@@ -308,7 +308,7 @@ class ImportWalletTests: XCTestCase {
         storage.deleteData(forKey: WalletStorage.Constants.zcashStoredWallet)
 
         let store = TestStore(
-            initialState: ImportWallet.State(
+            initialState: ImportWalletReducer.State(
                 alert: nil,
                 importedSeedPhrase: """
             still champion voice habit trend flight \
@@ -323,7 +323,7 @@ class ImportWalletTests: XCTestCase {
                 isValidNumberOfWords: true,
                 birthdayHeightValue: 1_700_000
             ),
-            reducer: ImportWallet()
+            reducer: ImportWalletReducer()
                 .dependency(\.mnemonic, .live)
                 .dependency(\.walletStorage, .live(walletStorage: storage))
         )

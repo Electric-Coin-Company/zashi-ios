@@ -9,10 +9,10 @@ import Foundation
 import ComposableArchitecture
 import SwiftUI
 
-typealias RecoveryPhraseValidationFlowStore = Store<RecoveryPhraseValidationFlow.State, RecoveryPhraseValidationFlow.Action>
-typealias RecoveryPhraseValidationFlowViewStore = ViewStore<RecoveryPhraseValidationFlow.State, RecoveryPhraseValidationFlow.Action>
+typealias RecoveryPhraseValidationFlowStore = Store<RecoveryPhraseValidationFlowReducer.State, RecoveryPhraseValidationFlowReducer.Action>
+typealias RecoveryPhraseValidationFlowViewStore = ViewStore<RecoveryPhraseValidationFlowReducer.State, RecoveryPhraseValidationFlowReducer.Action>
 
-struct RecoveryPhraseValidationFlow: ReducerProtocol {
+struct RecoveryPhraseValidationFlowReducer: ReducerProtocol {
     struct State: Equatable {
         enum Route: Equatable, CaseIterable {
             case validation
@@ -45,7 +45,7 @@ struct RecoveryPhraseValidationFlow: ReducerProtocol {
     @Dependency(\.feedbackGenerator) var feedbackGenerator
 
     enum Action: Equatable {
-        case updateRoute(RecoveryPhraseValidationFlow.State.Route?)
+        case updateRoute(RecoveryPhraseValidationFlowReducer.State.Route?)
         case reset
         case move(wordChip: PhraseChip.Kind, intoGroup: Int)
         case succeed
@@ -74,8 +74,8 @@ struct RecoveryPhraseValidationFlow: ReducerProtocol {
             state.validationWords.append(ValidationWord(groupIndex: group, word: word))
 
             if state.isComplete {
-                let value: RecoveryPhraseValidationFlow.Action = state.isValid ? .succeed : .fail
-                let effect = Effect<RecoveryPhraseValidationFlow.Action, Never>(value: value)
+                let value: RecoveryPhraseValidationFlowReducer.Action = state.isValid ? .succeed : .fail
+                let effect = Effect<RecoveryPhraseValidationFlowReducer.Action, Never>(value: value)
                     .delay(for: 1, scheduler: mainQueue)
                     .eraseToEffect()
 
@@ -116,7 +116,7 @@ struct RecoveryPhraseValidationFlow: ReducerProtocol {
     }
 }
 
-extension RecoveryPhraseValidationFlow.State {
+extension RecoveryPhraseValidationFlowReducer.State {
     /// Given an array of RecoveryPhraseStepCompletion, missing indices, original phrase and the number of groups it was split into,
     /// assembly the resulting phrase. This comes up with the "proposed solution" for the recovery phrase validation challenge.
     /// - returns:an array of String containing the recovery phrase words ordered by the original phrase order, or `nil`
@@ -169,7 +169,7 @@ extension RecoveryPhrase.Group {
 // MARK: - ViewStore
 
 extension RecoveryPhraseValidationFlowViewStore {
-    func bindingForRoute(_ route: RecoveryPhraseValidationFlow.State.Route) -> Binding<Bool> {
+    func bindingForRoute(_ route: RecoveryPhraseValidationFlowReducer.State.Route) -> Binding<Bool> {
         self.binding(
             get: { $0.route == route },
             send: { isActive in
@@ -210,8 +210,8 @@ extension RecoveryPhraseValidationFlowViewStore {
 
 // MARK: - Placeholders
 
-extension RecoveryPhraseValidationFlow.State {
-    static let placeholder = RecoveryPhraseValidationFlow.State(
+extension RecoveryPhraseValidationFlowReducer.State {
+    static let placeholder = RecoveryPhraseValidationFlowReducer.State(
         phrase: .placeholder,
         missingIndices: [2, 0, 3, 5],
         missingWordChips: [
@@ -224,7 +224,7 @@ extension RecoveryPhraseValidationFlow.State {
         route: nil
     )
 
-    static let placeholderStep1 = RecoveryPhraseValidationFlow.State(
+    static let placeholderStep1 = RecoveryPhraseValidationFlowReducer.State(
         phrase: .placeholder,
         missingIndices: [2, 0, 3, 5],
         missingWordChips: [
@@ -239,7 +239,7 @@ extension RecoveryPhraseValidationFlow.State {
         route: nil
     )
 
-    static let placeholderStep2 = RecoveryPhraseValidationFlow.State(
+    static let placeholderStep2 = RecoveryPhraseValidationFlowReducer.State(
         phrase: .placeholder,
         missingIndices: [2, 0, 3, 5],
         missingWordChips: [
@@ -255,7 +255,7 @@ extension RecoveryPhraseValidationFlow.State {
         route: nil
     )
 
-    static let placeholderStep3 = RecoveryPhraseValidationFlow.State(
+    static let placeholderStep3 = RecoveryPhraseValidationFlowReducer.State(
         phrase: .placeholder,
         missingIndices: [2, 0, 3, 5],
         missingWordChips: [
@@ -272,7 +272,7 @@ extension RecoveryPhraseValidationFlow.State {
         route: nil
     )
 
-    static let placeholderStep4 = RecoveryPhraseValidationFlow.State(
+    static let placeholderStep4 = RecoveryPhraseValidationFlowReducer.State(
         phrase: .placeholder,
         missingIndices: [2, 0, 3, 5],
         missingWordChips: [
@@ -294,26 +294,26 @@ extension RecoveryPhraseValidationFlow.State {
 extension RecoveryPhraseValidationFlowStore {
     static let demo = Store(
         initialState: .placeholder,
-        reducer: RecoveryPhraseValidationFlow()
+        reducer: RecoveryPhraseValidationFlowReducer()
     )
     
     static let demoStep1 = Store(
         initialState: .placeholderStep1,
-        reducer: RecoveryPhraseValidationFlow()
+        reducer: RecoveryPhraseValidationFlowReducer()
     )
 
     static let demoStep2 = Store(
         initialState: .placeholderStep1,
-        reducer: RecoveryPhraseValidationFlow()
+        reducer: RecoveryPhraseValidationFlowReducer()
     )
 
     static let demoStep3 = Store(
         initialState: .placeholderStep3,
-        reducer: RecoveryPhraseValidationFlow()
+        reducer: RecoveryPhraseValidationFlowReducer()
     )
 
     static let demoStep4 = Store(
         initialState: .placeholderStep4,
-        reducer: RecoveryPhraseValidationFlow()
+        reducer: RecoveryPhraseValidationFlowReducer()
     )
 }

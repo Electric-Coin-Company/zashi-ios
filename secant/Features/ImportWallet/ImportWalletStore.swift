@@ -8,12 +8,12 @@
 import ComposableArchitecture
 import ZcashLightClientKit
 
-typealias ImportWalletStore = Store<ImportWallet.State, ImportWallet.Action>
-typealias ImportWalletViewStore = ViewStore<ImportWallet.State, ImportWallet.Action>
+typealias ImportWalletStore = Store<ImportWalletReducer.State, ImportWalletReducer.Action>
+typealias ImportWalletViewStore = ViewStore<ImportWalletReducer.State, ImportWalletReducer.Action>
 
-struct ImportWallet: ReducerProtocol {
+struct ImportWalletReducer: ReducerProtocol {
     struct State: Equatable {
-        @BindableState var alert: AlertState<ImportWallet.Action>?
+        @BindableState var alert: AlertState<ImportWalletReducer.Action>?
         @BindableState var importedSeedPhrase: String = ""
         @BindableState var birthdayHeight: String = ""
         var wordsCount = 0
@@ -42,7 +42,7 @@ struct ImportWallet: ReducerProtocol {
     @Dependency(\.walletStorage) var walletStorage
 
     enum Action: Equatable, BindableAction {
-        case binding(BindingAction<ImportWallet.State>)
+        case binding(BindingAction<ImportWalletReducer.State>)
         case dismissAlert
         case restoreWallet
         case importPrivateOrViewingKey
@@ -141,15 +141,15 @@ struct ImportWallet: ReducerProtocol {
 
 // MARK: - Placeholders
 
-extension ImportWallet.State {
-    static let placeholder = ImportWallet.State()
+extension ImportWalletReducer.State {
+    static let placeholder = ImportWalletReducer.State()
 
-    static let live = ImportWallet.State()
+    static let live = ImportWalletReducer.State()
 }
 
 extension ImportWalletStore {
     static let demo = Store(
         initialState: .placeholder,
-        reducer: ImportWallet()
+        reducer: ImportWalletReducer()
     )
 }

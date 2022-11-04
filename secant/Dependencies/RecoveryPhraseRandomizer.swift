@@ -9,11 +9,11 @@ import Foundation
 import ComposableArchitecture
 
 struct RecoveryPhraseRandomizer {
-    func random(phrase: RecoveryPhrase) -> RecoveryPhraseValidationFlow.State {
+    func random(phrase: RecoveryPhrase) -> RecoveryPhraseValidationFlowReducer.State {
         let missingIndices = randomIndices()
         let missingWordChipKind = phrase.words(fromMissingIndices: missingIndices).shuffled()
         
-        return RecoveryPhraseValidationFlow.State(
+        return RecoveryPhraseValidationFlowReducer.State(
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordChips: missingWordChipKind,
@@ -22,8 +22,8 @@ struct RecoveryPhraseRandomizer {
     }
     
     func randomIndices() -> [Int] {
-        return (0..<RecoveryPhraseValidationFlow.State.phraseChunks).map { _ in
-            Int.random(in: 0 ..< RecoveryPhraseValidationFlow.State.wordGroupSize)
+        return (0..<RecoveryPhraseValidationFlowReducer.State.phraseChunks).map { _ in
+            Int.random(in: 0 ..< RecoveryPhraseValidationFlowReducer.State.wordGroupSize)
         }
     }
 }

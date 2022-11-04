@@ -6,10 +6,10 @@
 //
 
 import Foundation
+import ComposableArchitecture
 
 struct URIParser {
-    enum URIParserError: Error {
-    }
+    enum URIParserError: Error { }
     
     private let derivationTool: WrappedDerivationTool
     
@@ -19,5 +19,17 @@ struct URIParser {
 
     func isValidURI(_ uri: String) throws -> Bool {
         try derivationTool.isValidZcashAddress(uri)
+    }
+}
+
+private enum URIParserKey: DependencyKey {
+    static let liveValue = WrappedURIParser.live()
+    static let testValue = WrappedURIParser.live()
+}
+
+extension DependencyValues {
+    var uriParser: WrappedURIParser {
+        get { self[URIParserKey.self] }
+        set { self[URIParserKey.self] = newValue }
     }
 }

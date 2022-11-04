@@ -9,9 +9,9 @@ import Foundation
 import ComposableArchitecture
 import ZcashLightClientKit
 
-typealias BalanceBreakdownStore = Store<BalanceBreakdown.State, BalanceBreakdown.Action>
+typealias BalanceBreakdownStore = Store<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>
 
-struct BalanceBreakdown: ReducerProtocol {
+struct BalanceBreakdownReducer: ReducerProtocol {
     private enum CancelId {}
     
     struct State: Equatable {
@@ -40,7 +40,7 @@ struct BalanceBreakdown: ReducerProtocol {
         switch action {
         case .onAppear:
             return sdkSynchronizer.stateChanged
-                .map(BalanceBreakdown.Action.synchronizerStateChanged)
+                .map(BalanceBreakdownReducer.Action.synchronizerStateChanged)
                 .eraseToEffect()
                 .cancellable(id: CancelId.self, cancelInFlight: true)
 
@@ -76,8 +76,8 @@ struct BalanceBreakdown: ReducerProtocol {
 
 // MARK: - Placeholders
 
-extension BalanceBreakdown.State {
-    static let placeholder = BalanceBreakdown.State(
+extension BalanceBreakdownReducer.State {
+    static let placeholder = BalanceBreakdownReducer.State(
         autoShieldingTreshold: Zatoshi(1_000_000),
         latestBlock: "unknown",
         shieldedBalance: WalletBalance.zero,
@@ -88,6 +88,6 @@ extension BalanceBreakdown.State {
 extension BalanceBreakdownStore {
     static let placeholder = BalanceBreakdownStore(
         initialState: .placeholder,
-        reducer: BalanceBreakdown()
+        reducer: BalanceBreakdownReducer()
     )
 }

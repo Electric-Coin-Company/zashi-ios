@@ -14,18 +14,13 @@ class ScanTests: XCTestCase {
     func testOnAppearResetValues() throws {
         let store = TestStore(
             initialState:
-                ScanState(
+                ScanReducer.State(
                     isTorchAvailable: true,
                     isTorchOn: true,
                     isValidValue: true,
                     scanStatus: .value("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po")
                 ),
-            reducer: ScanReducer.default,
-            environment: ScanEnvironment(
-                captureDevice: .none,
-                scheduler: DispatchQueue.test.eraseToAnyScheduler(),
-                uriParser: .live()
-            )
+            reducer: ScanReducer()
         )
 
         store.send(.onAppear) { state in
@@ -38,13 +33,8 @@ class ScanTests: XCTestCase {
     
     func testTorchOn() throws {
         let store = TestStore(
-            initialState: ScanState(),
-            reducer: ScanReducer.default,
-            environment: ScanEnvironment(
-                captureDevice: .none,
-                scheduler: DispatchQueue.test.eraseToAnyScheduler(),
-                uriParser: .live()
-            )
+            initialState: ScanReducer.State(),
+            reducer: ScanReducer()
         )
 
         store.send(.torchPressed) { state in
@@ -54,15 +44,10 @@ class ScanTests: XCTestCase {
 
     func testTorchOff() throws {
         let store = TestStore(
-            initialState: ScanState(
+            initialState: ScanReducer.State(
                 isTorchOn: true
             ),
-            reducer: ScanReducer.default,
-            environment: ScanEnvironment(
-                captureDevice: .none,
-                scheduler: DispatchQueue.test.eraseToAnyScheduler(),
-                uriParser: .live()
-            )
+            reducer: ScanReducer()
         )
 
         store.send(.torchPressed) { state in
@@ -72,13 +57,8 @@ class ScanTests: XCTestCase {
 
     func testScannedInvalidValue() throws {
         let store = TestStore(
-            initialState: ScanState(),
-            reducer: ScanReducer.default,
-            environment: ScanEnvironment(
-                captureDevice: .none,
-                scheduler: DispatchQueue.test.eraseToAnyScheduler(),
-                uriParser: .live()
-            )
+            initialState: ScanReducer.State(),
+            reducer: ScanReducer()
         )
 
         store.send(.scan("test")) { state in
@@ -91,13 +71,9 @@ class ScanTests: XCTestCase {
         let testScheduler = DispatchQueue.test
         
         let store = TestStore(
-            initialState: ScanState(),
-            reducer: ScanReducer.default,
-            environment: ScanEnvironment(
-                captureDevice: .none,
-                scheduler: testScheduler.eraseToAnyScheduler(),
-                uriParser: .live()
-            )
+            initialState: ScanReducer.State(),
+            reducer: ScanReducer()
+                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
         )
 
         store.send(.scan("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po")) { state in
@@ -112,13 +88,8 @@ class ScanTests: XCTestCase {
 
     func testScanFailed() throws {
         let store = TestStore(
-            initialState: ScanState(),
-            reducer: ScanReducer.default,
-            environment: ScanEnvironment(
-                captureDevice: .none,
-                scheduler: DispatchQueue.test.eraseToAnyScheduler(),
-                uriParser: .live()
-            )
+            initialState: ScanReducer.State(),
+            reducer: ScanReducer()
         )
 
         store.send(.scanFailed) { state in

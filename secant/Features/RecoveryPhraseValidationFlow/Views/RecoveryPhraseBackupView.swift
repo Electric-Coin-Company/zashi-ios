@@ -83,7 +83,7 @@ private extension RecoveryPhraseBackupView {
         .padding(.horizontal, 30)
     }
     
-    @ViewBuilder func completeHeader(for state: RecoveryPhraseValidationFlow.State) -> some View {
+    @ViewBuilder func completeHeader(for state: RecoveryPhraseValidationFlowReducer.State) -> some View {
         if state.isValid {
             Text("recoveryPhraseBackupValidation.successResult")
                 .bodyText()
@@ -94,7 +94,7 @@ private extension RecoveryPhraseBackupView {
     }
 }
 
-private extension RecoveryPhraseValidationFlow.State {
+private extension RecoveryPhraseValidationFlowReducer.State {
     @ViewBuilder func missingWordGrid() -> some View {
         let columns = Array(
             repeating: GridItem(.flexible(minimum: 100, maximum: 120), spacing: 20),
@@ -116,7 +116,7 @@ private extension RecoveryPhraseValidationFlow.State {
     }
 }
 
-extension RecoveryPhraseValidationFlow.State {
+extension RecoveryPhraseValidationFlowReducer.State {
     func wordsChips(
         for groupIndex: Int,
         groupSize: Int,
@@ -140,14 +140,14 @@ extension RecoveryPhraseValidationFlow.State {
 
 private extension WordChipGrid {
     init(
-        state: RecoveryPhraseValidationFlow.State,
+        state: RecoveryPhraseValidationFlowReducer.State,
         groupIndex: Int,
         wordGroup: RecoveryPhrase.Group,
         misingIndex: Int
     ) {
         let chips = state.wordsChips(
             for: groupIndex,
-            groupSize: RecoveryPhraseValidationFlow.State.wordGroupSize,
+            groupSize: RecoveryPhraseValidationFlowReducer.State.wordGroupSize,
             from: wordGroup
         )
 
@@ -155,7 +155,7 @@ private extension WordChipGrid {
     }
 }
 
-private extension RecoveryPhraseValidationFlow.State {
+private extension RecoveryPhraseValidationFlowReducer.State {
     var coloredChipColor: Color {
         if self.isComplete {
             return isValid ? Asset.Colors.Buttons.activeButton.color : Asset.Colors.BackgroundColors.red.color

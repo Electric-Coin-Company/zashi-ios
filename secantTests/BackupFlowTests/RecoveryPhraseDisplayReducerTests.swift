@@ -13,7 +13,7 @@ class RecoveryPhraseDisplayReducerTests: XCTestCase {
     func testCopyToBuffer() {
         let store = TestStore(
             initialState: RecoveryPhraseDisplayStore.test,
-            reducer: RecoveryPhraseDisplay()
+            reducer: RecoveryPhraseDisplayReducer()
         )
                 
         store.send(.copyToBufferPressed) {
@@ -30,7 +30,7 @@ class RecoveryPhraseDisplayReducerTests: XCTestCase {
     func testNewPhrase() {
         let store = TestStore(
             initialState: RecoveryPhraseDisplayStore.empty,
-            reducer: RecoveryPhraseDisplay()
+            reducer: RecoveryPhraseDisplayReducer()
         )
                 
         store.send(.phraseResponse(.placeholder)) {
@@ -41,12 +41,12 @@ class RecoveryPhraseDisplayReducerTests: XCTestCase {
 }
 
 private extension RecoveryPhraseDisplayStore {
-    static let test = RecoveryPhraseDisplay.State(
+    static let test = RecoveryPhraseDisplayReducer.State(
         phrase: .placeholder,
         showCopyToBufferAlert: false
     )
     
-    static let empty = RecoveryPhraseDisplay.State(
+    static let empty = RecoveryPhraseDisplayReducer.State(
         phrase: .empty,
         showCopyToBufferAlert: false
     )

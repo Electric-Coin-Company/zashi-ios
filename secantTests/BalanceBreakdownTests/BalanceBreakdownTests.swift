@@ -17,7 +17,7 @@ class BalanceBreakdownTests: XCTestCase {
 
         let store = TestStore(
             initialState: .placeholder,
-            reducer: BalanceBreakdown()
+            reducer: BalanceBreakdownReducer()
                 .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
         )
         

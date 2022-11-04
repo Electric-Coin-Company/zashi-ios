@@ -8,9 +8,9 @@
 import Foundation
 import ComposableArchitecture
 
-typealias RecoveryPhraseDisplayStore = Store<RecoveryPhraseDisplay.State, RecoveryPhraseDisplay.Action>
+typealias RecoveryPhraseDisplayStore = Store<RecoveryPhraseDisplayReducer.State, RecoveryPhraseDisplayReducer.Action>
 
-struct RecoveryPhraseDisplay: ReducerProtocol {
+struct RecoveryPhraseDisplayReducer: ReducerProtocol {
     struct State: Equatable {
         var phrase: RecoveryPhrase?
         var showCopyToBufferAlert = false
@@ -50,8 +50,8 @@ struct RecoveryPhraseDisplay: ReducerProtocol {
     }
 }
 
-extension RecoveryPhraseDisplay {
-    static let demo = AnyReducer<RecoveryPhraseDisplay.State, RecoveryPhraseDisplay.Action, Void> { _ in
-        RecoveryPhraseDisplay()
+extension RecoveryPhraseDisplayReducer {
+    static let demo = AnyReducer<RecoveryPhraseDisplayReducer.State, RecoveryPhraseDisplayReducer.Action, Void> { _ in
+        RecoveryPhraseDisplayReducer()
     }
 }
