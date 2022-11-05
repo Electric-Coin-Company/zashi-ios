@@ -8,73 +8,35 @@
 import Foundation
 import ComposableArchitecture
 
-typealias AddressDetailsReducer = Reducer<AddressDetailsState, AddressDetailsAction, AddressDetailsEnvironment>
-typealias AddressDetailsStore = Store<AddressDetailsState, AddressDetailsAction>
-typealias AddressDetailsViewStore = ViewStore<AddressDetailsState, AddressDetailsAction>
+typealias AddressDetailsStore = Store<AddressDetailsReducer.State, AddressDetailsReducer.Action>
 
-// MARK: - State
+struct AddressDetailsReducer: ReducerProtocol {
+    struct State: Equatable { }
 
-struct AddressDetailsState: Equatable {
-}
-
-// MARK: - Action
-
-enum AddressDetailsAction: Equatable {
-    case copyToPastboard(String)
-}
-
-// MARK: - Environment
-
-struct AddressDetailsEnvironment {
-    let pasteboard: WrappedPasteboard
-}
-
-extension AddressDetailsEnvironment {
-    static let live = AddressDetailsEnvironment(
-        pasteboard: .live
-    )
-
-    static let mock = AddressDetailsEnvironment(
-        pasteboard: .test
-    )
-}
-
-// MARK: - Reducer
-
-extension AddressDetailsReducer {
-    static let `default` = AddressDetailsReducer { _, action, environment in
+    enum Action: Equatable {
+        case copyToPastboard(String)
+    }
+    
+    @Dependency(\.pasteboard) var pasteboard
+    
+    func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
         switch action {
         case .copyToPastboard(let value):
-            environment.pasteboard.setString(value)
+            pasteboard.setString(value)
         }
-        
         return .none
     }
 }
 
-// MARK: - Store
-
-extension AddressDetailsStore {
-}
-
-// MARK: - ViewStore
-
-extension AddressDetailsViewStore {
-}
-
 // MARK: - Placeholders
 
-extension AddressDetailsState {
-    static let placeholder = AddressDetailsState(
-    )
+extension AddressDetailsReducer.State {
+    static let placeholder = AddressDetailsReducer.State()
 }
 
 extension AddressDetailsStore {
     static let placeholder = AddressDetailsStore(
         initialState: .placeholder,
-        reducer: .default,
-        environment: AddressDetailsEnvironment(
-            pasteboard: .test
-        )
+        reducer: AddressDetailsReducer()
     )
 }
