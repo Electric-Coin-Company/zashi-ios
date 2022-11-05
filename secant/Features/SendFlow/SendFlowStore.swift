@@ -18,6 +18,7 @@ typealias AnyTransactionAddressTextFieldReducer = AnyReducer<
     TransactionAddressTextFieldReducer.Action,
     SendFlowEnvironment
 >
+typealias AnyMultiLineTextFieldReducer = AnyReducer<MultiLineTextFieldReducer.State, MultiLineTextFieldReducer.Action, SendFlowEnvironment>
 
 // MARK: - State
 
@@ -32,7 +33,7 @@ struct SendFlowState: Equatable {
 
     var addMemoState: Bool
     var isSendingTransaction = false
-    var memoState: MultiLineTextFieldState
+    var memoState: MultiLineTextFieldReducer.State
     var route: Route?
     var shieldedBalance = WalletBalance.zero
     var transactionAddressInputState: TransactionAddressTextFieldReducer.State
@@ -83,7 +84,7 @@ struct SendFlowState: Equatable {
 
 enum SendFlowAction: Equatable {
     case addMemo(CheckCircleAction)
-    case memo(MultiLineTextFieldAction)
+    case memo(MultiLineTextFieldReducer.Action)
     case onAppear
     case onDisappear
     case sendConfirmationPressed
@@ -247,10 +248,13 @@ extension SendFlowReducer {
         }
     )
 
-    private static let memoReducer: SendFlowReducer = MultiLineTextFieldReducer.default.pullback(
+    private static let memoReducer: SendFlowReducer = AnyMultiLineTextFieldReducer { _ in
+        MultiLineTextFieldReducer()
+    }
+    .pullback(
         state: \SendFlowState.memoState,
         action: /SendFlowAction.memo,
-        environment: { _ in MultiLineTextFieldEnvironment() }
+        environment: { $0 }
     )
 }
 

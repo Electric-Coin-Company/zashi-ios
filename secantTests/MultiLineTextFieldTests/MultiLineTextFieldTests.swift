@@ -12,9 +12,8 @@ import ComposableArchitecture
 class MultiLineTextFieldTests: XCTestCase {
     func testIsCharLimited() throws {
         let store = TestStore(
-            initialState: MultiLineTextFieldState(charLimit: 1),
-            reducer: MultiLineTextFieldReducer.default,
-            environment: MultiLineTextFieldEnvironment()
+            initialState: MultiLineTextFieldReducer.State(charLimit: 1),
+            reducer: MultiLineTextFieldReducer()
         )
         
         store.send(.binding(.set(\.$text, "test"))) { state in
@@ -28,9 +27,8 @@ class MultiLineTextFieldTests: XCTestCase {
 
     func testIsNotCharLimited() throws {
         let store = TestStore(
-            initialState: MultiLineTextFieldState(),
-            reducer: MultiLineTextFieldReducer.default,
-            environment: MultiLineTextFieldEnvironment()
+            initialState: MultiLineTextFieldReducer.State(),
+            reducer: MultiLineTextFieldReducer()
         )
         
         store.send(.binding(.set(\.$text, "test"))) { state in
@@ -44,9 +42,8 @@ class MultiLineTextFieldTests: XCTestCase {
 
     func testTextLength() throws {
         let store = TestStore(
-            initialState: MultiLineTextFieldState(),
-            reducer: MultiLineTextFieldReducer.default,
-            environment: MultiLineTextFieldEnvironment()
+            initialState: MultiLineTextFieldReducer.State(),
+            reducer: MultiLineTextFieldReducer()
         )
         
         store.send(.binding(.set(\.$text, "test"))) { state in
@@ -61,9 +58,8 @@ class MultiLineTextFieldTests: XCTestCase {
     
     func testIsValid_CharLimit() throws {
         let store = TestStore(
-            initialState: MultiLineTextFieldState(charLimit: 4),
-            reducer: MultiLineTextFieldReducer.default,
-            environment: MultiLineTextFieldEnvironment()
+            initialState: MultiLineTextFieldReducer.State(charLimit: 4),
+            reducer: MultiLineTextFieldReducer()
         )
         
         store.send(.binding(.set(\.$text, "test"))) { state in
@@ -77,9 +73,8 @@ class MultiLineTextFieldTests: XCTestCase {
 
     func testIsValid_NoCharLimit() throws {
         let store = TestStore(
-            initialState: MultiLineTextFieldState(),
-            reducer: MultiLineTextFieldReducer.default,
-            environment: MultiLineTextFieldEnvironment()
+            initialState: MultiLineTextFieldReducer.State(),
+            reducer: MultiLineTextFieldReducer()
         )
         
         store.send(.binding(.set(\.$text, "test"))) { state in
@@ -93,9 +88,8 @@ class MultiLineTextFieldTests: XCTestCase {
     
     func testIsInvalid() throws {
         let store = TestStore(
-            initialState: MultiLineTextFieldState(charLimit: 3),
-            reducer: MultiLineTextFieldReducer.default,
-            environment: MultiLineTextFieldEnvironment()
+            initialState: MultiLineTextFieldReducer.State(charLimit: 3),
+            reducer: MultiLineTextFieldReducer()
         )
         
         store.send(.binding(.set(\.$text, "test"))) { state in
@@ -109,9 +103,8 @@ class MultiLineTextFieldTests: XCTestCase {
     
     func testCharLimitText_NoCharLimit() throws {
         let store = TestStore(
-            initialState: MultiLineTextFieldState(),
-            reducer: MultiLineTextFieldReducer.default,
-            environment: MultiLineTextFieldEnvironment()
+            initialState: MultiLineTextFieldReducer.State(),
+            reducer: MultiLineTextFieldReducer()
         )
         
         store.send(.binding(.set(\.$text, "test"))) { state in
@@ -126,9 +119,8 @@ class MultiLineTextFieldTests: XCTestCase {
     
     func testCharLimitText_CharLimit_LessCharacters() throws {
         let store = TestStore(
-            initialState: MultiLineTextFieldState(charLimit: 5),
-            reducer: MultiLineTextFieldReducer.default,
-            environment: MultiLineTextFieldEnvironment()
+            initialState: MultiLineTextFieldReducer.State(charLimit: 5),
+            reducer: MultiLineTextFieldReducer()
         )
         
         store.send(.binding(.set(\.$text, "test"))) { state in
@@ -143,9 +135,8 @@ class MultiLineTextFieldTests: XCTestCase {
     
     func testCharLimitText_CharLimit_Exceeded() throws {
         let store = TestStore(
-            initialState: MultiLineTextFieldState(charLimit: 3),
-            reducer: MultiLineTextFieldReducer.default,
-            environment: MultiLineTextFieldEnvironment()
+            initialState: MultiLineTextFieldReducer.State(charLimit: 3),
+            reducer: MultiLineTextFieldReducer()
         )
         
         store.send(.binding(.set(\.$text, "test"))) { state in

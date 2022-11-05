@@ -8,69 +8,54 @@
 import Foundation
 import ComposableArchitecture
 
-typealias MultiLineTextFieldReducer = Reducer<MultiLineTextFieldState, MultiLineTextFieldAction, MultiLineTextFieldEnvironment>
-typealias MultiLineTextFieldStore = Store<MultiLineTextFieldState, MultiLineTextFieldAction>
-typealias MultiLineTextFieldViewStore = ViewStore<MultiLineTextFieldState, MultiLineTextFieldAction>
+typealias MultiLineTextFieldStore = Store<MultiLineTextFieldReducer.State, MultiLineTextFieldReducer.Action>
 
-// MARK: - State
-
-struct MultiLineTextFieldState: Equatable {
-    /// default 0, no char limit
-    var charLimit = 0
-    @BindableState var text = ""
-    
-    var isCharLimited: Bool {
-        charLimit > 0
-    }
-    
-    var textLength: Int {
-        text.count
-    }
-    
-    var isValid: Bool {
-        charLimit > 0
-        ? textLength <= charLimit
-        : true
-    }
-    
-    var charLimitText: String {
-        charLimit > 0
-        ? isValid
-        ? "\(textLength)/\(charLimit)"
-        : "char limit exceeded \(textLength)/\(charLimit)"
-        : ""
-    }
-}
-
-// MARK: - Action
-
-enum MultiLineTextFieldAction: Equatable, BindableAction {
-    case binding(BindingAction<MultiLineTextFieldState>)
-}
-
-// MARK: - Environment
-
-struct MultiLineTextFieldEnvironment { }
-
-extension MultiLineTextFieldEnvironment {
-    static let live = MultiLineTextFieldEnvironment()
-
-    static let mock = MultiLineTextFieldEnvironment()
-}
-
-// MARK: - Reducer
-
-extension MultiLineTextFieldReducer {
-    static let `default` = MultiLineTextFieldReducer { _, action, _ in
-        switch action {
-        case .binding(\.$text):
-            return .none
-            
-        case .binding:
-            return .none
+struct MultiLineTextFieldReducer: ReducerProtocol {
+    struct State: Equatable {
+        /// default 0, no char limit
+        var charLimit = 0
+        @BindableState var text = ""
+        
+        var isCharLimited: Bool {
+            charLimit > 0
+        }
+        
+        var textLength: Int {
+            text.count
+        }
+        
+        var isValid: Bool {
+            charLimit > 0
+            ? textLength <= charLimit
+            : true
+        }
+        
+        var charLimitText: String {
+            charLimit > 0
+            ? isValid
+            ? "\(textLength)/\(charLimit)"
+            : "char limit exceeded \(textLength)/\(charLimit)"
+            : ""
         }
     }
-    .binding()
+
+    enum Action: Equatable, BindableAction {
+        case binding(BindingAction<MultiLineTextFieldReducer.State>)
+    }
+    
+    var body: some ReducerProtocol<State, Action> {
+        BindingReducer()
+        
+        Reduce { _, action in
+            switch action {
+            case .binding(\.$text):
+                return .none
+                
+            case .binding:
+                return .none
+            }
+        }
+    }
 }
 
 // MARK: - Store
@@ -78,16 +63,15 @@ extension MultiLineTextFieldReducer {
 extension MultiLineTextFieldStore {
     static let placeholder = MultiLineTextFieldStore(
         initialState: .placeholder,
-        reducer: .default,
-        environment: MultiLineTextFieldEnvironment()
+        reducer: MultiLineTextFieldReducer()
     )
 }
 
 // MARK: - Placeholders
 
-extension MultiLineTextFieldState {
-    static let placeholder: MultiLineTextFieldState = {
-        var state = MultiLineTextFieldState()
+extension MultiLineTextFieldReducer.State {
+    static let placeholder: MultiLineTextFieldReducer.State = {
+        var state = MultiLineTextFieldReducer.State()
         state.text = "test"
         return state
     }()
