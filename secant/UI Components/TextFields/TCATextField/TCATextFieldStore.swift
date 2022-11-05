@@ -7,37 +7,25 @@
 
 import ComposableArchitecture
 
-typealias TCATextFieldReducer = Reducer<TCATextFieldState, TCATextFieldAction, TCATextFieldEnvironment>
-typealias TCATextFieldStore = Store<TCATextFieldState, TCATextFieldAction>
-typealias TCATextFieldViewStore = ViewStore<TCATextFieldState, TCATextFieldAction>
+typealias TCATextFieldStore = Store<TCATextFieldReducer.State, TCATextFieldReducer.Action>
 
-// MARK: - State
+struct TCATextFieldReducer: ReducerProtocol {
+    struct State: Equatable {
+        var validationType: String.ValidationType?
+        var text: String
+        var valid = false
 
-struct TCATextFieldState: Equatable {
-    var validationType: String.ValidationType?
-    var text: String
-    var valid = false
-
-    init(validationType: String.ValidationType?, text: String) {
-        self.validationType = validationType
-        self.text = text
+        init(validationType: String.ValidationType?, text: String) {
+            self.validationType = validationType
+            self.text = text
+        }
     }
-}
 
-// MARK: - Action
-
-enum TCATextFieldAction: Equatable {
-    case set(String)
-}
-
-// MARK: - Environment
-
-struct TCATextFieldEnvironment { }
-
-// MARK: - Reducer
-
-extension TCATextFieldReducer {
-    static let `default` = TCATextFieldReducer { state, action, _ in
+    enum Action: Equatable {
+        case set(String)
+    }
+    
+    func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
         switch action {
         case .set(let text):
             state.text = text
@@ -53,29 +41,27 @@ extension TCATextFieldStore {
     static var transaction: Self {
         .init(
             initialState: .init(validationType: .customFloatingPoint(.zcashNumberFormatter), text: ""),
-            reducer: .default,
-            environment: .init()
+            reducer: TCATextFieldReducer()
         )
     }
 
     static var address: Self {
         .init(
             initialState: .init(validationType: .email, text: ""),
-            reducer: .default,
-            environment: .init()
+            reducer: TCATextFieldReducer()
         )
     }
 }
 
 // MARK: - Placeholders
 
-extension TCATextFieldState {
-    static let placeholder = TCATextFieldState(
+extension TCATextFieldReducer.State {
+    static let placeholder = TCATextFieldReducer.State(
         validationType: nil,
         text: ""
     )
 
-    static let amount = TCATextFieldState(
+    static let amount = TCATextFieldReducer.State(
         validationType: .floatingPoint,
         text: ""
     )

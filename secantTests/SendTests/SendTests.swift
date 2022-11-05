@@ -319,7 +319,7 @@ class SendTests: XCTestCase {
                     currencySelectionState: CurrencySelectionState(),
                     maxValue: 501_300,
                     textFieldState:
-                        TCATextFieldState(
+                        TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
                             text: ""
                         )
@@ -398,7 +398,7 @@ class SendTests: XCTestCase {
                     TransactionAmountTextFieldState(
                         currencySelectionState: CurrencySelectionState(),
                         textFieldState:
-                            TCATextFieldState(
+                            TCATextFieldReducer.State(
                                 validationType: .customFloatingPoint(usNumberFormatter),
                                 text: ""
                             )
@@ -433,7 +433,7 @@ class SendTests: XCTestCase {
                     currencySelectionState: CurrencySelectionState(),
                     maxValue: 501_302,
                     textFieldState:
-                        TCATextFieldState(
+                        TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
                             text: "0.00501301"
                         )
@@ -481,7 +481,7 @@ class SendTests: XCTestCase {
                     currencySelectionState: CurrencySelectionState(),
                     maxValue: 501_300,
                     textFieldState:
-                        TCATextFieldState(
+                        TCATextFieldReducer.State(
                             validationType: .floatingPoint,
                             text: "0.00501301"
                         )
@@ -529,7 +529,7 @@ class SendTests: XCTestCase {
                     currencySelectionState: CurrencySelectionState(),
                     maxValue: 501_302,
                     textFieldState:
-                        TCATextFieldState(
+                        TCATextFieldReducer.State(
                             validationType: .floatingPoint,
                             text: "0.00501301"
                         )
@@ -577,7 +577,7 @@ class SendTests: XCTestCase {
                     currencySelectionState: CurrencySelectionState(),
                     maxValue: 501_302,
                     textFieldState:
-                        TCATextFieldState(
+                        TCATextFieldReducer.State(
                             validationType: .floatingPoint,
                             text: "0.0.0501301"
                         )
@@ -624,7 +624,7 @@ class SendTests: XCTestCase {
                 TransactionAddressTextFieldState(
                     isValidAddress: true,
                     textFieldState:
-                        TCATextFieldState(
+                        TCATextFieldReducer.State(
                             validationType: .none,
                             text: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
                         )
@@ -635,7 +635,7 @@ class SendTests: XCTestCase {
                     currencySelectionState: CurrencySelectionState(),
                     maxValue: 501_302,
                     textFieldState:
-                        TCATextFieldState(
+                        TCATextFieldReducer.State(
                             validationType: .floatingPoint,
                             text: "0.0.0501301"
                         )
@@ -679,7 +679,7 @@ class SendTests: XCTestCase {
                     currencySelectionState: CurrencySelectionState(),
                     maxValue: 501_302,
                     textFieldState:
-                        TCATextFieldState(
+                        TCATextFieldReducer.State(
                             validationType: .floatingPoint,
                             text: "0.0.0501301"
                         )

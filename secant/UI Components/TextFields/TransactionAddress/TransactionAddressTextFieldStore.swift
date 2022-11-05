@@ -16,14 +16,16 @@ typealias TransactionAddressTextFieldReducer = Reducer<
 
 typealias TransactionAddressTextFieldStore = Store<TransactionAddressTextFieldState, TransactionAddressTextFieldAction>
 
+typealias AnyTCATextFieldReducerAddress = AnyReducer<TCATextFieldReducer.State, TCATextFieldReducer.Action, TransactionAddressTextFieldEnvironment>
+
 struct TransactionAddressTextFieldState: Equatable {
     var isValidAddress = false
-    var textFieldState: TCATextFieldState
+    var textFieldState: TCATextFieldReducer.State
 }
 
 enum TransactionAddressTextFieldAction: Equatable {
     case clearAddress
-    case textField(TCATextFieldAction)
+    case textField(TCATextFieldReducer.Action)
 }
 
 struct TransactionAddressTextFieldEnvironment {
@@ -55,10 +57,13 @@ extension TransactionAddressTextFieldReducer {
         }
     }
     
-    private static let textFieldReducer: TransactionAddressTextFieldReducer = TCATextFieldReducer.default.pullback(
+    private static let textFieldReducer: TransactionAddressTextFieldReducer = AnyTCATextFieldReducerAddress { _ in
+        TCATextFieldReducer()
+    }
+    .pullback(
         state: \TransactionAddressTextFieldState.textFieldState,
         action: /TransactionAddressTextFieldAction.textField,
-        environment: { _ in return .init() }
+        environment: { $0 }
     )
 }
 

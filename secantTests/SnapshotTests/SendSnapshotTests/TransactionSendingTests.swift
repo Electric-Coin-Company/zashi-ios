@@ -26,14 +26,14 @@ class TransactionSendingTests: XCTestCase {
         var state = SendFlowState.placeholder
         state.addMemoState = true
         state.transactionAddressInputState = TransactionAddressTextFieldState(
-            textFieldState: TCATextFieldState(
+            textFieldState: TCATextFieldReducer.State(
                 validationType: nil,
                 text: "ztestmockeddestinationaddress"
             )
         )
         state.transactionAmountInputState = TransactionAmountTextFieldState(
             currencySelectionState: CurrencySelectionState(),
-            textFieldState: TCATextFieldState(
+            textFieldState: TCATextFieldReducer.State(
                 validationType: nil,
                 text: "2.91"
             )

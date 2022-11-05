@@ -17,11 +17,13 @@ typealias TransactionAmountTextFieldReducer = Reducer<
 
 typealias TransactionAmountTextFieldStore = Store<TransactionAmountTextFieldState, TransactionAmountTextFieldAction>
 
+typealias AnyTCATextFieldReducerAmount = AnyReducer<TCATextFieldReducer.State, TCATextFieldReducer.Action, TransactionAmountTextFieldEnvironment>
+
 struct TransactionAmountTextFieldState: Equatable {
     var amount: Int64 = 0
     var currencySelectionState: CurrencySelectionState
     var maxValue: Int64 = 0
-    var textFieldState: TCATextFieldState
+    var textFieldState: TCATextFieldReducer.State
     // TODO [#311]: - Get the ZEC price from the SDK, https://github.com/zcash/secant-ios-wallet/issues/311
     var zecPrice = Decimal(140.0)
 
@@ -34,7 +36,7 @@ enum TransactionAmountTextFieldAction: Equatable {
     case clearValue
     case currencySelection(CurrencySelectionAction)
     case setMax
-    case textField(TCATextFieldAction)
+    case textField(TCATextFieldReducer.Action)
     case updateAmount
 }
 
@@ -104,12 +106,15 @@ extension TransactionAmountTextFieldReducer {
         }
     }
 
-    private static let textFieldReducer: TransactionAmountTextFieldReducer = TCATextFieldReducer.default.pullback(
+    private static let textFieldReducer: TransactionAmountTextFieldReducer = AnyTCATextFieldReducerAmount { _ in
+        TCATextFieldReducer()
+    }
+    .pullback(
         state: \TransactionAmountTextFieldState.textFieldState,
         action: /TransactionAmountTextFieldAction.textField,
-        environment: { _ in return .init() }
+        environment: { $0 }
     )
-
+    
     private static let currencySelectionReducer: TransactionAmountTextFieldReducer = CurrencySelectionReducer.default.pullback(
         state: \TransactionAmountTextFieldState.currencySelectionState,
         action: /TransactionAmountTextFieldAction.currencySelection,

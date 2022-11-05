@@ -28,7 +28,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
                     currencySelectionState: CurrencySelectionState(),
                     maxValue: 501_301,
                     textFieldState:
-                        TCATextFieldState(
+                        TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
                             text: "0.002"
                         )
@@ -56,7 +56,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
                     currencySelectionState: CurrencySelectionState(),
                     maxValue: 501_301,
                     textFieldState:
-                        TCATextFieldState(
+                        TCATextFieldReducer.State(
                             validationType: .floatingPoint,
                             text: "0.002"
                         )
@@ -83,7 +83,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
                             currencyType: .zec
                         ),
                     textFieldState:
-                        TCATextFieldState(
+                        TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
                             text: "1.0"
                         ),
@@ -115,7 +115,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
                             currencyType: .zec
                         ),
                     textFieldState:
-                        TCATextFieldState(
+                        TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
                             text: "25000"
                         ),
@@ -147,7 +147,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
                             currencyType: .usd
                         ),
                     textFieldState:
-                        TCATextFieldState(
+                        TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
                             text: "1 000"
                         ),
@@ -180,7 +180,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         ),
                     maxValue: 100_000_000,
                     textFieldState:
-                        TCATextFieldState(
+                        TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
                             text: "5"
                         ),
@@ -222,7 +222,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         ),
                     maxValue: 200_000_000,
                     textFieldState:
-                        TCATextFieldState(
+                        TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
                             text: "5"
                         ),
@@ -254,7 +254,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         ),
                     maxValue: 200_000_000,
                     textFieldState:
-                        TCATextFieldState(
+                        TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
                             text: "5"
                         ),
