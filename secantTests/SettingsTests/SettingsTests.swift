@@ -44,18 +44,10 @@ class SettingsTests: XCTestCase {
             nukeWallet: { }
         )
         
-        let testEnvironment = SettingsEnvironment(
-            localAuthenticationHandler: LocalAuthenticationHandler(authenticate: { true }),
-            mnemonic: .live,
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            userPreferencesStorage: .mock,
-            walletStorage: mockedWalletStorage
-        )
-        
         let store = TestStore(
-            initialState: SettingsState(phraseDisplayState: RecoveryPhraseDisplayReducer.State(phrase: nil)),
-            reducer: SettingsReducer.default,
-            environment: testEnvironment
+            initialState: SettingsReducer.State(phraseDisplayState: RecoveryPhraseDisplayReducer.State(phrase: nil)),
+            reducer: SettingsReducer()
+                .dependency(\.walletStorage, mockedWalletStorage)
         )
         
         _ = await store.send(.backupWalletAccessRequest)
@@ -69,18 +61,10 @@ class SettingsTests: XCTestCase {
     }
     
     func testBackupWalletAccessRequest_AuthenticateFailedPath() async throws {
-        let testEnvironment = SettingsEnvironment(
-            localAuthenticationHandler: .unimplemented,
-            mnemonic: .mock,
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            userPreferencesStorage: .mock,
-            walletStorage: .throwing
-        )
-
         let store = TestStore(
             initialState: .placeholder,
-            reducer: SettingsReducer.default,
-            environment: testEnvironment
+            reducer: SettingsReducer()
+                .dependency(\.localAuthenticationHandler, .unimplemented)
         )
         
         _ = await store.send(.backupWalletAccessRequest)
@@ -89,18 +73,9 @@ class SettingsTests: XCTestCase {
     }
     
     func testRescanBlockchain() async throws {
-        let testEnvironment = SettingsEnvironment(
-            localAuthenticationHandler: .unimplemented,
-            mnemonic: .mock,
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            userPreferencesStorage: .mock,
-            walletStorage: .throwing
-        )
-
         let store = TestStore(
             initialState: .placeholder,
-            reducer: SettingsReducer.default,
-            environment: testEnvironment
+            reducer: SettingsReducer()
         )
         
         _ = await store.send(.rescanBlockchain) { state in
@@ -117,16 +92,8 @@ class SettingsTests: XCTestCase {
     }
     
     func testRescanBlockchain_Cancelling() async throws {
-        let testEnvironment = SettingsEnvironment(
-            localAuthenticationHandler: .unimplemented,
-            mnemonic: .mock,
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            userPreferencesStorage: .mock,
-            walletStorage: .throwing
-        )
-
         let store = TestStore(
-            initialState: SettingsState(
+            initialState: SettingsReducer.State(
                 phraseDisplayState: .init(),
                 rescanDialog: .init(
                     title: TextState("Rescan"),
@@ -139,8 +106,7 @@ class SettingsTests: XCTestCase {
                 ),
                 route: nil
             ),
-            reducer: SettingsReducer.default,
-            environment: testEnvironment
+            reducer: SettingsReducer()
         )
         
         _ = await store.send(.cancelRescan) { state in
@@ -149,16 +115,8 @@ class SettingsTests: XCTestCase {
     }
     
     func testRescanBlockchain_QuickRescanClearance() async throws {
-        let testEnvironment = SettingsEnvironment(
-            localAuthenticationHandler: .unimplemented,
-            mnemonic: .mock,
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            userPreferencesStorage: .mock,
-            walletStorage: .throwing
-        )
-
         let store = TestStore(
-            initialState: SettingsState(
+            initialState: SettingsReducer.State(
                 phraseDisplayState: .init(),
                 rescanDialog: .init(
                     title: TextState("Rescan"),
@@ -171,8 +129,7 @@ class SettingsTests: XCTestCase {
                 ),
                 route: nil
             ),
-            reducer: SettingsReducer.default,
-            environment: testEnvironment
+            reducer: SettingsReducer()
         )
         
         _ = await store.send(.quickRescan) { state in
@@ -181,16 +138,8 @@ class SettingsTests: XCTestCase {
     }
     
     func testRescanBlockchain_FullRescanClearance() async throws {
-        let testEnvironment = SettingsEnvironment(
-            localAuthenticationHandler: .unimplemented,
-            mnemonic: .mock,
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            userPreferencesStorage: .mock,
-            walletStorage: .throwing
-        )
-
         let store = TestStore(
-            initialState: SettingsState(
+            initialState: SettingsReducer.State(
                 phraseDisplayState: .init(),
                 rescanDialog: .init(
                     title: TextState("Rescan"),
@@ -203,8 +152,7 @@ class SettingsTests: XCTestCase {
                 ),
                 route: nil
             ),
-            reducer: SettingsReducer.default,
-            environment: testEnvironment
+            reducer: SettingsReducer()
         )
         
         _ = await store.send(.fullRescan) { state in

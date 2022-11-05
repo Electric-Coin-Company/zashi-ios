@@ -12,18 +12,12 @@ import SwiftUI
 
 class SettingsSnapshotTests: XCTestCase {
     func testSettingsSnapshot() throws {
-        let testEnvironment = SettingsEnvironment(
-            localAuthenticationHandler: .unimplemented,
-            mnemonic: .mock,
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            userPreferencesStorage: .mock,
-            walletStorage: .throwing
-        )
-
         let store = Store(
             initialState: .placeholder,
-            reducer: SettingsReducer.default,
-            environment: testEnvironment
+            reducer: SettingsReducer()
+                .dependency(\.localAuthenticationHandler, .unimplemented)
+                .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
+                .dependency(\.walletStorage, .throwing)
         )
         
         addAttachments(SettingsView(store: store))

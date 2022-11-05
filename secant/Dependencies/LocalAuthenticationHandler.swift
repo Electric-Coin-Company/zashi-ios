@@ -7,6 +7,7 @@
 
 import Foundation
 import LocalAuthentication
+import ComposableArchitecture
 
 struct LocalAuthenticationHandler {
     let authenticate: @Sendable () async -> Bool
@@ -42,4 +43,16 @@ extension LocalAuthenticationHandler {
     static let unimplemented = LocalAuthenticationHandler(
         authenticate: { false }
     )
+}
+
+private enum LocalAuthenticationHandlerKey: DependencyKey {
+    static let liveValue = LocalAuthenticationHandler.live
+    static let testValue = LocalAuthenticationHandler(authenticate: { true })
+}
+
+extension DependencyValues {
+    var localAuthenticationHandler: LocalAuthenticationHandler {
+        get { self[LocalAuthenticationHandlerKey.self] }
+        set { self[LocalAuthenticationHandlerKey.self] = newValue }
+    }
 }
