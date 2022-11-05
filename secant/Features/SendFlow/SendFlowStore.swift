@@ -13,6 +13,12 @@ typealias SendFlowReducer = Reducer<SendFlowState, SendFlowAction, SendFlowEnvir
 typealias SendFlowStore = Store<SendFlowState, SendFlowAction>
 typealias SendFlowViewStore = ViewStore<SendFlowState, SendFlowAction>
 
+typealias AnyTransactionAddressTextFieldReducer = AnyReducer<
+    TransactionAddressTextFieldReducer.State,
+    TransactionAddressTextFieldReducer.Action,
+    SendFlowEnvironment
+>
+
 // MARK: - State
 
 struct SendFlowState: Equatable {
@@ -29,7 +35,7 @@ struct SendFlowState: Equatable {
     var memoState: MultiLineTextFieldState
     var route: Route?
     var shieldedBalance = WalletBalance.zero
-    var transactionAddressInputState: TransactionAddressTextFieldState
+    var transactionAddressInputState: TransactionAddressTextFieldReducer.State
     var transactionAmountInputState: TransactionAmountTextFieldState
 
     var address: String {
@@ -83,7 +89,7 @@ enum SendFlowAction: Equatable {
     case sendConfirmationPressed
     case sendTransactionResult(Result<TransactionState, NSError>)
     case synchronizerStateChanged(WrappedSDKSynchronizerState)
-    case transactionAddressInput(TransactionAddressTextFieldAction)
+    case transactionAddressInput(TransactionAddressTextFieldReducer.Action)
     case transactionAmountInput(TransactionAmountTextFieldAction)
     case updateRoute(SendFlowState.Route?)
 }
@@ -222,16 +228,15 @@ extension SendFlowReducer {
         environment: { _ in Void() }
     )
 
-    private static let transactionAddressInputReducer: SendFlowReducer = TransactionAddressTextFieldReducer.default.pullback(
+    private static let transactionAddressInputReducer: SendFlowReducer = AnyTransactionAddressTextFieldReducer { _ in
+        TransactionAddressTextFieldReducer()
+    }
+    .pullback(
         state: \SendFlowState.transactionAddressInputState,
         action: /SendFlowAction.transactionAddressInput,
-        environment: { environment in
-            TransactionAddressTextFieldEnvironment(
-                derivationTool: environment.derivationTool
-            )
-        }
+        environment: { $0 }
     )
-
+    
     private static let transactionAmountInputReducer: SendFlowReducer = TransactionAmountTextFieldReducer.default.pullback(
         state: \SendFlowState.transactionAmountInputState,
         action: /SendFlowAction.transactionAmountInput,

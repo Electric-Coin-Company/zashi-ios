@@ -621,7 +621,7 @@ class SendTests: XCTestCase {
             memoState: MultiLineTextFieldState(charLimit: 3),
             shieldedBalance: WalletBalance(verified: Zatoshi(1), total: Zatoshi(1)),
             transactionAddressInputState:
-                TransactionAddressTextFieldState(
+                TransactionAddressTextFieldReducer.State(
                     isValidAddress: true,
                     textFieldState:
                         TCATextFieldReducer.State(

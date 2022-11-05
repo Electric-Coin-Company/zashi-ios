@@ -19,7 +19,7 @@ struct TransactionAddressTextField: View {
                     title: "To",
                     store: store.scope(
                         state: \.textFieldState,
-                        action: TransactionAddressTextFieldAction.textField
+                        action: TransactionAddressTextFieldReducer.Action.textField
                     ),
                     titleAccessoryView: {
                         if !viewStore.textFieldState.text.isEmpty {
@@ -56,8 +56,7 @@ struct TransactionAddressTextField_Previews: PreviewProvider {
                         text: ""
                     )
                 ),
-                reducer: .default,
-                environment: .init(derivationTool: .live())
+                reducer: TransactionAddressTextFieldReducer()
             )
         )
         .preferredColorScheme(.dark)

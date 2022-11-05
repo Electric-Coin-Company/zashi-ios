@@ -13,18 +13,14 @@ class TransactionAddressTextFieldTests: XCTestCase {
     func testClearValue() throws {
         let store = TestStore(
             initialState:
-                TransactionAddressTextFieldState(
+                TransactionAddressTextFieldReducer.State(
                     textFieldState:
                         TCATextFieldReducer.State(
                             validationType: nil,
                             text: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
                         )
                 ),
-            reducer: TransactionAddressTextFieldReducer.default,
-            environment:
-                TransactionAddressTextFieldEnvironment(
-                    derivationTool: .live()
-                )
+            reducer: TransactionAddressTextFieldReducer()
         )
 
         store.send(.clearAddress) { state in

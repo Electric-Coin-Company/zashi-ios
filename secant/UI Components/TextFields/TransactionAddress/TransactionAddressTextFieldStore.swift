@@ -8,67 +8,49 @@
 import ComposableArchitecture
 import SwiftUI
 
-typealias TransactionAddressTextFieldReducer = Reducer<
-    TransactionAddressTextFieldState,
-    TransactionAddressTextFieldAction,
-    TransactionAddressTextFieldEnvironment
->
+typealias TransactionAddressTextFieldStore = Store<TransactionAddressTextFieldReducer.State, TransactionAddressTextFieldReducer.Action>
 
-typealias TransactionAddressTextFieldStore = Store<TransactionAddressTextFieldState, TransactionAddressTextFieldAction>
+struct TransactionAddressTextFieldReducer: ReducerProtocol {
+    struct State: Equatable {
+        var isValidAddress = false
+        var textFieldState: TCATextFieldReducer.State
+    }
 
-typealias AnyTCATextFieldReducerAddress = AnyReducer<TCATextFieldReducer.State, TCATextFieldReducer.Action, TransactionAddressTextFieldEnvironment>
-
-struct TransactionAddressTextFieldState: Equatable {
-    var isValidAddress = false
-    var textFieldState: TCATextFieldReducer.State
-}
-
-enum TransactionAddressTextFieldAction: Equatable {
-    case clearAddress
-    case textField(TCATextFieldReducer.Action)
-}
-
-struct TransactionAddressTextFieldEnvironment {
-    let derivationTool: WrappedDerivationTool
-}
-
-extension TransactionAddressTextFieldReducer {
-    static let `default` = TransactionAddressTextFieldReducer.combine(
-        [
-            addressReducer,
-            textFieldReducer
-        ]
-    )
+    enum Action: Equatable {
+        case clearAddress
+        case textField(TCATextFieldReducer.Action)
+    }
     
-    private static let addressReducer = TransactionAddressTextFieldReducer { state, action, environment in
-        switch action {
-        case .clearAddress:
-            state.textFieldState.text = ""
-            return .none
+    @Dependency(\.derivationTool) var derivationTool
+    
+    var body: some ReducerProtocol<State, Action> {
+        Reduce { state, action in
+            switch action {
+            case .clearAddress:
+                state.textFieldState.text = ""
+                return .none
 
-        case .textField(.set(let address)):
-            do {
-                state.isValidAddress = try environment.derivationTool.isValidZcashAddress(address)
-            } catch {
-                state.isValidAddress = false
+            case .textField(.set(let address)):
+                do {
+                    state.isValidAddress = try derivationTool.isValidZcashAddress(address)
+                } catch {
+                    state.isValidAddress = false
+                }
+                    
+                return .none
             }
-                
-            return .none
+        }
+        
+        Scope(state: \.textFieldState, action: /Action.textField) {
+            TCATextFieldReducer()
         }
     }
-    
-    private static let textFieldReducer: TransactionAddressTextFieldReducer = AnyTCATextFieldReducerAddress { _ in
-        TCATextFieldReducer()
-    }
-    .pullback(
-        state: \TransactionAddressTextFieldState.textFieldState,
-        action: /TransactionAddressTextFieldAction.textField,
-        environment: { $0 }
-    )
 }
 
-extension TransactionAddressTextFieldState {
-    static let placeholder = TransactionAddressTextFieldState(
+// MARK: - Placeholders
+
+extension TransactionAddressTextFieldReducer.State {
+    static let placeholder = TransactionAddressTextFieldReducer.State(
         textFieldState: .placeholder
     )
 }
@@ -76,9 +58,6 @@ extension TransactionAddressTextFieldState {
 extension TransactionAddressTextFieldStore {
     static let placeholder = TransactionAddressTextFieldStore(
         initialState: .placeholder,
-        reducer: .default,
-        environment: TransactionAddressTextFieldEnvironment(
-            derivationTool: .live()
-        )
+        reducer: TransactionAddressTextFieldReducer()
     )
 }
