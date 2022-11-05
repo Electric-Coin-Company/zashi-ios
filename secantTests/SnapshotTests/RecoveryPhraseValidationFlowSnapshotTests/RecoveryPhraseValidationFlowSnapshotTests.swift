@@ -14,7 +14,7 @@ class RecoveryPhraseValidationFlowSnapshotTests: XCTestCase {
     func testRecoveryPhraseValidationFlowPreambleSnapshot() throws {
         let store = RecoveryPhraseValidationFlowStore(
             initialState: .placeholder,
-            reducer: RecoveryPhraseValidationFlow()
+            reducer: RecoveryPhraseValidationFlowReducer()
         )
 
         addAttachments(RecoveryPhraseValidationFlowView(store: store))
@@ -23,7 +23,7 @@ class RecoveryPhraseValidationFlowSnapshotTests: XCTestCase {
     func testRecoveryPhraseValidationFlowBackupSnapshot() throws {
         let store = RecoveryPhraseValidationFlowStore(
             initialState: .placeholder,
-            reducer: RecoveryPhraseValidationFlow()
+            reducer: RecoveryPhraseValidationFlowReducer()
                 .dependency(\.mainQueue, RecoveryPhraseValidationTests.testScheduler.eraseToAnyScheduler())
         )
         let viewStore = ViewStore(store)
@@ -66,7 +66,7 @@ class RecoveryPhraseValidationFlowSnapshotTests: XCTestCase {
     func testRecoveryPhraseValidationFlowSucceededSnapshot() throws {
         let store = RecoveryPhraseValidationFlowStore(
             initialState: .placeholder,
-            reducer: RecoveryPhraseValidationFlow()
+            reducer: RecoveryPhraseValidationFlowReducer()
         )
 
         addAttachments(RecoveryPhraseBackupSucceededView(store: store))
@@ -75,7 +75,7 @@ class RecoveryPhraseValidationFlowSnapshotTests: XCTestCase {
     func testRecoveryPhraseValidationFlowFailedSnapshot() throws {
         let store = RecoveryPhraseValidationFlowStore(
             initialState: .placeholder,
-            reducer: RecoveryPhraseValidationFlow()
+            reducer: RecoveryPhraseValidationFlowReducer()
         )
 
         addAttachments(RecoveryPhraseBackupFailedView(store: store))

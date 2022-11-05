@@ -13,7 +13,7 @@ typealias OnboardingFlowReducer = Reducer<OnboardingFlowState, OnboardingFlowAct
 typealias OnboardingFlowStore = Store<OnboardingFlowState, OnboardingFlowAction>
 typealias OnboardingFlowViewStore = ViewStore<OnboardingFlowState, OnboardingFlowAction>
 
-typealias AnyImportWalletReducer = AnyReducer<ImportWallet.State, ImportWallet.Action, OnboardingFlowEnvironment>
+typealias AnyImportWalletReducer = AnyReducer<ImportWalletReducer.State, ImportWalletReducer.Action, OnboardingFlowEnvironment>
 
 // MARK: - State
 
@@ -48,7 +48,7 @@ struct OnboardingFlowState: Equatable {
     }
     
     /// Import Wallet
-    var importWalletState: ImportWallet.State
+    var importWalletState: ImportWalletReducer.State
 }
 
 extension OnboardingFlowState {
@@ -95,7 +95,7 @@ enum OnboardingFlowAction: Equatable {
     case updateRoute(OnboardingFlowState.Route?)
     case createNewWallet
     case importExistingWallet
-    case importWallet(ImportWallet.Action)
+    case importWallet(ImportWalletReducer.Action)
 }
 
 // MARK: - Environment
@@ -171,7 +171,7 @@ extension OnboardingFlowReducer {
     }
     
     private static let importWalletReducer: OnboardingFlowReducer = AnyImportWalletReducer { _ in
-        ImportWallet()
+        ImportWalletReducer()
     }
     .pullback(
         state: \OnboardingFlowState.importWalletState,

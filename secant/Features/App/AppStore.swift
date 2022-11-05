@@ -6,8 +6,8 @@ typealias AppReducer = Reducer<AppState, AppAction, AppEnvironment>
 typealias AppStore = Store<AppState, AppAction>
 typealias AppViewStore = ViewStore<AppState, AppAction>
 
-typealias AnyRecoveryPhraseDisplayReducer = AnyReducer<RecoveryPhraseDisplay.State, RecoveryPhraseDisplay.Action, AppEnvironment>
-typealias AnyRecoveryPhraseValidationFlowReducer = AnyReducer<RecoveryPhraseValidationFlow.State, RecoveryPhraseValidationFlow.Action, AppEnvironment>
+typealias AnyRecoveryPhraseDisplayReducer = AnyReducer<RecoveryPhraseDisplayReducer.State, RecoveryPhraseDisplayReducer.Action, AppEnvironment>
+typealias AnyRecoveryPhraseValidationFlowReducer = AnyReducer<RecoveryPhraseValidationFlowReducer.State, RecoveryPhraseValidationFlowReducer.Action, AppEnvironment>
 
 // MARK: - State
 
@@ -25,8 +25,8 @@ struct AppState: Equatable {
     var appInitializationState: InitializationState = .uninitialized
     var homeState: HomeState
     var onboardingState: OnboardingFlowState
-    var phraseValidationState: RecoveryPhraseValidationFlow.State
-    var phraseDisplayState: RecoveryPhraseDisplay.State
+    var phraseValidationState: RecoveryPhraseValidationFlowReducer.State
+    var phraseDisplayState: RecoveryPhraseDisplayReducer.State
     var prevRoute: Route?
     var internalRoute: Route = .welcome
     var sandboxState: SandboxState
@@ -56,8 +56,8 @@ enum AppAction: Equatable {
     case initializeSDK
     case nukeWallet
     case onboarding(OnboardingFlowAction)
-    case phraseDisplay(RecoveryPhraseDisplay.Action)
-    case phraseValidation(RecoveryPhraseValidationFlow.Action)
+    case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
+    case phraseValidation(RecoveryPhraseValidationFlowReducer.Action)
     case respondToWalletInitializationState(InitializationState)
     case sandbox(SandboxAction)
     case updateRoute(AppState.Route)
@@ -393,7 +393,7 @@ extension AppReducer {
     )
 
     private static let phraseValidationReducer: AppReducer = AnyRecoveryPhraseValidationFlowReducer { _ in
-        RecoveryPhraseValidationFlow()
+        RecoveryPhraseValidationFlowReducer()
     }
     .pullback(
         state: \AppState.phraseValidationState,
@@ -402,7 +402,7 @@ extension AppReducer {
     )
     
     private static let phraseDisplayReducer: AppReducer = AnyRecoveryPhraseDisplayReducer { _ in
-        RecoveryPhraseDisplay()
+        RecoveryPhraseDisplayReducer()
     }
     .pullback(
         state: \AppState.phraseDisplayState,
@@ -514,7 +514,7 @@ extension AppState {
                 importWalletState: .placeholder
             ),
             phraseValidationState: .placeholder,
-            phraseDisplayState: RecoveryPhraseDisplay.State(
+            phraseDisplayState: RecoveryPhraseDisplayReducer.State(
                 phrase: .placeholder
             ),
             sandboxState: .placeholder,

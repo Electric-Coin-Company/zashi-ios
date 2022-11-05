@@ -144,11 +144,12 @@
 		9E6713F8289BC58C00A6796F /* BalanceBreakdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6713F5289BC58C00A6796F /* BalanceBreakdownView.swift */; };
 		9E6713FA289BE0E100A6796F /* ClearBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6713F9289BE0E100A6796F /* ClearBackgroundView.swift */; };
 		9E69A24D27FB002800A55317 /* WelcomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E69A24C27FB002800A55317 /* WelcomeStore.swift */; };
-		9E6EF2D12913B75400CA007B /* MnemonicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EF2D02913B75400CA007B /* MnemonicKey.swift */; };
-		9E6EF2D32913B79A00CA007B /* WalletStorageKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EF2D22913B79A00CA007B /* WalletStorageKey.swift */; };
 		9E6EF2CB291287BB00CA007B /* FeedbackGeneratorKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EF2CA291287BB00CA007B /* FeedbackGeneratorKey.swift */; };
 		9E6EF2CD2913B06300CA007B /* NumberFormatterKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EF2CC2913B06300CA007B /* NumberFormatterKey.swift */; };
 		9E6EF2CF2913B11A00CA007B /* SDKSynchronizerKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EF2CE2913B11A00CA007B /* SDKSynchronizerKey.swift */; };
+		9E6EF2D12913B75400CA007B /* MnemonicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EF2D02913B75400CA007B /* MnemonicKey.swift */; };
+		9E6EF2D32913B79A00CA007B /* WalletStorageKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EF2D22913B79A00CA007B /* WalletStorageKey.swift */; };
+		9E6EF2D5291525D300CA007B /* CaptureDeviceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EF2D4291525D300CA007B /* CaptureDeviceKey.swift */; };
 		9E7225F12889539300DF7F17 /* SettingsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7225F02889539300DF7F17 /* SettingsSnapshotTests.swift */; };
 		9E7225F3288AB6DD00DF7F17 /* MultipleLineTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7225F2288AB6DD00DF7F17 /* MultipleLineTextField.swift */; };
 		9E7225F6288AC71A00DF7F17 /* MultiLineTextFieldStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7225F5288AC71A00DF7F17 /* MultiLineTextFieldStore.swift */; };
@@ -394,11 +395,12 @@
 		9E6713F6289BC58C00A6796F /* BalanceBreakdownStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceBreakdownStore.swift; sourceTree = "<group>"; };
 		9E6713F9289BE0E100A6796F /* ClearBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearBackgroundView.swift; sourceTree = "<group>"; };
 		9E69A24C27FB002800A55317 /* WelcomeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeStore.swift; sourceTree = "<group>"; };
-		9E6EF2D02913B75400CA007B /* MnemonicKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicKey.swift; sourceTree = "<group>"; };
-		9E6EF2D22913B79A00CA007B /* WalletStorageKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletStorageKey.swift; sourceTree = "<group>"; };
 		9E6EF2CA291287BB00CA007B /* FeedbackGeneratorKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackGeneratorKey.swift; sourceTree = "<group>"; };
 		9E6EF2CC2913B06300CA007B /* NumberFormatterKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberFormatterKey.swift; sourceTree = "<group>"; };
 		9E6EF2CE2913B11A00CA007B /* SDKSynchronizerKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKSynchronizerKey.swift; sourceTree = "<group>"; };
+		9E6EF2D02913B75400CA007B /* MnemonicKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicKey.swift; sourceTree = "<group>"; };
+		9E6EF2D22913B79A00CA007B /* WalletStorageKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletStorageKey.swift; sourceTree = "<group>"; };
+		9E6EF2D4291525D300CA007B /* CaptureDeviceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureDeviceKey.swift; sourceTree = "<group>"; };
 		9E7225F02889539300DF7F17 /* SettingsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSnapshotTests.swift; sourceTree = "<group>"; };
 		9E7225F2288AB6DD00DF7F17 /* MultipleLineTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleLineTextField.swift; sourceTree = "<group>"; };
 		9E7225F5288AC71A00DF7F17 /* MultiLineTextFieldStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiLineTextFieldStore.swift; sourceTree = "<group>"; };
@@ -1143,6 +1145,7 @@
 				9E6EF2CA291287BB00CA007B /* FeedbackGeneratorKey.swift */,
 				9E6EF2CC2913B06300CA007B /* NumberFormatterKey.swift */,
 				9E6EF2CE2913B11A00CA007B /* SDKSynchronizerKey.swift */,
+				9E6EF2D4291525D300CA007B /* CaptureDeviceKey.swift */,
 			);
 			path = Dependencies;
 			sourceTree = "<group>";
@@ -1700,6 +1703,7 @@
 				9E66122C2877188700C75B70 /* SyncStatusSnapshot.swift in Sources */,
 				9E4DC6E227C4C6B700E657F4 /* SecantButtonStyles.swift in Sources */,
 				0DDB6A5127737D4A0012A410 /* RecoveryPhraseBackupFailedView.swift in Sources */,
+				9E6EF2D5291525D300CA007B /* CaptureDeviceKey.swift in Sources */,
 				0D6D628B276A528E002FB4CC /* DropDelegate.swift in Sources */,
 				9E2DF99D27CF704D00649636 /* ImportSeedEditor.swift in Sources */,
 				F9971A5327680DD000A2DB75 /* ProfileStore.swift in Sources */,

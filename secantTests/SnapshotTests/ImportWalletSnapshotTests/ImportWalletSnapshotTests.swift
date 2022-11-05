@@ -13,7 +13,7 @@ class ImportWalletSnapshotTests: XCTestCase {
     func testImportWalletSnapshot() throws {
         let store = ImportWalletStore(
             initialState: .placeholder,
-            reducer: ImportWallet()
+            reducer: ImportWalletReducer()
         )
         
         addAttachments(ImportWalletView(store: store))

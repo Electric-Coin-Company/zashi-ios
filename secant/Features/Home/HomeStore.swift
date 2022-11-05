@@ -9,7 +9,8 @@ typealias HomeReducer = Reducer<HomeState, HomeAction, HomeEnvironment>
 typealias HomeStore = Store<HomeState, HomeAction>
 typealias HomeViewStore = ViewStore<HomeState, HomeAction>
 
-typealias AnyBalanceBreakdownReducer = AnyReducer<BalanceBreakdown.State, BalanceBreakdown.Action, HomeEnvironment>
+typealias AnyBalanceBreakdownReducer = AnyReducer<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action, HomeEnvironment>
+typealias AnyScanReducer = AnyReducer<ScanReducer.State, ScanReducer.Action, HomeEnvironment>
 
 // MARK: State
 
@@ -25,12 +26,12 @@ struct HomeState: Equatable {
 
     var route: Route?
 
-    var balanceBreakdown: BalanceBreakdown.State
+    var balanceBreakdown: BalanceBreakdownReducer.State
     var drawerOverlay: DrawerOverlay
     var profileState: ProfileState
     var requestState: RequestState
     var requiredTransactionConfirmations = 0
-    var scanState: ScanState
+    var scanState: ScanReducer.State
     var sendState: SendFlowState
     var shieldedBalance: WalletBalance
     var synchronizerStatusSnapshot: SyncStatusSnapshot
@@ -60,14 +61,14 @@ struct HomeState: Equatable {
 // MARK: Action
 
 enum HomeAction: Equatable {
-    case balanceBreakdown(BalanceBreakdown.Action)
+    case balanceBreakdown(BalanceBreakdownReducer.Action)
     case debugMenuStartup
     case onAppear
     case onDisappear
     case profile(ProfileAction)
     case request(RequestAction)
     case send(SendFlowAction)
-    case scan(ScanAction)
+    case scan(ScanReducer.Action)
     case synchronizerStateChanged(WrappedSDKSynchronizerState)
     case walletEvents(WalletEventsFlowAction)
     case updateDrawer(DrawerOverlay)
@@ -261,18 +262,16 @@ extension HomeReducer {
         }
     )
     
-    private static let scanReducer: HomeReducer = ScanReducer.default.pullback(
+    private static let scanReducer: HomeReducer = AnyScanReducer { environment in
+        ScanReducer()
+            .dependency(\.uriParser, .live(uriParser: URIParser(derivationTool: environment.derivationTool)))
+    }
+    .pullback(
         state: \HomeState.scanState,
         action: /HomeAction.scan,
-        environment: { environment in
-            ScanEnvironment(
-                captureDevice: .real,
-                scheduler: environment.scheduler,
-                uriParser: .live(uriParser: URIParser(derivationTool: environment.derivationTool))
-            )
-        }
+        environment: { $0 }
     )
-
+    
     private static let profileReducer: HomeReducer = ProfileReducer.default.pullback(
         state: \HomeState.profileState,
         action: /HomeAction.profile,
@@ -288,7 +287,7 @@ extension HomeReducer {
     )
     
     private static let balanceBreakdownReducer: HomeReducer = AnyBalanceBreakdownReducer { _ in
-        BalanceBreakdown()
+        BalanceBreakdownReducer()
     }
     .pullback(
         state: \HomeState.balanceBreakdown,

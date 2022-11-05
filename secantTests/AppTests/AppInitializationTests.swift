@@ -33,7 +33,7 @@ class AppInitializationTests: XCTestCase {
 
         let recoveryPhrase = RecoveryPhrase(words: try WrappedMnemonic.mock.randomMnemonicWords())
         
-        let phraseValidationState = RecoveryPhraseValidationFlow.State(
+        let phraseValidationState = RecoveryPhraseValidationFlowReducer.State(
             phrase: recoveryPhrase,
             missingIndices: [2, 0, 3, 5],
             missingWordChips: [
@@ -67,7 +67,7 @@ class AppInitializationTests: XCTestCase {
                     )
                 ]
 
-                return RecoveryPhraseValidationFlow.State(
+                return RecoveryPhraseValidationFlowReducer.State(
                     phrase: recoveryPhrase,
                     missingIndices: missingIndices,
                     missingWordChips: missingWordChipKind,
@@ -99,7 +99,7 @@ class AppInitializationTests: XCTestCase {
                 importWalletState: .placeholder
             ),
             phraseValidationState: phraseValidationState,
-            phraseDisplayState: RecoveryPhraseDisplay.State(
+            phraseDisplayState: RecoveryPhraseDisplayReducer.State(
                 phrase: recoveryPhrase
             ),
             sandboxState: .placeholder,
