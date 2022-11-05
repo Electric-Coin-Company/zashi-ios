@@ -103,8 +103,7 @@ struct SingleLineTextField_Previews: PreviewProvider {
                     validationType: .floatingPoint,
                     text: ""
                 ),
-                reducer: .default,
-                environment: .init()
+                reducer: TCATextFieldReducer()
             )
         )
         .preferredColorScheme(.dark)
@@ -118,8 +117,7 @@ struct SingleLineTextField_Previews: PreviewProvider {
                     validationType: .email,
                     text: ""
                 ),
-                reducer: .default,
-                environment: .init()
+                reducer: TCATextFieldReducer()
             )
         )
         .preferredColorScheme(.light)

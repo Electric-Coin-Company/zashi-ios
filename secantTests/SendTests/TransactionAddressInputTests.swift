@@ -15,7 +15,7 @@ class TransactionAddressTextFieldTests: XCTestCase {
             initialState:
                 TransactionAddressTextFieldState(
                     textFieldState:
-                        TCATextFieldState(
+                        TCATextFieldReducer.State(
                             validationType: nil,
                             text: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
                         )
