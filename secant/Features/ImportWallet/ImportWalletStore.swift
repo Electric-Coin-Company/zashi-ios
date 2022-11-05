@@ -37,10 +37,6 @@ struct ImportWalletReducer: ReducerProtocol {
         }
     }
 
-    @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
-    @Dependency(\.mnemonic) var mnemonic
-    @Dependency(\.walletStorage) var walletStorage
-
     enum Action: Equatable, BindableAction {
         case binding(BindingAction<ImportWalletReducer.State>)
         case dismissAlert
@@ -50,7 +46,11 @@ struct ImportWalletReducer: ReducerProtocol {
         case onAppear
         case successfullyRecovered
     }
-    
+
+    @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
+    @Dependency(\.mnemonic) var mnemonic
+    @Dependency(\.walletStorage) var walletStorage
+
     var body: some ReducerProtocol<State, Action> {
         BindingReducer()
         

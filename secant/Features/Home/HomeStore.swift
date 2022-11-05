@@ -11,6 +11,7 @@ typealias HomeViewStore = ViewStore<HomeState, HomeAction>
 
 typealias AnyBalanceBreakdownReducer = AnyReducer<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action, HomeEnvironment>
 typealias AnyScanReducer = AnyReducer<ScanReducer.State, ScanReducer.Action, HomeEnvironment>
+typealias AnyWalletEventsFlowReducer = AnyReducer<WalletEventsFlowReducer.State, WalletEventsFlowReducer.Action, HomeEnvironment>
 
 // MARK: State
 
@@ -35,7 +36,7 @@ struct HomeState: Equatable {
     var sendState: SendFlowState
     var shieldedBalance: WalletBalance
     var synchronizerStatusSnapshot: SyncStatusSnapshot
-    var walletEventsState: WalletEventsFlowState
+    var walletEventsState: WalletEventsFlowReducer.State
     // TODO [#311]: - Get the ZEC price from the SDK, https://github.com/zcash/secant-ios-wallet/issues/311
     var zecPrice = Decimal(140.0)
 
@@ -70,7 +71,7 @@ enum HomeAction: Equatable {
     case send(SendFlowAction)
     case scan(ScanReducer.Action)
     case synchronizerStateChanged(WrappedSDKSynchronizerState)
-    case walletEvents(WalletEventsFlowAction)
+    case walletEvents(WalletEventsFlowReducer.Action)
     case updateDrawer(DrawerOverlay)
     case updateRoute(HomeState.Route?)
     case updateSynchronizerStatus
@@ -113,7 +114,7 @@ extension HomeReducer {
     static let `default` = HomeReducer.combine(
         [
             homeReducer,
-            historyReducer,
+            walletEventsFlowReducer,
             sendReducer,
             scanReducer,
             profileReducer,
@@ -233,17 +234,13 @@ extension HomeReducer {
         }
     }
     
-    private static let historyReducer: HomeReducer = WalletEventsFlowReducer.default.pullback(
+    private static let walletEventsFlowReducer: HomeReducer = AnyWalletEventsFlowReducer { _ in
+        WalletEventsFlowReducer()
+    }
+    .pullback(
         state: \HomeState.walletEventsState,
         action: /HomeAction.walletEvents,
-        environment: { environment in
-            WalletEventsFlowEnvironment(
-                pasteboard: .live,
-                scheduler: environment.scheduler,
-                SDKSynchronizer: environment.SDKSynchronizer,
-                zcashSDKEnvironment: environment.zcashSDKEnvironment
-            )
-        }
+        environment: { $0 }
     )
     
     private static let sendReducer: HomeReducer = SendFlowReducer.default.pullback(

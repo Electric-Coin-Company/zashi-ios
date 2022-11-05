@@ -2,80 +2,70 @@ import ComposableArchitecture
 import SwiftUI
 import ZcashLightClientKit
 
-typealias WalletEventsFlowReducer = Reducer<WalletEventsFlowState, WalletEventsFlowAction, WalletEventsFlowEnvironment>
-typealias WalletEventsFlowStore = Store<WalletEventsFlowState, WalletEventsFlowAction>
-typealias WalletEventsFlowViewStore = ViewStore<WalletEventsFlowState, WalletEventsFlowAction>
+typealias WalletEventsFlowStore = Store<WalletEventsFlowReducer.State, WalletEventsFlowReducer.Action>
+typealias WalletEventsFlowViewStore = ViewStore<WalletEventsFlowReducer.State, WalletEventsFlowReducer.Action>
 
-// MARK: - State
+struct WalletEventsFlowReducer: ReducerProtocol {
+    private enum CancelId {}
 
-struct WalletEventsFlowState: Equatable {
-    enum Route: Equatable {
-        case latest
-        case all
-        case showWalletEvent(WalletEvent)
+    struct State: Equatable {
+        enum Route: Equatable {
+            case latest
+            case all
+            case showWalletEvent(WalletEvent)
+        }
+
+        var route: Route?
+
+        @BindableState var alert: AlertState<WalletEventsFlowReducer.Action>?
+        var latestMinedHeight: BlockHeight?
+        var isScrollable = false
+        var requiredTransactionConfirmations = 0
+        var walletEvents = IdentifiedArrayOf<WalletEvent>.placeholder
+        var selectedWalletEvent: WalletEvent?
     }
 
-    var route: Route?
-
-    @BindableState var alert: AlertState<WalletEventsFlowAction>?
-    var latestMinedHeight: BlockHeight?
-    var isScrollable = false
-    var requiredTransactionConfirmations = 0
-    var walletEvents = IdentifiedArrayOf<WalletEvent>.placeholder
-    var selectedWalletEvent: WalletEvent?
-}
-
-// MARK: - Action
-
-enum WalletEventsFlowAction: Equatable {
-    case copyToPastboard(String)
-    case dismissAlert
-    case onAppear
-    case onDisappear
-    case openBlockExplorer(URL?)
-    case updateRoute(WalletEventsFlowState.Route?)
-    case replyTo(String)
-    case synchronizerStateChanged(WrappedSDKSynchronizerState)
-    case updateWalletEvents([WalletEvent])
-    case warnBeforeLeavingApp(URL?)
-}
-
-// MARK: - Environment
-
-struct WalletEventsFlowEnvironment {
-    let pasteboard: WrappedPasteboard
-    let scheduler: AnySchedulerOf<DispatchQueue>
-    let SDKSynchronizer: WrappedSDKSynchronizer
-    let zcashSDKEnvironment: ZCashSDKEnvironment
-}
-
-// MARK: - Reducer
-
-extension WalletEventsFlowReducer {
-    private struct CancelId: Hashable {}
+    enum Action: Equatable {
+        case copyToPastboard(String)
+        case dismissAlert
+        case onAppear
+        case onDisappear
+        case openBlockExplorer(URL?)
+        case updateRoute(WalletEventsFlowReducer.State.Route?)
+        case replyTo(String)
+        case synchronizerStateChanged(WrappedSDKSynchronizerState)
+        case updateWalletEvents([WalletEvent])
+        case warnBeforeLeavingApp(URL?)
+    }
     
-    static let `default` = WalletEventsFlowReducer { state, action, environment in
+    @Dependency(\.pasteboard) var pasteboard
+    @Dependency(\.mainQueue) var mainQueue
+    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
+    
+    // swiftlint:disable:next cyclomatic_complexity
+    func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
         switch action {
         case .onAppear:
-            state.requiredTransactionConfirmations = environment.zcashSDKEnvironment.requiredTransactionConfirmations
-            return environment.SDKSynchronizer.stateChanged
-                .map(WalletEventsFlowAction.synchronizerStateChanged)
+            state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
+            return sdkSynchronizer.stateChanged
+                .map(WalletEventsFlowReducer.Action.synchronizerStateChanged)
                 .eraseToEffect()
-                .cancellable(id: CancelId(), cancelInFlight: true)
+                .cancellable(id: CancelId.self, cancelInFlight: true)
 
         case .onDisappear:
-            return Effect.cancel(id: CancelId())
+            return Effect.cancel(id: CancelId.self)
 
         case .synchronizerStateChanged(.synced):
-            if let latestMinedHeight = environment.SDKSynchronizer.synchronizer?.latestScannedHeight {
+            if let latestMinedHeight = sdkSynchronizer.synchronizer?.latestScannedHeight {
                 state.latestMinedHeight = latestMinedHeight
             }
-            return environment.SDKSynchronizer.getAllTransactions()
-                .receive(on: environment.scheduler)
-                .map(WalletEventsFlowAction.updateWalletEvents)
+            return sdkSynchronizer.getAllTransactions()
+                .receive(on: mainQueue)
+                .map(WalletEventsFlowReducer.Action.updateWalletEvents)
                 .eraseToEffect()
             
-        case .synchronizerStateChanged(let synchronizerState):
+        case .synchronizerStateChanged:
             return .none
             
         case .updateWalletEvents(let walletEvents):
@@ -99,10 +89,10 @@ extension WalletEventsFlowReducer {
             return .none
             
         case .copyToPastboard(let value):
-            environment.pasteboard.setString(value)
+            pasteboard.setString(value)
             return .none
             
-        case .replyTo(let address):
+        case .replyTo:
             return .none
 
         case .dismissAlert:
@@ -140,7 +130,7 @@ extension WalletEventsFlowReducer {
 // MARK: - ViewStore
 
 extension WalletEventsFlowViewStore {
-    private typealias Route = WalletEventsFlowState.Route
+    private typealias Route = WalletEventsFlowReducer.State.Route
 
     func bindingForSelectedWalletEvent(_ walletEvent: WalletEvent?) -> Binding<Bool> {
         self.binding(
@@ -149,14 +139,14 @@ extension WalletEventsFlowViewStore {
                     return false
                 }
                 
-                return $0.route.map(/WalletEventsFlowState.Route.showWalletEvent) == walletEvent
+                return $0.route.map(/WalletEventsFlowReducer.State.Route.showWalletEvent) == walletEvent
             },
             send: { isActive in
                 guard let walletEvent = walletEvent else {
-                    return WalletEventsFlowAction.updateRoute(nil)
+                    return WalletEventsFlowReducer.Action.updateRoute(nil)
                 }
                 
-                return WalletEventsFlowAction.updateRoute( isActive ? WalletEventsFlowState.Route.showWalletEvent(walletEvent) : nil)
+                return WalletEventsFlowReducer.Action.updateRoute( isActive ? WalletEventsFlowReducer.State.Route.showWalletEvent(walletEvent) : nil)
             }
         )
     }
@@ -188,7 +178,7 @@ extension TransactionState {
     }
 }
 
-extension WalletEventsFlowState {
+extension WalletEventsFlowReducer.State {
     static var placeHolder: Self {
         .init(walletEvents: .placeholder)
     }
@@ -199,16 +189,11 @@ extension WalletEventsFlowState {
 }
 
 extension WalletEventsFlowStore {
-    static var placeholder: Store<WalletEventsFlowState, WalletEventsFlowAction> {
+    static var placeholder: Store<WalletEventsFlowReducer.State, WalletEventsFlowReducer.Action> {
         return Store(
             initialState: .placeHolder,
-            reducer: .default,
-            environment: WalletEventsFlowEnvironment(
-                pasteboard: .live,
-                scheduler: DispatchQueue.main.eraseToAnyScheduler(),
-                SDKSynchronizer: LiveWrappedSDKSynchronizer(),
-                zcashSDKEnvironment: .testnet
-            )
+            reducer: WalletEventsFlowReducer()
+                .dependency(\.zcashSDKEnvironment, .testnet)
         )
     }
 }

@@ -99,19 +99,10 @@ class WalletEventsSnapshotTests: XCTestCase {
             environment: .demo
         )
         
-        // wallet event detail
-        let testEnvironment = WalletEventsFlowEnvironment(
-            pasteboard: .test,
-            scheduler: DispatchQueue.test.eraseToAnyScheduler(),
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            zcashSDKEnvironment: .testnet
-        )
-        
         ViewStore(store).send(.walletEvents(.updateRoute(.showWalletEvent(walletEvent))))
         let walletEventsStore = WalletEventsFlowStore(
             initialState: .placeHolder,
-            reducer: .default,
-            environment: testEnvironment
+            reducer: WalletEventsFlowReducer()
         )
         
         addAttachments(
@@ -156,19 +147,10 @@ class WalletEventsSnapshotTests: XCTestCase {
             environment: .demo
         )
         
-        // wallet event detail
-        let testEnvironment = WalletEventsFlowEnvironment(
-            pasteboard: .test,
-            scheduler: DispatchQueue.test.eraseToAnyScheduler(),
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            zcashSDKEnvironment: .testnet
-        )
-        
         ViewStore(store).send(.walletEvents(.updateRoute(.showWalletEvent(walletEvent))))
         let walletEventsStore = WalletEventsFlowStore(
             initialState: .placeHolder,
-            reducer: .default,
-            environment: testEnvironment
+            reducer: WalletEventsFlowReducer()
         )
         
         addAttachments(
@@ -213,15 +195,7 @@ class WalletEventsSnapshotTests: XCTestCase {
             environment: .demo
         )
         
-        // wallet event detail
-        let testEnvironment = WalletEventsFlowEnvironment(
-            pasteboard: .test,
-            scheduler: DispatchQueue.test.eraseToAnyScheduler(),
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            zcashSDKEnvironment: .testnet
-        )
-        
-        let walletEventsState = WalletEventsFlowState(
+        let walletEventsState = WalletEventsFlowReducer.State(
             requiredTransactionConfirmations: 10,
             walletEvents: .placeholder
         )
@@ -229,8 +203,7 @@ class WalletEventsSnapshotTests: XCTestCase {
         ViewStore(store).send(.walletEvents(.updateRoute(.showWalletEvent(walletEvent))))
         let walletEventsStore = WalletEventsFlowStore(
             initialState: walletEventsState,
-            reducer: .default,
-            environment: testEnvironment
+            reducer: WalletEventsFlowReducer()
         )
         
         addAttachments(
@@ -276,19 +249,10 @@ class WalletEventsSnapshotTests: XCTestCase {
             environment: .demo
         )
         
-        // wallet event detail
-        let testEnvironment = WalletEventsFlowEnvironment(
-            pasteboard: .test,
-            scheduler: DispatchQueue.test.eraseToAnyScheduler(),
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            zcashSDKEnvironment: .testnet
-        )
-        
         ViewStore(store).send(.walletEvents(.updateRoute(.showWalletEvent(walletEvent))))
         let walletEventsStore = WalletEventsFlowStore(
             initialState: .placeHolder,
-            reducer: .default,
-            environment: testEnvironment
+            reducer: WalletEventsFlowReducer()
         )
         
         addAttachments(
