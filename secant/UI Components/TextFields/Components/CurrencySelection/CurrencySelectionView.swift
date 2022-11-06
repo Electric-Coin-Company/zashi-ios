@@ -17,14 +17,14 @@ struct CurrencySelectionView: View {
                 action: { viewStore.send(.swapCurrencyType) },
                 label: {
                     HStack {
-                        Text(CurrencySelectionState.Currency.usd.acronym)
+                        Text(CurrencySelectionReducer.State.Currency.usd.acronym)
                             .foregroundColor(
                                 viewStore.currencyType == .usd ? .yellow : .white
                             )
 
                         Asset.Assets.Icons.swap.image
 
-                        Text(CurrencySelectionState.Currency.zec.acronym)
+                        Text(CurrencySelectionReducer.State.Currency.zec.acronym)
                             .foregroundColor(
                                 viewStore.currencyType == .zec ? .yellow : .white
                             )

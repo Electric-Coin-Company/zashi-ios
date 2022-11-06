@@ -9,47 +9,37 @@ import ComposableArchitecture
 
 // TODO [#315]: Reimplement this into multicurrency supporter (https://github.com/zcash/secant-ios-wallet/issues/315)
 
-typealias CurrencySelectionReducer = Reducer<
-    CurrencySelectionState,
-    CurrencySelectionAction,
-    CurrencySelectionEnvironment
->
+typealias CurrencySelectionStore = Store<CurrencySelectionReducer.State, CurrencySelectionReducer.Action>
 
-typealias CurrencySelectionStore = Store<CurrencySelectionState, CurrencySelectionAction>
+struct CurrencySelectionReducer: ReducerProtocol {
+    struct State: Equatable {
+        enum Currency: Equatable {
+            case usd
+            case zec
 
-struct CurrencySelectionState: Equatable {
-    enum Currency: Equatable {
-        case usd
-        case zec
-
-        var acronym: String {
-            switch self {
-            case .usd:  return "USD"
-            case .zec:  return "ZEC"
-            }
-        }
-    }
-
-    var currencyType: Currency = .zec
-}
-
-enum CurrencySelectionAction: Equatable {
-    case swapCurrencyType
-}
-
-struct CurrencySelectionEnvironment { }
-
-extension CurrencySelectionReducer {
-    static var `default`: Self {
-        .init { state, action, _ in
-            switch action {
-            case .swapCurrencyType:
-                switch state.currencyType {
-                case .usd:  state.currencyType = .zec
-                case .zec:  state.currencyType = .usd
+            var acronym: String {
+                switch self {
+                case .usd:  return "USD"
+                case .zec:  return "ZEC"
                 }
             }
-            return .none
         }
+
+        var currencyType: Currency = .zec
+    }
+
+    enum Action: Equatable {
+        case swapCurrencyType
+    }
+    
+    func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
+        switch action {
+        case .swapCurrencyType:
+            switch state.currencyType {
+            case .usd:  state.currencyType = .zec
+            case .zec:  state.currencyType = .usd
+            }
+        }
+        return .none
     }
 }

@@ -18,10 +18,11 @@ typealias TransactionAmountTextFieldReducer = Reducer<
 typealias TransactionAmountTextFieldStore = Store<TransactionAmountTextFieldState, TransactionAmountTextFieldAction>
 
 typealias AnyTCATextFieldReducerAmount = AnyReducer<TCATextFieldReducer.State, TCATextFieldReducer.Action, TransactionAmountTextFieldEnvironment>
+typealias AnyCurrencySelectionReducer = AnyReducer<CurrencySelectionReducer.State, CurrencySelectionReducer.Action, TransactionAmountTextFieldEnvironment>
 
 struct TransactionAmountTextFieldState: Equatable {
     var amount: Int64 = 0
-    var currencySelectionState: CurrencySelectionState
+    var currencySelectionState: CurrencySelectionReducer.State
     var maxValue: Int64 = 0
     var textFieldState: TCATextFieldReducer.State
     // TODO [#311]: - Get the ZEC price from the SDK, https://github.com/zcash/secant-ios-wallet/issues/311
@@ -34,7 +35,7 @@ struct TransactionAmountTextFieldState: Equatable {
 
 enum TransactionAmountTextFieldAction: Equatable {
     case clearValue
-    case currencySelection(CurrencySelectionAction)
+    case currencySelection(CurrencySelectionReducer.Action)
     case setMax
     case textField(TCATextFieldReducer.Action)
     case updateAmount
@@ -115,21 +116,24 @@ extension TransactionAmountTextFieldReducer {
         environment: { $0 }
     )
     
-    private static let currencySelectionReducer: TransactionAmountTextFieldReducer = CurrencySelectionReducer.default.pullback(
+    private static let currencySelectionReducer: TransactionAmountTextFieldReducer = AnyCurrencySelectionReducer { _ in
+        CurrencySelectionReducer()
+    }
+    .pullback(
         state: \TransactionAmountTextFieldState.currencySelectionState,
         action: /TransactionAmountTextFieldAction.currencySelection,
-        environment: { _ in return .init() }
+        environment: { $0 }
     )
 }
 
 extension TransactionAmountTextFieldState {
     static let placeholder = TransactionAmountTextFieldState(
-        currencySelectionState: CurrencySelectionState(),
+        currencySelectionState: CurrencySelectionReducer.State(),
         textFieldState: .placeholder
     )
 
     static let amount = TransactionAmountTextFieldState(
-        currencySelectionState: CurrencySelectionState(),
+        currencySelectionState: CurrencySelectionReducer.State(),
         textFieldState: .amount
     )
 }
