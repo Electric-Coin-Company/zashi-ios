@@ -9,6 +9,7 @@ typealias AppViewStore = ViewStore<AppState, AppAction>
 typealias AnyRecoveryPhraseDisplayReducer = AnyReducer<RecoveryPhraseDisplayReducer.State, RecoveryPhraseDisplayReducer.Action, AppEnvironment>
 typealias AnyRecoveryPhraseValidationFlowReducer = AnyReducer<RecoveryPhraseValidationFlowReducer.State, RecoveryPhraseValidationFlowReducer.Action, AppEnvironment>
 typealias AnyWelcomeReducer = AnyReducer<WelcomeReducer.State, WelcomeReducer.Action, AppEnvironment>
+typealias AnySandboxReducer = AnyReducer<SandboxReducer.State, SandboxReducer.Action, AppEnvironment>
 
 // MARK: - State
 
@@ -30,7 +31,7 @@ struct AppState: Equatable {
     var phraseDisplayState: RecoveryPhraseDisplayReducer.State
     var prevRoute: Route?
     var internalRoute: Route = .welcome
-    var sandboxState: SandboxState
+    var sandboxState: SandboxReducer.State
     var storedWallet: StoredWallet?
     var welcomeState: WelcomeReducer.State
     
@@ -60,7 +61,7 @@ enum AppAction: Equatable {
     case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
     case phraseValidation(RecoveryPhraseValidationFlowReducer.Action)
     case respondToWalletInitializationState(InitializationState)
-    case sandbox(SandboxAction)
+    case sandbox(SandboxReducer.Action)
     case updateRoute(AppState.Route)
     case welcome(WelcomeReducer.Action)
 }
@@ -411,10 +412,13 @@ extension AppReducer {
         environment: { $0 }
     )
 
-    private static let sandboxReducer: AppReducer = SandboxReducer.default.pullback(
+    private static let sandboxReducer: AppReducer = AnySandboxReducer { _ in
+        SandboxReducer()
+    }
+    .pullback(
         state: \AppState.sandboxState,
         action: /AppAction.sandbox,
-        environment: { _ in SandboxEnvironment() }
+        environment: { $0 }
     )
 
     private static let welcomeReducer: AppReducer = AnyWelcomeReducer { _ in

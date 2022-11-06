@@ -30,7 +30,7 @@ struct HomeState: Equatable {
     var balanceBreakdown: BalanceBreakdownReducer.State
     var drawerOverlay: DrawerOverlay
     var profileState: ProfileState
-    var requestState: RequestState
+    var requestState: RequestReducer.State
     var requiredTransactionConfirmations = 0
     var scanState: ScanReducer.State
     var sendState: SendFlowState
@@ -67,7 +67,7 @@ enum HomeAction: Equatable {
     case onAppear
     case onDisappear
     case profile(ProfileAction)
-    case request(RequestAction)
+    case request(RequestReducer.Action)
     case send(SendFlowAction)
     case scan(ScanReducer.Action)
     case synchronizerStateChanged(WrappedSDKSynchronizerState)

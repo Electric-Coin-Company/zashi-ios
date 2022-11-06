@@ -4,22 +4,22 @@ import ComposableArchitecture
 struct SandboxView: View {
     struct SandboxRouteValue: Identifiable {
         let id: Int
-        let route: SandboxState.Route
+        let route: SandboxReducer.State.Route
     }
     
     let store: SandboxStore
 
-    var navigationRouteValues: [SandboxRouteValue] = SandboxState.Route.allCases
+    var navigationRouteValues: [SandboxRouteValue] = SandboxReducer.State.Route.allCases
         .enumerated()
         .filter { $0.1 != .history }
         .map { SandboxRouteValue(id: $0.0, route: $0.1) }
 
-    var modalRoutes: [SandboxRouteValue] = SandboxState.Route.allCases
+    var modalRoutes: [SandboxRouteValue] = SandboxReducer.State.Route.allCases
         .enumerated()
         .filter { $0.1 == .history }
         .map { SandboxRouteValue(id: $0.0, route: $0.1) }
 
-    @ViewBuilder func view(for route: SandboxState.Route) -> some View {
+    @ViewBuilder func view(for route: SandboxReducer.State.Route) -> some View {
         switch route {
         case .history:
             WalletEventsFlowView(store: store.historyStore())
