@@ -19,6 +19,7 @@ typealias AnyTransactionAddressTextFieldReducer = AnyReducer<
     SendFlowEnvironment
 >
 typealias AnyMultiLineTextFieldReducer = AnyReducer<MultiLineTextFieldReducer.State, MultiLineTextFieldReducer.Action, SendFlowEnvironment>
+typealias AnyCheckCircleReducer = AnyReducer<Bool, CheckCircleReducer.Action, SendFlowEnvironment>
 
 // MARK: - State
 
@@ -83,7 +84,7 @@ struct SendFlowState: Equatable {
 // MARK: - Action
 
 enum SendFlowAction: Equatable {
-    case addMemo(CheckCircleAction)
+    case addMemo(CheckCircleReducer.Action)
     case memo(MultiLineTextFieldReducer.Action)
     case onAppear
     case onDisappear
@@ -223,10 +224,13 @@ extension SendFlowReducer {
         }
     }
 
-    private static let addMemoReducer: SendFlowReducer = CheckCircleReducer.default.pullback(
+    private static let addMemoReducer: SendFlowReducer = AnyCheckCircleReducer { _ in
+        CheckCircleReducer()
+    }
+    .pullback(
         state: \SendFlowState.addMemoState,
         action: /SendFlowAction.addMemo,
-        environment: { _ in Void() }
+        environment: { $0 }
     )
 
     private static let transactionAddressInputReducer: SendFlowReducer = AnyTransactionAddressTextFieldReducer { _ in

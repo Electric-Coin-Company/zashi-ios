@@ -770,8 +770,8 @@
 		346D41E228DF0B0900963F36 /* CheckCircle */ = {
 			isa = PBXGroup;
 			children = (
-				346D41E328DF0B8600963F36 /* CheckCircle.swift */,
 				346715A428E2027D0035F7C4 /* CheckCircleStore.swift */,
+				346D41E328DF0B8600963F36 /* CheckCircle.swift */,
 			);
 			path = CheckCircle;
 			sourceTree = "<group>";
