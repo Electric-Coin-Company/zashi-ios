@@ -25,7 +25,7 @@ class TransactionConfirmationSnapshotTests: XCTestCase {
 
         var state = SendFlowState.placeholder
         state.addMemoState = true
-        state.transactionAddressInputState = TransactionAddressTextFieldState(
+        state.transactionAddressInputState = TransactionAddressTextFieldReducer.State(
             textFieldState: TCATextFieldReducer.State(
                 validationType: nil,
                 text: "ztestmockeddestinationaddress"
@@ -62,7 +62,7 @@ class TransactionConfirmationSnapshotTests: XCTestCase {
 
         var state = SendFlowState.placeholder
         state.addMemoState = true
-        state.transactionAddressInputState = TransactionAddressTextFieldState(
+        state.transactionAddressInputState = TransactionAddressTextFieldReducer.State(
             textFieldState: TCATextFieldReducer.State(
                 validationType: nil,
                 text: "ztestmockeddestinationaddress"

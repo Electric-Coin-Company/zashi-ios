@@ -150,6 +150,7 @@
 		9E6EF2D12913B75400CA007B /* MnemonicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EF2D02913B75400CA007B /* MnemonicKey.swift */; };
 		9E6EF2D32913B79A00CA007B /* WalletStorageKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EF2D22913B79A00CA007B /* WalletStorageKey.swift */; };
 		9E6EF2D5291525D300CA007B /* CaptureDeviceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EF2D4291525D300CA007B /* CaptureDeviceKey.swift */; };
+		9E6EF2D72916BE2500CA007B /* DerivationToolKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6EF2D62916BE2500CA007B /* DerivationToolKey.swift */; };
 		9E7225F12889539300DF7F17 /* SettingsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7225F02889539300DF7F17 /* SettingsSnapshotTests.swift */; };
 		9E7225F3288AB6DD00DF7F17 /* MultipleLineTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7225F2288AB6DD00DF7F17 /* MultipleLineTextField.swift */; };
 		9E7225F6288AC71A00DF7F17 /* MultiLineTextFieldStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7225F5288AC71A00DF7F17 /* MultiLineTextFieldStore.swift */; };
@@ -401,6 +402,7 @@
 		9E6EF2D02913B75400CA007B /* MnemonicKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicKey.swift; sourceTree = "<group>"; };
 		9E6EF2D22913B79A00CA007B /* WalletStorageKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletStorageKey.swift; sourceTree = "<group>"; };
 		9E6EF2D4291525D300CA007B /* CaptureDeviceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureDeviceKey.swift; sourceTree = "<group>"; };
+		9E6EF2D62916BE2500CA007B /* DerivationToolKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DerivationToolKey.swift; sourceTree = "<group>"; };
 		9E7225F02889539300DF7F17 /* SettingsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSnapshotTests.swift; sourceTree = "<group>"; };
 		9E7225F2288AB6DD00DF7F17 /* MultipleLineTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleLineTextField.swift; sourceTree = "<group>"; };
 		9E7225F5288AC71A00DF7F17 /* MultiLineTextFieldStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiLineTextFieldStore.swift; sourceTree = "<group>"; };
@@ -1146,6 +1148,7 @@
 				9E6EF2CC2913B06300CA007B /* NumberFormatterKey.swift */,
 				9E6EF2CE2913B11A00CA007B /* SDKSynchronizerKey.swift */,
 				9E6EF2D4291525D300CA007B /* CaptureDeviceKey.swift */,
+				9E6EF2D62916BE2500CA007B /* DerivationToolKey.swift */,
 			);
 			path = Dependencies;
 			sourceTree = "<group>";
@@ -1807,6 +1810,7 @@
 				9E39114B2848EEB90073DD9A /* ZCashSDKEnvironment.swift in Sources */,
 				0D0781C4278750E30083ACD7 /* WelcomeView.swift in Sources */,
 				F9971A6527680DFE00A2DB75 /* SettingsStore.swift in Sources */,
+				9E6EF2D72916BE2500CA007B /* DerivationToolKey.swift in Sources */,
 				9EF8139C27F47AED0075AF48 /* InitializationState.swift in Sources */,
 				0D0781C9278776D20083ACD7 /* ZcashSymbol.swift in Sources */,
 				2E8719CB27FB09990082C926 /* TransactionAmountTextField.swift in Sources */,
