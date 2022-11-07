@@ -9,20 +9,17 @@ import Foundation
 import ComposableArchitecture
 import SwiftUI
 
-typealias CheckCircleReducer = Reducer<Bool, CheckCircleAction, Void>
-typealias CheckCircleStore = Store<Bool, CheckCircleAction>
-typealias CheckCircleViewStore = ViewStore<Bool, CheckCircleAction>
+typealias CheckCircleStore = Store<Bool, CheckCircleReducer.Action>
+typealias CheckCircleViewStore = ViewStore<Bool, CheckCircleReducer.Action>
 
-// MARK: - Action
+struct CheckCircleReducer: ReducerProtocol {
+    typealias State = Bool
+    
+    enum Action: Equatable {
+        case updateIsChecked
+    }
 
-enum CheckCircleAction: Equatable {
-    case updateIsChecked
-}
-
-// MARK: - Reducer
-
-extension CheckCircleReducer {
-    static let `default` = CheckCircleReducer { state, action, _ in
+    func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
         switch action {
         case .updateIsChecked:
             state.toggle()
@@ -37,8 +34,7 @@ extension CheckCircleStore {
     static func mock(isChecked: Bool) -> CheckCircleStore {
         return CheckCircleStore(
             initialState: isChecked,
-            reducer: .default,
-            environment: Void()
+            reducer: CheckCircleReducer()
         )
     }
 }
@@ -48,7 +44,6 @@ extension CheckCircleStore {
 extension CheckCircleViewStore {
     static let placeholder = CheckCircleStore(
         initialState: true,
-        reducer: .default,
-        environment: Void()
+        reducer: CheckCircleReducer()
     )
 }
