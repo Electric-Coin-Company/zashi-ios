@@ -6,6 +6,7 @@ typealias ProfileStore = Store<ProfileState, ProfileAction>
 typealias ProfileViewStore = ViewStore<ProfileState, ProfileAction>
 
 typealias AnySettingsReducer = AnyReducer<SettingsReducer.State, SettingsReducer.Action, ProfileEnvironment>
+typealias AnyAddressDetailsReducer = AnyReducer<AddressDetailsReducer.State, AddressDetailsReducer.Action, ProfileEnvironment>
 
 // MARK: - State
 
@@ -16,7 +17,7 @@ struct ProfileState: Equatable {
     }
 
     var address = ""
-    var addressDetailsState: AddressDetailsState
+    var addressDetailsState: AddressDetailsReducer.State
     var appBuild = ""
     var appVersion = ""
     var route: Route?
@@ -27,7 +28,7 @@ struct ProfileState: Equatable {
 // MARK: - Action
 
 enum ProfileAction: Equatable {
-    case addressDetails(AddressDetailsAction)
+    case addressDetails(AddressDetailsReducer.Action)
     case back
     case onAppear
     case settings(SettingsReducer.Action)
@@ -97,14 +98,13 @@ extension ProfileReducer {
         }
     }
     
-    private static let addressDetailsReducer: ProfileReducer = AddressDetailsReducer.default.pullback(
+    private static let addressDetailsReducer: ProfileReducer = AnyAddressDetailsReducer { _ in
+        AddressDetailsReducer()
+    }
+    .pullback(
         state: \ProfileState.addressDetailsState,
         action: /ProfileAction.addressDetails,
-        environment: { _ in
-            AddressDetailsEnvironment(
-                pasteboard: .live
-            )
-        }
+        environment: { $0 }
     )
 
     private static let settingsReducer: ProfileReducer = AnySettingsReducer { _ in
