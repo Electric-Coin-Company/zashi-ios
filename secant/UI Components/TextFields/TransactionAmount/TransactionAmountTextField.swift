@@ -19,7 +19,7 @@ struct TransactionAmountTextField: View {
                     title: "How much ZEC would you like to send?",
                     store: store.scope(
                         state: \.textFieldState,
-                        action: TransactionAmountTextFieldAction.textField
+                        action: TransactionAmountTextFieldReducer.Action.textField
                     ),
                     titleAccessoryView: {
                         Button(
@@ -44,7 +44,7 @@ struct TransactionAmountTextField: View {
                         CurrencySelectionView(
                             store: store.scope(
                                 state: \.currencySelectionState,
-                                action: TransactionAmountTextFieldAction.currencySelection
+                                action: TransactionAmountTextFieldReducer.Action.currencySelection
                             )
                         )
                     }
@@ -65,10 +65,7 @@ struct TransactionAmountTextField_Previews: PreviewProvider {
                         text: ""
                     )
                 ),
-                reducer: .default,
-                environment: .init(
-                    numberFormatter: .live()
-                )
+                reducer: TransactionAmountTextFieldReducer()
             )
         )
         .preferredColorScheme(.dark)
