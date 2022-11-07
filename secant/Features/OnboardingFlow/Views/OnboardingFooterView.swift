@@ -9,7 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 
 struct OnboardingFooterView: View {
-    let store: Store<OnboardingFlowState, OnboardingFlowAction>
+    let store: Store<OnboardingFlowReducer.State, OnboardingFlowReducer.Action>
     let animationDuration: CGFloat = 0.8
 
     var body: some View {
@@ -52,7 +52,7 @@ struct OnboardingFooterView: View {
                     ImportWalletView(
                         store: store.scope(
                             state: \.importWalletState,
-                            action: OnboardingFlowAction.importWallet
+                            action: OnboardingFlowReducer.Action.importWallet
                         )
                     )
                 }
@@ -81,13 +81,12 @@ extension View {
 
 struct OnboardingFooterView_Previews: PreviewProvider {
     static var previews: some View {
-        let store = Store<OnboardingFlowState, OnboardingFlowAction>(
-            initialState: OnboardingFlowState(
+        let store = Store<OnboardingFlowReducer.State, OnboardingFlowReducer.Action>(
+            initialState: OnboardingFlowReducer.State(
                 index: 3,
                 importWalletState: .placeholder
             ),
-            reducer: OnboardingFlowReducer.default,
-            environment: (.demo)
+            reducer: OnboardingFlowReducer()
         )
         
         Group {

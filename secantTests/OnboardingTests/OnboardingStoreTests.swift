@@ -12,11 +12,10 @@ import ComposableArchitecture
 class OnboardingStoreTests: XCTestCase {
     func testIncrementingOnboarding() {
         let store = TestStore(
-            initialState: OnboardingFlowState(
+            initialState: OnboardingFlowReducer.State(
                 importWalletState: .placeholder
             ),
-            reducer: OnboardingFlowReducer.default,
-            environment: .demo
+            reducer: OnboardingFlowReducer()
         )
         
         store.send(.next) {
@@ -52,12 +51,11 @@ class OnboardingStoreTests: XCTestCase {
     
     func testIncrementingPastTotalStepsDoesNothing() {
         let store = TestStore(
-            initialState: OnboardingFlowState(
+            initialState: OnboardingFlowReducer.State(
                 index: 3,
                 importWalletState: .placeholder
             ),
-            reducer: OnboardingFlowReducer.default,
-            environment: .demo
+            reducer: OnboardingFlowReducer()
         )
         
         store.send(.next)
@@ -66,12 +64,11 @@ class OnboardingStoreTests: XCTestCase {
     
     func testDecrementingOnboarding() {
         let store = TestStore(
-            initialState: OnboardingFlowState(
+            initialState: OnboardingFlowReducer.State(
                 index: 2,
                 importWalletState: .placeholder
             ),
-            reducer: OnboardingFlowReducer.default,
-            environment: .demo
+            reducer: OnboardingFlowReducer()
         )
         
         store.send(.back) {
@@ -97,11 +94,10 @@ class OnboardingStoreTests: XCTestCase {
     
     func testDecrementingPastFirstStepDoesNothing() {
         let store = TestStore(
-            initialState: OnboardingFlowState(
+            initialState: OnboardingFlowReducer.State(
                 importWalletState: .placeholder
             ),
-            reducer: OnboardingFlowReducer.default,
-            environment: .demo
+            reducer: OnboardingFlowReducer()
         )
         
         store.send(.back)
@@ -112,12 +108,11 @@ class OnboardingStoreTests: XCTestCase {
         let initialIndex = 1
 
         let store = TestStore(
-            initialState: OnboardingFlowState(
+            initialState: OnboardingFlowReducer.State(
                 index: initialIndex,
                 importWalletState: .placeholder
             ),
-            reducer: OnboardingFlowReducer.default,
-            environment: .demo
+            reducer: OnboardingFlowReducer()
         )
         
         store.send(.skip) {
