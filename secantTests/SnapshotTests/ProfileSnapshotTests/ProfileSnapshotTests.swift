@@ -12,18 +12,10 @@ import SwiftUI
 
 class ProfileSnapshotTests: XCTestCase {
     func testProfileSnapshot_sent() throws {
-        let testEnvironment = ProfileEnvironment(
-            appVersionHandler: .test,
-            mnemonic: .mock,
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
-        )
-        
         let store = Store(
             initialState: .placeholder,
-            reducer: ProfileReducer.default,
-            environment: testEnvironment
+            reducer: ProfileReducer()
+                .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
         
         ViewStore(store).send(.onAppear)

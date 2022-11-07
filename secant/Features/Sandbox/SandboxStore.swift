@@ -15,14 +15,14 @@ struct SandboxReducer: ReducerProtocol {
             case request
         }
         var walletEventsState: WalletEventsFlowReducer.State
-        var profileState: ProfileState
+        var profileState: ProfileReducer.State
         var route: Route?
     }
 
     enum Action: Equatable {
         case updateRoute(SandboxReducer.State.Route?)
         case walletEvents(WalletEventsFlowReducer.Action)
-        case profile(ProfileAction)
+        case profile(ProfileReducer.Action)
         case reset
     }
     
@@ -38,14 +38,10 @@ struct SandboxReducer: ReducerProtocol {
                 .map(SandboxReducer.Action.walletEvents)
 
         case .profile:
-            return ProfileReducer
-                .default
-                .pullback(
-                    state: \.profileState,
-                    action: /SandboxReducer.Action.profile,
-                    environment: { _ in ProfileEnvironment.live }
-                )
-                .run(&state, action, ())
+            return Scope(state: \SandboxReducer.State.profileState, action: /SandboxReducer.Action.profile) {
+                ProfileReducer()
+            }
+            .reduce(into: &state, action: action)
             
         case .reset:
             return .none
