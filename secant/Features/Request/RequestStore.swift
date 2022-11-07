@@ -1,28 +1,15 @@
 import ComposableArchitecture
 
-typealias RequestReducer = Reducer<RequestState, RequestAction, RequestEnvironment>
-typealias RequestStore = Store<RequestState, RequestAction>
-typealias RequestViewStore = ViewStore<RequestState, RequestAction>
+typealias RequestStore = Store<RequestReducer.State, RequestReducer.Action>
 
-// MARK: - State
+struct RequestReducer: ReducerProtocol {
+    struct State: Equatable { }
 
-struct RequestState: Equatable {
-}
+    enum Action: Equatable {
+        case noOp
+    }
 
-// MARK: - Action
-
-enum RequestAction: Equatable {
-    case noOp
-}
-
-// MARK: - Environment
-
-struct RequestEnvironment { }
-
-// MARK: - Reducer
-
-extension RequestReducer {
-    static let `default` = RequestReducer { _, action, _ in
+    func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
         switch action {
         default:
             return .none
@@ -32,7 +19,7 @@ extension RequestReducer {
 
 // MARK: Placeholders
 
-extension RequestState {
+extension RequestReducer.State {
     static var placeholder: Self {
         .init()
     }
@@ -41,7 +28,6 @@ extension RequestState {
 extension RequestStore {
     static let placeholder = RequestStore(
         initialState: .placeholder,
-        reducer: .default,
-        environment: RequestEnvironment()
+        reducer: RequestReducer()
     )
 }

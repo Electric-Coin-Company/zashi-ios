@@ -1,29 +1,13 @@
 import ComposableArchitecture
 
-typealias WalletInfoReducer = Reducer<WalletInfoState, WalletInfoAction, WalletInfoEnvironment>
-typealias WalletInfoStore = Store<WalletInfoState, WalletInfoAction>
-typealias WalletInfoViewStore = ViewStore<WalletInfoState, WalletInfoAction>
+struct WalletInfoReducer: ReducerProtocol {
+    struct State: Equatable { }
 
-// MARK: - State
-
-struct WalletInfoState: Equatable {
-}
-
-// MARK: - Action
-
-enum WalletInfoAction: Equatable {
-    case noOp
-}
-
-// MARK: - Environment
-
-struct WalletInfoEnvironment {
-}
-
-// MARK: - Reducer
-
-extension WalletInfoReducer {
-    static let `default` = WalletInfoReducer { _, action, _ in
+    enum Action: Equatable {
+        case noOp
+    }
+    
+    func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
         switch action {
         default:
             return .none
