@@ -32,7 +32,7 @@ class TransactionConfirmationSnapshotTests: XCTestCase {
             )
         )
         state.transactionAmountInputState = TransactionAmountTextFieldState(
-            currencySelectionState: CurrencySelectionState(),
+            currencySelectionState: CurrencySelectionReducer.State(),
             textFieldState: TCATextFieldReducer.State(
                 validationType: nil,
                 text: "2.91"
@@ -69,7 +69,7 @@ class TransactionConfirmationSnapshotTests: XCTestCase {
             )
         )
         state.transactionAmountInputState = TransactionAmountTextFieldState(
-            currencySelectionState: CurrencySelectionState(),
+            currencySelectionState: CurrencySelectionReducer.State(),
             textFieldState: TCATextFieldReducer.State(
                 validationType: nil,
                 text: "2.91"

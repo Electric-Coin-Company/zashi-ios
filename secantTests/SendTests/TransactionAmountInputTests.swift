@@ -25,7 +25,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
         let store = TestStore(
             initialState:
                 TransactionAmountTextFieldState(
-                    currencySelectionState: CurrencySelectionState(),
+                    currencySelectionState: CurrencySelectionReducer.State(),
                     maxValue: 501_301,
                     textFieldState:
                         TCATextFieldReducer.State(
@@ -53,7 +53,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
         let store = TestStore(
             initialState:
                 TransactionAmountTextFieldState(
-                    currencySelectionState: CurrencySelectionState(),
+                    currencySelectionState: CurrencySelectionReducer.State(),
                     maxValue: 501_301,
                     textFieldState:
                         TCATextFieldReducer.State(
@@ -79,7 +79,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
             initialState:
                 TransactionAmountTextFieldState(
                     currencySelectionState:
-                        CurrencySelectionState(
+                        CurrencySelectionReducer.State(
                             currencyType: .zec
                         ),
                     textFieldState:
@@ -111,7 +111,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
             initialState:
                 TransactionAmountTextFieldState(
                     currencySelectionState:
-                        CurrencySelectionState(
+                        CurrencySelectionReducer.State(
                             currencyType: .zec
                         ),
                     textFieldState:
@@ -143,7 +143,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
             initialState:
                 TransactionAmountTextFieldState(
                     currencySelectionState:
-                        CurrencySelectionState(
+                        CurrencySelectionReducer.State(
                             currencyType: .usd
                         ),
                     textFieldState:
@@ -175,7 +175,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
             initialState:
                 TransactionAmountTextFieldState(
                     currencySelectionState:
-                        CurrencySelectionState(
+                        CurrencySelectionReducer.State(
                             currencyType: .usd
                         ),
                     maxValue: 100_000_000,
@@ -217,7 +217,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
             initialState:
                 TransactionAmountTextFieldState(
                     currencySelectionState:
-                        CurrencySelectionState(
+                        CurrencySelectionReducer.State(
                             currencyType: .zec
                         ),
                     maxValue: 200_000_000,
@@ -249,7 +249,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
             initialState:
                 TransactionAmountTextFieldState(
                     currencySelectionState:
-                        CurrencySelectionState(
+                        CurrencySelectionReducer.State(
                             currencyType: .usd
                         ),
                     maxValue: 200_000_000,

@@ -316,7 +316,7 @@ class SendTests: XCTestCase {
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldState(
-                    currencySelectionState: CurrencySelectionState(),
+                    currencySelectionState: CurrencySelectionReducer.State(),
                     maxValue: 501_300,
                     textFieldState:
                         TCATextFieldReducer.State(
@@ -396,7 +396,7 @@ class SendTests: XCTestCase {
                 transactionAddressInputState: .placeholder,
                 transactionAmountInputState:
                     TransactionAmountTextFieldState(
-                        currencySelectionState: CurrencySelectionState(),
+                        currencySelectionState: CurrencySelectionReducer.State(),
                         textFieldState:
                             TCATextFieldReducer.State(
                                 validationType: .customFloatingPoint(usNumberFormatter),
@@ -430,7 +430,7 @@ class SendTests: XCTestCase {
             transactionAmountInputState:
                 TransactionAmountTextFieldState(
                     amount: 501_301,
-                    currencySelectionState: CurrencySelectionState(),
+                    currencySelectionState: CurrencySelectionReducer.State(),
                     maxValue: 501_302,
                     textFieldState:
                         TCATextFieldReducer.State(
@@ -478,7 +478,7 @@ class SendTests: XCTestCase {
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldState(
-                    currencySelectionState: CurrencySelectionState(),
+                    currencySelectionState: CurrencySelectionReducer.State(),
                     maxValue: 501_300,
                     textFieldState:
                         TCATextFieldReducer.State(
@@ -526,7 +526,7 @@ class SendTests: XCTestCase {
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldState(
-                    currencySelectionState: CurrencySelectionState(),
+                    currencySelectionState: CurrencySelectionReducer.State(),
                     maxValue: 501_302,
                     textFieldState:
                         TCATextFieldReducer.State(
@@ -574,7 +574,7 @@ class SendTests: XCTestCase {
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldState(
-                    currencySelectionState: CurrencySelectionState(),
+                    currencySelectionState: CurrencySelectionReducer.State(),
                     maxValue: 501_302,
                     textFieldState:
                         TCATextFieldReducer.State(
@@ -632,7 +632,7 @@ class SendTests: XCTestCase {
             transactionAmountInputState:
                 TransactionAmountTextFieldState(
                     amount: 100,
-                    currencySelectionState: CurrencySelectionState(),
+                    currencySelectionState: CurrencySelectionReducer.State(),
                     maxValue: 501_302,
                     textFieldState:
                         TCATextFieldReducer.State(
@@ -676,7 +676,7 @@ class SendTests: XCTestCase {
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldState(
-                    currencySelectionState: CurrencySelectionState(),
+                    currencySelectionState: CurrencySelectionReducer.State(),
                     maxValue: 501_302,
                     textFieldState:
                         TCATextFieldReducer.State(

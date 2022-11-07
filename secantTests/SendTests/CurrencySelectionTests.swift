@@ -12,9 +12,8 @@ import ComposableArchitecture
 class CurrencySelectionTests: XCTestCase {
     func testCurrencySwapUsdToZec() throws {
         let store = TestStore(
-            initialState: CurrencySelectionState(currencyType: .usd),
-            reducer: CurrencySelectionReducer.default,
-            environment: CurrencySelectionEnvironment()
+            initialState: CurrencySelectionReducer.State(currencyType: .usd),
+            reducer: CurrencySelectionReducer()
         )
 
         store.send(.swapCurrencyType) { state in
@@ -24,9 +23,8 @@ class CurrencySelectionTests: XCTestCase {
 
     func testCurrencySwapZecToUsd() throws {
         let store = TestStore(
-            initialState: CurrencySelectionState(currencyType: .zec),
-            reducer: CurrencySelectionReducer.default,
-            environment: CurrencySelectionEnvironment()
+            initialState: CurrencySelectionReducer.State(currencyType: .zec),
+            reducer: CurrencySelectionReducer()
         )
 
         store.send(.swapCurrencyType) { state in
