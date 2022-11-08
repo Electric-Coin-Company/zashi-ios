@@ -11,18 +11,10 @@ import ComposableArchitecture
 
 class ProfileTests: XCTestCase {
     func testSynchronizerStateChanged_AnyButSynced() throws {
-        let testEnvironment = ProfileEnvironment(
-            appVersionHandler: .test,
-            mnemonic: .mock,
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
-        )
-        
         let store = TestStore(
             initialState: .placeholder,
-            reducer: ProfileReducer.default,
-            environment: testEnvironment
+            reducer: ProfileReducer()
+                .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
         
         store.send(.onAppear) { state in

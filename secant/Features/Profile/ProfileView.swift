@@ -116,8 +116,7 @@ struct ProfileView_Previews: PreviewProvider {
                         addressDetailsState: .placeholder,
                         settingsState: .placeholder
                     ),
-                    reducer: .default,
-                    environment: .live
+                    reducer: ProfileReducer()
                 )
             )
         }

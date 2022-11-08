@@ -12,6 +12,7 @@ typealias HomeViewStore = ViewStore<HomeState, HomeAction>
 typealias AnyBalanceBreakdownReducer = AnyReducer<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action, HomeEnvironment>
 typealias AnyScanReducer = AnyReducer<ScanReducer.State, ScanReducer.Action, HomeEnvironment>
 typealias AnyWalletEventsFlowReducer = AnyReducer<WalletEventsFlowReducer.State, WalletEventsFlowReducer.Action, HomeEnvironment>
+typealias AnyProfileReducer = AnyReducer<ProfileReducer.State, ProfileReducer.Action, HomeEnvironment>
 
 // MARK: State
 
@@ -29,7 +30,7 @@ struct HomeState: Equatable {
 
     var balanceBreakdown: BalanceBreakdownReducer.State
     var drawerOverlay: DrawerOverlay
-    var profileState: ProfileState
+    var profileState: ProfileReducer.State
     var requestState: RequestReducer.State
     var requiredTransactionConfirmations = 0
     var scanState: ScanReducer.State
@@ -66,7 +67,7 @@ enum HomeAction: Equatable {
     case debugMenuStartup
     case onAppear
     case onDisappear
-    case profile(ProfileAction)
+    case profile(ProfileReducer.Action)
     case request(RequestReducer.Action)
     case send(SendFlowAction)
     case scan(ScanReducer.Action)
@@ -269,18 +270,13 @@ extension HomeReducer {
         environment: { $0 }
     )
     
-    private static let profileReducer: HomeReducer = ProfileReducer.default.pullback(
+    private static let profileReducer: HomeReducer = AnyProfileReducer { _ in
+        ProfileReducer()
+    }
+    .pullback(
         state: \HomeState.profileState,
         action: /HomeAction.profile,
-        environment: { environment in
-            ProfileEnvironment(
-                appVersionHandler: .live,
-                mnemonic: environment.mnemonic,
-                SDKSynchronizer: environment.SDKSynchronizer,
-                walletStorage: environment.walletStorage,
-                zcashSDKEnvironment: environment.zcashSDKEnvironment
-            )
-        }
+        environment: { $0 }
     )
     
     private static let balanceBreakdownReducer: HomeReducer = AnyBalanceBreakdownReducer { _ in
