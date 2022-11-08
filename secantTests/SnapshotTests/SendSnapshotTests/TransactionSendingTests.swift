@@ -13,17 +13,7 @@ import ZcashLightClientKit
 
 class TransactionSendingTests: XCTestCase {
     func testTransactionSendingSnapshot() throws {
-        let testEnvironment = SendFlowEnvironment(
-            derivationTool: .live(derivationTool: DerivationTool(networkType: .testnet)),
-            mnemonic: .mock,
-            numberFormatter: .live(),
-            SDKSynchronizer: MockWrappedSDKSynchronizer(),
-            scheduler: DispatchQueue.main.eraseToAnyScheduler(),
-            walletStorage: .live(),
-            zcashSDKEnvironment: .testnet
-        )
-
-        var state = SendFlowState.placeholder
+        var state = SendFlowReducer.State.placeholder
         state.addMemoState = true
         state.transactionAddressInputState = TransactionAddressTextFieldReducer.State(
             textFieldState: TCATextFieldReducer.State(
@@ -41,8 +31,11 @@ class TransactionSendingTests: XCTestCase {
 
         let store = Store(
             initialState: state,
-            reducer: SendFlowReducer.default,
-            environment: testEnvironment
+            reducer: SendFlowReducer()
+                .dependency(\.derivationTool, .live(derivationTool: DerivationTool(networkType: .testnet)))
+                .dependency(\.mainQueue, DispatchQueue.main.eraseToAnyScheduler())
+                .dependency(\.walletStorage, .live())
+                .dependency(\.numberFormatter, .live())
         )
 
         ViewStore(store).send(.onAppear)

@@ -27,16 +27,7 @@ struct SandboxView: View {
             SendFlowView(
                 store: .init(
                     initialState: .placeholder,
-                    reducer: SendFlowReducer.default,
-                    environment: SendFlowEnvironment(
-                        derivationTool: .live(),
-                        mnemonic: .live,
-                        numberFormatter: .live(),
-                        SDKSynchronizer: LiveWrappedSDKSynchronizer(),
-                        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
-                        walletStorage: .live(),
-                        zcashSDKEnvironment: .mainnet
-                    )
+                    reducer: SendFlowReducer()
                 )
             )
         case .recoveryPhraseDisplay:

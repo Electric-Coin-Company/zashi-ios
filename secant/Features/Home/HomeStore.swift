@@ -13,6 +13,7 @@ typealias AnyBalanceBreakdownReducer = AnyReducer<BalanceBreakdownReducer.State,
 typealias AnyScanReducer = AnyReducer<ScanReducer.State, ScanReducer.Action, HomeEnvironment>
 typealias AnyWalletEventsFlowReducer = AnyReducer<WalletEventsFlowReducer.State, WalletEventsFlowReducer.Action, HomeEnvironment>
 typealias AnyProfileReducer = AnyReducer<ProfileReducer.State, ProfileReducer.Action, HomeEnvironment>
+typealias AnySendFlowReducer = AnyReducer<SendFlowReducer.State, SendFlowReducer.Action, HomeEnvironment>
 
 // MARK: State
 
@@ -34,7 +35,7 @@ struct HomeState: Equatable {
     var requestState: RequestReducer.State
     var requiredTransactionConfirmations = 0
     var scanState: ScanReducer.State
-    var sendState: SendFlowState
+    var sendState: SendFlowReducer.State
     var shieldedBalance: WalletBalance
     var synchronizerStatusSnapshot: SyncStatusSnapshot
     var walletEventsState: WalletEventsFlowReducer.State
@@ -69,7 +70,7 @@ enum HomeAction: Equatable {
     case onDisappear
     case profile(ProfileReducer.Action)
     case request(RequestReducer.Action)
-    case send(SendFlowAction)
+    case send(SendFlowReducer.Action)
     case scan(ScanReducer.Action)
     case synchronizerStateChanged(WrappedSDKSynchronizerState)
     case walletEvents(WalletEventsFlowReducer.Action)
@@ -244,20 +245,13 @@ extension HomeReducer {
         environment: { $0 }
     )
     
-    private static let sendReducer: HomeReducer = SendFlowReducer.default.pullback(
+    private static let sendReducer: HomeReducer = AnySendFlowReducer { _ in
+        SendFlowReducer()
+    }
+    .pullback(
         state: \HomeState.sendState,
         action: /HomeAction.send,
-        environment: { environment in
-            SendFlowEnvironment(
-                derivationTool: environment.derivationTool,
-                mnemonic: environment.mnemonic,
-                numberFormatter: .live(),
-                SDKSynchronizer: environment.SDKSynchronizer,
-                scheduler: environment.scheduler,
-                walletStorage: environment.walletStorage,
-                zcashSDKEnvironment: environment.zcashSDKEnvironment
-            )
-        }
+        environment: { $0 }
     )
     
     private static let scanReducer: HomeReducer = AnyScanReducer { environment in

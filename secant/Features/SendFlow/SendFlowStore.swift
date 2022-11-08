@@ -9,261 +9,208 @@ import SwiftUI
 import ComposableArchitecture
 import ZcashLightClientKit
 
-typealias SendFlowReducer = Reducer<SendFlowState, SendFlowAction, SendFlowEnvironment>
-typealias SendFlowStore = Store<SendFlowState, SendFlowAction>
-typealias SendFlowViewStore = ViewStore<SendFlowState, SendFlowAction>
+typealias SendFlowStore = Store<SendFlowReducer.State, SendFlowReducer.Action>
+typealias SendFlowViewStore = ViewStore<SendFlowReducer.State, SendFlowReducer.Action>
 
-typealias AnyTransactionAddressTextFieldReducer = AnyReducer<
-    TransactionAddressTextFieldReducer.State,
-    TransactionAddressTextFieldReducer.Action,
-    SendFlowEnvironment
->
-typealias AnyTransactionAmountTextFieldReducer = AnyReducer<
-    TransactionAmountTextFieldReducer.State,
-    TransactionAmountTextFieldReducer.Action,
-    SendFlowEnvironment
->
-typealias AnyMultiLineTextFieldReducer = AnyReducer<MultiLineTextFieldReducer.State, MultiLineTextFieldReducer.Action, SendFlowEnvironment>
-typealias AnyCheckCircleReducer = AnyReducer<Bool, CheckCircleReducer.Action, SendFlowEnvironment>
+struct SendFlowReducer: ReducerProtocol {
+    private enum SyncStatusUpdatesID {}
 
-// MARK: - State
+    struct State: Equatable {
+        enum Route: Equatable {
+            case confirmation
+            case inProgress
+            case success
+            case failure
+            case done
+        }
 
-struct SendFlowState: Equatable {
-    enum Route: Equatable {
-        case confirmation
-        case inProgress
-        case success
-        case failure
-        case done
-    }
+        var addMemoState: Bool
+        var isSendingTransaction = false
+        var memoState: MultiLineTextFieldReducer.State
+        var route: Route?
+        var shieldedBalance = WalletBalance.zero
+        var transactionAddressInputState: TransactionAddressTextFieldReducer.State
+        var transactionAmountInputState: TransactionAmountTextFieldReducer.State
 
-    var addMemoState: Bool
-    var isSendingTransaction = false
-    var memoState: MultiLineTextFieldReducer.State
-    var route: Route?
-    var shieldedBalance = WalletBalance.zero
-    var transactionAddressInputState: TransactionAddressTextFieldReducer.State
-    var transactionAmountInputState: TransactionAmountTextFieldReducer.State
+        var address: String {
+            get { transactionAddressInputState.textFieldState.text }
+            set { transactionAddressInputState.textFieldState.text = newValue }
+        }
 
-    var address: String {
-        get { transactionAddressInputState.textFieldState.text }
-        set { transactionAddressInputState.textFieldState.text = newValue }
-    }
+        var amount: Zatoshi {
+            get { Zatoshi(transactionAmountInputState.amount) }
+            set {
+                transactionAmountInputState.amount = newValue.amount
+                transactionAmountInputState.textFieldState.text = newValue.amount == 0 ?
+                "" :
+                newValue.decimalString()
+            }
+        }
 
-    var amount: Zatoshi {
-        get { Zatoshi(transactionAmountInputState.amount) }
-        set {
-            transactionAmountInputState.amount = newValue.amount
-            transactionAmountInputState.textFieldState.text = newValue.amount == 0 ?
-            "" :
-            newValue.decimalString()
+        var isInvalidAddressFormat: Bool {
+            !transactionAddressInputState.isValidAddress
+            && !transactionAddressInputState.textFieldState.text.isEmpty
+        }
+
+        var isInvalidAmountFormat: Bool {
+            !transactionAmountInputState.textFieldState.valid
+            && !transactionAmountInputState.textFieldState.text.isEmpty
+        }
+        
+        var isValidForm: Bool {
+            transactionAmountInputState.amount > 0
+            && transactionAddressInputState.isValidAddress
+            && !isInsufficientFunds
+            && memoState.isValid
+        }
+        
+        var isInsufficientFunds: Bool {
+            transactionAmountInputState.amount > transactionAmountInputState.maxValue
+        }
+
+        var totalCurrencyBalance: Zatoshi {
+            Zatoshi.from(decimal: shieldedBalance.total.decimalValue.decimalValue * transactionAmountInputState.zecPrice)
         }
     }
 
-    var isInvalidAddressFormat: Bool {
-        !transactionAddressInputState.isValidAddress
-        && !transactionAddressInputState.textFieldState.text.isEmpty
-    }
-
-    var isInvalidAmountFormat: Bool {
-        !transactionAmountInputState.textFieldState.valid
-        && !transactionAmountInputState.textFieldState.text.isEmpty
-    }
-    
-    var isValidForm: Bool {
-        transactionAmountInputState.amount > 0
-        && transactionAddressInputState.isValidAddress
-        && !isInsufficientFunds
-        && memoState.isValid
+    enum Action: Equatable {
+        case addMemo(CheckCircleReducer.Action)
+        case memo(MultiLineTextFieldReducer.Action)
+        case onAppear
+        case onDisappear
+        case sendConfirmationPressed
+        case sendTransactionResult(Result<TransactionState, NSError>)
+        case synchronizerStateChanged(WrappedSDKSynchronizerState)
+        case transactionAddressInput(TransactionAddressTextFieldReducer.Action)
+        case transactionAmountInput(TransactionAmountTextFieldReducer.Action)
+        case updateRoute(SendFlowReducer.State.Route?)
     }
     
-    var isInsufficientFunds: Bool {
-        transactionAmountInputState.amount > transactionAmountInputState.maxValue
-    }
+    @Dependency(\.walletStorage) var walletStorage
+    @Dependency(\.mnemonic) var mnemonic
+    @Dependency(\.derivationTool) var derivationTool
+    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.mainQueue) var mainQueue
+    @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
-    var totalCurrencyBalance: Zatoshi {
-        Zatoshi.from(decimal: shieldedBalance.total.decimalValue.decimalValue * transactionAmountInputState.zecPrice)
-    }
-}
+    var body: some ReducerProtocol<State, Action> {
+        Scope(state: \.addMemoState, action: /Action.addMemo) {
+            CheckCircleReducer()
+        }
 
-// MARK: - Action
+        Scope(state: \.memoState, action: /Action.memo) {
+            MultiLineTextFieldReducer()
+        }
 
-enum SendFlowAction: Equatable {
-    case addMemo(CheckCircleReducer.Action)
-    case memo(MultiLineTextFieldReducer.Action)
-    case onAppear
-    case onDisappear
-    case sendConfirmationPressed
-    case sendTransactionResult(Result<TransactionState, NSError>)
-    case synchronizerStateChanged(WrappedSDKSynchronizerState)
-    case transactionAddressInput(TransactionAddressTextFieldReducer.Action)
-    case transactionAmountInput(TransactionAmountTextFieldReducer.Action)
-    case updateRoute(SendFlowState.Route?)
-}
+        Scope(state: \.transactionAddressInputState, action: /Action.transactionAddressInput) {
+            TransactionAddressTextFieldReducer()
+        }
 
-// MARK: - Environment
+        Scope(state: \.transactionAmountInputState, action: /Action.transactionAmountInput) {
+            TransactionAmountTextFieldReducer()
+        }
 
-struct SendFlowEnvironment {
-    let derivationTool: WrappedDerivationTool
-    let mnemonic: WrappedMnemonic
-    let numberFormatter: WrappedNumberFormatter
-    let SDKSynchronizer: WrappedSDKSynchronizer
-    let scheduler: AnySchedulerOf<DispatchQueue>
-    let walletStorage: WrappedWalletStorage
-    let zcashSDKEnvironment: ZCashSDKEnvironment
-}
-
-// MARK: - Reducer
-
-extension SendFlowReducer {
-    private struct SyncStatusUpdatesID: Hashable {}
-
-    static let `default` = SendFlowReducer.combine(
-        [
-            sendReducer,
-            transactionAddressInputReducer,
-            transactionAmountInputReducer,
-            memoReducer,
-            addMemoReducer
-        ]
-    )
-
-    private static let sendReducer = SendFlowReducer { state, action, environment in
-        switch action {
-        case .addMemo:
-            return .none
-
-        case .updateRoute(.done):
-            state.route = nil
-            state.memoState.text = ""
-            state.transactionAmountInputState.textFieldState.text = ""
-            state.transactionAmountInputState.amount = 0
-            state.transactionAddressInputState.textFieldState.text = ""
-            return .none
-
-        case .updateRoute(.failure):
-            state.route = .failure
-            state.isSendingTransaction = false
-            return .none
-
-        case .updateRoute(.confirmation):
-            state.amount = Zatoshi(state.transactionAmountInputState.amount)
-            state.address = state.transactionAddressInputState.textFieldState.text
-            state.route = .confirmation
-            return .none
-            
-        case let .updateRoute(route):
-            state.route = route
-            return .none
-            
-        case .sendConfirmationPressed:
-            guard !state.isSendingTransaction else {
+        Reduce { state, action in
+            switch action {
+            case .addMemo:
                 return .none
-            }
 
-            do {
-                let storedWallet = try environment.walletStorage.exportWallet()
-                let seedBytes = try environment.mnemonic.toSeed(storedWallet.seedPhrase)
-                guard let spendingKey = try environment.derivationTool.deriveSpendingKeys(seedBytes, 1).first else {
-                    return Effect(value: .updateRoute(.failure))
+            case .updateRoute(.done):
+                state.route = nil
+                state.memoState.text = ""
+                state.transactionAmountInputState.textFieldState.text = ""
+                state.transactionAmountInputState.amount = 0
+                state.transactionAddressInputState.textFieldState.text = ""
+                return .none
+
+            case .updateRoute(.failure):
+                state.route = .failure
+                state.isSendingTransaction = false
+                return .none
+
+            case .updateRoute(.confirmation):
+                state.amount = Zatoshi(state.transactionAmountInputState.amount)
+                state.address = state.transactionAddressInputState.textFieldState.text
+                state.route = .confirmation
+                return .none
+                
+            case let .updateRoute(route):
+                state.route = route
+                return .none
+                
+            case .sendConfirmationPressed:
+                guard !state.isSendingTransaction else {
+                    return .none
                 }
 
-                state.isSendingTransaction = true
+                do {
+                    let storedWallet = try walletStorage.exportWallet()
+                    let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase)
+                    guard let spendingKey = try derivationTool.deriveSpendingKeys(seedBytes, 1).first else {
+                        return Effect(value: .updateRoute(.failure))
+                    }
 
-                let sendTransActionEffect = environment.SDKSynchronizer.sendTransaction(
-                    with: spendingKey,
-                    zatoshi: state.amount,
-                    to: state.address,
-                    memo: state.addMemoState ? state.memoState.text : nil,
-                    from: 0
-                )
-                .receive(on: environment.scheduler)
-                .map(SendFlowAction.sendTransactionResult)
-                .eraseToEffect()
+                    state.isSendingTransaction = true
 
-                return .concatenate(
-                    Effect(value: .updateRoute(.inProgress)),
-                    sendTransActionEffect
-                )
-            } catch {
-                return Effect(value: .updateRoute(.failure))
+                    let sendTransActionEffect = sdkSynchronizer.sendTransaction(
+                        with: spendingKey,
+                        zatoshi: state.amount,
+                        to: state.address,
+                        memo: state.addMemoState ? state.memoState.text : nil,
+                        from: 0
+                    )
+                    .receive(on: mainQueue)
+                    .map(SendFlowReducer.Action.sendTransactionResult)
+                    .eraseToEffect()
+
+                    return .concatenate(
+                        Effect(value: .updateRoute(.inProgress)),
+                        sendTransActionEffect
+                    )
+                } catch {
+                    return Effect(value: .updateRoute(.failure))
+                }
+                
+            case .sendTransactionResult(let result):
+                state.isSendingTransaction = false
+                do {
+                    _ = try result.get()
+                    return Effect(value: .updateRoute(.success))
+                } catch {
+                    return Effect(value: .updateRoute(.failure))
+                }
+                
+            case .transactionAmountInput:
+                return .none
+
+            case .transactionAddressInput:
+                return .none
+
+            case .onAppear:
+                state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
+                return sdkSynchronizer.stateChanged
+                    .map(SendFlowReducer.Action.synchronizerStateChanged)
+                    .eraseToEffect()
+                    .cancellable(id: SyncStatusUpdatesID.self, cancelInFlight: true)
+                
+            case .onDisappear:
+                return Effect.cancel(id: SyncStatusUpdatesID.self)
+                
+            case .synchronizerStateChanged(.synced):
+                if let shieldedBalance = sdkSynchronizer.latestScannedSynchronizerState?.shieldedBalance {
+                    state.shieldedBalance = shieldedBalance
+                    state.transactionAmountInputState.maxValue = shieldedBalance.total.amount
+                }
+                return .none
+                
+            case .synchronizerStateChanged:
+                return .none
+
+            case .memo:
+                return .none
             }
-            
-        case .sendTransactionResult(let result):
-            state.isSendingTransaction = false
-            do {
-                let transaction = try result.get()
-                return Effect(value: .updateRoute(.success))
-            } catch {
-                return Effect(value: .updateRoute(.failure))
-            }
-            
-        case .transactionAmountInput(let transactionInput):
-            return .none
-
-        case .transactionAddressInput(let transactionInput):
-            return .none
-
-        case .onAppear:
-            state.memoState.charLimit = environment.zcashSDKEnvironment.memoCharLimit
-            return environment.SDKSynchronizer.stateChanged
-                .map(SendFlowAction.synchronizerStateChanged)
-                .eraseToEffect()
-                .cancellable(id: SyncStatusUpdatesID(), cancelInFlight: true)
-            
-        case .onDisappear:
-            return Effect.cancel(id: SyncStatusUpdatesID())
-            
-        case .synchronizerStateChanged(.synced):
-            if let shieldedBalance = environment.SDKSynchronizer.latestScannedSynchronizerState?.shieldedBalance {
-                state.shieldedBalance = shieldedBalance
-                state.transactionAmountInputState.maxValue = shieldedBalance.total.amount
-            }
-            return .none
-            
-        case .synchronizerStateChanged(let synchronizerState):
-            return .none
-
-        case .memo:
-            return .none
         }
     }
-
-    private static let addMemoReducer: SendFlowReducer = AnyCheckCircleReducer { _ in
-        CheckCircleReducer()
-    }
-    .pullback(
-        state: \SendFlowState.addMemoState,
-        action: /SendFlowAction.addMemo,
-        environment: { $0 }
-    )
-
-    private static let transactionAddressInputReducer: SendFlowReducer = AnyTransactionAddressTextFieldReducer { _ in
-        TransactionAddressTextFieldReducer()
-    }
-    .pullback(
-        state: \SendFlowState.transactionAddressInputState,
-        action: /SendFlowAction.transactionAddressInput,
-        environment: { $0 }
-    )
-    
-    private static let transactionAmountInputReducer: SendFlowReducer = AnyTransactionAmountTextFieldReducer { _ in
-        TransactionAmountTextFieldReducer()
-    }
-    .pullback(
-        state: \SendFlowState.transactionAmountInputState,
-        action: /SendFlowAction.transactionAmountInput,
-        environment: { $0 }
-    )
-    
-    private static let memoReducer: SendFlowReducer = AnyMultiLineTextFieldReducer { _ in
-        MultiLineTextFieldReducer()
-    }
-    .pullback(
-        state: \SendFlowState.memoState,
-        action: /SendFlowAction.memo,
-        environment: { $0 }
-    )
 }
 
 // MARK: - Store
@@ -272,14 +219,14 @@ extension SendFlowStore {
     func addMemoStore() -> CheckCircleStore {
         self.scope(
             state: \.addMemoState,
-            action: SendFlowAction.addMemo
+            action: SendFlowReducer.Action.addMemo
         )
     }
 
     func memoStore() -> MultiLineTextFieldStore {
         self.scope(
             state: \.memoState,
-            action: SendFlowAction.memo
+            action: SendFlowReducer.Action.memo
         )
     }
 }
@@ -287,10 +234,10 @@ extension SendFlowStore {
 // MARK: - ViewStore
 
 extension SendFlowViewStore {
-    var routeBinding: Binding<SendFlowState.Route?> {
+    var routeBinding: Binding<SendFlowReducer.State.Route?> {
         self.binding(
             get: \.route,
-            send: SendFlowAction.updateRoute
+            send: SendFlowReducer.Action.updateRoute
         )
     }
 
@@ -302,7 +249,7 @@ extension SendFlowViewStore {
                 $0 == .success ||
                 $0 == .failure
             },
-            embed: { $0 ? SendFlowState.Route.confirmation : nil }
+            embed: { $0 ? SendFlowReducer.State.Route.confirmation : nil }
         )
     }
 
@@ -313,28 +260,28 @@ extension SendFlowViewStore {
                 $0 == .success ||
                 $0 == .failure
             },
-            embed: { $0 ? SendFlowState.Route.inProgress : SendFlowState.Route.confirmation }
+            embed: { $0 ? SendFlowReducer.State.Route.inProgress : SendFlowReducer.State.Route.confirmation }
         )
     }
 
     var bindingForSuccess: Binding<Bool> {
         self.routeBinding.map(
             extract: { $0 == .success },
-            embed: { _ in SendFlowState.Route.success }
+            embed: { _ in SendFlowReducer.State.Route.success }
         )
     }
 
     var bindingForFailure: Binding<Bool> {
         self.routeBinding.map(
             extract: { $0 == .failure },
-            embed: { _ in SendFlowState.Route.failure }
+            embed: { _ in SendFlowReducer.State.Route.failure }
         )
     }
 }
 
 // MARK: Placeholders
 
-extension SendFlowState {
+extension SendFlowReducer.State {
     static var placeholder: Self {
         .init(
             addMemoState: true,
@@ -361,16 +308,7 @@ extension SendFlowStore {
     static var placeholder: SendFlowStore {
         return SendFlowStore(
             initialState: .emptyPlaceholder,
-            reducer: .default,
-            environment: SendFlowEnvironment(
-                derivationTool: .live(),
-                mnemonic: .live,
-                numberFormatter: .live(),
-                SDKSynchronizer: LiveWrappedSDKSynchronizer(),
-                scheduler: DispatchQueue.main.eraseToAnyScheduler(),
-                walletStorage: .live(),
-                zcashSDKEnvironment: .mainnet
-            )
+            reducer: SendFlowReducer()
         )
     }
 }
