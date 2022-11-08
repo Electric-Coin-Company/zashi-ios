@@ -31,7 +31,7 @@ class TransactionSendingTests: XCTestCase {
                 text: "ztestmockeddestinationaddress"
             )
         )
-        state.transactionAmountInputState = TransactionAmountTextFieldState(
+        state.transactionAmountInputState = TransactionAmountTextFieldReducer.State(
             currencySelectionState: CurrencySelectionReducer.State(),
             textFieldState: TCATextFieldReducer.State(
                 validationType: nil,

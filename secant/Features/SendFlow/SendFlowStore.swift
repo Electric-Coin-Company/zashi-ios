@@ -18,6 +18,11 @@ typealias AnyTransactionAddressTextFieldReducer = AnyReducer<
     TransactionAddressTextFieldReducer.Action,
     SendFlowEnvironment
 >
+typealias AnyTransactionAmountTextFieldReducer = AnyReducer<
+    TransactionAmountTextFieldReducer.State,
+    TransactionAmountTextFieldReducer.Action,
+    SendFlowEnvironment
+>
 typealias AnyMultiLineTextFieldReducer = AnyReducer<MultiLineTextFieldReducer.State, MultiLineTextFieldReducer.Action, SendFlowEnvironment>
 typealias AnyCheckCircleReducer = AnyReducer<Bool, CheckCircleReducer.Action, SendFlowEnvironment>
 
@@ -38,7 +43,7 @@ struct SendFlowState: Equatable {
     var route: Route?
     var shieldedBalance = WalletBalance.zero
     var transactionAddressInputState: TransactionAddressTextFieldReducer.State
-    var transactionAmountInputState: TransactionAmountTextFieldState
+    var transactionAmountInputState: TransactionAmountTextFieldReducer.State
 
     var address: String {
         get { transactionAddressInputState.textFieldState.text }
@@ -92,7 +97,7 @@ enum SendFlowAction: Equatable {
     case sendTransactionResult(Result<TransactionState, NSError>)
     case synchronizerStateChanged(WrappedSDKSynchronizerState)
     case transactionAddressInput(TransactionAddressTextFieldReducer.Action)
-    case transactionAmountInput(TransactionAmountTextFieldAction)
+    case transactionAmountInput(TransactionAmountTextFieldReducer.Action)
     case updateRoute(SendFlowState.Route?)
 }
 
@@ -242,16 +247,15 @@ extension SendFlowReducer {
         environment: { $0 }
     )
     
-    private static let transactionAmountInputReducer: SendFlowReducer = TransactionAmountTextFieldReducer.default.pullback(
+    private static let transactionAmountInputReducer: SendFlowReducer = AnyTransactionAmountTextFieldReducer { _ in
+        TransactionAmountTextFieldReducer()
+    }
+    .pullback(
         state: \SendFlowState.transactionAmountInputState,
         action: /SendFlowAction.transactionAmountInput,
-        environment: { environment in
-            TransactionAmountTextFieldEnvironment(
-                numberFormatter: environment.numberFormatter
-            )
-        }
+        environment: { $0 }
     )
-
+    
     private static let memoReducer: SendFlowReducer = AnyMultiLineTextFieldReducer { _ in
         MultiLineTextFieldReducer()
     }

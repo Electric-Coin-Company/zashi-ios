@@ -9,6 +9,7 @@ import ComposableArchitecture
 
 private enum NumberFormatterKey: DependencyKey {
     static let liveValue = WrappedNumberFormatter.live()
+    static let testValue = WrappedNumberFormatter.live()
 }
 
 extension DependencyValues {

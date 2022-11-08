@@ -24,7 +24,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
     func testMaxValue() throws {
         let store = TestStore(
             initialState:
-                TransactionAmountTextFieldState(
+                TransactionAmountTextFieldReducer.State(
                     currencySelectionState: CurrencySelectionReducer.State(),
                     maxValue: 501_301,
                     textFieldState:
@@ -33,11 +33,8 @@ class TransactionAmountTextFieldTests: XCTestCase {
                             text: "0.002"
                         )
                 ),
-            reducer: TransactionAmountTextFieldReducer.default,
-            environment:
-                TransactionAmountTextFieldEnvironment(
-                    numberFormatter: .live(numberFormatter: usNumberFormatter)
-                )
+            reducer: TransactionAmountTextFieldReducer()
+                .dependency(\.numberFormatter, .live(numberFormatter: usNumberFormatter))
         )
 
         store.send(.setMax) { state in
@@ -52,7 +49,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
     func testClearValue() throws {
         let store = TestStore(
             initialState:
-                TransactionAmountTextFieldState(
+                TransactionAmountTextFieldReducer.State(
                     currencySelectionState: CurrencySelectionReducer.State(),
                     maxValue: 501_301,
                     textFieldState:
@@ -61,11 +58,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
                             text: "0.002"
                         )
                 ),
-            reducer: TransactionAmountTextFieldReducer.default,
-            environment:
-                TransactionAmountTextFieldEnvironment(
-                    numberFormatter: .live()
-                )
+            reducer: TransactionAmountTextFieldReducer()
         )
 
         store.send(.clearValue) { state in
@@ -77,7 +70,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
     func testZec_to_UsdConvertedAmount() throws {
         let store = TestStore(
             initialState:
-                TransactionAmountTextFieldState(
+                TransactionAmountTextFieldReducer.State(
                     currencySelectionState:
                         CurrencySelectionReducer.State(
                             currencyType: .zec
@@ -89,11 +82,8 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         ),
                     zecPrice: 1000.0
                 ),
-            reducer: TransactionAmountTextFieldReducer.default,
-            environment:
-                TransactionAmountTextFieldEnvironment(
-                    numberFormatter: .live(numberFormatter: usNumberFormatter)
-                )
+            reducer: TransactionAmountTextFieldReducer()
+                .dependency(\.numberFormatter, .live(numberFormatter: usNumberFormatter))
         )
 
         store.send(.currencySelection(.swapCurrencyType)) { state in
@@ -109,7 +99,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
     func testBigZecAmount_to_UsdConvertedAmount() throws {
         let store = TestStore(
             initialState:
-                TransactionAmountTextFieldState(
+                TransactionAmountTextFieldReducer.State(
                     currencySelectionState:
                         CurrencySelectionReducer.State(
                             currencyType: .zec
@@ -121,11 +111,8 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         ),
                     zecPrice: 1000.0
                 ),
-            reducer: TransactionAmountTextFieldReducer.default,
-            environment:
-                TransactionAmountTextFieldEnvironment(
-                    numberFormatter: .live(numberFormatter: usNumberFormatter)
-                )
+            reducer: TransactionAmountTextFieldReducer()
+                .dependency(\.numberFormatter, .live(numberFormatter: usNumberFormatter))
         )
 
         store.send(.currencySelection(.swapCurrencyType)) { state in
@@ -141,7 +128,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
     func testUsd_to_ZecConvertedAmount() throws {
         let store = TestStore(
             initialState:
-                TransactionAmountTextFieldState(
+                TransactionAmountTextFieldReducer.State(
                     currencySelectionState:
                         CurrencySelectionReducer.State(
                             currencyType: .usd
@@ -153,11 +140,8 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         ),
                     zecPrice: 1000.0
                 ),
-            reducer: TransactionAmountTextFieldReducer.default,
-            environment:
-                TransactionAmountTextFieldEnvironment(
-                    numberFormatter: .live(numberFormatter: usNumberFormatter)
-                )
+            reducer: TransactionAmountTextFieldReducer()
+                .dependency(\.numberFormatter, .live(numberFormatter: usNumberFormatter))
         )
 
         store.send(.currencySelection(.swapCurrencyType)) { state in
@@ -173,7 +157,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
     func testIfAmountIsMax() throws {
         let store = TestStore(
             initialState:
-                TransactionAmountTextFieldState(
+                TransactionAmountTextFieldReducer.State(
                     currencySelectionState:
                         CurrencySelectionReducer.State(
                             currencyType: .usd
@@ -186,11 +170,8 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         ),
                     zecPrice: 1000.0
                 ),
-            reducer: TransactionAmountTextFieldReducer.default,
-            environment:
-                TransactionAmountTextFieldEnvironment(
-                    numberFormatter: .live(numberFormatter: usNumberFormatter)
-                )
+            reducer: TransactionAmountTextFieldReducer()
+                .dependency(\.numberFormatter, .live(numberFormatter: usNumberFormatter))
         )
 
         store.send(.textField(.set("1 000"))) { state in
@@ -215,7 +196,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
     func testMaxZecValue() throws {
         let store = TestStore(
             initialState:
-                TransactionAmountTextFieldState(
+                TransactionAmountTextFieldReducer.State(
                     currencySelectionState:
                         CurrencySelectionReducer.State(
                             currencyType: .zec
@@ -228,11 +209,8 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         ),
                     zecPrice: 1000.0
                 ),
-            reducer: TransactionAmountTextFieldReducer.default,
-            environment:
-                TransactionAmountTextFieldEnvironment(
-                    numberFormatter: .live(numberFormatter: usNumberFormatter)
-                )
+            reducer: TransactionAmountTextFieldReducer()
+                .dependency(\.numberFormatter, .live(numberFormatter: usNumberFormatter))
         )
 
         store.send(.setMax) { state in
@@ -247,7 +225,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
     func testMaxUsdValue() throws {
         let store = TestStore(
             initialState:
-                TransactionAmountTextFieldState(
+                TransactionAmountTextFieldReducer.State(
                     currencySelectionState:
                         CurrencySelectionReducer.State(
                             currencyType: .usd
@@ -260,11 +238,8 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         ),
                     zecPrice: 1000.0
                 ),
-            reducer: TransactionAmountTextFieldReducer.default,
-            environment:
-                TransactionAmountTextFieldEnvironment(
-                    numberFormatter: .live(numberFormatter: usNumberFormatter)
-                )
+            reducer: TransactionAmountTextFieldReducer()
+                .dependency(\.numberFormatter, .live(numberFormatter: usNumberFormatter))
         )
 
         store.send(.setMax) { state in
