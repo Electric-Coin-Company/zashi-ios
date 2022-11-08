@@ -9,7 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 
 struct OnboardingScreen: View {
-    let store: Store<OnboardingFlowState, OnboardingFlowAction>
+    let store: Store<OnboardingFlowReducer.State, OnboardingFlowReducer.Action>
 
     var body: some View {
         GeometryReader { proxy in
@@ -52,11 +52,10 @@ struct OnboardingScreen_Previews: PreviewProvider {
     static var previews: some View {
         OnboardingScreen(
             store: Store(
-                initialState: OnboardingFlowState(
+                initialState: OnboardingFlowReducer.State(
                     importWalletState: .placeholder
                 ),
-                reducer: OnboardingFlowReducer.default,
-                environment: (.demo)
+                reducer: OnboardingFlowReducer()
             )
         )
         .preferredColorScheme(.light)
@@ -64,11 +63,10 @@ struct OnboardingScreen_Previews: PreviewProvider {
 
         OnboardingScreen(
             store: Store(
-                initialState: OnboardingFlowState(
+                initialState: OnboardingFlowReducer.State(
                     importWalletState: .placeholder
                 ),
-                reducer: OnboardingFlowReducer.default,
-                environment: (.demo)
+                reducer: OnboardingFlowReducer()
             )
         )
         .preferredColorScheme(.light)
@@ -76,11 +74,10 @@ struct OnboardingScreen_Previews: PreviewProvider {
 
         OnboardingScreen(
             store: Store(
-                initialState: OnboardingFlowState(
+                initialState: OnboardingFlowReducer.State(
                     importWalletState: .placeholder
                 ),
-                reducer: OnboardingFlowReducer.default,
-                environment: (.demo)
+                reducer: OnboardingFlowReducer()
             )
         )
         .preferredColorScheme(.light)
@@ -88,11 +85,10 @@ struct OnboardingScreen_Previews: PreviewProvider {
 
         OnboardingScreen(
             store: Store(
-                initialState: OnboardingFlowState(
+                initialState: OnboardingFlowReducer.State(
                     importWalletState: .placeholder
                 ),
-                reducer: OnboardingFlowReducer.default,
-                environment: (.demo)
+                reducer: OnboardingFlowReducer()
             )
         )
         .preferredColorScheme(.dark)
@@ -100,11 +96,10 @@ struct OnboardingScreen_Previews: PreviewProvider {
 
         OnboardingScreen(
             store: Store(
-                initialState: OnboardingFlowState(
+                initialState: OnboardingFlowReducer.State(
                     importWalletState: .placeholder
                 ),
-                reducer: OnboardingFlowReducer.default,
-                environment: (.demo)
+                reducer: OnboardingFlowReducer()
             )
         )
         .preferredColorScheme(.dark)
@@ -112,11 +107,10 @@ struct OnboardingScreen_Previews: PreviewProvider {
 
         OnboardingScreen(
             store: Store(
-                initialState: OnboardingFlowState(
+                initialState: OnboardingFlowReducer.State(
                     importWalletState: .placeholder
                 ),
-                reducer: OnboardingFlowReducer.default,
-                environment: (.demo)
+                reducer: OnboardingFlowReducer()
             )
         )
         .preferredColorScheme(.dark)

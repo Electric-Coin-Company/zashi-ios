@@ -7,9 +7,14 @@ typealias AppStore = Store<AppState, AppAction>
 typealias AppViewStore = ViewStore<AppState, AppAction>
 
 typealias AnyRecoveryPhraseDisplayReducer = AnyReducer<RecoveryPhraseDisplayReducer.State, RecoveryPhraseDisplayReducer.Action, AppEnvironment>
-typealias AnyRecoveryPhraseValidationFlowReducer = AnyReducer<RecoveryPhraseValidationFlowReducer.State, RecoveryPhraseValidationFlowReducer.Action, AppEnvironment>
+typealias AnyRecoveryPhraseValidationFlowReducer = AnyReducer<
+    RecoveryPhraseValidationFlowReducer.State,
+    RecoveryPhraseValidationFlowReducer.Action,
+    AppEnvironment
+>
 typealias AnyWelcomeReducer = AnyReducer<WelcomeReducer.State, WelcomeReducer.Action, AppEnvironment>
 typealias AnySandboxReducer = AnyReducer<SandboxReducer.State, SandboxReducer.Action, AppEnvironment>
+typealias AnyOnboardingFlowReducer = AnyReducer<OnboardingFlowReducer.State, OnboardingFlowReducer.Action, AppEnvironment>
 
 // MARK: - State
 
@@ -26,7 +31,7 @@ struct AppState: Equatable {
     
     var appInitializationState: InitializationState = .uninitialized
     var homeState: HomeState
-    var onboardingState: OnboardingFlowState
+    var onboardingState: OnboardingFlowReducer.State
     var phraseValidationState: RecoveryPhraseValidationFlowReducer.State
     var phraseDisplayState: RecoveryPhraseDisplayReducer.State
     var prevRoute: Route?
@@ -57,7 +62,7 @@ enum AppAction: Equatable {
     case home(HomeAction)
     case initializeSDK
     case nukeWallet
-    case onboarding(OnboardingFlowAction)
+    case onboarding(OnboardingFlowReducer.Action)
     case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
     case phraseValidation(RecoveryPhraseValidationFlowReducer.Action)
     case respondToWalletInitializationState(InitializationState)
@@ -382,18 +387,15 @@ extension AppReducer {
         }
     )
 
-    private static let onboardingReducer: AppReducer = OnboardingFlowReducer.default.pullback(
+    private static let onboardingReducer: AppReducer = AnyOnboardingFlowReducer { _ in
+        OnboardingFlowReducer()
+    }
+    .pullback(
         state: \AppState.onboardingState,
         action: /AppAction.onboarding,
-        environment: { environment in
-            OnboardingFlowEnvironment(
-                mnemonic: environment.mnemonic,
-                walletStorage: environment.walletStorage,
-                zcashSDKEnvironment: environment.zcashSDKEnvironment
-            )
-        }
+        environment: { $0 }
     )
-
+    
     private static let phraseValidationReducer: AppReducer = AnyRecoveryPhraseValidationFlowReducer { _ in
         RecoveryPhraseValidationFlowReducer()
     }

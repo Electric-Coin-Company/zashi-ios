@@ -9,49 +9,102 @@ import Foundation
 import SwiftUI
 import ComposableArchitecture
 
-typealias OnboardingFlowReducer = Reducer<OnboardingFlowState, OnboardingFlowAction, OnboardingFlowEnvironment>
-typealias OnboardingFlowStore = Store<OnboardingFlowState, OnboardingFlowAction>
-typealias OnboardingFlowViewStore = ViewStore<OnboardingFlowState, OnboardingFlowAction>
+typealias OnboardingFlowStore = Store<OnboardingFlowReducer.State, OnboardingFlowReducer.Action>
+typealias OnboardingFlowViewStore = ViewStore<OnboardingFlowReducer.State, OnboardingFlowReducer.Action>
 
-typealias AnyImportWalletReducer = AnyReducer<ImportWalletReducer.State, ImportWalletReducer.Action, OnboardingFlowEnvironment>
+struct OnboardingFlowReducer: ReducerProtocol {
+    struct State: Equatable {
+        enum Route: Equatable, CaseIterable {
+            case createNewWallet
+            case importExistingWallet
+        }
+        
+        struct Step: Equatable, Identifiable {
+            let id: UUID
+            let title: LocalizedStringKey
+            let description: LocalizedStringKey
+            let background: Image
+            let badge: Badge
+        }
 
-// MARK: - State
+        var steps: IdentifiedArrayOf<Step> = Self.onboardingSteps
+        var index = 0
+        var skippedAtindex: Int?
+        var route: Route?
 
-struct OnboardingFlowState: Equatable {
-    enum Route: Equatable, CaseIterable {
+        var currentStep: Step { steps[index] }
+        var isFinalStep: Bool { steps.count == index + 1 }
+        var isInitialStep: Bool { index == 0 }
+        var progress: Int { ((index + 1) * 100) / (steps.count) }
+        var offset: CGFloat {
+            let maxOffset = CGFloat(-60)
+            let stepOffset = CGFloat(maxOffset / CGFloat(steps.count - 1))
+            guard index != 0 else { return .zero }
+            return stepOffset * CGFloat(index)
+        }
+        
+        /// Import Wallet
+        var importWalletState: ImportWalletReducer.State
+    }
+
+    enum Action: Equatable {
+        case next
+        case back
+        case skip
+        case updateRoute(OnboardingFlowReducer.State.Route?)
         case createNewWallet
         case importExistingWallet
+        case importWallet(ImportWalletReducer.Action)
     }
     
-    struct Step: Equatable, Identifiable {
-        let id: UUID
-        let title: LocalizedStringKey
-        let description: LocalizedStringKey
-        let background: Image
-        let badge: Badge
-    }
+    var body: some ReducerProtocol<State, Action> {
+        Scope(state: \.importWalletState, action: /Action.importWallet) {
+            ImportWalletReducer()
+        }
+        
+        Reduce { state, action in
+            switch action {
+            case .back:
+                guard state.index > 0 else { return .none }
+                if let skippedFrom = state.skippedAtindex {
+                    state.index = skippedFrom
+                    state.skippedAtindex = nil
+                } else {
+                    state.index -= 1
+                }
+                return .none
+                
+            case .next:
+                guard state.index < state.steps.count - 1 else { return .none }
+                state.index += 1
+                return .none
+                
+            case .skip:
+                guard state.skippedAtindex == nil else { return .none }
+                state.skippedAtindex = state.index
+                state.index = state.steps.count - 1
+                return .none
+                
+            case .updateRoute(let route):
+                state.route = route
+                return .none
 
-    var steps: IdentifiedArrayOf<Step> = Self.onboardingSteps
-    var index = 0
-    var skippedAtindex: Int?
-    var route: Route?
+            case .createNewWallet:
+                state.route = .createNewWallet
+                return .none
 
-    var currentStep: Step { steps[index] }
-    var isFinalStep: Bool { steps.count == index + 1 }
-    var isInitialStep: Bool { index == 0 }
-    var progress: Int { ((index + 1) * 100) / (steps.count) }
-    var offset: CGFloat {
-        let maxOffset = CGFloat(-60)
-        let stepOffset = CGFloat(maxOffset / CGFloat(steps.count - 1))
-        guard index != 0 else { return .zero }
-        return stepOffset * CGFloat(index)
+            case .importExistingWallet:
+                state.route = .importExistingWallet
+                return .none
+                
+            case .importWallet:
+                return .none
+            }
+        }
     }
-    
-    /// Import Wallet
-    var importWalletState: ImportWalletReducer.State
 }
 
-extension OnboardingFlowState {
+extension OnboardingFlowReducer.State {
     static let onboardingSteps = IdentifiedArray(
         uniqueElements: [
             Step(
@@ -86,104 +139,10 @@ extension OnboardingFlowState {
     )
 }
 
-// MARK: - Action
-
-enum OnboardingFlowAction: Equatable {
-    case next
-    case back
-    case skip
-    case updateRoute(OnboardingFlowState.Route?)
-    case createNewWallet
-    case importExistingWallet
-    case importWallet(ImportWalletReducer.Action)
-}
-
-// MARK: - Environment
-
-struct OnboardingFlowEnvironment {
-    let mnemonic: WrappedMnemonic
-    let walletStorage: WrappedWalletStorage
-    let zcashSDKEnvironment: ZCashSDKEnvironment
-}
-
-extension OnboardingFlowEnvironment {
-    static let live = OnboardingFlowEnvironment(
-        mnemonic: .live,
-        walletStorage: .live(),
-        zcashSDKEnvironment: .mainnet
-    )
-
-    static let demo = OnboardingFlowEnvironment(
-        mnemonic: .mock,
-        walletStorage: .live(),
-        zcashSDKEnvironment: .testnet
-    )
-}
-
-// MARK: - Reducer
-
-extension OnboardingFlowReducer {
-    static let `default` = OnboardingFlowReducer.combine(
-        [
-            onboardingReducer,
-            importWalletReducer
-        ]
-    )
-
-    private static let onboardingReducer = OnboardingFlowReducer { state, action, _ in
-        switch action {
-        case .back:
-            guard state.index > 0 else { return .none }
-            if let skippedFrom = state.skippedAtindex {
-                state.index = skippedFrom
-                state.skippedAtindex = nil
-            } else {
-                state.index -= 1
-            }
-            return .none
-            
-        case .next:
-            guard state.index < state.steps.count - 1 else { return .none }
-            state.index += 1
-            return .none
-            
-        case .skip:
-            guard state.skippedAtindex == nil else { return .none }
-            state.skippedAtindex = state.index
-            state.index = state.steps.count - 1
-            return .none
-            
-        case .updateRoute(let route):
-            state.route = route
-            return .none
-
-        case .createNewWallet:
-            state.route = .createNewWallet
-            return .none
-
-        case .importExistingWallet:
-            state.route = .importExistingWallet
-            return .none
-            
-        case .importWallet(let route):
-            return .none
-        }
-    }
-    
-    private static let importWalletReducer: OnboardingFlowReducer = AnyImportWalletReducer { _ in
-        ImportWalletReducer()
-    }
-    .pullback(
-        state: \OnboardingFlowState.importWalletState,
-        action: /OnboardingFlowAction.importWallet,
-        environment: { $0 }
-    )
-}
-
 // MARK: - ViewStore
 
 extension OnboardingFlowViewStore {
-    func bindingForRoute(_ route: OnboardingFlowState.Route) -> Binding<Bool> {
+    func bindingForRoute(_ route: OnboardingFlowReducer.State.Route) -> Binding<Bool> {
         self.binding(
             get: { $0.route == route },
             send: { isActive in

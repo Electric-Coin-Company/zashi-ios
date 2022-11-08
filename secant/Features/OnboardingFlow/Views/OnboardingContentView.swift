@@ -9,7 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 
 struct OnboardingContentView: View {
-    let store: Store<OnboardingFlowState, OnboardingFlowAction>
+    let store: Store<OnboardingFlowReducer.State, OnboardingFlowReducer.Action>
     let width: Double
     let height: Double
     
@@ -76,12 +76,11 @@ extension OnboardingContentView {
 struct OnboardingContentView_Previews: PreviewProvider {
     static var previews: some View {
         let store = Store(
-            initialState: OnboardingFlowState(
+            initialState: OnboardingFlowReducer.State(
                 index: 0,
                 importWalletState: .placeholder
             ),
-            reducer: OnboardingFlowReducer.default,
-            environment: (.demo)
+            reducer: OnboardingFlowReducer()
         )
         
         OnboardingContentView_Previews.example(store)
@@ -98,7 +97,7 @@ struct OnboardingContentView_Previews: PreviewProvider {
 // MARK: - Previews
 
 extension OnboardingContentView_Previews {
-    static func example(_ store: Store<OnboardingFlowState, OnboardingFlowAction>) -> some View {
+    static func example(_ store: Store<OnboardingFlowReducer.State, OnboardingFlowReducer.Action>) -> some View {
         GeometryReader { proxy in
             ZStack {
                 OnboardingHeaderView(
