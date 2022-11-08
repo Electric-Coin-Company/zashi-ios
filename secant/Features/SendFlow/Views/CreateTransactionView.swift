@@ -21,7 +21,7 @@ struct CreateTransaction: View {
                     TransactionAmountTextField(
                         store: store.scope(
                             state: \.transactionAmountInputState,
-                            action: SendFlowAction.transactionAmountInput
+                            action: SendFlowReducer.Action.transactionAmountInput
                         )
                     )
                     
@@ -47,7 +47,7 @@ struct CreateTransaction: View {
                     TransactionAddressTextField(
                         store: store.scope(
                             state: \.transactionAddressInputState,
-                            action: SendFlowAction.transactionAddressInput
+                            action: SendFlowReducer.Action.transactionAddressInput
                         )
                     )
                     

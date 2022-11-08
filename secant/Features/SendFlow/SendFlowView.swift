@@ -40,16 +40,7 @@ struct SendFLowView_Previews: PreviewProvider {
                         transactionAddressInputState: .placeholder,
                         transactionAmountInputState: .placeholder
                     ),
-                    reducer: .default,
-                    environment: SendFlowEnvironment(
-                        derivationTool: .live(),
-                        mnemonic: .live,
-                        numberFormatter: .live(),
-                        SDKSynchronizer: LiveWrappedSDKSynchronizer(),
-                        scheduler: DispatchQueue.main.eraseToAnyScheduler(),
-                        walletStorage: .live(),
-                        zcashSDKEnvironment: .mainnet
-                    )
+                    reducer: SendFlowReducer()
                 )
             )
             .navigationBarTitleDisplayMode(.inline)
