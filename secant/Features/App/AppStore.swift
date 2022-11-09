@@ -15,6 +15,7 @@ typealias AnyRecoveryPhraseValidationFlowReducer = AnyReducer<
 typealias AnyWelcomeReducer = AnyReducer<WelcomeReducer.State, WelcomeReducer.Action, AppEnvironment>
 typealias AnySandboxReducer = AnyReducer<SandboxReducer.State, SandboxReducer.Action, AppEnvironment>
 typealias AnyOnboardingFlowReducer = AnyReducer<OnboardingFlowReducer.State, OnboardingFlowReducer.Action, AppEnvironment>
+typealias AnyHomeReducer = AnyReducer<HomeReducer.State, HomeReducer.Action, AppEnvironment>
 
 // MARK: - State
 
@@ -30,7 +31,7 @@ struct AppState: Equatable {
     }
     
     var appInitializationState: InitializationState = .uninitialized
-    var homeState: HomeState
+    var homeState: HomeReducer.State
     var onboardingState: OnboardingFlowReducer.State
     var phraseValidationState: RecoveryPhraseValidationFlowReducer.State
     var phraseDisplayState: RecoveryPhraseDisplayReducer.State
@@ -59,7 +60,7 @@ enum AppAction: Equatable {
     case deeplink(URL)
     case deeplinkHome
     case deeplinkSend(Zatoshi, String, String)
-    case home(HomeAction)
+    case home(HomeReducer.Action)
     case initializeSDK
     case nukeWallet
     case onboarding(OnboardingFlowReducer.Action)
@@ -368,25 +369,16 @@ extension AppReducer {
 
         return .none
     }
-
-    private static let homeReducer: AppReducer = HomeReducer.default.pullback(
+    
+    private static let homeReducer: AppReducer = AnyHomeReducer { _ in
+        HomeReducer()
+    }
+    .pullback(
         state: \AppState.homeState,
         action: /AppAction.home,
-        environment: { environment in
-            HomeEnvironment(
-                audioServices: environment.audioServices,
-                derivationTool: environment.derivationTool,
-                diskSpaceChecker: environment.diskSpaceChecker,
-                feedbackGenerator: environment.feedbackGenerator,
-                mnemonic: environment.mnemonic,
-                scheduler: environment.scheduler,
-                SDKSynchronizer: environment.SDKSynchronizer,
-                walletStorage: environment.walletStorage,
-                zcashSDKEnvironment: environment.zcashSDKEnvironment
-            )
-        }
+        environment: { $0 }
     )
-
+    
     private static let onboardingReducer: AppReducer = AnyOnboardingFlowReducer { _ in
         OnboardingFlowReducer()
     }

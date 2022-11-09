@@ -2,7 +2,7 @@ import SwiftUI
 import ComposableArchitecture
 
 struct HomeView: View {
-    let store: Store<HomeState, HomeAction>
+    let store: Store<HomeReducer.State, HomeReducer.Action>
 
     var body: some View {
         WithViewStore(store) { viewStore in

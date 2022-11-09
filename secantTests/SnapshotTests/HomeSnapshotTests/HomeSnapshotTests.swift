@@ -37,7 +37,7 @@ class HomeSnapshotTests: XCTestCase {
 
         let store = HomeStore(
             initialState: .init(
-                balanceBreakdown: .placeholder,
+                balanceBreakdownState: .placeholder,
                 drawerOverlay: .partial,
                 profileState: .placeholder,
                 requestState: .placeholder,
@@ -47,8 +47,7 @@ class HomeSnapshotTests: XCTestCase {
                 synchronizerStatusSnapshot: .default,
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: walletEvents))
             ),
-            reducer: .default,
-            environment: .demo
+            reducer: HomeReducer()
         )
 
         // landing home screen

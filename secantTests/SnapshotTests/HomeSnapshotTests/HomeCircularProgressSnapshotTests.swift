@@ -27,23 +27,9 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
 
         let balance = WalletBalance(verified: Zatoshi(15_345_000), total: Zatoshi(15_345_000))
 
-        let testScheduler = DispatchQueue.test
-
-        let testEnvironment = HomeEnvironment(
-            audioServices: .silent,
-            derivationTool: .live(),
-            diskSpaceChecker: .mockEmptyDisk,
-            feedbackGenerator: .silent,
-            mnemonic: .mock,
-            scheduler: testScheduler.eraseToAnyScheduler(),
-            SDKSynchronizer: SnapshotTestWrappedSDKSynchronizer(),
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
-        )
-
         let store = HomeStore(
             initialState: .init(
-                balanceBreakdown: .placeholder,
+                balanceBreakdownState: .placeholder,
                 drawerOverlay: .partial,
                 profileState: .placeholder,
                 requestState: .placeholder,
@@ -53,8 +39,8 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
                 synchronizerStatusSnapshot: .default,
                 walletEventsState: .emptyPlaceHolder
             ),
-            reducer: .default,
-            environment: testEnvironment
+            reducer: HomeReducer()
+                .dependency(\.sdkSynchronizer, SnapshotTestWrappedSDKSynchronizer())
         )
 
         addAttachments(HomeView(store: store))
@@ -76,23 +62,9 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
 
         let balance = WalletBalance(verified: 15_345_000, total: 15_345_000)
 
-        let testScheduler = DispatchQueue.test
-
-        let testEnvironment = HomeEnvironment(
-            audioServices: .silent,
-            derivationTool: .live(),
-            diskSpaceChecker: .mockEmptyDisk,
-            feedbackGenerator: .silent,
-            mnemonic: .mock,
-            scheduler: testScheduler.eraseToAnyScheduler(),
-            SDKSynchronizer: SnapshotTestWrappedSDKSynchronizer(),
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
-        )
-
         let store = HomeStore(
             initialState: .init(
-                balanceBreakdown: .placeholder,
+                balanceBreakdownState: .placeholder,
                 drawerOverlay: .partial,
                 profileState: .placeholder,
                 requestState: .placeholder,
@@ -102,8 +74,7 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
                 synchronizerStatusSnapshot: .default,
                 walletEventsState: .emptyPlaceHolder
             ),
-            reducer: .default,
-            environment: testEnvironment
+            reducer: HomeReducer()
         )
 
         addAttachments(HomeView(store: store))
@@ -118,23 +89,9 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
 
         let balance = WalletBalance(verified: 15_345_000, total: 15_345_000)
 
-        let testScheduler = DispatchQueue.test
-
-        let testEnvironment = HomeEnvironment(
-            audioServices: .silent,
-            derivationTool: .live(),
-            diskSpaceChecker: .mockEmptyDisk,
-            feedbackGenerator: .silent,
-            mnemonic: .mock,
-            scheduler: testScheduler.eraseToAnyScheduler(),
-            SDKSynchronizer: SnapshotTestWrappedSDKSynchronizer(),
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
-        )
-
         let store = HomeStore(
             initialState: .init(
-                balanceBreakdown: .placeholder,
+                balanceBreakdownState: .placeholder,
                 drawerOverlay: .partial,
                 profileState: .placeholder,
                 requestState: .placeholder,
@@ -144,8 +101,7 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
                 synchronizerStatusSnapshot: .default,
                 walletEventsState: .emptyPlaceHolder
             ),
-            reducer: .default,
-            environment: testEnvironment
+            reducer: HomeReducer()
         )
 
         addAttachments(HomeView(store: store))
