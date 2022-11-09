@@ -7,6 +7,7 @@
 
 import Foundation
 import AVFoundation
+import ComposableArchitecture
 
 struct WrappedAudioServices {
     let systemSoundVibrate: () -> Void
@@ -20,4 +21,16 @@ extension WrappedAudioServices {
     static let silent = WrappedAudioServices(
         systemSoundVibrate: { }
     )
+}
+
+private enum AudioServicesKey: DependencyKey {
+    static let liveValue = WrappedAudioServices.haptic
+    static let testValue = WrappedAudioServices.silent
+}
+
+extension DependencyValues {
+    var audioServices: WrappedAudioServices {
+        get { self[AudioServicesKey.self] }
+        set { self[AudioServicesKey.self] = newValue }
+    }
 }

@@ -10,7 +10,6 @@ import XCTest
 import ComposableArchitecture
 import ZcashLightClientKit
 
-// swiftlint:disable type_body_length
 class WalletEventsSnapshotTests: XCTestCase {
     func testFullWalletEventsSnapshot() throws {
         let transactionsHelper: [TransactionStateMockHelper] = [
@@ -38,7 +37,7 @@ class WalletEventsSnapshotTests: XCTestCase {
 
         let store = HomeStore(
             initialState: .init(
-                balanceBreakdown: .placeholder,
+                balanceBreakdownState: .placeholder,
                 drawerOverlay: .partial,
                 profileState: .placeholder,
                 requestState: .placeholder,
@@ -48,8 +47,7 @@ class WalletEventsSnapshotTests: XCTestCase {
                 synchronizerStatusSnapshot: .default,
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: walletEvents))
             ),
-            reducer: .default,
-            environment: .demo
+            reducer: HomeReducer()
         )
 
         // landing home screen
@@ -85,7 +83,7 @@ class WalletEventsSnapshotTests: XCTestCase {
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
         let store = HomeStore(
             initialState: .init(
-                balanceBreakdown: .placeholder,
+                balanceBreakdownState: .placeholder,
                 drawerOverlay: .partial,
                 profileState: .placeholder,
                 requestState: .placeholder,
@@ -95,8 +93,7 @@ class WalletEventsSnapshotTests: XCTestCase {
                 synchronizerStatusSnapshot: .default,
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent]))
             ),
-            reducer: .default,
-            environment: .demo
+            reducer: HomeReducer()
         )
         
         ViewStore(store).send(.walletEvents(.updateRoute(.showWalletEvent(walletEvent))))
@@ -133,7 +130,7 @@ class WalletEventsSnapshotTests: XCTestCase {
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
         let store = HomeStore(
             initialState: .init(
-                balanceBreakdown: .placeholder,
+                balanceBreakdownState: .placeholder,
                 drawerOverlay: .partial,
                 profileState: .placeholder,
                 requestState: .placeholder,
@@ -143,8 +140,7 @@ class WalletEventsSnapshotTests: XCTestCase {
                 synchronizerStatusSnapshot: .default,
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent]))
             ),
-            reducer: .default,
-            environment: .demo
+            reducer: HomeReducer()
         )
         
         ViewStore(store).send(.walletEvents(.updateRoute(.showWalletEvent(walletEvent))))
@@ -181,7 +177,7 @@ class WalletEventsSnapshotTests: XCTestCase {
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
         let store = HomeStore(
             initialState: .init(
-                balanceBreakdown: .placeholder,
+                balanceBreakdownState: .placeholder,
                 drawerOverlay: .partial,
                 profileState: .placeholder,
                 requestState: .placeholder,
@@ -191,8 +187,7 @@ class WalletEventsSnapshotTests: XCTestCase {
                 synchronizerStatusSnapshot: .default,
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent]))
             ),
-            reducer: .default,
-            environment: .demo
+            reducer: HomeReducer()
         )
         
         let walletEventsState = WalletEventsFlowReducer.State(
@@ -235,7 +230,7 @@ class WalletEventsSnapshotTests: XCTestCase {
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
         let store = HomeStore(
             initialState: .init(
-                balanceBreakdown: .placeholder,
+                balanceBreakdownState: .placeholder,
                 drawerOverlay: .partial,
                 profileState: .placeholder,
                 requestState: .placeholder,
@@ -245,8 +240,7 @@ class WalletEventsSnapshotTests: XCTestCase {
                 synchronizerStatusSnapshot: .default,
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent]))
             ),
-            reducer: .default,
-            environment: .demo
+            reducer: HomeReducer()
         )
         
         ViewStore(store).send(.walletEvents(.updateRoute(.showWalletEvent(walletEvent))))

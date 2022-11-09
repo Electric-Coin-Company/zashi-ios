@@ -13,30 +13,12 @@ import ZcashLightClientKit
 // swiftlint:disable type_body_length
 class HomeTests: XCTestCase {
     func testSynchronizerStateChanged_AnyButSynced() throws {
-        // setup the store and environment to be fully mocked
-        let testScheduler = DispatchQueue.test
-
-        let testEnvironment = HomeEnvironment(
-            audioServices: .silent,
-            derivationTool: .live(),
-            diskSpaceChecker: .mockEmptyDisk,
-            feedbackGenerator: .silent,
-            mnemonic: .mock,
-            scheduler: testScheduler.eraseToAnyScheduler(),
-            SDKSynchronizer: MockWrappedSDKSynchronizer(),
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
-        )
-        
         let store = TestStore(
             initialState: .placeholder,
-            reducer: HomeReducer.default,
-            environment: testEnvironment
+            reducer: HomeReducer()
         )
         
         store.send(.synchronizerStateChanged(.downloading))
-        
-        testScheduler.advance(by: 0.01)
         
         store.receive(.updateSynchronizerStatus)
     }
@@ -47,23 +29,11 @@ class HomeTests: XCTestCase {
     func testSynchronizerStateChanged_Synced() throws {
         // setup the store and environment to be fully mocked
         let testScheduler = DispatchQueue.test
-
-        let testEnvironment = HomeEnvironment(
-            audioServices: .silent,
-            derivationTool: .live(),
-            diskSpaceChecker: .mockEmptyDisk,
-            feedbackGenerator: .silent,
-            mnemonic: .mock,
-            scheduler: testScheduler.eraseToAnyScheduler(),
-            SDKSynchronizer: MockWrappedSDKSynchronizer(),
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
-        )
         
         let store = TestStore(
             initialState: .placeholder,
-            reducer: HomeReducer.default,
-            environment: testEnvironment
+            reducer: HomeReducer()
+                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
         )
         
         store.send(.synchronizerStateChanged(.synced))
@@ -97,23 +67,8 @@ class HomeTests: XCTestCase {
     }
     
     func testWalletEventsPartial_to_FullDrawer() throws {
-        // setup the store and environment to be fully mocked
-        let testScheduler = DispatchQueue.test
-
-        let testEnvironment = HomeEnvironment(
-            audioServices: .silent,
-            derivationTool: .live(),
-            diskSpaceChecker: .mockEmptyDisk,
-            feedbackGenerator: .silent,
-            mnemonic: .mock,
-            scheduler: testScheduler.eraseToAnyScheduler(),
-            SDKSynchronizer: MockWrappedSDKSynchronizer(),
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
-        )
-        
-        let homeState = HomeState(
-            balanceBreakdown: .placeholder,
+        let homeState = HomeReducer.State(
+            balanceBreakdownState: .placeholder,
             drawerOverlay: .partial,
             profileState: .placeholder,
             requestState: .placeholder,
@@ -126,8 +81,7 @@ class HomeTests: XCTestCase {
         
         let store = TestStore(
             initialState: homeState,
-            reducer: HomeReducer.default,
-            environment: testEnvironment
+            reducer: HomeReducer()
         )
         
         store.send(.walletEvents(.updateRoute(.all))) { state in
@@ -141,23 +95,8 @@ class HomeTests: XCTestCase {
     }
     
     func testWalletEventsFull_to_PartialDrawer() throws {
-        // setup the store and environment to be fully mocked
-        let testScheduler = DispatchQueue.test
-
-        let testEnvironment = HomeEnvironment(
-            audioServices: .silent,
-            derivationTool: .live(),
-            diskSpaceChecker: .mockEmptyDisk,
-            feedbackGenerator: .silent,
-            mnemonic: .mock,
-            scheduler: testScheduler.eraseToAnyScheduler(),
-            SDKSynchronizer: MockWrappedSDKSynchronizer(),
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
-        )
-        
-        let homeState = HomeState(
-            balanceBreakdown: .placeholder,
+        let homeState = HomeReducer.State(
+            balanceBreakdownState: .placeholder,
             drawerOverlay: .full,
             profileState: .placeholder,
             requestState: .placeholder,
@@ -170,8 +109,7 @@ class HomeTests: XCTestCase {
         
         let store = TestStore(
             initialState: homeState,
-            reducer: HomeReducer.default,
-            environment: testEnvironment
+            reducer: HomeReducer()
         )
         
         store.send(.walletEvents(.updateRoute(.latest))) { state in
@@ -187,32 +125,14 @@ class HomeTests: XCTestCase {
     /// The .onAppear action is important to register for the synchronizer state updates.
     /// The integration tests make sure registrations and side effects are properly implemented.
     func testOnAppear() throws {
-        // setup the store and environment to be fully mocked
-        let testScheduler = DispatchQueue.test
-
-        let testEnvironment = HomeEnvironment(
-            audioServices: .silent,
-            derivationTool: .live(),
-            diskSpaceChecker: .mockEmptyDisk,
-            feedbackGenerator: .silent,
-            mnemonic: .mock,
-            scheduler: testScheduler.eraseToAnyScheduler(),
-            SDKSynchronizer: MockWrappedSDKSynchronizer(),
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
-        )
-        
         let store = TestStore(
             initialState: .placeholder,
-            reducer: HomeReducer.default,
-            environment: testEnvironment
+            reducer: HomeReducer()
         )
         
         store.send(.onAppear) { state in
             state.requiredTransactionConfirmations = 10
         }
-        
-        testScheduler.advance(by: 0.01)
         
         // expected side effects as a result of .onAppear registration
         store.receive(.updateRoute(nil))
@@ -225,32 +145,15 @@ class HomeTests: XCTestCase {
     }
 
     func testOnAppear_notEnoughSpaceOnDisk() throws {
-        // setup the store and environment to be fully mocked
-        let testScheduler = DispatchQueue.test
-
-        let testEnvironment = HomeEnvironment(
-            audioServices: .silent,
-            derivationTool: .live(),
-            diskSpaceChecker: .mockFullDisk,
-            feedbackGenerator: .silent,
-            mnemonic: .mock,
-            scheduler: testScheduler.eraseToAnyScheduler(),
-            SDKSynchronizer: MockWrappedSDKSynchronizer(),
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
-        )
-
         let store = TestStore(
             initialState: .placeholder,
-            reducer: HomeReducer.default,
-            environment: testEnvironment
+            reducer: HomeReducer()
+                .dependency(\.diskSpaceChecker, .mockFullDisk)
         )
 
         store.send(.onAppear) { state in
             state.requiredTransactionConfirmations = 10
         }
-
-        testScheduler.advance(by: 0.01)
 
         // expected side effects as a result of .onAppear registration
         store.receive(.updateRoute(.notEnoughFreeDiskSpace)) { state in
@@ -263,24 +166,9 @@ class HomeTests: XCTestCase {
     }
     
     func testQuickRescan_ResetToHomeScreen() throws {
-        // setup the store and environment to be fully mocked
-        let testScheduler = DispatchQueue.test
-
-        let testEnvironment = HomeEnvironment(
-            audioServices: .silent,
-            derivationTool: .live(),
-            diskSpaceChecker: .mockEmptyDisk,
-            feedbackGenerator: .silent,
-            mnemonic: .mock,
-            scheduler: testScheduler.eraseToAnyScheduler(),
-            SDKSynchronizer: MockWrappedSDKSynchronizer(),
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
-        )
-        
-        let homeState = HomeState(
+        let homeState = HomeReducer.State(
             route: .profile,
-            balanceBreakdown: .placeholder,
+            balanceBreakdownState: .placeholder,
             drawerOverlay: .full,
             profileState: .placeholder,
             requestState: .placeholder,
@@ -293,8 +181,7 @@ class HomeTests: XCTestCase {
         
         let store = TestStore(
             initialState: homeState,
-            reducer: HomeReducer.default,
-            environment: testEnvironment
+            reducer: HomeReducer()
         )
         
         store.send(.profile(.settings(.quickRescan))) { state in
@@ -303,24 +190,9 @@ class HomeTests: XCTestCase {
     }
     
     func testFullRescan_ResetToHomeScreen() throws {
-        // setup the store and environment to be fully mocked
-        let testScheduler = DispatchQueue.test
-
-        let testEnvironment = HomeEnvironment(
-            audioServices: .silent,
-            derivationTool: .live(),
-            diskSpaceChecker: .mockEmptyDisk,
-            feedbackGenerator: .silent,
-            mnemonic: .mock,
-            scheduler: testScheduler.eraseToAnyScheduler(),
-            SDKSynchronizer: MockWrappedSDKSynchronizer(),
-            walletStorage: .throwing,
-            zcashSDKEnvironment: .testnet
-        )
-        
-        let homeState = HomeState(
+        let homeState = HomeReducer.State(
             route: .profile,
-            balanceBreakdown: .placeholder,
+            balanceBreakdownState: .placeholder,
             drawerOverlay: .full,
             profileState: .placeholder,
             requestState: .placeholder,
@@ -333,8 +205,7 @@ class HomeTests: XCTestCase {
         
         let store = TestStore(
             initialState: homeState,
-            reducer: HomeReducer.default,
-            environment: testEnvironment
+            reducer: HomeReducer()
         )
         
         store.send(.profile(.settings(.fullRescan))) { state in
