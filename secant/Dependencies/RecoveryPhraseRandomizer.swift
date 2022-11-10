@@ -30,6 +30,7 @@ struct RecoveryPhraseRandomizer {
 
 private enum RecoveryPhraseRandomKey: DependencyKey {
     static let liveValue = WrappedRecoveryPhraseRandomizer.live
+    static let testValue = WrappedRecoveryPhraseRandomizer.live
 }
 
 extension DependencyValues {

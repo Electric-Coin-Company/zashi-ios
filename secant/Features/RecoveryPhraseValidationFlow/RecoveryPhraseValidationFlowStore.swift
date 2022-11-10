@@ -55,7 +55,6 @@ struct RecoveryPhraseValidationFlowReducer: ReducerProtocol {
     @Dependency(\.pasteboard) var pasteboard
     @Dependency(\.feedbackGenerator) var feedbackGenerator
 
-    
     // swiftlint:disable:next cyclomatic_complexity
     func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
         switch action {

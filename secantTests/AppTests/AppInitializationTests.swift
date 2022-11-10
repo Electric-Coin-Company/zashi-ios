@@ -93,7 +93,7 @@ class AppInitializationTests: XCTestCase {
             nukeDbFilesFor: { _ in throw DatabaseFiles.DatabaseFilesError.nukeFiles }
         )
         
-        let appState = AppState(
+        let appState = AppReducer.State(
             homeState: .placeholder,
             onboardingState: .init(
                 importWalletState: .placeholder
@@ -106,25 +106,13 @@ class AppInitializationTests: XCTestCase {
             welcomeState: .placeholder
         )
         
-        let testEnvironment = AppEnvironment(
-            audioServices: .silent,
-            databaseFiles: dbFiles,
-            deeplinkHandler: .live,
-            derivationTool: .live(),
-            diskSpaceChecker: .mockEmptyDisk,
-            feedbackGenerator: .silent,
-            mnemonic: .mock,
-            recoveryPhraseRandomizer: recoveryPhraseRandomizer,
-            scheduler: testScheduler.eraseToAnyScheduler(),
-            SDKSynchronizer: MockWrappedSDKSynchronizer(),
-            walletStorage: .live(walletStorage: storage),
-            zcashSDKEnvironment: .mainnet
-        )
-
         let store = TestStore(
             initialState: appState,
-            reducer: AppReducer.default,
-            environment: testEnvironment
+            reducer: AppReducer()
+                .dependency(\.databaseFiles, dbFiles)
+                .dependency(\.walletStorage, .live(walletStorage: storage))
+                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
+                .dependency(\.randomPhrase, recoveryPhraseRandomizer)
         )
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
@@ -181,26 +169,13 @@ class AppInitializationTests: XCTestCase {
             areDbFilesPresentFor: { _ in true },
             nukeDbFilesFor: { _ in throw DatabaseFiles.DatabaseFilesError.nukeFiles }
         )
-
-        let testEnvironment = AppEnvironment(
-            audioServices: .silent,
-            databaseFiles: dbFiles,
-            deeplinkHandler: .live,
-            derivationTool: .live(),
-            diskSpaceChecker: .mockEmptyDisk,
-            feedbackGenerator: .silent,
-            mnemonic: .mock,
-            recoveryPhraseRandomizer: .live,
-            scheduler: testScheduler.eraseToAnyScheduler(),
-            SDKSynchronizer: MockWrappedSDKSynchronizer(),
-            walletStorage: .live(walletStorage: storage),
-            zcashSDKEnvironment: .mainnet
-        )
-
+        
         let store = TestStore(
             initialState: .placeholder,
-            reducer: AppReducer.default,
-            environment: testEnvironment
+            reducer: AppReducer()
+                .dependency(\.databaseFiles, dbFiles)
+                .dependency(\.walletStorage, .live(walletStorage: storage))
+                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
         )
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
@@ -226,25 +201,11 @@ class AppInitializationTests: XCTestCase {
         // setup the store and environment to be fully mocked
         let testScheduler = DispatchQueue.test
 
-        let testEnvironment = AppEnvironment(
-            audioServices: .silent,
-            databaseFiles: .throwing,
-            deeplinkHandler: .live,
-            derivationTool: .live(),
-            diskSpaceChecker: .mockEmptyDisk,
-            feedbackGenerator: .silent,
-            mnemonic: .mock,
-            recoveryPhraseRandomizer: .live,
-            scheduler: testScheduler.eraseToAnyScheduler(),
-            SDKSynchronizer: MockWrappedSDKSynchronizer(),
-            walletStorage: .live(walletStorage: storage),
-            zcashSDKEnvironment: .mainnet
-        )
-
         let store = TestStore(
             initialState: .placeholder,
-            reducer: AppReducer.default,
-            environment: testEnvironment
+            reducer: AppReducer()
+                .dependency(\.walletStorage, .live(walletStorage: storage))
+                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
         )
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
