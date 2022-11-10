@@ -10,7 +10,6 @@ import XCTest
 import ComposableArchitecture
 import ZcashLightClientKit
 
-// swiftlint:disable type_body_length
 class HomeTests: XCTestCase {
     func testSynchronizerStateChanged_AnyButSynced() throws {
         let store = TestStore(

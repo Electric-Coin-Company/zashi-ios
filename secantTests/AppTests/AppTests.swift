@@ -12,39 +12,13 @@ import ComposableArchitecture
 class AppTests: XCTestCase {
     static let testScheduler = DispatchQueue.test
 
-    let testEnvironment = AppEnvironment(
-        audioServices: .silent,
-        databaseFiles: .throwing,
-        deeplinkHandler: .live,
-        derivationTool: .live(),
-        diskSpaceChecker: .mockEmptyDisk,
-        feedbackGenerator: .silent,
-        mnemonic: .mock,
-        recoveryPhraseRandomizer: .live,
-        scheduler: testScheduler.eraseToAnyScheduler(),
-        SDKSynchronizer: TestWrappedSDKSynchronizer(),
-        walletStorage: .throwing,
-        zcashSDKEnvironment: .mainnet
-    )
-
     func testWalletInitializationState_Uninitialized() throws {
-        let uninitializedEnvironment = AppEnvironment(
-            audioServices: .silent,
+        let walletState = AppReducer.walletInitializationState(
             databaseFiles: .throwing,
-            deeplinkHandler: .live,
-            derivationTool: .live(),
-            diskSpaceChecker: .mockEmptyDisk,
-            feedbackGenerator: .silent,
-            mnemonic: .mock,
-            recoveryPhraseRandomizer: .live,
-            scheduler: DispatchQueue.test.eraseToAnyScheduler(),
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
             walletStorage: .throwing,
-            zcashSDKEnvironment: .mainnet
+            zcashSDKEnvironment: .testnet
         )
 
-        let walletState = AppReducer.walletInitializationState(uninitializedEnvironment)
-        
         XCTAssertEqual(walletState, .uninitialized)
     }
 
@@ -55,23 +29,12 @@ class AppTests: XCTestCase {
             removeItem: { _ in }
         )
 
-        let keysMissingEnvironment = AppEnvironment(
-            audioServices: .silent,
+        let walletState = AppReducer.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
-            deeplinkHandler: .live,
-            derivationTool: .live(),
-            diskSpaceChecker: .mockEmptyDisk,
-            feedbackGenerator: .silent,
-            mnemonic: .mock,
-            recoveryPhraseRandomizer: .live,
-            scheduler: Self.testScheduler.eraseToAnyScheduler(),
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
             walletStorage: .throwing,
-            zcashSDKEnvironment: .mainnet
+            zcashSDKEnvironment: .testnet
         )
 
-        let walletState = AppReducer.walletInitializationState(keysMissingEnvironment)
-        
         XCTAssertEqual(walletState, .keysMissing)
     }
 
@@ -82,23 +45,12 @@ class AppTests: XCTestCase {
             removeItem: { _ in }
         )
 
-        let keysMissingEnvironment = AppEnvironment(
-            audioServices: .silent,
+        let walletState = AppReducer.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
-            deeplinkHandler: .live,
-            derivationTool: .live(),
-            diskSpaceChecker: .mockEmptyDisk,
-            feedbackGenerator: .silent,
-            mnemonic: .mock,
-            recoveryPhraseRandomizer: .live,
-            scheduler: Self.testScheduler.eraseToAnyScheduler(),
-            SDKSynchronizer: TestWrappedSDKSynchronizer(),
             walletStorage: .throwing,
             zcashSDKEnvironment: .testnet
         )
 
-        let walletState = AppReducer.walletInitializationState(keysMissingEnvironment)
-        
         XCTAssertEqual(walletState, .uninitialized)
     }
 
@@ -109,8 +61,9 @@ class AppTests: XCTestCase {
     func testRespondToWalletInitializationState_Uninitialized() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: AppReducer.default,
-            environment: testEnvironment
+            reducer: AppReducer()
+                .dependency(\.mainQueue, Self.testScheduler.eraseToAnyScheduler())
+                .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
         
         store.send(.respondToWalletInitializationState(.uninitialized))
@@ -126,8 +79,7 @@ class AppTests: XCTestCase {
     func testRespondToWalletInitializationState_KeysMissing() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: AppReducer.default,
-            environment: testEnvironment
+            reducer: AppReducer()
         )
         
         store.send(.respondToWalletInitializationState(.keysMissing)) { state in
@@ -138,8 +90,7 @@ class AppTests: XCTestCase {
     func testRespondToWalletInitializationState_FilesMissing() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: AppReducer.default,
-            environment: testEnvironment
+            reducer: AppReducer()
         )
         
         store.send(.respondToWalletInitializationState(.filesMissing)) { state in
@@ -157,8 +108,7 @@ class AppTests: XCTestCase {
     func testRespondToWalletInitializationState_Initialized() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: AppReducer.default,
-            environment: testEnvironment
+            reducer: AppReducer()
         )
         
         store.send(.respondToWalletInitializationState(.initialized))
@@ -174,8 +124,7 @@ class AppTests: XCTestCase {
     func testWalletEventReplyTo_validAddress() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: AppReducer.default,
-            environment: testEnvironment
+            reducer: AppReducer()
         )
         
         let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"

@@ -13,15 +13,12 @@ import ZcashLightClientKit
 @MainActor
 class DeeplinkTests: XCTestCase {
     func testActionDeeplinkHome_SameRouteLevel() throws {
-        let testEnvironment = AppEnvironment.mock
-        
-        var appState = AppState.placeholder
+        var appState = AppReducer.State.placeholder
         appState.route = .welcome
         
         let store = TestStore(
             initialState: appState,
-            reducer: AppReducer.default,
-            environment: testEnvironment
+            reducer: AppReducer()
         )
         
         store.send(.deeplinkHome) { state in
@@ -30,16 +27,13 @@ class DeeplinkTests: XCTestCase {
     }
 
     func testActionDeeplinkHome_GeetingBack() throws {
-        let testEnvironment = AppEnvironment.mock
-        
-        var appState = AppState.placeholder
+        var appState = AppReducer.State.placeholder
         appState.route = .home
         appState.homeState.route = .send
         
         let store = TestStore(
             initialState: appState,
-            reducer: AppReducer.default,
-            environment: testEnvironment
+            reducer: AppReducer()
         )
         
         store.send(.deeplinkHome) { state in
@@ -49,15 +43,12 @@ class DeeplinkTests: XCTestCase {
     }
     
     func testActionDeeplinkSend() throws {
-        let testEnvironment = AppEnvironment.mock
-        
-        var appState = AppState.placeholder
+        var appState = AppReducer.State.placeholder
         appState.route = .welcome
         
         let store = TestStore(
             initialState: appState,
-            reducer: AppReducer.default,
-            environment: testEnvironment
+            reducer: AppReducer()
         )
         
         let amount = Zatoshi(123_000_000)
@@ -77,31 +68,14 @@ class DeeplinkTests: XCTestCase {
         let synchronizer = TestWrappedSDKSynchronizer()
         synchronizer.updateStateChanged(.synced)
         
-        let testScheduler = DispatchQueue.test
-
-        let testEnvironment = AppEnvironment(
-            audioServices: .silent,
-            databaseFiles: .live(),
-            deeplinkHandler: .live,
-            derivationTool: .live(),
-            diskSpaceChecker: .mockEmptyDisk,
-            feedbackGenerator: .silent,
-            mnemonic: .mock,
-            recoveryPhraseRandomizer: .live,
-            scheduler: testScheduler.eraseToAnyScheduler(),
-            SDKSynchronizer: synchronizer,
-            walletStorage: .live(),
-            zcashSDKEnvironment: .mainnet
-        )
-        
-        var appState = AppState.placeholder
+        var appState = AppReducer.State.placeholder
         appState.route = .welcome
         appState.appInitializationState = .initialized
         
         let store = TestStore(
             initialState: appState,
-            reducer: AppReducer.default,
-            environment: testEnvironment
+            reducer: AppReducer()
+                .dependency(\.sdkSynchronizer, synchronizer)
         )
         
         guard let url = URL(string: "zcash:///home") else {
@@ -121,31 +95,14 @@ class DeeplinkTests: XCTestCase {
         let synchronizer = TestWrappedSDKSynchronizer()
         synchronizer.updateStateChanged(.synced)
         
-        let testScheduler = DispatchQueue.test
-
-        let testEnvironment = AppEnvironment(
-            audioServices: .silent,
-            databaseFiles: .live(),
-            deeplinkHandler: .live,
-            derivationTool: .live(),
-            diskSpaceChecker: .mockEmptyDisk,
-            feedbackGenerator: .silent,
-            mnemonic: .mock,
-            recoveryPhraseRandomizer: .live,
-            scheduler: testScheduler.eraseToAnyScheduler(),
-            SDKSynchronizer: synchronizer,
-            walletStorage: .live(),
-            zcashSDKEnvironment: .mainnet
-        )
-        
-        var appState = AppState.placeholder
+        var appState = AppReducer.State.placeholder
         appState.route = .welcome
         appState.appInitializationState = .initialized
         
         let store = TestStore(
             initialState: appState,
-            reducer: AppReducer.default,
-            environment: testEnvironment
+            reducer: AppReducer()
+                .dependency(\.sdkSynchronizer, synchronizer)
         )
         
         guard let url = URL(string: "zcash:///home/send?amount=123000000") else {
@@ -173,31 +130,14 @@ class DeeplinkTests: XCTestCase {
         let synchronizer = TestWrappedSDKSynchronizer()
         synchronizer.updateStateChanged(.synced)
         
-        let testScheduler = DispatchQueue.test
-
-        let testEnvironment = AppEnvironment(
-            audioServices: .silent,
-            databaseFiles: .live(),
-            deeplinkHandler: .live,
-            derivationTool: .live(),
-            diskSpaceChecker: .mockEmptyDisk,
-            feedbackGenerator: .silent,
-            mnemonic: .mock,
-            recoveryPhraseRandomizer: .live,
-            scheduler: testScheduler.eraseToAnyScheduler(),
-            SDKSynchronizer: synchronizer,
-            walletStorage: .live(),
-            zcashSDKEnvironment: .mainnet
-        )
-        
-        var appState = AppState.placeholder
+        var appState = AppReducer.State.placeholder
         appState.route = .welcome
         appState.appInitializationState = .initialized
         
         let store = TestStore(
             initialState: appState,
-            reducer: AppReducer.default,
-            environment: testEnvironment
+            reducer: AppReducer()
+                .dependency(\.sdkSynchronizer, synchronizer)
         )
         
         guard let url = URL(string: "zcash:///home/send?address=address&memo=some%20text&amount=123000000") else {

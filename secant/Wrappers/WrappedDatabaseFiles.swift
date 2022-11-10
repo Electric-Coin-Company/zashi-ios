@@ -7,6 +7,7 @@
 
 import Foundation
 import ZcashLightClientKit
+import ComposableArchitecture
 
 struct WrappedDatabaseFiles {
     let documentsDirectory: () throws -> URL
@@ -75,4 +76,16 @@ extension WrappedDatabaseFiles {
             throw DatabaseFiles.DatabaseFilesError.nukeFiles
         }
     )
+}
+
+private enum DatabaseFilesKey: DependencyKey {
+    static let liveValue = WrappedDatabaseFiles.live()
+    static let testValue = WrappedDatabaseFiles.throwing
+}
+
+extension DependencyValues {
+    var databaseFiles: WrappedDatabaseFiles {
+        get { self[DatabaseFilesKey.self] }
+        set { self[DatabaseFilesKey.self] = newValue }
+    }
 }

@@ -18,3 +18,15 @@ extension WrappedDeeplinkHandler {
         resolveDeeplinkURL: { try DeeplinkHandler().resolveDeeplinkURL($0, derivationTool: $1) }
     )
 }
+
+private enum DeeplinkHandlerKey: DependencyKey {
+    static let liveValue = WrappedDeeplinkHandler.live
+    static let testValue = WrappedDeeplinkHandler.live
+}
+
+extension DependencyValues {
+    var deeplinkHandler: WrappedDeeplinkHandler {
+        get { self[DeeplinkHandlerKey.self] }
+        set { self[DeeplinkHandlerKey.self] = newValue }
+    }
+}

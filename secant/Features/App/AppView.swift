@@ -14,7 +14,7 @@ struct AppView: View {
                         HomeView(
                             store: store.scope(
                                 state: \.homeState,
-                                action: AppAction.home
+                                action: AppReducer.Action.home
                             )
                         )
                     }
@@ -25,7 +25,7 @@ struct AppView: View {
                         SandboxView(
                             store: store.scope(
                                 state: \.sandboxState,
-                                action: AppAction.sandbox
+                                action: AppReducer.Action.sandbox
                             )
                         )
                     }
@@ -36,7 +36,7 @@ struct AppView: View {
                         OnboardingScreen(
                             store: store.scope(
                                 state: \.onboardingState,
-                                action: AppAction.onboarding
+                                action: AppReducer.Action.onboarding
                             )
                         )
                     }
@@ -53,7 +53,7 @@ struct AppView: View {
                         RecoveryPhraseValidationFlowView(
                             store: store.scope(
                                 state: \.phraseValidationState,
-                                action: AppAction.phraseValidation
+                                action: AppReducer.Action.phraseValidation
                             )
                         )
                     }
@@ -64,7 +64,7 @@ struct AppView: View {
                         RecoveryPhraseDisplayView(
                             store: store.scope(
                                 state: \.phraseDisplayState,
-                                action: AppAction.phraseDisplay
+                                action: AppReducer.Action.phraseDisplay
                             )
                         )
                     }
@@ -73,7 +73,7 @@ struct AppView: View {
                     WelcomeView(
                         store: store.scope(
                             state: \.welcomeState,
-                            action: AppAction.welcome
+                            action: AppReducer.Action.welcome
                         )
                     )
                 }
@@ -120,8 +120,7 @@ struct AppView_Previews: PreviewProvider {
             AppView(
                 store: AppStore(
                     initialState: .placeholder,
-                    reducer: .default,
-                    environment: .mock
+                    reducer: AppReducer()
                 )
             )
         }
