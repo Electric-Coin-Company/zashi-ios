@@ -47,9 +47,9 @@ struct ImportWalletReducer: ReducerProtocol {
         case successfullyRecovered
     }
 
-    @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.walletStorage) var walletStorage
+    @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     var body: some ReducerProtocol<State, Action> {
         BindingReducer()

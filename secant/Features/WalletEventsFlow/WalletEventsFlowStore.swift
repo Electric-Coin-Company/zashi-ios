@@ -38,8 +38,8 @@ struct WalletEventsFlowReducer: ReducerProtocol {
         case warnBeforeLeavingApp(URL?)
     }
     
-    @Dependency(\.pasteboard) var pasteboard
     @Dependency(\.mainQueue) var mainQueue
+    @Dependency(\.pasteboard) var pasteboard
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
     

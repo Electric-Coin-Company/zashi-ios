@@ -1,20 +1,15 @@
 //
-//  LocalAuthenticationHandler.swift
+//  LocalAuthenticationLiveKey.swift
 //  secant-testnet
 //
-//  Created by Lukáš Korba on 20.07.2022.
+//  Created by Lukáš Korba on 12.11.2022.
 //
 
-import Foundation
-import LocalAuthentication
 import ComposableArchitecture
+import LocalAuthentication
 
-struct LocalAuthenticationHandler {
-    let authenticate: @Sendable () async -> Bool
-}
-
-extension LocalAuthenticationHandler {
-    static let live = LocalAuthenticationHandler(
+extension LocalAuthenticationClient: DependencyKey {
+    static let liveValue = Self(
         authenticate: {
             let context = LAContext()
             var error: NSError?
@@ -39,20 +34,4 @@ extension LocalAuthenticationHandler {
             }
         }
     )
-    
-    static let unimplemented = LocalAuthenticationHandler(
-        authenticate: { false }
-    )
-}
-
-private enum LocalAuthenticationHandlerKey: DependencyKey {
-    static let liveValue = LocalAuthenticationHandler.live
-    static let testValue = LocalAuthenticationHandler(authenticate: { true })
-}
-
-extension DependencyValues {
-    var localAuthenticationHandler: LocalAuthenticationHandler {
-        get { self[LocalAuthenticationHandlerKey.self] }
-        set { self[LocalAuthenticationHandlerKey.self] = newValue }
-    }
 }

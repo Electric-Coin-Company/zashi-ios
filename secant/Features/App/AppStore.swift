@@ -60,16 +60,16 @@ struct AppReducer: ReducerProtocol {
         case welcome(WelcomeReducer.Action)
     }
     
-    @Dependency(\.mainQueue) var mainQueue
-    @Dependency(\.walletStorage) var walletStorage
-    @Dependency(\.mnemonic) var mnemonic
-    @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
-    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
-    @Dependency(\.randomPhrase) var randomPhrase
     @Dependency(\.databaseFiles) var databaseFiles
+    @Dependency(\.deeplink) var deeplink
     @Dependency(\.derivationTool) var derivationTool
-    @Dependency(\.deeplinkHandler) var deeplinkHandler
-    
+    @Dependency(\.mainQueue) var mainQueue
+    @Dependency(\.mnemonic) var mnemonic
+    @Dependency(\.randomPhrase) var randomPhrase
+    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.walletStorage) var walletStorage
+    @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
+
     var body: some ReducerProtocol<State, Action> {
         Scope(state: \.homeState, action: /Action.home) {
             HomeReducer()
@@ -134,7 +134,7 @@ struct AppReducer: ReducerProtocol {
                         await send(
                             try await AppReducer.process(
                                 url: url,
-                                deeplinkHandler: deeplinkHandler,
+                                deeplink: deeplink,
                                 derivationTool: derivationTool
                             )
                         )
@@ -340,7 +340,7 @@ struct AppReducer: ReducerProtocol {
 
 extension AppReducer {
     static func walletInitializationState(
-        databaseFiles: WrappedDatabaseFiles,
+        databaseFiles: DatabaseFilesClient,
         walletStorage: WrappedWalletStorage,
         zcashSDKEnvironment: ZCashSDKEnvironment
     ) -> InitializationState {
@@ -386,8 +386,8 @@ extension AppReducer {
     static func prepareInitializer(
         for seedPhrase: String,
         birthday: BlockHeight,
-        databaseFiles: WrappedDatabaseFiles,
-        derivationTool: WrappedDerivationTool,
+        databaseFiles: DatabaseFilesClient,
+        derivationTool: DerivationToolClient,
         mnemonic: WrappedMnemonic,
         zcashSDKEnvironment: ZCashSDKEnvironment
     ) throws -> Initializer {
@@ -417,10 +417,10 @@ extension AppReducer {
 
     static func process(
         url: URL,
-        deeplinkHandler: WrappedDeeplinkHandler,
-        derivationTool: WrappedDerivationTool
+        deeplink: DeeplinkClient,
+        derivationTool: DerivationToolClient
     ) async throws -> AppReducer.Action {
-        let deeplink = try deeplinkHandler.resolveDeeplinkURL(url, derivationTool)
+        let deeplink = try deeplink.resolveDeeplinkURL(url, derivationTool)
         
         switch deeplink {
         case .home:

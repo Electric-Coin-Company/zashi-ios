@@ -23,6 +23,8 @@ class ScanTests: XCTestCase {
             reducer: ScanReducer()
         )
 
+        store.dependencies.captureDevice = .noop
+        
         store.send(.onAppear) { state in
             state.isTorchAvailable = false
             state.isTorchOn = false
@@ -37,6 +39,8 @@ class ScanTests: XCTestCase {
             reducer: ScanReducer()
         )
 
+        store.dependencies.captureDevice = .noop
+
         store.send(.torchPressed) { state in
             state.isTorchOn = true
         }
@@ -49,6 +53,8 @@ class ScanTests: XCTestCase {
             ),
             reducer: ScanReducer()
         )
+
+        store.dependencies.captureDevice = .noop
 
         store.send(.torchPressed) { state in
             state.isTorchOn = false

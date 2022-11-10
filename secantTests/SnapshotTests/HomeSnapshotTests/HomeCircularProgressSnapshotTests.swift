@@ -41,6 +41,7 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
             ),
             reducer: HomeReducer()
                 .dependency(\.sdkSynchronizer, SnapshotTestWrappedSDKSynchronizer())
+                .dependency(\.diskSpaceChecker, .mockEmptyDisk)
         )
 
         addAttachments(HomeView(store: store))
@@ -75,6 +76,7 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
                 walletEventsState: .emptyPlaceHolder
             ),
             reducer: HomeReducer()
+                .dependency(\.diskSpaceChecker, .mockEmptyDisk)
         )
 
         addAttachments(HomeView(store: store))
@@ -102,6 +104,7 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
                 walletEventsState: .emptyPlaceHolder
             ),
             reducer: HomeReducer()
+                .dependency(\.diskSpaceChecker, .mockEmptyDisk)
         )
 
         addAttachments(HomeView(store: store))

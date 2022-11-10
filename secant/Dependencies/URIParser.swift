@@ -11,9 +11,9 @@ import ComposableArchitecture
 struct URIParser {
     enum URIParserError: Error { }
     
-    private let derivationTool: WrappedDerivationTool
+    private let derivationTool: DerivationToolClient
     
-    init(derivationTool: WrappedDerivationTool) {
+    init(derivationTool: DerivationToolClient) {
         self.derivationTool = derivationTool
     }
 

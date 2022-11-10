@@ -48,6 +48,7 @@ class HomeSnapshotTests: XCTestCase {
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: walletEvents))
             ),
             reducer: HomeReducer()
+                .dependency(\.diskSpaceChecker, .mockEmptyDisk)
         )
 
         // landing home screen

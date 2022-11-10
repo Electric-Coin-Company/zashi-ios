@@ -23,8 +23,8 @@ struct RecoveryPhraseDisplayReducer: ReducerProtocol {
         case phraseResponse(RecoveryPhrase)
     }
     
-    @Dependency(\.pasteboard) var pasteboard
     @Dependency(\.newRecoveryPhrase) var newRecoveryPhrase
+    @Dependency(\.pasteboard) var pasteboard
 
     func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
         switch action {

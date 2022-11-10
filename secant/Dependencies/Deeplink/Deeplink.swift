@@ -1,5 +1,5 @@
 //
-//  DeeplinkHandler.swift
+//  Deeplink.swift
 //  secant-testnet
 //
 //  Created by Lukáš Korba on 15.06.2022.
@@ -10,18 +10,18 @@ import URLRouting
 import ComposableArchitecture
 import ZcashLightClientKit
 
-struct DeeplinkHandler {
-    enum Deeplink {
+struct Deeplink {
+    enum Route: Equatable {
         case home
         case send(amount: Int64, address: String, memo: String)
     }
     
-    func resolveDeeplinkURL(_ url: URL, derivationTool: WrappedDerivationTool) throws -> Deeplink {
+    func resolveDeeplinkURL(_ url: URL, isValidZcashAddress: (String) throws -> Bool) throws -> Route {
         // simplified format zcash:<address>
         // TODO [#109]: simplified for now until ZIP-321 is implememnted (https://github.com/zcash/secant-ios-wallet/issues/109)
         let address = url.absoluteString.replacingOccurrences(of: "zcash:", with: "")
         do {
-            if try derivationTool.isValidZcashAddress(address) {
+            if try isValidZcashAddress(address) {
                 return .send(amount: 0, address: address, memo: "")
             }
         }
@@ -29,12 +29,12 @@ struct DeeplinkHandler {
         // regular URL format zcash://
         let appRouter = OneOf {
             // GET /home
-            Route(.case(Deeplink.home)) {
+            URLRouting.Route(.case(Route.home)) {
                 Path { "home" }
             }
 
             // GET /home/send?amount=:amount&address=:address&memo=:memo
-            Route(.case(Deeplink.send(amount:address:memo:))) {
+            URLRouting.Route(.case(Route.send(amount:address:memo:))) {
                 Path { "home"; "send" }
                 Query {
                     Field("amount", default: 0) { Int64.parser() }

@@ -3,7 +3,6 @@
 //  secant-testnet
 //
 //  Created by Francisco Gindre on 10/18/21.
-// swiftlint:disable line_length
 
 import SwiftUI
 
@@ -23,6 +22,7 @@ struct DesignGuide: View {
     }
 }
 
+// swiftlint:disable line_length
 struct TextAndPlaceholdersGuide: View {
     var body: some View {
         VStack(spacing: 30) {

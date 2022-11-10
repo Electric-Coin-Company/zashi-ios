@@ -41,6 +41,9 @@ class SendTests: XCTestCase {
                 .dependency(\.walletStorage, .live(walletStorage: storage))
         )
 
+        store.dependencies.derivationTool = .noop
+        store.dependencies.derivationTool.deriveSpendingKeys = { _, _ in [""] }
+        
         // simulate the sending confirmation button to be pressed
         store.send(.sendConfirmationPressed) { state in
             // once sending is confirmed, the attemts to try to send again by pressing the button
@@ -97,6 +100,9 @@ class SendTests: XCTestCase {
                 .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
                 .dependency(\.walletStorage, .live(walletStorage: storage))
         )
+        
+        store.dependencies.derivationTool = .noop
+        store.dependencies.derivationTool.deriveSpendingKeys = { _, _ in [""] }
 
         // simulate the sending confirmation button to be pressed
         store.send(.sendConfirmationPressed) { state in
@@ -153,6 +159,9 @@ class SendTests: XCTestCase {
                 .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
 
+        store.dependencies.derivationTool = .noop
+        store.dependencies.derivationTool.deriveSpendingKeys = { _, _ in [""] }
+
         // simulate the sending confirmation button to be pressed
         store.send(.sendConfirmationPressed) { state in
             // once sending is confirmed, the attemts to try to send again by pressing the button
@@ -191,6 +200,9 @@ class SendTests: XCTestCase {
                 .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
         
+        store.dependencies.derivationTool = .noop
+        store.dependencies.derivationTool.isValidZcashAddress = { _ in false }
+
         store.send(.transactionAddressInput(.textField(.set("3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr")))) { state in
             state.transactionAddressInputState.textFieldState.text = "3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr"
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
@@ -203,6 +215,8 @@ class SendTests: XCTestCase {
             )
         }
         
+        store.dependencies.derivationTool.isValidZcashAddress = { _ in true }
+
         store.send(.transactionAddressInput(.textField(.set("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po")))) { state in
             state.transactionAddressInputState.textFieldState.text = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
@@ -245,6 +259,8 @@ class SendTests: XCTestCase {
                 .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
         
+        store.dependencies.derivationTool = .noop
+
         // Checks the computed property `isInvalidAddressFormat` which controls the error message to be shown on the screen
         // With empty input it must be false
         store.send(.transactionAddressInput(.textField(.set("")))) { state in
@@ -384,6 +400,9 @@ class SendTests: XCTestCase {
                 .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
         
+        store.dependencies.derivationTool = .noop
+        store.dependencies.derivationTool.isValidZcashAddress = { _ in true }
+
         store.send(.transactionAddressInput(.textField(.set("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po")))) { state in
             state.transactionAddressInputState.textFieldState.text = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
@@ -424,6 +443,9 @@ class SendTests: XCTestCase {
                 .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
         
+        store.dependencies.derivationTool = .noop
+        store.dependencies.derivationTool.isValidZcashAddress = { _ in true }
+
         store.send(.transactionAddressInput(.textField(.set("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po")))) { state in
             state.transactionAddressInputState.textFieldState.text = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
@@ -464,6 +486,8 @@ class SendTests: XCTestCase {
                 .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
         
+        store.dependencies.derivationTool = .noop
+
         store.send(.transactionAddressInput(.textField(.set("3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr")))) { state in
             state.transactionAddressInputState.textFieldState.text = "3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr"
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
@@ -503,6 +527,8 @@ class SendTests: XCTestCase {
                 .dependency(\.walletStorage, .live(walletStorage: WalletStorage(secItem: .live)))
                 .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
+        
+        store.dependencies.derivationTool = .liveValue
         
         store.send(.transactionAddressInput(.textField(.set("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po")))) { state in
             state.transactionAddressInputState.textFieldState.text = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"

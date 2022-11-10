@@ -86,11 +86,11 @@ struct SendFlowReducer: ReducerProtocol {
         case updateRoute(SendFlowReducer.State.Route?)
     }
     
-    @Dependency(\.walletStorage) var walletStorage
-    @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.derivationTool) var derivationTool
-    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.mainQueue) var mainQueue
+    @Dependency(\.mnemonic) var mnemonic
+    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     var body: some ReducerProtocol<State, Action> {

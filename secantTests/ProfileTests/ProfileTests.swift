@@ -17,6 +17,8 @@ class ProfileTests: XCTestCase {
                 .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
         
+        store.dependencies.appVersion = .mock
+
         store.send(.onAppear) { state in
             state.address = "ff3927e1f83df9b1b0dc75540ddc59ee435eecebae914d2e6dfe8576fbedc9a8"
             state.appVersion = "0.0.1"

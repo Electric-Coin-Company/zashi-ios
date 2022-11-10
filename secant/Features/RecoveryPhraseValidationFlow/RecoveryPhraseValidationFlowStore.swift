@@ -50,10 +50,10 @@ struct RecoveryPhraseValidationFlowReducer: ReducerProtocol {
         case displayBackedUpPhrase
     }
     
-    @Dependency(\.randomPhrase) var randomPhrase
+    @Dependency(\.feedbackGenerator) var feedbackGenerator
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.pasteboard) var pasteboard
-    @Dependency(\.feedbackGenerator) var feedbackGenerator
+    @Dependency(\.randomPhrase) var randomPhrase
 
     // swiftlint:disable:next cyclomatic_complexity
     func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {

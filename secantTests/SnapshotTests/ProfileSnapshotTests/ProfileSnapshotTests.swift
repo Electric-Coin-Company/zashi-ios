@@ -16,6 +16,7 @@ class ProfileSnapshotTests: XCTestCase {
             initialState: .placeholder,
             reducer: ProfileReducer()
                 .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
+                .dependency(\.appVersion, .mock)
         )
         
         ViewStore(store).send(.onAppear)

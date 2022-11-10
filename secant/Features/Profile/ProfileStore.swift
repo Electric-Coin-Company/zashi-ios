@@ -28,9 +28,9 @@ struct ProfileReducer: ReducerProtocol {
         case updateRoute(ProfileReducer.State.Route?)
     }
     
+    @Dependency(\.appVersion) var appVersion
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
-    @Dependency(\.appVersionHandler) var appVersionHandler
 
     var body: some ReducerProtocol<State, Action> {
         Scope(state: \.addressDetailsState, action: /Action.addressDetails) {
@@ -45,8 +45,8 @@ struct ProfileReducer: ReducerProtocol {
             switch action {
             case .onAppear:
                 state.address = sdkSynchronizer.getShieldedAddress() ?? ""
-                state.appBuild = appVersionHandler.appBuild()
-                state.appVersion = appVersionHandler.appVersion()
+                state.appBuild = appVersion.appBuild()
+                state.appVersion = appVersion.appVersion()
                 state.sdkVersion = zcashSDKEnvironment.sdkVersion
                 return .none
                 
