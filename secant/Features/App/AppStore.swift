@@ -65,7 +65,7 @@ struct AppReducer: ReducerProtocol {
     @Dependency(\.derivationTool) var derivationTool
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.mnemonic) var mnemonic
-    @Dependency(\.randomPhrase) var randomPhrase
+    @Dependency(\.randomRecoveryPhrase) var randomRecoveryPhrase
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
@@ -105,7 +105,7 @@ struct AppReducer: ReducerProtocol {
             case .phraseValidation(.proceedToHome):
                 state.route = .home
                 
-            case .phraseValidation(.displayBackedUpPhrase), .phraseDisplay(.createPhrase):
+            case .phraseValidation(.displayBackedUpPhrase):
                 state.route = .phraseDisplay
                 
             case .phraseDisplay(.finishedPressed):
@@ -120,7 +120,7 @@ struct AppReducer: ReducerProtocol {
                 
             case .deeplink(let url):
                 // get the latest synchronizer state
-                var synchronizerStatus = WrappedSDKSynchronizerState.unknown
+                var synchronizerStatus = SDKSynchronizerState.unknown
                 _ = sdkSynchronizer.stateChanged.sink { synchronizerStatus = $0 }
                 
                 // process the deeplink only if app is initialized and synchronizer synced
@@ -261,7 +261,7 @@ struct AppReducer: ReducerProtocol {
                         
                         let recoveryPhrase = RecoveryPhrase(words: phraseWords)
                         state.phraseDisplayState.phrase = recoveryPhrase
-                        state.phraseValidationState = randomPhrase.random(recoveryPhrase)
+                        state.phraseValidationState = randomRecoveryPhrase.random(recoveryPhrase)
                         landingRoute = .phraseDisplay
                     } catch {
                         // TODO [#201]: - merge with issue 201 (https://github.com/zcash/secant-ios-wallet/issues/201) and its Error States
@@ -286,10 +286,10 @@ struct AppReducer: ReducerProtocol {
                     try walletStorage.importWallet(newRandomPhrase, birthday, .english, false)
                     
                     // start the backup phrase validation test
-                    let randomPhraseWords = try mnemonic.asWords(newRandomPhrase)
-                    let recoveryPhrase = RecoveryPhrase(words: randomPhraseWords)
+                    let randomRecoveryPhraseWords = try mnemonic.asWords(newRandomPhrase)
+                    let recoveryPhrase = RecoveryPhrase(words: randomRecoveryPhraseWords)
                     state.phraseDisplayState.phrase = recoveryPhrase
-                    state.phraseValidationState = randomPhrase.random(recoveryPhrase)
+                    state.phraseValidationState = randomRecoveryPhrase.random(recoveryPhrase)
                     
                     return .concatenate(
                         Effect(value: .initializeSDK),
@@ -341,8 +341,8 @@ struct AppReducer: ReducerProtocol {
 extension AppReducer {
     static func walletInitializationState(
         databaseFiles: DatabaseFilesClient,
-        walletStorage: WrappedWalletStorage,
-        zcashSDKEnvironment: ZCashSDKEnvironment
+        walletStorage: WalletStorageClient,
+        zcashSDKEnvironment: ZcashSDKEnvironment
     ) -> InitializationState {
         var keysPresent = false
         do {
@@ -388,8 +388,8 @@ extension AppReducer {
         birthday: BlockHeight,
         databaseFiles: DatabaseFilesClient,
         derivationTool: DerivationToolClient,
-        mnemonic: WrappedMnemonic,
-        zcashSDKEnvironment: ZCashSDKEnvironment
+        mnemonic: MnemonicClient,
+        zcashSDKEnvironment: ZcashSDKEnvironment
     ) throws -> Initializer {
         do {
             let seedBytes = try mnemonic.toSeed(seedPhrase)

@@ -20,7 +20,7 @@ class SettingsTests: XCTestCase {
             breeze blouse charge solid fish spread
             """
         
-        let mockedWalletStorage = WrappedWalletStorage(
+        let mockedWalletStorage = WalletStorageClient(
             importWallet: { _, _, _, _ in
                 throw WalletStorage.WalletStorageError.alreadyImported
             },
@@ -47,11 +47,13 @@ class SettingsTests: XCTestCase {
         let store = TestStore(
             initialState: SettingsReducer.State(phraseDisplayState: RecoveryPhraseDisplayReducer.State(phrase: nil)),
             reducer: SettingsReducer()
-                .dependency(\.walletStorage, mockedWalletStorage)
         )
         
         store.dependencies.localAuthentication = .mockAuthenticationSucceeded
-        
+        store.dependencies.mnemonic = .noOp
+        store.dependencies.mnemonic.asWords = { _ in mnemonic.components(separatedBy: " ") }
+        store.dependencies.walletStorage = mockedWalletStorage
+
         _ = await store.send(.backupWalletAccessRequest)
         
         await store.receive(.backupWallet) { state in

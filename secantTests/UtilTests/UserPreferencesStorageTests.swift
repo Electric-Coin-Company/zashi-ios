@@ -94,7 +94,7 @@ class UserPreferencesStorageTests: XCTestCase {
     // MARK: - Mocked user defaults vs. default values
 
     func testAppSessionFrom_mocked() throws {
-        let mockedUD = WrappedUserDefaults(
+        let mockedUD = UserDefaultsClient(
             objectForKey: { _ in 87654321.0 },
             remove: { _ in },
             setValue: { _, _ in },
@@ -114,7 +114,7 @@ class UserPreferencesStorageTests: XCTestCase {
     }
 
     func testConvertedCurrency_mocked() throws {
-        let mockedUD = WrappedUserDefaults(
+        let mockedUD = UserDefaultsClient(
             objectForKey: { _ in "CZK" },
             remove: { _ in },
             setValue: { _, _ in },
@@ -134,7 +134,7 @@ class UserPreferencesStorageTests: XCTestCase {
     }
 
     func testFiatConvertion_mocked() throws {
-        let mockedUD = WrappedUserDefaults(
+        let mockedUD = UserDefaultsClient(
             objectForKey: { _ in false },
             remove: { _ in },
             setValue: { _, _ in },
@@ -154,7 +154,7 @@ class UserPreferencesStorageTests: XCTestCase {
     }
 
     func testRecoveryPhraseTestCompleted_mocked() throws {
-        let mockedUD = WrappedUserDefaults(
+        let mockedUD = UserDefaultsClient(
             objectForKey: { _ in false },
             remove: { _ in },
             setValue: { _, _ in },
@@ -174,7 +174,7 @@ class UserPreferencesStorageTests: XCTestCase {
     }
 
     func testSessionAutoshielded_mocked() throws {
-        let mockedUD = WrappedUserDefaults(
+        let mockedUD = UserDefaultsClient(
             objectForKey: { _ in true },
             remove: { _ in },
             setValue: { _, _ in },

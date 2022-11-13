@@ -80,7 +80,7 @@ struct SendFlowReducer: ReducerProtocol {
         case onDisappear
         case sendConfirmationPressed
         case sendTransactionResult(Result<TransactionState, NSError>)
-        case synchronizerStateChanged(WrappedSDKSynchronizerState)
+        case synchronizerStateChanged(SDKSynchronizerState)
         case transactionAddressInput(TransactionAddressTextFieldReducer.Action)
         case transactionAmountInput(TransactionAmountTextFieldReducer.Action)
         case updateRoute(SendFlowReducer.State.Route?)

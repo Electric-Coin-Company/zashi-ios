@@ -12,18 +12,12 @@ import ZcashLightClientKit
 
 class BalanceBreakdownTests: XCTestCase {
     func testOnAppear() throws {
-        // setup the store and environment to be fully mocked
-        let testScheduler = DispatchQueue.test
-
         let store = TestStore(
             initialState: .placeholder,
             reducer: BalanceBreakdownReducer()
-                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
         )
         
         store.send(.onAppear)
-        
-        testScheduler.advance(by: 0.1)
         
         // expected side effects as a result of .onAppear registration
         store.receive(.synchronizerStateChanged(.unknown))

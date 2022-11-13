@@ -16,8 +16,8 @@ class SettingsSnapshotTests: XCTestCase {
             initialState: .placeholder,
             reducer: SettingsReducer()
                 .dependency(\.localAuthentication, .mockAuthenticationFailed)
-                .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
-                .dependency(\.walletStorage, .throwing)
+                .dependency(\.sdkSynchronizer, NoopSDKSynchronizer())
+                .dependency(\.walletStorage, .noOp)
         )
         
         addAttachments(SettingsView(store: store))

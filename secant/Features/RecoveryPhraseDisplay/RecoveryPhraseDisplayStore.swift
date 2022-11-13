@@ -17,22 +17,15 @@ struct RecoveryPhraseDisplayReducer: ReducerProtocol {
     }
     
     enum Action: Equatable {
-        case createPhrase
         case copyToBufferPressed
         case finishedPressed
         case phraseResponse(RecoveryPhrase)
     }
     
-    @Dependency(\.newRecoveryPhrase) var newRecoveryPhrase
     @Dependency(\.pasteboard) var pasteboard
 
     func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
         switch action {
-        case .createPhrase:
-            return .run { send in
-                await send(.phraseResponse(newRecoveryPhrase()))
-            }
-            
         case .copyToBufferPressed:
             guard let phrase = state.phrase?.toString() else { return .none }
             pasteboard.setString(phrase)

@@ -30,7 +30,7 @@ class DatabaseFilesTests: XCTestCase {
     let network = ZcashNetworkBuilder.network(for: .testnet)
     
     func testFailingDocumentsDirectory() throws {
-        let mockedFileManager = WrappedFileManager(
+        let mockedFileManager = FileManagerClient(
             url: { _, _, _, _ in throw "some error" },
             fileExists: { _ in return true },
             removeItem: { _ in }
@@ -58,7 +58,7 @@ class DatabaseFilesTests: XCTestCase {
     }
     
     func testFailingDataDbURL() throws {
-        let mockedFileManager = WrappedFileManager(
+        let mockedFileManager = FileManagerClient(
             url: { _, _, _, _ in throw "some error" },
             fileExists: { _ in return true },
             removeItem: { _ in }
@@ -86,8 +86,8 @@ class DatabaseFilesTests: XCTestCase {
     }
     
     func testDatabaseFilesPresent() throws {
-        let mockedFileManager = WrappedFileManager(
-            url: { _, _, _, _ in URL(fileURLWithPath: "") },
+        let mockedFileManager = FileManagerClient(
+            url: { _, _, _, _ in .emptyURL },
             fileExists: { _ in return true },
             removeItem: { _ in }
         )
@@ -104,8 +104,8 @@ class DatabaseFilesTests: XCTestCase {
     }
 
     func testDatabaseFilesNotPresent() throws {
-        let mockedFileManager = WrappedFileManager(
-            url: { _, _, _, _ in URL(fileURLWithPath: "") },
+        let mockedFileManager = FileManagerClient(
+            url: { _, _, _, _ in .emptyURL },
             fileExists: { _ in return false },
             removeItem: { _ in }
         )
@@ -122,7 +122,7 @@ class DatabaseFilesTests: XCTestCase {
     }
 
     func testDatabaseFilesPresentFailure() throws {
-        let mockedFileManager = WrappedFileManager(
+        let mockedFileManager = FileManagerClient(
             url: { _, _, _, _ in throw "some error" },
             fileExists: { _ in return true },
             removeItem: { _ in }
@@ -150,8 +150,8 @@ class DatabaseFilesTests: XCTestCase {
     }
     
     func testNukeFiles_RemoveFileFailure() throws {
-        let mockedFileManager = WrappedFileManager(
-            url: { _, _, _, _ in URL(fileURLWithPath: "") },
+        let mockedFileManager = FileManagerClient(
+            url: { _, _, _, _ in .emptyURL },
             fileExists: { _ in return true },
             removeItem: { _ in throw "some error" }
         )
@@ -178,7 +178,7 @@ class DatabaseFilesTests: XCTestCase {
     }
     
     func testNukeFiles_URLFailure() throws {
-        let mockedFileManager = WrappedFileManager(
+        let mockedFileManager = FileManagerClient(
             url: { _, _, _, _ in throw "some error" },
             fileExists: { _ in return true },
             removeItem: { _ in }

@@ -12,7 +12,7 @@ import ComposableArchitecture
 
 class HomeCircularProgressSnapshotTests: XCTestCase {
     func testCircularProgress_DownloadingInnerCircle() throws {
-        class SnapshotTestWrappedSDKSynchronizer: TestWrappedSDKSynchronizer {
+        class SnapshotNoopSDKSynchronizer: NoopSDKSynchronizer {
             // heights purposely set so we visually see 55% progress
             override func statusSnapshot() -> SyncStatusSnapshot {
                 let blockProgress = BlockProgress(
@@ -40,15 +40,15 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
                 walletEventsState: .emptyPlaceHolder
             ),
             reducer: HomeReducer()
-                .dependency(\.sdkSynchronizer, SnapshotTestWrappedSDKSynchronizer())
                 .dependency(\.diskSpaceChecker, .mockEmptyDisk)
+                .dependency(\.sdkSynchronizer, SnapshotNoopSDKSynchronizer())
         )
 
         addAttachments(HomeView(store: store))
     }
     
     func testCircularProgress_ScanningOuterCircle() throws {
-        class SnapshotTestWrappedSDKSynchronizer: TestWrappedSDKSynchronizer {
+        class SnapshotNoopSDKSynchronizer: NoopSDKSynchronizer {
             override func statusSnapshot() -> SyncStatusSnapshot {
                 // heights purposely set so we visually see 72% progress
                 let blockProgress = BlockProgress(
@@ -83,7 +83,7 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
     }
     
     func testCircularProgress_UpToDateOnlyOuterCircle() throws {
-        class SnapshotTestWrappedSDKSynchronizer: TestWrappedSDKSynchronizer {
+        class SnapshotNoopSDKSynchronizer: NoopSDKSynchronizer {
             override func statusSnapshot() -> SyncStatusSnapshot {
                 SyncStatusSnapshot.snapshotFor(state: .synced)
             }
