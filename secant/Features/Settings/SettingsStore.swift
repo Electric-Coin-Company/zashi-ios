@@ -26,17 +26,17 @@ struct SettingsReducer: ReducerProtocol {
         case updateRoute(SettingsReducer.State.Route?)
     }
     
+    @Dependency(\.localAuthentication) var localAuthentication
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.walletStorage) var walletStorage
-    @Dependency(\.localAuthenticationHandler) var localAuthenticationHandler
 
     var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
             case .backupWalletAccessRequest:
                 return .run { send in
-                    if await localAuthenticationHandler.authenticate() {
+                    if await localAuthentication.authenticate() {
                         await send(.backupWallet)
                     }
                 }

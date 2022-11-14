@@ -1,12 +1,11 @@
 //
-//  FreeDiskSpaceChecker.swift
+//  DiskSpaceChecker.swift
 //  secant-testnet
 //
 //  Created by Michal Fousek on 28.09.2022.
 //
 
 import Foundation
-import ComposableArchitecture
 
 struct DiskSpaceChecker {
     /// Free space on disk in bytes required to do sync
@@ -27,17 +26,5 @@ struct DiskSpaceChecker {
             // If there is error getting information about free space from filesystem let's assume something is seriously wrong.
             return 0
         }
-    }
-}
-
-private enum DiskSpaceCheckerKey: DependencyKey {
-    static let liveValue = WrappedDiskSpaceChecker.live
-    static let testValue = WrappedDiskSpaceChecker.mockEmptyDisk
-}
-
-extension DependencyValues {
-    var diskSpaceChecker: WrappedDiskSpaceChecker {
-        get { self[DiskSpaceCheckerKey.self] }
-        set { self[DiskSpaceCheckerKey.self] = newValue }
     }
 }

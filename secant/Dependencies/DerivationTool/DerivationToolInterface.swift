@@ -1,15 +1,22 @@
 //
-//  WrappedDerivationTool.swift
+//  DerivationToolInterface.swift
 //  secant-testnet
 //
-//  Created by Lukáš Korba on 11.04.2022.
+//  Created by Lukáš Korba on 12.11.2022.
 //
 
-import Foundation
+import ComposableArchitecture
 import ZcashLightClientKit
 
+extension DependencyValues {
+    var derivationTool: DerivationToolClient {
+        get { self[DerivationToolClient.self] }
+        set { self[DerivationToolClient.self] = newValue }
+    }
+}
+
 // swiftlint:disable identifier_name
-struct WrappedDerivationTool {
+struct DerivationToolClient {
     /**
     Given a seed and a number of accounts, return the associated viewing keys.
      
@@ -39,7 +46,7 @@ struct WrappedDerivationTool {
      
     - Returns: the spending keys that correspond to the seed, formatted as Strings.
     */
-    let deriveSpendingKeys: ([UInt8], Int) throws -> [String]
+    var deriveSpendingKeys: ([UInt8], Int) throws -> [String]
     
     /**
     Given a seed and account index, return the associated address.
@@ -128,58 +135,5 @@ struct WrappedDerivationTool {
     /**
     Checks if given address is a valid zcash address.
     */
-    let isValidZcashAddress: (String) throws -> Bool
-}
-
-extension WrappedDerivationTool {
-    public static func live(derivationTool: DerivationTool = DerivationTool(networkType: .mainnet)) -> Self {
-        Self(
-            deriveViewingKeys: { seed, numberOfAccounts in
-                try derivationTool.deriveViewingKeys(seed: seed, numberOfAccounts: numberOfAccounts)
-            },
-            deriveViewingKey: { spendingKey in
-                try derivationTool.deriveViewingKey(spendingKey: spendingKey)
-            },
-            deriveSpendingKeys: { seed, numberOfAccounts in
-                try derivationTool.deriveSpendingKeys(seed: seed, numberOfAccounts: numberOfAccounts)
-            },
-            deriveShieldedAddress: { seed, accountIndex in
-                try derivationTool.deriveShieldedAddress(seed: seed, accountIndex: accountIndex)
-            },
-            deriveShieldedAddressFromViewingKey: { viewingKey in
-                try derivationTool.deriveShieldedAddress(viewingKey: viewingKey)
-            },
-            deriveTransparentAddress: { seed, account, index in
-                try derivationTool.deriveTransparentAddress(seed: seed, account: account, index: index)
-            },
-            deriveUnifiedViewingKeysFromSeed: { seed, numberOfAccounts in
-                try derivationTool.deriveUnifiedViewingKeysFromSeed(seed, numberOfAccounts: numberOfAccounts)
-            },
-            deriveUnifiedAddressFromUnifiedViewingKey: { uvk in
-                try derivationTool.deriveUnifiedAddressFromUnifiedViewingKey(uvk)
-            },
-            deriveTransparentAddressFromPublicKey: { pubkey in
-                try derivationTool.deriveTransparentAddressFromPublicKey(pubkey)
-            },
-            deriveTransparentPrivateKey: { seed, account, index in
-                try derivationTool.deriveTransparentPrivateKey(seed: seed, account: account, index: index)
-            },
-            deriveTransparentAddressFromPrivateKey: { tsk in
-                try derivationTool.deriveTransparentAddressFromPrivateKey(tsk)
-            },
-            isValidExtendedViewingKey: { extvk in
-                try derivationTool.isValidExtendedViewingKey(extvk)
-            },
-            isValidTransparentAddress: { tAddress in
-                try derivationTool.isValidTransparentAddress(tAddress)
-            },
-            isValidShieldedAddress: { zAddress in
-                try derivationTool.isValidShieldedAddress(zAddress)
-            },
-            isValidZcashAddress: { address in
-                try derivationTool.isValidTransparentAddress(address) ? true :
-                try derivationTool.isValidShieldedAddress(address) ? true : false
-            }
-        )
-    }
+    var isValidZcashAddress: (String) throws -> Bool
 }

@@ -82,7 +82,7 @@ class AppInitializationTests: XCTestCase {
         )
         
         let emptyURL = URL(fileURLWithPath: "")
-        let dbFiles = WrappedDatabaseFiles(
+        let dbFiles = DatabaseFilesClient(
             documentsDirectory: { emptyURL },
             cacheDbURLFor: { _ in emptyURL },
             dataDbURLFor: { _ in emptyURL },
@@ -114,6 +114,8 @@ class AppInitializationTests: XCTestCase {
                 .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
                 .dependency(\.randomPhrase, recoveryPhraseRandomizer)
         )
+
+        store.dependencies.derivationTool = .noop
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         store.send(.appDelegate(.didFinishLaunching))
@@ -159,7 +161,7 @@ class AppInitializationTests: XCTestCase {
         let testScheduler = DispatchQueue.test
 
         let emptyURL = URL(fileURLWithPath: "")
-        let dbFiles = WrappedDatabaseFiles(
+        let dbFiles = DatabaseFilesClient(
             documentsDirectory: { emptyURL },
             cacheDbURLFor: { _ in emptyURL },
             dataDbURLFor: { _ in emptyURL },
@@ -208,6 +210,8 @@ class AppInitializationTests: XCTestCase {
                 .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
         )
 
+        store.dependencies.databaseFiles = .throwing
+        
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         store.send(.appDelegate(.didFinishLaunching))
         

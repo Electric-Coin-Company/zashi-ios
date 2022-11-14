@@ -36,7 +36,7 @@ class DatabaseFilesTests: XCTestCase {
             removeItem: { _ in }
         )
         
-        let dfInteractor = WrappedDatabaseFiles.live(databaseFiles: DatabaseFiles(fileManager: mockedFileManager))
+        let dfInteractor = DatabaseFilesClient.live(databaseFiles: DatabaseFiles(fileManager: mockedFileManager))
         
         do {
             _ = try dfInteractor.documentsDirectory()
@@ -64,7 +64,7 @@ class DatabaseFilesTests: XCTestCase {
             removeItem: { _ in }
         )
         
-        let dfInteractor = WrappedDatabaseFiles.live(databaseFiles: DatabaseFiles(fileManager: mockedFileManager))
+        let dfInteractor = DatabaseFilesClient.live(databaseFiles: DatabaseFiles(fileManager: mockedFileManager))
         
         do {
             _ = try dfInteractor.dataDbURLFor(network)
@@ -92,7 +92,7 @@ class DatabaseFilesTests: XCTestCase {
             removeItem: { _ in }
         )
         
-        let dfInteractor = WrappedDatabaseFiles.live(databaseFiles: DatabaseFiles(fileManager: mockedFileManager))
+        let dfInteractor = DatabaseFilesClient.live(databaseFiles: DatabaseFiles(fileManager: mockedFileManager))
         
         do {
             let areFilesPresent = try dfInteractor.areDbFilesPresentFor(network)
@@ -110,7 +110,7 @@ class DatabaseFilesTests: XCTestCase {
             removeItem: { _ in }
         )
         
-        let dfInteractor = WrappedDatabaseFiles.live(databaseFiles: DatabaseFiles(fileManager: mockedFileManager))
+        let dfInteractor = DatabaseFilesClient.live(databaseFiles: DatabaseFiles(fileManager: mockedFileManager))
         
         do {
             let areFilesPresent = try dfInteractor.areDbFilesPresentFor(network)
@@ -128,7 +128,7 @@ class DatabaseFilesTests: XCTestCase {
             removeItem: { _ in }
         )
         
-        let dfInteractor = WrappedDatabaseFiles.live(databaseFiles: DatabaseFiles(fileManager: mockedFileManager))
+        let dfInteractor = DatabaseFilesClient.live(databaseFiles: DatabaseFiles(fileManager: mockedFileManager))
         
         do {
             _ = try dfInteractor.areDbFilesPresentFor(network)
@@ -156,7 +156,7 @@ class DatabaseFilesTests: XCTestCase {
             removeItem: { _ in throw "some error" }
         )
         
-        let dfInteractor = WrappedDatabaseFiles.live(databaseFiles: DatabaseFiles(fileManager: mockedFileManager))
+        let dfInteractor = DatabaseFilesClient.live(databaseFiles: DatabaseFiles(fileManager: mockedFileManager))
         
         do {
             _ = try dfInteractor.nukeDbFilesFor(network)
@@ -184,7 +184,7 @@ class DatabaseFilesTests: XCTestCase {
             removeItem: { _ in }
         )
         
-        let dfInteractor = WrappedDatabaseFiles.live(databaseFiles: DatabaseFiles(fileManager: mockedFileManager))
+        let dfInteractor = DatabaseFilesClient.live(databaseFiles: DatabaseFiles(fileManager: mockedFileManager))
         
         do {
             _ = try dfInteractor.nukeDbFilesFor(network)

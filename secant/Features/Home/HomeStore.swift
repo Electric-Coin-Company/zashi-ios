@@ -72,12 +72,12 @@ struct HomeReducer: ReducerProtocol {
         case updateWalletEvents([WalletEvent])
     }
     
-    @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
-    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
-    @Dependency(\.mainQueue) var mainQueue
-    @Dependency(\.diskSpaceChecker) var diskSpaceChecker
     @Dependency(\.audioServices) var audioServices
-    
+    @Dependency(\.diskSpaceChecker) var diskSpaceChecker
+    @Dependency(\.mainQueue) var mainQueue
+    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
+
     var body: some ReducerProtocol<State, Action> {
         Scope(state: \.walletEventsState, action: /Action.walletEvents) {
             WalletEventsFlowReducer()

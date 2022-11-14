@@ -64,10 +64,17 @@ class DeeplinkTests: XCTestCase {
         }
     }
 
-    func testDeeplinkRequest_homeURL() async throws {
-        let synchronizer = TestWrappedSDKSynchronizer()
-        synchronizer.updateStateChanged(.synced)
+    func testHomeURLParsing() throws {
+        guard let url = URL(string: "zcash:///home") else {
+            return XCTFail("Deeplink: 'testDeeplinkRequest_homeURL' URL is expected to be valid.")
+        }
+
+        let result = try Deeplink().resolveDeeplinkURL(url, isValidZcashAddress: { _ in false })
         
+        XCTAssertEqual(result, Deeplink.Route.home)
+    }
+
+    func testDeeplinkRequest_Received_Home() async throws {
         var appState = AppReducer.State.placeholder
         appState.route = .welcome
         appState.appInitializationState = .initialized
@@ -75,12 +82,19 @@ class DeeplinkTests: XCTestCase {
         let store = TestStore(
             initialState: appState,
             reducer: AppReducer()
-                .dependency(\.sdkSynchronizer, synchronizer)
         )
+        
+        let synchronizer = TestWrappedSDKSynchronizer()
+        synchronizer.updateStateChanged(.synced)
+        store.dependencies.sdkSynchronizer = synchronizer
         
         guard let url = URL(string: "zcash:///home") else {
             return XCTFail("Deeplink: 'testDeeplinkRequest_homeURL' URL is expected to be valid.")
         }
+        
+        store.dependencies.deeplink = DeeplinkClient(
+            resolveDeeplinkURL: { _, _ in Deeplink.Route.home }
+        )
         
         _ = await store.send(.deeplink(url))
         
@@ -90,43 +104,18 @@ class DeeplinkTests: XCTestCase {
         
         await store.finish()
     }
-    
-    func testDeeplinkRequest_sendURL_amount() async throws {
-        let synchronizer = TestWrappedSDKSynchronizer()
-        synchronizer.updateStateChanged(.synced)
-        
-        var appState = AppReducer.State.placeholder
-        appState.route = .welcome
-        appState.appInitializationState = .initialized
-        
-        let store = TestStore(
-            initialState: appState,
-            reducer: AppReducer()
-                .dependency(\.sdkSynchronizer, synchronizer)
-        )
-        
-        guard let url = URL(string: "zcash:///home/send?amount=123000000") else {
+
+    func testsendURLParsing() throws {
+        guard let url = URL(string: "zcash:///home/send?address=address&memo=some%20text&amount=123000000") else {
             return XCTFail("Deeplink: 'testDeeplinkRequest_sendURL_amount' URL is expected to be valid.")
         }
-        
-        _ = await store.send(.deeplink(url))
-        
-        let amount = Zatoshi(123_000_000)
-        let address = ""
-        let memo = ""
 
-        await store.receive(.deeplinkSend(amount, address, memo)) { state in
-            state.route = .home
-            state.homeState.route = .send
-            state.homeState.sendState.amount = amount
-            state.homeState.sendState.address = address
-            state.homeState.sendState.memoState.text = memo
-        }
+        let result = try Deeplink().resolveDeeplinkURL(url, isValidZcashAddress: { _ in false })
         
-        await store.finish()
+        XCTAssertEqual(result, Deeplink.Route.send(amount: 123_000_000, address: "address", memo: "some text"))
     }
     
-    func testDeeplinkRequest_sendURL_allFields() async throws {
+    func testDeeplinkRequest_Received_Send() async throws {
         let synchronizer = TestWrappedSDKSynchronizer()
         synchronizer.updateStateChanged(.synced)
         
@@ -144,6 +133,10 @@ class DeeplinkTests: XCTestCase {
             return XCTFail("Deeplink: 'testDeeplinkRequest_sendURL_amount' URL is expected to be valid.")
         }
         
+        store.dependencies.deeplink = DeeplinkClient(
+            resolveDeeplinkURL: { _, _ in Deeplink.Route.send(amount: 123_000_000, address: "address", memo: "some text") }
+        )
+
         _ = await store.send(.deeplink(url))
         
         let amount = Zatoshi(123_000_000)

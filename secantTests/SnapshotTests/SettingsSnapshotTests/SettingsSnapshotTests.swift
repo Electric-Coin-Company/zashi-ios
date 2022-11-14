@@ -15,7 +15,7 @@ class SettingsSnapshotTests: XCTestCase {
         let store = Store(
             initialState: .placeholder,
             reducer: SettingsReducer()
-                .dependency(\.localAuthenticationHandler, .unimplemented)
+                .dependency(\.localAuthentication, .mockAuthenticationFailed)
                 .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
                 .dependency(\.walletStorage, .throwing)
         )

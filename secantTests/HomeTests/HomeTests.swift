@@ -129,6 +129,8 @@ class HomeTests: XCTestCase {
             reducer: HomeReducer()
         )
         
+        store.dependencies.diskSpaceChecker = .mockEmptyDisk
+        
         store.send(.onAppear) { state in
             state.requiredTransactionConfirmations = 10
         }
@@ -147,9 +149,10 @@ class HomeTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: HomeReducer()
-                .dependency(\.diskSpaceChecker, .mockFullDisk)
         )
 
+        store.dependencies.diskSpaceChecker = .mockFullDisk
+        
         store.send(.onAppear) { state in
             state.requiredTransactionConfirmations = 10
         }

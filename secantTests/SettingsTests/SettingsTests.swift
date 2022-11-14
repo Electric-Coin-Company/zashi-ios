@@ -50,6 +50,8 @@ class SettingsTests: XCTestCase {
                 .dependency(\.walletStorage, mockedWalletStorage)
         )
         
+        store.dependencies.localAuthentication = .mockAuthenticationSucceeded
+        
         _ = await store.send(.backupWalletAccessRequest)
         
         await store.receive(.backupWallet) { state in
@@ -64,9 +66,10 @@ class SettingsTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: SettingsReducer()
-                .dependency(\.localAuthenticationHandler, .unimplemented)
         )
         
+        store.dependencies.localAuthentication = .mockAuthenticationFailed
+
         _ = await store.send(.backupWalletAccessRequest)
         
         await store.finish()
