@@ -16,7 +16,7 @@ extension CaptureDeviceClient: TestDependencyKey {
 }
 
 extension CaptureDeviceClient {
-    static let noop = Self(
+    static let noOp = Self(
         isTorchAvailable: { false },
         torch: { _ in }
     )

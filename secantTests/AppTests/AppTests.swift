@@ -14,8 +14,8 @@ class AppTests: XCTestCase {
 
     func testWalletInitializationState_Uninitialized() throws {
         let walletState = AppReducer.walletInitializationState(
-            databaseFiles: .throwing,
-            walletStorage: .throwing,
+            databaseFiles: .noOp,
+            walletStorage: .noOp,
             zcashSDKEnvironment: .testnet
         )
 
@@ -23,15 +23,15 @@ class AppTests: XCTestCase {
     }
 
     func testWalletInitializationState_FilesPresentKeysMissing() throws {
-        let wfmMock = WrappedFileManager(
-            url: { _, _, _, _ in URL(fileURLWithPath: "") },
+        let wfmMock = FileManagerClient(
+            url: { _, _, _, _ in .emptyURL },
             fileExists: { _ in return true },
             removeItem: { _ in }
         )
 
         let walletState = AppReducer.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
-            walletStorage: .throwing,
+            walletStorage: .noOp,
             zcashSDKEnvironment: .testnet
         )
 
@@ -39,15 +39,15 @@ class AppTests: XCTestCase {
     }
 
     func testWalletInitializationState_FilesMissingKeysMissing() throws {
-        let wfmMock = WrappedFileManager(
-            url: { _, _, _, _ in URL(fileURLWithPath: "") },
+        let wfmMock = FileManagerClient(
+            url: { _, _, _, _ in .emptyURL },
             fileExists: { _ in return false },
             removeItem: { _ in }
         )
 
         let walletState = AppReducer.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
-            walletStorage: .throwing,
+            walletStorage: .noOp,
             zcashSDKEnvironment: .testnet
         )
 
@@ -62,10 +62,10 @@ class AppTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: AppReducer()
-                .dependency(\.mainQueue, Self.testScheduler.eraseToAnyScheduler())
-                .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
         
+        store.dependencies.mainQueue = Self.testScheduler.eraseToAnyScheduler()
+
         store.send(.respondToWalletInitializationState(.uninitialized))
         
         Self.testScheduler.advance(by: 3)
@@ -93,6 +93,9 @@ class AppTests: XCTestCase {
             reducer: AppReducer()
         )
         
+        store.dependencies.walletStorage = .noOp
+        store.dependencies.walletStorage.exportWallet = { throw "export failed" }
+
         store.send(.respondToWalletInitializationState(.filesMissing)) { state in
             state.appInitializationState = .filesMissing
         }
@@ -110,6 +113,9 @@ class AppTests: XCTestCase {
             initialState: .placeholder,
             reducer: AppReducer()
         )
+        
+        store.dependencies.walletStorage = .noOp
+        store.dependencies.walletStorage.exportWallet = { throw "export failed" }
         
         store.send(.respondToWalletInitializationState(.initialized))
         

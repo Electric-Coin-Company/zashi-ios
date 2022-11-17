@@ -15,7 +15,9 @@ class RecoveryPhraseDisplayReducerTests: XCTestCase {
             initialState: RecoveryPhraseDisplayStore.test,
             reducer: RecoveryPhraseDisplayReducer()
         )
-                
+              
+        store.dependencies.pasteboard = .testPasteboard
+
         store.send(.copyToBufferPressed) {
             $0.phrase = .placeholder
             $0.showCopyToBufferAlert = true

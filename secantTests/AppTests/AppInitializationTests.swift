@@ -10,14 +10,6 @@ import XCTest
 import ComposableArchitecture
 
 class AppInitializationTests: XCTestCase {
-    var storage = WalletStorage(secItem: .live)
-    
-    override func setUp() {
-        super.setUp()
-        storage.zcashStoredWalletPrefix = "test_app_"
-        storage.deleteData(forKey: WalletStorage.Constants.zcashStoredWallet)
-    }
-
     /// This integration test starts with finishing the app launch and triggering bunch of initialization proceedures.
     /// 1. The app calls .checkWalletInitialization delayed by 0.02 seconds to ensure keychain is successfuly operational.
     /// 2. The .respondToWalletInitializationState is triggered to decide the state of the wallet.
@@ -25,13 +17,10 @@ class AppInitializationTests: XCTestCase {
     /// 4. The .checkBackupPhraseValidation is triggered to check the validation state.
     /// 5. The user hasn't finished the backup phrase test so the display phrase is presented.
     func testDidFinishLaunching_to_InitializedWallet() throws {
-        // the test needs to pass the exportWallet() so we simulate some in the keychain
-        try storage.importWallet(bip39: "one two three", birthday: nil)
-        
         // setup the store and environment to be fully mocked
         let testScheduler = DispatchQueue.test
 
-        let recoveryPhrase = RecoveryPhrase(words: try WrappedMnemonic.mock.randomMnemonicWords())
+        let recoveryPhrase = RecoveryPhrase(words: try MnemonicClient.mock.randomMnemonicWords())
         
         let phraseValidationState = RecoveryPhraseValidationFlowReducer.State(
             phrase: recoveryPhrase,
@@ -48,7 +37,7 @@ class AppInitializationTests: XCTestCase {
             route: nil
         )
         
-        let recoveryPhraseRandomizer = WrappedRecoveryPhraseRandomizer(
+        let recoveryPhraseRandomizer = RecoveryPhraseRandomizerClient(
             random: { _ in
                 let missingIndices = [2, 0, 3, 5]
                 let missingWordChipKind = [
@@ -81,18 +70,6 @@ class AppInitializationTests: XCTestCase {
             }
         )
         
-        let emptyURL = URL(fileURLWithPath: "")
-        let dbFiles = DatabaseFilesClient(
-            documentsDirectory: { emptyURL },
-            cacheDbURLFor: { _ in emptyURL },
-            dataDbURLFor: { _ in emptyURL },
-            outputParamsURLFor: { _ in emptyURL },
-            pendingDbURLFor: { _ in emptyURL },
-            spendParamsURLFor: { _ in emptyURL },
-            areDbFilesPresentFor: { _ in true },
-            nukeDbFilesFor: { _ in throw DatabaseFiles.DatabaseFilesError.nukeFiles }
-        )
-        
         let appState = AppReducer.State(
             homeState: .placeholder,
             onboardingState: .init(
@@ -109,13 +86,16 @@ class AppInitializationTests: XCTestCase {
         let store = TestStore(
             initialState: appState,
             reducer: AppReducer()
-                .dependency(\.databaseFiles, dbFiles)
-                .dependency(\.walletStorage, .live(walletStorage: storage))
-                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
-                .dependency(\.randomPhrase, recoveryPhraseRandomizer)
         )
-
-        store.dependencies.derivationTool = .noop
+        
+        store.dependencies.databaseFiles = .noOp
+        store.dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
+        store.dependencies.derivationTool = .noOp
+        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+        store.dependencies.mnemonic = .mock
+        store.dependencies.randomRecoveryPhrase = recoveryPhraseRandomizer
+        store.dependencies.walletStorage.exportWallet = { .placeholder }
+        store.dependencies.walletStorage.areKeysPresent = { true }
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         store.send(.appDelegate(.didFinishLaunching))
@@ -133,8 +113,9 @@ class AppInitializationTests: XCTestCase {
         store.receive(.initializeSDK) { state in
             state.storedWallet = StoredWallet(
                 language: .english,
-                seedPhrase: "one two three",
-                version: 1,
+                seedPhrase: "",
+                version: 0,
+                birthday: 0,
                 hasUserPassedPhraseBackupTest: false
             )
         }
@@ -160,25 +141,15 @@ class AppInitializationTests: XCTestCase {
         // setup the store and environment to be fully mocked
         let testScheduler = DispatchQueue.test
 
-        let emptyURL = URL(fileURLWithPath: "")
-        let dbFiles = DatabaseFilesClient(
-            documentsDirectory: { emptyURL },
-            cacheDbURLFor: { _ in emptyURL },
-            dataDbURLFor: { _ in emptyURL },
-            outputParamsURLFor: { _ in emptyURL },
-            pendingDbURLFor: { _ in emptyURL },
-            spendParamsURLFor: { _ in emptyURL },
-            areDbFilesPresentFor: { _ in true },
-            nukeDbFilesFor: { _ in throw DatabaseFiles.DatabaseFilesError.nukeFiles }
-        )
-        
         let store = TestStore(
             initialState: .placeholder,
             reducer: AppReducer()
-                .dependency(\.databaseFiles, dbFiles)
-                .dependency(\.walletStorage, .live(walletStorage: storage))
-                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
         )
+
+        store.dependencies.databaseFiles = .noOp
+        store.dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
+        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+        store.dependencies.walletStorage = .noOp
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         store.send(.appDelegate(.didFinishLaunching))
@@ -206,12 +177,12 @@ class AppInitializationTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: AppReducer()
-                .dependency(\.walletStorage, .live(walletStorage: storage))
-                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
         )
 
-        store.dependencies.databaseFiles = .throwing
-        
+        store.dependencies.databaseFiles = .noOp
+        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+        store.dependencies.walletStorage = .noOp
+
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         store.send(.appDelegate(.didFinishLaunching))
         

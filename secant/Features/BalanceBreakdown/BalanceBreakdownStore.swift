@@ -28,7 +28,7 @@ struct BalanceBreakdownReducer: ReducerProtocol {
     enum Action: Equatable {
         case onAppear
         case onDisappear
-        case synchronizerStateChanged(WrappedSDKSynchronizerState)
+        case synchronizerStateChanged(SDKSynchronizerState)
         case updateLatestBlock
         case updateSynchronizerStatus
     }

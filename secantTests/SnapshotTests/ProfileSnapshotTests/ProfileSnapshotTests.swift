@@ -15,8 +15,8 @@ class ProfileSnapshotTests: XCTestCase {
         let store = Store(
             initialState: .placeholder,
             reducer: ProfileReducer()
-                .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
                 .dependency(\.appVersion, .mock)
+                .dependency(\.sdkSynchronizer, NoopSDKSynchronizer())
         )
         
         ViewStore(store).send(.onAppear)

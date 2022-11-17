@@ -43,7 +43,7 @@ extension DerivationToolClient {
 }
 
 extension DerivationToolClient {
-    static let noop = Self(
+    static let noOp = Self(
         deriveViewingKeys: { _, _ in [] },
         deriveViewingKey: { _ in "" },
         deriveSpendingKeys: { _, _ in [] },

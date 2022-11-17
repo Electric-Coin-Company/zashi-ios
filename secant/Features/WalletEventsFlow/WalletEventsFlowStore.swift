@@ -33,7 +33,7 @@ struct WalletEventsFlowReducer: ReducerProtocol {
         case openBlockExplorer(URL?)
         case updateRoute(WalletEventsFlowReducer.State.Route?)
         case replyTo(String)
-        case synchronizerStateChanged(WrappedSDKSynchronizerState)
+        case synchronizerStateChanged(SDKSynchronizerState)
         case updateWalletEvents([WalletEvent])
         case warnBeforeLeavingApp(URL?)
     }

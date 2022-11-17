@@ -64,7 +64,7 @@ struct HomeReducer: ReducerProtocol {
         case request(RequestReducer.Action)
         case send(SendFlowReducer.Action)
         case scan(ScanReducer.Action)
-        case synchronizerStateChanged(WrappedSDKSynchronizerState)
+        case synchronizerStateChanged(SDKSynchronizerState)
         case walletEvents(WalletEventsFlowReducer.Action)
         case updateDrawer(DrawerOverlay)
         case updateRoute(HomeReducer.State.Route?)

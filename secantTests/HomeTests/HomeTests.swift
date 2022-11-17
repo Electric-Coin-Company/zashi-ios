@@ -32,9 +32,11 @@ class HomeTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: HomeReducer()
-                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
         )
         
+        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+        store.dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
+
         store.send(.synchronizerStateChanged(.synced))
         
         testScheduler.advance(by: 0.01)
@@ -44,11 +46,11 @@ class HomeTests: XCTestCase {
 
         // ad 2.
         let transactionsHelper: [TransactionStateMockHelper] = [
-            TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "1"),
-            TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "2"),
-            TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(3), status: .paid(success: true), uuid: "3"),
-            TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(4), uuid: "4"),
-            TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(5), uuid: "5")
+            TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "aa11"),
+            TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),
+            TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(3), status: .paid(success: true), uuid: "cc33"),
+            TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(4), uuid: "dd44"),
+            TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(5), uuid: "ee55")
         ]
         let walletEvents: [WalletEvent] = transactionsHelper.map {
             let transaction = TransactionState.placeholder(

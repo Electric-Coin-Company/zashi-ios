@@ -11,7 +11,7 @@ import ZcashLightClientKit
 extension DerivationToolClient: DependencyKey {
     static let liveValue = DerivationToolClient.live()
         
-    static func live(derivationTool: DerivationTool = DerivationTool(networkType: .mainnet)) -> Self {
+    static func live(derivationTool: DerivationTool = DerivationTool(networkType: .testnet)) -> Self {
         Self(
             deriveViewingKeys: { seed, numberOfAccounts in
                 try derivationTool.deriveViewingKeys(seed: seed, numberOfAccounts: numberOfAccounts)

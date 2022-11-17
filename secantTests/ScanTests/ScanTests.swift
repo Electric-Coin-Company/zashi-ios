@@ -23,7 +23,7 @@ class ScanTests: XCTestCase {
             reducer: ScanReducer()
         )
 
-        store.dependencies.captureDevice = .noop
+        store.dependencies.captureDevice = .noOp
         
         store.send(.onAppear) { state in
             state.isTorchAvailable = false
@@ -39,7 +39,7 @@ class ScanTests: XCTestCase {
             reducer: ScanReducer()
         )
 
-        store.dependencies.captureDevice = .noop
+        store.dependencies.captureDevice = .noOp
 
         store.send(.torchPressed) { state in
             state.isTorchOn = true
@@ -54,7 +54,7 @@ class ScanTests: XCTestCase {
             reducer: ScanReducer()
         )
 
-        store.dependencies.captureDevice = .noop
+        store.dependencies.captureDevice = .noOp
 
         store.send(.torchPressed) { state in
             state.isTorchOn = false
@@ -67,6 +67,8 @@ class ScanTests: XCTestCase {
             reducer: ScanReducer()
         )
 
+        store.dependencies.uriParser.isValidURI = { _ in false }
+        
         store.send(.scan("test")) { state in
             state.scanStatus = .value("test")
             state.isValidValue = false
@@ -79,8 +81,10 @@ class ScanTests: XCTestCase {
         let store = TestStore(
             initialState: ScanReducer.State(),
             reducer: ScanReducer()
-                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
         )
+
+        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+        store.dependencies.uriParser.isValidURI = { _ in true }
 
         store.send(.scan("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po")) { state in
             state.scanStatus = .value("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po")

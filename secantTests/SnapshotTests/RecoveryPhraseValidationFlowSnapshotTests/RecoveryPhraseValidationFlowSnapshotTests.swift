@@ -24,7 +24,8 @@ class RecoveryPhraseValidationFlowSnapshotTests: XCTestCase {
         let store = RecoveryPhraseValidationFlowStore(
             initialState: .placeholder,
             reducer: RecoveryPhraseValidationFlowReducer()
-                .dependency(\.mainQueue, RecoveryPhraseValidationTests.testScheduler.eraseToAnyScheduler())
+                .dependency(\.feedbackGenerator, .noOp)
+                .dependency(\.mainQueue, DispatchQueue.test.eraseToAnyScheduler())
         )
         let viewStore = ViewStore(store)
 

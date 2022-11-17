@@ -84,17 +84,16 @@ class DeeplinkTests: XCTestCase {
             reducer: AppReducer()
         )
         
-        let synchronizer = TestWrappedSDKSynchronizer()
-        synchronizer.updateStateChanged(.synced)
-        store.dependencies.sdkSynchronizer = synchronizer
-        
-        guard let url = URL(string: "zcash:///home") else {
-            return XCTFail("Deeplink: 'testDeeplinkRequest_homeURL' URL is expected to be valid.")
-        }
-        
         store.dependencies.deeplink = DeeplinkClient(
             resolveDeeplinkURL: { _, _ in Deeplink.Route.home }
         )
+        let synchronizer = NoopSDKSynchronizer()
+        synchronizer.updateStateChanged(.synced)
+        store.dependencies.sdkSynchronizer = synchronizer
+
+        guard let url = URL(string: "zcash:///home") else {
+            return XCTFail("Deeplink: 'testDeeplinkRequest_homeURL' URL is expected to be valid.")
+        }
         
         _ = await store.send(.deeplink(url))
         
@@ -116,7 +115,7 @@ class DeeplinkTests: XCTestCase {
     }
     
     func testDeeplinkRequest_Received_Send() async throws {
-        let synchronizer = TestWrappedSDKSynchronizer()
+        let synchronizer = NoopSDKSynchronizer()
         synchronizer.updateStateChanged(.synced)
         
         var appState = AppReducer.State.placeholder
@@ -126,7 +125,6 @@ class DeeplinkTests: XCTestCase {
         let store = TestStore(
             initialState: appState,
             reducer: AppReducer()
-                .dependency(\.sdkSynchronizer, synchronizer)
         )
         
         guard let url = URL(string: "zcash:///home/send?address=address&memo=some%20text&amount=123000000") else {
@@ -136,6 +134,7 @@ class DeeplinkTests: XCTestCase {
         store.dependencies.deeplink = DeeplinkClient(
             resolveDeeplinkURL: { _, _ in Deeplink.Route.send(amount: 123_000_000, address: "address", memo: "some text") }
         )
+        store.dependencies.sdkSynchronizer = synchronizer
 
         _ = await store.send(.deeplink(url))
         

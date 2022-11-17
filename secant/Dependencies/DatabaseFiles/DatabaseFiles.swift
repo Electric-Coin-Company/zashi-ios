@@ -20,9 +20,9 @@ struct DatabaseFiles {
         case filesPresentCheck
     }
     
-    private let fileManager: WrappedFileManager
+    private let fileManager: FileManagerClient
     
-    init(fileManager: WrappedFileManager) {
+    init(fileManager: FileManagerClient) {
         self.fileManager = fileManager
     }
     

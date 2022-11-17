@@ -23,6 +23,6 @@ struct DatabaseFilesClient {
     let outputParamsURLFor: (ZcashNetwork) throws -> URL
     let pendingDbURLFor: (ZcashNetwork) throws -> URL
     let spendParamsURLFor: (ZcashNetwork) throws -> URL
-    let areDbFilesPresentFor: (ZcashNetwork) throws -> Bool
+    var areDbFilesPresentFor: (ZcashNetwork) throws -> Bool
     let nukeDbFilesFor: (ZcashNetwork) throws -> Void
 }

@@ -18,3 +18,13 @@ struct StoredWallet: Codable, Equatable {
     var birthday: BlockHeight?
     var hasUserPassedPhraseBackupTest: Bool
 }
+
+extension StoredWallet {
+    static let placeholder = Self(
+        language: .english,
+        seedPhrase: "",
+        version: 0,
+        birthday: 0,
+        hasUserPassedPhraseBackupTest: false
+    )
+}

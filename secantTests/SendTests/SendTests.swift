@@ -28,22 +28,21 @@ class SendTests: XCTestCase {
     }
 
     func testSendSucceeded() throws {
-        // the test needs to pass the exportWallet() so we simulate some in the keychain
-        try storage.importWallet(bip39: "one two three", birthday: nil)
-        
         // setup the store and environment to be fully mocked
         let testScheduler = DispatchQueue.test
 
         let store = TestStore(
             initialState: .placeholder,
             reducer: SendFlowReducer()
-                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
-                .dependency(\.walletStorage, .live(walletStorage: storage))
         )
 
-        store.dependencies.derivationTool = .noop
+        store.dependencies.derivationTool = .noOp
         store.dependencies.derivationTool.deriveSpendingKeys = { _, _ in [""] }
-        
+        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+        store.dependencies.mnemonic = .mock
+        store.dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
+        store.dependencies.walletStorage.exportWallet = { .placeholder }
+
         // simulate the sending confirmation button to be pressed
         store.send(.sendConfirmationPressed) { state in
             // once sending is confirmed, the attemts to try to send again by pressing the button
@@ -85,9 +84,6 @@ class SendTests: XCTestCase {
     }
 
     func testSendSucceededWithoutMemo() throws {
-        // the test needs to pass the exportWallet() so we simulate some in the keychain
-        try storage.importWallet(bip39: "one two three", birthday: nil)
-
         // setup the store and environment to be fully mocked
         let testScheduler = DispatchQueue.test
 
@@ -97,12 +93,14 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: state,
             reducer: SendFlowReducer()
-                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
-                .dependency(\.walletStorage, .live(walletStorage: storage))
         )
         
-        store.dependencies.derivationTool = .noop
+        store.dependencies.derivationTool = .noOp
         store.dependencies.derivationTool.deriveSpendingKeys = { _, _ in [""] }
+        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+        store.dependencies.mnemonic = .mock
+        store.dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
+        store.dependencies.walletStorage.exportWallet = { .placeholder }
 
         // simulate the sending confirmation button to be pressed
         store.send(.sendConfirmationPressed) { state in
@@ -145,22 +143,19 @@ class SendTests: XCTestCase {
     }
     
     func testSendFailed() throws {
-        // the test needs to pass the exportWallet() so we simulate some in the keychain
-        try storage.importWallet(bip39: "one two three", birthday: nil)
-        
         // setup the store and environment to be fully mocked
         let testScheduler = DispatchQueue.test
 
         let store = TestStore(
             initialState: .placeholder,
             reducer: SendFlowReducer()
-                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
-                .dependency(\.walletStorage, .live(walletStorage: storage))
-                .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
 
-        store.dependencies.derivationTool = .noop
+        store.dependencies.derivationTool = .noOp
         store.dependencies.derivationTool.deriveSpendingKeys = { _, _ in [""] }
+        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+        store.dependencies.mnemonic = .mock
+        store.dependencies.walletStorage.exportWallet = { .placeholder }
 
         // simulate the sending confirmation button to be pressed
         store.send(.sendConfirmationPressed) { state in
@@ -190,17 +185,12 @@ class SendTests: XCTestCase {
     }
     
     func testAddressValidation() throws {
-        let testScheduler = DispatchQueue.test
-
         let store = TestStore(
             initialState: .placeholder,
             reducer: SendFlowReducer()
-                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
-                .dependency(\.walletStorage, .live(walletStorage: WalletStorage(secItem: .live)))
-                .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
         
-        store.dependencies.derivationTool = .noop
+        store.dependencies.derivationTool = .noOp
         store.dependencies.derivationTool.isValidZcashAddress = { _ in false }
 
         store.send(.transactionAddressInput(.textField(.set("3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr")))) { state in
@@ -231,15 +221,12 @@ class SendTests: XCTestCase {
     }
     
     func testInvalidAmountFormatEmptyInput() throws {
-        let testScheduler = DispatchQueue.test
-
         let store = TestStore(
             initialState: .placeholder,
             reducer: SendFlowReducer()
-                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
-                .dependency(\.walletStorage, .live(walletStorage: WalletStorage(secItem: .live)))
-                .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
+
+        store.dependencies.numberFormatter = .noOp
 
         // Checks the computed property `isInvalidAmountFormat` which controls the error message to be shown on the screen
         // With empty input it must be false
@@ -249,17 +236,12 @@ class SendTests: XCTestCase {
     }
     
     func testInvalidAddressFormatEmptyInput() throws {
-        let testScheduler = DispatchQueue.test
-
         let store = TestStore(
             initialState: .placeholder,
             reducer: SendFlowReducer()
-                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
-                .dependency(\.walletStorage, .live(walletStorage: WalletStorage(secItem: .live)))
-                .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
         
-        store.dependencies.derivationTool = .noop
+        store.dependencies.derivationTool = .noOp
 
         // Checks the computed property `isInvalidAddressFormat` which controls the error message to be shown on the screen
         // With empty input it must be false
@@ -291,17 +273,15 @@ class SendTests: XCTestCase {
                         )
                 )
         )
-        
-        let testScheduler = DispatchQueue.test
 
         let store = TestStore(
             initialState: sendState,
             reducer: SendFlowReducer()
-                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
-                .dependency(\.walletStorage, .live(walletStorage: WalletStorage(secItem: .live)))
-                .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
         
+        store.dependencies.numberFormatter = .noOp
+        store.dependencies.numberFormatter.number = { _ in NSNumber(0.00501299) }
+
         store.send(.transactionAmountInput(.textField(.set("0.00501299")))) { state in
             state.transactionAmountInputState.textFieldState.text = "0.00501299"
             state.transactionAmountInputState.textFieldState.valid = true
@@ -315,6 +295,8 @@ class SendTests: XCTestCase {
             state.transactionAmountInputState.amount = 501_299
         }
         
+        store.dependencies.numberFormatter.number = { _ in NSNumber(0.00501301) }
+
         store.send(.transactionAmountInput(.textField(.set("0.00501301")))) { state in
             state.transactionAmountInputState.textFieldState.text = "0.00501301"
             state.transactionAmountInputState.textFieldState.valid = true
@@ -333,43 +315,19 @@ class SendTests: XCTestCase {
         }
     }
     
-    func testDifferentAmountFormats() throws {
-        let testScheduler = DispatchQueue.test
-
-        let store = TestStore(
-            initialState: .init(
-                addMemoState: true,
-                memoState: .placeholder,
-                route: nil,
-                transactionAddressInputState: .placeholder,
-                transactionAmountInputState:
-                    TransactionAmountTextFieldReducer.State(
-                        currencySelectionState: CurrencySelectionReducer.State(),
-                        textFieldState:
-                            TCATextFieldReducer.State(
-                                validationType: .customFloatingPoint(usNumberFormatter),
-                                text: ""
-                            )
-                    )
-            ),
-            reducer: SendFlowReducer()
-                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
-                .dependency(\.walletStorage, .live(walletStorage: WalletStorage(secItem: .live)))
-                .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
-        )
-                
-        try amountFormatTest("1.234", true, 123_400_000, false, store)
-        try amountFormatTest("1,234", true, 123_400_000_000, false, store)
-        try amountFormatTest("1 234", true, 123_400_000_000, true, store)
-        try amountFormatTest("1,234.567", true, 123_456_700_000, false, store)
-        try amountFormatTest("1.", true, 100_000_000, false, store)
-        try amountFormatTest("1..", false, 0, false, store)
-        try amountFormatTest("1,.", false, 0, true, store)
-        try amountFormatTest("1.,", false, 0, true, store)
-        try amountFormatTest("1,,", false, 0, true, store)
-        try amountFormatTest("1,23", false, 0, true, store)
-        try amountFormatTest("1 23", false, 0, true, store)
-        try amountFormatTest("1.2.3", false, 0, true, store)
+    func testDifferentNumberFormats_LiveNumberFormatter() throws {
+        try numberFormatTest("1.234", NSNumber(1.234))
+        try numberFormatTest("1,234", NSNumber(1_234))
+        try numberFormatTest("1 234", NSNumber(1_234))
+        try numberFormatTest("1,234.567", NSNumber(1_234.567))
+        try numberFormatTest("1.", NSNumber(1))
+        try numberFormatTest("1..", nil)
+        try numberFormatTest("1,.", nil)
+        try numberFormatTest("1.,", nil)
+        try numberFormatTest("1,,", nil)
+        try numberFormatTest("1,23", nil)
+        try numberFormatTest("1 23", nil)
+        try numberFormatTest("1.2.3", nil)
     }
     
     func testValidForm() throws {
@@ -389,18 +347,13 @@ class SendTests: XCTestCase {
                         )
                 )
         )
-
-        let testScheduler = DispatchQueue.test
         
         let store = TestStore(
             initialState: sendState,
             reducer: SendFlowReducer()
-                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
-                .dependency(\.walletStorage, .live(walletStorage: WalletStorage(secItem: .live)))
-                .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
         
-        store.dependencies.derivationTool = .noop
+        store.dependencies.derivationTool = .noOp
         store.dependencies.derivationTool.isValidZcashAddress = { _ in true }
 
         store.send(.transactionAddressInput(.textField(.set("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po")))) { state in
@@ -433,17 +386,12 @@ class SendTests: XCTestCase {
                 )
         )
 
-        let testScheduler = DispatchQueue.test
-
         let store = TestStore(
             initialState: sendState,
             reducer: SendFlowReducer()
-                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
-                .dependency(\.walletStorage, .live(walletStorage: WalletStorage(secItem: .live)))
-                .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
         
-        store.dependencies.derivationTool = .noop
+        store.dependencies.derivationTool = .noOp
         store.dependencies.derivationTool.isValidZcashAddress = { _ in true }
 
         store.send(.transactionAddressInput(.textField(.set("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po")))) { state in
@@ -475,18 +423,13 @@ class SendTests: XCTestCase {
                         )
                 )
         )
-
-        let testScheduler = DispatchQueue.test
         
         let store = TestStore(
             initialState: sendState,
             reducer: SendFlowReducer()
-                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
-                .dependency(\.walletStorage, .live(walletStorage: WalletStorage(secItem: .live)))
-                .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
         
-        store.dependencies.derivationTool = .noop
+        store.dependencies.derivationTool = .noOp
 
         store.send(.transactionAddressInput(.textField(.set("3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr")))) { state in
             state.transactionAddressInputState.textFieldState.text = "3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr"
@@ -518,20 +461,16 @@ class SendTests: XCTestCase {
                 )
         )
 
-        let testScheduler = DispatchQueue.test
-        
         let store = TestStore(
             initialState: sendState,
             reducer: SendFlowReducer()
-                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
-                .dependency(\.walletStorage, .live(walletStorage: WalletStorage(secItem: .live)))
-                .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
         
-        store.dependencies.derivationTool = .liveValue
-        
-        store.send(.transactionAddressInput(.textField(.set("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po")))) { state in
-            state.transactionAddressInputState.textFieldState.text = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
+        store.dependencies.derivationTool = .noOp
+        store.dependencies.derivationTool.isValidZcashAddress = { _ in true }
+
+        store.send(.transactionAddressInput(.textField(.set("tmGh6ttAnQRJra81moqYcedFadW9XtUT5Eq")))) { state in
+            state.transactionAddressInputState.textFieldState.text = "tmGh6ttAnQRJra81moqYcedFadW9XtUT5Eq"
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
             // isValid function returns true, `guard let validationType = validationType else { return true }`
             state.transactionAddressInputState.textFieldState.valid = true
@@ -569,17 +508,12 @@ class SendTests: XCTestCase {
                         )
                 )
         )
-
-        let testScheduler = DispatchQueue.test
         
         let store = TestStore(
             initialState: sendState,
             reducer: SendFlowReducer()
-                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
-                .dependency(\.walletStorage, .live(walletStorage: WalletStorage(secItem: .live)))
-                .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
-        
+
         store.send(.memo(.binding(.set(\.$text, "test")))) { state in
             state.memoState.text = "test"
             XCTAssertFalse(
@@ -606,14 +540,9 @@ class SendTests: XCTestCase {
                 )
         )
 
-        let testScheduler = DispatchQueue.test
-        
         let store = TestStore(
             initialState: sendState,
             reducer: SendFlowReducer()
-                .dependency(\.mainQueue, testScheduler.eraseToAnyScheduler())
-                .dependency(\.walletStorage, .live(walletStorage: WalletStorage(secItem: .live)))
-                .dependency(\.sdkSynchronizer, TestWrappedSDKSynchronizer())
         )
 
         store.send(.onAppear) { state in
@@ -629,24 +558,15 @@ class SendTests: XCTestCase {
 }
 
 private extension SendTests {
-    func amountFormatTest(
+    func numberFormatTest(
         _ amount: String,
-        _ expectedValidationResult: Bool,
-        _ expectedAmount: Int64,
-        _ expectedToReceive: Bool,
-        _ store: TestStore<SendFlowReducer.State, SendFlowReducer.Action, SendFlowReducer.State, SendFlowReducer.Action, Void>
+        _ expectedResult: NSNumber?
     ) throws {
-        store.send(.transactionAmountInput(.textField(.set(amount)))) { state in
-            state.transactionAmountInputState.textFieldState.text = amount
-            state.transactionAmountInputState.textFieldState.valid = expectedValidationResult
-        }
-
-        if expectedToReceive {
-            store.receive(.transactionAmountInput(.updateAmount))
+        if let number = NumberFormatterClient.liveValue.number(amount) {
+            XCTAssertEqual(number, expectedResult)
+            return
         } else {
-            store.receive(.transactionAmountInput(.updateAmount)) { state in
-                state.transactionAmountInputState.amount = expectedAmount
-            }
+            XCTAssertEqual(nil, expectedResult, "NumberFormatterClient.liveValue.number(\(amount)) unexpected result.")
         }
     }
 }

@@ -34,8 +34,8 @@ class TransactionConfirmationSnapshotTests: XCTestCase {
             reducer: SendFlowReducer()
                 .dependency(\.derivationTool, .live(derivationTool: DerivationTool(networkType: .testnet)))
                 .dependency(\.mainQueue, DispatchQueue.main.eraseToAnyScheduler())
-                .dependency(\.walletStorage, .live())
                 .dependency(\.numberFormatter, .live())
+                .dependency(\.walletStorage, .live())
         )
 
         ViewStore(store).send(.onAppear)
@@ -64,8 +64,8 @@ class TransactionConfirmationSnapshotTests: XCTestCase {
             reducer: SendFlowReducer()
                 .dependency(\.derivationTool, .live(derivationTool: DerivationTool(networkType: .testnet)))
                 .dependency(\.mainQueue, DispatchQueue.main.eraseToAnyScheduler())
-                .dependency(\.walletStorage, .live())
                 .dependency(\.numberFormatter, .live())
+                .dependency(\.walletStorage, .live())
         )
 
         ViewStore(store).send(.onAppear)

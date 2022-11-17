@@ -53,13 +53,13 @@ struct RecoveryPhraseValidationFlowReducer: ReducerProtocol {
     @Dependency(\.feedbackGenerator) var feedbackGenerator
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.pasteboard) var pasteboard
-    @Dependency(\.randomPhrase) var randomPhrase
+    @Dependency(\.randomRecoveryPhrase) var randomRecoveryPhrase
 
     // swiftlint:disable:next cyclomatic_complexity
     func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
         switch action {
         case .reset:
-            state = randomPhrase.random(state.phrase)
+            state = randomRecoveryPhrase.random(state.phrase)
             state.route = .validation
             // FIXME [#186]: Resetting causes route to be nil = preamble screen, hence setting the .validation. The transition back is not animated
             // though
@@ -101,7 +101,7 @@ struct RecoveryPhraseValidationFlowReducer: ReducerProtocol {
 
         case .updateRoute(let route):
             guard let route = route else {
-                state = randomPhrase.random(state.phrase)
+                state = randomRecoveryPhrase.random(state.phrase)
                 return .none
             }
             state.route = route
