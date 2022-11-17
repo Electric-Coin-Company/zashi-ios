@@ -32,10 +32,10 @@ class HomeTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: HomeReducer()
-        )
-        
-        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-        store.dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
+        ) { dependencies in
+            dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+            dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
+        }
 
         store.send(.synchronizerStateChanged(.synced))
         
@@ -129,9 +129,9 @@ class HomeTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: HomeReducer()
-        )
-        
-        store.dependencies.diskSpaceChecker = .mockEmptyDisk
+        ) {
+            $0.diskSpaceChecker = .mockEmptyDisk
+        }
         
         store.send(.onAppear) { state in
             state.requiredTransactionConfirmations = 10
@@ -151,9 +151,9 @@ class HomeTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: HomeReducer()
-        )
-
-        store.dependencies.diskSpaceChecker = .mockFullDisk
+        ) {
+            $0.diskSpaceChecker = .mockFullDisk
+        }
         
         store.send(.onAppear) { state in
             state.requiredTransactionConfirmations = 10

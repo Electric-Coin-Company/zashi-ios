@@ -11,12 +11,14 @@ import ComposableArchitecture
 
 class RecoveryPhraseDisplayReducerTests: XCTestCase {
     func testCopyToBuffer() {
+        let testPasteboard = PasteboardClient.testPasteboard
+
         let store = TestStore(
             initialState: RecoveryPhraseDisplayStore.test,
             reducer: RecoveryPhraseDisplayReducer()
-        )
-              
-        store.dependencies.pasteboard = .testPasteboard
+        ) {
+            $0.pasteboard = testPasteboard
+        }
 
         store.send(.copyToBufferPressed) {
             $0.phrase = .placeholder
@@ -24,7 +26,7 @@ class RecoveryPhraseDisplayReducerTests: XCTestCase {
         }
 
         XCTAssertEqual(
-            store.dependencies.pasteboard.getString(),
+            testPasteboard.getString(),
             RecoveryPhrase.placeholder.toString()
         )
     }

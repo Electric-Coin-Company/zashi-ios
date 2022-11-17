@@ -14,10 +14,10 @@ class ProfileTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: ProfileReducer()
-        )
-        
-        store.dependencies.appVersion = .mock
-        store.dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
+        ) { dependencies in
+            dependencies.appVersion = .mock
+            dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
+        }
 
         store.send(.onAppear) { state in
             state.address = "ff3927e1f83df9b1b0dc75540ddc59ee435eecebae914d2e6dfe8576fbedc9a8"

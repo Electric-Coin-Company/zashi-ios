@@ -86,16 +86,16 @@ class AppInitializationTests: XCTestCase {
         let store = TestStore(
             initialState: appState,
             reducer: AppReducer()
-        )
-        
-        store.dependencies.databaseFiles = .noOp
-        store.dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
-        store.dependencies.derivationTool = .noOp
-        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-        store.dependencies.mnemonic = .mock
-        store.dependencies.randomRecoveryPhrase = recoveryPhraseRandomizer
-        store.dependencies.walletStorage.exportWallet = { .placeholder }
-        store.dependencies.walletStorage.areKeysPresent = { true }
+        ) { dependencies in
+            dependencies.databaseFiles = .noOp
+            dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
+            dependencies.derivationTool = .noOp
+            dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+            dependencies.mnemonic = .mock
+            dependencies.randomRecoveryPhrase = recoveryPhraseRandomizer
+            dependencies.walletStorage.exportWallet = { .placeholder }
+            dependencies.walletStorage.areKeysPresent = { true }
+        }
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         store.send(.appDelegate(.didFinishLaunching))
@@ -144,12 +144,12 @@ class AppInitializationTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: AppReducer()
-        )
-
-        store.dependencies.databaseFiles = .noOp
-        store.dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
-        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-        store.dependencies.walletStorage = .noOp
+        ) { dependencies in
+            dependencies.databaseFiles = .noOp
+            dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
+            dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+            dependencies.walletStorage = .noOp
+        }
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         store.send(.appDelegate(.didFinishLaunching))
@@ -177,11 +177,11 @@ class AppInitializationTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: AppReducer()
-        )
-
-        store.dependencies.databaseFiles = .noOp
-        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-        store.dependencies.walletStorage = .noOp
+        ) { dependencies in
+            dependencies.databaseFiles = .noOp
+            dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+            dependencies.walletStorage = .noOp
+        }
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         store.send(.appDelegate(.didFinishLaunching))

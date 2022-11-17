@@ -62,9 +62,9 @@ class AppTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: AppReducer()
-        )
-        
-        store.dependencies.mainQueue = Self.testScheduler.eraseToAnyScheduler()
+        ) {
+            $0.mainQueue = Self.testScheduler.eraseToAnyScheduler()
+        }
 
         store.send(.respondToWalletInitializationState(.uninitialized))
         
@@ -91,10 +91,10 @@ class AppTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: AppReducer()
-        )
-        
-        store.dependencies.walletStorage = .noOp
-        store.dependencies.walletStorage.exportWallet = { throw "export failed" }
+        ) { dependencies in
+            dependencies.walletStorage = .noOp
+            dependencies.walletStorage.exportWallet = { throw "export failed" }
+        }
 
         store.send(.respondToWalletInitializationState(.filesMissing)) { state in
             state.appInitializationState = .filesMissing
@@ -112,10 +112,10 @@ class AppTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: AppReducer()
-        )
-        
-        store.dependencies.walletStorage = .noOp
-        store.dependencies.walletStorage.exportWallet = { throw "export failed" }
+        ) { dependencies in
+            dependencies.walletStorage = .noOp
+            dependencies.walletStorage.exportWallet = { throw "export failed" }
+        }
         
         store.send(.respondToWalletInitializationState(.initialized))
         

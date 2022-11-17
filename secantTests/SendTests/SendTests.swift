@@ -34,14 +34,14 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: SendFlowReducer()
-        )
-
-        store.dependencies.derivationTool = .noOp
-        store.dependencies.derivationTool.deriveSpendingKeys = { _, _ in [""] }
-        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-        store.dependencies.mnemonic = .mock
-        store.dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
-        store.dependencies.walletStorage.exportWallet = { .placeholder }
+        ) { dependencies in
+            dependencies.derivationTool = .noOp
+            dependencies.derivationTool.deriveSpendingKeys = { _, _ in [""] }
+            dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+            dependencies.mnemonic = .mock
+            dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
+            dependencies.walletStorage.exportWallet = { .placeholder }
+        }
 
         // simulate the sending confirmation button to be pressed
         store.send(.sendConfirmationPressed) { state in
@@ -93,14 +93,14 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: state,
             reducer: SendFlowReducer()
-        )
-        
-        store.dependencies.derivationTool = .noOp
-        store.dependencies.derivationTool.deriveSpendingKeys = { _, _ in [""] }
-        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-        store.dependencies.mnemonic = .mock
-        store.dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
-        store.dependencies.walletStorage.exportWallet = { .placeholder }
+        ) { dependencies in
+            dependencies.derivationTool = .noOp
+            dependencies.derivationTool.deriveSpendingKeys = { _, _ in [""] }
+            dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+            dependencies.mnemonic = .mock
+            dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
+            dependencies.walletStorage.exportWallet = { .placeholder }
+        }
 
         // simulate the sending confirmation button to be pressed
         store.send(.sendConfirmationPressed) { state in
@@ -149,13 +149,13 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: SendFlowReducer()
-        )
-
-        store.dependencies.derivationTool = .noOp
-        store.dependencies.derivationTool.deriveSpendingKeys = { _, _ in [""] }
-        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-        store.dependencies.mnemonic = .mock
-        store.dependencies.walletStorage.exportWallet = { .placeholder }
+        ) { dependencies in
+            dependencies.derivationTool = .noOp
+            dependencies.derivationTool.deriveSpendingKeys = { _, _ in [""] }
+            dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+            dependencies.mnemonic = .mock
+            dependencies.walletStorage.exportWallet = { .placeholder }
+        }
 
         // simulate the sending confirmation button to be pressed
         store.send(.sendConfirmationPressed) { state in
@@ -184,14 +184,14 @@ class SendTests: XCTestCase {
         }
     }
     
-    func testAddressValidation() throws {
+    func testAddressValidation_Invalid() throws {
         let store = TestStore(
             initialState: .placeholder,
             reducer: SendFlowReducer()
-        )
-        
-        store.dependencies.derivationTool = .noOp
-        store.dependencies.derivationTool.isValidZcashAddress = { _ in false }
+        ) { dependencies in
+            dependencies.derivationTool = .noOp
+            dependencies.derivationTool.isValidZcashAddress = { _ in false }
+        }
 
         store.send(.transactionAddressInput(.textField(.set("3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr")))) { state in
             state.transactionAddressInputState.textFieldState.text = "3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr"
@@ -204,8 +204,16 @@ class SendTests: XCTestCase {
                 "Send Tests: `testAddressValidation` is expected to be true but it's \(state.isInvalidAddressFormat)"
             )
         }
-        
-        store.dependencies.derivationTool.isValidZcashAddress = { _ in true }
+    }
+    
+    func testAddressValidation_Valid() throws {
+        let store = TestStore(
+            initialState: .placeholder,
+            reducer: SendFlowReducer()
+        ) { dependencies in
+            dependencies.derivationTool = .noOp
+            dependencies.derivationTool.isValidZcashAddress = { _ in true }
+        }
 
         store.send(.transactionAddressInput(.textField(.set("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po")))) { state in
             state.transactionAddressInputState.textFieldState.text = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
@@ -224,9 +232,9 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: SendFlowReducer()
-        )
-
-        store.dependencies.numberFormatter = .noOp
+        ) {
+            $0.numberFormatter = .noOp
+        }
 
         // Checks the computed property `isInvalidAmountFormat` which controls the error message to be shown on the screen
         // With empty input it must be false
@@ -239,9 +247,9 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: SendFlowReducer()
-        )
-        
-        store.dependencies.derivationTool = .noOp
+        ) {
+            $0.derivationTool = .noOp
+        }
 
         // Checks the computed property `isInvalidAddressFormat` which controls the error message to be shown on the screen
         // With empty input it must be false
@@ -257,7 +265,7 @@ class SendTests: XCTestCase {
         }
     }
     
-    func testFundsSufficiency() throws {
+    func testFundsSufficiency_SufficientAmount() throws {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .placeholder,
@@ -277,10 +285,10 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState,
             reducer: SendFlowReducer()
-        )
-        
-        store.dependencies.numberFormatter = .noOp
-        store.dependencies.numberFormatter.number = { _ in NSNumber(0.00501299) }
+        ) { dependencies in
+            dependencies.numberFormatter = .noOp
+            dependencies.numberFormatter.number = { _ in NSNumber(0.00501299) }
+        }
 
         store.send(.transactionAmountInput(.textField(.set("0.00501299")))) { state in
             state.transactionAmountInputState.textFieldState.text = "0.00501299"
@@ -294,8 +302,32 @@ class SendTests: XCTestCase {
         store.receive(.transactionAmountInput(.updateAmount)) { state in
             state.transactionAmountInputState.amount = 501_299
         }
-        
-        store.dependencies.numberFormatter.number = { _ in NSNumber(0.00501301) }
+    }
+    
+    func testFundsSufficiency_InsufficientAmount() throws {
+        let sendState = SendFlowReducer.State(
+            addMemoState: true,
+            memoState: .placeholder,
+            transactionAddressInputState: .placeholder,
+            transactionAmountInputState:
+                TransactionAmountTextFieldReducer.State(
+                    currencySelectionState: CurrencySelectionReducer.State(),
+                    maxValue: 501_300,
+                    textFieldState:
+                        TCATextFieldReducer.State(
+                            validationType: .customFloatingPoint(usNumberFormatter),
+                            text: ""
+                        )
+                )
+        )
+
+        let store = TestStore(
+            initialState: sendState,
+            reducer: SendFlowReducer()
+        ) { dependencies in
+            dependencies.numberFormatter = .noOp
+            dependencies.numberFormatter.number = { _ in NSNumber(0.00501301) }
+        }
 
         store.send(.transactionAmountInput(.textField(.set("0.00501301")))) { state in
             state.transactionAmountInputState.textFieldState.text = "0.00501301"
@@ -351,10 +383,10 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState,
             reducer: SendFlowReducer()
-        )
-        
-        store.dependencies.derivationTool = .noOp
-        store.dependencies.derivationTool.isValidZcashAddress = { _ in true }
+        ) { dependencies in
+            dependencies.derivationTool = .noOp
+            dependencies.derivationTool.isValidZcashAddress = { _ in true }
+        }
 
         store.send(.transactionAddressInput(.textField(.set("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po")))) { state in
             state.transactionAddressInputState.textFieldState.text = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
@@ -389,10 +421,10 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState,
             reducer: SendFlowReducer()
-        )
-        
-        store.dependencies.derivationTool = .noOp
-        store.dependencies.derivationTool.isValidZcashAddress = { _ in true }
+        ) { dependencies in
+            dependencies.derivationTool = .noOp
+            dependencies.derivationTool.isValidZcashAddress = { _ in true }
+        }
 
         store.send(.transactionAddressInput(.textField(.set("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po")))) { state in
             state.transactionAddressInputState.textFieldState.text = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
@@ -427,9 +459,9 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState,
             reducer: SendFlowReducer()
-        )
-        
-        store.dependencies.derivationTool = .noOp
+        ) {
+            $0.derivationTool = .noOp
+        }
 
         store.send(.transactionAddressInput(.textField(.set("3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr")))) { state in
             state.transactionAddressInputState.textFieldState.text = "3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr"
@@ -464,10 +496,10 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState,
             reducer: SendFlowReducer()
-        )
-        
-        store.dependencies.derivationTool = .noOp
-        store.dependencies.derivationTool.isValidZcashAddress = { _ in true }
+        ) { dependencies in
+            dependencies.derivationTool = .noOp
+            dependencies.derivationTool.isValidZcashAddress = { _ in true }
+        }
 
         store.send(.transactionAddressInput(.textField(.set("tmGh6ttAnQRJra81moqYcedFadW9XtUT5Eq")))) { state in
             state.transactionAddressInputState.textFieldState.text = "tmGh6ttAnQRJra81moqYcedFadW9XtUT5Eq"
