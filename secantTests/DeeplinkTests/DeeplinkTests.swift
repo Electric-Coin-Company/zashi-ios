@@ -82,14 +82,14 @@ class DeeplinkTests: XCTestCase {
         let store = TestStore(
             initialState: appState,
             reducer: AppReducer()
-        )
-        
-        store.dependencies.deeplink = DeeplinkClient(
-            resolveDeeplinkURL: { _, _ in Deeplink.Route.home }
-        )
-        let synchronizer = NoopSDKSynchronizer()
-        synchronizer.updateStateChanged(.synced)
-        store.dependencies.sdkSynchronizer = synchronizer
+        ) { dependencies in
+            dependencies.deeplink = DeeplinkClient(
+                resolveDeeplinkURL: { _, _ in Deeplink.Route.home }
+            )
+            let synchronizer = NoopSDKSynchronizer()
+            synchronizer.updateStateChanged(.synced)
+            dependencies.sdkSynchronizer = synchronizer
+        }
 
         guard let url = URL(string: "zcash:///home") else {
             return XCTFail("Deeplink: 'testDeeplinkRequest_homeURL' URL is expected to be valid.")
@@ -125,16 +125,16 @@ class DeeplinkTests: XCTestCase {
         let store = TestStore(
             initialState: appState,
             reducer: AppReducer()
-        )
+        ) { dependencies in
+            dependencies.deeplink = DeeplinkClient(
+                resolveDeeplinkURL: { _, _ in Deeplink.Route.send(amount: 123_000_000, address: "address", memo: "some text") }
+            )
+            dependencies.sdkSynchronizer = synchronizer
+        }
         
         guard let url = URL(string: "zcash:///home/send?address=address&memo=some%20text&amount=123000000") else {
             return XCTFail("Deeplink: 'testDeeplinkRequest_sendURL_amount' URL is expected to be valid.")
         }
-        
-        store.dependencies.deeplink = DeeplinkClient(
-            resolveDeeplinkURL: { _, _ in Deeplink.Route.send(amount: 123_000_000, address: "address", memo: "some text") }
-        )
-        store.dependencies.sdkSynchronizer = synchronizer
 
         _ = await store.send(.deeplink(url))
         

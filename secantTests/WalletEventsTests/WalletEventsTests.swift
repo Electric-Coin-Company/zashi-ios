@@ -76,10 +76,10 @@ class WalletEventsTests: XCTestCase {
                 walletEvents: identifiedWalletEvents
             ),
             reducer: WalletEventsFlowReducer()
-        )
-        
-        store.dependencies.mainQueue = Self.testScheduler.eraseToAnyScheduler()
-        store.dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
+        ) { dependencies in
+            dependencies.mainQueue = Self.testScheduler.eraseToAnyScheduler()
+            dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
+        }
         
         store.send(.synchronizerStateChanged(.synced))
         
@@ -99,6 +99,8 @@ class WalletEventsTests: XCTestCase {
     }
     
     func testCopyToPasteboard() throws {
+        let testPasteboard = PasteboardClient.testPasteboard
+        
         let store = TestStore(
             initialState: WalletEventsFlowReducer.State(
                 route: .latest,
@@ -106,15 +108,15 @@ class WalletEventsTests: XCTestCase {
                 walletEvents: []
             ),
             reducer: WalletEventsFlowReducer()
-        )
-        
-        store.dependencies.pasteboard = .testPasteboard
+        ) {
+            $0.pasteboard = testPasteboard
+        }
 
         let testText = "test text"
         store.send(.copyToPastboard(testText))
         
         XCTAssertEqual(
-            store.dependencies.pasteboard.getString(),
+            testPasteboard.getString(),
             testText,
             "WalletEvetns: `testCopyToPasteboard` is expected to match the input `\(testText)`"
         )

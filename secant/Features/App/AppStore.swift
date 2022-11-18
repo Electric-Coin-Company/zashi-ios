@@ -454,7 +454,7 @@ extension AppStore {
     static var placeholder: AppStore {
         AppStore(
             initialState: .placeholder,
-            reducer: AppReducer()
+            reducer: AppReducer()._printChanges()
         )
     }
 }

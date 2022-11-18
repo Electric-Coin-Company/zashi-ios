@@ -291,7 +291,9 @@ class RecoveryPhraseValidationTests: XCTestCase {
         let store = TestStore(
             initialState: currentStep,
             reducer: RecoveryPhraseValidationFlowReducer()
-        )
+        ) {
+            $0.mainQueue = Self.testScheduler.eraseToAnyScheduler()
+        }
 
         let expectedMissingWordChips = [
             PhraseChip.Kind.empty,
@@ -306,8 +308,6 @@ class RecoveryPhraseValidationTests: XCTestCase {
             ValidationWord(groupIndex: 2, word: "cancel"),
             ValidationWord(groupIndex: 3, word: "pizza")
         ]
-
-        store.dependencies.mainQueue = Self.testScheduler.eraseToAnyScheduler()
 
         store.send(.move(wordChip: PhraseChip.Kind.unassigned(word: "pizza"), intoGroup: 3)) {
             $0.missingWordChips = expectedMissingWordChips
@@ -363,7 +363,10 @@ class RecoveryPhraseValidationTests: XCTestCase {
         let store = TestStore(
             initialState: currentStep,
             reducer: RecoveryPhraseValidationFlowReducer()
-        )
+        ) { dependencies in
+            dependencies.feedbackGenerator = .noOp
+            dependencies.mainQueue = Self.testScheduler.eraseToAnyScheduler()
+        }
 
         let expectedMissingWordChips = [
             PhraseChip.Kind.empty,
@@ -378,9 +381,6 @@ class RecoveryPhraseValidationTests: XCTestCase {
             ValidationWord(groupIndex: 1, word: "cancel"),
             ValidationWord(groupIndex: 3, word: "pizza")
         ]
-
-        store.dependencies.feedbackGenerator = .noOp
-        store.dependencies.mainQueue = Self.testScheduler.eraseToAnyScheduler()
 
         store.send(.move(wordChip: PhraseChip.Kind.unassigned(word: "pizza"), intoGroup: 3)) {
             $0.missingWordChips = expectedMissingWordChips
