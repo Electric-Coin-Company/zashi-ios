@@ -99,7 +99,7 @@ class AppTests: XCTestCase {
         store.send(.respondToWalletInitializationState(.filesMissing)) { state in
             state.appInitializationState = .filesMissing
         }
-        
+
         store.receive(.initializeSDK) { state in
             // failed is expected because environment is throwing errors
             state.appInitializationState = .failed
@@ -107,7 +107,7 @@ class AppTests: XCTestCase {
 
         store.receive(.checkBackupPhraseValidation)
     }
-    
+
     func testRespondToWalletInitializationState_Initialized() throws {
         let store = TestStore(
             initialState: .placeholder,
@@ -116,9 +116,9 @@ class AppTests: XCTestCase {
             dependencies.walletStorage = .noOp
             dependencies.walletStorage.exportWallet = { throw "export failed" }
         }
-        
+
         store.send(.respondToWalletInitializationState(.initialized))
-        
+
         store.receive(.initializeSDK) { state in
             // failed is expected because environment is throwing errors
             state.appInitializationState = .failed

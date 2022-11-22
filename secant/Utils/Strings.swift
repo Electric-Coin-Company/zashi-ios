@@ -9,6 +9,8 @@ extension String {
     }
 }
 
+extension String: Error {}
+
 extension String {
     private static let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}"
     private static let phoneRegex = "^^\\+(?:[0-9]?){6,14}[0-9]$"

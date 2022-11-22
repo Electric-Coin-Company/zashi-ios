@@ -25,26 +25,26 @@ struct TransactionDetailView: View {
                     plainText("fee \(transaction.fee.decimalString()) ZEC", mark: .inactive)
                     plainText("total amount \(transaction.totalAmount.decimalString()) ZEC", mark: .inactive)
                     address(mark: .inactive, viewStore: viewStore)
-                    if let text = transaction.memo { memo(text, viewStore, mark: .highlight) }
+                    if let text = transaction.memo?.toString() { memo(text, viewStore, mark: .highlight) }
                     confirmed(mark: .success, viewStore: viewStore)
                 case .pending:
                     plainText("You are sending \(transaction.zecAmount.decimalString()) ZEC")
                     plainText("Includes network fee \(transaction.fee.decimalString()) ZEC", mark: .inactive)
                     plainText("total amount \(transaction.totalAmount.decimalString()) ZEC", mark: .inactive)
-                    if let text = transaction.memo { memo(text, viewStore, mark: .inactive) }
+                    if let text = transaction.memo?.toString() { memo(text, viewStore, mark: .inactive) }
                     confirming(mark: .highlight, viewStore: viewStore)
                 case .received:
                     plainText("You received \(transaction.zecAmount.decimalString()) ZEC")
                     plainText("fee \(transaction.fee.decimalString()) ZEC")
                     plainText("total amount \(transaction.totalAmount.decimalString()) ZEC")
                     address(mark: .inactive, viewStore: viewStore)
-                    if let text = transaction.memo { memo(text, viewStore, mark: .highlight) }
+                    if let text = transaction.memo?.toString() { memo(text, viewStore, mark: .highlight) }
                     confirmed(mark: .success, viewStore: viewStore)
                 case .failed:
                     plainText("You DID NOT send \(transaction.zecAmount.decimalString()) ZEC", mark: .fail)
                     plainText("Includes network fee \(transaction.fee.decimalString()) ZEC", mark: .inactive)
                     plainText("total amount \(transaction.totalAmount.decimalString()) ZEC", mark: .inactive)
-                    if let text = transaction.memo { memo(text, viewStore, mark: .inactive) }
+                    if let text = transaction.memo?.toString() { memo(text, viewStore, mark: .inactive) }
                     if let errorMessage = transaction.errorMessage {
                         plainTwoColumnText(left: "Failed", right: errorMessage, mark: .fail)
                     }
@@ -253,12 +253,12 @@ struct TransactionDetail_Previews: PreviewProvider {
                 transaction:
                     TransactionState(
                         errorMessage: "possible roll back",
-                        memo:
+                        memo: try? Memo(string:
                         """
                         Testing some long memo so I can see many lines of text \
                         instead of just one. This can take some time and I'm \
                         bored to write all this stuff.
-                        """,
+                        """),
                         minedHeight: 1_875_256,
                         zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
                         fee: Zatoshi(1_000_000),

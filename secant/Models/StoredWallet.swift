@@ -22,7 +22,7 @@ struct StoredWallet: Codable, Equatable {
 extension StoredWallet {
     static let placeholder = Self(
         language: .english,
-        seedPhrase: "",
+        seedPhrase: RecoveryPhrase.testPhrase.joined(separator: " "),
         version: 0,
         birthday: 0,
         hasUserPassedPhraseBackupTest: false

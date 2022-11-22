@@ -19,7 +19,7 @@ struct TransactionState: Equatable, Identifiable {
 
     var errorMessage: String?
     var expirationHeight = -1
-    var memo: String?
+    var memo: Memo?
     var minedHeight = -1
     var shielded = true
     var zAddress: String?
@@ -55,8 +55,8 @@ extension TransactionState {
         zAddress = confirmedTransaction.toAddress
         zecAmount = sent ? Zatoshi(-confirmedTransaction.value.amount) : confirmedTransaction.value
         fee = Zatoshi(10)
-        if let memo = confirmedTransaction.memo {
-            self.memo = memo.asZcashTransactionMemo()
+        if let memoData = confirmedTransaction.memo {
+            self.memo = try? Memo(bytes: Array(memoData))
         }
         minedHeight = confirmedTransaction.minedHeight
     }
@@ -70,14 +70,20 @@ extension TransactionState {
             .paid(success: pendingTransaction.isSubmitSuccess) :
             .pending
         expirationHeight = pendingTransaction.expiryHeight
-        zAddress = pendingTransaction.toAddress
         zecAmount = pendingTransaction.value
         fee = Zatoshi(10)
-        if let memo = pendingTransaction.memo {
-            self.memo = memo.asZcashTransactionMemo()
+        if let memoData = pendingTransaction.memo {
+            self.memo = try? Memo(bytes: Array(memoData))
         }
         minedHeight = pendingTransaction.minedHeight
         errorMessage = pendingTransaction.errorMessage
+
+        switch pendingTransaction.recipient {
+        case let .address(recipient):
+            zAddress = recipient.stringEncoded
+        case .internalAccount:
+            zAddress = nil
+        }
     }
 }
 
