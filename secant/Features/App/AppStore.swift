@@ -2,7 +2,7 @@ import ComposableArchitecture
 import ZcashLightClientKit
 import Foundation
 
-typealias AppStore = Store<AppReducer.State, AppReducer.Action>
+typealias RootStore = Store<AppReducer.State, AppReducer.Action>
 typealias AppViewStore = ViewStore<AppReducer.State, AppReducer.Action>
 
 // swiftlint:disable type_body_length
