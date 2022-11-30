@@ -51,7 +51,7 @@ struct RecoveryPhraseValidationFlowView: View {
                         }
 
                         Button(
-                            action: { viewStore.send(.updateRoute(.validation)) },
+                            action: { viewStore.send(.updateDestination(.validation)) },
                             label: { Text("recoveryPhraseTestPreamble.button.goNext") }
                         )
                         .activeButtonStyle

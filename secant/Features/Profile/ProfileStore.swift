@@ -6,7 +6,7 @@ typealias ProfileViewStore = ViewStore<ProfileReducer.State, ProfileReducer.Acti
 
 struct ProfileReducer: ReducerProtocol {
     struct State: Equatable {
-        enum Route {
+        enum Destination {
             case addressDetails
             case settings
         }
@@ -15,7 +15,7 @@ struct ProfileReducer: ReducerProtocol {
         var addressDetailsState: AddressDetailsReducer.State
         var appBuild = ""
         var appVersion = ""
-        var route: Route?
+        var destination: Destination?
         var sdkVersion = ""
         var settingsState: SettingsReducer.State
     }
@@ -26,7 +26,7 @@ struct ProfileReducer: ReducerProtocol {
         case onAppear
         case onAppearFinished(String)
         case settings(SettingsReducer.Action)
-        case updateRoute(ProfileReducer.State.Route?)
+        case updateDestination(ProfileReducer.State.Destination?)
     }
     
     @Dependency(\.appVersion) var appVersion
@@ -60,8 +60,8 @@ struct ProfileReducer: ReducerProtocol {
             case .back:
                 return .none
                 
-            case let .updateRoute(route):
-                state.route = route
+            case let .updateDestination(destination):
+                state.destination = destination
                 return .none
                 
             case .addressDetails:
@@ -88,22 +88,22 @@ extension ProfileStore {
 // MARK: - ViewStore
 
 extension ProfileViewStore {
-    var routeBinding: Binding<ProfileReducer.State.Route?> {
+    var destinationBinding: Binding<ProfileReducer.State.Destination?> {
         self.binding(
-            get: \.route,
-            send: ProfileReducer.Action.updateRoute
+            get: \.destination,
+            send: ProfileReducer.Action.updateDestination
         )
     }
 
     var bindingForAddressDetails: Binding<Bool> {
-        self.routeBinding.map(
+        self.destinationBinding.map(
             extract: { $0 == .addressDetails },
             embed: { $0 ? .addressDetails : nil }
         )
     }
 
     var bindingForSettings: Binding<Bool> {
-        self.routeBinding.map(
+        self.destinationBinding.map(
             extract: { $0 == .settings },
             embed: { $0 ? .settings : nil }
         )
@@ -116,7 +116,7 @@ extension ProfileReducer.State {
     static var placeholder: Self {
         .init(
             addressDetailsState: .placeholder,
-            route: nil,
+            destination: nil,
             settingsState: .placeholder
         )
     }

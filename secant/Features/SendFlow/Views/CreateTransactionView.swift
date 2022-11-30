@@ -71,7 +71,7 @@ struct CreateTransaction: View {
                 .padding()
                 
                 Button(
-                    action: { viewStore.send(.updateRoute(.confirmation)) },
+                    action: { viewStore.send(.updateDestination(.confirmation)) },
                     label: { Text("Send") }
                 )
                 .activeButtonStyle

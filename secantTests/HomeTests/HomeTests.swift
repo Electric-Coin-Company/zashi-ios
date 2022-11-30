@@ -85,8 +85,8 @@ class HomeTests: XCTestCase {
             reducer: HomeReducer()
         )
         
-        store.send(.walletEvents(.updateRoute(.all))) { state in
-            state.walletEventsState.route = .all
+        store.send(.walletEvents(.updateDestination(.all))) { state in
+            state.walletEventsState.destination = .all
         }
                    
         store.receive(.updateDrawer(.full)) { state in
@@ -113,8 +113,8 @@ class HomeTests: XCTestCase {
             reducer: HomeReducer()
         )
         
-        store.send(.walletEvents(.updateRoute(.latest))) { state in
-            state.walletEventsState.route = .latest
+        store.send(.walletEvents(.updateDestination(.latest))) { state in
+            state.walletEventsState.destination = .latest
         }
                    
         store.receive(.updateDrawer(.partial)) { state in
@@ -138,7 +138,7 @@ class HomeTests: XCTestCase {
         }
         
         // expected side effects as a result of .onAppear registration
-        store.receive(.updateRoute(nil))
+        store.receive(.updateDestination(nil))
         store.receive(.synchronizerStateChanged(.unknown))
         store.receive(.updateSynchronizerStatus)
 
@@ -160,8 +160,8 @@ class HomeTests: XCTestCase {
         }
 
         // expected side effects as a result of .onAppear registration
-        store.receive(.updateRoute(.notEnoughFreeDiskSpace)) { state in
-            state.route = .notEnoughFreeDiskSpace
+        store.receive(.updateDestination(.notEnoughFreeDiskSpace)) { state in
+            state.destination = .notEnoughFreeDiskSpace
         }
 
         // long-living (cancelable) effects need to be properly canceled.
@@ -171,7 +171,7 @@ class HomeTests: XCTestCase {
 
     @MainActor func testQuickRescan_ResetToHomeScreen() async throws {
         let homeState = HomeReducer.State(
-            route: .profile,
+            destination: .profile,
             balanceBreakdownState: .placeholder,
             drawerOverlay: .full,
             profileState: .placeholder,
@@ -189,7 +189,7 @@ class HomeTests: XCTestCase {
         )
 
         _ = await store.send(.profile(.settings(.quickRescan))) { state in
-            state.route = nil
+            state.destination = nil
         }
 
         await store.receive(.rewindDone(true, .quickRescan))
@@ -197,7 +197,7 @@ class HomeTests: XCTestCase {
 
     @MainActor func testFullRescan_ResetToHomeScreen() async throws {
         let homeState = HomeReducer.State(
-            route: .profile,
+            destination: .profile,
             balanceBreakdownState: .placeholder,
             drawerOverlay: .full,
             profileState: .placeholder,
@@ -215,7 +215,7 @@ class HomeTests: XCTestCase {
         )
 
         _ = await store.send(.profile(.settings(.fullRescan))) { state in
-            state.route = nil
+            state.destination = nil
         }
 
         await store.receive(.rewindDone(true, .fullRescan))

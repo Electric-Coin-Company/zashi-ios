@@ -11,12 +11,12 @@ import ComposableArchitecture
 import ZcashLightClientKit
 
 struct Deeplink {
-    enum Route: Equatable {
+    enum Destination: Equatable {
         case home
         case send(amount: Int64, address: String, memo: String)
     }
     
-    func resolveDeeplinkURL(_ url: URL, isValidZcashAddress: (String) throws -> Bool) throws -> Route {
+    func resolveDeeplinkURL(_ url: URL, isValidZcashAddress: (String) throws -> Bool) throws -> Destination {
         // simplified format zcash:<address>
         // TODO [#109]: simplified for now until ZIP-321 is implememnted (https://github.com/zcash/secant-ios-wallet/issues/109)
         let address = url.absoluteString.replacingOccurrences(of: "zcash:", with: "")
@@ -29,12 +29,12 @@ struct Deeplink {
         // regular URL format zcash://
         let appRouter = OneOf {
             // GET /home
-            URLRouting.Route(.case(Route.home)) {
+            Route(.case(Destination.home)) {
                 Path { "home" }
             }
 
             // GET /home/send?amount=:amount&address=:address&memo=:memo
-            URLRouting.Route(.case(Route.send(amount:address:memo:))) {
+            Route(.case(Destination.send(amount:address:memo:))) {
                 Path { "home"; "send" }
                 Query {
                     Field("amount", default: 0) { Int64.parser() }

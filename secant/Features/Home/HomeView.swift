@@ -27,12 +27,12 @@ struct HomeView: View {
                 .navigationBarHidden(true)
                 .onAppear(perform: { viewStore.send(.onAppear) })
                 .onDisappear(perform: { viewStore.send(.onDisappear) })
-                .fullScreenCover(isPresented: viewStore.bindingForRoute(.balanceBreakdown)) {
+                .fullScreenCover(isPresented: viewStore.bindingForDestination(.balanceBreakdown)) {
                     BalanceBreakdownView(store: store.balanceBreakdownStore())
                 }
             }
             .navigationLinkEmpty(
-                isActive: viewStore.bindingForRoute(.notEnoughFreeDiskSpace),
+                isActive: viewStore.bindingForDestination(.notEnoughFreeDiskSpace),
                 destination: { NotEnoughFreeSpaceView(viewStore: viewStore) }
             )
         }
@@ -52,7 +52,7 @@ extension HomeView {
                     .frame(width: 60, height: 60)
                     .padding(.trailing, 15)
                     .navigationLink(
-                        isActive: viewStore.bindingForRoute(.profile),
+                        isActive: viewStore.bindingForDestination(.profile),
                         destination: {
                             ProfileView(store: store.profileStore())
                         }
@@ -82,7 +82,7 @@ extension HomeView {
                 .padding(.horizontal, 50)
                 .neumorphicButton()
                 .navigationLink(
-                    isActive: viewStore.bindingForRoute(.send),
+                    isActive: viewStore.bindingForDestination(.send),
                     destination: {
                         SendFlowView(store: store.sendStore())
                     }
@@ -101,7 +101,7 @@ extension HomeView {
                     .padding(.top, 7)
                     .padding(.leading, 22)
                     .navigationLink(
-                        isActive: viewStore.bindingForRoute(.scan),
+                        isActive: viewStore.bindingForDestination(.scan),
                         destination: {
                             ScanView(store: store.scanStore())
                         }
@@ -128,7 +128,7 @@ extension HomeView {
                 
                 VStack {
                     Button {
-                        viewStore.send(.updateRoute(.balanceBreakdown))
+                        viewStore.send(.updateDestination(.balanceBreakdown))
                     } label: {
                         Text("$\(viewStore.shieldedBalance.total.decimalString())")
                             .font(.custom(FontFamily.Zboto.regular.name, size: 40))

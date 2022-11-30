@@ -70,8 +70,8 @@ class AppTests: XCTestCase {
         
         Self.testScheduler.advance(by: 3)
 
-        store.receive(.updateRoute(.onboarding)) {
-            $0.route = .onboarding
+        store.receive(.updateDestination(.onboarding)) {
+            $0.destination = .onboarding
             $0.appInitializationState = .uninitialized
         }
     }

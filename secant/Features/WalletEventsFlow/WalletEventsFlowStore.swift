@@ -9,13 +9,13 @@ struct WalletEventsFlowReducer: ReducerProtocol {
     private enum CancelId {}
 
     struct State: Equatable {
-        enum Route: Equatable {
+        enum Destination: Equatable {
             case latest
             case all
             case showWalletEvent(WalletEvent)
         }
 
-        var route: Route?
+        var destination: Destination?
 
         @BindableState var alert: AlertState<WalletEventsFlowReducer.Action>?
         var latestMinedHeight: BlockHeight?
@@ -31,7 +31,7 @@ struct WalletEventsFlowReducer: ReducerProtocol {
         case onAppear
         case onDisappear
         case openBlockExplorer(URL?)
-        case updateRoute(WalletEventsFlowReducer.State.Route?)
+        case updateDestination(WalletEventsFlowReducer.State.Destination?)
         case replyTo(String)
         case synchronizerStateChanged(SDKSynchronizerState)
         case updateWalletEvents([WalletEvent])
@@ -76,14 +76,14 @@ struct WalletEventsFlowReducer: ReducerProtocol {
             state.walletEvents = IdentifiedArrayOf(uniqueElements: sortedWalletEvents)
             return .none
 
-        case .updateRoute(.showWalletEvent(let walletEvent)):
+        case .updateDestination(.showWalletEvent(let walletEvent)):
             state.selectedWalletEvent = walletEvent
-            state.route = .showWalletEvent(walletEvent)
+            state.destination = .showWalletEvent(walletEvent)
             return .none
 
-        case .updateRoute(let route):
-            state.route = route
-            if route == nil {
+        case .updateDestination(let destination):
+            state.destination = destination
+            if destination == nil {
                 state.selectedWalletEvent = nil
             }
             return .none
@@ -130,7 +130,7 @@ struct WalletEventsFlowReducer: ReducerProtocol {
 // MARK: - ViewStore
 
 extension WalletEventsFlowViewStore {
-    private typealias Route = WalletEventsFlowReducer.State.Route
+    private typealias Destination = WalletEventsFlowReducer.State.Destination
 
     func bindingForSelectedWalletEvent(_ walletEvent: WalletEvent?) -> Binding<Bool> {
         self.binding(
@@ -139,14 +139,14 @@ extension WalletEventsFlowViewStore {
                     return false
                 }
                 
-                return $0.route.map(/WalletEventsFlowReducer.State.Route.showWalletEvent) == walletEvent
+                return $0.destination.map(/WalletEventsFlowReducer.State.Destination.showWalletEvent) == walletEvent
             },
             send: { isActive in
                 guard let walletEvent = walletEvent else {
-                    return WalletEventsFlowReducer.Action.updateRoute(nil)
+                    return WalletEventsFlowReducer.Action.updateDestination(nil)
                 }
                 
-                return WalletEventsFlowReducer.Action.updateRoute( isActive ? WalletEventsFlowReducer.State.Route.showWalletEvent(walletEvent) : nil)
+                return WalletEventsFlowReducer.Action.updateDestination( isActive ? WalletEventsFlowReducer.State.Destination.showWalletEvent(walletEvent) : nil)
             }
         )
     }

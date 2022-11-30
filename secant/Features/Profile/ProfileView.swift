@@ -17,7 +17,7 @@ struct ProfileView: View {
                     .padding(30)
 
                 Button(
-                    action: { viewStore.send(.updateRoute(.addressDetails)) },
+                    action: { viewStore.send(.updateDestination(.addressDetails)) },
                     label: { Text("See address details") }
                 )
                 .activeButtonStyle
@@ -30,7 +30,7 @@ struct ProfileView: View {
                     .foregroundColor(Asset.Colors.TextField.Underline.purple.color)
 
                 Button(
-                    action: { viewStore.send(.updateRoute(.settings)) },
+                    action: { viewStore.send(.updateDestination(.settings)) },
                     label: { Text("Settings") }
                 )
                 .primaryButtonStyle

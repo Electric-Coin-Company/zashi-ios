@@ -47,7 +47,7 @@ struct OnboardingFooterView: View {
                 }
             }
             .navigationLinkEmpty(
-                isActive: viewStore.bindingForRoute(.importExistingWallet),
+                isActive: viewStore.bindingForDestination(.importExistingWallet),
                 destination: {
                     ImportWalletView(
                         store: store.scope(

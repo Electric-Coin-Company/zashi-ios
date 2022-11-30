@@ -10,7 +10,7 @@ struct TransactionFailed: View {
             
             Button(
                 action: {
-                    viewStore.send(.updateRoute(.done))
+                    viewStore.send(.updateDestination(.done))
                 },
                 label: { Text("Close") }
             )

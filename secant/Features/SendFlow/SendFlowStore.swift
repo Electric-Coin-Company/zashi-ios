@@ -16,7 +16,7 @@ struct SendFlowReducer: ReducerProtocol {
     private enum SyncStatusUpdatesID {}
 
     struct State: Equatable {
-        enum Route: Equatable {
+        enum Destination: Equatable {
             case confirmation
             case inProgress
             case success
@@ -27,7 +27,7 @@ struct SendFlowReducer: ReducerProtocol {
         var addMemoState: Bool
         var isSendingTransaction = false
         var memoState: MultiLineTextFieldReducer.State
-        var route: Route?
+        var destination: Destination?
         var shieldedBalance = WalletBalance.zero
         var transactionAddressInputState: TransactionAddressTextFieldReducer.State
         var transactionAmountInputState: TransactionAmountTextFieldReducer.State
@@ -83,7 +83,7 @@ struct SendFlowReducer: ReducerProtocol {
         case synchronizerStateChanged(SDKSynchronizerState)
         case transactionAddressInput(TransactionAddressTextFieldReducer.Action)
         case transactionAmountInput(TransactionAmountTextFieldReducer.Action)
-        case updateRoute(SendFlowReducer.State.Route?)
+        case updateDestination(SendFlowReducer.State.Destination?)
     }
     
     @Dependency(\.derivationTool) var derivationTool
@@ -115,27 +115,27 @@ struct SendFlowReducer: ReducerProtocol {
             case .addMemo:
                 return .none
 
-            case .updateRoute(.done):
-                state.route = nil
+            case .updateDestination(.done):
+                state.destination = nil
                 state.memoState.text = ""
                 state.transactionAmountInputState.textFieldState.text = ""
                 state.transactionAmountInputState.amount = 0
                 state.transactionAddressInputState.textFieldState.text = ""
                 return .none
 
-            case .updateRoute(.failure):
-                state.route = .failure
+            case .updateDestination(.failure):
+                state.destination = .failure
                 state.isSendingTransaction = false
                 return .none
 
-            case .updateRoute(.confirmation):
+            case .updateDestination(.confirmation):
                 state.amount = Zatoshi(state.transactionAmountInputState.amount)
                 state.address = state.transactionAddressInputState.textFieldState.text
-                state.route = .confirmation
+                state.destination = .confirmation
                 return .none
                 
-            case let .updateRoute(route):
-                state.route = route
+            case let .updateDestination(destination):
+                state.destination = destination
                 return .none
                 
             case .sendConfirmationPressed:
@@ -169,20 +169,20 @@ struct SendFlowReducer: ReducerProtocol {
                     .eraseToEffect()
 
                     return .concatenate(
-                        Effect(value: .updateRoute(.inProgress)),
+                        Effect(value: .updateDestination(.inProgress)),
                         sendTransActionEffect
                     )
                 } catch {
-                    return Effect(value: .updateRoute(.failure))
+                    return Effect(value: .updateDestination(.failure))
                 }
                 
             case .sendTransactionResult(let result):
                 state.isSendingTransaction = false
                 do {
                     _ = try result.get()
-                    return Effect(value: .updateRoute(.success))
+                    return Effect(value: .updateDestination(.success))
                 } catch {
-                    return Effect(value: .updateRoute(.failure))
+                    return Effect(value: .updateDestination(.failure))
                 }
                 
             case .transactionAmountInput:
@@ -239,47 +239,47 @@ extension SendFlowStore {
 // MARK: - ViewStore
 
 extension SendFlowViewStore {
-    var routeBinding: Binding<SendFlowReducer.State.Route?> {
+    var destinationBinding: Binding<SendFlowReducer.State.Destination?> {
         self.binding(
-            get: \.route,
-            send: SendFlowReducer.Action.updateRoute
+            get: \.destination,
+            send: SendFlowReducer.Action.updateDestination
         )
     }
 
     var bindingForConfirmation: Binding<Bool> {
-        self.routeBinding.map(
+        self.destinationBinding.map(
             extract: {
                 $0 == .confirmation ||
                 $0 == .inProgress ||
                 $0 == .success ||
                 $0 == .failure
             },
-            embed: { $0 ? SendFlowReducer.State.Route.confirmation : nil }
+            embed: { $0 ? SendFlowReducer.State.Destination.confirmation : nil }
         )
     }
 
     var bindingForInProgress: Binding<Bool> {
-        self.routeBinding.map(
+        self.destinationBinding.map(
             extract: {
                 $0 == .inProgress ||
                 $0 == .success ||
                 $0 == .failure
             },
-            embed: { $0 ? SendFlowReducer.State.Route.inProgress : SendFlowReducer.State.Route.confirmation }
+            embed: { $0 ? SendFlowReducer.State.Destination.inProgress : SendFlowReducer.State.Destination.confirmation }
         )
     }
 
     var bindingForSuccess: Binding<Bool> {
-        self.routeBinding.map(
+        self.destinationBinding.map(
             extract: { $0 == .success },
-            embed: { _ in SendFlowReducer.State.Route.success }
+            embed: { _ in SendFlowReducer.State.Destination.success }
         )
     }
 
     var bindingForFailure: Binding<Bool> {
-        self.routeBinding.map(
+        self.destinationBinding.map(
             extract: { $0 == .failure },
-            embed: { _ in SendFlowReducer.State.Route.failure }
+            embed: { _ in SendFlowReducer.State.Destination.failure }
         )
     }
 }
@@ -291,7 +291,7 @@ extension SendFlowReducer.State {
         .init(
             addMemoState: true,
             memoState: .placeholder,
-            route: nil,
+            destination: nil,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState: .amount
         )
@@ -301,7 +301,7 @@ extension SendFlowReducer.State {
         .init(
             addMemoState: true,
             memoState: .placeholder,
-            route: nil,
+            destination: nil,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState: .placeholder
         )

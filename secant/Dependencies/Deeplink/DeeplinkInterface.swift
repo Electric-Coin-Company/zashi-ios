@@ -17,5 +17,5 @@ extension DependencyValues {
 }
 
 struct DeeplinkClient {
-    let resolveDeeplinkURL: (URL, DerivationToolClient) throws -> Deeplink.Route
+    let resolveDeeplinkURL: (URL, DerivationToolClient) throws -> Deeplink.Destination
 }

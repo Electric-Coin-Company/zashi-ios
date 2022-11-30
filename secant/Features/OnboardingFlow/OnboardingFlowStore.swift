@@ -14,7 +14,7 @@ typealias OnboardingFlowViewStore = ViewStore<OnboardingFlowReducer.State, Onboa
 
 struct OnboardingFlowReducer: ReducerProtocol {
     struct State: Equatable {
-        enum Route: Equatable, CaseIterable {
+        enum Destination: Equatable, CaseIterable {
             case createNewWallet
             case importExistingWallet
         }
@@ -30,7 +30,7 @@ struct OnboardingFlowReducer: ReducerProtocol {
         var steps: IdentifiedArrayOf<Step> = Self.onboardingSteps
         var index = 0
         var skippedAtindex: Int?
-        var route: Route?
+        var destination: Destination?
 
         var currentStep: Step { steps[index] }
         var isFinalStep: Bool { steps.count == index + 1 }
@@ -51,7 +51,7 @@ struct OnboardingFlowReducer: ReducerProtocol {
         case next
         case back
         case skip
-        case updateRoute(OnboardingFlowReducer.State.Route?)
+        case updateDestination(OnboardingFlowReducer.State.Destination?)
         case createNewWallet
         case importExistingWallet
         case importWallet(ImportWalletReducer.Action)
@@ -85,16 +85,16 @@ struct OnboardingFlowReducer: ReducerProtocol {
                 state.index = state.steps.count - 1
                 return .none
                 
-            case .updateRoute(let route):
-                state.route = route
+            case .updateDestination(let destination):
+                state.destination = destination
                 return .none
 
             case .createNewWallet:
-                state.route = .createNewWallet
+                state.destination = .createNewWallet
                 return .none
 
             case .importExistingWallet:
-                state.route = .importExistingWallet
+                state.destination = .importExistingWallet
                 return .none
                 
             case .importWallet:
@@ -142,11 +142,11 @@ extension OnboardingFlowReducer.State {
 // MARK: - ViewStore
 
 extension OnboardingFlowViewStore {
-    func bindingForRoute(_ route: OnboardingFlowReducer.State.Route) -> Binding<Bool> {
+    func bindingForDestination(_ destination: OnboardingFlowReducer.State.Destination) -> Binding<Bool> {
         self.binding(
-            get: { $0.route == route },
+            get: { $0.destination == destination },
             send: { isActive in
-                return .updateRoute(isActive ? route : nil)
+                return .updateDestination(isActive ? destination : nil)
             }
         )
     }

@@ -6,13 +6,13 @@ typealias SettingsViewStore = ViewStore<SettingsReducer.State, SettingsReducer.A
 
 struct SettingsReducer: ReducerProtocol {
     struct State: Equatable {
-        enum Route {
+        enum Destination {
             case backupPhrase
         }
 
         var phraseDisplayState: RecoveryPhraseDisplayReducer.State
         var rescanDialog: ConfirmationDialogState<SettingsReducer.Action>?
-        var route: Route?
+        var destination: Destination?
     }
 
     enum Action: Equatable {
@@ -23,7 +23,7 @@ struct SettingsReducer: ReducerProtocol {
         case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
         case quickRescan
         case rescanBlockchain
-        case updateRoute(SettingsReducer.State.Route?)
+        case updateDestination(SettingsReducer.State.Destination?)
     }
     
     @Dependency(\.localAuthentication) var localAuthentication
@@ -47,7 +47,7 @@ struct SettingsReducer: ReducerProtocol {
                     let phraseWords = try mnemonic.asWords(storedWallet.seedPhrase)
                     let recoveryPhrase = RecoveryPhrase(words: phraseWords)
                     state.phraseDisplayState.phrase = recoveryPhrase
-                    return Effect(value: .updateRoute(.backupPhrase))
+                    return Effect(value: .updateDestination(.backupPhrase))
                 } catch {
                     // TODO [#201]: - merge with issue 201 (https://github.com/zcash/secant-ios-wallet/issues/201) and its Error States
                     return .none
@@ -70,11 +70,11 @@ struct SettingsReducer: ReducerProtocol {
                 return .none
                 
             case .phraseDisplay:
-                state.route = nil
+                state.destination = nil
                 return .none
                 
-            case .updateRoute(let route):
-                state.route = route
+            case .updateDestination(let destination):
+                state.destination = destination
                 return .none
             }
         }
@@ -88,15 +88,15 @@ struct SettingsReducer: ReducerProtocol {
 // MARK: - ViewStore
 
 extension SettingsViewStore {
-    var routeBinding: Binding<SettingsReducer.State.Route?> {
+    var destinationBinding: Binding<SettingsReducer.State.Destination?> {
         self.binding(
-            get: \.route,
-            send: SettingsReducer.Action.updateRoute
+            get: \.destination,
+            send: SettingsReducer.Action.updateDestination
         )
     }
 
     var bindingForBackupPhrase: Binding<Bool> {
-        self.routeBinding.map(
+        self.destinationBinding.map(
             extract: { $0 == .backupPhrase },
             embed: { $0 ? .backupPhrase : nil }
         )

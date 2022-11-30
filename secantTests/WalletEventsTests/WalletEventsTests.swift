@@ -16,7 +16,7 @@ class WalletEventsTests: XCTestCase {
     func testSynchronizerSubscription() throws {
         let store = TestStore(
             initialState: WalletEventsFlowReducer.State(
-                route: .latest,
+                destination: .latest,
                 isScrollable: true,
                 walletEvents: []
             ),
@@ -71,7 +71,7 @@ class WalletEventsTests: XCTestCase {
         
         let store = TestStore(
             initialState: WalletEventsFlowReducer.State(
-                route: .latest,
+                destination: .latest,
                 isScrollable: true,
                 walletEvents: identifiedWalletEvents
             ),
@@ -103,7 +103,7 @@ class WalletEventsTests: XCTestCase {
         
         let store = TestStore(
             initialState: WalletEventsFlowReducer.State(
-                route: .latest,
+                destination: .latest,
                 isScrollable: true,
                 walletEvents: []
             ),

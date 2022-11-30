@@ -8,7 +8,7 @@ struct AppView: View {
     var body: some View {
         WithViewStore(store) { viewStore in
             Group {
-                switch viewStore.route {
+                switch viewStore.destination {
                 case .home:
                     NavigationView {
                         HomeView(
@@ -86,21 +86,21 @@ struct AppView: View {
 private extension AppView {
     @ViewBuilder func debugView(_ viewStore: AppViewStore) -> some View {
         List {
-            Section(header: Text("Navigation Stack Routes")) {
+            Section(header: Text("Navigation Stack Destinations")) {
                 Button("Go To Sandbox (navigation proof)") {
-                    viewStore.send(.updateRoute(.sandbox))
+                    viewStore.send(.updateDestination(.sandbox))
                 }
                 
                 Button("Go To Onboarding") {
-                    viewStore.send(.updateRoute(.onboarding))
+                    viewStore.send(.updateDestination(.onboarding))
                 }
                 
                 Button("Go To Phrase Validation Demo") {
-                    viewStore.send(.updateRoute(.phraseValidation))
+                    viewStore.send(.updateDestination(.phraseValidation))
                 }
                 
                 Button("Restart the app") {
-                    viewStore.send(.updateRoute(.welcome))
+                    viewStore.send(.updateDestination(.welcome))
                 }
                 
                 Button("[Be careful] Nuke Wallet") {
