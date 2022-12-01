@@ -12,9 +12,9 @@ import ZcashLightClientKit
 
 @MainActor
 class DeeplinkTests: XCTestCase {
-    func testActionDeeplinkHome_SameRouteLevel() throws {
+    func testActionDeeplinkHome_SameDestinationLevel() throws {
         var appState = AppReducer.State.placeholder
-        appState.route = .welcome
+        appState.destination = .welcome
         
         let store = TestStore(
             initialState: appState,
@@ -22,14 +22,14 @@ class DeeplinkTests: XCTestCase {
         )
         
         store.send(.deeplinkHome) { state in
-            state.route = .home
+            state.destination = .home
         }
     }
 
     func testActionDeeplinkHome_GeetingBack() throws {
         var appState = AppReducer.State.placeholder
-        appState.route = .home
-        appState.homeState.route = .send
+        appState.destination = .home
+        appState.homeState.destination = .send
         
         let store = TestStore(
             initialState: appState,
@@ -37,14 +37,14 @@ class DeeplinkTests: XCTestCase {
         )
         
         store.send(.deeplinkHome) { state in
-            state.route = .home
-            state.homeState.route = nil
+            state.destination = .home
+            state.homeState.destination = nil
         }
     }
     
     func testActionDeeplinkSend() throws {
         var appState = AppReducer.State.placeholder
-        appState.route = .welcome
+        appState.destination = .welcome
         
         let store = TestStore(
             initialState: appState,
@@ -56,8 +56,8 @@ class DeeplinkTests: XCTestCase {
         let memo = "testing some memo"
         
         store.send(.deeplinkSend(amount, address, memo)) { state in
-            state.route = .home
-            state.homeState.route = .send
+            state.destination = .home
+            state.homeState.destination = .send
             state.homeState.sendState.amount = amount
             state.homeState.sendState.address = address
             state.homeState.sendState.memoState.text = memo
@@ -71,12 +71,12 @@ class DeeplinkTests: XCTestCase {
 
         let result = try Deeplink().resolveDeeplinkURL(url, isValidZcashAddress: { _ in false })
         
-        XCTAssertEqual(result, Deeplink.Route.home)
+        XCTAssertEqual(result, Deeplink.Destination.home)
     }
 
     func testDeeplinkRequest_Received_Home() async throws {
         var appState = AppReducer.State.placeholder
-        appState.route = .welcome
+        appState.destination = .welcome
         appState.appInitializationState = .initialized
         
         let store = TestStore(
@@ -84,7 +84,7 @@ class DeeplinkTests: XCTestCase {
             reducer: AppReducer()
         ) { dependencies in
             dependencies.deeplink = DeeplinkClient(
-                resolveDeeplinkURL: { _, _ in Deeplink.Route.home }
+                resolveDeeplinkURL: { _, _ in Deeplink.Destination.home }
             )
             let synchronizer = NoopSDKSynchronizer()
             synchronizer.updateStateChanged(.synced)
@@ -98,7 +98,7 @@ class DeeplinkTests: XCTestCase {
         _ = await store.send(.deeplink(url))
         
         await store.receive(.deeplinkHome) { state in
-            state.route = .home
+            state.destination = .home
         }
         
         await store.finish()
@@ -111,7 +111,7 @@ class DeeplinkTests: XCTestCase {
 
         let result = try Deeplink().resolveDeeplinkURL(url, isValidZcashAddress: { _ in false })
         
-        XCTAssertEqual(result, Deeplink.Route.send(amount: 123_000_000, address: "address", memo: "some text"))
+        XCTAssertEqual(result, Deeplink.Destination.send(amount: 123_000_000, address: "address", memo: "some text"))
     }
     
     func testDeeplinkRequest_Received_Send() async throws {
@@ -119,7 +119,7 @@ class DeeplinkTests: XCTestCase {
         synchronizer.updateStateChanged(.synced)
         
         var appState = AppReducer.State.placeholder
-        appState.route = .welcome
+        appState.destination = .welcome
         appState.appInitializationState = .initialized
         
         let store = TestStore(
@@ -127,7 +127,7 @@ class DeeplinkTests: XCTestCase {
             reducer: AppReducer()
         ) { dependencies in
             dependencies.deeplink = DeeplinkClient(
-                resolveDeeplinkURL: { _, _ in Deeplink.Route.send(amount: 123_000_000, address: "address", memo: "some text") }
+                resolveDeeplinkURL: { _, _ in Deeplink.Destination.send(amount: 123_000_000, address: "address", memo: "some text") }
             )
             dependencies.sdkSynchronizer = synchronizer
         }
@@ -143,8 +143,8 @@ class DeeplinkTests: XCTestCase {
         let memo = "some text"
 
         await store.receive(.deeplinkSend(amount, address, memo)) { state in
-            state.route = .home
-            state.homeState.route = .send
+            state.destination = .home
+            state.homeState.destination = .send
             state.homeState.sendState.amount = amount
             state.homeState.sendState.address = address
             state.homeState.sendState.memoState.text = memo

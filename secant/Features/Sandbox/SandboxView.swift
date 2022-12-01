@@ -2,25 +2,25 @@ import SwiftUI
 import ComposableArchitecture
 
 struct SandboxView: View {
-    struct SandboxRouteValue: Identifiable {
+    struct SandboxDestinationValue: Identifiable {
         let id: Int
-        let route: SandboxReducer.State.Route
+        let destination: SandboxReducer.State.Destination
     }
     
     let store: SandboxStore
 
-    var navigationRouteValues: [SandboxRouteValue] = SandboxReducer.State.Route.allCases
+    var navigationDestinationValues: [SandboxDestinationValue] = SandboxReducer.State.Destination.allCases
         .enumerated()
         .filter { $0.1 != .history }
-        .map { SandboxRouteValue(id: $0.0, route: $0.1) }
+        .map { SandboxDestinationValue(id: $0.0, destination: $0.1) }
 
-    var modalRoutes: [SandboxRouteValue] = SandboxReducer.State.Route.allCases
+    var modalDestinations: [SandboxDestinationValue] = SandboxReducer.State.Destination.allCases
         .enumerated()
         .filter { $0.1 == .history }
-        .map { SandboxRouteValue(id: $0.0, route: $0.1) }
+        .map { SandboxDestinationValue(id: $0.0, destination: $0.1) }
 
-    @ViewBuilder func view(for route: SandboxReducer.State.Route) -> some View {
-        switch route {
+    @ViewBuilder func view(for destination: SandboxReducer.State.Destination) -> some View {
+        switch destination {
         case .history:
             WalletEventsFlowView(store: store.historyStore())
         case .send:
@@ -45,23 +45,23 @@ struct SandboxView: View {
         WithViewStore(store) { viewStore in
             VStack {
                 List {
-                    Section(header: Text("Navigation Stack Routes")) {
-                        ForEach(navigationRouteValues) { routeValue in
-                            Text("\(String(describing: routeValue.route))")
+                    Section(header: Text("Navigation Stack Destinations")) {
+                        ForEach(navigationDestinationValues) { destinationValue in
+                            Text("\(String(describing: destinationValue.destination))")
                                 .navigationLink(
-                                    isActive: viewStore.bindingForRoute(routeValue.route),
+                                    isActive: viewStore.bindingForDestination(destinationValue.destination),
                                     destination: {
-                                        view(for: routeValue.route)
+                                        view(for: destinationValue.destination)
                                     }
                                 )
                         }
                     }
 
-                    Section(header: Text("Modal Routes")) {
-                        ForEach(modalRoutes) { routeValue in
+                    Section(header: Text("Modal Destinations")) {
+                        ForEach(modalDestinations) { destinationValue in
                             Button(
-                                action: { viewStore.send(.updateRoute(routeValue.route)) },
-                                label: { Text("\(String(describing: routeValue.route))") }
+                                action: { viewStore.send(.updateDestination(destinationValue.destination)) },
+                                label: { Text("\(String(describing: destinationValue.destination))") }
                             )
                         }
                     }
@@ -80,13 +80,13 @@ struct SandboxView: View {
                 }
             }
             .fullScreenCover(
-                isPresented: viewStore.bindingForRoute(.history),
+                isPresented: viewStore.bindingForDestination(.history),
                 content: {
                     NavigationView {
                         WalletEventsFlowView(store: store.historyStore())
                             .toolbar {
                                 ToolbarItem {
-                                    Button("Done") { viewStore.send(.updateRoute(nil)) }
+                                    Button("Done") { viewStore.send(.updateDestination(nil)) }
                                 }
                             }
                     }

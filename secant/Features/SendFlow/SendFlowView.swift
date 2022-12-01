@@ -36,7 +36,7 @@ struct SendFLowView_Previews: PreviewProvider {
                     initialState: .init(
                         addMemoState: true,
                         memoState: .placeholder,
-                        route: nil,
+                        destination: nil,
                         transactionAddressInputState: .placeholder,
                         transactionAmountInputState: .placeholder
                     ),

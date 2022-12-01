@@ -14,7 +14,7 @@ typealias RecoveryPhraseValidationFlowViewStore = ViewStore<RecoveryPhraseValida
 
 struct RecoveryPhraseValidationFlowReducer: ReducerProtocol {
     struct State: Equatable {
-        enum Route: Equatable, CaseIterable {
+        enum Destination: Equatable, CaseIterable {
             case validation
             case success
             case failure
@@ -27,7 +27,7 @@ struct RecoveryPhraseValidationFlowReducer: ReducerProtocol {
         var missingIndices: [Int]
         var missingWordChips: [PhraseChip.Kind]
         var validationWords: [ValidationWord]
-        var route: Route?
+        var destination: Destination?
         
         var isComplete: Bool {
             !validationWords.isEmpty && validationWords.count == missingIndices.count
@@ -40,7 +40,7 @@ struct RecoveryPhraseValidationFlowReducer: ReducerProtocol {
     }
 
     enum Action: Equatable {
-        case updateRoute(RecoveryPhraseValidationFlowReducer.State.Route?)
+        case updateDestination(RecoveryPhraseValidationFlowReducer.State.Destination?)
         case reset
         case move(wordChip: PhraseChip.Kind, intoGroup: Int)
         case succeed
@@ -60,8 +60,8 @@ struct RecoveryPhraseValidationFlowReducer: ReducerProtocol {
         switch action {
         case .reset:
             state = randomRecoveryPhrase.random(state.phrase)
-            state.route = .validation
-            // FIXME [#186]: Resetting causes route to be nil = preamble screen, hence setting the .validation. The transition back is not animated
+            state.destination = .validation
+            // FIXME [#186]: Resetting causes destination to be nil = preamble screen, hence setting the .validation. The transition back is not animated
             // though
 
         case let .move(wordChip, group):
@@ -91,20 +91,20 @@ struct RecoveryPhraseValidationFlowReducer: ReducerProtocol {
             return .none
 
         case .succeed:
-            state.route = .success
+            state.destination = .success
 
         case .fail:
-            state.route = .failure
+            state.destination = .failure
 
         case .failureFeedback:
             feedbackGenerator.generateErrorFeedback()
 
-        case .updateRoute(let route):
-            guard let route = route else {
+        case .updateDestination(let destination):
+            guard let destination = destination else {
                 state = randomRecoveryPhrase.random(state.phrase)
                 return .none
             }
-            state.route = route
+            state.destination = destination
 
         case .proceedToHome:
             break
@@ -169,11 +169,11 @@ extension RecoveryPhrase.Group {
 // MARK: - ViewStore
 
 extension RecoveryPhraseValidationFlowViewStore {
-    func bindingForRoute(_ route: RecoveryPhraseValidationFlowReducer.State.Route) -> Binding<Bool> {
+    func bindingForDestination(_ destination: RecoveryPhraseValidationFlowReducer.State.Destination) -> Binding<Bool> {
         self.binding(
-            get: { $0.route == route },
+            get: { $0.destination == destination },
             send: { isActive in
-                return .updateRoute(isActive ? route : nil)
+                return .updateDestination(isActive ? destination : nil)
             }
         )
     }
@@ -182,27 +182,27 @@ extension RecoveryPhraseValidationFlowViewStore {
 extension RecoveryPhraseValidationFlowViewStore {
     var bindingForValidation: Binding<Bool> {
         self.binding(
-            get: { $0.route != nil },
+            get: { $0.destination != nil },
             send: { isActive in
-                return .updateRoute(isActive ? .validation : nil)
+                return .updateDestination(isActive ? .validation : nil)
             }
         )
     }
 
     var bindingForSuccess: Binding<Bool> {
         self.binding(
-            get: { $0.route == .success },
+            get: { $0.destination == .success },
             send: { isActive in
-                return .updateRoute(isActive ? .success : .validation)
+                return .updateDestination(isActive ? .success : .validation)
             }
         )
     }
 
     var bindingForFailure: Binding<Bool> {
         self.binding(
-            get: { $0.route == .failure },
+            get: { $0.destination == .failure },
             send: { isActive in
-                return .updateRoute(isActive ? .failure : .validation)
+                return .updateDestination(isActive ? .failure : .validation)
             }
         )
     }
@@ -221,7 +221,7 @@ extension RecoveryPhraseValidationFlowReducer.State {
             .unassigned(word: "garlic")
         ],
         validationWords: [],
-        route: nil
+        destination: nil
     )
 
     static let placeholderStep1 = RecoveryPhraseValidationFlowReducer.State(
@@ -236,7 +236,7 @@ extension RecoveryPhraseValidationFlowReducer.State {
         validationWords: [
             .init(groupIndex: 2, word: "morning")
         ],
-        route: nil
+        destination: nil
     )
 
     static let placeholderStep2 = RecoveryPhraseValidationFlowReducer.State(
@@ -252,7 +252,7 @@ extension RecoveryPhraseValidationFlowReducer.State {
             .init(groupIndex: 2, word: "morning"),
             .init(groupIndex: 0, word: "thank")
         ],
-        route: nil
+        destination: nil
     )
 
     static let placeholderStep3 = RecoveryPhraseValidationFlowReducer.State(
@@ -269,7 +269,7 @@ extension RecoveryPhraseValidationFlowReducer.State {
             .init(groupIndex: 0, word: "thank"),
             .init(groupIndex: 3, word: "garlic")
         ],
-        route: nil
+        destination: nil
     )
 
     static let placeholderStep4 = RecoveryPhraseValidationFlowReducer.State(
@@ -287,7 +287,7 @@ extension RecoveryPhraseValidationFlowReducer.State {
             .init(groupIndex: 3, word: "garlic"),
             .init(groupIndex: 1, word: "boil")
         ],
-        route: nil
+        destination: nil
     )
 }
 

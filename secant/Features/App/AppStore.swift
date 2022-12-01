@@ -10,7 +10,7 @@ struct AppReducer: ReducerProtocol {
     private enum CancelId {}
 
     struct State: Equatable {
-        enum Route: Equatable {
+        enum Destination: Equatable {
             case welcome
             case startup
             case onboarding
@@ -25,17 +25,17 @@ struct AppReducer: ReducerProtocol {
         var onboardingState: OnboardingFlowReducer.State
         var phraseValidationState: RecoveryPhraseValidationFlowReducer.State
         var phraseDisplayState: RecoveryPhraseDisplayReducer.State
-        var prevRoute: Route?
-        var internalRoute: Route = .welcome
+        var prevDestination: Destination?
+        var internalDestination: Destination = .welcome
         var sandboxState: SandboxReducer.State
         var storedWallet: StoredWallet?
         var welcomeState: WelcomeReducer.State
         
-        var route: Route {
-            get { internalRoute }
+        var destination: Destination {
+            get { internalDestination }
             set {
-                prevRoute = internalRoute
-                internalRoute = newValue
+                prevDestination = internalDestination
+                internalDestination = newValue
             }
         }
     }
@@ -56,7 +56,7 @@ struct AppReducer: ReducerProtocol {
         case phraseValidation(RecoveryPhraseValidationFlowReducer.Action)
         case respondToWalletInitializationState(InitializationState)
         case sandbox(SandboxReducer.Action)
-        case updateRoute(AppReducer.State.Route)
+        case updateDestination(AppReducer.State.Destination)
         case welcome(WelcomeReducer.Action)
     }
     
@@ -93,29 +93,29 @@ struct AppReducer: ReducerProtocol {
 
         Reduce { state, action in
             switch action {
-            case let .updateRoute(route):
-                state.route = route
+            case let .updateDestination(destination):
+                state.destination = destination
                 
             case .sandbox(.reset):
-                state.route = .startup
+                state.destination = .startup
                 
             case .onboarding(.createNewWallet):
                 return Effect(value: .createNewWallet)
                 
             case .phraseValidation(.proceedToHome):
-                state.route = .home
+                state.destination = .home
                 
             case .phraseValidation(.displayBackedUpPhrase):
-                state.route = .phraseDisplay
+                state.destination = .phraseDisplay
                 
             case .phraseDisplay(.finishedPressed):
                 // user is still supposed to do the backup phrase validation test
-                if state.prevRoute == .welcome || state.prevRoute == .onboarding {
-                    state.route = .phraseValidation
+                if state.prevDestination == .welcome || state.prevDestination == .onboarding {
+                    state.destination = .phraseValidation
                 }
                 // user wanted to see the backup phrase once again (at validation finished screen)
-                if state.prevRoute == .phraseValidation {
-                    state.route = .home
+                if state.prevDestination == .phraseValidation {
+                    state.destination = .home
                 }
                 
             case .deeplink(let url):
@@ -144,13 +144,13 @@ struct AppReducer: ReducerProtocol {
                 }
                 
             case .deeplinkHome:
-                state.route = .home
-                state.homeState.route = nil
+                state.destination = .home
+                state.homeState.destination = nil
                 return .none
                 
             case let .deeplinkSend(amount, address, memo):
-                state.route = .home
-                state.homeState.route = .send
+                state.destination = .home
+                state.homeState.destination = .send
                 state.homeState.sendState.amount = amount
                 state.homeState.sendState.address = address
                 state.homeState.sendState.memoState.text = memo
@@ -162,7 +162,7 @@ struct AppReducer: ReducerProtocol {
                 }
                 return Effect(value: .deeplink(url))
                 
-                /// Default is meaningful here because there's `appReducer` handling actions and this reducer is handling only routes. We don't here plenty of unused cases.
+                /// Default is meaningful here because there's `appReducer` handling actions and this reducer is handling only destinations. We don't here plenty of unused cases.
             default:
                 break
             }
@@ -206,7 +206,7 @@ struct AppReducer: ReducerProtocol {
                     )
                 case .uninitialized:
                     state.appInitializationState = .uninitialized
-                    return Effect(value: .updateRoute(.onboarding))
+                    return Effect(value: .updateDestination(.onboarding))
                         .delay(for: 3, scheduler: mainQueue)
                         .eraseToEffect()
                         .cancellable(id: CancelId.self, cancelInFlight: true)
@@ -257,7 +257,7 @@ struct AppReducer: ReducerProtocol {
                     return .none
                 }
 
-                var landingRoute: AppReducer.State.Route = .home
+                var landingDestination: AppReducer.State.Destination = .home
                 
                 if !storedWallet.hasUserPassedPhraseBackupTest {
                     do {
@@ -266,7 +266,7 @@ struct AppReducer: ReducerProtocol {
                         let recoveryPhrase = RecoveryPhrase(words: phraseWords)
                         state.phraseDisplayState.phrase = recoveryPhrase
                         state.phraseValidationState = randomRecoveryPhrase.random(recoveryPhrase)
-                        landingRoute = .phraseDisplay
+                        landingDestination = .phraseDisplay
                     } catch {
                         // TODO [#201]: - merge with issue 201 (https://github.com/zcash/secant-ios-wallet/issues/201) and its Error States
                         return .none
@@ -275,7 +275,7 @@ struct AppReducer: ReducerProtocol {
                 
                 state.appInitializationState = .initialized
                 
-                return Effect(value: .updateRoute(landingRoute))
+                return Effect(value: .updateDestination(landingDestination))
                     .delay(for: 3, scheduler: mainQueue)
                     .eraseToEffect()
                     .cancellable(id: CancelId.self, cancelInFlight: true)
@@ -325,16 +325,16 @@ struct AppReducer: ReducerProtocol {
             case .welcome(.debugMenuStartup), .home(.debugMenuStartup):
                 return .concatenate(
                     Effect.cancel(id: CancelId.self),
-                    Effect(value: .updateRoute(.startup))
+                    Effect(value: .updateDestination(.startup))
                 )
 
             case .onboarding(.importWallet(.successfullyRecovered)):
-                return Effect(value: .updateRoute(.home))
+                return Effect(value: .updateDestination(.home))
 
             case .onboarding(.importWallet(.initializeSDK)):
                 return Effect(value: .initializeSDK)
 
-                /// Default is meaningful here because there's `routeReducer` handling routes and this reducer is handling only actions. We don't here plenty of unused cases.
+                /// Default is meaningful here because there's `destinationReducer` handling destinations and this reducer is handling only actions. We don't here plenty of unused cases.
             default:
                 return .none
             }

@@ -6,7 +6,7 @@ typealias SandboxViewStore = ViewStore<SandboxReducer.State, SandboxReducer.Acti
 
 struct SandboxReducer: ReducerProtocol {
     struct State: Equatable {
-        enum Route: Equatable, CaseIterable {
+        enum Destination: Equatable, CaseIterable {
             case history
             case send
             case recoveryPhraseDisplay
@@ -16,11 +16,11 @@ struct SandboxReducer: ReducerProtocol {
         }
         var walletEventsState: WalletEventsFlowReducer.State
         var profileState: ProfileReducer.State
-        var route: Route?
+        var destination: Destination?
     }
 
     enum Action: Equatable {
-        case updateRoute(SandboxReducer.State.Route?)
+        case updateDestination(SandboxReducer.State.Destination?)
         case walletEvents(WalletEventsFlowReducer.Action)
         case profile(ProfileReducer.Action)
         case reset
@@ -28,8 +28,8 @@ struct SandboxReducer: ReducerProtocol {
     
     func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
         switch action {
-        case let .updateRoute(route):
-            state.route = route
+        case let .updateDestination(destination):
+            state.destination = destination
             return .none
             
         case let .walletEvents(walletEventsAction):
@@ -73,22 +73,22 @@ extension SandboxViewStore {
     func toggleSelectedTransaction() {
         let isAlreadySelected = (self.selectedTranactionID != nil)
         let walletEvent = self.walletEventsState.walletEvents[5]
-        let newRoute = isAlreadySelected ? nil : WalletEventsFlowReducer.State.Route.showWalletEvent(walletEvent)
-        send(.walletEvents(.updateRoute(newRoute)))
+        let newDestination = isAlreadySelected ? nil : WalletEventsFlowReducer.State.Destination.showWalletEvent(walletEvent)
+        send(.walletEvents(.updateDestination(newDestination)))
     }
 
     var selectedTranactionID: String? {
         self.walletEventsState
-            .route
-            .flatMap(/WalletEventsFlowReducer.State.Route.showWalletEvent)
+            .destination
+            .flatMap(/WalletEventsFlowReducer.State.Destination.showWalletEvent)
             .map(\.id)
     }
 
-    func bindingForRoute(_ route: SandboxReducer.State.Route) -> Binding<Bool> {
+    func bindingForDestination(_ destination: SandboxReducer.State.Destination) -> Binding<Bool> {
         self.binding(
-            get: { $0.route == route },
+            get: { $0.destination == destination },
             send: { isActive in
-                return .updateRoute(isActive ? route : nil)
+                return .updateDestination(isActive ? destination : nil)
             }
         )
     }
@@ -101,7 +101,7 @@ extension SandboxReducer.State {
         .init(
             walletEventsState: .placeHolder,
             profileState: .placeholder,
-            route: nil
+            destination: nil
         )
     }
 }
@@ -112,7 +112,7 @@ extension SandboxStore {
             initialState: SandboxReducer.State(
                 walletEventsState: .placeHolder,
                 profileState: .placeholder,
-                route: nil
+                destination: nil
             ),
             reducer: SandboxReducer()
         )

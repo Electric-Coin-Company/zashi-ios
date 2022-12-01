@@ -97,7 +97,7 @@ class WalletEventsSnapshotTests: XCTestCase {
             reducer: HomeReducer()
         )
         
-        ViewStore(store).send(.walletEvents(.updateRoute(.showWalletEvent(walletEvent))))
+        ViewStore(store).send(.walletEvents(.updateDestination(.showWalletEvent(walletEvent))))
         let walletEventsStore = WalletEventsFlowStore(
             initialState: .placeHolder,
             reducer: WalletEventsFlowReducer()
@@ -144,7 +144,7 @@ class WalletEventsSnapshotTests: XCTestCase {
             reducer: HomeReducer()
         )
         
-        ViewStore(store).send(.walletEvents(.updateRoute(.showWalletEvent(walletEvent))))
+        ViewStore(store).send(.walletEvents(.updateDestination(.showWalletEvent(walletEvent))))
         let walletEventsStore = WalletEventsFlowStore(
             initialState: .placeHolder,
             reducer: WalletEventsFlowReducer()
@@ -196,7 +196,7 @@ class WalletEventsSnapshotTests: XCTestCase {
             walletEvents: .placeholder
         )
         
-        ViewStore(store).send(.walletEvents(.updateRoute(.showWalletEvent(walletEvent))))
+        ViewStore(store).send(.walletEvents(.updateDestination(.showWalletEvent(walletEvent))))
         let walletEventsStore = WalletEventsFlowStore(
             initialState: walletEventsState,
             reducer: WalletEventsFlowReducer()
@@ -244,7 +244,7 @@ class WalletEventsSnapshotTests: XCTestCase {
             reducer: HomeReducer()
         )
         
-        ViewStore(store).send(.walletEvents(.updateRoute(.showWalletEvent(walletEvent))))
+        ViewStore(store).send(.walletEvents(.updateDestination(.showWalletEvent(walletEvent))))
         let walletEventsStore = WalletEventsFlowStore(
             initialState: .placeHolder,
             reducer: WalletEventsFlowReducer()

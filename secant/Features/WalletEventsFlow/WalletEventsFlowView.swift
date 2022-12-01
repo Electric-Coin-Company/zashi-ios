@@ -42,7 +42,7 @@ extension WalletEventsFlowView {
         ForEach(viewStore.walletEvents) { walletEvent in
             walletEvent.rowView(viewStore)
                 .onTapGesture {
-                    viewStore.send(.updateRoute(.showWalletEvent(walletEvent)))
+                    viewStore.send(.updateDestination(.showWalletEvent(walletEvent)))
                 }
                 .listRowInsets(EdgeInsets())
                 .foregroundColor(Asset.Colors.Text.body.color)
@@ -54,7 +54,7 @@ extension WalletEventsFlowView {
         HStack(spacing: 0) {
             VStack {
                 Button {
-                    viewStore.send(.updateRoute(.latest))
+                    viewStore.send(.updateDestination(.latest))
                 } label: {
                     Text("Latest")
                         .font(.custom(FontFamily.Rubik.regular.name, size: 18))
@@ -70,7 +70,7 @@ extension WalletEventsFlowView {
 
             VStack {
                 Button {
-                    viewStore.send(.updateRoute(.all))
+                    viewStore.send(.updateDestination(.all))
                 } label: {
                     Text("All")
                         .font(.custom(FontFamily.Rubik.regular.name, size: 18))

@@ -321,7 +321,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         store.receive(.succeed) {
             XCTAssertTrue($0.isComplete)
-            $0.route = .success
+            $0.destination = .success
         }
     }
 
@@ -394,7 +394,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
         store.receive(.failureFeedback)
 
         store.receive(.fail) {
-            $0.route = .failure
+            $0.destination = .failure
             XCTAssertFalse($0.isValid)
         }
     }
@@ -612,7 +612,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
             missingIndices: missingIndices,
             missingWordChips: phrase.words(fromMissingIndices: missingIndices),
             validationWords: completion,
-            route: nil
+            destination: nil
         )
 
         XCTAssertTrue(result.isValid)
@@ -651,7 +651,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
             missingIndices: missingIndices,
             missingWordChips: phrase.words(fromMissingIndices: missingIndices),
             validationWords: completion,
-            route: nil
+            destination: nil
         )
 
         XCTAssertFalse(result.isValid)

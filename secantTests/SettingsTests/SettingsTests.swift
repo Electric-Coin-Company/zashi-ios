@@ -59,8 +59,8 @@ class SettingsTests: XCTestCase {
         await store.receive(.backupWallet) { state in
             state.phraseDisplayState.phrase = RecoveryPhrase(words: mnemonic.components(separatedBy: " "))
         }
-        await store.receive(.updateRoute(.backupPhrase)) { state in
-            state.route = .backupPhrase
+        await store.receive(.updateDestination(.backupPhrase)) { state in
+            state.destination = .backupPhrase
         }
     }
     
@@ -109,7 +109,7 @@ class SettingsTests: XCTestCase {
                         .cancel(TextState("Cancel"))
                     ]
                 ),
-                route: nil
+                destination: nil
             ),
             reducer: SettingsReducer()
         )
@@ -132,7 +132,7 @@ class SettingsTests: XCTestCase {
                         .cancel(TextState("Cancel"))
                     ]
                 ),
-                route: nil
+                destination: nil
             ),
             reducer: SettingsReducer()
         )
@@ -155,7 +155,7 @@ class SettingsTests: XCTestCase {
                         .cancel(TextState("Cancel"))
                     ]
                 ),
-                route: nil
+                destination: nil
             ),
             reducer: SettingsReducer()
         )

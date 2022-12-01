@@ -12,7 +12,7 @@ struct HomeReducer: ReducerProtocol {
     private enum CancelId {}
 
     struct State: Equatable {
-        enum Route: Equatable {
+        enum Destination: Equatable {
             case notEnoughFreeDiskSpace
             case profile
             case request
@@ -21,7 +21,7 @@ struct HomeReducer: ReducerProtocol {
             case balanceBreakdown
         }
 
-        var route: Route?
+        var destination: Destination?
 
         var balanceBreakdownState: BalanceBreakdownReducer.State
         var drawerOverlay: DrawerOverlay
@@ -68,7 +68,7 @@ struct HomeReducer: ReducerProtocol {
         case synchronizerStateChanged(SDKSynchronizerState)
         case walletEvents(WalletEventsFlowReducer.Action)
         case updateDrawer(DrawerOverlay)
-        case updateRoute(HomeReducer.State.Route?)
+        case updateDestination(HomeReducer.State.Destination?)
         case updateSynchronizerStatus
         case updateWalletEvents([WalletEvent])
     }
@@ -110,9 +110,9 @@ struct HomeReducer: ReducerProtocol {
                         .map(HomeReducer.Action.synchronizerStateChanged)
                         .eraseToEffect()
                         .cancellable(id: CancelId.self, cancelInFlight: true)
-                    return .concatenate(Effect(value: .updateRoute(nil)), syncEffect)
+                    return .concatenate(Effect(value: .updateDestination(nil)), syncEffect)
                 } else {
-                    return Effect(value: .updateRoute(.notEnoughFreeDiskSpace))
+                    return Effect(value: .updateDestination(.notEnoughFreeDiskSpace))
                 }
 
             case .onDisappear:
@@ -145,16 +145,16 @@ struct HomeReducer: ReducerProtocol {
                 }
                 return .none
 
-            case .updateRoute(let route):
-                state.route = route
+            case .updateDestination(let destination):
+                state.destination = destination
                 return .none
                 
             case .profile(.back):
-                state.route = nil
+                state.destination = nil
                 return .none
 
             case .profile(.settings(.quickRescan)):
-                state.route = nil
+                state.destination = nil
                 return Effect.task {
                     do {
                         try await sdkSynchronizer.rewind(.quick)
@@ -165,7 +165,7 @@ struct HomeReducer: ReducerProtocol {
                 }
 
             case .profile(.settings(.fullRescan)):
-                state.route = nil
+                state.destination = nil
                 return Effect.task {
                     do {
                         try await sdkSynchronizer.rewind(.birthday)
@@ -185,30 +185,30 @@ struct HomeReducer: ReducerProtocol {
                 // TODO [#221]: error we need to handle (https://github.com/zcash/secant-ios-wallet/issues/221)
                 return .none
                 
-            case .walletEvents(.updateRoute(.all)):
+            case .walletEvents(.updateDestination(.all)):
                 return state.drawerOverlay != .full ? Effect(value: .updateDrawer(.full)) : .none
 
-            case .walletEvents(.updateRoute(.latest)):
+            case .walletEvents(.updateDestination(.latest)):
                 return state.drawerOverlay != .partial ? Effect(value: .updateDrawer(.partial)) : .none
 
             case .walletEvents:
                 return .none
                 
-            case .send(.updateRoute(.done)):
-                return Effect(value: .updateRoute(nil))
+            case .send(.updateDestination(.done)):
+                return Effect(value: .updateDestination(nil))
                 
             case .send:
                 return .none
                 
             case .scan(.found):
                 audioServices.systemSoundVibrate()
-                return Effect(value: .updateRoute(nil))
+                return Effect(value: .updateDestination(nil))
                 
             case .scan:
                 return .none
                 
             case .balanceBreakdown(.onDisappear):
-                state.route = nil
+                state.destination = nil
                 return .none
 
             case .balanceBreakdown:
@@ -270,11 +270,11 @@ extension HomeStore {
 // MARK: - ViewStore
 
 extension HomeViewStore {
-    func bindingForRoute(_ route: HomeReducer.State.Route) -> Binding<Bool> {
+    func bindingForDestination(_ destination: HomeReducer.State.Destination) -> Binding<Bool> {
         self.binding(
-            get: { $0.route == route },
+            get: { $0.destination == destination },
             send: { isActive in
-                return .updateRoute(isActive ? route : nil)
+                return .updateDestination(isActive ? destination : nil)
             }
         )
     }

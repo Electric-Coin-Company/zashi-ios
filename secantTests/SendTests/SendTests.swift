@@ -77,8 +77,8 @@ class SendTests: XCTestCase {
         )
 
         // first it's expected that progress screen is showed
-        await store.receive(.updateRoute(.inProgress)) { state in
-            state.route = .inProgress
+        await store.receive(.updateDestination(.inProgress)) { state in
+            state.destination = .inProgress
         }
 
         // check the success transaction to be received back
@@ -89,8 +89,8 @@ class SendTests: XCTestCase {
         }
         
         // all went well, the success screen is triggered
-        await store.receive(.updateRoute(.success)) { state in
-            state.route = .success
+        await store.receive(.updateDestination(.success)) { state in
+            state.destination = .success
         }
     }
 
@@ -145,8 +145,8 @@ class SendTests: XCTestCase {
         )
 
         // first it's expected that progress screen is showed
-        await store.receive(.updateRoute(.inProgress)) { state in
-            state.route = .inProgress
+        await store.receive(.updateDestination(.inProgress)) { state in
+            state.destination = .inProgress
         }
 
         // check the success transaction to be received back
@@ -157,8 +157,8 @@ class SendTests: XCTestCase {
         }
 
         // all went well, the success screen is triggered
-        await store.receive(.updateRoute(.success)) { state in
-            state.route = .success
+        await store.receive(.updateDestination(.success)) { state in
+            state.destination = .success
         }
     }
     
@@ -198,8 +198,8 @@ class SendTests: XCTestCase {
         await testScheduler.advance(by: 0.01)
 
         // first it's expected that progress screen is showed
-        await store.receive(.updateRoute(.inProgress)) { state in
-            state.route = .inProgress
+        await store.receive(.updateDestination(.inProgress)) { state in
+            state.destination = .inProgress
         }
 
         // check the failure transaction to be received back
@@ -210,8 +210,8 @@ class SendTests: XCTestCase {
         }
         
         // the failure screen is triggered as expected
-        await store.receive(.updateRoute(.failure)) { state in
-            state.route = .failure
+        await store.receive(.updateDestination(.failure)) { state in
+            state.destination = .failure
         }
     }
     

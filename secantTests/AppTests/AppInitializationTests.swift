@@ -34,7 +34,7 @@ class AppInitializationTests: XCTestCase {
             validationWords: [
                 .init(groupIndex: 2, word: "dizzy")
             ],
-            route: nil
+            destination: nil
         )
 
         let recoveryPhraseRandomizer = RecoveryPhraseRandomizerClient(
@@ -122,9 +122,9 @@ class AppInitializationTests: XCTestCase {
         await testScheduler.advance(by: 3.00)
 
         // ad 5.
-        await store.receive(.updateRoute(.phraseDisplay)) { state in
-            state.prevRoute = .welcome
-            state.internalRoute = .phraseDisplay
+        await store.receive(.updateDestination(.phraseDisplay)) { state in
+            state.prevDestination = .welcome
+            state.internalDestination = .phraseDisplay
         }
     }
     
@@ -191,9 +191,9 @@ class AppInitializationTests: XCTestCase {
         store.receive(.respondToWalletInitializationState(.uninitialized))
         
         // ad 3.
-        store.receive(.updateRoute(.onboarding)) { state in
-            state.prevRoute = .welcome
-            state.internalRoute = .onboarding
+        store.receive(.updateDestination(.onboarding)) { state in
+            state.prevDestination = .welcome
+            state.internalDestination = .onboarding
         }
     }
 }
