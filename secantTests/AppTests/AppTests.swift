@@ -66,12 +66,12 @@ class AppTests: XCTestCase {
             $0.mainQueue = Self.testScheduler.eraseToAnyScheduler()
         }
 
-        store.send(.respondToWalletInitializationState(.uninitialized))
+        store.send(.initialization(.respondToWalletInitializationState(.uninitialized)))
         
         Self.testScheduler.advance(by: 3)
 
-        store.receive(.updateDestination(.onboarding)) {
-            $0.destination = .onboarding
+        store.receive(.destination(.updateDestination(.onboarding))) {
+            $0.destinationState.destination = .onboarding
             $0.appInitializationState = .uninitialized
         }
     }
@@ -82,7 +82,7 @@ class AppTests: XCTestCase {
             reducer: RootReducer()
         )
         
-        store.send(.respondToWalletInitializationState(.keysMissing)) { state in
+        store.send(.initialization(.respondToWalletInitializationState(.keysMissing))) { state in
             state.appInitializationState = .keysMissing
         }
     }
@@ -96,16 +96,16 @@ class AppTests: XCTestCase {
             dependencies.walletStorage.exportWallet = { throw "export failed" }
         }
 
-        store.send(.respondToWalletInitializationState(.filesMissing)) { state in
+        store.send(.initialization(.respondToWalletInitializationState(.filesMissing))) { state in
             state.appInitializationState = .filesMissing
         }
 
-        store.receive(.initializeSDK) { state in
+        store.receive(.initialization(.initializeSDK)) { state in
             // failed is expected because environment is throwing errors
             state.appInitializationState = .failed
         }
 
-        store.receive(.checkBackupPhraseValidation)
+        store.receive(.initialization(.checkBackupPhraseValidation))
     }
 
     func testRespondToWalletInitializationState_Initialized() throws {
@@ -117,14 +117,14 @@ class AppTests: XCTestCase {
             dependencies.walletStorage.exportWallet = { throw "export failed" }
         }
 
-        store.send(.respondToWalletInitializationState(.initialized))
+        store.send(.initialization(.respondToWalletInitializationState(.initialized)))
 
-        store.receive(.initializeSDK) { state in
+        store.receive(.initialization(.initializeSDK)) { state in
             // failed is expected because environment is throwing errors
             state.appInitializationState = .failed
         }
 
-        store.receive(.checkBackupPhraseValidation)
+        store.receive(.initialization(.checkBackupPhraseValidation))
     }
     
     func testWalletEventReplyTo_validAddress() throws {
@@ -137,7 +137,7 @@ class AppTests: XCTestCase {
         store.send(.home(.walletEvents(.replyTo(address))))
         
         if let url = URL(string: "zcash:\(address)") {
-            store.receive(.deeplink(url))
+            store.receive(.destination(.deeplink(url)))
         }
     }
 }
