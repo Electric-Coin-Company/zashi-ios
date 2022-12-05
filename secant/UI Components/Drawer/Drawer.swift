@@ -56,7 +56,7 @@ struct Drawer<Content: View>: View {
             .cornerRadius(16.0)
             .frame(height: proxy.size.height, alignment: .bottom)
             .offset(y: max(offset + translation, 0))
-            .animation(.interactiveSpring())
+            .animation(.interactiveSpring(), value: translation)
             .gesture(
                 DragGesture().updating($translation) { value, state, _ in
                     state = value.translation.height

@@ -52,7 +52,7 @@ struct OnboardingProgressStyle: ProgressViewStyle {
                     }
                 }
                 .frame(height: height)
-                // FIXME: .animation(.easeInOut) breaks the Onboarding UI when onAppear, fallback to .linear for now
+                .animation(.easeInOut, value: fractionCompleted)
             }
         }
     }
