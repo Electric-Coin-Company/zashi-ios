@@ -2,8 +2,8 @@ import SwiftUI
 import StoreKit
 import ComposableArchitecture
 
-struct AppView: View {
-    let store: AppStore
+struct RootView: View {
+    let store: RootStore
 
     var body: some View {
         WithViewStore(store) { viewStore in
@@ -14,7 +14,7 @@ struct AppView: View {
                         HomeView(
                             store: store.scope(
                                 state: \.homeState,
-                                action: AppReducer.Action.home
+                                action: RootReducer.Action.home
                             )
                         )
                     }
@@ -25,7 +25,7 @@ struct AppView: View {
                         SandboxView(
                             store: store.scope(
                                 state: \.sandboxState,
-                                action: AppReducer.Action.sandbox
+                                action: RootReducer.Action.sandbox
                             )
                         )
                     }
@@ -36,7 +36,7 @@ struct AppView: View {
                         OnboardingScreen(
                             store: store.scope(
                                 state: \.onboardingState,
-                                action: AppReducer.Action.onboarding
+                                action: RootReducer.Action.onboarding
                             )
                         )
                     }
@@ -53,7 +53,7 @@ struct AppView: View {
                         RecoveryPhraseValidationFlowView(
                             store: store.scope(
                                 state: \.phraseValidationState,
-                                action: AppReducer.Action.phraseValidation
+                                action: RootReducer.Action.phraseValidation
                             )
                         )
                     }
@@ -64,7 +64,7 @@ struct AppView: View {
                         RecoveryPhraseDisplayView(
                             store: store.scope(
                                 state: \.phraseDisplayState,
-                                action: AppReducer.Action.phraseDisplay
+                                action: RootReducer.Action.phraseDisplay
                             )
                         )
                     }
@@ -73,7 +73,7 @@ struct AppView: View {
                     WelcomeView(
                         store: store.scope(
                             state: \.welcomeState,
-                            action: AppReducer.Action.welcome
+                            action: RootReducer.Action.welcome
                         )
                     )
                 }
@@ -83,8 +83,8 @@ struct AppView: View {
     }
 }
 
-private extension AppView {
-    @ViewBuilder func debugView(_ viewStore: AppViewStore) -> some View {
+private extension RootView {
+    @ViewBuilder func debugView(_ viewStore: RootViewStore) -> some View {
         List {
             Section(header: Text("Navigation Stack Destinations")) {
                 Button("Go To Sandbox (navigation proof)") {
@@ -114,13 +114,13 @@ private extension AppView {
 
 // MARK: - Previews
 
-struct AppView_Previews: PreviewProvider {
+struct RootView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            AppView(
-                store: AppStore(
+            RootView(
+                store: RootStore(
                     initialState: .placeholder,
-                    reducer: AppReducer()
+                    reducer: RootReducer()
                 )
             )
         }

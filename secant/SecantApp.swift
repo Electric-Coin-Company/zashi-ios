@@ -10,9 +10,9 @@ import ComposableArchitecture
 import ZcashLightClientKit
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
-    var appStore: AppStore = .placeholder
-    lazy var appViewStore = ViewStore(
-        appStore.stateless,
+    var rootStore: RootStore = .placeholder
+    lazy var rootViewStore = ViewStore(
+        rootStore.stateless,
         removeDuplicates: ==
     )
 
@@ -22,7 +22,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     ) -> Bool {
         // set the default behavior for the NSDecimalNumber
         NSDecimalNumber.defaultBehavior = Zatoshi.decimalHandler
-        appViewStore.send(.appDelegate(.didFinishLaunching))
+        rootViewStore.send(.appDelegate(.didFinishLaunching))
         return true
     }
 
@@ -40,7 +40,7 @@ struct SecantApp: App {
 
     var body: some Scene {
         WindowGroup {
-            AppView(store: appDelegate.appStore)
+            RootView(store: appDelegate.rootStore)
         }
     }
 }

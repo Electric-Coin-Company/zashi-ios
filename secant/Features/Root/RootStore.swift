@@ -2,11 +2,11 @@ import ComposableArchitecture
 import ZcashLightClientKit
 import Foundation
 
-typealias AppStore = Store<AppReducer.State, AppReducer.Action>
-typealias AppViewStore = ViewStore<AppReducer.State, AppReducer.Action>
+typealias RootStore = Store<RootReducer.State, RootReducer.Action>
+typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
 
 // swiftlint:disable type_body_length
-struct AppReducer: ReducerProtocol {
+struct RootReducer: ReducerProtocol {
     private enum CancelId {}
 
     struct State: Equatable {
@@ -56,7 +56,7 @@ struct AppReducer: ReducerProtocol {
         case phraseValidation(RecoveryPhraseValidationFlowReducer.Action)
         case respondToWalletInitializationState(InitializationState)
         case sandbox(SandboxReducer.Action)
-        case updateDestination(AppReducer.State.Destination)
+        case updateDestination(RootReducer.State.Destination)
         case welcome(WelcomeReducer.Action)
     }
     
@@ -132,7 +132,7 @@ struct AppReducer: ReducerProtocol {
                 return .run { send in
                     do {
                         await send(
-                            try await AppReducer.process(
+                            try await RootReducer.process(
                                 url: url,
                                 deeplink: deeplink,
                                 derivationTool: derivationTool
@@ -162,7 +162,7 @@ struct AppReducer: ReducerProtocol {
                 }
                 return Effect(value: .deeplink(url))
                 
-                /// Default is meaningful here because there's `appReducer` handling actions and this reducer is handling only destinations. We don't here plenty of unused cases.
+                /// Default is meaningful here because there's `rootReducer` handling actions and this reducer is handling only destinations. We don't here plenty of unused cases.
             default:
                 break
             }
@@ -180,7 +180,7 @@ struct AppReducer: ReducerProtocol {
                 
                 /// Evaluate the wallet's state based on keychain keys and database files presence
             case .checkWalletInitialization:
-                let walletState = AppReducer.walletInitializationState(
+                let walletState = RootReducer.walletInitializationState(
                     databaseFiles: databaseFiles,
                     walletStorage: walletStorage,
                     zcashSDKEnvironment: zcashSDKEnvironment
@@ -231,7 +231,7 @@ struct AppReducer: ReducerProtocol {
 
                     let birthday = state.storedWallet?.birthday ?? zcashSDKEnvironment.defaultBirthday
 
-                    let initializer = try AppReducer.prepareInitializer(
+                    let initializer = try RootReducer.prepareInitializer(
                         for: storedWallet.seedPhrase,
                         birthday: birthday,
                         databaseFiles: databaseFiles,
@@ -257,7 +257,7 @@ struct AppReducer: ReducerProtocol {
                     return .none
                 }
 
-                var landingDestination: AppReducer.State.Destination = .home
+                var landingDestination: RootReducer.State.Destination = .home
                 
                 if !storedWallet.hasUserPassedPhraseBackupTest {
                     do {
@@ -342,7 +342,7 @@ struct AppReducer: ReducerProtocol {
     }
 }
 
-extension AppReducer {
+extension RootReducer {
     static func walletInitializationState(
         databaseFiles: DatabaseFilesClient,
         walletStorage: WalletStorageClient,
@@ -423,7 +423,7 @@ extension AppReducer {
         url: URL,
         deeplink: DeeplinkClient,
         derivationTool: DerivationToolClient
-    ) async throws -> AppReducer.Action {
+    ) async throws -> RootReducer.Action {
         let deeplink = try deeplink.resolveDeeplinkURL(url, derivationTool)
         
         switch deeplink {
@@ -437,7 +437,7 @@ extension AppReducer {
 
 // MARK: Placeholders
 
-extension AppReducer.State {
+extension RootReducer.State {
     static var placeholder: Self {
         .init(
             homeState: .placeholder,
@@ -454,11 +454,11 @@ extension AppReducer.State {
     }
 }
 
-extension AppStore {
-    static var placeholder: AppStore {
-        AppStore(
+extension RootStore {
+    static var placeholder: RootStore {
+        RootStore(
             initialState: .placeholder,
-            reducer: AppReducer()._printChanges()
+            reducer: RootReducer()._printChanges()
         )
     }
 }
