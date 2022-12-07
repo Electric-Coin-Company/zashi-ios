@@ -13,12 +13,12 @@ import ZcashLightClientKit
 @MainActor
 class DeeplinkTests: XCTestCase {
     func testActionDeeplinkHome_SameDestinationLevel() throws {
-        var appState = AppReducer.State.placeholder
+        var appState = RootReducer.State.placeholder
         appState.destination = .welcome
         
         let store = TestStore(
             initialState: appState,
-            reducer: AppReducer()
+            reducer: RootReducer()
         )
         
         store.send(.deeplinkHome) { state in
@@ -27,13 +27,13 @@ class DeeplinkTests: XCTestCase {
     }
 
     func testActionDeeplinkHome_GeetingBack() throws {
-        var appState = AppReducer.State.placeholder
+        var appState = RootReducer.State.placeholder
         appState.destination = .home
         appState.homeState.destination = .send
         
         let store = TestStore(
             initialState: appState,
-            reducer: AppReducer()
+            reducer: RootReducer()
         )
         
         store.send(.deeplinkHome) { state in
@@ -43,12 +43,12 @@ class DeeplinkTests: XCTestCase {
     }
     
     func testActionDeeplinkSend() throws {
-        var appState = AppReducer.State.placeholder
+        var appState = RootReducer.State.placeholder
         appState.destination = .welcome
         
         let store = TestStore(
             initialState: appState,
-            reducer: AppReducer()
+            reducer: RootReducer()
         )
         
         let amount = Zatoshi(123_000_000)
@@ -75,13 +75,13 @@ class DeeplinkTests: XCTestCase {
     }
 
     func testDeeplinkRequest_Received_Home() async throws {
-        var appState = AppReducer.State.placeholder
+        var appState = RootReducer.State.placeholder
         appState.destination = .welcome
         appState.appInitializationState = .initialized
         
         let store = TestStore(
             initialState: appState,
-            reducer: AppReducer()
+            reducer: RootReducer()
         ) { dependencies in
             dependencies.deeplink = DeeplinkClient(
                 resolveDeeplinkURL: { _, _ in Deeplink.Destination.home }
@@ -118,13 +118,13 @@ class DeeplinkTests: XCTestCase {
         let synchronizer = NoopSDKSynchronizer()
         synchronizer.updateStateChanged(.synced)
         
-        var appState = AppReducer.State.placeholder
+        var appState = RootReducer.State.placeholder
         appState.destination = .welcome
         appState.appInitializationState = .initialized
         
         let store = TestStore(
             initialState: appState,
-            reducer: AppReducer()
+            reducer: RootReducer()
         ) { dependencies in
             dependencies.deeplink = DeeplinkClient(
                 resolveDeeplinkURL: { _, _ in Deeplink.Destination.send(amount: 123_000_000, address: "address", memo: "some text") }

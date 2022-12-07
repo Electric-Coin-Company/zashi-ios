@@ -13,7 +13,7 @@ class AppTests: XCTestCase {
     static let testScheduler = DispatchQueue.test
 
     func testWalletInitializationState_Uninitialized() throws {
-        let walletState = AppReducer.walletInitializationState(
+        let walletState = RootReducer.walletInitializationState(
             databaseFiles: .noOp,
             walletStorage: .noOp,
             zcashSDKEnvironment: .testnet
@@ -29,7 +29,7 @@ class AppTests: XCTestCase {
             removeItem: { _ in }
         )
 
-        let walletState = AppReducer.walletInitializationState(
+        let walletState = RootReducer.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
             walletStorage: .noOp,
             zcashSDKEnvironment: .testnet
@@ -45,7 +45,7 @@ class AppTests: XCTestCase {
             removeItem: { _ in }
         )
 
-        let walletState = AppReducer.walletInitializationState(
+        let walletState = RootReducer.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
             walletStorage: .noOp,
             zcashSDKEnvironment: .testnet
@@ -61,7 +61,7 @@ class AppTests: XCTestCase {
     func testRespondToWalletInitializationState_Uninitialized() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: AppReducer()
+            reducer: RootReducer()
         ) {
             $0.mainQueue = Self.testScheduler.eraseToAnyScheduler()
         }
@@ -79,7 +79,7 @@ class AppTests: XCTestCase {
     func testRespondToWalletInitializationState_KeysMissing() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: AppReducer()
+            reducer: RootReducer()
         )
         
         store.send(.respondToWalletInitializationState(.keysMissing)) { state in
@@ -90,7 +90,7 @@ class AppTests: XCTestCase {
     func testRespondToWalletInitializationState_FilesMissing() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: AppReducer()
+            reducer: RootReducer()
         ) { dependencies in
             dependencies.walletStorage = .noOp
             dependencies.walletStorage.exportWallet = { throw "export failed" }
@@ -111,7 +111,7 @@ class AppTests: XCTestCase {
     func testRespondToWalletInitializationState_Initialized() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: AppReducer()
+            reducer: RootReducer()
         ) { dependencies in
             dependencies.walletStorage = .noOp
             dependencies.walletStorage.exportWallet = { throw "export failed" }
@@ -130,7 +130,7 @@ class AppTests: XCTestCase {
     func testWalletEventReplyTo_validAddress() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: AppReducer()
+            reducer: RootReducer()
         )
         
         let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"

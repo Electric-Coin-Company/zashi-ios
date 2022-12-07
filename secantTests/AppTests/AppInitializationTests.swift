@@ -70,7 +70,7 @@ class AppInitializationTests: XCTestCase {
             }
         )
 
-        let appState = AppReducer.State(
+        let appState = RootReducer.State(
             homeState: .placeholder,
             onboardingState: .init(
                 importWalletState: .placeholder
@@ -85,7 +85,7 @@ class AppInitializationTests: XCTestCase {
 
         let store = TestStore(
             initialState: appState,
-            reducer: AppReducer()
+            reducer: RootReducer()
         ) { dependencies in
             dependencies.databaseFiles = .noOp
             dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
@@ -137,7 +137,7 @@ class AppInitializationTests: XCTestCase {
 
         let store = TestStore(
             initialState: .placeholder,
-            reducer: AppReducer()
+            reducer: RootReducer()
         ) { dependencies in
             dependencies.databaseFiles = .noOp
             dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
@@ -170,7 +170,7 @@ class AppInitializationTests: XCTestCase {
 
         let store = TestStore(
             initialState: .placeholder,
-            reducer: AppReducer()
+            reducer: RootReducer()
         ) { dependencies in
             dependencies.databaseFiles = .noOp
             dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
