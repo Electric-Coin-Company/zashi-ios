@@ -14,21 +14,21 @@ import ZcashLightClientKit
 class DeeplinkTests: XCTestCase {
     func testActionDeeplinkHome_SameDestinationLevel() throws {
         var appState = RootReducer.State.placeholder
-        appState.destination = .welcome
+        appState.destinationState.destination = .welcome
         
         let store = TestStore(
             initialState: appState,
             reducer: RootReducer()
         )
         
-        store.send(.deeplinkHome) { state in
-            state.destination = .home
+        store.send(.destination(.deeplinkHome)) { state in
+            state.destinationState.destination = .home
         }
     }
 
     func testActionDeeplinkHome_GeetingBack() throws {
         var appState = RootReducer.State.placeholder
-        appState.destination = .home
+        appState.destinationState.destination = .home
         appState.homeState.destination = .send
         
         let store = TestStore(
@@ -36,15 +36,15 @@ class DeeplinkTests: XCTestCase {
             reducer: RootReducer()
         )
         
-        store.send(.deeplinkHome) { state in
-            state.destination = .home
+        store.send(.destination(.deeplinkHome)) { state in
+            state.destinationState.destination = .home
             state.homeState.destination = nil
         }
     }
     
     func testActionDeeplinkSend() throws {
         var appState = RootReducer.State.placeholder
-        appState.destination = .welcome
+        appState.destinationState.destination = .welcome
         
         let store = TestStore(
             initialState: appState,
@@ -55,8 +55,8 @@ class DeeplinkTests: XCTestCase {
         let address = "address"
         let memo = "testing some memo"
         
-        store.send(.deeplinkSend(amount, address, memo)) { state in
-            state.destination = .home
+        store.send(.destination(.deeplinkSend(amount, address, memo))) { state in
+            state.destinationState.destination = .home
             state.homeState.destination = .send
             state.homeState.sendState.amount = amount
             state.homeState.sendState.address = address
@@ -76,7 +76,7 @@ class DeeplinkTests: XCTestCase {
 
     func testDeeplinkRequest_Received_Home() async throws {
         var appState = RootReducer.State.placeholder
-        appState.destination = .welcome
+        appState.destinationState.destination = .welcome
         appState.appInitializationState = .initialized
         
         let store = TestStore(
@@ -95,10 +95,10 @@ class DeeplinkTests: XCTestCase {
             return XCTFail("Deeplink: 'testDeeplinkRequest_homeURL' URL is expected to be valid.")
         }
         
-        _ = await store.send(.deeplink(url))
+        _ = await store.send(.destination(.deeplink(url)))
         
-        await store.receive(.deeplinkHome) { state in
-            state.destination = .home
+        await store.receive(.destination(.deeplinkHome)) { state in
+            state.destinationState.destination = .home
         }
         
         await store.finish()
@@ -119,7 +119,7 @@ class DeeplinkTests: XCTestCase {
         synchronizer.updateStateChanged(.synced)
         
         var appState = RootReducer.State.placeholder
-        appState.destination = .welcome
+        appState.destinationState.destination = .welcome
         appState.appInitializationState = .initialized
         
         let store = TestStore(
@@ -136,14 +136,14 @@ class DeeplinkTests: XCTestCase {
             return XCTFail("Deeplink: 'testDeeplinkRequest_sendURL_amount' URL is expected to be valid.")
         }
 
-        _ = await store.send(.deeplink(url))
+        _ = await store.send(.destination(.deeplink(url)))
         
         let amount = Zatoshi(123_000_000)
         let address = "address"
         let memo = "some text"
 
-        await store.receive(.deeplinkSend(amount, address, memo)) { state in
-            state.destination = .home
+        await store.receive(.destination(.deeplinkSend(amount, address, memo))) { state in
+            state.destinationState.destination = .home
             state.homeState.destination = .send
             state.homeState.sendState.amount = amount
             state.homeState.sendState.address = address

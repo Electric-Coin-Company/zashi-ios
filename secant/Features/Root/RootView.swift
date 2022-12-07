@@ -8,7 +8,7 @@ struct RootView: View {
     var body: some View {
         WithViewStore(store) { viewStore in
             Group {
-                switch viewStore.destination {
+                switch viewStore.destinationState.destination {
                 case .home:
                     NavigationView {
                         HomeView(
@@ -19,7 +19,7 @@ struct RootView: View {
                         )
                     }
                     .navigationViewStyle(.stack)
-                    
+
                 case .sandbox:
                     NavigationView {
                         SandboxView(
@@ -30,7 +30,7 @@ struct RootView: View {
                         )
                     }
                     .navigationViewStyle(.stack)
-                    
+
                 case .onboarding:
                     NavigationView {
                         OnboardingScreen(
@@ -41,13 +41,13 @@ struct RootView: View {
                         )
                     }
                     .navigationViewStyle(.stack)
-                    
+
                 case .startup:
                     ZStack(alignment: .topTrailing) {
                         debugView(viewStore)
                             .transition(.opacity)
                     }
-                    
+
                 case .phraseValidation:
                     NavigationView {
                         RecoveryPhraseValidationFlowView(
@@ -58,7 +58,7 @@ struct RootView: View {
                         )
                     }
                     .navigationViewStyle(.stack)
-                    
+
                 case .phraseDisplay:
                     NavigationView {
                         RecoveryPhraseDisplayView(
@@ -68,7 +68,7 @@ struct RootView: View {
                             )
                         )
                     }
-                    
+
                 case .welcome:
                     WelcomeView(
                         store: store.scope(
@@ -78,7 +78,7 @@ struct RootView: View {
                     )
                 }
             }
-            .onOpenURL(perform: { viewStore.send(.deeplink($0)) })
+            .onOpenURL(perform: { viewStore.goToDeeplink($0) })
         }
     }
 }
@@ -88,23 +88,23 @@ private extension RootView {
         List {
             Section(header: Text("Navigation Stack Destinations")) {
                 Button("Go To Sandbox (navigation proof)") {
-                    viewStore.send(.updateDestination(.sandbox))
+                    viewStore.goToDestination(.sandbox)
                 }
                 
                 Button("Go To Onboarding") {
-                    viewStore.send(.updateDestination(.onboarding))
+                    viewStore.goToDestination(.onboarding)
                 }
                 
                 Button("Go To Phrase Validation Demo") {
-                    viewStore.send(.updateDestination(.phraseValidation))
+                    viewStore.goToDestination(.phraseValidation)
                 }
                 
                 Button("Restart the app") {
-                    viewStore.send(.updateDestination(.welcome))
+                    viewStore.goToDestination(.welcome)
                 }
                 
                 Button("[Be careful] Nuke Wallet") {
-                    viewStore.send(.nukeWallet)
+                    viewStore.send(.initialization(.nukeWallet))
                 }
             }
         }

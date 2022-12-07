@@ -22,7 +22,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     ) -> Bool {
         // set the default behavior for the NSDecimalNumber
         NSDecimalNumber.defaultBehavior = Zatoshi.decimalHandler
-        rootViewStore.send(.appDelegate(.didFinishLaunching))
+        rootViewStore.send(.initialization(.appDelegate(.didFinishLaunching)))
         return true
     }
 

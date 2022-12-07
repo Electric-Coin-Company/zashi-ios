@@ -71,6 +71,7 @@ class AppInitializationTests: XCTestCase {
         )
 
         let appState = RootReducer.State(
+            destinationState: .placeholder,
             homeState: .placeholder,
             onboardingState: .init(
                 importWalletState: .placeholder
@@ -98,23 +99,23 @@ class AppInitializationTests: XCTestCase {
         }
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
-        _ = await store.send(.appDelegate(.didFinishLaunching))
+        _ = await store.send(.initialization(.appDelegate(.didFinishLaunching)))
 
         // the 0.02 delay ensures keychain is ready
         await testScheduler.advance(by: 0.02)
 
         // ad 1.
-        await store.receive(.checkWalletInitialization)
+        await store.receive(.initialization(.checkWalletInitialization))
 
         // ad 2.
-        await store.receive(.respondToWalletInitializationState(.initialized))
+        await store.receive(.initialization(.respondToWalletInitializationState(.initialized)))
 
         // ad 3.
-        await store.receive(.initializeSDK) { state in
+        await store.receive(.initialization(.initializeSDK)) { state in
             state.storedWallet = .placeholder
         }
         // ad 4.
-        await store.receive(.checkBackupPhraseValidation) { state in
+        await store.receive(.initialization(.checkBackupPhraseValidation)) { state in
             state.appInitializationState = .initialized
         }
 
@@ -122,9 +123,9 @@ class AppInitializationTests: XCTestCase {
         await testScheduler.advance(by: 3.00)
 
         // ad 5.
-        await store.receive(.updateDestination(.phraseDisplay)) { state in
-            state.prevDestination = .welcome
-            state.internalDestination = .phraseDisplay
+        await store.receive(.destination(.updateDestination(.phraseDisplay))) { state in
+            state.destinationState.previousDestination = .welcome
+            state.destinationState.internalDestination = .phraseDisplay
         }
     }
     
@@ -146,16 +147,16 @@ class AppInitializationTests: XCTestCase {
         }
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
-        store.send(.appDelegate(.didFinishLaunching))
+        store.send(.initialization(.appDelegate(.didFinishLaunching)))
         
         // the 0.02 delay ensures keychain is ready
         testScheduler.advance(by: 0.02)
         
         // ad 1.
-        store.receive(.checkWalletInitialization)
+        store.receive(.initialization(.checkWalletInitialization))
 
         // ad 2.
-        store.receive(.respondToWalletInitializationState(.keysMissing)) { state in
+        store.receive(.initialization(.respondToWalletInitializationState(.keysMissing))) { state in
             state.appInitializationState = .keysMissing
         }
     }
@@ -178,22 +179,22 @@ class AppInitializationTests: XCTestCase {
         }
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
-        store.send(.appDelegate(.didFinishLaunching))
+        store.send(.initialization(.appDelegate(.didFinishLaunching)))
         
         // the 0.02 delay ensures keychain is ready
         // the 3.0 delay ensures the welcome screen is visible till the initialization check is done
         testScheduler.advance(by: 3.02)
         
         // ad 1.
-        store.receive(.checkWalletInitialization)
+        store.receive(.initialization(.checkWalletInitialization))
 
         // ad 2.
-        store.receive(.respondToWalletInitializationState(.uninitialized))
+        store.receive(.initialization(.respondToWalletInitializationState(.uninitialized)))
         
         // ad 3.
-        store.receive(.updateDestination(.onboarding)) { state in
-            state.prevDestination = .welcome
-            state.internalDestination = .onboarding
+        store.receive(.destination(.updateDestination(.onboarding))) { state in
+            state.destinationState.previousDestination = .welcome
+            state.destinationState.internalDestination = .onboarding
         }
     }
 }

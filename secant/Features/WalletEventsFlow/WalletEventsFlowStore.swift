@@ -146,7 +146,9 @@ extension WalletEventsFlowViewStore {
                     return WalletEventsFlowReducer.Action.updateDestination(nil)
                 }
                 
-                return WalletEventsFlowReducer.Action.updateDestination( isActive ? WalletEventsFlowReducer.State.Destination.showWalletEvent(walletEvent) : nil)
+                return WalletEventsFlowReducer.Action.updateDestination(
+                    isActive ? WalletEventsFlowReducer.State.Destination.showWalletEvent(walletEvent) : nil
+                )
             }
         )
     }
