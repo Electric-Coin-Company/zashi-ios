@@ -12,7 +12,7 @@ struct OnboardingScreen: View {
     let store: Store<OnboardingFlowReducer.State, OnboardingFlowReducer.Action>
 
     var body: some View {
-        GeometryReader { proxy in
+        VStack {
             ZStack {
                 OnboardingHeaderView(
                     store: store.scope(
@@ -32,14 +32,12 @@ struct OnboardingScreen: View {
                 )
                 .zIndex(1)
                 
-                OnboardingContentView(
-                    store: store,
-                    width: proxy.size.width,
-                    height: proxy.size.height
-                )
-                
-                OnboardingFooterView(store: store)
+                OnboardingContentView(store: store)
             }
+
+            Spacer()
+            
+            OnboardingFooterView(store: store)
         }
         .navigationBarHidden(true)
         .applyScreenBackground()
@@ -81,7 +79,8 @@ struct OnboardingScreen_Previews: PreviewProvider {
             )
         )
         .preferredColorScheme(.light)
-        .previewDevice(PreviewDevice(rawValue: "iPhone 12 Pro"))
+        .previewDevice(PreviewDevice(rawValue: "iPhone 14 Pro"))
+        .environment(\.sizeCategory, .accessibilityLarge)
 
         OnboardingScreen(
             store: Store(
@@ -114,6 +113,6 @@ struct OnboardingScreen_Previews: PreviewProvider {
             )
         )
         .preferredColorScheme(.dark)
-        .previewDevice(PreviewDevice(rawValue: "iPhone 12 Pro"))
+        .previewDevice(PreviewDevice(rawValue: "iPhone 14 Pro"))
     }
 }

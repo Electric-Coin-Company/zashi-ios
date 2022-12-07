@@ -15,27 +15,28 @@ struct OnboardingFooterView: View {
     var body: some View {
         WithViewStore(self.store) { viewStore in
             VStack(spacing: 5) {
-                Spacer()
-                
                 if viewStore.isFinalStep {
                     Button("onboarding.button.newWallet") {
                         viewStore.send(.createNewWallet, animation: .easeInOut(duration: animationDuration))
                     }
                     .activeButtonStyle
                     .onboardingFooterButtonLayout()
-                    
+                    .minimumScaleFactor(0.1)
+
                     Button("onboarding.button.importWallet") {
                         viewStore.send(.importExistingWallet, animation: .easeInOut(duration: animationDuration))
                     }
                     .secondaryButtonStyle
                     .onboardingFooterButtonLayout()
+                    .minimumScaleFactor(0.1)
                 } else {
                     Button("Next") {
                         viewStore.send(.next, animation: .easeInOut(duration: animationDuration))
                     }
                     .primaryButtonStyle
                     .onboardingFooterButtonLayout()
-                    
+                    .minimumScaleFactor(0.1)
+
                     ProgressView(
                         String(format: "%02d", viewStore.index + 1),
                         value: Double(viewStore.index + 1),
@@ -46,6 +47,7 @@ struct OnboardingFooterView: View {
                     .padding(.vertical, 20)
                 }
             }
+            .padding(.top, 10)
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForDestination(.importExistingWallet),
                 destination: {
@@ -93,7 +95,8 @@ struct OnboardingFooterView_Previews: PreviewProvider {
             OnboardingFooterView(store: store)
                 .applyScreenBackground()
                 .preferredColorScheme(.light)
-                .previewDevice("iPhone 13 Pro Max")
+                .previewDevice("iPhone 14 Pro")
+                .environment(\.sizeCategory, .accessibilityLarge)
 
             OnboardingFooterView(store: store)
                 .applyScreenBackground()

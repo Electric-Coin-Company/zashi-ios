@@ -33,6 +33,7 @@ struct OnboardingHeaderView: View {
                         .navigationButtonStyle
                         .frame(width: 75)
                         .disabled(viewStore.isInitialStep)
+                        .minimumScaleFactor(0.1)
                     }
                     
                     Spacer()
@@ -44,6 +45,7 @@ struct OnboardingHeaderView: View {
                         .navigationButtonStyle
                         .disabled(viewStore.isFinalStep)
                         .frame(width: 75)
+                        .minimumScaleFactor(0.1)
                     }
                 }
                 .padding(.horizontal, 30)
@@ -51,7 +53,6 @@ struct OnboardingHeaderView: View {
                 
                 Spacer()
             }
-            .padding(.top, 5)
         }
     }
 }
