@@ -10,65 +10,47 @@ import ComposableArchitecture
 
 struct OnboardingContentView: View {
     let store: Store<OnboardingFlowReducer.State, OnboardingFlowReducer.Action>
-    let width: Double
-    let height: Double
     
     var body: some View {
         WithViewStore(self.store) { viewStore in
-            let scale = imageScale
-            let imageWidth: CGFloat = width * scale
-            let imageXOffset: CGFloat = (width - imageWidth) / 2
-
             let image = viewStore.steps[viewStore.index].background
                 .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: imageWidth)
-                .offset(x: imageXOffset)
+                .scaledToFit()
 
             let title = Text(viewStore.steps[viewStore.index].title)
                 .titleText()
                 .lineLimit(0)
                 .minimumScaleFactor(0.1)
-                .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
-
+                .padding(.vertical, 10)
+            
             let text = Text(viewStore.steps[viewStore.index].description)
                 .paragraphText()
                 .lineSpacing(2)
-                .padding(EdgeInsets(top: 0, leading: 10, bottom: 10, trailing: 10))
-
+                .minimumScaleFactor(0.1)
+                .padding(.horizontal, 20)
+            
             if viewStore.isFinalStep {
-                VStack(alignment: .leading) {
-                    title
-                        .padding(.top, 73 * imageScale)
+                VStack {
+                    HStack {
+                        title
+                            .padding(.top, 60)
+                        Spacer()
+                    }
+                    .padding(.horizontal, 20)
                     text
                     image
-                    Spacer()
                 }
             } else {
-                VStack(alignment: .leading) {
+                VStack {
                     image
-                    title
+                    HStack {
+                        title
+                        Spacer()
+                    }
+                    .padding(.horizontal, 20)
                     text
-                    Spacer()
                 }
             }
-        }
-    }
-}
-
-/// Following computations are necessary to handle properly sizing and positioning of elements
-/// on different devices (apects). iPhone SE and iPhone 8 are similar aspect family devices
-/// while iPhone X, 11, etc are different family devices, capable to use more of the space.
-extension OnboardingContentView {
-    var imageScale: CGFloat {
-        // Just to be sure that we counting with exactly 3 decimal points.
-        let aspectRatio = (floor(height / width * 1000)) / 1000
-
-        /// iPhone SE or iPhone 8 for example
-        if aspectRatio <= 1.725 {
-            return 0.7
-        } else {
-            return 1.0
         }
     }
 }
@@ -119,9 +101,9 @@ extension OnboardingContentView_Previews {
                 .zIndex(1)
                 
                 OnboardingContentView(
-                    store: store,
-                    width: proxy.size.width,
-                    height: proxy.size.height
+                    store: store
+//                    width: proxy.size.width,
+//                    height: proxy.size.height
                 )
             }
         }
