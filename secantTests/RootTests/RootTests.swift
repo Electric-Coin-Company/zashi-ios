@@ -1,5 +1,5 @@
 //
-//  AppTests.swift
+//  RootTests.swift
 //  secantTests
 //
 //  Created by Lukáš Korba on 12.04.2022.
@@ -9,7 +9,7 @@ import XCTest
 @testable import secant_testnet
 import ComposableArchitecture
 
-class AppTests: XCTestCase {
+class RootTests: XCTestCase {
     static let testScheduler = DispatchQueue.test
 
     func testWalletInitializationState_Uninitialized() throws {
@@ -53,10 +53,44 @@ class AppTests: XCTestCase {
 
         XCTAssertEqual(walletState, .uninitialized)
     }
+    
+    func testWalletInitializationState_FilesMissing() throws {
+        let wfmMock = FileManagerClient(
+            url: { _, _, _, _ in .emptyURL },
+            fileExists: { _ in return false },
+            removeItem: { _ in }
+        )
 
-    // TODO [#231]: - Implement testWalletInitializationState_FilesMissing when WalletStorage mock is available (https://github.com/zcash/secant-ios-wallet/issues/231)
+        var walletStorage = WalletStorageClient.noOp
+        walletStorage.areKeysPresent = { true }
+        
+        let walletState = RootReducer.walletInitializationState(
+            databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
+            walletStorage: walletStorage,
+            zcashSDKEnvironment: .testnet
+        )
 
-    // TODO [#231]: - Implement testWalletInitializationState_Initialized when WalletStorage mock is available (https://github.com/zcash/secant-ios-wallet/issues/231)
+        XCTAssertEqual(walletState, .filesMissing)
+    }
+    
+    func testWalletInitializationState_Initialized() throws {
+        let wfmMock = FileManagerClient(
+            url: { _, _, _, _ in .emptyURL },
+            fileExists: { _ in return true },
+            removeItem: { _ in }
+        )
+
+        var walletStorage = WalletStorageClient.noOp
+        walletStorage.areKeysPresent = { true }
+        
+        let walletState = RootReducer.walletInitializationState(
+            databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
+            walletStorage: walletStorage,
+            zcashSDKEnvironment: .testnet
+        )
+
+        XCTAssertEqual(walletState, .initialized)
+    }
 
     func testRespondToWalletInitializationState_Uninitialized() throws {
         let store = TestStore(

@@ -181,7 +181,7 @@
 		9EAB4676285B5C7C002904A0 /* DeeplinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAB4675285B5C7C002904A0 /* DeeplinkTests.swift */; };
 		9EAB46782860A1D2002904A0 /* WalletEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAB46772860A1D2002904A0 /* WalletEvent.swift */; };
 		9EAB467A2861EA6A002904A0 /* TransactionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAB46792861EA6A002904A0 /* TransactionRowView.swift */; };
-		9EAFEB822805793200199FC9 /* AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB812805793200199FC9 /* AppTests.swift */; };
+		9EAFEB822805793200199FC9 /* RootTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB812805793200199FC9 /* RootTests.swift */; };
 		9EAFEB84280597B700199FC9 /* SecItemInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB83280597B700199FC9 /* SecItemInterface.swift */; };
 		9EAFEB862805A23100199FC9 /* SecItemClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB852805A23100199FC9 /* SecItemClientTests.swift */; };
 		9EAFEB882806E5AE00199FC9 /* SDKSynchronizerInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB872806E5AE00199FC9 /* SDKSynchronizerInterface.swift */; };
@@ -473,7 +473,7 @@
 		9EAB4675285B5C7C002904A0 /* DeeplinkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeeplinkTests.swift; sourceTree = "<group>"; };
 		9EAB46772860A1D2002904A0 /* WalletEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletEvent.swift; sourceTree = "<group>"; };
 		9EAB46792861EA6A002904A0 /* TransactionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRowView.swift; sourceTree = "<group>"; };
-		9EAFEB812805793200199FC9 /* AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTests.swift; sourceTree = "<group>"; };
+		9EAFEB812805793200199FC9 /* RootTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTests.swift; sourceTree = "<group>"; };
 		9EAFEB83280597B700199FC9 /* SecItemInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecItemInterface.swift; sourceTree = "<group>"; };
 		9EAFEB852805A23100199FC9 /* SecItemClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecItemClientTests.swift; sourceTree = "<group>"; };
 		9EAFEB872806E5AE00199FC9 /* SDKSynchronizerInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKSynchronizerInterface.swift; sourceTree = "<group>"; };
@@ -697,7 +697,7 @@
 				9E01F8262833CD84000EFC57 /* ScanTests */,
 				9E5BF642281FEC8700BA3F17 /* SendTests */,
 				9E5BF63D281953F900BA3F17 /* WalletEventsTests */,
-				9EAFEB802805791400199FC9 /* AppTests */,
+				9EAFEB802805791400199FC9 /* RootTests */,
 				9EF8135927ECC25E0075AF48 /* UtilTests */,
 				0DFE93E4272CB6D0000FCCA5 /* RecoveryPhraseValidationTests */,
 				0DFE93DD272C6D4B000FCCA5 /* BackupFlowTests */,
@@ -1412,13 +1412,13 @@
 			path = DeeplinkTests;
 			sourceTree = "<group>";
 		};
-		9EAFEB802805791400199FC9 /* AppTests */ = {
+		9EAFEB802805791400199FC9 /* RootTests */ = {
 			isa = PBXGroup;
 			children = (
-				9EAFEB812805793200199FC9 /* AppTests.swift */,
+				9EAFEB812805793200199FC9 /* RootTests.swift */,
 				9E391131284644580073DD9A /* AppInitializationTests.swift */,
 			);
-			path = AppTests;
+			path = RootTests;
 			sourceTree = "<group>";
 		};
 		9EAFEB8B2808174900199FC9 /* Sandbox */ = {
@@ -2183,7 +2183,7 @@
 				9E5BF644281FEC9900BA3F17 /* SendTests.swift in Sources */,
 				0D1C1AA327611EFD0004AF6A /* RecoveryPhraseDisplayReducerTests.swift in Sources */,
 				9E9ECC9A28589E150099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests.swift in Sources */,
-				9EAFEB822805793200199FC9 /* AppTests.swift in Sources */,
+				9EAFEB822805793200199FC9 /* RootTests.swift in Sources */,
 				9E391132284644580073DD9A /* AppInitializationTests.swift in Sources */,
 				9E9ECC9928589E150099D5A2 /* RecoveryPhraseDisplaySnapshotTests.swift in Sources */,
 				9E391124283E4CAC0073DD9A /* ImportWalletTests.swift in Sources */,
