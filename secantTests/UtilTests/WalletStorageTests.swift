@@ -34,7 +34,7 @@ class WalletStorageTests: XCTestCase {
         deleteData(forKey: WalletStorage.Constants.zcashStoredWallet)
     }
     
-    func testWalletStoredSuccessfuly() throws {
+    func testWalletStoredSuccessfully() throws {
         do {
             try storage.importWallet(bip39: seedPhrase, birthday: birthday)
             guard let data = data(forKey: WalletStorage.Constants.zcashStoredWallet) else {
@@ -48,7 +48,7 @@ class WalletStorageTests: XCTestCase {
             XCTAssertEqual(birthday, walletReceived.birthday, "Keychain: stored birthday and retrieved one must be the same.")
             XCTAssertEqual(seedPhrase, walletReceived.seedPhrase, "Keychain: stored seed phrase and retrieved one must be the same.")
         } catch let err {
-            XCTFail("Keychain: no error is expected for `testWalletStoredSucessfuly` but received. \(err)")
+            XCTFail("Keychain: no error is expected for `testWalletStoredSuccessfully` but received. \(err)")
         }
     }
 

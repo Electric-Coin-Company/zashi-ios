@@ -8,7 +8,7 @@
 import ComposableArchitecture
 
 /// In this file is a collection of helpers that control all state and action related operations
-/// for the `RootReducer` with a connection to the app/wallet initalization and erasure of the wallet.
+/// for the `RootReducer` with a connection to the app/wallet initialization and erasure of the wallet.
 extension RootReducer {
     enum InitializationAction: Equatable {
         case appDelegate(AppDelegateAction)

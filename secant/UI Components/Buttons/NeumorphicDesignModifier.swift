@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-/// Neumorphic design is charasterictical with two shadows (light & dark) around the view
-/// Appereance in our case is influenced by two parameters:
+/// Neumorphic design is characteristical with two shadows (light & dark) around the view
+/// Appearance in our case is influenced by two parameters:
 /// - Parameters:
 ///   - colorScheme: The light is using full neumorphic design while dark is limited to soft shadow only
 ///   - isPressed: When the button is pressed, there are different behaviours for light vs. dark colorScheme
@@ -40,8 +40,8 @@ fileprivate struct Neumorphic: ViewModifier {
     }
 }
 
-/// Neumorphic design is charasterictical with two shadows (light & dark) around the button
-/// Appereance in our case is influenced by two parameters:
+/// Neumorphic design is characteristical with two shadows (light & dark) around the button
+/// Appearance in our case is influenced by two parameters:
 /// - Parameters:
 ///   - colorScheme: The light is using full neumorphic design while dark is limited to soft shadow only
 ///   - isPressed: When the button is pressed, there are different behaviours for light vs. dark colorScheme
