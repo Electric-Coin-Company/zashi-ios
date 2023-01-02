@@ -48,7 +48,7 @@ struct WalletStorage {
         language: MnemonicLanguageType = .english,
         hasUserPassedPhraseBackupTest: Bool = false
     ) throws {
-        // Future-proof of the bundle to potentialy avoid migration. We enforce english mnemonic.
+        // Future-proof of the bundle to potentially avoid migration. We enforce english mnemonic.
         guard language == .english else {
             throw WalletStorageError.unsupportedLanguage(language)
         }

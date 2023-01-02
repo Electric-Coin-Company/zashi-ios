@@ -45,7 +45,7 @@ This information will help us review and fix your issue faster.
 
 ## Pull Requests
 
-We **love** pull requests! 
+We **love** pull requests!
 
 All contributions _will_ be licensed under the MIT license.
 
@@ -76,7 +76,7 @@ in the project's lifetime in a given context. A good record of the changes that
 occurred during the project's life helps to guarantee that it can outlive its
 stakeholders no matter how foundational or crucial these individuals (or
 groups) were. As any reading material, it is best appreciated and comprehended
-when there's a visible structure that readers can follow and reason about. 
+when there's a visible structure that readers can follow and reason about.
 
 For that we've defined a structure for commit messages that all contributors must
 follow to maintain coherence on the project's commit log. The proposed format
@@ -86,29 +86,29 @@ has been inspired by [this great article](https://cbea.ms/git-commit/)
 ### Preparing to contribute to the project
 The first thing you should look for is an existing issue. It is possible
 that the contribution you are planning to work on was already discussed
-by other users and/or contributors in the past. If not present, file an 
-issue following the criteria described in the preceeding sections.
+by other users and/or contributors in the past. If not present, file an
+issue following the criteria described in the preceding sections.
 
 Every contribution must reference an existing Issue. This issue is important
-since it will be directly referenced in the title of your commit. 
+since it will be directly referenced in the title of your commit.
 
 Although we prefer small PR's. We encourage our contributors to use Squash
-commits extensively. Maintainers prefer avoiding _merge commits_ when possible. 
+commits extensively. Maintainers prefer avoiding _merge commits_ when possible.
 It is very much likely that _if accepted_, your contribution will be _squash merged_.
 
 When squashing commits, use your best judgement. In some situations, a refactoring may
 be done before actual behavior changes are implemented. It is reasonable to keep such
-a refactoring as a separate commit as it both makes review easier and allows for 
+a refactoring as a separate commit as it both makes review easier and allows for
 these refactoring commit SHAs to be added to `.git-blame-ignore-revs`.
 
 ### Structuring a PR Commit
 
 #### Commit Title
-The first line of your commit message constitutes its _title_. Maintainers will 
+The first line of your commit message constitutes its _title_. Maintainers will
 use commit titles to create release notes. Your contribution will be featured
 in a public release of the project. Think of it as a newspaper headline. It
 should be descriptive and provide the reader a broad idea of what the commit is
-about. You can use a related github issue if it matches this criterion. 
+about. You can use a related github issue if it matches this criterion.
 
 **Preferred title format**
 
@@ -155,7 +155,7 @@ Date:   some date
     Add //TODO comment with the permanent fix for the problem
 ````
 
-When you open a PR with a commit like this one the first line will land on the GUI's title field, 
+When you open a PR with a commit like this one the first line will land on the GUI's title field,
 and the body will be added as the description of the PR.
 
 Adding the text `Closes #{issue_number}` will tell GitHub to close the issue when the PR is merged.

@@ -1,5 +1,5 @@
 //
-//  Array+Chuncked.swift
+//  Array+Chunked.swift
 //  secant-testnet
 //
 //  Created by Lukáš Korba on 12.05.2022.

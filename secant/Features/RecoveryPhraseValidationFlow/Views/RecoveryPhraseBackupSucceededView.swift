@@ -77,7 +77,7 @@ struct RecoveryPhraseBackupSucceededView: View {
 }
 
 /// Following computations are necessary to handle properly sizing and positioning of elements
-/// on different devices (apects). iPhone SE and iPhone 8 are similar aspect family devices
+/// on different devices (aspects). iPhone SE and iPhone 8 are similar aspect family devices
 /// while iPhone X, 11, etc are different family devices, capable to use more of the space.
 extension RecoveryPhraseBackupSucceededView {
     func circularFrameUniformSize(width: CGFloat, height: CGFloat) -> CGFloat {

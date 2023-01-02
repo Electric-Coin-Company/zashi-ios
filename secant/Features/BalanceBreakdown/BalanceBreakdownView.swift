@@ -33,7 +33,7 @@ struct BalanceBreakdownView: View {
                 
                 HStack {
                     Spacer()
-                    Text("Auto Shielding Treshold: \(viewStore.autoShieldingTreshold.decimalString()) ZEC")
+                    Text("Auto Shielding Threshold: \(viewStore.autoShieldingThreshold.decimalString()) ZEC")
                 }
                 .padding(.horizontal, 50)
             }

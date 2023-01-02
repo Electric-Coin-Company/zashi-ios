@@ -78,7 +78,7 @@ class ZatoshiTests: XCTestCase {
         XCTAssertEqual(
             result4.amount,
             Zatoshi.Constants.maxZatoshi,
-            "Zatoshi tests: `testAddingZatoshi` the value is expected to be clapmed to upper bound but it's \(result4.amount)"
+            "Zatoshi tests: `testAddingZatoshi` the value is expected to be clamped to upper bound but it's \(result4.amount)"
         )
     }
     
@@ -119,7 +119,7 @@ class ZatoshiTests: XCTestCase {
         XCTAssertEqual(
             result4.amount,
             -Zatoshi.Constants.maxZatoshi,
-            "Zatoshi tests: `testSubtractingZatoshi` the value is expected to be clapmed to lower bound but it's \(result4.amount)"
+            "Zatoshi tests: `testSubtractingZatoshi` the value is expected to be clamped to lower bound but it's \(result4.amount)"
         )
     }
     
@@ -131,7 +131,7 @@ class ZatoshiTests: XCTestCase {
         // but decimalString is rounding it to maximumFractionDigits set to be 8
         
         // We can't compare it to double value 1.42857143 (or even Decimal(1.42857143))
-        // so we convert it to string, in that case we are prooving it to be rendered
+        // so we convert it to string, in that case we are proving it to be rendered
         //    to the user exactly the way we want
         XCTAssertEqual(
             number.decimalString(formatter: usNumberFormatter),

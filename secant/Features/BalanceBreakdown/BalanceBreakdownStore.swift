@@ -15,7 +15,7 @@ struct BalanceBreakdownReducer: ReducerProtocol {
     private enum CancelId {}
     
     struct State: Equatable {
-        var autoShieldingTreshold: Zatoshi
+        var autoShieldingThreshold: Zatoshi
         var latestBlock: String
         var shieldedBalance: WalletBalance
         var transparentBalance: WalletBalance
@@ -78,7 +78,7 @@ struct BalanceBreakdownReducer: ReducerProtocol {
 
 extension BalanceBreakdownReducer.State {
     static let placeholder = BalanceBreakdownReducer.State(
-        autoShieldingTreshold: Zatoshi(1_000_000),
+        autoShieldingThreshold: Zatoshi(1_000_000),
         latestBlock: "unknown",
         shieldedBalance: WalletBalance.zero,
         transparentBalance: WalletBalance.zero

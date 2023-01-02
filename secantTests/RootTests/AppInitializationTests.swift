@@ -10,8 +10,8 @@ import XCTest
 import ComposableArchitecture
 
 class AppInitializationTests: XCTestCase {
-    /// This integration test starts with finishing the app launch and triggering bunch of initialization proceedures.
-    /// 1. The app calls .checkWalletInitialization delayed by 0.02 seconds to ensure keychain is successfuly operational.
+    /// This integration test starts with finishing the app launch and triggering bunch of initialization procedures.
+    /// 1. The app calls .checkWalletInitialization delayed by 0.02 seconds to ensure keychain is successfully operational.
     /// 2. The .respondToWalletInitializationState is triggered to decide the state of the wallet.
     /// 3. The .initializeSDK is triggered to set the state of the app and preparing the synchronizer.
     /// 4. The .checkBackupPhraseValidation is triggered to check the validation state.
@@ -130,7 +130,7 @@ class AppInitializationTests: XCTestCase {
     }
     
     /// Integration test validating the side effects work together properly when no wallet is stored but database files are present.
-    /// 1. The app calls .checkWalletInitialization delayed by 0.02 seconds to ensure keychain is successfuly operational.
+    /// 1. The app calls .checkWalletInitialization delayed by 0.02 seconds to ensure keychain is successfully operational.
     /// 2. The .respondToWalletInitializationState is triggered to decide the state of the wallet.
     func testDidFinishLaunching_to_KeysMissing() throws {
         // setup the store and environment to be fully mocked
@@ -162,9 +162,9 @@ class AppInitializationTests: XCTestCase {
     }
     
     /// Integration test validating the side effects work together properly when no wallet is stored and no database files are present.
-    /// 1. The app calls .checkWalletInitialization delayed by 0.02 seconds to ensure keychain is successfuly operational.
+    /// 1. The app calls .checkWalletInitialization delayed by 0.02 seconds to ensure keychain is successfully operational.
     /// 2. The .respondToWalletInitializationState is triggered to decide the state of the wallet.
-    /// 3. The wallet is no prosent, onboarding flow is triggered.
+    /// 3. The wallet is not present, onboarding flow is triggered.
     func testDidFinishLaunching_to_Uninitialized() throws {
         // setup the store and environment to be fully mocked
         let testScheduler = DispatchQueue.test

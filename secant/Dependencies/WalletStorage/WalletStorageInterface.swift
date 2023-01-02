@@ -33,7 +33,7 @@ struct WalletStorageClient {
     /// - Throws:
     ///   - `WalletStorageError.unsupportedLanguage`:  when mnemonic's language is anything other than English
     ///   - `WalletStorageError.alreadyImported` when valid wallet is already in the storage
-    ///   - `WalletStorageError.storageError` when some unrecognized error occured
+    ///   - `WalletStorageError.storageError` when some unrecognized error occurred
     let importWallet: (String, BlockHeight?, MnemonicLanguageType, Bool) throws -> Void
 
     /// Load the representation of the wallet from the persistent and secured storage.
@@ -41,13 +41,13 @@ struct WalletStorageClient {
     /// - Returns: the representation of the wallet from the persistent and secured storage.
     /// - Throws:
     ///   - `WalletStorageError.uninitializedWallet`:  when no wallet's data is found in the keychain.
-    ///   - `WalletStorageError.storageError` when some unrecognized error occured.
+    ///   - `WalletStorageError.storageError` when some unrecognized error occurred.
     ///   - `WalletStorageError.unsupportedVersion` when wallet's version stored in the keychain is outdated.
     var exportWallet: () throws -> StoredWallet
 
     /// Check if the wallet representation `StoredWallet` is present in the persistent storage.
     ///
-    /// - Returns: the information wheather some wallet is stored or is not available
+    /// - Returns: the information whether some wallet is stored or is not available
     var areKeysPresent: () throws -> Bool
 
     /// Update the birthday in the securely stored wallet.
@@ -56,16 +56,16 @@ struct WalletStorageClient {
     ///   - birthday: BlockHeight from SDK
     /// - Throws:
     ///   - `WalletStorage.KeychainError.encoding`:  when encoding the wallet's data failed.
-    ///   - `WalletStorageError.storageError` when some unrecognized error occured.
+    ///   - `WalletStorageError.storageError` when some unrecognized error occurred.
     let updateBirthday: (BlockHeight) throws -> Void
 
     /// Update the information that user has passed the recovery phrase backup test.
-    /// The fuction doesn't take any parameters, default value is the user hasn't passed the test
-    /// and this fucntion only sets the true = fact user passed.
+    /// The function doesn't take any parameters, default value is the user hasn't passed the test
+    /// and this function only sets the true = fact user passed.
     ///
     /// - Throws:
     ///   - `WalletStorage.KeychainError.encoding`:  when encoding the wallet's data failed.
-    ///   - `WalletStorageError.storageError` when some unrecognized error occured.
+    ///   - `WalletStorageError.storageError` when some unrecognized error occurred.
     let markUserPassedPhraseBackupTest: () throws -> Void
 
     /// Use carefully: deletes the stored wallet.

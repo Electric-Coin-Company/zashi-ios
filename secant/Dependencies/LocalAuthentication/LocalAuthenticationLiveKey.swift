@@ -24,12 +24,12 @@ extension LocalAuthenticationClient: DependencyKey {
                     if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
                         return try await context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason)
                     } else {
-                        /// No local authentication available, user's device is not protected, fallback to allow access to sensetive content
+                        /// No local authentication available, user's device is not protected, fallback to allow access to sensitive content
                         return true
                     }
                 }
             } catch {
-                /// Some interuption occured during the authentication, access to the sensitive content is therefore forbiden
+                /// Some interruption occurred during the authentication, access to the sensitive content is therefore forbidden
                 return false
             }
         }

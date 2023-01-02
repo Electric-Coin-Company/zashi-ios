@@ -36,7 +36,7 @@ Use the appropriate name for a feature you want to build. The <feature name> mus
 
 ```swift
 // Project structure
-// Folder <feature name> woth following files:
+// Folder <feature name> with following files:
 
 // <feature name>Store.swift
 struct <feature name>State: Equatable { }
