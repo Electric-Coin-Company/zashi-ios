@@ -152,7 +152,7 @@ extension RootReducer {
                         Effect(value: .phraseValidation(.displayBackedUpPhrase))
                     )
                 } catch {
-                    // TODO [#201]: - merge with issue 201 (https://github.com/zcash/secant-ios-wallet/issues/201) and its Error States
+                    // TODO [#201]: - merge with issue 221 (https://github.com/zcash/secant-ios-wallet/issues/221) and its Error States
                 }
 
                 return .none
