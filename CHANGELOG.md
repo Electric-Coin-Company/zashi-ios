@@ -1,6 +1,6 @@
 # Changelog
 
-# 0.0.1 build 36
+# 0.0.1 build 37
 
 - [#512] Check that every TODO in code has an open issue (#513)
 - [#507] Community PR - Fix typos (#507)
