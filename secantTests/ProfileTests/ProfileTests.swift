@@ -8,6 +8,7 @@
 import XCTest
 @testable import secant_testnet
 import ComposableArchitecture
+import ZcashLightClientKit
 
 class ProfileTests: XCTestCase {
     @MainActor func testSynchronizerStateChanged_AnyButSynced() async throws {
@@ -19,10 +20,14 @@ class ProfileTests: XCTestCase {
             dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
         }
 
-        _ = await store.send(.onAppear)
+        // swiftlint:disable line_length
+        let uAddress = try UnifiedAddress(
+            encoding: "utest1zkkkjfxkamagznjr6ayemffj2d2gacdwpzcyw669pvg06xevzqslpmm27zjsctlkstl2vsw62xrjktmzqcu4yu9zdhdxqz3kafa4j2q85y6mv74rzjcgjg8c0ytrg7dwyzwtgnuc76h",
+            network: .testnet
+        )
 
-        await store.receive(.onAppearFinished("ztestsapling1edm52k336nk70gxqxedd89slrrf5xwnnp5rt6gqnk0tgw4mynv6fcx42ym6x27yac5amvfvwypz")) { state in
-            state.address = "ztestsapling1edm52k336nk70gxqxedd89slrrf5xwnnp5rt6gqnk0tgw4mynv6fcx42ym6x27yac5amvfvwypz"
+        _ = await store.send(.onAppear) { state in
+            state.addressDetailsState.uAddress = uAddress
             state.appVersion = "0.0.1"
             state.appBuild = "31"
             state.sdkVersion = "0.17.0-beta"

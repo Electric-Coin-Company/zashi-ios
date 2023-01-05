@@ -111,6 +111,14 @@ class MockSDKSynchronizerClient: SDKSynchronizerClient {
         .eraseToEffect()
     }
 
+    func getUnifiedAddress(account: Int) -> UnifiedAddress? {
+        // swiftlint:disable line_length
+        try! UnifiedAddress(
+            encoding: "utest1zkkkjfxkamagznjr6ayemffj2d2gacdwpzcyw669pvg06xevzqslpmm27zjsctlkstl2vsw62xrjktmzqcu4yu9zdhdxqz3kafa4j2q85y6mv74rzjcgjg8c0ytrg7dwyzwtgnuc76h",
+            network: .testnet
+        )
+    }
+    
     func getTransparentAddress(account: Int) -> TransparentAddress? { nil }
     
     func getSaplingAddress(accountIndex account: Int) -> SaplingAddress? {

@@ -166,6 +166,10 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
         return .none
     }
 
+    func getUnifiedAddress(account: Int) -> UnifiedAddress? {
+        synchronizer?.getUnifiedAddress(accountIndex: account)
+    }
+    
     func getTransparentAddress(account: Int) -> TransparentAddress? {
         synchronizer?.getTransparentAddress(accountIndex: account)
     }

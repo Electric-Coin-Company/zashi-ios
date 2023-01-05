@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import SwiftUI
+import ZcashLightClientKit
 
 typealias ProfileStore = Store<ProfileReducer.State, ProfileReducer.Action>
 typealias ProfileViewStore = ViewStore<ProfileReducer.State, ProfileReducer.Action>
@@ -11,20 +12,22 @@ struct ProfileReducer: ReducerProtocol {
             case settings
         }
 
-        var address = ""
         var addressDetailsState: AddressDetailsReducer.State
         var appBuild = ""
         var appVersion = ""
         var destination: Destination?
         var sdkVersion = ""
         var settingsState: SettingsReducer.State
+        
+        var unifiedAddress: String {
+            addressDetailsState.uAddress?.stringEncoded ?? "could not extract UA"
+        }
     }
 
     enum Action: Equatable {
         case addressDetails(AddressDetailsReducer.Action)
         case back
         case onAppear
-        case onAppearFinished(String)
         case settings(SettingsReducer.Action)
         case updateDestination(ProfileReducer.State.Destination?)
     }
@@ -45,13 +48,7 @@ struct ProfileReducer: ReducerProtocol {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                return Effect.task {
-                    let saplingAddress = await self.sdkSynchronizer.getSaplingAddress()?.stringEncoded ?? ""
-                    return .onAppearFinished(saplingAddress)
-                }
-
-            case let .onAppearFinished(saplingAddress):
-                state.address = saplingAddress
+                state.addressDetailsState.uAddress = self.sdkSynchronizer.getUnifiedAddress(account: 0)
                 state.appBuild = appVersion.appBuild()
                 state.appVersion = appVersion.appVersion()
                 state.sdkVersion = zcashSDKEnvironment.sdkVersion
@@ -77,6 +74,13 @@ struct ProfileReducer: ReducerProtocol {
 // MARK: - Store
 
 extension ProfileStore {
+    func addressStore() -> AddressDetailsStore {
+        self.scope(
+            state: \.addressDetailsState,
+            action: ProfileReducer.Action.addressDetails
+        )
+    }
+
     func settingsStore() -> SettingsStore {
         self.scope(
             state: \.settingsState,

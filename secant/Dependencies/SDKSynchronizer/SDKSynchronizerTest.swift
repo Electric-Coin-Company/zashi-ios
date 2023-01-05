@@ -48,6 +48,8 @@ class NoopSDKSynchronizer: SDKSynchronizerClient {
 
     func getAllTransactions() -> Effect<[WalletEvent], Never> { Effect(value: []) }
 
+    func getUnifiedAddress(account: Int) -> UnifiedAddress? { nil }
+    
     func getTransparentAddress(account: Int) -> TransparentAddress? { nil }
     
     func getSaplingAddress(accountIndex account: Int) -> SaplingAddress? { nil }
@@ -158,6 +160,8 @@ class TestSDKSynchronizerClient: SDKSynchronizerClient {
         .collect()
         .eraseToEffect()
     }
+
+    func getUnifiedAddress(account: Int) -> UnifiedAddress? { nil }
 
     func getTransparentAddress(account: Int) -> TransparentAddress? { nil }
 
