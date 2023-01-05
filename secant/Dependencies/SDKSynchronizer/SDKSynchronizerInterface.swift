@@ -63,6 +63,7 @@ protocol SDKSynchronizerClient {
     func getAllPendingTransactions() -> Effect<[WalletEvent], Never>
     func getAllTransactions() -> Effect<[WalletEvent], Never>
 
+    func getUnifiedAddress(account: Int) -> UnifiedAddress?
     func getTransparentAddress(account: Int) -> TransparentAddress?
     func getSaplingAddress(accountIndex: Int) async -> SaplingAddress?
     
@@ -77,13 +78,5 @@ protocol SDKSynchronizerClient {
 extension SDKSynchronizerClient {
     func start() throws {
         try start(retry: false)
-    }
-
-    func getTransparentAddress() -> TransparentAddress? {
-        getTransparentAddress(account: 0)
-    }
-
-    func getSaplingAddress() async -> SaplingAddress? {
-        await getSaplingAddress(accountIndex: 0)
     }
 }

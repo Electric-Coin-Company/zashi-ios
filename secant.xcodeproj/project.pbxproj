@@ -112,6 +112,8 @@
 		9E153A7529216EFB00112F41 /* UserDefaultsLiveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E153A7229216EFB00112F41 /* UserDefaultsLiveKey.swift */; };
 		9E153A7629216EFB00112F41 /* UserDefaultsInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E153A7329216EFB00112F41 /* UserDefaultsInterface.swift */; };
 		9E153A7729216EFB00112F41 /* UserDefaultsTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E153A7429216EFB00112F41 /* UserDefaultsTestKey.swift */; };
+		9E207C362966EC77003E2C9B /* AddressDetailsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E207C352966EC77003E2C9B /* AddressDetailsSnapshotTests.swift */; };
+		9E207C392966EF87003E2C9B /* AddressDetailsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E207C382966EF87003E2C9B /* AddressDetailsTests.swift */; };
 		9E2AC0FF27D8EC120042AA47 /* MnemonicSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9E2AC0FE27D8EC120042AA47 /* MnemonicSwift */; };
 		9E2DF99C27CF704D00649636 /* ImportWalletStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2DF99827CF704D00649636 /* ImportWalletStore.swift */; };
 		9E2DF99D27CF704D00649636 /* ImportSeedEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2DF99A27CF704D00649636 /* ImportSeedEditor.swift */; };
@@ -406,6 +408,8 @@
 		9E153A7229216EFB00112F41 /* UserDefaultsLiveKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsLiveKey.swift; sourceTree = "<group>"; };
 		9E153A7329216EFB00112F41 /* UserDefaultsInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsInterface.swift; sourceTree = "<group>"; };
 		9E153A7429216EFB00112F41 /* UserDefaultsTestKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsTestKey.swift; sourceTree = "<group>"; };
+		9E207C352966EC77003E2C9B /* AddressDetailsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressDetailsSnapshotTests.swift; sourceTree = "<group>"; };
+		9E207C382966EF87003E2C9B /* AddressDetailsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressDetailsTests.swift; sourceTree = "<group>"; };
 		9E2DF99827CF704D00649636 /* ImportWalletStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportWalletStore.swift; sourceTree = "<group>"; };
 		9E2DF99A27CF704D00649636 /* ImportSeedEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportSeedEditor.swift; sourceTree = "<group>"; };
 		9E2DF99B27CF704D00649636 /* ImportWalletView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportWalletView.swift; sourceTree = "<group>"; };
@@ -687,6 +691,7 @@
 			isa = PBXGroup;
 			children = (
 				9E391162284E3ECF0073DD9A /* SnapshotTests */,
+				9E207C372966EF6E003E2C9B /* AddressDetailsTests */,
 				9E94C61E28AA7DD5008256E9 /* BalanceBreakdownTests */,
 				9E6713EF2897F80A00A6796F /* MultiLineTextFieldTests */,
 				9E7CB6222874245400A02233 /* ProfileTests */,
@@ -998,6 +1003,22 @@
 			path = UserDefaults;
 			sourceTree = "<group>";
 		};
+		9E207C342966EC60003E2C9B /* AddressDetailsSnapshotTests */ = {
+			isa = PBXGroup;
+			children = (
+				9E207C352966EC77003E2C9B /* AddressDetailsSnapshotTests.swift */,
+			);
+			path = AddressDetailsSnapshotTests;
+			sourceTree = "<group>";
+		};
+		9E207C372966EF6E003E2C9B /* AddressDetailsTests */ = {
+			isa = PBXGroup;
+			children = (
+				9E207C382966EF87003E2C9B /* AddressDetailsTests.swift */,
+			);
+			path = AddressDetailsTests;
+			sourceTree = "<group>";
+		};
 		9E2DF99727CF704D00649636 /* ImportWallet */ = {
 			isa = PBXGroup;
 			children = (
@@ -1034,6 +1055,7 @@
 		9E391162284E3ECF0073DD9A /* SnapshotTests */ = {
 			isa = PBXGroup;
 			children = (
+				9E207C342966EC60003E2C9B /* AddressDetailsSnapshotTests */,
 				9E94C62128AA7ECD008256E9 /* BalanceBreakdownSnapshotTests */,
 				9E9ECC8B28589E150099D5A2 /* HomeSnapshotTests */,
 				9E9ECC9328589E150099D5A2 /* ImportWalletSnapshotTests */,
@@ -2193,9 +2215,11 @@
 				0DFE93E6272CB6F7000FCCA5 /* RecoveryPhraseValidationTests.swift in Sources */,
 				9E66122A287717A900C75B70 /* HomeCircularProgressSnapshotTests.swift in Sources */,
 				9EAB4676285B5C7C002904A0 /* DeeplinkTests.swift in Sources */,
+				9E207C362966EC77003E2C9B /* AddressDetailsSnapshotTests.swift in Sources */,
 				9E3911392848AD500073DD9A /* HomeTests.swift in Sources */,
 				9E9ECC9C28589E150099D5A2 /* OnboardingSnapshotTests.swift in Sources */,
 				9E9ECC9728589E150099D5A2 /* HomeSnapshotTests.swift in Sources */,
+				9E207C392966EF87003E2C9B /* AddressDetailsTests.swift in Sources */,
 				9EF8135C27ECC25E0075AF48 /* WalletStorageTests.swift in Sources */,
 				0DB4E0B12881F2DB00947B78 /* WalletBalance+testing.swift in Sources */,
 				9E02B56C27FED475005B809B /* DatabaseFilesTests.swift in Sources */,

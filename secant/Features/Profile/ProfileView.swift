@@ -7,10 +7,10 @@ struct ProfileView: View {
     var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
-                qrCodeUA(viewStore.address)
+                qrCodeUA(viewStore.unifiedAddress)
                     .padding(.top, 30)
                 
-                Text("Your UA address \(viewStore.address)")
+                Text("Your UA address \(viewStore.unifiedAddress)")
                     .truncationMode(.middle)
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
@@ -73,7 +73,7 @@ struct ProfileView: View {
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForAddressDetails,
                 destination: {
-                    AddressDetails(store: .placeholder)
+                    AddressDetailsView(store: store.addressStore())
                 }
             )
         }
