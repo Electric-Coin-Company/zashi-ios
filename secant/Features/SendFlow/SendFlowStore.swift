@@ -19,15 +19,17 @@ struct SendFlowReducer: ReducerProtocol {
         enum Destination: Equatable {
             case confirmation
             case inProgress
+            case scanQR
             case success
             case failure
             case done
         }
 
         var addMemoState: Bool
+        var destination: Destination?
         var isSendingTransaction = false
         var memoState: MultiLineTextFieldReducer.State
-        var destination: Destination?
+        var scanState: ScanReducer.State
         var shieldedBalance = WalletBalance.zero
         var transactionAddressInputState: TransactionAddressTextFieldReducer.State
         var transactionAmountInputState: TransactionAmountTextFieldReducer.State
@@ -78,6 +80,7 @@ struct SendFlowReducer: ReducerProtocol {
         case memo(MultiLineTextFieldReducer.Action)
         case onAppear
         case onDisappear
+        case scan(ScanReducer.Action)
         case sendConfirmationPressed
         case sendTransactionResult(Result<TransactionState, NSError>)
         case synchronizerStateChanged(SDKSynchronizerState)
@@ -86,6 +89,7 @@ struct SendFlowReducer: ReducerProtocol {
         case updateDestination(SendFlowReducer.State.Destination?)
     }
     
+    @Dependency(\.audioServices) var audioServices
     @Dependency(\.derivationTool) var derivationTool
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.mnemonic) var mnemonic
@@ -108,6 +112,10 @@ struct SendFlowReducer: ReducerProtocol {
 
         Scope(state: \.transactionAmountInputState, action: /Action.transactionAmountInput) {
             TransactionAmountTextFieldReducer()
+        }
+
+        Scope(state: \.scanState, action: /Action.scan) {
+            ScanReducer()
         }
 
         Reduce { state, action in
@@ -188,6 +196,9 @@ struct SendFlowReducer: ReducerProtocol {
             case .transactionAmountInput:
                 return .none
 
+            case .transactionAddressInput(.scanQR):
+                return Effect(value: .updateDestination(.scanQR))
+
             case .transactionAddressInput:
                 return .none
 
@@ -213,6 +224,17 @@ struct SendFlowReducer: ReducerProtocol {
 
             case .memo:
                 return .none
+                
+            case .scan(.found(let address)):
+                state.transactionAddressInputState.textFieldState.text = address
+                // The is valid Zcash address check is already covered in the scan feature
+                // so we can be sure it's valid and thus `true` value here.
+                state.transactionAddressInputState.isValidAddress = true
+                audioServices.systemSoundVibrate()
+                return Effect(value: .updateDestination(nil))
+
+            case .scan:
+                return .none
             }
         }
     }
@@ -227,11 +249,18 @@ extension SendFlowStore {
             action: SendFlowReducer.Action.addMemo
         )
     }
-
+    
     func memoStore() -> MultiLineTextFieldStore {
         self.scope(
             state: \.memoState,
             action: SendFlowReducer.Action.memo
+        )
+    }
+    
+    func scanStore() -> ScanStore {
+        self.scope(
+            state: \.scanState,
+            action: SendFlowReducer.Action.scan
         )
     }
 }
@@ -282,6 +311,15 @@ extension SendFlowViewStore {
             embed: { _ in SendFlowReducer.State.Destination.failure }
         )
     }
+    
+    var bindingForScanQR: Binding<Bool> {
+        self.destinationBinding.map(
+            extract: {
+                $0 == .scanQR
+            },
+            embed: { $0 ? SendFlowReducer.State.Destination.scanQR : nil }
+        )
+    }
 }
 
 // MARK: Placeholders
@@ -290,8 +328,9 @@ extension SendFlowReducer.State {
     static var placeholder: Self {
         .init(
             addMemoState: true,
-            memoState: .placeholder,
             destination: nil,
+            memoState: .placeholder,
+            scanState: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState: .amount
         )
@@ -300,8 +339,9 @@ extension SendFlowReducer.State {
     static var emptyPlaceholder: Self {
         .init(
             addMemoState: true,
-            memoState: .placeholder,
             destination: nil,
+            memoState: .placeholder,
+            scanState: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState: .placeholder
         )
