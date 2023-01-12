@@ -22,6 +22,12 @@ struct SendFlowView: View {
                     TransactionConfirmation(store: store)
                 }
             )
+            .navigationLinkEmpty(
+                isActive: viewStore.bindingForScanQR,
+                destination: {
+                    ScanView(store: store.scanStore())
+                }
+            )
         }
     }
 }
@@ -35,8 +41,9 @@ struct SendFLowView_Previews: PreviewProvider {
                 store: .init(
                     initialState: .init(
                         addMemoState: true,
-                        memoState: .placeholder,
                         destination: nil,
+                        memoState: .placeholder,
+                        scanState: .placeholder,
                         transactionAddressInputState: .placeholder,
                         transactionAmountInputState: .placeholder
                     ),

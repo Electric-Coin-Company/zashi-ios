@@ -36,9 +36,13 @@ struct TransactionAddressTextField: View {
                     },
                     inputPrefixView: { EmptyView() },
                     inputAccessoryView: {
-                        Image(Asset.Assets.Icons.qrCode.name)
-                            .resizable()
-                            .frame(width: 30, height: 30)
+                        Button {
+                            viewStore.send(.scanQR)
+                        } label: {
+                            Image(Asset.Assets.Icons.qrCode.name)
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                        }
                     }
                 )
             }

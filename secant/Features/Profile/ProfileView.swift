@@ -6,7 +6,7 @@ struct ProfileView: View {
 
     var body: some View {
         WithViewStore(store) { viewStore in
-            VStack {
+            ScrollView {
                 qrCodeUA(viewStore.unifiedAddress)
                     .padding(.top, 30)
                 

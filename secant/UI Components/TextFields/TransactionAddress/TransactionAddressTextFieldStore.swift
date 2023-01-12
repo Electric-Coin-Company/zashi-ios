@@ -18,6 +18,7 @@ struct TransactionAddressTextFieldReducer: ReducerProtocol {
 
     enum Action: Equatable {
         case clearAddress
+        case scanQR
         case textField(TCATextFieldReducer.Action)
     }
     
@@ -28,6 +29,9 @@ struct TransactionAddressTextFieldReducer: ReducerProtocol {
             switch action {
             case .clearAddress:
                 state.textFieldState.text = ""
+                return .none
+            
+            case .scanQR:
                 return .none
 
             case .textField(.set(let address)):

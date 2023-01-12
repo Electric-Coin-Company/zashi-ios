@@ -300,6 +300,7 @@ class SendTests: XCTestCase {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .placeholder,
+            scanState: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
@@ -339,6 +340,7 @@ class SendTests: XCTestCase {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .placeholder,
+            scanState: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
@@ -397,6 +399,7 @@ class SendTests: XCTestCase {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .placeholder,
+            scanState: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
@@ -436,6 +439,7 @@ class SendTests: XCTestCase {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .placeholder,
+            scanState: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
@@ -474,6 +478,7 @@ class SendTests: XCTestCase {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .placeholder,
+            scanState: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
@@ -511,6 +516,7 @@ class SendTests: XCTestCase {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .placeholder,
+            scanState: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
@@ -549,6 +555,7 @@ class SendTests: XCTestCase {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: MultiLineTextFieldReducer.State(charLimit: 3),
+            scanState: .placeholder,
             shieldedBalance: WalletBalance(verified: Zatoshi(1), total: Zatoshi(1)),
             transactionAddressInputState:
                 TransactionAddressTextFieldReducer.State(
@@ -590,6 +597,7 @@ class SendTests: XCTestCase {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .placeholder,
+            scanState: .placeholder,
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
@@ -617,6 +625,32 @@ class SendTests: XCTestCase {
         // .onAppear action starts long living cancelable action .synchronizerStateChanged
         // .onDisappear cancels it, must have for the test to pass
         store.send(.onDisappear)
+    }
+    
+    func testScannedAddress() throws {
+        let sendState = SendFlowReducer.State(
+            addMemoState: true,
+            memoState: .placeholder,
+            scanState: .placeholder,
+            transactionAddressInputState: .placeholder,
+            transactionAmountInputState: .placeholder
+        )
+
+        let store = TestStore(
+            initialState: sendState,
+            reducer: SendFlowReducer()
+        )
+
+        store.dependencies.audioServices = AudioServicesClient(systemSoundVibrate: { })
+        
+        // We don't need to pass a valid address here, we just need to confirm some
+        // found string is received and the `isValidAddress` flag is set to `true`
+        store.send(.scan(.found("address"))) { state in
+            state.transactionAddressInputState.textFieldState.text = "address"
+            state.transactionAddressInputState.isValidAddress = true
+        }
+        
+        store.receive(.updateDestination(nil))
     }
 }
 
