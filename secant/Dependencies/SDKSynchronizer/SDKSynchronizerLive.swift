@@ -17,9 +17,9 @@ enum SDKSynchronizerDependency: DependencyKey {
 class LiveSDKSynchronizerClient: SDKSynchronizerClient {
     private var cancellables: [AnyCancellable] = []
     private(set) var synchronizer: SDKSynchronizer?
-    /// TODO [#497]: Since 0.17.0-beta SDKSynchronizer has `lastState` property which does exactly the same as `stateChanged`. Problem is that we have
-    /// synchronizer as optional. And now it would be complicated to handle the situation when `lastState` isn't always available. Let's handle this
-    /// in future.
+    // TODO: [#497] Since 0.17.0-beta SDKSynchronizer has `lastState` property which does exactly the same as `stateChanged`. Problem is that we have
+    // synchronizer as optional. And now it would be complicated to handle the situation when `lastState` isn't always available. Let's handle this
+    // in future.
     private(set) var stateChanged: CurrentValueSubject<SDKSynchronizerState, Never>
     private(set) var notificationCenter: NotificationCenterClient
     private(set) var walletBirthday: BlockHeight?

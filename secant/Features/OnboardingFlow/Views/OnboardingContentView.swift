@@ -80,32 +80,28 @@ struct OnboardingContentView_Previews: PreviewProvider {
 
 extension OnboardingContentView_Previews {
     static func example(_ store: Store<OnboardingFlowReducer.State, OnboardingFlowReducer.Action>) -> some View {
-        GeometryReader { proxy in
-            ZStack {
-                OnboardingHeaderView(
-                    store: store.scope(
-                        state: { state in
-                            OnboardingHeaderView.ViewState(
-                                isInitialStep: state.isInitialStep,
-                                isFinalStep: state.isFinalStep
-                            )
-                        },
-                        action: { action in
-                            switch action {
-                            case .back: return .back
-                            case .skip: return .skip
-                            }
+        ZStack {
+            OnboardingHeaderView(
+                store: store.scope(
+                    state: { state in
+                        OnboardingHeaderView.ViewState(
+                            isInitialStep: state.isInitialStep,
+                            isFinalStep: state.isFinalStep
+                        )
+                    },
+                    action: { action in
+                        switch action {
+                        case .back: return .back
+                        case .skip: return .skip
                         }
-                    )
+                    }
                 )
-                .zIndex(1)
-                
-                OnboardingContentView(
-                    store: store
-//                    width: proxy.size.width,
-//                    height: proxy.size.height
-                )
-            }
+            )
+            .zIndex(1)
+            
+            OnboardingContentView(
+                store: store
+            )
         }
         .applyScreenBackground()
         .preferredColorScheme(.light)

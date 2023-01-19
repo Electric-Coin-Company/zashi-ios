@@ -101,7 +101,7 @@ struct ImportWalletReducer: ReducerProtocol {
                     try walletStorage.markUserPassedPhraseBackupTest()
                     
                     // notify user
-                    // TODO [#221]: Proper Error/Success handling (https://github.com/zcash/secant-ios-wallet/issues/221)
+                    // TODO: [#221] Proper Error/Success handling (https://github.com/zcash/secant-ios-wallet/issues/221)
                     state.alert = AlertState(
                         title: TextState("Success"),
                         message: TextState("The wallet has been successfully recovered."),
@@ -113,7 +113,7 @@ struct ImportWalletReducer: ReducerProtocol {
                     
                     return Effect(value: .initializeSDK)
                 } catch {
-                    // TODO [#221]: Proper Error/Success handling (https://github.com/zcash/secant-ios-wallet/issues/221)
+                    // TODO: [#221] Proper Error/Success handling (https://github.com/zcash/secant-ios-wallet/issues/221)
                     state.alert = AlertState(
                         title: TextState("Wrong Seed Phrase"),
                         message: TextState("The seed phrase must be 24 words separated by space."),

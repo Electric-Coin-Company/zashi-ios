@@ -96,8 +96,8 @@ custom_rules:
   todos:
     included: ".*\\.swift"
     name: "TODO"
-    regex: "(TODO|FIXME)\ {0,}:"
-    message: "TODO or FIXME without issue number."
+    regex: '(TODO|FIXME):\ ([^\[]|\[[^#]|\[#[^1-9])'
+    message: "TODO or FIXME without issue number. Format TODO: [#...]"
     severity: warning
     match_kinds:
       - comment

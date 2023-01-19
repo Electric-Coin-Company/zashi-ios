@@ -49,7 +49,7 @@ struct SettingsReducer: ReducerProtocol {
                     state.phraseDisplayState.phrase = recoveryPhrase
                     return Effect(value: .updateDestination(.backupPhrase))
                 } catch {
-                    // TODO [#221]: - merge with issue 221 (https://github.com/zcash/secant-ios-wallet/issues/221) and its Error States
+                    // TODO: [#221] - merge with issue 221 (https://github.com/zcash/secant-ios-wallet/issues/221) and its Error States
                     return .none
                 }
                 

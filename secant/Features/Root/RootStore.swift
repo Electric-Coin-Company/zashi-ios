@@ -4,7 +4,6 @@ import ZcashLightClientKit
 typealias RootStore = Store<RootReducer.State, RootReducer.Action>
 typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
 
-// swiftlint:disable type_body_length
 struct RootReducer: ReducerProtocol {
     enum CancelId {}
 

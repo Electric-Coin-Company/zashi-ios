@@ -17,7 +17,7 @@ struct TransactionAmountTextFieldReducer: ReducerProtocol {
         var currencySelectionState: CurrencySelectionReducer.State
         var maxValue: Int64 = 0
         var textFieldState: TCATextFieldReducer.State
-        // TODO [#311]: - Get the ZEC price from the SDK, https://github.com/zcash/secant-ios-wallet/issues/311
+        // TODO: [#311] - Get the ZEC price from the SDK, https://github.com/zcash/secant-ios-wallet/issues/311
         var zecPrice = Decimal(140.0)
 
         var isMax: Bool {

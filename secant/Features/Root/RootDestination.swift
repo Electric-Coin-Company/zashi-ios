@@ -75,7 +75,7 @@ extension RootReducer {
 
                 // process the deeplink only if app is initialized and synchronizer synced
                 guard state.appInitializationState == .initialized && synchronizerStatus == .synced else {
-                    // TODO [#370]: There are many different states and edge cases we need to handle here
+                    // TODO: [#370] There are many different states and edge cases we need to handle here
                     // (https://github.com/zcash/secant-ios-wallet/issues/370)
                     return .none
                 }
@@ -89,7 +89,7 @@ extension RootReducer {
                             )
                         )
                     } catch {
-                        // TODO [#221]: error we need to handle (https://github.com/zcash/secant-ios-wallet/issues/221)
+                        // TODO: [#221] error we need to handle (https://github.com/zcash/secant-ios-wallet/issues/221)
                     }
                 }
 

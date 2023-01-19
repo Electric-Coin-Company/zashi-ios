@@ -1,6 +1,6 @@
 import Foundation
 
-// TODO: This should have a #DEBUG tag, but if so, it's not possible to compile this on release mode and submit it to testflight https://github.com/zcash/ZcashLightClientKit/issues/695
+// TODO: [#695] This should have a #DEBUG tag, but if so, it's not possible to compile this on release mode and submit it to testflight https://github.com/zcash/ZcashLightClientKit/issues/695
 extension String {
     init<T>(dumping value: T) {
         var output = String()
