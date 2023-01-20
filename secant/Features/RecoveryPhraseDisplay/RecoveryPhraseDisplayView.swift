@@ -71,11 +71,11 @@ struct RecoveryPhraseDisplayView: View {
             .padding(.top, 0)
             .applyScreenBackground()
         }
-        .navigationBarTitleDisplayMode(.inline) // TODO: NavigationBar Style
+        .navigationBarTitleDisplayMode(.inline)
         .navigationBarHidden(true)
     }
 }
-// TODO: This should have a #DEBUG tag, but if so, it's not possible to compile this on release mode and submit it to testflight https://github.com/zcash/ZcashLightClientKit/issues/695
+// TODO: [#695] This should have a #DEBUG tag, but if so, it's not possible to compile this on release mode and submit it to testflight https://github.com/zcash/ZcashLightClientKit/issues/695
 extension RecoveryPhraseDisplayStore {
     static var demo: RecoveryPhraseDisplayStore {
         RecoveryPhraseDisplayStore(
@@ -86,7 +86,7 @@ extension RecoveryPhraseDisplayStore {
     }
 }
 
-// TODO: This should have a #DEBUG tag, but if so, it's not possible to compile this on release mode and submit it to testflight https://github.com/zcash/ZcashLightClientKit/issues/695
+// TODO: [#695] This should have a #DEBUG tag, but if so, it's not possible to compile this on release mode and submit it to testflight https://github.com/zcash/ZcashLightClientKit/issues/695
 extension RecoveryPhrase {
     static let testPhrase = [
         // 1

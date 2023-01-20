@@ -39,7 +39,7 @@ struct TransactionRowView: View {
                         
                         Spacer(minLength: 80)
                         
-                        // TODO [#311]: - Get the ZEC price from the SDK, https://github.com/zcash/secant-ios-wallet/issues/311
+                        // TODO: [#311] - Get the ZEC price from the SDK, https://github.com/zcash/secant-ios-wallet/issues/311
                     }
                     .padding(.trailing, 15)
                 }
@@ -66,7 +66,7 @@ extension TransactionRowView {
         case .received:
             return "Unknown paid you"
         case .failed:
-            // TODO [#392]: final text to be provided (https://github.com/zcash/secant-ios-wallet/issues/392)
+            // TODO: [#392] final text to be provided (https://github.com/zcash/secant-ios-wallet/issues/392)
             return "Transaction failed"
         case .pending:
             return "You are sending to"
@@ -81,7 +81,7 @@ extension TransactionRowView {
                     .resizable()
                     .frame(width: 60, height: 60)
             case .failed:
-                // TODO [#392]: final icon to be provided (https://github.com/zcash/secant-ios-wallet/issues/392)
+                // TODO: [#392] final icon to be provided (https://github.com/zcash/secant-ios-wallet/issues/392)
                 Circle()
                     .frame(width: 30, height: 30)
                     .foregroundColor(Color.red)

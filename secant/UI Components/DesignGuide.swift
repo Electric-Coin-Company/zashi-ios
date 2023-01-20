@@ -69,12 +69,12 @@ struct SmallVisualElements: View {
                         .navigationButtonStyle
                         .frame(width: 80, height: 40)
 
-                    // TODO: Change state to selected https://github.com/zcash/ZcashLightClientKit/issues/696
+                    // TODO: [#696] Change state to selected https://github.com/zcash/ZcashLightClientKit/issues/696
                     Button("Back") { dump("Example button") }
                         .navigationButtonStyle
                         .frame(width: 80, height: 40)
 
-                    // TODO: Change state to selected https://github.com/zcash/ZcashLightClientKit/issues/696
+                    // TODO: [#696] Change state to selected https://github.com/zcash/ZcashLightClientKit/issues/696
                     Button("Skip") { dump("Example button") }
                         .navigationButtonStyle
                         .frame(width: 80, height: 40)

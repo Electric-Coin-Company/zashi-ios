@@ -38,11 +38,11 @@ extension WalletEvent {
             .failed(let transaction):
             TransactionRowView(transaction: transaction)
         case .shielded(let zatoshi):
-            // TODO [#390]: implement design once shielding is supported
+            // TODO: [#390] implement design once shielding is supported
             // https://github.com/zcash/secant-ios-wallet/issues/390
             Text("shielded wallet event \(zatoshi.decimalString())")
         case .walletImport:
-            // TODO [#391]: implement design once shielding is supported
+            // TODO: [#391] implement design once shielding is supported
             // https://github.com/zcash/secant-ios-wallet/issues/391
             Text("wallet import wallet event")
         }
@@ -60,11 +60,11 @@ extension WalletEvent {
             .failed(let transaction):
             TransactionDetailView(transaction: transaction, store: store)
         case .shielded(let zatoshi):
-            // TODO [#390]: implement design once shielding is supported
+            // TODO: [#390] implement design once shielding is supported
             // https://github.com/zcash/secant-ios-wallet/issues/390
             Text("shielded \(zatoshi.decimalString()) detail")
         case .walletImport:
-            // TODO [#391]: implement design once shielding is supported
+            // TODO: [#391] implement design once shielding is supported
             // https://github.com/zcash/secant-ios-wallet/issues/391
             Text("wallet import wallet event")
         }

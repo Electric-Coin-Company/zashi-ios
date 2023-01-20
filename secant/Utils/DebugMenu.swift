@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-// TODO [#273]: Make sure this code will never be in the production (app store) build (https://github.com/zcash/secant-ios-wallet/issues/273)
+// TODO: [#273] Make sure this code will never be in the production (app store) build (https://github.com/zcash/secant-ios-wallet/issues/273)
 
 // swiftlint:disable:next private_over_fileprivate strict_fileprivate
 fileprivate struct DebugMenuModifier: ViewModifier {

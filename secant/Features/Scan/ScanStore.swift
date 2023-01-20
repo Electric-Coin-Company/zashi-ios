@@ -60,7 +60,7 @@ struct ScanReducer: ReducerProtocol {
             do {
                 state.isTorchAvailable = try captureDevice.isTorchAvailable()
             } catch {
-                // TODO [#322]: handle torch errors (https://github.com/zcash/secant-ios-wallet/issues/322)
+                // TODO: [#322] handle torch errors (https://github.com/zcash/secant-ios-wallet/issues/322)
             }
             return .none
         
@@ -104,7 +104,7 @@ struct ScanReducer: ReducerProtocol {
                 try captureDevice.torch(!state.isTorchOn)
                 state.isTorchOn.toggle()
             } catch {
-                // TODO [#322]: handle torch errors (https://github.com/zcash/secant-ios-wallet/issues/322)
+                // TODO: [#322] handle torch errors (https://github.com/zcash/secant-ios-wallet/issues/322)
             }
             return .none
         }
