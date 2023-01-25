@@ -3,7 +3,7 @@ import ComposableArchitecture
 
 struct SettingsView: View {
     let store: SettingsStore
-
+    
     var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
@@ -22,7 +22,26 @@ struct SettingsView: View {
                 .primaryButtonStyle
                 .frame(height: 50)
                 .padding(.horizontal, 30)
-                
+
+                Button(
+                    action: { viewStore.send(.exportLogs) },
+                    label: {
+                        if viewStore.exportLogsDisabled {
+                            HStack {
+                                ProgressView()
+                                Text("Exporting...")
+                            }
+                        } else {
+                            Text("Export & share logs")
+                        }
+                    }
+                )
+                .primaryButtonStyle
+                .frame(height: 50)
+                .padding(.horizontal, 30)
+                .padding(.top, 30)
+                .disabled(viewStore.exportLogsDisabled)
+
                 Spacer()
             }
             .navigationTitle("Settings")
@@ -37,6 +56,17 @@ struct SettingsView: View {
                     RecoveryPhraseDisplayView(store: store.backupPhraseStore())
                 }
             )
+            
+            if viewStore.isSharingLogs {
+                UIShareDialogView(
+                    activityItems: [viewStore.tempSDKDir, viewStore.tempWalletDir, viewStore.tempTCADir]
+                ) {
+                    viewStore.send(.logsShareFinished)
+                }
+                // UIShareDialogView only wraps UIActivityViewController presentation
+                // so frame is set to 0 to not break SwiftUIs layout
+                .frame(width: 0, height: 0)
+            }
         }
     }
 }

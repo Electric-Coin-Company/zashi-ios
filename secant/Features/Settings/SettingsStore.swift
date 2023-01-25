@@ -10,25 +10,49 @@ struct SettingsReducer: ReducerProtocol {
             case backupPhrase
         }
 
+        var destination: Destination?
+        var exportLogsDisabled = false
+        var isSharingLogs = false
         var phraseDisplayState: RecoveryPhraseDisplayReducer.State
         var rescanDialog: ConfirmationDialogState<SettingsReducer.Action>?
-        var destination: Destination?
+        
+        var tempSDKDir: URL {
+            let tempDir = FileManager.default.temporaryDirectory
+            let sdkFileName = "sdkLogs.txt"
+            return tempDir.appendingPathComponent(sdkFileName)
+        }
+
+        var tempTCADir: URL {
+            let tempDir = FileManager.default.temporaryDirectory
+            let sdkFileName = "tcaLogs.txt"
+            return tempDir.appendingPathComponent(sdkFileName)
+        }
+
+        var tempWalletDir: URL {
+            let tempDir = FileManager.default.temporaryDirectory
+            let sdkFileName = "walletLogs.txt"
+            return tempDir.appendingPathComponent(sdkFileName)
+        }
     }
 
     enum Action: Equatable {
         case backupWallet
         case backupWalletAccessRequest
         case cancelRescan
+        case exportLogs
         case fullRescan
+        case logsExported
+        case logsShareFinished
         case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
         case quickRescan
         case rescanBlockchain
         case updateDestination(SettingsReducer.State.Destination?)
     }
-    
+
     @Dependency(\.localAuthentication) var localAuthentication
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.logsHandler) var logsHandler
     @Dependency(\.walletStorage) var walletStorage
 
     var body: some ReducerProtocol<State, Action> {
@@ -57,6 +81,26 @@ struct SettingsReducer: ReducerProtocol {
                 state.rescanDialog = nil
                 return .none
                 
+            case .exportLogs:
+                state.exportLogsDisabled = true
+                return .run { [state] send in
+                    do {
+                        try await logsHandler.exportAndStoreLogs(state.tempSDKDir, state.tempTCADir, state.tempWalletDir)
+                        await send(.logsExported)
+                    } catch {
+                        // TODO: [#527] address the error here https://github.com/zcash/secant-ios-wallet/issues/527
+                    }
+                }
+                
+            case .logsExported:
+                state.exportLogsDisabled = false
+                state.isSharingLogs = true
+                return .none
+
+            case .logsShareFinished:
+                state.isSharingLogs = false
+                return .none
+
             case .rescanBlockchain:
                 state.rescanDialog = .init(
                     title: TextState("Rescan"),
@@ -94,7 +138,7 @@ extension SettingsViewStore {
             send: SettingsReducer.Action.updateDestination
         )
     }
-
+    
     var bindingForBackupPhrase: Binding<Bool> {
         self.destinationBinding.map(
             extract: { $0 == .backupPhrase },

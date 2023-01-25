@@ -25,6 +25,8 @@ extension RootReducer {
         Reduce { state, action in
             switch action {
             case .initialization(.appDelegate(.didFinishLaunching)):
+                // TODO: [#524] finish all the wallet events according to definition, https://github.com/zcash/secant-ios-wallet/issues/524
+                LoggerProxy.event(".appDelegate(.didFinishLaunching)")
                 /// We need to fetch data from keychain, in order to be 100% sure the kecyhain can be read we delay the check a bit
                 return Effect(value: .initialization(.checkWalletInitialization))
                     .delay(for: 0.02, scheduler: mainQueue)

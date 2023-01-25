@@ -99,6 +99,7 @@ class SettingsTests: XCTestCase {
     func testRescanBlockchain_Cancelling() async throws {
         let store = TestStore(
             initialState: SettingsReducer.State(
+                destination: nil,
                 phraseDisplayState: .init(),
                 rescanDialog: .init(
                     title: TextState("Rescan"),
@@ -108,8 +109,7 @@ class SettingsTests: XCTestCase {
                         .default(TextState("Full rescan"), action: .send(.fullRescan)),
                         .cancel(TextState("Cancel"))
                     ]
-                ),
-                destination: nil
+                )
             ),
             reducer: SettingsReducer()
         )
@@ -122,6 +122,7 @@ class SettingsTests: XCTestCase {
     func testRescanBlockchain_QuickRescanClearance() async throws {
         let store = TestStore(
             initialState: SettingsReducer.State(
+                destination: nil,
                 phraseDisplayState: .init(),
                 rescanDialog: .init(
                     title: TextState("Rescan"),
@@ -131,8 +132,7 @@ class SettingsTests: XCTestCase {
                         .default(TextState("Full rescan"), action: .send(.fullRescan)),
                         .cancel(TextState("Cancel"))
                     ]
-                ),
-                destination: nil
+                )
             ),
             reducer: SettingsReducer()
         )
@@ -145,6 +145,7 @@ class SettingsTests: XCTestCase {
     func testRescanBlockchain_FullRescanClearance() async throws {
         let store = TestStore(
             initialState: SettingsReducer.State(
+                destination: nil,
                 phraseDisplayState: .init(),
                 rescanDialog: .init(
                     title: TextState("Rescan"),
@@ -154,14 +155,67 @@ class SettingsTests: XCTestCase {
                         .default(TextState("Full rescan"), action: .send(.fullRescan)),
                         .cancel(TextState("Cancel"))
                     ]
-                ),
-                destination: nil
+                )
             ),
             reducer: SettingsReducer()
         )
         
         _ = await store.send(.fullRescan) { state in
             state.rescanDialog = nil
+        }
+    }
+    
+    func testExportLogs_ButtonDisableShareEnable() async throws {
+        let store = TestStore(
+            initialState: SettingsReducer.State(
+                destination: nil,
+                phraseDisplayState: .init(),
+                rescanDialog: .init(
+                    title: TextState("Rescan"),
+                    message: TextState("Select the rescan you want"),
+                    buttons: [
+                        .default(TextState("Quick rescan"), action: .send(.quickRescan)),
+                        .default(TextState("Full rescan"), action: .send(.fullRescan)),
+                        .cancel(TextState("Cancel"))
+                    ]
+                )
+            ),
+            reducer: SettingsReducer()
+        )
+        
+        store.dependencies.logsHandler = LogsHandlerClient(exportAndStoreLogs: { _, _, _ in })
+        
+        _ = await store.send(.exportLogs) { state in
+            state.exportLogsDisabled = true
+        }
+        
+        await store.receive(.logsExported) { state in
+            state.exportLogsDisabled = false
+            state.isSharingLogs = true
+        }
+    }
+    
+    func testLogShareFinished() async throws {
+        let store = TestStore(
+            initialState: SettingsReducer.State(
+                destination: nil,
+                isSharingLogs: true,
+                phraseDisplayState: .init(),
+                rescanDialog: .init(
+                    title: TextState("Rescan"),
+                    message: TextState("Select the rescan you want"),
+                    buttons: [
+                        .default(TextState("Quick rescan"), action: .send(.quickRescan)),
+                        .default(TextState("Full rescan"), action: .send(.fullRescan)),
+                        .cancel(TextState("Cancel"))
+                    ]
+                )
+            ),
+            reducer: SettingsReducer()
+        )
+        
+        _ = await store.send(.logsShareFinished) { state in
+            state.isSharingLogs = false
         }
     }
 }
