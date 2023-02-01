@@ -139,7 +139,8 @@ extension RootReducer {
                 spendParamsURL: try databaseFiles.spendParamsURLFor(network),
                 outputParamsURL: try databaseFiles.outputParamsURLFor(network),
                 viewingKeys: [viewingKey],
-                walletBirthday: birthday
+                walletBirthday: birthday,
+                loggerProxy: OSLogger_(logLevel: .debug, category: LoggerConstants.sdkLogs)
             )
             
             return initializer
@@ -173,7 +174,7 @@ extension RootStore {
     static var placeholder: RootStore {
         RootStore(
             initialState: .placeholder,
-            reducer: RootReducer()._printChanges()
+            reducer: RootReducer().logging()._printChanges()
         )
     }
 }

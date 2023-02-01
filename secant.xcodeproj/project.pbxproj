@@ -99,6 +99,11 @@
 		9E01F8282833CDA0000EFC57 /* ScanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E01F8272833CDA0000EFC57 /* ScanTests.swift */; };
 		9E02B56A27FED43E005B809B /* FileManagerInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E02B56927FED43E005B809B /* FileManagerInterface.swift */; };
 		9E02B56C27FED475005B809B /* DatabaseFilesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E02B56B27FED475005B809B /* DatabaseFilesTests.swift */; };
+		9E0F5741297E7F1D005304FA /* TCALogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0F5740297E7F1C005304FA /* TCALogger.swift */; };
+		9E0F5743297EB96C005304FA /* TCALoggerReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0F5742297EB96C005304FA /* TCALoggerReducer.swift */; };
+		9E0F5745297EBA1B005304FA /* LogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0F5744297EBA1B005304FA /* LogStore.swift */; };
+		9E0F5747297EE5F3005304FA /* OSLogger_.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0F5746297EE5F3005304FA /* OSLogger_.swift */; };
+		9E0F574B2980260D005304FA /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0F574A2980260D005304FA /* LoggerTests.swift */; };
 		9E153A5F2920CE2700112F41 /* MnemonicInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E153A5E2920CD5100112F41 /* MnemonicInterface.swift */; };
 		9E153A602920CE2700112F41 /* MnemonicLiveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E153A5C2920CD5100112F41 /* MnemonicLiveKey.swift */; };
 		9E153A612920CE2700112F41 /* MnemonicMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E153A5B2920CD5100112F41 /* MnemonicMocks.swift */; };
@@ -137,6 +142,10 @@
 		9E5BF648282277BE00BA3F17 /* NotificationCenterInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF647282277BE00BA3F17 /* NotificationCenterInterface.swift */; };
 		9E5BF64F2823E94900BA3F17 /* TransactionAddressTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF64D2823E94900BA3F17 /* TransactionAddressTextField.swift */; };
 		9E5BF6502823E94900BA3F17 /* TransactionAddressTextFieldStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF64E2823E94900BA3F17 /* TransactionAddressTextFieldStore.swift */; };
+		9E612C6F2987A9B100D09B09 /* UIShareDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E612C6E2987A9B100D09B09 /* UIShareDialog.swift */; };
+		9E612C7229880E9200D09B09 /* LogsHandlerInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E612C7129880E9200D09B09 /* LogsHandlerInterface.swift */; };
+		9E612C7429880F2200D09B09 /* LogsHandlerLive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E612C7329880F2200D09B09 /* LogsHandlerLive.swift */; };
+		9E612C7629880FC900D09B09 /* LogsHandlerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E612C7529880FC900D09B09 /* LogsHandlerTest.swift */; };
 		9E66122A287717A900C75B70 /* HomeCircularProgressSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E661229287717A900C75B70 /* HomeCircularProgressSnapshotTests.swift */; };
 		9E66122C2877188700C75B70 /* SyncStatusSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E66122B2877188700C75B70 /* SyncStatusSnapshot.swift */; };
 		9E6612312878337F00C75B70 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 9E6612302878337F00C75B70 /* Lottie */; };
@@ -395,6 +404,11 @@
 		9E01F8272833CDA0000EFC57 /* ScanTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanTests.swift; sourceTree = "<group>"; };
 		9E02B56927FED43E005B809B /* FileManagerInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerInterface.swift; sourceTree = "<group>"; };
 		9E02B56B27FED475005B809B /* DatabaseFilesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseFilesTests.swift; sourceTree = "<group>"; };
+		9E0F5740297E7F1C005304FA /* TCALogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCALogger.swift; sourceTree = "<group>"; };
+		9E0F5742297EB96C005304FA /* TCALoggerReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCALoggerReducer.swift; sourceTree = "<group>"; };
+		9E0F5744297EBA1B005304FA /* LogStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogStore.swift; sourceTree = "<group>"; };
+		9E0F5746297EE5F3005304FA /* OSLogger_.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSLogger_.swift; sourceTree = "<group>"; };
+		9E0F574A2980260D005304FA /* LoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerTests.swift; sourceTree = "<group>"; };
 		9E153A5B2920CD5100112F41 /* MnemonicMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicMocks.swift; sourceTree = "<group>"; };
 		9E153A5C2920CD5100112F41 /* MnemonicLiveKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicLiveKey.swift; sourceTree = "<group>"; };
 		9E153A5D2920CD5100112F41 /* MnemonicTestKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicTestKey.swift; sourceTree = "<group>"; };
@@ -434,6 +448,10 @@
 		9E5BF647282277BE00BA3F17 /* NotificationCenterInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenterInterface.swift; sourceTree = "<group>"; };
 		9E5BF64D2823E94900BA3F17 /* TransactionAddressTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAddressTextField.swift; sourceTree = "<group>"; };
 		9E5BF64E2823E94900BA3F17 /* TransactionAddressTextFieldStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAddressTextFieldStore.swift; sourceTree = "<group>"; };
+		9E612C6E2987A9B100D09B09 /* UIShareDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIShareDialog.swift; sourceTree = "<group>"; };
+		9E612C7129880E9200D09B09 /* LogsHandlerInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsHandlerInterface.swift; sourceTree = "<group>"; };
+		9E612C7329880F2200D09B09 /* LogsHandlerLive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsHandlerLive.swift; sourceTree = "<group>"; };
+		9E612C7529880FC900D09B09 /* LogsHandlerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsHandlerTest.swift; sourceTree = "<group>"; };
 		9E661229287717A900C75B70 /* HomeCircularProgressSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCircularProgressSnapshotTests.swift; sourceTree = "<group>"; };
 		9E66122B2877188700C75B70 /* SyncStatusSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStatusSnapshot.swift; sourceTree = "<group>"; };
 		9E6612322878338C00C75B70 /* LottieAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LottieAnimation.swift; sourceTree = "<group>"; };
@@ -962,6 +980,17 @@
 			path = ScanTests;
 			sourceTree = "<group>";
 		};
+		9E0F573F297E7F00005304FA /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				9E0F5740297E7F1C005304FA /* TCALogger.swift */,
+				9E0F5742297EB96C005304FA /* TCALoggerReducer.swift */,
+				9E0F5744297EBA1B005304FA /* LogStore.swift */,
+				9E0F5746297EE5F3005304FA /* OSLogger_.swift */,
+			);
+			path = Logging;
+			sourceTree = "<group>";
+		};
 		9E153A5A2920CCE700112F41 /* Mnemonic */ = {
 			isa = PBXGroup;
 			children = (
@@ -1109,6 +1138,24 @@
 			path = TransactionAddress;
 			sourceTree = "<group>";
 		};
+		9E612C6D2987A96500D09B09 /* UIKitBridge */ = {
+			isa = PBXGroup;
+			children = (
+				9E612C6E2987A9B100D09B09 /* UIShareDialog.swift */,
+			);
+			path = UIKitBridge;
+			sourceTree = "<group>";
+		};
+		9E612C7029880E6700D09B09 /* LogsHandler */ = {
+			isa = PBXGroup;
+			children = (
+				9E612C7129880E9200D09B09 /* LogsHandlerInterface.swift */,
+				9E612C7329880F2200D09B09 /* LogsHandlerLive.swift */,
+				9E612C7529880FC900D09B09 /* LogsHandlerTest.swift */,
+			);
+			path = LogsHandler;
+			sourceTree = "<group>";
+		};
 		9E6612342878341F00C75B70 /* Lotties */ = {
 			isa = PBXGroup;
 			children = (
@@ -1226,6 +1273,7 @@
 		9E7FE0BB282D1DC200C374E8 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				9E0F573F297E7F00005304FA /* Logging */,
 				9E7FE0D4282D281800C374E8 /* Array+Chunked.swift */,
 				F9C165B3274031F600592F76 /* Bindings.swift */,
 				0DACFA7E27208CE00039EEA5 /* Clamped.swift */,
@@ -1260,6 +1308,7 @@
 				9EB863882922CC0E003D0F8B /* FeedbackGenerator */,
 				9EB863B52923C4ED003D0F8B /* FileManager */,
 				9EBDF981291F91B1000A1A05 /* LocalAuthentication */,
+				9E612C7029880E6700D09B09 /* LogsHandler */,
 				9E153A5A2920CCE700112F41 /* Mnemonic */,
 				9EB863B42923C490003D0F8B /* NotificationCenter */,
 				9EB8638F2922D000003D0F8B /* NumberFormatter */,
@@ -1650,6 +1699,7 @@
 				9E02B56B27FED475005B809B /* DatabaseFilesTests.swift */,
 				9E39112D283F91600073DD9A /* ZatoshiTests.swift */,
 				0DB4E0B02881F2DB00947B78 /* WalletBalance+testing.swift */,
+				9E0F574A2980260D005304FA /* LoggerTests.swift */,
 			);
 			path = UtilTests;
 			sourceTree = "<group>";
@@ -1726,6 +1776,7 @@
 			children = (
 				F9971A6227680DFE00A2DB75 /* SettingsStore.swift */,
 				F9971A6427680DFE00A2DB75 /* SettingsView.swift */,
+				9E612C6D2987A96500D09B09 /* UIKitBridge */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1996,6 +2047,7 @@
 				2EB7758727FC67FD00269373 /* TransactionAmountTextFieldStore.swift in Sources */,
 				669FDAE9272C23B3007B9422 /* CircularFrame.swift in Sources */,
 				9EF8136027F043CC0075AF48 /* AppDelegate.swift in Sources */,
+				9E612C7229880E9200D09B09 /* LogsHandlerInterface.swift in Sources */,
 				9EBDF960291E657B000A1A05 /* DeeplinkTestKey.swift in Sources */,
 				34E0AF1128DEE5220034CF37 /* Wedge.swift in Sources */,
 				F96B41E8273B501F0021B49A /* TransactionDetailView.swift in Sources */,
@@ -2013,9 +2065,11 @@
 				0DACFA7F27208CE00039EEA5 /* Clamped.swift in Sources */,
 				9EAB467A2861EA6A002904A0 /* TransactionRowView.swift in Sources */,
 				9EB8638C2922CD4A003D0F8B /* FeedbackGeneratorTestKey.swift in Sources */,
+				9E0F5741297E7F1D005304FA /* TCALogger.swift in Sources */,
 				0DFE93E3272CA1AA000FCCA5 /* RecoveryPhraseValidationFlowStore.swift in Sources */,
 				9E2DF99E27CF704D00649636 /* ImportWalletView.swift in Sources */,
 				9E9ADA7D2938F4C00071767B /* RootInitialization.swift in Sources */,
+				9E612C7429880F2200D09B09 /* LogsHandlerLive.swift in Sources */,
 				9EBDF967291ECDA2000A1A05 /* AudioServicesTestKey.swift in Sources */,
 				0D535FE2271F9476009A9E3E /* EnumeratedChip.swift in Sources */,
 				9EBDF97E291F7EB0000A1A05 /* AppVersionInterface.swift in Sources */,
@@ -2035,6 +2089,7 @@
 				9E2DF99D27CF704D00649636 /* ImportSeedEditor.swift in Sources */,
 				F9971A5327680DD000A2DB75 /* ProfileStore.swift in Sources */,
 				346D41E428DF0B8600963F36 /* CheckCircle.swift in Sources */,
+				9E0F5745297EBA1B005304FA /* LogStore.swift in Sources */,
 				9EB863AA29239EB2003D0F8B /* RecoveryPhraseRandomizer.swift in Sources */,
 				9EB863C52923C8AF003D0F8B /* FileManagerTest.swift in Sources */,
 				9EB863BF2923C72C003D0F8B /* SecItemLive.swift in Sources */,
@@ -2053,6 +2108,7 @@
 				0D18581B272728D60046B928 /* PhraseChip.swift in Sources */,
 				9E7FE0F92832824C00C374E8 /* QRCodeScanView.swift in Sources */,
 				9E153A6F292167FF00112F41 /* ZcashSDKEnvironmentTestKey.swift in Sources */,
+				9E0F5743297EB96C005304FA /* TCALoggerReducer.swift in Sources */,
 				0DF482BA2787ADA800EB37D6 /* ConditionalModifier.swift in Sources */,
 				9E7225F3288AB6DD00DF7F17 /* MultipleLineTextField.swift in Sources */,
 				3448CB3228E47666006ADEDB /* NotEnoughFreeSpaceView.swift in Sources */,
@@ -2110,6 +2166,7 @@
 				66DC733F271D88CC0053CBB6 /* StandardButtonStyle.swift in Sources */,
 				663FABA0271D876200E495F8 /* PrimaryButton.swift in Sources */,
 				663FAB9C271D874D00E495F8 /* ActiveButton.swift in Sources */,
+				9E612C6F2987A9B100D09B09 /* UIShareDialog.swift in Sources */,
 				9EBDF956291E5E86000A1A05 /* DatabaseFilesLiveKey.swift in Sources */,
 				9E2F1C842809B606004E65FE /* DebugMenu.swift in Sources */,
 				9E153A5F2920CE2700112F41 /* MnemonicInterface.swift in Sources */,
@@ -2148,6 +2205,7 @@
 				F9971A6627680DFE00A2DB75 /* SettingsView.swift in Sources */,
 				F96B41EB273B50520021B49A /* Strings.swift in Sources */,
 				9EB863D02923D3FC003D0F8B /* SDKSynchronizerMocks.swift in Sources */,
+				9E612C7629880FC900D09B09 /* LogsHandlerTest.swift in Sources */,
 				2EDA07A227EDE1AE00D6F09B /* TextFieldFooter.swift in Sources */,
 				F9971A5427680DD000A2DB75 /* ProfileView.swift in Sources */,
 				F9971A6027680DF600A2DB75 /* ScanStore.swift in Sources */,
@@ -2174,6 +2232,7 @@
 				34E5F2F328E46DB700C17E5F /* DiskSpaceChecker.swift in Sources */,
 				F9C165C42740403600592F76 /* TransactionSentView.swift in Sources */,
 				9E153A6E292167FF00112F41 /* ZcashSDKEnvironmentLiveKey.swift in Sources */,
+				9E0F5747297EE5F3005304FA /* OSLogger_.swift in Sources */,
 				F9971A5927680DDE00A2DB75 /* RequestStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2205,6 +2264,7 @@
 				9E5BF644281FEC9900BA3F17 /* SendTests.swift in Sources */,
 				0D1C1AA327611EFD0004AF6A /* RecoveryPhraseDisplayReducerTests.swift in Sources */,
 				9E9ECC9A28589E150099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests.swift in Sources */,
+				9E0F574B2980260D005304FA /* LoggerTests.swift in Sources */,
 				9EAFEB822805793200199FC9 /* RootTests.swift in Sources */,
 				9E391132284644580073DD9A /* AppInitializationTests.swift in Sources */,
 				9E9ECC9928589E150099D5A2 /* RecoveryPhraseDisplaySnapshotTests.swift in Sources */,
