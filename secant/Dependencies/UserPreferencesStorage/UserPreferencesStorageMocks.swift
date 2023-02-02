@@ -6,6 +6,33 @@
 //
 
 import Foundation
+import ComposableArchitecture
+
+extension UserPreferencesStorageClient: TestDependencyKey {
+    static var testValue = {
+        let mock = UserPreferencesStorage.mock
+
+        return UserPreferencesStorageClient(
+            activeAppSessionFrom: { mock.activeAppSessionFrom },
+            setActiveAppSessionFrom: mock.setActiveAppSessionFrom(_:),
+            currency: { mock.currency },
+            setCurrenty: mock.setCurrency(_:),
+            isFiatConverted: { mock.isFiatConverted },
+            setIsFiatConverted: mock.setIsFiatConverted(_:),
+            isRecoveryPhraseTestCompleted: {
+                mock.isRecoveryPhraseTestCompleted
+            },
+            setIsRecoveryPhraseTestCompleted: mock.setIsRecoveryPhraseTestCompleted(_:),
+            isSessionAutoshielded: { mock.isSessionAutoshielded },
+            setIsSessionAutoshielded: mock.setIsSessionAutoshielded(_:),
+            isUserOptedOutOfCrashReporting: {
+                mock.isUserOptedOutOfCrashReporting
+            },
+            setIsUserOptedOutOfCrashReporting: mock.setIsUserOptedOutOfCrashReporting(_:),
+            removeAll: mock.removeAll
+        )
+    }()
+}
 
 extension UserPreferencesStorage {
     static let mock = UserPreferencesStorage(
@@ -14,6 +41,7 @@ extension UserPreferencesStorage {
         fiatConvertion: true,
         recoveryPhraseTestCompleted: false,
         sessionAutoshielded: true,
+        userOptedOutOfCrashReporting: false,
         userDefaults: .noOp
     )
 }

@@ -12,8 +12,13 @@
 		0D185819272723FF0046B928 /* ColoredChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D185818272723FF0046B928 /* ColoredChip.swift */; };
 		0D18581B272728D60046B928 /* PhraseChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D18581A272728D60046B928 /* PhraseChip.swift */; };
 		0D1C1AA327611EFD0004AF6A /* RecoveryPhraseDisplayReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1C1AA227611EFD0004AF6A /* RecoveryPhraseDisplayReducerTests.swift */; };
+		0D26103A298C3DCD00CC9DE9 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0D261039298C3DCD00CC9DE9 /* FirebaseCrashlytics */; };
+		0D26103C298C3E4800CC9DE9 /* CrashReportingInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D26103B298C3E4800CC9DE9 /* CrashReportingInterface.swift */; };
+		0D26103E298C3FA600CC9DE9 /* CrashReporterLiveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D26103D298C3FA600CC9DE9 /* CrashReporterLiveKey.swift */; };
+		0D261040298C406F00CC9DE9 /* CrashReporterTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D26103F298C406F00CC9DE9 /* CrashReporterTestKey.swift */; };
 		0D2ACE8026C2C67100D62E3C /* Zboto.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0D2ACE7F26C2C67100D62E3C /* Zboto.otf */; };
 		0D35CC46277A36E00074316A /* ScrollableWhenScaled.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D35CC45277A36E00074316A /* ScrollableWhenScaled.swift */; };
+		0D3B01EC298DAF89007EBCDA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D3B01EB298DAF89007EBCDA /* GoogleService-Info.plist */; };
 		0D3D04082728B3440032ABC1 /* RecoveryPhraseDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3D04072728B3440032ABC1 /* RecoveryPhraseDisplayView.swift */; };
 		0D3D040A2728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3D04092728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift */; };
 		0D4E7A0926B364170058B01E /* SecantApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0826B364170058B01E /* SecantApp.swift */; };
@@ -24,6 +29,7 @@
 		0D535FDF271F4214009A9E3E /* Rubik-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D535FDD271F4214009A9E3E /* Rubik-VariableFont_wght.ttf */; };
 		0D535FE2271F9476009A9E3E /* EnumeratedChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D535FE1271F9476009A9E3E /* EnumeratedChip.swift */; };
 		0D5D9B8F2914620700DBD03F /* URLRouting in Frameworks */ = {isa = PBXBuildFile; productRef = 0D5D9B8E2914620700DBD03F /* URLRouting */; };
+		0D63170029919970007D873F /* UserPreferencesStorageInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6316FF29919970007D873F /* UserPreferencesStorageInterface.swift */; };
 		0D6D628B276A528E002FB4CC /* DropDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6D628A276A528D002FB4CC /* DropDelegate.swift */; };
 		0D7CE63427349B5D0020E050 /* View+WhenDraggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7CE63327349B5D0020E050 /* View+WhenDraggable.swift */; };
 		0D7DF08C271DCC0E00530046 /* ScreenBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7DF08B271DCC0E00530046 /* ScreenBackground.swift */; };
@@ -313,8 +319,12 @@
 		0D185818272723FF0046B928 /* ColoredChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColoredChip.swift; sourceTree = "<group>"; };
 		0D18581A272728D60046B928 /* PhraseChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhraseChip.swift; sourceTree = "<group>"; };
 		0D1C1AA227611EFD0004AF6A /* RecoveryPhraseDisplayReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseDisplayReducerTests.swift; sourceTree = "<group>"; };
+		0D26103B298C3E4800CC9DE9 /* CrashReportingInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashReportingInterface.swift; sourceTree = "<group>"; };
+		0D26103D298C3FA600CC9DE9 /* CrashReporterLiveKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashReporterLiveKey.swift; sourceTree = "<group>"; };
+		0D26103F298C406F00CC9DE9 /* CrashReporterTestKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashReporterTestKey.swift; sourceTree = "<group>"; };
 		0D2ACE7F26C2C67100D62E3C /* Zboto.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zboto.otf; sourceTree = "<group>"; };
 		0D35CC45277A36E00074316A /* ScrollableWhenScaled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableWhenScaled.swift; sourceTree = "<group>"; };
+		0D3B01EB298DAF89007EBCDA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0D3D04072728B3440032ABC1 /* RecoveryPhraseDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseDisplayView.swift; sourceTree = "<group>"; };
 		0D3D04092728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseDisplayStore.swift; sourceTree = "<group>"; };
 		0D4E7A0526B364170058B01E /* secant-testnet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "secant-testnet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -331,6 +341,7 @@
 		0D535FDC271F4214009A9E3E /* Rubik-Italic-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-Italic-VariableFont_wght.ttf"; sourceTree = "<group>"; };
 		0D535FDD271F4214009A9E3E /* Rubik-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-VariableFont_wght.ttf"; sourceTree = "<group>"; };
 		0D535FE1271F9476009A9E3E /* EnumeratedChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumeratedChip.swift; sourceTree = "<group>"; };
+		0D6316FF29919970007D873F /* UserPreferencesStorageInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreferencesStorageInterface.swift; sourceTree = "<group>"; };
 		0D6D628A276A528D002FB4CC /* DropDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropDelegate.swift; sourceTree = "<group>"; };
 		0D7CE63327349B5D0020E050 /* View+WhenDraggable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+WhenDraggable.swift"; sourceTree = "<group>"; };
 		0D7DF08B271DCC0E00530046 /* ScreenBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenBackground.swift; sourceTree = "<group>"; };
@@ -599,6 +610,7 @@
 				9E6612312878337F00C75B70 /* Lottie in Frameworks */,
 				0D5D9B8F2914620700DBD03F /* URLRouting in Frameworks */,
 				0DB4E0B42881FD9100947B78 /* ZcashLightClientKit in Frameworks */,
+				0D26103A298C3DCD00CC9DE9 /* FirebaseCrashlytics in Frameworks */,
 				9E2AC0FF27D8EC120042AA47 /* MnemonicSwift in Frameworks */,
 				6654C73A2715A38000901167 /* ComposableArchitecture in Frameworks */,
 				9EAB466D285A0468002904A0 /* Parsing in Frameworks */,
@@ -759,6 +771,16 @@
 				0D18581A272728D60046B928 /* PhraseChip.swift */,
 			);
 			path = Chips;
+			sourceTree = "<group>";
+		};
+		0D767873298C374F0047E085 /* CrashReporter */ = {
+			isa = PBXGroup;
+			children = (
+				0D26103B298C3E4800CC9DE9 /* CrashReportingInterface.swift */,
+				0D26103D298C3FA600CC9DE9 /* CrashReporterLiveKey.swift */,
+				0D26103F298C406F00CC9DE9 /* CrashReporterTestKey.swift */,
+			);
+			path = CrashReporter;
 			sourceTree = "<group>";
 		};
 		0D8A43C2272AEEA7005A6414 /* FontStyles */ = {
@@ -1253,6 +1275,7 @@
 			children = (
 				9E6612342878341F00C75B70 /* Lotties */,
 				0D4E7A0C26B364180058B01E /* Assets.xcassets */,
+				0D3B01EB298DAF89007EBCDA /* GoogleService-Info.plist */,
 				660558E8270C7A54009D6954 /* Colors.xcassets */,
 				9E37A2B727C8F59F00AE57B3 /* Localizable.strings */,
 				0D2ACE7E26C2C65E00D62E3C /* Fonts */,
@@ -1301,6 +1324,7 @@
 				9EBDF978291F7E85000A1A05 /* AppVersion */,
 				9EBDF962291ECD42000A1A05 /* AudioServices */,
 				9EBDF969291ECEAC000A1A05 /* CaptureDevice */,
+				0D767873298C374F0047E085 /* CrashReporter */,
 				9EBDF94E291E5E5F000A1A05 /* DatabaseFiles */,
 				9EBDF959291E654F000A1A05 /* Deeplink */,
 				9EBDF971291F79C9000A1A05 /* DerivationTool */,
@@ -1600,6 +1624,7 @@
 				9E3911442848EEB90073DD9A /* UserPreferencesStorage.swift */,
 				9EB863C62923C93B003D0F8B /* UserPreferencesStorageLive.swift */,
 				9EB863C82923C953003D0F8B /* UserPreferencesStorageMocks.swift */,
+				0D6316FF29919970007D873F /* UserPreferencesStorageInterface.swift */,
 			);
 			path = UserPreferencesStorage;
 			sourceTree = "<group>";
@@ -1820,11 +1845,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0D4E7A2A26B364180058B01E /* Build configuration list for PBXNativeTarget "secant-testnet" */;
 			buildPhases = (
+				0D3B01ED298DB0FE007EBCDA /* ShellScript */,
 				664E39ED270C693C0044AD7E /* SwiftGen */,
 				6696BA8726F0B1D200D5C875 /* SwiftLint */,
 				0D4E7A0126B364170058B01E /* Sources */,
 				0D4E7A0226B364170058B01E /* Frameworks */,
 				0D4E7A0326B364170058B01E /* Resources */,
+				0D300FA72996EAF200576003 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1838,6 +1865,7 @@
 				9E6612302878337F00C75B70 /* Lottie */,
 				0DB4E0B32881FD9100947B78 /* ZcashLightClientKit */,
 				0D5D9B8E2914620700DBD03F /* URLRouting */,
+				0D261039298C3DCD00CC9DE9 /* FirebaseCrashlytics */,
 			);
 			productName = secant;
 			productReference = 0D4E7A0526B364170058B01E /* secant-testnet.app */;
@@ -1919,6 +1947,7 @@
 				9E66122F2878337F00C75B70 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				0DB4E0B22881FD9100947B78 /* XCRemoteSwiftPackageReference "ZcashLightClientKit" */,
 				0D5D9B8D2914620700DBD03F /* XCRemoteSwiftPackageReference "swift-url-routing" */,
+				0D261038298C3DCD00CC9DE9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 0D4E7A0626B364170058B01E /* Products */;
 			projectDirPath = "";
@@ -1955,6 +1984,7 @@
 				0D4E7A0D26B364180058B01E /* Assets.xcassets in Resources */,
 				0DACFA9727209FA70039EEA5 /* Roboto-Black.ttf in Resources */,
 				0DACFA9C27209FA70039EEA5 /* Roboto-ThinItalic.ttf in Resources */,
+				0D3B01EC298DAF89007EBCDA /* GoogleService-Info.plist in Resources */,
 				9E37A2B827C8F59F00AE57B3 /* Localizable.strings in Resources */,
 				0DACFA9627209FA70039EEA5 /* Roboto-Thin.ttf in Resources */,
 				0D2ACE8026C2C67100D62E3C /* Zboto.otf in Resources */,
@@ -1978,6 +2008,43 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0D300FA72996EAF200576003 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif [[ $UPLOAD_CRASHLYTICS_SYMBOLS = \"NO\" ]]; then\n   echo \"DEBUG BUILD: SKIPPING UPLOAD SYMBOLS STEP\"\nelse\n${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\nfi\n";
+		};
+		0D3B01ED298DB0FE007EBCDA /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Resources/GoogleService-Info.plist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "# this creates an empty file for the firebase SDK\nCRASH_REPORTER_FILE=\"secant/Resources/GoogleService-Info.plist\"\nif [[ -f $CRASH_REPORTER_FILE ]]; then\n    echo \"$CRASH_REPORTER_FILE Exists. Not doing anything.\"\nelse \n    echo \"$CRASH_REPORTER_FILE does not exist. Will insert a DUMMY FILE\"\n\n    echo \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxLjAiPgo8ZGljdD4KICAgIDxrZXk+SVNfRFVNTVlfRklMRTwva2V5PgogICAgPHRydWU+PC90cnVlPgo8L2RpY3Q+CjwvcGxpc3Q+Cg==\" | base64 --decode > $CRASH_REPORTER_FILE\nfi\n";
+		};
 		664E39ED270C693C0044AD7E /* SwiftGen */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2028,6 +2095,7 @@
 			files = (
 				2EB660E02747EAB900A06A07 /* OnboardingFlowView.swift in Sources */,
 				9E7FE0DF282D2DD600C374E8 /* ZcashBadge.swift in Sources */,
+				0D261040298C406F00CC9DE9 /* CrashReporterTestKey.swift in Sources */,
 				9EBDF975291F79F9000A1A05 /* DerivationToolInterface.swift in Sources */,
 				660558F8270C862F009D6954 /* XCAssets+Generated.swift in Sources */,
 				9EAFEB902808183D00199FC9 /* SandboxStore.swift in Sources */,
@@ -2040,6 +2108,7 @@
 				9EBDF96E291ECED4000A1A05 /* CaptureDeviceLiveKey.swift in Sources */,
 				9EBDF968291ECDA2000A1A05 /* AudioServicesInterface.swift in Sources */,
 				9EB863BD2923C704003D0F8B /* NotificationCenterTest.swift in Sources */,
+				0D26103E298C3FA600CC9DE9 /* CrashReporterLiveKey.swift in Sources */,
 				9EB863A829239DCB003D0F8B /* RecoveryPhraseRandomizerLiveKey.swift in Sources */,
 				2EDA07A027EDE18C00D6F09B /* TCATextField.swift in Sources */,
 				9EBDF961291E657B000A1A05 /* DeeplinkInterface.swift in Sources */,
@@ -2083,6 +2152,7 @@
 				9E66122C2877188700C75B70 /* SyncStatusSnapshot.swift in Sources */,
 				9E4DC6E227C4C6B700E657F4 /* SecantButtonStyles.swift in Sources */,
 				0DDB6A5127737D4A0012A410 /* RecoveryPhraseBackupFailedView.swift in Sources */,
+				0D63170029919970007D873F /* UserPreferencesStorageInterface.swift in Sources */,
 				9EBDF94D291D773A000A1A05 /* DiskSpaceCheckerMocks.swift in Sources */,
 				0D6D628B276A528E002FB4CC /* DropDelegate.swift in Sources */,
 				9EBDF986291F91EF000A1A05 /* LocalAuthenticationLiveKey.swift in Sources */,
@@ -2207,6 +2277,7 @@
 				9EB863D02923D3FC003D0F8B /* SDKSynchronizerMocks.swift in Sources */,
 				9E612C7629880FC900D09B09 /* LogsHandlerTest.swift in Sources */,
 				2EDA07A227EDE1AE00D6F09B /* TextFieldFooter.swift in Sources */,
+				0D26103C298C3E4800CC9DE9 /* CrashReportingInterface.swift in Sources */,
 				F9971A5427680DD000A2DB75 /* ProfileView.swift in Sources */,
 				F9971A6027680DF600A2DB75 /* ScanStore.swift in Sources */,
 				9EB863952922D036003D0F8B /* NumberFormatterTestKey.swift in Sources */,
@@ -2436,7 +2507,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 37;
+				CURRENT_PROJECT_VERSION = 38;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
 				DEVELOPMENT_TEAM = RLPRR8CPQG;
 				ENABLE_BITCODE = NO;
@@ -2452,6 +2524,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
+				UPLOAD_CRASHLYTICS_SYMBOLS = NO;
 			};
 			name = Debug;
 		};
@@ -2461,7 +2534,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 37;
+				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
 				DEVELOPMENT_TEAM = RLPRR8CPQG;
 				ENABLE_BITCODE = NO;
@@ -2477,6 +2550,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
+				UPLOAD_CRASHLYTICS_SYMBOLS = YES;
 			};
 			name = Release;
 		};
@@ -2604,6 +2678,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		0D261038298C3DCD00CC9DE9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 9.6.0;
+			};
+		};
 		0D5D9B8D2914620700DBD03F /* XCRemoteSwiftPackageReference "swift-url-routing" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-url-routing";
@@ -2655,6 +2737,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0D261039298C3DCD00CC9DE9 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0D261038298C3DCD00CC9DE9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
 		0D5D9B8E2914620700DBD03F /* URLRouting */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 0D5D9B8D2914620700DBD03F /* XCRemoteSwiftPackageReference "swift-url-routing" */;
