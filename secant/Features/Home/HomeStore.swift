@@ -40,8 +40,8 @@ struct HomeReducer: ReducerProtocol {
             Zatoshi.from(decimal: shieldedBalance.total.decimalValue.decimalValue * zecPrice)
         }
 
-        var isDownloading: Bool {
-            if case .downloading = synchronizerStatusSnapshot.syncStatus {
+        var isSyncing: Bool {
+            if case .syncing = synchronizerStatusSnapshot.syncStatus {
                 return true
             }
             return false
@@ -120,7 +120,7 @@ struct HomeReducer: ReducerProtocol {
 
             case .synchronizerStateChanged(.synced):
                 return .merge(
-                    sdkSynchronizer.getAllClearedTransactions()
+                    sdkSynchronizer.getAllTransactions()
                         .receive(on: mainQueue)
                         .map(HomeReducer.Action.updateWalletEvents)
                         .eraseToEffect(),

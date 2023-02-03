@@ -62,10 +62,14 @@ class SendTests: XCTestCase {
         }
 
         await testScheduler.advance(by: 0.01)
-
+        guard let memo = try? Memo(string: "test") else {
+            XCTFail("testSendSucceeded: memo is expected to be successfuly initialized.")
+            return
+        }
+        
         let transactionState = TransactionState(
-            expirationHeight: 40,
-            memo: try? Memo(string: "test"),
+            expiryHeight: 40,
+            memos: [memo],
             minedHeight: 50,
             shielded: true,
             zAddress: "tteafadlamnelkqe",
@@ -132,8 +136,8 @@ class SendTests: XCTestCase {
         await testScheduler.advance(by: 0.01)
 
         let transactionState = TransactionState(
-            expirationHeight: 40,
-            memo: nil,
+            expiryHeight: 40,
+            memos: [],
             minedHeight: 50,
             shielded: true,
             zAddress: "tteafadlamnelkqe",

@@ -60,7 +60,7 @@ struct WalletEventsFlowReducer: ReducerProtocol {
             if let latestMinedHeight = sdkSynchronizer.synchronizer?.latestScannedHeight {
                 state.latestMinedHeight = latestMinedHeight
             }
-            return sdkSynchronizer.getAllTransactions()
+            return sdkSynchronizer.getAllClearedTransactions()
                 .receive(on: mainQueue)
                 .map(WalletEventsFlowReducer.Action.updateWalletEvents)
                 .eraseToEffect()
@@ -71,7 +71,10 @@ struct WalletEventsFlowReducer: ReducerProtocol {
         case .updateWalletEvents(let walletEvents):
             let sortedWalletEvents = walletEvents
                 .sorted(by: { lhs, rhs in
-                    lhs.timestamp > rhs.timestamp
+                    guard let lhsTimestamp = lhs.timestamp, let rhsTimestamp = rhs.timestamp else {
+                        return false
+                    }
+                    return lhsTimestamp > rhsTimestamp
                 })
             state.walletEvents = IdentifiedArrayOf(uniqueElements: sortedWalletEvents)
             return .none

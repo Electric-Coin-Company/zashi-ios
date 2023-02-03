@@ -118,8 +118,8 @@ extension HomeView {
         VStack {
             ZStack {
                 CircularProgress(
-                    outerCircleProgress: viewStore.isDownloading ? 0 : viewStore.synchronizerStatusSnapshot.progress,
-                    innerCircleProgress: viewStore.isDownloading ? viewStore.synchronizerStatusSnapshot.progress : 1,
+                    outerCircleProgress: viewStore.isSyncing ? 0 : viewStore.synchronizerStatusSnapshot.progress,
+                    innerCircleProgress: 1,
                     maxSegments: viewStore.requiredTransactionConfirmations,
                     innerCircleHidden: viewStore.isUpToDate
                 )
