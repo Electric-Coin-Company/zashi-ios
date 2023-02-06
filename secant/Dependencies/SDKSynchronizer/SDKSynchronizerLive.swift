@@ -113,10 +113,35 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
         latestScannedSynchronizerState?.transparentBalance
     }
 
+    func getAllSentTransactions() -> Effect<[WalletEvent], Never> {
+        if let transactions = try? synchronizer?.allSentTransactions() {
+            return Effect(value: transactions.map {
+                let memos = try? synchronizer?.getMemos(for: $0)
+                let transaction = TransactionState.init(transaction: $0, memos: memos)
+                return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
+            })
+        }
+        
+        return .none
+    }
+
+    func getAllReceivedTransactions() -> Effect<[WalletEvent], Never> {
+        if let transactions = try? synchronizer?.allReceivedTransactions() {
+            return Effect(value: transactions.map {
+                let memos = try? synchronizer?.getMemos(for: $0)
+                let transaction = TransactionState.init(transaction: $0, memos: memos)
+                return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
+            })
+        }
+        
+        return .none
+    }
+
     func getAllClearedTransactions() -> Effect<[WalletEvent], Never> {
-        if let clearedTransactions = try? synchronizer?.allClearedTransactions() {
-            return Effect(value: clearedTransactions.map {
-                let transaction = TransactionState.init(confirmedTransaction: $0, sent: ($0.toAddress != nil))
+        if let transactions = try? synchronizer?.allClearedTransactions() {
+            return Effect(value: transactions.map {
+                let memos = try? synchronizer?.getMemos(for: $0)
+                let transaction = TransactionState.init(transaction: $0, memos: memos)
                 return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
             })
         }
@@ -125,9 +150,9 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
     }
     
     func getAllPendingTransactions() -> Effect<[WalletEvent], Never> {
-        if let pendingTransactions = try? synchronizer?.allPendingTransactions(),
+        if let transactions = try? synchronizer?.allPendingTransactions(),
         let syncedBlockHeight = synchronizer?.latestScannedHeight {
-            return Effect(value: pendingTransactions.map {
+            return Effect(value: transactions.map {
                 let transaction = TransactionState.init(pendingTransaction: $0, latestBlockHeight: syncedBlockHeight)
                 return WalletEvent(id: transaction.id, state: .pending(transaction), timestamp: transaction.timestamp)
             })
@@ -141,21 +166,21 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
         let clearedTransactions = try? synchronizer?.allClearedTransactions(),
         let syncedBlockHeight = synchronizer?.latestScannedHeight {
             let clearedTxs: [WalletEvent] = clearedTransactions.map {
-                let transaction = TransactionState.init(confirmedTransaction: $0, sent: ($0.toAddress != nil))
+                let transaction = TransactionState.init(transaction: $0)
                 return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
             }
             let pendingTxs: [WalletEvent] = pendingTransactions.map {
                 let transaction = TransactionState.init(pendingTransaction: $0, latestBlockHeight: syncedBlockHeight)
                 return WalletEvent(id: transaction.id, state: .pending(transaction), timestamp: transaction.timestamp)
             }
-            
-            let txs = clearedTxs.filter { cleared in
+            let cTxs = clearedTxs.filter { transaction in
                 pendingTxs.first { pending in
-                    pending.id == cleared.id
+                    pending.id == transaction.id
                 } == nil
             }
+            
             return .merge(
-                Effect(value: txs),
+                Effect(value: cTxs),
                 Effect(value: pendingTxs)
             )
             .flatMap(Publishers.Sequence.init(sequence:))

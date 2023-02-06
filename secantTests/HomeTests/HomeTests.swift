@@ -50,18 +50,27 @@ class HomeTests: XCTestCase {
             TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),
             TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(3), status: .paid(success: true), uuid: "cc33"),
             TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(4), uuid: "dd44"),
-            TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(5), uuid: "ee55")
+            TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(5), uuid: "ee55"),
+            TransactionStateMockHelper(
+                date: 1651039606,
+                amount: Zatoshi(6),
+                status: .paid(success: false),
+                uuid: "ff66"
+            ),
+            TransactionStateMockHelper(date: 1651039303, amount: Zatoshi(7), uuid: "gg77"),
+            TransactionStateMockHelper(date: 1651039707, amount: Zatoshi(8), status: .paid(success: true), uuid: "hh88"),
+            TransactionStateMockHelper(date: 1651039808, amount: Zatoshi(9), uuid: "ii99")
         ]
         let walletEvents: [WalletEvent] = transactionsHelper.map {
             let transaction = TransactionState.placeholder(
                 amount: $0.amount,
                 fee: Zatoshi(10),
                 shielded: $0.shielded,
-                status: $0.status,
+                status: $0.amount.amount > 5 ? .pending : $0.status,
                 timestamp: $0.date,
                 uuid: $0.uuid
             )
-            return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
+            return WalletEvent(id: transaction.id, state: $0.amount.amount > 5 ? .pending(transaction) : .send(transaction), timestamp: transaction.timestamp)
         }
         
         store.receive(.updateWalletEvents(walletEvents))

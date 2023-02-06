@@ -24,7 +24,7 @@ struct WalletEvent: Equatable, Identifiable {
     
     let id: String
     let state: WalletEventState
-    var timestamp: TimeInterval
+    var timestamp: TimeInterval?
 }
 
 // MARK: - Rows

@@ -62,14 +62,14 @@ extension TransactionRowView {
     var operationTitle: String {
         switch transaction.status {
         case .paid(success: _):
-            return "You sent to"
+            return "You sent"
         case .received:
             return "Unknown paid you"
         case .failed:
             // TODO: [#392] final text to be provided (https://github.com/zcash/secant-ios-wallet/issues/392)
             return "Transaction failed"
         case .pending:
-            return "You are sending to"
+            return "You are sending"
         }
     }
     

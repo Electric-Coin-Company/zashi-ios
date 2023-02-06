@@ -42,6 +42,10 @@ class NoopSDKSynchronizer: SDKSynchronizerClient {
     
     func getTransparentBalance() -> WalletBalance? { nil }
 
+    func getAllSentTransactions() -> Effect<[WalletEvent], Never> { Effect(value: []) }
+
+    func getAllReceivedTransactions() -> Effect<[WalletEvent], Never> { Effect(value: []) }
+
     func getAllClearedTransactions() -> Effect<[WalletEvent], Never> { Effect(value: []) }
 
     func getAllPendingTransactions() -> Effect<[WalletEvent], Never> { Effect(value: []) }
@@ -69,7 +73,6 @@ class NoopSDKSynchronizer: SDKSynchronizerClient {
 }
 
 class TestSDKSynchronizerClient: SDKSynchronizerClient {
-    private(set) var blockProcessor: CompactBlockProcessor?
     private(set) var notificationCenter: NotificationCenterClient
     private(set) var synchronizer: SDKSynchronizer?
     private(set) var stateChanged: CurrentValueSubject<SDKSynchronizerState, Never>
@@ -97,6 +100,56 @@ class TestSDKSynchronizerClient: SDKSynchronizerClient {
     
     func getTransparentBalance() -> WalletBalance? { nil }
 
+    func getAllSentTransactions() -> Effect<[WalletEvent], Never> {
+        let mocked: [TransactionStateMockHelper] = [
+            TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "aa11"),
+            TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),
+            TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(3), status: .paid(success: true), uuid: "cc33"),
+            TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(4), uuid: "dd44"),
+            TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(5), uuid: "ee55")
+        ]
+        
+        return Effect(
+            value:
+                mocked.map {
+                    let transaction = TransactionState.placeholder(
+                        amount: $0.amount,
+                        fee: Zatoshi(10),
+                        shielded: $0.shielded,
+                        status: $0.status,
+                        timestamp: $0.date,
+                        uuid: $0.uuid
+                    )
+                    return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
+                }
+        )
+    }
+    
+    func getAllReceivedTransactions() -> Effect<[WalletEvent], Never> {
+        let mocked: [TransactionStateMockHelper] = [
+            TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "aa11"),
+            TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),
+            TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(3), status: .paid(success: true), uuid: "cc33"),
+            TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(4), uuid: "dd44"),
+            TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(5), uuid: "ee55")
+        ]
+        
+        return Effect(
+            value:
+                mocked.map {
+                    let transaction = TransactionState.placeholder(
+                        amount: $0.amount,
+                        fee: Zatoshi(10),
+                        shielded: $0.shielded,
+                        status: $0.status,
+                        timestamp: $0.date,
+                        uuid: $0.uuid
+                    )
+                    return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
+                }
+        )
+    }
+    
     func getAllClearedTransactions() -> Effect<[WalletEvent], Never> {
         let mocked: [TransactionStateMockHelper] = [
             TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "aa11"),

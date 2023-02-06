@@ -59,6 +59,8 @@ protocol SDKSynchronizerClient {
 
     func getShieldedBalance() -> WalletBalance?
     func getTransparentBalance() -> WalletBalance?
+    func getAllSentTransactions() -> Effect<[WalletEvent], Never>
+    func getAllReceivedTransactions() -> Effect<[WalletEvent], Never>
     func getAllClearedTransactions() -> Effect<[WalletEvent], Never>
     func getAllPendingTransactions() -> Effect<[WalletEvent], Never>
     func getAllTransactions() -> Effect<[WalletEvent], Never>

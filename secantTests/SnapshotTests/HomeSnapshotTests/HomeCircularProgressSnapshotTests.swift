@@ -21,7 +21,7 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
                     progressHeight: BlockHeight(55)
                 )
                 
-                return SyncStatusSnapshot.snapshotFor(state: .downloading(blockProgress))
+                return SyncStatusSnapshot.snapshotFor(state: .syncing(blockProgress))
             }
         }
 
@@ -57,7 +57,7 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
                     progressHeight: BlockHeight(72)
                 )
                 
-                return SyncStatusSnapshot.snapshotFor(state: .scanning(blockProgress))
+                return SyncStatusSnapshot.snapshotFor(state: .syncing(blockProgress))
             }
         }
 

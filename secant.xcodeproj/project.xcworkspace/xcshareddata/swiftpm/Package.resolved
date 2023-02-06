@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/stephencelis/SQLite.swift.git",
       "state" : {
-        "revision" : "4d543d811ee644fa4cc4bfa0be996b4dd6ba0f54",
-        "version" : "0.13.3"
+        "revision" : "7a2e3cd27de56f6d396e84f63beefd0267b55ccb",
+        "version" : "0.14.1"
       }
     },
     {
@@ -203,8 +203,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/zcash-hackworks/zcash-light-client-ffi.git",
       "state" : {
-        "revision" : "fad9802b907822d5a1877584c91f3786824521b7",
-        "version" : "0.1.0"
+        "revision" : "b6013b8b313523b2c72ce62dbdc17f6ffad3a500",
+        "version" : "0.1.1"
       }
     },
     {
@@ -212,8 +212,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/zcash/ZcashLightClientKit",
       "state" : {
-        "revision" : "d9b85b40ad36ac5183f44b6db9805e44171ee988",
-        "version" : "0.17.0-beta"
+        "revision" : "731c7bbf4514a90b879c5c15968cdb41ac728e3a",
+        "version" : "0.18.0-beta"
       }
     }
   ],
