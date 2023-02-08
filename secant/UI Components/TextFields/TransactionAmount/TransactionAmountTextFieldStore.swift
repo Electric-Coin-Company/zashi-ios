@@ -13,9 +13,9 @@ typealias TransactionAmountTextFieldStore = Store<TransactionAmountTextFieldRedu
 
 struct TransactionAmountTextFieldReducer: ReducerProtocol {
     struct State: Equatable {
-        var amount: Int64 = 0
+        var amount = RedactableInt64(0)
         var currencySelectionState: CurrencySelectionReducer.State
-        var maxValue: Int64 = 0
+        var maxValue = RedactableInt64(0)
         var textFieldState: TCATextFieldReducer.State
         // TODO: [#311] - Get the ZEC price from the SDK, https://github.com/zcash/secant-ios-wallet/issues/311
         var zecPrice = Decimal(140.0)
@@ -47,7 +47,7 @@ struct TransactionAmountTextFieldReducer: ReducerProtocol {
         Reduce { state, action in
             switch action {
             case .setMax:
-                let maxValueAsZec = Decimal(state.maxValue) / Decimal(Zatoshi.Constants.oneZecInZatoshi)
+                let maxValueAsZec = Decimal(state.maxValue.data) / Decimal(Zatoshi.Constants.oneZecInZatoshi)
                 let currencyType = state.currencySelectionState.currencyType
                 let maxCurrencyConvertedValue: NSDecimalNumber = currencyType == .zec ?
                 NSDecimalNumber(decimal: maxValueAsZec).roundedZec :
@@ -55,33 +55,35 @@ struct TransactionAmountTextFieldReducer: ReducerProtocol {
                 
                 let decimalString = numberFormatter.string(maxCurrencyConvertedValue) ?? ""
                 
-                state.textFieldState.text = "\(decimalString)"
-                return EffectTask(value: .updateAmount)
+                state.textFieldState.text = "\(decimalString)".redacted
+                return Effect(value: .updateAmount)
 
             case .clearValue:
-                state.textFieldState.text = ""
+                state.textFieldState.text = "".redacted
                 return .none
 
             case .textField(.set):
                 return EffectTask(value: .updateAmount)
                 
             case .updateAmount:
-                guard let number = numberFormatter.number(state.textFieldState.text) else {
-                    state.amount = 0
+                guard let number = numberFormatter.number(state.textFieldState.text.data) else {
+                    state.amount = Int64(0).redacted
                     return .none
                 }
                 switch state.currencySelectionState.currencyType {
                 case .zec:
-                    state.amount = NSDecimalNumber(decimal: number.decimalValue * Decimal(Zatoshi.Constants.oneZecInZatoshi)).roundedZec.int64Value
+                    state.amount = NSDecimalNumber(
+                        decimal: number.decimalValue * Decimal(Zatoshi.Constants.oneZecInZatoshi)
+                    ).roundedZec.int64Value.redacted
                 case .usd:
                     let decimal = (number.decimalValue / state.zecPrice) * Decimal(Zatoshi.Constants.oneZecInZatoshi)
-                    state.amount = NSDecimalNumber(decimal: decimal).roundedZec.int64Value
+                    state.amount = NSDecimalNumber(decimal: decimal).roundedZec.int64Value.redacted
                 }
                 return .none
                 
             case .currencySelection:
-                guard let number = numberFormatter.number(state.textFieldState.text) else {
-                    state.amount = 0
+                guard let number = numberFormatter.number(state.textFieldState.text.data) else {
+                    state.amount = Int64(0).redacted
                     return .none
                 }
                 
@@ -92,8 +94,8 @@ struct TransactionAmountTextFieldReducer: ReducerProtocol {
                 number.decimalValue * state.zecPrice
                 
                 let decimalString = numberFormatter.string(NSDecimalNumber(decimal: newValue)) ?? ""
-                state.textFieldState.text = "\(decimalString)"
-                return EffectTask(value: .updateAmount)
+                state.textFieldState.text = "\(decimalString)".redacted
+                return Effect(value: .updateAmount)
             }
         }
     }

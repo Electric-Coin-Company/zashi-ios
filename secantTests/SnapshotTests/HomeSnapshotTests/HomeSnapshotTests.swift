@@ -43,7 +43,7 @@ class HomeSnapshotTests: XCTestCase {
                 requestState: .placeholder,
                 scanState: .placeholder,
                 sendState: .placeholder,
-                shieldedBalance: balance,
+                shieldedBalance: balance.redacted,
                 synchronizerStatusSnapshot: .default,
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: walletEvents))
             ),

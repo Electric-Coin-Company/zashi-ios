@@ -17,8 +17,8 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
             initialState: BalanceBreakdownReducer.State(
                 autoShieldingThreshold: Zatoshi(1_000_000),
                 latestBlock: "unknown",
-                shieldedBalance: WalletBalance(verified: Zatoshi(123_000_000_000), total: Zatoshi(123_000_000_000)),
-                transparentBalance: WalletBalance(verified: Zatoshi(850_000_000), total: Zatoshi(850_000_000))
+                shieldedBalance: WalletBalance(verified: Zatoshi(123_000_000_000), total: Zatoshi(123_000_000_000)).redacted,
+                transparentBalance: WalletBalance(verified: Zatoshi(850_000_000), total: Zatoshi(850_000_000)).redacted
             ),
             reducer: BalanceBreakdownReducer()
         )

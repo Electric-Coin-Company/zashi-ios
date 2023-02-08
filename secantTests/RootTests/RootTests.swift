@@ -167,7 +167,7 @@ class RootTests: XCTestCase {
             reducer: RootReducer()
         )
         
-        let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
+        let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
         store.send(.home(.walletEvents(.replyTo(address))))
         
         if let url = URL(string: "zcash:\(address)") {

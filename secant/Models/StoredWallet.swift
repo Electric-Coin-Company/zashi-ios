@@ -12,19 +12,19 @@ import MnemonicSwift
 /// Representation of the wallet stored in the persistent storage (typically keychain, handled by `WalletStorage`).
 struct StoredWallet: Codable, Equatable {
     let language: MnemonicLanguageType
-    let seedPhrase: String
+    let seedPhrase: SeedPhrase
     let version: Int
     
-    var birthday: BlockHeight?
+    var birthday: Birthday?
     var hasUserPassedPhraseBackupTest: Bool
 }
 
 extension StoredWallet {
     static let placeholder = Self(
         language: .english,
-        seedPhrase: RecoveryPhrase.testPhrase.joined(separator: " "),
+        seedPhrase: SeedPhrase(RecoveryPhrase.testPhrase.joined(separator: " ")),
         version: 0,
-        birthday: 0,
+        birthday: Birthday(0),
         hasUserPassedPhraseBackupTest: false
     )
 }

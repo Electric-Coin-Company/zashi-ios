@@ -39,7 +39,7 @@ class SendTests: XCTestCase {
             textFieldState:
                 TCATextFieldReducer.State(
                     validationType: nil,
-                    text: "ztestsapling1psqa06alcfj9t6s246hht3n7kcw5h900r6z40qnuu7l58qs55kzeqa98879z9hzy596dca4hmsr"
+                    text: "ztestsapling1psqa06alcfj9t6s246hht3n7kcw5h900r6z40qnuu7l58qs55kzeqa98879z9hzy596dca4hmsr".redacted
                 )
         )
 
@@ -111,7 +111,7 @@ class SendTests: XCTestCase {
             textFieldState:
                 TCATextFieldReducer.State(
                     validationType: nil,
-                    text: "ztestsapling1psqa06alcfj9t6s246hht3n7kcw5h900r6z40qnuu7l58qs55kzeqa98879z9hzy596dca4hmsr"
+                    text: "ztestsapling1psqa06alcfj9t6s246hht3n7kcw5h900r6z40qnuu7l58qs55kzeqa98879z9hzy596dca4hmsr".redacted
                 )
         )
 
@@ -178,7 +178,7 @@ class SendTests: XCTestCase {
             textFieldState:
                 TCATextFieldReducer.State(
                     validationType: nil,
-                    text: "ztestsapling1psqa06alcfj9t6s246hht3n7kcw5h900r6z40qnuu7l58qs55kzeqa98879z9hzy596dca4hmsr"
+                    text: "ztestsapling1psqa06alcfj9t6s246hht3n7kcw5h900r6z40qnuu7l58qs55kzeqa98879z9hzy596dca4hmsr".redacted
                 )
         )
 
@@ -228,8 +228,9 @@ class SendTests: XCTestCase {
             dependencies.derivationTool.isValidZcashAddress = { _ in false }
         }
 
-        store.send(.transactionAddressInput(.textField(.set("3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr")))) { state in
-            state.transactionAddressInputState.textFieldState.text = "3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr"
+        let address = "3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr".redacted
+        store.send(.transactionAddressInput(.textField(.set(address)))) { state in
+            state.transactionAddressInputState.textFieldState.text = address
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
             // isValid function returns true, `guard let validationType = validationType else { return true }`
             state.transactionAddressInputState.textFieldState.valid = true
@@ -250,8 +251,9 @@ class SendTests: XCTestCase {
             dependencies.derivationTool.isValidZcashAddress = { _ in true }
         }
 
-        store.send(.transactionAddressInput(.textField(.set("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po")))) { state in
-            state.transactionAddressInputState.textFieldState.text = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
+        let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
+        store.send(.transactionAddressInput(.textField(.set(address)))) { state in
+            state.transactionAddressInputState.textFieldState.text = address
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
             // isValid function returns true, `guard let validationType = validationType else { return true }`
             state.transactionAddressInputState.textFieldState.valid = true
@@ -273,7 +275,7 @@ class SendTests: XCTestCase {
 
         // Checks the computed property `isInvalidAmountFormat` which controls the error message to be shown on the screen
         // With empty input it must be false
-        store.send(.transactionAmountInput(.textField(.set(""))))
+        store.send(.transactionAmountInput(.textField(.set("".redacted))))
         
         store.receive(.transactionAmountInput(.updateAmount))
     }
@@ -288,8 +290,8 @@ class SendTests: XCTestCase {
 
         // Checks the computed property `isInvalidAddressFormat` which controls the error message to be shown on the screen
         // With empty input it must be false
-        store.send(.transactionAddressInput(.textField(.set("")))) { state in
-            state.transactionAddressInputState.textFieldState.text = ""
+        store.send(.transactionAddressInput(.textField(.set("".redacted)))) { state in
+            state.transactionAddressInputState.textFieldState.text = "".redacted
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
             // isValid function returns true, `guard let validationType = validationType else { return true }`
             state.transactionAddressInputState.textFieldState.valid = true
@@ -309,11 +311,11 @@ class SendTests: XCTestCase {
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
                     currencySelectionState: CurrencySelectionReducer.State(),
-                    maxValue: 501_300,
+                    maxValue: Int64(501_300).redacted,
                     textFieldState:
                         TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
-                            text: ""
+                            text: "".redacted
                         )
                 )
         )
@@ -326,8 +328,9 @@ class SendTests: XCTestCase {
             dependencies.numberFormatter.number = { _ in NSNumber(0.00501299) }
         }
 
-        store.send(.transactionAmountInput(.textField(.set("0.00501299")))) { state in
-            state.transactionAmountInputState.textFieldState.text = "0.00501299"
+        let address = "0.00501299".redacted
+        store.send(.transactionAmountInput(.textField(.set(address)))) { state in
+            state.transactionAmountInputState.textFieldState.text = address
             state.transactionAmountInputState.textFieldState.valid = true
             XCTAssertFalse(
                 state.isInsufficientFunds,
@@ -336,7 +339,7 @@ class SendTests: XCTestCase {
         }
         
         store.receive(.transactionAmountInput(.updateAmount)) { state in
-            state.transactionAmountInputState.amount = 501_299
+            state.transactionAmountInputState.amount = Int64(501_299).redacted
         }
     }
     
@@ -349,11 +352,11 @@ class SendTests: XCTestCase {
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
                     currencySelectionState: CurrencySelectionReducer.State(),
-                    maxValue: 501_300,
+                    maxValue: Int64(501_300).redacted,
                     textFieldState:
                         TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
-                            text: ""
+                            text: "".redacted
                         )
                 )
         )
@@ -366,8 +369,9 @@ class SendTests: XCTestCase {
             dependencies.numberFormatter.number = { _ in NSNumber(0.00501301) }
         }
 
-        store.send(.transactionAmountInput(.textField(.set("0.00501301")))) { state in
-            state.transactionAmountInputState.textFieldState.text = "0.00501301"
+        let value = "0.00501301".redacted
+        store.send(.transactionAmountInput(.textField(.set(value)))) { state in
+            state.transactionAmountInputState.textFieldState.text = value
             state.transactionAmountInputState.textFieldState.valid = true
             XCTAssertFalse(
                 state.isInsufficientFunds,
@@ -376,7 +380,7 @@ class SendTests: XCTestCase {
         }
         
         store.receive(.transactionAmountInput(.updateAmount)) { state in
-            state.transactionAmountInputState.amount = 501_301
+            state.transactionAmountInputState.amount = Int64(501_301).redacted
             XCTAssertTrue(
                 state.isInsufficientFunds,
                 "Send Tests: `testFundsSufficiency` is expected to be true but it's \(state.isInsufficientFunds)"
@@ -407,13 +411,13 @@ class SendTests: XCTestCase {
             transactionAddressInputState: .placeholder,
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
-                    amount: 501_301,
+                    amount: Int64(501_301).redacted,
                     currencySelectionState: CurrencySelectionReducer.State(),
-                    maxValue: 501_302,
+                    maxValue: Int64(501_302).redacted,
                     textFieldState:
                         TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
-                            text: "0.00501301"
+                            text: "0.00501301".redacted
                         )
                 )
         )
@@ -426,8 +430,9 @@ class SendTests: XCTestCase {
             dependencies.derivationTool.isValidZcashAddress = { _ in true }
         }
 
-        store.send(.transactionAddressInput(.textField(.set("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po")))) { state in
-            state.transactionAddressInputState.textFieldState.text = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
+        let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
+        store.send(.transactionAddressInput(.textField(.set(address)))) { state in
+            state.transactionAddressInputState.textFieldState.text = address
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
             // isValid function returns true, `guard let validationType = validationType else { return true }`
             state.transactionAddressInputState.textFieldState.valid = true
@@ -448,11 +453,11 @@ class SendTests: XCTestCase {
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
                     currencySelectionState: CurrencySelectionReducer.State(),
-                    maxValue: 501_300,
+                    maxValue: Int64(501_300).redacted,
                     textFieldState:
                         TCATextFieldReducer.State(
                             validationType: .floatingPoint,
-                            text: "0.00501301"
+                            text: "0.00501301".redacted
                         )
                 )
         )
@@ -465,8 +470,9 @@ class SendTests: XCTestCase {
             dependencies.derivationTool.isValidZcashAddress = { _ in true }
         }
 
-        store.send(.transactionAddressInput(.textField(.set("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po")))) { state in
-            state.transactionAddressInputState.textFieldState.text = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
+        let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
+        store.send(.transactionAddressInput(.textField(.set(address)))) { state in
+            state.transactionAddressInputState.textFieldState.text = address
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
             // isValid function returns true, `guard let validationType = validationType else { return true }`
             state.transactionAddressInputState.textFieldState.valid = true
@@ -487,11 +493,11 @@ class SendTests: XCTestCase {
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
                     currencySelectionState: CurrencySelectionReducer.State(),
-                    maxValue: 501_302,
+                    maxValue: Int64(501_302).redacted,
                     textFieldState:
                         TCATextFieldReducer.State(
                             validationType: .floatingPoint,
-                            text: "0.00501301"
+                            text: "0.00501301".redacted
                         )
                 )
         )
@@ -503,8 +509,9 @@ class SendTests: XCTestCase {
             $0.derivationTool = .noOp
         }
 
-        store.send(.transactionAddressInput(.textField(.set("3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr")))) { state in
-            state.transactionAddressInputState.textFieldState.text = "3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr"
+        let address = "3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr".redacted
+        store.send(.transactionAddressInput(.textField(.set(address)))) { state in
+            state.transactionAddressInputState.textFieldState.text = address
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
             // isValid function returns true, `guard let validationType = validationType else { return true }`
             state.transactionAddressInputState.textFieldState.valid = true
@@ -525,11 +532,11 @@ class SendTests: XCTestCase {
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
                     currencySelectionState: CurrencySelectionReducer.State(),
-                    maxValue: 501_302,
+                    maxValue: Int64(501_302).redacted,
                     textFieldState:
                         TCATextFieldReducer.State(
                             validationType: .floatingPoint,
-                            text: "0.0.0501301"
+                            text: "0.0.0501301".redacted
                         )
                 )
         )
@@ -542,8 +549,9 @@ class SendTests: XCTestCase {
             dependencies.derivationTool.isValidZcashAddress = { _ in true }
         }
 
-        store.send(.transactionAddressInput(.textField(.set("tmGh6ttAnQRJra81moqYcedFadW9XtUT5Eq")))) { state in
-            state.transactionAddressInputState.textFieldState.text = "tmGh6ttAnQRJra81moqYcedFadW9XtUT5Eq"
+        let address = "tmGh6ttAnQRJra81moqYcedFadW9XtUT5Eq".redacted
+        store.send(.transactionAddressInput(.textField(.set(address)))) { state in
+            state.transactionAddressInputState.textFieldState.text = address
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
             // isValid function returns true, `guard let validationType = validationType else { return true }`
             state.transactionAddressInputState.textFieldState.valid = true
@@ -560,25 +568,25 @@ class SendTests: XCTestCase {
             addMemoState: true,
             memoState: MultiLineTextFieldReducer.State(charLimit: 3),
             scanState: .placeholder,
-            shieldedBalance: WalletBalance(verified: Zatoshi(1), total: Zatoshi(1)),
+            shieldedBalance: WalletBalance(verified: Zatoshi(1), total: Zatoshi(1)).redacted,
             transactionAddressInputState:
                 TransactionAddressTextFieldReducer.State(
                     isValidAddress: true,
                     textFieldState:
                         TCATextFieldReducer.State(
                             validationType: .none,
-                            text: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
+                            text: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
                         )
                 ),
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
-                    amount: 100,
+                    amount: Int64(100).redacted,
                     currencySelectionState: CurrencySelectionReducer.State(),
-                    maxValue: 501_302,
+                    maxValue: Int64(501_302).redacted,
                     textFieldState:
                         TCATextFieldReducer.State(
                             validationType: .floatingPoint,
-                            text: "0.0.0501301"
+                            text: "0.0.0501301".redacted
                         )
                 )
         )
@@ -588,8 +596,9 @@ class SendTests: XCTestCase {
             reducer: SendFlowReducer()
         )
 
-        store.send(.memo(.binding(.set(\.$text, "test")))) { state in
-            state.memoState.text = "test"
+        let value = "test".redacted
+        store.send(.memo(.memoInputChanged(value))) { state in
+            state.memoState.text = value
             XCTAssertFalse(
                 state.isValidForm,
                 "Send Tests: `testValidForm` is expected to be false but it's \(state.isValidForm)"
@@ -606,11 +615,11 @@ class SendTests: XCTestCase {
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
                     currencySelectionState: CurrencySelectionReducer.State(),
-                    maxValue: 501_302,
+                    maxValue: Int64(501_302).redacted,
                     textFieldState:
                         TCATextFieldReducer.State(
                             validationType: .floatingPoint,
-                            text: "0.0.0501301"
+                            text: "0.0.0501301".redacted
                         )
                 )
         )
@@ -649,8 +658,9 @@ class SendTests: XCTestCase {
         
         // We don't need to pass a valid address here, we just need to confirm some
         // found string is received and the `isValidAddress` flag is set to `true`
-        store.send(.scan(.found("address"))) { state in
-            state.transactionAddressInputState.textFieldState.text = "address"
+        let address = "address".redacted
+        store.send(.scan(.found(address))) { state in
+            state.transactionAddressInputState.textFieldState.text = address
             state.transactionAddressInputState.isValidAddress = true
         }
         

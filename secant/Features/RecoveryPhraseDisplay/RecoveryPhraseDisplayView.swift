@@ -103,7 +103,7 @@ extension RecoveryPhrase {
         "pizza", "just", "garlic"
     ]
 
-    static let placeholder = RecoveryPhrase(words: testPhrase)
+    static let placeholder = RecoveryPhrase(words: testPhrase.map { $0.redacted })
     static let empty = RecoveryPhrase(words: [])
 }
 

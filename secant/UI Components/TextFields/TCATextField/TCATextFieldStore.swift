@@ -12,24 +12,24 @@ typealias TCATextFieldStore = Store<TCATextFieldReducer.State, TCATextFieldReduc
 struct TCATextFieldReducer: ReducerProtocol {
     struct State: Equatable {
         var validationType: String.ValidationType?
-        var text: String
+        var text = "".redacted
         var valid = false
 
-        init(validationType: String.ValidationType?, text: String) {
+        init(validationType: String.ValidationType?, text: RedactableString) {
             self.validationType = validationType
             self.text = text
         }
     }
 
     enum Action: Equatable {
-        case set(String)
+        case set(RedactableString)
     }
     
     func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
         switch action {
         case .set(let text):
             state.text = text
-            state.valid = state.text.isValid(for: state.validationType)
+            state.valid = state.text.data.isValid(for: state.validationType)
         }
         return .none
     }
@@ -40,14 +40,14 @@ struct TCATextFieldReducer: ReducerProtocol {
 extension TCATextFieldStore {
     static var transaction: Self {
         .init(
-            initialState: .init(validationType: .customFloatingPoint(.zcashNumberFormatter), text: ""),
+            initialState: .init(validationType: .customFloatingPoint(.zcashNumberFormatter), text: "".redacted),
             reducer: TCATextFieldReducer()
         )
     }
 
     static var address: Self {
         .init(
-            initialState: .init(validationType: .email, text: ""),
+            initialState: .init(validationType: .email, text: "".redacted),
             reducer: TCATextFieldReducer()
         )
     }
@@ -58,11 +58,11 @@ extension TCATextFieldStore {
 extension TCATextFieldReducer.State {
     static let placeholder = TCATextFieldReducer.State(
         validationType: nil,
-        text: ""
+        text: "".redacted
     )
 
     static let amount = TCATextFieldReducer.State(
         validationType: .floatingPoint,
-        text: ""
+        text: "".redacted
     )
 }

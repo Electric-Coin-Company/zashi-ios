@@ -36,28 +36,28 @@ class RecoveryPhraseValidationFlowSnapshotTests: XCTestCase {
         )
         
         // 1st chip in place
-        viewStore.send(.move(wordChip: .unassigned(word: "thank"), intoGroup: 0))
+        viewStore.send(.move(wordChip: .unassigned(word: "thank".redacted), intoGroup: 0))
         addAttachments(
             name: "\(#function)_1stChipInPlace",
             RecoveryPhraseBackupView(store: store)
         )
 
         // 2nd chip in place
-        viewStore.send(.move(wordChip: .unassigned(word: "morning"), intoGroup: 1))
+        viewStore.send(.move(wordChip: .unassigned(word: "morning".redacted), intoGroup: 1))
         addAttachments(
             name: "\(#function)_2ndChipInPlace",
             RecoveryPhraseBackupView(store: store)
         )
 
         // 3rd chip in place
-        viewStore.send(.move(wordChip: .unassigned(word: "boil"), intoGroup: 2))
+        viewStore.send(.move(wordChip: .unassigned(word: "boil".redacted), intoGroup: 2))
         addAttachments(
             name: "\(#function)_3rdChipInPlace",
             RecoveryPhraseBackupView(store: store)
         )
 
         // 4th chip in place
-        viewStore.send(.move(wordChip: .unassigned(word: "garlic"), intoGroup: 3))
+        viewStore.send(.move(wordChip: .unassigned(word: "garlic".redacted), intoGroup: 3))
         addAttachments(
             name: "\(#function)_4thChipInPlace",
             RecoveryPhraseBackupView(store: store)

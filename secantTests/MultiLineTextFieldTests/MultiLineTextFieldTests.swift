@@ -16,8 +16,9 @@ class MultiLineTextFieldTests: XCTestCase {
             reducer: MultiLineTextFieldReducer()
         )
         
-        store.send(.binding(.set(\.$text, "test"))) { state in
-            state.text = "test"
+        let value = "test".redacted
+        store.send(.memoInputChanged(value)) { state in
+            state.text = value
             XCTAssertTrue(
                 state.isCharLimited,
                 "Multiline TextFiler tests: `testIsCharLimited` is expected to be true but it is \(state.isCharLimited)"
@@ -31,8 +32,9 @@ class MultiLineTextFieldTests: XCTestCase {
             reducer: MultiLineTextFieldReducer()
         )
         
-        store.send(.binding(.set(\.$text, "test"))) { state in
-            state.text = "test"
+        let value = "test".redacted
+        store.send(.memoInputChanged(value)) { state in
+            state.text = value
             XCTAssertFalse(
                 state.isCharLimited,
                 "Multiline TextFiler tests: `testIsNotCharLimited` is expected to be false but it is \(state.isCharLimited)"
@@ -46,8 +48,9 @@ class MultiLineTextFieldTests: XCTestCase {
             reducer: MultiLineTextFieldReducer()
         )
         
-        store.send(.binding(.set(\.$text, "test"))) { state in
-            state.text = "test"
+        let value = "test".redacted
+        store.send(.memoInputChanged(value)) { state in
+            state.text = value
             XCTAssertEqual(
                 4,
                 state.textLength,
@@ -62,8 +65,9 @@ class MultiLineTextFieldTests: XCTestCase {
             reducer: MultiLineTextFieldReducer()
         )
         
-        store.send(.binding(.set(\.$text, "test"))) { state in
-            state.text = "test"
+        let value = "test".redacted
+        store.send(.memoInputChanged(value)) { state in
+            state.text = value
             XCTAssertTrue(
                 state.isValid,
                 "Multiline TextFiler tests: `testIsValid_CharLimit` is expected to be true but it is \(state.isValid)"
@@ -77,8 +81,9 @@ class MultiLineTextFieldTests: XCTestCase {
             reducer: MultiLineTextFieldReducer()
         )
         
-        store.send(.binding(.set(\.$text, "test"))) { state in
-            state.text = "test"
+        let value = "test".redacted
+        store.send(.memoInputChanged(value)) { state in
+            state.text = value
             XCTAssertTrue(
                 state.isValid,
                 "Multiline TextFiler tests: `testIsValid_NoCharLimit` is expected to be true but it is \(state.isValid)"
@@ -92,8 +97,9 @@ class MultiLineTextFieldTests: XCTestCase {
             reducer: MultiLineTextFieldReducer()
         )
         
-        store.send(.binding(.set(\.$text, "test"))) { state in
-            state.text = "test"
+        let value = "test".redacted
+        store.send(.memoInputChanged(value)) { state in
+            state.text = value
             XCTAssertFalse(
                 state.isValid,
                 "Multiline TextFiler tests: `testIsInvalid` is expected to be false but it is \(state.isValid)"
@@ -107,8 +113,9 @@ class MultiLineTextFieldTests: XCTestCase {
             reducer: MultiLineTextFieldReducer()
         )
         
-        store.send(.binding(.set(\.$text, "test"))) { state in
-            state.text = "test"
+        let value = "test".redacted
+        store.send(.memoInputChanged(value)) { state in
+            state.text = value
             XCTAssertEqual(
                 "",
                 state.charLimitText,
@@ -123,8 +130,9 @@ class MultiLineTextFieldTests: XCTestCase {
             reducer: MultiLineTextFieldReducer()
         )
         
-        store.send(.binding(.set(\.$text, "test"))) { state in
-            state.text = "test"
+        let value = "test".redacted
+        store.send(.memoInputChanged(value)) { state in
+            state.text = value
             XCTAssertEqual(
                 "4/5",
                 state.charLimitText,
@@ -139,8 +147,9 @@ class MultiLineTextFieldTests: XCTestCase {
             reducer: MultiLineTextFieldReducer()
         )
         
-        store.send(.binding(.set(\.$text, "test"))) { state in
-            state.text = "test"
+        let value = "test".redacted
+        store.send(.memoInputChanged(value)) { state in
+            state.text = value
             XCTAssertEqual(
                 "char limit exceeded 4/3",
                 state.charLimitText,

@@ -65,7 +65,7 @@ struct SingleLineTextField_Previews: PreviewProvider {
                         titleAccessoryView: {
                             Button(
                                 action: {
-                                    viewStore.send(.set("\(500)"))
+                                    viewStore.send(.set("\(500)".redacted))
                                 },
                                 label: { Text("Max") }
                             )
@@ -101,7 +101,7 @@ struct SingleLineTextField_Previews: PreviewProvider {
             store: TCATextFieldStore(
                 initialState: .init(
                     validationType: .floatingPoint,
-                    text: ""
+                    text: "".redacted
                 ),
                 reducer: TCATextFieldReducer()
             )
@@ -115,7 +115,7 @@ struct SingleLineTextField_Previews: PreviewProvider {
             store: TCATextFieldStore(
                 initialState: .init(
                     validationType: .email,
-                    text: ""
+                    text: "".redacted
                 ),
                 reducer: TCATextFieldReducer()
             )

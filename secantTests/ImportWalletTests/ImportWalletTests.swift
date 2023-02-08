@@ -31,8 +31,9 @@ class ImportWalletTests: XCTestCase {
             dependencies.mnemonic.isValid = { _ in throw "invalid mnemonic" }
         }
         
-        store.send(.binding(.set(\.$importedSeedPhrase, "one two three"))) { state in
-            state.importedSeedPhrase = "one two three"
+        let seedPhrase = "one two three".redacted
+        store.send(.seedPhraseInputChanged(seedPhrase)) { state in
+            state.importedSeedPhrase = seedPhrase
             state.wordsCount = 3
             state.isValidMnemonic = false
         }
@@ -47,8 +48,9 @@ class ImportWalletTests: XCTestCase {
             dependencies.mnemonic.isValid = { _ in throw "invalid mnemonic" }
         }
 
-        store.send(.binding(.set(\.$importedSeedPhrase, "a a a a a a a a a a a a a a a a a a a a a a a a"))) { state in
-            state.importedSeedPhrase = "a a a a a a a a a a a a a a a a a a a a a a a a"
+        let seedPhrase = "a a a a a a a a a a a a a a a a a a a a a a a a".redacted
+        store.send(.seedPhraseInputChanged(seedPhrase)) { state in
+            state.importedSeedPhrase = seedPhrase
             state.wordsCount = 24
             state.isValidNumberOfWords = true
             state.isValidMnemonic = false
@@ -63,25 +65,15 @@ class ImportWalletTests: XCTestCase {
             $0.mnemonic = .noOp
         }
 
-        store.send(
-            .binding(
-                .set(
-                    \.$importedSeedPhrase,
+        let seedPhrase =
             """
             still champion voice habit trend flight \
             survey between bitter process artefact blind \
             carbon truly provide dizzy crush flush \
             breeze blouse charge solid fish spread
-            """
-                )
-            )
-        ) { state in
-            state.importedSeedPhrase = """
-            still champion voice habit trend flight \
-            survey between bitter process artefact blind \
-            carbon truly provide dizzy crush flush \
-            breeze blouse charge solid fish spread
-            """
+            """.redacted
+        store.send(.seedPhraseInputChanged(seedPhrase)) { state in
+            state.importedSeedPhrase = seedPhrase
             state.wordsCount = 24
             state.isValidNumberOfWords = true
             state.isValidMnemonic = true
@@ -94,8 +86,9 @@ class ImportWalletTests: XCTestCase {
             reducer: ImportWalletReducer()
         )
         
-        store.send(.binding(.set(\.$birthdayHeight, "1600000"))) { state in
-            state.birthdayHeight = "1600000"
+        let birthday = "1600000".redacted
+        store.send(.birthdayInputChanged(birthday)) { state in
+            state.birthdayHeight = birthday
         }
     }
 
@@ -105,8 +98,9 @@ class ImportWalletTests: XCTestCase {
             reducer: ImportWalletReducer()
         )
         
-        store.send(.binding(.set(\.$birthdayHeight, "abc"))) { state in
-            state.birthdayHeight = "abc"
+        let birthday = "abc".redacted
+        store.send(.birthdayInputChanged(birthday)) { state in
+            state.birthdayHeight = birthday
         }
     }
 
@@ -116,9 +110,10 @@ class ImportWalletTests: XCTestCase {
             reducer: ImportWalletReducer()
         )
         
-        store.send(.binding(.set(\.$birthdayHeight, "1700000"))) { state in
-            state.birthdayHeight = "1700000"
-            state.birthdayHeightValue = 1_700_000
+        let birthday = "1700000".redacted
+        store.send(.birthdayInputChanged(birthday)) { state in
+            state.birthdayHeight = birthday
+            state.birthdayHeightValue = RedactableBlockHeight(1_700_000)
         }
     }
     
@@ -152,13 +147,15 @@ class ImportWalletTests: XCTestCase {
             dependencies.mnemonic.isValid = { _ in throw "invalid mnemonic" }
         }
         
-        store.send(.binding(.set(\.$birthdayHeight, "1700000"))) { state in
-            state.birthdayHeight = "1700000"
-            state.birthdayHeightValue = 1_700_000
+        let birthday = "1700000".redacted
+        store.send(.birthdayInputChanged(birthday)) { state in
+            state.birthdayHeight = birthday
+            state.birthdayHeightValue = RedactableBlockHeight(1_700_000)
         }
         
-        store.send(.binding(.set(\.$importedSeedPhrase, "a a a a a a a a a a a a a a a a a a a a a a a a"))) { state in
-            state.importedSeedPhrase = "a a a a a a a a a a a a a a a a a a a a a a a a"
+        let seedPhrase = "a a a a a a a a a a a a a a a a a a a a a a a a".redacted
+        store.send(.seedPhraseInputChanged(seedPhrase)) { state in
+            state.importedSeedPhrase = seedPhrase
             state.wordsCount = 24
             state.isValidNumberOfWords = true
             state.isValidMnemonic = false
@@ -178,12 +175,14 @@ class ImportWalletTests: XCTestCase {
             dependencies.mnemonic.isValid = { _ in throw "invalid mnemonic" }
         }
 
-        store.send(.binding(.set(\.$birthdayHeight, "1600000"))) { state in
-            state.birthdayHeight = "1600000"
+        let birthday = "1600000".redacted
+        store.send(.birthdayInputChanged(birthday)) { state in
+            state.birthdayHeight = birthday
         }
         
-        store.send(.binding(.set(\.$importedSeedPhrase, "a a a a a a a a a a a a a a a a a a a a a a a a"))) { state in
-            state.importedSeedPhrase = "a a a a a a a a a a a a a a a a a a a a a a a a"
+        let seedPhrase = "a a a a a a a a a a a a a a a a a a a a a a a a".redacted
+        store.send(.seedPhraseInputChanged(seedPhrase)) { state in
+            state.importedSeedPhrase = seedPhrase
             state.wordsCount = 24
             state.isValidNumberOfWords = true
             state.isValidMnemonic = false
@@ -202,29 +201,20 @@ class ImportWalletTests: XCTestCase {
             $0.mnemonic = .noOp
         }
 
-        store.send(.binding(.set(\.$birthdayHeight, "1600000"))) { state in
-            state.birthdayHeight = "1600000"
+        let birthday = "1600000".redacted
+        store.send(.birthdayInputChanged(birthday)) { state in
+            state.birthdayHeight = birthday
         }
         
-        store.send(
-            .binding(
-                .set(
-                    \.$importedSeedPhrase,
+        let seedPhrase =
             """
             still champion voice habit trend flight \
             survey between bitter process artefact blind \
             carbon truly provide dizzy crush flush \
             breeze blouse charge solid fish spread
-            """
-                )
-            )
-        ) { state in
-            state.importedSeedPhrase = """
-            still champion voice habit trend flight \
-            survey between bitter process artefact blind \
-            carbon truly provide dizzy crush flush \
-            breeze blouse charge solid fish spread
-            """
+            """.redacted
+        store.send(.seedPhraseInputChanged(seedPhrase)) { state in
+            state.importedSeedPhrase = seedPhrase
             state.wordsCount = 24
             state.isValidNumberOfWords = true
             state.isValidMnemonic = true
@@ -243,30 +233,21 @@ class ImportWalletTests: XCTestCase {
             $0.mnemonic = .noOp
         }
 
-        store.send(.binding(.set(\.$birthdayHeight, "1700000"))) { state in
-            state.birthdayHeight = "1700000"
-            state.birthdayHeightValue = 1_700_000
+        let birthday = "1700000".redacted
+        store.send(.birthdayInputChanged(birthday)) { state in
+            state.birthdayHeight = birthday
+            state.birthdayHeightValue = RedactableBlockHeight(1_700_000)
         }
         
-        store.send(
-            .binding(
-                .set(
-                    \.$importedSeedPhrase,
+        let seedPhrase =
             """
             still champion voice habit trend flight \
             survey between bitter process artefact blind \
             carbon truly provide dizzy crush flush \
             breeze blouse charge solid fish spread
-            """
-                )
-            )
-        ) { state in
-            state.importedSeedPhrase = """
-            still champion voice habit trend flight \
-            survey between bitter process artefact blind \
-            carbon truly provide dizzy crush flush \
-            breeze blouse charge solid fish spread
-            """
+            """.redacted
+        store.send(.seedPhraseInputChanged(seedPhrase)) { state in
+            state.importedSeedPhrase = seedPhrase
             state.wordsCount = 24
             state.isValidNumberOfWords = true
             state.isValidMnemonic = true
@@ -285,25 +266,15 @@ class ImportWalletTests: XCTestCase {
             $0.mnemonic = .noOp
         }
 
-        store.send(
-            .binding(
-                .set(
-                    \.$importedSeedPhrase,
+        let seedPhrase =
             """
             still champion voice habit trend flight \
             survey between bitter process artefact blind \
             carbon truly provide dizzy crush flush \
             breeze blouse charge solid fish spread
-            """
-                )
-            )
-        ) { state in
-            state.importedSeedPhrase = """
-            still champion voice habit trend flight \
-            survey between bitter process artefact blind \
-            carbon truly provide dizzy crush flush \
-            breeze blouse charge solid fish spread
-            """
+            """.redacted
+        store.send(.seedPhraseInputChanged(seedPhrase)) { state in
+            state.importedSeedPhrase = seedPhrase
             state.wordsCount = 24
             state.isValidNumberOfWords = true
             state.isValidMnemonic = true
@@ -318,18 +289,18 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: ImportWalletReducer.State(
                 alert: nil,
+                birthdayHeight: "1700000".redacted,
+                birthdayHeightValue: RedactableBlockHeight(1_700_000),
                 importedSeedPhrase: """
-            still champion voice habit trend flight \
-            survey between bitter process artefact blind \
-            carbon truly provide dizzy crush flush \
-            breeze blouse charge solid fish spread
-            """,
-                birthdayHeight: "1700000",
-                wordsCount: 24,
-                maxWordsCount: 24,
+                still champion voice habit trend flight \
+                survey between bitter process artefact blind \
+                carbon truly provide dizzy crush flush \
+                breeze blouse charge solid fish spread
+                """.redacted,
                 isValidMnemonic: true,
                 isValidNumberOfWords: true,
-                birthdayHeightValue: 1_700_000
+                maxWordsCount: 24,
+                wordsCount: 24
             ),
             reducer: ImportWalletReducer()
         ) { dependencies in

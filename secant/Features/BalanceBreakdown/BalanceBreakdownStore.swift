@@ -17,11 +17,11 @@ struct BalanceBreakdownReducer: ReducerProtocol {
     struct State: Equatable {
         var autoShieldingThreshold: Zatoshi
         var latestBlock: String
-        var shieldedBalance: WalletBalance
-        var transparentBalance: WalletBalance
+        var shieldedBalance: Balance
+        var transparentBalance: Balance
         
         var totalBalance: Zatoshi {
-            shieldedBalance.total + transparentBalance.total
+            shieldedBalance.data.total + transparentBalance.data.total
         }
     }
 
@@ -55,10 +55,10 @@ struct BalanceBreakdownReducer: ReducerProtocol {
             
         case .updateSynchronizerStatus:
             if let shieldedBalance = sdkSynchronizer.latestScannedSynchronizerState?.shieldedBalance {
-                state.shieldedBalance = shieldedBalance
+                state.shieldedBalance = shieldedBalance.redacted
             }
             if let transparentBalance = sdkSynchronizer.latestScannedSynchronizerState?.transparentBalance {
-                state.transparentBalance = transparentBalance
+                state.transparentBalance = transparentBalance.redacted
             }
             return EffectTask(value: .updateLatestBlock)
             
@@ -80,8 +80,8 @@ extension BalanceBreakdownReducer.State {
     static let placeholder = BalanceBreakdownReducer.State(
         autoShieldingThreshold: Zatoshi(1_000_000),
         latestBlock: "unknown",
-        shieldedBalance: WalletBalance.zero,
-        transparentBalance: WalletBalance.zero
+        shieldedBalance: Balance.zero,
+        transparentBalance: Balance.zero
     )
 }
 

@@ -6,19 +6,20 @@
 //
 
 import Foundation
+import ZcashLightClientKit
 
 enum RecoveryPhraseError: Error {
     /// This error is thrown then the Recovery Phrase can't be generated
     case unableToGeneratePhrase
 }
 
-struct RecoveryPhrase: Equatable {
+struct RecoveryPhrase: Equatable, Redactable {
     struct Group: Hashable {
         var startIndex: Int
-        var words: [String]
+        var words: [RedactableString]
     }
 
-    let words: [String]
+    let words: [RedactableString]
     
     private let groupSize = 6
 
@@ -29,8 +30,11 @@ struct RecoveryPhrase: Equatable {
         }
     }
 
-    func toString() -> String {
-        words.joined(separator: " ")
+    func toString() -> RedactableString {
+        let result = words
+            .map { $0.data }
+            .joined(separator: " ")
+        return result.redacted
     }
 
     func words(fromMissingIndices indices: [Int]) -> [PhraseChip.Kind] {

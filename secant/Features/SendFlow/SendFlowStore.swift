@@ -30,48 +30,48 @@ struct SendFlowReducer: ReducerProtocol {
         var isSendingTransaction = false
         var memoState: MultiLineTextFieldReducer.State
         var scanState: ScanReducer.State
-        var shieldedBalance = WalletBalance.zero
+        var shieldedBalance = Balance.zero
         var transactionAddressInputState: TransactionAddressTextFieldReducer.State
         var transactionAmountInputState: TransactionAmountTextFieldReducer.State
 
         var address: String {
-            get { transactionAddressInputState.textFieldState.text }
-            set { transactionAddressInputState.textFieldState.text = newValue }
+            get { transactionAddressInputState.textFieldState.text.data }
+            set { transactionAddressInputState.textFieldState.text = newValue.redacted }
         }
 
         var amount: Zatoshi {
-            get { Zatoshi(transactionAmountInputState.amount) }
+            get { Zatoshi(transactionAmountInputState.amount.data) }
             set {
-                transactionAmountInputState.amount = newValue.amount
+                transactionAmountInputState.amount = newValue.amount.redacted
                 transactionAmountInputState.textFieldState.text = newValue.amount == 0 ?
-                "" :
-                newValue.decimalString()
+                "".redacted :
+                newValue.decimalString().redacted
             }
         }
 
         var isInvalidAddressFormat: Bool {
             !transactionAddressInputState.isValidAddress
-            && !transactionAddressInputState.textFieldState.text.isEmpty
+            && !transactionAddressInputState.textFieldState.text.data.isEmpty
         }
 
         var isInvalidAmountFormat: Bool {
             !transactionAmountInputState.textFieldState.valid
-            && !transactionAmountInputState.textFieldState.text.isEmpty
+            && !transactionAmountInputState.textFieldState.text.data.isEmpty
         }
         
         var isValidForm: Bool {
-            transactionAmountInputState.amount > 0
+            transactionAmountInputState.amount.data > 0
             && transactionAddressInputState.isValidAddress
             && !isInsufficientFunds
             && memoState.isValid
         }
         
         var isInsufficientFunds: Bool {
-            transactionAmountInputState.amount > transactionAmountInputState.maxValue
+            transactionAmountInputState.amount.data > transactionAmountInputState.maxValue.data
         }
 
         var totalCurrencyBalance: Zatoshi {
-            Zatoshi.from(decimal: shieldedBalance.total.decimalValue.decimalValue * transactionAmountInputState.zecPrice)
+            Zatoshi.from(decimal: shieldedBalance.data.total.decimalValue.decimalValue * transactionAmountInputState.zecPrice)
         }
     }
 
@@ -125,10 +125,10 @@ struct SendFlowReducer: ReducerProtocol {
 
             case .updateDestination(.done):
                 state.destination = nil
-                state.memoState.text = ""
-                state.transactionAmountInputState.textFieldState.text = ""
-                state.transactionAmountInputState.amount = 0
-                state.transactionAddressInputState.textFieldState.text = ""
+                state.memoState.text = "".redacted
+                state.transactionAmountInputState.textFieldState.text = "".redacted
+                state.transactionAmountInputState.amount = Int64(0).redacted
+                state.transactionAddressInputState.textFieldState.text = "".redacted
                 return .none
 
             case .updateDestination(.failure):
@@ -137,8 +137,8 @@ struct SendFlowReducer: ReducerProtocol {
                 return .none
 
             case .updateDestination(.confirmation):
-                state.amount = Zatoshi(state.transactionAmountInputState.amount)
-                state.address = state.transactionAddressInputState.textFieldState.text
+                state.amount = Zatoshi(state.transactionAmountInputState.amount.data)
+                state.address = state.transactionAddressInputState.textFieldState.text.data
                 state.destination = .confirmation
                 return .none
                 
@@ -153,14 +153,14 @@ struct SendFlowReducer: ReducerProtocol {
 
                 do {
                     let storedWallet = try walletStorage.exportWallet()
-                    let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase)
+                    let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
                     let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0)
 
                     state.isSendingTransaction = true
 
                     let memo: Memo?
                     if let memoText = state.addMemoState ? state.memoState.text : nil {
-                        memo = try Memo(string: memoText)
+                        memo = try Memo(string: memoText.data)
                     } else {
                         memo = nil
                     }
@@ -214,8 +214,8 @@ struct SendFlowReducer: ReducerProtocol {
                 
             case .synchronizerStateChanged(.synced):
                 if let shieldedBalance = sdkSynchronizer.latestScannedSynchronizerState?.shieldedBalance {
-                    state.shieldedBalance = shieldedBalance
-                    state.transactionAmountInputState.maxValue = shieldedBalance.total.amount
+                    state.shieldedBalance = shieldedBalance.redacted
+                    state.transactionAmountInputState.maxValue = shieldedBalance.total.amount.redacted
                 }
                 return .none
                 

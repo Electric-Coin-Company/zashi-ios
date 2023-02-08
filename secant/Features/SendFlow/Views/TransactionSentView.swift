@@ -20,7 +20,7 @@ struct TransactionSent: View {
 
             Text("amount: \(viewStore.amount.decimalString())")
             + Text(" address: \(viewStore.address)")
-            + Text(" memo: \(viewStore.memoState.text)")
+            + Text(" memo: \(viewStore.memoState.text.data)")
 
             Spacer()
         }

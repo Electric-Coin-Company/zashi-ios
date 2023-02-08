@@ -35,7 +35,7 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
                 requestState: .placeholder,
                 scanState: .placeholder,
                 sendState: .placeholder,
-                shieldedBalance: balance,
+                shieldedBalance: balance.redacted,
                 synchronizerStatusSnapshot: .default,
                 walletEventsState: .emptyPlaceHolder
             ),
@@ -71,7 +71,7 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
                 requestState: .placeholder,
                 scanState: .placeholder,
                 sendState: .placeholder,
-                shieldedBalance: balance,
+                shieldedBalance: balance.redacted,
                 synchronizerStatusSnapshot: .default,
                 walletEventsState: .emptyPlaceHolder
             ),
@@ -99,7 +99,7 @@ class HomeCircularProgressSnapshotTests: XCTestCase {
                 requestState: .placeholder,
                 scanState: .placeholder,
                 sendState: .placeholder,
-                shieldedBalance: balance,
+                shieldedBalance: balance.redacted,
                 synchronizerStatusSnapshot: .default,
                 walletEventsState: .emptyPlaceHolder
             ),

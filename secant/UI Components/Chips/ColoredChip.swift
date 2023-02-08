@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct ColoredChip: View {
-    var word: String
+    var word: RedactableString
     var color = Asset.Colors.Buttons.activeButton.color
     var body: some View {
-        Text(word)
+        Text(word.data)
             .font(.custom(FontFamily.Rubik.regular.name, size: 15))
             .frame(
                 minWidth: 0,
@@ -30,7 +30,7 @@ struct ColoredChip: View {
 
 struct ColoredChip_Previews: PreviewProvider {
     static var previews: some View {
-        ColoredChip(word: "negative")
+        ColoredChip(word: "negative".redacted)
             .frame(width: 115)
             .applyScreenBackground()
     }

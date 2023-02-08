@@ -84,7 +84,7 @@ class HomeTests: XCTestCase {
             requestState: .placeholder,
             scanState: .placeholder,
             sendState: .placeholder,
-            shieldedBalance: WalletBalance.zero,
+            shieldedBalance: Balance.zero,
             synchronizerStatusSnapshot: .default,
             walletEventsState: .emptyPlaceHolder
         )
@@ -112,7 +112,7 @@ class HomeTests: XCTestCase {
             requestState: .placeholder,
             scanState: .placeholder,
             sendState: .placeholder,
-            shieldedBalance: WalletBalance.zero,
+            shieldedBalance: Balance.zero,
             synchronizerStatusSnapshot: .default,
             walletEventsState: .emptyPlaceHolder
         )
@@ -187,7 +187,7 @@ class HomeTests: XCTestCase {
             requestState: .placeholder,
             scanState: .placeholder,
             sendState: .placeholder,
-            shieldedBalance: WalletBalance.zero,
+            shieldedBalance: Balance.zero,
             synchronizerStatusSnapshot: .default,
             walletEventsState: .emptyPlaceHolder
         )
@@ -213,7 +213,7 @@ class HomeTests: XCTestCase {
             requestState: .placeholder,
             scanState: .placeholder,
             sendState: .placeholder,
-            shieldedBalance: WalletBalance.zero,
+            shieldedBalance: Balance.zero,
             synchronizerStatusSnapshot: .default,
             walletEventsState: .emptyPlaceHolder
         )

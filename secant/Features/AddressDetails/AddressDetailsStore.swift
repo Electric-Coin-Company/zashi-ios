@@ -39,11 +39,11 @@ struct AddressDetailsReducer: ReducerProtocol {
     func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
         switch action {
         case .copySaplingAddressToPastboard:
-            pasteboard.setString(state.saplingAddress)
+            pasteboard.setString(state.saplingAddress.redacted)
         case .copyTransparentAddressToPastboard:
-            pasteboard.setString(state.transparentAddress)
+            pasteboard.setString(state.transparentAddress.redacted)
         case .copyUnifiedAddressToPastboard:
-            pasteboard.setString(state.unifiedAddress)
+            pasteboard.setString(state.unifiedAddress.redacted)
         }
         return .none
     }

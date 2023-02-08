@@ -60,7 +60,7 @@ class DeeplinkTests: XCTestCase {
             state.homeState.destination = .send
             state.homeState.sendState.amount = amount
             state.homeState.sendState.address = address
-            state.homeState.sendState.memoState.text = memo
+            state.homeState.sendState.memoState.text = memo.redacted
         }
     }
 
@@ -147,7 +147,7 @@ class DeeplinkTests: XCTestCase {
             state.homeState.destination = .send
             state.homeState.sendState.amount = amount
             state.homeState.sendState.address = address
-            state.homeState.sendState.memoState.text = memo
+            state.homeState.sendState.memoState.text = memo.redacted
         }
         
         await store.finish()

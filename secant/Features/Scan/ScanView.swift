@@ -20,7 +20,7 @@ struct ScanView: View {
                     QRCodeScanView(
                         rectOfInterest: normalizedRectOfInterest(proxy.size),
                         onQRScanningDidFail: { viewStore.send(.scanFailed) },
-                        onQRScanningSucceededWithCode: { viewStore.send(.scan($0)) }
+                        onQRScanningSucceededWithCode: { viewStore.send(.scan($0.redacted)) }
                     )
                     
                     backButton

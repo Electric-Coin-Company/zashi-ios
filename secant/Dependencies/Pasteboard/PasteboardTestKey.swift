@@ -11,7 +11,7 @@ import XCTestDynamicOverlay
 extension PasteboardClient: TestDependencyKey {
     static let testValue = Self(
         setString: XCTUnimplemented("\(Self.self).setString"),
-        getString: XCTUnimplemented("\(Self.self).getString", placeholder: "")
+        getString: XCTUnimplemented("\(Self.self).getString", placeholder: "".redacted)
     )
     
     private struct TestPasteboard {
@@ -20,7 +20,7 @@ extension PasteboardClient: TestDependencyKey {
     }
     
     static let testPasteboard = Self(
-        setString: { TestPasteboard.general.string = $0 },
-        getString: { TestPasteboard.general.string }
+        setString: { TestPasteboard.general.string = $0.data },
+        getString: { TestPasteboard.general.string?.redacted }
     )
 }

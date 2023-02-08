@@ -45,8 +45,8 @@ class WalletStorageTests: XCTestCase {
                 return XCTFail("Keychain: `walletReceived` can't be decoded.")
             }
             
-            XCTAssertEqual(birthday, walletReceived.birthday, "Keychain: stored birthday and retrieved one must be the same.")
-            XCTAssertEqual(seedPhrase, walletReceived.seedPhrase, "Keychain: stored seed phrase and retrieved one must be the same.")
+            XCTAssertEqual(birthday, walletReceived.birthday?.value(), "Keychain: stored birthday and retrieved one must be the same.")
+            XCTAssertEqual(seedPhrase, walletReceived.seedPhrase.value(), "Keychain: stored seed phrase and retrieved one must be the same.")
         } catch let err {
             XCTFail("Keychain: no error is expected for `testWalletStoredSuccessfully` but received. \(err)")
         }
@@ -95,9 +95,9 @@ class WalletStorageTests: XCTestCase {
         do {
             let wallet = StoredWallet(
                 language: language,
-                seedPhrase: seedPhrase,
+                seedPhrase: SeedPhrase(seedPhrase),
                 version: WalletStorage.Constants.zcashKeychainVersion,
-                birthday: birthday,
+                birthday: Birthday(birthday),
                 hasUserPassedPhraseBackupTest: false
             )
             
@@ -122,7 +122,7 @@ class WalletStorageTests: XCTestCase {
     func testUpdateBirthdayOverNil() throws {
         let wallet = StoredWallet(
             language: language,
-            seedPhrase: seedPhrase,
+            seedPhrase: SeedPhrase(seedPhrase),
             version: WalletStorage.Constants.zcashKeychainVersion,
             birthday: nil,
             hasUserPassedPhraseBackupTest: false
@@ -148,8 +148,8 @@ class WalletStorageTests: XCTestCase {
                 return XCTFail("Keychain: `walletReceived` can't be decoded.")
             }
             
-            XCTAssertEqual(birthday, walletReceived.birthday, "Keychain: stored birthday and retrieved one must be the same.")
-            XCTAssertEqual(seedPhrase, walletReceived.seedPhrase, "Keychain: stored seed phrase and retrieved one must be the same.")
+            XCTAssertEqual(birthday, walletReceived.birthday?.value(), "Keychain: stored birthday and retrieved one must be the same.")
+            XCTAssertEqual(seedPhrase, walletReceived.seedPhrase.value(), "Keychain: stored seed phrase and retrieved one must be the same.")
         } catch let err {
             XCTFail("Keychain: no error is expected for `testUpdateBirthdayOverNil` but received. \(err)")
         }
@@ -158,9 +158,9 @@ class WalletStorageTests: XCTestCase {
     func testUpdateBirthdayOverSomeBirthday() throws {
         let wallet = StoredWallet(
             language: language,
-            seedPhrase: seedPhrase,
+            seedPhrase: SeedPhrase(seedPhrase),
             version: WalletStorage.Constants.zcashKeychainVersion,
-            birthday: birthday,
+            birthday: Birthday(birthday),
             hasUserPassedPhraseBackupTest: false
         )
         let newBirthday = BlockHeight(87654321)
@@ -185,8 +185,8 @@ class WalletStorageTests: XCTestCase {
                 return XCTFail("Keychain: `walletReceived` can't be decoded.")
             }
             
-            XCTAssertEqual(newBirthday, walletReceived.birthday, "Keychain: stored birthday and retrieved one must be the same.")
-            XCTAssertEqual(seedPhrase, walletReceived.seedPhrase, "Keychain: stored seed phrase and retrieved one must be the same.")
+            XCTAssertEqual(newBirthday, walletReceived.birthday?.value(), "Keychain: stored birthday and retrieved one must be the same.")
+            XCTAssertEqual(seedPhrase, walletReceived.seedPhrase.value(), "Keychain: stored seed phrase and retrieved one must be the same.")
         } catch let err {
             XCTFail("Keychain: no error is expected for `testUpdateBirthdayOverNil` but received. \(err)")
         }
@@ -195,9 +195,9 @@ class WalletStorageTests: XCTestCase {
     func testMarkUserPassedPhraseBackupTest() throws {
         let wallet = StoredWallet(
             language: language,
-            seedPhrase: seedPhrase,
+            seedPhrase: SeedPhrase(seedPhrase),
             version: WalletStorage.Constants.zcashKeychainVersion,
-            birthday: birthday,
+            birthday: Birthday(birthday),
             hasUserPassedPhraseBackupTest: false
         )
         guard let walletData = try storage.encode(object: wallet) else {
@@ -221,7 +221,7 @@ class WalletStorageTests: XCTestCase {
             }
             
             XCTAssertTrue(walletReceived.hasUserPassedPhraseBackupTest, "Keychain: `hasUserPassedPhraseBackupTest` must be set to true.")
-            XCTAssertEqual(seedPhrase, walletReceived.seedPhrase, "Keychain: stored seed phrase and retrieved one must be the same.")
+            XCTAssertEqual(seedPhrase, walletReceived.seedPhrase.value(), "Keychain: stored seed phrase and retrieved one must be the same.")
         } catch let err {
             XCTFail("Keychain: no error is expected for `testMarkUserPassedPhraseBackupTest` but received. \(err)")
         }
@@ -230,10 +230,10 @@ class WalletStorageTests: XCTestCase {
     func testUnsupportedVersion() throws {
         let wallet = StoredWallet(
             language: language,
-            seedPhrase: seedPhrase,
+            seedPhrase: SeedPhrase(seedPhrase),
             /// older version
             version: WalletStorage.Constants.zcashKeychainVersion - 1,
-            birthday: birthday,
+            birthday: Birthday(birthday),
             hasUserPassedPhraseBackupTest: false
         )
         

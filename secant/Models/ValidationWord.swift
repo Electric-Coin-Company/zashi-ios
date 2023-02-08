@@ -11,5 +11,5 @@ import Foundation
 /// to validate the completed phrase when all ValidationWords have been placed.
 struct ValidationWord: Equatable {
     var groupIndex: Int
-    var word: String
+    var word: RedactableString
 }

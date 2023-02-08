@@ -10,13 +10,15 @@ import XCTest
 import OSLog
 
 class LoggerTests: XCTestCase {
+    let timeToPast: TimeInterval = 0.1
+    
     func testOSLogger_loggingAndExport() throws {
         let category = "testOSLogger_loggingAndExport"
         let osLogger = OSLogger_(logLevel: .debug, category: category)
         let testMessage = "test message"
         
         osLogger.debug(testMessage)
-        let logs = TestLogStore.exportCategory(category)
+        let logs = TestLogStore.exportCategory(category, hoursToThePast: timeToPast)
         
         XCTAssertNotNil(logs)
         
@@ -35,7 +37,7 @@ class LoggerTests: XCTestCase {
         let testMessage = "debug message"
         
         osLogger.debug(testMessage)
-        let logs = TestLogStore.exportCategory(category)
+        let logs = TestLogStore.exportCategory(category, hoursToThePast: timeToPast)
         
         XCTAssertNotNil(logs)
         
@@ -54,7 +56,7 @@ class LoggerTests: XCTestCase {
         let testMessage = "error message"
         
         osLogger.error(testMessage)
-        let logs = TestLogStore.exportCategory(category)
+        let logs = TestLogStore.exportCategory(category, hoursToThePast: timeToPast)
         
         XCTAssertNotNil(logs)
         
@@ -73,7 +75,7 @@ class LoggerTests: XCTestCase {
         let testMessage = "warning message"
         
         osLogger.warn(testMessage)
-        let logs = TestLogStore.exportCategory(category)
+        let logs = TestLogStore.exportCategory(category, hoursToThePast: timeToPast)
         
         XCTAssertNotNil(logs)
         
@@ -92,7 +94,7 @@ class LoggerTests: XCTestCase {
         let testMessage = "event message"
         
         osLogger.event(testMessage)
-        let logs = TestLogStore.exportCategory(category)
+        let logs = TestLogStore.exportCategory(category, hoursToThePast: timeToPast)
         
         XCTAssertNotNil(logs)
         
@@ -111,7 +113,7 @@ class LoggerTests: XCTestCase {
         let testMessage = "info message"
         
         osLogger.info(testMessage)
-        let logs = TestLogStore.exportCategory(category)
+        let logs = TestLogStore.exportCategory(category, hoursToThePast: timeToPast)
         
         XCTAssertNotNil(logs)
         
@@ -135,7 +137,7 @@ class LoggerTests: XCTestCase {
         osLogger.event(testMessage)
         osLogger.info(testMessage)
         
-        let logs = TestLogStore.exportCategory(category)
+        let logs = TestLogStore.exportCategory(category, hoursToThePast: timeToPast)
         
         guard let logs else { return }
         
@@ -153,7 +155,7 @@ class LoggerTests: XCTestCase {
         osLogger.event(testMessage)
         osLogger.info(testMessage)
         
-        let logs = TestLogStore.exportCategory(category)
+        let logs = TestLogStore.exportCategory(category, hoursToThePast: timeToPast)
         
         guard let logs else { return }
         
@@ -171,7 +173,7 @@ class LoggerTests: XCTestCase {
         osLogger.event(testMessage)
         osLogger.info(testMessage)
 
-        let logs = TestLogStore.exportCategory(category)
+        let logs = TestLogStore.exportCategory(category, hoursToThePast: timeToPast)
         
         guard let logs else { return }
 
@@ -189,7 +191,7 @@ class LoggerTests: XCTestCase {
         osLogger.event(testMessage)
         osLogger.info(testMessage)
 
-        let logs = TestLogStore.exportCategory(category)
+        let logs = TestLogStore.exportCategory(category, hoursToThePast: timeToPast)
         
         guard let logs else { return }
 
@@ -207,7 +209,7 @@ class LoggerTests: XCTestCase {
         osLogger.event(testMessage)
         osLogger.info(testMessage)
 
-        let logs = TestLogStore.exportCategory(category)
+        let logs = TestLogStore.exportCategory(category, hoursToThePast: timeToPast)
         
         guard let logs else { return }
 
@@ -220,7 +222,7 @@ class LoggerTests: XCTestCase {
         let testMessage = "wallet test message"
         
         LoggerProxy.info(testMessage)
-        let logs = TestLogStore.exportCategory(category)
+        let logs = TestLogStore.exportCategory(category, hoursToThePast: timeToPast)
         
         XCTAssertNotNil(logs)
         

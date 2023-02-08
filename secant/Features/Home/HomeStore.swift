@@ -30,14 +30,14 @@ struct HomeReducer: ReducerProtocol {
         var requiredTransactionConfirmations = 0
         var scanState: ScanReducer.State
         var sendState: SendFlowReducer.State
-        var shieldedBalance: WalletBalance
+        var shieldedBalance: Balance
         var synchronizerStatusSnapshot: SyncStatusSnapshot
         var walletEventsState: WalletEventsFlowReducer.State
         // TODO: [#311] - Get the ZEC price from the SDK, https://github.com/zcash/secant-ios-wallet/issues/311
         var zecPrice = Decimal(140.0)
 
         var totalCurrencyBalance: Zatoshi {
-            Zatoshi.from(decimal: shieldedBalance.total.decimalValue.decimalValue * zecPrice)
+            Zatoshi.from(decimal: shieldedBalance.data.total.decimalValue.decimalValue * zecPrice)
         }
 
         var isSyncing: Bool {
@@ -141,7 +141,7 @@ struct HomeReducer: ReducerProtocol {
             case .updateSynchronizerStatus:
                 state.synchronizerStatusSnapshot = sdkSynchronizer.statusSnapshot()
                 if let shieldedBalance = sdkSynchronizer.latestScannedSynchronizerState?.shieldedBalance {
-                    state.shieldedBalance = shieldedBalance
+                    state.shieldedBalance = shieldedBalance.redacted
                 }
                 return .none
 
@@ -298,7 +298,7 @@ extension HomeReducer.State {
             requestState: .placeholder,
             scanState: .placeholder,
             sendState: .placeholder,
-            shieldedBalance: WalletBalance.zero,
+            shieldedBalance: Balance.zero,
             synchronizerStatusSnapshot: .default,
             walletEventsState: .emptyPlaceHolder
         )

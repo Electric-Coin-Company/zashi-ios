@@ -22,7 +22,7 @@ struct TransactionAddressTextField: View {
                         action: TransactionAddressTextFieldReducer.Action.textField
                     ),
                     titleAccessoryView: {
-                        if !viewStore.textFieldState.text.isEmpty {
+                        if !viewStore.textFieldState.text.data.isEmpty {
                             Button(
                                 action: {
                                     viewStore.send(.clearAddress)
@@ -57,7 +57,7 @@ struct TransactionAddressTextField_Previews: PreviewProvider {
                 initialState: .init(
                     textFieldState: .init(
                         validationType: .floatingPoint,
-                        text: ""
+                        text: "".redacted
                     )
                 ),
                 reducer: TransactionAddressTextFieldReducer()

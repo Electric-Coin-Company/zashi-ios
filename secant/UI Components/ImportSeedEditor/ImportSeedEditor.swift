@@ -19,7 +19,7 @@ struct ImportSeedEditor: View {
     
     var body: some View {
         WithViewStore(store) { viewStore in
-            TextEditor(text: viewStore.binding(\.$importedSeedPhrase))
+            TextEditor(text: viewStore.bindingForRedactableSeedPhrase(viewStore.importedSeedPhrase))
                 .autocapitalization(.none)
                 .importSeedEditorModifier()
                 .padding(.horizontal, 28)

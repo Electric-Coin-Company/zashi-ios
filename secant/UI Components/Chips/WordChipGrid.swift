@@ -34,9 +34,9 @@ struct WordChipGrid: View {
         self.coloredChipColor = coloredChipColor
     }
 
-    init(words: [String], startingAt index: Int, coloredChipColor: Color = .clear) {
+    init(words: [RedactableString], startingAt index: Int, coloredChipColor: Color = .clear) {
         let chips = zip(words, index..<index + words.count).map { word, index in
-            word.isEmpty ? PhraseChip.Kind.empty : .ordered(position: index, word: word)
+            word.data.isEmpty ? PhraseChip.Kind.empty : .ordered(position: index, word: word)
         }
         self.init(chips: chips, coloredChipColor: coloredChipColor)
     }
@@ -49,7 +49,7 @@ struct WordChipGrid_Previews: PreviewProvider {
     ]
 
     static var previews: some View {
-        WordChipGrid(words: words, startingAt: 1)
+        WordChipGrid(words: words.map { $0.redacted }, startingAt: 1)
             .frame(maxHeight: .infinity)
             .fixedSize()
             .environment(\.sizeCategory, .accessibilityLarge)

@@ -17,8 +17,8 @@ struct TCATextField: View {
             TextField(
                 placeholder,
                 text: Binding(
-                    get: { viewStore.state.text },
-                    set: { viewStore.send(.set($0)) }
+                    get: { viewStore.state.text.data },
+                    set: { viewStore.send(.set($0.redacted)) }
                 )
             )
             .autocapitalization(.none)

@@ -55,9 +55,9 @@ struct WalletStorage {
 
         let wallet = StoredWallet(
             language: language,
-            seedPhrase: phrase,
+            seedPhrase: SeedPhrase(phrase),
             version: Constants.zcashKeychainVersion,
-            birthday: birthday,
+            birthday: Birthday(birthday),
             hasUserPassedPhraseBackupTest: hasUserPassedPhraseBackupTest
         )
 
@@ -104,7 +104,7 @@ struct WalletStorage {
     func updateBirthday(_ height: BlockHeight) throws {
         do {
             var wallet = try exportWallet()
-            wallet.birthday = height
+            wallet.birthday = Birthday(height)
             
             guard let data = try encode(object: wallet) else {
                 throw KeychainError.encoding

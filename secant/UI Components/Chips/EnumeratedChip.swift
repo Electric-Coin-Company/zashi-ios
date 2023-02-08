@@ -13,11 +13,11 @@ struct EnumeratedChip: View {
     @Clamped(1...24)
     var index: Int = 1
     
-    var text: String
+    var text: RedactableString
     var overlayPadding: CGFloat = 20
     
     var body: some View {
-        Text(text)
+        Text(text.data)
             .foregroundColor(Asset.Colors.Text.button.color)
             .font(.custom(FontFamily.Rubik.regular.name, size: 14))
             .frame(
@@ -58,7 +58,7 @@ struct EnumeratedChip_Previews: PreviewProvider {
     ]
 
     @ViewBuilder static var grid: some View {
-        WordChipGrid(words: words, startingAt: 1)
+        WordChipGrid(words: words.map { $0.redacted }, startingAt: 1)
     }
 
     static var previews: some View {

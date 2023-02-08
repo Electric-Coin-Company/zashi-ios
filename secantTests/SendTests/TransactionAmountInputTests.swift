@@ -26,11 +26,11 @@ class TransactionAmountTextFieldTests: XCTestCase {
             initialState:
                 TransactionAmountTextFieldReducer.State(
                     currencySelectionState: CurrencySelectionReducer.State(),
-                    maxValue: 501_301,
+                    maxValue: Int64(501_301).redacted,
                     textFieldState:
                         TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
-                            text: "0.002"
+                            text: "0.002".redacted
                         )
                 ),
             reducer: TransactionAmountTextFieldReducer()
@@ -40,11 +40,11 @@ class TransactionAmountTextFieldTests: XCTestCase {
         }
 
         store.send(.setMax) { state in
-            state.textFieldState.text = "0.00501301"
+            state.textFieldState.text = "0.00501301".redacted
         }
         
         store.receive(.updateAmount) { state in
-            state.amount = 501_301
+            state.amount = Int64(501_301).redacted
         }
     }
     
@@ -53,19 +53,19 @@ class TransactionAmountTextFieldTests: XCTestCase {
             initialState:
                 TransactionAmountTextFieldReducer.State(
                     currencySelectionState: CurrencySelectionReducer.State(),
-                    maxValue: 501_301,
+                    maxValue: Int64(501_301).redacted,
                     textFieldState:
                         TCATextFieldReducer.State(
                             validationType: .floatingPoint,
-                            text: "0.002"
+                            text: "0.002".redacted
                         )
                 ),
             reducer: TransactionAmountTextFieldReducer()
         )
 
         store.send(.clearValue) { state in
-            state.textFieldState.text = ""
-            XCTAssertEqual(0, state.amount, "AmountInput Tests: `testClearValue` expected \(0) but received \(state.amount)")
+            state.textFieldState.text = "".redacted
+            XCTAssertEqual(0, state.amount.data, "AmountInput Tests: `testClearValue` expected \(0) but received \(state.amount.data)")
         }
     }
     
@@ -80,7 +80,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
                     textFieldState:
                         TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
-                            text: "1.0"
+                            text: "1.0".redacted
                         ),
                     zecPrice: 1000.0
                 ),
@@ -91,12 +91,12 @@ class TransactionAmountTextFieldTests: XCTestCase {
         }
 
         store.send(.currencySelection(.swapCurrencyType)) { state in
-            state.textFieldState.text = "1,000"
+            state.textFieldState.text = "1,000".redacted
             state.currencySelectionState.currencyType = .usd
         }
         
         store.receive(.updateAmount) { state in
-            state.amount = 100_000_000
+            state.amount = Int64(100_000_000).redacted
         }
     }
     
@@ -111,7 +111,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
                     textFieldState:
                         TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
-                            text: "25000"
+                            text: "25000".redacted
                         ),
                     zecPrice: 1000.0
                 ),
@@ -122,12 +122,12 @@ class TransactionAmountTextFieldTests: XCTestCase {
         }
 
         store.send(.currencySelection(.swapCurrencyType)) { state in
-            state.textFieldState.text = "25,000,000"
+            state.textFieldState.text = "25,000,000".redacted
             state.currencySelectionState.currencyType = .usd
         }
         
         store.receive(.updateAmount) { state in
-            state.amount = 2_500_000_000_000
+            state.amount = Int64(2_500_000_000_000).redacted
         }
     }
     
@@ -142,7 +142,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
                     textFieldState:
                         TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
-                            text: "1 000"
+                            text: "1 000".redacted
                         ),
                     zecPrice: 1000.0
                 ),
@@ -153,12 +153,12 @@ class TransactionAmountTextFieldTests: XCTestCase {
         }
 
         store.send(.currencySelection(.swapCurrencyType)) { state in
-            state.textFieldState.text = "1"
+            state.textFieldState.text = "1".redacted
             state.currencySelectionState.currencyType = .zec
         }
         
         store.receive(.updateAmount) { state in
-            state.amount = 100_000_000
+            state.amount = Int64(100_000_000).redacted
         }
     }
     
@@ -170,11 +170,11 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         CurrencySelectionReducer.State(
                             currencyType: .usd
                         ),
-                    maxValue: 100_000_000,
+                    maxValue: Int64(100_000_000).redacted,
                     textFieldState:
                         TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
-                            text: "5"
+                            text: "5".redacted
                         ),
                     zecPrice: 1000.0
                 ),
@@ -184,8 +184,9 @@ class TransactionAmountTextFieldTests: XCTestCase {
             dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
         }
 
-        store.send(.textField(.set("1 000"))) { state in
-            state.textFieldState.text = "1 000"
+        let value = "1 000".redacted
+        store.send(.textField(.set(value))) { state in
+            state.textFieldState.text = value
             state.textFieldState.valid = true
             state.currencySelectionState.currencyType = .usd
             XCTAssertFalse(
@@ -195,7 +196,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
         }
         
         store.receive(.updateAmount) { state in
-            state.amount = 100_000_000
+            state.amount = Int64(100_000_000).redacted
             XCTAssertTrue(
                 state.isMax,
                 "AmountInput Tests: `testIfAmountIsMax` is expected to be true but it's \(state.isMax)"
@@ -211,11 +212,11 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         CurrencySelectionReducer.State(
                             currencyType: .zec
                         ),
-                    maxValue: 200_000_000,
+                    maxValue: Int64(200_000_000).redacted,
                     textFieldState:
                         TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
-                            text: "5"
+                            text: "5".redacted
                         ),
                     zecPrice: 1000.0
                 ),
@@ -226,11 +227,11 @@ class TransactionAmountTextFieldTests: XCTestCase {
         }
 
         store.send(.setMax) { state in
-            state.textFieldState.text = "2"
+            state.textFieldState.text = "2".redacted
         }
         
         store.receive(.updateAmount) { state in
-            state.amount = 200_000_000
+            state.amount = Int64(200_000_000).redacted
         }
     }
     
@@ -242,11 +243,11 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         CurrencySelectionReducer.State(
                             currencyType: .usd
                         ),
-                    maxValue: 200_000_000,
+                    maxValue: Int64(200_000_000).redacted,
                     textFieldState:
                         TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
-                            text: "5"
+                            text: "5".redacted
                         ),
                     zecPrice: 1000.0
                 ),
@@ -257,11 +258,11 @@ class TransactionAmountTextFieldTests: XCTestCase {
         }
 
         store.send(.setMax) { state in
-            state.textFieldState.text = "2,000"
+            state.textFieldState.text = "2,000".redacted
         }
         
         store.receive(.updateAmount) { state in
-            state.amount = 200_000_000
+            state.amount = Int64(200_000_000).redacted
         }
     }
 }
