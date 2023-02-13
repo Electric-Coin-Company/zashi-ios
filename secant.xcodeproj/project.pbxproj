@@ -2638,8 +2638,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/zcash/ZcashLightClientKit/";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = "0.18.0-beta";
+				branch = main;
+				kind = branch;
 			};
 		};
 		6654C7382715A38000901167 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {

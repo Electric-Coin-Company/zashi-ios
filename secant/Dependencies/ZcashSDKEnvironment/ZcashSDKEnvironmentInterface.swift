@@ -17,7 +17,6 @@ extension DependencyValues {
 
 extension ZcashSDKEnvironment {
     enum ZcashSDKConstants {
-        static let defaultBlockHeight = 1_629_724
         static let endpointMainnetAddress = "lightwalletd.electriccoin.co"
         static let endpointTestnetAddress = "lightwalletd.testnet.electriccoin.co"
         static let endpointPort = 9067
@@ -28,10 +27,9 @@ extension ZcashSDKEnvironment {
 }
 
 struct ZcashSDKEnvironment {
-    let defaultBirthday: BlockHeight
+    let latestCheckpoint: (ZcashNetwork) -> BlockHeight
     let endpoint: LightWalletEndpoint
     var isMainnet: Bool { network.networkType == .mainnet }
-    let lightWalletService: LightWalletService
     let memoCharLimit: Int
     let mnemonicWordsMaxCount: Int
     let network: ZcashNetwork

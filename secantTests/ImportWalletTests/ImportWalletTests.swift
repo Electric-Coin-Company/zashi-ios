@@ -80,13 +80,13 @@ class ImportWalletTests: XCTestCase {
         }
     }
     
-    func testInvalidBirthdayHeight_lessThanDefault() throws {
+    func testInvalidBirthdayHeight_lessThanSaplingActivation() throws {
         let store = TestStore(
             initialState: .placeholder,
             reducer: ImportWalletReducer()
         )
         
-        let birthday = "1600000".redacted
+        let birthday = "200000".redacted
         store.send(.birthdayInputChanged(birthday)) { state in
             state.birthdayHeight = birthday
         }
@@ -175,7 +175,7 @@ class ImportWalletTests: XCTestCase {
             dependencies.mnemonic.isValid = { _ in throw "invalid mnemonic" }
         }
 
-        let birthday = "1600000".redacted
+        let birthday = "200000".redacted
         store.send(.birthdayInputChanged(birthday)) { state in
             state.birthdayHeight = birthday
         }
@@ -201,7 +201,7 @@ class ImportWalletTests: XCTestCase {
             $0.mnemonic = .noOp
         }
 
-        let birthday = "1600000".redacted
+        let birthday = "200000".redacted
         store.send(.birthdayInputChanged(birthday)) { state in
             state.birthdayHeight = birthday
         }

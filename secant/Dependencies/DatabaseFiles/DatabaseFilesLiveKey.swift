@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import ZcashLightClientKit
 
 extension DatabaseFilesClient: DependencyKey {
     static let liveValue = DatabaseFilesClient.live()
@@ -14,6 +15,11 @@ extension DatabaseFilesClient: DependencyKey {
         Self(
             documentsDirectory: {
                 try databaseFiles.documentsDirectory()
+            },
+            fsBlockDbRootFor: { network in
+                try databaseFiles.documentsDirectory()
+                    .appendingPathComponent(network.networkType.chainName)
+                    .appendingPathComponent(ZcashSDK.defaultFsCacheName, isDirectory: true)
             },
             cacheDbURLFor: { network in
                 try databaseFiles.cacheDbURL(for: network)

@@ -132,6 +132,7 @@ extension RootReducer {
 
             let initializer = Initializer(
                 cacheDbURL: try databaseFiles.cacheDbURLFor(network),
+                fsBlockDbRoot: try databaseFiles.fsBlockDbRootFor(network),
                 dataDbURL: try databaseFiles.dataDbURLFor(network),
                 pendingDbURL: try databaseFiles.pendingDbURLFor(network),
                 endpoint: zcashSDKEnvironment.endpoint,
