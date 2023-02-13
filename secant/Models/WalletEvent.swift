@@ -12,7 +12,7 @@ import ZcashLightClientKit
 
 // MARK: - Model
 
-struct WalletEvent: Equatable, Identifiable {
+struct WalletEvent: Equatable, Identifiable, Redactable {
     enum WalletEventState: Equatable {
         case send(TransactionState)
         case pending(TransactionState)

@@ -44,10 +44,13 @@ struct ImportWalletView: View {
                     Text("importWallet.birthday.description")
                         .paragraphText()
 
-                    TextField("importWallet.birthday.placeholder", text: viewStore.binding(\.$birthdayHeight))
-                        .keyboardType(.numberPad)
-                        .autocapitalization(.none)
-                        .importSeedEditorModifier()
+                    TextField(
+                        "importWallet.birthday.placeholder",
+                        text: viewStore.bindingForRedactableBirthday(viewStore.birthdayHeight)
+                    )
+                    .keyboardType(.numberPad)
+                    .autocapitalization(.none)
+                    .importSeedEditorModifier()
                 }
                 .padding(28)
 

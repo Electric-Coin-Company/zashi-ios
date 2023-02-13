@@ -10,7 +10,7 @@ import UIKit
 
 extension PasteboardClient: DependencyKey {
     static let liveValue = Self(
-        setString: { UIPasteboard.general.string = $0 },
-        getString: { UIPasteboard.general.string }
+        setString: { UIPasteboard.general.string = $0.data },
+        getString: { UIPasteboard.general.string?.redacted }
     )
 }

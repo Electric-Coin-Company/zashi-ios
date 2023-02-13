@@ -27,11 +27,16 @@ class RecoveryPhraseValidationTests: XCTestCase {
             "pizza", "just", "garlic"
         ]
 
-        let phrase = RecoveryPhrase(words: words)
+        let phrase = RecoveryPhrase(words: words.map { $0.redacted })
 
         let indices = [1, 0, 5, 3]
 
-        let expected = ["salute", "boil", "cancel", "pizza"].map({ PhraseChip.Kind.unassigned(word: $0) })
+        let expected = [
+            "salute".redacted,
+            "boil".redacted,
+            "cancel".redacted,
+            "pizza".redacted
+        ].map({ PhraseChip.Kind.unassigned(word: $0) })
 
         let result = phrase.words(fromMissingIndices: indices)
 
@@ -55,9 +60,14 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let missingIndices = [1, 0, 5, 3]
 
-        let phrase = RecoveryPhrase(words: words)
+        let phrase = RecoveryPhrase(words: words.map { $0.redacted })
 
-        let missingWordChips: [PhraseChip.Kind] = ["salute", "boil", "cancel", "pizza"].map({ PhraseChip.Kind.unassigned(word: $0) })
+        let missingWordChips: [PhraseChip.Kind] = [
+            "salute".redacted,
+            "boil".redacted,
+            "cancel".redacted,
+            "pizza".redacted
+        ].map({ PhraseChip.Kind.unassigned(word: $0) })
 
         let initialStep = RecoveryPhraseValidationFlowReducer.State(
             phrase: phrase,
@@ -73,14 +83,14 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let expectedMissingChips = [
             PhraseChip.Kind.empty,
-            PhraseChip.Kind.unassigned(word: "boil"),
-            PhraseChip.Kind.unassigned(word: "cancel"),
-            PhraseChip.Kind.unassigned(word: "pizza")
+            PhraseChip.Kind.unassigned(word: "boil".redacted),
+            PhraseChip.Kind.unassigned(word: "cancel".redacted),
+            PhraseChip.Kind.unassigned(word: "pizza".redacted)
         ]
 
-        let expectedValidationWords = [ValidationWord(groupIndex: 1, word: "salute")]
+        let expectedValidationWords = [ValidationWord(groupIndex: 1, word: "salute".redacted)]
 
-        store.send(.move(wordChip: .unassigned(word: "salute"), intoGroup: 1)) {
+        store.send(.move(wordChip: .unassigned(word: "salute".redacted), intoGroup: 1)) {
             $0.validationWords = expectedValidationWords
             $0.missingWordChips = expectedMissingChips
 
@@ -105,9 +115,14 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let missingIndices = [1, 0, 5, 3]
 
-        let phrase = RecoveryPhrase(words: words)
+        let phrase = RecoveryPhrase(words: words.map { $0.redacted })
 
-        let missingWordChips = ["salute", "boil", "cancel", "pizza"].map({ PhraseChip.Kind.unassigned(word: $0) })
+        let missingWordChips = [
+            "salute".redacted,
+            "boil".redacted,
+            "cancel".redacted,
+            "pizza".redacted
+        ].map({ PhraseChip.Kind.unassigned(word: $0) })
 
         let initialStep = RecoveryPhraseValidationFlowReducer.State.initial(
             phrase: phrase,
@@ -121,13 +136,13 @@ class RecoveryPhraseValidationTests: XCTestCase {
         )
 
         let expectedMissingChips = [
-            PhraseChip.Kind.unassigned(word: "salute"),
-            PhraseChip.Kind.unassigned(word: "boil"),
-            PhraseChip.Kind.unassigned(word: "cancel"),
+            PhraseChip.Kind.unassigned(word: "salute".redacted),
+            PhraseChip.Kind.unassigned(word: "boil".redacted),
+            PhraseChip.Kind.unassigned(word: "cancel".redacted),
             PhraseChip.Kind.empty
         ]
 
-        let expectedValidationWords = [ValidationWord(groupIndex: 0, word: "pizza")]
+        let expectedValidationWords = [ValidationWord(groupIndex: 0, word: "pizza".redacted)]
 
         store.send(.move(wordChip: missingWordChips[3], intoGroup: 0)) {
             $0.missingWordChips = expectedMissingChips
@@ -154,18 +169,18 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let missingIndices = [1, 0, 5, 3]
 
-        let phrase = RecoveryPhrase(words: words)
+        let phrase = RecoveryPhrase(words: words.map { $0.redacted })
 
         let currentStep = RecoveryPhraseValidationFlowReducer.State(
             phrase: phrase,
             missingIndices: missingIndices,
             missingWordChips: [
                 PhraseChip.Kind.empty,
-                PhraseChip.Kind.unassigned(word: "boil"),
-                PhraseChip.Kind.unassigned(word: "cancel"),
-                PhraseChip.Kind.unassigned(word: "pizza")
+                PhraseChip.Kind.unassigned(word: "boil".redacted),
+                PhraseChip.Kind.unassigned(word: "cancel".redacted),
+                PhraseChip.Kind.unassigned(word: "pizza".redacted)
             ],
-            validationWords: [ValidationWord(groupIndex: 0, word: "salute")]
+            validationWords: [ValidationWord(groupIndex: 0, word: "salute".redacted)]
         )
 
         let store = TestStore(
@@ -176,16 +191,16 @@ class RecoveryPhraseValidationTests: XCTestCase {
         let expectedMissingWordChips = [
             PhraseChip.Kind.empty,
             PhraseChip.Kind.empty,
-            PhraseChip.Kind.unassigned(word: "cancel"),
-            PhraseChip.Kind.unassigned(word: "pizza")
+            PhraseChip.Kind.unassigned(word: "cancel".redacted),
+            PhraseChip.Kind.unassigned(word: "pizza".redacted)
         ]
 
         let expectedValidationWords = [
-            ValidationWord(groupIndex: 0, word: "salute"),
-            ValidationWord(groupIndex: 1, word: "boil")
+            ValidationWord(groupIndex: 0, word: "salute".redacted),
+            ValidationWord(groupIndex: 1, word: "boil".redacted)
         ]
 
-        store.send(.move(wordChip: PhraseChip.Kind.unassigned(word: "boil"), intoGroup: 1)) {
+        store.send(.move(wordChip: PhraseChip.Kind.unassigned(word: "boil".redacted), intoGroup: 1)) {
             $0.missingWordChips = expectedMissingWordChips
             $0.validationWords = expectedValidationWords
 
@@ -210,7 +225,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let missingIndices = [1, 0, 5, 3]
 
-        let phrase = RecoveryPhrase(words: words)
+        let phrase = RecoveryPhrase(words: words.map { $0.redacted })
 
         let currentStep = RecoveryPhraseValidationFlowReducer.State(
             phrase: phrase,
@@ -218,12 +233,12 @@ class RecoveryPhraseValidationTests: XCTestCase {
             missingWordChips: [
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.empty,
-                PhraseChip.Kind.unassigned(word: "cancel"),
-                PhraseChip.Kind.unassigned(word: "pizza")
+                PhraseChip.Kind.unassigned(word: "cancel".redacted),
+                PhraseChip.Kind.unassigned(word: "pizza".redacted)
             ],
             validationWords: [
-                ValidationWord(groupIndex: 0, word: "salute"),
-                ValidationWord(groupIndex: 1, word: "boil")
+                ValidationWord(groupIndex: 0, word: "salute".redacted),
+                ValidationWord(groupIndex: 1, word: "boil".redacted)
             ]
         )
 
@@ -236,16 +251,16 @@ class RecoveryPhraseValidationTests: XCTestCase {
             PhraseChip.Kind.empty,
             PhraseChip.Kind.empty,
             PhraseChip.Kind.empty,
-            PhraseChip.Kind.unassigned(word: "pizza")
+            PhraseChip.Kind.unassigned(word: "pizza".redacted)
         ]
 
         let expectedValidationWords = [
-            ValidationWord(groupIndex: 0, word: "salute"),
-            ValidationWord(groupIndex: 1, word: "boil"),
-            ValidationWord(groupIndex: 2, word: "cancel")
+            ValidationWord(groupIndex: 0, word: "salute".redacted),
+            ValidationWord(groupIndex: 1, word: "boil".redacted),
+            ValidationWord(groupIndex: 2, word: "cancel".redacted)
         ]
 
-        store.send(.move(wordChip: PhraseChip.Kind.unassigned(word: "cancel"), intoGroup: 2)) {
+        store.send(.move(wordChip: PhraseChip.Kind.unassigned(word: "cancel".redacted), intoGroup: 2)) {
             $0.missingWordChips = expectedMissingWordChips
             $0.validationWords = expectedValidationWords
 
@@ -270,7 +285,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let missingIndices = [1, 0, 5, 3]
 
-        let phrase = RecoveryPhrase(words: words)
+        let phrase = RecoveryPhrase(words: words.map { $0.redacted })
 
         let currentStep = RecoveryPhraseValidationFlowReducer.State(
             phrase: phrase,
@@ -279,12 +294,12 @@ class RecoveryPhraseValidationTests: XCTestCase {
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.empty,
-                PhraseChip.Kind.unassigned(word: "pizza")
+                PhraseChip.Kind.unassigned(word: "pizza".redacted)
             ],
             validationWords: [
-                ValidationWord(groupIndex: 0, word: "salute"),
-                ValidationWord(groupIndex: 1, word: "boil"),
-                ValidationWord(groupIndex: 2, word: "cancel")
+                ValidationWord(groupIndex: 0, word: "salute".redacted),
+                ValidationWord(groupIndex: 1, word: "boil".redacted),
+                ValidationWord(groupIndex: 2, word: "cancel".redacted)
             ]
         )
 
@@ -303,13 +318,13 @@ class RecoveryPhraseValidationTests: XCTestCase {
         ]
 
         let expectedValidationWords = [
-            ValidationWord(groupIndex: 0, word: "salute"),
-            ValidationWord(groupIndex: 1, word: "boil"),
-            ValidationWord(groupIndex: 2, word: "cancel"),
-            ValidationWord(groupIndex: 3, word: "pizza")
+            ValidationWord(groupIndex: 0, word: "salute".redacted),
+            ValidationWord(groupIndex: 1, word: "boil".redacted),
+            ValidationWord(groupIndex: 2, word: "cancel".redacted),
+            ValidationWord(groupIndex: 3, word: "pizza".redacted)
         ]
 
-        store.send(.move(wordChip: PhraseChip.Kind.unassigned(word: "pizza"), intoGroup: 3)) {
+        store.send(.move(wordChip: PhraseChip.Kind.unassigned(word: "pizza".redacted), intoGroup: 3)) {
             $0.missingWordChips = expectedMissingWordChips
             $0.validationWords = expectedValidationWords
 
@@ -342,7 +357,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let missingIndices = [1, 0, 5, 3]
 
-        let phrase = RecoveryPhrase(words: words)
+        let phrase = RecoveryPhrase(words: words.map { $0.redacted })
 
         let currentStep = RecoveryPhraseValidationFlowReducer.State(
             phrase: phrase,
@@ -351,12 +366,12 @@ class RecoveryPhraseValidationTests: XCTestCase {
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.empty,
-                PhraseChip.Kind.unassigned(word: "pizza")
+                PhraseChip.Kind.unassigned(word: "pizza".redacted)
             ],
             validationWords: [
-                ValidationWord(groupIndex: 0, word: "salute"),
-                ValidationWord(groupIndex: 2, word: "boil"),
-                ValidationWord(groupIndex: 1, word: "cancel")
+                ValidationWord(groupIndex: 0, word: "salute".redacted),
+                ValidationWord(groupIndex: 2, word: "boil".redacted),
+                ValidationWord(groupIndex: 1, word: "cancel".redacted)
             ]
         )
 
@@ -376,13 +391,13 @@ class RecoveryPhraseValidationTests: XCTestCase {
         ]
 
         let expectedValidationWords = [
-            ValidationWord(groupIndex: 0, word: "salute"),
-            ValidationWord(groupIndex: 2, word: "boil"),
-            ValidationWord(groupIndex: 1, word: "cancel"),
-            ValidationWord(groupIndex: 3, word: "pizza")
+            ValidationWord(groupIndex: 0, word: "salute".redacted),
+            ValidationWord(groupIndex: 2, word: "boil".redacted),
+            ValidationWord(groupIndex: 1, word: "cancel".redacted),
+            ValidationWord(groupIndex: 3, word: "pizza".redacted)
         ]
 
-        store.send(.move(wordChip: PhraseChip.Kind.unassigned(word: "pizza"), intoGroup: 3)) {
+        store.send(.move(wordChip: PhraseChip.Kind.unassigned(word: "pizza".redacted), intoGroup: 3)) {
             $0.missingWordChips = expectedMissingWordChips
             $0.validationWords = expectedValidationWords
 
@@ -416,7 +431,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let missingIndices = [1, 0, 5, 3]
 
-        let phrase = RecoveryPhrase(words: words)
+        let phrase = RecoveryPhrase(words: words.map { $0.redacted })
 
         let currentStep = RecoveryPhraseValidationFlowReducer.State(
             phrase: phrase,
@@ -425,11 +440,11 @@ class RecoveryPhraseValidationTests: XCTestCase {
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.empty,
-                PhraseChip.Kind.unassigned(word: "pizza")
+                PhraseChip.Kind.unassigned(word: "pizza".redacted)
             ],
             validationWords: [
-                ValidationWord(groupIndex: 1, word: "boil"),
-                ValidationWord(groupIndex: 2, word: "cancel")
+                ValidationWord(groupIndex: 1, word: "boil".redacted),
+                ValidationWord(groupIndex: 2, word: "cancel".redacted)
             ]
         )
 
@@ -440,12 +455,12 @@ class RecoveryPhraseValidationTests: XCTestCase {
         )
 
         let expected = [
-            PhraseChip.Kind.ordered(position: 1, word: "bring"),
+            PhraseChip.Kind.ordered(position: 1, word: "bring".redacted),
             .empty,
-            .ordered(position: 3, word: "thank"),
-            .ordered(position: 4, word: "require"),
-            .ordered(position: 5, word: "spirit"),
-            .ordered(position: 6, word: "toe")
+            .ordered(position: 3, word: "thank".redacted),
+            .ordered(position: 4, word: "require".redacted),
+            .ordered(position: 5, word: "spirit".redacted),
+            .ordered(position: 6, word: "toe".redacted)
         ]
 
         XCTAssertEqual(expected, result)
@@ -468,7 +483,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let missingIndices = [1, 0, 5, 3]
 
-        let phrase = RecoveryPhrase(words: words)
+        let phrase = RecoveryPhrase(words: words.map { $0.redacted })
 
         let currentStep = RecoveryPhraseValidationFlowReducer.State(
             phrase: phrase,
@@ -477,12 +492,12 @@ class RecoveryPhraseValidationTests: XCTestCase {
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.empty,
-                PhraseChip.Kind.unassigned(word: "pizza")
+                PhraseChip.Kind.unassigned(word: "pizza".redacted)
             ],
             validationWords: [
-                ValidationWord(groupIndex: 0, word: "salute"),
-                ValidationWord(groupIndex: 1, word: "boil"),
-                ValidationWord(groupIndex: 2, word: "cancel")
+                ValidationWord(groupIndex: 0, word: "salute".redacted),
+                ValidationWord(groupIndex: 1, word: "boil".redacted),
+                ValidationWord(groupIndex: 2, word: "cancel".redacted)
             ]
         )
 
@@ -493,12 +508,12 @@ class RecoveryPhraseValidationTests: XCTestCase {
         )
 
         let expected = [
-            PhraseChip.Kind.ordered(position: 1, word: "bring"),
-            .unassigned(word: "salute"),
-            .ordered(position: 3, word: "thank"),
-            .ordered(position: 4, word: "require"),
-            .ordered(position: 5, word: "spirit"),
-            .ordered(position: 6, word: "toe")
+            PhraseChip.Kind.ordered(position: 1, word: "bring".redacted),
+            .unassigned(word: "salute".redacted),
+            .ordered(position: 3, word: "thank".redacted),
+            .ordered(position: 4, word: "require".redacted),
+            .ordered(position: 5, word: "spirit".redacted),
+            .ordered(position: 6, word: "toe".redacted)
         ]
 
         XCTAssertEqual(expected, result)
@@ -521,7 +536,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let missingIndices = [1, 0, 5, 3]
 
-        let phrase = RecoveryPhrase(words: words)
+        let phrase = RecoveryPhrase(words: words.map { $0.redacted })
 
         let currentStep = RecoveryPhraseValidationFlowReducer.State(
             phrase: phrase,
@@ -530,12 +545,12 @@ class RecoveryPhraseValidationTests: XCTestCase {
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.empty,
-                PhraseChip.Kind.unassigned(word: "pizza")
+                PhraseChip.Kind.unassigned(word: "pizza".redacted)
             ],
             validationWords: [
-                ValidationWord(groupIndex: 0, word: "salute"),
-                ValidationWord(groupIndex: 1, word: "boil"),
-                ValidationWord(groupIndex: 2, word: "cancel")
+                ValidationWord(groupIndex: 0, word: "salute".redacted),
+                ValidationWord(groupIndex: 1, word: "boil".redacted),
+                ValidationWord(groupIndex: 2, word: "cancel".redacted)
             ]
         )
 
@@ -559,7 +574,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let missingIndices = [1, 0, 5, 3]
 
-        let phrase = RecoveryPhrase(words: words)
+        let phrase = RecoveryPhrase(words: words.map { $0.redacted })
 
         let currentStep = RecoveryPhraseValidationFlowReducer.State(
             phrase: phrase,
@@ -568,12 +583,12 @@ class RecoveryPhraseValidationTests: XCTestCase {
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.empty,
                 PhraseChip.Kind.empty,
-                PhraseChip.Kind.unassigned(word: "pizza")
+                PhraseChip.Kind.unassigned(word: "pizza".redacted)
             ],
             validationWords: [
-                ValidationWord(groupIndex: 0, word: "salute"),
-                ValidationWord(groupIndex: 1, word: "boil"),
-                ValidationWord(groupIndex: 2, word: "cancel")
+                ValidationWord(groupIndex: 0, word: "salute".redacted),
+                ValidationWord(groupIndex: 1, word: "boil".redacted),
+                ValidationWord(groupIndex: 2, word: "cancel".redacted)
             ]
         )
 
@@ -598,13 +613,13 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let missingIndices = [1, 0, 5, 3]
 
-        let phrase = RecoveryPhrase(words: words)
+        let phrase = RecoveryPhrase(words: words.map { $0.redacted })
 
         let completion = [
-            ValidationWord(groupIndex: 0, word: "salute"),
-            ValidationWord(groupIndex: 1, word: "boil"),
-            ValidationWord(groupIndex: 2, word: "cancel"),
-            ValidationWord(groupIndex: 3, word: "pizza")
+            ValidationWord(groupIndex: 0, word: "salute".redacted),
+            ValidationWord(groupIndex: 1, word: "boil".redacted),
+            ValidationWord(groupIndex: 2, word: "cancel".redacted),
+            ValidationWord(groupIndex: 3, word: "pizza".redacted)
         ]
 
         let result = RecoveryPhraseValidationFlowReducer.State(
@@ -617,7 +632,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         XCTAssertTrue(result.isValid)
         XCTAssertTrue(result.isComplete)
-        XCTAssertEqual(words, result.resultingPhrase)
+        XCTAssertEqual(words.map { $0.redacted }, result.resultingPhrase)
     }
 
     func testCreateResultPhraseInvalidPhraseFromCompletion() {
@@ -637,13 +652,13 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let missingIndices = [1, 0, 5, 3]
 
-        let phrase = RecoveryPhrase(words: words)
+        let phrase = RecoveryPhrase(words: words.map { $0.redacted })
 
         let completion = [
-            ValidationWord(groupIndex: 3, word: "salute"),
-            ValidationWord(groupIndex: 1, word: "boil"),
-            ValidationWord(groupIndex: 0, word: "cancel"),
-            ValidationWord(groupIndex: 2, word: "pizza")
+            ValidationWord(groupIndex: 3, word: "salute".redacted),
+            ValidationWord(groupIndex: 1, word: "boil".redacted),
+            ValidationWord(groupIndex: 0, word: "cancel".redacted),
+            ValidationWord(groupIndex: 2, word: "pizza".redacted)
         ]
 
         let result = RecoveryPhraseValidationFlowReducer.State(
@@ -656,7 +671,7 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         XCTAssertFalse(result.isValid)
         XCTAssertTrue(result.isComplete)
-        XCTAssertNotEqual(words, result.resultingPhrase)
+        XCTAssertNotEqual(words.map { $0.redacted }, result.resultingPhrase)
     }
 }
 

@@ -26,13 +26,13 @@ struct WalletEventsFlowReducer: ReducerProtocol {
     }
 
     enum Action: Equatable {
-        case copyToPastboard(String)
+        case copyToPastboard(RedactableString)
         case dismissAlert
         case onAppear
         case onDisappear
         case openBlockExplorer(URL?)
         case updateDestination(WalletEventsFlowReducer.State.Destination?)
-        case replyTo(String)
+        case replyTo(RedactableString)
         case synchronizerStateChanged(SDKSynchronizerState)
         case updateWalletEvents([WalletEvent])
         case warnBeforeLeavingApp(URL?)

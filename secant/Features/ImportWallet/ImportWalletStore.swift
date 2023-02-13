@@ -7,6 +7,7 @@
 
 import ComposableArchitecture
 import ZcashLightClientKit
+import SwiftUI
 
 typealias ImportWalletStore = Store<ImportWalletReducer.State, ImportWalletReducer.Action>
 typealias ImportWalletViewStore = ViewStore<ImportWalletReducer.State, ImportWalletReducer.Action>
@@ -14,13 +15,13 @@ typealias ImportWalletViewStore = ViewStore<ImportWalletReducer.State, ImportWal
 struct ImportWalletReducer: ReducerProtocol {
     struct State: Equatable {
         @BindingState var alert: AlertState<ImportWalletReducer.Action>?
-        @BindingState var importedSeedPhrase: String = ""
-        @BindingState var birthdayHeight: String = ""
-        var wordsCount = 0
-        var maxWordsCount = 0
+        var birthdayHeight = "".redacted
+        var birthdayHeightValue: RedactableBlockHeight?
+        var importedSeedPhrase = "".redacted
         var isValidMnemonic = false
         var isValidNumberOfWords = false
-        var birthdayHeightValue: BlockHeight?
+        var maxWordsCount = 0
+        var wordsCount = 0
         
         var mnemonicStatus: String {
             if isValidMnemonic {
@@ -32,18 +33,20 @@ struct ImportWalletReducer: ReducerProtocol {
         
         var isValidForm: Bool {
             isValidMnemonic &&
-            (birthdayHeight.isEmpty ||
-            (!birthdayHeight.isEmpty && birthdayHeightValue != nil))
+            (birthdayHeight.data.isEmpty ||
+            (!birthdayHeight.data.isEmpty && birthdayHeightValue != nil))
         }
     }
-
+    
     enum Action: Equatable, BindableAction {
         case binding(BindingAction<ImportWalletReducer.State>)
+        case birthdayInputChanged(RedactableString)
         case dismissAlert
         case restoreWallet
         case importPrivateOrViewingKey
         case initializeSDK
         case onAppear
+        case seedPhraseInputChanged(RedactableString)
         case successfullyRecovered
     }
 
@@ -59,13 +62,14 @@ struct ImportWalletReducer: ReducerProtocol {
             case .onAppear:
                 state.maxWordsCount = zcashSDKEnvironment.mnemonicWordsMaxCount
                 return .none
-                
-            case .binding(\.$importedSeedPhrase):
-                state.wordsCount = state.importedSeedPhrase.split(separator: " ").count
+
+            case .seedPhraseInputChanged(let redactedSeedPhrase):
+                state.importedSeedPhrase = redactedSeedPhrase
+                state.wordsCount = state.importedSeedPhrase.data.split(separator: " ").count
                 state.isValidNumberOfWords = state.wordsCount == state.maxWordsCount
                 // is the mnemonic valid one?
                 do {
-                    try mnemonic.isValid(state.importedSeedPhrase)
+                    try mnemonic.isValid(state.importedSeedPhrase.data)
                 } catch {
                     state.isValidMnemonic = false
                     return .none
@@ -73,9 +77,10 @@ struct ImportWalletReducer: ReducerProtocol {
                 state.isValidMnemonic = true
                 return .none
                 
-            case .binding(\.$birthdayHeight):
-                if let birthdayHeight = BlockHeight(state.birthdayHeight), birthdayHeight >= zcashSDKEnvironment.defaultBirthday {
-                    state.birthdayHeightValue = birthdayHeight
+            case .birthdayInputChanged(let redactedBirthday):
+                state.birthdayHeight = redactedBirthday
+                if let birthdayHeight = BlockHeight(state.birthdayHeight.data), birthdayHeight >= zcashSDKEnvironment.defaultBirthday {
+                    state.birthdayHeightValue = birthdayHeight.redacted
                 } else {
                     state.birthdayHeightValue = nil
                 }
@@ -91,11 +96,11 @@ struct ImportWalletReducer: ReducerProtocol {
             case .restoreWallet:
                 do {
                     // validate the seed
-                    try mnemonic.isValid(state.importedSeedPhrase)
+                    try mnemonic.isValid(state.importedSeedPhrase.data)
                     
                     // store it to the keychain
-                    let birthday = state.birthdayHeightValue ?? zcashSDKEnvironment.defaultBirthday
-                    try walletStorage.importWallet(state.importedSeedPhrase, birthday, .english, false)
+                    let birthday = state.birthdayHeightValue ?? zcashSDKEnvironment.defaultBirthday.redacted
+                    try walletStorage.importWallet(state.importedSeedPhrase.data, birthday.data, .english, false)
                     
                     // update the backup phrase validation flag
                     try walletStorage.markUserPassedPhraseBackupTest()
@@ -136,6 +141,24 @@ struct ImportWalletReducer: ReducerProtocol {
                 return .none
             }
         }
+    }
+}
+
+// MARK: - ViewStore
+
+extension ImportWalletViewStore {
+    func bindingForRedactableSeedPhrase(_ importedSeedPhrase: RedactableString) -> Binding<String> {
+        self.binding(
+            get: { _ in importedSeedPhrase.data },
+            send: { .seedPhraseInputChanged($0.redacted) }
+        )
+    }
+    
+    func bindingForRedactableBirthday(_ birthdayHeight: RedactableString) -> Binding<String> {
+        self.binding(
+            get: { _ in birthdayHeight.data },
+            send: { .birthdayInputChanged($0.redacted) }
+        )
     }
 }
 

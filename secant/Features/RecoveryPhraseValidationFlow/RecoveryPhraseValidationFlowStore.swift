@@ -75,7 +75,7 @@ struct RecoveryPhraseValidationFlowReducer: ReducerProtocol {
 
             if state.isComplete {
                 let value: RecoveryPhraseValidationFlowReducer.Action = state.isValid ? .succeed : .fail
-                let effect = Effect<RecoveryPhraseValidationFlowReducer.Action, Never>(value: value)
+                let effect = EffectTask<RecoveryPhraseValidationFlowReducer.Action>(value: value)
                     .delay(for: 1, scheduler: mainQueue)
                     .eraseToEffect()
 
@@ -121,7 +121,7 @@ extension RecoveryPhraseValidationFlowReducer.State {
     /// assembly the resulting phrase. This comes up with the "proposed solution" for the recovery phrase validation challenge.
     /// - returns:an array of String containing the recovery phrase words ordered by the original phrase order, or `nil`
     /// if a resulting phrase can't be formed because the validation state is not complete.
-    var resultingPhrase: [String]? {
+    var resultingPhrase: [RedactableString]? {
         guard missingIndices.count == validationWords.count else { return nil }
 
         guard validationWords.count == Self.phraseChunks else { return nil }
@@ -154,13 +154,13 @@ extension RecoveryPhraseValidationFlowReducer.State {
 
 extension RecoveryPhrase.Group {
     /// Returns an array of words where the word at the missing index will be an empty string
-    func words(with missingIndex: Int) -> [String] {
+    func words(with missingIndex: Int) -> [RedactableString] {
         assert(missingIndex >= 0)
         assert(missingIndex < self.words.count)
 
         var wordsApplyingMissing = self.words
 
-        wordsApplyingMissing[missingIndex] = ""
+        wordsApplyingMissing[missingIndex] = "".redacted
         
         return wordsApplyingMissing
     }
@@ -215,10 +215,10 @@ extension RecoveryPhraseValidationFlowReducer.State {
         phrase: .placeholder,
         missingIndices: [2, 0, 3, 5],
         missingWordChips: [
-            .unassigned(word: "thank"),
-            .unassigned(word: "morning"),
-            .unassigned(word: "boil"),
-            .unassigned(word: "garlic")
+            .unassigned(word: "thank".redacted),
+            .unassigned(word: "morning".redacted),
+            .unassigned(word: "boil".redacted),
+            .unassigned(word: "garlic".redacted)
         ],
         validationWords: [],
         destination: nil
@@ -228,13 +228,13 @@ extension RecoveryPhraseValidationFlowReducer.State {
         phrase: .placeholder,
         missingIndices: [2, 0, 3, 5],
         missingWordChips: [
-            .unassigned(word: "thank"),
+            .unassigned(word: "thank".redacted),
             .empty,
-            .unassigned(word: "boil"),
-            .unassigned(word: "garlic")
+            .unassigned(word: "boil".redacted),
+            .unassigned(word: "garlic".redacted)
         ],
         validationWords: [
-            .init(groupIndex: 2, word: "morning")
+            .init(groupIndex: 2, word: "morning".redacted)
         ],
         destination: nil
     )
@@ -245,12 +245,12 @@ extension RecoveryPhraseValidationFlowReducer.State {
         missingWordChips: [
             .empty,
             .empty,
-            .unassigned(word: "boil"),
-            .unassigned(word: "garlic")
+            .unassigned(word: "boil".redacted),
+            .unassigned(word: "garlic".redacted)
         ],
         validationWords: [
-            .init(groupIndex: 2, word: "morning"),
-            .init(groupIndex: 0, word: "thank")
+            .init(groupIndex: 2, word: "morning".redacted),
+            .init(groupIndex: 0, word: "thank".redacted)
         ],
         destination: nil
     )
@@ -261,13 +261,13 @@ extension RecoveryPhraseValidationFlowReducer.State {
         missingWordChips: [
             .empty,
             .empty,
-            .unassigned(word: "boil"),
+            .unassigned(word: "boil".redacted),
             .empty
         ],
         validationWords: [
-            .init(groupIndex: 2, word: "morning"),
-            .init(groupIndex: 0, word: "thank"),
-            .init(groupIndex: 3, word: "garlic")
+            .init(groupIndex: 2, word: "morning".redacted),
+            .init(groupIndex: 0, word: "thank".redacted),
+            .init(groupIndex: 3, word: "garlic".redacted)
         ],
         destination: nil
     )
@@ -282,10 +282,10 @@ extension RecoveryPhraseValidationFlowReducer.State {
             .empty
         ],
         validationWords: [
-            .init(groupIndex: 2, word: "morning"),
-            .init(groupIndex: 0, word: "thank"),
-            .init(groupIndex: 3, word: "garlic"),
-            .init(groupIndex: 1, word: "boil")
+            .init(groupIndex: 2, word: "morning".redacted),
+            .init(groupIndex: 0, word: "thank".redacted),
+            .init(groupIndex: 3, word: "garlic".redacted),
+            .init(groupIndex: 1, word: "boil".redacted)
         ],
         destination: nil
     )

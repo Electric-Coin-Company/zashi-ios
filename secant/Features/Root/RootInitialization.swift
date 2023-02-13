@@ -80,13 +80,13 @@ extension RootReducer {
                         return .none
                     }
 
-                    try mnemonic.isValid(storedWallet.seedPhrase)
-                    let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase)
+                    try mnemonic.isValid(storedWallet.seedPhrase.value())
+                    let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
 
-                    let birthday = state.storedWallet?.birthday ?? zcashSDKEnvironment.defaultBirthday
+                    let birthday = state.storedWallet?.birthday?.value() ?? zcashSDKEnvironment.defaultBirthday
 
                     let initializer = try RootReducer.prepareInitializer(
-                        for: storedWallet.seedPhrase,
+                        for: storedWallet.seedPhrase.value(),
                         birthday: birthday,
                         databaseFiles: databaseFiles,
                         derivationTool: derivationTool,
@@ -115,9 +115,9 @@ extension RootReducer {
 
                 if !storedWallet.hasUserPassedPhraseBackupTest {
                     do {
-                        let phraseWords = try mnemonic.asWords(storedWallet.seedPhrase)
+                        let phraseWords = try mnemonic.asWords(storedWallet.seedPhrase.value())
 
-                        let recoveryPhrase = RecoveryPhrase(words: phraseWords)
+                        let recoveryPhrase = RecoveryPhrase(words: phraseWords.map { $0.redacted })
                         state.phraseDisplayState.phrase = recoveryPhrase
                         state.phraseValidationState = randomRecoveryPhrase.random(recoveryPhrase)
                         landingDestination = .phraseDisplay
@@ -145,7 +145,7 @@ extension RootReducer {
 
                     // start the backup phrase validation test
                     let randomRecoveryPhraseWords = try mnemonic.asWords(newRandomPhrase)
-                    let recoveryPhrase = RecoveryPhrase(words: randomRecoveryPhraseWords)
+                    let recoveryPhrase = RecoveryPhrase(words: randomRecoveryPhraseWords.map { $0.redacted })
                     state.phraseDisplayState.phrase = recoveryPhrase
                     state.phraseValidationState = randomRecoveryPhrase.random(recoveryPhrase)
 

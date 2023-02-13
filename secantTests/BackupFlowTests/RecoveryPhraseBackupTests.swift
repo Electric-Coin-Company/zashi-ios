@@ -23,13 +23,13 @@ class RecoveryPhraseBackupTests: XCTestCase {
             "daughter", "salon", "quit",
             "pizza", "just", "garlic"
         ]
-        let phrase = RecoveryPhrase(words: words)
+        let phrase = RecoveryPhrase(words: words.map { $0.redacted })
 
         let chunks = phrase.toGroups()
 
         XCTAssertEqual(chunks.count, 4)
         XCTAssertEqual(chunks[0].startIndex, 1)
-        XCTAssertEqual(chunks[0].words, ["bring", "salute", "thank", "require", "spirit", "toe"])
+        XCTAssertEqual(chunks[0].words, ["bring", "salute", "thank", "require", "spirit", "toe"].map { $0.redacted })
         XCTAssertEqual(chunks[1].startIndex, 7)
         XCTAssertEqual(chunks[2].startIndex, 13)
         XCTAssertEqual(chunks[3].startIndex, 19)

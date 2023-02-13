@@ -25,7 +25,7 @@ struct MultipleLineTextField<TitleAccessoryContent>: View
                     titleAccessoryView
                 }
                 
-                TextEditor(text: viewStore.binding(\.$text))
+                TextEditor(text: viewStore.bindingForRedactableMemo(viewStore.text))
                     .multilineTextEditorModifier(
                         Asset.Colors.Text.activeButtonText.color,
                         Asset.Colors.TextField.multilineOutline.color

@@ -17,7 +17,7 @@ extension PhraseChip {
         switch self.kind {
         case let .unassigned(word, _):
             self.onDrag {
-                NSItemProvider(object: word as NSString)
+                NSItemProvider(object: word.data as NSString)
             }
         default:
             self

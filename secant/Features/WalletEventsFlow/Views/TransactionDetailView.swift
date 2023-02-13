@@ -96,7 +96,7 @@ extension TransactionDetailView {
 
     func address(mark: RowMark = .neutral, viewStore: WalletEventsFlowViewStore) -> some View {
         Button {
-            viewStore.send(.copyToPastboard(transaction.address))
+            viewStore.send(.copyToPastboard(transaction.address.redacted))
         } label: {
             Text("\(addressPrefixText) \(transaction.address)")
                 .lineLimit(1)
@@ -111,7 +111,7 @@ extension TransactionDetailView {
         mark: RowMark = .neutral
     ) -> some View {
         Button {
-            viewStore.send(.copyToPastboard(memo))
+            viewStore.send(.copyToPastboard(memo.redacted))
         } label: {
             VStack {
                 HStack {
@@ -124,7 +124,7 @@ extension TransactionDetailView {
                     Text("reply-to address included")
                     Spacer()
                     Button {
-                        viewStore.send(.replyTo(transaction.address))
+                        viewStore.send(.replyTo(transaction.address.redacted))
                     } label: {
                         Text("reply now")
                             .padding(5)
@@ -161,7 +161,7 @@ extension TransactionDetailView {
         WithViewStore(store) { viewStore in
             VStack {
                 Button {
-                    viewStore.send(.copyToPastboard(transaction.id))
+                    viewStore.send(.copyToPastboard(transaction.id.redacted))
                 } label: {
                     Text("txn: \(transaction.id)")
                         .foregroundColor(Asset.Colors.Text.transactionDetailText.color)

@@ -30,7 +30,7 @@ class AddressDetailsTests: XCTestCase {
         let expectedAddress = uAddress.saplingReceiver()?.stringEncoded ?? "could not extract sapling receiver from UA"
         
         XCTAssertEqual(
-            testPasteboard.getString(),
+            testPasteboard.getString()?.data,
             expectedAddress,
             "AddressDetails: `testCopySaplingAddressToPasteboard` is expected to match the input `\(expectedAddress)`"
         )
@@ -52,7 +52,7 @@ class AddressDetailsTests: XCTestCase {
         let expectedAddress = uAddress.transparentReceiver()?.stringEncoded ?? "could not extract transparent receiver from UA"
         
         XCTAssertEqual(
-            testPasteboard.getString(),
+            testPasteboard.getString()?.data,
             expectedAddress,
             "AddressDetails: `testCopyTransparentAddressToPasteboard` is expected to match the input `\(expectedAddress)`"
         )
@@ -72,7 +72,7 @@ class AddressDetailsTests: XCTestCase {
         store.send(.copyUnifiedAddressToPastboard)
         
         XCTAssertEqual(
-            testPasteboard.getString(),
+            testPasteboard.getString()?.data,
             uAddress.stringEncoded,
             "AddressDetails: `testCopyUnifiedAddressToPasteboard` is expected to match the input `\(uAddress.stringEncoded)`"
         )

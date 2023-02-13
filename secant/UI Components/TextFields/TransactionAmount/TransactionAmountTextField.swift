@@ -62,7 +62,7 @@ struct TransactionAmountTextField_Previews: PreviewProvider {
                     currencySelectionState: .init(currencyType: .usd),
                     textFieldState: .init(
                         validationType: .floatingPoint,
-                        text: ""
+                        text: "".redacted
                     )
                 ),
                 reducer: TransactionAmountTextFieldReducer()

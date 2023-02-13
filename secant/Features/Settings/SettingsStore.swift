@@ -68,8 +68,8 @@ struct SettingsReducer: ReducerProtocol {
             case .backupWallet:
                 do {
                     let storedWallet = try walletStorage.exportWallet()
-                    let phraseWords = try mnemonic.asWords(storedWallet.seedPhrase)
-                    let recoveryPhrase = RecoveryPhrase(words: phraseWords)
+                    let phraseWords = try mnemonic.asWords(storedWallet.seedPhrase.value())
+                    let recoveryPhrase = RecoveryPhrase(words: phraseWords.map { $0.redacted })
                     state.phraseDisplayState.phrase = recoveryPhrase
                     return EffectTask(value: .updateDestination(.backupPhrase))
                 } catch {

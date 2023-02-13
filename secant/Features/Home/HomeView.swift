@@ -130,7 +130,7 @@ extension HomeView {
                     Button {
                         viewStore.send(.updateDestination(.balanceBreakdown))
                     } label: {
-                        Text("$\(viewStore.shieldedBalance.total.decimalString())")
+                        Text("$\(viewStore.shieldedBalance.data.total.decimalString())")
                             .font(.custom(FontFamily.Zboto.regular.name, size: 40))
                             .foregroundColor(Asset.Colors.Text.balanceText.color)
                             .padding(.top, 80)

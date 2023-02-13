@@ -106,13 +106,13 @@ class WalletEventsTests: XCTestCase {
             $0.pasteboard = testPasteboard
         }
 
-        let testText = "test text"
+        let testText = "test text".redacted
         store.send(.copyToPastboard(testText))
         
         XCTAssertEqual(
-            testPasteboard.getString(),
-            testText,
-            "WalletEvetns: `testCopyToPasteboard` is expected to match the input `\(testText)`"
+            testPasteboard.getString()?.data,
+            testText.data,
+            "WalletEvetns: `testCopyToPasteboard` is expected to match the input `\(testText.data)`"
         )
     }
 }

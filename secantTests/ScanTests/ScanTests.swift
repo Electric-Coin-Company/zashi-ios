@@ -18,7 +18,7 @@ class ScanTests: XCTestCase {
                     isTorchAvailable: true,
                     isTorchOn: true,
                     isValidValue: true,
-                    scanStatus: .value("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po")
+                    scanStatus: .value("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted)
                 ),
             reducer: ScanReducer()
         ) {
@@ -69,8 +69,9 @@ class ScanTests: XCTestCase {
             $0.uriParser.isValidURI = { _ in false }
         }
         
-        store.send(.scan("test")) { state in
-            state.scanStatus = .value("test")
+        let value = "test".redacted
+        store.send(.scan(value)) { state in
+            state.scanStatus = .value(value)
             state.isValidValue = false
         }
     }
@@ -86,14 +87,15 @@ class ScanTests: XCTestCase {
             dependencies.uriParser.isValidURI = { _ in true }
         }
 
-        store.send(.scan("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po")) { state in
-            state.scanStatus = .value("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po")
+        let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
+        store.send(.scan(address)) { state in
+            state.scanStatus = .value(address)
             state.isValidValue = true
         }
         
         testScheduler.advance(by: 1.01)
         
-        store.receive(.found("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"))
+        store.receive(.found(address))
     }
 
     func testScanFailed() throws {

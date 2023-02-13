@@ -17,7 +17,7 @@ struct ScanReducer: ReducerProtocol {
     struct State: Equatable {
         enum ScanStatus: Equatable {
             case failed
-            case value(String)
+            case value(RedactableString)
             case unknown
         }
 
@@ -31,7 +31,7 @@ struct ScanReducer: ReducerProtocol {
                 return nil
             }
             
-            return scannedValue
+            return scannedValue.data
         }
     }
 
@@ -42,9 +42,9 @@ struct ScanReducer: ReducerProtocol {
     enum Action: Equatable {
         case onAppear
         case onDisappear
-        case found(String)
+        case found(RedactableString)
         case scanFailed
-        case scan(String)
+        case scan(RedactableString)
         case torchPressed
     }
     
@@ -76,13 +76,13 @@ struct ScanReducer: ReducerProtocol {
 
         case .scan(let code):
             // the logic for the same scanned code is skipped until some new code
-            if let prevCode = state.scannedValue, prevCode == code {
+            if let prevCode = state.scannedValue, prevCode == code.data {
                 return .none
             }
             state.scanStatus = .value(code)
             state.isValidValue = false
             do {
-                if try uriParser.isValidURI(code) {
+                if try uriParser.isValidURI(code.data) {
                     state.isValidValue = true
                     // once valid URI is scanned we want to start the timer to deliver the code
                     // any new code cancels the schedule and fires new one

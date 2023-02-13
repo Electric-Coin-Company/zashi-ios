@@ -18,14 +18,14 @@ class TransactionConfirmationSnapshotTests: XCTestCase {
         state.transactionAddressInputState = TransactionAddressTextFieldReducer.State(
             textFieldState: TCATextFieldReducer.State(
                 validationType: nil,
-                text: "ztestmockeddestinationaddress"
+                text: "ztestmockeddestinationaddress".redacted
             )
         )
         state.transactionAmountInputState = TransactionAmountTextFieldReducer.State(
             currencySelectionState: CurrencySelectionReducer.State(),
             textFieldState: TCATextFieldReducer.State(
                 validationType: nil,
-                text: "2.91"
+                text: "2.91".redacted
             )
         )
         
@@ -48,14 +48,14 @@ class TransactionConfirmationSnapshotTests: XCTestCase {
         state.transactionAddressInputState = TransactionAddressTextFieldReducer.State(
             textFieldState: TCATextFieldReducer.State(
                 validationType: nil,
-                text: "ztestmockeddestinationaddress"
+                text: "ztestmockeddestinationaddress".redacted
             )
         )
         state.transactionAmountInputState = TransactionAmountTextFieldReducer.State(
             currencySelectionState: CurrencySelectionReducer.State(),
             textFieldState: TCATextFieldReducer.State(
                 validationType: nil,
-                text: "2.91"
+                text: "2.91".redacted
             )
         )
 

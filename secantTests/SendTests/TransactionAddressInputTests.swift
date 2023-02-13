@@ -17,14 +17,14 @@ class TransactionAddressTextFieldTests: XCTestCase {
                     textFieldState:
                         TCATextFieldReducer.State(
                             validationType: nil,
-                            text: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
+                            text: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
                         )
                 ),
             reducer: TransactionAddressTextFieldReducer()
         )
 
         store.send(.clearAddress) { state in
-            state.textFieldState.text = ""
+            state.textFieldState.text = "".redacted
         }
     }
 }

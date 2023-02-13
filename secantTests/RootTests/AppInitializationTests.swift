@@ -20,19 +20,19 @@ class AppInitializationTests: XCTestCase {
         // setup the store and environment to be fully mocked
         let testScheduler = DispatchQueue.test
 
-        let recoveryPhrase = RecoveryPhrase(words: try MnemonicClient.mock.randomMnemonicWords())
+        let recoveryPhrase = RecoveryPhrase(words: try MnemonicClient.mock.randomMnemonicWords().map { $0.redacted })
 
         let phraseValidationState = RecoveryPhraseValidationFlowReducer.State(
             phrase: recoveryPhrase,
             missingIndices: [2, 0, 3, 5],
             missingWordChips: [
-                .unassigned(word: "voice"),
+                .unassigned(word: "voice".redacted),
                 .empty,
-                .unassigned(word: "survey"),
-                .unassigned(word: "spread")
+                .unassigned(word: "survey".redacted),
+                .unassigned(word: "spread".redacted)
             ],
             validationWords: [
-                .init(groupIndex: 2, word: "dizzy")
+                .init(groupIndex: 2, word: "dizzy".redacted)
             ],
             destination: nil
         )
@@ -42,16 +42,16 @@ class AppInitializationTests: XCTestCase {
                 let missingIndices = [2, 0, 3, 5]
                 let missingWordChipKind = [
                     PhraseChip.Kind.unassigned(
-                        word: "voice",
+                        word: "voice".redacted,
                         color: Asset.Colors.Buttons.activeButton.color
                     ),
                     PhraseChip.Kind.empty,
                     PhraseChip.Kind.unassigned(
-                        word: "survey",
+                        word: "survey".redacted,
                         color: Asset.Colors.Buttons.activeButton.color
                     ),
                     PhraseChip.Kind.unassigned(
-                        word: "spread",
+                        word: "spread".redacted,
                         color: Asset.Colors.Buttons.activeButton.color
                     )
                 ]
@@ -63,7 +63,7 @@ class AppInitializationTests: XCTestCase {
                     validationWords: [
                         ValidationWord(
                             groupIndex: 2,
-                            word: "dizzy"
+                            word: "dizzy".redacted
                         )
                     ]
                 )

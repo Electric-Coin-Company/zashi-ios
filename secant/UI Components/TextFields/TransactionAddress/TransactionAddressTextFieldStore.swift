@@ -28,7 +28,7 @@ struct TransactionAddressTextFieldReducer: ReducerProtocol {
         Reduce { state, action in
             switch action {
             case .clearAddress:
-                state.textFieldState.text = ""
+                state.textFieldState.text = "".redacted
                 return .none
             
             case .scanQR:
@@ -36,7 +36,7 @@ struct TransactionAddressTextFieldReducer: ReducerProtocol {
 
             case .textField(.set(let address)):
                 do {
-                    state.isValidAddress = try derivationTool.isValidZcashAddress(address)
+                    state.isValidAddress = try derivationTool.isValidZcashAddress(address.data)
                 } catch {
                     state.isValidAddress = false
                 }

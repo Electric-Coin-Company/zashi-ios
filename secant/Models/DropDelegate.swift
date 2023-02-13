@@ -26,7 +26,7 @@ struct WordChipDropDelegate: DropDelegate {
                         //  Extract string from data
 
                         let word = String(decoding: data, as: UTF8.self)
-                        dropAction?(.unassigned(word: word as String))
+                        dropAction?(.unassigned(word: (word as String).redacted))
                     }
                 }
             }

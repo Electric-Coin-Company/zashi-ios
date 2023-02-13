@@ -7,21 +7,23 @@
 
 import Foundation
 import ComposableArchitecture
+import SwiftUI
 
 typealias MultiLineTextFieldStore = Store<MultiLineTextFieldReducer.State, MultiLineTextFieldReducer.Action>
+typealias MultiLineTextFieldViewStore = ViewStore<MultiLineTextFieldReducer.State, MultiLineTextFieldReducer.Action>
 
 struct MultiLineTextFieldReducer: ReducerProtocol {
     struct State: Equatable {
         /// default 0, no char limit
         var charLimit = 0
-        @BindableState var text = ""
+        var text = "".redacted
         
         var isCharLimited: Bool {
             charLimit > 0
         }
         
         var textLength: Int {
-            text.count
+            text.data.count
         }
         
         var isValid: Bool {
@@ -39,22 +41,29 @@ struct MultiLineTextFieldReducer: ReducerProtocol {
         }
     }
 
-    enum Action: Equatable, BindableAction {
-        case binding(BindingAction<MultiLineTextFieldReducer.State>)
+    enum Action: Equatable {
+        case memoInputChanged(RedactableString)
     }
     
     var body: some ReducerProtocol<State, Action> {
-        BindingReducer()
-        
-        Reduce { _, action in
+        Reduce { state, action in
             switch action {
-            case .binding(\.$text):
-                return .none
-                
-            case .binding:
+            case .memoInputChanged(let text):
+                state.text = text
                 return .none
             }
         }
+    }
+}
+
+// MARK: - ViewStore
+
+extension MultiLineTextFieldViewStore {
+    func bindingForRedactableMemo(_ memo: RedactableString) -> Binding<String> {
+        self.binding(
+            get: { _ in memo.data },
+            send: { .memoInputChanged($0.redacted) }
+        )
     }
 }
 
@@ -72,7 +81,7 @@ extension MultiLineTextFieldStore {
 extension MultiLineTextFieldReducer.State {
     static let placeholder: MultiLineTextFieldReducer.State = {
         var state = MultiLineTextFieldReducer.State()
-        state.text = "test"
+        state.text = "test".redacted
         return state
     }()
 }

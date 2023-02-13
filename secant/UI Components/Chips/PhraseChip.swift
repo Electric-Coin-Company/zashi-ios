@@ -10,8 +10,8 @@ import SwiftUI
 struct PhraseChip: View {
     enum Kind: Hashable {
         case empty
-        case unassigned(word: String, color: Color = Asset.Colors.Buttons.activeButton.color)
-        case ordered(position: Int, word: String)
+        case unassigned(word: RedactableString, color: Color = Asset.Colors.Buttons.activeButton.color)
+        case ordered(position: Int, word: RedactableString)
     }
 
     var kind: Kind
@@ -31,13 +31,13 @@ struct PhraseChip: View {
 struct PhraseChip_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            PhraseChip(kind: .unassigned(word: "negative"))
+            PhraseChip(kind: .unassigned(word: "negative".redacted))
                 .frame(width: 120, height: 40)
 
             PhraseChip(kind: .empty)
                 .frame(width: 120, height: 40)
 
-            PhraseChip(kind: .ordered(position: 23, word: "mutual"))
+            PhraseChip(kind: .ordered(position: 23, word: "mutual".redacted))
                 .frame(width: 120, height: 40)
         }
         .applyScreenBackground()

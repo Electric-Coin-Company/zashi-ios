@@ -22,8 +22,12 @@ struct BalanceBreakdownView: View {
                 
                 .padding(.horizontal, 50)
                 VStack(alignment: .leading, spacing: 10) {
-                    balanceView(title: "SHIELDED ZEC (SPENDABLE)", viewStore.shieldedBalance.total, titleColor: Asset.Colors.Text.balanceText.color)
-                    balanceView(title: "TRANSPARENT BALANCE", viewStore.transparentBalance.total)
+                    balanceView(
+                        title: "SHIELDED ZEC (SPENDABLE)",
+                        viewStore.shieldedBalance.data.total,
+                        titleColor: Asset.Colors.Text.balanceText.color
+                    )
+                    balanceView(title: "TRANSPARENT BALANCE", viewStore.transparentBalance.data.total)
                     balanceView(title: "TOTAL BALANCE", viewStore.totalBalance)
                 }
                 .padding(30)

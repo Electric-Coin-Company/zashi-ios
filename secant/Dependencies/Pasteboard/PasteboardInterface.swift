@@ -15,6 +15,6 @@ extension DependencyValues {
 }
 
 struct PasteboardClient {
-    let setString: (String) -> Void
-    let getString: () -> String?
+    let setString: (RedactableString) -> Void
+    let getString: () -> RedactableString?
 }

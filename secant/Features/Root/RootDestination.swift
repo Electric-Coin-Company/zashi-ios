@@ -103,7 +103,7 @@ extension RootReducer {
                 state.homeState.destination = .send
                 state.homeState.sendState.amount = amount
                 state.homeState.sendState.address = address
-                state.homeState.sendState.memoState.text = memo
+                state.homeState.sendState.memoState.text = memo.redacted
                 return .none
 
             case .home(.walletEvents(.replyTo(let address))):
