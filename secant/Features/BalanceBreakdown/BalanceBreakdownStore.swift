@@ -45,13 +45,13 @@ struct BalanceBreakdownReducer: ReducerProtocol {
                 .cancellable(id: CancelId.self, cancelInFlight: true)
 
         case .onDisappear:
-            return Effect.cancel(id: CancelId.self)
+            return .cancel(id: CancelId.self)
 
         case .synchronizerStateChanged(.synced):
-            return Effect(value: .updateSynchronizerStatus)
+            return EffectTask(value: .updateSynchronizerStatus)
             
         case .synchronizerStateChanged:
-            return Effect(value: .updateSynchronizerStatus)
+            return EffectTask(value: .updateSynchronizerStatus)
             
         case .updateSynchronizerStatus:
             if let shieldedBalance = sdkSynchronizer.latestScannedSynchronizerState?.shieldedBalance {
@@ -60,7 +60,7 @@ struct BalanceBreakdownReducer: ReducerProtocol {
             if let transparentBalance = sdkSynchronizer.latestScannedSynchronizerState?.transparentBalance {
                 state.transparentBalance = transparentBalance
             }
-            return Effect(value: .updateLatestBlock)
+            return EffectTask(value: .updateLatestBlock)
             
         case .updateLatestBlock:
             guard let latestBlockNumber = sdkSynchronizer.latestScannedSynchronizerState?.latestScannedHeight,

@@ -17,7 +17,7 @@ struct WalletEventsFlowReducer: ReducerProtocol {
 
         var destination: Destination?
 
-        @BindableState var alert: AlertState<WalletEventsFlowReducer.Action>?
+        @BindingState var alert: AlertState<WalletEventsFlowReducer.Action>?
         var latestMinedHeight: BlockHeight?
         var isScrollable = false
         var requiredTransactionConfirmations = 0
@@ -54,7 +54,7 @@ struct WalletEventsFlowReducer: ReducerProtocol {
                 .cancellable(id: CancelId.self, cancelInFlight: true)
 
         case .onDisappear:
-            return Effect.cancel(id: CancelId.self)
+            return .cancel(id: CancelId.self)
 
         case .synchronizerStateChanged(.synced):
             if let latestMinedHeight = sdkSynchronizer.synchronizer?.latestScannedHeight {

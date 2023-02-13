@@ -59,11 +59,11 @@ protocol SDKSynchronizerClient {
 
     func getShieldedBalance() -> WalletBalance?
     func getTransparentBalance() -> WalletBalance?
-    func getAllSentTransactions() -> Effect<[WalletEvent], Never>
-    func getAllReceivedTransactions() -> Effect<[WalletEvent], Never>
-    func getAllClearedTransactions() -> Effect<[WalletEvent], Never>
-    func getAllPendingTransactions() -> Effect<[WalletEvent], Never>
-    func getAllTransactions() -> Effect<[WalletEvent], Never>
+    func getAllSentTransactions() -> EffectTask<[WalletEvent]>
+    func getAllReceivedTransactions() -> EffectTask<[WalletEvent]>
+    func getAllClearedTransactions() -> EffectTask<[WalletEvent]>
+    func getAllPendingTransactions() -> EffectTask<[WalletEvent]>
+    func getAllTransactions() -> EffectTask<[WalletEvent]>
 
     func getUnifiedAddress(account: Int) -> UnifiedAddress?
     func getTransparentAddress(account: Int) -> TransparentAddress?
@@ -74,7 +74,7 @@ protocol SDKSynchronizerClient {
         zatoshi: Zatoshi,
         to recipientAddress: Recipient,
         memo: Memo?
-    ) -> Effect<Result<TransactionState, NSError>, Never>
+    ) -> EffectTask<Result<TransactionState, NSError>>
 }
 
 extension SDKSynchronizerClient {

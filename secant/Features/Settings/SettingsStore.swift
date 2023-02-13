@@ -71,7 +71,7 @@ struct SettingsReducer: ReducerProtocol {
                     let phraseWords = try mnemonic.asWords(storedWallet.seedPhrase)
                     let recoveryPhrase = RecoveryPhrase(words: phraseWords)
                     state.phraseDisplayState.phrase = recoveryPhrase
-                    return Effect(value: .updateDestination(.backupPhrase))
+                    return EffectTask(value: .updateDestination(.backupPhrase))
                 } catch {
                     // TODO: [#221] - merge with issue 221 (https://github.com/zcash/secant-ios-wallet/issues/221) and its Error States
                     return .none

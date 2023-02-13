@@ -28,7 +28,7 @@ extension RootReducer {
                 // TODO: [#524] finish all the wallet events according to definition, https://github.com/zcash/secant-ios-wallet/issues/524
                 LoggerProxy.event(".appDelegate(.didFinishLaunching)")
                 /// We need to fetch data from keychain, in order to be 100% sure the kecyhain can be read we delay the check a bit
-                return Effect(value: .initialization(.checkWalletInitialization))
+                return EffectTask(value: .initialization(.checkWalletInitialization))
                     .delay(for: 0.02, scheduler: mainQueue)
                     .eraseToEffect()
 
@@ -39,7 +39,7 @@ extension RootReducer {
                     walletStorage: walletStorage,
                     zcashSDKEnvironment: zcashSDKEnvironment
                 )
-                return Effect(value: .initialization(.respondToWalletInitializationState(walletState)))
+                return EffectTask(value: .initialization(.respondToWalletInitializationState(walletState)))
 
                 /// Respond to all possible states of the wallet and initiate appropriate side effects including errors handling
             case .initialization(.respondToWalletInitializationState(let walletState)):
@@ -55,12 +55,12 @@ extension RootReducer {
                         state.appInitializationState = .filesMissing
                     }
                     return .concatenate(
-                        Effect(value: .initialization(.initializeSDK)),
-                        Effect(value: .initialization(.checkBackupPhraseValidation))
+                        EffectTask(value: .initialization(.initializeSDK)),
+                        EffectTask(value: .initialization(.checkBackupPhraseValidation))
                     )
                 case .uninitialized:
                     state.appInitializationState = .uninitialized
-                    return Effect(value: .destination(.updateDestination(.onboarding)))
+                    return EffectTask(value: .destination(.updateDestination(.onboarding)))
                         .delay(for: 3, scheduler: mainQueue)
                         .eraseToEffect()
                         .cancellable(id: CancelId.self, cancelInFlight: true)
@@ -129,7 +129,7 @@ extension RootReducer {
 
                 state.appInitializationState = .initialized
 
-                return Effect(value: .destination(.updateDestination(landingDestination)))
+                return EffectTask(value: .destination(.updateDestination(landingDestination)))
                     .delay(for: 3, scheduler: mainQueue)
                     .eraseToEffect()
                     .cancellable(id: CancelId.self, cancelInFlight: true)
@@ -150,8 +150,8 @@ extension RootReducer {
                     state.phraseValidationState = randomRecoveryPhrase.random(recoveryPhrase)
 
                     return .concatenate(
-                        Effect(value: .initialization(.initializeSDK)),
-                        Effect(value: .phraseValidation(.displayBackedUpPhrase))
+                        EffectTask(value: .initialization(.initializeSDK)),
+                        EffectTask(value: .phraseValidation(.displayBackedUpPhrase))
                     )
                 } catch {
                     // TODO: [#201] - merge with issue 221 (https://github.com/zcash/secant-ios-wallet/issues/221) and its Error States
@@ -178,18 +178,18 @@ extension RootReducer {
 
             case .welcome(.debugMenuStartup), .home(.debugMenuStartup):
                 return .concatenate(
-                    Effect.cancel(id: CancelId.self),
-                    Effect(value: .destination(.updateDestination(.startup)))
+                    EffectTask.cancel(id: CancelId.self),
+                    EffectTask(value: .destination(.updateDestination(.startup)))
                 )
 
             case .onboarding(.importWallet(.successfullyRecovered)):
-                return Effect(value: .destination(.updateDestination(.home)))
+                return EffectTask(value: .destination(.updateDestination(.home)))
 
             case .onboarding(.importWallet(.initializeSDK)):
-                return Effect(value: .initialization(.initializeSDK))
+                return EffectTask(value: .initialization(.initializeSDK))
 
             case .onboarding(.createNewWallet):
-                return Effect(value: .initialization(.createNewWallet))
+                return EffectTask(value: .initialization(.createNewWallet))
 
             case .home, .destination, .onboarding, .phraseDisplay, .phraseValidation, .sandbox, .welcome:
                 return .none

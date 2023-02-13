@@ -42,15 +42,15 @@ class NoopSDKSynchronizer: SDKSynchronizerClient {
     
     func getTransparentBalance() -> WalletBalance? { nil }
 
-    func getAllSentTransactions() -> Effect<[WalletEvent], Never> { Effect(value: []) }
+    func getAllSentTransactions() -> EffectTask<[WalletEvent]> { EffectTask(value: []) }
 
-    func getAllReceivedTransactions() -> Effect<[WalletEvent], Never> { Effect(value: []) }
+    func getAllReceivedTransactions() -> EffectTask<[WalletEvent]> { EffectTask(value: []) }
 
-    func getAllClearedTransactions() -> Effect<[WalletEvent], Never> { Effect(value: []) }
+    func getAllClearedTransactions() -> EffectTask<[WalletEvent]> { EffectTask(value: []) }
 
-    func getAllPendingTransactions() -> Effect<[WalletEvent], Never> { Effect(value: []) }
+    func getAllPendingTransactions() -> EffectTask<[WalletEvent]> { EffectTask(value: []) }
 
-    func getAllTransactions() -> Effect<[WalletEvent], Never> { Effect(value: []) }
+    func getAllTransactions() -> EffectTask<[WalletEvent]> { EffectTask(value: []) }
 
     func getUnifiedAddress(account: Int) -> UnifiedAddress? { nil }
     
@@ -63,8 +63,8 @@ class NoopSDKSynchronizer: SDKSynchronizerClient {
         zatoshi: Zatoshi,
         to recipientAddress: Recipient,
         memo: Memo?
-    ) -> Effect<Result<TransactionState, NSError>, Never> {
-        Effect(value: Result.failure(SynchronizerError.criticalError as NSError))
+    ) -> EffectTask<Result<TransactionState, NSError>> {
+        EffectTask(value: Result.failure(SynchronizerError.criticalError as NSError))
     }
     
     func updateStateChanged(_ newState: SDKSynchronizerState) {
@@ -100,7 +100,7 @@ class TestSDKSynchronizerClient: SDKSynchronizerClient {
     
     func getTransparentBalance() -> WalletBalance? { nil }
 
-    func getAllSentTransactions() -> Effect<[WalletEvent], Never> {
+    func getAllSentTransactions() -> EffectTask<[WalletEvent]> {
         let mocked: [TransactionStateMockHelper] = [
             TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "aa11"),
             TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),
@@ -109,7 +109,7 @@ class TestSDKSynchronizerClient: SDKSynchronizerClient {
             TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(5), uuid: "ee55")
         ]
         
-        return Effect(
+        return EffectTask(
             value:
                 mocked.map {
                     let transaction = TransactionState.placeholder(
@@ -125,7 +125,7 @@ class TestSDKSynchronizerClient: SDKSynchronizerClient {
         )
     }
     
-    func getAllReceivedTransactions() -> Effect<[WalletEvent], Never> {
+    func getAllReceivedTransactions() -> EffectTask<[WalletEvent]> {
         let mocked: [TransactionStateMockHelper] = [
             TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "aa11"),
             TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),
@@ -134,7 +134,7 @@ class TestSDKSynchronizerClient: SDKSynchronizerClient {
             TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(5), uuid: "ee55")
         ]
         
-        return Effect(
+        return EffectTask(
             value:
                 mocked.map {
                     let transaction = TransactionState.placeholder(
@@ -150,7 +150,7 @@ class TestSDKSynchronizerClient: SDKSynchronizerClient {
         )
     }
     
-    func getAllClearedTransactions() -> Effect<[WalletEvent], Never> {
+    func getAllClearedTransactions() -> EffectTask<[WalletEvent]> {
         let mocked: [TransactionStateMockHelper] = [
             TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "aa11"),
             TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),
@@ -159,7 +159,7 @@ class TestSDKSynchronizerClient: SDKSynchronizerClient {
             TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(5), uuid: "ee55")
         ]
         
-        return Effect(
+        return EffectTask(
             value:
                 mocked.map {
                     let transaction = TransactionState.placeholder(
@@ -175,7 +175,7 @@ class TestSDKSynchronizerClient: SDKSynchronizerClient {
         )
     }
 
-    func getAllPendingTransactions() -> Effect<[WalletEvent], Never> {
+    func getAllPendingTransactions() -> EffectTask<[WalletEvent]> {
         let mocked: [TransactionStateMockHelper] = [
             TransactionStateMockHelper(
                 date: 1651039606,
@@ -188,7 +188,7 @@ class TestSDKSynchronizerClient: SDKSynchronizerClient {
             TransactionStateMockHelper(date: 1651039808, amount: Zatoshi(9), uuid: "ii99")
         ]
         
-        return Effect(
+        return EffectTask(
             value:
                 mocked.map {
                     let transaction = TransactionState.placeholder(
@@ -204,7 +204,7 @@ class TestSDKSynchronizerClient: SDKSynchronizerClient {
         )
     }
 
-    func getAllTransactions() -> Effect<[WalletEvent], Never> {
+    func getAllTransactions() -> EffectTask<[WalletEvent]> {
         return .merge(
             getAllClearedTransactions(),
             getAllPendingTransactions()
@@ -228,8 +228,8 @@ class TestSDKSynchronizerClient: SDKSynchronizerClient {
         zatoshi: Zatoshi,
         to recipientAddress: Recipient,
         memo: Memo?
-    ) -> Effect<Result<TransactionState, NSError>, Never> {
-        return Effect(value: Result.failure(SynchronizerError.criticalError as NSError))
+    ) -> EffectTask<Result<TransactionState, NSError>> {
+        return EffectTask(value: Result.failure(SynchronizerError.criticalError as NSError))
     }
     
     func updateStateChanged(_ newState: SDKSynchronizerState) {

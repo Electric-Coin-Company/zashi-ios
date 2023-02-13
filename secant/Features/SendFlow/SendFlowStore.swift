@@ -177,27 +177,27 @@ struct SendFlowReducer: ReducerProtocol {
                     .eraseToEffect()
 
                     return .concatenate(
-                        Effect(value: .updateDestination(.inProgress)),
+                        EffectTask(value: .updateDestination(.inProgress)),
                         sendTransActionEffect
                     )
                 } catch {
-                    return Effect(value: .updateDestination(.failure))
+                    return EffectTask(value: .updateDestination(.failure))
                 }
                 
             case .sendTransactionResult(let result):
                 state.isSendingTransaction = false
                 do {
                     _ = try result.get()
-                    return Effect(value: .updateDestination(.success))
+                    return EffectTask(value: .updateDestination(.success))
                 } catch {
-                    return Effect(value: .updateDestination(.failure))
+                    return EffectTask(value: .updateDestination(.failure))
                 }
                 
             case .transactionAmountInput:
                 return .none
 
             case .transactionAddressInput(.scanQR):
-                return Effect(value: .updateDestination(.scanQR))
+                return EffectTask(value: .updateDestination(.scanQR))
 
             case .transactionAddressInput:
                 return .none
@@ -210,7 +210,7 @@ struct SendFlowReducer: ReducerProtocol {
                     .cancellable(id: SyncStatusUpdatesID.self, cancelInFlight: true)
                 
             case .onDisappear:
-                return Effect.cancel(id: SyncStatusUpdatesID.self)
+                return .cancel(id: SyncStatusUpdatesID.self)
                 
             case .synchronizerStateChanged(.synced):
                 if let shieldedBalance = sdkSynchronizer.latestScannedSynchronizerState?.shieldedBalance {
@@ -231,7 +231,7 @@ struct SendFlowReducer: ReducerProtocol {
                 // so we can be sure it's valid and thus `true` value here.
                 state.transactionAddressInputState.isValidAddress = true
                 audioServices.systemSoundVibrate()
-                return Effect(value: .updateDestination(nil))
+                return EffectTask(value: .updateDestination(nil))
 
             case .scan:
                 return .none

@@ -110,13 +110,13 @@ struct HomeReducer: ReducerProtocol {
                         .map(HomeReducer.Action.synchronizerStateChanged)
                         .eraseToEffect()
                         .cancellable(id: CancelId.self, cancelInFlight: true)
-                    return .concatenate(Effect(value: .updateDestination(nil)), syncEffect)
+                    return .concatenate(EffectTask(value: .updateDestination(nil)), syncEffect)
                 } else {
-                    return Effect(value: .updateDestination(.notEnoughFreeDiskSpace))
+                    return EffectTask(value: .updateDestination(.notEnoughFreeDiskSpace))
                 }
 
             case .onDisappear:
-                return Effect.cancel(id: CancelId.self)
+                return .cancel(id: CancelId.self)
 
             case .synchronizerStateChanged(.synced):
                 return .merge(
@@ -124,11 +124,11 @@ struct HomeReducer: ReducerProtocol {
                         .receive(on: mainQueue)
                         .map(HomeReducer.Action.updateWalletEvents)
                         .eraseToEffect(),
-                    Effect(value: .updateSynchronizerStatus)
+                    EffectTask(value: .updateSynchronizerStatus)
                 )
                 
             case .synchronizerStateChanged:
-                return Effect(value: .updateSynchronizerStatus)
+                return EffectTask(value: .updateSynchronizerStatus)
                 
             case .updateDrawer(let drawerOverlay):
                 state.drawerOverlay = drawerOverlay
@@ -155,7 +155,7 @@ struct HomeReducer: ReducerProtocol {
 
             case .profile(.settings(.quickRescan)):
                 state.destination = nil
-                return Effect.task {
+                return .task {
                     do {
                         try await sdkSynchronizer.rewind(.quick)
                         return .rewindDone(true, .quickRescan)
@@ -166,7 +166,7 @@ struct HomeReducer: ReducerProtocol {
 
             case .profile(.settings(.fullRescan)):
                 state.destination = nil
-                return Effect.task {
+                return .task {
                     do {
                         try await sdkSynchronizer.rewind(.birthday)
                         return .rewindDone(true, .fullRescan)
@@ -186,23 +186,23 @@ struct HomeReducer: ReducerProtocol {
                 return .none
                 
             case .walletEvents(.updateDestination(.all)):
-                return state.drawerOverlay != .full ? Effect(value: .updateDrawer(.full)) : .none
+                return state.drawerOverlay != .full ? EffectTask(value: .updateDrawer(.full)) : .none
 
             case .walletEvents(.updateDestination(.latest)):
-                return state.drawerOverlay != .partial ? Effect(value: .updateDrawer(.partial)) : .none
+                return state.drawerOverlay != .partial ? EffectTask(value: .updateDrawer(.partial)) : .none
 
             case .walletEvents:
                 return .none
                 
             case .send(.updateDestination(.done)):
-                return Effect(value: .updateDestination(nil))
+                return EffectTask(value: .updateDestination(nil))
                 
             case .send:
                 return .none
                 
             case .scan(.found):
                 audioServices.systemSoundVibrate()
-                return Effect(value: .updateDestination(nil))
+                return EffectTask(value: .updateDestination(nil))
                 
             case .scan:
                 return .none
