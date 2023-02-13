@@ -110,7 +110,7 @@ extension RootReducer {
                 guard let url = URL(string: "zcash:\(address)") else {
                     return .none
                 }
-                return Effect(value: .destination(.deeplink(url)))
+                return EffectTask(value: .destination(.deeplink(url)))
 
             case .home, .initialization, .onboarding, .phraseDisplay, .phraseValidation, .sandbox, .welcome:
                 return .none

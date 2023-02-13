@@ -113,9 +113,9 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
         latestScannedSynchronizerState?.transparentBalance
     }
 
-    func getAllSentTransactions() -> Effect<[WalletEvent], Never> {
+    func getAllSentTransactions() -> EffectTask<[WalletEvent]> {
         if let transactions = try? synchronizer?.allSentTransactions() {
-            return Effect(value: transactions.map {
+            return EffectTask(value: transactions.map {
                 let memos = try? synchronizer?.getMemos(for: $0)
                 let transaction = TransactionState.init(transaction: $0, memos: memos)
                 return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
@@ -125,9 +125,9 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
         return .none
     }
 
-    func getAllReceivedTransactions() -> Effect<[WalletEvent], Never> {
+    func getAllReceivedTransactions() -> EffectTask<[WalletEvent]> {
         if let transactions = try? synchronizer?.allReceivedTransactions() {
-            return Effect(value: transactions.map {
+            return EffectTask(value: transactions.map {
                 let memos = try? synchronizer?.getMemos(for: $0)
                 let transaction = TransactionState.init(transaction: $0, memos: memos)
                 return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
@@ -137,9 +137,9 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
         return .none
     }
 
-    func getAllClearedTransactions() -> Effect<[WalletEvent], Never> {
+    func getAllClearedTransactions() -> EffectTask<[WalletEvent]> {
         if let transactions = try? synchronizer?.allClearedTransactions() {
-            return Effect(value: transactions.map {
+            return EffectTask(value: transactions.map {
                 let memos = try? synchronizer?.getMemos(for: $0)
                 let transaction = TransactionState.init(transaction: $0, memos: memos)
                 return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
@@ -149,10 +149,10 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
         return .none
     }
     
-    func getAllPendingTransactions() -> Effect<[WalletEvent], Never> {
+    func getAllPendingTransactions() -> EffectTask<[WalletEvent]> {
         if let transactions = try? synchronizer?.allPendingTransactions(),
         let syncedBlockHeight = synchronizer?.latestScannedHeight {
-            return Effect(value: transactions.map {
+            return EffectTask(value: transactions.map {
                 let transaction = TransactionState.init(pendingTransaction: $0, latestBlockHeight: syncedBlockHeight)
                 return WalletEvent(id: transaction.id, state: .pending(transaction), timestamp: transaction.timestamp)
             })
@@ -161,7 +161,7 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
         return .none
     }
 
-    func getAllTransactions() -> Effect<[WalletEvent], Never> {
+    func getAllTransactions() -> EffectTask<[WalletEvent]> {
         if let pendingTransactions = try? synchronizer?.allPendingTransactions(),
         let clearedTransactions = try? synchronizer?.allClearedTransactions(),
         let syncedBlockHeight = synchronizer?.latestScannedHeight {
@@ -180,8 +180,8 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
             }
             
             return .merge(
-                Effect(value: cTxs),
-                Effect(value: pendingTxs)
+                EffectTask(value: cTxs),
+                EffectTask(value: pendingTxs)
             )
             .flatMap(Publishers.Sequence.init(sequence:))
             .collect()
@@ -208,8 +208,8 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
         zatoshi: Zatoshi,
         to recipientAddress: Recipient,
         memo: Memo?
-    ) -> Effect<Result<TransactionState, NSError>, Never> {
-        return Effect.run { [weak self] send in
+    ) -> EffectTask<Result<TransactionState, NSError>> {
+        return .run { [weak self] send in
             do {
                 guard let synchronizer = self?.synchronizer else {
                     await send(.failure(SDKSynchronizerClientError.synchronizerNotInitialized as NSError))

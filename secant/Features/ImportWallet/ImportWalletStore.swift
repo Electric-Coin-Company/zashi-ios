@@ -13,9 +13,9 @@ typealias ImportWalletViewStore = ViewStore<ImportWalletReducer.State, ImportWal
 
 struct ImportWalletReducer: ReducerProtocol {
     struct State: Equatable {
-        @BindableState var alert: AlertState<ImportWalletReducer.Action>?
-        @BindableState var importedSeedPhrase: String = ""
-        @BindableState var birthdayHeight: String = ""
+        @BindingState var alert: AlertState<ImportWalletReducer.Action>?
+        @BindingState var importedSeedPhrase: String = ""
+        @BindingState var birthdayHeight: String = ""
         var wordsCount = 0
         var maxWordsCount = 0
         var isValidMnemonic = false
@@ -111,7 +111,7 @@ struct ImportWalletReducer: ReducerProtocol {
                         )
                     )
                     
-                    return Effect(value: .initializeSDK)
+                    return EffectTask(value: .initializeSDK)
                 } catch {
                     // TODO: [#221] Proper Error/Success handling (https://github.com/zcash/secant-ios-wallet/issues/221)
                     state.alert = AlertState(
@@ -130,7 +130,7 @@ struct ImportWalletReducer: ReducerProtocol {
                 return .none
                 
             case .successfullyRecovered:
-                return Effect(value: .dismissAlert)
+                return EffectTask(value: .dismissAlert)
                 
             case .initializeSDK:
                 return .none

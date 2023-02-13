@@ -65,7 +65,7 @@ struct ScanReducer: ReducerProtocol {
             return .none
         
         case .onDisappear:
-            return Effect.cancel(id: CancelId.self)
+            return .cancel(id: CancelId.self)
 
         case .found:
             return .none
@@ -87,8 +87,8 @@ struct ScanReducer: ReducerProtocol {
                     // once valid URI is scanned we want to start the timer to deliver the code
                     // any new code cancels the schedule and fires new one
                     return .concatenate(
-                        Effect.cancel(id: CancelId.self),
-                        Effect(value: .found(code))
+                        EffectTask.cancel(id: CancelId.self),
+                        EffectTask(value: .found(code))
                             .delay(for: 1.0, scheduler: mainQueue)
                             .eraseToEffect()
                             .cancellable(id: CancelId.self, cancelInFlight: true)
@@ -97,7 +97,7 @@ struct ScanReducer: ReducerProtocol {
             } catch {
                 state.scanStatus = .failed
             }
-            return Effect.cancel(id: CancelId.self)
+            return .cancel(id: CancelId.self)
             
         case .torchPressed:
             do {

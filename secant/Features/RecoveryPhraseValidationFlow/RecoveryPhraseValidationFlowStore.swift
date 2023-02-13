@@ -83,7 +83,7 @@ struct RecoveryPhraseValidationFlowReducer: ReducerProtocol {
                     return effect
                 } else {
                     return .concatenate(
-                        Effect(value: .failureFeedback),
+                        EffectTask(value: .failureFeedback),
                         effect
                     )
                 }

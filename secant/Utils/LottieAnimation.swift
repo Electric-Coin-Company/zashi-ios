@@ -36,10 +36,10 @@ struct LottieAnimation: UIViewRepresentable {
         }
     }
     
-    func makeUIView(context: UIViewRepresentableContext<LottieAnimation>) -> AnimationView {
-        let animationView = AnimationView()
+    func makeUIView(context: UIViewRepresentableContext<LottieAnimation>) -> LottieAnimationView {
+        let animationView = LottieAnimationView()
         
-        let animation = Lottie.Animation.named(filename)
+        let animation = Lottie.LottieAnimation.named(filename)
         
         animationView.backgroundBehavior = .pauseAndRestore
         animationView.animation = animation
@@ -52,7 +52,7 @@ struct LottieAnimation: UIViewRepresentable {
         Coordinator(parent: self)
     }
     
-    func updateUIView(_ uiView: AnimationView, context: UIViewRepresentableContext<LottieAnimation>) {
+    func updateUIView(_ uiView: LottieAnimationView, context: UIViewRepresentableContext<LottieAnimation>) {
         guard isPlaying else {
             uiView.stop()
             return
