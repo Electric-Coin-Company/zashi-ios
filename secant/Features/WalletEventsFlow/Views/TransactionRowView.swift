@@ -61,7 +61,7 @@ struct TransactionRowView: View {
 extension TransactionRowView {
     var operationTitle: String {
         switch transaction.status {
-        case .paid(success: _):
+        case .paid:
             return "You sent"
         case .received:
             return "Unknown paid you"
@@ -76,7 +76,7 @@ extension TransactionRowView {
     var icon: some View {
         HStack {
             switch transaction.status {
-            case .paid(success: _), .received:
+            case .paid, .received:
                 Image(transaction.status == .received ? Asset.Assets.Icons.received.name : Asset.Assets.Icons.sent.name)
                     .resizable()
                     .frame(width: 60, height: 60)

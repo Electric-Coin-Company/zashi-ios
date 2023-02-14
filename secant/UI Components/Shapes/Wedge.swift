@@ -27,7 +27,7 @@ struct Wedge: Shape {
                     x: rect.midX,
                     y: rect.midY
                 ),
-                radius: rect.width / 2 ,
+                radius: rect.width / 2,
                 startAngle: Angle(degrees: Double(startAngle)),
                 endAngle: Angle(degrees: Double(endAngle)),
                 clockwise: clockwise

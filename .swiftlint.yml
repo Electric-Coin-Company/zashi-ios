@@ -54,7 +54,6 @@ opt_in_rules:
   - toggle_bool
   # - trailing_closure # weird in SwiftUI
   - unneeded_parentheses_in_closure_argument
-  - unused_import
   - vertical_whitespace_closing_braces
   - vertical_whitespace_opening_braces
   - weak_delegate

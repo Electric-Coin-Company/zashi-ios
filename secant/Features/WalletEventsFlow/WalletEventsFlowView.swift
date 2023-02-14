@@ -87,7 +87,7 @@ extension WalletEventsFlowView {
     }
     
     private func latestUnderline(_ viewStore: WalletEventsFlowViewStore) -> Color {
-        viewStore.isScrollable ? Asset.Colors.TextField.Underline.gray.color :  Asset.Colors.TextField.Underline.purple.color
+        viewStore.isScrollable ? Asset.Colors.TextField.Underline.gray.color : Asset.Colors.TextField.Underline.purple.color
     }
 
     private func allUnderline(_ viewStore: WalletEventsFlowViewStore) -> Color {

@@ -78,8 +78,11 @@ struct ImportWalletReducer: ReducerProtocol {
                 return .none
                 
             case .birthdayInputChanged(let redactedBirthday):
+                let saplingActivation = zcashSDKEnvironment.network.constants.saplingActivationHeight
+
                 state.birthdayHeight = redactedBirthday
-                if let birthdayHeight = BlockHeight(state.birthdayHeight.data), birthdayHeight >= zcashSDKEnvironment.network.constants.saplingActivationHeight {
+
+                if let birthdayHeight = BlockHeight(state.birthdayHeight.data), birthdayHeight >= saplingActivation {
                     state.birthdayHeightValue = birthdayHeight.redacted
                 } else {
                     state.birthdayHeightValue = nil
