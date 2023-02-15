@@ -338,8 +338,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/zcash/ZcashLightClientKit/",
       "state" : {
-        "branch" : "main",
-        "revision" : "27b99013f7dda11caee0a261361c155490966e7f"
+        "revision" : "3b2d972b2dd0c51e36d76e49fcf58273bf585c1b"
       }
     }
   ],

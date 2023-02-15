@@ -6,6 +6,7 @@ typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
 
 struct RootReducer: ReducerProtocol {
     enum CancelId {}
+    enum SynchronizerCancelId {}
 
     struct State: Equatable {
         var appInitializationState: InitializationState = .uninitialized
@@ -20,10 +21,13 @@ struct RootReducer: ReducerProtocol {
         var welcomeState: WelcomeReducer.State
     }
 
-    enum Action: Equatable {
+    enum Action: Equatable, BindableAction {
+        case binding(BindingAction<RootReducer.State>)
         case destination(DestinationAction)
         case home(HomeReducer.Action)
         case initialization(InitializationAction)
+        case nukeWalletFailed
+        case nukeWalletSucceeded
         case onboarding(OnboardingFlowReducer.Action)
         case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
         case phraseValidation(RecoveryPhraseValidationFlowReducer.Action)
@@ -46,6 +50,8 @@ struct RootReducer: ReducerProtocol {
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     var body: some ReducerProtocol<State, Action> {
+        BindingReducer()
+
         Scope(state: \.homeState, action: /Action.home) {
             HomeReducer()
         }
@@ -144,6 +150,7 @@ extension RootReducer {
                 network: zcashSDKEnvironment.network,
                 spendParamsURL: try databaseFiles.spendParamsURLFor(network),
                 outputParamsURL: try databaseFiles.outputParamsURLFor(network),
+                saplingParamsSourceURL: SaplingParamsSourceURL.default,
                 viewingKeys: [viewingKey],
                 walletBirthday: birthday,
                 loggerProxy: OSLogger_(logLevel: .debug, category: LoggerConstants.sdkLogs)

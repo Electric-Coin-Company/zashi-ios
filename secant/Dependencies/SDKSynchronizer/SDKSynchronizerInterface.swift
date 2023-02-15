@@ -18,24 +18,11 @@ extension DependencyValues {
 }
 
 enum SDKSynchronizerState: Equatable {
-    case unknown
-    case transactionsUpdated
-    case started
     case progressUpdated
-    case statusWillUpdate
-    case synced
+    case started
     case stopped
-    case disconnected
-    case syncing
-    case downloading
-    case validating
-    case scanning
-    case enhancing
-    case fetching
-    case minedTransaction
-    case foundTransactions
-    case failed
-    case connectionStateChanged
+    case synced
+    case unknown
 }
 
 enum SDKSynchronizerClientError: Error {
@@ -54,6 +41,8 @@ protocol SDKSynchronizerClient {
     func stop()
     func synchronizerSynced(_ synchronizerState: SDKSynchronizer.SynchronizerState?)
     func statusSnapshot() -> SyncStatusSnapshot
+    func isSyncing() -> Bool
+    func isInitialized() -> Bool
 
     func rewind(_ policy: RewindPolicy) async throws
 
@@ -75,6 +64,8 @@ protocol SDKSynchronizerClient {
         to recipientAddress: Recipient,
         memo: Memo?
     ) -> EffectTask<Result<TransactionState, NSError>>
+    
+    func wipe() -> AnyPublisher<Void, Error>?
 }
 
 extension SDKSynchronizerClient {

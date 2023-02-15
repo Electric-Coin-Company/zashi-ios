@@ -126,7 +126,7 @@ private extension RootView {
                     }
 
                     Button("[Be careful] Nuke Wallet") {
-                        viewStore.send(.initialization(.nukeWallet))
+                        viewStore.send(.initialization(.nukeWalletRequest))
                     }
                 }
 
@@ -154,6 +154,7 @@ private extension RootView {
                     }
                 }
             }
+            .alert(self.store.scope(state: \.destinationState.alert), dismiss: .destination(.dismissAlert))
         }
         .navigationBarTitle("Startup")
     }
