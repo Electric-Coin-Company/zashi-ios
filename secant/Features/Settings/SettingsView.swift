@@ -7,8 +7,9 @@ struct SettingsView: View {
     var body: some View {
         WithViewStore(store) { viewStore in
             VStack(spacing: 40) {
-                Toggle("Enable Crash Reporting",
-                       isOn: viewStore.binding(\.$isCrashReportingOn)
+                Toggle(
+                    "Enable Crash Reporting",
+                    isOn: viewStore.binding(\.$isCrashReportingOn)
                 )
                 Button(
                     action: { viewStore.send(.backupWalletAccessRequest) },

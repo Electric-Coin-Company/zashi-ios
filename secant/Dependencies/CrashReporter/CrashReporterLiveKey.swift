@@ -8,7 +8,7 @@ import ComposableArchitecture
 import FirebaseCore
 import FirebaseCrashlytics
 extension CrashReporterClient: DependencyKey {
-    static let liveValue: CrashReporterClient = CrashReporterClient(
+    static let liveValue = CrashReporterClient(
         configure: { canConfigure in
             let fileName = "GoogleService-Info.plist"
 
@@ -35,7 +35,6 @@ extension CrashReporterClient: DependencyKey {
         },
         optOut: {
             Crashlytics.crashlytics().setCrashlyticsCollectionEnabled(false)
-
         }
     )
 }
