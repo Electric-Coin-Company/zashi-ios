@@ -78,8 +78,11 @@ struct ImportWalletReducer: ReducerProtocol {
                 return .none
                 
             case .birthdayInputChanged(let redactedBirthday):
+                let saplingActivation = zcashSDKEnvironment.network.constants.saplingActivationHeight
+
                 state.birthdayHeight = redactedBirthday
-                if let birthdayHeight = BlockHeight(state.birthdayHeight.data), birthdayHeight >= zcashSDKEnvironment.defaultBirthday {
+
+                if let birthdayHeight = BlockHeight(state.birthdayHeight.data), birthdayHeight >= saplingActivation {
                     state.birthdayHeightValue = birthdayHeight.redacted
                 } else {
                     state.birthdayHeightValue = nil
@@ -99,7 +102,8 @@ struct ImportWalletReducer: ReducerProtocol {
                     try mnemonic.isValid(state.importedSeedPhrase.data)
                     
                     // store it to the keychain
-                    let birthday = state.birthdayHeightValue ?? zcashSDKEnvironment.defaultBirthday.redacted
+                    let birthday = state.birthdayHeightValue ?? zcashSDKEnvironment.latestCheckpoint(zcashSDKEnvironment.network).redacted
+                    
                     try walletStorage.importWallet(state.importedSeedPhrase.data, birthday.data, .english, false)
                     
                     // update the backup phrase validation flag

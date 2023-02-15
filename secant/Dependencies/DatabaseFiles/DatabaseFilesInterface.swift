@@ -18,6 +18,7 @@ extension DependencyValues {
 
 struct DatabaseFilesClient {
     let documentsDirectory: () throws -> URL
+    let fsBlockDbRootFor: (ZcashNetwork) throws -> URL
     let cacheDbURLFor: (ZcashNetwork) throws -> URL
     let dataDbURLFor: (ZcashNetwork) throws -> URL
     let outputParamsURLFor: (ZcashNetwork) throws -> URL

@@ -12,6 +12,7 @@ import ZcashLightClientKit
 extension DatabaseFiles.DatabaseFilesError {
     var debugValue: String {
         switch self {
+        case .getFsBlockDbRoot: return "getFsBlockDbRoot"
         case .getDocumentsURL: return "getDocumentsURL"
         case .getCacheURL: return "getCacheURL"
         case .getDataURL: return "getDataURL"

@@ -12,6 +12,7 @@ import XCTestDynamicOverlay
 extension DatabaseFilesClient: TestDependencyKey {
     static let testValue = Self(
         documentsDirectory: XCTUnimplemented("\(Self.self).documentsDirectory", placeholder: .emptyURL),
+        fsBlockDbRootFor: XCTUnimplemented("\(Self.self).fsBlockDbRootFor", placeholder: .emptyURL),
         cacheDbURLFor: XCTUnimplemented("\(Self.self).cacheDbURLFor", placeholder: .emptyURL),
         dataDbURLFor: XCTUnimplemented("\(Self.self).dataDbURLFor", placeholder: .emptyURL),
         outputParamsURLFor: XCTUnimplemented("\(Self.self).outputParamsURLFor", placeholder: .emptyURL),
@@ -31,6 +32,7 @@ extension URL {
 extension DatabaseFilesClient {
     static let noOp = Self(
         documentsDirectory: { .emptyURL },
+        fsBlockDbRootFor: { _ in .emptyURL },
         cacheDbURLFor: { _ in .emptyURL },
         dataDbURLFor: { _ in .emptyURL },
         outputParamsURLFor: { _ in .emptyURL },

@@ -43,7 +43,7 @@ extension Binding {
                 else { return nil }
                 return `case`
             },
-            // swiftlint:disable:next unused_closure_parameter
+            
             set: { `case` in
                 if let `case` = `case` {
                     self.wrappedValue = casePath.embed(`case`)

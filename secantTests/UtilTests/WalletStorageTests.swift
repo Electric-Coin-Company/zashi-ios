@@ -328,7 +328,7 @@ private extension WalletStorageTests {
     ) throws {
         let query = storage.baseQuery(forAccount: account, andKey: forKey)
         
-        let attributes:[ String: AnyObject ] = [
+        let attributes: [String: AnyObject] = [
             kSecValueData as String: data as AnyObject
         ]
 

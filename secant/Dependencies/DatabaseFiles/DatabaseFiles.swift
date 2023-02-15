@@ -10,6 +10,7 @@ import ZcashLightClientKit
 
 struct DatabaseFiles {
     enum DatabaseFilesError: Error {
+        case getFsBlockDbRoot
         case getDocumentsURL
         case getCacheURL
         case getDataURL

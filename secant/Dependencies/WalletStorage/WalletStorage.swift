@@ -158,7 +158,7 @@ struct WalletStorage {
     }
     
     func baseQuery(forAccount account: String = "", andKey forKey: String) -> [String: Any] {
-        let query:[ String: AnyObject ] = [
+        let query: [String: AnyObject] = [
             /// Uniquely identify this keychain accessor
             kSecAttrService as String: (zcashStoredWalletPrefix + forKey) as AnyObject,
             kSecAttrAccount as String: account as AnyObject,
@@ -239,7 +239,7 @@ struct WalletStorage {
     ) throws {
         let query = baseQuery(forAccount: account, andKey: forKey)
         
-        let attributes:[ String: AnyObject ] = [
+        let attributes: [String: AnyObject] = [
             kSecValueData as String: data as AnyObject
         ]
 

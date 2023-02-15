@@ -20,7 +20,7 @@ struct TransactionDetailView: View {
                 header
 
                 switch transaction.status {
-                case .paid(success: _):
+                case .paid:
                     plainText("You sent \(transaction.zecAmount.decimalString()) ZEC")
                     plainText("fee \(transaction.fee.decimalString()) ZEC", mark: .inactive)
                     plainText("total amount \(transaction.totalAmount.decimalString()) ZEC", mark: .inactive)

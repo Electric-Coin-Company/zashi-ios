@@ -30,7 +30,7 @@ class ProfileTests: XCTestCase {
             state.addressDetailsState.uAddress = uAddress
             state.appVersion = "0.0.1"
             state.appBuild = "31"
-            state.sdkVersion = "0.17.0-beta"
+            state.sdkVersion = "0.18.1-beta"
         }
     }
 }
