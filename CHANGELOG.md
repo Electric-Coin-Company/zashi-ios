@@ -1,5 +1,16 @@
 # Changelog
-
+# 0.0.1 build 40 
+- [#541] Adopt Latest main commit of SDK (#542)
+# 0.0.1 build 39
+- [#238] Add crash reporter to secant (#531)
+- [#444] Ensure that sensitive information can't be logged intentionally or by accident (#536)
+- [#538] Update and adapt 0.50.2 TCA (#539)
+- [#516] Adopt unreleased changes that will go live with SDK 0.18.0-beta release (#532)
+- [#126] TCA component for user logs (#526)
+- [#521] Update format for the Swiftlint TODO rule (#523)
+- [#521] Update format for the Swiftlint TODO rule (#522)
+- [#517] QR codes integration into the wallet details and send feature (#518)
+- [#514] Adopt Unified Addresses (#515)
 # 0.0.1 build 37
 
 - [#512] Check that every TODO in code has an open issue (#513)
