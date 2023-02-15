@@ -17,6 +17,7 @@ struct UserPreferencesStorage {
         case zcashFiatConverted
         case zcashRecoveryPhraseTestCompleted
         case zcashSessionAutoshielded
+        case zcashUserOptedOutOfCrashReporting
     }
     
     /// Default values for all preferences in case there is no value stored (counterparts to `Constants`)
@@ -25,6 +26,7 @@ struct UserPreferencesStorage {
     private let fiatConvertion: Bool
     private let recoveryPhraseTestCompleted: Bool
     private let sessionAutoshielded: Bool
+    private let userOptedOutOfCrashReporting: Bool
     
     private let userDefaults: UserDefaultsClient
     
@@ -34,6 +36,7 @@ struct UserPreferencesStorage {
         fiatConvertion: Bool,
         recoveryPhraseTestCompleted: Bool,
         sessionAutoshielded: Bool,
+        userOptedOutOfCrashReporting: Bool,
         userDefaults: UserDefaultsClient
     ) {
         self.appSessionFrom = appSessionFrom
@@ -41,6 +44,7 @@ struct UserPreferencesStorage {
         self.fiatConvertion = fiatConvertion
         self.recoveryPhraseTestCompleted = recoveryPhraseTestCompleted
         self.sessionAutoshielded = sessionAutoshielded
+        self.userOptedOutOfCrashReporting = userOptedOutOfCrashReporting
         self.userDefaults = userDefaults
     }
     
@@ -87,6 +91,15 @@ struct UserPreferencesStorage {
 
     func setIsSessionAutoshielded(_ bool: Bool) async {
         await setValue(bool, forKey: Constants.zcashSessionAutoshielded.rawValue)
+    }
+
+    /// Whether the user has opted out of crash reporting
+    var isUserOptedOutOfCrashReporting: Bool {
+        getValue(forKey: Constants.zcashUserOptedOutOfCrashReporting.rawValue, default: false)
+    }
+
+    func setIsUserOptedOutOfCrashReporting(_ bool: Bool) async {
+        await setValue(bool, forKey: Constants.zcashUserOptedOutOfCrashReporting.rawValue)
     }
 
     /// Use carefully: Deletes all user preferences from the User Defaults

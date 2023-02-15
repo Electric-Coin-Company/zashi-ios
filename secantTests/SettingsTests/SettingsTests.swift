@@ -45,7 +45,10 @@ class SettingsTests: XCTestCase {
         )
         
         let store = TestStore(
-            initialState: SettingsReducer.State(phraseDisplayState: RecoveryPhraseDisplayReducer.State(phrase: nil)),
+            initialState: SettingsReducer.State(
+                phraseDisplayState: RecoveryPhraseDisplayReducer.State(phrase: nil),
+                isCrashReportingOn: false
+            ),
             reducer: SettingsReducer()
         ) { dependencies in
             dependencies.localAuthentication = .mockAuthenticationSucceeded
@@ -109,7 +112,8 @@ class SettingsTests: XCTestCase {
                         .default(TextState("Full rescan"), action: .send(.fullRescan)),
                         .cancel(TextState("Cancel"))
                     ]
-                )
+                ),
+                isCrashReportingOn: false
             ),
             reducer: SettingsReducer()
         )
@@ -132,7 +136,8 @@ class SettingsTests: XCTestCase {
                         .default(TextState("Full rescan"), action: .send(.fullRescan)),
                         .cancel(TextState("Cancel"))
                     ]
-                )
+                ),
+                isCrashReportingOn: false
             ),
             reducer: SettingsReducer()
         )
@@ -155,7 +160,8 @@ class SettingsTests: XCTestCase {
                         .default(TextState("Full rescan"), action: .send(.fullRescan)),
                         .cancel(TextState("Cancel"))
                     ]
-                )
+                ),
+                isCrashReportingOn: false
             ),
             reducer: SettingsReducer()
         )
@@ -178,7 +184,8 @@ class SettingsTests: XCTestCase {
                         .default(TextState("Full rescan"), action: .send(.fullRescan)),
                         .cancel(TextState("Cancel"))
                     ]
-                )
+                ),
+                isCrashReportingOn: false
             ),
             reducer: SettingsReducer()
         )
@@ -209,7 +216,8 @@ class SettingsTests: XCTestCase {
                         .default(TextState("Full rescan"), action: .send(.fullRescan)),
                         .cancel(TextState("Cancel"))
                     ]
-                )
+                ),
+                isCrashReportingOn: false
             ),
             reducer: SettingsReducer()
         )

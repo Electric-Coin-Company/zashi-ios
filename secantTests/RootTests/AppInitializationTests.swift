@@ -105,16 +105,19 @@ class AppInitializationTests: XCTestCase {
         await testScheduler.advance(by: 0.02)
 
         // ad 1.
-        await store.receive(.initialization(.checkWalletInitialization))
+        await store.receive(.initialization(.configureCrashReporter))
 
         // ad 2.
-        await store.receive(.initialization(.respondToWalletInitializationState(.initialized)))
+        await store.receive(.initialization(.checkWalletInitialization))
 
         // ad 3.
+        await store.receive(.initialization(.respondToWalletInitializationState(.initialized)))
+
+        // ad 4.
         await store.receive(.initialization(.initializeSDK)) { state in
             state.storedWallet = .placeholder
         }
-        // ad 4.
+        // ad 5.
         await store.receive(.initialization(.checkBackupPhraseValidation)) { state in
             state.appInitializationState = .initialized
         }
@@ -153,9 +156,12 @@ class AppInitializationTests: XCTestCase {
         testScheduler.advance(by: 0.02)
         
         // ad 1.
+        store.receive(.initialization(.configureCrashReporter))
+
+        // ad 2
         store.receive(.initialization(.checkWalletInitialization))
 
-        // ad 2.
+        // ad 3.
         store.receive(.initialization(.respondToWalletInitializationState(.keysMissing))) { state in
             state.appInitializationState = .keysMissing
         }
@@ -184,14 +190,17 @@ class AppInitializationTests: XCTestCase {
         // the 0.02 delay ensures keychain is ready
         // the 3.0 delay ensures the welcome screen is visible till the initialization check is done
         testScheduler.advance(by: 3.02)
-        
+
         // ad 1.
-        store.receive(.initialization(.checkWalletInitialization))
+        store.receive(.initialization(.configureCrashReporter))
 
         // ad 2.
+        store.receive(.initialization(.checkWalletInitialization))
+
+        // ad 3.
         store.receive(.initialization(.respondToWalletInitializationState(.uninitialized)))
         
-        // ad 3.
+        // ad 4.
         store.receive(.destination(.updateDestination(.onboarding))) { state in
             state.destinationState.previousDestination = .welcome
             state.destinationState.internalDestination = .onboarding

@@ -29,7 +29,8 @@ struct RootReducer: ReducerProtocol {
         case sandbox(SandboxReducer.Action)
         case welcome(WelcomeReducer.Action)
     }
-    
+
+    @Dependency(\.crashReporter) var crashReporter
     @Dependency(\.databaseFiles) var databaseFiles
     @Dependency(\.deeplink) var deeplink
     @Dependency(\.derivationTool) var derivationTool
@@ -37,6 +38,7 @@ struct RootReducer: ReducerProtocol {
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.randomRecoveryPhrase) var randomRecoveryPhrase
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 

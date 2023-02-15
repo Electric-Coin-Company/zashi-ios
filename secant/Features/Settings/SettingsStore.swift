@@ -15,7 +15,9 @@ struct SettingsReducer: ReducerProtocol {
         var isSharingLogs = false
         var phraseDisplayState: RecoveryPhraseDisplayReducer.State
         var rescanDialog: ConfirmationDialogState<SettingsReducer.Action>?
-        
+
+        @BindableState var isCrashReportingOn: Bool
+
         var tempSDKDir: URL {
             let tempDir = FileManager.default.temporaryDirectory
             let sdkFileName = "sdkLogs.txt"
@@ -35,18 +37,21 @@ struct SettingsReducer: ReducerProtocol {
         }
     }
 
-    enum Action: Equatable {
+    enum Action: BindableAction, Equatable {
         case backupWallet
         case backupWalletAccessRequest
+        case binding(BindingAction<SettingsReducer.State>)
         case cancelRescan
         case exportLogs
         case fullRescan
         case logsExported
         case logsShareFinished
+        case onAppear
         case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
         case quickRescan
         case rescanBlockchain
         case updateDestination(SettingsReducer.State.Destination?)
+        case testCrashReporter // this will crash the app if live.
     }
 
     @Dependency(\.localAuthentication) var localAuthentication
@@ -54,10 +59,15 @@ struct SettingsReducer: ReducerProtocol {
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.logsHandler) var logsHandler
     @Dependency(\.walletStorage) var walletStorage
+    @Dependency(\.userStoredPreferences) var userStoredPreferences
+    @Dependency(\.crashReporter) var crashReporter
 
     var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                state.isCrashReportingOn = !userStoredPreferences.isUserOptedOutOfCrashReporting()
+                return .none
             case .backupWalletAccessRequest:
                 return .run { send in
                     if await localAuthentication.authenticate() {
@@ -75,6 +85,17 @@ struct SettingsReducer: ReducerProtocol {
                 } catch {
                     // TODO: [#221] - merge with issue 221 (https://github.com/zcash/secant-ios-wallet/issues/221) and its Error States
                     return .none
+                }
+
+            case .binding(\.$isCrashReportingOn):
+                if state.isCrashReportingOn {
+                    crashReporter.optOut()
+                } else {
+                    crashReporter.optIn()
+                }
+
+                return .run { [state] send in
+                    await userStoredPreferences.setIsUserOptedOutOfCrashReporting(state.isCrashReportingOn)
                 }
                 
             case .cancelRescan, .quickRescan, .fullRescan:
@@ -112,13 +133,20 @@ struct SettingsReducer: ReducerProtocol {
                     ]
                 )
                 return .none
-                
+
             case .phraseDisplay:
                 state.destination = nil
                 return .none
                 
             case .updateDestination(let destination):
                 state.destination = destination
+                return .none
+
+            case .testCrashReporter:
+                crashReporter.testCrash()
+                return .none
+
+            case .binding:
                 return .none
             }
         }
@@ -164,7 +192,8 @@ extension SettingsReducer.State {
     static let placeholder = SettingsReducer.State(
         phraseDisplayState: RecoveryPhraseDisplayReducer.State(
             phrase: .placeholder
-        )
+        ),
+        isCrashReportingOn: true
     )
 }
 

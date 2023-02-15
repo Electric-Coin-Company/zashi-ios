@@ -14,6 +14,7 @@ extension RootReducer {
         case appDelegate(AppDelegateAction)
         case checkBackupPhraseValidation
         case checkWalletInitialization
+        case configureCrashReporter
         case createNewWallet
         case initializeSDK
         case nukeWallet
@@ -27,10 +28,13 @@ extension RootReducer {
             case .initialization(.appDelegate(.didFinishLaunching)):
                 // TODO: [#524] finish all the wallet events according to definition, https://github.com/zcash/secant-ios-wallet/issues/524
                 LoggerProxy.event(".appDelegate(.didFinishLaunching)")
-                /// We need to fetch data from keychain, in order to be 100% sure the kecyhain can be read we delay the check a bit
-                return EffectTask(value: .initialization(.checkWalletInitialization))
-                    .delay(for: 0.02, scheduler: mainQueue)
-                    .eraseToEffect()
+                /// We need to fetch data from keychain, in order to be 100% sure the keychain can be read we delay the check a bit
+                return .concatenate(
+                    EffectTask(value: .initialization(.configureCrashReporter)),
+                    EffectTask(value: .initialization(.checkWalletInitialization))
+                        .delay(for: 0.02, scheduler: mainQueue)
+                        .eraseToEffect()
+                )
 
                 /// Evaluate the wallet's state based on keychain keys and database files presence
             case .initialization(.checkWalletInitialization):
@@ -192,6 +196,12 @@ extension RootReducer {
                 return EffectTask(value: .initialization(.createNewWallet))
 
             case .home, .destination, .onboarding, .phraseDisplay, .phraseValidation, .sandbox, .welcome:
+                return .none
+
+            case .initialization(.configureCrashReporter):
+                crashReporter.configure(
+                    !userStoredPreferences.isUserOptedOutOfCrashReporting()
+                )
                 return .none
             }
         }

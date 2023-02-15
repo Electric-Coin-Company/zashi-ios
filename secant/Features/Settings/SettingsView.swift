@@ -6,14 +6,16 @@ struct SettingsView: View {
     
     var body: some View {
         WithViewStore(store) { viewStore in
-            VStack {
+            VStack(spacing: 40) {
+                Toggle("Enable Crash Reporting",
+                       isOn: viewStore.binding(\.$isCrashReportingOn)
+                )
                 Button(
                     action: { viewStore.send(.backupWalletAccessRequest) },
                     label: { Text("Backup Wallet") }
                 )
                 .activeButtonStyle
                 .frame(height: 50)
-                .padding(30)
                 
                 Button(
                     action: { viewStore.send(.rescanBlockchain) },
@@ -21,7 +23,6 @@ struct SettingsView: View {
                 )
                 .primaryButtonStyle
                 .frame(height: 50)
-                .padding(.horizontal, 30)
 
                 Button(
                     action: { viewStore.send(.exportLogs) },
@@ -38,12 +39,17 @@ struct SettingsView: View {
                 )
                 .primaryButtonStyle
                 .frame(height: 50)
-                .padding(.horizontal, 30)
-                .padding(.top, 30)
                 .disabled(viewStore.exportLogsDisabled)
 
+                Button(
+                    action: { viewStore.send(.testCrashReporter) },
+                    label: { Text("Test Crash Reporter") }
+                )
+                .primaryButtonStyle
+                .frame(height: 50)
                 Spacer()
             }
+            .padding(.horizontal, 30)
             .navigationTitle("Settings")
             .applyScreenBackground()
             .confirmationDialog(
@@ -56,6 +62,7 @@ struct SettingsView: View {
                     RecoveryPhraseDisplayView(store: store.backupPhraseStore())
                 }
             )
+            .onAppear { viewStore.send(.onAppear) }
             
             if viewStore.isSharingLogs {
                 UIShareDialogView(

@@ -26,6 +26,7 @@ class UserPreferencesStorageTests: XCTestCase {
             fiatConvertion: true,
             recoveryPhraseTestCompleted: true,
             sessionAutoshielded: false,
+            userOptedOutOfCrashReporting: true,
             userDefaults: .live(userDefaults: userDefaults)
         )
         await storage.removeAll()
@@ -107,6 +108,7 @@ class UserPreferencesStorageTests: XCTestCase {
             fiatConvertion: true,
             recoveryPhraseTestCompleted: true,
             sessionAutoshielded: false,
+            userOptedOutOfCrashReporting: true,
             userDefaults: mockedUD
         )
 
@@ -127,6 +129,7 @@ class UserPreferencesStorageTests: XCTestCase {
             fiatConvertion: true,
             recoveryPhraseTestCompleted: true,
             sessionAutoshielded: false,
+            userOptedOutOfCrashReporting: true,
             userDefaults: mockedUD
         )
 
@@ -147,6 +150,7 @@ class UserPreferencesStorageTests: XCTestCase {
             fiatConvertion: true,
             recoveryPhraseTestCompleted: true,
             sessionAutoshielded: false,
+            userOptedOutOfCrashReporting: true,
             userDefaults: mockedUD
         )
 
@@ -167,6 +171,7 @@ class UserPreferencesStorageTests: XCTestCase {
             fiatConvertion: true,
             recoveryPhraseTestCompleted: true,
             sessionAutoshielded: false,
+            userOptedOutOfCrashReporting: true,
             userDefaults: mockedUD
         )
 
@@ -187,6 +192,7 @@ class UserPreferencesStorageTests: XCTestCase {
             fiatConvertion: true,
             recoveryPhraseTestCompleted: true,
             sessionAutoshielded: false,
+            userOptedOutOfCrashReporting: true,
             userDefaults: mockedUD
         )
 
