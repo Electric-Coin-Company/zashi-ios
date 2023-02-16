@@ -16,7 +16,7 @@ struct SettingsReducer: ReducerProtocol {
         var phraseDisplayState: RecoveryPhraseDisplayReducer.State
         var rescanDialog: ConfirmationDialogState<SettingsReducer.Action>?
 
-        @BindableState var isCrashReportingOn: Bool
+        @BindingState var isCrashReportingOn: Bool
 
         var tempSDKDir: URL {
             let tempDir = FileManager.default.temporaryDirectory
@@ -94,7 +94,7 @@ struct SettingsReducer: ReducerProtocol {
                     crashReporter.optIn()
                 }
 
-                return .run { [state] send in
+                return .run { [state] _ in
                     await userStoredPreferences.setIsUserOptedOutOfCrashReporting(state.isCrashReportingOn)
                 }
                 

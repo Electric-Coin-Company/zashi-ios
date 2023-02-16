@@ -34,7 +34,6 @@ extension UserPreferencesStorageClient: DependencyKey {
     }()
 }
 
-
 extension UserPreferencesStorage {
     static let live = UserPreferencesStorage(
         appSessionFrom: Date().timeIntervalSince1970,
