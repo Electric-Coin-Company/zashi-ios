@@ -32,7 +32,7 @@ class TransactionConfirmationSnapshotTests: XCTestCase {
         let store = Store(
             initialState: state,
             reducer: SendFlowReducer()
-                .dependency(\.derivationTool, .live(networkType: .testnet))
+                .dependency(\.derivationTool, .live())
                 .dependency(\.mainQueue, DispatchQueue.main.eraseToAnyScheduler())
                 .dependency(\.numberFormatter, .live())
                 .dependency(\.walletStorage, .live())
@@ -62,7 +62,7 @@ class TransactionConfirmationSnapshotTests: XCTestCase {
         let store = Store(
             initialState: state,
             reducer: SendFlowReducer()
-                .dependency(\.derivationTool, .live(networkType: .testnet))
+                .dependency(\.derivationTool, .live())
                 .dependency(\.mainQueue, DispatchQueue.main.eraseToAnyScheduler())
                 .dependency(\.numberFormatter, .live())
                 .dependency(\.walletStorage, .live())

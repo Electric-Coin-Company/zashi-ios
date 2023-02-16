@@ -102,7 +102,7 @@ struct ImportWalletReducer: ReducerProtocol {
                     try mnemonic.isValid(state.importedSeedPhrase.data)
                     
                     // store it to the keychain
-                    let birthday = state.birthdayHeightValue ?? zcashSDKEnvironment.latestCheckpoint(zcashSDKEnvironment.network).redacted
+                    let birthday = state.birthdayHeightValue ?? zcashSDKEnvironment.latestCheckpoint.redacted
                     
                     try walletStorage.importWallet(state.importedSeedPhrase.data, birthday.data, .english, false)
                     

@@ -11,8 +11,8 @@ import ZcashLightClientKit
 extension DerivationToolClient: DependencyKey {
     static let liveValue = DerivationToolClient.live()
         
-    static func live(networkType: NetworkType = .testnet) -> Self {
-        let derivationTool = DerivationTool(networkType: networkType)
+    static func live() -> Self {
+        let derivationTool = DerivationTool(networkType: TargetConstants.zcashNetwork.networkType)
         return Self(
             deriveSpendingKey: { seed, accountIndex in
                 try derivationTool.deriveUnifiedSpendingKey(seed: seed, accountIndex: accountIndex)
@@ -25,7 +25,7 @@ extension DerivationToolClient: DependencyKey {
             },
             isValidZcashAddress: { address in
                 do {
-                    _ = try Recipient(address, network: networkType)
+                    _ = try Recipient(address, network: .mainnet)
                     return true
                 } catch {
                     return false

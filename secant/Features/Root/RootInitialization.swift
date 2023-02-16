@@ -87,7 +87,7 @@ extension RootReducer {
                     try mnemonic.isValid(storedWallet.seedPhrase.value())
                     let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
 
-                    let birthday = state.storedWallet?.birthday?.value() ?? zcashSDKEnvironment.latestCheckpoint(zcashSDKEnvironment.network)
+                    let birthday = state.storedWallet?.birthday?.value() ?? zcashSDKEnvironment.latestCheckpoint
 
                     let initializer = try RootReducer.prepareInitializer(
                         for: storedWallet.seedPhrase.value(),
@@ -142,7 +142,7 @@ extension RootReducer {
                 do {
                     // get the random english mnemonic
                     let newRandomPhrase = try mnemonic.randomMnemonic()
-                    let birthday = zcashSDKEnvironment.latestCheckpoint(zcashSDKEnvironment.network)
+                    let birthday = zcashSDKEnvironment.latestCheckpoint
 
                     // store the wallet to the keychain
                     try walletStorage.importWallet(newRandomPhrase, birthday, .english, false)
