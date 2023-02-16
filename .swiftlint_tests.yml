@@ -2,12 +2,12 @@
 # https://github.com/raywenderlich/swift-style-guide
 
 included:
-  - secant/
+  - secantTests/
+  - secantUITests/
 
 excluded:
-  - xctemplates
-  - secantTests
-  - secantUITests
+  - secant/
+  - xctemplates/
 
 disabled_rules:
   - notification_center_detachment
@@ -18,6 +18,16 @@ disabled_rules:
   - multiple_closures_with_trailing_closure 
   - generic_type_name # allow for arbitrarily long generic type names
   - redundant_void_return
+  - implicitly_unwrapped_optional
+  - force_unwrapping
+  - type_body_length
+  - function_body_length
+  - file_length
+  - cyclomatic_complexity
+  - force_cast
+  - force_try
+  - function_parameter_count
+  - identifier_name
   - empty_parentheses_with_trailing_closure
 
 opt_in_rules:
@@ -36,8 +46,6 @@ opt_in_rules:
   - enum_case_associated_values_count
   - fatal_error_message
   - first_where
-  - force_unwrapping
-  - implicitly_unwrapped_optional
   - indentation_width
   - last_where
   - legacy_random
@@ -85,14 +93,6 @@ custom_rules:
     message: "Please use string interpolation instead of concatenation"
     severity: error
 
-  print_function_usage:
-    included: ".*\\.swift"
-    excluded: ".*Test\\.swift"
-    name: "Swift print() or debugPrint() should not be used in App Code"
-    regex: "print\\(|debugPrint\\("
-    message: "The Swift print() or debugPrint() functions should not be used."
-    severity: warning
-
   nslog_function_usage:
     included: ".*\\.swift"
     excluded: ".*Test\\.swift"
@@ -110,18 +110,12 @@ custom_rules:
     match_kinds:
       - comment
 
-
 attributes:
   always_on_same_line:
     - "@IBSegueAction"
     - "@IBAction"
     - "@NSManaged"
     - "@objc"
-
-force_cast: warning
-force_try: warning
-function_body_length:
-    warning: 150
 
 legacy_hashing: error
 
@@ -148,10 +142,6 @@ line_length:
   ignores_urls: true
   ignores_function_declarations: true
   ignores_comments: true
-
-file_length:
-  warning: 600
-  ignore_comment_only_lines: true
 
 multiline_arguments:
   first_argument_location: next_line
