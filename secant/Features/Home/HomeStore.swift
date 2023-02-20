@@ -144,7 +144,12 @@ struct HomeReducer: ReducerProtocol {
                     state.shieldedBalance = shieldedBalance.redacted
                 }
                 return .none
-
+            
+            case .updateDestination(.profile):
+                state.profileState.destination = nil
+                state.destination = .profile
+                return .none
+                
             case .updateDestination(let destination):
                 state.destination = destination
                 return .none
@@ -155,23 +160,23 @@ struct HomeReducer: ReducerProtocol {
 
             case .profile(.settings(.quickRescan)):
                 state.destination = nil
-                return .task {
+                return .run { send in
                     do {
                         try await sdkSynchronizer.rewind(.quick)
-                        return .rewindDone(true, .quickRescan)
+                        await send(.rewindDone(true, .quickRescan))
                     } catch {
-                        return .rewindDone(false, .quickRescan)
+                        await send(.rewindDone(false, .quickRescan))
                     }
                 }
 
             case .profile(.settings(.fullRescan)):
                 state.destination = nil
-                return .task {
+                return .run { send in
                     do {
                         try await sdkSynchronizer.rewind(.birthday)
-                        return .rewindDone(true, .fullRescan)
+                        await send(.rewindDone(true, .fullRescan))
                     } catch {
-                        return .rewindDone(false, .fullRescan)
+                        await send(.rewindDone(false, .fullRescan))
                     }
                 }
 
