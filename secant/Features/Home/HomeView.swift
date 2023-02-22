@@ -8,8 +8,6 @@ struct HomeView: View {
         WithViewStore(store) { viewStore in
             VStack {
                 ZStack {
-                    scanButton(viewStore)
-                    
                     profileButton(viewStore)
                     
                     circularArea(viewStore)
@@ -91,28 +89,6 @@ extension HomeView {
                     }
                 )
 
-            Spacer()
-        }
-    }
-
-    func scanButton(_ viewStore: HomeViewStore) -> some View {
-        VStack {
-            HStack {
-                Image(Asset.Assets.Icons.qrCode.name)
-                    .resizable()
-                    .frame(width: 40, height: 40)
-                    .padding(.top, 7)
-                    .padding(.leading, 22)
-                    .navigationLink(
-                        isActive: viewStore.bindingForDestination(.scan),
-                        destination: {
-                            ScanView(store: store.scanStore())
-                        }
-                    )
-                
-                Spacer()
-            }
-            
             Spacer()
         }
     }

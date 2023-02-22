@@ -18,7 +18,6 @@ struct HomeReducer: ReducerProtocol {
             case request
             case transactionHistory
             case send
-            case scan
             case balanceBreakdown
         }
 
@@ -64,7 +63,6 @@ struct HomeReducer: ReducerProtocol {
         case request(RequestReducer.Action)
         case rewindDone(Bool, SettingsReducer.Action)
         case send(SendFlowReducer.Action)
-        case scan(ScanReducer.Action)
         case synchronizerStateChanged(SDKSynchronizerState)
         case walletEvents(WalletEventsFlowReducer.Action)
         case updateDestination(HomeReducer.State.Destination?)
@@ -85,10 +83,6 @@ struct HomeReducer: ReducerProtocol {
 
         Scope(state: \.sendState, action: /Action.send) {
             SendFlowReducer()
-        }
-
-        Scope(state: \.scanState, action: /Action.scan) {
-            ScanReducer()
         }
 
         Scope(state: \.profileState, action: /Action.profile) {
@@ -184,13 +178,6 @@ struct HomeReducer: ReducerProtocol {
             case .send:
                 return .none
                 
-            case .scan(.found):
-                audioServices.systemSoundVibrate()
-                return EffectTask(value: .updateDestination(nil))
-                
-            case .scan:
-                return .none
-                
             case .balanceBreakdown(.onDisappear):
                 state.destination = nil
                 return .none
@@ -233,13 +220,6 @@ extension HomeStore {
         self.scope(
             state: \.sendState,
             action: HomeReducer.Action.send
-        )
-    }
-
-    func scanStore() -> ScanStore {
-        self.scope(
-            state: \.scanState,
-            action: HomeReducer.Action.scan
         )
     }
 
