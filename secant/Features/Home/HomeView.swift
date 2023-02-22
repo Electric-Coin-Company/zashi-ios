@@ -6,34 +6,37 @@ struct HomeView: View {
 
     var body: some View {
         WithViewStore(store) { viewStore in
-            GeometryReader { proxy in
+            VStack {
                 ZStack {
                     scanButton(viewStore)
                     
                     profileButton(viewStore)
-
-                    circularArea(viewStore, proxy.size)
-
-                    sendButton(viewStore)
                     
-                    if proxy.size.height > 0 {
-                        Drawer(overlay: viewStore.bindingForDrawer(), maxHeight: proxy.size.height) {
-                            WalletEventsFlowView(store: store.historyStore())
-                                .applyScreenBackground()
-                        }
-                    }
+                    circularArea(viewStore)
+                    
+                    sendButton(viewStore)
                 }
-                .applyScreenBackground()
-                .navigationBarHidden(true)
-                .onAppear(perform: { viewStore.send(.onAppear) })
-                .onDisappear(perform: { viewStore.send(.onDisappear) })
-                .fullScreenCover(isPresented: viewStore.bindingForDestination(.balanceBreakdown)) {
-                    BalanceBreakdownView(store: store.balanceBreakdownStore())
+                
+                Button {
+                    viewStore.send(.updateDestination(.transactionHistory))
+                } label: {
+                    Text("See transaction history")
                 }
+            }
+            .applyScreenBackground()
+            .navigationBarHidden(true)
+            .onAppear(perform: { viewStore.send(.onAppear) })
+            .onDisappear(perform: { viewStore.send(.onDisappear) })
+            .fullScreenCover(isPresented: viewStore.bindingForDestination(.balanceBreakdown)) {
+                BalanceBreakdownView(store: store.balanceBreakdownStore())
             }
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForDestination(.notEnoughFreeDiskSpace),
                 destination: { NotEnoughFreeSpaceView(viewStore: viewStore) }
+            )
+            .navigationLinkEmpty(
+                isActive: viewStore.bindingForDestination(.transactionHistory),
+                destination: { WalletEventsFlowView(store: store.historyStore()) }
             )
         }
     }
@@ -114,7 +117,7 @@ extension HomeView {
         }
     }
     
-    func circularArea(_ viewStore: HomeViewStore, _ size: CGSize) -> some View {
+    func circularArea(_ viewStore: HomeViewStore) -> some View {
         VStack {
             ZStack {
                 CircularProgress(
@@ -123,7 +126,6 @@ extension HomeView {
                     maxSegments: viewStore.requiredTransactionConfirmations,
                     innerCircleHidden: viewStore.isUpToDate
                 )
-                .frame(width: size.width * 0.65, height: size.width * 0.65)
                 .padding(.top, 50)
                 
                 VStack {

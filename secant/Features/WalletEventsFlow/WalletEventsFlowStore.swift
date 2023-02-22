@@ -19,7 +19,7 @@ struct WalletEventsFlowReducer: ReducerProtocol {
 
         @BindingState var alert: AlertState<WalletEventsFlowReducer.Action>?
         var latestMinedHeight: BlockHeight?
-        var isScrollable = false
+        var isScrollable = true
         var requiredTransactionConfirmations = 0
         var walletEvents = IdentifiedArrayOf<WalletEvent>.placeholder
         var selectedWalletEvent: WalletEvent?
@@ -60,7 +60,7 @@ struct WalletEventsFlowReducer: ReducerProtocol {
             if let latestMinedHeight = sdkSynchronizer.synchronizer?.latestScannedHeight {
                 state.latestMinedHeight = latestMinedHeight
             }
-            return sdkSynchronizer.getAllClearedTransactions()
+            return sdkSynchronizer.getAllTransactions()
                 .receive(on: mainQueue)
                 .map(WalletEventsFlowReducer.Action.updateWalletEvents)
                 .eraseToEffect()

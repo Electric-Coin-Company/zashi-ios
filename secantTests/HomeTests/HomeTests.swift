@@ -22,9 +22,7 @@ class HomeTests: XCTestCase {
         store.receive(.updateSynchronizerStatus)
     }
 
-    /// When the synchronizer status change to .synced, several things happen
-    /// 1. the .updateSynchronizerStatus is called
-    /// 2. the side effect to update the transactions history is called
+    /// When the synchronizer status change to .synced, the .updateSynchronizerStatus is called
     func testSynchronizerStateChanged_Synced() throws {
         // setup the store and environment to be fully mocked
         let testScheduler = DispatchQueue.test
@@ -41,95 +39,7 @@ class HomeTests: XCTestCase {
         
         testScheduler.advance(by: 0.01)
         
-        // ad 1.
         store.receive(.updateSynchronizerStatus)
-
-        // ad 2.
-        let transactionsHelper: [TransactionStateMockHelper] = [
-            TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "aa11"),
-            TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),
-            TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(3), status: .paid(success: true), uuid: "cc33"),
-            TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(4), uuid: "dd44"),
-            TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(5), uuid: "ee55"),
-            TransactionStateMockHelper(
-                date: 1651039606,
-                amount: Zatoshi(6),
-                status: .paid(success: false),
-                uuid: "ff66"
-            ),
-            TransactionStateMockHelper(date: 1651039303, amount: Zatoshi(7), uuid: "gg77"),
-            TransactionStateMockHelper(date: 1651039707, amount: Zatoshi(8), status: .paid(success: true), uuid: "hh88"),
-            TransactionStateMockHelper(date: 1651039808, amount: Zatoshi(9), uuid: "ii99")
-        ]
-        let walletEvents: [WalletEvent] = transactionsHelper.map {
-            let transaction = TransactionState.placeholder(
-                amount: $0.amount,
-                fee: Zatoshi(10),
-                shielded: $0.shielded,
-                status: $0.amount.amount > 5 ? .pending : $0.status,
-                timestamp: $0.date,
-                uuid: $0.uuid
-            )
-            return WalletEvent(id: transaction.id, state: $0.amount.amount > 5 ? .pending(transaction) : .send(transaction), timestamp: transaction.timestamp)
-        }
-        
-        store.receive(.updateWalletEvents(walletEvents))
-    }
-    
-    func testWalletEventsPartial_to_FullDrawer() throws {
-        let homeState = HomeReducer.State(
-            balanceBreakdownState: .placeholder,
-            drawerOverlay: .partial,
-            profileState: .placeholder,
-            requestState: .placeholder,
-            scanState: .placeholder,
-            sendState: .placeholder,
-            shieldedBalance: Balance.zero,
-            synchronizerStatusSnapshot: .default,
-            walletEventsState: .emptyPlaceHolder
-        )
-        
-        let store = TestStore(
-            initialState: homeState,
-            reducer: HomeReducer()
-        )
-        
-        store.send(.walletEvents(.updateDestination(.all))) { state in
-            state.walletEventsState.destination = .all
-        }
-                   
-        store.receive(.updateDrawer(.full)) { state in
-            state.drawerOverlay = .full
-            state.walletEventsState.isScrollable = true
-        }
-    }
-    
-    func testWalletEventsFull_to_PartialDrawer() throws {
-        let homeState = HomeReducer.State(
-            balanceBreakdownState: .placeholder,
-            drawerOverlay: .full,
-            profileState: .placeholder,
-            requestState: .placeholder,
-            scanState: .placeholder,
-            sendState: .placeholder,
-            shieldedBalance: Balance.zero,
-            synchronizerStatusSnapshot: .default,
-            walletEventsState: .emptyPlaceHolder
-        )
-        
-        let store = TestStore(
-            initialState: homeState,
-            reducer: HomeReducer()
-        )
-        
-        store.send(.walletEvents(.updateDestination(.latest))) { state in
-            state.walletEventsState.destination = .latest
-        }
-                   
-        store.receive(.updateDrawer(.partial)) { state in
-            state.drawerOverlay = .partial
-            state.walletEventsState.isScrollable = false
-        }
     }
     
     /// The .onAppear action is important to register for the synchronizer state updates.
@@ -182,7 +92,6 @@ class HomeTests: XCTestCase {
         let homeState = HomeReducer.State(
             destination: .profile,
             balanceBreakdownState: .placeholder,
-            drawerOverlay: .full,
             profileState: .placeholder,
             requestState: .placeholder,
             scanState: .placeholder,
@@ -208,7 +117,6 @@ class HomeTests: XCTestCase {
         let homeState = HomeReducer.State(
             destination: .profile,
             balanceBreakdownState: .placeholder,
-            drawerOverlay: .full,
             profileState: .placeholder,
             requestState: .placeholder,
             scanState: .placeholder,
