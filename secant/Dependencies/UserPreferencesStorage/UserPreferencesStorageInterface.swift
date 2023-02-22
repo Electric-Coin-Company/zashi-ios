@@ -10,7 +10,7 @@ import ComposableArchitecture
 
 extension DependencyValues {
     var userStoredPreferences: UserPreferencesStorageClient {
-        get { self [UserPreferencesStorageClient.self] }
+        get { self[UserPreferencesStorageClient.self] }
         set { self[UserPreferencesStorageClient.self] = newValue }
     }
 }

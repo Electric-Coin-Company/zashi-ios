@@ -16,6 +16,7 @@ struct HomeReducer: ReducerProtocol {
             case notEnoughFreeDiskSpace
             case profile
             case request
+            case transactionHistory
             case send
             case scan
             case balanceBreakdown
@@ -24,7 +25,6 @@ struct HomeReducer: ReducerProtocol {
         var destination: Destination?
 
         var balanceBreakdownState: BalanceBreakdownReducer.State
-        var drawerOverlay: DrawerOverlay
         var profileState: ProfileReducer.State
         var requestState: RequestReducer.State
         var requiredTransactionConfirmations = 0
@@ -67,7 +67,6 @@ struct HomeReducer: ReducerProtocol {
         case scan(ScanReducer.Action)
         case synchronizerStateChanged(SDKSynchronizerState)
         case walletEvents(WalletEventsFlowReducer.Action)
-        case updateDrawer(DrawerOverlay)
         case updateDestination(HomeReducer.State.Destination?)
         case updateSynchronizerStatus
         case updateWalletEvents([WalletEvent])
@@ -118,23 +117,9 @@ struct HomeReducer: ReducerProtocol {
             case .onDisappear:
                 return .cancel(id: CancelId.self)
 
-            case .synchronizerStateChanged(.synced):
-                return .merge(
-                    sdkSynchronizer.getAllTransactions()
-                        .receive(on: mainQueue)
-                        .map(HomeReducer.Action.updateWalletEvents)
-                        .eraseToEffect(),
-                    EffectTask(value: .updateSynchronizerStatus)
-                )
-                
             case .synchronizerStateChanged:
                 return EffectTask(value: .updateSynchronizerStatus)
-                
-            case .updateDrawer(let drawerOverlay):
-                state.drawerOverlay = drawerOverlay
-                state.walletEventsState.isScrollable = drawerOverlay == .full ? true : false
-                return .none
-                
+                                
             case .updateWalletEvents:
                 return .none
                 
@@ -190,12 +175,6 @@ struct HomeReducer: ReducerProtocol {
                 // TODO: [#221] error we need to handle (https://github.com/zcash/secant-ios-wallet/issues/221)
                 return .none
                 
-            case .walletEvents(.updateDestination(.all)):
-                return state.drawerOverlay != .full ? EffectTask(value: .updateDrawer(.full)) : .none
-
-            case .walletEvents(.updateDestination(.latest)):
-                return state.drawerOverlay != .partial ? EffectTask(value: .updateDrawer(.partial)) : .none
-
             case .walletEvents:
                 return .none
                 
@@ -283,13 +262,6 @@ extension HomeViewStore {
             }
         )
     }
-    
-    func bindingForDrawer() -> Binding<DrawerOverlay> {
-        self.binding(
-            get: { $0.drawerOverlay },
-            send: { .updateDrawer($0) }
-        )
-    }
 }
 
 // MARK: Placeholders
@@ -298,7 +270,6 @@ extension HomeReducer.State {
     static var placeholder: Self {
         .init(
             balanceBreakdownState: .placeholder,
-            drawerOverlay: .partial,
             profileState: .placeholder,
             requestState: .placeholder,
             scanState: .placeholder,

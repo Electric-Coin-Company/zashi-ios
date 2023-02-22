@@ -38,7 +38,6 @@ class HomeSnapshotTests: XCTestCase {
         let store = HomeStore(
             initialState: .init(
                 balanceBreakdownState: .placeholder,
-                drawerOverlay: .partial,
                 profileState: .placeholder,
                 requestState: .placeholder,
                 scanState: .placeholder,
