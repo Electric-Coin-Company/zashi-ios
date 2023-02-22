@@ -13,7 +13,6 @@ extension ZcashSDKEnvironment: TestDependencyKey {
     static let testnet = ZcashSDKEnvironment.liveValue
 
     static let testValue = Self(
-        latestCheckpoint: { network in BlockHeight.ofLatestCheckpoint(network: network) },
         endpoint: LightWalletEndpoint(
             address: ZcashSDKConstants.endpointTestnetAddress,
             port: ZcashSDKConstants.endpointPort,
