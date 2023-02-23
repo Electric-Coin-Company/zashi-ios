@@ -48,6 +48,16 @@ struct FeatureFlagsManager {
         return finalConfiguration
     }
 
+    // This is used only in debug menu to change configuration for specific flag
+    func update(featureFlag: FeatureFlag, isEnabled: Bool) async {
+        guard let provider = configurationProvider as? UserDefaultsFeatureFlagsStorage else {
+            LoggerProxy.debug("This is now only support with UserDefaultsFeatureFlagsStorage as configurationProvider.")
+            return
+        }
+
+        await provider.store(featureFlag: featureFlag, isEnabled: isEnabled)
+    }
+
     private func merge(
         configuration: FeatureFlagsConfiguration,
         withDefaultConfiguration defaultConfiguration: FeatureFlagsConfiguration
