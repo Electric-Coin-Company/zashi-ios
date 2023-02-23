@@ -27,10 +27,12 @@ struct OnboardingFlowReducer: ReducerProtocol {
             let badge: Badge
         }
 
-        var steps: IdentifiedArrayOf<Step> = Self.onboardingSteps
+        var destination: Destination?
+        var walletConfig: WalletConfig
+        var importWalletState: ImportWalletReducer.State
         var index = 0
         var skippedAtindex: Int?
-        var destination: Destination?
+        var steps: IdentifiedArrayOf<Step> = Self.onboardingSteps
 
         var currentStep: Step { steps[index] }
         var isFinalStep: Bool { steps.count == index + 1 }
@@ -42,19 +44,17 @@ struct OnboardingFlowReducer: ReducerProtocol {
             guard index != 0 else { return .zero }
             return stepOffset * CGFloat(index)
         }
-        
-        /// Import Wallet
-        var importWalletState: ImportWalletReducer.State
     }
 
     enum Action: Equatable {
-        case next
         case back
-        case skip
-        case updateDestination(OnboardingFlowReducer.State.Destination?)
         case createNewWallet
         case importExistingWallet
         case importWallet(ImportWalletReducer.Action)
+        case next
+        case onAppear
+        case skip
+        case updateDestination(OnboardingFlowReducer.State.Destination?)
     }
     
     var body: some ReducerProtocol<State, Action> {
@@ -64,6 +64,12 @@ struct OnboardingFlowReducer: ReducerProtocol {
         
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                if !state.walletConfig.isEnabled(.onboardingFlow) {
+                    return EffectTask(value: .skip)
+                }
+                return .none
+                
             case .back:
                 guard state.index > 0 else { return .none }
                 if let skippedFrom = state.skippedAtindex {

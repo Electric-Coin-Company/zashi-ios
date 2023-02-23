@@ -13,6 +13,7 @@ class OnboardingStoreTests: XCTestCase {
     func testIncrementingOnboarding() {
         let store = TestStore(
             initialState: OnboardingFlowReducer.State(
+                walletConfig: .default,
                 importWalletState: .placeholder
             ),
             reducer: OnboardingFlowReducer()
@@ -52,8 +53,9 @@ class OnboardingStoreTests: XCTestCase {
     func testIncrementingPastTotalStepsDoesNothing() {
         let store = TestStore(
             initialState: OnboardingFlowReducer.State(
-                index: 3,
-                importWalletState: .placeholder
+                walletConfig: .default,
+                importWalletState: .placeholder,
+                index: 3
             ),
             reducer: OnboardingFlowReducer()
         )
@@ -65,8 +67,9 @@ class OnboardingStoreTests: XCTestCase {
     func testDecrementingOnboarding() {
         let store = TestStore(
             initialState: OnboardingFlowReducer.State(
-                index: 2,
-                importWalletState: .placeholder
+                walletConfig: .default,
+                importWalletState: .placeholder,
+                index: 2
             ),
             reducer: OnboardingFlowReducer()
         )
@@ -95,6 +98,7 @@ class OnboardingStoreTests: XCTestCase {
     func testDecrementingPastFirstStepDoesNothing() {
         let store = TestStore(
             initialState: OnboardingFlowReducer.State(
+                walletConfig: .default,
                 importWalletState: .placeholder
             ),
             reducer: OnboardingFlowReducer()
@@ -109,8 +113,9 @@ class OnboardingStoreTests: XCTestCase {
 
         let store = TestStore(
             initialState: OnboardingFlowReducer.State(
-                index: initialIndex,
-                importWalletState: .placeholder
+                walletConfig: .default,
+                importWalletState: .placeholder,
+                index: initialIndex
             ),
             reducer: OnboardingFlowReducer()
         )

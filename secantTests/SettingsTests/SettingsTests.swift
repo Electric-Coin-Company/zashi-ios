@@ -57,7 +57,7 @@ class SettingsTests: XCTestCase {
             dependencies.walletStorage = mockedWalletStorage
         }
 
-        _ = await store.send(.backupWalletAccessRequest)
+        await store.send(.backupWalletAccessRequest)
         
         await store.receive(.backupWallet) { state in
             state.phraseDisplayState.phrase = RecoveryPhrase(words: mnemonic.components(separatedBy: " ").map { $0.redacted })
@@ -75,7 +75,7 @@ class SettingsTests: XCTestCase {
             $0.localAuthentication = .mockAuthenticationFailed
         }
 
-        _ = await store.send(.backupWalletAccessRequest)
+        await store.send(.backupWalletAccessRequest)
         
         await store.finish()
     }
@@ -86,7 +86,7 @@ class SettingsTests: XCTestCase {
             reducer: SettingsReducer()
         )
         
-        _ = await store.send(.rescanBlockchain) { state in
+        await store.send(.rescanBlockchain) { state in
             state.rescanDialog = .init(
                 title: TextState("Rescan"),
                 message: TextState("Select the rescan you want"),
@@ -118,7 +118,7 @@ class SettingsTests: XCTestCase {
             reducer: SettingsReducer()
         )
         
-        _ = await store.send(.cancelRescan) { state in
+        await store.send(.cancelRescan) { state in
             state.rescanDialog = nil
         }
     }
@@ -142,7 +142,7 @@ class SettingsTests: XCTestCase {
             reducer: SettingsReducer()
         )
         
-        _ = await store.send(.quickRescan) { state in
+        await store.send(.quickRescan) { state in
             state.rescanDialog = nil
         }
     }
@@ -166,7 +166,7 @@ class SettingsTests: XCTestCase {
             reducer: SettingsReducer()
         )
         
-        _ = await store.send(.fullRescan) { state in
+        await store.send(.fullRescan) { state in
             state.rescanDialog = nil
         }
     }
@@ -192,7 +192,7 @@ class SettingsTests: XCTestCase {
         
         store.dependencies.logsHandler = LogsHandlerClient(exportAndStoreLogs: { _, _, _ in })
         
-        _ = await store.send(.exportLogs) { state in
+        await store.send(.exportLogs) { state in
             state.exportLogsDisabled = true
         }
         
@@ -222,7 +222,7 @@ class SettingsTests: XCTestCase {
             reducer: SettingsReducer()
         )
         
-        _ = await store.send(.logsShareFinished) { state in
+        await store.send(.logsShareFinished) { state in
             state.isSharingLogs = false
         }
     }

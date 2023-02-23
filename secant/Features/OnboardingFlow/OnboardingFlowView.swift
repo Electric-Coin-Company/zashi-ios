@@ -9,38 +9,42 @@ import SwiftUI
 import ComposableArchitecture
 
 struct OnboardingScreen: View {
-    let store: Store<OnboardingFlowReducer.State, OnboardingFlowReducer.Action>
+    let store: OnboardingFlowStore
 
     var body: some View {
-        VStack {
-            ZStack {
-                OnboardingHeaderView(
-                    store: store.scope(
-                        state: { state in
-                            OnboardingHeaderView.ViewState(
-                                isInitialStep: state.isInitialStep,
-                                isFinalStep: state.isFinalStep
-                            )
-                        },
-                        action: { action in
-                            switch action {
-                            case .back: return .back
-                            case .skip: return .skip
+        WithViewStore(store) { viewStore in
+            VStack {
+                ZStack {
+                    OnboardingHeaderView(
+                        store: store.scope(
+                            state: { state in
+                                OnboardingHeaderView.ViewState(
+                                    walletConfig: state.walletConfig,
+                                    isInitialStep: state.isInitialStep,
+                                    isFinalStep: state.isFinalStep
+                                )
+                            },
+                            action: { action in
+                                switch action {
+                                case .back: return .back
+                                case .skip: return .skip
+                                }
                             }
-                        }
+                        )
                     )
-                )
-                .zIndex(1)
+                    .zIndex(1)
+                    
+                    OnboardingContentView(store: store)
+                }
                 
-                OnboardingContentView(store: store)
+                Spacer()
+                
+                OnboardingFooterView(store: store)
             }
-
-            Spacer()
-            
-            OnboardingFooterView(store: store)
+            .navigationBarHidden(true)
+            .applyScreenBackground()
+            .onAppear { viewStore.send(.onAppear) }
         }
-        .navigationBarHidden(true)
-        .applyScreenBackground()
     }
 }
 
@@ -51,6 +55,7 @@ struct OnboardingScreen_Previews: PreviewProvider {
         OnboardingScreen(
             store: Store(
                 initialState: OnboardingFlowReducer.State(
+                    walletConfig: .default,
                     importWalletState: .placeholder
                 ),
                 reducer: OnboardingFlowReducer()
@@ -62,6 +67,7 @@ struct OnboardingScreen_Previews: PreviewProvider {
         OnboardingScreen(
             store: Store(
                 initialState: OnboardingFlowReducer.State(
+                    walletConfig: .default,
                     importWalletState: .placeholder
                 ),
                 reducer: OnboardingFlowReducer()
@@ -73,6 +79,7 @@ struct OnboardingScreen_Previews: PreviewProvider {
         OnboardingScreen(
             store: Store(
                 initialState: OnboardingFlowReducer.State(
+                    walletConfig: .default,
                     importWalletState: .placeholder
                 ),
                 reducer: OnboardingFlowReducer()
@@ -85,6 +92,7 @@ struct OnboardingScreen_Previews: PreviewProvider {
         OnboardingScreen(
             store: Store(
                 initialState: OnboardingFlowReducer.State(
+                    walletConfig: .default,
                     importWalletState: .placeholder
                 ),
                 reducer: OnboardingFlowReducer()
@@ -96,6 +104,7 @@ struct OnboardingScreen_Previews: PreviewProvider {
         OnboardingScreen(
             store: Store(
                 initialState: OnboardingFlowReducer.State(
+                    walletConfig: .default,
                     importWalletState: .placeholder
                 ),
                 reducer: OnboardingFlowReducer()
@@ -107,6 +116,7 @@ struct OnboardingScreen_Previews: PreviewProvider {
         OnboardingScreen(
             store: Store(
                 initialState: OnboardingFlowReducer.State(
+                    walletConfig: .default,
                     importWalletState: .placeholder
                 ),
                 reducer: OnboardingFlowReducer()

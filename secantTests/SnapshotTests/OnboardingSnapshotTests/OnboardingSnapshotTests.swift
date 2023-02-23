@@ -12,7 +12,10 @@ import ComposableArchitecture
 class OnboardingSnapshotTests: XCTestCase {
     func testOnboardingFlowSnapshot() throws {
         let store = OnboardingFlowStore(
-            initialState: OnboardingFlowReducer.State(importWalletState: .placeholder),
+            initialState: OnboardingFlowReducer.State(
+                walletConfig: .default,
+                importWalletState: .placeholder
+            ),
             reducer: OnboardingFlowReducer()
         )
         let viewStore = ViewStore(store)
