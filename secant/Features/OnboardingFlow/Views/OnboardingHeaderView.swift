@@ -10,6 +10,7 @@ import ComposableArchitecture
 
 struct OnboardingHeaderView: View {
     struct ViewState: Equatable {
+        let featureFlagsConfiguration: FeatureFlagsConfiguration
         let isInitialStep: Bool
         let isFinalStep: Bool
     }
@@ -26,7 +27,7 @@ struct OnboardingHeaderView: View {
         WithViewStore(self.store) { viewStore in
             VStack {
                 HStack {
-                    if !viewStore.isInitialStep {
+                    if !viewStore.isInitialStep && viewStore.featureFlagsConfiguration.isEnabled(.onboardingFlow) {
                         Button("Back") {
                             viewStore.send(.back, animation: .easeInOut(duration: animationDuration))
                         }
@@ -63,8 +64,9 @@ struct OnboardingHeaderView_Previews: PreviewProvider {
     static var previews: some View {
         let store = Store<OnboardingFlowReducer.State, OnboardingFlowReducer.Action>(
             initialState: OnboardingFlowReducer.State(
-                index: 0,
-                importWalletState: .placeholder
+                featureFlagsConfiguration: .default,
+                importWalletState: .placeholder,
+                index: 0
             ),
             reducer: OnboardingFlowReducer()
         )
@@ -73,6 +75,7 @@ struct OnboardingHeaderView_Previews: PreviewProvider {
             store: store.scope(
                 state: { state in
                     OnboardingHeaderView.ViewState(
+                        featureFlagsConfiguration: state.featureFlagsConfiguration,
                         isInitialStep: state.isInitialStep,
                         isFinalStep: state.isFinalStep
                     )

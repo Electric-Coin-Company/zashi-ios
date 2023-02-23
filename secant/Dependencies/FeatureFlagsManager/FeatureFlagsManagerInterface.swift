@@ -6,7 +6,6 @@
 //
 
 import ComposableArchitecture
-import Foundation
 
 extension DependencyValues {
     var featureFlagsManager: FeatureFlagsManagerClient {

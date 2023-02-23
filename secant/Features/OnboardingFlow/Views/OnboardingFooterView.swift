@@ -85,8 +85,9 @@ struct OnboardingFooterView_Previews: PreviewProvider {
     static var previews: some View {
         let store = Store<OnboardingFlowReducer.State, OnboardingFlowReducer.Action>(
             initialState: OnboardingFlowReducer.State(
-                index: 3,
-                importWalletState: .placeholder
+                featureFlagsConfiguration: .default,
+                importWalletState: .placeholder,
+                index: 3
             ),
             reducer: OnboardingFlowReducer()
         )

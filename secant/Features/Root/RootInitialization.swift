@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import Foundation
 
 /// In this file is a collection of helpers that control all state and action related operations
 /// for the `RootReducer` with a connection to the app/wallet initialization and erasure of the wallet.
@@ -16,9 +17,12 @@ extension RootReducer {
         case checkWalletInitialization
         case configureCrashReporter
         case createNewWallet
+        case checkFeatureFlags
         case initializeSDK
+        case initialSetups
         case nukeWallet
         case respondToWalletInitializationState(InitializationState)
+        case featureFlagsChanged(FeatureFlagsConfiguration)
     }
 
     // swiftlint:disable:next cyclomatic_complexity
@@ -26,6 +30,26 @@ extension RootReducer {
         Reduce { state, action in
             switch action {
             case .initialization(.appDelegate(.didFinishLaunching)):
+                return EffectTask(value: .initialization(.checkFeatureFlags))
+                    .delay(for: 0.02, scheduler: mainQueue)
+                    .eraseToEffect()
+
+            case .initialization(.checkFeatureFlags):
+                return .run { send in
+                    let ffConfiguration = await featureFlagsManager.load()
+                    if ffConfiguration == FeatureFlagsConfiguration.default {
+                        await send(.initialization(.initialSetups))
+                    } else {
+                        await send(.initialization(.featureFlagsChanged(ffConfiguration)))
+                    }
+                }
+            
+            case .initialization(.featureFlagsChanged(let ffConfiguration)):
+                state.featureFlagsConfiguration = ffConfiguration
+                state.onboardingState.featureFlagsConfiguration = ffConfiguration
+                return EffectTask(value: .initialization(.initialSetups))
+                
+            case .initialization(.initialSetups):
                 // TODO: [#524] finish all the wallet events according to definition, https://github.com/zcash/secant-ios-wallet/issues/524
                 LoggerProxy.event(".appDelegate(.didFinishLaunching)")
                 /// We need to fetch data from keychain, in order to be 100% sure the keychain can be read we delay the check a bit

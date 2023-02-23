@@ -9,7 +9,6 @@ import XCTest
 @testable import secant_testnet
 
 class FeatureFlagsManagerTests: XCTestCase {
-
     override func setUp() {
         super.setUp()
 
@@ -20,7 +19,7 @@ class FeatureFlagsManagerTests: XCTestCase {
         XCTAssertFalse(FeatureFlagsConfiguration.default.isEnabled(.testFlag1))
         XCTAssertFalse(FeatureFlagsConfiguration.default.isEnabled(.testFlag2))
 
-        let provider = FeatureFlagsManagerConfigurationProviderMock() {
+        let provider = FeatureFlagsManagerConfigurationProviderMock {
             return FeatureFlagsConfiguration(flags: [.testFlag1: true, .testFlag2: false])
         }
 
@@ -35,7 +34,7 @@ class FeatureFlagsManagerTests: XCTestCase {
         XCTAssertFalse(FeatureFlagsConfiguration.default.isEnabled(.testFlag1))
         XCTAssertFalse(FeatureFlagsConfiguration.default.isEnabled(.testFlag2))
 
-        let provider = FeatureFlagsManagerConfigurationProviderMock() { throw NSError(domain: "whatever", code: 21) }
+        let provider = FeatureFlagsManagerConfigurationProviderMock { throw NSError(domain: "whatever", code: 21) }
         let cache = FeatureFlagsManagerCacheMock(cachedFlags: [.testFlag1: false, .testFlag2: true])
 
         let manager = FeatureFlagsManager(configurationProvider: provider, cache: cache)
@@ -49,7 +48,7 @@ class FeatureFlagsManagerTests: XCTestCase {
         XCTAssertFalse(FeatureFlagsConfiguration.default.isEnabled(.testFlag1))
         XCTAssertFalse(FeatureFlagsConfiguration.default.isEnabled(.testFlag2))
 
-        let provider = FeatureFlagsManagerConfigurationProviderMock() { throw NSError(domain: "whatever", code: 21) }
+        let provider = FeatureFlagsManagerConfigurationProviderMock { throw NSError(domain: "whatever", code: 21) }
         let cache = FeatureFlagsManagerCacheMock(cachedFlags: [:])
 
         let manager = FeatureFlagsManager(configurationProvider: provider, cache: cache)
@@ -63,7 +62,7 @@ class FeatureFlagsManagerTests: XCTestCase {
         XCTAssertFalse(FeatureFlagsConfiguration.default.isEnabled(.testFlag1))
         XCTAssertFalse(FeatureFlagsConfiguration.default.isEnabled(.testFlag2))
 
-        let provider = FeatureFlagsManagerConfigurationProviderMock() {
+        let provider = FeatureFlagsManagerConfigurationProviderMock {
             return FeatureFlagsConfiguration(flags: [.testFlag1: true])
         }
 
@@ -78,7 +77,7 @@ class FeatureFlagsManagerTests: XCTestCase {
         XCTAssertFalse(FeatureFlagsConfiguration.default.isEnabled(.testFlag1))
         XCTAssertFalse(FeatureFlagsConfiguration.default.isEnabled(.testFlag2))
 
-        let provider = FeatureFlagsManagerConfigurationProviderMock() {
+        let provider = FeatureFlagsManagerConfigurationProviderMock {
             return FeatureFlagsConfiguration(flags: [.testFlag1: true, .testFlag2: false])
         }
         let cache: FeatureFlagsManagerCache = UserDefaultsFeatureFlagsManagerCache()
@@ -95,6 +94,7 @@ class FeatureFlagsManagerTests: XCTestCase {
     }
 }
 
+// swiftlint:disable:next type_name
 struct FeatureFlagsManagerConfigurationProviderMock: FeatureFlagsConfigurationProvider {
     let provider: () async throws -> FeatureFlagsConfiguration
 
@@ -122,6 +122,7 @@ class FeatureFlagsManagerCacheMock: FeatureFlagsManagerCache {
 
 extension UserDefaultsFeatureFlagsStorage {
     func clearAll() {
+        // swiftlint:disable:next identifier_name
         let ud = UserDefaults.standard
         ud.removeObject(forKey: Constants.cacheKey)
         ud.removeObject(forKey: Constants.providerKey)

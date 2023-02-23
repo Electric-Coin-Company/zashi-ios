@@ -14,13 +14,13 @@ import ZcashLightClientKit
 extension RootReducer {
     struct DestinationState: Equatable {
         enum Destination: Equatable {
-            case welcome
-            case startup
-            case onboarding
-            case sandbox
             case home
-            case phraseValidation
+            case onboarding
             case phraseDisplay
+            case phraseValidation
+            case sandbox
+            case startup
+            case welcome
         }
         
         var internalDestination: Destination = .welcome
