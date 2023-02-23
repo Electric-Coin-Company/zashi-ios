@@ -14,7 +14,7 @@ enum FeatureFlag: String, CaseIterable, Codable {
     var enabledByDefault: Bool {
         switch self {
         case .testFlag1, .testFlag2: return false
-        case .onboardingFlow: return true
+        case .onboardingFlow: return false
         }
     }
 }

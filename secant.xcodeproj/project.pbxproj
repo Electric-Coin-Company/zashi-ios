@@ -3338,7 +3338,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG UNREDACTED";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/secant-testnet.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/secant-testnet";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/secant-testnet.app/secant-testnet";
 			};
 			name = Debug;
 		};
@@ -3360,7 +3360,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/secant-testnet.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/secant-testnet";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/secant-testnet.app/secant-testnet";
 			};
 			name = Release;
 		};
