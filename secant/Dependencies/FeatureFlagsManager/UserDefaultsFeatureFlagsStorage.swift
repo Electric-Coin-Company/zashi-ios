@@ -18,7 +18,7 @@ struct UserDefaultsFeatureFlagsStorage {
         case cantDeserializeData
     }
 
-    private enum Constants {
+    enum Constants {
         static let providerKey = "feature_flags_ud_config_provider"
         static let cacheKey = "feature_flags_ud_config_cache"
     }
@@ -34,19 +34,13 @@ struct UserDefaultsFeatureFlagsStorage {
         }
     }
 
-    func store(flags: FeatureFlagsConfiguration.RawFlags, key: String) async {
+    private func store(flags: FeatureFlagsConfiguration.RawFlags, key: String) async {
         do {
             let data = try PropertyListEncoder().encode(flags)
             userDefaults.set(data, forKey: key)
         } catch {
             LoggerProxy.debug("Can't store/encode feature flags when updating user defaults: \(error)")
         }
-    }
-}
-
-extension UserDefaultsFeatureFlagsStorage: FeatureFlagsConfigurationProvider {
-    func load() async throws -> FeatureFlagsConfiguration {
-        return try await load(key: Constants.providerKey)
     }
 
     // This is used only in debug menu to change configuration for specific flag
@@ -56,6 +50,12 @@ extension UserDefaultsFeatureFlagsStorage: FeatureFlagsConfigurationProvider {
         rawFlags[featureFlag] = isEnabled
 
         await store(flags: rawFlags, key: Constants.providerKey)
+    }
+}
+
+extension UserDefaultsFeatureFlagsStorage: FeatureFlagsConfigurationProvider {
+    func load() async throws -> FeatureFlagsConfiguration {
+        return try await load(key: Constants.providerKey)
     }
 }
 

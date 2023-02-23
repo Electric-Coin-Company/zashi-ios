@@ -6,14 +6,13 @@
 //
 
 enum FeatureFlag: String, CaseIterable, Codable {
-    case firstFeatureFlag
-    case secondFeatureFlag
+    // These two flags should stay here because those are used in tests. It's not super nice but there is probably no other way.
+    case testFlag1
+    case testFlag2
 
     var enabledByDefault: Bool {
         switch self {
-        case .firstFeatureFlag:
-            return true
-        case .secondFeatureFlag:
+        case .testFlag1, .testFlag2:
             return false
         }
     }

@@ -342,6 +342,7 @@
 		34F682F629A7641B0022C079 /* FeatureFlagsManagerTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F682F429A7641B0022C079 /* FeatureFlagsManagerTestKey.swift */; };
 		34F682F829A775C10022C079 /* UserDefaultsFeatureFlagsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F682F729A775C10022C079 /* UserDefaultsFeatureFlagsStorage.swift */; };
 		34F682F929A775C10022C079 /* UserDefaultsFeatureFlagsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F682F729A775C10022C079 /* UserDefaultsFeatureFlagsStorage.swift */; };
+		34F682FC29A784660022C079 /* FeatureFlagsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F682FB29A784660022C079 /* FeatureFlagsManagerTests.swift */; };
 		660558E9270C7A54009D6954 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 660558E8270C7A54009D6954 /* Colors.xcassets */; };
 		660558F7270C862F009D6954 /* Fonts+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660558F5270C862F009D6954 /* Fonts+Generated.swift */; };
 		660558F8270C862F009D6954 /* XCAssets+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660558F6270C862F009D6954 /* XCAssets+Generated.swift */; };
@@ -663,6 +664,7 @@
 		34F682F129A764120022C079 /* FeatureFlagsManagerLiveKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagsManagerLiveKey.swift; sourceTree = "<group>"; };
 		34F682F429A7641B0022C079 /* FeatureFlagsManagerTestKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagsManagerTestKey.swift; sourceTree = "<group>"; };
 		34F682F729A775C10022C079 /* UserDefaultsFeatureFlagsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsFeatureFlagsStorage.swift; sourceTree = "<group>"; };
+		34F682FB29A784660022C079 /* FeatureFlagsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagsManagerTests.swift; sourceTree = "<group>"; };
 		660558E8270C7A54009D6954 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		660558F5270C862F009D6954 /* Fonts+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Fonts+Generated.swift"; sourceTree = "<group>"; };
 		660558F6270C862F009D6954 /* XCAssets+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "XCAssets+Generated.swift"; sourceTree = "<group>"; };
@@ -1003,26 +1005,27 @@
 		0D4E7A1926B364180058B01E /* secantTests */ = {
 			isa = PBXGroup;
 			children = (
-				9E391162284E3ECF0073DD9A /* SnapshotTests */,
+				0D4E7A1C26B364180058B01E /* Info.plist */,
+				0D4E7A1A26B364180058B01E /* secantTests.swift */,
 				9E207C372966EF6E003E2C9B /* AddressDetailsTests */,
+				0DFE93DD272C6D4B000FCCA5 /* BackupFlowTests */,
 				9E94C61E28AA7DD5008256E9 /* BalanceBreakdownTests */,
-				9E6713EF2897F80A00A6796F /* MultiLineTextFieldTests */,
-				9E7CB6222874245400A02233 /* ProfileTests */,
 				9EAB4674285B5C68002904A0 /* DeeplinkTests */,
+				34F682FA29A784580022C079 /* FeatureFlagsManager */,
 				9E3911372848AD3A0073DD9A /* HomeTests */,
 				9E391122283E4C970073DD9A /* ImportWalletTests */,
-				9E612C7729913F2300D09B09 /* SensitiveDataTests */,
-				9E66129C2889388C00C75B70 /* SettingsTests */,
+				9E6713EF2897F80A00A6796F /* MultiLineTextFieldTests */,
+				6654C7422715A48E00901167 /* OnboardingTests */,
+				9E7CB6222874245400A02233 /* ProfileTests */,
+				0DFE93E4272CB6D0000FCCA5 /* RecoveryPhraseValidationTests */,
+				9EAFEB802805791400199FC9 /* RootTests */,
 				9E01F8262833CD84000EFC57 /* ScanTests */,
 				9E5BF642281FEC8700BA3F17 /* SendTests */,
-				9E5BF63D281953F900BA3F17 /* WalletEventsTests */,
-				9EAFEB802805791400199FC9 /* RootTests */,
+				9E612C7729913F2300D09B09 /* SensitiveDataTests */,
+				9E66129C2889388C00C75B70 /* SettingsTests */,
+				9E391162284E3ECF0073DD9A /* SnapshotTests */,
 				9EF8135927ECC25E0075AF48 /* UtilTests */,
-				0DFE93E4272CB6D0000FCCA5 /* RecoveryPhraseValidationTests */,
-				0DFE93DD272C6D4B000FCCA5 /* BackupFlowTests */,
-				6654C7422715A48E00901167 /* OnboardingTests */,
-				0D4E7A1A26B364180058B01E /* secantTests.swift */,
-				0D4E7A1C26B364180058B01E /* Info.plist */,
+				9E5BF63D281953F900BA3F17 /* WalletEventsTests */,
 			);
 			path = secantTests;
 			sourceTree = "<group>";
@@ -1196,6 +1199,14 @@
 				34F682EE29A7640A0022C079 /* FeatureFlagsManagerInterface.swift */,
 				34F682F129A764120022C079 /* FeatureFlagsManagerLiveKey.swift */,
 				34F682F429A7641B0022C079 /* FeatureFlagsManagerTestKey.swift */,
+			);
+			path = FeatureFlagsManager;
+			sourceTree = "<group>";
+		};
+		34F682FA29A784580022C079 /* FeatureFlagsManager */ = {
+			isa = PBXGroup;
+			children = (
+				34F682FB29A784660022C079 /* FeatureFlagsManagerTests.swift */,
 			);
 			path = FeatureFlagsManager;
 			sourceTree = "<group>";
@@ -2025,13 +2036,13 @@
 		9EF8135927ECC25E0075AF48 /* UtilTests */ = {
 			isa = PBXGroup;
 			children = (
-				9EF8135A27ECC25E0075AF48 /* WalletStorageTests.swift */,
+				9E02B56B27FED475005B809B /* DatabaseFilesTests.swift */,
+				9E0F574A2980260D005304FA /* LoggerTests.swift */,
 				9EAFEB852805A23100199FC9 /* SecItemClientTests.swift */,
 				9EF8135B27ECC25E0075AF48 /* UserPreferencesStorageTests.swift */,
-				9E02B56B27FED475005B809B /* DatabaseFilesTests.swift */,
-				9E39112D283F91600073DD9A /* ZatoshiTests.swift */,
 				0DB4E0B02881F2DB00947B78 /* WalletBalance+testing.swift */,
-				9E0F574A2980260D005304FA /* LoggerTests.swift */,
+				9EF8135A27ECC25E0075AF48 /* WalletStorageTests.swift */,
+				9E39112D283F91600073DD9A /* ZatoshiTests.swift */,
 			);
 			path = UtilTests;
 			sourceTree = "<group>";
@@ -3039,6 +3050,7 @@
 				9E02B56C27FED475005B809B /* DatabaseFilesTests.swift in Sources */,
 				9E612C7929913F3600D09B09 /* SensitiveDataTests.swift in Sources */,
 				9EF8135D27ECC25E0075AF48 /* UserPreferencesStorageTests.swift in Sources */,
+				34F682FC29A784660022C079 /* FeatureFlagsManagerTests.swift in Sources */,
 				9E94C62028AA7DEE008256E9 /* BalanceBreakdownTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

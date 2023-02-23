@@ -8,7 +8,10 @@
 import Foundation
 
 struct FeatureFlagsManager {
+    /// Objects that fetches flags configuration from some source. It can be fetched from user defaults or some backend API for example. It depends
+    /// on implementation.
     private let configurationProvider: FeatureFlagsConfigurationProvider
+    /// Object that caches provided flags configuration.
     private let cache: FeatureFlagsManagerCache
 
     init(configurationProvider: FeatureFlagsConfigurationProvider, cache: FeatureFlagsManagerCache) {
@@ -16,6 +19,15 @@ struct FeatureFlagsManager {
         self.cache = cache
     }
 
+    /// Loads flags configuration.
+    ///
+    /// First `configurationProvider` is used to fetch flags configuration. If that fails then `cache` is used to load flags configuration. And if
+    /// that fails `FeatureFlagsConfiguration.default` is used.
+    ///
+    /// Loaded configuration is merged with with `FeatureFlagsConfiguration.default` to be sure that all recognized flags are always returned in
+    /// configuration.
+    ///
+    /// Merged configuration is stored in cache.
     func load() async -> FeatureFlagsConfiguration {
         let configuration: FeatureFlagsConfiguration
         do {
@@ -40,9 +52,6 @@ struct FeatureFlagsManager {
         configuration: FeatureFlagsConfiguration,
         withDefaultConfiguration defaultConfiguration: FeatureFlagsConfiguration
     ) -> FeatureFlagsConfiguration {
-        // Merge config that we received from provider with default config. Provider may return only subset of flags or it can return more flags
-        // than we can recognize. Here we should make configuration that respects what is returned from provider and has all the flags that we can
-        // recognize.
         var rawDefaultFlags = defaultConfiguration.flags
         rawDefaultFlags.merge(configuration.flags, uniquingKeysWith: { $1 })
         return FeatureFlagsConfiguration(flags: rawDefaultFlags)
