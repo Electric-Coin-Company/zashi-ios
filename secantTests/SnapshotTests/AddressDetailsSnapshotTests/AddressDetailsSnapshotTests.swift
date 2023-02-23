@@ -22,6 +22,7 @@ class AddressDetailsSnapshotTests: XCTestCase {
         let store = Store(
             initialState: AddressDetailsReducer.State(uAddress: uAddress),
             reducer: AddressDetailsReducer()
+                .dependency(\.featureFlagsManager, .noOp)
         )
         
         addAttachments(AddressDetailsView(store: store))

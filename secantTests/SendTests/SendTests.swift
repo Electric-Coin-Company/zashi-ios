@@ -55,7 +55,7 @@ class SendTests: XCTestCase {
         }
 
         // simulate the sending confirmation button to be pressed
-        _ = await store.send(.sendConfirmationPressed) { state in
+        await store.send(.sendConfirmationPressed) { state in
             // once sending is confirmed, the attempts to try to send again by pressing the button
             // needs to be eliminated, indicated by the flag `isSendingTransaction`, need to be true
             state.isSendingTransaction = true
@@ -127,7 +127,7 @@ class SendTests: XCTestCase {
         }
 
         // simulate the sending confirmation button to be pressed
-        _ = await store.send(.sendConfirmationPressed) { state in
+        await store.send(.sendConfirmationPressed) { state in
             // once sending is confirmed, the attempts to try to send again by pressing the button
             // needs to be eliminated, indicated by the flag `isSendingTransaction`, need to be true
             state.isSendingTransaction = true
@@ -193,7 +193,7 @@ class SendTests: XCTestCase {
         }
 
         // simulate the sending confirmation button to be pressed
-        _ = await store.send(.sendConfirmationPressed) { state in
+        await store.send(.sendConfirmationPressed) { state in
             // once sending is confirmed, the attempts to try to send again by pressing the button
             // needs to be eliminated, indicated by the flag `isSendingTransaction`, need to be true
             state.isSendingTransaction = true

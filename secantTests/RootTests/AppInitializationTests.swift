@@ -11,15 +11,8 @@ import ComposableArchitecture
 
 class AppInitializationTests: XCTestCase {
     /// This integration test starts with finishing the app launch and triggering bunch of initialization procedures.
-    /// 1. The app calls .checkWalletInitialization delayed by 0.02 seconds to ensure keychain is successfully operational.
-    /// 2. The .respondToWalletInitializationState is triggered to decide the state of the wallet.
-    /// 3. The .initializeSDK is triggered to set the state of the app and preparing the synchronizer.
-    /// 4. The .checkBackupPhraseValidation is triggered to check the validation state.
-    /// 5. The user hasn't finished the backup phrase test so the display phrase is presented.
     @MainActor func testDidFinishLaunching_to_InitializedWallet() async throws {
         // setup the store and environment to be fully mocked
-        let testScheduler = DispatchQueue.test
-
         let recoveryPhrase = RecoveryPhrase(words: try MnemonicClient.mock.randomMnemonicWords().map { $0.redacted })
 
         let phraseValidationState = RecoveryPhraseValidationFlowReducer.State(
@@ -72,8 +65,10 @@ class AppInitializationTests: XCTestCase {
 
         let appState = RootReducer.State(
             destinationState: .placeholder,
+            featureFlagsConfiguration: .default,
             homeState: .placeholder,
             onboardingState: .init(
+                featureFlagsConfiguration: .default,
                 importWalletState: .placeholder
             ),
             phraseValidationState: phraseValidationState,
@@ -87,123 +82,108 @@ class AppInitializationTests: XCTestCase {
         let store = TestStore(
             initialState: appState,
             reducer: RootReducer()
-        ) { dependencies in
-            dependencies.databaseFiles = .noOp
-            dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
-            dependencies.derivationTool = .liveValue
-            dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-            dependencies.mnemonic = .mock
-            dependencies.randomRecoveryPhrase = recoveryPhraseRandomizer
-            dependencies.walletStorage.exportWallet = { .placeholder }
-            dependencies.walletStorage.areKeysPresent = { true }
-        }
+        )
+        
+        store.dependencies.databaseFiles = .noOp
+        store.dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
+        store.dependencies.derivationTool = .liveValue
+        store.dependencies.mainQueue = .immediate
+        store.dependencies.mnemonic = .mock
+        store.dependencies.randomRecoveryPhrase = recoveryPhraseRandomizer
+        store.dependencies.walletStorage.exportWallet = { .placeholder }
+        store.dependencies.walletStorage.areKeysPresent = { true }
+        store.dependencies.featureFlagsManager = .noOp
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
-        _ = await store.send(.initialization(.appDelegate(.didFinishLaunching)))
+        await store.send(.initialization(.appDelegate(.didFinishLaunching)))
 
-        // the 0.02 delay ensures keychain is ready
-        await testScheduler.advance(by: 0.02)
+        await store.receive(.initialization(.checkFeatureFlags))
 
-        // ad 1.
+        await store.receive(.initialization(.initialSetups))
+
         await store.receive(.initialization(.configureCrashReporter))
 
-        // ad 2.
         await store.receive(.initialization(.checkWalletInitialization))
 
-        // ad 3.
         await store.receive(.initialization(.respondToWalletInitializationState(.initialized)))
 
-        // ad 4.
         await store.receive(.initialization(.initializeSDK)) { state in
             state.storedWallet = .placeholder
         }
-        // ad 5.
+
         await store.receive(.initialization(.checkBackupPhraseValidation)) { state in
             state.appInitializationState = .initialized
         }
 
-        // the 3.0 delay ensures the welcome screen is visible till the initialization is done
-        await testScheduler.advance(by: 3.00)
-
-        // ad 5.
         await store.receive(.destination(.updateDestination(.phraseDisplay))) { state in
             state.destinationState.previousDestination = .welcome
             state.destinationState.internalDestination = .phraseDisplay
         }
+        
+        await store.finish()
     }
     
     /// Integration test validating the side effects work together properly when no wallet is stored but database files are present.
-    /// 1. The app calls .checkWalletInitialization delayed by 0.02 seconds to ensure keychain is successfully operational.
-    /// 2. The .respondToWalletInitializationState is triggered to decide the state of the wallet.
-    func testDidFinishLaunching_to_KeysMissing() throws {
-        // setup the store and environment to be fully mocked
-        let testScheduler = DispatchQueue.test
-
+    @MainActor func testDidFinishLaunching_to_KeysMissing() async throws {
         let store = TestStore(
             initialState: .placeholder,
             reducer: RootReducer()
-        ) { dependencies in
-            dependencies.databaseFiles = .noOp
-            dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
-            dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-            dependencies.walletStorage = .noOp
-        }
+        )
+
+        store.dependencies.databaseFiles = .noOp
+        store.dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
+        store.dependencies.walletStorage = .noOp
+        store.dependencies.mainQueue = .immediate
+        store.dependencies.featureFlagsManager = .noOp
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
-        store.send(.initialization(.appDelegate(.didFinishLaunching)))
-        
-        // the 0.02 delay ensures keychain is ready
-        testScheduler.advance(by: 0.02)
-        
-        // ad 1.
-        store.receive(.initialization(.configureCrashReporter))
+        await store.send(.initialization(.appDelegate(.didFinishLaunching)))
 
-        // ad 2
-        store.receive(.initialization(.checkWalletInitialization))
+        await store.receive(.initialization(.checkFeatureFlags))
+        
+        await store.receive(.initialization(.initialSetups))
 
-        // ad 3.
-        store.receive(.initialization(.respondToWalletInitializationState(.keysMissing))) { state in
+        await store.receive(.initialization(.configureCrashReporter))
+
+        await store.receive(.initialization(.checkWalletInitialization))
+
+        await store.receive(.initialization(.respondToWalletInitializationState(.keysMissing))) { state in
             state.appInitializationState = .keysMissing
         }
+        
+        await store.finish()
     }
     
     /// Integration test validating the side effects work together properly when no wallet is stored and no database files are present.
-    /// 1. The app calls .checkWalletInitialization delayed by 0.02 seconds to ensure keychain is successfully operational.
-    /// 2. The .respondToWalletInitializationState is triggered to decide the state of the wallet.
-    /// 3. The wallet is not present, onboarding flow is triggered.
-    func testDidFinishLaunching_to_Uninitialized() throws {
-        // setup the store and environment to be fully mocked
-        let testScheduler = DispatchQueue.test
-
+    @MainActor func testDidFinishLaunching_to_Uninitialized() async throws {
         let store = TestStore(
             initialState: .placeholder,
             reducer: RootReducer()
-        ) { dependencies in
-            dependencies.databaseFiles = .noOp
-            dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-            dependencies.walletStorage = .noOp
-        }
+        )
+        
+        store.dependencies.databaseFiles = .noOp
+        store.dependencies.mainQueue = .immediate
+        store.dependencies.walletStorage = .noOp
+        store.dependencies.featureFlagsManager = .noOp
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
-        store.send(.initialization(.appDelegate(.didFinishLaunching)))
+        await store.send(.initialization(.appDelegate(.didFinishLaunching)))
+
+        await store.receive(.initialization(.checkFeatureFlags))
+
+        await store.receive(.initialization(.initialSetups))
+
+        await store.receive(.initialization(.configureCrashReporter))
+
+        await store.receive(.initialization(.checkWalletInitialization))
+
+        await store.receive(.initialization(.respondToWalletInitializationState(.uninitialized)))
         
-        // the 0.02 delay ensures keychain is ready
-        // the 3.0 delay ensures the welcome screen is visible till the initialization check is done
-        testScheduler.advance(by: 3.02)
-
-        // ad 1.
-        store.receive(.initialization(.configureCrashReporter))
-
-        // ad 2.
-        store.receive(.initialization(.checkWalletInitialization))
-
-        // ad 3.
-        store.receive(.initialization(.respondToWalletInitializationState(.uninitialized)))
-        
-        // ad 4.
-        store.receive(.destination(.updateDestination(.onboarding))) { state in
+        await store.receive(.destination(.updateDestination(.onboarding))) { state in
             state.destinationState.previousDestination = .welcome
             state.destinationState.internalDestination = .onboarding
         }
+        
+        await store.finish()
     }
 }

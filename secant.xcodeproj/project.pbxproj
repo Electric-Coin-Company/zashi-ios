@@ -84,10 +84,10 @@
 		0D26AEDC299E8196005260EE /* CheckCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346D41E328DF0B8600963F36 /* CheckCircle.swift */; };
 		0D26AEDD299E8196005260EE /* LogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0F5744297EBA1B005304FA /* LogStore.swift */; };
 		0D26AEDE299E8196005260EE /* RecoveryPhraseRandomizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3911422848EEB90073DD9A /* RecoveryPhraseRandomizer.swift */; };
-		0D26AEDF299E8196005260EE /* FileManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863C42923C8AF003D0F8B /* FileManagerTest.swift */; };
+		0D26AEDF299E8196005260EE /* FileManagerTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863C42923C8AF003D0F8B /* FileManagerTestKey.swift */; };
 		0D26AEE0299E8196005260EE /* SecItemLive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863BE2923C72C003D0F8B /* SecItemLive.swift */; };
 		0D26AEE1299E8196005260EE /* CircularFrameBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669FDAEA272C23C2007B9422 /* CircularFrameBadge.swift */; };
-		0D26AEE2299E8196005260EE /* FileManagerLive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863B82923C6D7003D0F8B /* FileManagerLive.swift */; };
+		0D26AEE2299E8196005260EE /* FileManagerLiveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863B82923C6D7003D0F8B /* FileManagerLiveKey.swift */; };
 		0D26AEE3299E8196005260EE /* AppVersionTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF979291F7EB0000A1A05 /* AppVersionTestKey.swift */; };
 		0D26AEE4299E8196005260EE /* CurrencySelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8719CC27FB0D3B0082C926 /* CurrencySelectionView.swift */; };
 		0D26AEE5299E8196005260EE /* RecoveryPhraseRandomizerTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863A429239DCB003D0F8B /* RecoveryPhraseRandomizerTestKey.swift */; };
@@ -398,6 +398,7 @@
 		9E39115E284E3E350073DD9A /* secantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A2526B364180058B01E /* secantUITests.swift */; };
 		9E4DC6E027C409A100E657F4 /* NeumorphicDesignModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DC6DF27C409A100E657F4 /* NeumorphicDesignModifier.swift */; };
 		9E4DC6E227C4C6B700E657F4 /* SecantButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */; };
+		9E54DCB929A79076007071C3 /* FFOnboardingFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E54DCB829A79076007071C3 /* FFOnboardingFlowTests.swift */; };
 		9E5BF63F2819542C00BA3F17 /* WalletEventsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF63E2819542C00BA3F17 /* WalletEventsTests.swift */; };
 		9E5BF641281FD7B600BA3F17 /* TransactionFailedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF640281FD7B600BA3F17 /* TransactionFailedView.swift */; };
 		9E5BF644281FEC9900BA3F17 /* SendTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF643281FEC9900BA3F17 /* SendTests.swift */; };
@@ -480,13 +481,13 @@
 		9EB863A829239DCB003D0F8B /* RecoveryPhraseRandomizerLiveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863A529239DCB003D0F8B /* RecoveryPhraseRandomizerLiveKey.swift */; };
 		9EB863A929239DCB003D0F8B /* RecoveryPhraseRandomizerInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863A629239DCB003D0F8B /* RecoveryPhraseRandomizerInterface.swift */; };
 		9EB863AA29239EB2003D0F8B /* RecoveryPhraseRandomizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3911422848EEB90073DD9A /* RecoveryPhraseRandomizer.swift */; };
-		9EB863B92923C6D7003D0F8B /* FileManagerLive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863B82923C6D7003D0F8B /* FileManagerLive.swift */; };
+		9EB863B92923C6D7003D0F8B /* FileManagerLiveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863B82923C6D7003D0F8B /* FileManagerLiveKey.swift */; };
 		9EB863BB2923C6F8003D0F8B /* NotificationCenterLive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863BA2923C6F8003D0F8B /* NotificationCenterLive.swift */; };
 		9EB863BD2923C704003D0F8B /* NotificationCenterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863BC2923C704003D0F8B /* NotificationCenterTest.swift */; };
 		9EB863BF2923C72C003D0F8B /* SecItemLive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863BE2923C72C003D0F8B /* SecItemLive.swift */; };
 		9EB863C12923C779003D0F8B /* URIParserLive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863C02923C779003D0F8B /* URIParserLive.swift */; };
 		9EB863C32923C807003D0F8B /* URIParserTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863C22923C807003D0F8B /* URIParserTest.swift */; };
-		9EB863C52923C8AF003D0F8B /* FileManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863C42923C8AF003D0F8B /* FileManagerTest.swift */; };
+		9EB863C52923C8AF003D0F8B /* FileManagerTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863C42923C8AF003D0F8B /* FileManagerTestKey.swift */; };
 		9EB863C72923C93B003D0F8B /* UserPreferencesStorageLive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863C62923C93B003D0F8B /* UserPreferencesStorageLive.swift */; };
 		9EB863C92923C953003D0F8B /* UserPreferencesStorageMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863C82923C953003D0F8B /* UserPreferencesStorageMocks.swift */; };
 		9EB863CB2923CA20003D0F8B /* SDKSynchronizerLive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863CA2923CA20003D0F8B /* SDKSynchronizerLive.swift */; };
@@ -719,6 +720,7 @@
 		9E3911472848EEB90073DD9A /* WalletStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletStorage.swift; sourceTree = "<group>"; };
 		9E4DC6DF27C409A100E657F4 /* NeumorphicDesignModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeumorphicDesignModifier.swift; sourceTree = "<group>"; };
 		9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecantButtonStyles.swift; sourceTree = "<group>"; };
+		9E54DCB829A79076007071C3 /* FFOnboardingFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFOnboardingFlowTests.swift; sourceTree = "<group>"; };
 		9E5BF63B2818305D00BA3F17 /* TransactionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionState.swift; sourceTree = "<group>"; };
 		9E5BF63E2819542C00BA3F17 /* WalletEventsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletEventsTests.swift; sourceTree = "<group>"; };
 		9E5BF640281FD7B600BA3F17 /* TransactionFailedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionFailedView.swift; sourceTree = "<group>"; };
@@ -795,13 +797,13 @@
 		9EB863A429239DCB003D0F8B /* RecoveryPhraseRandomizerTestKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseRandomizerTestKey.swift; sourceTree = "<group>"; };
 		9EB863A529239DCB003D0F8B /* RecoveryPhraseRandomizerLiveKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseRandomizerLiveKey.swift; sourceTree = "<group>"; };
 		9EB863A629239DCB003D0F8B /* RecoveryPhraseRandomizerInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseRandomizerInterface.swift; sourceTree = "<group>"; };
-		9EB863B82923C6D7003D0F8B /* FileManagerLive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerLive.swift; sourceTree = "<group>"; };
+		9EB863B82923C6D7003D0F8B /* FileManagerLiveKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerLiveKey.swift; sourceTree = "<group>"; };
 		9EB863BA2923C6F8003D0F8B /* NotificationCenterLive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenterLive.swift; sourceTree = "<group>"; };
 		9EB863BC2923C704003D0F8B /* NotificationCenterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenterTest.swift; sourceTree = "<group>"; };
 		9EB863BE2923C72C003D0F8B /* SecItemLive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecItemLive.swift; sourceTree = "<group>"; };
 		9EB863C02923C779003D0F8B /* URIParserLive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URIParserLive.swift; sourceTree = "<group>"; };
 		9EB863C22923C807003D0F8B /* URIParserTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URIParserTest.swift; sourceTree = "<group>"; };
-		9EB863C42923C8AF003D0F8B /* FileManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerTest.swift; sourceTree = "<group>"; };
+		9EB863C42923C8AF003D0F8B /* FileManagerTestKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerTestKey.swift; sourceTree = "<group>"; };
 		9EB863C62923C93B003D0F8B /* UserPreferencesStorageLive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreferencesStorageLive.swift; sourceTree = "<group>"; };
 		9EB863C82923C953003D0F8B /* UserPreferencesStorageMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreferencesStorageMocks.swift; sourceTree = "<group>"; };
 		9EB863CA2923CA20003D0F8B /* SDKSynchronizerLive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKSynchronizerLive.swift; sourceTree = "<group>"; };
@@ -1011,7 +1013,7 @@
 				0DFE93DD272C6D4B000FCCA5 /* BackupFlowTests */,
 				9E94C61E28AA7DD5008256E9 /* BalanceBreakdownTests */,
 				9EAB4674285B5C68002904A0 /* DeeplinkTests */,
-				34F682FA29A784580022C079 /* FeatureFlagsManager */,
+				34F682FA29A784580022C079 /* FeatureFlagsTests */,
 				9E3911372848AD3A0073DD9A /* HomeTests */,
 				9E391122283E4C970073DD9A /* ImportWalletTests */,
 				9E6713EF2897F80A00A6796F /* MultiLineTextFieldTests */,
@@ -1203,12 +1205,13 @@
 			path = FeatureFlagsManager;
 			sourceTree = "<group>";
 		};
-		34F682FA29A784580022C079 /* FeatureFlagsManager */ = {
+		34F682FA29A784580022C079 /* FeatureFlagsTests */ = {
 			isa = PBXGroup;
 			children = (
 				34F682FB29A784660022C079 /* FeatureFlagsManagerTests.swift */,
+				9E54DCB829A79076007071C3 /* FFOnboardingFlowTests.swift */,
 			);
-			path = FeatureFlagsManager;
+			path = FeatureFlagsTests;
 			sourceTree = "<group>";
 		};
 		663FAB9A271D873300E495F8 /* Buttons */ = {
@@ -1919,8 +1922,8 @@
 			isa = PBXGroup;
 			children = (
 				9E02B56927FED43E005B809B /* FileManagerInterface.swift */,
-				9EB863B82923C6D7003D0F8B /* FileManagerLive.swift */,
-				9EB863C42923C8AF003D0F8B /* FileManagerTest.swift */,
+				9EB863B82923C6D7003D0F8B /* FileManagerLiveKey.swift */,
+				9EB863C42923C8AF003D0F8B /* FileManagerTestKey.swift */,
 			);
 			path = FileManager;
 			sourceTree = "<group>";
@@ -2625,10 +2628,10 @@
 				0D26AEDC299E8196005260EE /* CheckCircle.swift in Sources */,
 				0D26AEDD299E8196005260EE /* LogStore.swift in Sources */,
 				0D26AEDE299E8196005260EE /* RecoveryPhraseRandomizer.swift in Sources */,
-				0D26AEDF299E8196005260EE /* FileManagerTest.swift in Sources */,
+				0D26AEDF299E8196005260EE /* FileManagerTestKey.swift in Sources */,
 				0D26AEE0299E8196005260EE /* SecItemLive.swift in Sources */,
 				0D26AEE1299E8196005260EE /* CircularFrameBadge.swift in Sources */,
-				0D26AEE2299E8196005260EE /* FileManagerLive.swift in Sources */,
+				0D26AEE2299E8196005260EE /* FileManagerLiveKey.swift in Sources */,
 				0D26AEE3299E8196005260EE /* AppVersionTestKey.swift in Sources */,
 				0D26AEE4299E8196005260EE /* CurrencySelectionView.swift in Sources */,
 				0D26AEE5299E8196005260EE /* RecoveryPhraseRandomizerTestKey.swift in Sources */,
@@ -2851,10 +2854,10 @@
 				346D41E428DF0B8600963F36 /* CheckCircle.swift in Sources */,
 				9E0F5745297EBA1B005304FA /* LogStore.swift in Sources */,
 				9EB863AA29239EB2003D0F8B /* RecoveryPhraseRandomizer.swift in Sources */,
-				9EB863C52923C8AF003D0F8B /* FileManagerTest.swift in Sources */,
+				9EB863C52923C8AF003D0F8B /* FileManagerTestKey.swift in Sources */,
 				9EB863BF2923C72C003D0F8B /* SecItemLive.swift in Sources */,
 				669FDAEB272C23C2007B9422 /* CircularFrameBadge.swift in Sources */,
-				9EB863B92923C6D7003D0F8B /* FileManagerLive.swift in Sources */,
+				9EB863B92923C6D7003D0F8B /* FileManagerLiveKey.swift in Sources */,
 				9EBDF97C291F7EB0000A1A05 /* AppVersionTestKey.swift in Sources */,
 				2E8719CD27FB0D3B0082C926 /* CurrencySelectionView.swift in Sources */,
 				9EB863A729239DCB003D0F8B /* RecoveryPhraseRandomizerTestKey.swift in Sources */,
@@ -3031,6 +3034,7 @@
 				9E9ECC9A28589E150099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests.swift in Sources */,
 				9E0F574B2980260D005304FA /* LoggerTests.swift in Sources */,
 				9EAFEB822805793200199FC9 /* RootTests.swift in Sources */,
+				9E54DCB929A79076007071C3 /* FFOnboardingFlowTests.swift in Sources */,
 				9E391132284644580073DD9A /* AppInitializationTests.swift in Sources */,
 				9E9ECC9928589E150099D5A2 /* RecoveryPhraseDisplaySnapshotTests.swift in Sources */,
 				9E391124283E4CAC0073DD9A /* ImportWalletTests.swift in Sources */,

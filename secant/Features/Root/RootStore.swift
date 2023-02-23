@@ -10,6 +10,7 @@ struct RootReducer: ReducerProtocol {
     struct State: Equatable {
         var appInitializationState: InitializationState = .uninitialized
         var destinationState: DestinationState
+        var featureFlagsConfiguration: FeatureFlagsConfiguration
         var homeState: HomeReducer.State
         var onboardingState: OnboardingFlowReducer.State
         var phraseValidationState: RecoveryPhraseValidationFlowReducer.State
@@ -34,6 +35,7 @@ struct RootReducer: ReducerProtocol {
     @Dependency(\.databaseFiles) var databaseFiles
     @Dependency(\.deeplink) var deeplink
     @Dependency(\.derivationTool) var derivationTool
+    @Dependency(\.featureFlagsManager) var featureFlagsManager
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.randomRecoveryPhrase) var randomRecoveryPhrase
@@ -159,8 +161,10 @@ extension RootReducer.State {
     static var placeholder: Self {
         .init(
             destinationState: .placeholder,
+            featureFlagsConfiguration: .default,
             homeState: .placeholder,
             onboardingState: .init(
+                featureFlagsConfiguration: .default,
                 importWalletState: .placeholder
             ),
             phraseValidationState: .placeholder,

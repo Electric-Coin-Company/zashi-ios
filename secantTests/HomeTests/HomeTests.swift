@@ -106,7 +106,7 @@ class HomeTests: XCTestCase {
             reducer: HomeReducer()
         )
 
-        _ = await store.send(.profile(.settings(.quickRescan))) { state in
+        await store.send(.profile(.settings(.quickRescan))) { state in
             state.destination = nil
         }
 
@@ -131,7 +131,7 @@ class HomeTests: XCTestCase {
             reducer: HomeReducer()
         )
 
-        _ = await store.send(.profile(.settings(.fullRescan))) { state in
+        await store.send(.profile(.settings(.fullRescan))) { state in
             state.destination = nil
         }
 

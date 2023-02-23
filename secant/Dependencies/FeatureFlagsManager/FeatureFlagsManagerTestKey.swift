@@ -6,7 +6,6 @@
 //
 
 import ComposableArchitecture
-import Foundation
 import XCTestDynamicOverlay
 
 extension FeatureFlagsManagerClient: TestDependencyKey {
@@ -16,7 +15,7 @@ extension FeatureFlagsManagerClient: TestDependencyKey {
 }
 
 extension FeatureFlagsManagerClient {
-    static let `default` = Self(
+    static let noOp = Self(
         load: { FeatureFlagsConfiguration.default }
     )
 }

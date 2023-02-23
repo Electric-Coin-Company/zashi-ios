@@ -9,11 +9,12 @@ enum FeatureFlag: String, CaseIterable, Codable {
     // These two flags should stay here because those are used in tests. It's not super nice but there is probably no other way.
     case testFlag1
     case testFlag2
+    case onboardingFlow
 
     var enabledByDefault: Bool {
         switch self {
-        case .testFlag1, .testFlag2:
-            return false
+        case .testFlag1, .testFlag2: return false
+        case .onboardingFlow: return false
         }
     }
 }
