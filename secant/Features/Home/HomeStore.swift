@@ -13,17 +13,16 @@ struct HomeReducer: ReducerProtocol {
 
     struct State: Equatable {
         enum Destination: Equatable {
+            case balanceBreakdown
             case notEnoughFreeDiskSpace
             case profile
             case request
-            case transactionHistory
             case send
-            case balanceBreakdown
+            case transactionHistory
         }
 
-        var destination: Destination?
-
         var balanceBreakdownState: BalanceBreakdownReducer.State
+        var destination: Destination?
         var profileState: ProfileReducer.State
         var requestState: RequestReducer.State
         var requiredTransactionConfirmations = 0

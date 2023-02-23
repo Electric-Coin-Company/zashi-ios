@@ -90,8 +90,8 @@ class HomeTests: XCTestCase {
 
     @MainActor func testQuickRescan_ResetToHomeScreen() async throws {
         let homeState = HomeReducer.State(
-            destination: .profile,
             balanceBreakdownState: .placeholder,
+            destination: .profile,
             profileState: .placeholder,
             requestState: .placeholder,
             scanState: .placeholder,
@@ -115,8 +115,8 @@ class HomeTests: XCTestCase {
 
     @MainActor func testFullRescan_ResetToHomeScreen() async throws {
         let homeState = HomeReducer.State(
-            destination: .profile,
             balanceBreakdownState: .placeholder,
+            destination: .profile,
             profileState: .placeholder,
             requestState: .placeholder,
             scanState: .placeholder,
