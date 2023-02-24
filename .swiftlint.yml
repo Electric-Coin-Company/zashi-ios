@@ -13,6 +13,7 @@ disabled_rules:
   - nesting # allow for types to be nested, common pattern in Swift
   - multiple_closures_with_trailing_closure 
   - generic_type_name # allow for arbitrarily long generic type names
+  - empty_parentheses_with_trailing_closure
 
 opt_in_rules:
   - mark
