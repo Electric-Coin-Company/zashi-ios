@@ -11,7 +11,7 @@ import ZcashLightClientKit
 extension ZcashSDKEnvironment: DependencyKey {
     static let liveValue = Self(
         endpoint: LightWalletEndpoint(
-            address: ZcashSDKConstants.endpointTestnetAddress,
+            address: Self.endpoint(for: TargetConstants.zcashNetwork),
             port: ZcashSDKConstants.endpointPort,
             secure: true,
             streamingCallTimeoutInMillis: ZcashSDKConstants.streamingCallTimeoutInMillis
