@@ -1,4 +1,12 @@
 # Changelog
+# 0.0.1 build 41
+[#554] Add WalletConfigProvider (#574)
+[#560] Remove QR code scanning from the home screen (#571)
+[#207] create Secant Mainnet target (#550)
+[#564] Add transaction history as standalone screen (#569)
+[#537] Flaky navigation issue (#567)
+[#545] Fix CI issues with PR builds (#548)
+[#544] Fix swiftlint warnings (#544)
 # 0.0.1 build 40 
 - [#541] Adopt Latest main commit of SDK (#542)
 # 0.0.1 build 39
@@ -8,7 +16,6 @@
 - [#516] Adopt unreleased changes that will go live with SDK 0.18.0-beta release (#532)
 - [#126] TCA component for user logs (#526)
 - [#521] Update format for the Swiftlint TODO rule (#523)
-- [#521] Update format for the Swiftlint TODO rule (#522)
 - [#517] QR codes integration into the wallet details and send feature (#518)
 - [#514] Adopt Unified Addresses (#515)
 # 0.0.1 build 37
