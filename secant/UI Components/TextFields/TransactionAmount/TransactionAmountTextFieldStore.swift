@@ -56,7 +56,7 @@ struct TransactionAmountTextFieldReducer: ReducerProtocol {
                 let decimalString = numberFormatter.string(maxCurrencyConvertedValue) ?? ""
                 
                 state.textFieldState.text = "\(decimalString)".redacted
-                return Effect(value: .updateAmount)
+                return EffectTask(value: .updateAmount)
 
             case .clearValue:
                 state.textFieldState.text = "".redacted
@@ -95,7 +95,7 @@ struct TransactionAmountTextFieldReducer: ReducerProtocol {
                 
                 let decimalString = numberFormatter.string(NSDecimalNumber(decimal: newValue)) ?? ""
                 state.textFieldState.text = "\(decimalString)".redacted
-                return Effect(value: .updateAmount)
+                return EffectTask(value: .updateAmount)
             }
         }
     }

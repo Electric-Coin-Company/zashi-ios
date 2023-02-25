@@ -165,8 +165,6 @@
 		0D26AF2D299E8196005260EE /* DebugMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2F1C832809B606004E65FE /* DebugMenu.swift */; };
 		0D26AF2E299E8196005260EE /* MnemonicInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E153A5E2920CD5100112F41 /* MnemonicInterface.swift */; };
 		0D26AF2F299E8196005260EE /* PasteboardLiveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E153A6429210B3B00112F41 /* PasteboardLiveKey.swift */; };
-		0D26AF30299E8196005260EE /* HoldToSendButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0AF0E28DEE4C70034CF37 /* HoldToSendButton.swift */; };
-		0D26AF31299E8196005260EE /* TransactionConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165B92740403600592F76 /* TransactionConfirmationView.swift */; };
 		0D26AF32299E8196005260EE /* View+InnerShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DF2DC5327235E3E00FA31E2 /* View+InnerShadow.swift */; };
 		0D26AF33299E8196005260EE /* ZcashSDKEnvironmentInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E153A6D292167FF00112F41 /* ZcashSDKEnvironmentInterface.swift */; };
 		0D26AF34299E8196005260EE /* SecItemInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB83280597B700199FC9 /* SecItemInterface.swift */; };
@@ -322,12 +320,10 @@
 		3448CB3228E47666006ADEDB /* NotEnoughFreeSpaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3448CB3128E47666006ADEDB /* NotEnoughFreeSpaceView.swift */; };
 		3448CB3728E485CB006ADEDB /* NotEnoughFeeSpaceSnapshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3448CB3628E485CB006ADEDB /* NotEnoughFeeSpaceSnapshots.swift */; };
 		346715A528E2027D0035F7C4 /* CheckCircleStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346715A428E2027D0035F7C4 /* CheckCircleStore.swift */; };
-		346715A828E20FE40035F7C4 /* TransactionConfirmationSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346715A728E20FE40035F7C4 /* TransactionConfirmationSnapshotTests.swift */; };
 		346D41E428DF0B8600963F36 /* CheckCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346D41E328DF0B8600963F36 /* CheckCircle.swift */; };
 		34BF09092927C98000222134 /* Memo+toString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BF09082927C98000222134 /* Memo+toString.swift */; };
 		34DA414728E4385800F8CC61 /* TransactionSendingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34DA414628E4385800F8CC61 /* TransactionSendingView.swift */; };
 		34DA414928E439CD00F8CC61 /* sendingTransaction.json in Resources */ = {isa = PBXBuildFile; fileRef = 34DA414828E439CD00F8CC61 /* sendingTransaction.json */; };
-		34E0AF0F28DEE4C70034CF37 /* HoldToSendButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0AF0E28DEE4C70034CF37 /* HoldToSendButton.swift */; };
 		34E0AF1128DEE5220034CF37 /* Wedge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0AF1028DEE5220034CF37 /* Wedge.swift */; };
 		34E5F2F328E46DB700C17E5F /* DiskSpaceChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E5F2F228E46DB700C17E5F /* DiskSpaceChecker.swift */; };
 		660558E9270C7A54009D6954 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 660558E8270C7A54009D6954 /* Colors.xcassets */; };
@@ -534,7 +530,6 @@
 		F9971A6C27680E1000A2DB75 /* WalletInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A6A27680E1000A2DB75 /* WalletInfoView.swift */; };
 		F9C165B4274031F600592F76 /* Bindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165B3274031F600592F76 /* Bindings.swift */; };
 		F9C165BF2740403600592F76 /* SendFlowStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165B72740403600592F76 /* SendFlowStore.swift */; };
-		F9C165C02740403600592F76 /* TransactionConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165B92740403600592F76 /* TransactionConfirmationView.swift */; };
 		F9C165C22740403600592F76 /* CreateTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165BB2740403600592F76 /* CreateTransactionView.swift */; };
 		F9C165C42740403600592F76 /* TransactionSentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165BD2740403600592F76 /* TransactionSentView.swift */; };
 		F9C165CB2741AB5D00592F76 /* SendFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165CA2741AB5D00592F76 /* SendFlowView.swift */; };
@@ -637,12 +632,10 @@
 		3448CB3128E47666006ADEDB /* NotEnoughFreeSpaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotEnoughFreeSpaceView.swift; sourceTree = "<group>"; };
 		3448CB3628E485CB006ADEDB /* NotEnoughFeeSpaceSnapshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotEnoughFeeSpaceSnapshots.swift; sourceTree = "<group>"; };
 		346715A428E2027D0035F7C4 /* CheckCircleStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckCircleStore.swift; sourceTree = "<group>"; };
-		346715A728E20FE40035F7C4 /* TransactionConfirmationSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionConfirmationSnapshotTests.swift; sourceTree = "<group>"; };
 		346D41E328DF0B8600963F36 /* CheckCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckCircle.swift; sourceTree = "<group>"; };
 		34BF09082927C98000222134 /* Memo+toString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Memo+toString.swift"; sourceTree = "<group>"; };
 		34DA414628E4385800F8CC61 /* TransactionSendingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionSendingView.swift; sourceTree = "<group>"; };
 		34DA414828E439CD00F8CC61 /* sendingTransaction.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sendingTransaction.json; sourceTree = "<group>"; };
-		34E0AF0E28DEE4C70034CF37 /* HoldToSendButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldToSendButton.swift; sourceTree = "<group>"; };
 		34E0AF1028DEE5220034CF37 /* Wedge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wedge.swift; sourceTree = "<group>"; };
 		34E5F2F228E46DB700C17E5F /* DiskSpaceChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskSpaceChecker.swift; sourceTree = "<group>"; };
 		660558E8270C7A54009D6954 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
@@ -844,7 +837,6 @@
 		F9971A6A27680E1000A2DB75 /* WalletInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletInfoView.swift; sourceTree = "<group>"; };
 		F9C165B3274031F600592F76 /* Bindings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bindings.swift; sourceTree = "<group>"; };
 		F9C165B72740403600592F76 /* SendFlowStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendFlowStore.swift; sourceTree = "<group>"; };
-		F9C165B92740403600592F76 /* TransactionConfirmationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionConfirmationView.swift; sourceTree = "<group>"; };
 		F9C165BB2740403600592F76 /* CreateTransactionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTransactionView.swift; sourceTree = "<group>"; };
 		F9C165BD2740403600592F76 /* TransactionSentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionSentView.swift; sourceTree = "<group>"; };
 		F9C165CA2741AB5D00592F76 /* SendFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendFlowView.swift; sourceTree = "<group>"; };
@@ -1154,7 +1146,6 @@
 		346715A628E20FB30035F7C4 /* SendSnapshotTests */ = {
 			isa = PBXGroup;
 			children = (
-				346715A728E20FE40035F7C4 /* TransactionConfirmationSnapshotTests.swift */,
 				34429C6D28E703CD00F2B929 /* TransactionSendingSnapshotTests.swift */,
 			);
 			path = SendSnapshotTests;
@@ -2104,8 +2095,6 @@
 			isa = PBXGroup;
 			children = (
 				F9C165BB2740403600592F76 /* CreateTransactionView.swift */,
-				34E0AF0E28DEE4C70034CF37 /* HoldToSendButton.swift */,
-				F9C165B92740403600592F76 /* TransactionConfirmationView.swift */,
 				9E5BF640281FD7B600BA3F17 /* TransactionFailedView.swift */,
 				34DA414628E4385800F8CC61 /* TransactionSendingView.swift */,
 				F9C165BD2740403600592F76 /* TransactionSentView.swift */,
@@ -2660,8 +2649,6 @@
 				0D26AF2D299E8196005260EE /* DebugMenu.swift in Sources */,
 				0D26AF2E299E8196005260EE /* MnemonicInterface.swift in Sources */,
 				0D26AF2F299E8196005260EE /* PasteboardLiveKey.swift in Sources */,
-				0D26AF30299E8196005260EE /* HoldToSendButton.swift in Sources */,
-				0D26AF31299E8196005260EE /* TransactionConfirmationView.swift in Sources */,
 				0D26AF32299E8196005260EE /* View+InnerShadow.swift in Sources */,
 				0D26AF33299E8196005260EE /* ZcashSDKEnvironmentInterface.swift in Sources */,
 				0D26AF34299E8196005260EE /* SecItemInterface.swift in Sources */,
@@ -2880,8 +2867,6 @@
 				9E2F1C842809B606004E65FE /* DebugMenu.swift in Sources */,
 				9E153A5F2920CE2700112F41 /* MnemonicInterface.swift in Sources */,
 				9E153A6729210B3B00112F41 /* PasteboardLiveKey.swift in Sources */,
-				34E0AF0F28DEE4C70034CF37 /* HoldToSendButton.swift in Sources */,
-				F9C165C02740403600592F76 /* TransactionConfirmationView.swift in Sources */,
 				0DF2DC5427235E3E00FA31E2 /* View+InnerShadow.swift in Sources */,
 				9E153A70292167FF00112F41 /* ZcashSDKEnvironmentInterface.swift in Sources */,
 				9EAFEB84280597B700199FC9 /* SecItemInterface.swift in Sources */,
@@ -2979,7 +2964,6 @@
 				9E391132284644580073DD9A /* AppInitializationTests.swift in Sources */,
 				9E9ECC9928589E150099D5A2 /* RecoveryPhraseDisplaySnapshotTests.swift in Sources */,
 				9E391124283E4CAC0073DD9A /* ImportWalletTests.swift in Sources */,
-				346715A828E20FE40035F7C4 /* TransactionConfirmationSnapshotTests.swift in Sources */,
 				9E5BF63F2819542C00BA3F17 /* WalletEventsTests.swift in Sources */,
 				0D4E7A1B26B364180058B01E /* secantTests.swift in Sources */,
 				0DFE93E6272CB6F7000FCCA5 /* RecoveryPhraseValidationTests.swift in Sources */,

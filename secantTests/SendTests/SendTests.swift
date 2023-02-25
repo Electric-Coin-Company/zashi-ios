@@ -55,14 +55,14 @@ class SendTests: XCTestCase {
         }
 
         // simulate the sending confirmation button to be pressed
-        _ = await store.send(.sendConfirmationPressed) { state in
+        _ = await store.send(.sendPressed) { state in
             // once sending is confirmed, the attempts to try to send again by pressing the button
             // needs to be eliminated, indicated by the flag `isSendingTransaction`, need to be true
             state.isSendingTransaction = true
         }
 
         await testScheduler.advance(by: 0.01)
-        guard let memo = try? Memo(string: "test") else {
+        guard let memo = try? Memo(string: "") else {
             XCTFail("testSendSucceeded: memo is expected to be successfuly initialized.")
             return
         }
@@ -127,7 +127,7 @@ class SendTests: XCTestCase {
         }
 
         // simulate the sending confirmation button to be pressed
-        _ = await store.send(.sendConfirmationPressed) { state in
+        _ = await store.send(.sendPressed) { state in
             // once sending is confirmed, the attempts to try to send again by pressing the button
             // needs to be eliminated, indicated by the flag `isSendingTransaction`, need to be true
             state.isSendingTransaction = true
@@ -193,7 +193,7 @@ class SendTests: XCTestCase {
         }
 
         // simulate the sending confirmation button to be pressed
-        _ = await store.send(.sendConfirmationPressed) { state in
+        _ = await store.send(.sendPressed) { state in
             // once sending is confirmed, the attempts to try to send again by pressing the button
             // needs to be eliminated, indicated by the flag `isSendingTransaction`, need to be true
             state.isSendingTransaction = true

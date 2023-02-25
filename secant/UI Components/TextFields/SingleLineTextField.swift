@@ -38,14 +38,18 @@ struct SingleLineTextField<TitleAccessoryContent, InputPrefixContent, InputAcces
                     placeholder: placeholderText,
                     store: store
                 )
+                .padding(10)
 
                 Spacer()
 
                 inputAccessoryView
             }
             .frame(maxHeight: 50)
-
-            TextFieldFooter()
+            .overlay(
+                Rectangle()
+                    .stroke(.white, lineWidth: 2)
+            )
+            .padding(.vertical, 5)
         }
     }
 }
