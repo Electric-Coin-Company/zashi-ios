@@ -24,6 +24,15 @@ extension ZcashSDKEnvironment {
         static let requiredTransactionConfirmations = 10
         static let streamingCallTimeoutInMillis = Int64(10 * 60 * 60 * 1000) // ten hours
     }
+
+    static func endpoint(for network: ZcashNetwork) -> String {
+        switch network.networkType {
+        case .testnet:
+            return ZcashSDKConstants.endpointTestnetAddress
+        case .mainnet:
+            return ZcashSDKConstants.endpointMainnetAddress
+        }
+    }
 }
 
 struct ZcashSDKEnvironment {
