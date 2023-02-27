@@ -19,6 +19,11 @@ extension WalletConfigProviderClient: DependencyKey {
     }
 
     static func live(walletConfigProvider: WalletConfigProvider = WalletConfigProviderClient.defaultWalletConfigProvider) -> Self {
-        Self(load: { return await walletConfigProvider.load() })
+        Self(
+            load: { return await walletConfigProvider.load() },
+            update: { flag, isEnabled in
+                await walletConfigProvider.update(featureFlag: flag, isEnabled: isEnabled)
+            }
+        )
     }
 }

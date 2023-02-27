@@ -29,7 +29,10 @@ struct WalletConfig: Equatable {
     }
 
     static var `default`: WalletConfig = {
-        let defaultSettings = FeatureFlag.allCases.map { ($0, $0.enabledByDefault) }
+        let defaultSettings = FeatureFlag.allCases
+            .filter { $0 != .testFlag1 && $0 != .testFlag2 }
+            .map { ($0, $0.enabledByDefault) }
+
         return WalletConfig(flags: Dictionary(uniqueKeysWithValues: defaultSettings))
     }()
 }

@@ -25,6 +25,11 @@ extension RootReducer {
         case walletConfigChanged(WalletConfig)
     }
 
+    enum DebugAction: Equatable {
+        case updateFlag(FeatureFlag, Bool)
+        case flagUpdated(WalletConfig)
+    }
+
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func initializationReduce() -> Reduce<RootReducer.State, RootReducer.Action> {
         Reduce { state, action in
@@ -45,8 +50,7 @@ extension RootReducer {
                 }
             
             case .initialization(.walletConfigChanged(let walletConfig)):
-                state.walletConfig = walletConfig
-                state.onboardingState.walletConfig = walletConfig
+                updateStateAfterConfigUpdate(state: &state, config: walletConfig)
                 return EffectTask(value: .initialization(.initialSetups))
                 
             case .initialization(.initialSetups):
@@ -227,7 +231,23 @@ extension RootReducer {
                     !userStoredPreferences.isUserOptedOutOfCrashReporting()
                 )
                 return .none
+
+            case let .debug(.updateFlag(flag, isEnabled)):
+                return .run { send in
+                    await walletConfigProvider.update(flag, !isEnabled)
+                    let walletConfig = await walletConfigProvider.load()
+                    await send(.debug(.flagUpdated(walletConfig)))
+                }
+
+            case let .debug(.flagUpdated(walletConfig)):
+                updateStateAfterConfigUpdate(state: &state, config: walletConfig)
+                return .none
             }
         }
+    }
+
+    private func updateStateAfterConfigUpdate(state: inout RootReducer.State, config: WalletConfig) {
+        state.walletConfig = config
+        state.onboardingState.walletConfig = config
     }
 }

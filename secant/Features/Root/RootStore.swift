@@ -29,6 +29,7 @@ struct RootReducer: ReducerProtocol {
         case phraseValidation(RecoveryPhraseValidationFlowReducer.Action)
         case sandbox(SandboxReducer.Action)
         case welcome(WelcomeReducer.Action)
+        case debug(DebugAction)
     }
 
     @Dependency(\.crashReporter) var crashReporter
