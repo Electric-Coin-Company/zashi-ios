@@ -33,6 +33,10 @@ class MockSDKSynchronizerClient: SDKSynchronizerClient {
 
     func stop() { }
 
+    func isSyncing() -> Bool { false }
+    
+    func isInitialized() -> Bool { false }
+
     func synchronizerSynced(_ synchronizerState: SDKSynchronizer.SynchronizerState?) { }
 
     func statusSnapshot() -> SyncStatusSnapshot { .default }
@@ -200,4 +204,6 @@ class MockSDKSynchronizerClient: SDKSynchronizerClient {
         
         return EffectTask(value: Result.success(transactionState))
     }
+    
+    func wipe() -> AnyPublisher<Void, Error>? { nil }
 }

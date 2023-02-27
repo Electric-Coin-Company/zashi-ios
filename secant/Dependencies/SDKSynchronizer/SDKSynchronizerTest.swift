@@ -32,6 +32,10 @@ class NoopSDKSynchronizer: SDKSynchronizerClient {
 
     func stop() { }
 
+    func isSyncing() -> Bool { false }
+
+    func isInitialized() -> Bool { false }
+    
     func synchronizerSynced(_ synchronizerState: SDKSynchronizer.SynchronizerState?) { }
 
     func statusSnapshot() -> SyncStatusSnapshot { .default }
@@ -70,6 +74,8 @@ class NoopSDKSynchronizer: SDKSynchronizerClient {
     func updateStateChanged(_ newState: SDKSynchronizerState) {
         stateChanged = CurrentValueSubject<SDKSynchronizerState, Never>(newState)
     }
+    
+    func wipe() -> AnyPublisher<Void, Error>? { nil }
 }
 
 class TestSDKSynchronizerClient: SDKSynchronizerClient {
@@ -89,6 +95,10 @@ class TestSDKSynchronizerClient: SDKSynchronizerClient {
     func start(retry: Bool) throws { }
 
     func stop() { }
+
+    func isSyncing() -> Bool { false }
+
+    func isInitialized() -> Bool { false }
 
     func synchronizerSynced(_ synchronizerState: SDKSynchronizer.SynchronizerState?) { }
 
@@ -235,4 +245,6 @@ class TestSDKSynchronizerClient: SDKSynchronizerClient {
     func updateStateChanged(_ newState: SDKSynchronizerState) {
         stateChanged = CurrentValueSubject<SDKSynchronizerState, Never>(newState)
     }
+
+    func wipe() -> AnyPublisher<Void, Error>? { nil }
 }

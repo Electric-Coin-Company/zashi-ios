@@ -17,7 +17,7 @@ class HomeTests: XCTestCase {
             reducer: HomeReducer()
         )
         
-        store.send(.synchronizerStateChanged(.downloading))
+        store.send(.synchronizerStateChanged(.progressUpdated))
         
         store.receive(.updateSynchronizerStatus)
     }

@@ -23,9 +23,10 @@ extension RootReducer {
             case welcome
         }
         
+        @BindingState var alert: AlertState<RootReducer.Action>?
         var internalDestination: Destination = .welcome
         var previousDestination: Destination?
-        
+
         var destination: Destination {
             get { internalDestination }
             set {
@@ -39,6 +40,7 @@ extension RootReducer {
         case deeplink(URL)
         case deeplinkHome
         case deeplinkSend(Zatoshi, String, String)
+        case dismissAlert
         case updateDestination(RootReducer.DestinationState.Destination)
     }
 
@@ -112,7 +114,12 @@ extension RootReducer {
                 }
                 return EffectTask(value: .destination(.deeplink(url)))
 
-            case .home, .initialization, .onboarding, .phraseDisplay, .phraseValidation, .sandbox, .welcome, .debug:
+            case .destination(.dismissAlert):
+                state.destinationState.alert = nil
+                return .none
+                
+            case .home, .initialization, .onboarding, .phraseDisplay, .phraseValidation,
+                .sandbox, .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug:
                 return .none
             }
             

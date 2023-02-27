@@ -21,6 +21,7 @@ extension RootReducer {
         case initializeSDK
         case initialSetups
         case nukeWallet
+        case nukeWalletRequest
         case respondToWalletInitializationState(InitializationState)
         case walletConfigChanged(WalletConfig)
     }
@@ -125,10 +126,9 @@ extension RootReducer {
                         mnemonic: mnemonic,
                         zcashSDKEnvironment: zcashSDKEnvironment
                     )
-
+                    
                     try sdkSynchronizer.prepareWith(initializer: initializer, seedBytes: seedBytes)
                     try sdkSynchronizer.start()
-
                     return .none
                 } catch {
                     // TODO: [#221] error we need to handle (https://github.com/zcash/secant-ios-wallet/issues/221)
@@ -199,14 +199,57 @@ extension RootReducer {
                 }
                 return .none
 
-            case .initialization(.nukeWallet):
-                walletStorage.nukeWallet()
-                do {
-                    try databaseFiles.nukeDbFilesFor(zcashSDKEnvironment.network)
-                } catch {
-                    // TODO: [#221] error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
-                }
+            case .initialization(.nukeWalletRequest):
+                state.destinationState.alert = AlertState(
+                    title: TextState("Wipe of the wallet"),
+                    message: TextState("Are you sure?"),
+                    buttons: [
+                        .destructive(
+                            TextState("Yes"),
+                            action: .send(.initialization(.nukeWallet))
+                        ),
+                        .cancel(
+                            TextState("No"),
+                            action: .send(.destination(.dismissAlert))
+                        )
+                    ]
+                )
                 return .none
+            
+            case .initialization(.nukeWallet):
+                guard let wipePublisher = sdkSynchronizer.wipe() else {
+                    return EffectTask(value: .nukeWalletFailed)
+                }
+                return wipePublisher
+                    .catchToEffect()
+                    .receive(on: mainQueue)
+                    .replaceEmpty(with: .success(Void()))
+                    .map { _ in return RootReducer.Action.nukeWalletSucceeded }
+                    .replaceError(with: RootReducer.Action.nukeWalletFailed)
+                    .eraseToEffect()
+                    .cancellable(id: SynchronizerCancelId.self, cancelInFlight: true)
+
+            case .nukeWalletSucceeded:
+                walletStorage.nukeWallet()
+                state.onboardingState.destination = nil
+                state.onboardingState.index = 0
+                return .concatenate(
+                    .cancel(id: SynchronizerCancelId.self),
+                    EffectTask(value: .initialization(.checkWalletInitialization))
+                )
+
+            case .nukeWalletFailed:
+                // TODO: [#221] error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
+                let backDestination: EffectTask<RootReducer.Action>
+                if let previousDestination = state.destinationState.previousDestination {
+                    backDestination = EffectTask(value: .destination(.updateDestination(previousDestination)))
+                } else {
+                    backDestination = EffectTask(value: .destination(.updateDestination(state.destinationState.destination)))
+                }
+                return .concatenate(
+                    .cancel(id: SynchronizerCancelId.self),
+                    backDestination
+                )
 
             case .welcome(.debugMenuStartup), .home(.debugMenuStartup):
                 return .concatenate(
@@ -222,8 +265,8 @@ extension RootReducer {
 
             case .onboarding(.createNewWallet):
                 return EffectTask(value: .initialization(.createNewWallet))
-
-            case .home, .destination, .onboarding, .phraseDisplay, .phraseValidation, .sandbox, .welcome:
+                
+            case .home, .destination, .onboarding, .phraseDisplay, .phraseValidation, .sandbox, .welcome, .binding:
                 return .none
 
             case .initialization(.configureCrashReporter):

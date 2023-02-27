@@ -75,6 +75,14 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
     func stop() {
         synchronizer?.stop()
     }
+    
+    func isSyncing() -> Bool {
+        latestScannedSynchronizerState?.syncStatus.isSyncing ?? false
+    }
+    
+    func isInitialized() -> Bool {
+        synchronizer != nil
+    }
 
     func synchronizerStarted() {
         stateChanged.send(.started)
@@ -228,5 +236,9 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
                 await send(.failure(error as NSError))
             }
         }
+    }
+    
+    func wipe() -> AnyPublisher<Void, Error>? {
+        synchronizer?.wipe()
     }
 }
