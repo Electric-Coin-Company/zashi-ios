@@ -59,8 +59,9 @@ struct OnboardingContentView_Previews: PreviewProvider {
     static var previews: some View {
         let store = Store(
             initialState: OnboardingFlowReducer.State(
-                index: 0,
-                importWalletState: .placeholder
+                walletConfig: .default,
+                importWalletState: .placeholder,
+                index: 0
             ),
             reducer: OnboardingFlowReducer()
         )
@@ -85,6 +86,7 @@ extension OnboardingContentView_Previews {
                 store: store.scope(
                     state: { state in
                         OnboardingHeaderView.ViewState(
+                            walletConfig: state.walletConfig,
                             isInitialStep: state.isInitialStep,
                             isFinalStep: state.isFinalStep
                         )

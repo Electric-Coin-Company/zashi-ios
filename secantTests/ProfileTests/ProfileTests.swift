@@ -26,7 +26,7 @@ class ProfileTests: XCTestCase {
             network: .testnet
         )
 
-        _ = await store.send(.onAppear) { state in
+        await store.send(.onAppear) { state in
             state.addressDetailsState.uAddress = uAddress
             state.appVersion = "0.0.1"
             state.appBuild = "31"
