@@ -16,43 +16,40 @@ struct TransactionDetailView: View {
     
     var body: some View {
         WithViewStore(store) { viewStore in
-            ScrollView {
+            VStack(alignment: .leading) {
                 header
 
-                switch transaction.status {
-                case .paid:
-                    plainText("You sent \(transaction.zecAmount.decimalString()) ZEC")
-                    plainText("fee \(transaction.fee.decimalString()) ZEC", mark: .inactive)
-                    plainText("total amount \(transaction.totalAmount.decimalString()) ZEC", mark: .inactive)
-                    address(mark: .inactive, viewStore: viewStore)
-                    if let text = transaction.memos?.first?.toString() { memo(text, viewStore, mark: .highlight) }
-                    confirmed(mark: .success, viewStore: viewStore)
-                case .pending:
-                    plainText("You are sending \(transaction.zecAmount.decimalString()) ZEC")
-                    plainText("Includes network fee \(transaction.fee.decimalString()) ZEC", mark: .inactive)
-                    plainText("total amount \(transaction.totalAmount.decimalString()) ZEC", mark: .inactive)
-                    if let text = transaction.memos?.first?.toString() { memo(text, viewStore, mark: .inactive) }
-                    confirming(mark: .highlight, viewStore: viewStore)
-                case .received:
-                    plainText("You received \(transaction.zecAmount.decimalString()) ZEC")
-                    plainText("fee \(transaction.fee.decimalString()) ZEC")
-                    plainText("total amount \(transaction.totalAmount.decimalString()) ZEC")
-                    address(mark: .inactive, viewStore: viewStore)
-                    if let text = transaction.memos?.first?.toString() { memo(text, viewStore, mark: .highlight) }
-                    confirmed(mark: .success, viewStore: viewStore)
-                case .failed:
-                    plainText("You DID NOT send \(transaction.zecAmount.decimalString()) ZEC", mark: .fail)
-                    plainText("Includes network fee \(transaction.fee.decimalString()) ZEC", mark: .inactive)
-                    plainText("total amount \(transaction.totalAmount.decimalString()) ZEC", mark: .inactive)
-                    if let text = transaction.memos?.first?.toString() { memo(text, viewStore, mark: .inactive) }
-                    if let errorMessage = transaction.errorMessage {
-                        plainTwoColumnText(left: "Failed", right: errorMessage, mark: .fail)
+                HStack {
+                    VStack(alignment: .leading) {
+                        switch transaction.status {
+                        case .paid:
+                            Text("You sent \(transaction.zecAmount.decimalString()) ZEC")
+                                .padding()
+                            address(mark: .inactive, viewStore: viewStore)
+                            memo(transaction, viewStore, mark: .highlight)
+                            
+                        case .pending:
+                            Text("You are sending \(transaction.zecAmount.decimalString()) ZEC")
+                                .padding()
+                            address(mark: .inactive, viewStore: viewStore)
+                            memo(transaction, viewStore, mark: .highlight)
+                        case .received:
+                            Text("You received \(transaction.zecAmount.decimalString()) ZEC")
+                                .padding()
+                            address(mark: .inactive, viewStore: viewStore)
+                            memo(transaction, viewStore, mark: .highlight)
+                        case .failed:
+                            Text("You DID NOT send \(transaction.zecAmount.decimalString()) ZEC")
+                                .padding()
+                            address(mark: .inactive, viewStore: viewStore)
+                            memo(transaction, viewStore, mark: .highlight)
+                        }
                     }
+                    
+                    Spacer()
                 }
 
                 Spacer()
-
-                footer
             }
             .applyScreenBackground()
             .navigationTitle("Transaction detail")
@@ -69,73 +66,37 @@ extension TransactionDetailView {
                 Spacer()
             case .failed:
                 Text("\(transaction.date?.asHumanReadable() ?? "date not available")")
-                Spacer()
-                Text("FAILED")
             default:
                 Text("\(transaction.date?.asHumanReadable() ?? "date not available")")
-                Spacer()
-                Text("HEIGHT \(heightText)")
             }
         }
         .padding()
     }
     
-    func plainText(_ text: String, mark: RowMark = .neutral) -> some View {
-        Text(text)
-            .transactionDetailRow(mark: mark)
-    }
-
-    func plainTwoColumnText(left: String, right: String, mark: RowMark = .neutral) -> some View {
-        HStack {
-            Text(left)
-            Spacer()
-            Text(right)
-        }
-        .transactionDetailRow(mark: mark)
-    }
-
     func address(mark: RowMark = .neutral, viewStore: WalletEventsFlowViewStore) -> some View {
-        Button {
-            viewStore.send(.copyToPastboard(transaction.address.redacted))
-        } label: {
-            Text("\(addressPrefixText) \(transaction.address)")
-                .lineLimit(1)
-                .truncationMode(.middle)
-                .transactionDetailRow(mark: mark)
-        }
+        Text("\(addressPrefixText) \(transaction.address)")
+            .lineLimit(1)
+            .truncationMode(.middle)
+            .padding()
     }
     
     func memo(
-        _ memo: String,
+        _ transaction: TransactionState,
         _ viewStore: WalletEventsFlowViewStore,
         mark: RowMark = .neutral
     ) -> some View {
-        Button {
-            viewStore.send(.copyToPastboard(memo.redacted))
-        } label: {
-            VStack {
-                HStack {
-                    Text("\(memo)")
+        Group {
+            if let memoText = transaction.memos?.first?.toString() {
+                VStack(alignment: .leading) {
+                    Text("With memo:")
+                        .padding(.leading)
+                    Text("\"\(memoText)\"")
                         .multilineTextAlignment(.leading)
-                    Spacer()
+                        .padding(.leading)
                 }
-                
-                HStack {
-                    Text("reply-to address included")
-                    Spacer()
-                    Button {
-                        viewStore.send(.replyTo(transaction.address.redacted))
-                    } label: {
-                        Text("reply now")
-                            .padding(5)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 6)
-                                    .stroke(Asset.Colors.Text.transactionDetailText.color, lineWidth: 1)
-                            )
-                    }
-                }
+            } else {
+                EmptyView()
             }
-            .transactionDetailRow(mark: mark)
         }
     }
     
@@ -155,34 +116,6 @@ extension TransactionDetailView {
             Text("\(transaction.confirmationsWith(viewStore.latestMinedHeight))/\(viewStore.requiredTransactionConfirmations)")
         }
         .transactionDetailRow(mark: mark)
-    }
-
-    var footer: some View {
-        WithViewStore(store) { viewStore in
-            VStack {
-                Button {
-                    viewStore.send(.copyToPastboard(transaction.id.redacted))
-                } label: {
-                    Text("txn: \(transaction.id)")
-                        .foregroundColor(Asset.Colors.Text.transactionDetailText.color)
-                        .font(.system(size: 14))
-                        .fontWeight(.thin)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.horizontal, 60)
-                        .padding(.vertical, 10)
-                        .background(Asset.Colors.BackgroundColors.numberedChip.color)
-                        .padding(.vertical, 30)
-                }
-
-                Button("View online") {
-                    viewStore.send(.warnBeforeLeavingApp(transaction.viewOnlineURL))
-                }
-                .activeButtonStyle
-                .frame(height: 50)
-                .padding(.horizontal, 30)
-            }
-            .alert(self.store.scope(state: \.alert), dismiss: .dismissAlert)
-        }
     }
 }
 
@@ -265,7 +198,64 @@ struct TransactionDetail_Previews: PreviewProvider {
                     ),
                 store: WalletEventsFlowStore.placeholder
             )
-            .preferredColorScheme(.dark)
+            .preferredColorScheme(.light)
+        }
+        
+        NavigationView {
+            TransactionDetailView(
+                transaction:
+                    TransactionState(
+                        errorMessage: "possible roll back",
+                        memos: [Memo.placeholder],
+                        minedHeight: 1_875_256,
+                        zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
+                        fee: Zatoshi(1_000_000),
+                        id: "ff3927e1f83df9b1b0dc75540ddc59ee435eecebae914d2e6dfe8576fbedc9a8",
+                        status: .pending,
+                        timestamp: 1234567,
+                        zecAmount: Zatoshi(25_000_000)
+                    ),
+                store: WalletEventsFlowStore.placeholder
+            )
+            .preferredColorScheme(.light)
+        }
+        
+        NavigationView {
+            TransactionDetailView(
+                transaction:
+                    TransactionState(
+                        errorMessage: "possible roll back",
+                        memos: [Memo.placeholder],
+                        minedHeight: 1_875_256,
+                        zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
+                        fee: Zatoshi(1_000_000),
+                        id: "ff3927e1f83df9b1b0dc75540ddc59ee435eecebae914d2e6dfe8576fbedc9a8",
+                        status: .failed,
+                        timestamp: 1234567,
+                        zecAmount: Zatoshi(25_000_000)
+                    ),
+                store: WalletEventsFlowStore.placeholder
+            )
+            .preferredColorScheme(.light)
+        }
+        
+        NavigationView {
+            TransactionDetailView(
+                transaction:
+                    TransactionState(
+                        errorMessage: "possible roll back",
+                        memos: [Memo.placeholder],
+                        minedHeight: 1_875_256,
+                        zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
+                        fee: Zatoshi(1_000_000),
+                        id: "ff3927e1f83df9b1b0dc75540ddc59ee435eecebae914d2e6dfe8576fbedc9a8",
+                        status: .received,
+                        timestamp: 1234567,
+                        zecAmount: Zatoshi(25_000_000)
+                    ),
+                store: WalletEventsFlowStore.placeholder
+            )
+            .preferredColorScheme(.light)
         }
     }
 }
