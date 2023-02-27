@@ -17,7 +17,6 @@ struct SendFlowReducer: ReducerProtocol {
 
     struct State: Equatable {
         enum Destination: Equatable {
-            case confirmation
             case inProgress
             case scanQR
             case success
@@ -81,7 +80,7 @@ struct SendFlowReducer: ReducerProtocol {
         case onAppear
         case onDisappear
         case scan(ScanReducer.Action)
-        case sendConfirmationPressed
+        case sendPressed
         case sendTransactionResult(Result<TransactionState, NSError>)
         case synchronizerStateChanged(SDKSynchronizerState)
         case transactionAddressInput(TransactionAddressTextFieldReducer.Action)
@@ -136,20 +135,16 @@ struct SendFlowReducer: ReducerProtocol {
                 state.isSendingTransaction = false
                 return .none
 
-            case .updateDestination(.confirmation):
-                state.amount = Zatoshi(state.transactionAmountInputState.amount.data)
-                state.address = state.transactionAddressInputState.textFieldState.text.data
-                state.destination = .confirmation
-                return .none
-                
             case let .updateDestination(destination):
                 state.destination = destination
                 return .none
                 
-            case .sendConfirmationPressed:
+            case .sendPressed:
                 guard !state.isSendingTransaction else {
                     return .none
                 }
+                state.amount = Zatoshi(state.transactionAmountInputState.amount.data)
+                state.address = state.transactionAddressInputState.textFieldState.text.data
 
                 do {
                     let storedWallet = try walletStorage.exportWallet()
@@ -275,18 +270,6 @@ extension SendFlowViewStore {
         )
     }
 
-    var bindingForConfirmation: Binding<Bool> {
-        self.destinationBinding.map(
-            extract: {
-                $0 == .confirmation ||
-                $0 == .inProgress ||
-                $0 == .success ||
-                $0 == .failure
-            },
-            embed: { $0 ? SendFlowReducer.State.Destination.confirmation : nil }
-        )
-    }
-
     var bindingForInProgress: Binding<Bool> {
         self.destinationBinding.map(
             extract: {
@@ -294,7 +277,7 @@ extension SendFlowViewStore {
                 $0 == .success ||
                 $0 == .failure
             },
-            embed: { $0 ? SendFlowReducer.State.Destination.inProgress : SendFlowReducer.State.Destination.confirmation }
+            embed: { $0 ? SendFlowReducer.State.Destination.inProgress : nil }
         )
     }
 

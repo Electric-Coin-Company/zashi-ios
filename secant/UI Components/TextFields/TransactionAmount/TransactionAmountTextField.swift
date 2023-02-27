@@ -12,44 +12,18 @@ struct TransactionAmountTextField: View {
     let store: TransactionAmountTextFieldStore
     
     var body: some View {
-        WithViewStore(store) { viewStore in
-            VStack {
-                SingleLineTextField(
-                    placeholderText: "0",
-                    title: "How much ZEC would you like to send?",
-                    store: store.scope(
-                        state: \.textFieldState,
-                        action: TransactionAmountTextFieldReducer.Action.textField
-                    ),
-                    titleAccessoryView: {
-                        Button(
-                            action: {
-                                viewStore.send(viewStore.isMax ? .clearValue : .setMax)
-                            },
-                            label: {
-                                Text(viewStore.isMax ? "Clear" : "Max")
-                            }
-                        )
-                        .textFieldTitleAccessoryButtonStyle
-                    },
-                    inputPrefixView: {
-                        if viewStore.currencySelectionState.currencyType == .zec {
-                            ZcashSymbol()
-                                .frame(width: 12, height: 12, alignment: .center)
-                        } else {
-                            Text("$")
-                        }
-                    },
-                    inputAccessoryView: {
-                        CurrencySelectionView(
-                            store: store.scope(
-                                state: \.currencySelectionState,
-                                action: TransactionAmountTextFieldReducer.Action.currencySelection
-                            )
-                        )
-                    }
-                )
-            }
+        VStack {
+            SingleLineTextField(
+                placeholderText: "ZEC Amount",
+                title: "Amount",
+                store: store.scope(
+                    state: \.textFieldState,
+                    action: TransactionAmountTextFieldReducer.Action.textField
+                ),
+                titleAccessoryView: { },
+                inputPrefixView: { },
+                inputAccessoryView: { }
+            )
         }
     }
 }

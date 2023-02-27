@@ -17,10 +17,8 @@ struct SendFlowView: View {
             .onAppear { viewStore.send(.onAppear) }
             .onDisappear { viewStore.send(.onDisappear) }
             .navigationLinkEmpty(
-                isActive: viewStore.bindingForConfirmation,
-                destination: {
-                    TransactionConfirmation(store: store)
-                }
+                isActive: viewStore.bindingForInProgress,
+                destination: { TransactionSendingView(viewStore: viewStore) }
             )
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForScanQR,

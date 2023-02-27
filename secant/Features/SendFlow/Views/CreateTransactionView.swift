@@ -10,74 +10,44 @@ struct CreateTransaction: View {
         return WithViewStore(store) { viewStore in
             VStack {
                 VStack(spacing: 0) {
-                    Text("WalletBalance \(viewStore.shieldedBalance.data.total.decimalString()) ZEC")
-                    Text("($\(viewStore.totalCurrencyBalance.decimalString()))")
+                    Text("\(viewStore.shieldedBalance.data.total.decimalString()) ZEC Available")
+                    Text("Aditional funds may be in transit")
                         .font(.system(size: 13))
                         .opacity(0.6)
                 }
                 .padding()
 
-                VStack {
-                    TransactionAmountTextField(
-                        store: store.scope(
-                            state: \.transactionAmountInputState,
-                            action: SendFlowReducer.Action.transactionAmountInput
-                        )
+                TransactionAddressTextField(
+                    store: store.scope(
+                        state: \.transactionAddressInputState,
+                        action: SendFlowReducer.Action.transactionAddressInput
                     )
-                    
-                    if viewStore.isInvalidAmountFormat {
-                        HStack {
-                            Text("invalid amount")
-                                .foregroundColor(.red)
-                            
-                            Spacer()
-                        }
-                    } else if viewStore.isInsufficientFunds {
-                        HStack {
-                            Text("insufficient funds")
-                                .foregroundColor(.red)
-                            
-                            Spacer()
-                        }
-                    }
-                }
+                )
                 .padding()
 
-                VStack {
-                    TransactionAddressTextField(
-                        store: store.scope(
-                            state: \.transactionAddressInputState,
-                            action: SendFlowReducer.Action.transactionAddressInput
-                        )
+                TransactionAmountTextField(
+                    store: store.scope(
+                        state: \.transactionAmountInputState,
+                        action: SendFlowReducer.Action.transactionAmountInput
                     )
-                    
-                    if viewStore.isInvalidAddressFormat {
-                        HStack {
-                            Text("invalid address")
-                                .foregroundColor(.red)
-                            
-                            Spacer()
-                        }
-                    }
-                }
+                )
                 .padding()
-                
+
                 MultipleLineTextField(
                     store: store.memoStore(),
-                    title: "Memo",
+                    title: "Write a private message here",
                     titleAccessoryView: {}
                 )
                 .frame(height: 200)
                 .padding()
                 
                 Button(
-                    action: { viewStore.send(.updateDestination(.confirmation)) },
+                    action: { viewStore.send(.sendPressed) },
                     label: { Text("Send") }
                 )
                 .activeButtonStyle
                 .frame(height: 50)
                 .padding()
-                .disabled(!viewStore.isValidForm)
 
                 Spacer()
             }
@@ -99,7 +69,7 @@ struct Create_Previews: PreviewProvider {
                 CreateTransaction(store: .placeholder)
             }
             .navigationBarTitleDisplayMode(.inline)
-            .preferredColorScheme(.dark)
+            .preferredColorScheme(.light)
         }
     }
 }

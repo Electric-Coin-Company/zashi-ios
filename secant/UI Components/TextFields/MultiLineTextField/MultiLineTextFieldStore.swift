@@ -81,7 +81,7 @@ extension MultiLineTextFieldStore {
 extension MultiLineTextFieldReducer.State {
     static let placeholder: MultiLineTextFieldReducer.State = {
         var state = MultiLineTextFieldReducer.State()
-        state.text = "test".redacted
+        state.text = "".redacted
         return state
     }()
 }

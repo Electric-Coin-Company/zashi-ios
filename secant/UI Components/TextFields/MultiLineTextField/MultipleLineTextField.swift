@@ -58,9 +58,8 @@ struct MultilineTextEditorModifier: ViewModifier {
             .foregroundColor(Asset.Colors.Text.importSeedEditor.color)
             .padding()
             .background(backgroundColor)
-            .cornerRadius(4)
             .overlay(
-                RoundedRectangle(cornerRadius: 4)
+                Rectangle()
                     .stroke(outlineColor, lineWidth: 2)
             )
     }

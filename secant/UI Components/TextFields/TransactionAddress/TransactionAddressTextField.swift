@@ -15,7 +15,7 @@ struct TransactionAddressTextField: View {
         WithViewStore(store) { viewStore in
             VStack {
                 SingleLineTextField(
-                    placeholderText: "address",
+                    placeholderText: "Valid Zcash Address",
                     title: "To",
                     store: store.scope(
                         state: \.textFieldState,
@@ -43,6 +43,7 @@ struct TransactionAddressTextField: View {
                                 .resizable()
                                 .frame(width: 30, height: 30)
                         }
+                        .padding(.trailing, 10)
                     }
                 )
             }
