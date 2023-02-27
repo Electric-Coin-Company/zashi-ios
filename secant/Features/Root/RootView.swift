@@ -83,28 +83,75 @@ struct RootView: View {
     }
 }
 
+private struct FeatureFlagWrapper: Identifiable, Equatable, Comparable {
+    let name: FeatureFlag
+    let isEnabled: Bool
+    var id: String { name.rawValue }
+
+    static func < (lhs: FeatureFlagWrapper, rhs: FeatureFlagWrapper) -> Bool {
+        lhs.name.rawValue < rhs.name.rawValue
+    }
+
+    static func == (lhs: FeatureFlagWrapper, rhs: FeatureFlagWrapper) -> Bool {
+        lhs.name.rawValue == rhs.name.rawValue
+    }
+}
+
 private extension RootView {
     @ViewBuilder func debugView(_ viewStore: RootViewStore) -> some View {
-        List {
-            Section(header: Text("Navigation Stack Destinations")) {
-                Button("Go To Sandbox (navigation proof)") {
-                    viewStore.goToDestination(.sandbox)
+        VStack(alignment: .leading) {
+            Button("Back") {
+                viewStore.goToDestination(.home)
+            }
+            .navigationButtonStyle
+            .frame(width: 75, height: 40, alignment: .leading)
+            .padding()
+
+            List {
+                Section(header: Text("Navigation Stack Destinations")) {
+                    Button("Go To Sandbox (navigation proof)") {
+                        viewStore.goToDestination(.sandbox)
+                    }
+
+                    Button("Go To Onboarding") {
+                        viewStore.goToDestination(.onboarding)
+                    }
+
+                    Button("Go To Phrase Validation Demo") {
+                        viewStore.goToDestination(.phraseValidation)
+                    }
+
+                    Button("Restart the app") {
+                        viewStore.goToDestination(.welcome)
+                    }
+
+                    Button("[Be careful] Nuke Wallet") {
+                        viewStore.send(.initialization(.nukeWallet))
+                    }
                 }
-                
-                Button("Go To Onboarding") {
-                    viewStore.goToDestination(.onboarding)
-                }
-                
-                Button("Go To Phrase Validation Demo") {
-                    viewStore.goToDestination(.phraseValidation)
-                }
-                
-                Button("Restart the app") {
-                    viewStore.goToDestination(.welcome)
-                }
-                
-                Button("[Be careful] Nuke Wallet") {
-                    viewStore.send(.initialization(.nukeWallet))
+
+                Section(header: Text("Feature flags")) {
+                    let flags = viewStore.state.walletConfig.flags
+                        .map { FeatureFlagWrapper(name: $0.key, isEnabled: $0.value) }
+                        .sorted()
+
+                    ForEach(flags) { flag in
+                        HStack {
+                            Toggle(
+                                isOn: Binding(
+                                    get: { flag.isEnabled },
+                                    set: { _ in
+                                        viewStore.send(.debug(.updateFlag(flag.name, flag.isEnabled)))
+                                    }
+                                ),
+                                label: {
+                                    Text(flag.name.rawValue)
+                                        .foregroundColor(flag.isEnabled ? .green : .red)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                }
+                            )
+                        }
+                    }
                 }
             }
         }

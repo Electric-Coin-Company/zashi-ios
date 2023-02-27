@@ -17,4 +17,5 @@ extension DependencyValues {
 
 struct WalletConfigProviderClient {
     let load: () async -> WalletConfig
+    let update: (FeatureFlag, Bool) async -> Void
 }

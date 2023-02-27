@@ -112,7 +112,7 @@ extension RootReducer {
                 }
                 return EffectTask(value: .destination(.deeplink(url)))
 
-            case .home, .initialization, .onboarding, .phraseDisplay, .phraseValidation, .sandbox, .welcome:
+            case .home, .initialization, .onboarding, .phraseDisplay, .phraseValidation, .sandbox, .welcome, .debug:
                 return .none
             }
             

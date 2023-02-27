@@ -11,14 +11,15 @@ import XCTest
 class WalletConfigProviderTests: XCTestCase {
     override func setUp() {
         super.setUp()
-
         UserDefaultsWalletConfigStorage().clearAll()
     }
 
-    func testLoadFlagsFromProvider() async {
+    func testTestFlagsAreDisabledByDefault() {
         XCTAssertFalse(WalletConfig.default.isEnabled(.testFlag1))
         XCTAssertFalse(WalletConfig.default.isEnabled(.testFlag2))
+    }
 
+    func testLoadFlagsFromProvider() async {
         let provider = WalletConfigSourceProviderMock() {
             return WalletConfig(flags: [.testFlag1: true, .testFlag2: false])
         }
@@ -31,9 +32,6 @@ class WalletConfigProviderTests: XCTestCase {
     }
 
     func testLoadFlagsFromCache() async {
-        XCTAssertFalse(WalletConfig.default.isEnabled(.testFlag1))
-        XCTAssertFalse(WalletConfig.default.isEnabled(.testFlag2))
-
         let provider = WalletConfigSourceProviderMock() { throw NSError(domain: "whatever", code: 21) }
         let cache = WalletConfigProviderCacheMock(cachedFlags: [.testFlag1: false, .testFlag2: true])
 
@@ -45,23 +43,17 @@ class WalletConfigProviderTests: XCTestCase {
     }
 
     func testLoadDefaultFlags() async {
-        XCTAssertFalse(WalletConfig.default.isEnabled(.testFlag1))
-        XCTAssertFalse(WalletConfig.default.isEnabled(.testFlag2))
-
         let provider = WalletConfigSourceProviderMock() { throw NSError(domain: "whatever", code: 21) }
         let cache = WalletConfigProviderCacheMock(cachedFlags: [:])
 
         let manager = WalletConfigProvider(configSourceProvider: provider, cache: cache)
         let configuration = await manager.load()
 
-        XCTAssertFalse(WalletConfig.default.isEnabled(.testFlag1))
-        XCTAssertFalse(WalletConfig.default.isEnabled(.testFlag2))
+        XCTAssertFalse(configuration.isEnabled(.testFlag1))
+        XCTAssertFalse(configuration.isEnabled(.testFlag2))
     }
 
     func testAllTheFlagsAreAlwaysReturned() async {
-        XCTAssertFalse(WalletConfig.default.isEnabled(.testFlag1))
-        XCTAssertFalse(WalletConfig.default.isEnabled(.testFlag2))
-
         let provider = WalletConfigSourceProviderMock() {
             return WalletConfig(flags: [.testFlag1: true])
         }
@@ -74,9 +66,6 @@ class WalletConfigProviderTests: XCTestCase {
     }
 
     func testProvidedFlagsAreCached() async {
-        XCTAssertFalse(WalletConfig.default.isEnabled(.testFlag1))
-        XCTAssertFalse(WalletConfig.default.isEnabled(.testFlag2))
-
         let provider = WalletConfigSourceProviderMock() {
             return WalletConfig(flags: [.testFlag1: true, .testFlag2: false])
         }
