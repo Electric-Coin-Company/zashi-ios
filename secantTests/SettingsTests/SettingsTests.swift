@@ -46,8 +46,8 @@ class SettingsTests: XCTestCase {
         
         let store = TestStore(
             initialState: SettingsReducer.State(
-                phraseDisplayState: RecoveryPhraseDisplayReducer.State(phrase: nil),
-                isCrashReportingOn: false
+                isCrashReportingOn: false,
+                phraseDisplayState: RecoveryPhraseDisplayReducer.State(phrase: nil)
             ),
             reducer: SettingsReducer()
         ) { dependencies in
@@ -103,6 +103,7 @@ class SettingsTests: XCTestCase {
         let store = TestStore(
             initialState: SettingsReducer.State(
                 destination: nil,
+                isCrashReportingOn: false,
                 phraseDisplayState: .init(),
                 rescanDialog: .init(
                     title: TextState("Rescan"),
@@ -112,8 +113,7 @@ class SettingsTests: XCTestCase {
                         .default(TextState("Full rescan"), action: .send(.fullRescan)),
                         .cancel(TextState("Cancel"))
                     ]
-                ),
-                isCrashReportingOn: false
+                )
             ),
             reducer: SettingsReducer()
         )
@@ -127,6 +127,7 @@ class SettingsTests: XCTestCase {
         let store = TestStore(
             initialState: SettingsReducer.State(
                 destination: nil,
+                isCrashReportingOn: false,
                 phraseDisplayState: .init(),
                 rescanDialog: .init(
                     title: TextState("Rescan"),
@@ -136,8 +137,7 @@ class SettingsTests: XCTestCase {
                         .default(TextState("Full rescan"), action: .send(.fullRescan)),
                         .cancel(TextState("Cancel"))
                     ]
-                ),
-                isCrashReportingOn: false
+                )
             ),
             reducer: SettingsReducer()
         )
@@ -151,6 +151,7 @@ class SettingsTests: XCTestCase {
         let store = TestStore(
             initialState: SettingsReducer.State(
                 destination: nil,
+                isCrashReportingOn: false,
                 phraseDisplayState: .init(),
                 rescanDialog: .init(
                     title: TextState("Rescan"),
@@ -160,8 +161,7 @@ class SettingsTests: XCTestCase {
                         .default(TextState("Full rescan"), action: .send(.fullRescan)),
                         .cancel(TextState("Cancel"))
                     ]
-                ),
-                isCrashReportingOn: false
+                )
             ),
             reducer: SettingsReducer()
         )
@@ -175,6 +175,7 @@ class SettingsTests: XCTestCase {
         let store = TestStore(
             initialState: SettingsReducer.State(
                 destination: nil,
+                isCrashReportingOn: false,
                 phraseDisplayState: .init(),
                 rescanDialog: .init(
                     title: TextState("Rescan"),
@@ -184,8 +185,7 @@ class SettingsTests: XCTestCase {
                         .default(TextState("Full rescan"), action: .send(.fullRescan)),
                         .cancel(TextState("Cancel"))
                     ]
-                ),
-                isCrashReportingOn: false
+                )
             ),
             reducer: SettingsReducer()
         )
@@ -206,6 +206,7 @@ class SettingsTests: XCTestCase {
         let store = TestStore(
             initialState: SettingsReducer.State(
                 destination: nil,
+                isCrashReportingOn: false,
                 isSharingLogs: true,
                 phraseDisplayState: .init(),
                 rescanDialog: .init(
@@ -216,8 +217,7 @@ class SettingsTests: XCTestCase {
                         .default(TextState("Full rescan"), action: .send(.fullRescan)),
                         .cancel(TextState("Cancel"))
                     ]
-                ),
-                isCrashReportingOn: false
+                )
             ),
             reducer: SettingsReducer()
         )

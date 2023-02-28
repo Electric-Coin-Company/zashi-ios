@@ -37,14 +37,6 @@ struct ProfileView: View {
                 .frame(height: 50)
                 .padding(EdgeInsets(top: 30, leading: 30, bottom: 20, trailing: 30))
 
-                Button(
-                    action: { },
-                    label: { Text("Support") }
-                )
-                .primaryButtonStyle
-                .frame(height: 50)
-                .padding(EdgeInsets(top: 0, leading: 30, bottom: 20, trailing: 30))
-
                 Spacer()
                 
                 HStack {
