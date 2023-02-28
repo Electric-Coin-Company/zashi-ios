@@ -96,9 +96,9 @@ class RootTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: RootReducer()
-        ) {
-            $0.mainQueue = Self.testScheduler.eraseToAnyScheduler()
-        }
+        )
+
+        store.dependencies.mainQueue = Self.testScheduler.eraseToAnyScheduler()
 
         store.send(.initialization(.respondToWalletInitializationState(.uninitialized)))
         

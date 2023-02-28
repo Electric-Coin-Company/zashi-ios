@@ -65,7 +65,6 @@ class AppInitializationTests: XCTestCase {
 
         let appState = RootReducer.State(
             destinationState: .placeholder,
-            walletConfig: .default,
             homeState: .placeholder,
             onboardingState: .init(
                 walletConfig: .default,
@@ -76,6 +75,7 @@ class AppInitializationTests: XCTestCase {
                 phrase: recoveryPhrase
             ),
             sandboxState: .placeholder,
+            walletConfig: .default,
             welcomeState: .placeholder
         )
 
@@ -84,10 +84,12 @@ class AppInitializationTests: XCTestCase {
             reducer: RootReducer()
         )
         
+        let testQueue = DispatchQueue.test
+        
         store.dependencies.databaseFiles = .noOp
         store.dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
         store.dependencies.derivationTool = .liveValue
-        store.dependencies.mainQueue = .immediate
+        store.dependencies.mainQueue = .immediate// testQueue.eraseToAnyScheduler()
         store.dependencies.mnemonic = .mock
         store.dependencies.randomRecoveryPhrase = recoveryPhraseRandomizer
         store.dependencies.walletStorage.exportWallet = { .placeholder }
@@ -97,15 +99,23 @@ class AppInitializationTests: XCTestCase {
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         await store.send(.initialization(.appDelegate(.didFinishLaunching)))
 
+        await testQueue.advance(by: 0.02)
+
         await store.receive(.initialization(.checkWalletConfig))
+        
+        await store.receive(.walletConfigLoaded(WalletConfig.default))
 
         await store.receive(.initialization(.initialSetups))
+
+        await testQueue.advance(by: 0.02)
 
         await store.receive(.initialization(.configureCrashReporter))
 
         await store.receive(.initialization(.checkWalletInitialization))
 
         await store.receive(.initialization(.respondToWalletInitializationState(.initialized)))
+
+        await testQueue.advance(by: 3.00)
 
         await store.receive(.initialization(.initializeSDK)) { state in
             state.storedWallet = .placeholder
@@ -141,6 +151,8 @@ class AppInitializationTests: XCTestCase {
 
         await store.receive(.initialization(.checkWalletConfig))
         
+        await store.receive(.walletConfigLoaded(WalletConfig.default))
+
         await store.receive(.initialization(.initialSetups))
 
         await store.receive(.initialization(.configureCrashReporter))
@@ -170,6 +182,8 @@ class AppInitializationTests: XCTestCase {
         await store.send(.initialization(.appDelegate(.didFinishLaunching)))
 
         await store.receive(.initialization(.checkWalletConfig))
+
+        await store.receive(.walletConfigLoaded(WalletConfig.default))
 
         await store.receive(.initialization(.initialSetups))
 

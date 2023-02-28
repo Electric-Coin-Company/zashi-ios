@@ -7,22 +7,24 @@ typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
 struct RootReducer: ReducerProtocol {
     enum CancelId {}
     enum SynchronizerCancelId {}
+    enum WalletConfigCancelId {}
 
     struct State: Equatable {
         var appInitializationState: InitializationState = .uninitialized
         var destinationState: DestinationState
-        var walletConfig: WalletConfig
         var homeState: HomeReducer.State
         var onboardingState: OnboardingFlowReducer.State
         var phraseValidationState: RecoveryPhraseValidationFlowReducer.State
         var phraseDisplayState: RecoveryPhraseDisplayReducer.State
         var sandboxState: SandboxReducer.State
         var storedWallet: StoredWallet?
+        var walletConfig: WalletConfig
         var welcomeState: WelcomeReducer.State
     }
 
     enum Action: Equatable, BindableAction {
         case binding(BindingAction<RootReducer.State>)
+        case debug(DebugAction)
         case destination(DestinationAction)
         case home(HomeReducer.Action)
         case initialization(InitializationAction)
@@ -32,20 +34,20 @@ struct RootReducer: ReducerProtocol {
         case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
         case phraseValidation(RecoveryPhraseValidationFlowReducer.Action)
         case sandbox(SandboxReducer.Action)
+        case walletConfigLoaded(WalletConfig)
         case welcome(WelcomeReducer.Action)
-        case debug(DebugAction)
     }
 
     @Dependency(\.crashReporter) var crashReporter
     @Dependency(\.databaseFiles) var databaseFiles
     @Dependency(\.deeplink) var deeplink
     @Dependency(\.derivationTool) var derivationTool
-    @Dependency(\.walletConfigProvider) var walletConfigProvider
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.randomRecoveryPhrase) var randomRecoveryPhrase
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.userStoredPreferences) var userStoredPreferences
+    @Dependency(\.walletConfigProvider) var walletConfigProvider
     @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
@@ -169,7 +171,6 @@ extension RootReducer.State {
     static var placeholder: Self {
         .init(
             destinationState: .placeholder,
-            walletConfig: .default,
             homeState: .placeholder,
             onboardingState: .init(
                 walletConfig: .default,
@@ -180,6 +181,7 @@ extension RootReducer.State {
                 phrase: .placeholder
             ),
             sandboxState: .placeholder,
+            walletConfig: .default,
             welcomeState: .placeholder
         )
     }
