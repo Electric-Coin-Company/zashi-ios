@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 struct WalletConfigProvider {
     /// Objects that fetches flags configuration from some source. It can be fetched from user defaults or some backend API for example. It depends
@@ -28,7 +29,17 @@ struct WalletConfigProvider {
     /// configuration.
     ///
     /// Merged configuration is stored in cache.
-    func load() async -> WalletConfig {
+    func load() -> AnyPublisher<WalletConfig, Never> {
+        let publisher = PassthroughSubject<WalletConfig, Never>()
+        Task {
+            let config = await load()
+            publisher.send(config)
+            publisher.send(completion: .finished)
+        }
+        return publisher.eraseToAnyPublisher()
+    }
+
+    private func load() async -> WalletConfig {
         let configuration: WalletConfig
         do {
             configuration = try await configSourceProvider.load()
@@ -49,7 +60,17 @@ struct WalletConfigProvider {
     }
 
     // This is used only in debug menu to change configuration for specific flag
-    func update(featureFlag: FeatureFlag, isEnabled: Bool) async {
+    func update(featureFlag: FeatureFlag, isEnabled: Bool) -> AnyPublisher<Void, Never> {
+        let publisher = PassthroughSubject<Void, Never>()
+        Task {
+            await update(featureFlag: featureFlag, isEnabled: isEnabled)
+            publisher.send(Void())
+            publisher.send(completion: .finished)
+        }
+        return publisher.eraseToAnyPublisher()
+    }
+
+    private func update(featureFlag: FeatureFlag, isEnabled: Bool) async {
         guard let provider = configSourceProvider as? UserDefaultsWalletConfigStorage else {
             LoggerProxy.debug("This is now only support with UserDefaultsWalletConfigStorage as configurationProvider.")
             return

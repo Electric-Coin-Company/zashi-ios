@@ -119,7 +119,7 @@ extension RootReducer {
                 return .none
                 
             case .home, .initialization, .onboarding, .phraseDisplay, .phraseValidation,
-                .sandbox, .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug:
+                .sandbox, .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded:
                 return .none
             }
             

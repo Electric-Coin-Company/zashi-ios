@@ -28,7 +28,8 @@ extension RootReducer {
 
     enum DebugAction: Equatable {
         case updateFlag(FeatureFlag, Bool)
-        case flagUpdated(WalletConfig)
+        case flagUpdated
+        case walletConfigLoaded(WalletConfig)
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
@@ -41,13 +42,17 @@ extension RootReducer {
                     .eraseToEffect()
 
             case .initialization(.checkWalletConfig):
-                return .run { send in
-                    let walletConfig = await walletConfigProvider.load()
-                    if walletConfig == WalletConfig.default {
-                        await send(.initialization(.initialSetups))
-                    } else {
-                        await send(.initialization(.walletConfigChanged(walletConfig)))
-                    }
+                return walletConfigProvider.load()
+                    .receive(on: mainQueue)
+                    .map(RootReducer.Action.walletConfigLoaded)
+                    .eraseToEffect()
+                    .cancellable(id: WalletConfigCancelId.self, cancelInFlight: true)
+
+            case .walletConfigLoaded(let walletConfig):
+                if walletConfig == WalletConfig.default {
+                    return EffectTask(value: .initialization(.initialSetups))
+                } else {
+                    return EffectTask(value: .initialization(.walletConfigChanged(walletConfig)))
                 }
             
             case .initialization(.walletConfigChanged(let walletConfig)):
@@ -276,13 +281,20 @@ extension RootReducer {
                 return .none
 
             case let .debug(.updateFlag(flag, isEnabled)):
-                return .run { send in
-                    await walletConfigProvider.update(flag, !isEnabled)
-                    let walletConfig = await walletConfigProvider.load()
-                    await send(.debug(.flagUpdated(walletConfig)))
-                }
+                return walletConfigProvider.update(flag, !isEnabled)
+                    .receive(on: mainQueue)
+                    .map { _ in return Action.debug(.flagUpdated) }
+                    .eraseToEffect()
+                    .cancellable(id: WalletConfigCancelId.self, cancelInFlight: true)
 
-            case let .debug(.flagUpdated(walletConfig)):
+            case .debug(.flagUpdated):
+                return walletConfigProvider.load()
+                    .receive(on: mainQueue)
+                    .map { Action.debug(.walletConfigLoaded($0)) }
+                    .eraseToEffect()
+                    .cancellable(id: WalletConfigCancelId.self, cancelInFlight: true)
+
+            case let .debug(.walletConfigLoaded(walletConfig)):
                 updateStateAfterConfigUpdate(state: &state, config: walletConfig)
                 return .none
             }
