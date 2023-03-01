@@ -107,7 +107,7 @@ struct ImportWalletReducer: ReducerProtocol {
                     try walletStorage.importWallet(state.importedSeedPhrase.data, birthday.data, .english, false)
                     
                     // update the backup phrase validation flag
-                    try walletStorage.markUserPassedPhraseBackupTest()
+                    try walletStorage.markUserPassedPhraseBackupTest(true)
                     
                     // notify user
                     // TODO: [#221] Proper Error/Success handling (https://github.com/zcash/secant-ios-wallet/issues/221)

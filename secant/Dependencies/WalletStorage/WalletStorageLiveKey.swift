@@ -32,8 +32,8 @@ extension WalletStorageClient: DependencyKey {
             updateBirthday: { birthday in
                 try walletStorage.updateBirthday(birthday)
             },
-            markUserPassedPhraseBackupTest: {
-                try walletStorage.markUserPassedPhraseBackupTest()
+            markUserPassedPhraseBackupTest: { flag in
+                try walletStorage.markUserPassedPhraseBackupTest(flag)
             },
             nukeWallet: {
                 walletStorage.nukeWallet()

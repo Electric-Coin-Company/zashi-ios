@@ -62,12 +62,15 @@ extension RootReducer {
 
             case .phraseDisplay(.finishedPressed):
                 // user is still supposed to do the backup phrase validation test
-                if state.destinationState.previousDestination == .welcome
-                || state.destinationState.previousDestination == .onboarding {
+                if (state.destinationState.previousDestination == .welcome
+                || state.destinationState.previousDestination == .onboarding
+                || state.destinationState.previousDestination == .startup)
+                && state.walletConfig.isEnabled(.testBackupPhraseFlow) {
                     state.destinationState.destination = .phraseValidation
                 }
                 // user wanted to see the backup phrase once again (at validation finished screen)
-                if state.destinationState.previousDestination == .phraseValidation {
+                if state.destinationState.previousDestination == .phraseValidation
+                || !state.walletConfig.isEnabled(.testBackupPhraseFlow) {
                     state.destinationState.destination = .home
                 }
 

@@ -1,17 +1,114 @@
 //
-//  AppInitializationTests.swift
+//  RecoveryPhraseValidationFlowFeatureFlagTests.swift
 //  secantTests
 //
-//  Created by Lukáš Korba on 31.05.2022.
+//  Created by Lukáš Korba on 01.03.2023.
 //
 
 import XCTest
 @testable import secant_testnet
 import ComposableArchitecture
 
-class AppInitializationTests: XCTestCase {
-    /// This integration test starts with finishing the app launch and triggering bunch of initialization procedures.
-    @MainActor func testDidFinishLaunching_to_InitializedWallet() async throws {
+// swiftlint:disable:next type_name
+class RecoveryPhraseValidationFlowFeatureFlagTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+
+        UserDefaultsWalletConfigStorage().clearAll()
+    }
+
+    func testRecoveryPhraseValidationFlowOffByDefault() throws {
+        XCTAssertFalse(WalletConfig.default.isEnabled(.testBackupPhraseFlow))
+    }
+
+    func testRecoveryPhraseValidationFlow_SkipPuzzleUserConfirmedBackup() {
+        let store = TestStore(
+            initialState: .placeholder,
+            reducer: RootReducer()
+        )
+
+        store.send(.phraseDisplay(.finishedPressed)) { state in
+            state.destinationState.internalDestination = .home
+            state.destinationState.previousDestination = .welcome
+        }
+    }
+
+    func testRecoveryPhraseValidationFlow_StartPuzzle() {
+        var rootState = RootReducer.State.placeholder
+
+        var defaultRawFlags = WalletConfig.default.flags
+        defaultRawFlags[.testBackupPhraseFlow] = true
+        rootState.walletConfig = WalletConfig(flags: defaultRawFlags)
+        
+        let store = TestStore(
+            initialState: rootState,
+            reducer: RootReducer()
+        )
+
+        store.send(.phraseDisplay(.finishedPressed))
+    }
+    
+    func testRecoveryPhraseValidationFlow_SkipPuzzleStartOfTheApp() {
+        var rootState = RootReducer.State.placeholder
+        rootState.storedWallet = .placeholder
+
+        let store = TestStore(
+            initialState: rootState,
+            reducer: RootReducer()
+        )
+
+        store.dependencies.mainQueue = .immediate
+        
+        store.send(.initialization(.checkBackupPhraseValidation)) { state in
+            state.appInitializationState = .initialized
+        }
+        
+        store.receive(.destination(.updateDestination(.home))) { state in
+            state.destinationState.internalDestination = .home
+            state.destinationState.previousDestination = .welcome
+        }
+    }
+    
+    func testRecoveryPhraseValidationFlow_StartPuzzleStartOfTheApp() {
+        var rootState = RootReducer.State.placeholder
+        rootState.storedWallet = .placeholder
+
+        var defaultRawFlags = WalletConfig.default.flags
+        defaultRawFlags[.testBackupPhraseFlow] = true
+        rootState.walletConfig = WalletConfig(flags: defaultRawFlags)
+
+        let store = TestStore(
+            initialState: rootState,
+            reducer: RootReducer()
+        )
+
+        let mnemonic =
+            """
+            still champion voice habit trend flight \
+            survey between bitter process artefact blind \
+            carbon truly provide dizzy crush flush \
+            breeze blouse charge solid fish spread
+            """
+
+        let randomRecoveryPhrase = RecoveryPhraseValidationFlowReducer.State.placeholder
+        
+        store.dependencies.mainQueue = .immediate
+        store.dependencies.mnemonic = .noOp
+        store.dependencies.mnemonic.asWords = { _ in mnemonic.components(separatedBy: " ") }
+        store.dependencies.randomRecoveryPhrase.random = { _ in randomRecoveryPhrase }
+
+        store.send(.initialization(.checkBackupPhraseValidation)) { state in
+            state.appInitializationState = .initialized
+            state.phraseDisplayState.phrase = RecoveryPhrase(words: mnemonic.components(separatedBy: " ").map { $0.redacted })
+        }
+        
+        store.receive(.destination(.updateDestination(.phraseDisplay))) { state in
+            state.destinationState.internalDestination = .phraseDisplay
+            state.destinationState.previousDestination = .welcome
+        }
+    }
+    
+    @MainActor func testDidFinishLaunching_to_InitializedWalletPhraseBackupPuzzleOff() async throws {
         // setup the store and environment to be fully mocked
         let recoveryPhrase = RecoveryPhrase(words: try MnemonicClient.mock.randomMnemonicWords().map { $0.redacted })
 
@@ -63,10 +160,6 @@ class AppInitializationTests: XCTestCase {
             }
         )
 
-        var defaultRawFlags = WalletConfig.default.flags
-        defaultRawFlags[.testBackupPhraseFlow] = true
-        let walletConfig = WalletConfig(flags: defaultRawFlags)
-
         let appState = RootReducer.State(
             destinationState: .placeholder,
             homeState: .placeholder,
@@ -79,7 +172,7 @@ class AppInitializationTests: XCTestCase {
                 phrase: recoveryPhrase
             ),
             sandboxState: .placeholder,
-            walletConfig: walletConfig,
+            walletConfig: .default,
             welcomeState: .placeholder
         )
 
@@ -129,77 +222,9 @@ class AppInitializationTests: XCTestCase {
             state.appInitializationState = .initialized
         }
 
-        await store.receive(.destination(.updateDestination(.phraseDisplay))) { state in
+        await store.receive(.destination(.updateDestination(.home))) { state in
             state.destinationState.previousDestination = .welcome
-            state.destinationState.internalDestination = .phraseDisplay
-        }
-        
-        await store.finish()
-    }
-    
-    /// Integration test validating the side effects work together properly when no wallet is stored but database files are present.
-    @MainActor func testDidFinishLaunching_to_KeysMissing() async throws {
-        let store = TestStore(
-            initialState: .placeholder,
-            reducer: RootReducer()
-        )
-
-        store.dependencies.databaseFiles = .noOp
-        store.dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
-        store.dependencies.walletStorage = .noOp
-        store.dependencies.mainQueue = .immediate
-        store.dependencies.walletConfigProvider = .noOp
-
-        // Root of the test, the app finished the launch process and triggers the checks and initializations.
-        await store.send(.initialization(.appDelegate(.didFinishLaunching)))
-
-        await store.receive(.initialization(.checkWalletConfig))
-        
-        await store.receive(.walletConfigLoaded(WalletConfig.default))
-
-        await store.receive(.initialization(.initialSetups))
-
-        await store.receive(.initialization(.configureCrashReporter))
-
-        await store.receive(.initialization(.checkWalletInitialization))
-
-        await store.receive(.initialization(.respondToWalletInitializationState(.keysMissing))) { state in
-            state.appInitializationState = .keysMissing
-        }
-        
-        await store.finish()
-    }
-    
-    /// Integration test validating the side effects work together properly when no wallet is stored and no database files are present.
-    @MainActor func testDidFinishLaunching_to_Uninitialized() async throws {
-        let store = TestStore(
-            initialState: .placeholder,
-            reducer: RootReducer()
-        )
-        
-        store.dependencies.databaseFiles = .noOp
-        store.dependencies.mainQueue = .immediate
-        store.dependencies.walletStorage = .noOp
-        store.dependencies.walletConfigProvider = .noOp
-
-        // Root of the test, the app finished the launch process and triggers the checks and initializations.
-        await store.send(.initialization(.appDelegate(.didFinishLaunching)))
-
-        await store.receive(.initialization(.checkWalletConfig))
-
-        await store.receive(.walletConfigLoaded(WalletConfig.default))
-
-        await store.receive(.initialization(.initialSetups))
-
-        await store.receive(.initialization(.configureCrashReporter))
-
-        await store.receive(.initialization(.checkWalletInitialization))
-
-        await store.receive(.initialization(.respondToWalletInitializationState(.uninitialized)))
-        
-        await store.receive(.destination(.updateDestination(.onboarding))) { state in
-            state.destinationState.previousDestination = .welcome
-            state.destinationState.internalDestination = .onboarding
+            state.destinationState.internalDestination = .home
         }
         
         await store.finish()

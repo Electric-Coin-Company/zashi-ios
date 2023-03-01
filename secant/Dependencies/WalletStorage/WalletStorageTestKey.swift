@@ -25,7 +25,7 @@ extension WalletStorageClient {
         exportWallet: { .placeholder },
         areKeysPresent: { false },
         updateBirthday: { _ in },
-        markUserPassedPhraseBackupTest: { },
+        markUserPassedPhraseBackupTest: { _ in },
         nukeWallet: { }
     )
 }

@@ -33,7 +33,6 @@ struct RecoveryPhraseDisplayReducer: ReducerProtocol {
             return .none
             
         case .finishedPressed:
-            // TODO: [#47] remove this when feature is implemented in https://github.com/zcash/secant-ios-wallet/issues/47
             return .none
             
         case let .phraseResponse(phrase):
