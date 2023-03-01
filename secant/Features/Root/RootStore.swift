@@ -155,7 +155,7 @@ extension RootReducer {
                 saplingParamsSourceURL: SaplingParamsSourceURL.default,
                 viewingKeys: [viewingKey],
                 walletBirthday: birthday,
-                loggerProxy: OSLogger_(logLevel: .debug, category: LoggerConstants.sdkLogs)
+                loggerProxy: OSLogger(logLevel: .debug, category: LoggerConstants.sdkLogs)
             )
             
             return initializer

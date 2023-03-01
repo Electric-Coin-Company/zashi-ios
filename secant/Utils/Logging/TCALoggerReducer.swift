@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import ZcashLightClientKit
 
 extension ReducerProtocol {
     @inlinable
@@ -38,7 +39,7 @@ extension ReducerLogger {
             CustomDump.customDump(receivedAction, to: &target, indent: 2)
             target.write("\n")
             target.write(diff(oldState, newState).map { "\($0)\n" } ?? "  (No state changes)\n")
-            TCALogger.live.tcaDebug("\(target)")
+            OSLogger.live.tcaDebug("\(target)")
         }
     }
 }
