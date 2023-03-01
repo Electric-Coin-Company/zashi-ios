@@ -110,7 +110,7 @@ class HomeTests: XCTestCase {
             state.destination = nil
         }
 
-        await store.receive(.rewindDone(true, .quickRescan))
+        await store.receive(.rewindDone(nil, .quickRescan))
     }
 
     @MainActor func testFullRescan_ResetToHomeScreen() async throws {
@@ -135,6 +135,6 @@ class HomeTests: XCTestCase {
             state.destination = nil
         }
 
-        await store.receive(.rewindDone(true, .fullRescan))
+        await store.receive(.rewindDone(nil, .fullRescan))
     }
 }

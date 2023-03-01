@@ -79,6 +79,7 @@ struct RootView: View {
                 }
             }
             .onOpenURL(perform: { viewStore.goToDeeplink($0) })
+            .alert(self.store.scope(state: \.alert), dismiss: .dismissAlert)
         }
     }
 }

@@ -124,8 +124,8 @@ struct ImportWalletReducer: ReducerProtocol {
                 } catch {
                     // TODO: [#221] Proper Error/Success handling (https://github.com/zcash/secant-ios-wallet/issues/221)
                     state.alert = AlertState(
-                        title: TextState("Wrong Seed Phrase"),
-                        message: TextState("The seed phrase must be 24 words separated by space."),
+                        title: TextState("Failed to restore wallet"),
+                        message: TextState("Error: \(error.localizedDescription)"),
                         dismissButton: .default(
                             TextState("Ok"),
                             action: .send(.dismissAlert)

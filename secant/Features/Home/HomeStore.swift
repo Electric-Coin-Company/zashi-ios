@@ -21,6 +21,7 @@ struct HomeReducer: ReducerProtocol {
             case transactionHistory
         }
 
+        @BindingState var alert: AlertState<HomeReducer.Action>?
         var balanceBreakdownState: BalanceBreakdownReducer.State
         var destination: Destination?
         var profileState: ProfileReducer.State
@@ -56,11 +57,12 @@ struct HomeReducer: ReducerProtocol {
     enum Action: Equatable {
         case balanceBreakdown(BalanceBreakdownReducer.Action)
         case debugMenuStartup
+        case dismissAlert
         case onAppear
         case onDisappear
         case profile(ProfileReducer.Action)
         case request(RequestReducer.Action)
-        case rewindDone(Bool, SettingsReducer.Action)
+        case rewindDone(String?, SettingsReducer.Action)
         case send(SendFlowReducer.Action)
         case synchronizerStateChanged(SDKSynchronizerState)
         case walletEvents(WalletEventsFlowReducer.Action)
@@ -141,9 +143,9 @@ struct HomeReducer: ReducerProtocol {
                 return .run { send in
                     do {
                         try await sdkSynchronizer.rewind(.quick)
-                        await send(.rewindDone(true, .quickRescan))
+                        await send(.rewindDone(nil, .quickRescan))
                     } catch {
-                        await send(.rewindDone(false, .quickRescan))
+                        await send(.rewindDone(error.localizedDescription, .quickRescan))
                     }
                 }
 
@@ -152,9 +154,9 @@ struct HomeReducer: ReducerProtocol {
                 return .run { send in
                     do {
                         try await sdkSynchronizer.rewind(.birthday)
-                        await send(.rewindDone(true, .fullRescan))
+                        await send(.rewindDone(nil, .fullRescan))
                     } catch {
-                        await send(.rewindDone(false, .fullRescan))
+                        await send(.rewindDone(error.localizedDescription, .fullRescan))
                     }
                 }
 
@@ -164,8 +166,15 @@ struct HomeReducer: ReducerProtocol {
             case .request:
                 return .none
 
-            case .rewindDone:
-                // TODO: [#221] error we need to handle (https://github.com/zcash/secant-ios-wallet/issues/221)
+            case let .rewindDone(errorDescription, _):
+                if let errorDescription {
+                    // TODO: [#221] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
+                    state.alert = AlertState(
+                        title: TextState("Rewind failed"),
+                        message: TextState("Error: \(errorDescription)"),
+                        dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+                    )
+                }
                 return .none
                 
             case .walletEvents:
@@ -185,6 +194,10 @@ struct HomeReducer: ReducerProtocol {
                 return .none
 
             case .debugMenuStartup:
+                return .none
+
+            case .dismissAlert:
+                state.alert = nil
                 return .none
             }
         }

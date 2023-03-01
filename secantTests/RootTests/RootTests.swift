@@ -118,16 +118,23 @@ class RootTests: XCTestCase {
         
         store.send(.initialization(.respondToWalletInitializationState(.keysMissing))) { state in
             state.appInitializationState = .keysMissing
+            state.alert = AlertState(
+                title: TextState("Wallet initialisation failed."),
+                message: TextState("App initialisation state: keysMissing."),
+                dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+            )
         }
     }
 
     func testRespondToWalletInitializationState_FilesMissing() throws {
+        let walletStorageError: Error = "export failed"
+
         let store = TestStore(
             initialState: .placeholder,
             reducer: RootReducer()
         ) { dependencies in
             dependencies.walletStorage = .noOp
-            dependencies.walletStorage.exportWallet = { throw "export failed" }
+            dependencies.walletStorage.exportWallet = { throw walletStorageError }
         }
 
         store.send(.initialization(.respondToWalletInitializationState(.filesMissing))) { state in
@@ -137,18 +144,30 @@ class RootTests: XCTestCase {
         store.receive(.initialization(.initializeSDK)) { state in
             // failed is expected because environment is throwing errors
             state.appInitializationState = .failed
+            state.alert = AlertState(
+                title: TextState("Failed to initialize the SDK"),
+                message: TextState("Error: \(walletStorageError.localizedDescription)"),
+                dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+            )
         }
 
-        store.receive(.initialization(.checkBackupPhraseValidation))
+        store.receive(.initialization(.checkBackupPhraseValidation)) { state in
+            state.alert = AlertState(
+                title: TextState("Wallet initialisation failed."),
+                message: TextState("Can't load seed phrase from local storage."),
+                dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+            )
+        }
     }
 
     func testRespondToWalletInitializationState_Initialized() throws {
+        let walletStorageError: Error = "export failed"
         let store = TestStore(
             initialState: .placeholder,
             reducer: RootReducer()
         ) { dependencies in
             dependencies.walletStorage = .noOp
-            dependencies.walletStorage.exportWallet = { throw "export failed" }
+            dependencies.walletStorage.exportWallet = { throw walletStorageError }
         }
 
         store.send(.initialization(.respondToWalletInitializationState(.initialized)))
@@ -156,9 +175,20 @@ class RootTests: XCTestCase {
         store.receive(.initialization(.initializeSDK)) { state in
             // failed is expected because environment is throwing errors
             state.appInitializationState = .failed
+            state.alert = AlertState(
+                title: TextState("Failed to initialize the SDK"),
+                message: TextState("Error: \(walletStorageError.localizedDescription)"),
+                dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+            )
         }
 
-        store.receive(.initialization(.checkBackupPhraseValidation))
+        store.receive(.initialization(.checkBackupPhraseValidation)) { state in
+            state.alert = AlertState(
+                title: TextState("Wallet initialisation failed."),
+                message: TextState("Can't load seed phrase from local storage."),
+                dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+            )
+        }
     }
     
     func testWalletEventReplyTo_validAddress() throws {
