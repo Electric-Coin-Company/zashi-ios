@@ -48,6 +48,14 @@ struct SettingsView: View {
                 )
                 .primaryButtonStyle
                 .frame(height: 50)
+
+                Button(
+                    action: { viewStore.send(.sendSupportMail) },
+                    label: { Text("Send us feedback!") }
+                )
+                .primaryButtonStyle
+                .frame(height: 50)
+
                 Spacer()
             }
             .padding(.horizontal, 30)
@@ -64,6 +72,7 @@ struct SettingsView: View {
                 }
             )
             .onAppear { viewStore.send(.onAppear) }
+            .alert(self.store.scope(state: \.alert), dismiss: .dismissAlert)
             
             if viewStore.isSharingLogs {
                 UIShareDialogView(
@@ -72,6 +81,18 @@ struct SettingsView: View {
                     viewStore.send(.logsShareFinished)
                 }
                 // UIShareDialogView only wraps UIActivityViewController presentation
+                // so frame is set to 0 to not break SwiftUIs layout
+                .frame(width: 0, height: 0)
+            }
+
+            if let supportData = viewStore.supportData {
+                UIMailDialogView(
+                    supportData: supportData,
+                    completion: {
+                        viewStore.send(.sendSupportMailFinished)
+                    }
+                )
+                // UIMailDialogView only wraps MFMailComposeViewController presentation
                 // so frame is set to 0 to not break SwiftUIs layout
                 .frame(width: 0, height: 0)
             }

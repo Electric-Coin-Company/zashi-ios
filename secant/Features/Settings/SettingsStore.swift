@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import MessageUI
 import SwiftUI
 
 typealias SettingsStore = Store<SettingsReducer.State, SettingsReducer.Action>
@@ -10,13 +11,14 @@ struct SettingsReducer: ReducerProtocol {
             case backupPhrase
         }
 
+        @BindingState var alert: AlertState<SettingsReducer.Action>?
         var destination: Destination?
         var exportLogsDisabled = false
+        @BindingState var isCrashReportingOn: Bool
         var isSharingLogs = false
         var phraseDisplayState: RecoveryPhraseDisplayReducer.State
         var rescanDialog: ConfirmationDialogState<SettingsReducer.Action>?
-
-        @BindingState var isCrashReportingOn: Bool
+        var supportData: SupportData?
 
         var tempSDKDir: URL {
             let tempDir = FileManager.default.temporaryDirectory
@@ -42,6 +44,7 @@ struct SettingsReducer: ReducerProtocol {
         case backupWalletAccessRequest
         case binding(BindingAction<SettingsReducer.State>)
         case cancelRescan
+        case dismissAlert
         case exportLogs
         case fullRescan
         case logsExported
@@ -50,8 +53,10 @@ struct SettingsReducer: ReducerProtocol {
         case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
         case quickRescan
         case rescanBlockchain
-        case updateDestination(SettingsReducer.State.Destination?)
+        case sendSupportMail
+        case sendSupportMailFinished
         case testCrashReporter // this will crash the app if live.
+        case updateDestination(SettingsReducer.State.Destination?)
     }
 
     @Dependency(\.localAuthentication) var localAuthentication
@@ -101,6 +106,10 @@ struct SettingsReducer: ReducerProtocol {
             case .cancelRescan, .quickRescan, .fullRescan:
                 state.rescanDialog = nil
                 return .none
+
+            case .dismissAlert:
+                state.alert = nil
+                return .none
                 
             case .exportLogs:
                 state.exportLogsDisabled = true
@@ -148,6 +157,26 @@ struct SettingsReducer: ReducerProtocol {
 
             case .binding:
                 return .none
+
+            case .sendSupportMail:
+                if MFMailComposeViewController.canSendMail() {
+                    state.supportData = SupportDataGenerator.generate()
+                } else {
+                    state.alert = AlertState(
+                        title: TextState("Can't send email"),
+                        message: TextState("""
+                        It looks like that you don't have any email account configured on your device. Therefore it's not possible to send a support \
+                        email.
+                        """),
+                        dismissButton: .default(TextState("Ok"), action: .send(.sendSupportMailFinished))
+                    )
+                }
+
+                return .none
+
+            case .sendSupportMailFinished:
+                state.supportData = nil
+                return .none
             }
         }
 
@@ -190,10 +219,10 @@ extension SettingsStore {
 
 extension SettingsReducer.State {
     static let placeholder = SettingsReducer.State(
+        isCrashReportingOn: true,
         phraseDisplayState: RecoveryPhraseDisplayReducer.State(
             phrase: .placeholder
-        ),
-        isCrashReportingOn: true
+        )
     )
 }
 
