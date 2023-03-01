@@ -149,8 +149,8 @@ extension RootReducer {
                 }
 
                 var landingDestination = RootReducer.DestinationState.Destination.home
-
-                if !storedWallet.hasUserPassedPhraseBackupTest {
+                
+                if !storedWallet.hasUserPassedPhraseBackupTest && state.walletConfig.isEnabled(.testBackupPhraseFlow) {
                     do {
                         let phraseWords = try mnemonic.asWords(storedWallet.seedPhrase.value())
 
@@ -178,7 +178,7 @@ extension RootReducer {
                     let birthday = zcashSDKEnvironment.latestCheckpoint
 
                     // store the wallet to the keychain
-                    try walletStorage.importWallet(newRandomPhrase, birthday, .english, false)
+                    try walletStorage.importWallet(newRandomPhrase, birthday, .english, !state.walletConfig.isEnabled(.testBackupPhraseFlow))
 
                     // start the backup phrase validation test
                     let randomRecoveryPhraseWords = try mnemonic.asWords(newRandomPhrase)
@@ -198,7 +198,7 @@ extension RootReducer {
 
             case .phraseValidation(.succeed):
                 do {
-                    try walletStorage.markUserPassedPhraseBackupTest()
+                    try walletStorage.markUserPassedPhraseBackupTest(true)
                 } catch {
                     // TODO: [#221] error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
                 }

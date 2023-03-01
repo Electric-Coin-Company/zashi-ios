@@ -30,6 +30,7 @@ struct WalletStorageClient {
     ///   - bip39: Mnemonic/Seed phrase from `MnemonicSwift`
     ///   - birthday: BlockHeight from SDK
     ///   - language: Mnemonic's language
+    ///   - hasUserPassedPhraseBackupTest: If user passed the puzzle phrase backup
     /// - Throws:
     ///   - `WalletStorageError.unsupportedLanguage`:  when mnemonic's language is anything other than English
     ///   - `WalletStorageError.alreadyImported` when valid wallet is already in the storage
@@ -66,7 +67,7 @@ struct WalletStorageClient {
     /// - Throws:
     ///   - `WalletStorage.KeychainError.encoding`:  when encoding the wallet's data failed.
     ///   - `WalletStorageError.storageError` when some unrecognized error occurred.
-    let markUserPassedPhraseBackupTest: () throws -> Void
+    let markUserPassedPhraseBackupTest: (Bool) throws -> Void
 
     /// Use carefully: deletes the stored wallet.
     /// There's no fate but what we make for ourselves - Sarah Connor.

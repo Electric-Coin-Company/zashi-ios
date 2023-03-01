@@ -15,5 +15,5 @@ extension DependencyValues {
 }
 
 struct RecoveryPhraseRandomizerClient {
-    let random: (RecoveryPhrase) -> RecoveryPhraseValidationFlowReducer.State
+    var random: (RecoveryPhrase) -> RecoveryPhraseValidationFlowReducer.State
 }

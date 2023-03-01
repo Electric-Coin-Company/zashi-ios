@@ -23,10 +23,11 @@ struct RecoveryPhrase: Equatable, Redactable {
     
     private let groupSize = 6
 
-    func toGroups() -> [Group] {
-        let chunks = words.count / groupSize
-        return zip(0 ..< chunks, words.chunked(into: groupSize)).map {
-            Group(startIndex: $0 * groupSize + 1, words: $1)
+    func toGroups(groupSizeOverride: Int? = nil) -> [Group] {
+        let internalGroupSize = groupSizeOverride ?? groupSize
+        let chunks = words.count / internalGroupSize
+        return zip(0 ..< chunks, words.chunked(into: internalGroupSize)).map {
+            Group(startIndex: $0 * internalGroupSize + 1, words: $1)
         }
     }
 

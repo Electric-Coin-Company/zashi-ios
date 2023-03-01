@@ -20,9 +20,8 @@
 
 // MARK: - Secret Recovery Phrase Display
 "recoveryPhraseDisplay.title" = "Your Secret Recovery Phrase";
-"recoveryPhraseDisplay.description" = "The following 24 words represent your funds and the security used to protect them.";
-"recoveryPhraseDisplay.backItUp" = "Back them up now! There will be a test.";
-"recoveryPhraseDisplay.button.finished" = "Finished!";
+"recoveryPhraseDisplay.description" = "The following 24 words represent your funds and the security used to protect them. Back them up now!";
+"recoveryPhraseDisplay.button.wroteItDown" = "I wrote it down!";
 "recoveryPhraseDisplay.button.copyToBuffer" = "Copy To Buffer";
 "recoveryPhraseDisplay.noWords" = "Oops no words";
 

@@ -8,6 +8,7 @@
 import Combine
 import XCTest
 @testable import secant_testnet
+import ComposableArchitecture
 
 class WalletConfigProviderTests: XCTestCase {
     var cancellables: [AnyCancellable] = []
@@ -113,6 +114,24 @@ class WalletConfigProviderTests: XCTestCase {
         wait(for: [expectation], timeout: 1)
 
         return configuration
+    }
+    
+    func testPropagationOfFlagUpdate() throws {
+        let store = TestStore(
+            initialState: .placeholder,
+            reducer: RootReducer()
+        )
+        
+        // Change any of the flags from the default value
+        var defaultRawFlags = WalletConfig.default.flags
+        defaultRawFlags[.onboardingFlow] = true
+        let flags = WalletConfig(flags: defaultRawFlags)
+        
+        // The new flag's value has to be propagated to all `walletConfig` instances
+        store.send(.debug(.walletConfigLoaded(flags))) { state in
+            state.walletConfig = flags
+            state.onboardingState.walletConfig = flags
+        }
     }
 }
 

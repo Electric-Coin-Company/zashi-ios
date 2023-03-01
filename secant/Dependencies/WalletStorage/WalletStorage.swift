@@ -116,10 +116,10 @@ struct WalletStorage {
         }
     }
     
-    func markUserPassedPhraseBackupTest() throws {
+    func markUserPassedPhraseBackupTest(_ flag: Bool = true) throws {
         do {
             var wallet = try exportWallet()
-            wallet.hasUserPassedPhraseBackupTest = true
+            wallet.hasUserPassedPhraseBackupTest = flag
             
             guard let data = try encode(object: wallet) else {
                 throw KeychainError.encoding

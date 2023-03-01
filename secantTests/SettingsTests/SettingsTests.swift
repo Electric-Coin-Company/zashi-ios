@@ -38,7 +38,7 @@ class SettingsTests: XCTestCase {
             updateBirthday: { _ in
                 throw WalletStorage.KeychainError.encoding
             },
-            markUserPassedPhraseBackupTest: {
+            markUserPassedPhraseBackupTest: { _ in
                 throw WalletStorage.KeychainError.encoding
             },
             nukeWallet: { }

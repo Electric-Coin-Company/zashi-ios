@@ -446,6 +446,7 @@
 		9E7FE0EC282E7D9400C374E8 /* TransactionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF63B2818305D00BA3F17 /* TransactionState.swift */; };
 		9E7FE0F628327F6F00C374E8 /* ScanUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0F528327F6F00C374E8 /* ScanUIView.swift */; };
 		9E7FE0F92832824C00C374E8 /* QRCodeScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0F82832824C00C374E8 /* QRCodeScanView.swift */; };
+		9E852D5C29AF8EB200CF4AC1 /* RecoveryPhraseValidationFlowFeatureFlagTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E852D5B29AF8EB200CF4AC1 /* RecoveryPhraseValidationFlowFeatureFlagTests.swift */; };
 		9E92AF0828530EBF007367AD /* View+UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AF0728530EBF007367AD /* View+UIImage.swift */; };
 		9E94C62028AA7DEE008256E9 /* BalanceBreakdownTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E94C61F28AA7DEE008256E9 /* BalanceBreakdownTests.swift */; };
 		9E94C62328AA7EE0008256E9 /* BalanceBreakdownSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E94C62228AA7EE0008256E9 /* BalanceBreakdownSnapshotTests.swift */; };
@@ -768,6 +769,7 @@
 		9E7FE0E5282E7B1100C374E8 /* StoredWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredWallet.swift; sourceTree = "<group>"; };
 		9E7FE0F528327F6F00C374E8 /* ScanUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanUIView.swift; sourceTree = "<group>"; };
 		9E7FE0F82832824C00C374E8 /* QRCodeScanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeScanView.swift; sourceTree = "<group>"; };
+		9E852D5B29AF8EB200CF4AC1 /* RecoveryPhraseValidationFlowFeatureFlagTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseValidationFlowFeatureFlagTests.swift; sourceTree = "<group>"; };
 		9E92AF0728530EBF007367AD /* View+UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+UIImage.swift"; sourceTree = "<group>"; };
 		9E94C61F28AA7DEE008256E9 /* BalanceBreakdownTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceBreakdownTests.swift; sourceTree = "<group>"; };
 		9E94C62228AA7EE0008256E9 /* BalanceBreakdownSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceBreakdownSnapshotTests.swift; sourceTree = "<group>"; };
@@ -1091,7 +1093,6 @@
 			children = (
 				9EF8135F27F043CC0075AF48 /* AppDelegate.swift */,
 				0D6D628A276A528D002FB4CC /* DropDelegate.swift */,
-				34F682E429A75EB60022C079 /* WalletConfig.swift */,
 				9EF8139B27F47AED0075AF48 /* InitializationState.swift */,
 				9E7FE0D6282D286500C374E8 /* RecoveryPhrase.swift */,
 				9E612C7C2991476F00D09B09 /* SensitiveData.swift */,
@@ -1099,6 +1100,7 @@
 				9E66122B2877188700C75B70 /* SyncStatusSnapshot.swift */,
 				9E5BF63B2818305D00BA3F17 /* TransactionState.swift */,
 				9E7FE0DC282D298900C374E8 /* ValidationWord.swift */,
+				34F682E429A75EB60022C079 /* WalletConfig.swift */,
 				9EAB46772860A1D2002904A0 /* WalletEvent.swift */,
 			);
 			path = Models;
@@ -1145,6 +1147,7 @@
 			isa = PBXGroup;
 			children = (
 				0DFE93E5272CB6F7000FCCA5 /* RecoveryPhraseValidationTests.swift */,
+				9E852D5B29AF8EB200CF4AC1 /* RecoveryPhraseValidationFlowFeatureFlagTests.swift */,
 			);
 			path = RecoveryPhraseValidationTests;
 			sourceTree = "<group>";
@@ -3052,6 +3055,7 @@
 				9E9ECC9828589E150099D5A2 /* WelcomeSnapshotTests.swift in Sources */,
 				9E7CB6122869882D00A02233 /* WalletEventsSnapshotTests.swift in Sources */,
 				9E5BF644281FEC9900BA3F17 /* SendTests.swift in Sources */,
+				9E852D5C29AF8EB200CF4AC1 /* RecoveryPhraseValidationFlowFeatureFlagTests.swift in Sources */,
 				0D1C1AA327611EFD0004AF6A /* RecoveryPhraseDisplayReducerTests.swift in Sources */,
 				9E9ECC9A28589E150099D5A2 /* RecoveryPhraseValidationFlowSnapshotTests.swift in Sources */,
 				9E0F574B2980260D005304FA /* LoggerTests.swift in Sources */,

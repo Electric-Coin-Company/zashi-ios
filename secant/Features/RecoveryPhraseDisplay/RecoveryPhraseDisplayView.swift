@@ -13,57 +13,57 @@ struct RecoveryPhraseDisplayView: View {
     
     var body: some View {
         WithViewStore(self.store) { viewStore in
-            ScrollView {
-                VStack(alignment: .center, spacing: 0) {
-                    if let groups = viewStore.phrase?.toGroups() {
-                        VStack(spacing: 20) {
-                            Text("recoveryPhraseDisplay.title")
-                                .titleText()
-                                .multilineTextAlignment(.center)
-
-                            VStack(alignment: .center, spacing: 4) {
-                                Text("recoveryPhraseDisplay.description")
-                                    .bodyText()
-                                
-                                Text("recoveryPhraseDisplay.backItUp")
-                                    .bodyText()
-                            }
-                        }
-                        .padding(.top, 0)
-                        .padding(.bottom, 20)
+            VStack(alignment: .center, spacing: 0) {
+                if let groups = viewStore.phrase?.toGroups(groupSizeOverride: 2) {
+                    VStack(spacing: 20) {
+                        Text("recoveryPhraseDisplay.title")
+                            .titleText()
+                            .multilineTextAlignment(.center)
                         
-                        VStack(alignment: .leading, spacing: 35) {
-                            ForEach(groups, id: \.startIndex) { group in
-                                VStack {
-                                    WordChipGrid(words: group.words, startingAt: group.startIndex)
-                                }
-                            }
+                        VStack(alignment: .center, spacing: 4) {
+                            Text("recoveryPhraseDisplay.description")
+                                .bodyText()
                         }
-                        .padding(.horizontal, 5)
-                        
-                        VStack {
-                            Button(
-                                action: { viewStore.send(.finishedPressed) },
-                                label: { Text("recoveryPhraseDisplay.button.finished") }
-                            )
-                            .activeButtonStyle
-                            .frame(height: 60)
-                            
-                            Button(
-                                action: {
-                                    viewStore.send(.copyToBufferPressed)
-                                },
-                                label: {
-                                    Text("recoveryPhraseDisplay.button.copyToBuffer")
-                                        .bodyText()
-                                }
-                            )
-                            .frame(height: 60)
-                        }
-                        .padding()
-                    } else {
-                        Text("recoveryPhraseDisplay.noWords")
                     }
+                    .padding(.top, 0)
+                    .padding(.bottom, 20)
+                    
+                    Spacer()
+
+                    VStack(alignment: .leading, spacing: 10) {
+                        ForEach(groups, id: \.startIndex) { group in
+                            VStack {
+                                HStack(alignment: .center) {
+                                    HStack {
+                                        Spacer()
+                                        Text("\(group.startIndex). \(group.words[0].data)")
+                                        Spacer()
+                                    }
+                                    .padding(.leading, 20)
+                                    HStack {
+                                        Spacer()
+                                        Text("\(group.startIndex + 1). \(group.words[1].data)")
+                                        Spacer()
+                                    }
+                                    .padding(.trailing, 20)
+                                }
+                            }
+                        }
+                    }
+                    
+                    Spacer()
+                    
+                    VStack {
+                        Button(
+                            action: { viewStore.send(.finishedPressed) },
+                            label: { Text("recoveryPhraseDisplay.button.wroteItDown") }
+                        )
+                        .activeButtonStyle
+                        .frame(height: 60)
+                    }
+                    .padding()
+                } else {
+                    Text("recoveryPhraseDisplay.noWords")
                 }
             }
             .padding(.bottom, 20)
