@@ -8,13 +8,14 @@
 import XCTest
 @testable import secant_testnet
 import OSLog
+import ZcashLightClientKit
 
 class LoggerTests: XCTestCase {
     let timeToPast: TimeInterval = 0.1
     
     func testOSLogger_loggingAndExport() throws {
         let category = "testOSLogger_loggingAndExport"
-        let osLogger = OSLogger_(logLevel: .debug, category: category)
+        let osLogger = OSLogger(logLevel: .debug, category: category)
         let testMessage = "test message"
         
         osLogger.debug(testMessage)
@@ -33,7 +34,7 @@ class LoggerTests: XCTestCase {
     
     func testOSLogger_DebugLevel_DebugLog() throws {
         let category = "testOSLogger_DebugLevel_DebugLog"
-        let osLogger = OSLogger_(logLevel: .debug, category: category)
+        let osLogger = OSLogger(logLevel: .debug, category: category)
         let testMessage = "debug message"
         
         osLogger.debug(testMessage)
@@ -52,7 +53,7 @@ class LoggerTests: XCTestCase {
     
     func testOSLogger_ErrorLevel_ErrorLog() throws {
         let category = "testOSLogger_ErrorLevel_ErrorLog"
-        let osLogger = OSLogger_(logLevel: .debug, category: category)
+        let osLogger = OSLogger(logLevel: .debug, category: category)
         let testMessage = "error message"
         
         osLogger.error(testMessage)
@@ -71,7 +72,7 @@ class LoggerTests: XCTestCase {
     
     func testOSLogger_WarningLevel_WarningLog() throws {
         let category = "testOSLogger_WarningLevel_WarningLog"
-        let osLogger = OSLogger_(logLevel: .warning, category: category)
+        let osLogger = OSLogger(logLevel: .warning, category: category)
         let testMessage = "warning message"
         
         osLogger.warn(testMessage)
@@ -90,7 +91,7 @@ class LoggerTests: XCTestCase {
     
     func testOSLogger_EventLevel_EventLog() throws {
         let category = "testOSLogger_EventLevel_EventLog"
-        let osLogger = OSLogger_(logLevel: .event, category: category)
+        let osLogger = OSLogger(logLevel: .event, category: category)
         let testMessage = "event message"
         
         osLogger.event(testMessage)
@@ -109,7 +110,7 @@ class LoggerTests: XCTestCase {
     
     func testOSLogger_InfoLevel_InfoLog() throws {
         let category = "testOSLogger_InfoLevel_InfoLog"
-        let osLogger = OSLogger_(logLevel: .info, category: category)
+        let osLogger = OSLogger(logLevel: .info, category: category)
         let testMessage = "info message"
         
         osLogger.info(testMessage)
@@ -128,7 +129,7 @@ class LoggerTests: XCTestCase {
     
     func testOSLogger_DebugLevel_OtherLogs() throws {
         let category = "testOSLogger_DebugLevel_OtherLogs"
-        let osLogger = OSLogger_(logLevel: .debug, category: category)
+        let osLogger = OSLogger(logLevel: .debug, category: category)
         let testMessage = "debug message"
         
         osLogger.debug(testMessage)
@@ -146,7 +147,7 @@ class LoggerTests: XCTestCase {
     
     func testOSLogger_ErrorLevel_OtherLogs() throws {
         let category = "testOSLogger_ErrorLevel_OtherLogs"
-        let osLogger = OSLogger_(logLevel: .error, category: category)
+        let osLogger = OSLogger(logLevel: .error, category: category)
         let testMessage = "debug message"
         
         osLogger.debug(testMessage)
@@ -164,7 +165,7 @@ class LoggerTests: XCTestCase {
     
     func testOSLogger_WarningLevel_OtherLogs() throws {
         let category = "testOSLogger_WarningLevel_OtherLogs"
-        let osLogger = OSLogger_(logLevel: .warning, category: category)
+        let osLogger = OSLogger(logLevel: .warning, category: category)
         let testMessage = "debug message"
         
         osLogger.debug(testMessage)
@@ -182,7 +183,7 @@ class LoggerTests: XCTestCase {
     
     func testOSLogger_EventLevel_OtherLogs() throws {
         let category = "testOSLogger_EventLevel_OtherLogs"
-        let osLogger = OSLogger_(logLevel: .event, category: category)
+        let osLogger = OSLogger(logLevel: .event, category: category)
         let testMessage = "debug message"
         
         osLogger.debug(testMessage)
@@ -200,7 +201,7 @@ class LoggerTests: XCTestCase {
     
     func testOSLogger_InfoLevel_OtherLogs() throws {
         let category = "testOSLogger_InfoLevel_OtherLogs"
-        let osLogger = OSLogger_(logLevel: .info, category: category)
+        let osLogger = OSLogger(logLevel: .info, category: category)
         let testMessage = "debug message"
         
         osLogger.debug(testMessage)
@@ -218,7 +219,7 @@ class LoggerTests: XCTestCase {
     
     func testWalletLogger() throws {
         let category = "testWalletLogger"
-        walletLogger = OSLogger_(logLevel: .info, category: category)
+        walletLogger = OSLogger(logLevel: .info, category: category)
         let testMessage = "wallet test message"
         
         LoggerProxy.info(testMessage)

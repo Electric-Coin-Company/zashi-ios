@@ -57,7 +57,7 @@
 		0D26AEC1299E8196005260EE /* Clamped.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DACFA7E27208CE00039EEA5 /* Clamped.swift */; };
 		0D26AEC2299E8196005260EE /* TransactionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAB46792861EA6A002904A0 /* TransactionRowView.swift */; };
 		0D26AEC3299E8196005260EE /* FeedbackGeneratorTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863892922CC4D003D0F8B /* FeedbackGeneratorTestKey.swift */; };
-		0D26AEC4299E8196005260EE /* TCALogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0F5740297E7F1C005304FA /* TCALogger.swift */; };
+		0D26AEC4299E8196005260EE /* TCALogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0F5740297E7F1C005304FA /* TCALogging.swift */; };
 		0D26AEC5299E8196005260EE /* RecoveryPhraseValidationFlowStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DFE93E2272CA1AA000FCCA5 /* RecoveryPhraseValidationFlowStore.swift */; };
 		0D26AEC6299E8196005260EE /* ImportWalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2DF99B27CF704D00649636 /* ImportWalletView.swift */; };
 		0D26AEC7299E8196005260EE /* RootInitialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ADA7C2938F4C00071767B /* RootInitialization.swift */; };
@@ -225,7 +225,7 @@
 		0D26AF6B299E8196005260EE /* DiskSpaceChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E5F2F228E46DB700C17E5F /* DiskSpaceChecker.swift */; };
 		0D26AF6C299E8196005260EE /* TransactionSentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9C165BD2740403600592F76 /* TransactionSentView.swift */; };
 		0D26AF6D299E8196005260EE /* ZcashSDKEnvironmentLiveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E153A6B292167FF00112F41 /* ZcashSDKEnvironmentLiveKey.swift */; };
-		0D26AF6E299E8196005260EE /* OSLogger_.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0F5746297EE5F3005304FA /* OSLogger_.swift */; };
+		0D26AF6E299E8196005260EE /* WalletLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0F5746297EE5F3005304FA /* WalletLogger.swift */; };
 		0D26AF6F299E8196005260EE /* RequestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A5627680DDE00A2DB75 /* RequestStore.swift */; };
 		0D26AF71299E8196005260EE /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 0D26AE8F299E8196005260EE /* Lottie */; };
 		0D26AF72299E8196005260EE /* URLRouting in Frameworks */ = {isa = PBXBuildFile; productRef = 0D26AE93299E8196005260EE /* URLRouting */; };
@@ -368,10 +368,10 @@
 		9E01F8282833CDA0000EFC57 /* ScanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E01F8272833CDA0000EFC57 /* ScanTests.swift */; };
 		9E02B56A27FED43E005B809B /* FileManagerInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E02B56927FED43E005B809B /* FileManagerInterface.swift */; };
 		9E02B56C27FED475005B809B /* DatabaseFilesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E02B56B27FED475005B809B /* DatabaseFilesTests.swift */; };
-		9E0F5741297E7F1D005304FA /* TCALogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0F5740297E7F1C005304FA /* TCALogger.swift */; };
+		9E0F5741297E7F1D005304FA /* TCALogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0F5740297E7F1C005304FA /* TCALogging.swift */; };
 		9E0F5743297EB96C005304FA /* TCALoggerReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0F5742297EB96C005304FA /* TCALoggerReducer.swift */; };
 		9E0F5745297EBA1B005304FA /* LogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0F5744297EBA1B005304FA /* LogStore.swift */; };
-		9E0F5747297EE5F3005304FA /* OSLogger_.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0F5746297EE5F3005304FA /* OSLogger_.swift */; };
+		9E0F5747297EE5F3005304FA /* WalletLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0F5746297EE5F3005304FA /* WalletLogger.swift */; };
 		9E0F574B2980260D005304FA /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0F574A2980260D005304FA /* LoggerTests.swift */; };
 		9E153A5F2920CE2700112F41 /* MnemonicInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E153A5E2920CD5100112F41 /* MnemonicInterface.swift */; };
 		9E153A602920CE2700112F41 /* MnemonicLiveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E153A5C2920CD5100112F41 /* MnemonicLiveKey.swift */; };
@@ -691,10 +691,10 @@
 		9E01F8272833CDA0000EFC57 /* ScanTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanTests.swift; sourceTree = "<group>"; };
 		9E02B56927FED43E005B809B /* FileManagerInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerInterface.swift; sourceTree = "<group>"; };
 		9E02B56B27FED475005B809B /* DatabaseFilesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseFilesTests.swift; sourceTree = "<group>"; };
-		9E0F5740297E7F1C005304FA /* TCALogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCALogger.swift; sourceTree = "<group>"; };
+		9E0F5740297E7F1C005304FA /* TCALogging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCALogging.swift; sourceTree = "<group>"; };
 		9E0F5742297EB96C005304FA /* TCALoggerReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCALoggerReducer.swift; sourceTree = "<group>"; };
 		9E0F5744297EBA1B005304FA /* LogStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogStore.swift; sourceTree = "<group>"; };
-		9E0F5746297EE5F3005304FA /* OSLogger_.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSLogger_.swift; sourceTree = "<group>"; };
+		9E0F5746297EE5F3005304FA /* WalletLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletLogger.swift; sourceTree = "<group>"; };
 		9E0F574A2980260D005304FA /* LoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerTests.swift; sourceTree = "<group>"; };
 		9E153A5B2920CD5100112F41 /* MnemonicMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicMocks.swift; sourceTree = "<group>"; };
 		9E153A5C2920CD5100112F41 /* MnemonicLiveKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicLiveKey.swift; sourceTree = "<group>"; };
@@ -1332,10 +1332,10 @@
 		9E0F573F297E7F00005304FA /* Logging */ = {
 			isa = PBXGroup;
 			children = (
-				9E0F5740297E7F1C005304FA /* TCALogger.swift */,
+				9E0F5740297E7F1C005304FA /* TCALogging.swift */,
 				9E0F5742297EB96C005304FA /* TCALoggerReducer.swift */,
 				9E0F5744297EBA1B005304FA /* LogStore.swift */,
-				9E0F5746297EE5F3005304FA /* OSLogger_.swift */,
+				9E0F5746297EE5F3005304FA /* WalletLogger.swift */,
 			);
 			path = Logging;
 			sourceTree = "<group>";
@@ -2616,7 +2616,7 @@
 				0D26AEC1299E8196005260EE /* Clamped.swift in Sources */,
 				0D26AEC2299E8196005260EE /* TransactionRowView.swift in Sources */,
 				0D26AEC3299E8196005260EE /* FeedbackGeneratorTestKey.swift in Sources */,
-				0D26AEC4299E8196005260EE /* TCALogger.swift in Sources */,
+				0D26AEC4299E8196005260EE /* TCALogging.swift in Sources */,
 				0D26AEC5299E8196005260EE /* RecoveryPhraseValidationFlowStore.swift in Sources */,
 				0D26AEC6299E8196005260EE /* ImportWalletView.swift in Sources */,
 				0D26AEC7299E8196005260EE /* RootInitialization.swift in Sources */,
@@ -2791,7 +2791,7 @@
 				0D26AF6B299E8196005260EE /* DiskSpaceChecker.swift in Sources */,
 				0D26AF6C299E8196005260EE /* TransactionSentView.swift in Sources */,
 				0D26AF6D299E8196005260EE /* ZcashSDKEnvironmentLiveKey.swift in Sources */,
-				0D26AF6E299E8196005260EE /* OSLogger_.swift in Sources */,
+				0D26AF6E299E8196005260EE /* WalletLogger.swift in Sources */,
 				0D26AF6F299E8196005260EE /* RequestStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2845,7 +2845,7 @@
 				0DACFA7F27208CE00039EEA5 /* Clamped.swift in Sources */,
 				9EAB467A2861EA6A002904A0 /* TransactionRowView.swift in Sources */,
 				9EB8638C2922CD4A003D0F8B /* FeedbackGeneratorTestKey.swift in Sources */,
-				9E0F5741297E7F1D005304FA /* TCALogger.swift in Sources */,
+				9E0F5741297E7F1D005304FA /* TCALogging.swift in Sources */,
 				0DFE93E3272CA1AA000FCCA5 /* RecoveryPhraseValidationFlowStore.swift in Sources */,
 				9E2DF99E27CF704D00649636 /* ImportWalletView.swift in Sources */,
 				9E9ADA7D2938F4C00071767B /* RootInitialization.swift in Sources */,
@@ -3020,7 +3020,7 @@
 				34E5F2F328E46DB700C17E5F /* DiskSpaceChecker.swift in Sources */,
 				F9C165C42740403600592F76 /* TransactionSentView.swift in Sources */,
 				9E153A6E292167FF00112F41 /* ZcashSDKEnvironmentLiveKey.swift in Sources */,
-				9E0F5747297EE5F3005304FA /* OSLogger_.swift in Sources */,
+				9E0F5747297EE5F3005304FA /* WalletLogger.swift in Sources */,
 				F9971A5927680DDE00A2DB75 /* RequestStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3554,7 +3554,7 @@
 			repositoryURL = "https://github.com/zcash/ZcashLightClientKit/";
 			requirement = {
 				kind = revision;
-				revision = 3b2d972b2dd0c51e36d76e49fcf58273bf585c1b;
+				revision = 9bfbdcb4c5ce315beb2e6bf94e982e7e10703707;
 			};
 		};
 		6654C7382715A38000901167 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
