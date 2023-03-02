@@ -102,7 +102,7 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
     }
 
     func statusSnapshot() -> SyncStatusSnapshot {
-        guard let synchronizer = synchronizer else {
+        guard let synchronizer else {
             return .default
         }
         

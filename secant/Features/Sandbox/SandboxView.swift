@@ -36,8 +36,6 @@ struct SandboxView: View {
             ScanView(store: .placeholder)
         case .profile:
             ProfileView(store: store.profileStore())
-        case .request:
-            RequestView(store: .placeholder)
         }
     }
 

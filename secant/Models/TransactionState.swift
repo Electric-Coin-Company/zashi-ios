@@ -33,6 +33,17 @@ struct TransactionState: Equatable, Identifiable {
     var address: String {
         zAddress ?? ""
     }
+    
+    var unarySymbol: String {
+        switch status {
+        case .paid, .pending:
+            return "-"
+        case .received:
+            return "+"
+        case .failed:
+            return ""
+        }
+    }
 
     var date: Date? {
         guard let timestamp else { return nil }

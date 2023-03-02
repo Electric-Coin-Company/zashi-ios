@@ -16,7 +16,7 @@ extension XCTestCase {
 
 extension View {
     func attachments(_ name: String) -> [XCTAttachment] {
-        [attachment(name), attachment(name, .dark)]
+        [attachment(name)]
     }
 
     func attachment(_ fileName: String, _ colorScheme: ColorScheme = .light) -> XCTAttachment {

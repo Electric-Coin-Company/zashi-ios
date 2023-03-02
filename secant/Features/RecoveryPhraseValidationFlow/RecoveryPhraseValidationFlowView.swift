@@ -108,13 +108,7 @@ struct RecoveryPhraseTestPreambleView_Previews: PreviewProvider {
             }
 
             RecoveryPhraseValidationFlowView(store: .demo)
-                .preferredColorScheme(.dark)
-
-            RecoveryPhraseValidationFlowView(store: .demo)
                 .previewDevice(PreviewDevice(rawValue: "iPhone SE (2nd generation)"))
-
-            RecoveryPhraseValidationFlowView(store: .demo)
-                .environment(\.sizeCategory, .accessibilityLarge)
         }
     }
 }

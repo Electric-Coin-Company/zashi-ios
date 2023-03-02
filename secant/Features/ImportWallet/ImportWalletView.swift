@@ -9,29 +9,15 @@ import SwiftUI
 import ComposableArchitecture
 
 struct ImportWalletView: View {
-    @Environment(\.presentationMode) var presentationMode
-    
     var store: ImportWalletStore
 
     var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
-                VStack(alignment: .leading, spacing: 30) {
-                    HStack {
-                        Button("Back") { presentationMode.wrappedValue.dismiss() }
-                        .navigationButtonStyle
-                        .frame(width: 75, height: 40)
-                        
-                        Text("importWallet.title")
-                            .titleText()
-                    }
-                    
-                    Text("importWallet.description")
-                        .paragraphText()
-                        .lineSpacing(4)
-                        .opacity(0.53)
-                }
-                .padding(18)
+                Text("importWallet.description")
+                    .font(.system(size: 27))
+                    .fontWeight(.bold)
+                    .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                 
                 ZStack {
                     ImportSeedEditor(store: store)
@@ -42,7 +28,9 @@ struct ImportWalletView: View {
 
                 VStack {
                     Text("importWallet.birthday.description")
-                        .paragraphText()
+                        .font(.system(size: 16))
+                        .fontWeight(.bold)
+                        .foregroundColor(Asset.Colors.Mfp.fontDark.color)
 
                     TextField(
                         "importWallet.birthday.placeholder",
@@ -60,12 +48,6 @@ struct ImportWalletView: View {
                 .activeButtonStyle
                 .importWalletButtonLayout()
                 .disabled(!viewStore.isValidForm)
-
-                Button("importWallet.button.importPrivateKey") {
-                    viewStore.send(.importPrivateOrViewingKey)
-                }
-                .secondaryButtonStyle
-                .importWalletButtonLayout()
 
                 Spacer()
             }
@@ -130,11 +112,7 @@ struct ImportWalletView_Previews: PreviewProvider {
             .preferredColorScheme(.light)
 
         ImportWalletView(store: .demo)
-            .preferredColorScheme(.dark)
-        
-        ImportWalletView(store: .demo)
             .previewDevice(PreviewDevice(rawValue: "iPhone SE (2nd generation)"))
             .preferredColorScheme(.light)
-            .environment(\.sizeCategory, .accessibilityLarge)
     }
 }

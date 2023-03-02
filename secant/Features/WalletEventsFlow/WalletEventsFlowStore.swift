@@ -138,14 +138,14 @@ extension WalletEventsFlowViewStore {
     func bindingForSelectedWalletEvent(_ walletEvent: WalletEvent?) -> Binding<Bool> {
         self.binding(
             get: {
-                guard let walletEvent = walletEvent else {
+                guard let walletEvent else {
                     return false
                 }
                 
                 return $0.destination.map(/WalletEventsFlowReducer.State.Destination.showWalletEvent) == walletEvent
             },
             send: { isActive in
-                guard let walletEvent = walletEvent else {
+                guard let walletEvent else {
                     return WalletEventsFlowReducer.Action.updateDestination(nil)
                 }
                 

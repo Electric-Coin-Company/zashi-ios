@@ -12,32 +12,23 @@ struct WelcomeView: View {
     var store: WelcomeStore
         
     var body: some View {
-        GeometryReader { proxy in
-            ZStack(alignment: .top) {
-                VStack(alignment: .center, spacing: 80) {
-                    let diameter = proxy.size.width - 40
-                    ZcashBadge()
-                        .frame(
-                            width: diameter,
-                            height: diameter
-                        )
-                        .accessDebugMenuWithHiddenGesture {
-                            ViewStore(store).send(.debugMenuStartup)
-                        }
-
-                    VStack {
-                        Text("welcomeScreen.title")
-                            .titleText()
-
-                        Text("welcomeScreen.subtitle")
-                            .captionText()
-                    }
-                }
+        VStack(alignment: .center, spacing: 80) {
+            VStack {
+                Image(Asset.Assets.welcomeScreenLogo.name)
+                    .resizable()
+                    .frame(width: 210, height: 210)
+                    .padding(.bottom, 14)
+                
+                Text("welcomeScreen.title")
+                    .font(.system(size: 23))
             }
-            .frame(alignment: .center)
-            .applyScreenBackground()
-            .animation(.easeInOut, value: 3)
+            .accessDebugMenuWithHiddenGesture {
+                ViewStore(store).send(.debugMenuStartup)
+            }
         }
+        .frame(alignment: .center)
+        .applyScreenBackground()
+        .animation(.easeInOut, value: 3)
     }
 }
 
@@ -55,7 +46,7 @@ struct WelcomeView_Previews: PreviewProvider {
                     height: squarePreviewSize
                 )
             )
-            .preferredColorScheme(.dark)
+            .preferredColorScheme(.light)
 
         ZStack {
             ZcashBadge()
@@ -72,7 +63,7 @@ struct WelcomeView_Previews: PreviewProvider {
 
         Group {
             WelcomeView(store: .demo)
-                .preferredColorScheme(.dark)
+                .preferredColorScheme(.light)
 
             WelcomeView(store: .demo)
                 .previewDevice("iPhone SE (2nd generation)")

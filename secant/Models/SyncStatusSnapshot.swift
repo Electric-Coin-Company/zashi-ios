@@ -21,29 +21,29 @@ struct SyncStatusSnapshot: Equatable {
     
     static func snapshotFor(state: SyncStatus) -> SyncStatusSnapshot {
         switch state {
-        case .enhancing(let enhanceProgress):
-            return SyncStatusSnapshot(state, "Enhancing tx \(enhanceProgress.enhancedTransactions) of \(enhanceProgress.totalTransactions)")
+        case .enhancing:
+            return SyncStatusSnapshot(state, "Enhancing tx")
             
         case .fetching:
             return SyncStatusSnapshot(state, "fetching UTXOs")
             
         case .disconnected:
-            return SyncStatusSnapshot(state, "disconnected 💔")
+            return SyncStatusSnapshot(state, "disconnected")
             
         case .stopped:
-            return SyncStatusSnapshot(state, "Stopped 🚫")
+            return SyncStatusSnapshot(state, "Stopped")
             
         case .synced:
             return SyncStatusSnapshot(state, "Up-To-Date")
             
         case .unprepared:
-            return SyncStatusSnapshot(state, "Unprepared 😅")
+            return SyncStatusSnapshot(state, "Unprepared")
             
         case .error(let err):
             return SyncStatusSnapshot(state, "Error: \(err.localizedDescription)")
-        
+
         case .syncing(let progress):
-            return SyncStatusSnapshot(state, "Syncing \(progress)")
+            return SyncStatusSnapshot(state, "\(String(format: "%0.2f", progress.progress))% Synced")
         }
     }
 }

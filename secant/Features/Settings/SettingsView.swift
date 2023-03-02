@@ -8,12 +8,12 @@ struct SettingsView: View {
         WithViewStore(store) { viewStore in
             VStack(spacing: 40) {
                 Toggle(
-                    "Enable Crash Reporting",
+                    "settings.crashReporting",
                     isOn: viewStore.binding(\.$isCrashReportingOn)
                 )
                 Button(
                     action: { viewStore.send(.backupWalletAccessRequest) },
-                    label: { Text("Backup Wallet") }
+                    label: { Text("settings.backupWallet") }
                 )
                 .activeButtonStyle
                 .frame(height: 50)
@@ -24,28 +24,28 @@ struct SettingsView: View {
                         if viewStore.exportLogsDisabled {
                             HStack {
                                 ProgressView()
-                                Text("Exporting...")
+                                Text("settings.exporting")
                             }
                         } else {
-                            Text("Export & share logs")
+                            Text("settings.exportLogs")
                         }
                     }
                 )
-                .primaryButtonStyle
+                .activeButtonStyle
                 .frame(height: 50)
                 .disabled(viewStore.exportLogsDisabled)
 
                 Button(
                     action: { viewStore.send(.sendSupportMail) },
-                    label: { Text("Send us feedback!") }
+                    label: { Text("settings.feedback") }
                 )
-                .primaryButtonStyle
+                .activeButtonStyle
                 .frame(height: 50)
 
                 Spacer()
             }
             .padding(.horizontal, 30)
-            .navigationTitle("Settings")
+            .navigationTitle("settings.title")
             .applyScreenBackground()
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForBackupPhrase,

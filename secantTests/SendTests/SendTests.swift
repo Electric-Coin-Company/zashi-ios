@@ -232,7 +232,7 @@ class SendTests: XCTestCase {
         store.send(.transactionAddressInput(.textField(.set(address)))) { state in
             state.transactionAddressInputState.textFieldState.text = address
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
-            // isValid function returns true, `guard let validationType = validationType else { return true }`
+            // isValid function returns true, `guard let validationType else { return true }`
             state.transactionAddressInputState.textFieldState.valid = true
             state.transactionAddressInputState.isValidAddress = false
             XCTAssertTrue(
@@ -255,7 +255,7 @@ class SendTests: XCTestCase {
         store.send(.transactionAddressInput(.textField(.set(address)))) { state in
             state.transactionAddressInputState.textFieldState.text = address
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
-            // isValid function returns true, `guard let validationType = validationType else { return true }`
+            // isValid function returns true, `guard let validationType else { return true }`
             state.transactionAddressInputState.textFieldState.valid = true
             state.transactionAddressInputState.isValidAddress = true
             XCTAssertFalse(
@@ -293,7 +293,7 @@ class SendTests: XCTestCase {
         store.send(.transactionAddressInput(.textField(.set("".redacted)))) { state in
             state.transactionAddressInputState.textFieldState.text = "".redacted
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
-            // isValid function returns true, `guard let validationType = validationType else { return true }`
+            // isValid function returns true, `guard let validationType else { return true }`
             state.transactionAddressInputState.textFieldState.valid = true
             XCTAssertFalse(
                 state.isInvalidAddressFormat,
@@ -434,7 +434,7 @@ class SendTests: XCTestCase {
         store.send(.transactionAddressInput(.textField(.set(address)))) { state in
             state.transactionAddressInputState.textFieldState.text = address
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
-            // isValid function returns true, `guard let validationType = validationType else { return true }`
+            // isValid function returns true, `guard let validationType else { return true }`
             state.transactionAddressInputState.textFieldState.valid = true
             state.transactionAddressInputState.isValidAddress = true
             XCTAssertTrue(
@@ -474,7 +474,7 @@ class SendTests: XCTestCase {
         store.send(.transactionAddressInput(.textField(.set(address)))) { state in
             state.transactionAddressInputState.textFieldState.text = address
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
-            // isValid function returns true, `guard let validationType = validationType else { return true }`
+            // isValid function returns true, `guard let validationType else { return true }`
             state.transactionAddressInputState.textFieldState.valid = true
             state.transactionAddressInputState.isValidAddress = true
             XCTAssertFalse(
@@ -513,7 +513,7 @@ class SendTests: XCTestCase {
         store.send(.transactionAddressInput(.textField(.set(address)))) { state in
             state.transactionAddressInputState.textFieldState.text = address
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
-            // isValid function returns true, `guard let validationType = validationType else { return true }`
+            // isValid function returns true, `guard let validationType else { return true }`
             state.transactionAddressInputState.textFieldState.valid = true
             state.transactionAddressInputState.isValidAddress = false
             XCTAssertFalse(
@@ -553,7 +553,7 @@ class SendTests: XCTestCase {
         store.send(.transactionAddressInput(.textField(.set(address)))) { state in
             state.transactionAddressInputState.textFieldState.text = address
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
-            // isValid function returns true, `guard let validationType = validationType else { return true }`
+            // isValid function returns true, `guard let validationType else { return true }`
             state.transactionAddressInputState.textFieldState.valid = true
             state.transactionAddressInputState.isValidAddress = true
             XCTAssertFalse(

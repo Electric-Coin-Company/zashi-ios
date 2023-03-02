@@ -57,8 +57,8 @@ extension View {
         self.modifier(
             ScreenBackgroundModifier(
                 colors: [
-                    Asset.Colors.ScreenBackground.gradientStart.color,
-                    Asset.Colors.ScreenBackground.gradientEnd.color
+                    Asset.Colors.Mfp.background.color,
+                    Asset.Colors.Mfp.background.color
                 ]
             )
         )
@@ -92,8 +92,8 @@ extension View {
         self.modifier(
             ScreenBackgroundModifier(
                 colors: [
-                    Asset.Colors.ScreenBackground.semiTransparentGradientStart.color,
-                    Asset.Colors.ScreenBackground.semiTransparentGradientEnd.color
+                    Asset.Colors.Mfp.primary.color,
+                    Asset.Colors.Mfp.primary.color
                 ]
             )
         )

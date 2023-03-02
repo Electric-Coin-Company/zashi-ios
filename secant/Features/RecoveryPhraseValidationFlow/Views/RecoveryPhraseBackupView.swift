@@ -180,6 +180,5 @@ struct RecoveryPhraseBackupView_Previews: PreviewProvider {
         NavigationView {
             RecoveryPhraseValidationFlowView(store: .demoStep1)
         }
-        .preferredColorScheme(.dark)
     }
 }

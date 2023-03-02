@@ -20,21 +20,18 @@ struct OnboardingFooterView: View {
                         viewStore.send(.createNewWallet, animation: .easeInOut(duration: animationDuration))
                     }
                     .activeButtonStyle
-                    .onboardingFooterButtonLayout()
                     .minimumScaleFactor(0.1)
 
                     Button("onboarding.button.importWallet") {
                         viewStore.send(.importExistingWallet, animation: .easeInOut(duration: animationDuration))
                     }
-                    .secondaryButtonStyle
-                    .onboardingFooterButtonLayout()
+                    .activeButtonStyle
                     .minimumScaleFactor(0.1)
                 } else {
-                    Button("Next") {
+                    Button("general.next") {
                         viewStore.send(.next, animation: .easeInOut(duration: animationDuration))
                     }
-                    .primaryButtonStyle
-                    .onboardingFooterButtonLayout()
+                    .activeButtonStyle
                     .minimumScaleFactor(0.1)
 
                     ProgressView(
@@ -97,16 +94,15 @@ struct OnboardingFooterView_Previews: PreviewProvider {
                 .applyScreenBackground()
                 .preferredColorScheme(.light)
                 .previewDevice("iPhone 14 Pro")
-                .environment(\.sizeCategory, .accessibilityLarge)
 
             OnboardingFooterView(store: store)
                 .applyScreenBackground()
-                .preferredColorScheme(.dark)
+                .preferredColorScheme(.light)
                 .previewDevice("iPhone 13 Pro Max")
             
             OnboardingFooterView(store: store)
                 .applyScreenBackground()
-                .preferredColorScheme(.dark)
+                .preferredColorScheme(.light)
                 .previewDevice("iPhone 13 mini")
         }
     }

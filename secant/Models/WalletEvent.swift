@@ -41,10 +41,12 @@ extension WalletEvent {
             // TODO: [#390] implement design once shielding is supported
             // https://github.com/zcash/secant-ios-wallet/issues/390
             Text("shielded wallet event \(zatoshi.decimalString())")
+                .padding(.leading, 30)
         case .walletImport:
             // TODO: [#391] implement design once shielding is supported
             // https://github.com/zcash/secant-ios-wallet/issues/391
             Text("wallet import wallet event")
+                .padding(.leading, 30)
         }
     }
 }
@@ -84,6 +86,16 @@ private extension WalletEvent {
         default: return .send(.placeholder)
         }
     }
+    
+    static func mockedWalletEventState(atIndex: Int) -> WalletEvent.WalletEventState {
+        switch atIndex % 4 {
+        case 0: return .received(.statePlaceholder(.received))
+        case 1: return .failed(.statePlaceholder(.failed))
+        case 2: return .pending(.statePlaceholder(.pending))
+        case 3: return .send(.placeholder)
+        default: return .send(.placeholder)
+        }
+    }
 }
 
 extension IdentifiedArrayOf where Element == WalletEvent {
@@ -92,7 +104,7 @@ extension IdentifiedArrayOf where Element == WalletEvent {
             uniqueElements: (0..<30).map {
                 WalletEvent(
                     id: String($0),
-                    state: WalletEvent.randomWalletEventState(),
+                    state: WalletEvent.mockedWalletEventState(atIndex: $0),
                     timestamp: 1234567
                 )
             }

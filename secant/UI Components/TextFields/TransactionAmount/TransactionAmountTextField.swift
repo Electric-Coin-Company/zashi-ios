@@ -15,7 +15,7 @@ struct TransactionAmountTextField: View {
         VStack {
             SingleLineTextField(
                 placeholderText: "ZEC Amount",
-                title: "Amount",
+                title: "Amount:",
                 store: store.scope(
                     state: \.textFieldState,
                     action: TransactionAmountTextFieldReducer.Action.textField
@@ -42,7 +42,7 @@ struct TransactionAmountTextField_Previews: PreviewProvider {
                 reducer: TransactionAmountTextFieldReducer()
             )
         )
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(.light)
         .padding(.horizontal, 50)
         .applyScreenBackground()
         .previewLayout(.fixed(width: 500, height: 200))
@@ -54,14 +54,14 @@ struct TransactionAmountTextField_Previews: PreviewProvider {
             titleAccessoryView: {
                 Button(
                     action: { },
-                    label: { Text("Max") }
+                    label: { Text("general.max") }
                 )
                 .textFieldTitleAccessoryButtonStyle
             },
             inputPrefixView: { EmptyView() },
             inputAccessoryView: { EmptyView() }
         )
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(.light)
         .padding(.horizontal, 50)
         .applyScreenBackground()
         .previewLayout(.fixed(width: 500, height: 200))
@@ -78,7 +78,7 @@ struct TransactionAmountTextField_Previews: PreviewProvider {
                     .frame(width: 30, height: 30)
             }
         )
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(.light)
         .padding(.horizontal, 50)
         .applyScreenBackground()
         .previewLayout(.fixed(width: 500, height: 200))

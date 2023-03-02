@@ -6,15 +6,15 @@ struct TransactionFailed: View {
 
     var body: some View {
         VStack {
-            Text("Sending transaction failed")
+            Text("send.failed")
             
             Button(
                 action: {
                     viewStore.send(.updateDestination(.done))
                 },
-                label: { Text("Close") }
+                label: { Text("general.close") }
             )
-            .primaryButtonStyle
+            .activeButtonStyle
             .frame(height: 50)
             .padding()
 

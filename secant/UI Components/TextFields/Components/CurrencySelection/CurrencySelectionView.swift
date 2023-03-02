@@ -22,8 +22,6 @@ struct CurrencySelectionView: View {
                                 viewStore.currencyType == .usd ? .yellow : .white
                             )
 
-                        Asset.Assets.Icons.swap.image
-
                         Text(CurrencySelectionReducer.State.Currency.zec.acronym)
                             .foregroundColor(
                                 viewStore.currencyType == .zec ? .yellow : .white

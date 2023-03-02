@@ -1,5 +1,5 @@
 // MARK: - Welcome Screen
-"welcomeScreen.title" = "Welcome!";
+"welcomeScreen.title" = "Powered by Zcash";
 "welcomeScreen.subtitle" = "Just Loading, one sec";
 
 // MARK: - Onboarding Flow
@@ -50,23 +50,91 @@
 
 // MARK: - Import Wallet Screen
 "importWallet.title" = "Wallet Import";
-"importWallet.description" = "You can import your backed up wallet by entering your backup recovery phrase (aka seed phrase) now.";
+"importWallet.description" = "Enter your secret backup seed phrase.";
 "importWallet.button.restoreWallet" = "Restore wallet";
 "importWallet.button.importPrivateKey" = "Import a private or viewing key";
-"importWallet.birthday.description" = "Add your wallet's birthday to sync up quicker. Leave it blank if you don't know it.";
+"importWallet.birthday.description" = "Do you know the wallet's creation date? This will allow a faster sync. If you don't know the wallet's birthday, don't worry!";
 "importWallet.birthday.placeholder" = "Enter birthday height";
 
-
 // MARK: - Home Screen
-"home.request" = "Request ZEC";
-
-// MARK: - Common & Shared
-"Back" = "Back";
-"Skip" = "Skip";
-"Next" = "Next";
-"Send" = "Send";
-"Clear" = "Clear";
-"Max" = "Max";
+"home.sendZec" = "Send ZEC";
+"home.receiveZec" = "Receive ZEC";
+"home.transactionHistory" = "See transaction history";
+"home.title" = "Secant Wallet";
 
 // MARK: - Receive ZEC (Formerly Profile Screen)
 "receiveZec.yourAddress" = "Your Address";
+
+// MARK: - Address Details
+"addressDetails.ua" = "Unified Address";
+"addressDetails.sa" = "Sapling Address";
+"addressDetails.ta" = "Transparent Address";
+
+// MARK: - Balance Breakdown
+"balanceBreakdown.blockId" = "Block: %@";
+"balanceBreakdown.shieldedZec" = "SHIELDED ZEC (SPENDABLE)";
+"balanceBreakdown.transparentBalance" = "TRANSPARENT BALANCE";
+"balanceBreakdown.totalBalance" = "TOTAL BALANCE";
+"balanceBreakdown.autoShieldingThreshold" = "Auto Shielding Threshold: %@ ZEC";
+
+// MARK: - Scan
+"scan.info" = "We will validate any Zcash URI and take you to the appropriate action.";
+"scan.scanning" = "Scanning...";
+
+// MARK: - Send
+"send.title" = "Send Zcash";
+"send.fundsInfo" = "Aditional funds may be in transit";
+"send.memoPlaceholder" = "Write a private message here";
+"send.failed" = "Sending transaction failed";
+"send.succeeded" = "Sending transaction succeeded";
+"send.sendingTo" = "Sending %@ ZEC to";
+"send.amount" = "amount: %@";
+"send.address" = " address: %@";
+"send.memo" = " memo: %@";
+
+// MARK: - Settings
+"settings.crashReporting" = "Enable Crash Reporting";
+"settings.backupWallet" = "Backup Wallet";
+"settings.exporting" = "Exporting...";
+"settings.exportLogs" = "Export & share logs";
+"settings.feedback" = "Send us feedback!";
+"settings.title" = "Settings";
+
+// MARK: - Transactions
+"transactions.title" = "Transactions";
+"transaction.sent" = "Sent";
+"transaction.sending" = "Sending";
+"transaction.received" = "Received";
+"transaction.failed" = "Failed";
+"transaction.youSent" = "You sent %@ ZEC";
+"transaction.youAreSending" = "You are sending %@ ZEC";
+"transaction.youReceived" = "You received %@ ZEC";
+"transaction.youDidNotSent" = "You DID NOT send %@ ZEC";
+"transaction.pending" = "PENDING";
+"transaction.confirmed" = "Confirmed";
+"transaction.confirmedTimes" = "%@ times";
+"transaction.confirming" = "Confirming ~%@mins";
+"transaction.withMemo" = "With memo:";
+"transaction.from" = "from";
+"transaction.to" = "to";
+"transaction.unconfirmed" = "unconfirmed";
+"transactionDetail.title" = "Transaction detail";
+
+// MARK: - Not Enough Free Space
+"nefs.message" = "Not enough space on disk to do synchronisation!"
+
+// MARK: - Errors
+"error.rollBack" = "possible roll back";
+
+// MARK: - Common & Shared
+"general.back" = "Back";
+"general.skip" = "Skip";
+"general.next" = "Next";
+"general.send" = "Send";
+"general.clear" = "Clear";
+"general.close" = "Close";
+"general.max" = "Max";
+"balance" = "%@ ZEC";
+"balance.available" = "%@ ZEC Available";
+"qrCodeFor" = "QR Code for %@";
+"general.dateNotAvailable" = "date not available";

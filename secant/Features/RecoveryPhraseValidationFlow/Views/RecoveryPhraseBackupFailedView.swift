@@ -101,16 +101,6 @@ struct RecoveryPhraseBackupValidationFailedView_Previews: PreviewProvider {
             }
             
             RecoveryPhraseBackupFailedView(store: .demo)
-                .preferredColorScheme(.dark)
-            
-            RecoveryPhraseBackupFailedView(store: .demo)
-                .previewDevice(PreviewDevice(rawValue: "iPhone SE (2nd generation)"))
-            
-            RecoveryPhraseBackupFailedView(store: .demo)
-                .environment(\.sizeCategory, .accessibilityLarge)
-
-            RecoveryPhraseBackupFailedView(store: .demo)
-                .environment(\.sizeCategory, .accessibilityLarge)
                 .previewDevice(PreviewDevice(rawValue: "iPhone SE (2nd generation)"))
         }
     }

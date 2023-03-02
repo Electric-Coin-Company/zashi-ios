@@ -23,23 +23,23 @@ struct TransactionDetailView: View {
                     VStack(alignment: .leading) {
                         switch transaction.status {
                         case .paid:
-                            Text("You sent \(transaction.zecAmount.decimalString()) ZEC")
+                            Text("transaction.youSent".localized("\(transaction.zecAmount.decimalString())"))
                                 .padding()
                             address(mark: .inactive, viewStore: viewStore)
                             memo(transaction, viewStore, mark: .highlight)
                             
                         case .pending:
-                            Text("You are sending \(transaction.zecAmount.decimalString()) ZEC")
+                            Text("transaction.youAreSending".localized("\(transaction.zecAmount.decimalString())"))
                                 .padding()
                             address(mark: .inactive, viewStore: viewStore)
                             memo(transaction, viewStore, mark: .highlight)
                         case .received:
-                            Text("You received \(transaction.zecAmount.decimalString()) ZEC")
+                            Text("transaction.youReceived".localized("\(transaction.zecAmount.decimalString())"))
                                 .padding()
                             address(mark: .inactive, viewStore: viewStore)
                             memo(transaction, viewStore, mark: .highlight)
                         case .failed:
-                            Text("You DID NOT send \(transaction.zecAmount.decimalString()) ZEC")
+                            Text("transaction.youDidNotSent".localized("\(transaction.zecAmount.decimalString())"))
                                 .padding()
                             address(mark: .inactive, viewStore: viewStore)
                             memo(transaction, viewStore, mark: .highlight)
@@ -52,7 +52,7 @@ struct TransactionDetailView: View {
                 Spacer()
             }
             .applyScreenBackground()
-            .navigationTitle("Transaction detail")
+            .navigationTitle("transactionDetail.title")
         }
     }
 }
@@ -62,12 +62,12 @@ extension TransactionDetailView {
         HStack {
             switch transaction.status {
             case .pending:
-                Text("PENDING")
+                Text("transaction.pending")
                 Spacer()
             case .failed:
-                Text("\(transaction.date?.asHumanReadable() ?? "date not available")")
+                Text("\(transaction.date?.asHumanReadable() ?? "general.dateNotAvailable")")
             default:
-                Text("\(transaction.date?.asHumanReadable() ?? "date not available")")
+                Text("\(transaction.date?.asHumanReadable() ?? "general.dateNotAvailable")")
             }
         }
         .padding()
@@ -88,7 +88,7 @@ extension TransactionDetailView {
         Group {
             if let memoText = transaction.memos?.first?.toString() {
                 VStack(alignment: .leading) {
-                    Text("With memo:")
+                    Text("transaction.withMemo")
                         .padding(.leading)
                     Text("\"\(memoText)\"")
                         .multilineTextAlignment(.leading)
@@ -102,16 +102,16 @@ extension TransactionDetailView {
     
     func confirmed(mark: RowMark = .neutral, viewStore: WalletEventsFlowViewStore) -> some View {
         HStack {
-            Text("Confirmed")
+            Text("transaction.confirmed")
             Spacer()
-            Text("\(transaction.confirmationsWith(viewStore.latestMinedHeight)) times")
+            Text("transaction.confirmedTimes".localized("\(transaction.confirmationsWith(viewStore.latestMinedHeight))"))
         }
         .transactionDetailRow(mark: mark)
     }
 
     func confirming(mark: RowMark = .neutral, viewStore: WalletEventsFlowViewStore) -> some View {
         HStack {
-            Text("Confirming ~\(viewStore.requiredTransactionConfirmations)mins")
+            Text("transaction.confirming".localized("\(viewStore.requiredTransactionConfirmations)"))
             Spacer()
             Text("\(transaction.confirmationsWith(viewStore.latestMinedHeight))/\(viewStore.requiredTransactionConfirmations)")
         }
@@ -121,12 +121,12 @@ extension TransactionDetailView {
 
 extension TransactionDetailView {
     var addressPrefixText: String {
-        transaction.status == .received ? "from" : "to"
+        transaction.status == .received ? "transaction.from" : "transaction.to"
     }
     
     var heightText: String {
-        guard let minedHeight = transaction.minedHeight else { return "unconfirmed" }
-        return minedHeight > 0 ? String(minedHeight) : "unconfirmed"
+        guard let minedHeight = transaction.minedHeight else { return "transaction.unconfirmed" }
+        return minedHeight > 0 ? String(minedHeight) : "transaction.unconfirmed"
     }
 }
 
@@ -186,7 +186,7 @@ struct TransactionDetail_Previews: PreviewProvider {
             TransactionDetailView(
                 transaction:
                     TransactionState(
-                        errorMessage: "possible roll back",
+                        errorMessage: "error.rollBack",
                         memos: [Memo.placeholder],
                         minedHeight: 1_875_256,
                         zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
@@ -205,7 +205,7 @@ struct TransactionDetail_Previews: PreviewProvider {
             TransactionDetailView(
                 transaction:
                     TransactionState(
-                        errorMessage: "possible roll back",
+                        errorMessage: "error.rollBack",
                         memos: [Memo.placeholder],
                         minedHeight: 1_875_256,
                         zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
@@ -224,7 +224,7 @@ struct TransactionDetail_Previews: PreviewProvider {
             TransactionDetailView(
                 transaction:
                     TransactionState(
-                        errorMessage: "possible roll back",
+                        errorMessage: "error.rollBack",
                         memos: [Memo.placeholder],
                         minedHeight: 1_875_256,
                         zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
@@ -243,7 +243,7 @@ struct TransactionDetail_Previews: PreviewProvider {
             TransactionDetailView(
                 transaction:
                     TransactionState(
-                        errorMessage: "possible roll back",
+                        errorMessage: "error.rollBack",
                         memos: [Memo.placeholder],
                         minedHeight: 1_875_256,
                         zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",

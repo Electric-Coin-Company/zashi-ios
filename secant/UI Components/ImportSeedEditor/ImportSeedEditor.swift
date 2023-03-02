@@ -36,10 +36,9 @@ struct ImportSeedEditorModifier: ViewModifier {
             .foregroundColor(Asset.Colors.Text.importSeedEditor.color)
             .padding()
             .background(backgroundColor)
-            .cornerRadius(4)
             .overlay(
-                RoundedRectangle(cornerRadius: 4)
-                    .stroke(Color.black, lineWidth: 2)
+                Rectangle()
+                    .stroke(Asset.Colors.Mfp.primary.color, lineWidth: 2)
             )
     }
 }
@@ -60,11 +59,6 @@ struct ImportSeedInputField_Previews: PreviewProvider {
                 .frame(width: width, height: height)
                 .applyScreenBackground()
                 .preferredColorScheme(.light)
-            
-            ImportSeedEditor(store: .demo)
-                .frame(width: width, height: height)
-                .applyScreenBackground()
-                .preferredColorScheme(.dark)
         }
         .previewLayout(.fixed(width: width + 50, height: height + 50))
     }

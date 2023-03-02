@@ -16,7 +16,7 @@ struct TransactionAddressTextField: View {
             VStack {
                 SingleLineTextField(
                     placeholderText: "Valid Zcash Address",
-                    title: "To",
+                    title: "To:",
                     store: store.scope(
                         state: \.textFieldState,
                         action: TransactionAddressTextFieldReducer.Action.textField
@@ -28,7 +28,7 @@ struct TransactionAddressTextField: View {
                                     viewStore.send(.clearAddress)
                                 },
                                 label: {
-                                    Text("Clear")
+                                    Text("general.clear")
                                 }
                             )
                             .textFieldTitleAccessoryButtonStyle
@@ -64,7 +64,7 @@ struct TransactionAddressTextField_Previews: PreviewProvider {
                 reducer: TransactionAddressTextFieldReducer()
             )
         )
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(.light)
         .padding(.horizontal, 50)
         .applyScreenBackground()
         .previewLayout(.fixed(width: 500, height: 200))
