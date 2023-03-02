@@ -67,3 +67,6 @@
 "Send" = "Send";
 "Clear" = "Clear";
 "Max" = "Max";
+
+// MARK: - Receive ZEC (Formerly Profile Screen)
+"receiveZec.yourAddress" = "Your Address";

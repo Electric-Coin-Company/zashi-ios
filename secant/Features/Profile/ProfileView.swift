@@ -11,7 +11,7 @@ struct ProfileView: View {
                     .padding(.vertical, 50)
 
                 HStack {
-                    Text("Your UA")
+                    Text("receiveZec.yourAddress")
                         .fontWeight(.bold)
                         .onTapGesture {
                             viewStore.send(.copyUnifiedAddressToPastboard)
