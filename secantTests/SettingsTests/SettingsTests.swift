@@ -80,112 +80,12 @@ class SettingsTests: XCTestCase {
         await store.finish()
     }
     
-    func testRescanBlockchain() async throws {
-        let store = TestStore(
-            initialState: .placeholder,
-            reducer: SettingsReducer()
-        )
-        
-        await store.send(.rescanBlockchain) { state in
-            state.rescanDialog = .init(
-                title: TextState("Rescan"),
-                message: TextState("Select the rescan you want"),
-                buttons: [
-                    .default(TextState("Quick rescan"), action: .send(.quickRescan)),
-                    .default(TextState("Full rescan"), action: .send(.fullRescan)),
-                    .cancel(TextState("Cancel"))
-                ]
-            )
-        }
-    }
-    
-    func testRescanBlockchain_Cancelling() async throws {
-        let store = TestStore(
-            initialState: SettingsReducer.State(
-                destination: nil,
-                isCrashReportingOn: false,
-                phraseDisplayState: .init(),
-                rescanDialog: .init(
-                    title: TextState("Rescan"),
-                    message: TextState("Select the rescan you want"),
-                    buttons: [
-                        .default(TextState("Quick rescan"), action: .send(.quickRescan)),
-                        .default(TextState("Full rescan"), action: .send(.fullRescan)),
-                        .cancel(TextState("Cancel"))
-                    ]
-                )
-            ),
-            reducer: SettingsReducer()
-        )
-        
-        await store.send(.cancelRescan) { state in
-            state.rescanDialog = nil
-        }
-    }
-    
-    func testRescanBlockchain_QuickRescanClearance() async throws {
-        let store = TestStore(
-            initialState: SettingsReducer.State(
-                destination: nil,
-                isCrashReportingOn: false,
-                phraseDisplayState: .init(),
-                rescanDialog: .init(
-                    title: TextState("Rescan"),
-                    message: TextState("Select the rescan you want"),
-                    buttons: [
-                        .default(TextState("Quick rescan"), action: .send(.quickRescan)),
-                        .default(TextState("Full rescan"), action: .send(.fullRescan)),
-                        .cancel(TextState("Cancel"))
-                    ]
-                )
-            ),
-            reducer: SettingsReducer()
-        )
-        
-        await store.send(.quickRescan) { state in
-            state.rescanDialog = nil
-        }
-    }
-    
-    func testRescanBlockchain_FullRescanClearance() async throws {
-        let store = TestStore(
-            initialState: SettingsReducer.State(
-                destination: nil,
-                isCrashReportingOn: false,
-                phraseDisplayState: .init(),
-                rescanDialog: .init(
-                    title: TextState("Rescan"),
-                    message: TextState("Select the rescan you want"),
-                    buttons: [
-                        .default(TextState("Quick rescan"), action: .send(.quickRescan)),
-                        .default(TextState("Full rescan"), action: .send(.fullRescan)),
-                        .cancel(TextState("Cancel"))
-                    ]
-                )
-            ),
-            reducer: SettingsReducer()
-        )
-        
-        await store.send(.fullRescan) { state in
-            state.rescanDialog = nil
-        }
-    }
-    
     func testExportLogs_ButtonDisableShareEnable() async throws {
         let store = TestStore(
             initialState: SettingsReducer.State(
                 destination: nil,
                 isCrashReportingOn: false,
-                phraseDisplayState: .init(),
-                rescanDialog: .init(
-                    title: TextState("Rescan"),
-                    message: TextState("Select the rescan you want"),
-                    buttons: [
-                        .default(TextState("Quick rescan"), action: .send(.quickRescan)),
-                        .default(TextState("Full rescan"), action: .send(.fullRescan)),
-                        .cancel(TextState("Cancel"))
-                    ]
-                )
+                phraseDisplayState: .init()
             ),
             reducer: SettingsReducer()
         )
@@ -208,16 +108,7 @@ class SettingsTests: XCTestCase {
                 destination: nil,
                 isCrashReportingOn: false,
                 isSharingLogs: true,
-                phraseDisplayState: .init(),
-                rescanDialog: .init(
-                    title: TextState("Rescan"),
-                    message: TextState("Select the rescan you want"),
-                    buttons: [
-                        .default(TextState("Quick rescan"), action: .send(.quickRescan)),
-                        .default(TextState("Full rescan"), action: .send(.fullRescan)),
-                        .cancel(TextState("Cancel"))
-                    ]
-                )
+                phraseDisplayState: .init()
             ),
             reducer: SettingsReducer()
         )

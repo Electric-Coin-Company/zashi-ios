@@ -134,8 +134,8 @@ extension RootReducer {
                 state.destinationState.alert = nil
                 return .none
                 
-            case .home, .initialization, .onboarding, .phraseDisplay, .phraseValidation,
-                .sandbox, .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .dismissAlert:
+            case .home, .initialization, .onboarding, .phraseDisplay, .phraseValidation, .sandbox, .updateStateAfterConfigUpdate,
+                .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .dismissAlert:
                 return .none
             }
             

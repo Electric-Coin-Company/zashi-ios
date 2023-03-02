@@ -8,9 +8,9 @@ struct HomeView: View {
         WithViewStore(store) { viewStore in
             VStack {
                 HStack {
-                    profileButton(viewStore)
-                    
                     Spacer()
+
+                    settingsButton(viewStore)
                 }
                 
                 balance(viewStore)
@@ -18,6 +18,8 @@ struct HomeView: View {
                 Spacer()
 
                 sendButton(viewStore)
+
+                receiveButton(viewStore)
                 
                 Button {
                     viewStore.send(.updateDestination(.transactionHistory))
@@ -48,21 +50,21 @@ struct HomeView: View {
 // MARK: - Buttons
 
 extension HomeView {
-    func profileButton(_ viewStore: HomeViewStore) -> some View {
+    func settingsButton(_ viewStore: HomeViewStore) -> some View {
         Image(Asset.Assets.Icons.profile.name)
             .resizable()
             .frame(width: 60, height: 60)
             .padding(.trailing, 15)
             .navigationLink(
-                isActive: viewStore.bindingForDestination(.profile),
+                isActive: viewStore.bindingForDestination(.settings),
                 destination: {
-                    ProfileView(store: store.profileStore())
+                    SettingsView(store: store.settingsStore())
                 }
             )
     }
 
     func sendButton(_ viewStore: HomeViewStore) -> some View {
-        Text("Send")
+        Text("Send ZEC")
             .shadow(color: Asset.Colors.Buttons.buttonsTitleShadow.color, radius: 2, x: 0, y: 2)
             .frame(
                 minWidth: 0,
@@ -80,6 +82,30 @@ extension HomeView {
                 isActive: viewStore.bindingForDestination(.send),
                 destination: {
                     SendFlowView(store: store.sendStore())
+                }
+            )
+            .padding(.bottom, 30)
+    }
+    
+    func receiveButton(_ viewStore: HomeViewStore) -> some View {
+        Text("Receive ZEC")
+            .shadow(color: Asset.Colors.Buttons.buttonsTitleShadow.color, radius: 2, x: 0, y: 2)
+            .frame(
+                minWidth: 0,
+                maxWidth: .infinity,
+                minHeight: 0,
+                maxHeight: .infinity
+            )
+            .foregroundColor(Asset.Colors.Text.activeButtonText.color)
+            .background(Asset.Colors.Buttons.activeButton.color)
+            .cornerRadius(12)
+            .frame(height: 60)
+            .padding(.horizontal, 50)
+            .neumorphicButton()
+            .navigationLink(
+                isActive: viewStore.bindingForDestination(.profile),
+                destination: {
+                    ProfileView(store: store.profileStore())
                 }
             )
             .padding(.bottom, 30)

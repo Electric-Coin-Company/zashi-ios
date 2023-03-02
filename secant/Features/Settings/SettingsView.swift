@@ -19,13 +19,6 @@ struct SettingsView: View {
                 .frame(height: 50)
                 
                 Button(
-                    action: { viewStore.send(.rescanBlockchain) },
-                    label: { Text("Rescan Blockchain") }
-                )
-                .primaryButtonStyle
-                .frame(height: 50)
-
-                Button(
                     action: { viewStore.send(.exportLogs) },
                     label: {
                         if viewStore.exportLogsDisabled {
@@ -43,13 +36,6 @@ struct SettingsView: View {
                 .disabled(viewStore.exportLogsDisabled)
 
                 Button(
-                    action: { viewStore.send(.testCrashReporter) },
-                    label: { Text("Test Crash Reporter") }
-                )
-                .primaryButtonStyle
-                .frame(height: 50)
-
-                Button(
                     action: { viewStore.send(.sendSupportMail) },
                     label: { Text("Send us feedback!") }
                 )
@@ -61,10 +47,6 @@ struct SettingsView: View {
             .padding(.horizontal, 30)
             .navigationTitle("Settings")
             .applyScreenBackground()
-            .confirmationDialog(
-                store.scope(state: \.rescanDialog),
-                dismiss: .cancelRescan
-            )
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForBackupPhrase,
                 destination: {

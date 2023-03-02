@@ -161,6 +161,7 @@ class RecoveryPhraseValidationFlowFeatureFlagTests: XCTestCase {
         )
 
         let appState = RootReducer.State(
+            debugState: .placeholder,
             destinationState: .placeholder,
             homeState: .placeholder,
             onboardingState: .init(
