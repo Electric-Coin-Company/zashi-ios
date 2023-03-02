@@ -12,6 +12,7 @@ struct RootReducer: ReducerProtocol {
     struct State: Equatable {
         @BindingState var alert: AlertState<RootReducer.Action>?
         var appInitializationState: InitializationState = .uninitialized
+        var debugState: DebugState
         var destinationState: DestinationState
         var homeState: HomeReducer.State
         var onboardingState: OnboardingFlowReducer.State
@@ -36,6 +37,7 @@ struct RootReducer: ReducerProtocol {
         case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
         case phraseValidation(RecoveryPhraseValidationFlowReducer.Action)
         case sandbox(SandboxReducer.Action)
+        case updateStateAfterConfigUpdate(WalletConfig)
         case walletConfigLoaded(WalletConfig)
         case welcome(WelcomeReducer.Action)
     }
@@ -83,6 +85,8 @@ struct RootReducer: ReducerProtocol {
         initializationReduce()
 
         destinationReduce()
+        
+        debugReduce()
     }
 }
 
@@ -172,6 +176,7 @@ extension RootReducer {
 extension RootReducer.State {
     static var placeholder: Self {
         .init(
+            debugState: .placeholder,
             destinationState: .placeholder,
             homeState: .placeholder,
             onboardingState: .init(

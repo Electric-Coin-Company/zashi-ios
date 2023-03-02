@@ -68,6 +68,7 @@ class AppInitializationTests: XCTestCase {
         let walletConfig = WalletConfig(flags: defaultRawFlags)
 
         let appState = RootReducer.State(
+            debugState: .placeholder,
             destinationState: .placeholder,
             homeState: .placeholder,
             onboardingState: .init(

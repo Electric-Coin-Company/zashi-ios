@@ -127,8 +127,10 @@ class WalletConfigProviderTests: XCTestCase {
         defaultRawFlags[.onboardingFlow] = true
         let flags = WalletConfig(flags: defaultRawFlags)
         
+        store.send(.debug(.walletConfigLoaded(flags)))
+        
         // The new flag's value has to be propagated to all `walletConfig` instances
-        store.send(.debug(.walletConfigLoaded(flags))) { state in
+        store.receive(.updateStateAfterConfigUpdate(flags)) { state in
             state.walletConfig = flags
             state.onboardingState.walletConfig = flags
         }

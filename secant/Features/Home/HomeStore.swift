@@ -16,8 +16,8 @@ struct HomeReducer: ReducerProtocol {
             case balanceBreakdown
             case notEnoughFreeDiskSpace
             case profile
-            case request
             case send
+            case settings
             case transactionHistory
         }
 
@@ -25,10 +25,10 @@ struct HomeReducer: ReducerProtocol {
         var balanceBreakdownState: BalanceBreakdownReducer.State
         var destination: Destination?
         var profileState: ProfileReducer.State
-        var requestState: RequestReducer.State
         var requiredTransactionConfirmations = 0
         var scanState: ScanReducer.State
         var sendState: SendFlowReducer.State
+        var settingsState: SettingsReducer.State
         var shieldedBalance: Balance
         var synchronizerStatusSnapshot: SyncStatusSnapshot
         var walletEventsState: WalletEventsFlowReducer.State
@@ -61,9 +61,8 @@ struct HomeReducer: ReducerProtocol {
         case onAppear
         case onDisappear
         case profile(ProfileReducer.Action)
-        case request(RequestReducer.Action)
-        case rewindDone(String?, SettingsReducer.Action)
         case send(SendFlowReducer.Action)
+        case settings(SettingsReducer.Action)
         case synchronizerStateChanged(SDKSynchronizerState)
         case walletEvents(WalletEventsFlowReducer.Action)
         case updateDestination(HomeReducer.State.Destination?)
@@ -84,6 +83,10 @@ struct HomeReducer: ReducerProtocol {
 
         Scope(state: \.sendState, action: /Action.send) {
             SendFlowReducer()
+        }
+
+        Scope(state: \.settingsState, action: /Action.settings) {
+            SettingsReducer()
         }
 
         Scope(state: \.profileState, action: /Action.profile) {
@@ -137,44 +140,11 @@ struct HomeReducer: ReducerProtocol {
             case .profile(.back):
                 state.destination = nil
                 return .none
-
-            case .profile(.settings(.quickRescan)):
-                state.destination = nil
-                return .run { send in
-                    do {
-                        try await sdkSynchronizer.rewind(.quick)
-                        await send(.rewindDone(nil, .quickRescan))
-                    } catch {
-                        await send(.rewindDone(error.localizedDescription, .quickRescan))
-                    }
-                }
-
-            case .profile(.settings(.fullRescan)):
-                state.destination = nil
-                return .run { send in
-                    do {
-                        try await sdkSynchronizer.rewind(.birthday)
-                        await send(.rewindDone(nil, .fullRescan))
-                    } catch {
-                        await send(.rewindDone(error.localizedDescription, .fullRescan))
-                    }
-                }
+            
+            case .settings:
+                return .none
 
             case .profile:
-                return .none
-
-            case .request:
-                return .none
-
-            case let .rewindDone(errorDescription, _):
-                if let errorDescription {
-                    // TODO: [#221] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
-                    state.alert = AlertState(
-                        title: TextState("Rewind failed"),
-                        message: TextState("Error: \(errorDescription)"),
-                        dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
-                    )
-                }
                 return .none
                 
             case .walletEvents:
@@ -221,17 +191,17 @@ extension HomeStore {
         )
     }
 
-    func requestStore() -> RequestStore {
-        self.scope(
-            state: \.requestState,
-            action: HomeReducer.Action.request
-        )
-    }
-
     func sendStore() -> SendFlowStore {
         self.scope(
             state: \.sendState,
             action: HomeReducer.Action.send
+        )
+    }
+
+    func settingsStore() -> SettingsStore {
+        self.scope(
+            state: \.settingsState,
+            action: HomeReducer.Action.settings
         )
     }
 
@@ -263,9 +233,9 @@ extension HomeReducer.State {
         .init(
             balanceBreakdownState: .placeholder,
             profileState: .placeholder,
-            requestState: .placeholder,
             scanState: .placeholder,
             sendState: .placeholder,
+            settingsState: .placeholder,
             shieldedBalance: Balance.zero,
             synchronizerStatusSnapshot: .default,
             walletEventsState: .emptyPlaceHolder

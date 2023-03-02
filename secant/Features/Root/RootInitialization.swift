@@ -26,12 +26,6 @@ extension RootReducer {
         case walletConfigChanged(WalletConfig)
     }
 
-    enum DebugAction: Equatable {
-        case updateFlag(FeatureFlag, Bool)
-        case flagUpdated
-        case walletConfigLoaded(WalletConfig)
-    }
-
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func initializationReduce() -> Reduce<RootReducer.State, RootReducer.Action> {
         Reduce { state, action in
@@ -56,8 +50,10 @@ extension RootReducer {
                 }
             
             case .initialization(.walletConfigChanged(let walletConfig)):
-                updateStateAfterConfigUpdate(state: &state, config: walletConfig)
-                return EffectTask(value: .initialization(.initialSetups))
+                return .concatenate(
+                    EffectTask(value: .updateStateAfterConfigUpdate(walletConfig)),
+                    EffectTask(value: .initialization(.initialSetups))
+                )
                 
             case .initialization(.initialSetups):
                 // TODO: [#524] finish all the wallet events according to definition, https://github.com/zcash/secant-ios-wallet/issues/524
@@ -307,43 +303,26 @@ extension RootReducer {
 
             case .onboarding(.createNewWallet):
                 return EffectTask(value: .initialization(.createNewWallet))
-                
-            case .home, .destination, .onboarding, .phraseDisplay, .phraseValidation, .sandbox, .welcome, .binding:
-                return .none
 
             case .initialization(.configureCrashReporter):
                 crashReporter.configure(
                     !userStoredPreferences.isUserOptedOutOfCrashReporting()
                 )
                 return .none
+                
+            case .updateStateAfterConfigUpdate(let walletConfig):
+                state.walletConfig = walletConfig
+                state.onboardingState.walletConfig = walletConfig
+                return .none
 
             case .dismissAlert:
                 state.alert = nil
                 return .none
 
-            case let .debug(.updateFlag(flag, isEnabled)):
-                return walletConfigProvider.update(flag, !isEnabled)
-                    .receive(on: mainQueue)
-                    .map { _ in return Action.debug(.flagUpdated) }
-                    .eraseToEffect()
-                    .cancellable(id: WalletConfigCancelId.self, cancelInFlight: true)
-
-            case .debug(.flagUpdated):
-                return walletConfigProvider.load()
-                    .receive(on: mainQueue)
-                    .map { Action.debug(.walletConfigLoaded($0)) }
-                    .eraseToEffect()
-                    .cancellable(id: WalletConfigCancelId.self, cancelInFlight: true)
-
-            case let .debug(.walletConfigLoaded(walletConfig)):
-                updateStateAfterConfigUpdate(state: &state, config: walletConfig)
+            case .home, .destination, .onboarding, .phraseDisplay, .phraseValidation, .sandbox,
+                .welcome, .binding, .debug:
                 return .none
             }
         }
-    }
-
-    private func updateStateAfterConfigUpdate(state: inout RootReducer.State, config: WalletConfig) {
-        state.walletConfig = config
-        state.onboardingState.walletConfig = config
     }
 }

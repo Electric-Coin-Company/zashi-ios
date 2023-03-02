@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+
 extension CrashReporterClient: TestDependencyKey {
     static let testValue = CrashReporterClient(
         configure: { _ in },

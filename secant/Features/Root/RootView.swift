@@ -126,6 +126,14 @@ private extension RootView {
                         viewStore.goToDestination(.welcome)
                     }
 
+                    Button("Test Crash Reporter") {
+                        viewStore.send(.debug(.testCrashReporter))
+                    }
+
+                    Button("Rescan Blockchain") {
+                        viewStore.send(.debug(.rescanBlockchain))
+                    }
+
                     Button("[Be careful] Nuke Wallet") {
                         viewStore.send(.initialization(.nukeWalletRequest))
                     }
@@ -156,6 +164,10 @@ private extension RootView {
                 }
             }
             .alert(self.store.scope(state: \.destinationState.alert), dismiss: .destination(.dismissAlert))
+            .confirmationDialog(
+                store.scope(state: \.debugState.rescanDialog),
+                dismiss: .debug(.cancelRescan)
+            )
         }
         .navigationBarTitle("Startup")
     }

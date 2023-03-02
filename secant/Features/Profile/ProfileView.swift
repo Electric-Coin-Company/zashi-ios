@@ -6,62 +6,32 @@ struct ProfileView: View {
 
     var body: some View {
         WithViewStore(store) { viewStore in
-            ScrollView {
+            VStack {
                 qrCodeUA(viewStore.unifiedAddress)
-                    .padding(.top, 30)
-                
-                Text("Your UA address \(viewStore.unifiedAddress)")
-                    .truncationMode(.middle)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(2)
-                    .padding(30)
+                    .padding(.vertical, 50)
 
-                Button(
-                    action: { viewStore.send(.updateDestination(.addressDetails)) },
-                    label: { Text("See address details") }
-                )
-                .activeButtonStyle
-                .frame(height: 50)
-                .padding(EdgeInsets(top: 0, leading: 30, bottom: 50, trailing: 30))
-
-                Rectangle()
-                    .frame(height: 1.5)
-                    .padding(EdgeInsets(top: 0, leading: 100, bottom: 20, trailing: 100))
-                    .foregroundColor(Asset.Colors.TextField.Underline.purple.color)
-
-                Button(
-                    action: { viewStore.send(.updateDestination(.settings)) },
-                    label: { Text("Settings") }
-                )
-                .primaryButtonStyle
-                .frame(height: 50)
-                .padding(EdgeInsets(top: 30, leading: 30, bottom: 20, trailing: 30))
-
-                Spacer()
-                
                 HStack {
-                    VStack {
-                        Text("secant v\(viewStore.appVersion)(\(viewStore.appBuild))")
-                        Text("sdk v\(viewStore.sdkVersion)")
-                    }
-                    Spacer()
-                    Button(
-                        action: { },
-                        label: {
-                            Text("More info")
-                                .foregroundColor(Asset.Colors.Text.moreInfoText.color)
+                    Text("Your UA")
+                        .fontWeight(.bold)
+                        .onTapGesture {
+                            viewStore.send(.copyUnifiedAddressToPastboard)
                         }
-                    )
+
+                    Button {
+                        viewStore.send(.updateDestination(.addressDetails))
+                    } label: {
+                        Image(systemName: "info.circle")
+                            .offset(x: -10, y: -10)
+                            .tint(.black)
+                    }
                 }
-                .padding(30)
+                
+                Text("\(viewStore.unifiedAddress)")
+                    .padding(30)
+                
+                Spacer()
             }
             .onAppear(perform: { viewStore.send(.onAppear) })
-            .navigationLinkEmpty(
-                isActive: viewStore.bindingForSettings,
-                destination: {
-                    SettingsView(store: store.settingsStore())
-                }
-            )
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForAddressDetails,
                 destination: {
@@ -104,14 +74,11 @@ struct ProfileView_Previews: PreviewProvider {
         NavigationView {
             ProfileView(
                 store: .init(
-                    initialState: .init(
-                        addressDetailsState: .placeholder,
-                        settingsState: .placeholder
-                    ),
+                    initialState: .init(addressDetailsState: .placeholder),
                     reducer: ProfileReducer()
                 )
             )
         }
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(.light)
     }
 }

@@ -17,7 +17,6 @@ struct SettingsReducer: ReducerProtocol {
         @BindingState var isCrashReportingOn: Bool
         var isSharingLogs = false
         var phraseDisplayState: RecoveryPhraseDisplayReducer.State
-        var rescanDialog: ConfirmationDialogState<SettingsReducer.Action>?
         var supportData: SupportData?
 
         var tempSDKDir: URL {
@@ -43,20 +42,15 @@ struct SettingsReducer: ReducerProtocol {
         case backupWallet
         case backupWalletAccessRequest
         case binding(BindingAction<SettingsReducer.State>)
-        case cancelRescan
         case dismissAlert
         case exportLogs
-        case fullRescan
         case logsExported
         case logsExportFailed(String)
         case logsShareFinished
         case onAppear
         case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
-        case quickRescan
-        case rescanBlockchain
         case sendSupportMail
         case sendSupportMailFinished
-        case testCrashReporter // this will crash the app if live.
         case updateDestination(SettingsReducer.State.Destination?)
     }
 
@@ -108,10 +102,6 @@ struct SettingsReducer: ReducerProtocol {
                 return .run { [state] _ in
                     await userStoredPreferences.setIsUserOptedOutOfCrashReporting(state.isCrashReportingOn)
                 }
-                
-            case .cancelRescan, .quickRescan, .fullRescan:
-                state.rescanDialog = nil
-                return .none
 
             case .dismissAlert:
                 state.alert = nil
@@ -146,28 +136,12 @@ struct SettingsReducer: ReducerProtocol {
                 state.isSharingLogs = false
                 return .none
 
-            case .rescanBlockchain:
-                state.rescanDialog = .init(
-                    title: TextState("Rescan"),
-                    message: TextState("Select the rescan you want"),
-                    buttons: [
-                        .default(TextState("Quick rescan"), action: .send(.quickRescan)),
-                        .default(TextState("Full rescan"), action: .send(.fullRescan)),
-                        .cancel(TextState("Cancel"))
-                    ]
-                )
-                return .none
-
             case .phraseDisplay:
                 state.destination = nil
                 return .none
                 
             case .updateDestination(let destination):
                 state.destination = destination
-                return .none
-
-            case .testCrashReporter:
-                crashReporter.testCrash()
                 return .none
 
             case .binding:
