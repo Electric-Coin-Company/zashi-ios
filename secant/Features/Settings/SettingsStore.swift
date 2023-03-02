@@ -48,6 +48,7 @@ struct SettingsReducer: ReducerProtocol {
         case exportLogs
         case fullRescan
         case logsExported
+        case logsExportFailed(String)
         case logsShareFinished
         case onAppear
         case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
@@ -83,12 +84,17 @@ struct SettingsReducer: ReducerProtocol {
             case .backupWallet:
                 do {
                     let storedWallet = try walletStorage.exportWallet()
-                    let phraseWords = try mnemonic.asWords(storedWallet.seedPhrase.value())
+                    let phraseWords = mnemonic.asWords(storedWallet.seedPhrase.value())
                     let recoveryPhrase = RecoveryPhrase(words: phraseWords.map { $0.redacted })
                     state.phraseDisplayState.phrase = recoveryPhrase
                     return EffectTask(value: .updateDestination(.backupPhrase))
                 } catch {
                     // TODO: [#221] - merge with issue 221 (https://github.com/zcash/secant-ios-wallet/issues/221) and its Error States
+                    state.alert = AlertState(
+                        title: TextState("Can't backup wallet"),
+                        message: TextState("Error: \(error.localizedDescription)"),
+                        dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+                    )
                     return .none
                 }
 
@@ -118,13 +124,22 @@ struct SettingsReducer: ReducerProtocol {
                         try await logsHandler.exportAndStoreLogs(state.tempSDKDir, state.tempTCADir, state.tempWalletDir)
                         await send(.logsExported)
                     } catch {
-                        // TODO: [#527] address the error here https://github.com/zcash/secant-ios-wallet/issues/527
+                        await send(.logsExportFailed(error.localizedDescription))
                     }
                 }
                 
             case .logsExported:
                 state.exportLogsDisabled = false
                 state.isSharingLogs = true
+                return .none
+
+            case let .logsExportFailed(errorDescription):
+                // TODO: [#527] address the error here https://github.com/zcash/secant-ios-wallet/issues/527
+                state.alert = AlertState(
+                    title: TextState("Error when exporting logs"),
+                    message: TextState("Error: \(errorDescription)"),
+                    dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+                )
                 return .none
 
             case .logsShareFinished:

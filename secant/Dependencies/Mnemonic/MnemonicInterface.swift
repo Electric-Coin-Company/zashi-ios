@@ -22,7 +22,7 @@ struct MnemonicClient {
     /// Generate deterministic seed from mnemonic phrase
     var toSeed: (String) throws -> [UInt8]
     /// Get this mnemonic phrase as array of words
-    var asWords: (String) throws -> [String]
+    var asWords: (String) -> [String]
     /// Validates whether the given mnemonic is correct
     var isValid: (String) throws -> Void
 }

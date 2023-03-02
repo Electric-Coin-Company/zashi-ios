@@ -29,6 +29,7 @@ struct HomeView: View {
             .navigationBarHidden(true)
             .onAppear(perform: { viewStore.send(.onAppear) })
             .onDisappear(perform: { viewStore.send(.onDisappear) })
+            .alert(self.store.scope(state: \.alert), dismiss: .dismissAlert)
             .fullScreenCover(isPresented: viewStore.bindingForDestination(.balanceBreakdown)) {
                 BalanceBreakdownView(store: store.balanceBreakdownStore())
             }

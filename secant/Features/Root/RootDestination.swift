@@ -40,6 +40,7 @@ extension RootReducer {
         case deeplink(URL)
         case deeplinkHome
         case deeplinkSend(Zatoshi, String, String)
+        case deeplinkFailed(URL, String)
         case dismissAlert
         case updateDestination(RootReducer.DestinationState.Destination)
     }
@@ -94,7 +95,7 @@ extension RootReducer {
                             )
                         )
                     } catch {
-                        // TODO: [#221] error we need to handle (https://github.com/zcash/secant-ios-wallet/issues/221)
+                        await send(.destination(.deeplinkFailed(url, error.localizedDescription)))
                     }
                 }
 
@@ -111,6 +112,18 @@ extension RootReducer {
                 state.homeState.sendState.memoState.text = memo.redacted
                 return .none
 
+            case let .destination(.deeplinkFailed(url, errorDescription)):
+                // TODO: [#221] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
+                state.destinationState.alert = AlertState(
+                    title: TextState("Failed to process deeplink."),
+                    message: TextState("Deeplink: \(url))\nError: \(errorDescription)"),
+                    dismissButton: .default(
+                        TextState("Ok"),
+                        action: .send(.destination(.dismissAlert))
+                    )
+                )
+                return .none
+
             case .home(.walletEvents(.replyTo(let address))):
                 guard let url = URL(string: "zcash:\(address)") else {
                     return .none
@@ -122,7 +135,7 @@ extension RootReducer {
                 return .none
                 
             case .home, .initialization, .onboarding, .phraseDisplay, .phraseValidation,
-                .sandbox, .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded:
+                .sandbox, .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .dismissAlert:
                 return .none
             }
             

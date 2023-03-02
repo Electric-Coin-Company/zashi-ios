@@ -10,6 +10,7 @@ struct RootReducer: ReducerProtocol {
     enum WalletConfigCancelId {}
 
     struct State: Equatable {
+        @BindingState var alert: AlertState<RootReducer.Action>?
         var appInitializationState: InitializationState = .uninitialized
         var destinationState: DestinationState
         var homeState: HomeReducer.State
@@ -25,6 +26,7 @@ struct RootReducer: ReducerProtocol {
     enum Action: Equatable, BindableAction {
         case binding(BindingAction<RootReducer.State>)
         case debug(DebugAction)
+        case dismissAlert
         case destination(DestinationAction)
         case home(HomeReducer.Action)
         case initialization(InitializationAction)

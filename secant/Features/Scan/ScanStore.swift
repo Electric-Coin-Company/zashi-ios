@@ -21,6 +21,7 @@ struct ScanReducer: ReducerProtocol {
             case unknown
         }
 
+        @BindingState var alert: AlertState<ScanReducer.Action>?
         var isTorchAvailable = false
         var isTorchOn = false
         var isValidValue = false
@@ -40,6 +41,7 @@ struct ScanReducer: ReducerProtocol {
     @Dependency(\.uriParser) var uriParser
 
     enum Action: Equatable {
+        case dismissAlert
         case onAppear
         case onDisappear
         case found(RedactableString)
@@ -51,6 +53,10 @@ struct ScanReducer: ReducerProtocol {
     // swiftlint:disable:next cyclomatic_complexity
     func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
         switch action {
+        case .dismissAlert:
+            state.alert = nil
+            return .none
+
         case .onAppear:
             // reset the values
             state.scanStatus = .unknown
@@ -60,7 +66,12 @@ struct ScanReducer: ReducerProtocol {
             do {
                 state.isTorchAvailable = try captureDevice.isTorchAvailable()
             } catch {
-                // TODO: [#322] handle torch errors (https://github.com/zcash/secant-ios-wallet/issues/322)
+                // TODO: [#322] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/322)
+                state.alert = AlertState(
+                    title: TextState("Can't initialize the camera"),
+                    message: TextState("Error: \(error.localizedDescription)"),
+                    dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+                )
             }
             return .none
         
@@ -105,6 +116,11 @@ struct ScanReducer: ReducerProtocol {
                 state.isTorchOn.toggle()
             } catch {
                 // TODO: [#322] handle torch errors (https://github.com/zcash/secant-ios-wallet/issues/322)
+                state.alert = AlertState(
+                    title: TextState("Can't initialize the camera"),
+                    message: TextState("Error: \(error.localizedDescription)"),
+                    dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+                )
             }
             return .none
         }
