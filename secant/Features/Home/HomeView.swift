@@ -51,9 +51,9 @@ struct HomeView: View {
 
 extension HomeView {
     func settingsButton(_ viewStore: HomeViewStore) -> some View {
-        Image(Asset.Assets.Icons.profile.name)
+        Image(systemName: "gearshape")
             .resizable()
-            .frame(width: 60, height: 60)
+            .frame(width: 30, height: 30)
             .padding(.trailing, 15)
             .navigationLink(
                 isActive: viewStore.bindingForDestination(.settings),
