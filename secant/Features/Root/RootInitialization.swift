@@ -253,11 +253,10 @@ extension RootReducer {
                     return EffectTask(value: .nukeWalletFailed)
                 }
                 return wipePublisher
-                    .catchToEffect()
-                    .receive(on: mainQueue)
-                    .replaceEmpty(with: .success(Void()))
+                    .replaceEmpty(with: Void())
                     .map { _ in return RootReducer.Action.nukeWalletSucceeded }
                     .replaceError(with: RootReducer.Action.nukeWalletFailed)
+                    .receive(on: mainQueue)
                     .eraseToEffect()
                     .cancellable(id: SynchronizerCancelId.self, cancelInFlight: true)
 
