@@ -109,8 +109,8 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
         return SyncStatusSnapshot.snapshotFor(state: synchronizer.status)
     }
 
-    func rewind(_ policy: RewindPolicy) async throws {
-        try await synchronizer?.rewind(policy)
+    func rewind(_ policy: RewindPolicy) -> AnyPublisher<Void, Error>? {
+        return synchronizer?.rewind(policy)
     }
     
     func getShieldedBalance() -> WalletBalance? {

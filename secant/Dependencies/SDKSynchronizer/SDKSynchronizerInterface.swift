@@ -44,7 +44,7 @@ protocol SDKSynchronizerClient {
     func isSyncing() -> Bool
     func isInitialized() -> Bool
 
-    func rewind(_ policy: RewindPolicy) async throws
+    func rewind(_ policy: RewindPolicy) -> AnyPublisher<Void, Error>?
 
     func getShieldedBalance() -> WalletBalance?
     func getTransparentBalance() -> WalletBalance?

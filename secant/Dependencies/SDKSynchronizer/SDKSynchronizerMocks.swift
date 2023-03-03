@@ -41,7 +41,7 @@ class MockSDKSynchronizerClient: SDKSynchronizerClient {
 
     func statusSnapshot() -> SyncStatusSnapshot { .default }
 
-    func rewind(_ policy: RewindPolicy) throws { }
+    func rewind(_ policy: RewindPolicy) -> AnyPublisher<Void, Error>? { Empty<Void, Error>().eraseToAnyPublisher() }
     
     func getShieldedBalance() -> WalletBalance? {
         WalletBalance(verified: Zatoshi(12345000), total: Zatoshi(12345000))

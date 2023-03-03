@@ -5,9 +5,9 @@
 //  Created by Lukáš Korba on 15.11.2022.
 //
 
-import Foundation
 import Combine
 import ComposableArchitecture
+import Foundation
 import ZcashLightClientKit
 
 extension SDKSynchronizerDependency: TestDependencyKey {
@@ -40,8 +40,8 @@ class NoopSDKSynchronizer: SDKSynchronizerClient {
 
     func statusSnapshot() -> SyncStatusSnapshot { .default }
 
-    func rewind(_ policy: RewindPolicy) async throws { }
-    
+    func rewind(_ policy: RewindPolicy) -> AnyPublisher<Void, Error>? { Empty<Void, Error>().eraseToAnyPublisher() }
+
     func getShieldedBalance() -> WalletBalance? { nil }
     
     func getTransparentBalance() -> WalletBalance? { nil }
@@ -104,7 +104,7 @@ class TestSDKSynchronizerClient: SDKSynchronizerClient {
 
     func statusSnapshot() -> SyncStatusSnapshot { .default }
 
-    func rewind(_ policy: RewindPolicy) throws { }
+    func rewind(_ policy: RewindPolicy) -> AnyPublisher<Void, Error>? { nil }
     
     func getShieldedBalance() -> WalletBalance? { nil }
     

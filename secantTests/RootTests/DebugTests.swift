@@ -71,6 +71,8 @@ class DebugTests: XCTestCase {
             reducer: RootReducer()
         )
 
+        store.dependencies.mainQueue = .immediate
+
         await store.send(.debug(.quickRescan)) { state in
             state.destinationState.internalDestination = .home
             state.destinationState.previousDestination = .welcome
@@ -96,6 +98,8 @@ class DebugTests: XCTestCase {
             initialState: mockState,
             reducer: RootReducer()
         )
+
+        store.dependencies.mainQueue = .immediate
                 
         await store.send(.debug(.fullRescan)) { state in
             state.destinationState.internalDestination = .home
