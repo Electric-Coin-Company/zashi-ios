@@ -14,6 +14,7 @@ struct RootReducer: ReducerProtocol {
         var appInitializationState: InitializationState = .uninitialized
         var debugState: DebugState
         var destinationState: DestinationState
+        var exportLogsState: ExportLogsReducer.State
         var homeState: HomeReducer.State
         var onboardingState: OnboardingFlowReducer.State
         var phraseValidationState: RecoveryPhraseValidationFlowReducer.State
@@ -29,6 +30,7 @@ struct RootReducer: ReducerProtocol {
         case debug(DebugAction)
         case dismissAlert
         case destination(DestinationAction)
+        case exportLogs(ExportLogsReducer.Action)
         case home(HomeReducer.Action)
         case initialization(InitializationAction)
         case nukeWalletFailed
@@ -60,6 +62,10 @@ struct RootReducer: ReducerProtocol {
 
         Scope(state: \.homeState, action: /Action.home) {
             HomeReducer()
+        }
+
+        Scope(state: \.exportLogsState, action: /Action.exportLogs) {
+            ExportLogsReducer()
         }
 
         Scope(state: \.onboardingState, action: /Action.onboarding) {
@@ -178,6 +184,7 @@ extension RootReducer.State {
         .init(
             debugState: .placeholder,
             destinationState: .placeholder,
+            exportLogsState: .placeholder,
             homeState: .placeholder,
             onboardingState: .init(
                 walletConfig: .default,

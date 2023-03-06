@@ -80,6 +80,8 @@ struct RootView: View {
             }
             .onOpenURL(perform: { viewStore.goToDeeplink($0) })
             .alert(self.store.scope(state: \.alert), dismiss: .dismissAlert)
+
+            shareLogsView(viewStore)
         }
     }
 }
@@ -99,6 +101,25 @@ private struct FeatureFlagWrapper: Identifiable, Equatable, Comparable {
 }
 
 private extension RootView {
+    @ViewBuilder func shareLogsView(_ viewStore: RootViewStore) -> some View {
+        if viewStore.exportLogsState.isSharingLogs {
+            UIShareDialogView(
+                activityItems: [
+                    viewStore.exportLogsState.tempSDKDir,
+                    viewStore.exportLogsState.tempWalletDir,
+                    viewStore.exportLogsState.tempTCADir
+                ]
+            ) {
+                viewStore.send(.exportLogs(.shareFinished))
+            }
+            // UIShareDialogView only wraps UIActivityViewController presentation
+            // so frame is set to 0 to not break SwiftUIs layout
+            .frame(width: 0, height: 0)
+        } else {
+            EmptyView()
+        }
+    }
+
     @ViewBuilder func debugView(_ viewStore: RootViewStore) -> some View {
         VStack(alignment: .leading) {
             if viewStore.destinationState.previousDestination == .home {
@@ -131,6 +152,11 @@ private extension RootView {
                     Button("Test Crash Reporter") {
                         viewStore.send(.debug(.testCrashReporter))
                     }
+
+                    Button("Export logs") {
+                        viewStore.send(.exportLogs(.start))
+                    }
+                    .disabled(viewStore.exportLogsState.exportLogsDisabled)
 
                     Button("Rescan Blockchain") {
                         viewStore.send(.debug(.rescanBlockchain))
@@ -166,6 +192,13 @@ private extension RootView {
                 }
             }
             .alert(self.store.scope(state: \.destinationState.alert), dismiss: .destination(.dismissAlert))
+            .alert(
+                self.store.scope(
+                    state: \.exportLogsState.alert,
+                    action: { (_: ExportLogsReducer.Action) in return .exportLogs(.dismissAlert) }
+                ),
+                dismiss: .dismissAlert
+            )
             .confirmationDialog(
                 store.scope(state: \.debugState.rescanDialog),
                 dismiss: .debug(.cancelRescan)

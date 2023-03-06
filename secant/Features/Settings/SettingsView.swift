@@ -19,9 +19,9 @@ struct SettingsView: View {
                 .frame(height: 50)
                 
                 Button(
-                    action: { viewStore.send(.exportLogs) },
+                    action: { viewStore.send(.exportLogs(.start)) },
                     label: {
-                        if viewStore.exportLogsDisabled {
+                        if viewStore.exportLogsState.exportLogsDisabled {
                             HStack {
                                 ProgressView()
                                 Text(L10n.Settings.exporting)
@@ -33,7 +33,7 @@ struct SettingsView: View {
                 )
                 .activeButtonStyle
                 .frame(height: 50)
-                .disabled(viewStore.exportLogsDisabled)
+                .disabled(viewStore.exportLogsState.exportLogsDisabled)
 
                 Button(
                     action: { viewStore.send(.sendSupportMail) },
@@ -55,17 +55,15 @@ struct SettingsView: View {
             )
             .onAppear { viewStore.send(.onAppear) }
             .alert(self.store.scope(state: \.alert), dismiss: .dismissAlert)
-            
-            if viewStore.isSharingLogs {
-                UIShareDialogView(
-                    activityItems: [viewStore.tempSDKDir, viewStore.tempWalletDir, viewStore.tempTCADir]
-                ) {
-                    viewStore.send(.logsShareFinished)
-                }
-                // UIShareDialogView only wraps UIActivityViewController presentation
-                // so frame is set to 0 to not break SwiftUIs layout
-                .frame(width: 0, height: 0)
-            }
+            .alert(
+                self.store.scope(
+                    state: \.exportLogsState.alert,
+                    action: { (_: ExportLogsReducer.Action) in return .exportLogs(.dismissAlert) }
+                ),
+                dismiss: .dismissAlert
+            )
+
+            shareLogsView(viewStore)
 
             if let supportData = viewStore.supportData {
                 UIMailDialogView(
@@ -78,6 +76,25 @@ struct SettingsView: View {
                 // so frame is set to 0 to not break SwiftUIs layout
                 .frame(width: 0, height: 0)
             }
+        }
+    }
+
+    @ViewBuilder func shareLogsView(_ viewStore: SettingsViewStore) -> some View {
+        if viewStore.exportLogsState.isSharingLogs {
+            UIShareDialogView(
+                activityItems: [
+                    viewStore.exportLogsState.tempSDKDir,
+                    viewStore.exportLogsState.tempWalletDir,
+                    viewStore.exportLogsState.tempTCADir
+                ]
+            ) {
+                viewStore.send(.exportLogs(.shareFinished))
+            }
+            // UIShareDialogView only wraps UIActivityViewController presentation
+            // so frame is set to 0 to not break SwiftUIs layout
+            .frame(width: 0, height: 0)
+        } else {
+            EmptyView()
         }
     }
 }
