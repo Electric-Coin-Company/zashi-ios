@@ -63,7 +63,7 @@ struct RecoveryPhraseBackupSucceededView: View {
                                     .fixedSize(horizontal: false, vertical: true)
                             }
                         )
-                        .secondaryButtonStyle
+                        .activeButtonStyle
                         .recoveryPhraseBackupValidationSucceededViewLayout()
                     }
                 }
@@ -126,16 +126,6 @@ struct RecoveryPhraseBackupValidationSucceededView_Previews: PreviewProvider {
             }
             
             RecoveryPhraseBackupSucceededView(store: .demo)
-                .preferredColorScheme(.dark)
-            
-            RecoveryPhraseBackupSucceededView(store: .demo)
-                .previewDevice(PreviewDevice(rawValue: "iPhone SE (2nd generation)"))
-            
-            RecoveryPhraseBackupSucceededView(store: .demo)
-                .environment(\.sizeCategory, .accessibilityLarge)
-
-            RecoveryPhraseBackupSucceededView(store: .demo)
-                .environment(\.sizeCategory, .accessibilityLarge)
                 .previewDevice(PreviewDevice(rawValue: "iPhone SE (2nd generation)"))
         }
     }

@@ -10,11 +10,13 @@ struct CreateTransaction: View {
         return WithViewStore(store) { viewStore in
             VStack {
                 VStack(spacing: 0) {
-                    Text("\(viewStore.shieldedBalance.data.total.decimalString()) ZEC Available")
-                    Text("Aditional funds may be in transit")
-                        .font(.system(size: 13))
-                        .opacity(0.6)
+                    Text("balance.available".localized("\(viewStore.shieldedBalance.data.total.decimalString())"))
+                        .font(.system(size: 32))
+                        .fontWeight(.bold)
+                    Text("send.fundsInfo")
+                        .font(.system(size: 16))
                 }
+                .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                 .padding()
 
                 TransactionAddressTextField(
@@ -35,7 +37,7 @@ struct CreateTransaction: View {
 
                 MultipleLineTextField(
                     store: store.memoStore(),
-                    title: "Write a private message here",
+                    title: "send.memoPlaceholder",
                     titleAccessoryView: {}
                 )
                 .frame(height: 200)
@@ -43,14 +45,13 @@ struct CreateTransaction: View {
                 
                 Button(
                     action: { viewStore.send(.sendPressed) },
-                    label: { Text("Send") }
+                    label: { Text("general.send") }
                 )
                 .activeButtonStyle
-                .frame(height: 50)
-                .padding()
 
                 Spacer()
             }
+            .navigationTitle("send.title")
             .navigationBarTitleDisplayMode(.inline)
             .padding()
             .applyScreenBackground()

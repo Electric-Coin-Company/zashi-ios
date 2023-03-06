@@ -52,7 +52,6 @@ struct WordChipGrid_Previews: PreviewProvider {
         WordChipGrid(words: words.map { $0.redacted }, startingAt: 1)
             .frame(maxHeight: .infinity)
             .fixedSize()
-            .environment(\.sizeCategory, .accessibilityLarge)
             .padding()
     }
 }

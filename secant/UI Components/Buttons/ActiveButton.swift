@@ -27,11 +27,5 @@ struct ActiveButton_Previews: PreviewProvider {
             .frame(width: 250, height: 50)
             .previewLayout(.fixed(width: 300, height: 100))
             .preferredColorScheme(.light)
-        
-        Button("Active Button") { dump("Active button") }
-            .activeButtonStyle
-            .frame(width: 250, height: 50)
-            .previewLayout(.fixed(width: 300, height: 100))
-            .preferredColorScheme(.dark)
     }
 }

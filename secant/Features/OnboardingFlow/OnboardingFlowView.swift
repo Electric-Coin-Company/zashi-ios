@@ -40,6 +40,8 @@ struct OnboardingScreen: View {
                 Spacer()
                 
                 OnboardingFooterView(store: store)
+                
+                Spacer()
             }
             .navigationBarHidden(true)
             .applyScreenBackground()
@@ -86,43 +88,6 @@ struct OnboardingScreen_Previews: PreviewProvider {
             )
         )
         .preferredColorScheme(.light)
-        .previewDevice(PreviewDevice(rawValue: "iPhone 14 Pro"))
-        .environment(\.sizeCategory, .accessibilityLarge)
-
-        OnboardingScreen(
-            store: Store(
-                initialState: OnboardingFlowReducer.State(
-                    walletConfig: .default,
-                    importWalletState: .placeholder
-                ),
-                reducer: OnboardingFlowReducer()
-            )
-        )
-        .preferredColorScheme(.dark)
-        .previewDevice(PreviewDevice(rawValue: "iPhone SE (2nd generation)"))
-
-        OnboardingScreen(
-            store: Store(
-                initialState: OnboardingFlowReducer.State(
-                    walletConfig: .default,
-                    importWalletState: .placeholder
-                ),
-                reducer: OnboardingFlowReducer()
-            )
-        )
-        .preferredColorScheme(.dark)
-        .previewDevice(PreviewDevice(rawValue: "iPhone 8"))
-
-        OnboardingScreen(
-            store: Store(
-                initialState: OnboardingFlowReducer.State(
-                    walletConfig: .default,
-                    importWalletState: .placeholder
-                ),
-                reducer: OnboardingFlowReducer()
-            )
-        )
-        .preferredColorScheme(.dark)
         .previewDevice(PreviewDevice(rawValue: "iPhone 14 Pro"))
     }
 }

@@ -24,7 +24,6 @@ struct OnboardingFlowReducer: ReducerProtocol {
             let title: LocalizedStringKey
             let description: LocalizedStringKey
             let background: Image
-            let badge: Badge
         }
 
         var destination: Destination?
@@ -117,29 +116,25 @@ extension OnboardingFlowReducer.State {
                 id: UUID(),
                 title: "onboarding.step1.title",
                 description: "onboarding.step1.description",
-                background: Asset.Assets.Backgrounds.callout1.image,
-                badge: .shield
+                background: Asset.Assets.Backgrounds.callout1.image
             ),
             Step(
                 id: UUID(),
                 title: "onboarding.step2.title",
                 description: "onboarding.step2.description",
-                background: Asset.Assets.Backgrounds.callout2.image,
-                badge: .person
+                background: Asset.Assets.Backgrounds.callout2.image
             ),
             Step(
                 id: UUID(),
                 title: "onboarding.step3.title",
                 description: "onboarding.step3.description",
-                background: Asset.Assets.Backgrounds.callout3.image,
-                badge: .list
+                background: Asset.Assets.Backgrounds.callout3.image
             ),
             Step(
                 id: UUID(),
                 title: "onboarding.step4.title",
                 description: "onboarding.step4.description",
-                background: Asset.Assets.Backgrounds.callout4.image,
-                badge: .shield
+                background: Asset.Assets.Backgrounds.callout4.image
             )
         ]
     )

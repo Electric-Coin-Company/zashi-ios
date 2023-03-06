@@ -39,9 +39,6 @@ struct TextAndPlaceholdersGuide: View {
             .fontWeight(.thin)
             .foregroundColor(Asset.Colors.Text.titleText.color)
 
-            CircularFrame()
-                .frame(width: 300, height: 300, alignment: .center)
-
             Text("Placeholder for rectangular view")
                 .frame(width: 386, height: 125, alignment: .center)
 
@@ -61,22 +58,22 @@ struct SmallVisualElements: View {
                     .font(.caption)
 
                 LazyVGrid(columns: gridItems) {
-                    Button("Back") { dump("Example button") }
-                        .navigationButtonStyle
+                    Button("general.back") { dump("Example button") }
+                        .activeButtonStyle
                         .frame(width: 80, height: 40)
 
-                    Button("Skip") { dump("Example button") }
-                        .navigationButtonStyle
-                        .frame(width: 80, height: 40)
-
-                    // TODO: [#696] Change state to selected https://github.com/zcash/ZcashLightClientKit/issues/696
-                    Button("Back") { dump("Example button") }
-                        .navigationButtonStyle
+                    Button("general.skip") { dump("Example button") }
+                        .activeButtonStyle
                         .frame(width: 80, height: 40)
 
                     // TODO: [#696] Change state to selected https://github.com/zcash/ZcashLightClientKit/issues/696
-                    Button("Skip") { dump("Example button") }
-                        .navigationButtonStyle
+                    Button("general.back") { dump("Example button") }
+                        .activeButtonStyle
+                        .frame(width: 80, height: 40)
+
+                    // TODO: [#696] Change state to selected https://github.com/zcash/ZcashLightClientKit/issues/696
+                    Button("general.skip") { dump("Example button") }
+                        .activeButtonStyle
                         .frame(width: 80, height: 40)
                 }
             }
@@ -91,17 +88,6 @@ struct SmallVisualElements: View {
                 EmptyChip()
                     .frame(width: 100, height: 40)
             }
-
-            VStack(spacing: 25) {
-                Asset.Assets.Icons.shield.image
-                    .frame(width: 76, height: 76)
-
-                Asset.Assets.Icons.profile.image
-                    .frame(width: 76, height: 76)
-
-                Asset.Assets.Icons.list.image
-                    .frame(width: 76, height: 76)
-            }
         }
     }
 }
@@ -115,7 +101,7 @@ struct ButtonGuide: View {
             Button(action: {}) {
                 Text("Primary Button")
             }
-            .primaryButtonStyle
+            .activeButtonStyle
             .frame(height: buttonHeight)
 
             // Pressed Primary Button
@@ -129,7 +115,7 @@ struct ButtonGuide: View {
             Button(action: {}) {
                 Text("Disabled Primary Button")
             }
-            .primaryButtonStyle
+            .activeButtonStyle
             .frame(height: buttonHeight)
             .disabled(true)
 
@@ -159,14 +145,14 @@ struct ButtonGuide: View {
             Button(action: {}) {
                 Text("Secondary Button")
             }
-            .secondaryButtonStyle
+            .activeButtonStyle
             .frame(height: buttonHeight)
 
             // Disabled Secondary Button
             Button(action: {}) {
                 Text("Disabled Secondary Button")
             }
-            .secondaryButtonStyle
+            .activeButtonStyle
             .frame(height: buttonHeight)
             .disabled(true)
 
@@ -178,10 +164,6 @@ struct ButtonGuide: View {
 struct DesignGuide_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            DesignGuide()
-                .applyScreenBackground()
-                .preferredColorScheme(.dark)
-
             DesignGuide()
                 .applyScreenBackground()
                 .preferredColorScheme(.light)

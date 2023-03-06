@@ -17,21 +17,16 @@ struct StandardButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .shadow(color: Asset.Colors.Buttons.buttonsTitleShadow.color, radius: 2, x: 0, y: 2)
             .frame(
                 minWidth: 0,
                 maxWidth: .infinity,
                 minHeight: 0,
                 maxHeight: .infinity
             )
-            .foregroundColor(foregroundColor)
-            .background(
-                isEnabled ?
-                (configuration.isPressed ? pressedBackgroundColor : background)
-                : disabledBackgroundColor
-            )
-            .cornerRadius(12)
-            .neumorphicButton(configuration.isPressed)
+            .frame(height: 60)
+            .foregroundColor(Asset.Colors.Mfp.fontLight.color)
+            .background(Asset.Colors.Mfp.primary.color)
+            .padding(.horizontal, 30)
     }
 }
 
@@ -55,6 +50,6 @@ struct ButtonModifier_Previews: PreviewProvider {
             .padding(.horizontal, 25)
             .frame(height: 60)
             .previewLayout(.fixed(width: 300, height: 100))
-            .preferredColorScheme(.dark)
+            .preferredColorScheme(.light)
     }
 }

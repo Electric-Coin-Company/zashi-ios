@@ -10,11 +10,11 @@ import ComposableArchitecture
 
 struct AddressDetailsView: View {
     let store: AddressDetailsStore
-    
+
     var body: some View {
         WithViewStore(store) { viewStore in
             ScrollView {
-                Text("Unified Address")
+                Text("addressDetails.ua")
                     .fontWeight(.bold)
                 qrCode(viewStore.unifiedAddress)
                     .padding(30)
@@ -24,7 +24,7 @@ struct AddressDetailsView: View {
                         viewStore.send(.copyUnifiedAddressToPastboard)
                     }
 
-                Text("Sapling Address")
+                Text("addressDetails.sa")
                     .fontWeight(.bold)
                     .padding(.top, 20)
                 qrCode(viewStore.saplingAddress)
@@ -35,7 +35,7 @@ struct AddressDetailsView: View {
                         viewStore.send(.copySaplingAddressToPastboard)
                     }
 
-                Text("Transparent Address")
+                Text("addressDetails.ta")
                     .fontWeight(.bold)
                     .padding(.top, 20)
                 qrCode(viewStore.transparentAddress)
@@ -56,7 +56,7 @@ extension AddressDetailsView {
     func qrCode(_ qrText: String) -> some View {
         Group {
             if let img = QRCodeGenerator.generate(from: qrText) {
-                Image(img, scale: 1, label: Text(String(format: NSLocalizedString("QR Code for %@", comment: ""), "\(qrText)") ))
+                Image(img, scale: 1, label: Text("qrCodeFor".localized("\(qrText)")))
                     .cornerRadius(20)
                     .overlay(
                         RoundedRectangle(cornerRadius: 20)

@@ -6,21 +6,21 @@ struct TransactionSent: View {
 
     var body: some View {
         VStack {
-            Text("Sending transaction succeeded")
+            Text("send.succeeded")
             
             Button(
                 action: {
                     viewStore.send(.updateDestination(.done))
                 },
-                label: { Text("Close") }
+                label: { Text("general.close") }
             )
-            .primaryButtonStyle
+            .activeButtonStyle
             .frame(height: 50)
             .padding()
 
-            Text("amount: \(viewStore.amount.decimalString())")
-            + Text(" address: \(viewStore.address)")
-            + Text(" memo: \(viewStore.memoState.text.data)")
+            Text("send.amount".localized("\(viewStore.amount.decimalString())"))
+            + Text("send.address".localized("\(viewStore.address)"))
+            + Text("send.memo".localized("\(viewStore.memoState.text.data)"))
 
             Spacer()
         }

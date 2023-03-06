@@ -68,24 +68,6 @@ struct EnumeratedChip_Previews: PreviewProvider {
 
         grid
             .applyScreenBackground()
-            .previewLayout(.fixed(width: 428, height: 200))
-
-        grid
-            .applyScreenBackground()
-            .previewLayout(.fixed(width: 428, height: 200))
-
-        grid
-            .applyScreenBackground()
-            .preferredColorScheme(.dark)
-            .previewLayout(.fixed(width: 428, height: 200))
-
-        grid
-            .applyScreenBackground()
-            .previewLayout(.fixed(width: 390, height: 200))
-
-        grid
-            .applyScreenBackground()
-            .preferredColorScheme(.dark)
             .previewLayout(.fixed(width: 390, height: 200))
 
         grid
@@ -94,16 +76,6 @@ struct EnumeratedChip_Previews: PreviewProvider {
 
         grid
             .applyScreenBackground()
-            .preferredColorScheme(.dark)
-            .previewLayout(.fixed(width: 375, height: 200))
-
-        grid
-            .applyScreenBackground()
-            .previewLayout(.fixed(width: 320, height: 200))
-
-        grid
-            .applyScreenBackground()
-            .preferredColorScheme(.dark)
             .previewLayout(.fixed(width: 320, height: 200))
     }
 }

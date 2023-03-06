@@ -55,9 +55,8 @@ struct MultilineTextEditorModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .foregroundColor(Asset.Colors.Text.importSeedEditor.color)
+            .foregroundColor(Asset.Colors.Mfp.fontDark.color)
             .padding()
-            .background(backgroundColor)
             .overlay(
                 Rectangle()
                     .stroke(outlineColor, lineWidth: 2)
@@ -92,6 +91,6 @@ struct MultipleLineTextField_Previews: PreviewProvider {
         .frame(height: 200)
         .padding()
         .applyScreenBackground()
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(.light)
     }
 }

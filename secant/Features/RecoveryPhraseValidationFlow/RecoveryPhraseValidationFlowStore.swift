@@ -100,7 +100,7 @@ struct RecoveryPhraseValidationFlowReducer: ReducerProtocol {
             feedbackGenerator.generateErrorFeedback()
 
         case .updateDestination(let destination):
-            guard let destination = destination else {
+            guard let destination else {
                 state = randomRecoveryPhrase.random(state.phrase)
                 return .none
             }

@@ -28,10 +28,10 @@ struct OnboardingHeaderView: View {
             VStack {
                 HStack {
                     if !viewStore.isInitialStep && viewStore.walletConfig.isEnabled(.onboardingFlow) {
-                        Button("Back") {
+                        Button("general.back") {
                             viewStore.send(.back, animation: .easeInOut(duration: animationDuration))
                         }
-                        .navigationButtonStyle
+                        .activeButtonStyle
                         .frame(width: 75)
                         .disabled(viewStore.isInitialStep)
                         .minimumScaleFactor(0.1)
@@ -40,12 +40,12 @@ struct OnboardingHeaderView: View {
                     Spacer()
                     
                     if !viewStore.isInitialStep && !viewStore.isFinalStep {
-                        Button("Skip") {
+                        Button("general.skip") {
                             viewStore.send(.skip, animation: .easeInOut(duration: animationDuration))
                         }
-                        .navigationButtonStyle
+                        .activeButtonStyle
                         .disabled(viewStore.isFinalStep)
-                        .frame(width: 75)
+                        .frame(width: 150)
                         .minimumScaleFactor(0.1)
                     }
                 }

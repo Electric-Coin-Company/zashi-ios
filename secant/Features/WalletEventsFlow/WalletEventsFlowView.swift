@@ -9,7 +9,7 @@ struct WalletEventsFlowView: View {
             List {
                 walletEventsList(with: viewStore)
             }
-            .navigationTitle("Transactions")
+            .navigationTitle("transactions.title")
             .listStyle(.plain)
             .onAppear { viewStore.send(.onAppear) }
             .onDisappear(perform: { viewStore.send(.onDisappear) })
@@ -28,8 +28,6 @@ extension WalletEventsFlowView {
                     viewStore.send(.updateDestination(.showWalletEvent(walletEvent)))
                 }
                 .listRowInsets(EdgeInsets())
-                .foregroundColor(Asset.Colors.Text.body.color)
-                .listRowBackground(Color.clear)
                 .frame(height: 60)
         }
     }
@@ -41,7 +39,7 @@ struct TransactionView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             WalletEventsFlowView(store: .placeholder)
-                .preferredColorScheme(.dark)
+                .preferredColorScheme(.light)
         }
     }
 }

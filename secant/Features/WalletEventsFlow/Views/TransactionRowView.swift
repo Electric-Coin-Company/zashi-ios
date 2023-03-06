@@ -16,33 +16,28 @@ struct TransactionRowView: View {
             icon
             
             HStack {
-                VStack {
-                    HStack {
-                        Text(operationTitle)
-                            .font(.custom(FontFamily.Rubik.regular.name, size: 14))
-                        
-                        Spacer()
-                        
-                        Text(transaction.status == .received ? "+" : "")
-                            .font(.custom(FontFamily.Rubik.regular.name, size: 17))
-                        + Text("\(transaction.zecAmount.decimalString()) ZEC")
-                            .font(.custom(FontFamily.Rubik.regular.name, size: 17))
-                    }
-                    .padding(.trailing, 30)
+                VStack(alignment: .leading) {
+                    Text(operationTitle)
+                        .font(.system(size: 16))
+                        .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                     
-                    HStack {
-                        Text(transaction.address)
-                            .foregroundColor(Asset.Colors.Text.transactionRowSubtitle.color)
-                            .font(.custom(FontFamily.Rubik.regular.name, size: 12))
-                            .truncationMode(.middle)
-                            .lineLimit(1)
-                        
-                        Spacer(minLength: 80)
-                        
-                        // TODO: [#311] - Get the ZEC price from the SDK, https://github.com/zcash/secant-ios-wallet/issues/311
-                    }
-                    .padding(.trailing, 15)
+                    Text("\(transaction.date?.asHumanReadable() ?? "general.dateNotAvailable")")
+                        .font(.system(size: 16))
+                        .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+                        .opacity(0.5)
                 }
+
+                Spacer()
+
+                Group {
+                    Text(transaction.unarySymbol)
+                        .font(.system(size: 16))
+                        .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+                    + Text("balance".localized("\(transaction.zecAmount.decimalString())"))
+                        .font(.system(size: 16))
+                        .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+                }
+                .padding(.trailing, 30)
             }
             .padding(.leading, 80)
             
@@ -62,38 +57,36 @@ extension TransactionRowView {
     var operationTitle: String {
         switch transaction.status {
         case .paid:
-            return "You sent"
+            return "transaction.sent"
         case .received:
-            return "Unknown paid you"
+            return "transaction.received"
         case .failed:
             // TODO: [#392] final text to be provided (https://github.com/zcash/secant-ios-wallet/issues/392)
-            return "Transaction failed"
+            return "transaction.failed"
         case .pending:
-            return "You are sending"
+            return "transaction.sending"
         }
     }
     
     var icon: some View {
         HStack {
             switch transaction.status {
-            case .paid, .received:
-                Image(transaction.status == .received ? Asset.Assets.Icons.received.name : Asset.Assets.Icons.sent.name)
+            case .paid, .received, .pending:
+                Image(systemName: "arrow.forward")
                     .resizable()
-                    .frame(width: 60, height: 60)
+                    .frame(width: 12, height: 12)
+                    .foregroundColor(transaction.status == .received ? .yellow : .white)
+                    .padding(10)
+                    .background(Asset.Colors.Mfp.primary.color)
+                    .cornerRadius(40)
+                    .rotationEffect(Angle(degrees: transaction.status == .received ? 135 : -45))
+                    .padding(.leading, 14)
             case .failed:
                 // TODO: [#392] final icon to be provided (https://github.com/zcash/secant-ios-wallet/issues/392)
                 Circle()
                     .frame(width: 30, height: 30)
                     .foregroundColor(Color.red)
                     .padding(15)
-            case .pending:
-                LottieAnimation(
-                    isPlaying: true,
-                    filename: "endlessCircleProgress",
-                    animationType: .circularLoop
-                )
-                .frame(width: 60, height: 60)
-                .scaleEffect(0.45)
             }
             
             Spacer()
@@ -115,7 +108,48 @@ struct TransactionRowView_Previews: PreviewProvider {
                     zecAmount: Zatoshi(123_000_000)
                 )
         )
-        .preferredColorScheme(.dark)
+        .applyScreenBackground()
+        .previewLayout(.fixed(width: 428, height: 60))
+
+        TransactionRowView(
+            transaction:
+                .init(
+                    zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
+                    fee: Zatoshi(10),
+                    id: "2",
+                    status: .failed,
+                    timestamp: 1234567,
+                    zecAmount: Zatoshi(123_000_000)
+                )
+        )
+        .applyScreenBackground()
+        .previewLayout(.fixed(width: 428, height: 60))
+
+        TransactionRowView(
+            transaction:
+                .init(
+                    zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
+                    fee: Zatoshi(10),
+                    id: "2",
+                    status: .pending,
+                    timestamp: 1234567,
+                    zecAmount: Zatoshi(123_000_000)
+                )
+        )
+        .applyScreenBackground()
+        .previewLayout(.fixed(width: 428, height: 60))
+
+        TransactionRowView(
+            transaction:
+                .init(
+                    zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
+                    fee: Zatoshi(10),
+                    id: "2",
+                    status: .received,
+                    timestamp: 1234567,
+                    zecAmount: Zatoshi(123_000_000)
+                )
+        )
         .applyScreenBackground()
         .previewLayout(.fixed(width: 428, height: 60))
     }

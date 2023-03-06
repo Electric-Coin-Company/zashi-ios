@@ -42,6 +42,7 @@ struct SecantApp: App {
     var body: some Scene {
         WindowGroup {
             RootView(store: appDelegate.rootStore)
+                .preferredColorScheme(.light)
         }
     }
 }

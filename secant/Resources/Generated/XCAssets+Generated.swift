@@ -34,15 +34,7 @@ internal enum Asset {
       internal static let calloutBackupSucceeded = ImageAsset(name: "calloutBackupSucceeded")
     }
     internal enum Icons {
-      internal static let bank = ImageAsset(name: "bank")
-      internal static let checkmark = ImageAsset(name: "checkmark")
-      internal static let list = ImageAsset(name: "list")
-      internal static let profile = ImageAsset(name: "profile")
-      internal static let qrCode = ImageAsset(name: "qr-code")
-      internal static let received = ImageAsset(name: "received")
-      internal static let sent = ImageAsset(name: "sent")
-      internal static let shield = ImageAsset(name: "shield")
-      internal static let swap = ImageAsset(name: "swap")
+      internal static let qrCode = ImageAsset(name: "qrCode")
     }
     internal static let welcomeScreenLogo = ImageAsset(name: "WelcomeScreenLogo")
   }
@@ -74,6 +66,12 @@ internal enum Asset {
     }
     internal enum Cursor {
       internal static let bar = ColorAsset(name: "Bar")
+    }
+    internal enum Mfp {
+      internal static let background = ColorAsset(name: "background")
+      internal static let fontDark = ColorAsset(name: "fontDark")
+      internal static let fontLight = ColorAsset(name: "fontLight")
+      internal static let primary = ColorAsset(name: "primary")
     }
     internal enum Onboarding {
       internal static let badgeShadow = ColorAsset(name: "BadgeShadow")

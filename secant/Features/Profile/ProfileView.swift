@@ -48,7 +48,7 @@ extension ProfileView {
     func qrCodeUA(_ qrText: String) -> some View {
         Group {
             if let img = QRCodeGenerator.generate(from: qrText) {
-                Image(img, scale: 1, label: Text(String(format: NSLocalizedString("QR Code for %@", comment: ""), "\(qrText)") ))
+                Image(img, scale: 1, label: Text("qrCodeFor".localized("\(qrText)")))
                     .cornerRadius(20)
                     .overlay(
                         RoundedRectangle(cornerRadius: 20)

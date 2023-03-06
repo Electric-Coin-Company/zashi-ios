@@ -24,11 +24,13 @@ struct HomeView: View {
                 Button {
                     viewStore.send(.updateDestination(.transactionHistory))
                 } label: {
-                    Text("See transaction history")
+                    Text("home.transactionHistory")
+                        .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                 }
             }
             .applyScreenBackground()
-            .navigationBarHidden(true)
+            .navigationTitle("home.title")
+            .navigationBarTitleDisplayMode(.inline)
             .onAppear(perform: { viewStore.send(.onAppear) })
             .onDisappear(perform: { viewStore.send(.onDisappear) })
             .alert(self.store.scope(state: \.alert), dismiss: .dismissAlert)
@@ -43,6 +45,14 @@ struct HomeView: View {
                 isActive: viewStore.bindingForDestination(.transactionHistory),
                 destination: { WalletEventsFlowView(store: store.historyStore()) }
             )
+            .navigationLinkEmpty(
+                isActive: viewStore.bindingForDestination(.send),
+                destination: { SendFlowView(store: store.sendStore()) }
+            )
+            .navigationLinkEmpty(
+                isActive: viewStore.bindingForDestination(.profile),
+                destination: { ProfileView(store: store.profileStore()) }
+            )
         }
     }
 }
@@ -51,64 +61,37 @@ struct HomeView: View {
 
 extension HomeView {
     func settingsButton(_ viewStore: HomeViewStore) -> some View {
-        Image(Asset.Assets.Icons.profile.name)
+        Image(systemName: "gear")
             .resizable()
-            .frame(width: 60, height: 60)
-            .padding(.trailing, 15)
+            .frame(width: 30, height: 30)
+            .padding(15)
             .navigationLink(
                 isActive: viewStore.bindingForDestination(.settings),
                 destination: {
                     SettingsView(store: store.settingsStore())
                 }
             )
+            .tint(Asset.Colors.Mfp.primary.color)
     }
 
     func sendButton(_ viewStore: HomeViewStore) -> some View {
-        Text("Send ZEC")
-            .shadow(color: Asset.Colors.Buttons.buttonsTitleShadow.color, radius: 2, x: 0, y: 2)
-            .frame(
-                minWidth: 0,
-                maxWidth: .infinity,
-                minHeight: 0,
-                maxHeight: .infinity
-            )
-            .foregroundColor(Asset.Colors.Text.activeButtonText.color)
-            .background(Asset.Colors.Buttons.activeButton.color)
-            .cornerRadius(12)
-            .frame(height: 60)
-            .padding(.horizontal, 50)
-            .neumorphicButton()
-            .navigationLink(
-                isActive: viewStore.bindingForDestination(.send),
-                destination: {
-                    SendFlowView(store: store.sendStore())
-                }
-            )
-            .padding(.bottom, 30)
+        Button(action: {
+            viewStore.send(.updateDestination(.send))
+        }, label: {
+            Text("home.sendZec")
+        })
+        .activeButtonStyle
+        .padding(.bottom, 30)
     }
     
     func receiveButton(_ viewStore: HomeViewStore) -> some View {
-        Text("Receive ZEC")
-            .shadow(color: Asset.Colors.Buttons.buttonsTitleShadow.color, radius: 2, x: 0, y: 2)
-            .frame(
-                minWidth: 0,
-                maxWidth: .infinity,
-                minHeight: 0,
-                maxHeight: .infinity
-            )
-            .foregroundColor(Asset.Colors.Text.activeButtonText.color)
-            .background(Asset.Colors.Buttons.activeButton.color)
-            .cornerRadius(12)
-            .frame(height: 60)
-            .padding(.horizontal, 50)
-            .neumorphicButton()
-            .navigationLink(
-                isActive: viewStore.bindingForDestination(.profile),
-                destination: {
-                    ProfileView(store: store.profileStore())
-                }
-            )
-            .padding(.bottom, 30)
+        Button(action: {
+            viewStore.send(.updateDestination(.profile))
+        }, label: {
+            Text("home.receiveZec")
+        })
+        .activeButtonStyle
+        .padding(.bottom, 30)
     }
     
     func balance(_ viewStore: HomeViewStore) -> some View {
@@ -116,20 +99,17 @@ extension HomeView {
             Button {
                 viewStore.send(.updateDestination(.balanceBreakdown))
             } label: {
-                Text("$\(viewStore.shieldedBalance.data.total.decimalString())")
-                    .font(.custom(FontFamily.Zboto.regular.name, size: 40))
-                    .foregroundColor(Asset.Colors.Text.balanceText.color)
+                Text("balance".localized("\(viewStore.shieldedBalance.data.total.decimalString())"))
+                    .font(.system(size: 32))
+                    .fontWeight(.bold)
+                    .accessDebugMenuWithHiddenGesture {
+                        viewStore.send(.debugMenuStartup)
+                    }
             }
             
-            Text("$\(viewStore.totalCurrencyBalance.decimalString())")
-                .font(.custom(FontFamily.Rubik.regular.name, size: 13))
-                .opacity(0.6)
-            
             Text("\(viewStore.synchronizerStatusSnapshot.message)")
-                .accessDebugMenuWithHiddenGesture {
-                    viewStore.send(.debugMenuStartup)
-                }
         }
+        .foregroundColor(Asset.Colors.Mfp.primary.color)
     }
 }
 
@@ -139,11 +119,6 @@ struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             HomeView(store: .placeholder)
-        }
-
-        NavigationView {
-            HomeView(store: .placeholder)
-                .preferredColorScheme(.dark)
         }
     }
 }

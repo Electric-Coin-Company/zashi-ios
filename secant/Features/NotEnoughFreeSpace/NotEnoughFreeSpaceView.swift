@@ -13,7 +13,7 @@ struct NotEnoughFreeSpaceView: View {
     let viewStore: HomeViewStore
     
     var body: some View {
-        Text("Not enough space on disk to do synchronisation!")
+        Text("nefs.message")
             .applyScreenBackground()
     }
 }

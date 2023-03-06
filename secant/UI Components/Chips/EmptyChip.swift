@@ -66,6 +66,6 @@ struct EmptyChip_Previews: PreviewProvider {
             }
         }
         .previewLayout(.fixed(width: 200, height: 100))
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(.light)
     }
 }

@@ -12,7 +12,6 @@ struct SandboxReducer: ReducerProtocol {
             case recoveryPhraseDisplay
             case profile
             case scan
-            case request
         }
         var walletEventsState: WalletEventsFlowReducer.State
         var profileState: ProfileReducer.State

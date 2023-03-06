@@ -47,7 +47,7 @@ struct SingleLineTextField<TitleAccessoryContent, InputPrefixContent, InputAcces
             .frame(maxHeight: 50)
             .overlay(
                 Rectangle()
-                    .stroke(.white, lineWidth: 2)
+                    .stroke(Asset.Colors.Mfp.primary.color, lineWidth: 2)
             )
             .padding(.vertical, 5)
         }
@@ -71,7 +71,7 @@ struct SingleLineTextField_Previews: PreviewProvider {
                                 action: {
                                     viewStore.send(.set("\(500)".redacted))
                                 },
-                                label: { Text("Max") }
+                                label: { Text("general.max") }
                             )
                             .textFieldTitleAccessoryButtonStyle
                         },
@@ -110,7 +110,7 @@ struct SingleLineTextField_Previews: PreviewProvider {
                 reducer: TCATextFieldReducer()
             )
         )
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(.light)
         .padding(.horizontal, 50)
         .applyScreenBackground()
         .previewLayout(.fixed(width: 500, height: 200))

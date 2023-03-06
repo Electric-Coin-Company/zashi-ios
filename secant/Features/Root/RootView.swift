@@ -101,12 +101,14 @@ private struct FeatureFlagWrapper: Identifiable, Equatable, Comparable {
 private extension RootView {
     @ViewBuilder func debugView(_ viewStore: RootViewStore) -> some View {
         VStack(alignment: .leading) {
-            Button("Back") {
-                viewStore.goToDestination(.home)
+            if viewStore.destinationState.previousDestination == .home {
+                Button("general.back") {
+                    viewStore.goToDestination(.home)
+                }
+                .activeButtonStyle
+                .frame(width: 75, height: 40, alignment: .leading)
+                .padding()
             }
-            .navigationButtonStyle
-            .frame(width: 75, height: 40, alignment: .leading)
-            .padding()
 
             List {
                 Section(header: Text("Navigation Stack Destinations")) {

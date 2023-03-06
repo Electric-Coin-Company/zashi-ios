@@ -34,14 +34,14 @@ struct ScanView: View {
                     VStack {
                         Spacer()
                         
-                        Text("We will validate any Zcash URI and take you to the appropriate action.")
+                        Text("scan.info")
                             .padding(.bottom, 10)
                         
                         if let scannedValue = viewStore.scannedValue {
                             Text("\(scannedValue)")
                                 .foregroundColor(viewStore.isValidValue ? .green : .red)
                         } else {
-                            Text("Scanning...")
+                            Text("scan.scanning")
                         }
                     }
                     .padding()

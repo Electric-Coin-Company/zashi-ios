@@ -17,12 +17,14 @@ struct RecoveryPhraseDisplayView: View {
                 if let groups = viewStore.phrase?.toGroups(groupSizeOverride: 2) {
                     VStack(spacing: 20) {
                         Text("recoveryPhraseDisplay.title")
-                            .titleText()
+                            .font(.system(size: 20))
+                            .fontWeight(.bold)
                             .multilineTextAlignment(.center)
                         
                         VStack(alignment: .center, spacing: 4) {
                             Text("recoveryPhraseDisplay.description")
-                                .bodyText()
+                                .font(.system(size: 16))
+                                .padding(.horizontal, 20)
                         }
                     }
                     .padding(.top, 0)
@@ -115,11 +117,5 @@ struct RecoveryPhraseDisplayView_Previews: PreviewProvider {
         NavigationView {
             RecoveryPhraseDisplayView(store: store)
         }
-        .environment(\.sizeCategory, .accessibilityLarge)
-
-        NavigationView {
-            RecoveryPhraseDisplayView(store: store)
-        }
-        .preferredColorScheme(.dark)
     }
 }

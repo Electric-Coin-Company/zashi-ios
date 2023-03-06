@@ -113,6 +113,6 @@ struct CircularProgress_Previews: PreviewProvider {
             .offset(x: 40, y: 200)
         }
         .applyScreenBackground()
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(.light)
     }
 }
