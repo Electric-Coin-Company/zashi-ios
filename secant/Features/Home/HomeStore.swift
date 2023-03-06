@@ -52,6 +52,12 @@ struct HomeReducer: ReducerProtocol {
             }
             return false
         }
+
+        var isSendButtonDisabled: Bool {
+            // If the destination is `.send` the button must be enabled
+            // to avoid involuntary navigation pop.
+            self.destination != .send && self.isSyncing
+        }
     }
 
     enum Action: Equatable {
