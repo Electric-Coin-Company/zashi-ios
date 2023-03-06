@@ -387,7 +387,6 @@
 		9E39114C2848EEB90073DD9A /* DatabaseFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3911462848EEB90073DD9A /* DatabaseFiles.swift */; };
 		9E39115E284E3E350073DD9A /* secantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A2526B364180058B01E /* secantUITests.swift */; };
 		9E4DC6E227C4C6B700E657F4 /* SecantButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */; };
-		9E55074629B21EB200A3043C /* LaunchScreen2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9E55074529B21EB200A3043C /* LaunchScreen2.storyboard */; };
 		9E5BF63F2819542C00BA3F17 /* WalletEventsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF63E2819542C00BA3F17 /* WalletEventsTests.swift */; };
 		9E5BF641281FD7B600BA3F17 /* TransactionFailedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF640281FD7B600BA3F17 /* TransactionFailedView.swift */; };
 		9E5BF644281FEC9900BA3F17 /* SendTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF643281FEC9900BA3F17 /* SendTests.swift */; };
@@ -704,7 +703,6 @@
 		9E3911462848EEB90073DD9A /* DatabaseFiles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseFiles.swift; sourceTree = "<group>"; };
 		9E3911472848EEB90073DD9A /* WalletStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletStorage.swift; sourceTree = "<group>"; };
 		9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecantButtonStyles.swift; sourceTree = "<group>"; };
-		9E55074529B21EB200A3043C /* LaunchScreen2.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen2.storyboard; sourceTree = "<group>"; };
 		9E5BF63B2818305D00BA3F17 /* TransactionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionState.swift; sourceTree = "<group>"; };
 		9E5BF63E2819542C00BA3F17 /* WalletEventsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletEventsTests.swift; sourceTree = "<group>"; };
 		9E5BF640281FD7B600BA3F17 /* TransactionFailedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionFailedView.swift; sourceTree = "<group>"; };
@@ -941,7 +939,6 @@
 		0D4E79FC26B364170058B01E = {
 			isa = PBXGroup;
 			children = (
-				9E55074529B21EB200A3043C /* LaunchScreen2.storyboard */,
 				0D4E7A0726B364170058B01E /* secant */,
 				0D4E7A1926B364180058B01E /* secantTests */,
 				0D4E7A2426B364180058B01E /* secantUITests */,
@@ -2326,7 +2323,6 @@
 				0DACFA9727209FA70039EEA5 /* Roboto-Black.ttf in Resources */,
 				0DACFA9C27209FA70039EEA5 /* Roboto-ThinItalic.ttf in Resources */,
 				0D3B01EC298DAF89007EBCDA /* GoogleService-Info.plist in Resources */,
-				9E55074629B21EB200A3043C /* LaunchScreen2.storyboard in Resources */,
 				9E37A2B827C8F59F00AE57B3 /* Localizable.strings in Resources */,
 				0DACFA9627209FA70039EEA5 /* Roboto-Thin.ttf in Resources */,
 				0D2ACE8026C2C67100D62E3C /* Zboto.otf in Resources */,

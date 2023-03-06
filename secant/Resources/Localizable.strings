@@ -121,7 +121,7 @@
 "transactionDetail.title" = "Transaction detail";
 
 // MARK: - Not Enough Free Space
-"nefs.message" = "Not enough space on disk to do synchronisation!"
+"nefs.message" = "Not enough space on disk to do synchronisation!";
 
 // MARK: - Errors
 "error.rollBack" = "possible roll back";

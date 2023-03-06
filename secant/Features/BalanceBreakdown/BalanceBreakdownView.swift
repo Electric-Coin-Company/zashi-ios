@@ -62,11 +62,14 @@ extension BalanceBreakdownView {
         VStack(alignment: .leading) {
             Text("\(title)")
                 .foregroundColor(titleColor)
-            Text("balance".localized(
-                "\(balance.decimalString(formatter: NumberFormatter.zcashNumberFormatter8FractionDigits))"))
-                .font(.system(size: 32))
-                .fontWeight(.bold)
-                .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+            Text(
+                "balance".localized(
+                    "\(balance.decimalString(formatter: NumberFormatter.zcashNumberFormatter8FractionDigits))"
+                )
+            )
+            .font(.system(size: 32))
+            .fontWeight(.bold)
+            .foregroundColor(Asset.Colors.Mfp.fontDark.color)
         }
     }
 }
