@@ -14,9 +14,14 @@ typealias ImportWalletViewStore = ViewStore<ImportWalletReducer.State, ImportWal
 
 struct ImportWalletReducer: ReducerProtocol {
     struct State: Equatable {
+        enum Destination: Equatable {
+            case birthday
+        }
+
         @BindingState var alert: AlertState<ImportWalletReducer.Action>?
         var birthdayHeight = "".redacted
         var birthdayHeightValue: RedactableBlockHeight?
+        var destination: Destination?
         var importedSeedPhrase = "".redacted
         var isValidMnemonic = false
         var isValidNumberOfWords = false
@@ -48,6 +53,7 @@ struct ImportWalletReducer: ReducerProtocol {
         case onAppear
         case seedPhraseInputChanged(RedactableString)
         case successfullyRecovered
+        case updateDestination(ImportWalletReducer.State.Destination?)
     }
 
     @Dependency(\.mnemonic) var mnemonic
@@ -135,6 +141,10 @@ struct ImportWalletReducer: ReducerProtocol {
                 
                 return .none
                 
+            case .updateDestination(let destination):
+                state.destination = destination
+                return .none
+
             case .importPrivateOrViewingKey:
                 return .none
                 
@@ -151,6 +161,15 @@ struct ImportWalletReducer: ReducerProtocol {
 // MARK: - ViewStore
 
 extension ImportWalletViewStore {
+    func bindingForDestination(_ destination: ImportWalletReducer.State.Destination) -> Binding<Bool> {
+        self.binding(
+            get: { $0.destination == destination },
+            send: { isActive in
+                return .updateDestination(isActive ? destination : nil)
+            }
+        )
+    }
+
     func bindingForRedactableSeedPhrase(_ importedSeedPhrase: RedactableString) -> Binding<String> {
         self.binding(
             get: { _ in importedSeedPhrase.data },

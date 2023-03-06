@@ -18,4 +18,13 @@ class ImportWalletSnapshotTests: XCTestCase {
         
         addAttachments(ImportWalletView(store: store))
     }
+    
+    func testImportBirthdaySnapshot() throws {
+        let store = ImportWalletStore(
+            initialState: .placeholder,
+            reducer: ImportWalletReducer()
+        )
+        
+        addAttachments(ImportBirthdayView(store: store))
+    }
 }
