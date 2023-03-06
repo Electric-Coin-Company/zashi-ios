@@ -34,14 +34,14 @@ struct ScanView: View {
                     VStack {
                         Spacer()
                         
-                        Text("scan.info")
+                        Text(L10n.Scan.info)
                             .padding(.bottom, 10)
                         
                         if let scannedValue = viewStore.scannedValue {
                             Text("\(scannedValue)")
                                 .foregroundColor(viewStore.isValidValue ? .green : .red)
                         } else {
-                            Text("scan.scanning")
+                            Text(L10n.Scan.scanning)
                         }
                     }
                     .padding()

@@ -21,7 +21,7 @@ struct TransactionRowView: View {
                         .font(.system(size: 16))
                         .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                     
-                    Text("\(transaction.date?.asHumanReadable() ?? "general.dateNotAvailable")")
+                    Text("\(transaction.date?.asHumanReadable() ?? L10n.General.dateNotAvailable)")
                         .font(.system(size: 16))
                         .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                         .opacity(0.5)
@@ -33,7 +33,7 @@ struct TransactionRowView: View {
                     Text(transaction.unarySymbol)
                         .font(.system(size: 16))
                         .foregroundColor(Asset.Colors.Mfp.fontDark.color)
-                    + Text("balance".localized("\(transaction.zecAmount.decimalString())"))
+                    + Text(L10n.balance(transaction.zecAmount.decimalString()))
                         .font(.system(size: 16))
                         .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                 }
@@ -57,14 +57,14 @@ extension TransactionRowView {
     var operationTitle: String {
         switch transaction.status {
         case .paid:
-            return "transaction.sent"
+            return L10n.Transaction.sent
         case .received:
-            return "transaction.received"
+            return L10n.Transaction.received
         case .failed:
             // TODO: [#392] final text to be provided (https://github.com/zcash/secant-ios-wallet/issues/392)
-            return "transaction.failed"
+            return L10n.Transaction.failed
         case .pending:
-            return "transaction.sending"
+            return L10n.Transaction.sending
         }
     }
     

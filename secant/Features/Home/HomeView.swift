@@ -24,12 +24,12 @@ struct HomeView: View {
                 Button {
                     viewStore.send(.updateDestination(.transactionHistory))
                 } label: {
-                    Text("home.transactionHistory")
+                    Text(L10n.Home.transactionHistory)
                         .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                 }
             }
             .applyScreenBackground()
-            .navigationTitle("home.title")
+            .navigationTitle(L10n.Home.title)
             .navigationBarTitleDisplayMode(.inline)
             .onAppear(perform: { viewStore.send(.onAppear) })
             .onDisappear(perform: { viewStore.send(.onDisappear) })
@@ -78,7 +78,7 @@ extension HomeView {
         Button(action: {
             viewStore.send(.updateDestination(.send))
         }, label: {
-            Text("home.sendZec")
+            Text(L10n.Home.sendZec)
         })
         .activeButtonStyle
         .padding(.bottom, 30)
@@ -88,7 +88,7 @@ extension HomeView {
         Button(action: {
             viewStore.send(.updateDestination(.profile))
         }, label: {
-            Text("home.receiveZec")
+            Text(L10n.Home.receiveZec)
         })
         .activeButtonStyle
         .padding(.bottom, 30)
@@ -99,7 +99,7 @@ extension HomeView {
             Button {
                 viewStore.send(.updateDestination(.balanceBreakdown))
             } label: {
-                Text("balance".localized("\(viewStore.shieldedBalance.data.total.decimalString())"))
+                Text(L10n.balance(viewStore.shieldedBalance.data.total.decimalString()))
                     .font(.system(size: 32))
                     .fontWeight(.bold)
                     .accessDebugMenuWithHiddenGesture {

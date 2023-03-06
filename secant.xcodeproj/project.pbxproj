@@ -322,6 +322,8 @@
 		3469F18229ACD70500A07146 /* OnboardingFlowFeatureFlagTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3469F18129ACD70500A07146 /* OnboardingFlowFeatureFlagTests.swift */; };
 		346D41E428DF0B8600963F36 /* CheckCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346D41E328DF0B8600963F36 /* CheckCircle.swift */; };
 		34BF09092927C98000222134 /* Memo+toString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BF09082927C98000222134 /* Memo+toString.swift */; };
+		34C4329029B62D8D00F74045 /* L10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C4328F29B62D8D00F74045 /* L10n.swift */; };
+		34C4329129B62D8D00F74045 /* L10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C4328F29B62D8D00F74045 /* L10n.swift */; };
 		34DA414728E4385800F8CC61 /* TransactionSendingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34DA414628E4385800F8CC61 /* TransactionSendingView.swift */; };
 		34DA414928E439CD00F8CC61 /* sendingTransaction.json in Resources */ = {isa = PBXBuildFile; fileRef = 34DA414828E439CD00F8CC61 /* sendingTransaction.json */; };
 		34E0AF1128DEE5220034CF37 /* Wedge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0AF1028DEE5220034CF37 /* Wedge.swift */; };
@@ -647,6 +649,7 @@
 		3469F18129ACD70500A07146 /* OnboardingFlowFeatureFlagTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlowFeatureFlagTests.swift; sourceTree = "<group>"; };
 		346D41E328DF0B8600963F36 /* CheckCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckCircle.swift; sourceTree = "<group>"; };
 		34BF09082927C98000222134 /* Memo+toString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Memo+toString.swift"; sourceTree = "<group>"; };
+		34C4328F29B62D8D00F74045 /* L10n.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = L10n.swift; sourceTree = "<group>"; };
 		34DA414628E4385800F8CC61 /* TransactionSendingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionSendingView.swift; sourceTree = "<group>"; };
 		34DA414828E439CD00F8CC61 /* sendingTransaction.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sendingTransaction.json; sourceTree = "<group>"; };
 		34E0AF1028DEE5220034CF37 /* Wedge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wedge.swift; sourceTree = "<group>"; };
@@ -1587,6 +1590,7 @@
 			isa = PBXGroup;
 			children = (
 				660558F5270C862F009D6954 /* Fonts+Generated.swift */,
+				34C4328F29B62D8D00F74045 /* L10n.swift */,
 				660558F6270C862F009D6954 /* XCAssets+Generated.swift */,
 			);
 			path = Generated;
@@ -2479,6 +2483,7 @@
 				"$(SRCROOT)/swiftlint.yml",
 				"$(SRCROOT)/secant/Resources/Colors.xcassets",
 				"$(SRCROOT)/secant/Resources/Assets/xcassets",
+				"$(SRCROOT)/Resources/Localizable.strings",
 			);
 			name = SwiftGen;
 			outputFileListPaths = (
@@ -2486,6 +2491,7 @@
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Resources/Generated/XCAssets+Generated.swift",
 				"$(DERIVED_FILE_DIR)/Resources/Generated/Fonts+Generated.swift",
+				"$(DERIVED_FILE_DIR)/Resources/Generated/L10n.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2607,6 +2613,7 @@
 				0D26AEEF299E8196005260EE /* ZcashSDKEnvironmentTestKey.swift in Sources */,
 				0D26AEF0299E8196005260EE /* TCALoggerReducer.swift in Sources */,
 				0D26AEF1299E8196005260EE /* ConditionalModifier.swift in Sources */,
+				34C4329129B62D8D00F74045 /* L10n.swift in Sources */,
 				0D26AEF2299E8196005260EE /* MultipleLineTextField.swift in Sources */,
 				0D26AEF3299E8196005260EE /* NotEnoughFreeSpaceView.swift in Sources */,
 				0D26AEF4299E8196005260EE /* LocalAuthenticationHandlerInterface.swift in Sources */,
@@ -2827,6 +2834,7 @@
 				9E153A6F292167FF00112F41 /* ZcashSDKEnvironmentTestKey.swift in Sources */,
 				9E0F5743297EB96C005304FA /* TCALoggerReducer.swift in Sources */,
 				0DF482BA2787ADA800EB37D6 /* ConditionalModifier.swift in Sources */,
+				34C4329029B62D8D00F74045 /* L10n.swift in Sources */,
 				9E7225F3288AB6DD00DF7F17 /* MultipleLineTextField.swift in Sources */,
 				3448CB3228E47666006ADEDB /* NotEnoughFreeSpaceView.swift in Sources */,
 				9EBDF985291F91EF000A1A05 /* LocalAuthenticationHandlerInterface.swift in Sources */,

@@ -16,13 +16,13 @@ struct RecoveryPhraseDisplayView: View {
             VStack(alignment: .center, spacing: 0) {
                 if let groups = viewStore.phrase?.toGroups(groupSizeOverride: 2) {
                     VStack(spacing: 20) {
-                        Text("recoveryPhraseDisplay.title")
+                        Text(L10n.RecoveryPhraseDisplay.title)
                             .font(.system(size: 20))
                             .fontWeight(.bold)
                             .multilineTextAlignment(.center)
                         
                         VStack(alignment: .center, spacing: 4) {
-                            Text("recoveryPhraseDisplay.description")
+                            Text(L10n.RecoveryPhraseDisplay.description)
                                 .font(.system(size: 16))
                                 .padding(.horizontal, 20)
                         }
@@ -58,14 +58,14 @@ struct RecoveryPhraseDisplayView: View {
                     VStack {
                         Button(
                             action: { viewStore.send(.finishedPressed) },
-                            label: { Text("recoveryPhraseDisplay.button.wroteItDown") }
+                            label: { Text(L10n.RecoveryPhraseDisplay.Button.wroteItDown) }
                         )
                         .activeButtonStyle
                         .frame(height: 60)
                     }
                     .padding()
                 } else {
-                    Text("recoveryPhraseDisplay.noWords")
+                    Text(L10n.RecoveryPhraseDisplay.noWords)
                 }
             }
             .padding(.bottom, 20)

@@ -16,19 +16,19 @@ struct OnboardingFooterView: View {
         WithViewStore(self.store) { viewStore in
             VStack(spacing: 5) {
                 if viewStore.isFinalStep {
-                    Button("onboarding.button.newWallet") {
+                    Button(L10n.Onboarding.Button.newWallet) {
                         viewStore.send(.createNewWallet, animation: .easeInOut(duration: animationDuration))
                     }
                     .activeButtonStyle
                     .minimumScaleFactor(0.1)
 
-                    Button("onboarding.button.importWallet") {
+                    Button(L10n.Onboarding.Button.importWallet) {
                         viewStore.send(.importExistingWallet, animation: .easeInOut(duration: animationDuration))
                     }
                     .activeButtonStyle
                     .minimumScaleFactor(0.1)
                 } else {
-                    Button("general.next") {
+                    Button(L10n.General.next) {
                         viewStore.send(.next, animation: .easeInOut(duration: animationDuration))
                     }
                     .activeButtonStyle

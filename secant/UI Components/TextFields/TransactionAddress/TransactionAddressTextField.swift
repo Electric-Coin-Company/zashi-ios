@@ -28,7 +28,7 @@ struct TransactionAddressTextField: View {
                                     viewStore.send(.clearAddress)
                                 },
                                 label: {
-                                    Text("general.clear")
+                                    Text(L10n.General.clear)
                                 }
                             )
                             .textFieldTitleAccessoryButtonStyle

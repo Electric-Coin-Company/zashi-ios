@@ -9,7 +9,7 @@ struct WalletEventsFlowView: View {
             List {
                 walletEventsList(with: viewStore)
             }
-            .navigationTitle("transactions.title")
+            .navigationTitle(L10n.Transactions.title)
             .listStyle(.plain)
             .onAppear { viewStore.send(.onAppear) }
             .onDisappear(perform: { viewStore.send(.onDisappear) })

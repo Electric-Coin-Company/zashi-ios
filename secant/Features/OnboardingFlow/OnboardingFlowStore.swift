@@ -21,8 +21,8 @@ struct OnboardingFlowReducer: ReducerProtocol {
         
         struct Step: Equatable, Identifiable {
             let id: UUID
-            let title: LocalizedStringKey
-            let description: LocalizedStringKey
+            let title: String
+            let description: String
             let background: Image
         }
 
@@ -114,26 +114,26 @@ extension OnboardingFlowReducer.State {
         uniqueElements: [
             Step(
                 id: UUID(),
-                title: "onboarding.step1.title",
-                description: "onboarding.step1.description",
+                title: L10n.Onboarding.Step1.title,
+                description: L10n.Onboarding.Step1.description,
                 background: Asset.Assets.Backgrounds.callout1.image
             ),
             Step(
                 id: UUID(),
-                title: "onboarding.step2.title",
-                description: "onboarding.step2.description",
+                title: L10n.Onboarding.Step2.title,
+                description: L10n.Onboarding.Step2.description,
                 background: Asset.Assets.Backgrounds.callout2.image
             ),
             Step(
                 id: UUID(),
-                title: "onboarding.step3.title",
-                description: "onboarding.step3.description",
+                title: L10n.Onboarding.Step3.title,
+                description: L10n.Onboarding.Step3.description,
                 background: Asset.Assets.Backgrounds.callout3.image
             ),
             Step(
                 id: UUID(),
-                title: "onboarding.step4.title",
-                description: "onboarding.step4.description",
+                title: L10n.Onboarding.Step4.title,
+                description: L10n.Onboarding.Step4.description,
                 background: Asset.Assets.Backgrounds.callout4.image
             )
         ]

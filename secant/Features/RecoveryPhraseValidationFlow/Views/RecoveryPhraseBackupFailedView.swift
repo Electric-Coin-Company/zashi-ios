@@ -18,7 +18,7 @@ struct RecoveryPhraseBackupFailedView: View {
             GeometryReader { proxy in
                 VStack {
                     VStack(alignment: .center, spacing: 20) {
-                        Text("validationFailed.title")
+                        Text(L10n.ValidationFailed.title)
                             .titleText()
                             .multilineTextAlignment(.center)
                     }
@@ -34,12 +34,12 @@ struct RecoveryPhraseBackupFailedView: View {
 
                     VStack(alignment: .center, spacing: 40) {
                         VStack(alignment: .center, spacing: 20) {
-                            Text("validationFailed.description")
+                            Text(L10n.ValidationFailed.description)
                                 .paragraphText()
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal, 30)
 
-                            Text("validationFailed.incorrectBackupDescription")
+                            Text(L10n.ValidationFailed.incorrectBackupDescription)
                                 .paragraphText()
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal, 20)
@@ -50,7 +50,7 @@ struct RecoveryPhraseBackupFailedView: View {
                                 viewStore.send(.reset)
                                 presentationMode.wrappedValue.dismiss()
                             },
-                            label: { Text("validationFailed.button.tryAgain") }
+                            label: { Text(L10n.ValidationFailed.Button.tryAgain) }
                         )
                         .activeButtonStyle
                         .frame(

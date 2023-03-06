@@ -16,11 +16,11 @@ struct RecoveryPhraseBackupSucceededView: View {
             GeometryReader { proxy in
                 VStack {
                     VStack(spacing: 20) {
-                        Text("validationSuccess.title")
+                        Text(L10n.ValidationSuccess.title)
                             .titleText()
                             .multilineTextAlignment(.center)
 
-                        Text("validationSuccess.description")
+                        Text(L10n.ValidationSuccess.description)
                             .paragraphText()
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 45)
@@ -44,7 +44,7 @@ struct RecoveryPhraseBackupSucceededView: View {
                                 viewStore.send(.proceedToHome, animation: .easeIn(duration: 1))
                             },
                             label: {
-                                Text("validationSuccess.button.goToWallet")
+                                Text(L10n.ValidationSuccess.Button.goToWallet)
                                     .fixedSize(horizontal: false, vertical: true)
                             }
                         )
@@ -59,7 +59,7 @@ struct RecoveryPhraseBackupSucceededView: View {
                                 )
                             },
                             label: {
-                                Text("validationSuccess.button.phraseAgain")
+                                Text(L10n.ValidationSuccess.Button.phraseAgain)
                                     .fixedSize(horizontal: false, vertical: true)
                             }
                         )
