@@ -1,4 +1,31 @@
 # Changelog
+# 0.0.1 build 44
+This is the baseline build for iOS Re-Scoping epic. 
+- [#819] build and release from tag 0.0.1-44
+- [#566] Change colors app-wide (#603)
+- [#613] Adopt ZcashLightClientKit version 0.19.0-beta (#616)
+- [#614] Fix error handling when calling wipe (#615)
+- [#605] Change "Your UA" for "Your Address" (#606)
+- [#553] Add Mainnet and Testnet icons (#612)
+- Test mainnet release (#593)
+- [#557] Nav Changes (#602)
+- [#576] All the errors are handled by alert (#589)
+
+# 0.0.1 build 43
+- [#529] Replace OSLogger_ with OSLogger from the SDK (#590)
+- [#556] Hide post-seed backup flow and rework screenshot tests (#591)
+- [#575] Add support for sending feedback (#588)
+- [#546] Update how swiftlint is used (#547)
+- [#586] secantTests.AppInitializationTests Tests fail on CI (#587)
+- [#535] Use 0.18.0's wipe() instead of obsolete nuke approach (#549)
+- [#554] Add ability to update feature flags from debug screen (#583)
+- [#554] Use WalletConfigProvider and WalletConfig in the TCA (#582)
+- [#565] Add transaction details as standalone screen (#581)
+- [#562] Clean up the Send screen (#580)
+- [#577] Fix TCA warning (#578)
+- [#806] Mainnet target is using testnet endpoint (#579)
+# 0.0.1 build 42
+- CI changes that fixed release of mainnet and testnet apps to testflight
 # 0.0.1 build 41
 [#554] Add WalletConfigProvider (#574)
 [#560] Remove QR code scanning from the home screen (#571)
