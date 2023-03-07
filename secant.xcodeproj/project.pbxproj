@@ -1136,12 +1136,12 @@
 		2E35F99027B28E6800EB79CD /* TextFields */ = {
 			isa = PBXGroup;
 			children = (
+				2E35F99127B28E7600EB79CD /* SingleLineTextField.swift */,
+				2EDA07A527EDE31100D6F09B /* Components */,
 				9E7225F4288AC6F300DF7F17 /* MultiLineTextField */,
 				9E7FE0F0282E80C100C374E8 /* TCATextField */,
-				2E35F99127B28E7600EB79CD /* SingleLineTextField.swift */,
 				9E5BF64C2823E84300BA3F17 /* TransactionAddress */,
 				9E5BF64B2823C91200BA3F17 /* TransactionAmount */,
-				2EDA07A527EDE31100D6F09B /* Components */,
 			);
 			path = TextFields;
 			sourceTree = "<group>";
@@ -1619,7 +1619,6 @@
 		9E7FE0BB282D1DC200C374E8 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				9E0F573F297E7F00005304FA /* Logging */,
 				9E7FE0D4282D281800C374E8 /* Array+Chunked.swift */,
 				F9C165B3274031F600592F76 /* Bindings.swift */,
 				0DACFA7E27208CE00039EEA5 /* Clamped.swift */,
@@ -1637,6 +1636,7 @@
 				0DACFA8027208D940039EEA5 /* UInt+SuperscriptText.swift */,
 				0D7CE63327349B5D0020E050 /* View+WhenDraggable.swift */,
 				F9EEB8152742C2210032EEB8 /* WithStateBinding.swift */,
+				9E0F573F297E7F00005304FA /* Logging */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -2402,9 +2402,10 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/swiftlint.yml",
 				"$(SRCROOT)/secant/Resources/Colors.xcassets",
 				"$(SRCROOT)/secant/Resources/Assets/xcassets",
+				"$(SRCROOT)/secant/Resources/Localizable.strings",
+				"$(SRCROOT)/swiftgen.yml",
 			);
 			name = SwiftGen;
 			outputFileListPaths = (
@@ -2412,6 +2413,7 @@
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Resources/Generated/XCAssets+Generated.swift",
 				"$(DERIVED_FILE_DIR)/Resources/Generated/Fonts+Generated.swift",
+				"$(DERIVED_FILE_DIR)/Resources/Generated/L10n.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2500,10 +2502,10 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/swiftlint.yml",
 				"$(SRCROOT)/secant/Resources/Colors.xcassets",
 				"$(SRCROOT)/secant/Resources/Assets/xcassets",
-				"$(SRCROOT)/Resources/Localizable.strings",
+				"$(SRCROOT)/secant/Resources/Localizable.strings",
+				"$(SRCROOT)/swiftgen.yml",
 			);
 			name = SwiftGen;
 			outputFileListPaths = (

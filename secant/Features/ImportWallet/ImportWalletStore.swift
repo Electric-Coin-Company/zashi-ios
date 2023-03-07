@@ -30,7 +30,7 @@ struct ImportWalletReducer: ReducerProtocol {
         
         var mnemonicStatus: String {
             if isValidMnemonic {
-                return "VALID SEED PHRASE"
+                return L10n.ImportWallet.Seed.valid
             } else {
                 return "\(wordsCount)/\(maxWordsCount)"
             }
@@ -118,10 +118,10 @@ struct ImportWalletReducer: ReducerProtocol {
                     // notify user
                     // TODO: [#221] Proper Error/Success handling (https://github.com/zcash/secant-ios-wallet/issues/221)
                     state.alert = AlertState(
-                        title: TextState("Success"),
-                        message: TextState("The wallet has been successfully recovered."),
+                        title: TextState(L10n.General.success),
+                        message: TextState(L10n.ImportWallet.Alert.Success.message),
                         dismissButton: .default(
-                            TextState("Ok"),
+                            TextState(L10n.General.ok),
                             action: .send(.successfullyRecovered)
                         )
                     )
@@ -130,10 +130,10 @@ struct ImportWalletReducer: ReducerProtocol {
                 } catch {
                     // TODO: [#221] Proper Error/Success handling (https://github.com/zcash/secant-ios-wallet/issues/221)
                     state.alert = AlertState(
-                        title: TextState("Failed to restore wallet"),
-                        message: TextState("Error: \(error.localizedDescription)"),
+                        title: TextState(L10n.ImportWallet.Alert.Failed.title),
+                        message: TextState(L10n.ImportWallet.Alert.Failed.message(error.localizedDescription)),
                         dismissButton: .default(
-                            TextState("Ok"),
+                            TextState(L10n.General.ok),
                             action: .send(.dismissAlert)
                         )
                     )

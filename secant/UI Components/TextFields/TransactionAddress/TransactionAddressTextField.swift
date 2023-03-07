@@ -15,8 +15,8 @@ struct TransactionAddressTextField: View {
         WithViewStore(store) { viewStore in
             VStack {
                 SingleLineTextField(
-                    placeholderText: "Valid Zcash Address",
-                    title: "To:",
+                    placeholderText: L10n.Field.TransactionAddress.validZcashAddress,
+                    title: L10n.Field.TransactionAddress.to,
                     store: store.scope(
                         state: \.textFieldState,
                         action: TransactionAddressTextFieldReducer.Action.textField

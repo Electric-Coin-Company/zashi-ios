@@ -14,20 +14,20 @@ struct ImportBirthdayView: View {
     var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
-                Text("importWallet.birthday.description")
+                Text(L10n.ImportWallet.Birthday.description)
                     .font(.system(size: 16))
                     .fontWeight(.bold)
                     .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                 
                 TextField(
-                    "importWallet.birthday.placeholder",
+                    L10n.ImportWallet.Birthday.placeholder,
                     text: viewStore.bindingForRedactableBirthday(viewStore.birthdayHeight)
                 )
                 .keyboardType(.numberPad)
                 .autocapitalization(.none)
                 .importSeedEditorModifier()
                 
-                Button("importWallet.button.restoreWallet") {
+                Button(L10n.ImportWallet.Button.restoreWallet) {
                     viewStore.send(.restoreWallet)
                 }
                 .activeButtonStyle

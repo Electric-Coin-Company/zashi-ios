@@ -65,7 +65,7 @@ struct BalanceBreakdownReducer: ReducerProtocol {
         case .updateLatestBlock:
             guard let latestBlockNumber = sdkSynchronizer.latestScannedSynchronizerState?.latestScannedHeight,
             let latestBlock = numberFormatter.string(NSDecimalNumber(value: latestBlockNumber)) else {
-                state.latestBlock = "unknown"
+                state.latestBlock = L10n.General.unknown
                 return .none
             }
             state.latestBlock = "\(latestBlock)"
@@ -79,7 +79,7 @@ struct BalanceBreakdownReducer: ReducerProtocol {
 extension BalanceBreakdownReducer.State {
     static let placeholder = BalanceBreakdownReducer.State(
         autoShieldingThreshold: Zatoshi(1_000_000),
-        latestBlock: "unknown",
+        latestBlock: L10n.General.unknown,
         shieldedBalance: Balance.zero,
         transparentBalance: Balance.zero
     )

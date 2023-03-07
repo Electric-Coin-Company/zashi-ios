@@ -14,8 +14,8 @@ struct TransactionAmountTextField: View {
     var body: some View {
         VStack {
             SingleLineTextField(
-                placeholderText: "ZEC Amount",
-                title: "Amount:",
+                placeholderText: L10n.Field.TransactionAmount.zecAmount,
+                title: L10n.Field.TransactionAmount.amount,
                 store: store.scope(
                     state: \.textFieldState,
                     action: TransactionAmountTextFieldReducer.Action.textField

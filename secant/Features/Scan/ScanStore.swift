@@ -68,9 +68,9 @@ struct ScanReducer: ReducerProtocol {
             } catch {
                 // TODO: [#322] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/322)
                 state.alert = AlertState(
-                    title: TextState("Can't initialize the camera"),
-                    message: TextState("Error: \(error.localizedDescription)"),
-                    dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+                    title: TextState(L10n.Scan.Alert.CantInitializeCamera.title),
+                    message: TextState(L10n.Scan.Alert.CantInitializeCamera.message(error.localizedDescription)),
+                    dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
                 )
             }
             return .none
@@ -117,9 +117,9 @@ struct ScanReducer: ReducerProtocol {
             } catch {
                 // TODO: [#322] handle torch errors (https://github.com/zcash/secant-ios-wallet/issues/322)
                 state.alert = AlertState(
-                    title: TextState("Can't initialize the camera"),
-                    message: TextState("Error: \(error.localizedDescription)"),
-                    dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+                    title: TextState(L10n.Scan.Alert.CantInitializeCamera.title),
+                    message: TextState(L10n.Scan.Alert.CantInitializeCamera.message(error.localizedDescription)),
+                    dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
                 )
             }
             return .none

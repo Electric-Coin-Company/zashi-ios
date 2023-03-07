@@ -36,7 +36,7 @@ struct MultiLineTextFieldReducer: ReducerProtocol {
             charLimit > 0
             ? isValid
             ? "\(textLength)/\(charLimit)"
-            : "char limit exceeded \(textLength)/\(charLimit)"
+            : "\(L10n.Field.Multiline.charLimitExceeded) \(textLength)/\(charLimit)"
             : ""
         }
     }

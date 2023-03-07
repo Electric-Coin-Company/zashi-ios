@@ -19,7 +19,7 @@ struct AddressDetailsView: View {
                 qrCode(viewStore.unifiedAddress)
                     .padding(30)
                 
-                Text("\(viewStore.unifiedAddress)")
+                Text(viewStore.unifiedAddress)
                     .onTapGesture {
                         viewStore.send(.copyUnifiedAddressToPastboard)
                     }
@@ -30,7 +30,7 @@ struct AddressDetailsView: View {
                 qrCode(viewStore.saplingAddress)
                     .padding(30)
 
-                Text("\(viewStore.saplingAddress)")
+                Text(viewStore.saplingAddress)
                     .onTapGesture {
                         viewStore.send(.copySaplingAddressToPastboard)
                     }
@@ -41,7 +41,7 @@ struct AddressDetailsView: View {
                 qrCode(viewStore.transparentAddress)
                     .padding(30)
 
-                Text("\(viewStore.transparentAddress)")
+                Text(viewStore.transparentAddress)
                     .onTapGesture {
                         viewStore.send(.copyTransparentAddressToPastboard)
                     }

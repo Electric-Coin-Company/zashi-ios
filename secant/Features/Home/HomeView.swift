@@ -107,7 +107,7 @@ extension HomeView {
                     }
             }
             
-            Text("\(viewStore.synchronizerStatusSnapshot.message)")
+            Text(viewStore.synchronizerStatusSnapshot.message)
         }
         .foregroundColor(Asset.Colors.Mfp.primary.color)
     }

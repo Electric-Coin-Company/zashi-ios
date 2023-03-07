@@ -29,7 +29,7 @@ struct UserDefaultsWalletConfigStorage {
             let rawFlags = try PropertyListDecoder().decode(WalletConfig.RawFlags.self, from: data)
             return WalletConfig(flags: rawFlags)
         } catch {
-            LoggerProxy.debug("Error when deocding feature flags from user defaults: \(error)")
+            LoggerProxy.debug("Error when decoding feature flags from user defaults: \(error)")
             throw InternalError.unableToDeserializeData
         }
     }

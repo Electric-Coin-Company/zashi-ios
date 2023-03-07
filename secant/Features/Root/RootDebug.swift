@@ -39,12 +39,12 @@ extension RootReducer {
                 
             case .debug(.rescanBlockchain):
                 state.debugState.rescanDialog = .init(
-                    title: TextState("Rescan"),
-                    message: TextState("Select the rescan you want"),
+                    title: TextState(L10n.Root.Debug.Dialog.Rescan.title),
+                    message: TextState(L10n.Root.Debug.Dialog.Rescan.message),
                     buttons: [
-                        .default(TextState("Quick rescan"), action: .send(.debug(.quickRescan))),
-                        .default(TextState("Full rescan"), action: .send(.debug(.fullRescan))),
-                        .cancel(TextState("Cancel"))
+                        .default(TextState(L10n.Root.Debug.Dialog.Rescan.Option.quick), action: .send(.debug(.quickRescan))),
+                        .default(TextState(L10n.Root.Debug.Dialog.Rescan.Option.full), action: .send(.debug(.fullRescan))),
+                        .cancel(TextState(L10n.General.cancel))
                     ]
                 )
                 return .none
@@ -65,9 +65,9 @@ extension RootReducer {
                 if let errorDescription {
                     // TODO: [#221] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
                     state.alert = AlertState(
-                        title: TextState("Rewind failed"),
-                        message: TextState("Error: \(errorDescription)"),
-                        dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+                        title: TextState(L10n.Root.Debug.Alert.Rewind.Failed.title),
+                        message: TextState(L10n.Root.Debug.Alert.Rewind.Failed.message(errorDescription)),
+                        dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
                     )
                 } else {
                     do {
@@ -75,9 +75,9 @@ extension RootReducer {
                     } catch {
                         // TODO: [#221] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
                         state.alert = AlertState(
-                            title: TextState("Can't start sync process after rewind"),
-                            message: TextState("Error: \(error.localizedDescription)"),
-                            dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+                            title: TextState(L10n.Root.Debug.Alert.Rewind.CantStartSync.title),
+                            message: TextState(L10n.Root.Debug.Alert.Rewind.CantStartSync.message(error.localizedDescription)),
+                            dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
                         )
                     }
                 }
@@ -108,7 +108,7 @@ extension RootReducer {
 
     private func rewind(policy: RewindPolicy, sourceAction: DebugAction) -> EffectPublisher<RootReducer.Action, Never> {
         guard let rewindPublisher = sdkSynchronizer.rewind(policy) else {
-            return EffectTask(value: .debug(.rewindDone("SDKSynchronizer not initilized. rewindPublisher is nil", .debug(sourceAction))))
+            return EffectTask(value: .debug(.rewindDone(L10n.Root.Debug.Error.Rewind.sdkSynchronizerNotInitialized, .debug(sourceAction))))
         }
         return rewindPublisher
             .replaceEmpty(with: Void())

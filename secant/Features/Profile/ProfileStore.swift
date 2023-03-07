@@ -18,7 +18,7 @@ struct ProfileReducer: ReducerProtocol {
         var sdkVersion = ""
         
         var unifiedAddress: String {
-            addressDetailsState.uAddress?.stringEncoded ?? "could not extract UA"
+            addressDetailsState.uAddress?.stringEncoded ?? L10n.ReceiveZec.Error.cantExtractUnifiedAddress
         }
     }
 

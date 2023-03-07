@@ -25,6 +25,14 @@ internal enum L10n {
     internal static let ta = L10n.tr("Localizable", "addressDetails.ta", fallback: "Transparent Address")
     /// Unified Address
     internal static let ua = L10n.tr("Localizable", "addressDetails.ua", fallback: "Unified Address")
+    internal enum Error {
+      /// could not extract sapling receiver from UA
+      internal static let cantExtractSaplingAddress = L10n.tr("Localizable", "addressDetails.error.cantExtractSaplingAddress", fallback: "could not extract sapling receiver from UA")
+      /// could not extract transparent receiver from UA
+      internal static let cantExtractTransparentAddress = L10n.tr("Localizable", "addressDetails.error.cantExtractTransparentAddress", fallback: "could not extract transparent receiver from UA")
+      /// could not extract UA
+      internal static let cantExtractUnifiedAddress = L10n.tr("Localizable", "addressDetails.error.cantExtractUnifiedAddress", fallback: "could not extract UA")
+    }
   }
   internal enum Balance {
     /// %@ ZEC Available
@@ -52,9 +60,41 @@ internal enum L10n {
     /// possible roll back
     internal static let rollBack = L10n.tr("Localizable", "error.rollBack", fallback: "possible roll back")
   }
+  internal enum ExportLogs {
+    internal enum Alert {
+      internal enum Failed {
+        /// Error: %@
+        internal static func message(_ p1: Any) -> String {
+          return L10n.tr("Localizable", "exportLogs.alert.failed.message", String(describing: p1), fallback: "Error: %@")
+        }
+        /// Error when exporting logs
+        internal static let title = L10n.tr("Localizable", "exportLogs.alert.failed.title", fallback: "Error when exporting logs")
+      }
+    }
+  }
+  internal enum Field {
+    internal enum Multiline {
+      /// char limit exceeded
+      internal static let charLimitExceeded = L10n.tr("Localizable", "field.multiline.charLimitExceeded", fallback: "char limit exceeded")
+    }
+    internal enum TransactionAddress {
+      /// To:
+      internal static let to = L10n.tr("Localizable", "field.transactionAddress.to", fallback: "To:")
+      /// Valid Zcash Address
+      internal static let validZcashAddress = L10n.tr("Localizable", "field.transactionAddress.validZcashAddress", fallback: "Valid Zcash Address")
+    }
+    internal enum TransactionAmount {
+      /// Amount:
+      internal static let amount = L10n.tr("Localizable", "field.transactionAmount.amount", fallback: "Amount:")
+      /// ZEC Amount
+      internal static let zecAmount = L10n.tr("Localizable", "field.transactionAmount.zecAmount", fallback: "ZEC Amount")
+    }
+  }
   internal enum General {
     /// Back
     internal static let back = L10n.tr("Localizable", "general.back", fallback: "Back")
+    /// Cancel
+    internal static let cancel = L10n.tr("Localizable", "general.cancel", fallback: "Cancel")
     /// Clear
     internal static let clear = L10n.tr("Localizable", "general.clear", fallback: "Clear")
     /// Close
@@ -65,10 +105,20 @@ internal enum L10n {
     internal static let max = L10n.tr("Localizable", "general.max", fallback: "Max")
     /// Next
     internal static let next = L10n.tr("Localizable", "general.next", fallback: "Next")
+    /// No
+    internal static let no = L10n.tr("Localizable", "general.no", fallback: "No")
+    /// Ok
+    internal static let ok = L10n.tr("Localizable", "general.ok", fallback: "Ok")
     /// Send
     internal static let send = L10n.tr("Localizable", "general.send", fallback: "Send")
     /// Skip
     internal static let skip = L10n.tr("Localizable", "general.skip", fallback: "Skip")
+    /// Success
+    internal static let success = L10n.tr("Localizable", "general.success", fallback: "Success")
+    /// Unknown
+    internal static let unknown = L10n.tr("Localizable", "general.unknown", fallback: "Unknown")
+    /// Yes
+    internal static let yes = L10n.tr("Localizable", "general.yes", fallback: "Yes")
   }
   internal enum Home {
     /// Receive ZEC
@@ -85,6 +135,22 @@ internal enum L10n {
     internal static let description = L10n.tr("Localizable", "importWallet.description", fallback: "Enter your secret backup seed phrase.")
     /// Wallet Import
     internal static let title = L10n.tr("Localizable", "importWallet.title", fallback: "Wallet Import")
+    internal enum Alert {
+      internal enum Failed {
+        /// Error: %@
+        internal static func message(_ p1: Any) -> String {
+          return L10n.tr("Localizable", "importWallet.alert.failed.message", String(describing: p1), fallback: "Error: %@")
+        }
+        /// Failed to restore wallet
+        internal static let title = L10n.tr("Localizable", "importWallet.alert.failed.title", fallback: "Failed to restore wallet")
+      }
+      internal enum Success {
+        /// The wallet has been successfully recovered.
+        internal static let message = L10n.tr("Localizable", "importWallet.alert.success.message", fallback: "The wallet has been successfully recovered.")
+        /// Success
+        internal static let title = L10n.tr("Localizable", "importWallet.alert.success.title", fallback: "Success")
+      }
+    }
     internal enum Birthday {
       /// Do you know the wallet's creation date? This will allow a faster sync. If you don't know the wallet's birthday, don't worry!
       internal static let description = L10n.tr("Localizable", "importWallet.birthday.description", fallback: "Do you know the wallet's creation date? This will allow a faster sync. If you don't know the wallet's birthday, don't worry!")
@@ -97,6 +163,14 @@ internal enum L10n {
       /// Restore wallet
       internal static let restoreWallet = L10n.tr("Localizable", "importWallet.button.restoreWallet", fallback: "Restore wallet")
     }
+    internal enum Seed {
+      /// VALID SEED PHRASE
+      internal static let valid = L10n.tr("Localizable", "importWallet.seed.valid", fallback: "VALID SEED PHRASE")
+    }
+  }
+  internal enum LocalAuthentication {
+    /// The Following content requires authentication.
+    internal static let reason = L10n.tr("Localizable", "localAuthentication.reason", fallback: "The Following content requires authentication.")
   }
   internal enum Nefs {
     /// Not enough space on disk to do synchronisation!
@@ -143,6 +217,10 @@ internal enum L10n {
   internal enum ReceiveZec {
     /// Your Address
     internal static let yourAddress = L10n.tr("Localizable", "receiveZec.yourAddress", fallback: "Your Address")
+    internal enum Error {
+      /// could not extract UA
+      internal static let cantExtractUnifiedAddress = L10n.tr("Localizable", "receiveZec.error.cantExtractUnifiedAddress", fallback: "could not extract UA")
+    }
   }
   internal enum RecoveryPhraseBackupValidation {
     /// Drag the words below to match your backed-up copy.
@@ -182,11 +260,152 @@ internal enum L10n {
       internal static let goNext = L10n.tr("Localizable", "recoveryPhraseTestPreamble.button.goNext", fallback: "By understanding and preparing")
     }
   }
+  internal enum Root {
+    internal enum Debug {
+      /// Feature flags
+      internal static let featureFlags = L10n.tr("Localizable", "root.debug.featureFlags", fallback: "Feature flags")
+      /// Startup
+      internal static let navigationTitle = L10n.tr("Localizable", "root.debug.navigationTitle", fallback: "Startup")
+      /// Debug options
+      internal static let title = L10n.tr("Localizable", "root.debug.title", fallback: "Debug options")
+      internal enum Alert {
+        internal enum Rewind {
+          internal enum CantStartSync {
+            /// Error: %@
+            internal static func message(_ p1: Any) -> String {
+              return L10n.tr("Localizable", "root.debug.alert.rewind.cantStartSync.message", String(describing: p1), fallback: "Error: %@")
+            }
+            /// Can't start sync process after rewind
+            internal static let title = L10n.tr("Localizable", "root.debug.alert.rewind.cantStartSync.title", fallback: "Can't start sync process after rewind")
+          }
+          internal enum Failed {
+            /// Error: %@
+            internal static func message(_ p1: Any) -> String {
+              return L10n.tr("Localizable", "root.debug.alert.rewind.failed.message", String(describing: p1), fallback: "Error: %@")
+            }
+            /// Rewind failed
+            internal static let title = L10n.tr("Localizable", "root.debug.alert.rewind.failed.title", fallback: "Rewind failed")
+          }
+        }
+      }
+      internal enum Dialog {
+        internal enum Rescan {
+          /// Select the rescan you want
+          internal static let message = L10n.tr("Localizable", "root.debug.dialog.rescan.message", fallback: "Select the rescan you want")
+          /// Rescan
+          internal static let title = L10n.tr("Localizable", "root.debug.dialog.rescan.title", fallback: "Rescan")
+          internal enum Option {
+            /// Full rescan
+            internal static let full = L10n.tr("Localizable", "root.debug.dialog.rescan.option.full", fallback: "Full rescan")
+            /// Quick rescan
+            internal static let quick = L10n.tr("Localizable", "root.debug.dialog.rescan.option.quick", fallback: "Quick rescan")
+          }
+        }
+      }
+      internal enum Error {
+        internal enum Rewind {
+          /// SDKSynchronizer not initilized. rewindPublisher is nil
+          internal static let sdkSynchronizerNotInitialized = L10n.tr("Localizable", "root.debug.error.rewind.sdkSynchronizerNotInitialized", fallback: "SDKSynchronizer not initilized. rewindPublisher is nil")
+        }
+      }
+      internal enum Option {
+        /// Export logs
+        internal static let exportLogs = L10n.tr("Localizable", "root.debug.option.exportLogs", fallback: "Export logs")
+        /// Go To Onboarding
+        internal static let gotoOnboarding = L10n.tr("Localizable", "root.debug.option.gotoOnboarding", fallback: "Go To Onboarding")
+        /// Go To Phrase Validation Demo
+        internal static let gotoPhraseValidationDemo = L10n.tr("Localizable", "root.debug.option.gotoPhraseValidationDemo", fallback: "Go To Phrase Validation Demo")
+        /// Go To Sandbox (navigation proof)
+        internal static let gotoSandbox = L10n.tr("Localizable", "root.debug.option.gotoSandbox", fallback: "Go To Sandbox (navigation proof)")
+        /// [Be careful] Nuke Wallet
+        internal static let nukeWallet = L10n.tr("Localizable", "root.debug.option.nukeWallet", fallback: "[Be careful] Nuke Wallet")
+        /// Rescan Blockchain
+        internal static let rescanBlockchain = L10n.tr("Localizable", "root.debug.option.rescanBlockchain", fallback: "Rescan Blockchain")
+        /// Restart the app
+        internal static let restartApp = L10n.tr("Localizable", "root.debug.option.restartApp", fallback: "Restart the app")
+        /// Test Crash Reporter
+        internal static let testCrashReporter = L10n.tr("Localizable", "root.debug.option.testCrashReporter", fallback: "Test Crash Reporter")
+      }
+    }
+    internal enum Destination {
+      internal enum Alert {
+        internal enum FailedToProcessDeeplink {
+          /// Deeplink: (%@))
+          /// Error: (%@)
+          internal static func message(_ p1: Any, _ p2: Any) -> String {
+            return L10n.tr("Localizable", "root.destination.alert.failedToProcessDeeplink.message", String(describing: p1), String(describing: p2), fallback: "Deeplink: (%@))\nError: (%@)")
+          }
+          /// Failed to process deeplink.
+          internal static let title = L10n.tr("Localizable", "root.destination.alert.failedToProcessDeeplink.title", fallback: "Failed to process deeplink.")
+        }
+      }
+    }
+    internal enum Initialization {
+      internal enum Alert {
+        internal enum CantCreateNewWallet {
+          /// Can't create new wallet. Error: %@
+          internal static func message(_ p1: Any) -> String {
+            return L10n.tr("Localizable", "root.initialization.alert.cantCreateNewWallet.message", String(describing: p1), fallback: "Can't create new wallet. Error: %@")
+          }
+        }
+        internal enum CantLoadSeedPhrase {
+          /// Can't load seed phrase from local storage.
+          internal static let message = L10n.tr("Localizable", "root.initialization.alert.cantLoadSeedPhrase.message", fallback: "Can't load seed phrase from local storage.")
+        }
+        internal enum CantStoreThatUserPassedPhraseBackupTest {
+          /// Can't store information that user passed phrase backup test. Error: %@
+          internal static func message(_ p1: Any) -> String {
+            return L10n.tr("Localizable", "root.initialization.alert.cantStoreThatUserPassedPhraseBackupTest.message", String(describing: p1), fallback: "Can't store information that user passed phrase backup test. Error: %@")
+          }
+        }
+        internal enum Error {
+          /// Error: %@
+          internal static func message(_ p1: Any) -> String {
+            return L10n.tr("Localizable", "root.initialization.alert.error.message", String(describing: p1), fallback: "Error: %@")
+          }
+        }
+        internal enum Failed {
+          /// Wallet initialisation failed.
+          internal static let title = L10n.tr("Localizable", "root.initialization.alert.failed.title", fallback: "Wallet initialisation failed.")
+        }
+        internal enum SdkInitFailed {
+          /// Failed to initialize the SDK
+          internal static let title = L10n.tr("Localizable", "root.initialization.alert.sdkInitFailed.title", fallback: "Failed to initialize the SDK")
+        }
+        internal enum WalletStateFailed {
+          /// App initialisation state: %@.
+          internal static func message(_ p1: Any) -> String {
+            return L10n.tr("Localizable", "root.initialization.alert.walletStateFailed.message", String(describing: p1), fallback: "App initialisation state: %@.")
+          }
+        }
+        internal enum Wipe {
+          /// Are you sure?
+          internal static let message = L10n.tr("Localizable", "root.initialization.alert.wipe.message", fallback: "Are you sure?")
+          /// Wipe of the wallet
+          internal static let title = L10n.tr("Localizable", "root.initialization.alert.wipe.title", fallback: "Wipe of the wallet")
+        }
+        internal enum WipeFailed {
+          /// Nuke of the wallet failed
+          internal static let title = L10n.tr("Localizable", "root.initialization.alert.wipeFailed.title", fallback: "Nuke of the wallet failed")
+        }
+      }
+    }
+  }
   internal enum Scan {
     /// We will validate any Zcash URI and take you to the appropriate action.
     internal static let info = L10n.tr("Localizable", "scan.info", fallback: "We will validate any Zcash URI and take you to the appropriate action.")
     /// Scanning...
     internal static let scanning = L10n.tr("Localizable", "scan.scanning", fallback: "Scanning...")
+    internal enum Alert {
+      internal enum CantInitializeCamera {
+        /// Error: %@
+        internal static func message(_ p1: Any) -> String {
+          return L10n.tr("Localizable", "scan.alert.cantInitializeCamera.message", String(describing: p1), fallback: "Error: %@")
+        }
+        /// Can't initialize the camera
+        internal static let title = L10n.tr("Localizable", "scan.alert.cantInitializeCamera.title", fallback: "Can't initialize the camera")
+      }
+    }
   }
   internal enum Send {
     ///  address: %@
@@ -229,6 +448,88 @@ internal enum L10n {
     internal static let feedback = L10n.tr("Localizable", "settings.feedback", fallback: "Send us feedback!")
     /// Settings
     internal static let title = L10n.tr("Localizable", "settings.title", fallback: "Settings")
+    internal enum Alert {
+      internal enum CantBackupWallet {
+        /// Error: %@
+        internal static func message(_ p1: Any) -> String {
+          return L10n.tr("Localizable", "settings.alert.cantBackupWallet.message", String(describing: p1), fallback: "Error: %@")
+        }
+        /// Can't backup wallet
+        internal static let title = L10n.tr("Localizable", "settings.alert.cantBackupWallet.title", fallback: "Can't backup wallet")
+      }
+      internal enum CantSendEmail {
+        /// It looks like that you don't have any email account configured on your device. Therefore it's not possible to send a support email.
+        internal static let message = L10n.tr("Localizable", "settings.alert.cantSendEmail.message", fallback: "It looks like that you don't have any email account configured on your device. Therefore it's not possible to send a support email.")
+        /// Can't send email
+        internal static let title = L10n.tr("Localizable", "settings.alert.cantSendEmail.title", fallback: "Can't send email")
+      }
+    }
+  }
+  internal enum SupportData {
+    internal enum AppVersionItem {
+      /// App identifier
+      internal static let bundleIdentifier = L10n.tr("Localizable", "supportData.appVersionItem.bundleIdentifier", fallback: "App identifier")
+      /// App version
+      internal static let version = L10n.tr("Localizable", "supportData.appVersionItem.version", fallback: "App version")
+    }
+    internal enum DeviceModelItem {
+      /// Device
+      internal static let device = L10n.tr("Localizable", "supportData.deviceModelItem.device", fallback: "Device")
+    }
+    internal enum FreeDiskSpaceItem {
+      /// Usable storage
+      internal static let freeDiskSpace = L10n.tr("Localizable", "supportData.freeDiskSpaceItem.freeDiskSpace", fallback: "Usable storage")
+    }
+    internal enum LocaleItem {
+      /// Currency decimal separator
+      internal static let decimalSeparator = L10n.tr("Localizable", "supportData.localeItem.decimalSeparator", fallback: "Currency decimal separator")
+      /// Currency grouping separator
+      internal static let groupingSeparator = L10n.tr("Localizable", "supportData.localeItem.groupingSeparator", fallback: "Currency grouping separator")
+      /// Locale
+      internal static let locale = L10n.tr("Localizable", "supportData.localeItem.locale", fallback: "Locale")
+    }
+    internal enum PermissionItem {
+      /// Camera access
+      internal static let camera = L10n.tr("Localizable", "supportData.permissionItem.camera", fallback: "Camera access")
+      /// FaceID available
+      internal static let faceID = L10n.tr("Localizable", "supportData.permissionItem.faceID", fallback: "FaceID available")
+      /// Permissions
+      internal static let permissions = L10n.tr("Localizable", "supportData.permissionItem.permissions", fallback: "Permissions")
+      /// TouchID available
+      internal static let touchID = L10n.tr("Localizable", "supportData.permissionItem.touchID", fallback: "TouchID available")
+    }
+    internal enum SystemVersionItem {
+      /// iOS version
+      internal static let version = L10n.tr("Localizable", "supportData.systemVersionItem.version", fallback: "iOS version")
+    }
+    internal enum TimeItem {
+      /// Current time
+      internal static let time = L10n.tr("Localizable", "supportData.timeItem.time", fallback: "Current time")
+    }
+  }
+  internal enum Sync {
+    internal enum Message {
+      /// disconnected
+      internal static let disconnected = L10n.tr("Localizable", "sync.message.disconnected", fallback: "disconnected")
+      /// Enhancing tx
+      internal static let enhancing = L10n.tr("Localizable", "sync.message.enhancing", fallback: "Enhancing tx")
+      /// Error: %@
+      internal static func error(_ p1: Any) -> String {
+        return L10n.tr("Localizable", "sync.message.error", String(describing: p1), fallback: "Error: %@")
+      }
+      /// fetching UTXOs
+      internal static let fetchingUTXO = L10n.tr("Localizable", "sync.message.fetchingUTXO", fallback: "fetching UTXOs")
+      /// Stopped
+      internal static let stopped = L10n.tr("Localizable", "sync.message.stopped", fallback: "Stopped")
+      /// %@ Synced
+      internal static func sync(_ p1: Any) -> String {
+        return L10n.tr("Localizable", "sync.message.sync", String(describing: p1), fallback: "%@ Synced")
+      }
+      /// Unprepared
+      internal static let unprepared = L10n.tr("Localizable", "sync.message.unprepared", fallback: "Unprepared")
+      /// Up-To-Date
+      internal static let uptodate = L10n.tr("Localizable", "sync.message.uptodate", fallback: "Up-To-Date")
+    }
   }
   internal enum Transaction {
     /// Confirmed
@@ -306,6 +607,38 @@ internal enum L10n {
       internal static let goToWallet = L10n.tr("Localizable", "validationSuccess.button.goToWallet", fallback: "Take me to my wallet!")
       /// Show me my phrase again
       internal static let phraseAgain = L10n.tr("Localizable", "validationSuccess.button.phraseAgain", fallback: "Show me my phrase again")
+    }
+  }
+  internal enum WalletEvent {
+    internal enum Alert {
+      internal enum LeavingApp {
+        /// While usually an acceptable risk, you will possibly exposing your behavior and interest in this transaction by going online. OH NOES! What will you do?
+        internal static let message = L10n.tr("Localizable", "walletEvent.alert.leavingApp.message", fallback: "While usually an acceptable risk, you will possibly exposing your behavior and interest in this transaction by going online. OH NOES! What will you do?")
+        /// You are exiting your wallet
+        internal static let title = L10n.tr("Localizable", "walletEvent.alert.leavingApp.title", fallback: "You are exiting your wallet")
+        internal enum Button {
+          /// NEVERMIND
+          internal static let nevermind = L10n.tr("Localizable", "walletEvent.alert.leavingApp.button.nevermind", fallback: "NEVERMIND")
+          /// SEE TX ONLINE
+          internal static let seeOnline = L10n.tr("Localizable", "walletEvent.alert.leavingApp.button.seeOnline", fallback: "SEE TX ONLINE")
+        }
+      }
+    }
+    internal enum Detail {
+      /// wallet import wallet event
+      internal static let `import` = L10n.tr("Localizable", "walletEvent.detail.import", fallback: "wallet import wallet event")
+      /// shielded %@ detail
+      internal static func shielded(_ p1: Any) -> String {
+        return L10n.tr("Localizable", "walletEvent.detail.shielded", String(describing: p1), fallback: "shielded %@ detail")
+      }
+    }
+    internal enum Row {
+      /// wallet import wallet event
+      internal static let `import` = L10n.tr("Localizable", "walletEvent.row.import", fallback: "wallet import wallet event")
+      /// shielded wallet event %@
+      internal static func shielded(_ p1: Any) -> String {
+        return L10n.tr("Localizable", "walletEvent.row.shielded", String(describing: p1), fallback: "shielded wallet event %@")
+      }
     }
   }
   internal enum WelcomeScreen {

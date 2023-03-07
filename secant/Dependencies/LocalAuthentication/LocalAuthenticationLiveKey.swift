@@ -13,7 +13,7 @@ extension LocalAuthenticationClient: DependencyKey {
         authenticate: {
             let context = LAContext()
             var error: NSError?
-            let reason = "The Following content requires authentication."
+            let reason = L10n.LocalAuthentication.reason
             
             do {
                 /// Biometrics validation
