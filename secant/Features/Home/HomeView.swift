@@ -106,6 +106,11 @@ extension HomeView {
                         viewStore.send(.debugMenuStartup)
                     }
             }
+
+            if viewStore.walletConfig.isEnabled(.showFiatConversion) {
+                Text("$\(viewStore.totalCurrencyBalance.decimalString())")
+                    .font(.system(size: 20))
+            }
             
             Text("\(viewStore.synchronizerStatusSnapshot.message)")
         }

@@ -44,6 +44,7 @@ class HomeSnapshotTests: XCTestCase {
                 settingsState: .placeholder,
                 shieldedBalance: balance.redacted,
                 synchronizerStatusSnapshot: .default,
+                walletConfig: .default,
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: walletEvents))
             ),
             reducer: HomeReducer()

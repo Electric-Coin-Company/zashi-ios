@@ -11,12 +11,14 @@ enum FeatureFlag: String, CaseIterable, Codable {
     case testFlag2
     case onboardingFlow
     case testBackupPhraseFlow
+    case showFiatConversion
 
     var enabledByDefault: Bool {
         switch self {
         case .testFlag1, .testFlag2: return false
         case .onboardingFlow: return false
         case .testBackupPhraseFlow: return false
+        case .showFiatConversion: return false
         }
     }
 }

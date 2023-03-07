@@ -59,6 +59,7 @@ class WalletEventsSnapshotTests: XCTestCase {
                 settingsState: .placeholder,
                 shieldedBalance: balance.redacted,
                 synchronizerStatusSnapshot: .default,
+                walletConfig: .default,
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent]))
             ),
             reducer: HomeReducer()
@@ -111,6 +112,7 @@ class WalletEventsSnapshotTests: XCTestCase {
                 settingsState: .placeholder,
                 shieldedBalance: balance.redacted,
                 synchronizerStatusSnapshot: .default,
+                walletConfig: .default,
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent]))
             ),
             reducer: HomeReducer()
@@ -163,6 +165,7 @@ class WalletEventsSnapshotTests: XCTestCase {
                 settingsState: .placeholder,
                 shieldedBalance: balance.redacted,
                 synchronizerStatusSnapshot: .default,
+                walletConfig: .default,
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent]))
             ),
             reducer: HomeReducer()
@@ -221,6 +224,7 @@ class WalletEventsSnapshotTests: XCTestCase {
                 settingsState: .placeholder,
                 shieldedBalance: balance.redacted,
                 synchronizerStatusSnapshot: .default,
+                walletConfig: .default,
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent]))
             ),
             reducer: HomeReducer()

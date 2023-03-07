@@ -31,6 +31,7 @@ struct HomeReducer: ReducerProtocol {
         var settingsState: SettingsReducer.State
         var shieldedBalance: Balance
         var synchronizerStatusSnapshot: SyncStatusSnapshot
+        var walletConfig: WalletConfig
         var walletEventsState: WalletEventsFlowReducer.State
         // TODO: [#311] - Get the ZEC price from the SDK, https://github.com/zcash/secant-ios-wallet/issues/311
         var zecPrice = Decimal(140.0)
@@ -238,6 +239,7 @@ extension HomeReducer.State {
             settingsState: .placeholder,
             shieldedBalance: Balance.zero,
             synchronizerStatusSnapshot: .default,
+            walletConfig: .default,
             walletEventsState: .emptyPlaceHolder
         )
     }
