@@ -386,6 +386,8 @@
 		9E39114A2848EEB90073DD9A /* UserPreferencesStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3911442848EEB90073DD9A /* UserPreferencesStorage.swift */; };
 		9E39114C2848EEB90073DD9A /* DatabaseFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3911462848EEB90073DD9A /* DatabaseFiles.swift */; };
 		9E39115E284E3E350073DD9A /* secantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A2526B364180058B01E /* secantUITests.swift */; };
+		9E486DE529B637AF003E6945 /* ImportBirthdayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E486DE429B637AF003E6945 /* ImportBirthdayView.swift */; };
+		9E486DE629B637AF003E6945 /* ImportBirthdayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E486DE429B637AF003E6945 /* ImportBirthdayView.swift */; };
 		9E4DC6E227C4C6B700E657F4 /* SecantButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */; };
 		9E5BF63F2819542C00BA3F17 /* WalletEventsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF63E2819542C00BA3F17 /* WalletEventsTests.swift */; };
 		9E5BF641281FD7B600BA3F17 /* TransactionFailedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF640281FD7B600BA3F17 /* TransactionFailedView.swift */; };
@@ -702,6 +704,7 @@
 		9E3911442848EEB90073DD9A /* UserPreferencesStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserPreferencesStorage.swift; sourceTree = "<group>"; };
 		9E3911462848EEB90073DD9A /* DatabaseFiles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseFiles.swift; sourceTree = "<group>"; };
 		9E3911472848EEB90073DD9A /* WalletStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletStorage.swift; sourceTree = "<group>"; };
+		9E486DE429B637AF003E6945 /* ImportBirthdayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportBirthdayView.swift; sourceTree = "<group>"; };
 		9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecantButtonStyles.swift; sourceTree = "<group>"; };
 		9E5BF63B2818305D00BA3F17 /* TransactionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionState.swift; sourceTree = "<group>"; };
 		9E5BF63E2819542C00BA3F17 /* WalletEventsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletEventsTests.swift; sourceTree = "<group>"; };
@@ -1361,6 +1364,7 @@
 			children = (
 				9E2DF99827CF704D00649636 /* ImportWalletStore.swift */,
 				9E2DF99B27CF704D00649636 /* ImportWalletView.swift */,
+				9E486DE429B637AF003E6945 /* ImportBirthdayView.swift */,
 			);
 			path = ImportWallet;
 			sourceTree = "<group>";
@@ -2580,6 +2584,7 @@
 				0D26AED9299E8196005260EE /* LocalAuthenticationLiveKey.swift in Sources */,
 				0D26AEDA299E8196005260EE /* ImportSeedEditor.swift in Sources */,
 				0D26AEDB299E8196005260EE /* ProfileStore.swift in Sources */,
+				9E486DE629B637AF003E6945 /* ImportBirthdayView.swift in Sources */,
 				3467319629AE265300974482 /* SupportDataGenerator.swift in Sources */,
 				0D26AEDC299E8196005260EE /* CheckCircle.swift in Sources */,
 				0D26AEDD299E8196005260EE /* LogStore.swift in Sources */,
@@ -2799,6 +2804,7 @@
 				9EBDF986291F91EF000A1A05 /* LocalAuthenticationLiveKey.swift in Sources */,
 				9E2DF99D27CF704D00649636 /* ImportSeedEditor.swift in Sources */,
 				F9971A5327680DD000A2DB75 /* ProfileStore.swift in Sources */,
+				9E486DE529B637AF003E6945 /* ImportBirthdayView.swift in Sources */,
 				3467319529AE265300974482 /* SupportDataGenerator.swift in Sources */,
 				346D41E428DF0B8600963F36 /* CheckCircle.swift in Sources */,
 				9E0F5745297EBA1B005304FA /* LogStore.swift in Sources */,

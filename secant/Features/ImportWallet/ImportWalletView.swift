@@ -18,44 +18,30 @@ struct ImportWalletView: View {
                     .font(.system(size: 27))
                     .fontWeight(.bold)
                     .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+                    .minimumScaleFactor(0.3)
                 
-                ZStack {
-                    ImportSeedEditor(store: store)
-                    
-                    mnemonicStatus(viewStore)
-                }
-                .frame(width: nil, height: 200, alignment: .center)
-
-                VStack {
-                    Text("importWallet.birthday.description")
-                        .font(.system(size: 16))
-                        .fontWeight(.bold)
-                        .foregroundColor(Asset.Colors.Mfp.fontDark.color)
-
-                    TextField(
-                        "importWallet.birthday.placeholder",
-                        text: viewStore.bindingForRedactableBirthday(viewStore.birthdayHeight)
-                    )
-                    .keyboardType(.numberPad)
-                    .autocapitalization(.none)
-                    .importSeedEditorModifier()
-                }
-                .padding(28)
-
-                Button("importWallet.button.restoreWallet") {
-                    viewStore.send(.restoreWallet)
+                ImportSeedEditor(store: store)
+                    .frame(width: nil, height: 200, alignment: .center)
+                
+                Button("general.next") {
+                    viewStore.send(.updateDestination(.birthday))
                 }
                 .activeButtonStyle
                 .importWalletButtonLayout()
                 .disabled(!viewStore.isValidForm)
-
+                .opacity(viewStore.isValidForm ? 1.0 : 0.5)
+                
                 Spacer()
             }
-            .navigationBarHidden(true)
+            .padding(.horizontal, 20)
             .applyScreenBackground()
             .scrollableWhenScaledUp()
             .onAppear(perform: { viewStore.send(.onAppear) })
             .alert(self.store.scope(state: \.alert), dismiss: .dismissAlert)
+            .navigationLinkEmpty(
+                isActive: viewStore.bindingForDestination(.birthday),
+                destination: { ImportBirthdayView(store: store) }
+            )
         }
     }
 }
