@@ -21,20 +21,8 @@ struct TransactionAddressTextField: View {
                         state: \.textFieldState,
                         action: TransactionAddressTextFieldReducer.Action.textField
                     ),
-                    titleAccessoryView: {
-                        if !viewStore.textFieldState.text.data.isEmpty {
-                            Button(
-                                action: {
-                                    viewStore.send(.clearAddress)
-                                },
-                                label: {
-                                    Text(L10n.General.clear)
-                                }
-                            )
-                            .textFieldTitleAccessoryButtonStyle
-                        }
-                    },
-                    inputPrefixView: { EmptyView() },
+                    titleAccessoryView: { },
+                    inputPrefixView: { },
                     inputAccessoryView: {
                         Button {
                             viewStore.send(.scanQR)

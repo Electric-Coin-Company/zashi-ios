@@ -48,6 +48,8 @@ struct CreateTransaction: View {
                     label: { Text(L10n.General.send) }
                 )
                 .activeButtonStyle
+                .disabled(viewStore.isValidForm)
+                .opacity(viewStore.isValidForm ? 1.0 : 0.5)
 
                 Spacer()
             }
