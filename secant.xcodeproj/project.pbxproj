@@ -304,6 +304,7 @@
 		2EDA07A027EDE18C00D6F09B /* TCATextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDA079F27EDE18C00D6F09B /* TCATextField.swift */; };
 		2EDA07A227EDE1AE00D6F09B /* TextFieldFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDA07A127EDE1AE00D6F09B /* TextFieldFooter.swift */; };
 		2EDA07A427EDE2A900D6F09B /* DebugFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDA07A327EDE2A900D6F09B /* DebugFrame.swift */; };
+		341B30BB29B78D1000697081 /* HomeFeatureFlagTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341B30BA29B78D1000697081 /* HomeFeatureFlagTests.swift */; };
 		34429C6E28E703CD00F2B929 /* TransactionSendingSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34429C6D28E703CD00F2B929 /* TransactionSendingSnapshotTests.swift */; };
 		3448CB3228E47666006ADEDB /* NotEnoughFreeSpaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3448CB3128E47666006ADEDB /* NotEnoughFreeSpaceView.swift */; };
 		3448CB3728E485CB006ADEDB /* NotEnoughFeeSpaceSnapshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3448CB3628E485CB006ADEDB /* NotEnoughFeeSpaceSnapshots.swift */; };
@@ -639,6 +640,7 @@
 		2EDA079F27EDE18C00D6F09B /* TCATextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCATextField.swift; sourceTree = "<group>"; };
 		2EDA07A127EDE1AE00D6F09B /* TextFieldFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFooter.swift; sourceTree = "<group>"; };
 		2EDA07A327EDE2A900D6F09B /* DebugFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugFrame.swift; sourceTree = "<group>"; };
+		341B30BA29B78D1000697081 /* HomeFeatureFlagTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeatureFlagTests.swift; sourceTree = "<group>"; };
 		34429C6D28E703CD00F2B929 /* TransactionSendingSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionSendingSnapshotTests.swift; sourceTree = "<group>"; };
 		3448CB3128E47666006ADEDB /* NotEnoughFreeSpaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotEnoughFreeSpaceView.swift; sourceTree = "<group>"; };
 		3448CB3628E485CB006ADEDB /* NotEnoughFeeSpaceSnapshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotEnoughFeeSpaceSnapshots.swift; sourceTree = "<group>"; };
@@ -1413,6 +1415,7 @@
 			isa = PBXGroup;
 			children = (
 				9E3911382848AD500073DD9A /* HomeTests.swift */,
+				341B30BA29B78D1000697081 /* HomeFeatureFlagTests.swift */,
 			);
 			path = HomeTests;
 			sourceTree = "<group>";
@@ -2990,6 +2993,7 @@
 				9E7225F12889539300DF7F17 /* SettingsSnapshotTests.swift in Sources */,
 				3469F18229ACD70500A07146 /* OnboardingFlowFeatureFlagTests.swift in Sources */,
 				0DFE93DF272C6D4B000FCCA5 /* RecoveryPhraseBackupTests.swift in Sources */,
+				341B30BB29B78D1000697081 /* HomeFeatureFlagTests.swift in Sources */,
 				9EDDEAA22829610D00B4100C /* CurrencySelectionTests.swift in Sources */,
 				9E6713F12897F81B00A6796F /* MultiLineTextFieldTests.swift in Sources */,
 				9E01F8282833CDA0000EFC57 /* ScanTests.swift in Sources */,

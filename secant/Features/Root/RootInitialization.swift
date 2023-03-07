@@ -312,6 +312,7 @@ extension RootReducer {
             case .updateStateAfterConfigUpdate(let walletConfig):
                 state.walletConfig = walletConfig
                 state.onboardingState.walletConfig = walletConfig
+                state.homeState.walletConfig = walletConfig
                 return .none
 
             case .dismissAlert:
