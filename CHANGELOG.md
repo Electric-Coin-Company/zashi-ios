@@ -1,4 +1,6 @@
 # Changelog
+# Unreleased
+- [#611] Disable Send ZEC button when sync in progress 
 # 0.0.1 build 44
 This is the baseline build for iOS Re-Scoping epic. 
 - [#819] build and release from tag 0.0.1-44

@@ -50,7 +50,7 @@ class SendTests: XCTestCase {
             dependencies.derivationTool = .liveValue
             dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
             dependencies.mnemonic = .liveValue
-            dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
+            dependencies.sdkSynchronizer = SDKSynchronizerDependency.mockWithSnapshot(.default)
             dependencies.walletStorage = .noOp
         }
 
@@ -122,7 +122,7 @@ class SendTests: XCTestCase {
             dependencies.derivationTool = .liveValue
             dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
             dependencies.mnemonic = .liveValue
-            dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
+            dependencies.sdkSynchronizer = SDKSynchronizerDependency.mockWithSnapshot(.default)
             dependencies.walletStorage = .noOp
         }
 

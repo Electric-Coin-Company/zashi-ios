@@ -6,9 +6,9 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
-import ZcashLightClientKit
+@testable import secant_testnet
+@testable import ZcashLightClientKit
 
 class HomeTests: XCTestCase {
     func testSynchronizerStateChanged_AnyButSynced() throws {
@@ -32,7 +32,7 @@ class HomeTests: XCTestCase {
             reducer: HomeReducer()
         ) { dependencies in
             dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-            dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
+            dependencies.sdkSynchronizer = SDKSynchronizerDependency.mockWithSnapshot(.default)
         }
 
         store.send(.synchronizerStateChanged(.synced))
@@ -41,7 +41,92 @@ class HomeTests: XCTestCase {
         
         store.receive(.updateSynchronizerStatus)
     }
-    
+
+    func testSendButtonIsDisabledWhenSyncing() {
+        let testScheduler = DispatchQueue.test
+
+        let mockSnapshot = SyncStatusSnapshot.init(
+            .syncing(
+                .init(
+                    startHeight: 1_700_000,
+                    targetHeight: 1_800_000,
+                    progressHeight: 1_770_000
+                )
+            )
+        )
+
+        let store = TestStore(
+            initialState: .init(
+                balanceBreakdownState: .placeholder,
+                profileState: .placeholder,
+                scanState: .placeholder,
+                sendState: .placeholder,
+                settingsState: .placeholder,
+                shieldedBalance: Balance.zero,
+                synchronizerStatusSnapshot: mockSnapshot,
+                walletEventsState: .emptyPlaceHolder
+            ),
+            reducer: HomeReducer()
+        )
+
+        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+        store.dependencies.sdkSynchronizer = SDKSynchronizerDependency.mockWithSnapshot(mockSnapshot)
+
+        store.send(.synchronizerStateChanged(.progressUpdated))
+
+        testScheduler.advance(by: 0.01)
+
+        store.receive(.updateSynchronizerStatus)
+
+        XCTAssertTrue(store.state.isSyncing)
+        XCTAssertTrue(store.state.isSendButtonDisabled)
+    }
+
+    func testSendButtonIsNotDisabledWhenSyncingWhileOnSendScreen() {
+        let testScheduler = DispatchQueue.test
+
+        let mockSnapshot = SyncStatusSnapshot.init(
+            .syncing(
+                .init(
+                    startHeight: 1_700_000,
+                    targetHeight: 1_800_000,
+                    progressHeight: 1_770_000
+                )
+            )
+        )
+
+        let store = TestStore(
+            initialState: .init(
+                balanceBreakdownState: .placeholder,
+                profileState: .placeholder,
+                scanState: .placeholder,
+                sendState: .placeholder,
+                settingsState: .placeholder,
+                shieldedBalance: Balance.zero,
+                synchronizerStatusSnapshot: mockSnapshot,
+                walletEventsState: .emptyPlaceHolder
+            ),
+            reducer: HomeReducer()
+        )
+
+        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+        store.dependencies.sdkSynchronizer = SDKSynchronizerDependency.mockWithSnapshot(mockSnapshot)
+
+        store.send(.updateDestination(.send)) {
+            $0.destination = .send
+        }
+
+        testScheduler.advance(by: 0.01)
+
+        store.send(.synchronizerStateChanged(.progressUpdated))
+
+        testScheduler.advance(by: 0.01)
+
+        store.receive(.updateSynchronizerStatus)
+        
+        XCTAssertTrue(store.state.isSyncing)
+        XCTAssertFalse(store.state.isSendButtonDisabled)
+    }
     /// The .onAppear action is important to register for the synchronizer state updates.
     /// The integration tests make sure registrations and side effects are properly implemented.
     func testOnAppear() throws {
@@ -84,7 +169,7 @@ class HomeTests: XCTestCase {
         }
 
         // long-living (cancelable) effects need to be properly canceled.
-        // the .onDisappear action cancles the observer of the synchronizer status change.
+        // the .onDisappear action cancels the observer of the synchronizer status change.
         store.send(.onDisappear)
     }
 }

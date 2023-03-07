@@ -12,19 +12,28 @@ import ZcashLightClientKit
 
 extension SDKSynchronizerDependency {
     static let mock: SDKSynchronizerClient = MockSDKSynchronizerClient()
+
+    static func mockWithSnapshot(_ snapshot: SyncStatusSnapshot) -> MockSDKSynchronizerClient {
+        MockSDKSynchronizerClient(snapshot: snapshot)
+    }
 }
 
 class MockSDKSynchronizerClient: SDKSynchronizerClient {
     private var cancellables: [AnyCancellable] = []
+    private var snapshot: SyncStatusSnapshot
     private(set) var notificationCenter: NotificationCenterClient
     private(set) var synchronizer: SDKSynchronizer?
     private(set) var stateChanged: CurrentValueSubject<SDKSynchronizerState, Never>
     private(set) var walletBirthday: BlockHeight?
     private(set) var latestScannedSynchronizerState: SDKSynchronizer.SynchronizerState?
 
-    init(notificationCenter: NotificationCenterClient = .noOp) {
+    init(
+        notificationCenter: NotificationCenterClient = .noOp,
+        snapshot: SyncStatusSnapshot = .default
+    ) {
         self.notificationCenter = notificationCenter
         self.stateChanged = CurrentValueSubject<SDKSynchronizerState, Never>(.unknown)
+        self.snapshot = snapshot
     }
 
     func prepareWith(initializer: Initializer, seedBytes: [UInt8]) throws { }
@@ -39,7 +48,7 @@ class MockSDKSynchronizerClient: SDKSynchronizerClient {
 
     func synchronizerSynced(_ synchronizerState: SDKSynchronizer.SynchronizerState?) { }
 
-    func statusSnapshot() -> SyncStatusSnapshot { .default }
+    func statusSnapshot() -> SyncStatusSnapshot { self.snapshot }
 
     func rewind(_ policy: RewindPolicy) -> AnyPublisher<Void, Error>? { Empty<Void, Error>().eraseToAnyPublisher() }
     

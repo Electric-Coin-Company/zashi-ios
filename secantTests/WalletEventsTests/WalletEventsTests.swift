@@ -78,7 +78,7 @@ class WalletEventsTests: XCTestCase {
             reducer: WalletEventsFlowReducer()
         ) { dependencies in
             dependencies.mainQueue = Self.testScheduler.eraseToAnyScheduler()
-            dependencies.sdkSynchronizer = SDKSynchronizerDependency.mock
+            dependencies.sdkSynchronizer = SDKSynchronizerDependency.mockWithSnapshot(.default)
         }
         
         store.send(.synchronizerStateChanged(.synced))
