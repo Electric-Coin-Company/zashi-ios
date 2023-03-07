@@ -1,6 +1,14 @@
 # Changelog
-# Unreleased
+# 0.0.1 build 45
+- [#633] build and release from tag 0.0.1-45
 - [#611] Disable Send ZEC button when sync in progress 
+- [#617] Use L10n for all the texts in the app (#627)
+- [#594] Don't Allow user to proceed to send funds if they are not available for spend (#629)
+- [#595] Visbility of fiat conversion on homeage depends on feature flag (#625)
+- [#592] Add export logs to debug menu (#621)
+- PR Fix how sync progress is displayed (#624)
+- [#618] Use SwiftGen to generate L10n structure (#619)
+- [#609] Split birthday from the import seed phrase (#622)
 # 0.0.1 build 44
 This is the baseline build for iOS Re-Scoping epic. 
 - [#819] build and release from tag 0.0.1-44
