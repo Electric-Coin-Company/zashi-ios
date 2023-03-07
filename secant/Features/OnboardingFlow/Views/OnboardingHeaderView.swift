@@ -28,7 +28,7 @@ struct OnboardingHeaderView: View {
             VStack {
                 HStack {
                     if !viewStore.isInitialStep && viewStore.walletConfig.isEnabled(.onboardingFlow) {
-                        Button("general.back") {
+                        Button(L10n.General.back) {
                             viewStore.send(.back, animation: .easeInOut(duration: animationDuration))
                         }
                         .activeButtonStyle
@@ -40,7 +40,7 @@ struct OnboardingHeaderView: View {
                     Spacer()
                     
                     if !viewStore.isInitialStep && !viewStore.isFinalStep {
-                        Button("general.skip") {
+                        Button(L10n.General.skip) {
                             viewStore.send(.skip, animation: .easeInOut(duration: animationDuration))
                         }
                         .activeButtonStyle

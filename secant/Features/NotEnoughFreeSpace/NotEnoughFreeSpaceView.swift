@@ -13,7 +13,7 @@ struct NotEnoughFreeSpaceView: View {
     let viewStore: HomeViewStore
     
     var body: some View {
-        Text("nefs.message")
+        Text(L10n.Nefs.message)
             .applyScreenBackground()
     }
 }

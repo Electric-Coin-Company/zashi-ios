@@ -19,3 +19,9 @@ fonts:
   outputs:
       templatePath: Templates/fonts/fonts_swift5_swiftui.stencil
       output: Fonts+Generated.swift
+
+strings:
+  inputs: Localizable.strings
+  outputs:
+    - templateName: structured-swift5
+      output: L10n.swift

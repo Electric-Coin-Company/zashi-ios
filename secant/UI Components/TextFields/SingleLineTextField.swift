@@ -71,7 +71,7 @@ struct SingleLineTextField_Previews: PreviewProvider {
                                 action: {
                                     viewStore.send(.set("\(500)".redacted))
                                 },
-                                label: { Text("general.max") }
+                                label: { Text(L10n.General.max) }
                             )
                             .textFieldTitleAccessoryButtonStyle
                         },

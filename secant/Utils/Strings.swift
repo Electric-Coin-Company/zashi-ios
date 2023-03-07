@@ -70,10 +70,3 @@ extension String {
         return validationType.isValid(text: self)
     }
 }
-
-/// Helper that make the syntax for localized strings holding values more readable
-extension String {
-    func localized(_ values: String..., comment: String? = nil) -> String {
-        String(format: NSLocalizedString(self, comment: comment ?? ""), arguments: values)
-    }
-}

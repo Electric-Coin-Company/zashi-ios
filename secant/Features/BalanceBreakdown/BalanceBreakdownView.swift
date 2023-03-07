@@ -17,19 +17,19 @@ struct BalanceBreakdownView: View {
             VStack {
                 HStack {
                     Spacer()
-                    Text("balanceBreakdown.blockId".localized("\(viewStore.latestBlock)"))
+                    Text(L10n.BalanceBreakdown.blockId(viewStore.latestBlock))
                         .foregroundColor(Asset.Colors.Mfp.fontLight.color)
                 }
                 
                 .padding(.horizontal, 50)
                 VStack(alignment: .leading, spacing: 10) {
                     balanceView(
-                        title: "balanceBreakdown.ShieldedZec",
+                        title: L10n.BalanceBreakdown.shieldedZec,
                         viewStore.shieldedBalance.data.total,
                         titleColor: Asset.Colors.Mfp.fontDark.color
                     )
-                    balanceView(title: "balanceBreakdown.transparentBalance", viewStore.transparentBalance.data.total)
-                    balanceView(title: "balanceBreakdown.totalBalance", viewStore.totalBalance)
+                    balanceView(title: L10n.BalanceBreakdown.transparentBalance, viewStore.transparentBalance.data.total)
+                    balanceView(title: L10n.BalanceBreakdown.totalBalance, viewStore.totalBalance)
                 }
                 .padding(30)
                 .background(Asset.Colors.Mfp.background.color)
@@ -37,12 +37,8 @@ struct BalanceBreakdownView: View {
                 
                 HStack {
                     Spacer()
-                    Text(
-                        "balanceBreakdown.autoShieldingThreshold".localized(
-                            "\(viewStore.autoShieldingThreshold.decimalString())"
-                        )
-                    )
-                    .foregroundColor(Asset.Colors.Mfp.fontLight.color)
+                    Text(L10n.BalanceBreakdown.autoShieldingThreshold(viewStore.autoShieldingThreshold.decimalString()))
+                        .foregroundColor(Asset.Colors.Mfp.fontLight.color)
                 }
                 .padding(.horizontal, 50)
             }
@@ -62,14 +58,10 @@ extension BalanceBreakdownView {
         VStack(alignment: .leading) {
             Text("\(title)")
                 .foregroundColor(titleColor)
-            Text(
-                "balance".localized(
-                    "\(balance.decimalString(formatter: NumberFormatter.zcashNumberFormatter8FractionDigits))"
-                )
-            )
-            .font(.system(size: 32))
-            .fontWeight(.bold)
-            .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+            Text(L10n.balance(balance.decimalString(formatter: NumberFormatter.zcashNumberFormatter8FractionDigits)))
+                .font(.system(size: 32))
+                .fontWeight(.bold)
+                .foregroundColor(Asset.Colors.Mfp.fontDark.color)
         }
     }
 }

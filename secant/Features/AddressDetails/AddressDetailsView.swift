@@ -14,7 +14,7 @@ struct AddressDetailsView: View {
     var body: some View {
         WithViewStore(store) { viewStore in
             ScrollView {
-                Text("addressDetails.ua")
+                Text(L10n.AddressDetails.ua)
                     .fontWeight(.bold)
                 qrCode(viewStore.unifiedAddress)
                     .padding(30)
@@ -24,7 +24,7 @@ struct AddressDetailsView: View {
                         viewStore.send(.copyUnifiedAddressToPastboard)
                     }
 
-                Text("addressDetails.sa")
+                Text(L10n.AddressDetails.sa)
                     .fontWeight(.bold)
                     .padding(.top, 20)
                 qrCode(viewStore.saplingAddress)
@@ -35,7 +35,7 @@ struct AddressDetailsView: View {
                         viewStore.send(.copySaplingAddressToPastboard)
                     }
 
-                Text("addressDetails.ta")
+                Text(L10n.AddressDetails.ta)
                     .fontWeight(.bold)
                     .padding(.top, 20)
                 qrCode(viewStore.transparentAddress)
@@ -56,7 +56,7 @@ extension AddressDetailsView {
     func qrCode(_ qrText: String) -> some View {
         Group {
             if let img = QRCodeGenerator.generate(from: qrText) {
-                Image(img, scale: 1, label: Text("qrCodeFor".localized("\(qrText)")))
+                Image(img, scale: 1, label: Text(L10n.qrCodeFor(qrText)))
                     .cornerRadius(20)
                     .overlay(
                         RoundedRectangle(cornerRadius: 20)

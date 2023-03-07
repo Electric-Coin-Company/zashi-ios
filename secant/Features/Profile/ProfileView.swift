@@ -11,7 +11,7 @@ struct ProfileView: View {
                     .padding(.vertical, 50)
 
                 HStack {
-                    Text("receiveZec.yourAddress")
+                    Text(L10n.ReceiveZec.yourAddress)
                         .fontWeight(.bold)
                         .onTapGesture {
                             viewStore.send(.copyUnifiedAddressToPastboard)
@@ -48,7 +48,7 @@ extension ProfileView {
     func qrCodeUA(_ qrText: String) -> some View {
         Group {
             if let img = QRCodeGenerator.generate(from: qrText) {
-                Image(img, scale: 1, label: Text("qrCodeFor".localized("\(qrText)")))
+                Image(img, scale: 1, label: Text(L10n.qrCodeFor(qrText)))
                     .cornerRadius(20)
                     .overlay(
                         RoundedRectangle(cornerRadius: 20)

@@ -54,7 +54,7 @@ struct TransactionAmountTextField_Previews: PreviewProvider {
             titleAccessoryView: {
                 Button(
                     action: { },
-                    label: { Text("general.max") }
+                    label: { Text(L10n.General.max) }
                 )
                 .textFieldTitleAccessoryButtonStyle
             },

@@ -14,23 +14,23 @@ struct ImportWalletView: View {
     var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
-                Text("importWallet.description")
+                Text(L10n.ImportWallet.description)
                     .font(.system(size: 27))
                     .fontWeight(.bold)
                     .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                     .minimumScaleFactor(0.3)
-                
+
                 ImportSeedEditor(store: store)
                     .frame(width: nil, height: 200, alignment: .center)
-                
-                Button("general.next") {
+
+                Button(L10n.General.next) {
                     viewStore.send(.updateDestination(.birthday))
                 }
                 .activeButtonStyle
                 .importWalletButtonLayout()
                 .disabled(!viewStore.isValidForm)
                 .opacity(viewStore.isValidForm ? 1.0 : 0.5)
-                
+
                 Spacer()
             }
             .padding(.horizontal, 20)

@@ -64,7 +64,7 @@ struct RecoveryPhraseBackupView: View {
         .applyScreenBackground()
         .scrollableWhenScaledUp()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle(Text("recoveryPhraseBackupValidation.title"))
+        .navigationTitle(Text(L10n.RecoveryPhraseBackupValidation.title))
     }
 }
 
@@ -74,7 +74,7 @@ private extension RecoveryPhraseBackupView {
             if viewStore.isComplete {
                 completeHeader(for: viewStore.state)
             } else {
-                Text("recoveryPhraseBackupValidation.description")
+                Text(L10n.RecoveryPhraseBackupValidation.description)
                     .bodyText()
             }
 
@@ -85,10 +85,10 @@ private extension RecoveryPhraseBackupView {
     
     @ViewBuilder func completeHeader(for state: RecoveryPhraseValidationFlowReducer.State) -> some View {
         if state.isValid {
-            Text("recoveryPhraseBackupValidation.successResult")
+            Text(L10n.RecoveryPhraseBackupValidation.successResult)
                 .bodyText()
         } else {
-            Text("recoveryPhraseBackupValidation.failedResult")
+            Text(L10n.RecoveryPhraseBackupValidation.failedResult)
                 .bodyText()
         }
     }

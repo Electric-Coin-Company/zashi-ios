@@ -58,21 +58,21 @@ struct SmallVisualElements: View {
                     .font(.caption)
 
                 LazyVGrid(columns: gridItems) {
-                    Button("general.back") { dump("Example button") }
+                    Button(L10n.General.back) { dump("Example button") }
                         .activeButtonStyle
                         .frame(width: 80, height: 40)
 
-                    Button("general.skip") { dump("Example button") }
-                        .activeButtonStyle
-                        .frame(width: 80, height: 40)
-
-                    // TODO: [#696] Change state to selected https://github.com/zcash/ZcashLightClientKit/issues/696
-                    Button("general.back") { dump("Example button") }
+                    Button(L10n.General.skip) { dump("Example button") }
                         .activeButtonStyle
                         .frame(width: 80, height: 40)
 
                     // TODO: [#696] Change state to selected https://github.com/zcash/ZcashLightClientKit/issues/696
-                    Button("general.skip") { dump("Example button") }
+                    Button(L10n.General.back) { dump("Example button") }
+                        .activeButtonStyle
+                        .frame(width: 80, height: 40)
+
+                    // TODO: [#696] Change state to selected https://github.com/zcash/ZcashLightClientKit/issues/696
+                    Button(L10n.General.skip) { dump("Example button") }
                         .activeButtonStyle
                         .frame(width: 80, height: 40)
                 }

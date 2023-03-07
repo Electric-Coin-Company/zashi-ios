@@ -16,11 +16,11 @@ struct RecoveryPhraseValidationFlowView: View {
             GeometryReader { proxy in
                 VStack {
                     VStack(alignment: .center, spacing: 20) {
-                        Text("recoveryPhraseTestPreamble.title")
+                        Text(L10n.RecoveryPhraseTestPreamble.title)
                             .titleText()
                             .multilineTextAlignment(.center)
                             
-                        Text("recoveryPhraseTestPreamble.paragraph1")
+                        Text(L10n.RecoveryPhraseTestPreamble.paragraph1)
                             .paragraphText()
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 44)
@@ -38,12 +38,12 @@ struct RecoveryPhraseValidationFlowView: View {
 
                     VStack(alignment: .center, spacing: 40) {
                         VStack(alignment: .center, spacing: 20) {
-                            Text("recoveryPhraseTestPreamble.paragraph2")
+                            Text(L10n.RecoveryPhraseTestPreamble.paragraph2)
                                 .paragraphText()
                                 .multilineTextAlignment(.center)
                                 .opacity(0.53)
 
-                            Text("recoveryPhraseTestPreamble.paragraph3")
+                            Text(L10n.RecoveryPhraseTestPreamble.paragraph3)
                                 .paragraphText()
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal, 10)
@@ -52,7 +52,7 @@ struct RecoveryPhraseValidationFlowView: View {
 
                         Button(
                             action: { viewStore.send(.updateDestination(.validation)) },
-                            label: { Text("recoveryPhraseTestPreamble.button.goNext") }
+                            label: { Text(L10n.RecoveryPhraseTestPreamble.Button.goNext) }
                         )
                         .activeButtonStyle
                         .frame(

@@ -19,7 +19,7 @@ struct WelcomeView: View {
                     .frame(width: 210, height: 210)
                     .padding(.bottom, 14)
                 
-                Text("welcomeScreen.title")
+                Text(L10n.WelcomeScreen.title)
                     .font(.system(size: 23))
             }
             .accessDebugMenuWithHiddenGesture {
