@@ -46,6 +46,7 @@ class SettingsTests: XCTestCase {
         
         let store = TestStore(
             initialState: SettingsReducer.State(
+                exportLogsState: .placeholder,
                 isCrashReportingOn: false,
                 phraseDisplayState: RecoveryPhraseDisplayReducer.State(phrase: nil)
             ),
@@ -84,6 +85,7 @@ class SettingsTests: XCTestCase {
         let store = TestStore(
             initialState: SettingsReducer.State(
                 destination: nil,
+                exportLogsState: .placeholder,
                 isCrashReportingOn: false,
                 phraseDisplayState: .init()
             ),
@@ -92,13 +94,13 @@ class SettingsTests: XCTestCase {
         
         store.dependencies.logsHandler = LogsHandlerClient(exportAndStoreLogs: { _, _, _ in })
         
-        await store.send(.exportLogs) { state in
-            state.exportLogsDisabled = true
+        await store.send(.exportLogs(.start)) { state in
+            state.exportLogsState.exportLogsDisabled = true
         }
         
-        await store.receive(.logsExported) { state in
-            state.exportLogsDisabled = false
-            state.isSharingLogs = true
+        await store.receive(.exportLogs(.finished)) { state in
+            state.exportLogsState.exportLogsDisabled = false
+            state.exportLogsState.isSharingLogs = true
         }
     }
     
@@ -106,15 +108,17 @@ class SettingsTests: XCTestCase {
         let store = TestStore(
             initialState: SettingsReducer.State(
                 destination: nil,
+                exportLogsState: ExportLogsReducer.State(
+                    isSharingLogs: true
+                ),
                 isCrashReportingOn: false,
-                isSharingLogs: true,
                 phraseDisplayState: .init()
             ),
             reducer: SettingsReducer()
         )
         
-        await store.send(.logsShareFinished) { state in
-            state.isSharingLogs = false
+        await store.send(.exportLogs(.shareFinished)) { state in
+            state.exportLogsState.isSharingLogs = false
         }
     }
 }

@@ -13,29 +13,10 @@ struct SettingsReducer: ReducerProtocol {
 
         @BindingState var alert: AlertState<SettingsReducer.Action>?
         var destination: Destination?
-        var exportLogsDisabled = false
+        var exportLogsState: ExportLogsReducer.State
         @BindingState var isCrashReportingOn: Bool
-        var isSharingLogs = false
         var phraseDisplayState: RecoveryPhraseDisplayReducer.State
         var supportData: SupportData?
-
-        var tempSDKDir: URL {
-            let tempDir = FileManager.default.temporaryDirectory
-            let sdkFileName = "sdkLogs.txt"
-            return tempDir.appendingPathComponent(sdkFileName)
-        }
-
-        var tempTCADir: URL {
-            let tempDir = FileManager.default.temporaryDirectory
-            let sdkFileName = "tcaLogs.txt"
-            return tempDir.appendingPathComponent(sdkFileName)
-        }
-
-        var tempWalletDir: URL {
-            let tempDir = FileManager.default.temporaryDirectory
-            let sdkFileName = "walletLogs.txt"
-            return tempDir.appendingPathComponent(sdkFileName)
-        }
     }
 
     enum Action: BindableAction, Equatable {
@@ -43,10 +24,7 @@ struct SettingsReducer: ReducerProtocol {
         case backupWalletAccessRequest
         case binding(BindingAction<SettingsReducer.State>)
         case dismissAlert
-        case exportLogs
-        case logsExported
-        case logsExportFailed(String)
-        case logsShareFinished
+        case exportLogs(ExportLogsReducer.Action)
         case onAppear
         case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
         case sendSupportMail
@@ -108,32 +86,6 @@ struct SettingsReducer: ReducerProtocol {
                 return .none
                 
             case .exportLogs:
-                state.exportLogsDisabled = true
-                return .run { [state] send in
-                    do {
-                        try await logsHandler.exportAndStoreLogs(state.tempSDKDir, state.tempTCADir, state.tempWalletDir)
-                        await send(.logsExported)
-                    } catch {
-                        await send(.logsExportFailed(error.localizedDescription))
-                    }
-                }
-                
-            case .logsExported:
-                state.exportLogsDisabled = false
-                state.isSharingLogs = true
-                return .none
-
-            case let .logsExportFailed(errorDescription):
-                // TODO: [#527] address the error here https://github.com/zcash/secant-ios-wallet/issues/527
-                state.alert = AlertState(
-                    title: TextState("Error when exporting logs"),
-                    message: TextState("Error: \(errorDescription)"),
-                    dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
-                )
-                return .none
-
-            case .logsShareFinished:
-                state.isSharingLogs = false
                 return .none
 
             case .phraseDisplay:
@@ -172,6 +124,10 @@ struct SettingsReducer: ReducerProtocol {
         Scope(state: \.phraseDisplayState, action: /Action.phraseDisplay) {
             RecoveryPhraseDisplayReducer()
         }
+
+        Scope(state: \.exportLogsState, action: /Action.exportLogs) {
+            ExportLogsReducer()
+        }
     }
 }
 
@@ -208,6 +164,7 @@ extension SettingsStore {
 
 extension SettingsReducer.State {
     static let placeholder = SettingsReducer.State(
+        exportLogsState: .placeholder,
         isCrashReportingOn: true,
         phraseDisplayState: RecoveryPhraseDisplayReducer.State(
             phrase: .placeholder

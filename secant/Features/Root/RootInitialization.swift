@@ -319,7 +319,7 @@ extension RootReducer {
                 return .none
 
             case .home, .destination, .onboarding, .phraseDisplay, .phraseValidation, .sandbox,
-                .welcome, .binding, .debug:
+                .welcome, .binding, .debug, .exportLogs:
                 return .none
             }
         }

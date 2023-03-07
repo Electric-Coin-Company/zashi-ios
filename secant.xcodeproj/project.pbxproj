@@ -151,7 +151,6 @@
 		0D26AF27299E8196005260EE /* WalletStorageInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863982923935B003D0F8B /* WalletStorageInterface.swift */; };
 		0D26AF28299E8196005260EE /* StandardButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DC733E271D88CC0053CBB6 /* StandardButtonStyle.swift */; };
 		0D26AF2A299E8196005260EE /* ActiveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663FAB9B271D874D00E495F8 /* ActiveButton.swift */; };
-		0D26AF2B299E8196005260EE /* UIShareDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E612C6E2987A9B100D09B09 /* UIShareDialog.swift */; };
 		0D26AF2C299E8196005260EE /* DatabaseFilesLiveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF952291E5E86000A1A05 /* DatabaseFilesLiveKey.swift */; };
 		0D26AF2D299E8196005260EE /* DebugMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2F1C832809B606004E65FE /* DebugMenu.swift */; };
 		0D26AF2E299E8196005260EE /* MnemonicInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E153A5E2920CD5100112F41 /* MnemonicInterface.swift */; };
@@ -324,6 +323,10 @@
 		34BF09092927C98000222134 /* Memo+toString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BF09082927C98000222134 /* Memo+toString.swift */; };
 		34C4329029B62D8D00F74045 /* L10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C4328F29B62D8D00F74045 /* L10n.swift */; };
 		34C4329129B62D8D00F74045 /* L10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C4328F29B62D8D00F74045 /* L10n.swift */; };
+		34C5658229B60C1C002F3A7C /* UIShareDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C5658129B60C1C002F3A7C /* UIShareDialog.swift */; };
+		34C5658329B60C1C002F3A7C /* UIShareDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C5658129B60C1C002F3A7C /* UIShareDialog.swift */; };
+		34C5658529B60C8B002F3A7C /* ExportLogsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C5658429B60C8B002F3A7C /* ExportLogsStore.swift */; };
+		34C5658629B60C8B002F3A7C /* ExportLogsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C5658429B60C8B002F3A7C /* ExportLogsStore.swift */; };
 		34DA414728E4385800F8CC61 /* TransactionSendingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34DA414628E4385800F8CC61 /* TransactionSendingView.swift */; };
 		34DA414928E439CD00F8CC61 /* sendingTransaction.json in Resources */ = {isa = PBXBuildFile; fileRef = 34DA414828E439CD00F8CC61 /* sendingTransaction.json */; };
 		34E0AF1128DEE5220034CF37 /* Wedge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0AF1028DEE5220034CF37 /* Wedge.swift */; };
@@ -397,7 +400,6 @@
 		9E5BF648282277BE00BA3F17 /* NotificationCenterInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF647282277BE00BA3F17 /* NotificationCenterInterface.swift */; };
 		9E5BF64F2823E94900BA3F17 /* TransactionAddressTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF64D2823E94900BA3F17 /* TransactionAddressTextField.swift */; };
 		9E5BF6502823E94900BA3F17 /* TransactionAddressTextFieldStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF64E2823E94900BA3F17 /* TransactionAddressTextFieldStore.swift */; };
-		9E612C6F2987A9B100D09B09 /* UIShareDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E612C6E2987A9B100D09B09 /* UIShareDialog.swift */; };
 		9E612C7229880E9200D09B09 /* LogsHandlerInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E612C7129880E9200D09B09 /* LogsHandlerInterface.swift */; };
 		9E612C7429880F2200D09B09 /* LogsHandlerLive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E612C7329880F2200D09B09 /* LogsHandlerLive.swift */; };
 		9E612C7629880FC900D09B09 /* LogsHandlerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E612C7529880FC900D09B09 /* LogsHandlerTest.swift */; };
@@ -650,6 +652,8 @@
 		346D41E328DF0B8600963F36 /* CheckCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckCircle.swift; sourceTree = "<group>"; };
 		34BF09082927C98000222134 /* Memo+toString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Memo+toString.swift"; sourceTree = "<group>"; };
 		34C4328F29B62D8D00F74045 /* L10n.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = L10n.swift; sourceTree = "<group>"; };
+		34C5658129B60C1C002F3A7C /* UIShareDialog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIShareDialog.swift; sourceTree = "<group>"; };
+		34C5658429B60C8B002F3A7C /* ExportLogsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportLogsStore.swift; sourceTree = "<group>"; };
 		34DA414628E4385800F8CC61 /* TransactionSendingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionSendingView.swift; sourceTree = "<group>"; };
 		34DA414828E439CD00F8CC61 /* sendingTransaction.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sendingTransaction.json; sourceTree = "<group>"; };
 		34E0AF1028DEE5220034CF37 /* Wedge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wedge.swift; sourceTree = "<group>"; };
@@ -716,7 +720,6 @@
 		9E5BF647282277BE00BA3F17 /* NotificationCenterInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenterInterface.swift; sourceTree = "<group>"; };
 		9E5BF64D2823E94900BA3F17 /* TransactionAddressTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAddressTextField.swift; sourceTree = "<group>"; };
 		9E5BF64E2823E94900BA3F17 /* TransactionAddressTextFieldStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAddressTextFieldStore.swift; sourceTree = "<group>"; };
-		9E612C6E2987A9B100D09B09 /* UIShareDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIShareDialog.swift; sourceTree = "<group>"; };
 		9E612C7129880E9200D09B09 /* LogsHandlerInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsHandlerInterface.swift; sourceTree = "<group>"; };
 		9E612C7329880F2200D09B09 /* LogsHandlerLive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsHandlerLive.swift; sourceTree = "<group>"; };
 		9E612C7529880FC900D09B09 /* LogsHandlerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsHandlerTest.swift; sourceTree = "<group>"; };
@@ -1189,6 +1192,23 @@
 			path = CheckCircle;
 			sourceTree = "<group>";
 		};
+		34C5657F29B60BDF002F3A7C /* ExportLogs */ = {
+			isa = PBXGroup;
+			children = (
+				34C5658429B60C8B002F3A7C /* ExportLogsStore.swift */,
+				34C5658029B60C1C002F3A7C /* UIKitBridge */,
+			);
+			path = ExportLogs;
+			sourceTree = "<group>";
+		};
+		34C5658029B60C1C002F3A7C /* UIKitBridge */ = {
+			isa = PBXGroup;
+			children = (
+				34C5658129B60C1C002F3A7C /* UIShareDialog.swift */,
+			);
+			path = UIKitBridge;
+			sourceTree = "<group>";
+		};
 		34F039B129ABCE8500CF0053 /* WalletConfigProviderTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -1223,6 +1243,7 @@
 			children = (
 				9E7CB61B2874140900A02233 /* AddressDetails */,
 				9E6713F2289BC51200A6796F /* BalanceBreakdown */,
+				34C5657F29B60BDF002F3A7C /* ExportLogs */,
 				F93874EC273C4DE200F0E875 /* Home */,
 				9E2DF99727CF704D00649636 /* ImportWallet */,
 				3448CB3028E4764E006ADEDB /* NotEnoughFreeSpace */,
@@ -1457,7 +1478,6 @@
 			isa = PBXGroup;
 			children = (
 				346731A129AE3A5100974482 /* UIMailDialog.swift */,
-				9E612C6E2987A9B100D09B09 /* UIShareDialog.swift */,
 			);
 			path = UIKitBridge;
 			sourceTree = "<group>";
@@ -2603,6 +2623,7 @@
 				0D26AEE4299E8196005260EE /* CurrencySelectionView.swift in Sources */,
 				0D26AEE5299E8196005260EE /* RecoveryPhraseRandomizerTestKey.swift in Sources */,
 				0D26AEE7299E8196005260EE /* TransactionAddressTextFieldStore.swift in Sources */,
+				34C5658629B60C8B002F3A7C /* ExportLogsStore.swift in Sources */,
 				0D26AEE8299E8196005260EE /* NumberFormatterInterface.swift in Sources */,
 				0D26AEE9299E8196005260EE /* WithStateBinding.swift in Sources */,
 				0D26AEEA299E8196005260EE /* Date+Readable.swift in Sources */,
@@ -2628,6 +2649,7 @@
 				0D26AEFE299E8196005260EE /* NavigationLinks.swift in Sources */,
 				0D26AEFF299E8196005260EE /* SandboxView.swift in Sources */,
 				0D26AF00299E8196005260EE /* View+WhenDraggable.swift in Sources */,
+				34C5658329B60C1C002F3A7C /* UIShareDialog.swift in Sources */,
 				0D26AF01299E8196005260EE /* RecoveryPhraseDisplayView.swift in Sources */,
 				0D26AF02299E8196005260EE /* URIParser.swift in Sources */,
 				0D26AF03299E8196005260EE /* URIParserLive.swift in Sources */,
@@ -2670,7 +2692,6 @@
 				0D26AF27299E8196005260EE /* WalletStorageInterface.swift in Sources */,
 				0D26AF28299E8196005260EE /* StandardButtonStyle.swift in Sources */,
 				0D26AF2A299E8196005260EE /* ActiveButton.swift in Sources */,
-				0D26AF2B299E8196005260EE /* UIShareDialog.swift in Sources */,
 				0D26AF2C299E8196005260EE /* DatabaseFilesLiveKey.swift in Sources */,
 				0D26AF2D299E8196005260EE /* DebugMenu.swift in Sources */,
 				0D26AF2E299E8196005260EE /* MnemonicInterface.swift in Sources */,
@@ -2824,6 +2845,7 @@
 				2E8719CD27FB0D3B0082C926 /* CurrencySelectionView.swift in Sources */,
 				9EB863A729239DCB003D0F8B /* RecoveryPhraseRandomizerTestKey.swift in Sources */,
 				9E5BF6502823E94900BA3F17 /* TransactionAddressTextFieldStore.swift in Sources */,
+				34C5658529B60C8B002F3A7C /* ExportLogsStore.swift in Sources */,
 				9EB863932922D036003D0F8B /* NumberFormatterInterface.swift in Sources */,
 				F9EEB8162742C2210032EEB8 /* WithStateBinding.swift in Sources */,
 				9E7FE0D3282D274E00C374E8 /* Date+Readable.swift in Sources */,
@@ -2849,6 +2871,7 @@
 				F9322DC0273B555C00C105B5 /* NavigationLinks.swift in Sources */,
 				9EAFEB8F2808183D00199FC9 /* SandboxView.swift in Sources */,
 				0D7CE63427349B5D0020E050 /* View+WhenDraggable.swift in Sources */,
+				34C5658229B60C1C002F3A7C /* UIShareDialog.swift in Sources */,
 				0D3D04082728B3440032ABC1 /* RecoveryPhraseDisplayView.swift in Sources */,
 				9EB863A2292398A8003D0F8B /* URIParser.swift in Sources */,
 				9EB863C12923C779003D0F8B /* URIParserLive.swift in Sources */,
@@ -2891,7 +2914,6 @@
 				9EB8639B2923935B003D0F8B /* WalletStorageInterface.swift in Sources */,
 				66DC733F271D88CC0053CBB6 /* StandardButtonStyle.swift in Sources */,
 				663FAB9C271D874D00E495F8 /* ActiveButton.swift in Sources */,
-				9E612C6F2987A9B100D09B09 /* UIShareDialog.swift in Sources */,
 				9EBDF956291E5E86000A1A05 /* DatabaseFilesLiveKey.swift in Sources */,
 				9E2F1C842809B606004E65FE /* DebugMenu.swift in Sources */,
 				9E153A5F2920CE2700112F41 /* MnemonicInterface.swift in Sources */,
