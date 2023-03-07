@@ -123,7 +123,7 @@ private extension RootView {
     @ViewBuilder func debugView(_ viewStore: RootViewStore) -> some View {
         VStack(alignment: .leading) {
             if viewStore.destinationState.previousDestination == .home {
-                Button("general.back") {
+                Button(L10n.General.back) {
                     viewStore.goToDestination(.home)
                 }
                 .activeButtonStyle
@@ -132,42 +132,42 @@ private extension RootView {
             }
 
             List {
-                Section(header: Text("Navigation Stack Destinations")) {
-                    Button("Go To Sandbox (navigation proof)") {
+                Section(header: Text(L10n.Root.Debug.title)) {
+                    Button(L10n.Root.Debug.Option.gotoSandbox) {
                         viewStore.goToDestination(.sandbox)
                     }
 
-                    Button("Go To Onboarding") {
+                    Button(L10n.Root.Debug.Option.gotoOnboarding) {
                         viewStore.goToDestination(.onboarding)
                     }
 
-                    Button("Go To Phrase Validation Demo") {
+                    Button(L10n.Root.Debug.Option.gotoPhraseValidationDemo) {
                         viewStore.goToDestination(.phraseValidation)
                     }
 
-                    Button("Restart the app") {
+                    Button(L10n.Root.Debug.Option.restartApp) {
                         viewStore.goToDestination(.welcome)
                     }
 
-                    Button("Test Crash Reporter") {
+                    Button(L10n.Root.Debug.Option.testCrashReporter) {
                         viewStore.send(.debug(.testCrashReporter))
                     }
 
-                    Button("Export logs") {
+                    Button(L10n.Root.Debug.Option.exportLogs) {
                         viewStore.send(.exportLogs(.start))
                     }
                     .disabled(viewStore.exportLogsState.exportLogsDisabled)
 
-                    Button("Rescan Blockchain") {
+                    Button(L10n.Root.Debug.Option.rescanBlockchain) {
                         viewStore.send(.debug(.rescanBlockchain))
                     }
 
-                    Button("[Be careful] Nuke Wallet") {
+                    Button(L10n.Root.Debug.Option.nukeWallet) {
                         viewStore.send(.initialization(.nukeWalletRequest))
                     }
                 }
 
-                Section(header: Text("Feature flags")) {
+                Section(header: Text(L10n.Root.Debug.featureFlags)) {
                     let flags = viewStore.state.walletConfig.flags
                         .map { FeatureFlagWrapper(name: $0.key, isEnabled: $0.value) }
                         .sorted()
@@ -204,7 +204,7 @@ private extension RootView {
                 dismiss: .debug(.cancelRescan)
             )
         }
-        .navigationBarTitle("Startup")
+        .navigationBarTitle(L10n.Root.Debug.navigationTitle)
     }
 }
 

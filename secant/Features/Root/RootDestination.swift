@@ -115,10 +115,10 @@ extension RootReducer {
             case let .destination(.deeplinkFailed(url, errorDescription)):
                 // TODO: [#221] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
                 state.destinationState.alert = AlertState(
-                    title: TextState("Failed to process deeplink."),
-                    message: TextState("Deeplink: \(url))\nError: \(errorDescription)"),
+                    title: TextState(L10n.Root.Destination.Alert.FailedToProcessDeeplink.title),
+                    message: TextState(L10n.Root.Destination.Alert.FailedToProcessDeeplink.message(url, errorDescription)),
                     dismissButton: .default(
-                        TextState("Ok"),
+                        TextState(L10n.General.ok),
                         action: .send(.destination(.dismissAlert))
                     )
                 )

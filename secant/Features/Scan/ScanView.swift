@@ -38,7 +38,7 @@ struct ScanView: View {
                             .padding(.bottom, 10)
                         
                         if let scannedValue = viewStore.scannedValue {
-                            Text("\(scannedValue)")
+                            Text(scannedValue)
                                 .foregroundColor(viewStore.isValidValue ? .green : .red)
                         } else {
                             Text(L10n.Scan.scanning)

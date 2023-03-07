@@ -63,9 +63,9 @@ struct SettingsReducer: ReducerProtocol {
                 } catch {
                     // TODO: [#221] - merge with issue 221 (https://github.com/zcash/secant-ios-wallet/issues/221) and its Error States
                     state.alert = AlertState(
-                        title: TextState("Can't backup wallet"),
-                        message: TextState("Error: \(error.localizedDescription)"),
-                        dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+                        title: TextState(L10n.Settings.Alert.CantBackupWallet.title),
+                        message: TextState(L10n.Settings.Alert.CantBackupWallet.message(error.localizedDescription)),
+                        dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
                     )
                     return .none
                 }
@@ -104,12 +104,9 @@ struct SettingsReducer: ReducerProtocol {
                     state.supportData = SupportDataGenerator.generate()
                 } else {
                     state.alert = AlertState(
-                        title: TextState("Can't send email"),
-                        message: TextState("""
-                        It looks like that you don't have any email account configured on your device. Therefore it's not possible to send a support \
-                        email.
-                        """),
-                        dismissButton: .default(TextState("Ok"), action: .send(.sendSupportMailFinished))
+                        title: TextState(L10n.Settings.Alert.CantSendEmail.title),
+                        message: TextState(L10n.Settings.Alert.CantSendEmail.message),
+                        dismissButton: .default(TextState(L10n.General.ok), action: .send(.sendSupportMailFinished))
                     )
                 }
 

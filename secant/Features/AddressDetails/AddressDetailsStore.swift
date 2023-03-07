@@ -16,15 +16,15 @@ struct AddressDetailsReducer: ReducerProtocol {
         var uAddress: UnifiedAddress?
 
         var unifiedAddress: String {
-            uAddress?.stringEncoded ?? "could not extract UA"
+            uAddress?.stringEncoded ?? L10n.AddressDetails.Error.cantExtractUnifiedAddress
         }
 
         var transparentAddress: String {
-            uAddress?.transparentReceiver()?.stringEncoded ?? "could not extract transparent receiver from UA"
+            uAddress?.transparentReceiver()?.stringEncoded ?? L10n.AddressDetails.Error.cantExtractTransparentAddress
         }
 
         var saplingAddress: String {
-            uAddress?.saplingReceiver()?.stringEncoded ?? "could not extract sapling receiver from UA"
+            uAddress?.saplingReceiver()?.stringEncoded ?? L10n.AddressDetails.Error.cantExtractSaplingAddress
         }
     }
 

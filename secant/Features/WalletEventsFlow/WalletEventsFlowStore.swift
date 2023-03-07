@@ -42,7 +42,7 @@ struct WalletEventsFlowReducer: ReducerProtocol {
     @Dependency(\.pasteboard) var pasteboard
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
-    
+
     // swiftlint:disable:next cyclomatic_complexity
     func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
         switch action {
@@ -104,17 +104,14 @@ struct WalletEventsFlowReducer: ReducerProtocol {
 
         case .warnBeforeLeavingApp(let blockExplorerURL):
             state.alert = AlertState(
-                title: TextState("You are exiting your wallet"),
-                message: TextState("""
-                While usually an acceptable risk, you will possibly exposing your behavior and interest in this transaction by going online. \
-                OH NOES! What will you do?
-                """),
+                title: TextState(L10n.WalletEvent.Alert.LeavingApp.title),
+                message: TextState(L10n.WalletEvent.Alert.LeavingApp.message),
                 primaryButton: .cancel(
-                    TextState("NEVERMIND"),
+                    TextState(L10n.WalletEvent.Alert.LeavingApp.Button.nevermind),
                     action: .send(.dismissAlert)
                 ),
                 secondaryButton: .default(
-                    TextState("SEE TX ONLINE"),
+                    TextState(L10n.WalletEvent.Alert.LeavingApp.Button.seeOnline),
                     action: .send(.openBlockExplorer(blockExplorerURL))
                 )
             )

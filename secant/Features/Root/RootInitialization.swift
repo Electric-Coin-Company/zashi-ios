@@ -82,17 +82,17 @@ extension RootReducer {
                     // TODO: [#221] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
                     state.appInitializationState = .failed
                     state.alert = AlertState(
-                        title: TextState("Wallet initialisation failed."),
-                        message: TextState("App initialisation state: failed"),
-                        dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+                        title: TextState(L10n.Root.Initialization.Alert.Failed.title),
+                        message: TextState(L10n.Root.Initialization.Alert.WalletStateFailed.message(walletState)),
+                        dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
                     )
                 case .keysMissing:
                     // TODO: [#221] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
                     state.appInitializationState = .keysMissing
                     state.alert = AlertState(
-                        title: TextState("Wallet initialisation failed."),
-                        message: TextState("App initialisation state: keysMissing."),
-                        dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+                        title: TextState(L10n.Root.Initialization.Alert.Failed.title),
+                        message: TextState(L10n.Root.Initialization.Alert.WalletStateFailed.message(walletState)),
+                        dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
                     )
 
                 case .initialized, .filesMissing:
@@ -123,9 +123,9 @@ extension RootReducer {
                         state.appInitializationState = .failed
                         // TODO: [#221] Handle fatal error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
                         state.alert = AlertState(
-                            title: TextState("Wallet initialisation failed."),
-                            message: TextState("Can't load seed phrase from local storage."),
-                            dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+                            title: TextState(L10n.Root.Initialization.Alert.Failed.title),
+                            message: TextState(L10n.Root.Initialization.Alert.CantLoadSeedPhrase.message),
+                            dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
                         )
                         return .none
                     }
@@ -151,9 +151,9 @@ extension RootReducer {
                     state.appInitializationState = .failed
                     // TODO: [#221] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
                     state.alert = AlertState(
-                        title: TextState("Failed to initialize the SDK"),
-                        message: TextState("Error: \(error.localizedDescription)"),
-                        dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+                        title: TextState(L10n.Root.Initialization.Alert.SdkInitFailed.title),
+                        message: TextState(L10n.Root.Initialization.Alert.Error.message(error.localizedDescription)),
+                        dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
                     )
                     return .none
                 }
@@ -163,9 +163,9 @@ extension RootReducer {
                     state.appInitializationState = .failed
                     // TODO: [#221] Handle fatal error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
                     state.alert = AlertState(
-                        title: TextState("Wallet initialisation failed."),
-                        message: TextState("Can't load seed phrase from local storage."),
-                        dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+                        title: TextState(L10n.Root.Initialization.Alert.Failed.title),
+                        message: TextState(L10n.Root.Initialization.Alert.CantLoadSeedPhrase.message),
+                        dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
                     )
                     return .none
                 }
@@ -210,9 +210,9 @@ extension RootReducer {
                 } catch {
                     // TODO: [#201] - merge with issue 221 (https://github.com/zcash/secant-ios-wallet/issues/221) and its Error States
                     state.alert = AlertState(
-                        title: TextState("Wallet initialisation failed."),
-                        message: TextState("Can't create new wallet. Error: \(error.localizedDescription)"),
-                        dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+                        title: TextState(L10n.Root.Initialization.Alert.Failed.title),
+                        message: TextState(L10n.Root.Initialization.Alert.CantCreateNewWallet.message(error.localizedDescription)),
+                        dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
                     )
                 }
 
@@ -224,24 +224,26 @@ extension RootReducer {
                 } catch {
                     // TODO: [#221] error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
                     state.alert = AlertState(
-                        title: TextState("Wallet initialisation failed."),
-                        message: TextState("Can't store information that user passed phrase backup test. Error: \(error.localizedDescription)"),
-                        dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+                        title: TextState(L10n.Root.Initialization.Alert.Failed.title),
+                        message: TextState(
+                            L10n.Root.Initialization.Alert.CantStoreThatUserPassedPhraseBackupTest.message(error.localizedDescription)
+                        ),
+                        dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
                     )
                 }
                 return .none
 
             case .initialization(.nukeWalletRequest):
                 state.destinationState.alert = AlertState(
-                    title: TextState("Wipe of the wallet"),
-                    message: TextState("Are you sure?"),
+                    title: TextState(L10n.Root.Initialization.Alert.Wipe.title),
+                    message: TextState(L10n.Root.Initialization.Alert.Wipe.message),
                     buttons: [
                         .destructive(
-                            TextState("Yes"),
+                            TextState(L10n.General.yes),
                             action: .send(.initialization(.nukeWallet))
                         ),
                         .cancel(
-                            TextState("No"),
+                            TextState(L10n.General.no),
                             action: .send(.destination(.dismissAlert))
                         )
                     ]
@@ -272,9 +274,9 @@ extension RootReducer {
             case .nukeWalletFailed:
                 // TODO: [#221] error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
                 state.alert = AlertState(
-                    title: TextState("Nuke of the wallet failed"),
+                    title: TextState(L10n.Root.Initialization.Alert.WipeFailed.title),
                     message: TextState(""),
-                    dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+                    dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
                 )
 
                 let backDestination: EffectTask<RootReducer.Action>

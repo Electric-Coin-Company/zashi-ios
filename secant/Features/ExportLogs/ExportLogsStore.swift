@@ -81,9 +81,9 @@ struct ExportLogsReducer: ReducerProtocol {
             case let .failed(errorDescription):
                 // TODO: [#527] address the error here https://github.com/zcash/secant-ios-wallet/issues/527
                 state.alert = AlertState(
-                    title: TextState("Error when exporting logs"),
-                    message: TextState("Error: \(errorDescription)"),
-                    dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
+                    title: TextState(L10n.ExportLogs.Alert.Failed.title),
+                    message: TextState(L10n.ExportLogs.Alert.Failed.message(errorDescription)),
+                    dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
                 )
                 return .none
 

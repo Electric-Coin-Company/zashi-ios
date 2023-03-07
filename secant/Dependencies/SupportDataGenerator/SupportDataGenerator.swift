@@ -44,7 +44,7 @@ private protocol SupportDataGeneratorItem {
 
 private struct TimeItem: SupportDataGeneratorItem {
     private enum Constants {
-        static let timeKey = "Current time"
+        static let timeKey = L10n.SupportData.TimeItem.time
     }
 
     let dateFormatter: DateFormatter
@@ -62,9 +62,9 @@ private struct TimeItem: SupportDataGeneratorItem {
 
 private struct AppVersionItem: SupportDataGeneratorItem {
     private enum Constants {
-        static let bundleIdentifierKey = "App identifier"
-        static let versionKey = "App version"
-        static let unknownVersion = "Unknown"
+        static let bundleIdentifierKey = L10n.SupportData.AppVersionItem.bundleIdentifier
+        static let versionKey = L10n.SupportData.AppVersionItem.version
+        static let unknownVersion = L10n.General.unknown
     }
 
     func generate() -> [(String, String)] {
@@ -88,7 +88,7 @@ private struct AppVersionItem: SupportDataGeneratorItem {
 
 private struct SystemVersionItem: SupportDataGeneratorItem {
     private enum Constants {
-        static let systemVersionKey = "iOS version"
+        static let systemVersionKey = L10n.SupportData.SystemVersionItem.version
     }
 
     func generate() -> [(String, String)] {
@@ -98,8 +98,8 @@ private struct SystemVersionItem: SupportDataGeneratorItem {
 
 private struct DeviceModelItem: SupportDataGeneratorItem {
     private enum Constants {
-        static let deviceModelKey = "Device"
-        static let unknownDevice = "unknown"
+        static let deviceModelKey = L10n.SupportData.DeviceModelItem.device
+        static let unknownDevice = L10n.General.unknown
     }
 
     func generate() -> [(String, String)] {
@@ -117,17 +117,17 @@ private struct DeviceModelItem: SupportDataGeneratorItem {
 
 private struct LocaleItem: SupportDataGeneratorItem {
     private enum Constants {
-        static let localKey = "Locale"
-        static let groupingSeparatorKey = "Currency grouping separato"
-        static let decimalSeparatorKey = "Currency decimal separator"
-        static let unknownSeparator = "unknown"
+        static let localeKey = L10n.SupportData.LocaleItem.locale
+        static let groupingSeparatorKey = L10n.SupportData.LocaleItem.groupingSeparator
+        static let decimalSeparatorKey = L10n.SupportData.LocaleItem.decimalSeparator
+        static let unknownSeparator = L10n.General.unknown
     }
 
     func generate() -> [(String, String)] {
         let locale = Locale.current
 
         return [
-            (Constants.localKey, locale.identifier),
+            (Constants.localeKey, locale.identifier),
             (Constants.groupingSeparatorKey, locale.groupingSeparator ?? Constants.unknownSeparator),
             (Constants.decimalSeparatorKey, locale.decimalSeparator ?? Constants.unknownSeparator)
         ]
@@ -136,8 +136,8 @@ private struct LocaleItem: SupportDataGeneratorItem {
 
 private struct FreeDiskSpaceItem: SupportDataGeneratorItem {
     private enum Constants {
-        static let freeDiskSpaceKey = "Usable storage"
-        static let freeDiskSpaceUnknown = "unknown"
+        static let freeDiskSpaceKey = L10n.SupportData.FreeDiskSpaceItem.freeDiskSpace
+        static let freeDiskSpaceUnknown = L10n.General.unknown
     }
 
     func generate() -> [(String, String)] {
@@ -162,12 +162,12 @@ private struct FreeDiskSpaceItem: SupportDataGeneratorItem {
 
 private struct PermissionsItems: SupportDataGeneratorItem {
     private enum Constants {
-        static let permissionsKey = "Permissions"
-        static let cameraPermKey = "Camera access"
-        static let faceIDAvailable = "FaceID available"
-        static let touchIDAvailable = "TouchID available"
-        static let yesText = "yes"
-        static let noText = "no"
+        static let permissionsKey = L10n.SupportData.PermissionItem.permissions
+        static let cameraPermKey = L10n.SupportData.PermissionItem.camera
+        static let faceIDAvailable = L10n.SupportData.PermissionItem.faceID
+        static let touchIDAvailable = L10n.SupportData.PermissionItem.touchID
+        static let yesText = L10n.General.yes
+        static let noText = L10n.General.no
     }
 
     func generate() -> [(String, String)] {
