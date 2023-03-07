@@ -64,6 +64,7 @@ class HomeTests: XCTestCase {
                 settingsState: .placeholder,
                 shieldedBalance: Balance.zero,
                 synchronizerStatusSnapshot: mockSnapshot,
+                walletConfig: .default,
                 walletEventsState: .emptyPlaceHolder
             ),
             reducer: HomeReducer()
@@ -104,6 +105,7 @@ class HomeTests: XCTestCase {
                 settingsState: .placeholder,
                 shieldedBalance: Balance.zero,
                 synchronizerStatusSnapshot: mockSnapshot,
+                walletConfig: .default,
                 walletEventsState: .emptyPlaceHolder
             ),
             reducer: HomeReducer()
