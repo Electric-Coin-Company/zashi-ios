@@ -24,7 +24,7 @@ struct BalanceBreakdownView: View {
                 .padding(.horizontal, 50)
                 VStack(alignment: .leading, spacing: 10) {
                     balanceView(
-                        title: L10n.BalanceBreakdown.shieldedZec,
+                        title: L10n.BalanceBreakdown.shieldedZec(TargetConstants.tokenName),
                         viewStore.shieldedBalance.data.total,
                         titleColor: Asset.Colors.Mfp.fontDark.color
                     )
@@ -37,8 +37,13 @@ struct BalanceBreakdownView: View {
                 
                 HStack {
                     Spacer()
-                    Text(L10n.BalanceBreakdown.autoShieldingThreshold(viewStore.autoShieldingThreshold.decimalString()))
-                        .foregroundColor(Asset.Colors.Mfp.fontLight.color)
+                    Text(
+                        L10n.BalanceBreakdown.autoShieldingThreshold(
+                            viewStore.autoShieldingThreshold.decimalString(),
+                            TargetConstants.tokenName
+                        )
+                    )
+                    .foregroundColor(Asset.Colors.Mfp.fontLight.color)
                 }
                 .padding(.horizontal, 50)
             }
@@ -58,10 +63,15 @@ extension BalanceBreakdownView {
         VStack(alignment: .leading) {
             Text("\(title)")
                 .foregroundColor(titleColor)
-            Text(L10n.balance(balance.decimalString(formatter: NumberFormatter.zcashNumberFormatter8FractionDigits)))
-                .font(.system(size: 32))
-                .fontWeight(.bold)
-                .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+            Text(
+                L10n.balance(
+                    balance.decimalString(formatter: NumberFormatter.zcashNumberFormatter8FractionDigits),
+                    TargetConstants.tokenName
+                )
+            )
+            .font(.system(size: 32))
+            .fontWeight(.bold)
+            .foregroundColor(Asset.Colors.Mfp.fontDark.color)
         }
     }
 }

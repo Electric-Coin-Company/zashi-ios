@@ -33,7 +33,7 @@ struct TransactionRowView: View {
                     Text(transaction.unarySymbol)
                         .font(.system(size: 16))
                         .foregroundColor(Asset.Colors.Mfp.fontDark.color)
-                    + Text(L10n.balance(transaction.zecAmount.decimalString()))
+                    + Text(L10n.balance(transaction.zecAmount.decimalString(), TargetConstants.tokenName))
                         .font(.system(size: 16))
                         .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                 }

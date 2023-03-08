@@ -23,23 +23,23 @@ struct TransactionDetailView: View {
                     VStack(alignment: .leading) {
                         switch transaction.status {
                         case .paid:
-                            Text(L10n.Transaction.youSent(transaction.zecAmount.decimalString()))
+                            Text(L10n.Transaction.youSent(transaction.zecAmount.decimalString(), TargetConstants.tokenName))
                                 .padding()
                             address(mark: .inactive, viewStore: viewStore)
                             memo(transaction, viewStore, mark: .highlight)
                             
                         case .pending:
-                            Text(L10n.Transaction.youAreSending(transaction.zecAmount.decimalString()))
+                            Text(L10n.Transaction.youAreSending(transaction.zecAmount.decimalString(), TargetConstants.tokenName))
                                 .padding()
                             address(mark: .inactive, viewStore: viewStore)
                             memo(transaction, viewStore, mark: .highlight)
                         case .received:
-                            Text(L10n.Transaction.youReceived(transaction.zecAmount.decimalString()))
+                            Text(L10n.Transaction.youReceived(transaction.zecAmount.decimalString(), TargetConstants.tokenName))
                                 .padding()
                             address(mark: .inactive, viewStore: viewStore)
                             memo(transaction, viewStore, mark: .highlight)
                         case .failed:
-                            Text(L10n.Transaction.youDidNotSent(transaction.zecAmount.decimalString()))
+                            Text(L10n.Transaction.youDidNotSent(transaction.zecAmount.decimalString(), TargetConstants.tokenName))
                                 .padding()
                             address(mark: .inactive, viewStore: viewStore)
                             memo(transaction, viewStore, mark: .highlight)

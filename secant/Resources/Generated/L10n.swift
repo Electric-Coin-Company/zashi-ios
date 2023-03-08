@@ -10,9 +10,9 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum L10n {
-  /// %@ ZEC
-  internal static func balance(_ p1: Any) -> String {
-    return L10n.tr("Localizable", "balance", String(describing: p1), fallback: "%@ ZEC")
+  /// %@ %@
+  internal static func balance(_ p1: Any, _ p2: Any) -> String {
+    return L10n.tr("Localizable", "balance", String(describing: p1), String(describing: p2), fallback: "%@ %@")
   }
   /// QR Code for %@
   internal static func qrCodeFor(_ p1: Any) -> String {
@@ -35,22 +35,24 @@ internal enum L10n {
     }
   }
   internal enum Balance {
-    /// %@ ZEC Available
-    internal static func available(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "balance.available", String(describing: p1), fallback: "%@ ZEC Available")
+    /// %@ %@ Available
+    internal static func available(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "balance.available", String(describing: p1), String(describing: p2), fallback: "%@ %@ Available")
     }
   }
   internal enum BalanceBreakdown {
-    /// Auto Shielding Threshold: %@ ZEC
-    internal static func autoShieldingThreshold(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "balanceBreakdown.autoShieldingThreshold", String(describing: p1), fallback: "Auto Shielding Threshold: %@ ZEC")
+    /// Auto Shielding Threshold: %@ %@
+    internal static func autoShieldingThreshold(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "balanceBreakdown.autoShieldingThreshold", String(describing: p1), String(describing: p2), fallback: "Auto Shielding Threshold: %@ %@")
     }
     /// Block: %@
     internal static func blockId(_ p1: Any) -> String {
       return L10n.tr("Localizable", "balanceBreakdown.blockId", String(describing: p1), fallback: "Block: %@")
     }
-    /// SHIELDED ZEC (SPENDABLE)
-    internal static let shieldedZec = L10n.tr("Localizable", "balanceBreakdown.shieldedZec", fallback: "SHIELDED ZEC (SPENDABLE)")
+    /// SHIELDED %@ (SPENDABLE)
+    internal static func shieldedZec(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "balanceBreakdown.shieldedZec", String(describing: p1), fallback: "SHIELDED %@ (SPENDABLE)")
+    }
     /// TOTAL BALANCE
     internal static let totalBalance = L10n.tr("Localizable", "balanceBreakdown.totalBalance", fallback: "TOTAL BALANCE")
     /// TRANSPARENT BALANCE
@@ -86,8 +88,10 @@ internal enum L10n {
     internal enum TransactionAmount {
       /// Amount:
       internal static let amount = L10n.tr("Localizable", "field.transactionAmount.amount", fallback: "Amount:")
-      /// ZEC Amount
-      internal static let zecAmount = L10n.tr("Localizable", "field.transactionAmount.zecAmount", fallback: "ZEC Amount")
+      /// %@ Amount
+      internal static func zecAmount(_ p1: Any) -> String {
+        return L10n.tr("Localizable", "field.transactionAmount.zecAmount", String(describing: p1), fallback: "%@ Amount")
+      }
     }
   }
   internal enum General {
@@ -121,10 +125,14 @@ internal enum L10n {
     internal static let yes = L10n.tr("Localizable", "general.yes", fallback: "Yes")
   }
   internal enum Home {
-    /// Receive ZEC
-    internal static let receiveZec = L10n.tr("Localizable", "home.receiveZec", fallback: "Receive ZEC")
-    /// Send ZEC
-    internal static let sendZec = L10n.tr("Localizable", "home.sendZec", fallback: "Send ZEC")
+    /// Receive %@
+    internal static func receiveZec(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "home.receiveZec", String(describing: p1), fallback: "Receive %@")
+    }
+    /// Send %@
+    internal static func sendZec(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "home.sendZec", String(describing: p1), fallback: "Send %@")
+    }
     /// Secant Wallet
     internal static let title = L10n.tr("Localizable", "home.title", fallback: "Secant Wallet")
     /// See transaction history
@@ -426,9 +434,9 @@ internal enum L10n {
     }
     /// Write a private message here
     internal static let memoPlaceholder = L10n.tr("Localizable", "send.memoPlaceholder", fallback: "Write a private message here")
-    /// Sending %@ ZEC to
-    internal static func sendingTo(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "send.sendingTo", String(describing: p1), fallback: "Sending %@ ZEC to")
+    /// Sending %@ %@ to
+    internal static func sendingTo(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "send.sendingTo", String(describing: p1), String(describing: p2), fallback: "Sending %@ %@ to")
     }
     /// Sending transaction succeeded
     internal static let succeeded = L10n.tr("Localizable", "send.succeeded", fallback: "Sending transaction succeeded")
@@ -560,21 +568,21 @@ internal enum L10n {
     internal static let unconfirmed = L10n.tr("Localizable", "transaction.unconfirmed", fallback: "unconfirmed")
     /// With memo:
     internal static let withMemo = L10n.tr("Localizable", "transaction.withMemo", fallback: "With memo:")
-    /// You are sending %@ ZEC
-    internal static func youAreSending(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "transaction.youAreSending", String(describing: p1), fallback: "You are sending %@ ZEC")
+    /// You are sending %@ %@
+    internal static func youAreSending(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "transaction.youAreSending", String(describing: p1), String(describing: p2), fallback: "You are sending %@ %@")
     }
-    /// You DID NOT send %@ ZEC
-    internal static func youDidNotSent(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "transaction.youDidNotSent", String(describing: p1), fallback: "You DID NOT send %@ ZEC")
+    /// You DID NOT send %@ %@
+    internal static func youDidNotSent(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "transaction.youDidNotSent", String(describing: p1), String(describing: p2), fallback: "You DID NOT send %@ %@")
     }
-    /// You received %@ ZEC
-    internal static func youReceived(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "transaction.youReceived", String(describing: p1), fallback: "You received %@ ZEC")
+    /// You received %@ %@
+    internal static func youReceived(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "transaction.youReceived", String(describing: p1), String(describing: p2), fallback: "You received %@ %@")
     }
-    /// You sent %@ ZEC
-    internal static func youSent(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "transaction.youSent", String(describing: p1), fallback: "You sent %@ ZEC")
+    /// You sent %@ %@
+    internal static func youSent(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "transaction.youSent", String(describing: p1), String(describing: p2), fallback: "You sent %@ %@")
     }
   }
   internal enum TransactionDetail {

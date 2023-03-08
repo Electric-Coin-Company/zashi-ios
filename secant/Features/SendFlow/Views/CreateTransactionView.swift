@@ -10,7 +10,7 @@ struct CreateTransaction: View {
         return WithViewStore(store) { viewStore in
             VStack {
                 VStack(spacing: 0) {
-                    Text(L10n.Balance.available(viewStore.shieldedBalance.data.total.decimalString()))
+                    Text(L10n.Balance.available(viewStore.shieldedBalance.data.total.decimalString(), TargetConstants.tokenName))
                         .font(.system(size: 32))
                         .fontWeight(.bold)
                     Text(L10n.Send.fundsInfo)

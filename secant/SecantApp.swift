@@ -62,4 +62,14 @@ enum TargetConstants {
     fatalError("SECANT_MAINNET or SECANT_TESTNET flags not defined on Swift Compiler custom flags of your build target.")
 #endif
     }
+    
+    static var tokenName: String {
+#if SECANT_MAINNET
+    return "ZEC"
+#elseif SECANT_TESTNET
+    return "TAZ"
+#else
+    fatalError("SECANT_MAINNET or SECANT_TESTNET flags not defined on Swift Compiler custom flags of your build target.")
+#endif
+    }
 }
