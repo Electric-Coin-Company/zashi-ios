@@ -62,8 +62,8 @@
 "importWallet.alert.failed.message" = "Error: %@";
 
 // MARK: - Home Screen
-"home.sendZec" = "Send ZEC";
-"home.receiveZec" = "Receive ZEC";
+"home.sendZec" = "Send %@";
+"home.receiveZec" = "Receive %@";
 "home.transactionHistory" = "See transaction history";
 "home.title" = "Secant Wallet";
 
@@ -81,10 +81,10 @@
 
 // MARK: - Balance Breakdown
 "balanceBreakdown.blockId" = "Block: %@";
-"balanceBreakdown.shieldedZec" = "SHIELDED ZEC (SPENDABLE)";
+"balanceBreakdown.shieldedZec" = "SHIELDED %@ (SPENDABLE)";
 "balanceBreakdown.transparentBalance" = "TRANSPARENT BALANCE";
 "balanceBreakdown.totalBalance" = "TOTAL BALANCE";
-"balanceBreakdown.autoShieldingThreshold" = "Auto Shielding Threshold: %@ ZEC";
+"balanceBreakdown.autoShieldingThreshold" = "Auto Shielding Threshold: %@ %@";
 
 // MARK: - Scan
 "scan.info" = "We will validate any Zcash URI and take you to the appropriate action.";
@@ -98,7 +98,7 @@
 "send.memoPlaceholder" = "Write a private message here";
 "send.failed" = "Sending transaction failed";
 "send.succeeded" = "Sending transaction succeeded";
-"send.sendingTo" = "Sending %@ ZEC to";
+"send.sendingTo" = "Sending %@ %@ to";
 "send.amount" = "amount: %@";
 "send.address" = " address: %@";
 "send.memo" = " memo: %@";
@@ -131,10 +131,10 @@
 "transaction.sending" = "Sending";
 "transaction.received" = "Received";
 "transaction.failed" = "Failed";
-"transaction.youSent" = "You sent %@ ZEC";
-"transaction.youAreSending" = "You are sending %@ ZEC";
-"transaction.youReceived" = "You received %@ ZEC";
-"transaction.youDidNotSent" = "You DID NOT send %@ ZEC";
+"transaction.youSent" = "You sent %@ %@";
+"transaction.youAreSending" = "You are sending %@ %@";
+"transaction.youReceived" = "You received %@ %@";
+"transaction.youDidNotSent" = "You DID NOT send %@ %@";
 "transaction.pending" = "PENDING";
 "transaction.confirmed" = "Confirmed";
 "transaction.confirmedTimes" = "%@ times";
@@ -165,8 +165,8 @@
 "general.cancel" = "Cancel";
 "general.success" = "Success";
 "general.unknown" = "Unknown";
-"balance" = "%@ ZEC";
-"balance.available" = "%@ ZEC Available";
+"balance" = "%@ %@";
+"balance.available" = "%@ %@ Available";
 "qrCodeFor" = "QR Code for %@";
 "general.dateNotAvailable" = "date not available";
 
@@ -244,5 +244,5 @@
 "field.transactionAddress.validZcashAddress" = "Valid Zcash Address";
 "field.transactionAddress.to" = "To:";
 
-"field.transactionAmount.zecAmount" = "ZEC Amount";
+"field.transactionAmount.zecAmount" = "%@ Amount";
 "field.transactionAmount.amount" = "Amount:";

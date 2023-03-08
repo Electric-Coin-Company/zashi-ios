@@ -78,7 +78,7 @@ extension HomeView {
         Button(action: {
             viewStore.send(.updateDestination(.send))
         }, label: {
-            Text(L10n.Home.sendZec)
+            Text(L10n.Home.sendZec(TargetConstants.tokenName))
         })
         .activeButtonStyle
         .padding(.bottom, 30)
@@ -90,7 +90,7 @@ extension HomeView {
         Button(action: {
             viewStore.send(.updateDestination(.profile))
         }, label: {
-            Text(L10n.Home.receiveZec)
+            Text(L10n.Home.receiveZec(TargetConstants.tokenName))
         })
         .activeButtonStyle
         .padding(.bottom, 30)
@@ -101,12 +101,9 @@ extension HomeView {
             Button {
                 viewStore.send(.updateDestination(.balanceBreakdown))
             } label: {
-                Text(L10n.balance(viewStore.shieldedBalance.data.total.decimalString()))
+                Text(L10n.balance(viewStore.shieldedBalance.data.total.decimalString(), TargetConstants.tokenName))
                     .font(.system(size: 32))
                     .fontWeight(.bold)
-                    .accessDebugMenuWithHiddenGesture {
-                        viewStore.send(.debugMenuStartup)
-                    }
             }
 
             if viewStore.walletConfig.isEnabled(.showFiatConversion) {
@@ -115,6 +112,9 @@ extension HomeView {
             }
             
             Text(viewStore.synchronizerStatusSnapshot.message)
+                .accessDebugMenuWithHiddenGesture {
+                    viewStore.send(.debugMenuStartup)
+                }
         }
         .foregroundColor(Asset.Colors.Mfp.primary.color)
     }
