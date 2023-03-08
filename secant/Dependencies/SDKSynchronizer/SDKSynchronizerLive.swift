@@ -39,7 +39,10 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
 
         notificationCenter.publisherFor(.synchronizerStarted)?
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in self?.synchronizerStarted() }
+            .sink { [weak self] notif in
+                let synchronizerState = notif.userInfo?[SDKSynchronizer.NotificationKeys.synchronizerState] as? SDKSynchronizer.SynchronizerState
+                self?.synchronizerStarted(synchronizerState)
+            }
             .store(in: &cancellables)
 
         notificationCenter.publisherFor(.synchronizerSynced)?
@@ -84,13 +87,14 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
         synchronizer != nil
     }
 
-    func synchronizerStarted() {
+    func synchronizerStarted(_ synchronizerState: SDKSynchronizer.SynchronizerState?) {
+        latestScannedSynchronizerState = synchronizerState
         stateChanged.send(.started)
     }
 
     func synchronizerSynced(_ synchronizerState: SDKSynchronizer.SynchronizerState?) {
-        stateChanged.send(.synced)
         latestScannedSynchronizerState = synchronizerState
+        stateChanged.send(.synced)
     }
 
     func synchronizerProgressUpdated() {
