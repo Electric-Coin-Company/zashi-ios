@@ -30,6 +30,8 @@ struct BalanceBreakdownView: View {
                     )
                     balanceView(title: L10n.BalanceBreakdown.transparentBalance, viewStore.transparentBalance.data.total)
                     balanceView(title: L10n.BalanceBreakdown.totalBalance, viewStore.totalBalance)
+
+                    shieldButton(viewStore)
                 }
                 .padding(30)
                 .background(Asset.Colors.Mfp.background.color)
@@ -53,6 +55,7 @@ struct BalanceBreakdownView: View {
             .onTapGesture {
                 viewStore.send(.onDisappear)
             }
+            .alert(self.store.scope(state: \.alert), dismiss: .dismissAlert)
         }
         .background(ClearBackgroundView())
     }
@@ -73,6 +76,26 @@ extension BalanceBreakdownView {
             .fontWeight(.bold)
             .foregroundColor(Asset.Colors.Mfp.fontDark.color)
         }
+    }
+
+    func shieldButton(_ viewStore: BalanceBreakdownViewStore) -> some View {
+        Button(
+            action: { viewStore.send(.shieldFunds) },
+            label: {
+                if viewStore.shieldingFunds {
+                    HStack(spacing: 10) {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: Asset.Colors.Text.activeButtonText.color))
+                        Text(L10n.BalanceBreakdown.shieldingFunds)
+                    }
+                } else {
+                    Text(L10n.BalanceBreakdown.shieldFunds)
+                }
+            }
+        )
+        .activeButtonStyle
+        .padding(.top, 30)
+        .disabled(viewStore.shieldingFunds)
     }
 }
 

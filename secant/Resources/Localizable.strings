@@ -84,7 +84,13 @@
 "balanceBreakdown.shieldedZec" = "SHIELDED %@ (SPENDABLE)";
 "balanceBreakdown.transparentBalance" = "TRANSPARENT BALANCE";
 "balanceBreakdown.totalBalance" = "TOTAL BALANCE";
-"balanceBreakdown.autoShieldingThreshold" = "Auto Shielding Threshold: %@ %@";
+"balanceBreakdown.autoShieldingThreshold" = "Shielding Threshold: %@ %@";
+"balanceBreakdown.shieldFunds" = "Shield funds";
+"balanceBreakdown.shieldingFunds" = "Shielding funds";
+"balanceBreakdown.alert.shieldFunds.failure.title" = "Failed to shield funds";
+"balanceBreakdown.alert.shieldFunds.failure.message" = "Error: %@";
+"balanceBreakdown.alert.shieldFunds.success.title" = "Done";
+"balanceBreakdown.alert.shieldFunds.success.message" = "Shielding transaction created";
 
 // MARK: - Scan
 "scan.info" = "We will validate any Zcash URI and take you to the appropriate action.";

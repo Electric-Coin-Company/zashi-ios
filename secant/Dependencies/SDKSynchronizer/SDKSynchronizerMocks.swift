@@ -216,6 +216,25 @@ class MockSDKSynchronizerClient: SDKSynchronizerClient {
         
         return EffectTask(value: Result.success(transactionState))
     }
+
+    func shieldFunds(
+        spendingKey: UnifiedSpendingKey,
+        memo: Memo,
+        shieldingThreshold: Zatoshi
+    ) async throws -> TransactionState {
+        return TransactionState(
+            expiryHeight: 40,
+            memos: [memo],
+            minedHeight: 50,
+            shielded: true,
+            zAddress: "tteafadlamnelkqe",
+            fee: Zatoshi(10),
+            id: "id",
+            status: .paid(success: true),
+            timestamp: 1234567,
+            zecAmount: Zatoshi(10)
+        )
+    }
     
     func wipe() -> AnyPublisher<Void, Error>? { nil }
 }

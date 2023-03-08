@@ -41,9 +41,9 @@ internal enum L10n {
     }
   }
   internal enum BalanceBreakdown {
-    /// Auto Shielding Threshold: %@ %@
+    /// Shielding Threshold: %@ %@
     internal static func autoShieldingThreshold(_ p1: Any, _ p2: Any) -> String {
-      return L10n.tr("Localizable", "balanceBreakdown.autoShieldingThreshold", String(describing: p1), String(describing: p2), fallback: "Auto Shielding Threshold: %@ %@")
+      return L10n.tr("Localizable", "balanceBreakdown.autoShieldingThreshold", String(describing: p1), String(describing: p2), fallback: "Shielding Threshold: %@ %@")
     }
     /// Block: %@
     internal static func blockId(_ p1: Any) -> String {
@@ -53,10 +53,32 @@ internal enum L10n {
     internal static func shieldedZec(_ p1: Any) -> String {
       return L10n.tr("Localizable", "balanceBreakdown.shieldedZec", String(describing: p1), fallback: "SHIELDED %@ (SPENDABLE)")
     }
+    /// Shield funds
+    internal static let shieldFunds = L10n.tr("Localizable", "balanceBreakdown.shieldFunds", fallback: "Shield funds")
+    /// Shielding funds
+    internal static let shieldingFunds = L10n.tr("Localizable", "balanceBreakdown.shieldingFunds", fallback: "Shielding funds")
     /// TOTAL BALANCE
     internal static let totalBalance = L10n.tr("Localizable", "balanceBreakdown.totalBalance", fallback: "TOTAL BALANCE")
     /// TRANSPARENT BALANCE
     internal static let transparentBalance = L10n.tr("Localizable", "balanceBreakdown.transparentBalance", fallback: "TRANSPARENT BALANCE")
+    internal enum Alert {
+      internal enum ShieldFunds {
+        internal enum Failure {
+          /// Error: %@
+          internal static func message(_ p1: Any) -> String {
+            return L10n.tr("Localizable", "balanceBreakdown.alert.shieldFunds.failure.message", String(describing: p1), fallback: "Error: %@")
+          }
+          /// Failed to shield funds
+          internal static let title = L10n.tr("Localizable", "balanceBreakdown.alert.shieldFunds.failure.title", fallback: "Failed to shield funds")
+        }
+        internal enum Success {
+          /// Shielding transaction created
+          internal static let message = L10n.tr("Localizable", "balanceBreakdown.alert.shieldFunds.success.message", fallback: "Shielding transaction created")
+          /// Done
+          internal static let title = L10n.tr("Localizable", "balanceBreakdown.alert.shieldFunds.success.title", fallback: "Done")
+        }
+      }
+    }
   }
   internal enum Error {
     /// possible roll back

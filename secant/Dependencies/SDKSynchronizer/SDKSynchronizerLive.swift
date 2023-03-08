@@ -241,6 +241,16 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
             }
         }
     }
+
+    func shieldFunds(
+        spendingKey: UnifiedSpendingKey,
+        memo: Memo,
+        shieldingThreshold: Zatoshi
+    ) async throws -> TransactionState {
+        guard let synchronizer = synchronizer else { throw SDKSynchronizerClientError.synchronizerNotInitialized }
+        let pendingTransaction = try await synchronizer.shieldFunds(spendingKey: spendingKey, memo: memo, shieldingThreshold: shieldingThreshold)
+        return TransactionState(pendingTransaction: pendingTransaction)
+    }
     
     func wipe() -> AnyPublisher<Void, Error>? {
         synchronizer?.wipe()
