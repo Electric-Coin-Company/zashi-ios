@@ -586,6 +586,10 @@ internal enum L10n {
     }
   }
   internal enum TransactionDetail {
+    /// Error: %@
+    internal static func error(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "transactionDetail.error", String(describing: p1), fallback: "Error: %@")
+    }
     /// Transaction detail
     internal static let title = L10n.tr("Localizable", "transactionDetail.title", fallback: "Transaction detail")
   }
