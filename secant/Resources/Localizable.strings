@@ -144,6 +144,7 @@
 "transaction.to" = "to";
 "transaction.unconfirmed" = "unconfirmed";
 "transactionDetail.title" = "Transaction detail";
+"transactionDetail.error" = "Error: %@";
 
 // MARK: - Not Enough Free Space
 "nefs.message" = "Not enough space on disk to do synchronisation!";

@@ -41,8 +41,12 @@ struct TransactionDetailView: View {
                         case .failed:
                             Text(L10n.Transaction.youDidNotSent(transaction.zecAmount.decimalString()))
                                 .padding()
+
                             address(mark: .inactive, viewStore: viewStore)
                             memo(transaction, viewStore, mark: .highlight)
+
+                            Text(L10n.TransactionDetail.error(transaction.errorMessage ?? L10n.General.unknown))
+                                .padding()
                         }
                     }
                     
