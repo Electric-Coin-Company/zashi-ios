@@ -2153,13 +2153,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0D26AF91299E8196005260EE /* Build configuration list for PBXNativeTarget "secant-mainnet" */;
 			buildPhases = (
-				0D26AE97299E8196005260EE /* ShellScript */,
+				0D26AE97299E8196005260EE /* Generate GoogleService-Info.plist  */,
 				0D26AE98299E8196005260EE /* SwiftGen */,
 				0D26AE99299E8196005260EE /* SwiftLint */,
 				0D26AE9A299E8196005260EE /* Sources */,
 				0D26AF70299E8196005260EE /* Frameworks */,
 				0D26AF78299E8196005260EE /* Resources */,
-				0D26AF90299E8196005260EE /* ShellScript */,
+				0D26AF90299E8196005260EE /* Upload crashlytics symbols */,
 			);
 			buildRules = (
 			);
@@ -2183,13 +2183,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0D4E7A2A26B364180058B01E /* Build configuration list for PBXNativeTarget "secant-testnet" */;
 			buildPhases = (
-				0D3B01ED298DB0FE007EBCDA /* ShellScript */,
+				0D3B01ED298DB0FE007EBCDA /* Generate GoogleService-Info.plist  */,
 				664E39ED270C693C0044AD7E /* SwiftGen */,
 				6696BA8726F0B1D200D5C875 /* SwiftLint */,
 				0D4E7A0126B364170058B01E /* Sources */,
 				0D4E7A0226B364170058B01E /* Frameworks */,
 				0D4E7A0326B364170058B01E /* Resources */,
-				0D300FA72996EAF200576003 /* ShellScript */,
+				0D300FA72996EAF200576003 /* Upload crashlytics symbols */,
 			);
 			buildRules = (
 			);
@@ -2377,7 +2377,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0D26AE97299E8196005260EE /* ShellScript */ = {
+		0D26AE97299E8196005260EE /* Generate GoogleService-Info.plist  */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -2387,6 +2387,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Generate GoogleService-Info.plist ";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -2419,8 +2420,8 @@
 				"$(DERIVED_FILE_DIR)/Resources/Generated/L10n.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if which swiftgen >/dev/null; then\n  swiftgen\nelse\n  echo \"warning: SwiftGen not installed, download from https://github.com/SwiftGen/SwiftGen\"\nfi\n";
+			shellPath = /bin/zsh;
+			shellScript = "swiftgen_version=\"v6.6.2\"\n\nif which swiftgen >/dev/null; then\n    current_version=`swiftgen --version | awk -F'\\ ' '{print $2}'`\n    if [[ $current_version != $swiftgen_version ]]; then\n        echo \"error: Compatible SwiftGen version not installed. Install version ${swiftgen_version}.\"\n        exit 1\n    fi\n\n    swiftgen\nelse\n  echo \"Error: SwiftGen not installed. Install version ${swiftgen_version}.\"\n  exit 1\nfi\n";
 		};
 		0D26AE99299E8196005260EE /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2438,10 +2439,10 @@
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "swiftlint_version=0.50.3\n\nif which swiftlint >/dev/null; then\n  if ![ $(swiftlint version) = $swiftlint_version ]; then\n    echo \"warning: Compatible SwiftLint version not installed, download version $swiftlint_version from https://github.com/realm/SwiftLint. Currently installed version is $(swiftlint version)\"\n  fi\n   \n  echo \"Linting the Secant code\"\n  swiftlint lint --config .swiftlint.yml\n  echo \"Linting tests\"\n  swiftlint lint --config .swiftlint_tests.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n\n";
+			shellPath = /bin/zsh;
+			shellScript = "swiftlint_version=0.50.3\n\nif which swiftlint >/dev/null; then\n  if [[ $(swiftlint version) != $swiftlint_version ]]; then\n    echo \"warning: Compatible SwiftLint version not installed, download version $swiftlint_version from https://github.com/realm/SwiftLint. Currently installed version is $(swiftlint version)\"\n  fi\n   \n  echo \"Linting the Secant code\"\n  swiftlint lint --config .swiftlint.yml\n  echo \"Linting tests\"\n  swiftlint lint --config .swiftlint_tests.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
-		0D26AF90299E8196005260EE /* ShellScript */ = {
+		0D26AF90299E8196005260EE /* Upload crashlytics symbols */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 12;
@@ -2451,6 +2452,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Upload crashlytics symbols";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -2459,7 +2461,7 @@
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif [[ $UPLOAD_CRASHLYTICS_SYMBOLS = \"NO\" ]]; then\n   echo \"DEBUG BUILD: SKIPPING UPLOAD SYMBOLS STEP\"\nelse\n${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\nfi\n";
 		};
-		0D300FA72996EAF200576003 /* ShellScript */ = {
+		0D300FA72996EAF200576003 /* Upload crashlytics symbols */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 12;
@@ -2469,6 +2471,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Upload crashlytics symbols";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -2477,7 +2480,7 @@
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif [[ $UPLOAD_CRASHLYTICS_SYMBOLS = \"NO\" ]]; then\n   echo \"DEBUG BUILD: SKIPPING UPLOAD SYMBOLS STEP\"\nelse\n${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\nfi\n";
 		};
-		0D3B01ED298DB0FE007EBCDA /* ShellScript */ = {
+		0D3B01ED298DB0FE007EBCDA /* Generate GoogleService-Info.plist  */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -2487,6 +2490,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Generate GoogleService-Info.plist ";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -2519,8 +2523,8 @@
 				"$(DERIVED_FILE_DIR)/Resources/Generated/L10n.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if which swiftgen >/dev/null; then\n  swiftgen\nelse\n  echo \"warning: SwiftGen not installed, download from https://github.com/SwiftGen/SwiftGen\"\nfi\n";
+			shellPath = /bin/zsh;
+			shellScript = "swiftgen_version=\"v6.6.2\"\n\nif which swiftgen >/dev/null; then\n    current_version=`swiftgen --version | awk -F'\\ ' '{print $2}'`\n    if [[ $current_version != $swiftgen_version ]]; then\n        echo \"error: Compatible SwiftGen version not installed. Install version ${swiftgen_version}.\"\n        exit 1\n    fi\n\n    swiftgen\nelse\n  echo \"Error: SwiftGen not installed. Install version ${swiftgen_version}.\"\n  exit 1\nfi\n";
 		};
 		6696BA8726F0B1D200D5C875 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2538,8 +2542,8 @@
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "swiftlint_version=0.50.3\n\nif which swiftlint >/dev/null; then\n  if ![ $(swiftlint version) = $swiftlint_version ]; then\n    echo \"warning: Compatible SwiftLint version not installed, download version $swiftlint_version from https://github.com/realm/SwiftLint. Currently installed version is $(swiftlint version)\"\n  fi\n   \n  echo \"Linting the Secant code\"\n  swiftlint lint --config .swiftlint.yml\n  echo \"Linting tests\"\n  swiftlint lint --config .swiftlint_tests.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n\n";
+			shellPath = /bin/zsh;
+			shellScript = "swiftlint_version=0.50.3\n\nif which swiftlint >/dev/null; then\n  if [[ $(swiftlint version) != $swiftlint_version ]]; then\n    echo \"warning: Compatible SwiftLint version not installed, download version $swiftlint_version from https://github.com/realm/SwiftLint. Currently installed version is $(swiftlint version)\"\n  fi\n   \n  echo \"Linting the Secant code\"\n  swiftlint lint --config .swiftlint.yml\n  echo \"Linting tests\"\n  swiftlint lint --config .swiftlint_tests.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
