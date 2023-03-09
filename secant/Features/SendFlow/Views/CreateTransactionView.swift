@@ -13,6 +13,8 @@ struct CreateTransaction: View {
                     Text(L10n.Balance.available(viewStore.shieldedBalance.data.total.decimalString(), TargetConstants.tokenName))
                         .font(.system(size: 32))
                         .fontWeight(.bold)
+                        .multilineTextAlignment(.center)
+                        .minimumScaleFactor(0.5)
                     Text(L10n.Send.fundsInfo)
                         .font(.system(size: 16))
                 }
@@ -53,10 +55,14 @@ struct CreateTransaction: View {
 
                 Spacer()
             }
+            .keyboardAdaptive()
             .navigationTitle(L10n.Send.title)
             .navigationBarTitleDisplayMode(.inline)
             .padding()
             .applyScreenBackground()
+            .onTapGesture {
+                UIApplication.shared.endEditing()
+            }
         }
     }
 }
