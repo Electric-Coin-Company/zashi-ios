@@ -149,7 +149,7 @@ class HomeTests: XCTestCase {
         store.receive(.updateSynchronizerStatus)
 
         // long-living (cancelable) effects need to be properly canceled.
-        // the .onDisappear action cancles the observer of the synchronizer status change.
+        // the .onDisappear action cancels the observer of the synchronizer status change.
         store.send(.onDisappear)
     }
 

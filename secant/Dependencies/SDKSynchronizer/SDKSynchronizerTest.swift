@@ -70,6 +70,14 @@ class NoopSDKSynchronizer: SDKSynchronizerClient {
     ) -> EffectTask<Result<TransactionState, NSError>> {
         EffectTask(value: Result.failure(SynchronizerError.criticalError as NSError))
     }
+
+    func shieldFunds(
+        spendingKey: UnifiedSpendingKey,
+        memo: Memo,
+        shieldingThreshold: Zatoshi
+    ) async throws -> TransactionState {
+        throw SynchronizerError.criticalError
+    }
     
     func updateStateChanged(_ newState: SDKSynchronizerState) {
         stateChanged = CurrentValueSubject<SDKSynchronizerState, Never>(newState)
@@ -240,6 +248,14 @@ class TestSDKSynchronizerClient: SDKSynchronizerClient {
         memo: Memo?
     ) -> EffectTask<Result<TransactionState, NSError>> {
         return EffectTask(value: Result.failure(SynchronizerError.criticalError as NSError))
+    }
+
+    func shieldFunds(
+        spendingKey: UnifiedSpendingKey,
+        memo: Memo,
+        shieldingThreshold: Zatoshi
+    ) async throws -> TransactionState {
+        throw SynchronizerError.criticalError
     }
     
     func updateStateChanged(_ newState: SDKSynchronizerState) {

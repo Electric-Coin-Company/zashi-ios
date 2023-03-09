@@ -64,6 +64,12 @@ protocol SDKSynchronizerClient {
         to recipientAddress: Recipient,
         memo: Memo?
     ) -> EffectTask<Result<TransactionState, NSError>>
+
+    func shieldFunds(
+        spendingKey: UnifiedSpendingKey,
+        memo: Memo,
+        shieldingThreshold: Zatoshi
+    ) async throws -> TransactionState
     
     func wipe() -> AnyPublisher<Void, Error>?
 }
