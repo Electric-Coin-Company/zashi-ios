@@ -394,6 +394,12 @@
 		9E39115E284E3E350073DD9A /* secantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A2526B364180058B01E /* secantUITests.swift */; };
 		9E486DE529B637AF003E6945 /* ImportBirthdayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E486DE429B637AF003E6945 /* ImportBirthdayView.swift */; };
 		9E486DE629B637AF003E6945 /* ImportBirthdayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E486DE429B637AF003E6945 /* ImportBirthdayView.swift */; };
+		9E486DF029B9EE84003E6945 /* KeyboardAdaptive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E486DEF29B9EE84003E6945 /* KeyboardAdaptive.swift */; };
+		9E486DF129B9EE84003E6945 /* KeyboardAdaptive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E486DEF29B9EE84003E6945 /* KeyboardAdaptive.swift */; };
+		9E486DF329B9EEC4003E6945 /* UIResponder+Current.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E486DF229B9EEC4003E6945 /* UIResponder+Current.swift */; };
+		9E486DF429B9EEC4003E6945 /* UIResponder+Current.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E486DF229B9EEC4003E6945 /* UIResponder+Current.swift */; };
+		9E486DF929BA09C2003E6945 /* UIKit+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E486DF829BA09C2003E6945 /* UIKit+Extensions.swift */; };
+		9E486DFA29BA09C2003E6945 /* UIKit+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E486DF829BA09C2003E6945 /* UIKit+Extensions.swift */; };
 		9E4DC6E227C4C6B700E657F4 /* SecantButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */; };
 		9E5BF63F2819542C00BA3F17 /* WalletEventsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF63E2819542C00BA3F17 /* WalletEventsTests.swift */; };
 		9E5BF641281FD7B600BA3F17 /* TransactionFailedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF640281FD7B600BA3F17 /* TransactionFailedView.swift */; };
@@ -714,6 +720,9 @@
 		9E3911462848EEB90073DD9A /* DatabaseFiles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseFiles.swift; sourceTree = "<group>"; };
 		9E3911472848EEB90073DD9A /* WalletStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletStorage.swift; sourceTree = "<group>"; };
 		9E486DE429B637AF003E6945 /* ImportBirthdayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportBirthdayView.swift; sourceTree = "<group>"; };
+		9E486DEF29B9EE84003E6945 /* KeyboardAdaptive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardAdaptive.swift; sourceTree = "<group>"; };
+		9E486DF229B9EEC4003E6945 /* UIResponder+Current.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIResponder+Current.swift"; sourceTree = "<group>"; };
+		9E486DF829BA09C2003E6945 /* UIKit+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+Extensions.swift"; sourceTree = "<group>"; };
 		9E4DC6E127C4C6B700E657F4 /* SecantButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecantButtonStyles.swift; sourceTree = "<group>"; };
 		9E5BF63B2818305D00BA3F17 /* TransactionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionState.swift; sourceTree = "<group>"; };
 		9E5BF63E2819542C00BA3F17 /* WalletEventsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletEventsTests.swift; sourceTree = "<group>"; };
@@ -1629,6 +1638,7 @@
 				9E7FE0D2282D274E00C374E8 /* Date+Readable.swift */,
 				2EDA07A327EDE2A900D6F09B /* DebugFrame.swift */,
 				9E2F1C832809B606004E65FE /* DebugMenu.swift */,
+				9E486DEF29B9EE84003E6945 /* KeyboardAdaptive.swift */,
 				9E6612322878338C00C75B70 /* LottieAnimation.swift */,
 				34BF09082927C98000222134 /* Memo+toString.swift */,
 				F9322DBF273B555C00C105B5 /* NavigationLinks.swift */,
@@ -1637,6 +1647,8 @@
 				0D35CC45277A36E00074316A /* ScrollableWhenScaled.swift */,
 				F96B41EA273B50520021B49A /* Strings.swift */,
 				0DACFA8027208D940039EEA5 /* UInt+SuperscriptText.swift */,
+				9E486DF829BA09C2003E6945 /* UIKit+Extensions.swift */,
+				9E486DF229B9EEC4003E6945 /* UIResponder+Current.swift */,
 				0D7CE63327349B5D0020E050 /* View+WhenDraggable.swift */,
 				F9EEB8152742C2210032EEB8 /* WithStateBinding.swift */,
 				9E0F573F297E7F00005304FA /* Logging */,
@@ -2596,6 +2608,7 @@
 				0D26AEC3299E8196005260EE /* FeedbackGeneratorTestKey.swift in Sources */,
 				0D26AEC4299E8196005260EE /* TCALogging.swift in Sources */,
 				0D26AEC5299E8196005260EE /* RecoveryPhraseValidationFlowStore.swift in Sources */,
+				9E486DFA29BA09C2003E6945 /* UIKit+Extensions.swift in Sources */,
 				0D26AEC6299E8196005260EE /* ImportWalletView.swift in Sources */,
 				0D26AEC7299E8196005260EE /* RootInitialization.swift in Sources */,
 				0D26AEC8299E8196005260EE /* LogsHandlerLive.swift in Sources */,
@@ -2680,6 +2693,7 @@
 				0D26AF12299E8196005260EE /* UserPreferencesStorageMocks.swift in Sources */,
 				0D26AF13299E8196005260EE /* RecoveryPhraseDisplayStore.swift in Sources */,
 				0D26AF14299E8196005260EE /* Deeplink.swift in Sources */,
+				9E486DF129B9EE84003E6945 /* KeyboardAdaptive.swift in Sources */,
 				0D26AF15299E8196005260EE /* RecoveryPhrase.swift in Sources */,
 				0D26AF16299E8196005260EE /* LocalAuthenticationMocks.swift in Sources */,
 				0D26AF17299E8196005260EE /* Fonts+Generated.swift in Sources */,
@@ -2760,6 +2774,7 @@
 				0D26AF65299E8196005260EE /* InitializationState.swift in Sources */,
 				0D26AF66299E8196005260EE /* ZcashSymbol.swift in Sources */,
 				0D26AF67299E8196005260EE /* UserPreferencesStorageLive.swift in Sources */,
+				9E486DF429B9EEC4003E6945 /* UIResponder+Current.swift in Sources */,
 				0D26AF68299E8196005260EE /* TransactionAmountTextField.swift in Sources */,
 				0D26AF69299E8196005260EE /* AddressDetailsView.swift in Sources */,
 				0D26AF6A299E8196005260EE /* ClearBackgroundView.swift in Sources */,
@@ -2818,6 +2833,7 @@
 				9EB8638C2922CD4A003D0F8B /* FeedbackGeneratorTestKey.swift in Sources */,
 				9E0F5741297E7F1D005304FA /* TCALogging.swift in Sources */,
 				0DFE93E3272CA1AA000FCCA5 /* RecoveryPhraseValidationFlowStore.swift in Sources */,
+				9E486DF929BA09C2003E6945 /* UIKit+Extensions.swift in Sources */,
 				9E2DF99E27CF704D00649636 /* ImportWalletView.swift in Sources */,
 				9E9ADA7D2938F4C00071767B /* RootInitialization.swift in Sources */,
 				9E612C7429880F2200D09B09 /* LogsHandlerLive.swift in Sources */,
@@ -2902,6 +2918,7 @@
 				9EB863C92923C953003D0F8B /* UserPreferencesStorageMocks.swift in Sources */,
 				0D3D040A2728B3A10032ABC1 /* RecoveryPhraseDisplayStore.swift in Sources */,
 				9EAB4671285A1C77002904A0 /* Deeplink.swift in Sources */,
+				9E486DF029B9EE84003E6945 /* KeyboardAdaptive.swift in Sources */,
 				9E7FE0D7282D286500C374E8 /* RecoveryPhrase.swift in Sources */,
 				9EBDF989291F9428000A1A05 /* LocalAuthenticationMocks.swift in Sources */,
 				660558F7270C862F009D6954 /* Fonts+Generated.swift in Sources */,
@@ -2982,6 +2999,7 @@
 				9EF8139C27F47AED0075AF48 /* InitializationState.swift in Sources */,
 				0D0781C9278776D20083ACD7 /* ZcashSymbol.swift in Sources */,
 				9EB863C72923C93B003D0F8B /* UserPreferencesStorageLive.swift in Sources */,
+				9E486DF329B9EEC4003E6945 /* UIResponder+Current.swift in Sources */,
 				2E8719CB27FB09990082C926 /* TransactionAmountTextField.swift in Sources */,
 				9E7CB6212874143800A02233 /* AddressDetailsView.swift in Sources */,
 				9E6713FA289BE0E100A6796F /* ClearBackgroundView.swift in Sources */,
