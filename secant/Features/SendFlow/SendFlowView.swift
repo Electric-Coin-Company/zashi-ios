@@ -39,6 +39,7 @@ struct SendFlowView: View {
                     }
                 }
             )
+            .applyScreenBackground()
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForInProgress,
                 destination: { TransactionSendingView(viewStore: viewStore) }

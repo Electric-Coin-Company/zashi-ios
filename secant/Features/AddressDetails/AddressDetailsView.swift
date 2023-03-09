@@ -57,17 +57,6 @@ extension AddressDetailsView {
         Group {
             if let img = QRCodeGenerator.generate(from: qrText) {
                 Image(img, scale: 1, label: Text(L10n.qrCodeFor(qrText)))
-                    .cornerRadius(20)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color.white, lineWidth: 25)
-                        .scaleEffect(1.1)
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color.black, lineWidth: 8)
-                        .scaleEffect(1.1)
-                    )
             } else {
                 Image(systemName: "qrcode")
             }

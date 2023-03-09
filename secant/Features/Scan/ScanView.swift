@@ -65,7 +65,7 @@ extension ScanView {
                     presentationMode.wrappedValue.dismiss()
                 }, label: {
                     Image(systemName: "arrow.backward")
-                        .foregroundColor(Asset.Colors.QRScan.frame.color)
+                        .foregroundColor(Asset.Colors.Mfp.background.color)
                         .font(.system(size: 30.0))
                 })
                 .padding(.top, 10)
@@ -90,7 +90,7 @@ extension ScanView {
                         Image(
                             systemName: viewStore.isTorchOn ? "lightbulb.fill" : "lightbulb.slash"
                         )
-                        .foregroundColor(Asset.Colors.QRScan.frame.color)
+                        .foregroundColor(Asset.Colors.Mfp.background.color)
                         .font(.system(size: 30.0))
                     }
                 )
@@ -104,8 +104,8 @@ extension ScanView {
     }
 
     func frameOfInterest(_ size: CGSize) -> some View {
-        RoundedRectangle(cornerSize: CGSize(width: 5.0, height: 5.0))
-            .stroke(Asset.Colors.QRScan.frame.color, lineWidth: 5.0)
+        Rectangle()
+            .stroke(Asset.Colors.Mfp.background.color, lineWidth: 5.0)
             .frame(
                 width: frameSize(size),
                 height: frameSize(size),

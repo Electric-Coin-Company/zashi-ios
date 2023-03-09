@@ -6,7 +6,7 @@ struct CreateTransaction: View {
 
     var body: some View {
         UITextView.appearance().backgroundColor = .clear
-        
+
         return WithViewStore(store) { viewStore in
             VStack(spacing: 5) {
                 VStack(spacing: 0) {
@@ -63,11 +63,7 @@ struct CreateTransaction: View {
             }
             .navigationTitle(L10n.Send.title)
             .navigationBarTitleDisplayMode(.inline)
-            .padding()
-            .applyScreenBackground()
-            .onTapGesture {
-                UIApplication.shared.endEditing()
-            }
+            .padding(.horizontal)
         }
     }
 }
