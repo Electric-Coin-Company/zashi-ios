@@ -283,7 +283,6 @@
 		0DACFA9A27209FA70039EEA5 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0DACFA8D27209FA70039EEA5 /* Roboto-Light.ttf */; };
 		0DACFA9C27209FA70039EEA5 /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0DACFA8F27209FA70039EEA5 /* Roboto-ThinItalic.ttf */; };
 		0DB4E0B12881F2DB00947B78 /* WalletBalance+testing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB4E0B02881F2DB00947B78 /* WalletBalance+testing.swift */; };
-		0DB4E0B42881FD9100947B78 /* ZcashLightClientKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0DB4E0B32881FD9100947B78 /* ZcashLightClientKit */; };
 		0DB8AA81271DC7520035BC9D /* DesignGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB8AA80271DC7520035BC9D /* DesignGuide.swift */; };
 		0DC487C32772574C00BE6A63 /* RecoveryPhraseBackupSucceededView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC487C22772574C00BE6A63 /* RecoveryPhraseBackupSucceededView.swift */; };
 		0DDB6A5127737D4A0012A410 /* RecoveryPhraseBackupFailedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDB6A5027737D4A0012A410 /* RecoveryPhraseBackupFailedView.swift */; };
@@ -309,6 +308,7 @@
 		2EDA07A227EDE1AE00D6F09B /* TextFieldFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDA07A127EDE1AE00D6F09B /* TextFieldFooter.swift */; };
 		2EDA07A427EDE2A900D6F09B /* DebugFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDA07A327EDE2A900D6F09B /* DebugFrame.swift */; };
 		341B30BB29B78D1000697081 /* HomeFeatureFlagTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341B30BA29B78D1000697081 /* HomeFeatureFlagTests.swift */; };
+		343CF3F629BB5A14009E44DF /* ZcashLightClientKit in Frameworks */ = {isa = PBXBuildFile; productRef = 343CF3F529BB5A14009E44DF /* ZcashLightClientKit */; };
 		34429C6E28E703CD00F2B929 /* TransactionSendingSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34429C6D28E703CD00F2B929 /* TransactionSendingSnapshotTests.swift */; };
 		3448CB3228E47666006ADEDB /* NotEnoughFreeSpaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3448CB3128E47666006ADEDB /* NotEnoughFreeSpaceView.swift */; };
 		3448CB3728E485CB006ADEDB /* NotEnoughFeeSpaceSnapshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3448CB3628E485CB006ADEDB /* NotEnoughFeeSpaceSnapshots.swift */; };
@@ -332,6 +332,7 @@
 		34C5658329B60C1C002F3A7C /* UIShareDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C5658129B60C1C002F3A7C /* UIShareDialog.swift */; };
 		34C5658529B60C8B002F3A7C /* ExportLogsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C5658429B60C8B002F3A7C /* ExportLogsStore.swift */; };
 		34C5658629B60C8B002F3A7C /* ExportLogsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C5658429B60C8B002F3A7C /* ExportLogsStore.swift */; };
+		34CE032B29C0938600A6626B /* ZcashLightClientKit in Frameworks */ = {isa = PBXBuildFile; productRef = 34CE032A29C0938600A6626B /* ZcashLightClientKit */; };
 		34DA414728E4385800F8CC61 /* TransactionSendingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34DA414628E4385800F8CC61 /* TransactionSendingView.swift */; };
 		34DA414928E439CD00F8CC61 /* sendingTransaction.json in Resources */ = {isa = PBXBuildFile; fileRef = 34DA414828E439CD00F8CC61 /* sendingTransaction.json */; };
 		34E0AF1128DEE5220034CF37 /* Wedge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0AF1028DEE5220034CF37 /* Wedge.swift */; };
@@ -899,9 +900,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				343CF3F629BB5A14009E44DF /* ZcashLightClientKit in Frameworks */,
 				9E6612312878337F00C75B70 /* Lottie in Frameworks */,
 				0D5D9B8F2914620700DBD03F /* URLRouting in Frameworks */,
-				0DB4E0B42881FD9100947B78 /* ZcashLightClientKit in Frameworks */,
+				34CE032B29C0938600A6626B /* ZcashLightClientKit in Frameworks */,
 				0D26103A298C3DCD00CC9DE9 /* FirebaseCrashlytics in Frameworks */,
 				9E2AC0FF27D8EC120042AA47 /* MnemonicSwift in Frameworks */,
 				6654C73A2715A38000901167 /* ComposableArchitecture in Frameworks */,
@@ -971,6 +973,7 @@
 				0D4E7A1926B364180058B01E /* secantTests */,
 				0D4E7A2426B364180058B01E /* secantUITests */,
 				0D4E7A0626B364170058B01E /* Products */,
+				343CF3F429BB5A14009E44DF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1174,6 +1177,13 @@
 				2E35F99927B3E99C00EB79CD /* TextFieldTitleAccessoryButtonStyle.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		343CF3F429BB5A14009E44DF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		3448CB3028E4764E006ADEDB /* NotEnoughFreeSpace */ = {
@@ -2232,9 +2242,10 @@
 				9E2AC0FE27D8EC120042AA47 /* MnemonicSwift */,
 				9EAB466C285A0468002904A0 /* Parsing */,
 				9E6612302878337F00C75B70 /* Lottie */,
-				0DB4E0B32881FD9100947B78 /* ZcashLightClientKit */,
 				0D5D9B8E2914620700DBD03F /* URLRouting */,
 				0D261039298C3DCD00CC9DE9 /* FirebaseCrashlytics */,
+				343CF3F529BB5A14009E44DF /* ZcashLightClientKit */,
+				34CE032A29C0938600A6626B /* ZcashLightClientKit */,
 			);
 			productName = secant;
 			productReference = 0D4E7A0526B364170058B01E /* secant-testnet.app */;
@@ -2314,9 +2325,9 @@
 				9E2AC0FD27D8EC120042AA47 /* XCRemoteSwiftPackageReference "MnemonicSwift" */,
 				9EAB466B285A0468002904A0 /* XCRemoteSwiftPackageReference "swift-parsing" */,
 				9E66122F2878337F00C75B70 /* XCRemoteSwiftPackageReference "lottie-ios" */,
-				0DB4E0B22881FD9100947B78 /* XCRemoteSwiftPackageReference "ZcashLightClientKit" */,
 				0D5D9B8D2914620700DBD03F /* XCRemoteSwiftPackageReference "swift-url-routing" */,
 				0D261038298C3DCD00CC9DE9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				34CE032929C0938600A6626B /* XCRemoteSwiftPackageReference "ZcashLightClientKit" */,
 			);
 			productRefGroup = 0D4E7A0626B364170058B01E /* Products */;
 			projectDirPath = "";
@@ -3561,12 +3572,12 @@
 				minimumVersion = 0.3.1;
 			};
 		};
-		0DB4E0B22881FD9100947B78 /* XCRemoteSwiftPackageReference "ZcashLightClientKit" */ = {
+		34CE032929C0938600A6626B /* XCRemoteSwiftPackageReference "ZcashLightClientKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/zcash/ZcashLightClientKit/";
+			repositoryURL = "https://github.com/zcash/ZcashLightClientKit.git";
 			requirement = {
-				kind = exactVersion;
-				version = "0.19.1-beta";
+				kind = revision;
+				revision = b34ae033ae868f8abfa343a53ac6b0f2264047c8;
 			};
 		};
 		6654C7382715A38000901167 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
@@ -3649,9 +3660,13 @@
 			package = 0D5D9B8D2914620700DBD03F /* XCRemoteSwiftPackageReference "swift-url-routing" */;
 			productName = URLRouting;
 		};
-		0DB4E0B32881FD9100947B78 /* ZcashLightClientKit */ = {
+		343CF3F529BB5A14009E44DF /* ZcashLightClientKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0DB4E0B22881FD9100947B78 /* XCRemoteSwiftPackageReference "ZcashLightClientKit" */;
+			productName = ZcashLightClientKit;
+		};
+		34CE032A29C0938600A6626B /* ZcashLightClientKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 34CE032929C0938600A6626B /* XCRemoteSwiftPackageReference "ZcashLightClientKit" */;
 			productName = ZcashLightClientKit;
 		};
 		6654C7392715A38000901167 /* ComposableArchitecture */ = {

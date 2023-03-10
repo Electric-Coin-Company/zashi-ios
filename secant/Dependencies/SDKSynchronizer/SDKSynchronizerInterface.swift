@@ -36,7 +36,7 @@ protocol SDKSynchronizerClient {
     var walletBirthday: BlockHeight? { get }
     var latestScannedSynchronizerState: SDKSynchronizer.SynchronizerState? { get }
 
-    func prepareWith(initializer: Initializer, seedBytes: [UInt8]) throws
+    func prepareWith(initializer: Initializer, seedBytes: [UInt8], viewingKey: UnifiedFullViewingKey, walletBirthday: BlockHeight) throws
     func start(retry: Bool) throws
     func stop()
     func synchronizerSynced(_ synchronizerState: SDKSynchronizer.SynchronizerState?)

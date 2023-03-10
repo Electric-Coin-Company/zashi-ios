@@ -139,20 +139,14 @@ extension RootReducer {
         
         return .uninitialized
     }
-    
-    // swiftlint:disable function_parameter_count
+
     static func prepareInitializer(
-        for seedPhrase: String,
-        birthday: BlockHeight,
         databaseFiles: DatabaseFilesClient,
         derivationTool: DerivationToolClient,
         mnemonic: MnemonicClient,
         zcashSDKEnvironment: ZcashSDKEnvironment
     ) throws -> Initializer {
         do {
-            let seedBytes = try mnemonic.toSeed(seedPhrase)
-            let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0)
-            let viewingKey = try spendingKey.deriveFullViewingKey()
             let network = zcashSDKEnvironment.network
 
             let initializer = Initializer(
@@ -165,8 +159,6 @@ extension RootReducer {
                 spendParamsURL: try databaseFiles.spendParamsURLFor(network),
                 outputParamsURL: try databaseFiles.outputParamsURLFor(network),
                 saplingParamsSourceURL: SaplingParamsSourceURL.default,
-                viewingKeys: [viewingKey],
-                walletBirthday: birthday,
                 loggerProxy: OSLogger(logLevel: .debug, category: LoggerConstants.sdkLogs)
             )
             

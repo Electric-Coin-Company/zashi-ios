@@ -36,7 +36,7 @@ class MockSDKSynchronizerClient: SDKSynchronizerClient {
         self.snapshot = snapshot
     }
 
-    func prepareWith(initializer: Initializer, seedBytes: [UInt8]) throws { }
+    func prepareWith(initializer: Initializer, seedBytes: [UInt8], viewingKey: UnifiedFullViewingKey, walletBirthday: BlockHeight) throws { }
 
     func start(retry: Bool) throws { }
 

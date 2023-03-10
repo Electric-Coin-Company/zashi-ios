@@ -136,15 +136,16 @@ extension RootReducer {
                     let birthday = state.storedWallet?.birthday?.value() ?? zcashSDKEnvironment.latestCheckpoint
 
                     let initializer = try RootReducer.prepareInitializer(
-                        for: storedWallet.seedPhrase.value(),
-                        birthday: birthday,
                         databaseFiles: databaseFiles,
                         derivationTool: derivationTool,
                         mnemonic: mnemonic,
                         zcashSDKEnvironment: zcashSDKEnvironment
                     )
+
+                    let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0)
+                    let viewingKey = try spendingKey.deriveFullViewingKey()
                     
-                    try sdkSynchronizer.prepareWith(initializer: initializer, seedBytes: seedBytes)
+                    try sdkSynchronizer.prepareWith(initializer: initializer, seedBytes: seedBytes, viewingKey: viewingKey, walletBirthday: birthday)
                     try sdkSynchronizer.start()
                     return .none
                 } catch {
