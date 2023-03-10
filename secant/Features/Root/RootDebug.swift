@@ -108,8 +108,16 @@ extension RootReducer {
 
     private func rewind(policy: RewindPolicy, sourceAction: DebugAction) -> EffectPublisher<RootReducer.Action, Never> {
         guard let rewindPublisher = sdkSynchronizer.rewind(policy) else {
-            return EffectTask(value: .debug(.rewindDone(L10n.Root.Debug.Error.Rewind.sdkSynchronizerNotInitialized, .debug(sourceAction))))
+            return EffectTask(
+                value: .debug(
+                    .rewindDone(
+                        L10n.Root.Debug.Error.Rewind.sdkSynchronizerNotInitialized,
+                        .debug(sourceAction)
+                    )
+                )
+            )
         }
+
         return rewindPublisher
             .replaceEmpty(with: Void())
             .map { _ in return RootReducer.Action.debug(.rewindDone(nil, .debug(sourceAction))) }

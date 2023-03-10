@@ -74,6 +74,8 @@ struct HomeReducer: ReducerProtocol {
         case walletEvents(WalletEventsFlowReducer.Action)
         case updateDestination(HomeReducer.State.Destination?)
         case updateSynchronizerStatus
+        case showSynchronizerErrorAlert(SyncStatusSnapshot)
+        case retrySync
         case updateWalletEvents([WalletEvent])
     }
     
@@ -129,12 +131,24 @@ struct HomeReducer: ReducerProtocol {
                 return .none
                 
             case .updateSynchronizerStatus:
-                state.synchronizerStatusSnapshot = sdkSynchronizer.statusSnapshot()
+                let snapshot = sdkSynchronizer.statusSnapshot()
+
+                guard snapshot != state.synchronizerStatusSnapshot else {
+                    return .none
+                }
+
+                state.synchronizerStatusSnapshot = snapshot
                 if let shieldedBalance = sdkSynchronizer.latestScannedSynchronizerState?.shieldedBalance {
                     state.shieldedBalance = shieldedBalance.redacted
                 }
-                return .none
-            
+
+                switch snapshot.syncStatus {
+                case .error:
+                    return EffectTask(value: .showSynchronizerErrorAlert(snapshot))
+                default:
+                    return .none
+                }
+
             case .updateDestination(.profile):
                 state.profileState.destination = nil
                 state.destination = .profile
@@ -161,6 +175,23 @@ struct HomeReducer: ReducerProtocol {
                 return EffectTask(value: .updateDestination(nil))
                 
             case .send:
+                return .none
+
+            case .retrySync:
+                do {
+                    try sdkSynchronizer.start(retry: true)
+                } catch {
+                    state.alert = AlertState<HomeReducer.Action>(
+                        title: TextState(L10n.Home.SyncFailed.title),
+                        message: TextState(error.localizedDescription),
+                        primaryButton: .default(TextState(L10n.Home.SyncFailed.retry), action: .send(.retrySync)),
+                        secondaryButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
+                    )
+                }
+                return .none
+
+            case .showSynchronizerErrorAlert(let snapshot):
+                state.alert = HomeStore.syncErrorAlert(with: snapshot)
                 return .none
                 
             case .balanceBreakdown(.onDisappear):
@@ -233,6 +264,18 @@ extension HomeViewStore {
     }
 }
 
+// MARK: Alerts
+
+extension HomeStore {
+    static func syncErrorAlert(with snapshot: SyncStatusSnapshot) -> AlertState<HomeReducer.Action> {
+        AlertState<HomeReducer.Action>(
+            title: TextState(L10n.Home.SyncFailed.title),
+            message: TextState(snapshot.message),
+            primaryButton: .default(TextState(L10n.Home.SyncFailed.retry), action: .send(.retrySync)),
+            secondaryButton: .default(TextState(L10n.Home.SyncFailed.dismiss), action: .send(.dismissAlert))
+            )
+    }
+}
 // MARK: Placeholders
 
 extension HomeReducer.State {
@@ -255,6 +298,30 @@ extension HomeStore {
     static var placeholder: HomeStore {
         HomeStore(
             initialState: .placeholder,
+            reducer: HomeReducer()
+        )
+    }
+
+    static var error: HomeStore {
+        HomeStore(
+            initialState: .init(
+                alert: HomeStore.syncErrorAlert(
+                    with:  SyncStatusSnapshot.snapshotFor(
+                        state: .error(SynchronizerError.networkTimeout)
+                    )
+                ),
+                balanceBreakdownState: .placeholder,
+                profileState: .placeholder,
+                scanState: .placeholder,
+                sendState: .placeholder,
+                settingsState: .placeholder,
+                shieldedBalance: Balance.zero,
+                synchronizerStatusSnapshot: .snapshotFor(
+                    state: .error(SDKInitializationError.failed)
+                ),
+                walletConfig: .default,
+                walletEventsState: .emptyPlaceHolder
+            ),
             reducer: HomeReducer()
         )
     }

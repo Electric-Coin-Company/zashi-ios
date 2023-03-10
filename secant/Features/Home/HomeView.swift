@@ -125,7 +125,7 @@ extension HomeView {
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            HomeView(store: .placeholder)
+            HomeView(store: .error)
         }
     }
 }

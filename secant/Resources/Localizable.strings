@@ -66,7 +66,9 @@
 "home.receiveZec" = "Receive %@";
 "home.transactionHistory" = "See transaction history";
 "home.title" = "Secant Wallet";
-
+"home.syncFailed.title" = "Sync failed!";
+"home.syncFailed.dismiss" = "Dismiss";
+"home.syncFailed.retry" = "Retry";
 // MARK: - Receive ZEC (Formerly Profile Screen)
 "receiveZec.yourAddress" = "Your Address";
 "receiveZec.error.cantExtractUnifiedAddress" = "could not extract UA";
