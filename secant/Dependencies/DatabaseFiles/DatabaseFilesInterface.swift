@@ -17,13 +17,12 @@ extension DependencyValues {
 }
 
 struct DatabaseFilesClient {
-    let documentsDirectory: () throws -> URL
-    let fsBlockDbRootFor: (ZcashNetwork) throws -> URL
-    let cacheDbURLFor: (ZcashNetwork) throws -> URL
-    let dataDbURLFor: (ZcashNetwork) throws -> URL
-    let outputParamsURLFor: (ZcashNetwork) throws -> URL
-    let pendingDbURLFor: (ZcashNetwork) throws -> URL
-    let spendParamsURLFor: (ZcashNetwork) throws -> URL
-    var areDbFilesPresentFor: (ZcashNetwork) throws -> Bool
-    let nukeDbFilesFor: (ZcashNetwork) throws -> Void
+    let documentsDirectory: () -> URL
+    let fsBlockDbRootFor: (ZcashNetwork) -> URL
+    let cacheDbURLFor: (ZcashNetwork) -> URL
+    let dataDbURLFor: (ZcashNetwork) -> URL
+    let outputParamsURLFor: (ZcashNetwork) -> URL
+    let pendingDbURLFor: (ZcashNetwork) -> URL
+    let spendParamsURLFor: (ZcashNetwork) -> URL
+    var areDbFilesPresentFor: (ZcashNetwork) -> Bool
 }

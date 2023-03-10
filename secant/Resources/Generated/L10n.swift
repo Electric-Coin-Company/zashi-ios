@@ -352,12 +352,6 @@ internal enum L10n {
           }
         }
       }
-      internal enum Error {
-        internal enum Rewind {
-          /// SDKSynchronizer not initilized. rewindPublisher is nil
-          internal static let sdkSynchronizerNotInitialized = L10n.tr("Localizable", "root.debug.error.rewind.sdkSynchronizerNotInitialized", fallback: "SDKSynchronizer not initilized. rewindPublisher is nil")
-        }
-      }
       internal enum Option {
         /// Export logs
         internal static let exportLogs = L10n.tr("Localizable", "root.debug.option.exportLogs", fallback: "Export logs")

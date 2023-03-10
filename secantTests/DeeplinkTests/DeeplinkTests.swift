@@ -5,6 +5,7 @@
 //  Created by Lukáš Korba on 16.06.2022.
 //
 
+import Combine
 import XCTest
 @testable import secant_testnet
 import ComposableArchitecture
@@ -87,9 +88,9 @@ class DeeplinkTests: XCTestCase {
         store.dependencies.deeplink = DeeplinkClient(
             resolveDeeplinkURL: { _, _ in Deeplink.Destination.home }
         )
-        let synchronizer = NoopSDKSynchronizer()
-        synchronizer.updateStateChanged(.synced)
-        store.dependencies.sdkSynchronizer = synchronizer
+        store.dependencies.sdkSynchronizer = SDKSynchronizerClient.mocked(
+            stateChangedStream: { CurrentValueSubject<SDKSynchronizerState, Never>(.synced) }
+        )
         store.dependencies.walletConfigProvider = .noOp
 
         guard let url = URL(string: "zcash:///home") else {
@@ -116,9 +117,6 @@ class DeeplinkTests: XCTestCase {
     }
     
     func testDeeplinkRequest_Received_Send() async throws {
-        let synchronizer = NoopSDKSynchronizer()
-        synchronizer.updateStateChanged(.synced)
-        
         var appState = RootReducer.State.placeholder
         appState.destinationState.destination = .welcome
         appState.appInitializationState = .initialized
@@ -130,7 +128,9 @@ class DeeplinkTests: XCTestCase {
             dependencies.deeplink = DeeplinkClient(
                 resolveDeeplinkURL: { _, _ in Deeplink.Destination.send(amount: 123_000_000, address: "address", memo: "some text") }
             )
-            dependencies.sdkSynchronizer = synchronizer
+            dependencies.sdkSynchronizer = SDKSynchronizerClient.mocked(
+                stateChangedStream: { CurrentValueSubject<SDKSynchronizerState, Never>(.synced) }
+            )
         }
         
         guard let url = URL(string: "zcash:///home/send?address=address&memo=some%20text&amount=123000000") else {

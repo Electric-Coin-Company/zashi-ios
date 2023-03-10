@@ -22,6 +22,8 @@ class WalletEventsTests: XCTestCase {
             ),
             reducer: WalletEventsFlowReducer()
         )
+
+        store.dependencies.sdkSynchronizer = .noOp
         
         store.send(.onAppear) { state in
             state.requiredTransactionConfirmations = 10
@@ -78,10 +80,12 @@ class WalletEventsTests: XCTestCase {
             reducer: WalletEventsFlowReducer()
         ) { dependencies in
             dependencies.mainQueue = Self.testScheduler.eraseToAnyScheduler()
-            dependencies.sdkSynchronizer = SDKSynchronizerDependency.mockWithSnapshot(.default)
+            dependencies.sdkSynchronizer = SDKSynchronizerClient.mocked(statusSnapshot: { .default })
         }
         
-        store.send(.synchronizerStateChanged(.synced))
+        store.send(.synchronizerStateChanged(.synced)) { state in
+            state.latestMinedHeight = 0
+        }
         
         Self.testScheduler.advance(by: 0.01)
 

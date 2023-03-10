@@ -68,7 +68,7 @@ struct BalanceBreakdownReducer: ReducerProtocol {
                 return .none
 
             case .onAppear:
-                return sdkSynchronizer.stateChanged
+                return sdkSynchronizer.stateChangedStream()
                     .map(BalanceBreakdownReducer.Action.synchronizerStateChanged)
                     .eraseToEffect()
                     .cancellable(id: CancelId.self, cancelInFlight: true)
@@ -84,11 +84,7 @@ struct BalanceBreakdownReducer: ReducerProtocol {
                         let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
                         let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0)
 
-                        _ = try await sdkSynchronizer.shieldFunds(
-                            spendingKey: spendingKey,
-                            memo: Memo(string: ""),
-                            shieldingThreshold: state.autoShieldingThreshold
-                        )
+                        _ = try await sdkSynchronizer.shieldFunds(spendingKey, Memo(string: ""), state.autoShieldingThreshold)
 
                         await send(.shieldFundsSuccess)
                     } catch {
@@ -121,17 +117,17 @@ struct BalanceBreakdownReducer: ReducerProtocol {
                 return EffectTask(value: .updateSynchronizerStatus)
 
             case .updateSynchronizerStatus:
-                if let shieldedBalance = sdkSynchronizer.latestScannedSynchronizerState?.shieldedBalance {
+                if let shieldedBalance = sdkSynchronizer.latestScannedSynchronizerState()?.shieldedBalance {
                     state.shieldedBalance = shieldedBalance.redacted
                 }
-                if let transparentBalance = sdkSynchronizer.latestScannedSynchronizerState?.transparentBalance {
+                if let transparentBalance = sdkSynchronizer.latestScannedSynchronizerState()?.transparentBalance {
                     state.transparentBalance = transparentBalance.redacted
                 }
                 return EffectTask(value: .updateLatestBlock)
 
             case .updateLatestBlock:
                 guard
-                    let latestBlockNumber = sdkSynchronizer.latestScannedSynchronizerState?.latestScannedHeight,
+                    let latestBlockNumber = sdkSynchronizer.latestScannedSynchronizerState()?.latestScannedHeight,
                     let latestBlock = numberFormatter.string(NSDecimalNumber(value: latestBlockNumber))
                 else {
                     state.latestBlock = L10n.General.unknown

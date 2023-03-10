@@ -16,6 +16,8 @@ class BalanceBreakdownTests: XCTestCase {
             initialState: .placeholder,
             reducer: BalanceBreakdownReducer()
         )
+
+        store.dependencies.sdkSynchronizer = .noOp
         
         store.send(.onAppear)
         
@@ -35,7 +37,7 @@ class BalanceBreakdownTests: XCTestCase {
             reducer: BalanceBreakdownReducer()
         )
 
-        store.dependencies.sdkSynchronizer = MockSDKSynchronizerClient()
+        store.dependencies.sdkSynchronizer = .mock
         store.dependencies.derivationTool = .liveValue
         store.dependencies.mnemonic = .mock
         store.dependencies.walletStorage.exportWallet = { .placeholder }
@@ -64,7 +66,7 @@ class BalanceBreakdownTests: XCTestCase {
             reducer: BalanceBreakdownReducer()
         )
 
-        store.dependencies.sdkSynchronizer = NoopSDKSynchronizer()
+        store.dependencies.sdkSynchronizer = .mocked(shieldFunds: { _, _, _ in throw SynchronizerError.criticalError })
         store.dependencies.derivationTool = .liveValue
         store.dependencies.mnemonic = .mock
         store.dependencies.walletStorage.exportWallet = { .placeholder }

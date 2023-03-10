@@ -72,6 +72,7 @@ class DebugTests: XCTestCase {
         )
 
         store.dependencies.mainQueue = .immediate
+        store.dependencies.sdkSynchronizer = .noOp
 
         await store.send(.debug(.quickRescan)) { state in
             state.destinationState.internalDestination = .home
@@ -100,6 +101,7 @@ class DebugTests: XCTestCase {
         )
 
         store.dependencies.mainQueue = .immediate
+        store.dependencies.sdkSynchronizer = .noOp
                 
         await store.send(.debug(.fullRescan)) { state in
             state.destinationState.internalDestination = .home

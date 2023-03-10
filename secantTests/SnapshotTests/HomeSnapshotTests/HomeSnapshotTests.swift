@@ -49,6 +49,7 @@ class HomeSnapshotTests: XCTestCase {
             ),
             reducer: HomeReducer()
                 .dependency(\.diskSpaceChecker, .mockEmptyDisk)
+                .dependency(\.sdkSynchronizer, .noOp)
         )
 
         // landing home screen

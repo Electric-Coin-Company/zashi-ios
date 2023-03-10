@@ -251,7 +251,6 @@
 "root.debug.alert.rewind.failed.message" = "Error: %@";
 "root.debug.alert.rewind.cantStartSync.title" = "Can't start sync process after rewind";
 "root.debug.alert.rewind.cantStartSync.message" = "Error: %@";
-"root.debug.error.rewind.sdkSynchronizerNotInitialized" = "SDKSynchronizer not initilized. rewindPublisher is nil";
 
 // MARK: - Export logs
 "exportLogs.alert.failed.title" = "Error when exporting logs";

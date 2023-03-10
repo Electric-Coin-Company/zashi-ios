@@ -22,6 +22,7 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
                 transparentBalance: WalletBalance(verified: Zatoshi(850_000_000), total: Zatoshi(850_000_000)).redacted
             ),
             reducer: BalanceBreakdownReducer()
+                .dependency(\.sdkSynchronizer, .noOp)
         )
         
         addAttachments(BalanceBreakdownView(store: store))

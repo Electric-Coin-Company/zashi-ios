@@ -14,33 +14,30 @@ extension DatabaseFilesClient: DependencyKey {
     static func live(databaseFiles: DatabaseFiles = DatabaseFiles(fileManager: .live)) -> Self {
         Self(
             documentsDirectory: {
-                try databaseFiles.documentsDirectory()
+                databaseFiles.documentsDirectory()
             },
             fsBlockDbRootFor: { network in
-                try databaseFiles.documentsDirectory()
+                databaseFiles.documentsDirectory()
                     .appendingPathComponent(network.networkType.chainName)
                     .appendingPathComponent(ZcashSDK.defaultFsCacheName, isDirectory: true)
             },
             cacheDbURLFor: { network in
-                try databaseFiles.cacheDbURL(for: network)
+                databaseFiles.cacheDbURL(for: network)
             },
             dataDbURLFor: { network in
-                try databaseFiles.dataDbURL(for: network)
+                databaseFiles.dataDbURL(for: network)
             },
             outputParamsURLFor: { network in
-                try databaseFiles.outputParamsURL(for: network)
+                databaseFiles.outputParamsURL(for: network)
             },
             pendingDbURLFor: { network in
-                try databaseFiles.pendingDbURL(for: network)
+                databaseFiles.pendingDbURL(for: network)
             },
             spendParamsURLFor: { network in
-                try databaseFiles.spendParamsURL(for: network)
+                databaseFiles.spendParamsURL(for: network)
             },
             areDbFilesPresentFor: { network in
-                try databaseFiles.areDbFilesPresent(for: network)
-            },
-            nukeDbFilesFor: { network in
-                try databaseFiles.nukeDbFiles(for: network)
+                databaseFiles.areDbFilesPresent(for: network)
             }
         )
     }

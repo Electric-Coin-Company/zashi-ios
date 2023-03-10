@@ -48,7 +48,7 @@ struct WalletEventsFlowReducer: ReducerProtocol {
         switch action {
         case .onAppear:
             state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
-            return sdkSynchronizer.stateChanged
+            return sdkSynchronizer.stateChangedStream()
                 .map(WalletEventsFlowReducer.Action.synchronizerStateChanged)
                 .eraseToEffect()
                 .cancellable(id: CancelId.self, cancelInFlight: true)
@@ -57,9 +57,7 @@ struct WalletEventsFlowReducer: ReducerProtocol {
             return .cancel(id: CancelId.self)
 
         case .synchronizerStateChanged(.synced):
-            if let latestMinedHeight = sdkSynchronizer.synchronizer?.latestScannedHeight {
-                state.latestMinedHeight = latestMinedHeight
-            }
+            state.latestMinedHeight = sdkSynchronizer.latestScannedHeight()
             return sdkSynchronizer.getAllTransactions()
                 .receive(on: mainQueue)
                 .map(WalletEventsFlowReducer.Action.updateWalletEvents)

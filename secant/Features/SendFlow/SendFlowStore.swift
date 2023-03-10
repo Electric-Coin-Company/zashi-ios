@@ -162,15 +162,10 @@ struct SendFlowReducer: ReducerProtocol {
                     }
 
                     let recipient = try Recipient(state.address, network: zcashSDKEnvironment.network.networkType)
-                    let sendTransActionEffect = sdkSynchronizer.sendTransaction(
-                        with: spendingKey,
-                        zatoshi: state.amount,
-                        to: recipient,
-                        memo: memo
-                    )
-                    .receive(on: mainQueue)
-                    .map(SendFlowReducer.Action.sendTransactionResult)
-                    .eraseToEffect()
+                    let sendTransActionEffect = sdkSynchronizer.sendTransaction(spendingKey, state.amount, recipient, memo)
+                        .receive(on: mainQueue)
+                        .map(SendFlowReducer.Action.sendTransactionResult)
+                        .eraseToEffect()
 
                     return .concatenate(
                         EffectTask(value: .updateDestination(.inProgress)),
@@ -200,7 +195,7 @@ struct SendFlowReducer: ReducerProtocol {
 
             case .onAppear:
                 state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
-                return sdkSynchronizer.stateChanged
+                return sdkSynchronizer.stateChangedStream()
                     .map(SendFlowReducer.Action.synchronizerStateChanged)
                     .eraseToEffect()
                     .cancellable(id: SyncStatusUpdatesID.self, cancelInFlight: true)
@@ -209,7 +204,7 @@ struct SendFlowReducer: ReducerProtocol {
                 return .cancel(id: SyncStatusUpdatesID.self)
                 
             case .synchronizerStateChanged(.synced):
-                if let shieldedBalance = sdkSynchronizer.latestScannedSynchronizerState?.shieldedBalance {
+                if let shieldedBalance = sdkSynchronizer.latestScannedSynchronizerState()?.shieldedBalance {
                     state.shieldedBalance = shieldedBalance.redacted
                     state.transactionAmountInputState.maxValue = shieldedBalance.total.amount.redacted
                 }

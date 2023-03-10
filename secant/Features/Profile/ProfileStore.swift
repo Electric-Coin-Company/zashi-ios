@@ -43,7 +43,7 @@ struct ProfileReducer: ReducerProtocol {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                state.addressDetailsState.uAddress = self.sdkSynchronizer.getUnifiedAddress(account: 0)
+                state.addressDetailsState.uAddress = self.sdkSynchronizer.getUnifiedAddress(0)
                 state.appBuild = appVersion.appBuild()
                 state.appVersion = appVersion.appVersion()
                 state.sdkVersion = zcashSDKEnvironment.sdkVersion

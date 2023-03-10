@@ -10,33 +10,42 @@ import Combine
 import ComposableArchitecture
 import ZcashLightClientKit
 
-enum SDKSynchronizerDependency: DependencyKey {
-    static let liveValue: SDKSynchronizerClient = LiveSDKSynchronizerClient()
-}
-
-class LiveSDKSynchronizerClient: SDKSynchronizerClient {
+private class SDKSynchronizerLiveWrapper {
     private var cancellables: [AnyCancellable] = []
-    private(set) var synchronizer: SDKSynchronizer?
-    // TODO: [#497] Since 0.17.0-beta SDKSynchronizer has `lastState` property which does exactly the same as `stateChanged`. Problem is that we have
-    // synchronizer as optional. And now it would be complicated to handle the situation when `lastState` isn't always available. Let's handle this
-    // in future.
-    private(set) var stateChanged: CurrentValueSubject<SDKSynchronizerState, Never>
-    private(set) var notificationCenter: NotificationCenterClient
-    private(set) var walletBirthday: BlockHeight?
-    private(set) var latestScannedSynchronizerState: SDKSynchronizer.SynchronizerState?
+    let synchronizer: SDKSynchronizer
+    let stateChanged: CurrentValueSubject<SDKSynchronizerState, Never>
+    var latestScannedSynchronizerState: SDKSynchronizer.SynchronizerState?
 
-    init(notificationCenter: NotificationCenterClient = .live) {
-        self.notificationCenter = notificationCenter
+    init(
+        notificationCenter: NotificationCenterClient = .live,
+        databaseFiles: DatabaseFilesClient = .liveValue,
+        environment: ZcashSDKEnvironment = .liveValue
+    ) {
         self.stateChanged = CurrentValueSubject<SDKSynchronizerState, Never>(.unknown)
+
+        let network = environment.network
+        let initializer = Initializer(
+            cacheDbURL: databaseFiles.cacheDbURLFor(network),
+            fsBlockDbRoot: databaseFiles.fsBlockDbRootFor(network),
+            dataDbURL: databaseFiles.dataDbURLFor(network),
+            pendingDbURL: databaseFiles.pendingDbURLFor(network),
+            endpoint: environment.endpoint,
+            network: network,
+            spendParamsURL: databaseFiles.spendParamsURLFor(network),
+            outputParamsURL: databaseFiles.outputParamsURLFor(network),
+            saplingParamsSourceURL: SaplingParamsSourceURL.default,
+            loggerProxy: OSLogger(logLevel: .debug, category: LoggerConstants.sdkLogs)
+        )
+
+        synchronizer = SDKSynchronizer(initializer: initializer)
+        subscribeToNotifications(notificationCenter: notificationCenter)
     }
-    
+
     deinit {
-        synchronizer?.stop()
+        synchronizer.stop()
     }
 
-    func prepareWith(initializer: Initializer, seedBytes: [UInt8], viewingKey: UnifiedFullViewingKey, walletBirthday: BlockHeight) throws {
-        let synchronizer = SDKSynchronizer(initializer: initializer)
-
+    private func subscribeToNotifications(notificationCenter: NotificationCenterClient) {
         notificationCenter.publisherFor(.synchronizerStarted)?
             .receive(on: DispatchQueue.main)
             .sink { [weak self] notif in
@@ -62,197 +71,160 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in self?.synchronizerStopped() }
             .store(in: &cancellables)
-
-        guard try synchronizer.prepare(with: seedBytes, viewingKeys: [viewingKey], walletBirthday: walletBirthday) == .success else {
-            throw SynchronizerError.initFailed(message: "")
-        }
-
-        self.synchronizer = synchronizer
-        self.walletBirthday = initializer.walletBirthday
-    }
-    
-    func start(retry: Bool) throws {
-        try synchronizer?.start(retry: retry)
     }
 
-    func stop() {
-        synchronizer?.stop()
-    }
-    
-    func isSyncing() -> Bool {
-        latestScannedSynchronizerState?.syncStatus.isSyncing ?? false
-    }
-    
-    func isInitialized() -> Bool {
-        synchronizer != nil
-    }
-
-    func synchronizerStarted(_ synchronizerState: SDKSynchronizer.SynchronizerState?) {
+    private func synchronizerStarted(_ synchronizerState: SDKSynchronizer.SynchronizerState?) {
         latestScannedSynchronizerState = synchronizerState
         stateChanged.send(.started)
     }
 
-    func synchronizerSynced(_ synchronizerState: SDKSynchronizer.SynchronizerState?) {
+    private func synchronizerSynced(_ synchronizerState: SDKSynchronizer.SynchronizerState?) {
         latestScannedSynchronizerState = synchronizerState
         stateChanged.send(.synced)
     }
 
-    func synchronizerProgressUpdated() {
+    private func synchronizerProgressUpdated() {
         stateChanged.send(.progressUpdated)
     }
 
-    func synchronizerStopped() {
+    private func synchronizerStopped() {
         stateChanged.send(.stopped)
     }
+}
 
-    func statusSnapshot() -> SyncStatusSnapshot {
-        guard let synchronizer else {
-            return .default
-        }
-        
-        return SyncStatusSnapshot.snapshotFor(state: synchronizer.status)
-    }
+extension SDKSynchronizerClient: DependencyKey {
+    static let liveValue: SDKSynchronizerClient = Self.live()
 
-    func rewind(_ policy: RewindPolicy) -> AnyPublisher<Void, Error>? {
-        return synchronizer?.rewind(policy)
-    }
-    
-    func getShieldedBalance() -> WalletBalance? {
-        latestScannedSynchronizerState?.shieldedBalance
-    }
+    static func live(
+        notificationCenter: NotificationCenterClient = .live,
+        databaseFiles: DatabaseFilesClient = .liveValue,
+        environment: ZcashSDKEnvironment = .liveValue
+    ) -> Self {
+        let sdkSynchronizerWrapper = SDKSynchronizerLiveWrapper(
+            notificationCenter: notificationCenter,
+            databaseFiles: databaseFiles,
+            environment: environment
+        )
+        let synchronizer = sdkSynchronizerWrapper.synchronizer
 
-    func getTransparentBalance() -> WalletBalance? {
-        latestScannedSynchronizerState?.transparentBalance
-    }
+        return SDKSynchronizerClient(
+            stateChangedStream: { sdkSynchronizerWrapper.stateChanged },
+            latestScannedSynchronizerState: { sdkSynchronizerWrapper.latestScannedSynchronizerState },
+            latestScannedHeight: { synchronizer.latestScannedHeight },
+            prepareWith: { seedBytes, viewingKey, walletBirtday in
+                let result = try synchronizer.prepare(with: seedBytes, viewingKeys: [viewingKey], walletBirthday: walletBirtday)
 
-    func getAllSentTransactions() -> EffectTask<[WalletEvent]> {
-        if let transactions = try? synchronizer?.allSentTransactions() {
-            return EffectTask(value: transactions.map {
-                let memos = try? synchronizer?.getMemos(for: $0)
-                let transaction = TransactionState.init(transaction: $0, memos: memos)
-                return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
-            })
-        }
-        
-        return .none
-    }
-
-    func getAllReceivedTransactions() -> EffectTask<[WalletEvent]> {
-        if let transactions = try? synchronizer?.allReceivedTransactions() {
-            return EffectTask(value: transactions.map {
-                let memos = try? synchronizer?.getMemos(for: $0)
-                let transaction = TransactionState.init(transaction: $0, memos: memos)
-                return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
-            })
-        }
-        
-        return .none
-    }
-
-    func getAllClearedTransactions() -> EffectTask<[WalletEvent]> {
-        if let transactions = try? synchronizer?.allClearedTransactions() {
-            return EffectTask(value: transactions.map {
-                let memos = try? synchronizer?.getMemos(for: $0)
-                let transaction = TransactionState.init(transaction: $0, memos: memos)
-                return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
-            })
-        }
-        
-        return .none
-    }
-    
-    func getAllPendingTransactions() -> EffectTask<[WalletEvent]> {
-        if let transactions = try? synchronizer?.allPendingTransactions(),
-        let syncedBlockHeight = synchronizer?.latestScannedHeight {
-            return EffectTask(value: transactions.map {
-                let transaction = TransactionState.init(pendingTransaction: $0, latestBlockHeight: syncedBlockHeight)
-                return WalletEvent(id: transaction.id, state: .pending(transaction), timestamp: transaction.timestamp)
-            })
-        }
-        
-        return .none
-    }
-
-    func getAllTransactions() -> EffectTask<[WalletEvent]> {
-        if let pendingTransactions = try? synchronizer?.allPendingTransactions(),
-        let clearedTransactions = try? synchronizer?.allClearedTransactions(),
-        let syncedBlockHeight = synchronizer?.latestScannedHeight {
-            let clearedTxs: [WalletEvent] = clearedTransactions.map {
-                let transaction = TransactionState.init(transaction: $0)
-                return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
-            }
-            let pendingTxs: [WalletEvent] = pendingTransactions.map {
-                let transaction = TransactionState.init(pendingTransaction: $0, latestBlockHeight: syncedBlockHeight)
-                return WalletEvent(id: transaction.id, state: .pending(transaction), timestamp: transaction.timestamp)
-            }
-            let cTxs = clearedTxs.filter { transaction in
-                pendingTxs.first { pending in
-                    pending.id == transaction.id
-                } == nil
-            }
-            
-            return .merge(
-                EffectTask(value: cTxs),
-                EffectTask(value: pendingTxs)
-            )
-            .flatMap(Publishers.Sequence.init(sequence:))
-            .collect()
-            .eraseToEffect()
-        }
-        
-        return .none
-    }
-
-    func getUnifiedAddress(account: Int) -> UnifiedAddress? {
-        synchronizer?.getUnifiedAddress(accountIndex: account)
-    }
-    
-    func getTransparentAddress(account: Int) -> TransparentAddress? {
-        synchronizer?.getTransparentAddress(accountIndex: account)
-    }
-    
-    func getSaplingAddress(accountIndex: Int) async -> SaplingAddress? {
-        await synchronizer?.getSaplingAddress(accountIndex: accountIndex)
-    }
-    
-    func sendTransaction(
-        with spendingKey: UnifiedSpendingKey,
-        zatoshi: Zatoshi,
-        to recipientAddress: Recipient,
-        memo: Memo?
-    ) -> EffectTask<Result<TransactionState, NSError>> {
-        return .run { [weak self] send in
-            do {
-                guard let synchronizer = self?.synchronizer else {
-                    await send(.failure(SDKSynchronizerClientError.synchronizerNotInitialized as NSError))
-                    return
+                if result != .success {
+                    throw SynchronizerError.initFailed(message: "")
+                }
+            },
+            start: { retry in try synchronizer.start(retry: retry) },
+            stop: { synchronizer.stop() },
+            statusSnapshot: { SyncStatusSnapshot.snapshotFor(state: synchronizer.status) },
+            isSyncing: { sdkSynchronizerWrapper.latestScannedSynchronizerState?.syncStatus.isSyncing ?? false },
+            isInitialized: { synchronizer.status != .unprepared },
+            rewind: { synchronizer.rewind($0) },
+            getShieldedBalance: { sdkSynchronizerWrapper.latestScannedSynchronizerState?.shieldedBalance },
+            getTransparentBalance: { sdkSynchronizerWrapper.latestScannedSynchronizerState?.transparentBalance },
+            getAllSentTransactions: {
+                if let transactions = try? synchronizer.allSentTransactions() {
+                    return EffectTask(value: transactions.map {
+                        let memos = try? synchronizer.getMemos(for: $0)
+                        let transaction = TransactionState.init(transaction: $0, memos: memos)
+                        return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
+                    })
                 }
 
-                let pendingTransaction = try await synchronizer.sendToAddress(
+                return .none
+            },
+            getAllReceivedTransactions: {
+                if let transactions = try? synchronizer.allReceivedTransactions() {
+                    return EffectTask(value: transactions.map {
+                        let memos = try? synchronizer.getMemos(for: $0)
+                        let transaction = TransactionState.init(transaction: $0, memos: memos)
+                        return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
+                    })
+                }
+
+                return .none
+            },
+            getAllClearedTransactions: {
+                if let transactions = try? synchronizer.allClearedTransactions() {
+                    return EffectTask(value: transactions.map {
+                        let memos = try? synchronizer.getMemos(for: $0)
+                        let transaction = TransactionState.init(transaction: $0, memos: memos)
+                        return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
+                    })
+                }
+
+                return .none
+            },
+            getAllPendingTransactions: {
+                if let transactions = try? synchronizer.allPendingTransactions() {
+                    return EffectTask(value: transactions.map {
+                        let transaction = TransactionState.init(pendingTransaction: $0, latestBlockHeight: synchronizer.latestScannedHeight)
+                        return WalletEvent(id: transaction.id, state: .pending(transaction), timestamp: transaction.timestamp)
+                    })
+                }
+
+                return .none
+            },
+            getAllTransactions: {
+                if  let pendingTransactions = try? synchronizer.allPendingTransactions(),
+                    let clearedTransactions = try? synchronizer.allClearedTransactions() {
+                    let clearedTxs: [WalletEvent] = clearedTransactions.map {
+                        let transaction = TransactionState.init(transaction: $0)
+                        return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
+                    }
+                    let pendingTxs: [WalletEvent] = pendingTransactions.map {
+                        let transaction = TransactionState.init(pendingTransaction: $0, latestBlockHeight: synchronizer.latestScannedHeight)
+                        return WalletEvent(id: transaction.id, state: .pending(transaction), timestamp: transaction.timestamp)
+                    }
+                    let cTxs = clearedTxs.filter { transaction in
+                        pendingTxs.first { pending in
+                            pending.id == transaction.id
+                        } == nil
+                    }
+
+                    return .merge(
+                        EffectTask(value: cTxs),
+                        EffectTask(value: pendingTxs)
+                    )
+                    .flatMap(Publishers.Sequence.init(sequence:))
+                    .collect()
+                    .eraseToEffect()
+                }
+
+                return .none
+            },
+            getUnifiedAddress: { synchronizer.getUnifiedAddress(accountIndex: $0) },
+            getTransparentAddress: { synchronizer.getTransparentAddress(accountIndex: $0) },
+            getSaplingAddress: { await synchronizer.getSaplingAddress(accountIndex: $0) },
+            sendTransaction: { spendingKey, amount, recipient, memo in
+                return .run { send in
+                    do {
+                        let pendingTransaction = try await synchronizer.sendToAddress(
+                            spendingKey: spendingKey,
+                            zatoshi: amount,
+                            toAddress: recipient,
+                            memo: memo
+                        )
+
+                        await send(.success(TransactionState(pendingTransaction: pendingTransaction)))
+                    } catch {
+                        await send(.failure(error as NSError))
+                    }
+                }
+            },
+            shieldFunds: { spendingKey, memo, shieldingThreshold in
+                let pendingTransaction = try await synchronizer.shieldFunds(
                     spendingKey: spendingKey,
-                    zatoshi: zatoshi,
-                    toAddress: recipientAddress,
-                    memo: memo
+                    memo: memo,
+                    shieldingThreshold: shieldingThreshold
                 )
-
-                await send(.success(TransactionState(pendingTransaction: pendingTransaction)))
-            } catch {
-                await send(.failure(error as NSError))
-            }
-        }
-    }
-
-    func shieldFunds(
-        spendingKey: UnifiedSpendingKey,
-        memo: Memo,
-        shieldingThreshold: Zatoshi
-    ) async throws -> TransactionState {
-        guard let synchronizer = synchronizer else { throw SDKSynchronizerClientError.synchronizerNotInitialized }
-        let pendingTransaction = try await synchronizer.shieldFunds(spendingKey: spendingKey, memo: memo, shieldingThreshold: shieldingThreshold)
-        return TransactionState(pendingTransaction: pendingTransaction)
-    }
-    
-    func wipe() -> AnyPublisher<Void, Error>? {
-        synchronizer?.wipe()
+                return TransactionState(pendingTransaction: pendingTransaction)
+            },
+            wipe: { synchronizer.wipe() }
+        )
     }
 }

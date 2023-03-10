@@ -15,6 +15,8 @@ class WalletEventsSnapshotTests: XCTestCase {
         let store = WalletEventsFlowStore(
             initialState: .placeHolder,
             reducer: WalletEventsFlowReducer()
+                .dependency(\.sdkSynchronizer, .mock)
+                .dependency(\.mainQueue, .immediate)
         )
         
         // landing wallet events screen

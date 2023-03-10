@@ -185,7 +185,6 @@
 		0D26AF4E299E8196005260EE /* BalanceBreakdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6713F5289BC58C00A6796F /* BalanceBreakdownView.swift */; };
 		0D26AF4F299E8196005260EE /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9971A6427680DFE00A2DB75 /* SettingsView.swift */; };
 		0D26AF50299E8196005260EE /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96B41EA273B50520021B49A /* Strings.swift */; };
-		0D26AF51299E8196005260EE /* SDKSynchronizerMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863CE2923CA32003D0F8B /* SDKSynchronizerMocks.swift */; };
 		0D26AF52299E8196005260EE /* LogsHandlerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E612C7529880FC900D09B09 /* LogsHandlerTest.swift */; };
 		0D26AF53299E8196005260EE /* TextFieldFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDA07A127EDE1AE00D6F09B /* TextFieldFooter.swift */; };
 		0D26AF54299E8196005260EE /* CrashReportingInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D26103B298C3E4800CC9DE9 /* CrashReportingInterface.swift */; };
@@ -502,7 +501,6 @@
 		9EB863C92923C953003D0F8B /* UserPreferencesStorageMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863C82923C953003D0F8B /* UserPreferencesStorageMocks.swift */; };
 		9EB863CB2923CA20003D0F8B /* SDKSynchronizerLive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863CA2923CA20003D0F8B /* SDKSynchronizerLive.swift */; };
 		9EB863CD2923CA28003D0F8B /* SDKSynchronizerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863CC2923CA28003D0F8B /* SDKSynchronizerTest.swift */; };
-		9EB863D02923D3FC003D0F8B /* SDKSynchronizerMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863CE2923CA32003D0F8B /* SDKSynchronizerMocks.swift */; };
 		9EBDF947291D75B2000A1A05 /* DiskSpaceCheckerInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF946291D75B2000A1A05 /* DiskSpaceCheckerInterface.swift */; };
 		9EBDF949291D75BF000A1A05 /* DiskSpaceCheckerLiveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF948291D75BF000A1A05 /* DiskSpaceCheckerLiveKey.swift */; };
 		9EBDF94B291D75C7000A1A05 /* DiskSpaceCheckerTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF94A291D75C7000A1A05 /* DiskSpaceCheckerTestKey.swift */; };
@@ -821,7 +819,6 @@
 		9EB863C82923C953003D0F8B /* UserPreferencesStorageMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreferencesStorageMocks.swift; sourceTree = "<group>"; };
 		9EB863CA2923CA20003D0F8B /* SDKSynchronizerLive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKSynchronizerLive.swift; sourceTree = "<group>"; };
 		9EB863CC2923CA28003D0F8B /* SDKSynchronizerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKSynchronizerTest.swift; sourceTree = "<group>"; };
-		9EB863CE2923CA32003D0F8B /* SDKSynchronizerMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKSynchronizerMocks.swift; sourceTree = "<group>"; };
 		9EBDF946291D75B2000A1A05 /* DiskSpaceCheckerInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskSpaceCheckerInterface.swift; sourceTree = "<group>"; };
 		9EBDF948291D75BF000A1A05 /* DiskSpaceCheckerLiveKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskSpaceCheckerLiveKey.swift; sourceTree = "<group>"; };
 		9EBDF94A291D75C7000A1A05 /* DiskSpaceCheckerTestKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskSpaceCheckerTestKey.swift; sourceTree = "<group>"; };
@@ -1980,7 +1977,6 @@
 				9EAFEB872806E5AE00199FC9 /* SDKSynchronizerInterface.swift */,
 				9EB863CA2923CA20003D0F8B /* SDKSynchronizerLive.swift */,
 				9EB863CC2923CA28003D0F8B /* SDKSynchronizerTest.swift */,
-				9EB863CE2923CA32003D0F8B /* SDKSynchronizerMocks.swift */,
 			);
 			path = SDKSynchronizer;
 			sourceTree = "<group>";
@@ -2782,7 +2778,6 @@
 				0D26AF4E299E8196005260EE /* BalanceBreakdownView.swift in Sources */,
 				0D26AF4F299E8196005260EE /* SettingsView.swift in Sources */,
 				0D26AF50299E8196005260EE /* Strings.swift in Sources */,
-				0D26AF51299E8196005260EE /* SDKSynchronizerMocks.swift in Sources */,
 				0D26AF52299E8196005260EE /* LogsHandlerTest.swift in Sources */,
 				0D26AF53299E8196005260EE /* TextFieldFooter.swift in Sources */,
 				0D26AF54299E8196005260EE /* CrashReportingInterface.swift in Sources */,
@@ -3010,7 +3005,6 @@
 				9E6713F8289BC58C00A6796F /* BalanceBreakdownView.swift in Sources */,
 				F9971A6627680DFE00A2DB75 /* SettingsView.swift in Sources */,
 				F96B41EB273B50520021B49A /* Strings.swift in Sources */,
-				9EB863D02923D3FC003D0F8B /* SDKSynchronizerMocks.swift in Sources */,
 				9E612C7629880FC900D09B09 /* LogsHandlerTest.swift in Sources */,
 				2EDA07A227EDE1AE00D6F09B /* TextFieldFooter.swift in Sources */,
 				0D26103C298C3E4800CC9DE9 /* CrashReportingInterface.swift in Sources */,
