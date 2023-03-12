@@ -44,12 +44,11 @@ struct SingleLineTextField<TitleAccessoryContent, InputPrefixContent, InputAcces
 
                 inputAccessoryView
             }
-            .frame(maxHeight: 50)
+            .frame(maxHeight: 40)
             .overlay(
                 Rectangle()
                     .stroke(Asset.Colors.Mfp.primary.color, lineWidth: 2)
             )
-            .padding(.vertical, 5)
         }
     }
 }

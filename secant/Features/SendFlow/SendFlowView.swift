@@ -10,12 +10,35 @@ import ComposableArchitecture
 
 struct SendFlowView: View {
     let store: SendFlowStore
-
+    @FocusState private var isFocused: Bool
+    
     var body: some View {
-        WithViewStore(store) { viewStore in
+        isFocused = true
+        
+        return WithViewStore(store) { viewStore in
             CreateTransaction(store: store)
             .onAppear { viewStore.send(.onAppear) }
             .onDisappear { viewStore.send(.onDisappear) }
+            .sheet(
+                isPresented: viewStore.bindingForMemo,
+                onDismiss: {
+                    viewStore.send(.updateDestination(nil))
+                },
+                content: {
+                    VStack {
+                        MultipleLineTextField(
+                            store: store.memoStore(),
+                            title: L10n.Send.memoPlaceholder,
+                            titleAccessoryView: {},
+                            isFocused: _isFocused
+                        )
+                        .frame(height: 200)
+                        .padding()
+                        
+                        Spacer()
+                    }
+                }
+            )
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForInProgress,
                 destination: { TransactionSendingView(viewStore: viewStore) }

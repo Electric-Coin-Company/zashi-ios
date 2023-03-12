@@ -29,7 +29,7 @@ struct TransactionAddressTextField: View {
                         } label: {
                             Image(Asset.Assets.Icons.qrCode.name)
                                 .resizable()
-                                .frame(width: 30, height: 30)
+                                .frame(width: 25, height: 25)
                         }
                         .padding(.trailing, 10)
                     }
