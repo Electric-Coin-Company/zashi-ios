@@ -174,4 +174,30 @@ class HomeTests: XCTestCase {
         // the .onDisappear action cancels the observer of the synchronizer status change.
         store.send(.onDisappear)
     }
+
+    func testSynchronizerErrorBringsUpAlert() {
+        let testError = SDKInitializationError.failed
+        let errorSnapshot = SyncStatusSnapshot.snapshotFor(
+            state: .error(testError)
+        )
+
+        let mockSynchronizer = MockSDKSynchronizerClient(
+            snapshot: errorSnapshot
+        )
+
+        let store = TestStore(
+            initialState: .placeholder,
+            reducer: HomeReducer()
+        ) {
+            $0.sdkSynchronizer = mockSynchronizer
+        }
+
+        store.send(.updateSynchronizerStatus) {
+            $0.synchronizerStatusSnapshot = errorSnapshot
+        }
+
+        store.receive(.showSynchronizerErrorAlert(errorSnapshot)) {
+            $0.alert = HomeStore.syncErrorAlert(with: errorSnapshot)
+        }
+    }
 }

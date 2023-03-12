@@ -159,6 +159,14 @@ internal enum L10n {
     internal static let title = L10n.tr("Localizable", "home.title", fallback: "Secant Wallet")
     /// See transaction history
     internal static let transactionHistory = L10n.tr("Localizable", "home.transactionHistory", fallback: "See transaction history")
+    internal enum SyncFailed {
+      /// Dismiss
+      internal static let dismiss = L10n.tr("Localizable", "home.syncFailed.dismiss", fallback: "Dismiss")
+      /// Retry
+      internal static let retry = L10n.tr("Localizable", "home.syncFailed.retry", fallback: "Retry")
+      /// Sync failed!
+      internal static let title = L10n.tr("Localizable", "home.syncFailed.title", fallback: "Sync failed!")
+    }
   }
   internal enum ImportWallet {
     /// Enter your secret backup seed phrase.
