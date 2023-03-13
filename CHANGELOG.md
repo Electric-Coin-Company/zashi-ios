@@ -1,4 +1,15 @@
 # Changelog
+# 0.0.1 build 46
+- [#626] Small UI-UX fixes for 0.0.1-45 (#649)
+- [#650] Layout changes for the send screen (#651)
+- [#647] Adopt 0.19.1-beta (#648)
+- [#597] Sync cannot be retried after a failure (#646)
+- [#631] Make Send Form fields avoid being blocked by keyboard (#645)
+- [#599] Add ability to shield funds (#641)
+- [#632] Show error message for failed transaction (#642)
+- [#628] TAZ vs ZEC builds (#637)
+- [#639] Show valid balance after app start (#640)
+- [#618] Require specific version of SwiftGen (#638)
 # 0.0.1 build 45
 - [#635] Fix HomeTests
 - [#633] build and release from tag 0.0.1-45
