@@ -86,4 +86,59 @@ class BalanceBreakdownTests: XCTestCase {
         // the .onDisappear action cancels the observer of the synchronizer status change.
         await store.send(.onDisappear)
     }
+
+    @MainActor func testShieldFundsButtonDisabledWhenNoShieldableFunds() async throws {
+        let store = TestStore(
+            initialState: .placeholder,
+            reducer: BalanceBreakdownReducer()
+        )
+
+        XCTAssertFalse(store.state.shieldingFunds)
+        XCTAssertFalse(store.state.isShieldableBalanceAvailable)
+        XCTAssertTrue(store.state.isShieldingButtonDisabled)
+    }
+
+    @MainActor func testShieldFundsButtonEnabledWhenShieldableFundsAvailable() async throws {
+        let store = TestStore(
+            initialState: BalanceBreakdownReducer.State(
+                autoShieldingThreshold: Zatoshi(1_000_000),
+                latestBlock: L10n.General.unknown,
+                shieldedBalance: Balance.zero,
+                shieldingFunds: false,
+                transparentBalance: Balance(
+                    WalletBalance(
+                        verified: 1_000_000,
+                        total: 1_000_000
+                    )
+                )
+            ),
+            reducer: BalanceBreakdownReducer()
+        )
+
+        XCTAssertFalse(store.state.shieldingFunds)
+        XCTAssertTrue(store.state.isShieldableBalanceAvailable)
+        XCTAssertFalse(store.state.isShieldingButtonDisabled)
+    }
+
+    @MainActor func testShieldFundsButtonDisabledWhenShieldableFundsAvailableAndShielding() async throws {
+        let store = TestStore(
+            initialState: BalanceBreakdownReducer.State(
+                autoShieldingThreshold: Zatoshi(1_000_000),
+                latestBlock: L10n.General.unknown,
+                shieldedBalance: Balance.zero,
+                shieldingFunds: true,
+                transparentBalance: Balance(
+                    WalletBalance(
+                        verified: 1_000_000,
+                        total: 1_000_000
+                    )
+                )
+            ),
+            reducer: BalanceBreakdownReducer()
+        )
+
+        XCTAssertTrue(store.state.shieldingFunds)
+        XCTAssertTrue(store.state.isShieldableBalanceAvailable)
+        XCTAssertTrue(store.state.isShieldingButtonDisabled)
+    }
 }
