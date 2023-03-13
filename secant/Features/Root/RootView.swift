@@ -33,12 +33,22 @@ struct RootView: View {
 
                 case .onboarding:
                     NavigationView {
-                        OnboardingScreen(
-                            store: store.scope(
-                                state: \.onboardingState,
-                                action: RootReducer.Action.onboarding
+                        if viewStore.walletConfig
+                            .isEnabled(.onboardingFlow) {
+                            OnboardingScreen(
+                                store: store.scope(
+                                    state: \.onboardingState,
+                                    action: RootReducer.Action.onboarding
+                                )
                             )
-                        )
+                        } else {
+                            PlainOnboardingView(
+                                store: store.scope(
+                                    state: \.onboardingState,
+                                    action: RootReducer.Action.onboarding
+                                )
+                            )
+                        }
                     }
                     .navigationViewStyle(.stack)
 

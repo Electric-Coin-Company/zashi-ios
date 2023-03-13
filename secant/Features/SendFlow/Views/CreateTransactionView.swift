@@ -57,6 +57,7 @@ struct CreateTransaction: View {
                 .activeButtonStyle
                 .disable(when: !viewStore.isValidForm, dimmingOpacity: 0.5)
                 .padding(.top, 10)
+                .padding(.horizontal)
 
                 Spacer()
             }

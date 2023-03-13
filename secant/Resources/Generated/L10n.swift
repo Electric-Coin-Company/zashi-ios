@@ -252,6 +252,18 @@ internal enum L10n {
       internal static let title = L10n.tr("Localizable", "onboarding.step4.title", fallback: "Let's get started")
     }
   }
+  internal enum PlainOnboarding {
+    /// We need to create a new wallet or restore an existing one. Select your path:
+    internal static let caption = L10n.tr("Localizable", "plainOnboarding.caption", fallback: "We need to create a new wallet or restore an existing one. Select your path:")
+    /// It's time to setup your Secant, powered by Zcash, no-frills wallet.
+    internal static let title = L10n.tr("Localizable", "plainOnboarding.title", fallback: "It's time to setup your Secant, powered by Zcash, no-frills wallet.")
+    internal enum Button {
+      /// Create a new Wallet
+      internal static let createNewWallet = L10n.tr("Localizable", "plainOnboarding.button.createNewWallet", fallback: "Create a new Wallet")
+      /// Restore an existing wallet
+      internal static let restoreWallet = L10n.tr("Localizable", "plainOnboarding.button.restoreWallet", fallback: "Restore an existing wallet")
+    }
+  }
   internal enum ReceiveZec {
     /// Your Address
     internal static let yourAddress = L10n.tr("Localizable", "receiveZec.yourAddress", fallback: "Your Address")

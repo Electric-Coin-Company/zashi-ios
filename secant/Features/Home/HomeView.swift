@@ -22,6 +22,7 @@ struct HomeView: View {
                         .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                 }
             }
+            .padding()
             .applyScreenBackground()
             .navigationTitle(L10n.Home.title)
             .navigationBarItems(trailing: settingsButton(viewStore))
