@@ -18,8 +18,23 @@ class SettingsSnapshotTests: XCTestCase {
                 .dependency(\.localAuthentication, .mockAuthenticationFailed)
                 .dependency(\.sdkSynchronizer, NoopSDKSynchronizer())
                 .dependency(\.walletStorage, .noOp)
+                .dependency(\.appVersion, .mock)
         )
         
         addAttachments(SettingsView(store: store))
+    }
+    
+    func testAboutSnapshot() throws {
+        let store = Store(
+            initialState: .placeholder,
+            reducer: SettingsReducer()
+                .dependency(\.localAuthentication, .mockAuthenticationFailed)
+                .dependency(\.sdkSynchronizer, NoopSDKSynchronizer())
+                .dependency(\.walletStorage, .noOp)
+                .dependency(\.appVersion, .liveValue)
+        )
+        
+        ViewStore(store).send(.onAppear)
+        addAttachments(About(store: store))
     }
 }

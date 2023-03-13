@@ -119,6 +119,8 @@
 "settings.exporting" = "Exporting...";
 "settings.exportLogs" = "Export & share logs";
 "settings.feedback" = "Send us feedback!";
+"settings.about" = "About";
+"settings.version" = "Version %@ (%@)";
 "settings.title" = "Settings";
 "settings.alert.cantBackupWallet.title" = "Can't backup wallet";
 "settings.alert.cantBackupWallet.message" = "Error: %@";

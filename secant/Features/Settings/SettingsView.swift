@@ -43,6 +43,14 @@ struct SettingsView: View {
                 .frame(height: 50)
 
                 Spacer()
+                
+                Button(
+                    action: { viewStore.send(.updateDestination(.about)) },
+                    label: { Text(L10n.Settings.about) }
+                )
+                .activeButtonStyle
+                .frame(maxHeight: 50)
+                .padding(.bottom, 50)
             }
             .padding(.horizontal, 30)
             .navigationTitle(L10n.Settings.title)
@@ -51,6 +59,12 @@ struct SettingsView: View {
                 isActive: viewStore.bindingForBackupPhrase,
                 destination: {
                     RecoveryPhraseDisplayView(store: store.backupPhraseStore())
+                }
+            )
+            .navigationLinkEmpty(
+                isActive: viewStore.bindingForAbout,
+                destination: {
+                    About(store: store)
                 }
             )
             .onAppear { viewStore.send(.onAppear) }

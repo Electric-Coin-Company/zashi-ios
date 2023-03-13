@@ -478,6 +478,8 @@ internal enum L10n {
     internal static let title = L10n.tr("Localizable", "send.title", fallback: "Send Zcash")
   }
   internal enum Settings {
+    /// About
+    internal static let about = L10n.tr("Localizable", "settings.about", fallback: "About")
     /// Backup Wallet
     internal static let backupWallet = L10n.tr("Localizable", "settings.backupWallet", fallback: "Backup Wallet")
     /// Enable Crash Reporting
@@ -490,6 +492,10 @@ internal enum L10n {
     internal static let feedback = L10n.tr("Localizable", "settings.feedback", fallback: "Send us feedback!")
     /// Settings
     internal static let title = L10n.tr("Localizable", "settings.title", fallback: "Settings")
+    /// Version %@ (%@)
+    internal static func version(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "settings.version", String(describing: p1), String(describing: p2), fallback: "Version %@ (%@)")
+    }
     internal enum Alert {
       internal enum CantBackupWallet {
         /// Error: %@
