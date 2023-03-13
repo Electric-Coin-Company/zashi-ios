@@ -38,7 +38,7 @@ struct SingleLineTextField<TitleAccessoryContent, InputPrefixContent, InputAcces
                     placeholder: placeholderText,
                     store: store
                 )
-                .padding(10)
+                .padding(2)
 
                 Spacer()
 

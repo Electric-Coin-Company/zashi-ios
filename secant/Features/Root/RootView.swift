@@ -127,7 +127,7 @@ private extension RootView {
                     viewStore.goToDestination(.home)
                 }
                 .activeButtonStyle
-                .frame(width: 75, height: 40, alignment: .leading)
+                .frame(width: 150)
                 .padding()
             }
 

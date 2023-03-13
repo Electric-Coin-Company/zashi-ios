@@ -21,9 +21,10 @@ struct ProfileView: View {
                         viewStore.send(.updateDestination(.addressDetails))
                     } label: {
                         Image(systemName: "info.circle")
-                            .offset(x: -10, y: -10)
+                            .padding(15)
                             .tint(.black)
                     }
+                    .offset(x: -20, y: -10)
                 }
                 
                 Text("\(viewStore.unifiedAddress)")
@@ -49,17 +50,6 @@ extension ProfileView {
         Group {
             if let img = QRCodeGenerator.generate(from: qrText) {
                 Image(img, scale: 1, label: Text(L10n.qrCodeFor(qrText)))
-                    .cornerRadius(20)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color.white, lineWidth: 25)
-                        .scaleEffect(1.1)
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color.black, lineWidth: 8)
-                        .scaleEffect(1.1)
-                    )
             } else {
                 Image(systemName: "qrcode")
             }

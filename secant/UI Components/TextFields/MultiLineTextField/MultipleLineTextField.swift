@@ -58,7 +58,6 @@ struct MultilineTextEditorModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .foregroundColor(Asset.Colors.Mfp.fontDark.color)
-            .padding()
             .overlay(
                 Rectangle()
                     .stroke(outlineColor, lineWidth: 2)
