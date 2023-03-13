@@ -205,7 +205,7 @@ extension RootStore {
     static var placeholder: RootStore {
         RootStore(
             initialState: .placeholder,
-            reducer: RootReducer().logging()._printChanges()
+            reducer: RootReducer().logging()
         )
     }
 }
