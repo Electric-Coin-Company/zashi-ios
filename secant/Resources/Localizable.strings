@@ -110,6 +110,8 @@
 "send.amount" = "amount: %@";
 "send.address" = " address: %@";
 "send.memo" = " memo: %@";
+"send.includeMemo" = "Want to include memo? Tap here.";
+"send.editMemo" = "Memo included. Tap to edit.";
 
 // MARK: - Settings
 "settings.crashReporting" = "Enable Crash Reporting";

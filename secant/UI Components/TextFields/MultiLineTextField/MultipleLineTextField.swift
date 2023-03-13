@@ -14,6 +14,7 @@ struct MultipleLineTextField<TitleAccessoryContent>: View
     let title: String
 
     @ViewBuilder let titleAccessoryView: TitleAccessoryContent
+    @FocusState public var isFocused: Bool
 
     var body: some View {
         WithViewStore(store) { viewStore in
@@ -30,6 +31,7 @@ struct MultipleLineTextField<TitleAccessoryContent>: View
                         Asset.Colors.Text.activeButtonText.color,
                         Asset.Colors.TextField.multilineOutline.color
                     )
+                    .focused($isFocused)
                 
                 if viewStore.isCharLimited {
                     HStack {

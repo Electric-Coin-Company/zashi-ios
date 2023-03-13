@@ -454,10 +454,14 @@ internal enum L10n {
     internal static func amount(_ p1: Any) -> String {
       return L10n.tr("Localizable", "send.amount", String(describing: p1), fallback: "amount: %@")
     }
+    /// Memo included. Tap to edit.
+    internal static let editMemo = L10n.tr("Localizable", "send.editMemo", fallback: "Memo included. Tap to edit.")
     /// Sending transaction failed
     internal static let failed = L10n.tr("Localizable", "send.failed", fallback: "Sending transaction failed")
     /// Aditional funds may be in transit
     internal static let fundsInfo = L10n.tr("Localizable", "send.fundsInfo", fallback: "Aditional funds may be in transit")
+    /// Want to include memo? Tap here.
+    internal static let includeMemo = L10n.tr("Localizable", "send.includeMemo", fallback: "Want to include memo? Tap here.")
     ///  memo: %@
     internal static func memo(_ p1: Any) -> String {
       return L10n.tr("Localizable", "send.memo", String(describing: p1), fallback: " memo: %@")

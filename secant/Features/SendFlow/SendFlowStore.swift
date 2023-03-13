@@ -17,11 +17,12 @@ struct SendFlowReducer: ReducerProtocol {
 
     struct State: Equatable {
         enum Destination: Equatable {
+            case done
+            case failure
             case inProgress
+            case memo
             case scanQR
             case success
-            case failure
-            case done
         }
 
         var addMemoState: Bool
@@ -294,7 +295,14 @@ extension SendFlowViewStore {
             embed: { _ in SendFlowReducer.State.Destination.failure }
         )
     }
-    
+
+    var bindingForMemo: Binding<Bool> {
+        self.destinationBinding.map(
+            extract: { $0 == .memo },
+            embed: { _ in SendFlowReducer.State.Destination.memo }
+        )
+    }
+
     var bindingForScanQR: Binding<Bool> {
         self.destinationBinding.map(
             extract: {

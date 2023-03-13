@@ -8,18 +8,18 @@ struct CreateTransaction: View {
         UITextView.appearance().backgroundColor = .clear
         
         return WithViewStore(store) { viewStore in
-            VStack {
+            VStack(spacing: 5) {
                 VStack(spacing: 0) {
                     Text(L10n.Balance.available(viewStore.shieldedBalance.data.total.decimalString(), TargetConstants.tokenName))
-                        .font(.system(size: 32))
+                        .font(.system(size: 26))
                         .fontWeight(.bold)
                         .multilineTextAlignment(.center)
                         .minimumScaleFactor(0.5)
                     Text(L10n.Send.fundsInfo)
-                        .font(.system(size: 16))
+                        .font(.system(size: 14))
                 }
                 .foregroundColor(Asset.Colors.Mfp.fontDark.color)
-                .padding()
+                .padding(.horizontal)
 
                 TransactionAddressTextField(
                     store: store.scope(
@@ -27,7 +27,8 @@ struct CreateTransaction: View {
                         action: SendFlowReducer.Action.transactionAddressInput
                     )
                 )
-                .padding()
+                .padding(.horizontal)
+                .padding(.bottom, 5)
 
                 TransactionAmountTextField(
                     store: store.scope(
@@ -35,16 +36,20 @@ struct CreateTransaction: View {
                         action: SendFlowReducer.Action.transactionAmountInput
                     )
                 )
-                .padding()
+                .padding(.horizontal)
 
-                MultipleLineTextField(
-                    store: store.memoStore(),
-                    title: L10n.Send.memoPlaceholder,
-                    titleAccessoryView: {}
-                )
-                .frame(height: 200)
-                .padding()
-                
+                Button {
+                    viewStore.send(.updateDestination(.memo))
+                } label: {
+                    Text(
+                        viewStore.memoState.textLength > 0 ?
+                        L10n.Send.editMemo
+                        : L10n.Send.includeMemo
+                    )
+                    .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+                }
+                .padding(.top, 10)
+
                 Button(
                     action: { viewStore.send(.sendPressed) },
                     label: { Text(L10n.General.send) }
@@ -52,10 +57,10 @@ struct CreateTransaction: View {
                 .activeButtonStyle
                 .disabled(viewStore.isValidForm)
                 .opacity(viewStore.isValidForm ? 1.0 : 0.5)
+                .padding(.top, 10)
 
                 Spacer()
             }
-            .keyboardAdaptive()
             .navigationTitle(L10n.Send.title)
             .navigationBarTitleDisplayMode(.inline)
             .padding()
