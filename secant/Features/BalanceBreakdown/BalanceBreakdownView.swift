@@ -14,28 +14,24 @@ struct BalanceBreakdownView: View {
     
     var body: some View {
         WithViewStore(store) { viewStore in
-            VStack {
+            VStack(alignment: .leading) {
                 HStack {
                     Spacer()
                     Text(L10n.BalanceBreakdown.blockId(viewStore.latestBlock))
-                        .foregroundColor(Asset.Colors.Mfp.fontLight.color)
+                        .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                 }
-                
                 .padding(.horizontal, 50)
-                VStack(alignment: .leading, spacing: 10) {
-                    balanceView(
-                        title: L10n.BalanceBreakdown.shieldedZec(TargetConstants.tokenName),
-                        viewStore.shieldedBalance.data.total,
-                        titleColor: Asset.Colors.Mfp.fontDark.color
-                    )
-                    balanceView(title: L10n.BalanceBreakdown.transparentBalance, viewStore.transparentBalance.data.total)
-                    balanceView(title: L10n.BalanceBreakdown.totalBalance, viewStore.totalBalance)
+                .padding(.vertical, 20)
 
-                    shieldButton(viewStore)
-                }
-                .padding(30)
-                .background(Asset.Colors.Mfp.background.color)
-                .onAppear { viewStore.send(.onAppear) }
+                balanceView(
+                    title: L10n.BalanceBreakdown.shieldedZec(TargetConstants.tokenName),
+                    viewStore.shieldedBalance.data.total,
+                    titleColor: Asset.Colors.Mfp.fontDark.color
+                )
+                balanceView(title: L10n.BalanceBreakdown.transparentBalance, viewStore.transparentBalance.data.total)
+                balanceView(title: L10n.BalanceBreakdown.totalBalance, viewStore.totalBalance)
+                
+                shieldButton(viewStore)
                 
                 HStack {
                     Spacer()
@@ -45,19 +41,17 @@ struct BalanceBreakdownView: View {
                             TargetConstants.tokenName
                         )
                     )
-                    .foregroundColor(Asset.Colors.Mfp.fontLight.color)
+                    .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                 }
                 .padding(.horizontal, 50)
-            }
-            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
-            .applySemiTransparentScreenBackground()
-            .edgesIgnoringSafeArea(.all)
-            .onTapGesture {
-                viewStore.send(.onDisappear)
+                
+                Spacer()
             }
             .alert(self.store.scope(state: \.alert), dismiss: .dismissAlert)
+            .onAppear { viewStore.send(.onAppear) }
+            .onDisappear { viewStore.send(.onDisappear) }
         }
-        .background(ClearBackgroundView())
+        .applyScreenBackground()
     }
 }
 
@@ -76,6 +70,7 @@ extension BalanceBreakdownView {
             .fontWeight(.bold)
             .foregroundColor(Asset.Colors.Mfp.fontDark.color)
         }
+        .padding(.horizontal, 50)
     }
 
     func shieldButton(_ viewStore: BalanceBreakdownViewStore) -> some View {
@@ -94,7 +89,8 @@ extension BalanceBreakdownView {
             }
         )
         .activeButtonStyle
-        .padding(.top, 30)
+        .padding(.horizontal, 50)
+        .padding(.vertical, 20)
         .disable(when: !viewStore.isShieldableBalanceAvailable || viewStore.shieldingFunds, dimmingOpacity: 0.5)
     }
 }

@@ -30,9 +30,10 @@ struct HomeView: View {
             .onAppear(perform: { viewStore.send(.onAppear) })
             .onDisappear(perform: { viewStore.send(.onDisappear) })
             .alert(self.store.scope(state: \.alert), dismiss: .dismissAlert)
-            .fullScreenCover(isPresented: viewStore.bindingForDestination(.balanceBreakdown)) {
-                BalanceBreakdownView(store: store.balanceBreakdownStore())
-            }
+            .navigationLinkEmpty(
+                isActive: viewStore.bindingForDestination(.balanceBreakdown),
+                destination: { BalanceBreakdownView(store: store.balanceBreakdownStore()) }
+            )
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForDestination(.notEnoughFreeDiskSpace),
                 destination: { NotEnoughFreeSpaceView(viewStore: viewStore) }
