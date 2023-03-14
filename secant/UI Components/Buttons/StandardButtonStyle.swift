@@ -26,7 +26,6 @@ struct StandardButtonStyle: ButtonStyle {
             .frame(height: 60)
             .foregroundColor(Asset.Colors.Mfp.fontLight.color)
             .background(Asset.Colors.Mfp.primary.color)
-            .padding(.horizontal, 30)
     }
 }
 

@@ -45,6 +45,7 @@ struct OnboardingFooterView: View {
                 }
             }
             .padding(.top, 10)
+            .padding(.horizontal, 30)
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForDestination(.importExistingWallet),
                 destination: {

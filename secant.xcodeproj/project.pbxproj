@@ -247,6 +247,8 @@
 		0D2ACE8026C2C67100D62E3C /* Zboto.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0D2ACE7F26C2C67100D62E3C /* Zboto.otf */; };
 		0D3016B529BF94D1002371B3 /* Button+Disabling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3016B429BF94D1002371B3 /* Button+Disabling.swift */; };
 		0D3016B629BF94D1002371B3 /* Button+Disabling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3016B429BF94D1002371B3 /* Button+Disabling.swift */; };
+		0D3016B829BFB2FB002371B3 /* PlainOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3016B729BFB2FB002371B3 /* PlainOnboardingView.swift */; };
+		0D3016B929BFB2FB002371B3 /* PlainOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3016B729BFB2FB002371B3 /* PlainOnboardingView.swift */; };
 		0D35CC46277A36E00074316A /* ScrollableWhenScaled.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D35CC45277A36E00074316A /* ScrollableWhenScaled.swift */; };
 		0D3B01EC298DAF89007EBCDA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D3B01EB298DAF89007EBCDA /* GoogleService-Info.plist */; };
 		0D3D04082728B3440032ABC1 /* RecoveryPhraseDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3D04072728B3440032ABC1 /* RecoveryPhraseDisplayView.swift */; };
@@ -586,6 +588,7 @@
 		0D26AF94299E8196005260EE /* secant-mainnet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "secant-mainnet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D2ACE7F26C2C67100D62E3C /* Zboto.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zboto.otf; sourceTree = "<group>"; };
 		0D3016B429BF94D1002371B3 /* Button+Disabling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Button+Disabling.swift"; sourceTree = "<group>"; };
+		0D3016B729BFB2FB002371B3 /* PlainOnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainOnboardingView.swift; sourceTree = "<group>"; };
 		0D35CC45277A36E00074316A /* ScrollableWhenScaled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableWhenScaled.swift; sourceTree = "<group>"; };
 		0D3B01EB298DAF89007EBCDA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0D3D04072728B3440032ABC1 /* RecoveryPhraseDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseDisplayView.swift; sourceTree = "<group>"; };
@@ -1285,6 +1288,7 @@
 				6654C73D2715A41300901167 /* OnboardingFlowStore.swift */,
 				2E5C03802738C570008BFFD3 /* OnboardingFlowView.swift */,
 				6654C73F2715A45900901167 /* Views */,
+				0D3016B729BFB2FB002371B3 /* PlainOnboardingView.swift */,
 			);
 			path = OnboardingFlow;
 			sourceTree = "<group>";
@@ -2607,6 +2611,7 @@
 				0D26AEB2299E8196005260EE /* LogsHandlerInterface.swift in Sources */,
 				0D26AEB3299E8196005260EE /* DeeplinkTestKey.swift in Sources */,
 				34F682F929A775C10022C079 /* UserDefaultsWalletConfigStorage.swift in Sources */,
+				0D3016B929BFB2FB002371B3 /* PlainOnboardingView.swift in Sources */,
 				0D26AEB4299E8196005260EE /* Wedge.swift in Sources */,
 				0D26AEB5299E8196005260EE /* TransactionDetailView.swift in Sources */,
 				0D26AEB6299E8196005260EE /* NumberFormatterLiveKey.swift in Sources */,
@@ -2834,6 +2839,7 @@
 				9E612C7229880E9200D09B09 /* LogsHandlerInterface.swift in Sources */,
 				9EBDF960291E657B000A1A05 /* DeeplinkTestKey.swift in Sources */,
 				34F682F829A775C10022C079 /* UserDefaultsWalletConfigStorage.swift in Sources */,
+				0D3016B829BFB2FB002371B3 /* PlainOnboardingView.swift in Sources */,
 				34E0AF1128DEE5220034CF37 /* Wedge.swift in Sources */,
 				F96B41E8273B501F0021B49A /* TransactionDetailView.swift in Sources */,
 				9EB863942922D036003D0F8B /* NumberFormatterLiveKey.swift in Sources */,
