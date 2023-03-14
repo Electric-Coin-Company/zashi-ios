@@ -306,7 +306,7 @@ extension HomeStore {
         HomeStore(
             initialState: .init(
                 alert: HomeStore.syncErrorAlert(
-                    with:  SyncStatusSnapshot.snapshotFor(
+                    with: SyncStatusSnapshot.snapshotFor(
                         state: .error(SynchronizerError.networkTimeout)
                     )
                 ),

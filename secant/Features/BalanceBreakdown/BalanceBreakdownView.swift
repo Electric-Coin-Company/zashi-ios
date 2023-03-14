@@ -95,7 +95,7 @@ extension BalanceBreakdownView {
         )
         .activeButtonStyle
         .padding(.top, 30)
-        .disabled(viewStore.shieldingFunds)
+        .disable(when: viewStore.shieldingFunds, dimmingOpacity: 0.5)
     }
 }
 

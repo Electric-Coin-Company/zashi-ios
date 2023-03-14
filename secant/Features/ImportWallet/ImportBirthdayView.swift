@@ -32,8 +32,10 @@ struct ImportBirthdayView: View {
                 }
                 .activeButtonStyle
                 .importWalletButtonLayout()
-                .disabled(!viewStore.isValidForm)
-                .opacity(viewStore.isValidForm ? 1.0 : 0.5)
+                .disable(
+                    when: !viewStore.isValidForm,
+                    dimmingOpacity: 0.5
+                )
                 
                 Spacer()
             }

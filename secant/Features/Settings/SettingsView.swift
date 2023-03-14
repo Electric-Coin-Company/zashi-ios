@@ -33,8 +33,11 @@ struct SettingsView: View {
                 )
                 .activeButtonStyle
                 .frame(height: 50)
-                .disabled(viewStore.exportLogsState.exportLogsDisabled)
-
+                .disable(
+                    when: viewStore.exportLogsState.exportLogsDisabled,
+                    dimmingOpacity: 0.5
+                )
+                
                 Button(
                     action: { viewStore.send(.sendSupportMail) },
                     label: { Text(L10n.Settings.feedback) }

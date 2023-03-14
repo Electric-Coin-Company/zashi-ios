@@ -77,8 +77,10 @@ extension HomeView {
         })
         .activeButtonStyle
         .padding(.bottom, 30)
-        .disabled(viewStore.isSendButtonDisabled)
-        .opacity(viewStore.isSendButtonDisabled ? 0.5 : 1)
+        .disable(
+            when: viewStore.isSendButtonDisabled,
+            dimmingOpacity: 0.5
+        )
     }
     
     func receiveButton(_ viewStore: HomeViewStore) -> some View {

@@ -245,6 +245,8 @@
 		0D26AF8E299E8196005260EE /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0DACFA8927209FA60039EEA5 /* Roboto-Thin.ttf */; };
 		0D26AF8F299E8196005260EE /* Zboto.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0D2ACE7F26C2C67100D62E3C /* Zboto.otf */; };
 		0D2ACE8026C2C67100D62E3C /* Zboto.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0D2ACE7F26C2C67100D62E3C /* Zboto.otf */; };
+		0D3016B529BF94D1002371B3 /* Button+Disabling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3016B429BF94D1002371B3 /* Button+Disabling.swift */; };
+		0D3016B629BF94D1002371B3 /* Button+Disabling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3016B429BF94D1002371B3 /* Button+Disabling.swift */; };
 		0D35CC46277A36E00074316A /* ScrollableWhenScaled.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D35CC45277A36E00074316A /* ScrollableWhenScaled.swift */; };
 		0D3B01EC298DAF89007EBCDA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D3B01EB298DAF89007EBCDA /* GoogleService-Info.plist */; };
 		0D3D04082728B3440032ABC1 /* RecoveryPhraseDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3D04072728B3440032ABC1 /* RecoveryPhraseDisplayView.swift */; };
@@ -583,6 +585,7 @@
 		0D26103F298C406F00CC9DE9 /* CrashReporterTestKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashReporterTestKey.swift; sourceTree = "<group>"; };
 		0D26AF94299E8196005260EE /* secant-mainnet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "secant-mainnet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D2ACE7F26C2C67100D62E3C /* Zboto.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zboto.otf; sourceTree = "<group>"; };
+		0D3016B429BF94D1002371B3 /* Button+Disabling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Button+Disabling.swift"; sourceTree = "<group>"; };
 		0D35CC45277A36E00074316A /* ScrollableWhenScaled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableWhenScaled.swift; sourceTree = "<group>"; };
 		0D3B01EB298DAF89007EBCDA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0D3D04072728B3440032ABC1 /* RecoveryPhraseDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseDisplayView.swift; sourceTree = "<group>"; };
@@ -1124,6 +1127,7 @@
 			children = (
 				0DF2DC5327235E3E00FA31E2 /* View+InnerShadow.swift */,
 				0DF482B92787ADA800EB37D6 /* ConditionalModifier.swift */,
+				0D3016B429BF94D1002371B3 /* Button+Disabling.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2684,6 +2688,7 @@
 				0D26AF00299E8196005260EE /* View+WhenDraggable.swift in Sources */,
 				34C5658329B60C1C002F3A7C /* UIShareDialog.swift in Sources */,
 				0D26AF01299E8196005260EE /* RecoveryPhraseDisplayView.swift in Sources */,
+				0D3016B629BF94D1002371B3 /* Button+Disabling.swift in Sources */,
 				0D26AF02299E8196005260EE /* URIParser.swift in Sources */,
 				0D26AF03299E8196005260EE /* URIParserLive.swift in Sources */,
 				9E852D6229B098F400CF4AC1 /* RootDebug.swift in Sources */,
@@ -2910,6 +2915,7 @@
 				0D7CE63427349B5D0020E050 /* View+WhenDraggable.swift in Sources */,
 				34C5658229B60C1C002F3A7C /* UIShareDialog.swift in Sources */,
 				0D3D04082728B3440032ABC1 /* RecoveryPhraseDisplayView.swift in Sources */,
+				0D3016B529BF94D1002371B3 /* Button+Disabling.swift in Sources */,
 				9EB863A2292398A8003D0F8B /* URIParser.swift in Sources */,
 				9EB863C12923C779003D0F8B /* URIParserLive.swift in Sources */,
 				9E852D6129B098F400CF4AC1 /* RootDebug.swift in Sources */,
