@@ -260,6 +260,7 @@
 		0D535FDE271F4214009A9E3E /* Rubik-Italic-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D535FDC271F4214009A9E3E /* Rubik-Italic-VariableFont_wght.ttf */; };
 		0D535FDF271F4214009A9E3E /* Rubik-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D535FDD271F4214009A9E3E /* Rubik-VariableFont_wght.ttf */; };
 		0D535FE2271F9476009A9E3E /* EnumeratedChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D535FE1271F9476009A9E3E /* EnumeratedChip.swift */; };
+		0D573CB629C106E900B97379 /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4AA4F729BF76BB00752BB3 /* About.swift */; };
 		0D5D9B8F2914620700DBD03F /* URLRouting in Frameworks */ = {isa = PBXBuildFile; productRef = 0D5D9B8E2914620700DBD03F /* URLRouting */; };
 		0D63170029919970007D873F /* UserPreferencesStorageInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6316FF29919970007D873F /* UserPreferencesStorageInterface.swift */; };
 		0D6D628B276A528E002FB4CC /* DropDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6D628A276A528D002FB4CC /* DropDelegate.swift */; };
@@ -2728,6 +2729,7 @@
 				9E486DF129B9EE84003E6945 /* KeyboardAdaptive.swift in Sources */,
 				0D26AF15299E8196005260EE /* RecoveryPhrase.swift in Sources */,
 				0D26AF16299E8196005260EE /* LocalAuthenticationMocks.swift in Sources */,
+				0D573CB629C106E900B97379 /* About.swift in Sources */,
 				0D26AF17299E8196005260EE /* Fonts+Generated.swift in Sources */,
 				0D26AF18299E8196005260EE /* WalletEventsFlowStore.swift in Sources */,
 				0D26AF19299E8196005260EE /* StoredWallet.swift in Sources */,
