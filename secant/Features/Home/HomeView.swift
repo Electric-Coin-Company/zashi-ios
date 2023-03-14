@@ -7,12 +7,6 @@ struct HomeView: View {
     var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
-                HStack {
-                    Spacer()
-
-                    settingsButton(viewStore)
-                }
-                
                 balance(viewStore)
 
                 Spacer()
@@ -30,6 +24,7 @@ struct HomeView: View {
             }
             .applyScreenBackground()
             .navigationTitle(L10n.Home.title)
+            .navigationBarItems(trailing: settingsButton(viewStore))
             .navigationBarTitleDisplayMode(.inline)
             .onAppear(perform: { viewStore.send(.onAppear) })
             .onDisappear(perform: { viewStore.send(.onDisappear) })
@@ -125,7 +120,7 @@ extension HomeView {
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            HomeView(store: .error)
+            HomeView(store: .placeholder)
         }
     }
 }
