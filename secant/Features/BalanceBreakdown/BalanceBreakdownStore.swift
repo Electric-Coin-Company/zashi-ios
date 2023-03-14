@@ -26,6 +26,14 @@ struct BalanceBreakdownReducer: ReducerProtocol {
         var totalBalance: Zatoshi {
             shieldedBalance.data.total + transparentBalance.data.total
         }
+
+        var isShieldableBalanceAvailable: Bool {
+            transparentBalance.data.verified.amount >= autoShieldingThreshold.amount
+        }
+
+        var isShieldingButtonDisabled: Bool {
+            shieldingFunds || !isShieldableBalanceAvailable
+        }
     }
 
     enum Action: Equatable, BindableAction {
