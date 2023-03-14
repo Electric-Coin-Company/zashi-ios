@@ -8,10 +8,13 @@ typealias SettingsViewStore = ViewStore<SettingsReducer.State, SettingsReducer.A
 struct SettingsReducer: ReducerProtocol {
     struct State: Equatable {
         enum Destination {
+            case about
             case backupPhrase
         }
 
         @BindingState var alert: AlertState<SettingsReducer.Action>?
+        var appVersion = ""
+        var appBuild = ""
         var destination: Destination?
         var exportLogsState: ExportLogsReducer.State
         @BindingState var isCrashReportingOn: Bool
@@ -32,6 +35,7 @@ struct SettingsReducer: ReducerProtocol {
         case updateDestination(SettingsReducer.State.Destination?)
     }
 
+    @Dependency(\.appVersion) var appVersion
     @Dependency(\.localAuthentication) var localAuthentication
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
@@ -45,6 +49,8 @@ struct SettingsReducer: ReducerProtocol {
             switch action {
             case .onAppear:
                 state.isCrashReportingOn = !userStoredPreferences.isUserOptedOutOfCrashReporting()
+                state.appVersion = appVersion.appVersion()
+                state.appBuild = appVersion.appBuild()
                 return .none
             case .backupWalletAccessRequest:
                 return .run { send in
@@ -142,6 +148,13 @@ extension SettingsViewStore {
         self.destinationBinding.map(
             extract: { $0 == .backupPhrase },
             embed: { $0 ? .backupPhrase : nil }
+        )
+    }
+    
+    var bindingForAbout: Binding<Bool> {
+        self.destinationBinding.map(
+            extract: { $0 == .about },
+            embed: { $0 ? .about : nil }
         )
     }
 }
