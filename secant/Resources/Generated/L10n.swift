@@ -581,9 +581,9 @@ internal enum L10n {
       internal static let fetchingUTXO = L10n.tr("Localizable", "sync.message.fetchingUTXO", fallback: "fetching UTXOs")
       /// Stopped
       internal static let stopped = L10n.tr("Localizable", "sync.message.stopped", fallback: "Stopped")
-      /// %@ Synced
+      /// %@%% Synced
       internal static func sync(_ p1: Any) -> String {
-        return L10n.tr("Localizable", "sync.message.sync", String(describing: p1), fallback: "%@ Synced")
+        return L10n.tr("Localizable", "sync.message.sync", String(describing: p1), fallback: "%@%% Synced")
       }
       /// Unprepared
       internal static let unprepared = L10n.tr("Localizable", "sync.message.unprepared", fallback: "Unprepared")

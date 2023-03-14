@@ -43,7 +43,7 @@ struct SyncStatusSnapshot: Equatable {
             return SyncStatusSnapshot(state, L10n.Sync.Message.error(err.localizedDescription))
 
         case .syncing(let progress):
-            return SyncStatusSnapshot(state, L10n.Sync.Message.sync(String(format: "%0.1f%", progress.progress * 100)))
+            return SyncStatusSnapshot(state, L10n.Sync.Message.sync(String(format: "%0.1f", progress.progress * 100)))
         }
     }
 }
