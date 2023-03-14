@@ -26,7 +26,7 @@ class NoopSDKSynchronizer: SDKSynchronizerClient {
         self.stateChanged = CurrentValueSubject<SDKSynchronizerState, Never>(.unknown)
     }
 
-    func prepareWith(initializer: Initializer, seedBytes: [UInt8]) throws { }
+    func prepareWith(initializer: Initializer, seedBytes: [UInt8], viewingKey: UnifiedFullViewingKey, walletBirthday: BlockHeight) throws { }
 
     func start(retry: Bool) throws { }
 
@@ -98,7 +98,7 @@ class TestSDKSynchronizerClient: SDKSynchronizerClient {
         self.stateChanged = CurrentValueSubject<SDKSynchronizerState, Never>(.unknown)
     }
 
-    func prepareWith(initializer: Initializer, seedBytes: [UInt8]) throws { }
+    func prepareWith(initializer: Initializer, seedBytes: [UInt8], viewingKey: UnifiedFullViewingKey, walletBirthday: BlockHeight) throws { }
 
     func start(retry: Bool) throws { }
 

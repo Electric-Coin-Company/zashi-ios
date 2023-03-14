@@ -34,8 +34,8 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
         synchronizer?.stop()
     }
 
-    func prepareWith(initializer: Initializer, seedBytes: [UInt8]) throws {
-        let synchronizer = try SDKSynchronizer(initializer: initializer)
+    func prepareWith(initializer: Initializer, seedBytes: [UInt8], viewingKey: UnifiedFullViewingKey, walletBirthday: BlockHeight) throws {
+        let synchronizer = SDKSynchronizer(initializer: initializer)
 
         notificationCenter.publisherFor(.synchronizerStarted)?
             .receive(on: DispatchQueue.main)
@@ -63,12 +63,12 @@ class LiveSDKSynchronizerClient: SDKSynchronizerClient {
             .sink { [weak self] _ in self?.synchronizerStopped() }
             .store(in: &cancellables)
 
-        guard try synchronizer.prepare(with: seedBytes) == .success else {
+        guard try synchronizer.prepare(with: seedBytes, viewingKeys: [viewingKey], walletBirthday: walletBirthday) == .success else {
             throw SynchronizerError.initFailed(message: "")
         }
 
         self.synchronizer = synchronizer
-        walletBirthday = initializer.walletBirthday
+        self.walletBirthday = initializer.walletBirthday
     }
     
     func start(retry: Bool) throws {
