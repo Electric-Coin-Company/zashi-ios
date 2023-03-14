@@ -1,4 +1,15 @@
 # Changelog
+# 0.0.1 build 47
+- [#653] Adopt SDK initialisation changes (#671)
+- [#668] Balance Breakdown design enhancements (#669)
+- [#660] Fix missing percentage on homepage while syncing (#670)
+- [#663] Shield Funds button is enabled when there are no funds to shield (#665)
+- [#666] Remove Graphics from "create new wallet" screen (#667)
+- [#661] Send Button works even if it's apparently disabled (#664)
+- [#660] Settings button is not part of a navigation bar (#662)
+- [#658] About Screen with version (#659)
+- [#652] Each logged TCA actions appears twice in the log (#657)
+
 # 0.0.1 build 46
 - [#626] Small UI-UX fixes for 0.0.1-45 (#649)
 - [#650] Layout changes for the send screen (#651)
