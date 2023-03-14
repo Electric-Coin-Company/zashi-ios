@@ -49,6 +49,7 @@ struct CreateTransaction: View {
                     .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                 }
                 .padding(.top, 10)
+                .disable(when: !viewStore.isMemoInputEnabled, dimmingOpacity: 0.5)
 
                 Button(
                     action: { viewStore.send(.sendPressed) },
