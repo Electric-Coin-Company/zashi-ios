@@ -1,4 +1,9 @@
 # Changelog
+
+
+# 0.0.1 build 48
+- [#676] fix About.swift not being present on mainnet target (#677)
+- [#654] Convert SDKSynchronizerDependency to regular TCA dependency (#672)
 # 0.0.1 build 47
 - [#653] Adopt SDK initialisation changes (#671)
 - [#668] Balance Breakdown design enhancements (#669)
