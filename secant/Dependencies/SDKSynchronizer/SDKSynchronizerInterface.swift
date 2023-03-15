@@ -12,8 +12,8 @@ import ZcashLightClientKit
 
 extension DependencyValues {
     var sdkSynchronizer: SDKSynchronizerClient {
-        get { self[SDKSynchronizerDependency.self] }
-        set { self[SDKSynchronizerDependency.self] = newValue }
+        get { self[SDKSynchronizerClient.self] }
+        set { self[SDKSynchronizerClient.self] = newValue }
     }
 }
 
@@ -25,57 +25,35 @@ enum SDKSynchronizerState: Equatable {
     case unknown
 }
 
-enum SDKSynchronizerClientError: Error {
-    case synchronizerNotInitialized
-}
+struct SDKSynchronizerClient {
+    let stateChangedStream: () -> CurrentValueSubject<SDKSynchronizerState, Never>
+    let latestScannedSynchronizerState: () -> SDKSynchronizer.SynchronizerState?
+    let latestScannedHeight: () -> BlockHeight
 
-protocol SDKSynchronizerClient {
-    var notificationCenter: NotificationCenterClient { get }
-    var synchronizer: SDKSynchronizer? { get }
-    var stateChanged: CurrentValueSubject<SDKSynchronizerState, Never> { get }
-    var walletBirthday: BlockHeight? { get }
-    var latestScannedSynchronizerState: SDKSynchronizer.SynchronizerState? { get }
+    let prepareWith: ([UInt8], UnifiedFullViewingKey, BlockHeight) throws -> Void
+    let start: (_ retry: Bool) throws -> Void
+    let stop: () -> Void
+    let statusSnapshot: () -> SyncStatusSnapshot
+    let isSyncing: () -> Bool
+    let isInitialized: () -> Bool
 
-    func prepareWith(initializer: Initializer, seedBytes: [UInt8], viewingKey: UnifiedFullViewingKey, walletBirthday: BlockHeight) throws
-    func start(retry: Bool) throws
-    func stop()
-    func synchronizerSynced(_ synchronizerState: SDKSynchronizer.SynchronizerState?)
-    func statusSnapshot() -> SyncStatusSnapshot
-    func isSyncing() -> Bool
-    func isInitialized() -> Bool
+    let rewind: (RewindPolicy) -> AnyPublisher<Void, Error>
 
-    func rewind(_ policy: RewindPolicy) -> AnyPublisher<Void, Error>?
+    let getShieldedBalance: () -> WalletBalance?
+    let getTransparentBalance: () -> WalletBalance?
+    let getAllSentTransactions: () -> EffectTask<[WalletEvent]>
+    let getAllReceivedTransactions: () -> EffectTask<[WalletEvent]>
+    let getAllClearedTransactions: () -> EffectTask<[WalletEvent]>
+    let getAllPendingTransactions: () -> EffectTask<[WalletEvent]>
+    let getAllTransactions: () -> EffectTask<[WalletEvent]>
 
-    func getShieldedBalance() -> WalletBalance?
-    func getTransparentBalance() -> WalletBalance?
-    func getAllSentTransactions() -> EffectTask<[WalletEvent]>
-    func getAllReceivedTransactions() -> EffectTask<[WalletEvent]>
-    func getAllClearedTransactions() -> EffectTask<[WalletEvent]>
-    func getAllPendingTransactions() -> EffectTask<[WalletEvent]>
-    func getAllTransactions() -> EffectTask<[WalletEvent]>
+    let getUnifiedAddress: (_ account: Int) -> UnifiedAddress?
+    let getTransparentAddress: (_ account: Int) -> TransparentAddress?
+    let getSaplingAddress: (_ accountIndex: Int) async -> SaplingAddress?
 
-    func getUnifiedAddress(account: Int) -> UnifiedAddress?
-    func getTransparentAddress(account: Int) -> TransparentAddress?
-    func getSaplingAddress(accountIndex: Int) async -> SaplingAddress?
-    
-    func sendTransaction(
-        with spendingKey: UnifiedSpendingKey,
-        zatoshi: Zatoshi,
-        to recipientAddress: Recipient,
-        memo: Memo?
-    ) -> EffectTask<Result<TransactionState, NSError>>
+    let sendTransaction: (UnifiedSpendingKey, Zatoshi, Recipient, Memo?) -> EffectTask<Result<TransactionState, NSError>>
 
-    func shieldFunds(
-        spendingKey: UnifiedSpendingKey,
-        memo: Memo,
-        shieldingThreshold: Zatoshi
-    ) async throws -> TransactionState
-    
-    func wipe() -> AnyPublisher<Void, Error>?
-}
+    let shieldFunds: (UnifiedSpendingKey, Memo, Zatoshi) async throws -> TransactionState
 
-extension SDKSynchronizerClient {
-    func start() throws {
-        try start(retry: false)
-    }
+    let wipe: () -> AnyPublisher<Void, Error>?
 }

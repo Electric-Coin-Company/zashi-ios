@@ -105,7 +105,7 @@ extension RootReducer {
         var keysPresent = false
         do {
             keysPresent = try walletStorage.areKeysPresent()
-            let databaseFilesPresent = try databaseFiles.areDbFilesPresentFor(
+            let databaseFilesPresent = databaseFiles.areDbFilesPresentFor(
                 zcashSDKEnvironment.network
             )
             
@@ -119,53 +119,15 @@ extension RootReducer {
             case (true, true):
                 return .initialized
             }
-        } catch DatabaseFiles.DatabaseFilesError.filesPresentCheck {
-            if keysPresent {
-                return .filesMissing
-            }
         } catch WalletStorage.WalletStorageError.uninitializedWallet {
-            do {
-                if try databaseFiles.areDbFilesPresentFor(
-                    zcashSDKEnvironment.network
-                ) {
-                    return .keysMissing
-                }
-            } catch {
-                return .uninitialized
+            if databaseFiles.areDbFilesPresentFor(zcashSDKEnvironment.network) {
+                return .keysMissing
             }
         } catch {
             return .failed
         }
         
         return .uninitialized
-    }
-
-    static func prepareInitializer(
-        databaseFiles: DatabaseFilesClient,
-        derivationTool: DerivationToolClient,
-        mnemonic: MnemonicClient,
-        zcashSDKEnvironment: ZcashSDKEnvironment
-    ) throws -> Initializer {
-        do {
-            let network = zcashSDKEnvironment.network
-
-            let initializer = Initializer(
-                cacheDbURL: try databaseFiles.cacheDbURLFor(network),
-                fsBlockDbRoot: try databaseFiles.fsBlockDbRootFor(network),
-                dataDbURL: try databaseFiles.dataDbURLFor(network),
-                pendingDbURL: try databaseFiles.pendingDbURLFor(network),
-                endpoint: zcashSDKEnvironment.endpoint,
-                network: zcashSDKEnvironment.network,
-                spendParamsURL: try databaseFiles.spendParamsURLFor(network),
-                outputParamsURL: try databaseFiles.outputParamsURLFor(network),
-                saplingParamsSourceURL: SaplingParamsSourceURL.default,
-                loggerProxy: OSLogger(logLevel: .debug, category: LoggerConstants.sdkLogs)
-            )
-            
-            return initializer
-        } catch {
-            throw SDKInitializationError.failed
-        }
     }
 }
 

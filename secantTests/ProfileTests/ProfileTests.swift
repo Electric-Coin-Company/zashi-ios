@@ -20,7 +20,7 @@ class ProfileTests: XCTestCase {
             reducer: ProfileReducer()
         ) { dependencies in
             dependencies.appVersion = .mock
-            dependencies.sdkSynchronizer = SDKSynchronizerDependency.mockWithSnapshot(.default)
+            dependencies.sdkSynchronizer = SDKSynchronizerClient.mocked(statusSnapshot: { .default })
         }
 
         let uAddress = try UnifiedAddress(

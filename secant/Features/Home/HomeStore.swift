@@ -112,7 +112,7 @@ struct HomeReducer: ReducerProtocol {
                 state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
 
                 if diskSpaceChecker.hasEnoughFreeSpaceForSync() {
-                    let syncEffect = sdkSynchronizer.stateChanged
+                    let syncEffect = sdkSynchronizer.stateChangedStream()
                         .map(HomeReducer.Action.synchronizerStateChanged)
                         .eraseToEffect()
                         .cancellable(id: CancelId.self, cancelInFlight: true)
@@ -138,7 +138,7 @@ struct HomeReducer: ReducerProtocol {
                 }
 
                 state.synchronizerStatusSnapshot = snapshot
-                if let shieldedBalance = sdkSynchronizer.latestScannedSynchronizerState?.shieldedBalance {
+                if let shieldedBalance = sdkSynchronizer.latestScannedSynchronizerState()?.shieldedBalance {
                     state.shieldedBalance = shieldedBalance.redacted
                 }
 
@@ -179,7 +179,7 @@ struct HomeReducer: ReducerProtocol {
 
             case .retrySync:
                 do {
-                    try sdkSynchronizer.start(retry: true)
+                    try sdkSynchronizer.start(true)
                 } catch {
                     state.alert = AlertState<HomeReducer.Action>(
                         title: TextState(L10n.Home.SyncFailed.title),

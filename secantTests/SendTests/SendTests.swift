@@ -50,7 +50,7 @@ class SendTests: XCTestCase {
             dependencies.derivationTool = .liveValue
             dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
             dependencies.mnemonic = .liveValue
-            dependencies.sdkSynchronizer = SDKSynchronizerDependency.mockWithSnapshot(.default)
+            dependencies.sdkSynchronizer = SDKSynchronizerClient.mocked(statusSnapshot: { .default })
             dependencies.walletStorage = .noOp
         }
 
@@ -122,7 +122,7 @@ class SendTests: XCTestCase {
             dependencies.derivationTool = .liveValue
             dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
             dependencies.mnemonic = .liveValue
-            dependencies.sdkSynchronizer = SDKSynchronizerDependency.mockWithSnapshot(.default)
+            dependencies.sdkSynchronizer = SDKSynchronizerClient.mocked(statusSnapshot: { .default })
             dependencies.walletStorage = .noOp
         }
 
@@ -190,6 +190,7 @@ class SendTests: XCTestCase {
             dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
             dependencies.mnemonic = .liveValue
             dependencies.walletStorage = .noOp
+            dependencies.sdkSynchronizer = .noOp
         }
 
         // simulate the sending confirmation button to be pressed
@@ -628,6 +629,8 @@ class SendTests: XCTestCase {
             initialState: sendState,
             reducer: SendFlowReducer()
         )
+
+        store.dependencies.sdkSynchronizer = .noOp
 
         store.send(.onAppear) { state in
             state.memoState.charLimit = 512

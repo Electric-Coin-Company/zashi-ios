@@ -71,7 +71,7 @@ extension RootReducer {
                     )
                 } else {
                     do {
-                        try sdkSynchronizer.start()
+                        try sdkSynchronizer.start(false)
                     } catch {
                         // TODO: [#221] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
                         state.alert = AlertState(
@@ -107,18 +107,7 @@ extension RootReducer {
     }
 
     private func rewind(policy: RewindPolicy, sourceAction: DebugAction) -> EffectPublisher<RootReducer.Action, Never> {
-        guard let rewindPublisher = sdkSynchronizer.rewind(policy) else {
-            return EffectTask(
-                value: .debug(
-                    .rewindDone(
-                        L10n.Root.Debug.Error.Rewind.sdkSynchronizerNotInitialized,
-                        .debug(sourceAction)
-                    )
-                )
-            )
-        }
-
-        return rewindPublisher
+        return sdkSynchronizer.rewind(policy)
             .replaceEmpty(with: Void())
             .map { _ in return RootReducer.Action.debug(.rewindDone(nil, .debug(sourceAction))) }
             .catch { error in

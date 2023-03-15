@@ -36,6 +36,7 @@ class TransactionSendingTests: XCTestCase {
                 .dependency(\.mainQueue, DispatchQueue.main.eraseToAnyScheduler())
                 .dependency(\.numberFormatter, .live())
                 .dependency(\.walletStorage, .live())
+                .dependency(\.sdkSynchronizer, .mock)
         )
 
         ViewStore(store).send(.onAppear)

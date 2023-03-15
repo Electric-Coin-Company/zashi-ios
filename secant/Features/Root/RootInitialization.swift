@@ -130,23 +130,15 @@ extension RootReducer {
                         return .none
                     }
 
-                    try mnemonic.isValid(storedWallet.seedPhrase.value())
-                    let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
-
                     let birthday = state.storedWallet?.birthday?.value() ?? zcashSDKEnvironment.latestCheckpoint
 
-                    let initializer = try RootReducer.prepareInitializer(
-                        databaseFiles: databaseFiles,
-                        derivationTool: derivationTool,
-                        mnemonic: mnemonic,
-                        zcashSDKEnvironment: zcashSDKEnvironment
-                    )
-
+                    try mnemonic.isValid(storedWallet.seedPhrase.value())
+                    let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
                     let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0)
                     let viewingKey = try spendingKey.deriveFullViewingKey()
                     
-                    try sdkSynchronizer.prepareWith(initializer: initializer, seedBytes: seedBytes, viewingKey: viewingKey, walletBirthday: birthday)
-                    try sdkSynchronizer.start()
+                    try sdkSynchronizer.prepareWith(seedBytes, viewingKey, birthday)
+                    try sdkSynchronizer.start(false)
                     return .none
                 } catch {
                     state.appInitializationState = .failed

@@ -5,6 +5,7 @@
 //  Created by Lukáš Korba on 02.06.2022.
 //
 
+import Combine
 import XCTest
 import ComposableArchitecture
 @testable import secant_testnet
@@ -15,6 +16,11 @@ class HomeTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: HomeReducer()
+        )
+
+        store.dependencies.sdkSynchronizer = .mocked(
+            stateChangedStream: { CurrentValueSubject<SDKSynchronizerState, Never>(.progressUpdated) },
+            statusSnapshot: { .default }
         )
         
         store.send(.synchronizerStateChanged(.progressUpdated))
@@ -32,7 +38,7 @@ class HomeTests: XCTestCase {
             reducer: HomeReducer()
         ) { dependencies in
             dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-            dependencies.sdkSynchronizer = SDKSynchronizerDependency.mockWithSnapshot(.default)
+            dependencies.sdkSynchronizer = SDKSynchronizerClient.mocked(statusSnapshot: { .default })
         }
 
         store.send(.synchronizerStateChanged(.synced))
@@ -71,7 +77,7 @@ class HomeTests: XCTestCase {
         )
 
         store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-        store.dependencies.sdkSynchronizer = SDKSynchronizerDependency.mockWithSnapshot(mockSnapshot)
+        store.dependencies.sdkSynchronizer = SDKSynchronizerClient.mocked(statusSnapshot: { mockSnapshot })
 
         store.send(.synchronizerStateChanged(.progressUpdated))
 
@@ -112,7 +118,7 @@ class HomeTests: XCTestCase {
         )
 
         store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-        store.dependencies.sdkSynchronizer = SDKSynchronizerDependency.mockWithSnapshot(mockSnapshot)
+        store.dependencies.sdkSynchronizer = SDKSynchronizerClient.mocked(statusSnapshot: { mockSnapshot })
 
         store.send(.updateDestination(.send)) {
             $0.destination = .send
@@ -135,9 +141,13 @@ class HomeTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: HomeReducer()
-        ) {
-            $0.diskSpaceChecker = .mockEmptyDisk
-        }
+        )
+
+        store.dependencies.diskSpaceChecker = .mockEmptyDisk
+        store.dependencies.sdkSynchronizer = .mocked(
+            stateChangedStream: { CurrentValueSubject<SDKSynchronizerState, Never>(.unknown) },
+            statusSnapshot: { .default }
+        )
         
         store.send(.onAppear) { state in
             state.requiredTransactionConfirmations = 10
@@ -181,15 +191,11 @@ class HomeTests: XCTestCase {
             state: .error(testError)
         )
 
-        let mockSynchronizer = MockSDKSynchronizerClient(
-            snapshot: errorSnapshot
-        )
-
         let store = TestStore(
             initialState: .placeholder,
             reducer: HomeReducer()
         ) {
-            $0.sdkSynchronizer = mockSynchronizer
+            $0.sdkSynchronizer = SDKSynchronizerClient.mocked(statusSnapshot: { errorSnapshot })
         }
 
         store.send(.updateSynchronizerStatus) {

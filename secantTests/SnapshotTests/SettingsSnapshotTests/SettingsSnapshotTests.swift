@@ -16,7 +16,7 @@ class SettingsSnapshotTests: XCTestCase {
             initialState: .placeholder,
             reducer: SettingsReducer()
                 .dependency(\.localAuthentication, .mockAuthenticationFailed)
-                .dependency(\.sdkSynchronizer, NoopSDKSynchronizer())
+                .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.walletStorage, .noOp)
                 .dependency(\.appVersion, .mock)
         )
@@ -29,7 +29,7 @@ class SettingsSnapshotTests: XCTestCase {
             initialState: .placeholder,
             reducer: SettingsReducer()
                 .dependency(\.localAuthentication, .mockAuthenticationFailed)
-                .dependency(\.sdkSynchronizer, NoopSDKSynchronizer())
+                .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.walletStorage, .noOp)
                 .dependency(\.appVersion, .liveValue)
         )
