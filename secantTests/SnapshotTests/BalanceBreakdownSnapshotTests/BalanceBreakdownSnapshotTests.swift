@@ -23,6 +23,7 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
             ),
             reducer: BalanceBreakdownReducer()
                 .dependency(\.sdkSynchronizer, .noOp)
+                .dependency(\.mainQueue, .immediate)
         )
         
         addAttachments(BalanceBreakdownView(store: store))

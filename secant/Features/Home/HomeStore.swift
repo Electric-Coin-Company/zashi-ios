@@ -70,10 +70,9 @@ struct HomeReducer: ReducerProtocol {
         case profile(ProfileReducer.Action)
         case send(SendFlowReducer.Action)
         case settings(SettingsReducer.Action)
-        case synchronizerStateChanged(SDKSynchronizerState)
+        case synchronizerStateChanged(SynchronizerState)
         case walletEvents(WalletEventsFlowReducer.Action)
         case updateDestination(HomeReducer.State.Destination?)
-        case updateSynchronizerStatus
         case showSynchronizerErrorAlert(SyncStatusSnapshot)
         case retrySync
         case updateWalletEvents([WalletEvent])
@@ -112,7 +111,8 @@ struct HomeReducer: ReducerProtocol {
                 state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
 
                 if diskSpaceChecker.hasEnoughFreeSpaceForSync() {
-                    let syncEffect = sdkSynchronizer.stateChangedStream()
+                    let syncEffect = sdkSynchronizer.stateStream()
+                        .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
                         .map(HomeReducer.Action.synchronizerStateChanged)
                         .eraseToEffect()
                         .cancellable(id: CancelId.self, cancelInFlight: true)
@@ -123,24 +123,19 @@ struct HomeReducer: ReducerProtocol {
 
             case .onDisappear:
                 return .cancel(id: CancelId.self)
-
-            case .synchronizerStateChanged:
-                return EffectTask(value: .updateSynchronizerStatus)
                                 
             case .updateWalletEvents:
                 return .none
                 
-            case .updateSynchronizerStatus:
-                let snapshot = sdkSynchronizer.statusSnapshot()
+            case .synchronizerStateChanged(let latestState):
+                let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.syncStatus)
 
                 guard snapshot != state.synchronizerStatusSnapshot else {
                     return .none
                 }
 
                 state.synchronizerStatusSnapshot = snapshot
-                if let shieldedBalance = sdkSynchronizer.latestScannedSynchronizerState()?.shieldedBalance {
-                    state.shieldedBalance = shieldedBalance.redacted
-                }
+                state.shieldedBalance = latestState.shieldedBalance.redacted
 
                 switch snapshot.syncStatus {
                 case .error:
@@ -317,7 +312,7 @@ extension HomeStore {
                 settingsState: .placeholder,
                 shieldedBalance: Balance.zero,
                 synchronizerStatusSnapshot: .snapshotFor(
-                    state: .error(SDKInitializationError.failed)
+                    state: .error(SynchronizerError.syncFailed)
                 ),
                 walletConfig: .default,
                 walletEventsState: .emptyPlaceHolder

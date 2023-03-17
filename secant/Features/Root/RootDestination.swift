@@ -77,7 +77,7 @@ extension RootReducer {
 
             case .destination(.deeplink(let url)):
                 // get the latest synchronizer state
-                let synchronizerStatus = sdkSynchronizer.stateChangedStream().value
+                let synchronizerStatus = sdkSynchronizer.latestState().syncStatus
 
                 // process the deeplink only if app is initialized and synchronizer synced
                 guard state.appInitializationState == .initialized && synchronizerStatus == .synced else {

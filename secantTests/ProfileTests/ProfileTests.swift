@@ -18,10 +18,10 @@ class ProfileTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: ProfileReducer()
-        ) { dependencies in
-            dependencies.appVersion = .mock
-            dependencies.sdkSynchronizer = SDKSynchronizerClient.mocked(statusSnapshot: { .default })
-        }
+        )
+
+        store.dependencies.appVersion = .mock
+        store.dependencies.sdkSynchronizer = .mocked()
 
         let uAddress = try UnifiedAddress(
             encoding: uAddressEncoding,
@@ -45,9 +45,9 @@ class ProfileTests: XCTestCase {
                 addressDetailsState: AddressDetailsReducer.State(uAddress: uAddress)
             ),
             reducer: ProfileReducer()
-        ) {
-            $0.pasteboard = testPasteboard
-        }
+        )
+
+        store.dependencies.pasteboard = testPasteboard
 
         store.send(.copyUnifiedAddressToPastboard)
         

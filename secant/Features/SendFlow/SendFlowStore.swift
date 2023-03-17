@@ -87,7 +87,7 @@ struct SendFlowReducer: ReducerProtocol {
         case scan(ScanReducer.Action)
         case sendPressed
         case sendTransactionResult(Result<TransactionState, NSError>)
-        case synchronizerStateChanged(SDKSynchronizerState)
+        case synchronizerStateChanged(SynchronizerState)
         case transactionAddressInput(TransactionAddressTextFieldReducer.Action)
         case transactionAmountInput(TransactionAmountTextFieldReducer.Action)
         case updateDestination(SendFlowReducer.State.Destination?)
@@ -201,7 +201,8 @@ struct SendFlowReducer: ReducerProtocol {
 
             case .onAppear:
                 state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
-                return sdkSynchronizer.stateChangedStream()
+                return sdkSynchronizer.stateStream()
+                    .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
                     .map(SendFlowReducer.Action.synchronizerStateChanged)
                     .eraseToEffect()
                     .cancellable(id: SyncStatusUpdatesID.self, cancelInFlight: true)
@@ -209,14 +210,10 @@ struct SendFlowReducer: ReducerProtocol {
             case .onDisappear:
                 return .cancel(id: SyncStatusUpdatesID.self)
                 
-            case .synchronizerStateChanged(.synced):
-                if let shieldedBalance = sdkSynchronizer.latestScannedSynchronizerState()?.shieldedBalance {
-                    state.shieldedBalance = shieldedBalance.redacted
-                    state.transactionAmountInputState.maxValue = shieldedBalance.total.amount.redacted
-                }
-                return .none
-                
-            case .synchronizerStateChanged:
+            case .synchronizerStateChanged(let latestState):
+                let shieldedBalance = latestState.shieldedBalance
+                state.shieldedBalance = shieldedBalance.redacted
+                state.transactionAmountInputState.maxValue = shieldedBalance.total.amount.redacted
                 return .none
 
             case .memo:

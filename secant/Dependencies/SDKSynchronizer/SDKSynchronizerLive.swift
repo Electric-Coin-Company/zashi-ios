@@ -10,19 +10,13 @@ import Combine
 import ComposableArchitecture
 import ZcashLightClientKit
 
-private class SDKSynchronizerLiveWrapper {
-    private var cancellables: [AnyCancellable] = []
-    let synchronizer: SDKSynchronizer
-    let stateChanged: CurrentValueSubject<SDKSynchronizerState, Never>
-    var latestScannedSynchronizerState: SDKSynchronizer.SynchronizerState?
+extension SDKSynchronizerClient: DependencyKey {
+    static let liveValue: SDKSynchronizerClient = Self.live()
 
-    init(
-        notificationCenter: NotificationCenterClient = .live,
+    static func live(
         databaseFiles: DatabaseFilesClient = .liveValue,
         environment: ZcashSDKEnvironment = .liveValue
-    ) {
-        self.stateChanged = CurrentValueSubject<SDKSynchronizerState, Never>(.unknown)
-
+    ) -> Self {
         let network = environment.network
         let initializer = Initializer(
             cacheDbURL: databaseFiles.cacheDbURLFor(network),
@@ -36,80 +30,13 @@ private class SDKSynchronizerLiveWrapper {
             saplingParamsSourceURL: SaplingParamsSourceURL.default,
             loggerProxy: OSLogger(logLevel: .debug, category: LoggerConstants.sdkLogs)
         )
-
-        synchronizer = SDKSynchronizer(initializer: initializer)
-        subscribeToNotifications(notificationCenter: notificationCenter)
-    }
-
-    deinit {
-        synchronizer.stop()
-    }
-
-    private func subscribeToNotifications(notificationCenter: NotificationCenterClient) {
-        notificationCenter.publisherFor(.synchronizerStarted)?
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] notif in
-                let synchronizerState = notif.userInfo?[SDKSynchronizer.NotificationKeys.synchronizerState] as? SDKSynchronizer.SynchronizerState
-                self?.synchronizerStarted(synchronizerState)
-            }
-            .store(in: &cancellables)
-
-        notificationCenter.publisherFor(.synchronizerSynced)?
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] output in
-                let synchronizerState = output.userInfo?[SDKSynchronizer.NotificationKeys.synchronizerState] as? SDKSynchronizer.SynchronizerState
-                self?.synchronizerSynced(synchronizerState)
-            }
-            .store(in: &cancellables)
-
-        notificationCenter.publisherFor(.synchronizerProgressUpdated)?
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in self?.synchronizerProgressUpdated() }
-            .store(in: &cancellables)
-
-        notificationCenter.publisherFor(.synchronizerStopped)?
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in self?.synchronizerStopped() }
-            .store(in: &cancellables)
-    }
-
-    private func synchronizerStarted(_ synchronizerState: SDKSynchronizer.SynchronizerState?) {
-        latestScannedSynchronizerState = synchronizerState
-        stateChanged.send(.started)
-    }
-
-    private func synchronizerSynced(_ synchronizerState: SDKSynchronizer.SynchronizerState?) {
-        latestScannedSynchronizerState = synchronizerState
-        stateChanged.send(.synced)
-    }
-
-    private func synchronizerProgressUpdated() {
-        stateChanged.send(.progressUpdated)
-    }
-
-    private func synchronizerStopped() {
-        stateChanged.send(.stopped)
-    }
-}
-
-extension SDKSynchronizerClient: DependencyKey {
-    static let liveValue: SDKSynchronizerClient = Self.live()
-
-    static func live(
-        notificationCenter: NotificationCenterClient = .live,
-        databaseFiles: DatabaseFilesClient = .liveValue,
-        environment: ZcashSDKEnvironment = .liveValue
-    ) -> Self {
-        let sdkSynchronizerWrapper = SDKSynchronizerLiveWrapper(
-            notificationCenter: notificationCenter,
-            databaseFiles: databaseFiles,
-            environment: environment
-        )
-        let synchronizer = sdkSynchronizerWrapper.synchronizer
+        
+        let synchronizer = SDKSynchronizer(initializer: initializer)
 
         return SDKSynchronizerClient(
-            stateChangedStream: { sdkSynchronizerWrapper.stateChanged },
-            latestScannedSynchronizerState: { sdkSynchronizerWrapper.latestScannedSynchronizerState },
+            stateStream: { synchronizer.stateStream },
+            eventStream: { synchronizer.eventStream },
+            latestState: { synchronizer.latestState },
             latestScannedHeight: { synchronizer.latestScannedHeight },
             prepareWith: { seedBytes, viewingKey, walletBirtday in
                 let result = try synchronizer.prepare(with: seedBytes, viewingKeys: [viewingKey], walletBirthday: walletBirtday)
@@ -120,12 +47,11 @@ extension SDKSynchronizerClient: DependencyKey {
             },
             start: { retry in try synchronizer.start(retry: retry) },
             stop: { synchronizer.stop() },
-            statusSnapshot: { SyncStatusSnapshot.snapshotFor(state: synchronizer.status) },
-            isSyncing: { sdkSynchronizerWrapper.latestScannedSynchronizerState?.syncStatus.isSyncing ?? false },
-            isInitialized: { synchronizer.status != .unprepared },
+            isSyncing: { synchronizer.latestState.syncStatus.isSyncing },
+            isInitialized: { synchronizer.latestState.syncStatus != .unprepared },
             rewind: { synchronizer.rewind($0) },
-            getShieldedBalance: { sdkSynchronizerWrapper.latestScannedSynchronizerState?.shieldedBalance },
-            getTransparentBalance: { sdkSynchronizerWrapper.latestScannedSynchronizerState?.transparentBalance },
+            getShieldedBalance: { synchronizer.latestState.shieldedBalance },
+            getTransparentBalance: { synchronizer.latestState.transparentBalance },
             getAllSentTransactions: {
                 if let transactions = try? synchronizer.allSentTransactions() {
                     return EffectTask(value: transactions.map {

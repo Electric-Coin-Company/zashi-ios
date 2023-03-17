@@ -21,9 +21,9 @@ class ScanTests: XCTestCase {
                     scanStatus: .value("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted)
                 ),
             reducer: ScanReducer()
-        ) {
-            $0.captureDevice = .noOp
-        }
+        )
+
+        store.dependencies.captureDevice = .noOp
         
         store.send(.onAppear) { state in
             state.isTorchAvailable = false
@@ -37,9 +37,9 @@ class ScanTests: XCTestCase {
         let store = TestStore(
             initialState: ScanReducer.State(),
             reducer: ScanReducer()
-        ) {
-            $0.captureDevice = .noOp
-        }
+        )
+
+        store.dependencies.captureDevice = .noOp
 
         store.send(.torchPressed) { state in
             state.isTorchOn = true
@@ -52,9 +52,9 @@ class ScanTests: XCTestCase {
                 isTorchOn: true
             ),
             reducer: ScanReducer()
-        ) {
-            $0.captureDevice = .noOp
-        }
+        )
+
+        store.dependencies.captureDevice = .noOp
 
         store.send(.torchPressed) { state in
             state.isTorchOn = false
@@ -65,9 +65,9 @@ class ScanTests: XCTestCase {
         let store = TestStore(
             initialState: ScanReducer.State(),
             reducer: ScanReducer()
-        ) {
-            $0.uriParser.isValidURI = { _ in false }
-        }
+        )
+
+        store.dependencies.uriParser.isValidURI = { _ in false }
         
         let value = "test".redacted
         store.send(.scan(value)) { state in
@@ -82,10 +82,11 @@ class ScanTests: XCTestCase {
         let store = TestStore(
             initialState: ScanReducer.State(),
             reducer: ScanReducer()
-        ) { dependencies in
-            dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-            dependencies.uriParser.isValidURI = { _ in true }
-        }
+        )
+        
+        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+        store.dependencies.uriParser.isValidURI = { _ in true }
+
 
         let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
         store.send(.scan(address)) { state in

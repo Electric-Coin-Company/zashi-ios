@@ -51,12 +51,12 @@ class SettingsTests: XCTestCase {
                 phraseDisplayState: RecoveryPhraseDisplayReducer.State(phrase: nil)
             ),
             reducer: SettingsReducer()
-        ) { dependencies in
-            dependencies.localAuthentication = .mockAuthenticationSucceeded
-            dependencies.mnemonic = .noOp
-            dependencies.mnemonic.asWords = { _ in mnemonic.components(separatedBy: " ") }
-            dependencies.walletStorage = mockedWalletStorage
-        }
+        )
+
+        store.dependencies.localAuthentication = .mockAuthenticationSucceeded
+        store.dependencies.mnemonic = .noOp
+        store.dependencies.mnemonic.asWords = { _ in mnemonic.components(separatedBy: " ") }
+        store.dependencies.walletStorage = mockedWalletStorage
 
         await store.send(.backupWalletAccessRequest)
         
@@ -72,9 +72,9 @@ class SettingsTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: SettingsReducer()
-        ) {
-            $0.localAuthentication = .mockAuthenticationFailed
-        }
+        )
+
+        store.dependencies.localAuthentication = .mockAuthenticationFailed
 
         await store.send(.backupWalletAccessRequest)
         

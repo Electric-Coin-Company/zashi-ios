@@ -104,9 +104,9 @@ class RootTests: XCTestCase {
         
         Self.testScheduler.advance(by: 3)
 
-        store.receive(.destination(.updateDestination(.onboarding))) {
-            $0.destinationState.destination = .onboarding
-            $0.appInitializationState = .uninitialized
+        store.receive(.destination(.updateDestination(.onboarding))) { state in
+            state.destinationState.destination = .onboarding
+            state.appInitializationState = .uninitialized
         }
     }
 
@@ -132,10 +132,10 @@ class RootTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: RootReducer()
-        ) { dependencies in
-            dependencies.walletStorage = .noOp
-            dependencies.walletStorage.exportWallet = { throw walletStorageError }
-        }
+        )
+        
+        store.dependencies.walletStorage = .noOp
+        store.dependencies.walletStorage.exportWallet = { throw walletStorageError }
 
         store.send(.initialization(.respondToWalletInitializationState(.filesMissing))) { state in
             state.appInitializationState = .filesMissing
@@ -165,10 +165,10 @@ class RootTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: RootReducer()
-        ) { dependencies in
-            dependencies.walletStorage = .noOp
-            dependencies.walletStorage.exportWallet = { throw walletStorageError }
-        }
+        )
+        
+        store.dependencies.walletStorage = .noOp
+        store.dependencies.walletStorage.exportWallet = { throw walletStorageError }
 
         store.send(.initialization(.respondToWalletInitializationState(.initialized)))
 

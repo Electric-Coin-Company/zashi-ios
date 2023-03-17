@@ -26,10 +26,10 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder,
             reducer: ImportWalletReducer()
-        ) { dependencies in
-            dependencies.mnemonic = .noOp
-            dependencies.mnemonic.isValid = { _ in throw "invalid mnemonic" }
-        }
+        )
+        
+        store.dependencies.mnemonic = .noOp
+        store.dependencies.mnemonic.isValid = { _ in throw "invalid mnemonic" }
         
         let seedPhrase = "one two three".redacted
         store.send(.seedPhraseInputChanged(seedPhrase)) { state in
@@ -43,10 +43,10 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24),
             reducer: ImportWalletReducer()
-        ) { dependencies in
-            dependencies.mnemonic = .noOp
-            dependencies.mnemonic.isValid = { _ in throw "invalid mnemonic" }
-        }
+        )
+        
+        store.dependencies.mnemonic = .noOp
+        store.dependencies.mnemonic.isValid = { _ in throw "invalid mnemonic" }
 
         let seedPhrase = "a a a a a a a a a a a a a a a a a a a a a a a a".redacted
         store.send(.seedPhraseInputChanged(seedPhrase)) { state in
@@ -61,9 +61,9 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24),
             reducer: ImportWalletReducer()
-        ) {
-            $0.mnemonic = .noOp
-        }
+        )
+        
+        store.dependencies.mnemonic = .noOp
 
         let seedPhrase =
             """
@@ -142,10 +142,10 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24),
             reducer: ImportWalletReducer()
-        ) { dependencies in
-            dependencies.mnemonic = .noOp
-            dependencies.mnemonic.isValid = { _ in throw "invalid mnemonic" }
-        }
+        )
+
+        store.dependencies.mnemonic = .noOp
+        store.dependencies.mnemonic.isValid = { _ in throw "invalid mnemonic" }
         
         let birthday = "1700000".redacted
         store.send(.birthdayInputChanged(birthday)) { state in
@@ -170,10 +170,10 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24),
             reducer: ImportWalletReducer()
-        ) { dependencies in
-            dependencies.mnemonic = .noOp
-            dependencies.mnemonic.isValid = { _ in throw "invalid mnemonic" }
-        }
+        )
+        
+        store.dependencies.mnemonic = .noOp
+        store.dependencies.mnemonic.isValid = { _ in throw "invalid mnemonic" }
 
         let birthday = "200000".redacted
         store.send(.birthdayInputChanged(birthday)) { state in
@@ -197,9 +197,9 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24),
             reducer: ImportWalletReducer()
-        ) {
-            $0.mnemonic = .noOp
-        }
+        )
+        
+        store.dependencies.mnemonic = .noOp
 
         let birthday = "200000".redacted
         store.send(.birthdayInputChanged(birthday)) { state in
@@ -229,9 +229,9 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24),
             reducer: ImportWalletReducer()
-        ) {
-            $0.mnemonic = .noOp
-        }
+        )
+            
+        store.dependencies.mnemonic = .noOp
 
         let birthday = "1700000".redacted
         store.send(.birthdayInputChanged(birthday)) { state in
@@ -262,9 +262,9 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24),
             reducer: ImportWalletReducer()
-        ) {
-            $0.mnemonic = .noOp
-        }
+        )
+        
+        store.dependencies.mnemonic = .noOp
 
         let seedPhrase =
             """
@@ -303,10 +303,10 @@ class ImportWalletTests: XCTestCase {
                 wordsCount: 24
             ),
             reducer: ImportWalletReducer()
-        ) { dependencies in
-            dependencies.mnemonic = .noOp
-            dependencies.walletStorage = .noOp
-        }
+        )
+        
+        store.dependencies.mnemonic = .noOp
+        store.dependencies.walletStorage = .noOp
         
         store.send(.restoreWallet) { state in
             state.alert = AlertState(

@@ -17,23 +17,15 @@ extension DependencyValues {
     }
 }
 
-enum SDKSynchronizerState: Equatable {
-    case progressUpdated
-    case started
-    case stopped
-    case synced
-    case unknown
-}
-
 struct SDKSynchronizerClient {
-    let stateChangedStream: () -> CurrentValueSubject<SDKSynchronizerState, Never>
-    let latestScannedSynchronizerState: () -> SDKSynchronizer.SynchronizerState?
+    let stateStream: () -> AnyPublisher<SynchronizerState, Never>
+    let eventStream: () -> AnyPublisher<SynchronizerEvent, Never>
+    let latestState: () -> SynchronizerState
     let latestScannedHeight: () -> BlockHeight
 
     let prepareWith: ([UInt8], UnifiedFullViewingKey, BlockHeight) throws -> Void
     let start: (_ retry: Bool) throws -> Void
     let stop: () -> Void
-    let statusSnapshot: () -> SyncStatusSnapshot
     let isSyncing: () -> Bool
     let isInitialized: () -> Bool
 

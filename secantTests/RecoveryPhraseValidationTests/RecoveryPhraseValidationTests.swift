@@ -90,11 +90,11 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let expectedValidationWords = [ValidationWord(groupIndex: 1, word: "salute".redacted)]
 
-        store.send(.move(wordChip: .unassigned(word: "salute".redacted), intoGroup: 1)) {
-            $0.validationWords = expectedValidationWords
-            $0.missingWordChips = expectedMissingChips
+        store.send(.move(wordChip: .unassigned(word: "salute".redacted), intoGroup: 1)) { state in
+            state.validationWords = expectedValidationWords
+            state.missingWordChips = expectedMissingChips
 
-            XCTAssertFalse($0.isComplete)
+            XCTAssertFalse(state.isComplete)
         }
     }
 
@@ -144,11 +144,11 @@ class RecoveryPhraseValidationTests: XCTestCase {
 
         let expectedValidationWords = [ValidationWord(groupIndex: 0, word: "pizza".redacted)]
 
-        store.send(.move(wordChip: missingWordChips[3], intoGroup: 0)) {
-            $0.missingWordChips = expectedMissingChips
-            $0.validationWords = expectedValidationWords
+        store.send(.move(wordChip: missingWordChips[3], intoGroup: 0)) { state in
+            state.missingWordChips = expectedMissingChips
+            state.validationWords = expectedValidationWords
 
-            XCTAssertFalse($0.isComplete)
+            XCTAssertFalse(state.isComplete)
         }
     }
 
@@ -200,11 +200,11 @@ class RecoveryPhraseValidationTests: XCTestCase {
             ValidationWord(groupIndex: 1, word: "boil".redacted)
         ]
 
-        store.send(.move(wordChip: PhraseChip.Kind.unassigned(word: "boil".redacted), intoGroup: 1)) {
-            $0.missingWordChips = expectedMissingWordChips
-            $0.validationWords = expectedValidationWords
+        store.send(.move(wordChip: PhraseChip.Kind.unassigned(word: "boil".redacted), intoGroup: 1)) { state in
+            state.missingWordChips = expectedMissingWordChips
+            state.validationWords = expectedValidationWords
 
-            XCTAssertFalse($0.isComplete)
+            XCTAssertFalse(state.isComplete)
         }
     }
 
@@ -260,11 +260,11 @@ class RecoveryPhraseValidationTests: XCTestCase {
             ValidationWord(groupIndex: 2, word: "cancel".redacted)
         ]
 
-        store.send(.move(wordChip: PhraseChip.Kind.unassigned(word: "cancel".redacted), intoGroup: 2)) {
-            $0.missingWordChips = expectedMissingWordChips
-            $0.validationWords = expectedValidationWords
+        store.send(.move(wordChip: PhraseChip.Kind.unassigned(word: "cancel".redacted), intoGroup: 2)) { state in
+            state.missingWordChips = expectedMissingWordChips
+            state.validationWords = expectedValidationWords
 
-            XCTAssertFalse($0.isComplete)
+            XCTAssertFalse(state.isComplete)
         }
     }
 
@@ -306,9 +306,9 @@ class RecoveryPhraseValidationTests: XCTestCase {
         let store = TestStore(
             initialState: currentStep,
             reducer: RecoveryPhraseValidationFlowReducer()
-        ) {
-            $0.mainQueue = Self.testScheduler.eraseToAnyScheduler()
-        }
+        )
+            
+        store.dependencies.mainQueue = Self.testScheduler.eraseToAnyScheduler()
 
         let expectedMissingWordChips = [
             PhraseChip.Kind.empty,
@@ -324,19 +324,19 @@ class RecoveryPhraseValidationTests: XCTestCase {
             ValidationWord(groupIndex: 3, word: "pizza".redacted)
         ]
 
-        store.send(.move(wordChip: PhraseChip.Kind.unassigned(word: "pizza".redacted), intoGroup: 3)) {
-            $0.missingWordChips = expectedMissingWordChips
-            $0.validationWords = expectedValidationWords
+        store.send(.move(wordChip: PhraseChip.Kind.unassigned(word: "pizza".redacted), intoGroup: 3)) { state in
+            state.missingWordChips = expectedMissingWordChips
+            state.validationWords = expectedValidationWords
 
-            XCTAssertTrue($0.isComplete)
-            XCTAssertTrue($0.isValid)
+            XCTAssertTrue(state.isComplete)
+            XCTAssertTrue(state.isValid)
         }
 
         Self.testScheduler.advance(by: 2)
 
-        store.receive(.succeed) {
-            XCTAssertTrue($0.isComplete)
-            $0.destination = .success
+        store.receive(.succeed) { state in
+            XCTAssertTrue(state.isComplete)
+            state.destination = .success
         }
     }
 
@@ -378,10 +378,10 @@ class RecoveryPhraseValidationTests: XCTestCase {
         let store = TestStore(
             initialState: currentStep,
             reducer: RecoveryPhraseValidationFlowReducer()
-        ) { dependencies in
-            dependencies.feedbackGenerator = .noOp
-            dependencies.mainQueue = Self.testScheduler.eraseToAnyScheduler()
-        }
+        )
+        
+        store.dependencies.feedbackGenerator = .noOp
+        store.dependencies.mainQueue = Self.testScheduler.eraseToAnyScheduler()
 
         let expectedMissingWordChips = [
             PhraseChip.Kind.empty,
@@ -397,20 +397,20 @@ class RecoveryPhraseValidationTests: XCTestCase {
             ValidationWord(groupIndex: 3, word: "pizza".redacted)
         ]
 
-        store.send(.move(wordChip: PhraseChip.Kind.unassigned(word: "pizza".redacted), intoGroup: 3)) {
-            $0.missingWordChips = expectedMissingWordChips
-            $0.validationWords = expectedValidationWords
+        store.send(.move(wordChip: PhraseChip.Kind.unassigned(word: "pizza".redacted), intoGroup: 3)) { state in
+            state.missingWordChips = expectedMissingWordChips
+            state.validationWords = expectedValidationWords
 
-            XCTAssertTrue($0.isComplete)
+            XCTAssertTrue(state.isComplete)
         }
 
         Self.testScheduler.advance(by: 2)
 
         store.receive(.failureFeedback)
 
-        store.receive(.fail) {
-            $0.destination = .failure
-            XCTAssertFalse($0.isValid)
+        store.receive(.fail) { state in
+            state.destination = .failure
+            XCTAssertFalse(state.isValid)
         }
     }
 
