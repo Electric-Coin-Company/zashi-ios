@@ -1,5 +1,10 @@
 # Changelog
-
+# 0.0.1 build 49
+- [#673] End to end bugfix (#679)
+Bugs fixed:
+ - derivation tool live key has hardcoded mainnet so it doesn't recognise and validate zcash testnet addresses
+ - send to transparent address fails because of Memo("") provided instead of nil
+ - when transparent address is filled in a send form, the memo input is still present in the UI, memo is not supported by transparent addresses so it should be removed
 
 # 0.0.1 build 48
 - [#676] fix About.swift not being present on mainnet target (#677)
