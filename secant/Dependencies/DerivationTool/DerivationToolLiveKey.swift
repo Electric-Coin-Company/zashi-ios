@@ -25,7 +25,7 @@ extension DerivationToolClient: DependencyKey {
             },
             isValidZcashAddress: { address in
                 do {
-                    _ = try Recipient(address, network: .mainnet)
+                    _ = try Recipient(address, network: TargetConstants.zcashNetwork.networkType)
                     return true
                 } catch {
                     return false

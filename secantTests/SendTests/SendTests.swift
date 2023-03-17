@@ -62,14 +62,10 @@ class SendTests: XCTestCase {
         }
 
         await testScheduler.advance(by: 0.01)
-        guard let memo = try? Memo(string: "") else {
-            XCTFail("testSendSucceeded: memo is expected to be successfuly initialized.")
-            return
-        }
         
         let transactionState = TransactionState(
             expiryHeight: 40,
-            memos: [memo],
+            memos: [],
             minedHeight: 50,
             shielded: true,
             zAddress: "tteafadlamnelkqe",
@@ -557,6 +553,7 @@ class SendTests: XCTestCase {
             // isValid function returns true, `guard let validationType else { return true }`
             state.transactionAddressInputState.textFieldState.valid = true
             state.transactionAddressInputState.isValidAddress = true
+            state.transactionAddressInputState.isValidTransparentAddress = true
             XCTAssertFalse(
                 state.isValidForm,
                 "Send Tests: `testValidForm` is expected to be false but it's \(state.isValidForm)"
@@ -658,6 +655,7 @@ class SendTests: XCTestCase {
         )
 
         store.dependencies.audioServices = AudioServicesClient(systemSoundVibrate: { })
+        store.dependencies.derivationTool = .noOp
         
         // We don't need to pass a valid address here, we just need to confirm some
         // found string is received and the `isValidAddress` flag is set to `true`

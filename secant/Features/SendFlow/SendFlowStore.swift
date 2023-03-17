@@ -69,7 +69,11 @@ struct SendFlowReducer: ReducerProtocol {
         var isInsufficientFunds: Bool {
             transactionAmountInputState.amount.data > transactionAmountInputState.maxValue.data
         }
-
+        
+        var isMemoInputEnabled: Bool {
+            transactionAddressInputState.isValidAddress && !transactionAddressInputState.isValidTransparentAddress
+        }
+        
         var totalCurrencyBalance: Zatoshi {
             Zatoshi.from(decimal: shieldedBalance.data.total.decimalValue.decimalValue * transactionAmountInputState.zecPrice)
         }
@@ -155,8 +159,10 @@ struct SendFlowReducer: ReducerProtocol {
                     state.isSendingTransaction = true
 
                     let memo: Memo?
-                    if let memoText = state.addMemoState ? state.memoState.text : nil {
-                        memo = try Memo(string: memoText.data)
+                    if state.transactionAddressInputState.isValidTransparentAddress {
+                        memo = nil
+                    } else if let memoText = state.addMemoState ? state.memoState.text : nil {
+                        memo = memoText.data.isEmpty ? nil : try Memo(string: memoText.data)
                     } else {
                         memo = nil
                     }
@@ -221,6 +227,15 @@ struct SendFlowReducer: ReducerProtocol {
                 // The is valid Zcash address check is already covered in the scan feature
                 // so we can be sure it's valid and thus `true` value here.
                 state.transactionAddressInputState.isValidAddress = true
+                do {
+                    if case .transparent = try Recipient(address.data, network: zcashSDKEnvironment.network.networkType) {
+                        state.transactionAddressInputState.isValidTransparentAddress = true
+                    } else {
+                        state.transactionAddressInputState.isValidTransparentAddress = false
+                    }
+                } catch {
+                    state.transactionAddressInputState.isValidTransparentAddress = false
+                }
                 audioServices.systemSoundVibrate()
                 return EffectTask(value: .updateDestination(nil))
 

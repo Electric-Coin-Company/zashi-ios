@@ -7,12 +7,14 @@
 
 import ComposableArchitecture
 import SwiftUI
+import ZcashLightClientKit
 
 typealias TransactionAddressTextFieldStore = Store<TransactionAddressTextFieldReducer.State, TransactionAddressTextFieldReducer.Action>
 
 struct TransactionAddressTextFieldReducer: ReducerProtocol {
     struct State: Equatable {
         var isValidAddress = false
+        var isValidTransparentAddress = false
         var textFieldState: TCATextFieldReducer.State
     }
 
@@ -23,7 +25,8 @@ struct TransactionAddressTextFieldReducer: ReducerProtocol {
     }
     
     @Dependency(\.derivationTool) var derivationTool
-    
+    @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
+
     var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
@@ -40,7 +43,17 @@ struct TransactionAddressTextFieldReducer: ReducerProtocol {
                 } catch {
                     state.isValidAddress = false
                 }
-                    
+                do {
+                    if case .transparent = try Recipient(address.data, network: zcashSDKEnvironment.network.networkType) {
+                        state.isValidTransparentAddress = true
+                    } else {
+                        state.isValidTransparentAddress = false
+                    }
+                    state.isValidTransparentAddress = true
+                } catch {
+                    state.isValidTransparentAddress = false
+                }
+
                 return .none
             }
         }
