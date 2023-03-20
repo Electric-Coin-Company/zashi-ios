@@ -17,7 +17,6 @@ class ScanTests: XCTestCase {
                 ScanReducer.State(
                     isTorchAvailable: true,
                     isTorchOn: true,
-                    isValidValue: true,
                     scanStatus: .value("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted)
                 ),
             reducer: ScanReducer()
@@ -28,7 +27,6 @@ class ScanTests: XCTestCase {
         store.send(.onAppear) { state in
             state.isTorchAvailable = false
             state.isTorchOn = false
-            state.isValidValue = false
             state.scanStatus = .unknown
         }
     }
@@ -71,8 +69,7 @@ class ScanTests: XCTestCase {
         
         let value = "test".redacted
         store.send(.scan(value)) { state in
-            state.scanStatus = .value(value)
-            state.isValidValue = false
+            state.scanStatus = .failed
         }
     }
 
@@ -91,7 +88,6 @@ class ScanTests: XCTestCase {
         let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
         store.send(.scan(address)) { state in
             state.scanStatus = .value(address)
-            state.isValidValue = true
         }
         
         testScheduler.advance(by: 1.01)

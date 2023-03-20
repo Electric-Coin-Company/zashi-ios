@@ -12,9 +12,7 @@ extension URIParserClient: DependencyKey {
     
     static func live(uriParser: URIParser = URIParser(derivationTool: .live())) -> Self {
         Self(
-            isValidURI: { uri in
-                try uriParser.isValidURI(uri)
-            }
+            isValidURI: { uri in uriParser.isValidURI(uri) }
         )
     }
 }

@@ -24,7 +24,6 @@ struct ScanReducer: ReducerProtocol {
         @BindingState var alert: AlertState<ScanReducer.Action>?
         var isTorchAvailable = false
         var isTorchOn = false
-        var isValidValue = false
         var scanStatus: ScanStatus = .unknown
 
         var scannedValue: String? {
@@ -33,6 +32,13 @@ struct ScanReducer: ReducerProtocol {
             }
             
             return scannedValue.data
+        }
+        
+        var isValidValue: Bool {
+            if case .value = scanStatus {
+                return true
+            }
+            return false
         }
     }
 
@@ -60,7 +66,6 @@ struct ScanReducer: ReducerProtocol {
         case .onAppear:
             // reset the values
             state.scanStatus = .unknown
-            state.isValidValue = false
             state.isTorchOn = false
             // check the torch availability
             do {
@@ -90,22 +95,18 @@ struct ScanReducer: ReducerProtocol {
             if let prevCode = state.scannedValue, prevCode == code.data {
                 return .none
             }
-            state.scanStatus = .value(code)
-            state.isValidValue = false
-            do {
-                if try uriParser.isValidURI(code.data) {
-                    state.isValidValue = true
-                    // once valid URI is scanned we want to start the timer to deliver the code
-                    // any new code cancels the schedule and fires new one
-                    return .concatenate(
-                        EffectTask.cancel(id: CancelId.self),
-                        EffectTask(value: .found(code))
-                            .delay(for: 1.0, scheduler: mainQueue)
-                            .eraseToEffect()
-                            .cancellable(id: CancelId.self, cancelInFlight: true)
-                    )
-                }
-            } catch {
+            if uriParser.isValidURI(code.data) {
+                state.scanStatus = .value(code)
+                // once valid URI is scanned we want to start the timer to deliver the code
+                // any new code cancels the schedule and fires new one
+                return .concatenate(
+                    EffectTask.cancel(id: CancelId.self),
+                    EffectTask(value: .found(code))
+                        .delay(for: 1.0, scheduler: mainQueue)
+                        .eraseToEffect()
+                        .cancellable(id: CancelId.self, cancelInFlight: true)
+                )
+            } else {
                 state.scanStatus = .failed
             }
             return .cancel(id: CancelId.self)

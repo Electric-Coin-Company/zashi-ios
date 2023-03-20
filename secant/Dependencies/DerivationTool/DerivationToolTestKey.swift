@@ -12,17 +12,19 @@ import ZcashLightClientKit
 extension DerivationToolClient: TestDependencyKey {
     static let testValue = Self(
         deriveSpendingKey: XCTUnimplemented("\(Self.self).deriveSpendingKey"),
-        isValidTransparentAddress: XCTUnimplemented("\(Self.self).isValidTransparentAddress", placeholder: false),
-        isValidSaplingAddress: XCTUnimplemented("\(Self.self).isValidShieldedAddress", placeholder: false),
-        isValidZcashAddress: XCTUnimplemented("\(Self.self).isValidZcashAddress", placeholder: false)
+        isUnifiedAddress: XCTUnimplemented("\(Self.self).isUnifiedAddress", placeholder: false),
+        isSaplingAddress: XCTUnimplemented("\(Self.self).isSaplingAddress", placeholder: false),
+        isTransparentAddress: XCTUnimplemented("\(Self.self).isTransparentAddress", placeholder: false),
+        isZcashAddress: XCTUnimplemented("\(Self.self).isZcashAddress", placeholder: false)
     )
 }
 
 extension DerivationToolClient {
     static let noOp = Self(
         deriveSpendingKey: { _, _ in throw "NotImplemented" },
-        isValidTransparentAddress: { _ in return false },
-        isValidSaplingAddress: { _ in return false },
-        isValidZcashAddress: { _ in return false }
+        isUnifiedAddress: { _ in return false },
+        isSaplingAddress: { _ in return false },
+        isTransparentAddress: { _ in return false },
+        isZcashAddress: { _ in return false }
     )
 }

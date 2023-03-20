@@ -23,12 +23,15 @@ struct DerivationToolClient {
     /// - Returns: the spending keys that correspond to the seed, formatted as Strings.
     var deriveSpendingKey: ([UInt8], Int) throws -> UnifiedSpendingKey
 
-    /// Checks validity of the transparent address.
-    var isValidTransparentAddress: (String) throws -> Bool
+    /// Checks validity of the unified address.
+    var isUnifiedAddress: (String) -> Bool
 
     /// Checks validity of the shielded address.
-    var isValidSaplingAddress: (String) throws -> Bool
+    var isSaplingAddress: (String) -> Bool
+
+    /// Checks validity of the transparent address.
+    var isTransparentAddress: (String) -> Bool
 
     /// Checks if given address is a valid zcash address.
-    var isValidZcashAddress: (String) throws -> Bool
+    var isZcashAddress: (String) -> Bool
 }

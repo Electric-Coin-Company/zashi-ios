@@ -17,13 +17,40 @@ extension DerivationToolClient: DependencyKey {
             deriveSpendingKey: { seed, accountIndex in
                 try derivationTool.deriveUnifiedSpendingKey(seed: seed, accountIndex: accountIndex)
             },
-            isValidTransparentAddress: { tAddress in
-                derivationTool.isValidTransparentAddress(tAddress)
+            isUnifiedAddress: { address in
+                do {
+                    if case .unified = try Recipient(address, network: TargetConstants.zcashNetwork.networkType) {
+                        return true
+                    } else {
+                        return false
+                    }
+                } catch {
+                    return false
+                }
             },
-            isValidSaplingAddress: { zAddress in
-                derivationTool.isValidSaplingAddress(zAddress)
+            isSaplingAddress: { address in
+                do {
+                    if case .sapling = try Recipient(address, network: TargetConstants.zcashNetwork.networkType) {
+                        return true
+                    } else {
+                        return false
+                    }
+                } catch {
+                    return false
+                }
             },
-            isValidZcashAddress: { address in
+            isTransparentAddress: { address in
+                do {
+                    if case .transparent = try Recipient(address, network: TargetConstants.zcashNetwork.networkType) {
+                        return true
+                    } else {
+                        return false
+                    }
+                } catch {
+                    return false
+                }
+            },
+            isZcashAddress: { address in
                 do {
                     _ = try Recipient(address, network: TargetConstants.zcashNetwork.networkType)
                     return true
