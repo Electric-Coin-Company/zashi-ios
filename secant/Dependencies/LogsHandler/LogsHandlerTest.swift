@@ -10,6 +10,6 @@ import XCTestDynamicOverlay
 
 extension LogsHandlerClient: TestDependencyKey {
     static let testValue = Self(
-        exportAndStoreLogs: XCTUnimplemented("\(Self.self).exportAndStoreLogs")
+        exportAndStoreLogs: XCTUnimplemented("\(Self.self).exportAndStoreLogs", placeholder: nil)
     )
 }

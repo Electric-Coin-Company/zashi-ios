@@ -10,16 +10,56 @@ import ComposableArchitecture
 
 extension LogsHandlerClient: DependencyKey {
     static let liveValue = LogsHandlerClient(
-        exportAndStoreLogs: { tempSDKDir, tempTCADir, tempWalletDir in
-            async let sdkLogs = LogsHandlerClient.exportAndStoreLogsFor(key: LoggerConstants.sdkLogs, atURL: tempSDKDir)
-            async let tcaLogs = LogsHandlerClient.exportAndStoreLogsFor(key: LoggerConstants.tcaLogs, atURL: tempTCADir)
-            async let walletLogs = LogsHandlerClient.exportAndStoreLogsFor(key: LoggerConstants.walletLogs, atURL: tempWalletDir)
+        exportAndStoreLogs: {
+            // create a directory
+            let logsURL = FileManager.default.temporaryDirectory.appendingPathComponent("logs")
+            try FileManager.default.createDirectory(atPath: logsURL.path, withIntermediateDirectories: true)
+            
+            // export the logs
+            async let sdkLogs = LogsHandlerClient.exportAndStoreLogsFor(
+                key: LoggerConstants.sdkLogs,
+                atURL: logsURL.appendingPathComponent("sdkLogs.txt")
+            )
+            async let tcaLogs = LogsHandlerClient.exportAndStoreLogsFor(
+                key: LoggerConstants.tcaLogs,
+                atURL: logsURL.appendingPathComponent("tcaLogs.txt")
+            )
+            async let walletLogs = LogsHandlerClient.exportAndStoreLogsFor(
+                key: LoggerConstants.walletLogs,
+                atURL: logsURL.appendingPathComponent("walletLogs.txt")
+            )
 
             let logs = try await [sdkLogs, tcaLogs, walletLogs]
             
+            // store the log files into the logs folder
             try logs.forEach { logsHandler in
                 try logsHandler.result.write(to: logsHandler.dir, atomically: true, encoding: String.Encoding.utf8)
             }
+            
+            // zip the logs folder
+            let coordinator = NSFileCoordinator()
+            var zipError: NSError?
+            var archiveURL: URL?
+            
+            archiveURL = await withCheckedContinuation { continuation in
+                coordinator.coordinate(readingItemAt: logsURL, options: [.forUploading], error: &zipError) { zipURL in
+                    do {
+                        let tmpURL = try FileManager.default.url(
+                            for: .itemReplacementDirectory,
+                            in: .userDomainMask,
+                            appropriateFor: zipURL,
+                            create: true
+                        )
+                        .appendingPathComponent("logs.zip")
+                        try FileManager.default.moveItem(at: zipURL, to: tmpURL)
+                        continuation.resume(returning: tmpURL)
+                    } catch {
+                        continuation.resume(returning: nil)
+                    }
+                }
+            }
+            
+            return archiveURL
         }
     )
 }

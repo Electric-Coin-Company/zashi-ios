@@ -15,5 +15,5 @@ extension DependencyValues {
     }
 }
 struct LogsHandlerClient {
-    let exportAndStoreLogs: (URL, URL, URL) async throws -> Void
+    let exportAndStoreLogs: () async throws -> URL?
 }
