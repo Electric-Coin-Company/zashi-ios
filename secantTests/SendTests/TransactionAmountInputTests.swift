@@ -34,10 +34,10 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         )
                 ),
             reducer: TransactionAmountTextFieldReducer()
-        ) { dependencies in
-            dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
-            dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
-        }
+        )
+
+        store.dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
+        store.dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
 
         store.send(.setMax) { state in
             state.textFieldState.text = "0.00501301".redacted
@@ -85,10 +85,10 @@ class TransactionAmountTextFieldTests: XCTestCase {
                     zecPrice: 1000.0
                 ),
             reducer: TransactionAmountTextFieldReducer()
-        ) { dependencies in
-            dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
-            dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
-        }
+        )
+
+        store.dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
+        store.dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
 
         store.send(.currencySelection(.swapCurrencyType)) { state in
             state.textFieldState.text = "1,000".redacted
@@ -116,10 +116,10 @@ class TransactionAmountTextFieldTests: XCTestCase {
                     zecPrice: 1000.0
                 ),
             reducer: TransactionAmountTextFieldReducer()
-        ) { dependencies in
-            dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
-            dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
-        }
+        )
+
+        store.dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
+        store.dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
 
         store.send(.currencySelection(.swapCurrencyType)) { state in
             state.textFieldState.text = "25,000,000".redacted
@@ -147,10 +147,10 @@ class TransactionAmountTextFieldTests: XCTestCase {
                     zecPrice: 1000.0
                 ),
             reducer: TransactionAmountTextFieldReducer()
-        ) { dependencies in
-            dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
-            dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
-        }
+        )
+
+        store.dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
+        store.dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
 
         store.send(.currencySelection(.swapCurrencyType)) { state in
             state.textFieldState.text = "1".redacted
@@ -179,10 +179,10 @@ class TransactionAmountTextFieldTests: XCTestCase {
                     zecPrice: 1000.0
                 ),
             reducer: TransactionAmountTextFieldReducer()
-        ) { dependencies in
-            dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
-            dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
-        }
+        )
+
+        store.dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
+        store.dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
 
         let value = "1 000".redacted
         store.send(.textField(.set(value))) { state in
@@ -221,10 +221,10 @@ class TransactionAmountTextFieldTests: XCTestCase {
                     zecPrice: 1000.0
                 ),
             reducer: TransactionAmountTextFieldReducer()
-        ) { dependencies in
-            dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
-            dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
-        }
+        )
+
+        store.dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
+        store.dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
 
         store.send(.setMax) { state in
             state.textFieldState.text = "2".redacted
@@ -252,10 +252,10 @@ class TransactionAmountTextFieldTests: XCTestCase {
                     zecPrice: 1000.0
                 ),
             reducer: TransactionAmountTextFieldReducer()
-        ) { dependencies in
-            dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
-            dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
-        }
+        )
+
+        store.dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
+        store.dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
 
         store.send(.setMax) { state in
             state.textFieldState.text = "2,000".redacted

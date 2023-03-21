@@ -9,6 +9,7 @@ import XCTest
 @testable import secant_testnet
 import ComposableArchitecture
 import ZcashLightClientKit
+import Combine
 
 class BalanceBreakdownTests: XCTestCase {
     func testOnAppear() throws {
@@ -16,15 +17,18 @@ class BalanceBreakdownTests: XCTestCase {
             initialState: .placeholder,
             reducer: BalanceBreakdownReducer()
         )
-
-        store.dependencies.sdkSynchronizer = .noOp
+        
+        store.dependencies.sdkSynchronizer = .mocked()
+        store.dependencies.mainQueue = .immediate
+        store.dependencies.numberFormatter = .noOp
         
         store.send(.onAppear)
         
         // expected side effects as a result of .onAppear registration
-        store.receive(.synchronizerStateChanged(.unknown))
-        store.receive(.updateSynchronizerStatus)
-        store.receive(.updateLatestBlock)
+        store.receive(.synchronizerStateChanged(.zero))
+        store.receive(.updateLatestBlock) { state in
+            state.latestBlock = "nil"
+        }
 
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancels the observer of the synchronizer status change.
@@ -109,8 +113,8 @@ class BalanceBreakdownTests: XCTestCase {
                 shieldingFunds: false,
                 transparentBalance: Balance(
                     WalletBalance(
-                        verified: 1_000_000,
-                        total: 1_000_000
+                        verified: Zatoshi(1_000_000),
+                        total: Zatoshi(1_000_000)
                     )
                 )
             ),
@@ -131,8 +135,8 @@ class BalanceBreakdownTests: XCTestCase {
                 shieldingFunds: true,
                 transparentBalance: Balance(
                     WalletBalance(
-                        verified: 1_000_000,
-                        total: 1_000_000
+                        verified: Zatoshi(1_000_000),
+                        total: Zatoshi(1_000_000)
                     )
                 )
             ),

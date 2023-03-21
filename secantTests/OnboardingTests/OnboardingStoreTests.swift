@@ -19,34 +19,34 @@ class OnboardingStoreTests: XCTestCase {
             reducer: OnboardingFlowReducer()
         )
         
-        store.send(.next) {
-            $0.index += 1
+        store.send(.next) { state in
+            state.index += 1
             
-            XCTAssertFalse($0.isFinalStep)
-            XCTAssertFalse($0.isInitialStep)
-            XCTAssertEqual($0.currentStep, $0.steps[1])
-            XCTAssertEqual($0.offset, -20.0)
-            XCTAssertEqual($0.progress, 50)
+            XCTAssertFalse(state.isFinalStep)
+            XCTAssertFalse(state.isInitialStep)
+            XCTAssertEqual(state.currentStep, state.steps[1])
+            XCTAssertEqual(state.offset, -20.0)
+            XCTAssertEqual(state.progress, 50)
         }
                 
-        store.send(.next) {
-            $0.index += 1
+        store.send(.next) { state in
+            state.index += 1
             
-            XCTAssertFalse($0.isFinalStep)
-            XCTAssertFalse($0.isInitialStep)
-            XCTAssertEqual($0.currentStep, $0.steps[2])
-            XCTAssertEqual($0.offset, -40.0)
-            XCTAssertEqual($0.progress, 75)
+            XCTAssertFalse(state.isFinalStep)
+            XCTAssertFalse(state.isInitialStep)
+            XCTAssertEqual(state.currentStep, state.steps[2])
+            XCTAssertEqual(state.offset, -40.0)
+            XCTAssertEqual(state.progress, 75)
         }
         
-        store.send(.next) {
-            $0.index += 1
+        store.send(.next) { state in
+            state.index += 1
             
-            XCTAssertTrue($0.isFinalStep)
-            XCTAssertFalse($0.isInitialStep)
-            XCTAssertEqual($0.currentStep, $0.steps[3])
-            XCTAssertEqual($0.offset, -60.0)
-            XCTAssertEqual($0.progress, 100)
+            XCTAssertTrue(state.isFinalStep)
+            XCTAssertFalse(state.isInitialStep)
+            XCTAssertEqual(state.currentStep, state.steps[3])
+            XCTAssertEqual(state.offset, -60.0)
+            XCTAssertEqual(state.progress, 100)
         }
     }
     
@@ -74,24 +74,24 @@ class OnboardingStoreTests: XCTestCase {
             reducer: OnboardingFlowReducer()
         )
         
-        store.send(.back) {
-            $0.index -= 1
+        store.send(.back) { state in
+            state.index -= 1
             
-            XCTAssertFalse($0.isFinalStep)
-            XCTAssertFalse($0.isInitialStep)
-            XCTAssertEqual($0.currentStep, $0.steps[1])
-            XCTAssertEqual($0.offset, -20.0)
-            XCTAssertEqual($0.progress, 50)
+            XCTAssertFalse(state.isFinalStep)
+            XCTAssertFalse(state.isInitialStep)
+            XCTAssertEqual(state.currentStep, state.steps[1])
+            XCTAssertEqual(state.offset, -20.0)
+            XCTAssertEqual(state.progress, 50)
         }
                 
-        store.send(.back) {
-            $0.index -= 1
+        store.send(.back) { state in
+            state.index -= 1
             
-            XCTAssertFalse($0.isFinalStep)
-            XCTAssertTrue($0.isInitialStep)
-            XCTAssertEqual($0.currentStep, $0.steps[0])
-            XCTAssertEqual($0.offset, 0.0)
-            XCTAssertEqual($0.progress, 25)
+            XCTAssertFalse(state.isFinalStep)
+            XCTAssertTrue(state.isInitialStep)
+            XCTAssertEqual(state.currentStep, state.steps[0])
+            XCTAssertEqual(state.offset, 0.0)
+            XCTAssertEqual(state.progress, 25)
         }
     }
     
@@ -120,26 +120,26 @@ class OnboardingStoreTests: XCTestCase {
             reducer: OnboardingFlowReducer()
         )
         
-        store.send(.skip) {
-            $0.index = $0.steps.count - 1
-            $0.skippedAtindex = initialIndex
+        store.send(.skip) { state in
+            state.index = state.steps.count - 1
+            state.skippedAtindex = initialIndex
             
-            XCTAssertTrue($0.isFinalStep)
-            XCTAssertFalse($0.isInitialStep)
-            XCTAssertEqual($0.currentStep, $0.steps[3])
-            XCTAssertEqual($0.offset, -60.0)
-            XCTAssertEqual($0.progress, 100)
+            XCTAssertTrue(state.isFinalStep)
+            XCTAssertFalse(state.isInitialStep)
+            XCTAssertEqual(state.currentStep, state.steps[3])
+            XCTAssertEqual(state.offset, -60.0)
+            XCTAssertEqual(state.progress, 100)
         }
                 
-        store.send(.back) {
-            $0.skippedAtindex = nil
-            $0.index = initialIndex
+        store.send(.back) { state in
+            state.skippedAtindex = nil
+            state.index = initialIndex
             
-            XCTAssertFalse($0.isFinalStep)
-            XCTAssertFalse($0.isInitialStep)
-            XCTAssertEqual($0.currentStep, $0.steps[1])
-            XCTAssertEqual($0.offset, -20.0)
-            XCTAssertEqual($0.progress, 50)
+            XCTAssertFalse(state.isFinalStep)
+            XCTAssertFalse(state.isInitialStep)
+            XCTAssertEqual(state.currentStep, state.steps[1])
+            XCTAssertEqual(state.offset, -20.0)
+            XCTAssertEqual(state.progress, 50)
         }
     }
 }

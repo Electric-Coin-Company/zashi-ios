@@ -16,13 +16,13 @@ class RecoveryPhraseDisplayReducerTests: XCTestCase {
         let store = TestStore(
             initialState: RecoveryPhraseDisplayStore.test,
             reducer: RecoveryPhraseDisplayReducer()
-        ) {
-            $0.pasteboard = testPasteboard
-        }
+        )
 
-        store.send(.copyToBufferPressed) {
-            $0.phrase = .placeholder
-            $0.showCopyToBufferAlert = true
+        store.dependencies.pasteboard = testPasteboard
+
+        store.send(.copyToBufferPressed) { state in
+            state.phrase = .placeholder
+            state.showCopyToBufferAlert = true
         }
 
         XCTAssertEqual(
@@ -37,9 +37,9 @@ class RecoveryPhraseDisplayReducerTests: XCTestCase {
             reducer: RecoveryPhraseDisplayReducer()
         )
                 
-        store.send(.phraseResponse(.placeholder)) {
-            $0.phrase = .placeholder
-            $0.showCopyToBufferAlert = false
+        store.send(.phraseResponse(.placeholder)) { state in
+            state.phrase = .placeholder
+            state.showCopyToBufferAlert = false
         }
     }
 }

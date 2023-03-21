@@ -89,7 +89,11 @@ class DeeplinkTests: XCTestCase {
             resolveDeeplinkURL: { _, _ in Deeplink.Destination.home }
         )
         store.dependencies.sdkSynchronizer = SDKSynchronizerClient.mocked(
-            stateChangedStream: { CurrentValueSubject<SDKSynchronizerState, Never>(.synced) }
+            latestState: {
+                var state = SynchronizerState.zero
+                state.syncStatus = .synced
+                return state
+            }
         )
         store.dependencies.walletConfigProvider = .noOp
 
@@ -124,14 +128,18 @@ class DeeplinkTests: XCTestCase {
         let store = TestStore(
             initialState: appState,
             reducer: RootReducer()
-        ) { dependencies in
-            dependencies.deeplink = DeeplinkClient(
-                resolveDeeplinkURL: { _, _ in Deeplink.Destination.send(amount: 123_000_000, address: "address", memo: "some text") }
-            )
-            dependencies.sdkSynchronizer = SDKSynchronizerClient.mocked(
-                stateChangedStream: { CurrentValueSubject<SDKSynchronizerState, Never>(.synced) }
-            )
-        }
+        )
+        
+        store.dependencies.deeplink = DeeplinkClient(
+            resolveDeeplinkURL: { _, _ in Deeplink.Destination.send(amount: 123_000_000, address: "address", memo: "some text") }
+        )
+        store.dependencies.sdkSynchronizer = SDKSynchronizerClient.mocked(
+            latestState: {
+                var state = SynchronizerState.zero
+                state.syncStatus = .synced
+                return state
+            }
+        )
         
         guard let url = URL(string: "zcash:///home/send?address=address&memo=some%20text&amount=123000000") else {
             return XCTFail("Deeplink: 'testDeeplinkRequest_sendURL_amount' URL is expected to be valid.")

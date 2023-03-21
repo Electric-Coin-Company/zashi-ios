@@ -12,13 +12,13 @@ import ZcashLightClientKit
 
 extension SDKSynchronizerClient: TestDependencyKey {
     static let testValue = Self(
-        stateChangedStream: XCTUnimplemented("\(Self.self).stateChangedStream", placeholder: CurrentValueSubject(SDKSynchronizerState.unknown)),
-        latestScannedSynchronizerState: XCTUnimplemented("\(Self.self).latestScannedSynchronizerState", placeholder: .zero),
+        stateStream: XCTUnimplemented("\(Self.self).stateStream", placeholder: Empty().eraseToAnyPublisher()),
+        eventStream: XCTUnimplemented("\(Self.self).eventStream", placeholder: Empty().eraseToAnyPublisher()),
+        latestState: XCTUnimplemented("\(Self.self).latestState", placeholder: .zero),
         latestScannedHeight: XCTUnimplemented("\(Self.self).latestScannedHeight", placeholder: 0),
         prepareWith: XCTUnimplemented("\(Self.self).prepareWith"),
         start: XCTUnimplemented("\(Self.self).start"),
         stop: XCTUnimplemented("\(Self.self).stop"),
-        statusSnapshot: XCTUnimplemented("\(Self.self).statusSnapshot", placeholder: SyncStatusSnapshot.snapshotFor(state: .unprepared)),
         isSyncing: XCTUnimplemented("\(Self.self).isSyncing", placeholder: false),
         isInitialized: XCTUnimplemented("\(Self.self).isInitialized", placeholder: false),
         rewind: XCTUnimplemented("\(Self.self).rewind", placeholder: Fail(error: "Error").eraseToAnyPublisher()),
@@ -40,13 +40,13 @@ extension SDKSynchronizerClient: TestDependencyKey {
 
 extension SDKSynchronizerClient {
     static let noOp = Self(
-        stateChangedStream: { CurrentValueSubject<SDKSynchronizerState, Never>(.unknown) },
-        latestScannedSynchronizerState: { nil },
+        stateStream: { Empty().eraseToAnyPublisher() },
+        eventStream: { Empty().eraseToAnyPublisher() },
+        latestState: { .zero },
         latestScannedHeight: { 0 },
         prepareWith: { _, _, _ in },
         start: { _ in },
         stop: { },
-        statusSnapshot: { SyncStatusSnapshot.snapshotFor(state: .unprepared) },
         isSyncing: { false },
         isInitialized: { false },
         rewind: { _ in return Empty<Void, Error>().eraseToAnyPublisher() },
@@ -70,15 +70,13 @@ extension SDKSynchronizerClient {
 
 extension SDKSynchronizerClient {
     static func mocked(
-        stateChangedStream: @escaping () -> CurrentValueSubject<SDKSynchronizerState, Never> = {
-            CurrentValueSubject<SDKSynchronizerState, Never>(.synced)
-        },
-        latestScannedSynchronizerState: @escaping () -> SDKSynchronizer.SynchronizerState? = { nil },
+        stateStream: @escaping () -> AnyPublisher<SynchronizerState, Never> = { Just(.zero).eraseToAnyPublisher() },
+        eventStream: @escaping () -> AnyPublisher<SynchronizerEvent, Never> = { Empty().eraseToAnyPublisher() },
+        latestState: @escaping () -> SynchronizerState = { .zero },
         latestScannedHeight: @escaping () -> BlockHeight = { 0 },
         prepareWith: @escaping ([UInt8], UnifiedFullViewingKey, BlockHeight) throws -> Void = { _, _, _ in },
         start: @escaping (_ retry: Bool) throws -> Void = { _ in },
         stop: @escaping () -> Void = { },
-        statusSnapshot: @escaping () -> SyncStatusSnapshot = { SyncStatusSnapshot.snapshotFor(state: .unprepared) },
         isSyncing: @escaping () -> Bool = { false },
         isInitialized: @escaping () -> Bool = { false },
         rewind: @escaping (RewindPolicy) -> AnyPublisher<Void, Error> = { _ in return Empty<Void, Error>().eraseToAnyPublisher() },
@@ -298,13 +296,13 @@ extension SDKSynchronizerClient {
         wipe: @escaping () -> AnyPublisher<Void, Error>? = { Fail(error: "Error").eraseToAnyPublisher() }
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
-            stateChangedStream: stateChangedStream,
-            latestScannedSynchronizerState: latestScannedSynchronizerState,
+            stateStream: stateStream,
+            eventStream: eventStream,
+            latestState: latestState,
             latestScannedHeight: latestScannedHeight,
             prepareWith: prepareWith,
             start: start,
             stop: stop,
-            statusSnapshot: statusSnapshot,
             isSyncing: isSyncing,
             isInitialized: isInitialized,
             rewind: rewind,

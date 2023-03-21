@@ -33,7 +33,7 @@ struct WalletEventsFlowReducer: ReducerProtocol {
         case openBlockExplorer(URL?)
         case updateDestination(WalletEventsFlowReducer.State.Destination?)
         case replyTo(RedactableString)
-        case synchronizerStateChanged(SDKSynchronizerState)
+        case synchronizerStateChanged(SyncStatus)
         case updateWalletEvents([WalletEvent])
         case warnBeforeLeavingApp(URL?)
     }
@@ -48,8 +48,9 @@ struct WalletEventsFlowReducer: ReducerProtocol {
         switch action {
         case .onAppear:
             state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
-            return sdkSynchronizer.stateChangedStream()
-                .map(WalletEventsFlowReducer.Action.synchronizerStateChanged)
+            return sdkSynchronizer.stateStream()
+                .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                .map { WalletEventsFlowReducer.Action.synchronizerStateChanged($0.syncStatus) }
                 .eraseToEffect()
                 .cancellable(id: CancelId.self, cancelInFlight: true)
 

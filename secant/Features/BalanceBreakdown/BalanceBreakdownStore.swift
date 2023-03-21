@@ -44,12 +44,12 @@ struct BalanceBreakdownReducer: ReducerProtocol {
         case shieldFunds
         case shieldFundsSuccess
         case shieldFundsFailure(String)
-        case synchronizerStateChanged(SDKSynchronizerState)
+        case synchronizerStateChanged(SynchronizerState)
         case updateLatestBlock
-        case updateSynchronizerStatus
     }
 
     @Dependency(\.derivationTool) var derivationTool
+    @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.numberFormatter) var numberFormatter
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
@@ -68,7 +68,8 @@ struct BalanceBreakdownReducer: ReducerProtocol {
                 return .none
 
             case .onAppear:
-                return sdkSynchronizer.stateChangedStream()
+                return sdkSynchronizer.stateStream()
+                    .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
                     .map(BalanceBreakdownReducer.Action.synchronizerStateChanged)
                     .eraseToEffect()
                     .cancellable(id: CancelId.self, cancelInFlight: true)
@@ -110,30 +111,15 @@ struct BalanceBreakdownReducer: ReducerProtocol {
                 )
                 return .none
 
-            case .synchronizerStateChanged(.synced):
-                return EffectTask(value: .updateSynchronizerStatus)
-
-            case .synchronizerStateChanged:
-                return EffectTask(value: .updateSynchronizerStatus)
-
-            case .updateSynchronizerStatus:
-                if let shieldedBalance = sdkSynchronizer.latestScannedSynchronizerState()?.shieldedBalance {
-                    state.shieldedBalance = shieldedBalance.redacted
-                }
-                if let transparentBalance = sdkSynchronizer.latestScannedSynchronizerState()?.transparentBalance {
-                    state.transparentBalance = transparentBalance.redacted
-                }
+            case .synchronizerStateChanged(let latestState):
+                state.shieldedBalance = latestState.shieldedBalance.redacted
+                state.transparentBalance = latestState.transparentBalance.redacted
                 return EffectTask(value: .updateLatestBlock)
 
             case .updateLatestBlock:
-                guard
-                    let latestBlockNumber = sdkSynchronizer.latestScannedSynchronizerState()?.latestScannedHeight,
-                    let latestBlock = numberFormatter.string(NSDecimalNumber(value: latestBlockNumber))
-                else {
-                    state.latestBlock = L10n.General.unknown
-                    return .none
-                }
-                state.latestBlock = "\(latestBlock)"
+                let latestBlockNumber = sdkSynchronizer.latestScannedHeight()
+                let latestBlock = numberFormatter.string(NSDecimalNumber(value: latestBlockNumber))
+                state.latestBlock = "\(String(describing: latestBlock))"
                 return .none
             }
         }

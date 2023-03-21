@@ -21,9 +21,9 @@ class AddressDetailsTests: XCTestCase {
         let store = TestStore(
             initialState: AddressDetailsReducer.State(uAddress: uAddress),
             reducer: AddressDetailsReducer()
-        ) {
-            $0.pasteboard = testPasteboard
-        }
+        )
+
+        store.dependencies.pasteboard = testPasteboard
 
         store.send(.copySaplingAddressToPastboard)
         
@@ -43,9 +43,9 @@ class AddressDetailsTests: XCTestCase {
         let store = TestStore(
             initialState: AddressDetailsReducer.State(uAddress: uAddress),
             reducer: AddressDetailsReducer()
-        ) {
-            $0.pasteboard = testPasteboard
-        }
+        )
+        
+        store.dependencies.pasteboard = testPasteboard
 
         store.send(.copyTransparentAddressToPastboard)
         
@@ -65,9 +65,9 @@ class AddressDetailsTests: XCTestCase {
         let store = TestStore(
             initialState: AddressDetailsReducer.State(uAddress: uAddress),
             reducer: AddressDetailsReducer()
-        ) {
-            $0.pasteboard = testPasteboard
-        }
+        )
+        
+        store.dependencies.pasteboard = testPasteboard
 
         store.send(.copyUnifiedAddressToPastboard)
         

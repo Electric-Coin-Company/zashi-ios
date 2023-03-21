@@ -12,7 +12,7 @@ import ZcashLightClientKit
 
 class WalletEventsTests: XCTestCase {
     static let testScheduler = DispatchQueue.test
-    
+
     func testSynchronizerSubscription() throws {
         let store = TestStore(
             initialState: WalletEventsFlowReducer.State(
@@ -23,13 +23,14 @@ class WalletEventsTests: XCTestCase {
             reducer: WalletEventsFlowReducer()
         )
 
-        store.dependencies.sdkSynchronizer = .noOp
-        
+        store.dependencies.sdkSynchronizer = .mocked()
+        store.dependencies.mainQueue = .immediate
+
         store.send(.onAppear) { state in
             state.requiredTransactionConfirmations = 10
         }
 
-        store.receive(.synchronizerStateChanged(.unknown))
+        store.receive(.synchronizerStateChanged(.unprepared))
 
         // ending the subscription
         store.send(.onDisappear)
@@ -70,7 +71,7 @@ class WalletEventsTests: XCTestCase {
         }
 
         let identifiedWalletEvents = IdentifiedArrayOf(uniqueElements: walletEvents)
-        
+
         let store = TestStore(
             initialState: WalletEventsFlowReducer.State(
                 destination: .latest,
@@ -78,15 +79,15 @@ class WalletEventsTests: XCTestCase {
                 walletEvents: identifiedWalletEvents
             ),
             reducer: WalletEventsFlowReducer()
-        ) { dependencies in
-            dependencies.mainQueue = Self.testScheduler.eraseToAnyScheduler()
-            dependencies.sdkSynchronizer = SDKSynchronizerClient.mocked(statusSnapshot: { .default })
-        }
-        
+        )
+
+        store.dependencies.mainQueue = Self.testScheduler.eraseToAnyScheduler()
+        store.dependencies.sdkSynchronizer = .mocked()
+
         store.send(.synchronizerStateChanged(.synced)) { state in
             state.latestMinedHeight = 0
         }
-        
+
         Self.testScheduler.advance(by: 0.01)
 
         store.receive(.updateWalletEvents(walletEvents)) { state in
@@ -100,14 +101,14 @@ class WalletEventsTests: XCTestCase {
                         return lhsTimestamp > rhsTimestamp
                     })
             )
-            
+
             state.walletEvents = receivedWalletEvents
         }
     }
-    
+
     func testCopyToPasteboard() throws {
         let testPasteboard = PasteboardClient.testPasteboard
-        
+
         let store = TestStore(
             initialState: WalletEventsFlowReducer.State(
                 destination: .latest,
@@ -115,13 +116,13 @@ class WalletEventsTests: XCTestCase {
                 walletEvents: []
             ),
             reducer: WalletEventsFlowReducer()
-        ) {
-            $0.pasteboard = testPasteboard
-        }
+        )
+            
+        store.dependencies.pasteboard = testPasteboard
 
         let testText = "test text".redacted
         store.send(.copyToPastboard(testText))
-        
+
         XCTAssertEqual(
             testPasteboard.getString()?.data,
             testText.data,

@@ -10,12 +10,10 @@ import ZcashLightClientKit
 
 struct SyncStatusSnapshot: Equatable {
     let message: String
-    let progress: Float
     let syncStatus: SyncStatus
     
-    init(_ syncStatus: SyncStatus = .unprepared, _ message: String = "", _ progress: Float = 0) {
+    init(_ syncStatus: SyncStatus = .unprepared, _ message: String = "") {
         self.message = message
-        self.progress = progress
         self.syncStatus = syncStatus
     }
     
