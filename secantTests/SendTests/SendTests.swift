@@ -223,7 +223,7 @@ class SendTests: XCTestCase {
         )
 
         store.dependencies.derivationTool = .noOp
-        store.dependencies.derivationTool.isValidZcashAddress = { _ in false }
+        store.dependencies.derivationTool.isZcashAddress = { _ in false }
 
         let address = "3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr".redacted
         store.send(.transactionAddressInput(.textField(.set(address)))) { state in
@@ -246,7 +246,7 @@ class SendTests: XCTestCase {
         )
         
         store.dependencies.derivationTool = .noOp
-        store.dependencies.derivationTool.isValidZcashAddress = { _ in true }
+        store.dependencies.derivationTool.isZcashAddress = { _ in true }
 
         let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
         store.send(.transactionAddressInput(.textField(.set(address)))) { state in
@@ -425,7 +425,7 @@ class SendTests: XCTestCase {
         )
 
         store.dependencies.derivationTool = .noOp
-        store.dependencies.derivationTool.isValidZcashAddress = { _ in true }
+        store.dependencies.derivationTool.isZcashAddress = { _ in true }
 
         let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
         store.send(.transactionAddressInput(.textField(.set(address)))) { state in
@@ -465,7 +465,7 @@ class SendTests: XCTestCase {
         )
 
         store.dependencies.derivationTool = .noOp
-        store.dependencies.derivationTool.isValidZcashAddress = { _ in true }
+        store.dependencies.derivationTool.isZcashAddress = { _ in true }
 
         let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
         store.send(.transactionAddressInput(.textField(.set(address)))) { state in
@@ -544,7 +544,8 @@ class SendTests: XCTestCase {
         )
 
         store.dependencies.derivationTool = .noOp
-        store.dependencies.derivationTool.isValidZcashAddress = { _ in true }
+        store.dependencies.derivationTool.isZcashAddress = { _ in true }
+        store.dependencies.derivationTool.isTransparentAddress = { _ in true }
 
         let address = "tmGh6ttAnQRJra81moqYcedFadW9XtUT5Eq".redacted
         store.send(.transactionAddressInput(.textField(.set(address)))) { state in

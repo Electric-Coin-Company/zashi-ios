@@ -224,15 +224,7 @@ struct SendFlowReducer: ReducerProtocol {
                 // The is valid Zcash address check is already covered in the scan feature
                 // so we can be sure it's valid and thus `true` value here.
                 state.transactionAddressInputState.isValidAddress = true
-                do {
-                    if case .transparent = try Recipient(address.data, network: zcashSDKEnvironment.network.networkType) {
-                        state.transactionAddressInputState.isValidTransparentAddress = true
-                    } else {
-                        state.transactionAddressInputState.isValidTransparentAddress = false
-                    }
-                } catch {
-                    state.transactionAddressInputState.isValidTransparentAddress = false
-                }
+                state.transactionAddressInputState.isValidTransparentAddress = derivationTool.isTransparentAddress(address.data)
                 audioServices.systemSoundVibrate()
                 return EffectTask(value: .updateDestination(nil))
 

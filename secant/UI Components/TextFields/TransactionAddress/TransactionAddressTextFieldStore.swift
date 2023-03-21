@@ -38,22 +38,8 @@ struct TransactionAddressTextFieldReducer: ReducerProtocol {
                 return .none
 
             case .textField(.set(let address)):
-                do {
-                    state.isValidAddress = try derivationTool.isValidZcashAddress(address.data)
-                } catch {
-                    state.isValidAddress = false
-                }
-                do {
-                    if case .transparent = try Recipient(address.data, network: zcashSDKEnvironment.network.networkType) {
-                        state.isValidTransparentAddress = true
-                    } else {
-                        state.isValidTransparentAddress = false
-                    }
-                    state.isValidTransparentAddress = true
-                } catch {
-                    state.isValidTransparentAddress = false
-                }
-
+                state.isValidAddress = derivationTool.isZcashAddress(address.data)
+                state.isValidTransparentAddress = derivationTool.isTransparentAddress(address.data)
                 return .none
             }
         }

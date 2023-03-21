@@ -16,6 +16,6 @@ extension DependencyValues {
 }
 
 struct URIParserClient {
-    var isValidURI: (String) throws -> Bool
+    var isValidURI: (String) -> Bool
 }
         

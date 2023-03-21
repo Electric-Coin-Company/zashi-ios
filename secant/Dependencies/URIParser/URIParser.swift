@@ -16,7 +16,7 @@ struct URIParser {
         self.derivationTool = derivationTool
     }
 
-    func isValidURI(_ uri: String) throws -> Bool {
-        try derivationTool.isValidZcashAddress(uri)
+    func isValidURI(_ uri: String) -> Bool {
+        derivationTool.isZcashAddress(uri)
     }
 }
