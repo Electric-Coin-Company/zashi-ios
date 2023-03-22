@@ -92,13 +92,13 @@ class SettingsTests: XCTestCase {
             reducer: SettingsReducer()
         )
         
-        store.dependencies.logsHandler = LogsHandlerClient(exportAndStoreLogs: { _, _, _ in })
+        store.dependencies.logsHandler = LogsHandlerClient(exportAndStoreLogs: { nil })
         
         await store.send(.exportLogs(.start)) { state in
             state.exportLogsState.exportLogsDisabled = true
         }
         
-        await store.receive(.exportLogs(.finished)) { state in
+        await store.receive(.exportLogs(.finished(nil))) { state in
             state.exportLogsState.exportLogsDisabled = false
             state.exportLogsState.isSharingLogs = true
         }

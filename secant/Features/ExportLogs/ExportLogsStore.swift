@@ -18,30 +18,14 @@ struct ExportLogsReducer: ReducerProtocol {
         @BindingState var alert: AlertState<ExportLogsReducer.Action>?
         var exportLogsDisabled = false
         var isSharingLogs = false
-        var tempSDKDir: URL {
-            let tempDir = FileManager.default.temporaryDirectory
-            let sdkFileName = "sdkLogs.txt"
-            return tempDir.appendingPathComponent(sdkFileName)
-        }
-
-        var tempTCADir: URL {
-            let tempDir = FileManager.default.temporaryDirectory
-            let sdkFileName = "tcaLogs.txt"
-            return tempDir.appendingPathComponent(sdkFileName)
-        }
-
-        var tempWalletDir: URL {
-            let tempDir = FileManager.default.temporaryDirectory
-            let sdkFileName = "walletLogs.txt"
-            return tempDir.appendingPathComponent(sdkFileName)
-        }
+        var zippedLogsURLs: [URL] = []
     }
 
     indirect enum Action: Equatable, BindableAction {
         case binding(BindingAction<ExportLogsReducer.State>)
         case dismissAlert
         case start
-        case finished
+        case finished(URL?)
         case failed(String)
         case shareFinished
     }
@@ -64,16 +48,19 @@ struct ExportLogsReducer: ReducerProtocol {
 
             case .start:
                 state.exportLogsDisabled = true
-                return .run { [state] send in
+                return .run { send in
                     do {
-                        try await logsHandler.exportAndStoreLogs(state.tempSDKDir, state.tempTCADir, state.tempWalletDir)
-                        await send(.finished)
+                        let zippedLogsURL = try await logsHandler.exportAndStoreLogs()
+                        await send(.finished(zippedLogsURL))
                     } catch {
                         await send(.failed(error.localizedDescription))
                     }
                 }
 
-            case .finished:
+            case .finished(let zippedLogsURL):
+                if let zippedLogsURL {
+                    state.zippedLogsURLs = [zippedLogsURL]
+                }
                 state.exportLogsDisabled = false
                 state.isSharingLogs = true
                 return .none

@@ -114,11 +114,7 @@ private extension RootView {
     @ViewBuilder func shareLogsView(_ viewStore: RootViewStore) -> some View {
         if viewStore.exportLogsState.isSharingLogs {
             UIShareDialogView(
-                activityItems: [
-                    viewStore.exportLogsState.tempSDKDir,
-                    viewStore.exportLogsState.tempWalletDir,
-                    viewStore.exportLogsState.tempTCADir
-                ]
+                activityItems: viewStore.exportLogsState.zippedLogsURLs
             ) {
                 viewStore.send(.exportLogs(.shareFinished))
             }
