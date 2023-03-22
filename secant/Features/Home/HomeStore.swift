@@ -70,6 +70,7 @@ struct HomeReducer: ReducerProtocol {
         case profile(ProfileReducer.Action)
         case send(SendFlowReducer.Action)
         case settings(SettingsReducer.Action)
+        case syncFailed(String)
         case synchronizerStateChanged(SynchronizerState)
         case walletEvents(WalletEventsFlowReducer.Action)
         case updateDestination(HomeReducer.State.Destination?)
@@ -173,17 +174,13 @@ struct HomeReducer: ReducerProtocol {
                 return .none
 
             case .retrySync:
-                do {
-                    try sdkSynchronizer.start(true)
-                } catch {
-                    state.alert = AlertState<HomeReducer.Action>(
-                        title: TextState(L10n.Home.SyncFailed.title),
-                        message: TextState(error.localizedDescription),
-                        primaryButton: .default(TextState(L10n.Home.SyncFailed.retry), action: .send(.retrySync)),
-                        secondaryButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-                    )
+                return .run { send in
+                    do {
+                        try await sdkSynchronizer.start(true)
+                    } catch {
+                        await send(.syncFailed(error.localizedDescription))
+                    }
                 }
-                return .none
 
             case .showSynchronizerErrorAlert(let snapshot):
                 state.alert = HomeStore.syncErrorAlert(with: snapshot)
@@ -201,6 +198,15 @@ struct HomeReducer: ReducerProtocol {
 
             case .dismissAlert:
                 state.alert = nil
+                return .none
+                
+            case .syncFailed(let errorMessage):
+                state.alert = AlertState<HomeReducer.Action>(
+                    title: TextState(L10n.Home.SyncFailed.title),
+                    message: TextState(errorMessage),
+                    primaryButton: .default(TextState(L10n.Home.SyncFailed.retry), action: .send(.retrySync)),
+                    secondaryButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
+                )
                 return .none
             }
         }

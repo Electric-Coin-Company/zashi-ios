@@ -39,14 +39,14 @@ extension SDKSynchronizerClient: DependencyKey {
             latestState: { synchronizer.latestState },
             latestScannedHeight: { synchronizer.latestScannedHeight },
             prepareWith: { seedBytes, viewingKey, walletBirtday in
-                let result = try synchronizer.prepare(with: seedBytes, viewingKeys: [viewingKey], walletBirthday: walletBirtday)
+                let result = try await synchronizer.prepare(with: seedBytes, viewingKeys: [viewingKey], walletBirthday: walletBirtday)
 
                 if result != .success {
                     throw SynchronizerError.initFailed(message: "")
                 }
             },
-            start: { retry in try synchronizer.start(retry: retry) },
-            stop: { synchronizer.stop() },
+            start: { retry in try await synchronizer.start(retry: retry) },
+            stop: { await synchronizer.stop() },
             isSyncing: { synchronizer.latestState.syncStatus.isSyncing },
             isInitialized: { synchronizer.latestState.syncStatus != .unprepared },
             rewind: { synchronizer.rewind($0) },

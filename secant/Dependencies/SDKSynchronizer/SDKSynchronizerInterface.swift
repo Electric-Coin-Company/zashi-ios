@@ -23,9 +23,9 @@ struct SDKSynchronizerClient {
     let latestState: () -> SynchronizerState
     let latestScannedHeight: () -> BlockHeight
 
-    let prepareWith: ([UInt8], UnifiedFullViewingKey, BlockHeight) throws -> Void
-    let start: (_ retry: Bool) throws -> Void
-    let stop: () -> Void
+    let prepareWith: ([UInt8], UnifiedFullViewingKey, BlockHeight) async throws -> Void
+    let start: (_ retry: Bool) async throws -> Void
+    let stop: () async -> Void
     let isSyncing: () -> Bool
     let isInitialized: () -> Bool
 
