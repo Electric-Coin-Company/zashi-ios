@@ -19,6 +19,7 @@ extension RootReducer {
     
     indirect enum DebugAction: Equatable {
         case cancelRescan
+        case cantStartSync(String)
         case flagUpdated
         case fullRescan
         case quickRescan
@@ -70,15 +71,12 @@ extension RootReducer {
                         dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
                     )
                 } else {
-                    do {
-                        try sdkSynchronizer.start(false)
-                    } catch {
-                        // TODO: [#221] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
-                        state.alert = AlertState(
-                            title: TextState(L10n.Root.Debug.Alert.Rewind.CantStartSync.title),
-                            message: TextState(L10n.Root.Debug.Alert.Rewind.CantStartSync.message(error.localizedDescription)),
-                            dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-                        )
+                    return .run { send in
+                        do {
+                            try await sdkSynchronizer.start(false)
+                        } catch {
+                            await send(.debug(.cantStartSync(error.localizedDescription)))
+                        }
                     }
                 }
 
@@ -101,6 +99,15 @@ extension RootReducer {
             case let .debug(.walletConfigLoaded(walletConfig)):
                 return EffectTask(value: .updateStateAfterConfigUpdate(walletConfig))
 
+            case .debug(.cantStartSync(let errorMessage)):
+                // TODO: [#221] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
+                state.alert = AlertState(
+                    title: TextState(L10n.Root.Debug.Alert.Rewind.CantStartSync.title),
+                    message: TextState(L10n.Root.Debug.Alert.Rewind.CantStartSync.message(errorMessage)),
+                    dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
+                )
+                return .none
+                
             default: return .none
             }
         }

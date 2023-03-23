@@ -141,20 +141,22 @@ class RootTests: XCTestCase {
             state.appInitializationState = .filesMissing
         }
 
-        store.receive(.initialization(.initializeSDK)) { state in
+        store.receive(.initialization(.initializeSDK))
+        
+        store.receive(.initialization(.checkBackupPhraseValidation)) { state in
             // failed is expected because environment is throwing errors
             state.appInitializationState = .failed
             state.alert = AlertState(
-                title: TextState("Failed to initialize the SDK"),
-                message: TextState("Error: \(walletStorageError.localizedDescription)"),
+                title: TextState("Wallet initialisation failed."),
+                message: TextState("Can't load seed phrase from local storage."),
                 dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
             )
         }
-
-        store.receive(.initialization(.checkBackupPhraseValidation)) { state in
+        
+        store.receive(.initialization(.initializationFailed(walletStorageError.localizedDescription))) { state in
             state.alert = AlertState(
-                title: TextState("Wallet initialisation failed."),
-                message: TextState("Can't load seed phrase from local storage."),
+                title: TextState("Failed to initialize the SDK"),
+                message: TextState("Error: \(walletStorageError.localizedDescription)"),
                 dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
             )
         }
@@ -172,20 +174,22 @@ class RootTests: XCTestCase {
 
         store.send(.initialization(.respondToWalletInitializationState(.initialized)))
 
-        store.receive(.initialization(.initializeSDK)) { state in
+        store.receive(.initialization(.initializeSDK))
+
+        store.receive(.initialization(.checkBackupPhraseValidation)) { state in
             // failed is expected because environment is throwing errors
             state.appInitializationState = .failed
             state.alert = AlertState(
-                title: TextState("Failed to initialize the SDK"),
-                message: TextState("Error: \(walletStorageError.localizedDescription)"),
+                title: TextState("Wallet initialisation failed."),
+                message: TextState("Can't load seed phrase from local storage."),
                 dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
             )
         }
-
-        store.receive(.initialization(.checkBackupPhraseValidation)) { state in
+        
+        store.receive(.initialization(.initializationFailed(walletStorageError.localizedDescription))) { state in
             state.alert = AlertState(
-                title: TextState("Wallet initialisation failed."),
-                message: TextState("Can't load seed phrase from local storage."),
+                title: TextState("Failed to initialize the SDK"),
+                message: TextState("Error: \(walletStorageError.localizedDescription)"),
                 dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
             )
         }

@@ -84,7 +84,6 @@ class ScanTests: XCTestCase {
         store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
         store.dependencies.uriParser.isValidURI = { _ in true }
 
-
         let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
         store.send(.scan(address)) { state in
             state.scanStatus = .value(address)

@@ -20,6 +20,7 @@ extension RootReducer {
         case checkWalletConfig
         case initializeSDK
         case initialSetups
+        case initializationFailed(String)
         case nukeWallet
         case nukeWalletRequest
         case respondToWalletInitializationState(InitializationState)
@@ -137,18 +138,16 @@ extension RootReducer {
                     let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0)
                     let viewingKey = try spendingKey.deriveFullViewingKey()
                     
-                    try sdkSynchronizer.prepareWith(seedBytes, viewingKey, birthday)
-                    try sdkSynchronizer.start(false)
-                    return .none
+                    return .run { send in
+                        do {
+                            try await sdkSynchronizer.prepareWith(seedBytes, viewingKey, birthday)
+                            try await sdkSynchronizer.start(false)
+                        } catch {
+                            await send(.initialization(.initializationFailed(error.localizedDescription)))
+                        }
+                    }
                 } catch {
-                    state.appInitializationState = .failed
-                    // TODO: [#221] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
-                    state.alert = AlertState(
-                        title: TextState(L10n.Root.Initialization.Alert.SdkInitFailed.title),
-                        message: TextState(L10n.Root.Initialization.Alert.Error.message(error.localizedDescription)),
-                        dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-                    )
-                    return .none
+                    return EffectTask(value: .initialization(.initializationFailed(error.localizedDescription)))
                 }
 
             case .initialization(.checkBackupPhraseValidation):
@@ -310,6 +309,16 @@ extension RootReducer {
                 state.homeState.walletConfig = walletConfig
                 return .none
 
+            case .initialization(.initializationFailed(let errorMessage)):
+                state.appInitializationState = .failed
+                // TODO: [#221] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
+                state.alert = AlertState(
+                    title: TextState(L10n.Root.Initialization.Alert.SdkInitFailed.title),
+                    message: TextState(L10n.Root.Initialization.Alert.Error.message(errorMessage)),
+                    dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
+                )
+                return .none
+                
             case .dismissAlert:
                 state.alert = nil
                 return .none

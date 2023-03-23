@@ -635,8 +635,6 @@ class SendTests: XCTestCase {
             state.memoState.charLimit = 512
         }
 
-        //store.receive(.synchronizerStateChanged(.unknown))
-
         // .onAppear action starts long living cancelable action .synchronizerStateChanged
         // .onDisappear cancels it, must have for the test to pass
         store.send(.onDisappear)
