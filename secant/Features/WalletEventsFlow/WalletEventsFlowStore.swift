@@ -17,7 +17,6 @@ struct WalletEventsFlowReducer: ReducerProtocol {
 
         var destination: Destination?
 
-        @BindingState var alert: AlertState<WalletEventsFlowReducer.Action>?
         var latestMinedHeight: BlockHeight?
         var isScrollable = true
         var requiredTransactionConfirmations = 0
@@ -26,8 +25,8 @@ struct WalletEventsFlowReducer: ReducerProtocol {
     }
 
     enum Action: Equatable {
+        case alert(AlertRequest)
         case copyToPastboard(RedactableString)
-        case dismissAlert
         case onAppear
         case onDisappear
         case openBlockExplorer(URL?)
@@ -97,27 +96,13 @@ struct WalletEventsFlowReducer: ReducerProtocol {
         case .replyTo:
             return .none
 
-        case .dismissAlert:
-            state.alert = nil
+        case .alert:
             return .none
 
         case .warnBeforeLeavingApp(let blockExplorerURL):
-            state.alert = AlertState(
-                title: TextState(L10n.WalletEvent.Alert.LeavingApp.title),
-                message: TextState(L10n.WalletEvent.Alert.LeavingApp.message),
-                primaryButton: .cancel(
-                    TextState(L10n.WalletEvent.Alert.LeavingApp.Button.nevermind),
-                    action: .send(.dismissAlert)
-                ),
-                secondaryButton: .default(
-                    TextState(L10n.WalletEvent.Alert.LeavingApp.Button.seeOnline),
-                    action: .send(.openBlockExplorer(blockExplorerURL))
-                )
-            )
-            return .none
+            return EffectTask(value: .alert(.walletEvents(.warnBeforeLeavingApp(blockExplorerURL))))
 
         case .openBlockExplorer(let blockExplorerURL):
-            state.alert = nil
             if let url = blockExplorerURL {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }

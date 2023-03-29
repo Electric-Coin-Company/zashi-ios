@@ -16,7 +16,6 @@ struct BalanceBreakdownReducer: ReducerProtocol {
     private enum CancelId {}
     
     struct State: Equatable {
-        @BindingState var alert: AlertState<BalanceBreakdownReducer.Action>?
         var autoShieldingThreshold: Zatoshi
         var latestBlock: String
         var shieldedBalance: Balance
@@ -36,9 +35,8 @@ struct BalanceBreakdownReducer: ReducerProtocol {
         }
     }
 
-    enum Action: Equatable, BindableAction {
-        case binding(BindingAction<BalanceBreakdownReducer.State>)
-        case dismissAlert
+    enum Action: Equatable {
+        case alert(AlertRequest)
         case onAppear
         case onDisappear
         case shieldFunds
@@ -56,15 +54,9 @@ struct BalanceBreakdownReducer: ReducerProtocol {
     @Dependency(\.walletStorage) var walletStorage
 
     var body: some ReducerProtocol<State, Action> {
-        BindingReducer()
-
         Reduce { state, action in
             switch action {
-            case .binding:
-                return .none
-
-            case .dismissAlert:
-                state.alert = nil
+            case .alert:
                 return .none
 
             case .onAppear:
@@ -95,21 +87,11 @@ struct BalanceBreakdownReducer: ReducerProtocol {
 
             case .shieldFundsSuccess:
                 state.shieldingFunds = false
-                state.alert = AlertState(
-                    title: TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Success.title),
-                    message: TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Success.message),
-                    dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-                )
-                return .none
+                return EffectTask(value: .alert(.balanceBreakdown(.shieldFundsSuccess)))
 
             case let .shieldFundsFailure(errorDescription):
                 state.shieldingFunds = false
-                state.alert = AlertState(
-                    title: TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Failure.title),
-                    message: TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Failure.message(errorDescription)),
-                    dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-                )
-                return .none
+                return EffectTask(value: .alert(.balanceBreakdown(.shieldFundsFailure(errorDescription))))
 
             case .synchronizerStateChanged(let latestState):
                 state.shieldedBalance = latestState.shieldedBalance.redacted

@@ -39,7 +39,6 @@ struct ImportWalletView: View {
             .applyScreenBackground()
             .scrollableWhenScaledUp()
             .onAppear(perform: { viewStore.send(.onAppear) })
-            .alert(self.store.scope(state: \.alert), dismiss: .dismissAlert)
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForDestination(.birthday),
                 destination: { ImportBirthdayView(store: store) }

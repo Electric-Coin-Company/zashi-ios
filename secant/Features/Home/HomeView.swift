@@ -29,7 +29,6 @@ struct HomeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .onAppear(perform: { viewStore.send(.onAppear) })
             .onDisappear(perform: { viewStore.send(.onDisappear) })
-            .alert(self.store.scope(state: \.alert), dismiss: .dismissAlert)
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForDestination(.balanceBreakdown),
                 destination: { BalanceBreakdownView(store: store.balanceBreakdownStore()) }

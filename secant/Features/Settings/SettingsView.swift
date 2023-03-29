@@ -71,14 +71,6 @@ struct SettingsView: View {
                 }
             )
             .onAppear { viewStore.send(.onAppear) }
-            .alert(self.store.scope(state: \.alert), dismiss: .dismissAlert)
-            .alert(
-                self.store.scope(
-                    state: \.exportLogsState.alert,
-                    action: { (_: ExportLogsReducer.Action) in return .exportLogs(.dismissAlert) }
-                ),
-                dismiss: .dismissAlert
-            )
 
             shareLogsView(viewStore)
 

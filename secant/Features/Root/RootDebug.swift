@@ -64,12 +64,7 @@ extension RootReducer {
 
             case let .debug(.rewindDone(errorDescription, _)):
                 if let errorDescription {
-                    // TODO: [#221] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
-                    state.alert = AlertState(
-                        title: TextState(L10n.Root.Debug.Alert.Rewind.Failed.title),
-                        message: TextState(L10n.Root.Debug.Alert.Rewind.Failed.message(errorDescription)),
-                        dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-                    )
+                    return EffectTask(value: .alert(.root(.rewindFailed(errorDescription))))
                 } else {
                     return .run { send in
                         do {
@@ -79,8 +74,6 @@ extension RootReducer {
                         }
                     }
                 }
-
-                return .none
                 
             case let .debug(.updateFlag(flag, isEnabled)):
                 return walletConfigProvider.update(flag, !isEnabled)
@@ -100,13 +93,7 @@ extension RootReducer {
                 return EffectTask(value: .updateStateAfterConfigUpdate(walletConfig))
 
             case .debug(.cantStartSync(let errorMessage)):
-                // TODO: [#221] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
-                state.alert = AlertState(
-                    title: TextState(L10n.Root.Debug.Alert.Rewind.CantStartSync.title),
-                    message: TextState(L10n.Root.Debug.Alert.Rewind.CantStartSync.message(errorMessage)),
-                    dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-                )
-                return .none
+                return EffectTask(value: .alert(.root(.cantStartSync(errorMessage))))
                 
             default: return .none
             }

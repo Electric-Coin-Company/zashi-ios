@@ -116,28 +116,7 @@ class ImportWalletTests: XCTestCase {
             state.birthdayHeightValue = RedactableBlockHeight(1_700_000)
         }
     }
-    
-    func testDismissAlert() throws {
-        let store = TestStore(
-            initialState:
-                ImportWalletReducer.State(
-                    alert: AlertState(
-                        title: TextState("Success"),
-                        message: TextState("The wallet has been successfully recovered."),
-                        dismissButton: .default(
-                            TextState("Ok"),
-                            action: .send(.successfullyRecovered)
-                        )
-                    )
-                ),
-            reducer: ImportWalletReducer()
-        )
         
-        store.send(.dismissAlert) { state in
-            state.alert = nil
-        }
-    }
-    
     func testFormValidity_validBirthday_invalidMnemonic() throws {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24),
@@ -288,7 +267,6 @@ class ImportWalletTests: XCTestCase {
     func testRestoreWallet() throws {
         let store = TestStore(
             initialState: ImportWalletReducer.State(
-                alert: nil,
                 birthdayHeight: "1700000".redacted,
                 birthdayHeightValue: RedactableBlockHeight(1_700_000),
                 importedSeedPhrase: """
@@ -308,17 +286,10 @@ class ImportWalletTests: XCTestCase {
         store.dependencies.mnemonic = .noOp
         store.dependencies.walletStorage = .noOp
         
-        store.send(.restoreWallet) { state in
-            state.alert = AlertState(
-                title: TextState("Success"),
-                message: TextState("The wallet has been successfully recovered."),
-                dismissButton: .default(
-                    TextState("Ok"),
-                    action: .send(.successfullyRecovered)
-                )
-            )
-        }
-        
+        store.send(.restoreWallet)
+
+        store.receive(.alert(.importWallet(.succeed)))
+
         store.receive(.initializeSDK)
     }
 }

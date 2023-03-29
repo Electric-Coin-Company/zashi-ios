@@ -80,22 +80,11 @@ extension RootReducer {
             case .initialization(.respondToWalletInitializationState(let walletState)):
                 switch walletState {
                 case .failed:
-                    // TODO: [#221] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
                     state.appInitializationState = .failed
-                    state.alert = AlertState(
-                        title: TextState(L10n.Root.Initialization.Alert.Failed.title),
-                        message: TextState(L10n.Root.Initialization.Alert.WalletStateFailed.message(walletState)),
-                        dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-                    )
+                    return EffectTask(value: .alert(.root(.walletStateFailed(walletState))))
                 case .keysMissing:
-                    // TODO: [#221] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
                     state.appInitializationState = .keysMissing
-                    state.alert = AlertState(
-                        title: TextState(L10n.Root.Initialization.Alert.Failed.title),
-                        message: TextState(L10n.Root.Initialization.Alert.WalletStateFailed.message(walletState)),
-                        dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-                    )
-
+                    return EffectTask(value: .alert(.root(.walletStateFailed(walletState))))
                 case .initialized, .filesMissing:
                     if walletState == .filesMissing {
                         state.appInitializationState = .filesMissing
@@ -112,8 +101,6 @@ extension RootReducer {
                         .cancellable(id: CancelId.self, cancelInFlight: true)
                 }
 
-                return .none
-
                 /// Stored wallet is present, database files may or may not be present, trying to initialize app state variables and environments.
                 /// When initialization succeeds user is taken to the home screen.
             case .initialization(.initializeSDK):
@@ -122,13 +109,7 @@ extension RootReducer {
 
                     guard let storedWallet = state.storedWallet else {
                         state.appInitializationState = .failed
-                        // TODO: [#221] Handle fatal error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
-                        state.alert = AlertState(
-                            title: TextState(L10n.Root.Initialization.Alert.Failed.title),
-                            message: TextState(L10n.Root.Initialization.Alert.CantLoadSeedPhrase.message),
-                            dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-                        )
-                        return .none
+                        return EffectTask(value: .alert(.root(.cantLoadSeedPhrase)))
                     }
 
                     let birthday = state.storedWallet?.birthday?.value() ?? zcashSDKEnvironment.latestCheckpoint
@@ -153,13 +134,7 @@ extension RootReducer {
             case .initialization(.checkBackupPhraseValidation):
                 guard let storedWallet = state.storedWallet else {
                     state.appInitializationState = .failed
-                    // TODO: [#221] Handle fatal error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
-                    state.alert = AlertState(
-                        title: TextState(L10n.Root.Initialization.Alert.Failed.title),
-                        message: TextState(L10n.Root.Initialization.Alert.CantLoadSeedPhrase.message),
-                        dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-                    )
-                    return .none
+                    return EffectTask(value: .alert(.root(.cantLoadSeedPhrase)))
                 }
 
                 var landingDestination = RootReducer.DestinationState.Destination.home
@@ -200,47 +175,19 @@ extension RootReducer {
                         EffectTask(value: .phraseValidation(.displayBackedUpPhrase))
                     )
                 } catch {
-                    // TODO: [#201] - merge with issue 221 (https://github.com/zcash/secant-ios-wallet/issues/221) and its Error States
-                    state.alert = AlertState(
-                        title: TextState(L10n.Root.Initialization.Alert.Failed.title),
-                        message: TextState(L10n.Root.Initialization.Alert.CantCreateNewWallet.message(error.localizedDescription)),
-                        dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-                    )
+                    return EffectTask(value: .alert(.root(.cantCreateNewWallet(error.localizedDescription))))
                 }
-
-                return .none
 
             case .phraseValidation(.succeed):
                 do {
                     try walletStorage.markUserPassedPhraseBackupTest(true)
+                    return .none
                 } catch {
-                    // TODO: [#221] error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
-                    state.alert = AlertState(
-                        title: TextState(L10n.Root.Initialization.Alert.Failed.title),
-                        message: TextState(
-                            L10n.Root.Initialization.Alert.CantStoreThatUserPassedPhraseBackupTest.message(error.localizedDescription)
-                        ),
-                        dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-                    )
+                    return EffectTask(value: .alert(.root(.cantStoreThatUserPassedPhraseBackupTest(error.localizedDescription))))
                 }
-                return .none
 
             case .initialization(.nukeWalletRequest):
-                state.destinationState.alert = AlertState(
-                    title: TextState(L10n.Root.Initialization.Alert.Wipe.title),
-                    message: TextState(L10n.Root.Initialization.Alert.Wipe.message),
-                    buttons: [
-                        .destructive(
-                            TextState(L10n.General.yes),
-                            action: .send(.initialization(.nukeWallet))
-                        ),
-                        .cancel(
-                            TextState(L10n.General.no),
-                            action: .send(.destination(.dismissAlert))
-                        )
-                    ]
-                )
-                return .none
+                return EffectTask(value: .alert(.root(.wipeRequest)))
             
             case .initialization(.nukeWallet):
                 guard let wipePublisher = sdkSynchronizer.wipe() else {
@@ -264,13 +211,6 @@ extension RootReducer {
                 )
 
             case .nukeWalletFailed:
-                // TODO: [#221] error we need to handle, issue #221 (https://github.com/zcash/secant-ios-wallet/issues/221)
-                state.alert = AlertState(
-                    title: TextState(L10n.Root.Initialization.Alert.WipeFailed.title),
-                    message: TextState(""),
-                    dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-                )
-
                 let backDestination: EffectTask<RootReducer.Action>
                 if let previousDestination = state.destinationState.previousDestination {
                     backDestination = EffectTask(value: .destination(.updateDestination(previousDestination)))
@@ -278,6 +218,7 @@ extension RootReducer {
                     backDestination = EffectTask(value: .destination(.updateDestination(state.destinationState.destination)))
                 }
                 return .concatenate(
+                    EffectTask(value: .alert(.root(.wipeFailed))),
                     .cancel(id: SynchronizerCancelId.self),
                     backDestination
                 )
@@ -311,20 +252,10 @@ extension RootReducer {
 
             case .initialization(.initializationFailed(let errorMessage)):
                 state.appInitializationState = .failed
-                // TODO: [#221] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
-                state.alert = AlertState(
-                    title: TextState(L10n.Root.Initialization.Alert.SdkInitFailed.title),
-                    message: TextState(L10n.Root.Initialization.Alert.Error.message(errorMessage)),
-                    dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-                )
-                return .none
+                return EffectTask(value: .alert(.root(.initializationFailed(errorMessage))))
                 
-            case .dismissAlert:
-                state.alert = nil
-                return .none
-
             case .home, .destination, .onboarding, .phraseDisplay, .phraseValidation, .sandbox,
-                .welcome, .binding, .debug, .exportLogs:
+                .welcome, .binding, .debug, .exportLogs, .uniAlert, .dismissAlert, .alert:
                 return .none
             }
         }

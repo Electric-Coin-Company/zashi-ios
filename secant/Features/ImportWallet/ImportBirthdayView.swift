@@ -43,7 +43,6 @@ struct ImportBirthdayView: View {
             .applyScreenBackground()
             .scrollableWhenScaledUp()
             .onAppear(perform: { viewStore.send(.onAppear) })
-            .alert(self.store.scope(state: \.alert), dismiss: .dismissAlert)
         }
     }
 }

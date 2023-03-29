@@ -18,7 +18,6 @@ struct ImportWalletReducer: ReducerProtocol {
             case birthday
         }
 
-        @BindingState var alert: AlertState<ImportWalletReducer.Action>?
         var birthdayHeight = "".redacted
         var birthdayHeightValue: RedactableBlockHeight?
         var destination: Destination?
@@ -43,10 +42,9 @@ struct ImportWalletReducer: ReducerProtocol {
         }
     }
     
-    enum Action: Equatable, BindableAction {
-        case binding(BindingAction<ImportWalletReducer.State>)
+    enum Action: Equatable {
+        case alert(AlertRequest)
         case birthdayInputChanged(RedactableString)
-        case dismissAlert
         case restoreWallet
         case importPrivateOrViewingKey
         case initializeSDK
@@ -61,8 +59,6 @@ struct ImportWalletReducer: ReducerProtocol {
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     var body: some ReducerProtocol<State, Action> {
-        BindingReducer()
-        
         Reduce { state, action in
             switch action {
             case .onAppear:
@@ -95,11 +91,7 @@ struct ImportWalletReducer: ReducerProtocol {
                 }
                 return .none
                 
-            case .binding:
-                return .none
-                
-            case .dismissAlert:
-                state.alert = nil
+            case .alert:
                 return .none
                 
             case .restoreWallet:
@@ -116,30 +108,13 @@ struct ImportWalletReducer: ReducerProtocol {
                     try walletStorage.markUserPassedPhraseBackupTest(true)
                     
                     // notify user
-                    // TODO: [#221] Proper Error/Success handling (https://github.com/zcash/secant-ios-wallet/issues/221)
-                    state.alert = AlertState(
-                        title: TextState(L10n.General.success),
-                        message: TextState(L10n.ImportWallet.Alert.Success.message),
-                        dismissButton: .default(
-                            TextState(L10n.General.ok),
-                            action: .send(.successfullyRecovered)
-                        )
+                    return .concatenate(
+                        EffectTask(value: .alert(.importWallet(.succeed))),
+                        EffectTask(value: .initializeSDK)
                     )
-                    
-                    return EffectTask(value: .initializeSDK)
                 } catch {
-                    // TODO: [#221] Proper Error/Success handling (https://github.com/zcash/secant-ios-wallet/issues/221)
-                    state.alert = AlertState(
-                        title: TextState(L10n.ImportWallet.Alert.Failed.title),
-                        message: TextState(L10n.ImportWallet.Alert.Failed.message(error.localizedDescription)),
-                        dismissButton: .default(
-                            TextState(L10n.General.ok),
-                            action: .send(.dismissAlert)
-                        )
-                    )
+                    return EffectTask(value: .alert(.importWallet(.failed(error.localizedDescription))))
                 }
-                
-                return .none
                 
             case .updateDestination(let destination):
                 state.destination = destination
@@ -149,7 +124,7 @@ struct ImportWalletReducer: ReducerProtocol {
                 return .none
                 
             case .successfullyRecovered:
-                return EffectTask(value: .dismissAlert)
+                return .none
                 
             case .initializeSDK:
                 return .none

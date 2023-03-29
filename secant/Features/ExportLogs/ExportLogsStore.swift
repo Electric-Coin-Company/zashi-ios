@@ -15,15 +15,13 @@ typealias ExportLogsViewStore = ViewStore<ExportLogsReducer.State, ExportLogsRed
 
 struct ExportLogsReducer: ReducerProtocol {
     struct State: Equatable {
-        @BindingState var alert: AlertState<ExportLogsReducer.Action>?
         var exportLogsDisabled = false
         var isSharingLogs = false
         var zippedLogsURLs: [URL] = []
     }
 
-    indirect enum Action: Equatable, BindableAction {
-        case binding(BindingAction<ExportLogsReducer.State>)
-        case dismissAlert
+    indirect enum Action: Equatable {
+        case alert(AlertRequest)
         case start
         case finished(URL?)
         case failed(String)
@@ -33,17 +31,9 @@ struct ExportLogsReducer: ReducerProtocol {
     @Dependency(\.logsHandler) var logsHandler
 
     var body: some ReducerProtocol<State, Action> {
-        BindingReducer()
-
         Reduce { state, action in
             switch action {
-            case .binding:
-                return .none
-
-            case .dismissAlert:
-                state.exportLogsDisabled = false
-                state.isSharingLogs = false
-                state.alert = nil
+            case .alert:
                 return .none
 
             case .start:
@@ -66,13 +56,9 @@ struct ExportLogsReducer: ReducerProtocol {
                 return .none
 
             case let .failed(errorDescription):
-                // TODO: [#527] address the error here https://github.com/zcash/secant-ios-wallet/issues/527
-                state.alert = AlertState(
-                    title: TextState(L10n.ExportLogs.Alert.Failed.title),
-                    message: TextState(L10n.ExportLogs.Alert.Failed.message(errorDescription)),
-                    dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-                )
-                return .none
+                state.exportLogsDisabled = false
+                state.isSharingLogs = false
+                return EffectTask(value: .alert(.exportLogs(.failed(errorDescription))))
 
             case .shareFinished:
                 state.isSharingLogs = false

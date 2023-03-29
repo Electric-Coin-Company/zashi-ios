@@ -17,7 +17,7 @@ extension DependencyValues {
 struct CaptureDeviceClient {
     enum CaptureDeviceClientError: Error {
         case captureDeviceFailed
-        case lockFailed
+        case lockForConfigurationFailed
         case torchUnavailable
     }
     

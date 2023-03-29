@@ -21,7 +21,6 @@ struct HomeReducer: ReducerProtocol {
             case transactionHistory
         }
 
-        @BindingState var alert: AlertState<HomeReducer.Action>?
         var balanceBreakdownState: BalanceBreakdownReducer.State
         var destination: Destination?
         var profileState: ProfileReducer.State
@@ -62,9 +61,9 @@ struct HomeReducer: ReducerProtocol {
     }
 
     enum Action: Equatable {
+        case alert(AlertRequest)
         case balanceBreakdown(BalanceBreakdownReducer.Action)
         case debugMenuStartup
-        case dismissAlert
         case onAppear
         case onDisappear
         case profile(ProfileReducer.Action)
@@ -183,8 +182,7 @@ struct HomeReducer: ReducerProtocol {
                 }
 
             case .showSynchronizerErrorAlert(let snapshot):
-                state.alert = HomeStore.syncErrorAlert(with: snapshot)
-                return .none
+                return EffectTask(value: .alert(.home(.syncFailed(snapshot.message, L10n.Home.SyncFailed.dismiss))))
                 
             case .balanceBreakdown(.onDisappear):
                 state.destination = nil
@@ -195,18 +193,11 @@ struct HomeReducer: ReducerProtocol {
 
             case .debugMenuStartup:
                 return .none
-
-            case .dismissAlert:
-                state.alert = nil
-                return .none
                 
             case .syncFailed(let errorMessage):
-                state.alert = AlertState<HomeReducer.Action>(
-                    title: TextState(L10n.Home.SyncFailed.title),
-                    message: TextState(errorMessage),
-                    primaryButton: .default(TextState(L10n.Home.SyncFailed.retry), action: .send(.retrySync)),
-                    secondaryButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-                )
+                return EffectTask(value: .alert(.home(.syncFailed(errorMessage, L10n.General.ok))))
+                
+            case .alert:
                 return .none
             }
         }
@@ -265,18 +256,6 @@ extension HomeViewStore {
     }
 }
 
-// MARK: Alerts
-
-extension HomeStore {
-    static func syncErrorAlert(with snapshot: SyncStatusSnapshot) -> AlertState<HomeReducer.Action> {
-        AlertState<HomeReducer.Action>(
-            title: TextState(L10n.Home.SyncFailed.title),
-            message: TextState(snapshot.message),
-            primaryButton: .default(TextState(L10n.Home.SyncFailed.retry), action: .send(.retrySync)),
-            secondaryButton: .default(TextState(L10n.Home.SyncFailed.dismiss), action: .send(.dismissAlert))
-            )
-    }
-}
 // MARK: Placeholders
 
 extension HomeReducer.State {
@@ -306,11 +285,6 @@ extension HomeStore {
     static var error: HomeStore {
         HomeStore(
             initialState: .init(
-                alert: HomeStore.syncErrorAlert(
-                    with: SyncStatusSnapshot.snapshotFor(
-                        state: .error(SynchronizerError.networkTimeout)
-                    )
-                ),
                 balanceBreakdownState: .placeholder,
                 profileState: .placeholder,
                 scanState: .placeholder,

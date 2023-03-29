@@ -118,7 +118,10 @@ class RootTests: XCTestCase {
         
         store.send(.initialization(.respondToWalletInitializationState(.keysMissing))) { state in
             state.appInitializationState = .keysMissing
-            state.alert = AlertState(
+        }
+        
+        store.receive(.alert(.root(.walletStateFailed(.keysMissing)))) { state in
+            state.uniAlert = AlertState(
                 title: TextState("Wallet initialisation failed."),
                 message: TextState("App initialisation state: keysMissing."),
                 dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
@@ -140,21 +143,26 @@ class RootTests: XCTestCase {
         store.send(.initialization(.respondToWalletInitializationState(.filesMissing))) { state in
             state.appInitializationState = .filesMissing
         }
-
-        store.receive(.initialization(.initializeSDK))
         
+        store.receive(.initialization(.initializeSDK))
+
         store.receive(.initialization(.checkBackupPhraseValidation)) { state in
             // failed is expected because environment is throwing errors
             state.appInitializationState = .failed
-            state.alert = AlertState(
+        }
+
+        store.receive(.initialization(.initializationFailed(walletStorageError.localizedDescription)))
+
+        store.receive(.alert(.root(.cantLoadSeedPhrase))) { state in
+            state.uniAlert = AlertState(
                 title: TextState("Wallet initialisation failed."),
                 message: TextState("Can't load seed phrase from local storage."),
                 dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
             )
         }
         
-        store.receive(.initialization(.initializationFailed(walletStorageError.localizedDescription))) { state in
-            state.alert = AlertState(
+        store.receive(.alert(.root(.initializationFailed("The operation couldn’t be completed. (Swift.String error 1.)")))) { state in
+            state.uniAlert = AlertState(
                 title: TextState("Failed to initialize the SDK"),
                 message: TextState("Error: \(walletStorageError.localizedDescription)"),
                 dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
@@ -179,15 +187,20 @@ class RootTests: XCTestCase {
         store.receive(.initialization(.checkBackupPhraseValidation)) { state in
             // failed is expected because environment is throwing errors
             state.appInitializationState = .failed
-            state.alert = AlertState(
+        }
+        
+        store.receive(.initialization(.initializationFailed(walletStorageError.localizedDescription)))
+        
+        store.receive(.alert(.root(.cantLoadSeedPhrase))) { state in
+            state.uniAlert = AlertState(
                 title: TextState("Wallet initialisation failed."),
                 message: TextState("Can't load seed phrase from local storage."),
                 dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
             )
         }
         
-        store.receive(.initialization(.initializationFailed(walletStorageError.localizedDescription))) { state in
-            state.alert = AlertState(
+        store.receive(.alert(.root(.initializationFailed("The operation couldn’t be completed. (Swift.String error 1.)")))) { state in
+            state.uniAlert = AlertState(
                 title: TextState("Failed to initialize the SDK"),
                 message: TextState("Error: \(walletStorageError.localizedDescription)"),
                 dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))

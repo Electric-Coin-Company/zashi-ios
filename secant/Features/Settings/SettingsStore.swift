@@ -12,7 +12,6 @@ struct SettingsReducer: ReducerProtocol {
             case backupPhrase
         }
 
-        @BindingState var alert: AlertState<SettingsReducer.Action>?
         var appVersion = ""
         var appBuild = ""
         var destination: Destination?
@@ -23,10 +22,10 @@ struct SettingsReducer: ReducerProtocol {
     }
 
     enum Action: BindableAction, Equatable {
+        case alert(AlertRequest)
         case backupWallet
         case backupWalletAccessRequest
         case binding(BindingAction<SettingsReducer.State>)
-        case dismissAlert
         case exportLogs(ExportLogsReducer.Action)
         case onAppear
         case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
@@ -67,13 +66,7 @@ struct SettingsReducer: ReducerProtocol {
                     state.phraseDisplayState.phrase = recoveryPhrase
                     return EffectTask(value: .updateDestination(.backupPhrase))
                 } catch {
-                    // TODO: [#221] - merge with issue 221 (https://github.com/zcash/secant-ios-wallet/issues/221) and its Error States
-                    state.alert = AlertState(
-                        title: TextState(L10n.Settings.Alert.CantBackupWallet.title),
-                        message: TextState(L10n.Settings.Alert.CantBackupWallet.message(error.localizedDescription)),
-                        dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-                    )
-                    return .none
+                    return EffectTask(value: .alert(.settings(.cantBackupWallet(error.localizedDescription))))
                 }
 
             case .binding(\.$isCrashReportingOn):
@@ -86,10 +79,6 @@ struct SettingsReducer: ReducerProtocol {
                 return .run { [state] _ in
                     await userStoredPreferences.setIsUserOptedOutOfCrashReporting(state.isCrashReportingOn)
                 }
-
-            case .dismissAlert:
-                state.alert = nil
-                return .none
                 
             case .exportLogs:
                 return .none
@@ -108,18 +97,16 @@ struct SettingsReducer: ReducerProtocol {
             case .sendSupportMail:
                 if MFMailComposeViewController.canSendMail() {
                     state.supportData = SupportDataGenerator.generate()
+                    return .none
                 } else {
-                    state.alert = AlertState(
-                        title: TextState(L10n.Settings.Alert.CantSendEmail.title),
-                        message: TextState(L10n.Settings.Alert.CantSendEmail.message),
-                        dismissButton: .default(TextState(L10n.General.ok), action: .send(.sendSupportMailFinished))
-                    )
+                    return EffectTask(value: .alert(.settings(.sendSupportMail)))
                 }
-
-                return .none
 
             case .sendSupportMailFinished:
                 state.supportData = nil
+                return .none
+                
+            case .alert:
                 return .none
             }
         }
