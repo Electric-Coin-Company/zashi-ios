@@ -47,7 +47,6 @@ struct BalanceBreakdownView: View {
                 
                 Spacer()
             }
-            .alert(self.store.scope(state: \.alert), dismiss: .dismissAlert)
             .onAppear { viewStore.send(.onAppear) }
             .onDisappear { viewStore.send(.onDisappear) }
         }

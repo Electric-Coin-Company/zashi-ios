@@ -23,7 +23,6 @@ extension RootReducer {
             case welcome
         }
         
-        @BindingState var alert: AlertState<RootReducer.Action>?
         var internalDestination: Destination = .welcome
         var previousDestination: Destination?
 
@@ -41,7 +40,6 @@ extension RootReducer {
         case deeplinkHome
         case deeplinkSend(Zatoshi, String, String)
         case deeplinkFailed(URL, String)
-        case dismissAlert
         case updateDestination(RootReducer.DestinationState.Destination)
     }
 
@@ -113,16 +111,7 @@ extension RootReducer {
                 return .none
 
             case let .destination(.deeplinkFailed(url, errorDescription)):
-                // TODO: [#221] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/221)
-                state.destinationState.alert = AlertState(
-                    title: TextState(L10n.Root.Destination.Alert.FailedToProcessDeeplink.title),
-                    message: TextState(L10n.Root.Destination.Alert.FailedToProcessDeeplink.message(url, errorDescription)),
-                    dismissButton: .default(
-                        TextState(L10n.General.ok),
-                        action: .send(.destination(.dismissAlert))
-                    )
-                )
-                return .none
+                return EffectTask(value: .alert(.root(.failedToProcessDeeplink(url, errorDescription))))
 
             case .home(.walletEvents(.replyTo(let address))):
                 guard let url = URL(string: "zcash:\(address)") else {
@@ -130,12 +119,8 @@ extension RootReducer {
                 }
                 return EffectTask(value: .destination(.deeplink(url)))
 
-            case .destination(.dismissAlert):
-                state.destinationState.alert = nil
-                return .none
-                
-            case .home, .initialization, .onboarding, .phraseDisplay, .phraseValidation, .sandbox, .updateStateAfterConfigUpdate,
-                .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .dismissAlert, .exportLogs:
+            case .home, .initialization, .onboarding, .phraseDisplay, .phraseValidation, .sandbox, .updateStateAfterConfigUpdate, .alert,
+                .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .dismissAlert, .exportLogs, .uniAlert:
                 return .none
             }
             

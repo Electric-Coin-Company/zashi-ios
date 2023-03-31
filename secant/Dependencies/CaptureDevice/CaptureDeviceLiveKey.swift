@@ -31,7 +31,7 @@ extension CaptureDeviceClient: DependencyKey {
                 videoCaptureDevice.torchMode = isTorchOn ? .on : .off
                 videoCaptureDevice.unlockForConfiguration()
             } catch {
-                throw CaptureDeviceClientError.lockFailed
+                throw CaptureDeviceClientError.lockForConfigurationFailed
             }
         }
     )

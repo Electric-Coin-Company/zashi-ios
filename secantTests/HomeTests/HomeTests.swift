@@ -109,8 +109,8 @@ class HomeTests: XCTestCase {
             state.synchronizerStatusSnapshot = errorSnapshot
         }
 
-        store.receive(.showSynchronizerErrorAlert(errorSnapshot)) { state in
-            state.alert = HomeStore.syncErrorAlert(with: errorSnapshot)
-        }
+        store.receive(.showSynchronizerErrorAlert(errorSnapshot))
+        
+        store.receive(.alert(.home(.syncFailed("Error: Synchronizer failed", "Dismiss"))))
     }
 }

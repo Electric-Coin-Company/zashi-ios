@@ -10,7 +10,6 @@ struct RootReducer: ReducerProtocol {
     enum WalletConfigCancelId {}
 
     struct State: Equatable {
-        @BindingState var alert: AlertState<RootReducer.Action>?
         var appInitializationState: InitializationState = .uninitialized
         var debugState: DebugState
         var destinationState: DestinationState
@@ -21,11 +20,13 @@ struct RootReducer: ReducerProtocol {
         var phraseDisplayState: RecoveryPhraseDisplayReducer.State
         var sandboxState: SandboxReducer.State
         var storedWallet: StoredWallet?
+        @BindingState var uniAlert: AlertState<RootReducer.Action>?
         var walletConfig: WalletConfig
         var welcomeState: WelcomeReducer.State
     }
 
     enum Action: Equatable, BindableAction {
+        case alert(AlertRequest)
         case binding(BindingAction<RootReducer.State>)
         case debug(DebugAction)
         case dismissAlert
@@ -39,6 +40,7 @@ struct RootReducer: ReducerProtocol {
         case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
         case phraseValidation(RecoveryPhraseValidationFlowReducer.Action)
         case sandbox(SandboxReducer.Action)
+        case uniAlert(AlertAction)
         case updateStateAfterConfigUpdate(WalletConfig)
         case walletConfigLoaded(WalletConfig)
         case welcome(WelcomeReducer.Action)
@@ -57,7 +59,8 @@ struct RootReducer: ReducerProtocol {
     @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
-    var body: some ReducerProtocol<State, Action> {
+    @ReducerBuilder<State, Action>
+    var core: some ReducerProtocol<State, Action> {
         BindingReducer()
 
         Scope(state: \.homeState, action: /Action.home) {
@@ -93,6 +96,11 @@ struct RootReducer: ReducerProtocol {
         destinationReduce()
         
         debugReduce()
+    }
+    
+    var body: some ReducerProtocol<State, Action> {
+        self.core
+            .alerts()
     }
 }
 

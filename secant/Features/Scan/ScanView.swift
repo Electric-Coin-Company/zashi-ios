@@ -50,7 +50,6 @@ struct ScanView: View {
                 .applyScreenBackground()
                 .onAppear { viewStore.send(.onAppear) }
                 .onDisappear { viewStore.send(.onDisappear) }
-                .alert(self.store.scope(state: \.alert), dismiss: .dismissAlert)
             }
             .ignoresSafeArea()
         }

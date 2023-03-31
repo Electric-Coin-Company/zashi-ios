@@ -52,13 +52,10 @@ class BalanceBreakdownTests: XCTestCase {
         }
         await store.receive(.shieldFundsSuccess) { state in
             state.shieldingFunds = false
-            state.alert = AlertState(
-                title: TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Success.title),
-                message: TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Success.message),
-                dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-            )
         }
 
+        await store.receive(.alert(.balanceBreakdown(.shieldFundsSuccess)))
+        
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancels the observer of the synchronizer status change.
         await store.send(.onDisappear)
@@ -81,12 +78,9 @@ class BalanceBreakdownTests: XCTestCase {
         }
         await store.receive(.shieldFundsFailure(SynchronizerError.criticalError.localizedDescription)) { state in
             state.shieldingFunds = false
-            state.alert = AlertState(
-                title: TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Failure.title),
-                message: TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Failure.message(SynchronizerError.criticalError.localizedDescription)),
-                dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-            )
         }
+
+        await store.receive(.alert(.balanceBreakdown(.shieldFundsFailure("A critical Error Occurred"))))
 
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancels the observer of the synchronizer status change.

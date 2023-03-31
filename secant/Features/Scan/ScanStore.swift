@@ -21,7 +21,6 @@ struct ScanReducer: ReducerProtocol {
             case unknown
         }
 
-        @BindingState var alert: AlertState<ScanReducer.Action>?
         var isTorchAvailable = false
         var isTorchOn = false
         var scanStatus: ScanStatus = .unknown
@@ -47,7 +46,7 @@ struct ScanReducer: ReducerProtocol {
     @Dependency(\.uriParser) var uriParser
 
     enum Action: Equatable {
-        case dismissAlert
+        case alert(AlertRequest)
         case onAppear
         case onDisappear
         case found(RedactableString)
@@ -59,8 +58,7 @@ struct ScanReducer: ReducerProtocol {
     // swiftlint:disable:next cyclomatic_complexity
     func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
         switch action {
-        case .dismissAlert:
-            state.alert = nil
+        case .alert:
             return .none
 
         case .onAppear:
@@ -70,15 +68,10 @@ struct ScanReducer: ReducerProtocol {
             // check the torch availability
             do {
                 state.isTorchAvailable = try captureDevice.isTorchAvailable()
+                return .none
             } catch {
-                // TODO: [#322] Handle error more properly (https://github.com/zcash/secant-ios-wallet/issues/322)
-                state.alert = AlertState(
-                    title: TextState(L10n.Scan.Alert.CantInitializeCamera.title),
-                    message: TextState(L10n.Scan.Alert.CantInitializeCamera.message(error.localizedDescription)),
-                    dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-                )
+                return EffectTask(value: .alert(.scan(.cantInitializeCamera(error.localizedDescription))))
             }
-            return .none
         
         case .onDisappear:
             return .cancel(id: CancelId.self)
@@ -115,15 +108,10 @@ struct ScanReducer: ReducerProtocol {
             do {
                 try captureDevice.torch(!state.isTorchOn)
                 state.isTorchOn.toggle()
+                return .none
             } catch {
-                // TODO: [#322] handle torch errors (https://github.com/zcash/secant-ios-wallet/issues/322)
-                state.alert = AlertState(
-                    title: TextState(L10n.Scan.Alert.CantInitializeCamera.title),
-                    message: TextState(L10n.Scan.Alert.CantInitializeCamera.message(error.localizedDescription)),
-                    dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
-                )
+                return EffectTask(value: .alert(.scan(.cantInitializeCamera(error.localizedDescription))))
             }
-            return .none
         }
     }
 }
