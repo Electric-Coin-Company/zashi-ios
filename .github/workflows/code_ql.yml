@@ -32,7 +32,7 @@ jobs:
         languages: ${{ matrix.language }}
     
     - name: Build
-      run: xcodebuild "-project" "secant.xcodeproj" "-scheme" "secant-testnet" "clean" "test"
+      run: xcodebuild "-project" "secant.xcodeproj" "-scheme" "secant-testnet" -destination "platform=iOS,name=iPhone 14,OS=16.2" "clean" "test"
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
