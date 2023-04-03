@@ -242,6 +242,7 @@
 "root.debug.option.rescanBlockchain" = "Rescan Blockchain";
 "root.debug.option.nukeWallet" = "[Be careful] Nuke Wallet";
 "root.debug.option.exportLogs" = "Export logs";
+"root.debug.option.appReview" = "Rate the app";
 "root.debug.featureFlags" = "Feature flags";
 "root.debug.dialog.rescan.title" = "Rescan";
 "root.debug.dialog.rescan.message" = "Select the rescan you want";

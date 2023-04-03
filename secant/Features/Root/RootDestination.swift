@@ -141,7 +141,7 @@ private extension RootReducer {
         case .home:
             return .destination(.deeplinkHome)
         case let .send(amount, address, memo):
-            return .destination(.deeplinkSend(Zatoshi(amount), address, memo))
+            return .destination(.deeplinkSend(Zatoshi(Int64(amount)), address, memo))
         }
     }
 }

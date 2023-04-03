@@ -10,6 +10,7 @@ typealias HomeViewStore = ViewStore<HomeReducer.State, HomeReducer.Action>
 
 struct HomeReducer: ReducerProtocol {
     private enum CancelId {}
+    private enum CancelEventsId {}
 
     struct State: Equatable {
         enum Destination: Equatable {
@@ -23,6 +24,7 @@ struct HomeReducer: ReducerProtocol {
 
         var balanceBreakdownState: BalanceBreakdownReducer.State
         var destination: Destination?
+        var canRequestReview = false
         var profileState: ProfileReducer.State
         var requiredTransactionConfirmations = 0
         var scanState: ScanReducer.State
@@ -67,9 +69,12 @@ struct HomeReducer: ReducerProtocol {
         case onAppear
         case onDisappear
         case profile(ProfileReducer.Action)
+        case resolveReviewRequest
+        case reviewRequestFinished
         case send(SendFlowReducer.Action)
         case settings(SettingsReducer.Action)
         case syncFailed(String)
+        case foundTransactions
         case synchronizerStateChanged(SynchronizerState)
         case walletEvents(WalletEventsFlowReducer.Action)
         case updateDestination(HomeReducer.State.Destination?)
@@ -81,6 +86,7 @@ struct HomeReducer: ReducerProtocol {
     @Dependency(\.audioServices) var audioServices
     @Dependency(\.diskSpaceChecker) var diskSpaceChecker
     @Dependency(\.mainQueue) var mainQueue
+    @Dependency(\.reviewRequest) var reviewRequest
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
@@ -109,20 +115,37 @@ struct HomeReducer: ReducerProtocol {
             switch action {
             case .onAppear:
                 state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
-
+                
                 if diskSpaceChecker.hasEnoughFreeSpaceForSync() {
                     let syncEffect = sdkSynchronizer.stateStream()
                         .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
                         .map(HomeReducer.Action.synchronizerStateChanged)
                         .eraseToEffect()
                         .cancellable(id: CancelId.self, cancelInFlight: true)
-                    return .concatenate(EffectTask(value: .updateDestination(nil)), syncEffect)
+                    return .merge(
+                        EffectTask(value: .updateDestination(nil)),
+                        syncEffect
+                    )
                 } else {
                     return EffectTask(value: .updateDestination(.notEnoughFreeDiskSpace))
                 }
-
+                
             case .onDisappear:
-                return .cancel(id: CancelId.self)
+                return .merge(
+                    .cancel(id: CancelId.self),
+                    .cancel(id: CancelEventsId.self)
+                )
+                
+            case .resolveReviewRequest:
+                if reviewRequest.canRequestReview() {
+                    state.canRequestReview = true
+                    return .fireAndForget { await reviewRequest.reviewRequested() }
+                }
+                return .none
+                
+            case .reviewRequestFinished:
+                state.canRequestReview = false
+                return .none
                                 
             case .updateWalletEvents:
                 return .none
@@ -140,9 +163,16 @@ struct HomeReducer: ReducerProtocol {
                 switch snapshot.syncStatus {
                 case .error:
                     return EffectTask(value: .showSynchronizerErrorAlert(snapshot))
+                    
+                case .synced:
+                    return .fireAndForget { await reviewRequest.syncFinished() }
+                    
                 default:
                     return .none
                 }
+
+            case .foundTransactions:
+                return .fireAndForget { await reviewRequest.foundTransactions() }
 
             case .updateDestination(.profile):
                 state.profileState.destination = nil

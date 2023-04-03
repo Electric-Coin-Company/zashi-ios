@@ -1,9 +1,10 @@
 import SwiftUI
 import ComposableArchitecture
+import StoreKit
 
 struct HomeView: View {
     let store: Store<HomeReducer.State, HomeReducer.Action>
-
+    
     var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
@@ -27,8 +28,18 @@ struct HomeView: View {
             .navigationTitle(L10n.Home.title)
             .navigationBarItems(trailing: settingsButton(viewStore))
             .navigationBarTitleDisplayMode(.inline)
-            .onAppear(perform: { viewStore.send(.onAppear) })
-            .onDisappear(perform: { viewStore.send(.onDisappear) })
+            .onAppear {
+                viewStore.send(.onAppear)
+            }
+            .onChange(of: viewStore.canRequestReview) { canRequestReview in
+                if canRequestReview {
+                    if let currentScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                        SKStoreReviewController.requestReview(in: currentScene)
+                    }
+                    viewStore.send(.reviewRequestFinished)
+                }
+            }
+            .onDisappear { viewStore.send(.onDisappear) }
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForDestination(.balanceBreakdown),
                 destination: { BalanceBreakdownView(store: store.balanceBreakdownStore()) }

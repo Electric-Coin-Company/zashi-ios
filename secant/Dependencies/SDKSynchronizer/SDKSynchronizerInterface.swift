@@ -33,15 +33,15 @@ struct SDKSynchronizerClient {
 
     let getShieldedBalance: () -> WalletBalance?
     let getTransparentBalance: () -> WalletBalance?
-    let getAllSentTransactions: () -> EffectTask<[WalletEvent]>
-    let getAllReceivedTransactions: () -> EffectTask<[WalletEvent]>
-    let getAllClearedTransactions: () -> EffectTask<[WalletEvent]>
-    let getAllPendingTransactions: () -> EffectTask<[WalletEvent]>
-    let getAllTransactions: () -> EffectTask<[WalletEvent]>
+    let getAllSentTransactions: () async throws -> [WalletEvent]
+    let getAllReceivedTransactions: () async throws -> [WalletEvent]
+    let getAllClearedTransactions: () async throws -> [WalletEvent]
+    let getAllPendingTransactions: () async throws -> [WalletEvent]
+    let getAllTransactions: () async throws -> [WalletEvent]
 
-    let getUnifiedAddress: (_ account: Int) -> UnifiedAddress?
-    let getTransparentAddress: (_ account: Int) -> TransparentAddress?
-    let getSaplingAddress: (_ accountIndex: Int) async -> SaplingAddress?
+    let getUnifiedAddress: (_ account: Int) async throws -> UnifiedAddress?
+    let getTransparentAddress: (_ account: Int) async throws -> TransparentAddress?
+    let getSaplingAddress: (_ accountIndex: Int) async throws -> SaplingAddress?
 
     let sendTransaction: (UnifiedSpendingKey, Zatoshi, Recipient, Memo?) -> EffectTask<Result<TransactionState, NSError>>
 
