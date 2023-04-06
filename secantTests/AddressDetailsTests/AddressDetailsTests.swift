@@ -27,7 +27,7 @@ class AddressDetailsTests: XCTestCase {
 
         store.send(.copySaplingAddressToPastboard)
         
-        let expectedAddress = uAddress.saplingReceiver()?.stringEncoded ?? "could not extract sapling receiver from UA"
+        let expectedAddress = try uAddress.saplingReceiver().stringEncoded
         
         XCTAssertEqual(
             testPasteboard.getString()?.data,
@@ -49,7 +49,7 @@ class AddressDetailsTests: XCTestCase {
 
         store.send(.copyTransparentAddressToPastboard)
         
-        let expectedAddress = uAddress.transparentReceiver()?.stringEncoded ?? "could not extract transparent receiver from UA"
+        let expectedAddress = try uAddress.transparentReceiver().stringEncoded
         
         XCTAssertEqual(
             testPasteboard.getString()?.data,

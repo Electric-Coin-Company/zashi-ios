@@ -20,11 +20,21 @@ struct AddressDetailsReducer: ReducerProtocol {
         }
 
         var transparentAddress: String {
-            uAddress?.transparentReceiver()?.stringEncoded ?? L10n.AddressDetails.Error.cantExtractTransparentAddress
+            do {
+                let address = try uAddress?.transparentReceiver().stringEncoded ?? L10n.AddressDetails.Error.cantExtractTransparentAddress
+                return address
+            } catch {
+                return L10n.AddressDetails.Error.cantExtractTransparentAddress
+            }
         }
 
         var saplingAddress: String {
-            uAddress?.saplingReceiver()?.stringEncoded ?? L10n.AddressDetails.Error.cantExtractSaplingAddress
+            do {
+                let address = try uAddress?.saplingReceiver().stringEncoded ?? L10n.AddressDetails.Error.cantExtractSaplingAddress
+                return address
+            } catch {
+                return L10n.AddressDetails.Error.cantExtractSaplingAddress
+            }
         }
     }
 

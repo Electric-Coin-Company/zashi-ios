@@ -24,11 +24,11 @@ extension SDKSynchronizerClient: TestDependencyKey {
         rewind: XCTUnimplemented("\(Self.self).rewind", placeholder: Fail(error: "Error").eraseToAnyPublisher()),
         getShieldedBalance: XCTUnimplemented("\(Self.self).getShieldedBalance", placeholder: WalletBalance.zero),
         getTransparentBalance: XCTUnimplemented("\(Self.self).getTransparentBalance", placeholder: WalletBalance.zero),
-        getAllSentTransactions: XCTUnimplemented("\(Self.self).getAllSentTransactions", placeholder: .none),
-        getAllReceivedTransactions: XCTUnimplemented("\(Self.self).getAllReceivedTransactions", placeholder: .none),
-        getAllClearedTransactions: XCTUnimplemented("\(Self.self).getAllClearedTransactions", placeholder: .none),
-        getAllPendingTransactions: XCTUnimplemented("\(Self.self).getAllPendingTransactions", placeholder: .none),
-        getAllTransactions: XCTUnimplemented("\(Self.self).getAllTransactions", placeholder: .none),
+        getAllSentTransactions: XCTUnimplemented("\(Self.self).getAllSentTransactions", placeholder: []),
+        getAllReceivedTransactions: XCTUnimplemented("\(Self.self).getAllReceivedTransactions", placeholder: []),
+        getAllClearedTransactions: XCTUnimplemented("\(Self.self).getAllClearedTransactions", placeholder: []),
+        getAllPendingTransactions: XCTUnimplemented("\(Self.self).getAllPendingTransactions", placeholder: []),
+        getAllTransactions: XCTUnimplemented("\(Self.self).getAllTransactions", placeholder: []),
         getUnifiedAddress: XCTUnimplemented("\(Self.self).getUnifiedAddress", placeholder: nil),
         getTransparentAddress: XCTUnimplemented("\(Self.self).getTransparentAddress", placeholder: nil),
         getSaplingAddress: XCTUnimplemented("\(Self.self).getSaplingAddress", placeholder: nil),
@@ -52,11 +52,11 @@ extension SDKSynchronizerClient {
         rewind: { _ in return Empty<Void, Error>().eraseToAnyPublisher() },
         getShieldedBalance: { .zero },
         getTransparentBalance: { .zero },
-        getAllSentTransactions: { EffectTask(value: []) },
-        getAllReceivedTransactions: { EffectTask(value: []) },
-        getAllClearedTransactions: { EffectTask(value: []) },
-        getAllPendingTransactions: { EffectTask(value: []) },
-        getAllTransactions: { EffectTask(value: []) },
+        getAllSentTransactions: { [] },
+        getAllReceivedTransactions: { [] },
+        getAllClearedTransactions: { [] },
+        getAllPendingTransactions: { [] },
+        getAllTransactions: { [] },
         getUnifiedAddress: { _ in return nil },
         getTransparentAddress: { _ in return nil },
         getSaplingAddress: { _ in return nil },
@@ -82,7 +82,7 @@ extension SDKSynchronizerClient {
         rewind: @escaping (RewindPolicy) -> AnyPublisher<Void, Error> = { _ in return Empty<Void, Error>().eraseToAnyPublisher() },
         getShieldedBalance: @escaping () -> WalletBalance? = { WalletBalance(verified: Zatoshi(12345000), total: Zatoshi(12345000)) },
         getTransparentBalance: @escaping () -> WalletBalance? = { WalletBalance(verified: Zatoshi(12345000), total: Zatoshi(12345000)) },
-        getAllSentTransactions: @escaping () -> EffectTask<[WalletEvent]> = {
+        getAllSentTransactions: @escaping () -> [WalletEvent] = {
             let mocked: [TransactionStateMockHelper] = [
                 TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "aa11"),
                 TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),
@@ -91,22 +91,20 @@ extension SDKSynchronizerClient {
                 TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(5), uuid: "ee55")
             ]
 
-            return EffectTask(
-                value:
-                    mocked.map {
-                        let transaction = TransactionState.placeholder(
-                            amount: $0.amount,
-                            fee: Zatoshi(10),
-                            shielded: $0.shielded,
-                            status: $0.status,
-                            timestamp: $0.date,
-                            uuid: $0.uuid
-                        )
-                        return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp ?? 0)
-                    }
-            )
+            return mocked
+                .map {
+                    let transaction = TransactionState.placeholder(
+                        amount: $0.amount,
+                        fee: Zatoshi(10),
+                        shielded: $0.shielded,
+                        status: $0.status,
+                        timestamp: $0.date,
+                        uuid: $0.uuid
+                    )
+                    return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp ?? 0)
+                }
         },
-        getAllReceivedTransactions: @escaping () -> EffectTask<[WalletEvent]> = {
+        getAllReceivedTransactions: @escaping () -> [WalletEvent] = {
             let mocked: [TransactionStateMockHelper] = [
                 TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "aa11"),
                 TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),
@@ -115,22 +113,20 @@ extension SDKSynchronizerClient {
                 TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(5), uuid: "ee55")
             ]
 
-            return EffectTask(
-                value:
-                    mocked.map {
-                        let transaction = TransactionState.placeholder(
-                            amount: $0.amount,
-                            fee: Zatoshi(10),
-                            shielded: $0.shielded,
-                            status: $0.status,
-                            timestamp: $0.date,
-                            uuid: $0.uuid
-                        )
-                        return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp ?? 0)
-                    }
-            )
+            return mocked
+                .map {
+                    let transaction = TransactionState.placeholder(
+                        amount: $0.amount,
+                        fee: Zatoshi(10),
+                        shielded: $0.shielded,
+                        status: $0.status,
+                        timestamp: $0.date,
+                        uuid: $0.uuid
+                    )
+                    return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp ?? 0)
+                }
         },
-        getAllClearedTransactions: @escaping () -> EffectTask<[WalletEvent]> = {
+        getAllClearedTransactions: @escaping () -> [WalletEvent] = {
             let mocked: [TransactionStateMockHelper] = [
                 TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "aa11"),
                 TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),
@@ -139,22 +135,20 @@ extension SDKSynchronizerClient {
                 TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(5), uuid: "ee55")
             ]
 
-            return EffectTask(
-                value:
-                    mocked.map {
-                        let transaction = TransactionState.placeholder(
-                            amount: $0.amount,
-                            fee: Zatoshi(10),
-                            shielded: $0.shielded,
-                            status: $0.status,
-                            timestamp: $0.date,
-                            uuid: $0.uuid
-                        )
-                        return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp ?? 0)
-                    }
-            )
+            return mocked
+                .map {
+                    let transaction = TransactionState.placeholder(
+                        amount: $0.amount,
+                        fee: Zatoshi(10),
+                        shielded: $0.shielded,
+                        status: $0.status,
+                        timestamp: $0.date,
+                        uuid: $0.uuid
+                    )
+                    return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp ?? 0)
+                }
         },
-        getAllPendingTransactions: @escaping () -> EffectTask<[WalletEvent]> = {
+        getAllPendingTransactions: @escaping () -> [WalletEvent] = {
             let mocked: [TransactionStateMockHelper] = [
                 TransactionStateMockHelper(
                     date: 1651039606,
@@ -167,23 +161,21 @@ extension SDKSynchronizerClient {
                 TransactionStateMockHelper(date: 1651039808, amount: Zatoshi(9), uuid: "ii99")
             ]
 
-            return EffectTask(
-                value:
-                    mocked.map {
-                        let transaction = TransactionState.placeholder(
-                            amount: $0.amount,
-                            fee: Zatoshi(10),
-                            shielded: $0.shielded,
-                            status: $0.amount.amount > 5 ? .pending : $0.status,
-                            timestamp: $0.date,
-                            uuid: $0.uuid
-                        )
-                        return WalletEvent(id: transaction.id, state: .pending(transaction), timestamp: transaction.timestamp)
-                    }
-            )
+            return mocked
+                .map {
+                    let transaction = TransactionState.placeholder(
+                        amount: $0.amount,
+                        fee: Zatoshi(10),
+                        shielded: $0.shielded,
+                        status: $0.amount.amount > 5 ? .pending : $0.status,
+                        timestamp: $0.date,
+                        uuid: $0.uuid
+                    )
+                    return WalletEvent(id: transaction.id, state: .pending(transaction), timestamp: transaction.timestamp)
+                }
         },
-        getAllTransactions: @escaping () -> EffectTask<[WalletEvent]> = {
-            let mockerCleared: [TransactionStateMockHelper] = [
+        getAllTransactions: @escaping () -> [WalletEvent] = {
+            let mockedCleared: [TransactionStateMockHelper] = [
                 TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "aa11"),
                 TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),
                 TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(3), status: .paid(success: true), uuid: "cc33"),
@@ -191,21 +183,19 @@ extension SDKSynchronizerClient {
                 TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(5), uuid: "ee55")
             ]
 
-            let clearedTransactionsEffect = EffectTask(
-                value:
-                    mockerCleared.map {
-                        let transaction = TransactionState.placeholder(
-                            amount: $0.amount,
-                            fee: Zatoshi(10),
-                            shielded: $0.shielded,
-                            status: $0.status,
-                            timestamp: $0.date,
-                            uuid: $0.uuid
-                        )
-                        return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp ?? 0)
-                    }
-            )
-
+            var clearedTransactions = mockedCleared
+                .map {
+                    let transaction = TransactionState.placeholder(
+                        amount: $0.amount,
+                        fee: Zatoshi(10),
+                        shielded: $0.shielded,
+                        status: $0.status,
+                        timestamp: $0.date,
+                        uuid: $0.uuid
+                    )
+                    return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp ?? 0)
+                }
+        
             let mockedPending: [TransactionStateMockHelper] = [
                 TransactionStateMockHelper(
                     date: 1651039606,
@@ -218,28 +208,22 @@ extension SDKSynchronizerClient {
                 TransactionStateMockHelper(date: 1651039808, amount: Zatoshi(9), uuid: "ii99")
             ]
 
-            let pendingTransactionsEffect = EffectTask(
-                value:
-                    mockedPending.map {
-                        let transaction = TransactionState.placeholder(
-                            amount: $0.amount,
-                            fee: Zatoshi(10),
-                            shielded: $0.shielded,
-                            status: $0.amount.amount > 5 ? .pending : $0.status,
-                            timestamp: $0.date,
-                            uuid: $0.uuid
-                        )
-                        return WalletEvent(id: transaction.id, state: .pending(transaction), timestamp: transaction.timestamp)
-                    }
-            )
+            let pendingTransactions = mockedPending
+                .map {
+                    let transaction = TransactionState.placeholder(
+                        amount: $0.amount,
+                        fee: Zatoshi(10),
+                        shielded: $0.shielded,
+                        status: $0.amount.amount > 5 ? .pending : $0.status,
+                        timestamp: $0.date,
+                        uuid: $0.uuid
+                    )
+                    return WalletEvent(id: transaction.id, state: .pending(transaction), timestamp: transaction.timestamp)
+                }
+            
+            clearedTransactions.append(contentsOf: pendingTransactions)
 
-            return .merge(
-                clearedTransactionsEffect,
-                pendingTransactionsEffect
-            )
-            .flatMap(Publishers.Sequence.init(sequence:))
-            .collect()
-            .eraseToEffect()
+            return clearedTransactions
         },
         getUnifiedAddress: @escaping (_ account: Int) -> UnifiedAddress? = { _ in
             // swiftlint:disable force_try

@@ -353,6 +353,8 @@ internal enum L10n {
         }
       }
       internal enum Option {
+        /// Rate the app
+        internal static let appReview = L10n.tr("Localizable", "root.debug.option.appReview", fallback: "Rate the app")
         /// Export logs
         internal static let exportLogs = L10n.tr("Localizable", "root.debug.option.exportLogs", fallback: "Export logs")
         /// Go To Onboarding

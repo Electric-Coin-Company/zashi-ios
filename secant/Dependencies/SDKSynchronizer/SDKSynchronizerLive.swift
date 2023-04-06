@@ -28,7 +28,7 @@ extension SDKSynchronizerClient: DependencyKey {
             spendParamsURL: databaseFiles.spendParamsURLFor(network),
             outputParamsURL: databaseFiles.outputParamsURLFor(network),
             saplingParamsSourceURL: SaplingParamsSourceURL.default,
-            loggerProxy: OSLogger(logLevel: .debug, category: LoggerConstants.sdkLogs)
+            logLevel: .debug
         )
         
         let synchronizer = SDKSynchronizer(initializer: initializer)
@@ -53,79 +53,75 @@ extension SDKSynchronizerClient: DependencyKey {
             getShieldedBalance: { synchronizer.latestState.shieldedBalance },
             getTransparentBalance: { synchronizer.latestState.transparentBalance },
             getAllSentTransactions: {
-                if let transactions = try? synchronizer.allSentTransactions() {
-                    return EffectTask(value: transactions.map {
-                        let memos = try? synchronizer.getMemos(for: $0)
-                        let transaction = TransactionState.init(transaction: $0, memos: memos)
-                        return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
-                    })
+                let transactions = try await synchronizer.allSentTransactions()
+                var walletEvents: [WalletEvent] = []
+                for sentTransaction in transactions {
+                    let memos = try await synchronizer.getMemos(for: sentTransaction)
+                    let transaction = TransactionState.init(transaction: sentTransaction, memos: memos)
+                    walletEvents.append(WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp))
                 }
-
-                return .none
+                
+                return walletEvents
             },
             getAllReceivedTransactions: {
-                if let transactions = try? synchronizer.allReceivedTransactions() {
-                    return EffectTask(value: transactions.map {
-                        let memos = try? synchronizer.getMemos(for: $0)
-                        let transaction = TransactionState.init(transaction: $0, memos: memos)
-                        return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
-                    })
+                let transactions = try await synchronizer.allReceivedTransactions()
+                var walletEvents: [WalletEvent] = []
+                for receivedTransaction in transactions {
+                    let memos = try await synchronizer.getMemos(for: receivedTransaction)
+                    let transaction = TransactionState.init(transaction: receivedTransaction, memos: memos)
+                    walletEvents.append(WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp))
                 }
-
-                return .none
+                
+                return walletEvents
             },
             getAllClearedTransactions: {
-                if let transactions = try? synchronizer.allClearedTransactions() {
-                    return EffectTask(value: transactions.map {
-                        let memos = try? synchronizer.getMemos(for: $0)
-                        let transaction = TransactionState.init(transaction: $0, memos: memos)
-                        return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
-                    })
+                let transactions = try await synchronizer.allClearedTransactions()
+                var walletEvents: [WalletEvent] = []
+                for clearedTransaction in transactions {
+                    let memos = try await synchronizer.getMemos(for: clearedTransaction)
+                    let transaction = TransactionState.init(transaction: clearedTransaction, memos: memos)
+                    walletEvents.append(WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp))
                 }
-
-                return .none
+                
+                return walletEvents
             },
             getAllPendingTransactions: {
-                if let transactions = try? synchronizer.allPendingTransactions() {
-                    return EffectTask(value: transactions.map {
-                        let transaction = TransactionState.init(pendingTransaction: $0, latestBlockHeight: synchronizer.latestScannedHeight)
-                        return WalletEvent(id: transaction.id, state: .pending(transaction), timestamp: transaction.timestamp)
-                    })
+                let transactions = try await synchronizer.allPendingTransactions()
+                var walletEvents: [WalletEvent] = []
+                for pendingTransaction in transactions {
+                    let transaction = TransactionState.init(
+                        pendingTransaction: pendingTransaction,
+                        latestBlockHeight: synchronizer.latestScannedHeight
+                    )
+                    walletEvents.append(WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp))
                 }
-
-                return .none
+                
+                return walletEvents
             },
             getAllTransactions: {
-                if  let pendingTransactions = try? synchronizer.allPendingTransactions(),
-                    let clearedTransactions = try? synchronizer.allClearedTransactions() {
-                    let clearedTxs: [WalletEvent] = clearedTransactions.map {
-                        let transaction = TransactionState.init(transaction: $0)
-                        return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
-                    }
-                    let pendingTxs: [WalletEvent] = pendingTransactions.map {
-                        let transaction = TransactionState.init(pendingTransaction: $0, latestBlockHeight: synchronizer.latestScannedHeight)
-                        return WalletEvent(id: transaction.id, state: .pending(transaction), timestamp: transaction.timestamp)
-                    }
-                    let cTxs = clearedTxs.filter { transaction in
-                        pendingTxs.first { pending in
-                            pending.id == transaction.id
-                        } == nil
-                    }
+                let pendingTransactions = try await synchronizer.allPendingTransactions()
+                let clearedTransactions = try await synchronizer.allClearedTransactions()
 
-                    return .merge(
-                        EffectTask(value: cTxs),
-                        EffectTask(value: pendingTxs)
-                    )
-                    .flatMap(Publishers.Sequence.init(sequence:))
-                    .collect()
-                    .eraseToEffect()
+                let clearedTxs: [WalletEvent] = clearedTransactions.map {
+                    let transaction = TransactionState.init(transaction: $0)
+                    return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
                 }
-
-                return .none
+                let pendingTxs: [WalletEvent] = pendingTransactions.map {
+                    let transaction = TransactionState.init(pendingTransaction: $0, latestBlockHeight: synchronizer.latestScannedHeight)
+                    return WalletEvent(id: transaction.id, state: .pending(transaction), timestamp: transaction.timestamp)
+                }
+                var cTxs = clearedTxs.filter { transaction in
+                    pendingTxs.first { pending in
+                        pending.id == transaction.id
+                    } == nil
+                }
+                cTxs.append(contentsOf: pendingTxs)
+                
+                return cTxs
             },
-            getUnifiedAddress: { synchronizer.getUnifiedAddress(accountIndex: $0) },
-            getTransparentAddress: { synchronizer.getTransparentAddress(accountIndex: $0) },
-            getSaplingAddress: { await synchronizer.getSaplingAddress(accountIndex: $0) },
+            getUnifiedAddress: { try await synchronizer.getUnifiedAddress(accountIndex: $0) },
+            getTransparentAddress: { try await synchronizer.getTransparentAddress(accountIndex: $0) },
+            getSaplingAddress: { try await synchronizer.getSaplingAddress(accountIndex: $0) },
             sendTransaction: { spendingKey, amount, recipient, memo in
                 return .run { send in
                     do {

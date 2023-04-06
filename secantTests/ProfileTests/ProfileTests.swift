@@ -29,10 +29,13 @@ class ProfileTests: XCTestCase {
         )
 
         await store.send(.onAppear) { state in
-            state.addressDetailsState.uAddress = uAddress
             state.appVersion = "0.0.1"
             state.appBuild = "31"
             state.sdkVersion = "0.18.1-beta"
+        }
+        
+        await store.receive(.uAddressChanged(uAddress)) { state in
+            state.addressDetailsState.uAddress = uAddress
         }
     }
     

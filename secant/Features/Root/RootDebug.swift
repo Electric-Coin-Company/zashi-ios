@@ -23,6 +23,7 @@ extension RootReducer {
         case flagUpdated
         case fullRescan
         case quickRescan
+        case rateTheApp
         case rescanBlockchain
         case rewindDone(String?, RootReducer.Action)
         case testCrashReporter // this will crash the app if live.
@@ -94,6 +95,9 @@ extension RootReducer {
 
             case .debug(.cantStartSync(let errorMessage)):
                 return EffectTask(value: .alert(.root(.cantStartSync(errorMessage))))
+                
+            case .debug(.rateTheApp):
+                return .none
                 
             default: return .none
             }

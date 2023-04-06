@@ -27,6 +27,7 @@ struct ProfileReducer: ReducerProtocol {
         case back
         case copyUnifiedAddressToPastboard
         case onAppear
+        case uAddressChanged(UnifiedAddress?)
         case updateDestination(ProfileReducer.State.Destination?)
     }
     
@@ -43,12 +44,17 @@ struct ProfileReducer: ReducerProtocol {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                state.addressDetailsState.uAddress = self.sdkSynchronizer.getUnifiedAddress(0)
                 state.appBuild = appVersion.appBuild()
                 state.appVersion = appVersion.appVersion()
                 state.sdkVersion = zcashSDKEnvironment.sdkVersion
-                return .none
+                return .task {
+                    return .uAddressChanged(try? await sdkSynchronizer.getUnifiedAddress(0))
+                }
 
+            case .uAddressChanged(let uAddress):
+                state.addressDetailsState.uAddress = uAddress
+                return .none
+                
             case .back:
                 return .none
             

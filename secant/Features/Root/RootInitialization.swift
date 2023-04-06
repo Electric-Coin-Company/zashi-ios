@@ -32,6 +32,8 @@ extension RootReducer {
         Reduce { state, action in
             switch action {
             case .initialization(.appDelegate(.didFinishLaunching)):
+                // TODO: [#704], trigger the review request logic when approved by the team,
+                // https://github.com/zcash/secant-ios-wallet/issues/704
                 return EffectTask(value: .initialization(.checkWalletConfig))
                     .delay(for: 0.02, scheduler: mainQueue)
                     .eraseToEffect()

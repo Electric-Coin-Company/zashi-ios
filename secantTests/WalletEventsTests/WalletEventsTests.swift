@@ -11,8 +11,6 @@ import ComposableArchitecture
 import ZcashLightClientKit
 
 class WalletEventsTests: XCTestCase {
-    static let testScheduler = DispatchQueue.test
-
     func testSynchronizerSubscription() throws {
         let store = TestStore(
             initialState: WalletEventsFlowReducer.State(
@@ -36,7 +34,7 @@ class WalletEventsTests: XCTestCase {
         store.send(.onDisappear)
     }
 
-    func testSynchronizerStateChanged2Synced() throws {
+    @MainActor func testSynchronizerStateChanged2Synced() async throws {
         let mocked: [TransactionStateMockHelper] = [
             TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "aa11"),
             TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),
@@ -81,16 +79,14 @@ class WalletEventsTests: XCTestCase {
             reducer: WalletEventsFlowReducer()
         )
 
-        store.dependencies.mainQueue = Self.testScheduler.eraseToAnyScheduler()
+        store.dependencies.mainQueue = .immediate
         store.dependencies.sdkSynchronizer = .mocked()
 
-        store.send(.synchronizerStateChanged(.synced)) { state in
+        await store.send(.synchronizerStateChanged(.synced)) { state in
             state.latestMinedHeight = 0
         }
 
-        Self.testScheduler.advance(by: 0.01)
-
-        store.receive(.updateWalletEvents(walletEvents)) { state in
+        await store.receive(.updateWalletEvents(walletEvents)) { state in
             let receivedWalletEvents = IdentifiedArrayOf(
                 uniqueElements:
                     walletEvents
@@ -104,6 +100,8 @@ class WalletEventsTests: XCTestCase {
 
             state.walletEvents = receivedWalletEvents
         }
+        
+        await store.finish()
     }
 
     func testCopyToPasteboard() throws {

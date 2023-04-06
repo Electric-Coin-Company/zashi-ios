@@ -164,6 +164,13 @@ private extension RootView {
                     }
                     .disabled(viewStore.exportLogsState.exportLogsDisabled)
 
+                    Button(L10n.Root.Debug.Option.appReview) {
+                        viewStore.send(.debug(.rateTheApp))
+                        if let currentScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                            SKStoreReviewController.requestReview(in: currentScene)
+                        }
+                    }
+
                     Button(L10n.Root.Debug.Option.rescanBlockchain) {
                         viewStore.send(.debug(.rescanBlockchain))
                     }

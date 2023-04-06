@@ -13,7 +13,7 @@ import ZcashLightClientKit
 struct Deeplink {
     enum Destination: Equatable {
         case home
-        case send(amount: Int64, address: String, memo: String)
+        case send(amount: Int, address: String, memo: String)
     }
     
     func resolveDeeplinkURL(_ url: URL, isValidZcashAddress: (String) throws -> Bool) throws -> Destination {
@@ -25,7 +25,7 @@ struct Deeplink {
                 return .send(amount: 0, address: address, memo: "")
             }
         }
-        
+      
         // regular URL format zcash://
         let appRouter = OneOf {
             // GET /home
@@ -37,7 +37,7 @@ struct Deeplink {
             Route(.case(Destination.send(amount:address:memo:))) {
                 Path { "home"; "send" }
                 Query {
-                    Field("amount", default: 0) { Int64.parser() }
+                    Field("amount", default: 0) { Digits() }
                     Field("address", .string, default: "")
                     Field("memo", .string, default: "")
                 }
