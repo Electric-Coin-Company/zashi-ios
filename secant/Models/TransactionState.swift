@@ -115,7 +115,9 @@ extension TransactionState {
         fee = Zatoshi(10)
         minedHeight = pendingTransaction.minedHeight
         errorMessage = pendingTransaction.errorMessage
-
+        if let data = pendingTransaction.memo, let memo = try? Memo(bytes: [UInt8](data)) {
+            memos = [memo]
+        }
         switch pendingTransaction.recipient {
         case let .address(recipient):
             zAddress = recipient.stringEncoded

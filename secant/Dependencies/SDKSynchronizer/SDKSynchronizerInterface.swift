@@ -33,10 +33,6 @@ struct SDKSynchronizerClient {
 
     let getShieldedBalance: () -> WalletBalance?
     let getTransparentBalance: () -> WalletBalance?
-    let getAllSentTransactions: () async throws -> [WalletEvent]
-    let getAllReceivedTransactions: () async throws -> [WalletEvent]
-    let getAllClearedTransactions: () async throws -> [WalletEvent]
-    let getAllPendingTransactions: () async throws -> [WalletEvent]
     let getAllTransactions: () async throws -> [WalletEvent]
 
     let getUnifiedAddress: (_ account: Int) async throws -> UnifiedAddress?

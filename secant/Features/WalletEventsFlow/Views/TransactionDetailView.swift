@@ -33,11 +33,12 @@ struct TransactionDetailView: View {
                                 .padding()
                             address(mark: .inactive, viewStore: viewStore)
                             memo(transaction, viewStore, mark: .highlight)
+                            
                         case .received:
                             Text(L10n.Transaction.youReceived(transaction.zecAmount.decimalString(), TargetConstants.tokenName))
                                 .padding()
-                            address(mark: .inactive, viewStore: viewStore)
                             memo(transaction, viewStore, mark: .highlight)
+                            
                         case .failed:
                             Text(L10n.Transaction.youDidNotSent(transaction.zecAmount.decimalString(), TargetConstants.tokenName))
                                 .padding()

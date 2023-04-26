@@ -67,7 +67,7 @@ class BalanceBreakdownTests: XCTestCase {
             reducer: BalanceBreakdownReducer()
         )
 
-        store.dependencies.sdkSynchronizer = .mocked(shieldFunds: { _, _, _ in throw SynchronizerError.criticalError })
+        store.dependencies.sdkSynchronizer = .mocked(shieldFunds: { _, _, _ in throw ZcashError.synchronizerNotPrepared })
         store.dependencies.derivationTool = .liveValue
         store.dependencies.mnemonic = .mock
         store.dependencies.walletStorage.exportWallet = { .placeholder }
@@ -76,11 +76,17 @@ class BalanceBreakdownTests: XCTestCase {
         await store.send(.shieldFunds) { state in
             state.shieldingFunds = true
         }
-        await store.receive(.shieldFundsFailure(SynchronizerError.criticalError.localizedDescription)) { state in
+        await store.receive(.shieldFundsFailure(ZcashError.synchronizerNotPrepared.localizedDescription)) { state in
             state.shieldingFunds = false
         }
 
-        await store.receive(.alert(.balanceBreakdown(.shieldFundsFailure("A critical Error Occurred"))))
+        await store.receive(
+            .alert(
+                .balanceBreakdown(
+                    .shieldFundsFailure("The operation couldn’t be completed. (ZcashLightClientKit.ZcashError error 168.)")
+                )
+            )
+        )
 
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancels the observer of the synchronizer status change.

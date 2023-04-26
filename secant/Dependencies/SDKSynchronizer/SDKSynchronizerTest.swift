@@ -24,10 +24,6 @@ extension SDKSynchronizerClient: TestDependencyKey {
         rewind: XCTUnimplemented("\(Self.self).rewind", placeholder: Fail(error: "Error").eraseToAnyPublisher()),
         getShieldedBalance: XCTUnimplemented("\(Self.self).getShieldedBalance", placeholder: WalletBalance.zero),
         getTransparentBalance: XCTUnimplemented("\(Self.self).getTransparentBalance", placeholder: WalletBalance.zero),
-        getAllSentTransactions: XCTUnimplemented("\(Self.self).getAllSentTransactions", placeholder: []),
-        getAllReceivedTransactions: XCTUnimplemented("\(Self.self).getAllReceivedTransactions", placeholder: []),
-        getAllClearedTransactions: XCTUnimplemented("\(Self.self).getAllClearedTransactions", placeholder: []),
-        getAllPendingTransactions: XCTUnimplemented("\(Self.self).getAllPendingTransactions", placeholder: []),
         getAllTransactions: XCTUnimplemented("\(Self.self).getAllTransactions", placeholder: []),
         getUnifiedAddress: XCTUnimplemented("\(Self.self).getUnifiedAddress", placeholder: nil),
         getTransparentAddress: XCTUnimplemented("\(Self.self).getTransparentAddress", placeholder: nil),
@@ -52,15 +48,11 @@ extension SDKSynchronizerClient {
         rewind: { _ in return Empty<Void, Error>().eraseToAnyPublisher() },
         getShieldedBalance: { .zero },
         getTransparentBalance: { .zero },
-        getAllSentTransactions: { [] },
-        getAllReceivedTransactions: { [] },
-        getAllClearedTransactions: { [] },
-        getAllPendingTransactions: { [] },
         getAllTransactions: { [] },
         getUnifiedAddress: { _ in return nil },
         getTransparentAddress: { _ in return nil },
         getSaplingAddress: { _ in return nil },
-        sendTransaction: { _, _, _, _ in return EffectTask(value: Result.failure(SynchronizerError.criticalError as NSError)) },
+        sendTransaction: { _, _, _, _ in return EffectTask(value: Result.failure(ZcashError.synchronizerNotPrepared as NSError)) },
         shieldFunds: { _, _, _ in return .placeholder },
         wipe: { Empty<Void, Error>().eraseToAnyPublisher() }
     )
@@ -82,98 +74,6 @@ extension SDKSynchronizerClient {
         rewind: @escaping (RewindPolicy) -> AnyPublisher<Void, Error> = { _ in return Empty<Void, Error>().eraseToAnyPublisher() },
         getShieldedBalance: @escaping () -> WalletBalance? = { WalletBalance(verified: Zatoshi(12345000), total: Zatoshi(12345000)) },
         getTransparentBalance: @escaping () -> WalletBalance? = { WalletBalance(verified: Zatoshi(12345000), total: Zatoshi(12345000)) },
-        getAllSentTransactions: @escaping () -> [WalletEvent] = {
-            let mocked: [TransactionStateMockHelper] = [
-                TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "aa11"),
-                TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),
-                TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(3), status: .paid(success: true), uuid: "cc33"),
-                TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(4), uuid: "dd44"),
-                TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(5), uuid: "ee55")
-            ]
-
-            return mocked
-                .map {
-                    let transaction = TransactionState.placeholder(
-                        amount: $0.amount,
-                        fee: Zatoshi(10),
-                        shielded: $0.shielded,
-                        status: $0.status,
-                        timestamp: $0.date,
-                        uuid: $0.uuid
-                    )
-                    return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp ?? 0)
-                }
-        },
-        getAllReceivedTransactions: @escaping () -> [WalletEvent] = {
-            let mocked: [TransactionStateMockHelper] = [
-                TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "aa11"),
-                TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),
-                TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(3), status: .paid(success: true), uuid: "cc33"),
-                TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(4), uuid: "dd44"),
-                TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(5), uuid: "ee55")
-            ]
-
-            return mocked
-                .map {
-                    let transaction = TransactionState.placeholder(
-                        amount: $0.amount,
-                        fee: Zatoshi(10),
-                        shielded: $0.shielded,
-                        status: $0.status,
-                        timestamp: $0.date,
-                        uuid: $0.uuid
-                    )
-                    return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp ?? 0)
-                }
-        },
-        getAllClearedTransactions: @escaping () -> [WalletEvent] = {
-            let mocked: [TransactionStateMockHelper] = [
-                TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "aa11"),
-                TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),
-                TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(3), status: .paid(success: true), uuid: "cc33"),
-                TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(4), uuid: "dd44"),
-                TransactionStateMockHelper(date: 1651039404, amount: Zatoshi(5), uuid: "ee55")
-            ]
-
-            return mocked
-                .map {
-                    let transaction = TransactionState.placeholder(
-                        amount: $0.amount,
-                        fee: Zatoshi(10),
-                        shielded: $0.shielded,
-                        status: $0.status,
-                        timestamp: $0.date,
-                        uuid: $0.uuid
-                    )
-                    return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp ?? 0)
-                }
-        },
-        getAllPendingTransactions: @escaping () -> [WalletEvent] = {
-            let mocked: [TransactionStateMockHelper] = [
-                TransactionStateMockHelper(
-                    date: 1651039606,
-                    amount: Zatoshi(6),
-                    status: .paid(success: false),
-                    uuid: "ff66"
-                ),
-                TransactionStateMockHelper(date: 1651039303, amount: Zatoshi(7), uuid: "gg77"),
-                TransactionStateMockHelper(date: 1651039707, amount: Zatoshi(8), status: .paid(success: true), uuid: "hh88"),
-                TransactionStateMockHelper(date: 1651039808, amount: Zatoshi(9), uuid: "ii99")
-            ]
-
-            return mocked
-                .map {
-                    let transaction = TransactionState.placeholder(
-                        amount: $0.amount,
-                        fee: Zatoshi(10),
-                        shielded: $0.shielded,
-                        status: $0.amount.amount > 5 ? .pending : $0.status,
-                        timestamp: $0.date,
-                        uuid: $0.uuid
-                    )
-                    return WalletEvent(id: transaction.id, state: .pending(transaction), timestamp: transaction.timestamp)
-                }
-        },
         getAllTransactions: @escaping () -> [WalletEvent] = {
             let mockedCleared: [TransactionStateMockHelper] = [
                 TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: false), uuid: "aa11"),
@@ -193,7 +93,7 @@ extension SDKSynchronizerClient {
                         timestamp: $0.date,
                         uuid: $0.uuid
                     )
-                    return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp ?? 0)
+                    return WalletEvent(id: transaction.id, state: .sent(transaction), timestamp: transaction.timestamp ?? 0)
                 }
         
             let mockedPending: [TransactionStateMockHelper] = [
@@ -292,10 +192,6 @@ extension SDKSynchronizerClient {
             rewind: rewind,
             getShieldedBalance: getShieldedBalance,
             getTransparentBalance: getTransparentBalance,
-            getAllSentTransactions: getAllSentTransactions,
-            getAllReceivedTransactions: getAllReceivedTransactions,
-            getAllClearedTransactions: getAllClearedTransactions,
-            getAllPendingTransactions: getAllPendingTransactions,
             getAllTransactions: getAllTransactions,
             getUnifiedAddress: getUnifiedAddress,
             getTransparentAddress: getTransparentAddress,

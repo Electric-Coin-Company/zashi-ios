@@ -119,7 +119,7 @@ extension RootReducer {
                     try mnemonic.isValid(storedWallet.seedPhrase.value())
                     let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
                     let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0)
-                    let viewingKey = try spendingKey.deriveFullViewingKey()
+                    let viewingKey = try derivationTool.deriveUnifiedFullViewingKey(spendingKey)
                     
                     return .run { send in
                         do {

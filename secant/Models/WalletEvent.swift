@@ -14,7 +14,7 @@ import ZcashLightClientKit
 
 struct WalletEvent: Equatable, Identifiable, Redactable {
     enum WalletEventState: Equatable {
-        case send(TransactionState)
+        case sent(TransactionState)
         case pending(TransactionState)
         case received(TransactionState)
         case failed(TransactionState)
@@ -32,7 +32,7 @@ struct WalletEvent: Equatable, Identifiable, Redactable {
 extension WalletEvent {
     @ViewBuilder func rowView(_ viewStore: WalletEventsFlowViewStore) -> some View {
         switch state {
-        case .send(let transaction),
+        case .sent(let transaction),
             .pending(let transaction),
             .received(let transaction),
             .failed(let transaction):
@@ -56,7 +56,7 @@ extension WalletEvent {
 extension WalletEvent {
     @ViewBuilder func detailView(_ store: WalletEventsFlowStore) -> some View {
         switch state {
-        case .send(let transaction),
+        case .sent(let transaction),
             .pending(let transaction),
             .received(let transaction),
             .failed(let transaction):
@@ -83,7 +83,7 @@ private extension WalletEvent {
         case 3: return .shielded(Zatoshi(234_000_000))
         case 4: return .walletImport(BlockHeight(1_629_724))
         case 5: return .pending(.statePlaceholder(.pending))
-        default: return .send(.placeholder)
+        default: return .sent(.placeholder)
         }
     }
     
@@ -92,8 +92,8 @@ private extension WalletEvent {
         case 0: return .received(.statePlaceholder(.received))
         case 1: return .failed(.statePlaceholder(.failed))
         case 2: return .pending(.statePlaceholder(.pending))
-        case 3: return .send(.placeholder)
-        default: return .send(.placeholder)
+        case 3: return .sent(.placeholder)
+        default: return .sent(.placeholder)
         }
     }
 }

@@ -3651,7 +3651,7 @@
 			repositoryURL = "https://github.com/zcash/ZcashLightClientKit.git";
 			requirement = {
 				kind = revision;
-				revision = 16d70cfead166ae214bc813fd245d3eb62588cfd;
+				revision = 88e120509b44104790949504fa58d0add9fb970e;
 			};
 		};
 		6654C7382715A38000901167 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {

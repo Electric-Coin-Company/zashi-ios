@@ -61,7 +61,6 @@ class HomeTests: XCTestCase {
 
         // expected side effects as a result of .onAppear registration
         store.receive(.updateDestination(nil))
-        store.receive(.resolveReviewRequest)
         store.receive(.synchronizerStateChanged(.zero)) { state in
             state.synchronizerStatusSnapshot = SyncStatusSnapshot.snapshotFor(state: .unprepared)
         }
@@ -89,15 +88,13 @@ class HomeTests: XCTestCase {
             state.destination = .notEnoughFreeDiskSpace
         }
 
-        store.receive(.resolveReviewRequest)
-
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancels the observer of the synchronizer status change.
         store.send(.onDisappear)
     }
 
     func testSynchronizerErrorBringsUpAlert() {
-        let testError = SynchronizerError.syncFailed
+        let testError = ZcashError.synchronizerNotPrepared
         let errorSnapshot = SyncStatusSnapshot.snapshotFor(
             state: .error(testError)
         )
@@ -116,6 +113,12 @@ class HomeTests: XCTestCase {
 
         store.receive(.showSynchronizerErrorAlert(errorSnapshot))
         
-        store.receive(.alert(.home(.syncFailed("Error: Synchronizer failed", "Dismiss"))))
+        store.receive(
+            .alert(
+                .home(
+                    .syncFailed("Error: The operation couldn’t be completed. (ZcashLightClientKit.ZcashError error 168.)", "Dismiss")
+                )
+            )
+        )
     }
 }
