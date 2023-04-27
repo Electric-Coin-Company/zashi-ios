@@ -30,7 +30,7 @@ class HomeSnapshotTests: XCTestCase {
             )
             transaction.zAddress = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po"
             
-            return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
+            return WalletEvent(id: transaction.id, state: .sent(transaction), timestamp: transaction.timestamp)
         }
         
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)

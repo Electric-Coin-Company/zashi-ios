@@ -17,6 +17,9 @@ extension DerivationToolClient: DependencyKey {
             deriveSpendingKey: { seed, accountIndex in
                 try derivationTool.deriveUnifiedSpendingKey(seed: seed, accountIndex: accountIndex)
             },
+            deriveUnifiedFullViewingKey: { spendingKey in
+                try derivationTool.deriveUnifiedFullViewingKey(from: spendingKey)
+            },
             isUnifiedAddress: { address in
                 do {
                     if case .unified = try Recipient(address, network: TargetConstants.zcashNetwork.networkType) {

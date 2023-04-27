@@ -322,7 +322,7 @@ extension HomeStore {
                 settingsState: .placeholder,
                 shieldedBalance: Balance.zero,
                 synchronizerStatusSnapshot: .snapshotFor(
-                    state: .error(SynchronizerError.syncFailed)
+                    state: .error(ZcashError.synchronizerNotPrepared)
                 ),
                 walletConfig: .default,
                 walletEventsState: .emptyPlaceHolder

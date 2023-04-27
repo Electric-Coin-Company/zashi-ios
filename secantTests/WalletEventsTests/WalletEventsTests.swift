@@ -63,7 +63,7 @@ class WalletEventsTests: XCTestCase {
             )
             return WalletEvent(
                 id: transaction.id,
-                state: transaction.status == .pending ? .pending(transaction) : .send(transaction),
+                state: transaction.status == .pending ? .pending(transaction) : .sent(transaction),
                 timestamp: transaction.timestamp
             )
         }

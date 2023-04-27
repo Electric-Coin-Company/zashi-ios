@@ -23,6 +23,9 @@ struct DerivationToolClient {
     /// - Returns: the spending keys that correspond to the seed, formatted as Strings.
     var deriveSpendingKey: ([UInt8], Int) throws -> UnifiedSpendingKey
 
+    /// Given a unified spending key, returns the associated unified viewwing key.
+    var deriveUnifiedFullViewingKey: (UnifiedSpendingKey) throws -> UnifiedFullViewingKey
+    
     /// Checks validity of the unified address.
     var isUnifiedAddress: (String) -> Bool
 

@@ -204,7 +204,7 @@ class SendTests: XCTestCase {
         }
 
         // check the failure transaction to be received back
-        await store.receive(.sendTransactionResult(Result.failure(SynchronizerError.criticalError as NSError))) { state in
+        await store.receive(.sendTransactionResult(Result.failure(ZcashError.synchronizerNotPrepared as NSError))) { state in
             // from this moment on the sending next transaction is allowed again
             // the 'isSendingTransaction' needs to be false again
             state.isSendingTransaction = false

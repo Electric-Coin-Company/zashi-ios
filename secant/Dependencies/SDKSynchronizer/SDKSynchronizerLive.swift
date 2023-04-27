@@ -37,13 +37,10 @@ extension SDKSynchronizerClient: DependencyKey {
             stateStream: { synchronizer.stateStream },
             eventStream: { synchronizer.eventStream },
             latestState: { synchronizer.latestState },
-            latestScannedHeight: { synchronizer.latestScannedHeight },
+            latestScannedHeight: { synchronizer.latestState.latestScannedHeight },
             prepareWith: { seedBytes, viewingKey, walletBirtday in
                 let result = try await synchronizer.prepare(with: seedBytes, viewingKeys: [viewingKey], walletBirthday: walletBirtday)
-
-                if result != .success {
-                    throw SynchronizerError.initFailed(message: "")
-                }
+                if result != .success { throw ZcashError.synchronizerNotPrepared }
             },
             start: { retry in try await synchronizer.start(retry: retry) },
             stop: { await synchronizer.stop() },
@@ -52,64 +49,46 @@ extension SDKSynchronizerClient: DependencyKey {
             rewind: { synchronizer.rewind($0) },
             getShieldedBalance: { synchronizer.latestState.shieldedBalance },
             getTransparentBalance: { synchronizer.latestState.transparentBalance },
-            getAllSentTransactions: {
-                let transactions = try await synchronizer.allSentTransactions()
-                var walletEvents: [WalletEvent] = []
-                for sentTransaction in transactions {
-                    let memos = try await synchronizer.getMemos(for: sentTransaction)
-                    let transaction = TransactionState.init(transaction: sentTransaction, memos: memos)
-                    walletEvents.append(WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp))
-                }
-                
-                return walletEvents
-            },
-            getAllReceivedTransactions: {
-                let transactions = try await synchronizer.allReceivedTransactions()
-                var walletEvents: [WalletEvent] = []
-                for receivedTransaction in transactions {
-                    let memos = try await synchronizer.getMemos(for: receivedTransaction)
-                    let transaction = TransactionState.init(transaction: receivedTransaction, memos: memos)
-                    walletEvents.append(WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp))
-                }
-                
-                return walletEvents
-            },
-            getAllClearedTransactions: {
-                let transactions = try await synchronizer.allClearedTransactions()
-                var walletEvents: [WalletEvent] = []
-                for clearedTransaction in transactions {
-                    let memos = try await synchronizer.getMemos(for: clearedTransaction)
-                    let transaction = TransactionState.init(transaction: clearedTransaction, memos: memos)
-                    walletEvents.append(WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp))
-                }
-                
-                return walletEvents
-            },
-            getAllPendingTransactions: {
-                let transactions = try await synchronizer.allPendingTransactions()
-                var walletEvents: [WalletEvent] = []
-                for pendingTransaction in transactions {
-                    let transaction = TransactionState.init(
-                        pendingTransaction: pendingTransaction,
-                        latestBlockHeight: synchronizer.latestScannedHeight
-                    )
-                    walletEvents.append(WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp))
-                }
-                
-                return walletEvents
-            },
             getAllTransactions: {
                 let pendingTransactions = try await synchronizer.allPendingTransactions()
                 let clearedTransactions = try await synchronizer.allClearedTransactions()
 
-                let clearedTxs: [WalletEvent] = clearedTransactions.map {
-                    let transaction = TransactionState.init(transaction: $0)
-                    return WalletEvent(id: transaction.id, state: .send(transaction), timestamp: transaction.timestamp)
+                var clearedTxs: [WalletEvent] = []
+                for clearedTransaction in clearedTransactions {
+                    var transaction = TransactionState.init(
+                        transaction: clearedTransaction,
+                        memos: clearedTransaction.memoCount > 0 ? try await synchronizer.getMemos(for: clearedTransaction) : nil
+                    )
+
+                    let recipients = await synchronizer.getRecipients(for: clearedTransaction)
+                    let addresses = recipients.compactMap {
+                        if case let .address(address) = $0 {
+                            return address
+                        } else {
+                            return nil
+                        }
+                    }
+                    
+                    transaction.zAddress = addresses.first?.stringEncoded
+                    
+                    clearedTxs.append(
+                        WalletEvent(
+                            id: transaction.id,
+                            state: clearedTransaction.isSentTransaction ? .sent(transaction) : .received(transaction),
+                            timestamp: transaction.timestamp
+                        )
+                    )
                 }
+                
                 let pendingTxs: [WalletEvent] = pendingTransactions.map {
-                    let transaction = TransactionState.init(pendingTransaction: $0, latestBlockHeight: synchronizer.latestScannedHeight)
-                    return WalletEvent(id: transaction.id, state: .pending(transaction), timestamp: transaction.timestamp)
+                    let transaction = TransactionState.init(pendingTransaction: $0, latestBlockHeight: synchronizer.latestState.latestScannedHeight)
+                    return WalletEvent(
+                        id: transaction.id,
+                        state: .pending(transaction),
+                        timestamp: transaction.timestamp
+                    )
                 }
+                
                 var cTxs = clearedTxs.filter { transaction in
                     pendingTxs.first { pending in
                         pending.id == transaction.id
