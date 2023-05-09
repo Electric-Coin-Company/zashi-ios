@@ -83,7 +83,7 @@ class BalanceBreakdownTests: XCTestCase {
         await store.receive(
             .alert(
                 .balanceBreakdown(
-                    .shieldFundsFailure("The operation couldn’t be completed. (ZcashLightClientKit.ZcashError error 168.)")
+                    .shieldFundsFailure("The operation couldn’t be completed. (ZcashLightClientKit.ZcashError error 140.)")
                 )
             )
         )

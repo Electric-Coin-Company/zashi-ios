@@ -49,7 +49,7 @@ class WalletEventsSnapshotTests: XCTestCase {
             zecAmount: Zatoshi(25_000_000)
         )
         
-        let walletEvent = WalletEvent(id: transaction.id, state: .sent(transaction), timestamp: transaction.timestamp)
+        let walletEvent = WalletEvent(id: transaction.id, state: .transaction(transaction), timestamp: transaction.timestamp)
         
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
         let store = HomeStore(
@@ -102,7 +102,7 @@ class WalletEventsSnapshotTests: XCTestCase {
             zecAmount: Zatoshi(25_000_000)
         )
         
-        let walletEvent = WalletEvent(id: transaction.id, state: .sent(transaction), timestamp: transaction.timestamp)
+        let walletEvent = WalletEvent(id: transaction.id, state: .transaction(transaction), timestamp: transaction.timestamp)
         
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
         let store = HomeStore(
@@ -155,7 +155,7 @@ class WalletEventsSnapshotTests: XCTestCase {
             zecAmount: Zatoshi(25_000_000)
         )
         
-        let walletEvent = WalletEvent(id: transaction.id, state: .sent(transaction), timestamp: transaction.timestamp)
+        let walletEvent = WalletEvent(id: transaction.id, state: .transaction(transaction), timestamp: transaction.timestamp)
         
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
         let store = HomeStore(
@@ -214,7 +214,7 @@ class WalletEventsSnapshotTests: XCTestCase {
             zecAmount: Zatoshi(25_000_000)
         )
         
-        let walletEvent = WalletEvent(id: transaction.id, state: .sent(transaction), timestamp: transaction.timestamp)
+        let walletEvent = WalletEvent(id: transaction.id, state: .transaction(transaction), timestamp: transaction.timestamp)
         
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
         let store = HomeStore(

@@ -116,7 +116,7 @@ class HomeTests: XCTestCase {
         store.receive(
             .alert(
                 .home(
-                    .syncFailed("Error: The operation couldn’t be completed. (ZcashLightClientKit.ZcashError error 168.)", "Dismiss")
+                    .syncFailed("Error: The operation couldn’t be completed. (ZcashLightClientKit.ZcashError error 140.)", "Dismiss")
                 )
             )
         )
