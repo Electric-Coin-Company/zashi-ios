@@ -1,4 +1,15 @@
 # Changelog
+# 0.0.1 build 50
+- [#707] Adopt latest SDK (#708)
+- [#705] Transaction detail lacks memo and addresses (#706)
+- [#265] Integrate App Rating Alert (#703)
+- [#698] RootView to use SwitchStore (#699)
+- [#691] Adopt sync/async synchronizer changes (#696)
+- [#683] Zip log files into one (#692)
+- [#684] Improvements for the derivation tool dependency (#689)
+- [#678] Adopt TCA 0.52.0 (#688)
+- [#682] Adopt removal of the Notification center on the SDK side (#687)
+
 # 0.0.1 build 49
 - [#673] End to end bugfix (#679)
 Bugs fixed:
