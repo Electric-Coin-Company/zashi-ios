@@ -69,61 +69,16 @@ struct TransactionState: Equatable, Identifiable {
 }
 
 extension TransactionState {
-    init(transaction: ZcashTransaction.Overview, memos: [Memo]? = nil) {
+    init(transaction: ZcashTransaction.Overview, memos: [Memo]? = nil, latestBlockHeight: BlockHeight? = nil) {
         expiryHeight = transaction.expiryHeight
         minedHeight = transaction.minedHeight
-        fee = transaction.fee ?? Zatoshi(0)
+        fee = transaction.fee ?? .zero
         id = transaction.rawID.toHexStringTxId()
-        status = transaction.isSentTransaction ? .paid(success: minedHeight ?? 0 > 0) : .received
+        status = transaction.isPending(currentHeight: latestBlockHeight ?? 0) ? .pending
+        : transaction.isSentTransaction ? .paid(success: minedHeight ?? 0 > 0) : .received
         timestamp = transaction.blockTime
         zecAmount = transaction.isSentTransaction ? Zatoshi(-transaction.value.amount) : transaction.value
         self.memos = memos
-    }
-
-    init(transaction: ZcashTransaction.Sent, memos: [Memo]? = nil) {
-        expiryHeight = transaction.expiryHeight
-        minedHeight = transaction.minedHeight
-        fee = .zero
-        id = transaction.rawID?.toHexStringTxId() ?? ""
-        status = .paid(success: minedHeight ?? 0 > 0)
-        timestamp = transaction.blockTime
-        zecAmount = transaction.value
-        self.memos = memos
-    }
-
-    init(transaction: ZcashTransaction.Received, memos: [Memo]? = nil) {
-        expiryHeight = transaction.expiryHeight
-        minedHeight = transaction.minedHeight
-        fee = .zero
-        id = transaction.rawID?.toHexStringTxId() ?? ""
-        status = .received
-        timestamp = transaction.blockTime
-        zecAmount = transaction.value
-        self.memos = memos
-    }
-
-    init(pendingTransaction: PendingTransactionEntity, latestBlockHeight: BlockHeight? = nil) {
-        timestamp = pendingTransaction.createTime
-        id = pendingTransaction.rawTransactionId?.toHexStringTxId() ?? String(pendingTransaction.createTime)
-        shielded = true
-        status = pendingTransaction.errorMessage != nil ? .failed :
-        pendingTransaction.minedHeight > 0 ?
-            .paid(success: pendingTransaction.isSubmitSuccess) :
-            .pending
-        expiryHeight = pendingTransaction.expiryHeight
-        zecAmount = pendingTransaction.value
-        fee = Zatoshi(10)
-        minedHeight = pendingTransaction.minedHeight
-        errorMessage = pendingTransaction.errorMessage
-        if let data = pendingTransaction.memo, let memo = try? Memo(bytes: [UInt8](data)) {
-            memos = [memo]
-        }
-        switch pendingTransaction.recipient {
-        case let .address(recipient):
-            zAddress = recipient.stringEncoded
-        case .internalAccount:
-            zAddress = nil
-        }
     }
 }
 

@@ -82,7 +82,7 @@ class SendTests: XCTestCase {
         }
 
         // check the success transaction to be received back
-        await store.receive(.sendTransactionResult(Result.success(transactionState))) { state in
+        await store.receive(.sendTransactionSuccess) { state in
             // from this moment on the sending next transaction is allowed again
             // the 'isSendingTransaction' needs to be false again
             state.isSendingTransaction = false
@@ -150,7 +150,7 @@ class SendTests: XCTestCase {
         }
 
         // check the success transaction to be received back
-        await store.receive(.sendTransactionResult(Result.success(transactionState))) { state in
+        await store.receive(.sendTransactionSuccess) { state in
             // from this moment on the sending next transaction is allowed again
             // the 'isSendingTransaction' needs to be false again
             state.isSendingTransaction = false
@@ -188,6 +188,7 @@ class SendTests: XCTestCase {
         store.dependencies.mnemonic = .liveValue
         store.dependencies.walletStorage = .noOp
         store.dependencies.sdkSynchronizer = .noOp
+        store.dependencies.sdkSynchronizer.sendTransaction = { _, _, _, _ in throw ZcashError.synchronizerNotPrepared }
 
         // simulate the sending confirmation button to be pressed
         _ = await store.send(.sendPressed) { state in
@@ -204,7 +205,9 @@ class SendTests: XCTestCase {
         }
 
         // check the failure transaction to be received back
-        await store.receive(.sendTransactionResult(Result.failure(ZcashError.synchronizerNotPrepared as NSError))) { state in
+        await store.receive(
+            .sendTransactionFailure("The operation couldn’t be completed. (ZcashLightClientKit.ZcashError error 140.)")
+        ) { state in
             // from this moment on the sending next transaction is allowed again
             // the 'isSendingTransaction' needs to be false again
             state.isSendingTransaction = false

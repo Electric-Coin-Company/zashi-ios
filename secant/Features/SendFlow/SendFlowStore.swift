@@ -86,7 +86,8 @@ struct SendFlowReducer: ReducerProtocol {
         case onDisappear
         case scan(ScanReducer.Action)
         case sendPressed
-        case sendTransactionResult(Result<TransactionState, NSError>)
+        case sendTransactionSuccess
+        case sendTransactionFailure(String)
         case synchronizerStateChanged(SynchronizerState)
         case transactionAddressInput(TransactionAddressTextFieldReducer.Action)
         case transactionAmountInput(TransactionAmountTextFieldReducer.Action)
@@ -168,28 +169,27 @@ struct SendFlowReducer: ReducerProtocol {
                     }
 
                     let recipient = try Recipient(state.address, network: zcashSDKEnvironment.network.networkType)
-                    let sendTransActionEffect = sdkSynchronizer.sendTransaction(spendingKey, state.amount, recipient, memo)
-                        .receive(on: mainQueue)
-                        .map(SendFlowReducer.Action.sendTransactionResult)
-                        .eraseToEffect()
-
-                    return .concatenate(
-                        EffectTask(value: .updateDestination(.inProgress)),
-                        sendTransActionEffect
-                    )
+                    return .run { [state] send in
+                        do {
+                            await send(SendFlowReducer.Action.updateDestination(.inProgress))
+                            _ = try await sdkSynchronizer.sendTransaction(spendingKey, state.amount, recipient, memo)
+                            await send(SendFlowReducer.Action.sendTransactionSuccess)
+                        } catch {
+                            await send(SendFlowReducer.Action.sendTransactionFailure(error.localizedDescription))
+                        }
+                    }
                 } catch {
                     return EffectTask(value: .updateDestination(.failure))
                 }
                 
-            case .sendTransactionResult(let result):
+            case .sendTransactionSuccess:
                 state.isSendingTransaction = false
-                do {
-                    _ = try result.get()
-                    return EffectTask(value: .updateDestination(.success))
-                } catch {
-                    return EffectTask(value: .updateDestination(.failure))
-                }
-                
+                return EffectTask(value: .updateDestination(.success))
+
+            case .sendTransactionFailure:
+                state.isSendingTransaction = false
+                return EffectTask(value: .updateDestination(.failure))
+
             case .transactionAmountInput:
                 return .none
 

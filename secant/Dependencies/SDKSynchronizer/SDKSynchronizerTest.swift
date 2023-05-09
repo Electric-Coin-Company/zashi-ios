@@ -28,7 +28,7 @@ extension SDKSynchronizerClient: TestDependencyKey {
         getUnifiedAddress: XCTUnimplemented("\(Self.self).getUnifiedAddress", placeholder: nil),
         getTransparentAddress: XCTUnimplemented("\(Self.self).getTransparentAddress", placeholder: nil),
         getSaplingAddress: XCTUnimplemented("\(Self.self).getSaplingAddress", placeholder: nil),
-        sendTransaction: XCTUnimplemented("\(Self.self).sendTransaction", placeholder: .none),
+        sendTransaction: XCTUnimplemented("\(Self.self).sendTransaction", placeholder: .placeholder),
         shieldFunds: XCTUnimplemented("\(Self.self).shieldFunds", placeholder: .placeholder),
         wipe: XCTUnimplemented("\(Self.self).wipe")
     )
@@ -52,7 +52,7 @@ extension SDKSynchronizerClient {
         getUnifiedAddress: { _ in return nil },
         getTransparentAddress: { _ in return nil },
         getSaplingAddress: { _ in return nil },
-        sendTransaction: { _, _, _, _ in return EffectTask(value: Result.failure(ZcashError.synchronizerNotPrepared as NSError)) },
+        sendTransaction: { _, _, _, _ in return .placeholder },
         shieldFunds: { _, _, _ in return .placeholder },
         wipe: { Empty<Void, Error>().eraseToAnyPublisher() }
     )
@@ -93,7 +93,7 @@ extension SDKSynchronizerClient {
                         timestamp: $0.date,
                         uuid: $0.uuid
                     )
-                    return WalletEvent(id: transaction.id, state: .sent(transaction), timestamp: transaction.timestamp ?? 0)
+                    return WalletEvent(id: transaction.id, state: .transaction(transaction), timestamp: transaction.timestamp ?? 0)
                 }
         
             let mockedPending: [TransactionStateMockHelper] = [
@@ -118,7 +118,7 @@ extension SDKSynchronizerClient {
                         timestamp: $0.date,
                         uuid: $0.uuid
                     )
-                    return WalletEvent(id: transaction.id, state: .pending(transaction), timestamp: transaction.timestamp)
+                    return WalletEvent(id: transaction.id, state: .transaction(transaction), timestamp: transaction.timestamp)
                 }
             
             clearedTransactions.append(contentsOf: pendingTransactions)
@@ -144,11 +144,11 @@ extension SDKSynchronizerClient {
             )
         },
         sendTransaction:
-        @escaping (UnifiedSpendingKey, Zatoshi, Recipient, Memo?) -> EffectTask<Result<TransactionState, NSError>> = { _, _, _, memo in
+        @escaping (UnifiedSpendingKey, Zatoshi, Recipient, Memo?) async throws -> TransactionState = { _, _, _, memo in
             var memos: [Memo]? = []
             if let memo { memos?.append(memo) }
 
-            let transactionState = TransactionState(
+            return TransactionState(
                 expiryHeight: 40,
                 memos: memos,
                 minedHeight: 50,
@@ -160,8 +160,6 @@ extension SDKSynchronizerClient {
                 timestamp: 1234567,
                 zecAmount: Zatoshi(10)
             )
-
-            return EffectTask(value: Result.success(transactionState))
         },
         shieldFunds: @escaping (UnifiedSpendingKey, Memo, Zatoshi) async throws -> TransactionState = { _, memo, _  in
             return TransactionState(

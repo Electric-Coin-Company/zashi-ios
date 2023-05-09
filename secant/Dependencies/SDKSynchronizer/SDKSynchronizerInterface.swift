@@ -25,7 +25,7 @@ struct SDKSynchronizerClient {
 
     let prepareWith: ([UInt8], UnifiedFullViewingKey, BlockHeight) async throws -> Void
     let start: (_ retry: Bool) async throws -> Void
-    let stop: () async -> Void
+    let stop: () -> Void
     let isSyncing: () -> Bool
     let isInitialized: () -> Bool
 
@@ -39,8 +39,7 @@ struct SDKSynchronizerClient {
     let getTransparentAddress: (_ account: Int) async throws -> TransparentAddress?
     let getSaplingAddress: (_ accountIndex: Int) async throws -> SaplingAddress?
 
-    let sendTransaction: (UnifiedSpendingKey, Zatoshi, Recipient, Memo?) -> EffectTask<Result<TransactionState, NSError>>
-
+    var sendTransaction: (UnifiedSpendingKey, Zatoshi, Recipient, Memo?) async throws -> TransactionState
     let shieldFunds: (UnifiedSpendingKey, Memo, Zatoshi) async throws -> TransactionState
 
     let wipe: () -> AnyPublisher<Void, Error>?
