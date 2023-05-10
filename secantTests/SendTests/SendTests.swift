@@ -206,7 +206,7 @@ class SendTests: XCTestCase {
 
         // check the failure transaction to be received back
         await store.receive(
-            .sendTransactionFailure("The operation couldn’t be completed. (ZcashLightClientKit.ZcashError error 140.)")
+            .sendTransactionFailure(ZcashError.synchronizerNotPrepared)
         ) { state in
             // from this moment on the sending next transaction is allowed again
             // the 'isSendingTransaction' needs to be false again

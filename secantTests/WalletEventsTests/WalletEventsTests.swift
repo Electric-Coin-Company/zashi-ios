@@ -82,7 +82,7 @@ class WalletEventsTests: XCTestCase {
         store.dependencies.mainQueue = .immediate
         store.dependencies.sdkSynchronizer = .mocked()
 
-        await store.send(.synchronizerStateChanged(.synced)) { state in
+        await store.send(.synchronizerStateChanged(.upToDate)) { state in
             state.latestMinedHeight = 0
         }
 

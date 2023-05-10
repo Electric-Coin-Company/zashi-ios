@@ -19,13 +19,13 @@ extension RootReducer {
     
     indirect enum DebugAction: Equatable {
         case cancelRescan
-        case cantStartSync(String)
+        case cantStartSync(ZcashError)
         case flagUpdated
         case fullRescan
         case quickRescan
         case rateTheApp
         case rescanBlockchain
-        case rewindDone(String?, RootReducer.Action)
+        case rewindDone(ZcashError?, RootReducer.Action)
         case testCrashReporter // this will crash the app if live.
         case updateFlag(FeatureFlag, Bool)
         case walletConfigLoaded(WalletConfig)
@@ -63,15 +63,15 @@ extension RootReducer {
                 state.destinationState.destination = .home
                 return rewind(policy: .birthday, sourceAction: .fullRescan)
 
-            case let .debug(.rewindDone(errorDescription, _)):
-                if let errorDescription {
-                    return EffectTask(value: .alert(.root(.rewindFailed(errorDescription))))
+            case let .debug(.rewindDone(error, _)):
+                if let error {
+                    return EffectTask(value: .alert(.root(.rewindFailed(error.toZcashError()))))
                 } else {
                     return .run { send in
                         do {
                             try await sdkSynchronizer.start(false)
                         } catch {
-                            await send(.debug(.cantStartSync(error.localizedDescription)))
+                            await send(.debug(.cantStartSync(error.toZcashError())))
                         }
                     }
                 }
@@ -93,8 +93,8 @@ extension RootReducer {
             case let .debug(.walletConfigLoaded(walletConfig)):
                 return EffectTask(value: .updateStateAfterConfigUpdate(walletConfig))
 
-            case .debug(.cantStartSync(let errorMessage)):
-                return EffectTask(value: .alert(.root(.cantStartSync(errorMessage))))
+            case .debug(.cantStartSync(let error)):
+                return EffectTask(value: .alert(.root(.cantStartSync(error))))
                 
             case .debug(.rateTheApp):
                 return .none
@@ -109,7 +109,7 @@ extension RootReducer {
             .replaceEmpty(with: Void())
             .map { _ in return RootReducer.Action.debug(.rewindDone(nil, .debug(sourceAction))) }
             .catch { error in
-                return Just(RootReducer.Action.debug(.rewindDone(error.localizedDescription, .debug(sourceAction)))).eraseToAnyPublisher()
+                return Just(RootReducer.Action.debug(.rewindDone(error.toZcashError(), .debug(sourceAction)))).eraseToAnyPublisher()
             }
             .receive(on: mainQueue)
             .eraseToEffect()

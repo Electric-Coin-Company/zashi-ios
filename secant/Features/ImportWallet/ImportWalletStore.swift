@@ -113,7 +113,7 @@ struct ImportWalletReducer: ReducerProtocol {
                         EffectTask(value: .initializeSDK)
                     )
                 } catch {
-                    return EffectTask(value: .alert(.importWallet(.failed(error.localizedDescription))))
+                    return EffectTask(value: .alert(.importWallet(.failed(error.toZcashError()))))
                 }
                 
             case .updateDestination(let destination):

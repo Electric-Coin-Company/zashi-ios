@@ -70,7 +70,7 @@ struct ScanReducer: ReducerProtocol {
                 state.isTorchAvailable = try captureDevice.isTorchAvailable()
                 return .none
             } catch {
-                return EffectTask(value: .alert(.scan(.cantInitializeCamera(error.localizedDescription))))
+                return EffectTask(value: .alert(.scan(.cantInitializeCamera(error.toZcashError()))))
             }
         
         case .onDisappear:
@@ -110,7 +110,7 @@ struct ScanReducer: ReducerProtocol {
                 state.isTorchOn.toggle()
                 return .none
             } catch {
-                return EffectTask(value: .alert(.scan(.cantInitializeCamera(error.localizedDescription))))
+                return EffectTask(value: .alert(.scan(.cantInitializeCamera(error.toZcashError()))))
             }
         }
     }

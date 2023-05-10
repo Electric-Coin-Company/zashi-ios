@@ -36,7 +36,7 @@ final class ReviewRequestTests: XCTestCase {
             )
         
         var syncState: SynchronizerState = .zero
-        syncState.syncStatus = .synced
+        syncState.syncStatus = .upToDate
         let snapshot = SyncStatusSnapshot.snapshotFor(state: syncState.syncStatus)
         
         await store.send(.synchronizerStateChanged(syncState)) { state in

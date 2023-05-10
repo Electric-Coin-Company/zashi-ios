@@ -49,7 +49,7 @@ struct HomeReducer: ReducerProtocol {
         }
         
         var isUpToDate: Bool {
-            if case .synced = synchronizerStatusSnapshot.syncStatus {
+            if case .upToDate = synchronizerStatusSnapshot.syncStatus {
                 return true
             }
             return false
@@ -73,12 +73,12 @@ struct HomeReducer: ReducerProtocol {
         case reviewRequestFinished
         case send(SendFlowReducer.Action)
         case settings(SettingsReducer.Action)
-        case syncFailed(String)
+        case syncFailed(ZcashError)
         case foundTransactions
         case synchronizerStateChanged(SynchronizerState)
         case walletEvents(WalletEventsFlowReducer.Action)
         case updateDestination(HomeReducer.State.Destination?)
-        case showSynchronizerErrorAlert(SyncStatusSnapshot)
+        case showSynchronizerErrorAlert(ZcashError)
         case retrySync
         case updateWalletEvents([WalletEvent])
     }
@@ -161,10 +161,10 @@ struct HomeReducer: ReducerProtocol {
                 state.shieldedBalance = latestState.shieldedBalance.redacted
 
                 switch snapshot.syncStatus {
-                case .error:
-                    return EffectTask(value: .showSynchronizerErrorAlert(snapshot))
+                case .error(let error):
+                    return EffectTask(value: .showSynchronizerErrorAlert(error.toZcashError()))
                     
-                case .synced:
+                case .upToDate:
                     return .fireAndForget { await reviewRequest.syncFinished() }
                     
                 default:
@@ -207,12 +207,12 @@ struct HomeReducer: ReducerProtocol {
                     do {
                         try await sdkSynchronizer.start(true)
                     } catch {
-                        await send(.syncFailed(error.localizedDescription))
+                        await send(.syncFailed(error.toZcashError()))
                     }
                 }
 
-            case .showSynchronizerErrorAlert(let snapshot):
-                return EffectTask(value: .alert(.home(.syncFailed(snapshot.message, L10n.Home.SyncFailed.dismiss))))
+            case .showSynchronizerErrorAlert(let error):
+                return EffectTask(value: .alert(.home(.syncFailed(error, L10n.Home.SyncFailed.dismiss))))
                 
             case .balanceBreakdown(.onDisappear):
                 state.destination = nil
@@ -224,8 +224,8 @@ struct HomeReducer: ReducerProtocol {
             case .debugMenuStartup:
                 return .none
                 
-            case .syncFailed(let errorMessage):
-                return EffectTask(value: .alert(.home(.syncFailed(errorMessage, L10n.General.ok))))
+            case .syncFailed(let error):
+                return EffectTask(value: .alert(.home(.syncFailed(error, L10n.General.ok))))
                 
             case .alert:
                 return .none

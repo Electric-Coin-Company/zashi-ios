@@ -66,7 +66,7 @@ struct SettingsReducer: ReducerProtocol {
                     state.phraseDisplayState.phrase = recoveryPhrase
                     return EffectTask(value: .updateDestination(.backupPhrase))
                 } catch {
-                    return EffectTask(value: .alert(.settings(.cantBackupWallet(error.localizedDescription))))
+                    return EffectTask(value: .alert(.settings(.cantBackupWallet(error.toZcashError()))))
                 }
 
             case .binding(\.$isCrashReportingOn):
