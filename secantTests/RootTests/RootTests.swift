@@ -8,6 +8,7 @@
 import XCTest
 @testable import secant_testnet
 import ComposableArchitecture
+import ZcashLightClientKit
 
 class RootTests: XCTestCase {
     static let testScheduler = DispatchQueue.test
@@ -131,6 +132,7 @@ class RootTests: XCTestCase {
 
     func testRespondToWalletInitializationState_FilesMissing() throws {
         let walletStorageError: Error = "export failed"
+        let zcashError = ZcashError.unknown(walletStorageError)
 
         let store = TestStore(
             initialState: .placeholder,
@@ -151,7 +153,7 @@ class RootTests: XCTestCase {
             state.appInitializationState = .failed
         }
 
-        store.receive(.initialization(.initializationFailed(walletStorageError.localizedDescription)))
+        store.receive(.initialization(.initializationFailed(zcashError)))
 
         store.receive(.alert(.root(.cantLoadSeedPhrase))) { state in
             state.uniAlert = AlertState(
@@ -161,10 +163,10 @@ class RootTests: XCTestCase {
             )
         }
         
-        store.receive(.alert(.root(.initializationFailed("The operation couldn’t be completed. (Swift.String error 1.)")))) { state in
+        store.receive(.alert(.root(.initializationFailed(zcashError)))) { state in
             state.uniAlert = AlertState(
                 title: TextState("Failed to initialize the SDK"),
-                message: TextState("Error: \(walletStorageError.localizedDescription)"),
+                message: TextState("Error: \(zcashError.message) (code: \(zcashError.code.rawValue))"),
                 dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
             )
         }
@@ -172,6 +174,8 @@ class RootTests: XCTestCase {
 
     func testRespondToWalletInitializationState_Initialized() throws {
         let walletStorageError: Error = "export failed"
+        let zcashError = ZcashError.unknown(walletStorageError)
+
         let store = TestStore(
             initialState: .placeholder,
             reducer: RootReducer()
@@ -189,7 +193,7 @@ class RootTests: XCTestCase {
             state.appInitializationState = .failed
         }
         
-        store.receive(.initialization(.initializationFailed(walletStorageError.localizedDescription)))
+        store.receive(.initialization(.initializationFailed(zcashError)))
         
         store.receive(.alert(.root(.cantLoadSeedPhrase))) { state in
             state.uniAlert = AlertState(
@@ -199,10 +203,10 @@ class RootTests: XCTestCase {
             )
         }
         
-        store.receive(.alert(.root(.initializationFailed("The operation couldn’t be completed. (Swift.String error 1.)")))) { state in
+        store.receive(.alert(.root(.initializationFailed(zcashError)))) { state in
             state.uniAlert = AlertState(
                 title: TextState("Failed to initialize the SDK"),
-                message: TextState("Error: \(walletStorageError.localizedDescription)"),
+                message: TextState("Error: \(zcashError.message) (code: \(zcashError.code.rawValue))"),
                 dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
             )
         }

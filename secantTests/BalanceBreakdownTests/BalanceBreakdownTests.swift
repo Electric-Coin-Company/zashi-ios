@@ -76,14 +76,14 @@ class BalanceBreakdownTests: XCTestCase {
         await store.send(.shieldFunds) { state in
             state.shieldingFunds = true
         }
-        await store.receive(.shieldFundsFailure(ZcashError.synchronizerNotPrepared.localizedDescription)) { state in
+        await store.receive(.shieldFundsFailure(ZcashError.synchronizerNotPrepared)) { state in
             state.shieldingFunds = false
         }
 
         await store.receive(
             .alert(
                 .balanceBreakdown(
-                    .shieldFundsFailure("The operation couldn’t be completed. (ZcashLightClientKit.ZcashError error 140.)")
+                    .shieldFundsFailure(ZcashError.synchronizerNotPrepared)
                 )
             )
         )

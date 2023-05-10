@@ -19,29 +19,17 @@ struct SyncStatusSnapshot: Equatable {
     
     static func snapshotFor(state: SyncStatus) -> SyncStatusSnapshot {
         switch state {
-        case .enhancing:
-            return SyncStatusSnapshot(state, L10n.Sync.Message.enhancing)
-            
-        case .fetching:
-            return SyncStatusSnapshot(state, L10n.Sync.Message.fetchingUTXO)
-            
-        case .disconnected:
-            return SyncStatusSnapshot(state, L10n.Sync.Message.disconnected)
-            
-        case .stopped:
-            return SyncStatusSnapshot(state, L10n.Sync.Message.stopped)
-            
-        case .synced:
+        case .upToDate:
             return SyncStatusSnapshot(state, L10n.Sync.Message.uptodate)
             
         case .unprepared:
             return SyncStatusSnapshot(state, L10n.Sync.Message.unprepared)
             
-        case .error(let err):
-            return SyncStatusSnapshot(state, L10n.Sync.Message.error(err.localizedDescription))
+        case .error(let error):
+            return SyncStatusSnapshot(state, L10n.Sync.Message.error(error.toZcashError().message))
 
         case .syncing(let progress):
-            return SyncStatusSnapshot(state, L10n.Sync.Message.sync(String(format: "%0.1f", progress.progress * 100)))
+            return SyncStatusSnapshot(state, L10n.Sync.Message.sync(String(format: "%0.1f", progress * 100)))
         }
     }
 }

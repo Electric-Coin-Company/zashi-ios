@@ -39,7 +39,7 @@ extension RootReducer {
         case deeplink(URL)
         case deeplinkHome
         case deeplinkSend(Zatoshi, String, String)
-        case deeplinkFailed(URL, String)
+        case deeplinkFailed(URL, ZcashError)
         case updateDestination(RootReducer.DestinationState.Destination)
     }
 
@@ -78,7 +78,7 @@ extension RootReducer {
                 let synchronizerStatus = sdkSynchronizer.latestState().syncStatus
 
                 // process the deeplink only if app is initialized and synchronizer synced
-                guard state.appInitializationState == .initialized && synchronizerStatus == .synced else {
+                guard state.appInitializationState == .initialized && synchronizerStatus == .upToDate else {
                     // TODO: [#370] There are many different states and edge cases we need to handle here
                     // (https://github.com/zcash/secant-ios-wallet/issues/370)
                     return .none
@@ -93,7 +93,7 @@ extension RootReducer {
                             )
                         )
                     } catch {
-                        await send(.destination(.deeplinkFailed(url, error.localizedDescription)))
+                        await send(.destination(.deeplinkFailed(url, error.toZcashError())))
                     }
                 }
 
@@ -110,8 +110,8 @@ extension RootReducer {
                 state.homeState.sendState.memoState.text = memo.redacted
                 return .none
 
-            case let .destination(.deeplinkFailed(url, errorDescription)):
-                return EffectTask(value: .alert(.root(.failedToProcessDeeplink(url, errorDescription))))
+            case let .destination(.deeplinkFailed(url, error)):
+                return EffectTask(value: .alert(.root(.failedToProcessDeeplink(url, error))))
 
             case .home(.walletEvents(.replyTo(let address))):
                 guard let url = URL(string: "zcash:\(address)") else {

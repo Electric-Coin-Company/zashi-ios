@@ -24,7 +24,7 @@ struct ExportLogsReducer: ReducerProtocol {
         case alert(AlertRequest)
         case start
         case finished(URL?)
-        case failed(String)
+        case failed(ZcashError)
         case shareFinished
     }
 
@@ -43,7 +43,7 @@ struct ExportLogsReducer: ReducerProtocol {
                         let zippedLogsURL = try await logsHandler.exportAndStoreLogs()
                         await send(.finished(zippedLogsURL))
                     } catch {
-                        await send(.failed(error.localizedDescription))
+                        await send(.failed(error.toZcashError()))
                     }
                 }
 
@@ -55,10 +55,10 @@ struct ExportLogsReducer: ReducerProtocol {
                 state.isSharingLogs = true
                 return .none
 
-            case let .failed(errorDescription):
+            case let .failed(error):
                 state.exportLogsDisabled = false
                 state.isSharingLogs = false
-                return EffectTask(value: .alert(.exportLogs(.failed(errorDescription))))
+                return EffectTask(value: .alert(.exportLogs(.failed(error))))
 
             case .shareFinished:
                 state.isSharingLogs = false

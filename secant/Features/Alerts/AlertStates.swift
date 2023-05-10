@@ -12,10 +12,10 @@ import ComposableArchitecture
 extension AlertRequest {
     func balanceBreakdownAlertState(_ balanceBreakdown: BalanceBreakdown) -> AlertState<RootReducer.Action> {
         switch balanceBreakdown {
-        case .shieldFundsFailure(let errorDescription):
+        case .shieldFundsFailure(let error):
             return AlertState(
                 title: TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Failure.title),
-                message: TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Failure.message(errorDescription)),
+                message: TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Failure.message(error.message, error.code.rawValue)),
                 dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
             )
         case .shieldFundsSuccess:
@@ -33,10 +33,10 @@ extension AlertRequest {
 extension AlertRequest {
     func exportLogsAlertState(_ exportLogs: ExportLogs) -> AlertState<RootReducer.Action> {
         switch exportLogs {
-        case .failed(let errorDescription):
+        case .failed(let error):
             return AlertState(
                 title: TextState(L10n.ExportLogs.Alert.Failed.title),
-                message: TextState(L10n.ExportLogs.Alert.Failed.message(errorDescription)),
+                message: TextState(L10n.ExportLogs.Alert.Failed.message(error.message, error.code.rawValue)),
                 dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
             )
         }
@@ -48,10 +48,10 @@ extension AlertRequest {
 extension AlertRequest {
     func homeAlertState(_ home: Home) -> AlertState<RootReducer.Action> {
         switch home {
-        case let .syncFailed(message, secondaryButtonTitle):
+        case let .syncFailed(error, secondaryButtonTitle):
             return AlertState(
                 title: TextState(L10n.Home.SyncFailed.title),
-                message: TextState(message),
+                message: TextState("\(error.message) (code: \(error.code.rawValue))"),
                 primaryButton: .default(TextState(L10n.Home.SyncFailed.retry), action: .send(.uniAlert(.home(.retrySync)))),
                 secondaryButton: .default(TextState(secondaryButtonTitle), action: .send(.dismissAlert))
             )
@@ -70,10 +70,10 @@ extension AlertRequest {
                 message: TextState(L10n.ImportWallet.Alert.Success.message),
                 dismissButton: .default(TextState(L10n.General.ok), action: .send(.uniAlert(.importWallet(.successfullyRecovered))))
             )
-        case .failed(let errorDescription):
+        case .failed(let error):
             return AlertState(
                 title: TextState(L10n.ImportWallet.Alert.Failed.title),
-                message: TextState(L10n.ImportWallet.Alert.Failed.message(errorDescription)),
+                message: TextState(L10n.ImportWallet.Alert.Failed.message(error.message, error.code.rawValue)),
                 dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
             )
         }
@@ -85,10 +85,10 @@ extension AlertRequest {
 extension AlertRequest {
     func rootAlertState(_ root: Root) -> AlertState<RootReducer.Action> {
         switch root {
-        case .cantCreateNewWallet(let errorDescription):
+        case .cantCreateNewWallet(let error):
             return AlertState(
                 title: TextState(L10n.Root.Initialization.Alert.Failed.title),
-                message: TextState(L10n.Root.Initialization.Alert.CantCreateNewWallet.message(errorDescription)),
+                message: TextState(L10n.Root.Initialization.Alert.CantCreateNewWallet.message(error.message, error.code.rawValue)),
                 dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
             )
         case .cantLoadSeedPhrase:
@@ -97,34 +97,34 @@ extension AlertRequest {
                 message: TextState(L10n.Root.Initialization.Alert.CantLoadSeedPhrase.message),
                 dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
             )
-        case .cantStartSync(let errorDescription):
+        case .cantStartSync(let error):
             return AlertState(
                 title: TextState(L10n.Root.Debug.Alert.Rewind.CantStartSync.title),
-                message: TextState(L10n.Root.Debug.Alert.Rewind.CantStartSync.message(errorDescription)),
+                message: TextState(L10n.Root.Debug.Alert.Rewind.CantStartSync.message(error.message, error.code.rawValue)),
                 dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
             )
-        case .cantStoreThatUserPassedPhraseBackupTest(let errorDescription):
+        case .cantStoreThatUserPassedPhraseBackupTest(let error):
             return AlertState(
                 title: TextState(L10n.Root.Initialization.Alert.Failed.title),
-                message: TextState(L10n.Root.Initialization.Alert.CantStoreThatUserPassedPhraseBackupTest.message(errorDescription)),
+                message: TextState(L10n.Root.Initialization.Alert.CantStoreThatUserPassedPhraseBackupTest.message(error.message, error.code.rawValue)),
                 dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
             )
-        case let .failedToProcessDeeplink(url, errorDescription):
+        case let .failedToProcessDeeplink(url, error):
             return AlertState(
                 title: TextState(L10n.Root.Destination.Alert.FailedToProcessDeeplink.title),
-                message: TextState(L10n.Root.Destination.Alert.FailedToProcessDeeplink.message(url, errorDescription)),
+                message: TextState(L10n.Root.Destination.Alert.FailedToProcessDeeplink.message(url, error.message, error.code.rawValue)),
                 dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
             )
-        case .initializationFailed(let errorDescription):
+        case .initializationFailed(let error):
             return AlertState(
                 title: TextState(L10n.Root.Initialization.Alert.SdkInitFailed.title),
-                message: TextState(L10n.Root.Initialization.Alert.Error.message(errorDescription)),
+                message: TextState(L10n.Root.Initialization.Alert.Error.message(error.message, error.code.rawValue)),
                 dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
             )
-        case .rewindFailed(let errorDescription):
+        case .rewindFailed(let error):
             return AlertState(
                 title: TextState(L10n.Root.Debug.Alert.Rewind.Failed.title),
-                message: TextState(L10n.Root.Debug.Alert.Rewind.Failed.message(errorDescription)),
+                message: TextState(L10n.Root.Debug.Alert.Rewind.Failed.message(error.message, error.code.rawValue)),
                 dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
             )
         case .walletStateFailed(let walletState):
@@ -157,10 +157,10 @@ extension AlertRequest {
 extension AlertRequest {
     func scanAlertState(_ scan: Scan) -> AlertState<RootReducer.Action> {
         switch scan {
-        case .cantInitializeCamera(let errorDescription):
+        case .cantInitializeCamera(let error):
             return AlertState(
                 title: TextState(L10n.Scan.Alert.CantInitializeCamera.title),
-                message: TextState(L10n.Scan.Alert.CantInitializeCamera.message(errorDescription)),
+                message: TextState(L10n.Scan.Alert.CantInitializeCamera.message(error.message, error.code.rawValue)),
                 dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
             )
         }
@@ -172,10 +172,10 @@ extension AlertRequest {
 extension AlertRequest {
     func settingsAlertState(_ settings: Settings) -> AlertState<RootReducer.Action> {
         switch settings {
-        case .cantBackupWallet(let message):
+        case .cantBackupWallet(let error):
             return AlertState<RootReducer.Action>(
                 title: TextState(L10n.Settings.Alert.CantBackupWallet.title),
-                message: TextState(L10n.Settings.Alert.CantBackupWallet.message(message)),
+                message: TextState(L10n.Settings.Alert.CantBackupWallet.message(error.message, error.code.rawValue)),
                 dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
             )
         case .sendSupportMail:

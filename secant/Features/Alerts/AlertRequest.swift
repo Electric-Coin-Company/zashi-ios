@@ -7,6 +7,7 @@
 
 import Foundation
 import ComposableArchitecture
+import ZcashLightClientKit
 
 extension RootReducer {
     indirect enum AlertAction: Equatable {
@@ -24,41 +25,41 @@ extension RootReducer {
 enum AlertRequest: Equatable {
     enum BalanceBreakdown: Equatable {
         case shieldFundsSuccess
-        case shieldFundsFailure(String)
+        case shieldFundsFailure(ZcashError)
     }
 
     enum ExportLogs: Equatable {
-        case failed(String)
+        case failed(ZcashError)
     }
 
     enum Home: Equatable {
-        case syncFailed(String, String)
+        case syncFailed(ZcashError, String)
     }
 
     enum ImportWallet: Equatable {
         case succeed
-        case failed(String)
+        case failed(ZcashError)
     }
 
     enum Root: Equatable {
-        case cantCreateNewWallet(String)
+        case cantCreateNewWallet(ZcashError)
         case cantLoadSeedPhrase
-        case cantStartSync(String)
-        case cantStoreThatUserPassedPhraseBackupTest(String)
-        case failedToProcessDeeplink(URL, String)
-        case initializationFailed(String)
-        case rewindFailed(String)
+        case cantStartSync(ZcashError)
+        case cantStoreThatUserPassedPhraseBackupTest(ZcashError)
+        case failedToProcessDeeplink(URL, ZcashError)
+        case initializationFailed(ZcashError)
+        case rewindFailed(ZcashError)
         case walletStateFailed(InitializationState)
         case wipeFailed
         case wipeRequest
     }
 
     enum Scan: Equatable {
-        case cantInitializeCamera(String)
+        case cantInitializeCamera(ZcashError)
     }
 
     enum Settings: Equatable {
-        case cantBackupWallet(String)
+        case cantBackupWallet(ZcashError)
         case sendSupportMail
     }
 

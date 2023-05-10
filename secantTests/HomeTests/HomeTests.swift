@@ -14,13 +14,7 @@ import ComposableArchitecture
 class HomeTests: XCTestCase {
     func testSendButtonIsDisabledWhenSyncing() {
         let mockSnapshot = SyncStatusSnapshot.init(
-            .syncing(
-                .init(
-                    startHeight: 1_700_000,
-                    targetHeight: 1_800_000,
-                    progressHeight: 1_770_000
-                )
-            )
+            .syncing(0.7)
         )
 
         let store = TestStore(
@@ -111,12 +105,12 @@ class HomeTests: XCTestCase {
             state.synchronizerStatusSnapshot = errorSnapshot
         }
 
-        store.receive(.showSynchronizerErrorAlert(errorSnapshot))
+        store.receive(.showSynchronizerErrorAlert(testError))
         
         store.receive(
             .alert(
                 .home(
-                    .syncFailed("Error: The operation couldn’t be completed. (ZcashLightClientKit.ZcashError error 140.)", "Dismiss")
+                    .syncFailed(ZcashError.synchronizerNotPrepared, "Dismiss")
                 )
             )
         )

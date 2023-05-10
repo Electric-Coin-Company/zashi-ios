@@ -64,9 +64,9 @@ internal enum L10n {
     internal enum Alert {
       internal enum ShieldFunds {
         internal enum Failure {
-          /// Error: %@
-          internal static func message(_ p1: Any) -> String {
-            return L10n.tr("Localizable", "balanceBreakdown.alert.shieldFunds.failure.message", String(describing: p1), fallback: "Error: %@")
+          /// Error: %@ (code: %@)
+          internal static func message(_ p1: Any, _ p2: Any) -> String {
+            return L10n.tr("Localizable", "balanceBreakdown.alert.shieldFunds.failure.message", String(describing: p1), String(describing: p2), fallback: "Error: %@ (code: %@)")
           }
           /// Failed to shield funds
           internal static let title = L10n.tr("Localizable", "balanceBreakdown.alert.shieldFunds.failure.title", fallback: "Failed to shield funds")
@@ -87,9 +87,9 @@ internal enum L10n {
   internal enum ExportLogs {
     internal enum Alert {
       internal enum Failed {
-        /// Error: %@
-        internal static func message(_ p1: Any) -> String {
-          return L10n.tr("Localizable", "exportLogs.alert.failed.message", String(describing: p1), fallback: "Error: %@")
+        /// Error: %@ (code: %@)
+        internal static func message(_ p1: Any, _ p2: Any) -> String {
+          return L10n.tr("Localizable", "exportLogs.alert.failed.message", String(describing: p1), String(describing: p2), fallback: "Error: %@ (code: %@)")
         }
         /// Error when exporting logs
         internal static let title = L10n.tr("Localizable", "exportLogs.alert.failed.title", fallback: "Error when exporting logs")
@@ -175,9 +175,9 @@ internal enum L10n {
     internal static let title = L10n.tr("Localizable", "importWallet.title", fallback: "Wallet Import")
     internal enum Alert {
       internal enum Failed {
-        /// Error: %@
-        internal static func message(_ p1: Any) -> String {
-          return L10n.tr("Localizable", "importWallet.alert.failed.message", String(describing: p1), fallback: "Error: %@")
+        /// Error: %@ (code: %@)
+        internal static func message(_ p1: Any, _ p2: Any) -> String {
+          return L10n.tr("Localizable", "importWallet.alert.failed.message", String(describing: p1), String(describing: p2), fallback: "Error: %@ (code: %@)")
         }
         /// Failed to restore wallet
         internal static let title = L10n.tr("Localizable", "importWallet.alert.failed.title", fallback: "Failed to restore wallet")
@@ -321,17 +321,17 @@ internal enum L10n {
       internal enum Alert {
         internal enum Rewind {
           internal enum CantStartSync {
-            /// Error: %@
-            internal static func message(_ p1: Any) -> String {
-              return L10n.tr("Localizable", "root.debug.alert.rewind.cantStartSync.message", String(describing: p1), fallback: "Error: %@")
+            /// Error: %@ (code: %@)
+            internal static func message(_ p1: Any, _ p2: Any) -> String {
+              return L10n.tr("Localizable", "root.debug.alert.rewind.cantStartSync.message", String(describing: p1), String(describing: p2), fallback: "Error: %@ (code: %@)")
             }
             /// Can't start sync process after rewind
             internal static let title = L10n.tr("Localizable", "root.debug.alert.rewind.cantStartSync.title", fallback: "Can't start sync process after rewind")
           }
           internal enum Failed {
-            /// Error: %@
-            internal static func message(_ p1: Any) -> String {
-              return L10n.tr("Localizable", "root.debug.alert.rewind.failed.message", String(describing: p1), fallback: "Error: %@")
+            /// Error: %@ (code: %@)
+            internal static func message(_ p1: Any, _ p2: Any) -> String {
+              return L10n.tr("Localizable", "root.debug.alert.rewind.failed.message", String(describing: p1), String(describing: p2), fallback: "Error: %@ (code: %@)")
             }
             /// Rewind failed
             internal static let title = L10n.tr("Localizable", "root.debug.alert.rewind.failed.title", fallback: "Rewind failed")
@@ -377,9 +377,9 @@ internal enum L10n {
       internal enum Alert {
         internal enum FailedToProcessDeeplink {
           /// Deeplink: (%@))
-          /// Error: (%@)
-          internal static func message(_ p1: Any, _ p2: Any) -> String {
-            return L10n.tr("Localizable", "root.destination.alert.failedToProcessDeeplink.message", String(describing: p1), String(describing: p2), fallback: "Deeplink: (%@))\nError: (%@)")
+          /// Error: (%@) (code: %@)
+          internal static func message(_ p1: Any, _ p2: Any, _ p3: Any) -> String {
+            return L10n.tr("Localizable", "root.destination.alert.failedToProcessDeeplink.message", String(describing: p1), String(describing: p2), String(describing: p3), fallback: "Deeplink: (%@))\nError: (%@) (code: %@)")
           }
           /// Failed to process deeplink.
           internal static let title = L10n.tr("Localizable", "root.destination.alert.failedToProcessDeeplink.title", fallback: "Failed to process deeplink.")
@@ -389,9 +389,9 @@ internal enum L10n {
     internal enum Initialization {
       internal enum Alert {
         internal enum CantCreateNewWallet {
-          /// Can't create new wallet. Error: %@
-          internal static func message(_ p1: Any) -> String {
-            return L10n.tr("Localizable", "root.initialization.alert.cantCreateNewWallet.message", String(describing: p1), fallback: "Can't create new wallet. Error: %@")
+          /// Can't create new wallet. Error: %@ (code: %@)
+          internal static func message(_ p1: Any, _ p2: Any) -> String {
+            return L10n.tr("Localizable", "root.initialization.alert.cantCreateNewWallet.message", String(describing: p1), String(describing: p2), fallback: "Can't create new wallet. Error: %@ (code: %@)")
           }
         }
         internal enum CantLoadSeedPhrase {
@@ -399,15 +399,15 @@ internal enum L10n {
           internal static let message = L10n.tr("Localizable", "root.initialization.alert.cantLoadSeedPhrase.message", fallback: "Can't load seed phrase from local storage.")
         }
         internal enum CantStoreThatUserPassedPhraseBackupTest {
-          /// Can't store information that user passed phrase backup test. Error: %@
-          internal static func message(_ p1: Any) -> String {
-            return L10n.tr("Localizable", "root.initialization.alert.cantStoreThatUserPassedPhraseBackupTest.message", String(describing: p1), fallback: "Can't store information that user passed phrase backup test. Error: %@")
+          /// Can't store information that user passed phrase backup test. Error: %@ (code: %@)
+          internal static func message(_ p1: Any, _ p2: Any) -> String {
+            return L10n.tr("Localizable", "root.initialization.alert.cantStoreThatUserPassedPhraseBackupTest.message", String(describing: p1), String(describing: p2), fallback: "Can't store information that user passed phrase backup test. Error: %@ (code: %@)")
           }
         }
         internal enum Error {
-          /// Error: %@
-          internal static func message(_ p1: Any) -> String {
-            return L10n.tr("Localizable", "root.initialization.alert.error.message", String(describing: p1), fallback: "Error: %@")
+          /// Error: %@ (code: %@)
+          internal static func message(_ p1: Any, _ p2: Any) -> String {
+            return L10n.tr("Localizable", "root.initialization.alert.error.message", String(describing: p1), String(describing: p2), fallback: "Error: %@ (code: %@)")
           }
         }
         internal enum Failed {
@@ -444,9 +444,9 @@ internal enum L10n {
     internal static let scanning = L10n.tr("Localizable", "scan.scanning", fallback: "Scanning...")
     internal enum Alert {
       internal enum CantInitializeCamera {
-        /// Error: %@
-        internal static func message(_ p1: Any) -> String {
-          return L10n.tr("Localizable", "scan.alert.cantInitializeCamera.message", String(describing: p1), fallback: "Error: %@")
+        /// Error: %@ (code: %@)
+        internal static func message(_ p1: Any, _ p2: Any) -> String {
+          return L10n.tr("Localizable", "scan.alert.cantInitializeCamera.message", String(describing: p1), String(describing: p2), fallback: "Error: %@ (code: %@)")
         }
         /// Can't initialize the camera
         internal static let title = L10n.tr("Localizable", "scan.alert.cantInitializeCamera.title", fallback: "Can't initialize the camera")
@@ -506,9 +506,9 @@ internal enum L10n {
     }
     internal enum Alert {
       internal enum CantBackupWallet {
-        /// Error: %@
-        internal static func message(_ p1: Any) -> String {
-          return L10n.tr("Localizable", "settings.alert.cantBackupWallet.message", String(describing: p1), fallback: "Error: %@")
+        /// Error: %@ (code: %@)
+        internal static func message(_ p1: Any, _ p2: Any) -> String {
+          return L10n.tr("Localizable", "settings.alert.cantBackupWallet.message", String(describing: p1), String(describing: p2), fallback: "Error: %@ (code: %@)")
         }
         /// Can't backup wallet
         internal static let title = L10n.tr("Localizable", "settings.alert.cantBackupWallet.title", fallback: "Can't backup wallet")
@@ -565,18 +565,10 @@ internal enum L10n {
   }
   internal enum Sync {
     internal enum Message {
-      /// disconnected
-      internal static let disconnected = L10n.tr("Localizable", "sync.message.disconnected", fallback: "disconnected")
-      /// Enhancing tx
-      internal static let enhancing = L10n.tr("Localizable", "sync.message.enhancing", fallback: "Enhancing tx")
       /// Error: %@
       internal static func error(_ p1: Any) -> String {
         return L10n.tr("Localizable", "sync.message.error", String(describing: p1), fallback: "Error: %@")
       }
-      /// fetching UTXOs
-      internal static let fetchingUTXO = L10n.tr("Localizable", "sync.message.fetchingUTXO", fallback: "fetching UTXOs")
-      /// Stopped
-      internal static let stopped = L10n.tr("Localizable", "sync.message.stopped", fallback: "Stopped")
       /// %@%% Synced
       internal static func sync(_ p1: Any) -> String {
         return L10n.tr("Localizable", "sync.message.sync", String(describing: p1), fallback: "%@%% Synced")

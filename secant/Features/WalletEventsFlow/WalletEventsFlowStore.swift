@@ -56,7 +56,7 @@ struct WalletEventsFlowReducer: ReducerProtocol {
         case .onDisappear:
             return .cancel(id: CancelId.self)
 
-        case .synchronizerStateChanged(.synced):
+        case .synchronizerStateChanged(.upToDate):
             state.latestMinedHeight = sdkSynchronizer.latestScannedHeight()
             return .task {
                 return .updateWalletEvents(try await sdkSynchronizer.getAllTransactions())

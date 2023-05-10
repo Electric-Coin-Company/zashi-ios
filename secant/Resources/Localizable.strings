@@ -65,7 +65,7 @@
 "importWallet.alert.success.title" = "Success";
 "importWallet.alert.success.message" = "The wallet has been successfully recovered.";
 "importWallet.alert.failed.title" = "Failed to restore wallet";
-"importWallet.alert.failed.message" = "Error: %@";
+"importWallet.alert.failed.message" = "Error: %@ (code: %@)";
 
 // MARK: - Home Screen
 "home.sendZec" = "Send %@";
@@ -96,7 +96,7 @@
 "balanceBreakdown.shieldFunds" = "Shield funds";
 "balanceBreakdown.shieldingFunds" = "Shielding funds";
 "balanceBreakdown.alert.shieldFunds.failure.title" = "Failed to shield funds";
-"balanceBreakdown.alert.shieldFunds.failure.message" = "Error: %@";
+"balanceBreakdown.alert.shieldFunds.failure.message" = "Error: %@ (code: %@)";
 "balanceBreakdown.alert.shieldFunds.success.title" = "Done";
 "balanceBreakdown.alert.shieldFunds.success.message" = "Shielding transaction created";
 
@@ -104,7 +104,7 @@
 "scan.info" = "We will validate any Zcash URI and take you to the appropriate action.";
 "scan.scanning" = "Scanning...";
 "scan.alert.cantInitializeCamera.title" = "Can't initialize the camera";
-"scan.alert.cantInitializeCamera.message" = "Error: %@";
+"scan.alert.cantInitializeCamera.message" = "Error: %@ (code: %@)";
 
 // MARK: - Send
 "send.title" = "Send Zcash";
@@ -129,15 +129,11 @@
 "settings.version" = "Version %@ (%@)";
 "settings.title" = "Settings";
 "settings.alert.cantBackupWallet.title" = "Can't backup wallet";
-"settings.alert.cantBackupWallet.message" = "Error: %@";
+"settings.alert.cantBackupWallet.message" = "Error: %@ (code: %@)";
 "settings.alert.cantSendEmail.title" = "Can't send email";
 "settings.alert.cantSendEmail.message" = "It looks like that you don't have any email account configured on your device. Therefore it's not possible to send a support email.";
 
 // MARK: - Sync message
-"sync.message.enhancing" = "Enhancing tx";
-"sync.message.fetchingUTXO" = "fetching UTXOs";
-"sync.message.disconnected" = "disconnected";
-"sync.message.stopped" = "Stopped";
 "sync.message.uptodate" = "Up-To-Date";
 "sync.message.unprepared" = "Unprepared";
 "sync.message.error" = "Error: %@";
@@ -219,18 +215,18 @@
 
 // MARK: - Root
 "root.initialization.alert.failed.title" = "Wallet initialisation failed.";
-"root.initialization.alert.error.message" = "Error: %@";
+"root.initialization.alert.error.message" = "Error: %@ (code: %@)";
 "root.initialization.alert.sdkInitFailed.title" = "Failed to initialize the SDK";
 "root.initialization.alert.walletStateFailed.message" = "App initialisation state: %@.";
 "root.initialization.alert.cantLoadSeedPhrase.message" = "Can't load seed phrase from local storage.";
-"root.initialization.alert.cantCreateNewWallet.message" = "Can't create new wallet. Error: %@";
-"root.initialization.alert.cantStoreThatUserPassedPhraseBackupTest.message" = "Can't store information that user passed phrase backup test. Error: %@";
+"root.initialization.alert.cantCreateNewWallet.message" = "Can't create new wallet. Error: %@ (code: %@)";
+"root.initialization.alert.cantStoreThatUserPassedPhraseBackupTest.message" = "Can't store information that user passed phrase backup test. Error: %@ (code: %@)";
 "root.initialization.alert.wipe.title" = "Wipe of the wallet";
 "root.initialization.alert.wipe.message" = "Are you sure?";
 "root.initialization.alert.wipeFailed.title" = "Nuke of the wallet failed";
 
 "root.destination.alert.failedToProcessDeeplink.title" = "Failed to process deeplink.";
-"root.destination.alert.failedToProcessDeeplink.message" = "Deeplink: \(%@))\nError: \(%@)";
+"root.destination.alert.failedToProcessDeeplink.message" = "Deeplink: \(%@))\nError: \(%@) (code: %@)";
 
 "root.debug.title" = "Debug options";
 "root.debug.navigationTitle" = "Startup";
@@ -249,13 +245,13 @@
 "root.debug.dialog.rescan.option.quick" = "Quick rescan";
 "root.debug.dialog.rescan.option.full" = "Full rescan";
 "root.debug.alert.rewind.failed.title" = "Rewind failed";
-"root.debug.alert.rewind.failed.message" = "Error: %@";
+"root.debug.alert.rewind.failed.message" = "Error: %@ (code: %@)";
 "root.debug.alert.rewind.cantStartSync.title" = "Can't start sync process after rewind";
-"root.debug.alert.rewind.cantStartSync.message" = "Error: %@";
+"root.debug.alert.rewind.cantStartSync.message" = "Error: %@ (code: %@)";
 
 // MARK: - Export logs
 "exportLogs.alert.failed.title" = "Error when exporting logs";
-"exportLogs.alert.failed.message" = "Error: %@";
+"exportLogs.alert.failed.message" = "Error: %@ (code: %@)";
 
 // MARK: - Text Fields
 "field.multiline.charLimitExceeded" = "char limit exceeded";

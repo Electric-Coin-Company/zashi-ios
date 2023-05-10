@@ -7,6 +7,7 @@
 
 import ComposableArchitecture
 import Foundation
+import ZcashLightClientKit
 
 /// In this file is a collection of helpers that control all state and action related operations
 /// for the `RootReducer` with a connection to the app/wallet initialization and erasure of the wallet.
@@ -20,7 +21,7 @@ extension RootReducer {
         case checkWalletConfig
         case initializeSDK
         case initialSetups
-        case initializationFailed(String)
+        case initializationFailed(ZcashError)
         case nukeWallet
         case nukeWalletRequest
         case respondToWalletInitializationState(InitializationState)
@@ -126,11 +127,11 @@ extension RootReducer {
                             try await sdkSynchronizer.prepareWith(seedBytes, viewingKey, birthday)
                             try await sdkSynchronizer.start(false)
                         } catch {
-                            await send(.initialization(.initializationFailed(error.localizedDescription)))
+                            await send(.initialization(.initializationFailed(error.toZcashError())))
                         }
                     }
                 } catch {
-                    return EffectTask(value: .initialization(.initializationFailed(error.localizedDescription)))
+                    return EffectTask(value: .initialization(.initializationFailed(error.toZcashError())))
                 }
 
             case .initialization(.checkBackupPhraseValidation):
@@ -177,7 +178,7 @@ extension RootReducer {
                         EffectTask(value: .phraseValidation(.displayBackedUpPhrase))
                     )
                 } catch {
-                    return EffectTask(value: .alert(.root(.cantCreateNewWallet(error.localizedDescription))))
+                    return EffectTask(value: .alert(.root(.cantCreateNewWallet(error.toZcashError()))))
                 }
 
             case .phraseValidation(.succeed):
@@ -185,7 +186,7 @@ extension RootReducer {
                     try walletStorage.markUserPassedPhraseBackupTest(true)
                     return .none
                 } catch {
-                    return EffectTask(value: .alert(.root(.cantStoreThatUserPassedPhraseBackupTest(error.localizedDescription))))
+                    return EffectTask(value: .alert(.root(.cantStoreThatUserPassedPhraseBackupTest(error.toZcashError()))))
                 }
 
             case .initialization(.nukeWalletRequest):
@@ -252,9 +253,9 @@ extension RootReducer {
                 state.homeState.walletConfig = walletConfig
                 return .none
 
-            case .initialization(.initializationFailed(let errorMessage)):
+            case .initialization(.initializationFailed(let error)):
                 state.appInitializationState = .failed
-                return EffectTask(value: .alert(.root(.initializationFailed(errorMessage))))
+                return EffectTask(value: .alert(.root(.initializationFailed(error))))
                 
             case .home, .destination, .onboarding, .phraseDisplay, .phraseValidation, .sandbox,
                 .welcome, .binding, .debug, .exportLogs, .uniAlert, .dismissAlert, .alert:

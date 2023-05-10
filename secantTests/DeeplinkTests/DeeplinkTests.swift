@@ -91,7 +91,7 @@ class DeeplinkTests: XCTestCase {
         store.dependencies.sdkSynchronizer = SDKSynchronizerClient.mocked(
             latestState: {
                 var state = SynchronizerState.zero
-                state.syncStatus = .synced
+                state.syncStatus = .upToDate
                 return state
             }
         )
@@ -136,7 +136,7 @@ class DeeplinkTests: XCTestCase {
         store.dependencies.sdkSynchronizer = SDKSynchronizerClient.mocked(
             latestState: {
                 var state = SynchronizerState.zero
-                state.syncStatus = .synced
+                state.syncStatus = .upToDate
                 return state
             }
         )

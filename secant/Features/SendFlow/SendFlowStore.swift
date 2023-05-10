@@ -87,7 +87,7 @@ struct SendFlowReducer: ReducerProtocol {
         case scan(ScanReducer.Action)
         case sendPressed
         case sendTransactionSuccess
-        case sendTransactionFailure(String)
+        case sendTransactionFailure(ZcashError)
         case synchronizerStateChanged(SynchronizerState)
         case transactionAddressInput(TransactionAddressTextFieldReducer.Action)
         case transactionAmountInput(TransactionAmountTextFieldReducer.Action)
@@ -175,7 +175,7 @@ struct SendFlowReducer: ReducerProtocol {
                             _ = try await sdkSynchronizer.sendTransaction(spendingKey, state.amount, recipient, memo)
                             await send(SendFlowReducer.Action.sendTransactionSuccess)
                         } catch {
-                            await send(SendFlowReducer.Action.sendTransactionFailure(error.localizedDescription))
+                            await send(SendFlowReducer.Action.sendTransactionFailure(error.toZcashError()))
                         }
                     }
                 } catch {

@@ -41,7 +41,7 @@ struct BalanceBreakdownReducer: ReducerProtocol {
         case onDisappear
         case shieldFunds
         case shieldFundsSuccess
-        case shieldFundsFailure(String)
+        case shieldFundsFailure(ZcashError)
         case synchronizerStateChanged(SynchronizerState)
         case updateLatestBlock
     }
@@ -81,7 +81,7 @@ struct BalanceBreakdownReducer: ReducerProtocol {
 
                         await send(.shieldFundsSuccess)
                     } catch {
-                        await send(.shieldFundsFailure(error.localizedDescription))
+                        await send(.shieldFundsFailure(error.toZcashError()))
                     }
                 }
 
@@ -89,9 +89,9 @@ struct BalanceBreakdownReducer: ReducerProtocol {
                 state.shieldingFunds = false
                 return EffectTask(value: .alert(.balanceBreakdown(.shieldFundsSuccess)))
 
-            case let .shieldFundsFailure(errorDescription):
+            case .shieldFundsFailure(let error):
                 state.shieldingFunds = false
-                return EffectTask(value: .alert(.balanceBreakdown(.shieldFundsFailure(errorDescription))))
+                return EffectTask(value: .alert(.balanceBreakdown(.shieldFundsFailure(error))))
 
             case .synchronizerStateChanged(let latestState):
                 state.shieldedBalance = latestState.shieldedBalance.redacted
