@@ -1,4 +1,10 @@
 # Changelog
+# 0.0.1 build 52
+- [#709] Better error handling in tests (#713)
+
+# 0.0.1 build 51
+- [#711] Transaction History not shown (#715) 
+
 # 0.0.1 build 50
 - [#707] Adopt latest SDK (#708)
 - [#705] Transaction detail lacks memo and addresses (#706)
