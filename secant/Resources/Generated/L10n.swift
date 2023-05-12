@@ -58,7 +58,7 @@ internal enum L10n {
     /// Shielding funds
     internal static let shieldingFunds = L10n.tr("Localizable", "balanceBreakdown.shieldingFunds", fallback: "Shielding funds")
     /// TOTAL BALANCE
-    internal static let totalBalance = L10n.tr("Localizable", "balanceBreakdown.totalBalance", fallback: "TOTAL BALANCE")
+    internal static let totalSpendableBalance = L10n.tr("Localizable", "balanceBreakdown.totalSpendableBalance", fallback: "TOTAL BALANCE")
     /// TRANSPARENT BALANCE
     internal static let transparentBalance = L10n.tr("Localizable", "balanceBreakdown.transparentBalance", fallback: "TRANSPARENT BALANCE")
     internal enum Alert {
@@ -592,14 +592,12 @@ internal enum L10n {
     }
     /// Failed
     internal static let failed = L10n.tr("Localizable", "transaction.failed", fallback: "Failed")
-    /// from
-    internal static let from = L10n.tr("Localizable", "transaction.from", fallback: "from")
-    /// PENDING
-    internal static let pending = L10n.tr("Localizable", "transaction.pending", fallback: "PENDING")
     /// Received
     internal static let received = L10n.tr("Localizable", "transaction.received", fallback: "Received")
-    /// Sending
-    internal static let sending = L10n.tr("Localizable", "transaction.sending", fallback: "Sending")
+    /// RECEIVING
+    internal static let receiving = L10n.tr("Localizable", "transaction.receiving", fallback: "RECEIVING")
+    /// SENDING
+    internal static let sending = L10n.tr("Localizable", "transaction.sending", fallback: "SENDING")
     /// Sent
     internal static let sent = L10n.tr("Localizable", "transaction.sent", fallback: "Sent")
     /// to
@@ -608,6 +606,10 @@ internal enum L10n {
     internal static let unconfirmed = L10n.tr("Localizable", "transaction.unconfirmed", fallback: "unconfirmed")
     /// With memo:
     internal static let withMemo = L10n.tr("Localizable", "transaction.withMemo", fallback: "With memo:")
+    /// You are receiving %@ %@
+    internal static func youAreReceiving(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "transaction.youAreReceiving", String(describing: p1), String(describing: p2), fallback: "You are receiving %@ %@")
+    }
     /// You are sending %@ %@
     internal static func youAreSending(_ p1: Any, _ p2: Any) -> String {
       return L10n.tr("Localizable", "transaction.youAreSending", String(describing: p1), String(describing: p2), fallback: "You are sending %@ %@")

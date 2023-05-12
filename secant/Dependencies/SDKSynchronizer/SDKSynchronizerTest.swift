@@ -114,7 +114,7 @@ extension SDKSynchronizerClient {
                         amount: $0.amount,
                         fee: Zatoshi(10),
                         shielded: $0.shielded,
-                        status: $0.amount.amount > 5 ? .pending : $0.status,
+                        status: $0.amount.amount > 5 ? .sending : $0.status,
                         timestamp: $0.date,
                         uuid: $0.uuid
                     )

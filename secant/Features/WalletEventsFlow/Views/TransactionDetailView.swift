@@ -28,12 +28,17 @@ struct TransactionDetailView: View {
                             address(mark: .inactive, viewStore: viewStore)
                             memo(transaction, viewStore, mark: .highlight)
                             
-                        case .pending:
+                        case .sending:
                             Text(L10n.Transaction.youAreSending(transaction.zecAmount.decimalString(), TargetConstants.tokenName))
                                 .padding()
                             address(mark: .inactive, viewStore: viewStore)
                             memo(transaction, viewStore, mark: .highlight)
-                            
+
+                        case .receiving:
+                            Text(L10n.Transaction.youAreReceiving(transaction.zecAmount.decimalString(), TargetConstants.tokenName))
+                                .padding()
+                            memo(transaction, viewStore, mark: .highlight)
+
                         case .received:
                             Text(L10n.Transaction.youReceived(transaction.zecAmount.decimalString(), TargetConstants.tokenName))
                                 .padding()
@@ -66,8 +71,11 @@ extension TransactionDetailView {
     var header: some View {
         HStack {
             switch transaction.status {
-            case .pending:
-                Text(L10n.Transaction.pending)
+            case .sending:
+                Text(L10n.Transaction.sending)
+                Spacer()
+            case .receiving:
+                Text(L10n.Transaction.receiving)
                 Spacer()
             case .failed:
                 Text("\(transaction.date?.asHumanReadable() ?? L10n.General.dateNotAvailable)")
@@ -126,7 +134,8 @@ extension TransactionDetailView {
 
 extension TransactionDetailView {
     var addressPrefixText: String {
-        transaction.status == .received ? L10n.Transaction.from : L10n.Transaction.to
+        (transaction.status == .received || transaction.status == .receiving)
+        ? "" : L10n.Transaction.to
     }
     
     var heightText: String {
@@ -216,7 +225,7 @@ struct TransactionDetail_Previews: PreviewProvider {
                         zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
                         fee: Zatoshi(1_000_000),
                         id: "ff3927e1f83df9b1b0dc75540ddc59ee435eecebae914d2e6dfe8576fbedc9a8",
-                        status: .pending,
+                        status: .sending,
                         timestamp: 1234567,
                         zecAmount: Zatoshi(25_000_000)
                     ),

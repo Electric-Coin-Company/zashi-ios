@@ -106,7 +106,9 @@ extension AlertRequest {
         case .cantStoreThatUserPassedPhraseBackupTest(let error):
             return AlertState(
                 title: TextState(L10n.Root.Initialization.Alert.Failed.title),
-                message: TextState(L10n.Root.Initialization.Alert.CantStoreThatUserPassedPhraseBackupTest.message(error.message, error.code.rawValue)),
+                message: TextState(
+                    L10n.Root.Initialization.Alert.CantStoreThatUserPassedPhraseBackupTest.message(error.message, error.code.rawValue)
+                ),
                 dismissButton: .default(TextState(L10n.General.ok), action: .send(.dismissAlert))
             )
         case let .failedToProcessDeeplink(url, error):

@@ -22,8 +22,8 @@ struct BalanceBreakdownReducer: ReducerProtocol {
         var shieldingFunds: Bool
         var transparentBalance: Balance
         
-        var totalBalance: Zatoshi {
-            shieldedBalance.data.total + transparentBalance.data.total
+        var totalSpendableBalance: Zatoshi {
+            shieldedBalance.data.verified + transparentBalance.data.verified
         }
 
         var isShieldableBalanceAvailable: Bool {

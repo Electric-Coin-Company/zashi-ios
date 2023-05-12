@@ -76,11 +76,12 @@ private extension WalletEvent {
     }
     
     static func mockedWalletEventState(atIndex: Int) -> WalletEvent.WalletEventState {
-        switch atIndex % 4 {
+        switch atIndex % 5 {
         case 0: return .transaction(.statePlaceholder(.received))
         case 1: return .transaction(.statePlaceholder(.failed))
-        case 2: return .transaction(.statePlaceholder(.pending))
-        case 3: return .transaction(.placeholder)
+        case 2: return .transaction(.statePlaceholder(.sending))
+        case 3: return .transaction(.statePlaceholder(.receiving))
+        case 4: return .transaction(.placeholder)
         default: return .transaction(.placeholder)
         }
     }
