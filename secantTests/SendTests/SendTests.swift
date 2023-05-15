@@ -63,19 +63,6 @@ class SendTests: XCTestCase {
 
         await testScheduler.advance(by: 0.01)
 
-        let transactionState = TransactionState(
-            expiryHeight: 40,
-            memos: [],
-            minedHeight: 50,
-            shielded: true,
-            zAddress: "tteafadlamnelkqe",
-            fee: Zatoshi(10),
-            id: "id",
-            status: .paid(success: true),
-            timestamp: 1234567,
-            zecAmount: Zatoshi(10)
-        )
-
         // first it's expected that progress screen is showed
         await store.receive(.updateDestination(.inProgress)) { state in
             state.destination = .inProgress
@@ -130,19 +117,6 @@ class SendTests: XCTestCase {
         }
 
         await testScheduler.advance(by: 0.01)
-
-        let transactionState = TransactionState(
-            expiryHeight: 40,
-            memos: [],
-            minedHeight: 50,
-            shielded: true,
-            zAddress: "tteafadlamnelkqe",
-            fee: Zatoshi(10),
-            id: "id",
-            status: .paid(success: true),
-            timestamp: 1234567,
-            zecAmount: Zatoshi(10)
-        )
 
         // first it's expected that progress screen is showed
         await store.receive(.updateDestination(.inProgress)) { state in

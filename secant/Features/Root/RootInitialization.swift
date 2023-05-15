@@ -44,7 +44,7 @@ extension RootReducer {
                     .receive(on: mainQueue)
                     .map(RootReducer.Action.walletConfigLoaded)
                     .eraseToEffect()
-                    .cancellable(id: WalletConfigCancelId.self, cancelInFlight: true)
+                    .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
 
             case .walletConfigLoaded(let walletConfig):
                 if walletConfig == WalletConfig.default {
@@ -101,7 +101,7 @@ extension RootReducer {
                     return EffectTask(value: .destination(.updateDestination(.onboarding)))
                         .delay(for: 3, scheduler: mainQueue)
                         .eraseToEffect()
-                        .cancellable(id: CancelId.self, cancelInFlight: true)
+                        .cancellable(id: CancelId.timer, cancelInFlight: true)
                 }
 
                 /// Stored wallet is present, database files may or may not be present, trying to initialize app state variables and environments.
@@ -156,7 +156,7 @@ extension RootReducer {
                 return EffectTask(value: .destination(.updateDestination(landingDestination)))
                     .delay(for: 3, scheduler: mainQueue)
                     .eraseToEffect()
-                    .cancellable(id: CancelId.self, cancelInFlight: true)
+                    .cancellable(id: CancelId.timer, cancelInFlight: true)
 
             case .initialization(.createNewWallet):
                 do {
@@ -202,14 +202,14 @@ extension RootReducer {
                     .replaceError(with: RootReducer.Action.nukeWalletFailed)
                     .receive(on: mainQueue)
                     .eraseToEffect()
-                    .cancellable(id: SynchronizerCancelId.self, cancelInFlight: true)
+                    .cancellable(id: SynchronizerCancelId.timer, cancelInFlight: true)
 
             case .nukeWalletSucceeded:
                 walletStorage.nukeWallet()
                 state.onboardingState.destination = nil
                 state.onboardingState.index = 0
                 return .concatenate(
-                    .cancel(id: SynchronizerCancelId.self),
+                    .cancel(id: SynchronizerCancelId.timer),
                     EffectTask(value: .initialization(.checkWalletInitialization))
                 )
 
@@ -222,13 +222,13 @@ extension RootReducer {
                 }
                 return .concatenate(
                     EffectTask(value: .alert(.root(.wipeFailed))),
-                    .cancel(id: SynchronizerCancelId.self),
+                    .cancel(id: SynchronizerCancelId.timer),
                     backDestination
                 )
 
             case .welcome(.debugMenuStartup), .home(.debugMenuStartup):
                 return .concatenate(
-                    EffectTask.cancel(id: CancelId.self),
+                    EffectTask.cancel(id: CancelId.timer),
                     EffectTask(value: .destination(.updateDestination(.startup)))
                 )
 

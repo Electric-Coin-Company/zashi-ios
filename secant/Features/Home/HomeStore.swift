@@ -10,7 +10,7 @@ typealias HomeViewStore = ViewStore<HomeReducer.State, HomeReducer.Action>
 
 struct HomeReducer: ReducerProtocol {
     private enum CancelId {}
-    
+
     struct State: Equatable {
         enum Destination: Equatable {
             case balanceBreakdown
@@ -120,7 +120,7 @@ struct HomeReducer: ReducerProtocol {
                         .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
                         .map(HomeReducer.Action.synchronizerStateChanged)
                         .eraseToEffect()
-                        .cancellable(id: CancelId.self, cancelInFlight: true)
+                        .cancellable(id: CancelId.timer, cancelInFlight: true)
                     return .merge(
                         EffectTask(value: .updateDestination(nil)),
                         syncEffect

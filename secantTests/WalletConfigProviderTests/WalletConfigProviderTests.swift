@@ -111,7 +111,7 @@ class WalletConfigProviderTests: XCTestCase {
                 .store(in: &cancellables)
         }
 
-        wait(for: [expectation], timeout: 1)
+        await fulfillment(of: [expectation], timeout: 1)
 
         return configuration
     }

@@ -81,14 +81,14 @@ extension RootReducer {
                     .receive(on: mainQueue)
                     .map { _ in return Action.debug(.flagUpdated) }
                     .eraseToEffect()
-                    .cancellable(id: WalletConfigCancelId.self, cancelInFlight: true)
+                    .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
 
             case .debug(.flagUpdated):
                 return walletConfigProvider.load()
                     .receive(on: mainQueue)
                     .map { Action.debug(.walletConfigLoaded($0)) }
                     .eraseToEffect()
-                    .cancellable(id: WalletConfigCancelId.self, cancelInFlight: true)
+                    .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
 
             case let .debug(.walletConfigLoaded(walletConfig)):
                 return EffectTask(value: .updateStateAfterConfigUpdate(walletConfig))
@@ -113,7 +113,7 @@ extension RootReducer {
             }
             .receive(on: mainQueue)
             .eraseToEffect()
-            .cancellable(id: SynchronizerCancelId.self, cancelInFlight: true)
+            .cancellable(id: SynchronizerCancelId.timer, cancelInFlight: true)
     }
 }
 
