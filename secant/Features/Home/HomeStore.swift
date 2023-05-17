@@ -10,8 +10,7 @@ typealias HomeViewStore = ViewStore<HomeReducer.State, HomeReducer.Action>
 
 struct HomeReducer: ReducerProtocol {
     private enum CancelId {}
-    private enum CancelEventsId {}
-
+    
     struct State: Equatable {
         enum Destination: Equatable {
             case balanceBreakdown
@@ -38,7 +37,7 @@ struct HomeReducer: ReducerProtocol {
         var zecPrice = Decimal(140.0)
 
         var totalCurrencyBalance: Zatoshi {
-            Zatoshi.from(decimal: shieldedBalance.data.total.decimalValue.decimalValue * zecPrice)
+            Zatoshi.from(decimal: shieldedBalance.data.verified.decimalValue.decimalValue * zecPrice)
         }
 
         var isSyncing: Bool {
@@ -58,7 +57,7 @@ struct HomeReducer: ReducerProtocol {
         var isSendButtonDisabled: Bool {
             // If the destination is `.send` the button must be enabled
             // to avoid involuntary navigation pop.
-            self.destination != .send && self.isSyncing
+            (self.destination != .send && self.isSyncing) || shieldedBalance.data.verified.amount == 0
         }
     }
 
@@ -131,10 +130,7 @@ struct HomeReducer: ReducerProtocol {
                 }
                 
             case .onDisappear:
-                return .merge(
-                    .cancel(id: CancelId.self),
-                    .cancel(id: CancelEventsId.self)
-                )
+                return .cancel(id: CancelId.self)
                 
             case .resolveReviewRequest:
                 if reviewRequest.canRequestReview() {
@@ -163,10 +159,10 @@ struct HomeReducer: ReducerProtocol {
                 switch snapshot.syncStatus {
                 case .error(let error):
                     return EffectTask(value: .showSynchronizerErrorAlert(error.toZcashError()))
-                    
+
                 case .upToDate:
                     return .fireAndForget { await reviewRequest.syncFinished() }
-                    
+
                 default:
                     return .none
                 }

@@ -10,7 +10,7 @@ struct CreateTransaction: View {
         return WithViewStore(store) { viewStore in
             VStack(spacing: 5) {
                 VStack(spacing: 0) {
-                    Text(L10n.Balance.available(viewStore.shieldedBalance.data.total.decimalString(), TargetConstants.tokenName))
+                    Text(L10n.Balance.available(viewStore.shieldedBalance.data.verified.decimalString(), TargetConstants.tokenName))
                         .font(.system(size: 26))
                         .fontWeight(.bold)
                         .multilineTextAlignment(.center)

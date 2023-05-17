@@ -14,7 +14,8 @@ struct TransactionState: Equatable, Identifiable {
         case paid(success: Bool)
         case received
         case failed
-        case pending
+        case sending
+        case receiving
     }
 
     var errorMessage: String?
@@ -36,9 +37,9 @@ struct TransactionState: Equatable, Identifiable {
     
     var unarySymbol: String {
         switch status {
-        case .paid, .pending:
+        case .paid, .sending:
             return "-"
-        case .received:
+        case .received, .receiving:
             return "+"
         case .failed:
             return ""
@@ -74,11 +75,18 @@ extension TransactionState {
         minedHeight = transaction.minedHeight
         fee = transaction.fee ?? .zero
         id = transaction.rawID.toHexStringTxId()
-        status = transaction.isPending(currentHeight: latestBlockHeight ?? 0) ? .pending
-        : transaction.isSentTransaction ? .paid(success: minedHeight ?? 0 > 0) : .received
         timestamp = transaction.blockTime
         zecAmount = transaction.isSentTransaction ? Zatoshi(-transaction.value.amount) : transaction.value
         self.memos = memos
+
+        let isSent = transaction.isSentTransaction
+        let isPending = transaction.isPending(currentHeight: latestBlockHeight ?? 0)
+        switch (isSent, isPending) {
+        case (true, true): status = .sending
+        case (true, false): status = .paid(success: minedHeight ?? 0 > 0)
+        case (false, true): status = .receiving
+        case (false, false): status = .received
+        }
     }
 }
 

@@ -75,7 +75,7 @@ struct SendFlowReducer: ReducerProtocol {
         }
         
         var totalCurrencyBalance: Zatoshi {
-            Zatoshi.from(decimal: shieldedBalance.data.total.decimalValue.decimalValue * transactionAmountInputState.zecPrice)
+            Zatoshi.from(decimal: shieldedBalance.data.verified.decimalValue.decimalValue * transactionAmountInputState.zecPrice)
         }
     }
 
@@ -213,7 +213,7 @@ struct SendFlowReducer: ReducerProtocol {
             case .synchronizerStateChanged(let latestState):
                 let shieldedBalance = latestState.shieldedBalance
                 state.shieldedBalance = shieldedBalance.redacted
-                state.transactionAmountInputState.maxValue = shieldedBalance.total.amount.redacted
+                state.transactionAmountInputState.maxValue = shieldedBalance.verified.amount.redacted
                 return .none
 
             case .memo:

@@ -63,23 +63,26 @@ extension TransactionRowView {
         case .failed:
             // TODO: [#392] final text to be provided (https://github.com/zcash/secant-ios-wallet/issues/392)
             return L10n.Transaction.failed
-        case .pending:
+        case .sending:
             return L10n.Transaction.sending
+        case .receiving:
+            return L10n.Transaction.receiving
         }
     }
     
     var icon: some View {
-        HStack {
+        let inTransaction = transaction.status == .received || transaction.status == .receiving
+        return HStack {
             switch transaction.status {
-            case .paid, .received, .pending:
+            case .paid, .received, .sending, .receiving:
                 Image(systemName: "arrow.forward")
                     .resizable()
                     .frame(width: 12, height: 12)
-                    .foregroundColor(transaction.status == .received ? .yellow : .white)
+                    .foregroundColor(inTransaction ? .yellow : .white)
                     .padding(10)
                     .background(Asset.Colors.Mfp.primary.color)
                     .cornerRadius(40)
-                    .rotationEffect(Angle(degrees: transaction.status == .received ? 135 : -45))
+                    .rotationEffect(Angle(degrees: inTransaction ? 135 : -45))
                     .padding(.leading, 14)
             case .failed:
                 // TODO: [#392] final icon to be provided (https://github.com/zcash/secant-ios-wallet/issues/392)
@@ -131,7 +134,7 @@ struct TransactionRowView_Previews: PreviewProvider {
                     zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
                     fee: Zatoshi(10),
                     id: "2",
-                    status: .pending,
+                    status: .sending,
                     timestamp: 1234567,
                     zecAmount: Zatoshi(123_000_000)
                 )

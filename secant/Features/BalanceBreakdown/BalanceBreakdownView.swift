@@ -25,11 +25,11 @@ struct BalanceBreakdownView: View {
 
                 balanceView(
                     title: L10n.BalanceBreakdown.shieldedZec(TargetConstants.tokenName),
-                    viewStore.shieldedBalance.data.total,
+                    viewStore.shieldedBalance.data.verified,
                     titleColor: Asset.Colors.Mfp.fontDark.color
                 )
-                balanceView(title: L10n.BalanceBreakdown.transparentBalance, viewStore.transparentBalance.data.total)
-                balanceView(title: L10n.BalanceBreakdown.totalBalance, viewStore.totalBalance)
+                balanceView(title: L10n.BalanceBreakdown.transparentBalance, viewStore.transparentBalance.data.verified)
+                balanceView(title: L10n.BalanceBreakdown.totalSpendableBalance, viewStore.totalSpendableBalance)
                 
                 shieldButton(viewStore)
                 

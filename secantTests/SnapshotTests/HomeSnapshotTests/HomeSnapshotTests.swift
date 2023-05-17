@@ -14,7 +14,7 @@ class HomeSnapshotTests: XCTestCase {
     func testHomeSnapshot() throws {
         let transactionsHelper: [TransactionStateMockHelper] = [
             TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid(success: true), uuid: "1"),
-            TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), status: .pending, uuid: "2"),
+            TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), status: .sending, uuid: "2"),
             TransactionStateMockHelper(date: 1651039000, amount: Zatoshi(3), status: .received, uuid: "3"),
             TransactionStateMockHelper(date: 1651039505, amount: Zatoshi(4), status: .failed, uuid: "4")
         ]
