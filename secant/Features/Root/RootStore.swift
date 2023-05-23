@@ -5,9 +5,9 @@ typealias RootStore = Store<RootReducer.State, RootReducer.Action>
 typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
 
 struct RootReducer: ReducerProtocol {
-    enum CancelId {}
-    enum SynchronizerCancelId {}
-    enum WalletConfigCancelId {}
+    enum CancelId { case timer }
+    enum SynchronizerCancelId { case timer }
+    enum WalletConfigCancelId { case timer }
 
     struct State: Equatable {
         var appInitializationState: InitializationState = .uninitialized

@@ -13,7 +13,7 @@ typealias BalanceBreakdownStore = Store<BalanceBreakdownReducer.State, BalanceBr
 typealias BalanceBreakdownViewStore = ViewStore<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>
 
 struct BalanceBreakdownReducer: ReducerProtocol {
-    private enum CancelId {}
+    private enum CancelId { case timer }
     
     struct State: Equatable {
         var autoShieldingThreshold: Zatoshi
@@ -64,10 +64,10 @@ struct BalanceBreakdownReducer: ReducerProtocol {
                     .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
                     .map(BalanceBreakdownReducer.Action.synchronizerStateChanged)
                     .eraseToEffect()
-                    .cancellable(id: CancelId.self, cancelInFlight: true)
+                    .cancellable(id: CancelId.timer, cancelInFlight: true)
 
             case .onDisappear:
-                return .cancel(id: CancelId.self)
+                return .cancel(id: CancelId.timer)
 
             case .shieldFunds:
                 state.shieldingFunds = true

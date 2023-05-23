@@ -6,7 +6,7 @@ typealias WalletEventsFlowStore = Store<WalletEventsFlowReducer.State, WalletEve
 typealias WalletEventsFlowViewStore = ViewStore<WalletEventsFlowReducer.State, WalletEventsFlowReducer.Action>
 
 struct WalletEventsFlowReducer: ReducerProtocol {
-    private enum CancelId {}
+    private enum CancelId { case timer }
 
     struct State: Equatable {
         enum Destination: Equatable {
@@ -51,10 +51,10 @@ struct WalletEventsFlowReducer: ReducerProtocol {
                 .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
                 .map { WalletEventsFlowReducer.Action.synchronizerStateChanged($0.syncStatus) }
                 .eraseToEffect()
-                .cancellable(id: CancelId.self, cancelInFlight: true)
+                .cancellable(id: CancelId.timer, cancelInFlight: true)
 
         case .onDisappear:
-            return .cancel(id: CancelId.self)
+            return .cancel(id: CancelId.timer)
 
         case .synchronizerStateChanged(.upToDate):
             state.latestMinedHeight = sdkSynchronizer.latestScannedHeight()
