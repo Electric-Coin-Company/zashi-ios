@@ -9,7 +9,7 @@ typealias HomeStore = Store<HomeReducer.State, HomeReducer.Action>
 typealias HomeViewStore = ViewStore<HomeReducer.State, HomeReducer.Action>
 
 struct HomeReducer: ReducerProtocol {
-    private enum CancelId {}
+    private enum CancelId { case timer }
 
     struct State: Equatable {
         enum Destination: Equatable {
