@@ -21,6 +21,7 @@ extension SDKSynchronizerClient: DependencyKey {
         let initializer = Initializer(
             cacheDbURL: databaseFiles.cacheDbURLFor(network),
             fsBlockDbRoot: databaseFiles.fsBlockDbRootFor(network),
+            generalStorageURL: databaseFiles.documentsDirectory(),
             dataDbURL: databaseFiles.dataDbURLFor(network),
             endpoint: environment.endpoint,
             network: network,
