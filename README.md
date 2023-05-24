@@ -44,9 +44,9 @@ and create a symbolic link
 ln -s /opt/homebrew/bin/swiftgen /usr/local/bin
 ```
 ## Swiftlint
-The project is setup to work with `0.47.0` version. We recommend to install it directly using [the official 0.47.0 package](https://github.com/realm/SwiftLint/releases/download/0.47.0/SwiftLint.pkg). If you follow this step there is no symbolic link needed.
+The project is setup to work with `0.50.3` version. We recommend to install it directly using [the official 0.50.3 package](https://github.com/realm/SwiftLint/releases/download/0.50.3/SwiftLint.pkg). If you follow this step there is no symbolic link needed.
 
-In case you already have swiftlint 0.47.0 ready on your machine and installed via homebrew, create a symbolic link
+In case you already have swiftlint 0.50.3 ready on your machine and installed via homebrew, create a symbolic link
 ```
 ln -s /opt/homebrew/bin/swiftlint /usr/local/bin
 ```
