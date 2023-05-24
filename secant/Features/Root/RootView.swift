@@ -89,7 +89,10 @@ struct RootView: View {
                 }
             }
             .onOpenURL(perform: { viewStore.goToDeeplink($0) })
-            .alert(store.scope(state: \.uniAlert), dismiss: .dismissAlert)
+            .alert(store.scope(
+                state: \.uniAlert,
+                action: { _ in RootReducer.Action.dismissAlert }
+            ), dismiss: .dismissAlert)
 
             shareLogsView(viewStore)
         }
@@ -205,7 +208,10 @@ private extension RootView {
                 }
             }
             .confirmationDialog(
-                store.scope(state: \.debugState.rescanDialog),
+                store.scope(
+                    state: \.debugState.rescanDialog,
+                    action: { _ in RootReducer.Action.debug(.cancelRescan) }
+                ),
                 dismiss: .debug(.cancelRescan)
             )
         }

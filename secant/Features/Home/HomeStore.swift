@@ -130,7 +130,7 @@ struct HomeReducer: ReducerProtocol {
                 }
                 
             case .onDisappear:
-                return .cancel(id: CancelId.self)
+                return .cancel(id: CancelId.timer)
                 
             case .resolveReviewRequest:
                 if reviewRequest.canRequestReview() {
