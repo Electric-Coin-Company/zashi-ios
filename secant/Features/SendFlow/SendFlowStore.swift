@@ -13,7 +13,7 @@ typealias SendFlowStore = Store<SendFlowReducer.State, SendFlowReducer.Action>
 typealias SendFlowViewStore = ViewStore<SendFlowReducer.State, SendFlowReducer.Action>
 
 struct SendFlowReducer: ReducerProtocol {
-    private enum SyncStatusUpdatesID {}
+    private enum SyncStatusUpdatesID { case timer }
 
     struct State: Equatable {
         enum Destination: Equatable {
@@ -205,10 +205,10 @@ struct SendFlowReducer: ReducerProtocol {
                     .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
                     .map(SendFlowReducer.Action.synchronizerStateChanged)
                     .eraseToEffect()
-                    .cancellable(id: SyncStatusUpdatesID.self, cancelInFlight: true)
+                    .cancellable(id: SyncStatusUpdatesID.timer, cancelInFlight: true)
                 
             case .onDisappear:
-                return .cancel(id: SyncStatusUpdatesID.self)
+                return .cancel(id: SyncStatusUpdatesID.timer)
                 
             case .synchronizerStateChanged(let latestState):
                 let shieldedBalance = latestState.shieldedBalance
