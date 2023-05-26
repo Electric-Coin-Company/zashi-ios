@@ -819,6 +819,7 @@
 		9EAFEB872806E5AE00199FC9 /* SDKSynchronizerInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKSynchronizerInterface.swift; sourceTree = "<group>"; };
 		9EAFEB8D2808183D00199FC9 /* SandboxView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SandboxView.swift; sourceTree = "<group>"; };
 		9EAFEB8E2808183D00199FC9 /* SandboxStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SandboxStore.swift; sourceTree = "<group>"; };
+		9EB7D14A2A20C6BC00F35E03 /* modules */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = modules; sourceTree = "<group>"; };
 		9EB863892922CC4D003D0F8B /* FeedbackGeneratorTestKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackGeneratorTestKey.swift; sourceTree = "<group>"; };
 		9EB8638A2922CC4D003D0F8B /* FeedbackGeneratorInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackGeneratorInterface.swift; sourceTree = "<group>"; };
 		9EB8638B2922CC4D003D0F8B /* FeedbackGeneratorLiveKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackGeneratorLiveKey.swift; sourceTree = "<group>"; };
@@ -988,6 +989,7 @@
 		0D4E79FC26B364170058B01E = {
 			isa = PBXGroup;
 			children = (
+				9EB7D14A2A20C6BC00F35E03 /* modules */,
 				0D4E7A0726B364170058B01E /* secant */,
 				0D4E7A1926B364180058B01E /* secantTests */,
 				0D4E7A2426B364180058B01E /* secantUITests */,
