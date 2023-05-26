@@ -15,6 +15,6 @@ extension DependencyValues {
     }
 }
 
-struct DateClient {
-    let now: () -> Date
+public struct DateClient {
+    public let now: () -> Date
 }
