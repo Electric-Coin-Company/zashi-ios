@@ -9,7 +9,7 @@ import ComposableArchitecture
 import XCTestDynamicOverlay
 
 extension AppVersionClient: TestDependencyKey {
-    static let testValue = Self(
+    public static let testValue = Self(
         appVersion: XCTUnimplemented("\(Self.self).appVersion", placeholder: ""),
         appBuild: XCTUnimplemented("\(Self.self).appBuild", placeholder: "")
     )

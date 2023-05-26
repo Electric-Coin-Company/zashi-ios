@@ -6,7 +6,7 @@
 //
 
 extension AppVersionClient {
-    static let mock = Self(
+    public static let mock = Self(
         appVersion: { "0.0.1" },
         appBuild: { "31" }
     )

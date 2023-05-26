@@ -9,7 +9,7 @@ import Foundation
 import ComposableArchitecture
 
 extension DependencyValues {
-    var date: DateClient {
+    public var date: DateClient {
         get { self[DateClient.self] }
         set { self[DateClient.self] = newValue }
     }
