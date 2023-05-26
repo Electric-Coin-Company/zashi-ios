@@ -458,12 +458,6 @@
 		9E69A24D27FB002800A55317 /* WelcomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E69A24C27FB002800A55317 /* WelcomeStore.swift */; };
 		9E7225F3288AB6DD00DF7F17 /* MultipleLineTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7225F2288AB6DD00DF7F17 /* MultipleLineTextField.swift */; };
 		9E7225F6288AC71A00DF7F17 /* MultiLineTextFieldStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7225F5288AC71A00DF7F17 /* MultiLineTextFieldStore.swift */; };
-		9E74CCC529DC04E8003D6E32 /* DateTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E74CCC229DC04E8003D6E32 /* DateTestKey.swift */; };
-		9E74CCC629DC04E8003D6E32 /* DateTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E74CCC229DC04E8003D6E32 /* DateTestKey.swift */; };
-		9E74CCC729DC04E8003D6E32 /* DateInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E74CCC329DC04E8003D6E32 /* DateInterface.swift */; };
-		9E74CCC829DC04E8003D6E32 /* DateInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E74CCC329DC04E8003D6E32 /* DateInterface.swift */; };
-		9E74CCC929DC04E8003D6E32 /* DateLiveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E74CCC429DC04E8003D6E32 /* DateLiveKey.swift */; };
-		9E74CCCA29DC04E8003D6E32 /* DateLiveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E74CCC429DC04E8003D6E32 /* DateLiveKey.swift */; };
 		9E74CCCB29DC04ED003D6E32 /* ReviewRequestInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2A07B629DAE0A900F2B086 /* ReviewRequestInterface.swift */; };
 		9E74CCCC29DC04ED003D6E32 /* ReviewRequestLiveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2A07B529DAE0A900F2B086 /* ReviewRequestLiveKey.swift */; };
 		9E74CCCD29DC04ED003D6E32 /* ReviewRequestTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2A07B429DAE0A900F2B086 /* ReviewRequestTestKey.swift */; };
@@ -483,6 +477,7 @@
 		9E7FE0F92832824C00C374E8 /* QRCodeScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0F82832824C00C374E8 /* QRCodeScanView.swift */; };
 		9E852D6129B098F400CF4AC1 /* RootDebug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E852D6029B098F400CF4AC1 /* RootDebug.swift */; };
 		9E852D6229B098F400CF4AC1 /* RootDebug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E852D6029B098F400CF4AC1 /* RootDebug.swift */; };
+		9E88FB9E2A20CAA000DAA500 /* DateClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E88FB9D2A20CAA000DAA500 /* DateClient */; };
 		9E9ADA7D2938F4C00071767B /* RootInitialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ADA7C2938F4C00071767B /* RootInitialization.swift */; };
 		9E9ADA7F2938F5EC0071767B /* RootDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ADA7E2938F5EC0071767B /* RootDestination.swift */; };
 		9E9CEA3E29D47BE000599DF5 /* OnChangeReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9CEA3D29D47BE000599DF5 /* OnChangeReducer.swift */; };
@@ -774,9 +769,6 @@
 		9E7225F02889539300DF7F17 /* SettingsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSnapshotTests.swift; sourceTree = "<group>"; };
 		9E7225F2288AB6DD00DF7F17 /* MultipleLineTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleLineTextField.swift; sourceTree = "<group>"; };
 		9E7225F5288AC71A00DF7F17 /* MultiLineTextFieldStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiLineTextFieldStore.swift; sourceTree = "<group>"; };
-		9E74CCC229DC04E8003D6E32 /* DateTestKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateTestKey.swift; sourceTree = "<group>"; };
-		9E74CCC329DC04E8003D6E32 /* DateInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateInterface.swift; sourceTree = "<group>"; };
-		9E74CCC429DC04E8003D6E32 /* DateLiveKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateLiveKey.swift; sourceTree = "<group>"; };
 		9E74CCCF29DC0628003D6E32 /* ReviewRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewRequestTests.swift; sourceTree = "<group>"; };
 		9E7CB6112869882D00A02233 /* WalletEventsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletEventsSnapshotTests.swift; sourceTree = "<group>"; };
 		9E7CB6142869E8C300A02233 /* CircularProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgress.swift; sourceTree = "<group>"; };
@@ -928,6 +920,7 @@
 				9E2AC0FF27D8EC120042AA47 /* MnemonicSwift in Frameworks */,
 				6654C73A2715A38000901167 /* ComposableArchitecture in Frameworks */,
 				9EAB466D285A0468002904A0 /* Parsing in Frameworks */,
+				9E88FB9E2A20CAA000DAA500 /* DateClient in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1634,16 +1627,6 @@
 			path = MultiLineTextField;
 			sourceTree = "<group>";
 		};
-		9E74CCC129DC0476003D6E32 /* Date */ = {
-			isa = PBXGroup;
-			children = (
-				9E74CCC329DC04E8003D6E32 /* DateInterface.swift */,
-				9E74CCC429DC04E8003D6E32 /* DateLiveKey.swift */,
-				9E74CCC229DC04E8003D6E32 /* DateTestKey.swift */,
-			);
-			path = Date;
-			sourceTree = "<group>";
-		};
 		9E74CCCE29DC060B003D6E32 /* ReviewRequestTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -1749,7 +1732,6 @@
 		9E7FE0BD282D1DE100C374E8 /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
-				9E74CCC129DC0476003D6E32 /* Date */,
 				9EBDF978291F7E85000A1A05 /* AppVersion */,
 				9EBDF962291ECD42000A1A05 /* AudioServices */,
 				9EBDF969291ECEAC000A1A05 /* CaptureDevice */,
@@ -2305,6 +2287,7 @@
 				0D5D9B8E2914620700DBD03F /* URLRouting */,
 				0D261039298C3DCD00CC9DE9 /* FirebaseCrashlytics */,
 				34CE032A29C0938600A6626B /* ZcashLightClientKit */,
+				9E88FB9D2A20CAA000DAA500 /* DateClient */,
 			);
 			productName = secant;
 			productReference = 0D4E7A0526B364170058B01E /* secant-testnet.app */;
@@ -2688,7 +2671,6 @@
 				0D26AEB8299E8196005260EE /* FileManagerInterface.swift in Sources */,
 				0D26AEBA299E8196005260EE /* AddressDetailsStore.swift in Sources */,
 				0D26AEBB299E8196005260EE /* RecoveryPhraseBackupSucceededView.swift in Sources */,
-				9E74CCCA29DC04E8003D6E32 /* DateLiveKey.swift in Sources */,
 				0D26AEBC299E8196005260EE /* TCATextFieldStore.swift in Sources */,
 				0D26AEBE299E8196005260EE /* SecantTextStyles.swift in Sources */,
 				0D26AEBF299E8196005260EE /* TransactionFailedView.swift in Sources */,
@@ -2699,7 +2681,6 @@
 				0D26AEC5299E8196005260EE /* RecoveryPhraseValidationFlowStore.swift in Sources */,
 				9E486DFA29BA09C2003E6945 /* UIKit+Extensions.swift in Sources */,
 				9E33ECDA29D5E30700708DE4 /* OnChangeReducer.swift in Sources */,
-				9E74CCC629DC04E8003D6E32 /* DateTestKey.swift in Sources */,
 				0D26AEC6299E8196005260EE /* ImportWalletView.swift in Sources */,
 				0D26AEC7299E8196005260EE /* RootInitialization.swift in Sources */,
 				9E74CCCC29DC04ED003D6E32 /* ReviewRequestLiveKey.swift in Sources */,
@@ -2871,7 +2852,6 @@
 				0D26AF65299E8196005260EE /* InitializationState.swift in Sources */,
 				0D26AF66299E8196005260EE /* ZcashSymbol.swift in Sources */,
 				0D26AF67299E8196005260EE /* UserPreferencesStorageLive.swift in Sources */,
-				9E74CCC829DC04E8003D6E32 /* DateInterface.swift in Sources */,
 				9E486DF429B9EEC4003E6945 /* UIResponder+Current.swift in Sources */,
 				0D26AF68299E8196005260EE /* TransactionAmountTextField.swift in Sources */,
 				0D26AF69299E8196005260EE /* AddressDetailsView.swift in Sources */,
@@ -2892,7 +2872,6 @@
 				9E7FE0DF282D2DD600C374E8 /* ZcashBadge.swift in Sources */,
 				34F682F229A764120022C079 /* WalletConfigProviderLiveKey.swift in Sources */,
 				0D261040298C406F00CC9DE9 /* CrashReporterTestKey.swift in Sources */,
-				9E74CCC929DC04E8003D6E32 /* DateLiveKey.swift in Sources */,
 				9EBDF975291F79F9000A1A05 /* DerivationToolInterface.swift in Sources */,
 				660558F8270C862F009D6954 /* XCAssets+Generated.swift in Sources */,
 				9EAFEB902808183D00199FC9 /* SandboxStore.swift in Sources */,
@@ -2901,7 +2880,6 @@
 				9E39114A2848EEB90073DD9A /* UserPreferencesStorage.swift in Sources */,
 				9E153A612920CE2700112F41 /* MnemonicMocks.swift in Sources */,
 				34DA414728E4385800F8CC61 /* TransactionSendingView.swift in Sources */,
-				9E74CCC729DC04E8003D6E32 /* DateInterface.swift in Sources */,
 				F96B41E9273B501F0021B49A /* WalletEventsFlowView.swift in Sources */,
 				9E4AA4F829BF76BB00752BB3 /* About.swift in Sources */,
 				9E33ECD429D5D99000708DE4 /* AlertRequest.swift in Sources */,
@@ -2934,7 +2912,6 @@
 				9EAB467A2861EA6A002904A0 /* TransactionRowView.swift in Sources */,
 				9EB8638C2922CD4A003D0F8B /* FeedbackGeneratorTestKey.swift in Sources */,
 				9E0F5741297E7F1D005304FA /* TCALogging.swift in Sources */,
-				9E74CCC529DC04E8003D6E32 /* DateTestKey.swift in Sources */,
 				0DFE93E3272CA1AA000FCCA5 /* RecoveryPhraseValidationFlowStore.swift in Sources */,
 				9E9CEA3E29D47BE000599DF5 /* OnChangeReducer.swift in Sources */,
 				9E486DF929BA09C2003E6945 /* UIKit+Extensions.swift in Sources */,
@@ -3752,6 +3729,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9E66122F2878337F00C75B70 /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
+		};
+		9E88FB9D2A20CAA000DAA500 /* DateClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DateClient;
 		};
 		9EAB466C285A0468002904A0 /* Parsing */ = {
 			isa = XCSwiftPackageProductDependency;

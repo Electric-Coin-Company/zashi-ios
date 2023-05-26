@@ -10,7 +10,7 @@ import ComposableArchitecture
 import XCTestDynamicOverlay
 
 extension DateClient: TestDependencyKey {
-    static let testValue = Self(
+    public static let testValue = Self(
         now: XCTUnimplemented("\(Self.self).now", placeholder: Date.now)
     )
 }
