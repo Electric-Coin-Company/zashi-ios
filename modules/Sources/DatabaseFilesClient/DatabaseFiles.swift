@@ -7,8 +7,9 @@
 
 import Foundation
 import ZcashLightClientKit
+import FileManager
 
-struct DatabaseFiles {
+public struct DatabaseFiles {
     enum DatabaseFilesError: Error {
         case getFsBlockDbRoot
         case getDocumentsURL
@@ -23,7 +24,7 @@ struct DatabaseFiles {
     
     private let fileManager: FileManagerClient
     
-    init(fileManager: FileManagerClient) {
+    public init(fileManager: FileManagerClient) {
         self.fileManager = fileManager
     }
     

@@ -9,7 +9,7 @@ import ComposableArchitecture
 import XCTestDynamicOverlay
 
 extension DeeplinkClient: TestDependencyKey {
-    static let testValue = Self(
+    public static let testValue = Self(
         resolveDeeplinkURL: XCTUnimplemented("\(Self.self).resolveDeeplinkURL")
     )
 }

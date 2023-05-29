@@ -6,9 +6,11 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
 import ZcashLightClientKit
+import FileManager
+import DatabaseFilesClient
+@testable import secant_testnet
 
 class RootTests: XCTestCase {
     static let testScheduler = DispatchQueue.test

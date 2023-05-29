@@ -8,6 +8,8 @@
 import Foundation
 import ComposableArchitecture
 import ZcashLightClientKit
+import DeeplinkClient
+import DerivationToolClient
 
 /// In this file is a collection of helpers that control all state and action related operations
 /// for the `RootReducer` with a connection to the UI navigation.
@@ -135,7 +137,7 @@ private extension RootReducer {
         deeplink: DeeplinkClient,
         derivationTool: DerivationToolClient
     ) async throws -> RootReducer.Action {
-        let deeplink = try deeplink.resolveDeeplinkURL(url, derivationTool)
+        let deeplink = try deeplink.resolveDeeplinkURL(url, TargetConstants.zcashNetwork.networkType, derivationTool)
         
         switch deeplink {
         case .home:

@@ -1,6 +1,7 @@
 import ComposableArchitecture
 import SwiftUI
 import ZcashLightClientKit
+import AudioServicesClient
 
 import UIKit
 import AVFoundation

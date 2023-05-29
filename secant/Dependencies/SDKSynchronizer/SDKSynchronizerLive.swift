@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import ComposableArchitecture
 import ZcashLightClientKit
+import DatabaseFilesClient
 
 extension SDKSynchronizerClient: DependencyKey {
     static let liveValue: SDKSynchronizerClient = Self.live()

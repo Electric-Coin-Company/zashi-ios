@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import DerivationToolClient
 
-struct URIParser {
+public struct URIParser {
     enum URIParserError: Error { }
     
     private let derivationTool: DerivationToolClient
@@ -17,6 +18,6 @@ struct URIParser {
     }
 
     func isValidURI(_ uri: String) -> Bool {
-        derivationTool.isZcashAddress(uri)
+        derivationTool.isZcashAddress(uri, TargetConstants.zcashNetwork.networkType)
     }
 }

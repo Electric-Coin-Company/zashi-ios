@@ -8,9 +8,10 @@
 import ComposableArchitecture
 import XCTestDynamicOverlay
 import ZcashLightClientKit
+import Utils
 
 extension DerivationToolClient: TestDependencyKey {
-    static let testValue = Self(
+    public static let testValue = Self(
         deriveSpendingKey: XCTUnimplemented("\(Self.self).deriveSpendingKey"),
         deriveUnifiedFullViewingKey: XCTUnimplemented("\(Self.self).deriveUnifiedFullViewingKey"),
         isUnifiedAddress: XCTUnimplemented("\(Self.self).isUnifiedAddress", placeholder: false),
@@ -21,12 +22,12 @@ extension DerivationToolClient: TestDependencyKey {
 }
 
 extension DerivationToolClient {
-    static let noOp = Self(
-        deriveSpendingKey: { _, _ in throw "NotImplemented" },
-        deriveUnifiedFullViewingKey: { _ in throw "NotImplemented" },
-        isUnifiedAddress: { _ in return false },
-        isSaplingAddress: { _ in return false },
-        isTransparentAddress: { _ in return false },
-        isZcashAddress: { _ in return false }
+    public static let noOp = Self(
+        deriveSpendingKey: { _, _, _ in throw "NotImplemented" },
+        deriveUnifiedFullViewingKey: { _, _ in throw "NotImplemented" },
+        isUnifiedAddress: { _, _ in return false },
+        isSaplingAddress: { _, _ in return false },
+        isTransparentAddress: { _, _ in return false },
+        isZcashAddress: { _, _ in return false }
     )
 }

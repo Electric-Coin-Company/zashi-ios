@@ -9,14 +9,14 @@ import ComposableArchitecture
 import XCTestDynamicOverlay
 
 extension CaptureDeviceClient: TestDependencyKey {
-    static let testValue = Self(
+    public static let testValue = Self(
         isTorchAvailable: XCTUnimplemented("\(Self.self).isTorchAvailable", placeholder: false),
         torch: XCTUnimplemented("\(Self.self).torch")
     )
 }
 
 extension CaptureDeviceClient {
-    static let noOp = Self(
+    public static let noOp = Self(
         isTorchAvailable: { false },
         torch: { _ in }
     )

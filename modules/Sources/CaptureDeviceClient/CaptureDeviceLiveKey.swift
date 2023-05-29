@@ -9,7 +9,7 @@ import AVFoundation
 import ComposableArchitecture
 
 extension CaptureDeviceClient: DependencyKey {
-    static let liveValue = Self(
+    public static let liveValue = Self(
         isTorchAvailable: {
             guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else {
                 throw CaptureDeviceClientError.captureDeviceFailed

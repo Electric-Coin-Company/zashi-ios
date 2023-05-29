@@ -8,7 +8,7 @@
 import Foundation
 
 extension FileManagerClient {
-    static let live = FileManagerClient(
+    public static let live = FileManagerClient(
         url: { searchPathDirectory, searchPathDomainMask, appropriateForURL, shouldCreate in
             try FileManager.default.url(for: searchPathDirectory, in: searchPathDomainMask, appropriateFor: appropriateForURL, create: shouldCreate)
         },

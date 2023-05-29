@@ -17,4 +17,8 @@ extension DependencyValues {
 
 public struct DateClient {
     public let now: () -> Date
+    
+    public init(now: @escaping () -> Date) {
+        self.now = now
+    }
 }

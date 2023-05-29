@@ -9,7 +9,7 @@ import ComposableArchitecture
 import XCTestDynamicOverlay
 
 extension AudioServicesClient: TestDependencyKey {
-    static let testValue = Self(
+    public static let testValue = Self(
         systemSoundVibrate: XCTUnimplemented("\(Self.self).systemSoundVibrate")
     )
 }

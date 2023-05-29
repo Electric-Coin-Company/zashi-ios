@@ -8,7 +8,7 @@
 import ComposableArchitecture
 
 extension DeeplinkClient: DependencyKey {
-    static let liveValue = Self(
-        resolveDeeplinkURL: { try Deeplink().resolveDeeplinkURL($0, isValidZcashAddress: $1.isZcashAddress) }
+    public static let liveValue = Self(
+        resolveDeeplinkURL: { try Deeplink().resolveDeeplinkURL($0, networkType: $1, isValidZcashAddress: $2.isZcashAddress) }
     )
 }
