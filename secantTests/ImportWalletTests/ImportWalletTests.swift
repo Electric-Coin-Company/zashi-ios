@@ -6,8 +6,9 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
+import Utils
+@testable import secant_testnet
 
 // swiftlint:disable type_body_length
 class ImportWalletTests: XCTestCase {

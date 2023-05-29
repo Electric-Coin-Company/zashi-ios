@@ -6,8 +6,9 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
+import MnemonicClient
+@testable import secant_testnet
 
 // swiftlint:disable:next type_name
 class RecoveryPhraseValidationFlowFeatureFlagTests: XCTestCase {

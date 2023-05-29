@@ -9,6 +9,7 @@ import Combine
 import ComposableArchitecture
 import Foundation
 import ZcashLightClientKit
+import LogsHandlerClient
 
 typealias ExportLogsStore = Store<ExportLogsReducer.State, ExportLogsReducer.Action>
 typealias ExportLogsViewStore = ViewStore<ExportLogsReducer.State, ExportLogsReducer.Action>
@@ -40,7 +41,11 @@ struct ExportLogsReducer: ReducerProtocol {
                 state.exportLogsDisabled = true
                 return .run { send in
                     do {
-                        let zippedLogsURL = try await logsHandler.exportAndStoreLogs()
+                        let zippedLogsURL = try await logsHandler.exportAndStoreLogs(
+                            LoggerConstants.sdkLogs,
+                            LoggerConstants.tcaLogs,
+                            LoggerConstants.walletLogs
+                        )
                         await send(.finished(zippedLogsURL))
                     } catch {
                         await send(.failed(error.toZcashError()))

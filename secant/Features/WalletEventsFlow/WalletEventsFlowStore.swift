@@ -1,6 +1,7 @@
 import ComposableArchitecture
 import SwiftUI
 import ZcashLightClientKit
+import Utils
 
 typealias WalletEventsFlowStore = Store<WalletEventsFlowReducer.State, WalletEventsFlowReducer.Action>
 typealias WalletEventsFlowViewStore = ViewStore<WalletEventsFlowReducer.State, WalletEventsFlowReducer.Action>

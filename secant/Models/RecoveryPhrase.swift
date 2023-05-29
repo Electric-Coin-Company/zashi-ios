@@ -7,6 +7,7 @@
 
 import Foundation
 import ZcashLightClientKit
+import Utils
 
 enum RecoveryPhraseError: Error {
     /// This error is thrown then the Recovery Phrase can't be generated

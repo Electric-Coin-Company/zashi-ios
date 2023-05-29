@@ -9,6 +9,7 @@ import Foundation
 import ComposableArchitecture
 import SwiftUI
 import ZcashLightClientKit
+import Utils
 
 // MARK: - Model
 

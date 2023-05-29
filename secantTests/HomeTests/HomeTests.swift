@@ -8,6 +8,7 @@
 import Combine
 import XCTest
 import ComposableArchitecture
+import Utils
 @testable import secant_testnet
 @testable import ZcashLightClientKit
 

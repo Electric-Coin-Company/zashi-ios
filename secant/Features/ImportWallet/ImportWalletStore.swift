@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import ZcashLightClientKit
 import SwiftUI
+import Utils
 
 typealias ImportWalletStore = Store<ImportWalletReducer.State, ImportWalletReducer.Action>
 typealias ImportWalletViewStore = ViewStore<ImportWalletReducer.State, ImportWalletReducer.Action>
