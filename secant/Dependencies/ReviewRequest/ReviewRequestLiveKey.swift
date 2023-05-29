@@ -8,6 +8,7 @@
 import Foundation
 import ComposableArchitecture
 import DateClient
+import AppVersionClient
 
 extension ReviewRequestClient: DependencyKey {
     static let liveValue = ReviewRequestClient.live()

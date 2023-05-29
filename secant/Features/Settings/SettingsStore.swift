@@ -1,6 +1,7 @@
 import ComposableArchitecture
 import MessageUI
 import SwiftUI
+import AppVersionClient
 
 typealias SettingsStore = Store<SettingsReducer.State, SettingsReducer.Action>
 typealias SettingsViewStore = ViewStore<SettingsReducer.State, SettingsReducer.Action>

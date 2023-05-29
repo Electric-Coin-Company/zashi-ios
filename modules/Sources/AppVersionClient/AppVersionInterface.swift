@@ -8,13 +8,13 @@
 import ComposableArchitecture
 
 extension DependencyValues {
-    var appVersion: AppVersionClient {
+    public var appVersion: AppVersionClient {
         get { self[AppVersionClient.self] }
         set { self[AppVersionClient.self] = newValue }
     }
 }
 
-struct AppVersionClient {
-    let appVersion: () -> String
-    let appBuild: () -> String
+public struct AppVersionClient {
+    public let appVersion: () -> String
+    public let appBuild: () -> String
 }

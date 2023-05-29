@@ -58,7 +58,6 @@
 		0D26AEC8299E8196005260EE /* LogsHandlerLive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E612C7329880F2200D09B09 /* LogsHandlerLive.swift */; };
 		0D26AEC9299E8196005260EE /* AudioServicesTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF964291ECDA2000A1A05 /* AudioServicesTestKey.swift */; };
 		0D26AECA299E8196005260EE /* EnumeratedChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D535FE1271F9476009A9E3E /* EnumeratedChip.swift */; };
-		0D26AECB299E8196005260EE /* AppVersionInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF97B291F7EB0000A1A05 /* AppVersionInterface.swift */; };
 		0D26AECC299E8196005260EE /* OnboardingFlowStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6654C73D2715A41300901167 /* OnboardingFlowStore.swift */; };
 		0D26AECD299E8196005260EE /* SDKSynchronizerLive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863CA2923CA20003D0F8B /* SDKSynchronizerLive.swift */; };
 		0D26AECE299E8196005260EE /* URIParserInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB8639F292398A8003D0F8B /* URIParserInterface.swift */; };
@@ -81,7 +80,6 @@
 		0D26AEDF299E8196005260EE /* FileManagerTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863C42923C8AF003D0F8B /* FileManagerTestKey.swift */; };
 		0D26AEE0299E8196005260EE /* SecItemLive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863BE2923C72C003D0F8B /* SecItemLive.swift */; };
 		0D26AEE2299E8196005260EE /* FileManagerLiveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863B82923C6D7003D0F8B /* FileManagerLiveKey.swift */; };
-		0D26AEE3299E8196005260EE /* AppVersionTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF979291F7EB0000A1A05 /* AppVersionTestKey.swift */; };
 		0D26AEE4299E8196005260EE /* CurrencySelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8719CC27FB0D3B0082C926 /* CurrencySelectionView.swift */; };
 		0D26AEE5299E8196005260EE /* RecoveryPhraseRandomizerTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB863A429239DCB003D0F8B /* RecoveryPhraseRandomizerTestKey.swift */; };
 		0D26AEE7299E8196005260EE /* TransactionAddressTextFieldStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF64E2823E94900BA3F17 /* TransactionAddressTextFieldStore.swift */; };
@@ -135,7 +133,6 @@
 		0D26AF19299E8196005260EE /* StoredWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0E5282E7B1100C374E8 /* StoredWallet.swift */; };
 		0D26AF1A299E8196005260EE /* UserDefaultsInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E153A7329216EFB00112F41 /* UserDefaultsInterface.swift */; };
 		0D26AF1B299E8196005260EE /* HomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93874ED273C4DE200F0E875 /* HomeStore.swift */; };
-		0D26AF1C299E8196005260EE /* AppVersionMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF97F291F8261000A1A05 /* AppVersionMocks.swift */; };
 		0D26AF1E299E8196005260EE /* QRCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB619287310EC00A02233 /* QRCodeGenerator.swift */; };
 		0D26AF1F299E8196005260EE /* Array+Chunked.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0D4282D281800C374E8 /* Array+Chunked.swift */; };
 		0D26AF20299E8196005260EE /* UInt+SuperscriptText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DACFA8027208D940039EEA5 /* UInt+SuperscriptText.swift */; };
@@ -156,7 +153,6 @@
 		0D26AF34299E8196005260EE /* SecItemInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB83280597B700199FC9 /* SecItemInterface.swift */; };
 		0D26AF36299E8196005260EE /* DatabaseFilesTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF94F291E5E86000A1A05 /* DatabaseFilesTestKey.swift */; };
 		0D26AF37299E8196005260EE /* ScanUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0F528327F6F00C374E8 /* ScanUIView.swift */; };
-		0D26AF38299E8196005260EE /* AppVersionLiveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF97A291F7EB0000A1A05 /* AppVersionLiveKey.swift */; };
 		0D26AF39299E8196005260EE /* ColoredChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D185818272723FF0046B928 /* ColoredChip.swift */; };
 		0D26AF3A299E8196005260EE /* OnboardingContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA11F5C27467F7700709571 /* OnboardingContentView.swift */; };
 		0D26AF3B299E8196005260EE /* CircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6142869E8C300A02233 /* CircularProgress.swift */; };
@@ -477,7 +473,8 @@
 		9E7FE0F92832824C00C374E8 /* QRCodeScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0F82832824C00C374E8 /* QRCodeScanView.swift */; };
 		9E852D6129B098F400CF4AC1 /* RootDebug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E852D6029B098F400CF4AC1 /* RootDebug.swift */; };
 		9E852D6229B098F400CF4AC1 /* RootDebug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E852D6029B098F400CF4AC1 /* RootDebug.swift */; };
-		9E88FB9E2A20CAA000DAA500 /* DateClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E88FB9D2A20CAA000DAA500 /* DateClient */; };
+		9E88FBA02A20D33C00DAA500 /* DateClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E88FB9F2A20D33C00DAA500 /* DateClient */; };
+		9E88FBA22A20D35800DAA500 /* AppVersionClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E88FBA12A20D35800DAA500 /* AppVersionClient */; };
 		9E9ADA7D2938F4C00071767B /* RootInitialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ADA7C2938F4C00071767B /* RootInitialization.swift */; };
 		9E9ADA7F2938F5EC0071767B /* RootDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ADA7E2938F5EC0071767B /* RootDestination.swift */; };
 		9E9CEA3E29D47BE000599DF5 /* OnChangeReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9CEA3D29D47BE000599DF5 /* OnChangeReducer.swift */; };
@@ -535,10 +532,6 @@
 		9EBDF975291F79F9000A1A05 /* DerivationToolInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF972291F79F9000A1A05 /* DerivationToolInterface.swift */; };
 		9EBDF976291F79F9000A1A05 /* DerivationToolLiveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF973291F79F9000A1A05 /* DerivationToolLiveKey.swift */; };
 		9EBDF977291F79F9000A1A05 /* DerivationToolTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF974291F79F9000A1A05 /* DerivationToolTestKey.swift */; };
-		9EBDF97C291F7EB0000A1A05 /* AppVersionTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF979291F7EB0000A1A05 /* AppVersionTestKey.swift */; };
-		9EBDF97D291F7EB0000A1A05 /* AppVersionLiveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF97A291F7EB0000A1A05 /* AppVersionLiveKey.swift */; };
-		9EBDF97E291F7EB0000A1A05 /* AppVersionInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF97B291F7EB0000A1A05 /* AppVersionInterface.swift */; };
-		9EBDF980291F8261000A1A05 /* AppVersionMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF97F291F8261000A1A05 /* AppVersionMocks.swift */; };
 		9EBDF985291F91EF000A1A05 /* LocalAuthenticationHandlerInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF982291F91EF000A1A05 /* LocalAuthenticationHandlerInterface.swift */; };
 		9EBDF986291F91EF000A1A05 /* LocalAuthenticationLiveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF983291F91EF000A1A05 /* LocalAuthenticationLiveKey.swift */; };
 		9EBDF987291F91EF000A1A05 /* LocalAuthenticationTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBDF984291F91EF000A1A05 /* LocalAuthenticationTestKey.swift */; };
@@ -854,10 +847,6 @@
 		9EBDF972291F79F9000A1A05 /* DerivationToolInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DerivationToolInterface.swift; sourceTree = "<group>"; };
 		9EBDF973291F79F9000A1A05 /* DerivationToolLiveKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DerivationToolLiveKey.swift; sourceTree = "<group>"; };
 		9EBDF974291F79F9000A1A05 /* DerivationToolTestKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DerivationToolTestKey.swift; sourceTree = "<group>"; };
-		9EBDF979291F7EB0000A1A05 /* AppVersionTestKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppVersionTestKey.swift; sourceTree = "<group>"; };
-		9EBDF97A291F7EB0000A1A05 /* AppVersionLiveKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppVersionLiveKey.swift; sourceTree = "<group>"; };
-		9EBDF97B291F7EB0000A1A05 /* AppVersionInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppVersionInterface.swift; sourceTree = "<group>"; };
-		9EBDF97F291F8261000A1A05 /* AppVersionMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionMocks.swift; sourceTree = "<group>"; };
 		9EBDF982291F91EF000A1A05 /* LocalAuthenticationHandlerInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalAuthenticationHandlerInterface.swift; sourceTree = "<group>"; };
 		9EBDF983291F91EF000A1A05 /* LocalAuthenticationLiveKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalAuthenticationLiveKey.swift; sourceTree = "<group>"; };
 		9EBDF984291F91EF000A1A05 /* LocalAuthenticationTestKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalAuthenticationTestKey.swift; sourceTree = "<group>"; };
@@ -917,10 +906,11 @@
 				0D5D9B8F2914620700DBD03F /* URLRouting in Frameworks */,
 				34CE032B29C0938600A6626B /* ZcashLightClientKit in Frameworks */,
 				0D26103A298C3DCD00CC9DE9 /* FirebaseCrashlytics in Frameworks */,
+				9E88FBA22A20D35800DAA500 /* AppVersionClient in Frameworks */,
 				9E2AC0FF27D8EC120042AA47 /* MnemonicSwift in Frameworks */,
 				6654C73A2715A38000901167 /* ComposableArchitecture in Frameworks */,
 				9EAB466D285A0468002904A0 /* Parsing in Frameworks */,
-				9E88FB9E2A20CAA000DAA500 /* DateClient in Frameworks */,
+				9E88FBA02A20D33C00DAA500 /* DateClient in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1732,7 +1722,6 @@
 		9E7FE0BD282D1DE100C374E8 /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
-				9EBDF978291F7E85000A1A05 /* AppVersion */,
 				9EBDF962291ECD42000A1A05 /* AudioServices */,
 				9EBDF969291ECEAC000A1A05 /* CaptureDevice */,
 				0D767873298C374F0047E085 /* CrashReporter */,
@@ -2102,17 +2091,6 @@
 			path = DerivationTool;
 			sourceTree = "<group>";
 		};
-		9EBDF978291F7E85000A1A05 /* AppVersion */ = {
-			isa = PBXGroup;
-			children = (
-				9EBDF97B291F7EB0000A1A05 /* AppVersionInterface.swift */,
-				9EBDF97A291F7EB0000A1A05 /* AppVersionLiveKey.swift */,
-				9EBDF979291F7EB0000A1A05 /* AppVersionTestKey.swift */,
-				9EBDF97F291F8261000A1A05 /* AppVersionMocks.swift */,
-			);
-			path = AppVersion;
-			sourceTree = "<group>";
-		};
 		9EBDF981291F91B1000A1A05 /* LocalAuthentication */ = {
 			isa = PBXGroup;
 			children = (
@@ -2287,7 +2265,8 @@
 				0D5D9B8E2914620700DBD03F /* URLRouting */,
 				0D261039298C3DCD00CC9DE9 /* FirebaseCrashlytics */,
 				34CE032A29C0938600A6626B /* ZcashLightClientKit */,
-				9E88FB9D2A20CAA000DAA500 /* DateClient */,
+				9E88FB9F2A20D33C00DAA500 /* DateClient */,
+				9E88FBA12A20D35800DAA500 /* AppVersionClient */,
 			);
 			productName = secant;
 			productReference = 0D4E7A0526B364170058B01E /* secant-testnet.app */;
@@ -2687,7 +2666,6 @@
 				0D26AEC8299E8196005260EE /* LogsHandlerLive.swift in Sources */,
 				0D26AEC9299E8196005260EE /* AudioServicesTestKey.swift in Sources */,
 				0D26AECA299E8196005260EE /* EnumeratedChip.swift in Sources */,
-				0D26AECB299E8196005260EE /* AppVersionInterface.swift in Sources */,
 				0D26AECC299E8196005260EE /* OnboardingFlowStore.swift in Sources */,
 				0D26AECD299E8196005260EE /* SDKSynchronizerLive.swift in Sources */,
 				0D26AECE299E8196005260EE /* URIParserInterface.swift in Sources */,
@@ -2715,7 +2693,6 @@
 				0D26AEDF299E8196005260EE /* FileManagerTestKey.swift in Sources */,
 				0D26AEE0299E8196005260EE /* SecItemLive.swift in Sources */,
 				0D26AEE2299E8196005260EE /* FileManagerLiveKey.swift in Sources */,
-				0D26AEE3299E8196005260EE /* AppVersionTestKey.swift in Sources */,
 				0D26AEE4299E8196005260EE /* CurrencySelectionView.swift in Sources */,
 				0D26AEE5299E8196005260EE /* RecoveryPhraseRandomizerTestKey.swift in Sources */,
 				0D26AEE7299E8196005260EE /* TransactionAddressTextFieldStore.swift in Sources */,
@@ -2780,7 +2757,6 @@
 				0D26AF1A299E8196005260EE /* UserDefaultsInterface.swift in Sources */,
 				34F682E629A75EB60022C079 /* WalletConfig.swift in Sources */,
 				0D26AF1B299E8196005260EE /* HomeStore.swift in Sources */,
-				0D26AF1C299E8196005260EE /* AppVersionMocks.swift in Sources */,
 				0D26AF1E299E8196005260EE /* QRCodeGenerator.swift in Sources */,
 				0D26AF1F299E8196005260EE /* Array+Chunked.swift in Sources */,
 				0D26AF20299E8196005260EE /* UInt+SuperscriptText.swift in Sources */,
@@ -2802,7 +2778,6 @@
 				0D26AF36299E8196005260EE /* DatabaseFilesTestKey.swift in Sources */,
 				34F682F629A7641B0022C079 /* WalletConfigProviderTestKey.swift in Sources */,
 				0D26AF37299E8196005260EE /* ScanUIView.swift in Sources */,
-				0D26AF38299E8196005260EE /* AppVersionLiveKey.swift in Sources */,
 				0D26AF39299E8196005260EE /* ColoredChip.swift in Sources */,
 				0D26AF3A299E8196005260EE /* OnboardingContentView.swift in Sources */,
 				0D26AF3B299E8196005260EE /* CircularProgress.swift in Sources */,
@@ -2920,7 +2895,6 @@
 				9E612C7429880F2200D09B09 /* LogsHandlerLive.swift in Sources */,
 				9EBDF967291ECDA2000A1A05 /* AudioServicesTestKey.swift in Sources */,
 				0D535FE2271F9476009A9E3E /* EnumeratedChip.swift in Sources */,
-				9EBDF97E291F7EB0000A1A05 /* AppVersionInterface.swift in Sources */,
 				9E2A07B829DAE0A900F2B086 /* ReviewRequestLiveKey.swift in Sources */,
 				6654C73E2715A41300901167 /* OnboardingFlowStore.swift in Sources */,
 				9EB863CB2923CA20003D0F8B /* SDKSynchronizerLive.swift in Sources */,
@@ -2949,7 +2923,6 @@
 				9EB863C52923C8AF003D0F8B /* FileManagerTestKey.swift in Sources */,
 				9EB863BF2923C72C003D0F8B /* SecItemLive.swift in Sources */,
 				9EB863B92923C6D7003D0F8B /* FileManagerLiveKey.swift in Sources */,
-				9EBDF97C291F7EB0000A1A05 /* AppVersionTestKey.swift in Sources */,
 				2E8719CD27FB0D3B0082C926 /* CurrencySelectionView.swift in Sources */,
 				9EB863A729239DCB003D0F8B /* RecoveryPhraseRandomizerTestKey.swift in Sources */,
 				9E5BF6502823E94900BA3F17 /* TransactionAddressTextFieldStore.swift in Sources */,
@@ -3012,7 +2985,6 @@
 				9E153A7629216EFB00112F41 /* UserDefaultsInterface.swift in Sources */,
 				34F682E529A75EB60022C079 /* WalletConfig.swift in Sources */,
 				9EAFEB9128081E9400199FC9 /* HomeStore.swift in Sources */,
-				9EBDF980291F8261000A1A05 /* AppVersionMocks.swift in Sources */,
 				9E7CB61A287310EC00A02233 /* QRCodeGenerator.swift in Sources */,
 				9E7FE0D5282D281800C374E8 /* Array+Chunked.swift in Sources */,
 				0DACFA8127208D940039EEA5 /* UInt+SuperscriptText.swift in Sources */,
@@ -3034,7 +3006,6 @@
 				9EBDF953291E5E86000A1A05 /* DatabaseFilesTestKey.swift in Sources */,
 				34F682F529A7641B0022C079 /* WalletConfigProviderTestKey.swift in Sources */,
 				9E7FE0F628327F6F00C374E8 /* ScanUIView.swift in Sources */,
-				9EBDF97D291F7EB0000A1A05 /* AppVersionLiveKey.swift in Sources */,
 				0D185819272723FF0046B928 /* ColoredChip.swift in Sources */,
 				2EA11F5D27467F7700709571 /* OnboardingContentView.swift in Sources */,
 				9E7CB6152869E8C300A02233 /* CircularProgress.swift in Sources */,
@@ -3730,9 +3701,13 @@
 			package = 9E66122F2878337F00C75B70 /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
 		};
-		9E88FB9D2A20CAA000DAA500 /* DateClient */ = {
+		9E88FB9F2A20D33C00DAA500 /* DateClient */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DateClient;
+		};
+		9E88FBA12A20D35800DAA500 /* AppVersionClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppVersionClient;
 		};
 		9EAB466C285A0468002904A0 /* Parsing */ = {
 			isa = XCSwiftPackageProductDependency;

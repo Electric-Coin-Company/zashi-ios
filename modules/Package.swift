@@ -9,12 +9,19 @@ let package = Package(
       .iOS(.v15),
     ],
     products: [
+        .library(name: "AppVersionClient", targets: ["AppVersionClient"]),
         .library(name: "DateClient", targets: ["DateClient"])
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.50.3")
     ],
     targets: [
+        .target(
+            name: "AppVersionClient",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ]
+        ),
         .target(
             name: "DateClient",
             dependencies: [
