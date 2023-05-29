@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import ZcashLightClientKit
+import AudioServicesClient
 
 typealias SendFlowStore = Store<SendFlowReducer.State, SendFlowReducer.Action>
 typealias SendFlowViewStore = ViewStore<SendFlowReducer.State, SendFlowReducer.Action>
@@ -155,7 +156,7 @@ struct SendFlowReducer: ReducerProtocol {
                 do {
                     let storedWallet = try walletStorage.exportWallet()
                     let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
-                    let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0)
+                    let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, TargetConstants.zcashNetwork.networkType)
 
                     state.isSendingTransaction = true
 
@@ -224,7 +225,10 @@ struct SendFlowReducer: ReducerProtocol {
                 // The is valid Zcash address check is already covered in the scan feature
                 // so we can be sure it's valid and thus `true` value here.
                 state.transactionAddressInputState.isValidAddress = true
-                state.transactionAddressInputState.isValidTransparentAddress = derivationTool.isTransparentAddress(address.data)
+                state.transactionAddressInputState.isValidTransparentAddress = derivationTool.isTransparentAddress(
+                    address.data,
+                    TargetConstants.zcashNetwork.networkType
+                )
                 audioServices.systemSoundVibrate()
                 return EffectTask(value: .updateDestination(nil))
 

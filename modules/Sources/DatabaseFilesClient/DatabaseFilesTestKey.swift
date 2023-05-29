@@ -8,9 +8,10 @@
 import Foundation
 import ComposableArchitecture
 import XCTestDynamicOverlay
+import Utils
 
 extension DatabaseFilesClient: TestDependencyKey {
-    static let testValue = Self(
+    public static let testValue = Self(
         documentsDirectory: XCTUnimplemented("\(Self.self).documentsDirectory", placeholder: .emptyURL),
         fsBlockDbRootFor: XCTUnimplemented("\(Self.self).fsBlockDbRootFor", placeholder: .emptyURL),
         cacheDbURLFor: XCTUnimplemented("\(Self.self).cacheDbURLFor", placeholder: .emptyURL),
@@ -22,14 +23,8 @@ extension DatabaseFilesClient: TestDependencyKey {
     )
 }
 
-extension URL {
-    /// The `DatabaseFilesClient` API returns an instance of the URL or throws an error.
-    /// In order to use placeholders for the URL we need a URL instance, hence `emptyURL` and force unwrapp.
-    static let emptyURL = URL(string: "http://empty.url")!// swiftlint:disable:this force_unwrapping
-}
-
 extension DatabaseFilesClient {
-    static let noOp = Self(
+    public static let noOp = Self(
         documentsDirectory: { .emptyURL },
         fsBlockDbRootFor: { _ in .emptyURL },
         cacheDbURLFor: { _ in .emptyURL },

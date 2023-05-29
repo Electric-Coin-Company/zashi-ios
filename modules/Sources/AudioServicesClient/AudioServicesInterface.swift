@@ -9,12 +9,16 @@ import ComposableArchitecture
 import AVFoundation
 
 extension DependencyValues {
-    var audioServices: AudioServicesClient {
+    public var audioServices: AudioServicesClient {
         get { self[AudioServicesClient.self] }
         set { self[AudioServicesClient.self] = newValue }
     }
 }
 
-struct AudioServicesClient {
-    let systemSoundVibrate: () -> Void
+public struct AudioServicesClient {
+    public let systemSoundVibrate: () -> Void
+    
+    public init(systemSoundVibrate: @escaping () -> Void) {
+        self.systemSoundVibrate = systemSoundVibrate
+    }
 }

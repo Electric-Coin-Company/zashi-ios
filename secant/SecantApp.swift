@@ -52,8 +52,8 @@ struct SecantApp: App {
 /// Whenever the ZcashNetwork is required use this var to determine which is the
 /// network type suitable for the present target.
 
-enum TargetConstants {
-    static var zcashNetwork: ZcashNetwork {
+public enum TargetConstants {
+    public static var zcashNetwork: ZcashNetwork {
 #if SECANT_MAINNET
     return ZcashNetworkBuilder.network(for: .mainnet)
 #elseif SECANT_TESTNET
@@ -63,7 +63,7 @@ enum TargetConstants {
 #endif
     }
     
-    static var tokenName: String {
+    public static var tokenName: String {
 #if SECANT_MAINNET
     return "ZEC"
 #elseif SECANT_TESTNET

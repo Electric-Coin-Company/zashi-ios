@@ -10,18 +10,24 @@ import URLRouting
 import ComposableArchitecture
 import ZcashLightClientKit
 
-struct Deeplink {
-    enum Destination: Equatable {
+public struct Deeplink {
+    public enum Destination: Equatable {
         case home
         case send(amount: Int, address: String, memo: String)
     }
     
-    func resolveDeeplinkURL(_ url: URL, isValidZcashAddress: (String) throws -> Bool) throws -> Destination {
+    public init() { }
+    
+    public func resolveDeeplinkURL(
+        _ url: URL,
+        networkType: NetworkType,
+        isValidZcashAddress: (String, NetworkType) throws -> Bool
+    ) throws -> Destination {
         // simplified format zcash:<address>
         // TODO: [#109] simplified for now until ZIP-321 is implememnted (https://github.com/zcash/secant-ios-wallet/issues/109)
         let address = url.absoluteString.replacingOccurrences(of: "zcash:", with: "")
         do {
-            if try isValidZcashAddress(address) {
+            if try isValidZcashAddress(address, networkType) {
                 return .send(amount: 0, address: address, memo: "")
             }
         }

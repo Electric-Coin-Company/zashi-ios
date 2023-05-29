@@ -9,32 +9,32 @@ import ComposableArchitecture
 import ZcashLightClientKit
 
 extension DependencyValues {
-    var derivationTool: DerivationToolClient {
+    public var derivationTool: DerivationToolClient {
         get { self[DerivationToolClient.self] }
         set { self[DerivationToolClient.self] = newValue }
     }
 }
 
-struct DerivationToolClient {
+public struct DerivationToolClient {
     /// Given a seed and a number of accounts, return the associated spending keys.
     /// - Parameter seed: the seed from which to derive spending keys.
     /// - Parameter accountIndex: Index of account to use. Multiple accounts are not fully
     /// supported so the default value of 0 is recommended.
     /// - Returns: the spending keys that correspond to the seed, formatted as Strings.
-    var deriveSpendingKey: ([UInt8], Int) throws -> UnifiedSpendingKey
+    public var deriveSpendingKey: ([UInt8], Int, NetworkType) throws -> UnifiedSpendingKey
 
     /// Given a unified spending key, returns the associated unified viewwing key.
-    var deriveUnifiedFullViewingKey: (UnifiedSpendingKey) throws -> UnifiedFullViewingKey
+    public var deriveUnifiedFullViewingKey: (UnifiedSpendingKey, NetworkType) throws -> UnifiedFullViewingKey
     
     /// Checks validity of the unified address.
-    var isUnifiedAddress: (String) -> Bool
+    public var isUnifiedAddress: (String, NetworkType) -> Bool
 
     /// Checks validity of the shielded address.
-    var isSaplingAddress: (String) -> Bool
+    public var isSaplingAddress: (String, NetworkType) -> Bool
 
     /// Checks validity of the transparent address.
-    var isTransparentAddress: (String) -> Bool
+    public var isTransparentAddress: (String, NetworkType) -> Bool
 
     /// Checks if given address is a valid zcash address.
-    var isZcashAddress: (String) -> Bool
+    public var isZcashAddress: (String, NetworkType) -> Bool
 }

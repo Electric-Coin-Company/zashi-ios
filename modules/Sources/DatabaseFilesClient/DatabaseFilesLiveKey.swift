@@ -7,11 +7,12 @@
 
 import ComposableArchitecture
 import ZcashLightClientKit
+import FileManager
 
 extension DatabaseFilesClient: DependencyKey {
-    static let liveValue = DatabaseFilesClient.live()
+    public static let liveValue = DatabaseFilesClient.live()
         
-    static func live(databaseFiles: DatabaseFiles = DatabaseFiles(fileManager: .live)) -> Self {
+    public static func live(databaseFiles: DatabaseFiles = DatabaseFiles(fileManager: .live)) -> Self {
         Self(
             documentsDirectory: {
                 databaseFiles.documentsDirectory()

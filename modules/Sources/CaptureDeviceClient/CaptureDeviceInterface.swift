@@ -8,19 +8,19 @@
 import ComposableArchitecture
 
 extension DependencyValues {
-    var captureDevice: CaptureDeviceClient {
+    public var captureDevice: CaptureDeviceClient {
         get { self[CaptureDeviceClient.self] }
         set { self[CaptureDeviceClient.self] = newValue }
     }
 }
 
-struct CaptureDeviceClient {
-    enum CaptureDeviceClientError: Error {
+public struct CaptureDeviceClient {
+    public enum CaptureDeviceClientError: Error {
         case captureDeviceFailed
         case lockForConfigurationFailed
         case torchUnavailable
     }
     
-    let isTorchAvailable: () throws -> Bool
-    let torch: (Bool) throws -> Void
+    public let isTorchAvailable: () throws -> Bool
+    public let torch: (Bool) throws -> Void
 }

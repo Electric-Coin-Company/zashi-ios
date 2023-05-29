@@ -119,8 +119,8 @@ extension RootReducer {
 
                     try mnemonic.isValid(storedWallet.seedPhrase.value())
                     let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
-                    let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0)
-                    let viewingKey = try derivationTool.deriveUnifiedFullViewingKey(spendingKey)
+                    let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, TargetConstants.zcashNetwork.networkType)
+                    let viewingKey = try derivationTool.deriveUnifiedFullViewingKey(spendingKey, TargetConstants.zcashNetwork.networkType)
                     
                     return .run { send in
                         do {

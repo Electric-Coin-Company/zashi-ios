@@ -1,5 +1,7 @@
 import ComposableArchitecture
 import ZcashLightClientKit
+import DatabaseFilesClient
+import DeeplinkClient
 
 typealias RootStore = Store<RootReducer.State, RootReducer.Action>
 typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
