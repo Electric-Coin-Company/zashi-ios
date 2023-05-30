@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UserDefaultsClient
 
 /// Live implementation of the `UserPreferences` using User Defaults
 /// according to https://developer.apple.com/documentation/foundation/userdefaults
@@ -103,9 +104,9 @@ struct UserPreferencesStorage {
     }
 
     /// Use carefully: Deletes all user preferences from the User Defaults
-    func removeAll() async {
+    func removeAll() {
         for key in Constants.allCases {
-            await userDefaults.remove(key.rawValue)
+            userDefaults.remove(key.rawValue)
         }
     }
 }
@@ -116,7 +117,6 @@ private extension UserPreferencesStorage {
     }
 
     func setValue<Value>(_ value: Value, forKey: String) async {
-        await userDefaults.setValue(value, forKey)
-        _ = await userDefaults.synchronize()
+        userDefaults.setValue(value, forKey)
     }
 }

@@ -5,6 +5,8 @@ import AppVersionClient
 import MnemonicClient
 import LogsHandlerClient
 import LocalAuthenticationClient
+import SupportDataGeneratorClient
+import Models
 
 typealias SettingsStore = Store<SettingsReducer.State, SettingsReducer.Action>
 typealias SettingsViewStore = ViewStore<SettingsReducer.State, SettingsReducer.Action>
@@ -57,7 +59,7 @@ struct SettingsReducer: ReducerProtocol {
                 return .none
             case .backupWalletAccessRequest:
                 return .run { send in
-                    if await localAuthentication.authenticate(L10n.LocalAuthentication.reason) {
+                    if await localAuthentication.authenticate() {
                         await send(.backupWallet)
                     }
                 }

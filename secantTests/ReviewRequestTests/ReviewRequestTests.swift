@@ -10,6 +10,8 @@ import ComposableArchitecture
 import ZcashLightClientKit
 import DateClient
 import AppVersionClient
+import UserDefaultsClient
+import ReviewRequestClient
 @testable import secant_testnet
 
 @MainActor
@@ -63,7 +65,7 @@ final class ReviewRequestTests: XCTestCase {
         let now = Date.now
         let userDefaultsClient: UserDefaultsClient = .live(userDefaults: userDefaults)
 
-        await userDefaultsClient.setValue("any value", ReviewRequestClient.Constants.latestSyncKey)
+        userDefaultsClient.setValue("any value", ReviewRequestClient.Constants.latestSyncKey)
 
         store.dependencies.reviewRequest =
             .live(
@@ -80,7 +82,7 @@ final class ReviewRequestTests: XCTestCase {
         XCTAssertEqual(now.timeIntervalSince1970, storedDate, "Review Request: stored date doesn't match the input.")
     }
     
-    func testCanRequestReview_FirstTime() async throws {
+    func testCanRequestReview_FirstTime() throws {
         guard let userDefaults = UserDefaults.init(suiteName: "testCanRequestReview_FirstTime") else {
             XCTFail("Review Request: UserDefaults failed to initialize")
             return
@@ -89,8 +91,8 @@ final class ReviewRequestTests: XCTestCase {
         let now = Date.now
         let userDefaultsClient: UserDefaultsClient = .live(userDefaults: userDefaults)
 
-        await userDefaultsClient.setValue("any value", ReviewRequestClient.Constants.latestSyncKey)
-        await userDefaultsClient.setValue("any value", ReviewRequestClient.Constants.foundTransactionsKey)
+        userDefaultsClient.setValue("any value", ReviewRequestClient.Constants.latestSyncKey)
+        userDefaultsClient.setValue("any value", ReviewRequestClient.Constants.foundTransactionsKey)
 
         let reviewRequest = ReviewRequestClient.live(
             appVersion: .mock,
@@ -103,7 +105,7 @@ final class ReviewRequestTests: XCTestCase {
         XCTAssertTrue(reviewRequest.canRequestReview())
     }
     
-    func testCanRequestReview_NewerVersion() async throws {
+    func testCanRequestReview_NewerVersion() throws {
         guard let userDefaults = UserDefaults.init(suiteName: "testCanRequestReview_NewerVersion") else {
             XCTFail("Review Request: UserDefaults failed to initialize")
             return
@@ -112,9 +114,9 @@ final class ReviewRequestTests: XCTestCase {
         let now = Date.now
         let userDefaultsClient: UserDefaultsClient = .live(userDefaults: userDefaults)
 
-        await userDefaultsClient.setValue("any value", ReviewRequestClient.Constants.latestSyncKey)
-        await userDefaultsClient.setValue("any value", ReviewRequestClient.Constants.foundTransactionsKey)
-        await userDefaultsClient.setValue("0.0.1", ReviewRequestClient.Constants.versionKey)
+        userDefaultsClient.setValue("any value", ReviewRequestClient.Constants.latestSyncKey)
+        userDefaultsClient.setValue("any value", ReviewRequestClient.Constants.foundTransactionsKey)
+        userDefaultsClient.setValue("0.0.1", ReviewRequestClient.Constants.versionKey)
 
         let reviewRequest = ReviewRequestClient.live(
             appVersion: AppVersionClient(
@@ -130,7 +132,7 @@ final class ReviewRequestTests: XCTestCase {
         XCTAssertTrue(reviewRequest.canRequestReview())
     }
     
-    func testCanRequestReview_OlderVersion() async throws {
+    func testCanRequestReview_OlderVersion() throws {
         guard let userDefaults = UserDefaults.init(suiteName: "testCanRequestReview_OlderVersion") else {
             XCTFail("Review Request: UserDefaults failed to initialize")
             return
@@ -139,9 +141,9 @@ final class ReviewRequestTests: XCTestCase {
         let now = Date.now
         let userDefaultsClient: UserDefaultsClient = .live(userDefaults: userDefaults)
 
-        await userDefaultsClient.setValue("any value", ReviewRequestClient.Constants.latestSyncKey)
-        await userDefaultsClient.setValue("any value", ReviewRequestClient.Constants.foundTransactionsKey)
-        await userDefaultsClient.setValue("0.0.2", ReviewRequestClient.Constants.versionKey)
+        userDefaultsClient.setValue("any value", ReviewRequestClient.Constants.latestSyncKey)
+        userDefaultsClient.setValue("any value", ReviewRequestClient.Constants.foundTransactionsKey)
+        userDefaultsClient.setValue("0.0.2", ReviewRequestClient.Constants.versionKey)
 
         let reviewRequest = ReviewRequestClient.live(
             appVersion: AppVersionClient(
@@ -157,7 +159,7 @@ final class ReviewRequestTests: XCTestCase {
         XCTAssertFalse(reviewRequest.canRequestReview())
     }
     
-    func testCanRequestReview_MissingSync() async throws {
+    func testCanRequestReview_MissingSync() throws {
         guard let userDefaults = UserDefaults.init(suiteName: "testCanRequestReview_MissingSync") else {
             XCTFail("Review Request: UserDefaults failed to initialize")
             return
@@ -177,7 +179,7 @@ final class ReviewRequestTests: XCTestCase {
         XCTAssertFalse(reviewRequest.canRequestReview())
     }
     
-    func testCanRequestReview_MissingTransaction() async throws {
+    func testCanRequestReview_MissingTransaction() throws {
         guard let userDefaults = UserDefaults.init(suiteName: "testCanRequestReview_MissingTransaction") else {
             XCTFail("Review Request: UserDefaults failed to initialize")
             return
@@ -186,8 +188,8 @@ final class ReviewRequestTests: XCTestCase {
         let now = Date.now
         let userDefaultsClient: UserDefaultsClient = .live(userDefaults: userDefaults)
 
-        await userDefaultsClient.setValue("any value", ReviewRequestClient.Constants.latestSyncKey)
-        await userDefaultsClient.setValue("0.0.1", ReviewRequestClient.Constants.versionKey)
+        userDefaultsClient.setValue("any value", ReviewRequestClient.Constants.latestSyncKey)
+        userDefaultsClient.setValue("0.0.1", ReviewRequestClient.Constants.versionKey)
 
         let reviewRequest = ReviewRequestClient.live(
             appVersion: AppVersionClient(

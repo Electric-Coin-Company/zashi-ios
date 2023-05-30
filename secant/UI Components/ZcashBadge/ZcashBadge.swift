@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Generated
 
 struct ZcashBadge: View {
     @Environment(\.colorScheme) var colorScheme

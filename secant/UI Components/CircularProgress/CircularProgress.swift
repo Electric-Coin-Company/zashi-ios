@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Generated
 
 struct CircularProgress: View {
     let outerCircleProgress: Float

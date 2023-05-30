@@ -8,6 +8,7 @@
 
 import ComposableArchitecture
 import SwiftUI
+import Generated
 
 struct CheckCircle: View {
     let viewStore: CheckCircleViewStore

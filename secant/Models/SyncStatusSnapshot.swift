@@ -7,6 +7,7 @@
 
 import Foundation
 import ZcashLightClientKit
+import Generated
 
 struct SyncStatusSnapshot: Equatable {
     let message: String

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import Generated
 
 struct RecoveryPhraseDisplayView: View {
     let store: RecoveryPhraseDisplayStore
@@ -86,27 +87,6 @@ extension RecoveryPhraseDisplayStore {
             environment: Void()
         )
     }
-}
-
-// TODO: [#695] This should have a #DEBUG tag, but if so, it's not possible to compile this on release mode and submit it to testflight https://github.com/zcash/ZcashLightClientKit/issues/695
-extension RecoveryPhrase {
-    static let testPhrase = [
-        // 1
-        "bring", "salute", "thank",
-        "require", "spirit", "toe",
-        // 7
-        "boil", "hill", "casino",
-        "trophy", "drink", "frown",
-        // 13
-        "bird", "grit", "close",
-        "morning", "bind", "cancel",
-        // 19
-        "daughter", "salon", "quit",
-        "pizza", "just", "garlic"
-    ]
-
-    static let placeholder = RecoveryPhrase(words: testPhrase.map { $0.redacted })
-    static let empty = RecoveryPhrase(words: [])
 }
 
 struct RecoveryPhraseDisplayView_Previews: PreviewProvider {

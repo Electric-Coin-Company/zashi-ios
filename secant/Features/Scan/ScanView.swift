@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import Generated
 
 struct ScanView: View {
     @Environment(\.presentationMode) var presentationMode

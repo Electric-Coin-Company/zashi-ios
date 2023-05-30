@@ -8,6 +8,7 @@
 import XCTest
 import ComposableArchitecture
 import PasteboardClient
+import Models
 @testable import secant_testnet
 
 class RecoveryPhraseDisplayReducerTests: XCTestCase {

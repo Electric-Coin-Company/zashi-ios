@@ -8,6 +8,10 @@
 import XCTest
 import ComposableArchitecture
 import MnemonicClient
+import Models
+import UIComponents
+import RecoveryPhraseValidationFlow
+import Generated
 @testable import secant_testnet
 
 class AppInitializationTests: XCTestCase {

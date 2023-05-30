@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import Generated
 
 struct SingleLineTextField<TitleAccessoryContent, InputPrefixContent, InputAccessoryContent>: View
     where TitleAccessoryContent: View, InputPrefixContent: View, InputAccessoryContent: View {

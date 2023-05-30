@@ -9,6 +9,7 @@ import Foundation
 import MnemonicSwift
 import ZcashLightClientKit
 import Utils
+import SecItem
 
 /// Zcash implementation of the keychain that is not universal but designed to deliver functionality needed by the wallet itself.
 /// All the APIs should be thread safe according to official doc:

@@ -1,5 +1,5 @@
-input_dir: secant/Resources/
-output_dir: secant/Resources/Generated/
+input_dir: modules/Sources/Generated/Resources/
+output_dir: modules/Sources/Generated/
 
 xcassets:
   inputs:
@@ -9,6 +9,7 @@ xcassets:
       templatePath: Templates/xcassets/assets_swift5_swiftui.stencil
       params:
         forceProvidesNamespaces: true
+        publicAccess: true
       output: XCAssets+Generated.swift
       
 fonts:
@@ -18,10 +19,14 @@ fonts:
     - Fonts/Roboto
   outputs:
       templatePath: Templates/fonts/fonts_swift5_swiftui.stencil
+      params:
+        publicAccess: true
       output: Fonts+Generated.swift
 
 strings:
   inputs: Localizable.strings
   outputs:
     - templateName: structured-swift5
+      params:
+        publicAccess: true
       output: L10n.swift

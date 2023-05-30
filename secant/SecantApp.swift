@@ -8,6 +8,8 @@
 import SwiftUI
 import ComposableArchitecture
 import ZcashLightClientKit
+import SDKSynchronizerClient
+import Utils
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
     var rootStore: RootStore = .placeholder
@@ -72,4 +74,8 @@ public enum TargetConstants {
     fatalError("SECANT_MAINNET or SECANT_TESTNET flags not defined on Swift Compiler custom flags of your build target.")
 #endif
     }
+}
+
+extension SDKSynchronizerClient: DependencyKey {
+    public static let liveValue: SDKSynchronizerClient = Self.live(network: TargetConstants.zcashNetwork)
 }

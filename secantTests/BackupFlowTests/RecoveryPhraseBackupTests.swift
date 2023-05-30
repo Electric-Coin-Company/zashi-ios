@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import Models
 @testable import secant_testnet
 
 class RecoveryPhraseBackupTests: XCTestCase {

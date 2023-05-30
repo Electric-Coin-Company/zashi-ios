@@ -6,9 +6,10 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
 import ZcashLightClientKit
+import Models
+@testable import secant_testnet
 
 class HomeSnapshotTests: XCTestCase {
     func testHomeSnapshot() throws {

@@ -1,5 +1,6 @@
 import SwiftUI
 import ComposableArchitecture
+import Generated
 
 struct TransactionFailed: View {
     let viewStore: SendFlowViewStore

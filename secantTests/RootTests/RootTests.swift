@@ -10,6 +10,7 @@ import ComposableArchitecture
 import ZcashLightClientKit
 import FileManager
 import DatabaseFilesClient
+import ZcashSDKEnvironment
 @testable import secant_testnet
 
 class RootTests: XCTestCase {
@@ -18,8 +19,7 @@ class RootTests: XCTestCase {
     func testWalletInitializationState_Uninitialized() throws {
         let walletState = RootReducer.walletInitializationState(
             databaseFiles: .noOp,
-            walletStorage: .noOp,
-            zcashSDKEnvironment: .testnet
+            walletStorage: .noOp
         )
 
         XCTAssertEqual(walletState, .uninitialized)
@@ -34,8 +34,7 @@ class RootTests: XCTestCase {
 
         let walletState = RootReducer.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
-            walletStorage: .noOp,
-            zcashSDKEnvironment: .testnet
+            walletStorage: .noOp
         )
 
         XCTAssertEqual(walletState, .keysMissing)
@@ -50,8 +49,7 @@ class RootTests: XCTestCase {
 
         let walletState = RootReducer.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
-            walletStorage: .noOp,
-            zcashSDKEnvironment: .testnet
+            walletStorage: .noOp
         )
 
         XCTAssertEqual(walletState, .uninitialized)
@@ -69,8 +67,7 @@ class RootTests: XCTestCase {
         
         let walletState = RootReducer.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
-            walletStorage: walletStorage,
-            zcashSDKEnvironment: .testnet
+            walletStorage: walletStorage
         )
 
         XCTAssertEqual(walletState, .filesMissing)
@@ -88,8 +85,7 @@ class RootTests: XCTestCase {
         
         let walletState = RootReducer.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
-            walletStorage: walletStorage,
-            zcashSDKEnvironment: .testnet
+            walletStorage: walletStorage
         )
 
         XCTAssertEqual(walletState, .initialized)

@@ -5,6 +5,8 @@
 //  Created by Francisco Gindre on 10/18/21.
 
 import SwiftUI
+import Generated
+import UIComponents
 
 struct DesignGuide: View {
     let columns = [GridItem(.adaptive(minimum: 320, maximum: .infinity))]

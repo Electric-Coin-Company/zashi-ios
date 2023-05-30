@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import Generated
 
 // MARK: - Balance Breakdown
 

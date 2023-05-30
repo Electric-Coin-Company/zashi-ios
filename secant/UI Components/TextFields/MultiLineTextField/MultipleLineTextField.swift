@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import Generated
 
 struct MultipleLineTextField<TitleAccessoryContent>: View
     where TitleAccessoryContent: View {

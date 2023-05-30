@@ -2,6 +2,8 @@ import SwiftUI
 import ComposableArchitecture
 import ZcashLightClientKit
 import Utils
+import Models
+import Generated
 
 struct TransactionDetailView: View {
     enum RowMark {

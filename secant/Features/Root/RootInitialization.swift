@@ -8,6 +8,8 @@
 import ComposableArchitecture
 import Foundation
 import ZcashLightClientKit
+import Models
+import Utils
 
 /// In this file is a collection of helpers that control all state and action related operations
 /// for the `RootReducer` with a connection to the app/wallet initialization and erasure of the wallet.
@@ -74,8 +76,7 @@ extension RootReducer {
             case .initialization(.checkWalletInitialization):
                 let walletState = RootReducer.walletInitializationState(
                     databaseFiles: databaseFiles,
-                    walletStorage: walletStorage,
-                    zcashSDKEnvironment: zcashSDKEnvironment
+                    walletStorage: walletStorage
                 )
                 return EffectTask(value: .initialization(.respondToWalletInitializationState(walletState)))
 
@@ -115,7 +116,7 @@ extension RootReducer {
                         return EffectTask(value: .alert(.root(.cantLoadSeedPhrase)))
                     }
 
-                    let birthday = state.storedWallet?.birthday?.value() ?? zcashSDKEnvironment.latestCheckpoint
+                    let birthday = state.storedWallet?.birthday?.value() ?? zcashSDKEnvironment.latestCheckpoint(TargetConstants.zcashNetwork)
 
                     try mnemonic.isValid(storedWallet.seedPhrase.value())
                     let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
@@ -162,7 +163,7 @@ extension RootReducer {
                 do {
                     // get the random english mnemonic
                     let newRandomPhrase = try mnemonic.randomMnemonic()
-                    let birthday = zcashSDKEnvironment.latestCheckpoint
+                    let birthday = zcashSDKEnvironment.latestCheckpoint(TargetConstants.zcashNetwork)
 
                     // store the wallet to the keychain
                     try walletStorage.importWallet(newRandomPhrase, birthday, .english, !state.walletConfig.isEnabled(.testBackupPhraseFlow))

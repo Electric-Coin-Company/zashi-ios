@@ -170,7 +170,7 @@ struct SendFlowReducer: ReducerProtocol {
                         memo = nil
                     }
 
-                    let recipient = try Recipient(state.address, network: zcashSDKEnvironment.network.networkType)
+                    let recipient = try Recipient(state.address, network: TargetConstants.zcashNetwork.networkType)
                     return .run { [state] send in
                         do {
                             await send(SendFlowReducer.Action.updateDestination(.inProgress))

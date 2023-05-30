@@ -1,5 +1,6 @@
 import SwiftUI
 import ComposableArchitecture
+import Generated
 
 struct TransactionSent: View {
     let viewStore: SendFlowViewStore
