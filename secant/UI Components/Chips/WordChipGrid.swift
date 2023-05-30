@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Utils
 
 /// A 3x(N/3) grid of numbered or empty chips.
 struct WordChipGrid: View {

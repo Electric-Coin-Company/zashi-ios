@@ -6,10 +6,11 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
 import ZcashLightClientKit
 import Combine
+import Utils
+@testable import secant_testnet
 
 class BalanceBreakdownTests: XCTestCase {
     func testOnAppear() throws {

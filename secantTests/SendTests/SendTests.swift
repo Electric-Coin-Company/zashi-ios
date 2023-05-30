@@ -9,6 +9,7 @@ import XCTest
 import ComposableArchitecture
 import ZcashLightClientKit
 import AudioServicesClient
+import NumberFormatterClient
 @testable import secant_testnet
 
 // swiftlint:disable type_body_length

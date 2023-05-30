@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Utils
 
 /// Represents the data of a word that has been placed into an empty position, that will be used
 /// to validate the completed phrase when all ValidationWords have been placed.
