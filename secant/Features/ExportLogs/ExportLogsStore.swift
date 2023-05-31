@@ -9,7 +9,7 @@ import Combine
 import ComposableArchitecture
 import Foundation
 import ZcashLightClientKit
-import LogsHandlerClient
+import LogsHandler
 import Utils
 
 typealias ExportLogsStore = Store<ExportLogsReducer.State, ExportLogsReducer.Action>

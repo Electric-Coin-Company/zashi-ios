@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import ComposableArchitecture
 import ZcashLightClientKit
-import DatabaseFilesClient
+import DatabaseFiles
 import Models
 import ZcashSDKEnvironment
 

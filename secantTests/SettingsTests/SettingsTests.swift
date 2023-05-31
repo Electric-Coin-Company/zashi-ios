@@ -8,7 +8,7 @@
 import XCTest
 import Utils
 import ComposableArchitecture
-import LogsHandlerClient
+import LogsHandler
 import Models
 @testable import secant_testnet
 

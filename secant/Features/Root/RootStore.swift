@@ -1,7 +1,7 @@
 import ComposableArchitecture
 import ZcashLightClientKit
-import DatabaseFilesClient
-import DeeplinkClient
+import DatabaseFiles
+import Deeplink
 import RecoveryPhraseValidationFlow
 import ZcashSDKEnvironment
 

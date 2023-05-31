@@ -7,7 +7,7 @@
 
 import XCTest
 import ComposableArchitecture
-import PasteboardClient
+import Pasteboard
 import Models
 @testable import secant_testnet
 

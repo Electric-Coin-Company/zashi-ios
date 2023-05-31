@@ -8,7 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import ZcashLightClientKit
-import SDKSynchronizerClient
+import SDKSynchronizer
 import Utils
 
 final class AppDelegate: NSObject, UIApplicationDelegate {

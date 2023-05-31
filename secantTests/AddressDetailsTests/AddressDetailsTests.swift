@@ -8,7 +8,7 @@
 import XCTest
 import ComposableArchitecture
 import ZcashLightClientKit
-import PasteboardClient
+import Pasteboard
 @testable import secant_testnet
 
 class AddressDetailsTests: XCTestCase {
