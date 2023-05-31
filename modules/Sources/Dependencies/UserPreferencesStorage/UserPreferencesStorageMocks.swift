@@ -9,7 +9,7 @@ import Foundation
 import ComposableArchitecture
 
 extension UserPreferencesStorageClient: TestDependencyKey {
-    static var testValue = {
+    public static var testValue = {
         let mock = UserPreferencesStorage.mock
 
         return UserPreferencesStorageClient(
@@ -35,7 +35,7 @@ extension UserPreferencesStorageClient: TestDependencyKey {
 }
 
 extension UserPreferencesStorage {
-    static let mock = UserPreferencesStorage(
+    public static let mock = UserPreferencesStorage(
         appSessionFrom: 1651039606.0,
         convertedCurrency: "USD",
         fiatConvertion: true,

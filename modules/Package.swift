@@ -32,8 +32,12 @@ let package = Package(
         .library(name: "SecItem", targets: ["SecItem"]),
         .library(name: "SupportDataGenerator", targets: ["SupportDataGenerator"]),
         .library(name: "UIComponents", targets: ["UIComponents"]),
-        .library(name: "Utils", targets: ["Utils"]),
+        .library(name: "URIParser", targets: ["URIParser"]),
         .library(name: "UserDefaults", targets: ["UserDefaults"]),
+        .library(name: "UserPreferencesStorage", targets: ["UserPreferencesStorage"]),
+        .library(name: "Utils", targets: ["Utils"]),
+        .library(name: "WalletConfigProvider", targets: ["WalletConfigProvider"]),
+        .library(name: "WalletStorage", targets: ["WalletStorage"]),
         .library(name: "ZcashSDKEnvironment", targets: ["ZcashSDKEnvironment"])
     ],
     dependencies: [
@@ -154,7 +158,8 @@ let package = Package(
             dependencies: [
                 "Utils",
                 "UIComponents"
-            ]
+            ],
+            path: "Sources/Models"
         ),
         .target(
             name: "NumberFormatter",
@@ -228,13 +233,17 @@ let package = Package(
             dependencies: [
                 "Generated",
                 "Utils"
-            ]
+            ],
+            path: "Sources/UIComponents"
         ),
         .target(
-            name: "Utils",
+            name: "URIParser",
             dependencies: [
+                "DerivationTool",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
-            ]
+            ],
+            path: "Sources/Dependencies/URIParser"
         ),
         .target(
             name: "UserDefaults",
@@ -242,6 +251,41 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Dependencies/UserDefaults"
+        ),
+        .target(
+            name: "UserPreferencesStorage",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Dependencies/UserPreferencesStorage"
+        ),
+        .target(
+            name: "Utils",
+            dependencies: [
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
+            ],
+            path: "Sources/Utils"
+        ),
+        .target(
+            name: "WalletConfigProvider",
+            dependencies: [
+                "Utils",
+                "Models",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Dependencies/WalletConfigProvider"
+        ),
+        .target(
+            name: "WalletStorage",
+            dependencies: [
+                "Utils",
+                "SecItem",
+                "MnemonicClient",
+                "Models",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
+            ],
+            path: "Sources/Dependencies/WalletStorage"
         ),
         .target(
             name: "ZcashSDKEnvironment",

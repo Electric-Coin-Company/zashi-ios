@@ -7,15 +7,16 @@
 
 import Foundation
 import ComposableArchitecture
+import ZcashLightClientKit
 
 extension DependencyValues {
-    var uriParser: URIParserClient {
+    public var uriParser: URIParserClient {
         get { self[URIParserClient.self] }
         set { self[URIParserClient.self] = newValue }
     }
 }
 
-struct URIParserClient {
-    var isValidURI: (String) -> Bool
+public struct URIParserClient {
+    public var isValidURI: (String, NetworkType) -> Bool
 }
         

@@ -13,6 +13,7 @@ import MnemonicClient
 import NumberFormatter
 import Utils
 import Generated
+import WalletStorage
 
 typealias BalanceBreakdownStore = Store<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>
 typealias BalanceBreakdownViewStore = ViewStore<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>

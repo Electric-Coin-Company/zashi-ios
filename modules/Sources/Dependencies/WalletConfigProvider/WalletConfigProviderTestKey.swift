@@ -8,16 +8,17 @@
 import ComposableArchitecture
 import XCTestDynamicOverlay
 import Combine
+import Models
 
 extension WalletConfigProviderClient: TestDependencyKey {
-    static let testValue = Self(
+    public static let testValue = Self(
         load: XCTUnimplemented("\(Self.self).load", placeholder: Just(WalletConfig.default).eraseToAnyPublisher()),
         update: XCTUnimplemented("\(Self.self).update")
     )
 }
 
 extension WalletConfigProviderClient {
-    static let noOp = Self(
+    public static let noOp = Self(
         load: { Just(WalletConfig.default).eraseToAnyPublisher() },
         update: { _, _ in Just(Void()).eraseToAnyPublisher() }
     )

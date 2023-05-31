@@ -7,23 +7,26 @@
 
 import Foundation
 import Utils
+import Models
 
-typealias UserDefaultsWalletConfigProvider = UserDefaultsWalletConfigStorage
-typealias UserDefaultsWalletConfigProviderCache = UserDefaultsWalletConfigStorage
+public typealias UserDefaultsWalletConfigProvider = UserDefaultsWalletConfigStorage
+public typealias UserDefaultsWalletConfigProviderCache = UserDefaultsWalletConfigStorage
 
-struct UserDefaultsWalletConfigStorage {
+public struct UserDefaultsWalletConfigStorage {
     private let userDefaults = UserDefaults.standard
 
-    enum InternalError: Error {
+    public enum InternalError: Error {
         case noValueStored
         case unableToDeserializeData
     }
 
-    enum Constants {
-        static let providerKey = "feature_flags_ud_config_provider"
-        static let cacheKey = "feature_flags_ud_config_cache"
+    public enum Constants {
+        public static let providerKey = "feature_flags_ud_config_provider"
+        public static let cacheKey = "feature_flags_ud_config_cache"
     }
 
+    public init() {}
+    
     private func load(key: String) async throws -> WalletConfig {
         guard let data = userDefaults.data(forKey: key) else { throw InternalError.noValueStored }
         do {
@@ -45,7 +48,7 @@ struct UserDefaultsWalletConfigStorage {
     }
 
     // This is used only in debug menu to change configuration for specific flag
-    func store(featureFlag: FeatureFlag, isEnabled: Bool) async {
+    public func store(featureFlag: FeatureFlag, isEnabled: Bool) async {
         let currentConfig = (try? await load(key: Constants.providerKey)) ?? WalletConfig.default
         var rawFlags = currentConfig.flags
         rawFlags[featureFlag] = isEnabled
@@ -55,13 +58,13 @@ struct UserDefaultsWalletConfigStorage {
 }
 
 extension UserDefaultsWalletConfigStorage: WalletConfigSourceProvider {
-    func load() async throws -> WalletConfig {
+    public func load() async throws -> WalletConfig {
         return try await load(key: Constants.providerKey)
     }
 }
 
 extension UserDefaultsWalletConfigStorage: WalletConfigProviderCache {
-    func load() async -> WalletConfig? {
+    public func load() async -> WalletConfig? {
         do {
             return try await load(key: Constants.cacheKey)
         } catch {
@@ -70,7 +73,7 @@ extension UserDefaultsWalletConfigStorage: WalletConfigProviderCache {
         }
     }
 
-    func store(_ configuration: WalletConfig) async {
+    public func store(_ configuration: WalletConfig) async {
         await store(flags: configuration.flags, key: Constants.cacheKey)
     }
 }

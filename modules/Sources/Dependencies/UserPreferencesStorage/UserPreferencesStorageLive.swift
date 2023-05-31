@@ -9,7 +9,7 @@ import Foundation
 import ComposableArchitecture
 
 extension UserPreferencesStorageClient: DependencyKey {
-    static var liveValue: UserPreferencesStorageClient = {
+    public static var liveValue: UserPreferencesStorageClient = {
         let live = UserPreferencesStorage.live
 
         return UserPreferencesStorageClient(
@@ -35,7 +35,7 @@ extension UserPreferencesStorageClient: DependencyKey {
 }
 
 extension UserPreferencesStorage {
-    static let live = UserPreferencesStorage(
+    public static let live = UserPreferencesStorage(
         appSessionFrom: Date().timeIntervalSince1970,
         convertedCurrency: "USD",
         fiatConvertion: true,

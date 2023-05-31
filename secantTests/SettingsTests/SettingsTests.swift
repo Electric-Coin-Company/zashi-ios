@@ -10,6 +10,7 @@ import Utils
 import ComposableArchitecture
 import LogsHandler
 import Models
+import WalletStorage
 @testable import secant_testnet
 
 @MainActor

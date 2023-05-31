@@ -10,6 +10,7 @@ import ComposableArchitecture
 import Foundation
 import ZcashLightClientKit
 import Generated
+import Models
 
 /// In this file is a collection of helpers that control all state and action related operations
 /// for the `RootReducer` with a connection to the UI navigation.

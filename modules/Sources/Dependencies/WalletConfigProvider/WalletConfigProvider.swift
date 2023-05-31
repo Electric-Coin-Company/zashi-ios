@@ -8,15 +8,16 @@
 import Foundation
 import Combine
 import Utils
+import Models
 
-struct WalletConfigProvider {
+public struct WalletConfigProvider {
     /// Objects that fetches flags configuration from some source. It can be fetched from user defaults or some backend API for example. It depends
     /// on implementation.
     private let configSourceProvider: WalletConfigSourceProvider
     /// Object that caches provided flags configuration.
     private let cache: WalletConfigProviderCache
 
-    init(configSourceProvider: WalletConfigSourceProvider, cache: WalletConfigProviderCache) {
+    public init(configSourceProvider: WalletConfigSourceProvider, cache: WalletConfigProviderCache) {
         self.configSourceProvider = configSourceProvider
         self.cache = cache
     }
@@ -30,7 +31,7 @@ struct WalletConfigProvider {
     /// configuration.
     ///
     /// Merged configuration is stored in cache.
-    func load() -> AnyPublisher<WalletConfig, Never> {
+    public func load() -> AnyPublisher<WalletConfig, Never> {
         let publisher = PassthroughSubject<WalletConfig, Never>()
         Task {
             let config = await load()
@@ -61,7 +62,7 @@ struct WalletConfigProvider {
     }
 
     // This is used only in debug menu to change configuration for specific flag
-    func update(featureFlag: FeatureFlag, isEnabled: Bool) -> AnyPublisher<Void, Never> {
+    public func update(featureFlag: FeatureFlag, isEnabled: Bool) -> AnyPublisher<Void, Never> {
         let publisher = PassthroughSubject<Void, Never>()
         Task {
             await update(featureFlag: featureFlag, isEnabled: isEnabled)
@@ -90,11 +91,11 @@ struct WalletConfigProvider {
     }
 }
 
-protocol WalletConfigSourceProvider {
+public protocol WalletConfigSourceProvider {
     func load() async throws -> WalletConfig
 }
 
-protocol WalletConfigProviderCache {
+public protocol WalletConfigProviderCache {
     func load() async -> WalletConfig?
     func store(_ configuration: WalletConfig) async
 }

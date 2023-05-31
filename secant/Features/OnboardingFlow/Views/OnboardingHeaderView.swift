@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import Generated
+import Models
 
 struct OnboardingHeaderView: View {
     struct ViewState: Equatable {

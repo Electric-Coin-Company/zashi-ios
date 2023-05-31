@@ -6,8 +6,10 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
+import WalletConfigProvider
+import Models
+@testable import secant_testnet
 
 class OnboardingFlowFeatureFlagTests: XCTestCase {
     override func setUp() {

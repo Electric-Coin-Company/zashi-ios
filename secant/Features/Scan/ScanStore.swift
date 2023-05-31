@@ -9,6 +9,7 @@ import ComposableArchitecture
 import Foundation
 import CaptureDevice
 import Utils
+import URIParser
 
 typealias ScanStore = Store<ScanReducer.State, ScanReducer.Action>
 typealias ScanViewStore = ViewStore<ScanReducer.State, ScanReducer.Action>
@@ -90,7 +91,7 @@ struct ScanReducer: ReducerProtocol {
             if let prevCode = state.scannedValue, prevCode == code.data {
                 return .none
             }
-            if uriParser.isValidURI(code.data) {
+            if uriParser.isValidURI(code.data, TargetConstants.zcashNetwork.networkType) {
                 state.scanStatus = .value(code)
                 // once valid URI is scanned we want to start the timer to deliver the code
                 // any new code cancels the schedule and fires new one

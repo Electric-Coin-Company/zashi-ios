@@ -11,8 +11,8 @@ import UserDefaults
 /// Live implementation of the `UserPreferences` using User Defaults
 /// according to https://developer.apple.com/documentation/foundation/userdefaults
 /// the UserDefaults class is thread-safe.
-struct UserPreferencesStorage {
-    enum Constants: String, CaseIterable {
+public struct UserPreferencesStorage {
+    public enum Constants: String, CaseIterable {
         case zcashActiveAppSessionFrom
         case zcashCurrency
         case zcashFiatConverted
@@ -31,7 +31,7 @@ struct UserPreferencesStorage {
     
     private let userDefaults: UserDefaultsClient
     
-    init(
+    public init(
         appSessionFrom: TimeInterval,
         convertedCurrency: String,
         fiatConvertion: Bool,
@@ -50,61 +50,61 @@ struct UserPreferencesStorage {
     }
     
     /// From when the app is on and uninterrupted
-    var activeAppSessionFrom: TimeInterval {
+    public var activeAppSessionFrom: TimeInterval {
         getValue(forKey: Constants.zcashActiveAppSessionFrom.rawValue, default: appSessionFrom)
     }
     
-    func setActiveAppSessionFrom(_ timeInterval: TimeInterval) async {
+    public func setActiveAppSessionFrom(_ timeInterval: TimeInterval) async {
         await setValue(timeInterval, forKey: Constants.zcashActiveAppSessionFrom.rawValue)
     }
 
     /// What is the set up currency
-    var currency: String {
+    public var currency: String {
         getValue(forKey: Constants.zcashCurrency.rawValue, default: convertedCurrency)
     }
     
-    func setCurrency(_ string: String) async {
+    public func setCurrency(_ string: String) async {
         await setValue(string, forKey: Constants.zcashCurrency.rawValue)
     }
 
     /// Whether the fiat conversion is on/off
-    var isFiatConverted: Bool {
+    public var isFiatConverted: Bool {
         getValue(forKey: Constants.zcashFiatConverted.rawValue, default: fiatConvertion)
     }
 
-    func setIsFiatConverted(_ bool: Bool) async {
+    public func setIsFiatConverted(_ bool: Bool) async {
         await setValue(bool, forKey: Constants.zcashFiatConverted.rawValue)
     }
 
     /// Whether user finished recovery phrase backup test
-    var isRecoveryPhraseTestCompleted: Bool {
+    public var isRecoveryPhraseTestCompleted: Bool {
         getValue(forKey: Constants.zcashRecoveryPhraseTestCompleted.rawValue, default: recoveryPhraseTestCompleted)
     }
 
-    func setIsRecoveryPhraseTestCompleted(_ bool: Bool) async {
+    public func setIsRecoveryPhraseTestCompleted(_ bool: Bool) async {
         await setValue(bool, forKey: Constants.zcashRecoveryPhraseTestCompleted.rawValue)
     }
 
     /// Whether the user has been autoshielded in the running session
-    var isSessionAutoshielded: Bool {
+    public var isSessionAutoshielded: Bool {
         getValue(forKey: Constants.zcashSessionAutoshielded.rawValue, default: sessionAutoshielded)
     }
 
-    func setIsSessionAutoshielded(_ bool: Bool) async {
+    public func setIsSessionAutoshielded(_ bool: Bool) async {
         await setValue(bool, forKey: Constants.zcashSessionAutoshielded.rawValue)
     }
 
     /// Whether the user has opted out of crash reporting
-    var isUserOptedOutOfCrashReporting: Bool {
+    public var isUserOptedOutOfCrashReporting: Bool {
         getValue(forKey: Constants.zcashUserOptedOutOfCrashReporting.rawValue, default: false)
     }
 
-    func setIsUserOptedOutOfCrashReporting(_ bool: Bool) async {
+    public func setIsUserOptedOutOfCrashReporting(_ bool: Bool) async {
         await setValue(bool, forKey: Constants.zcashUserOptedOutOfCrashReporting.rawValue)
     }
 
     /// Use carefully: Deletes all user preferences from the User Defaults
-    func removeAll() {
+    public func removeAll() {
         for key in Constants.allCases {
             userDefaults.remove(key.rawValue)
         }
