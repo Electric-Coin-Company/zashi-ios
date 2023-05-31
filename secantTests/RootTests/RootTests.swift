@@ -9,7 +9,7 @@ import XCTest
 import ComposableArchitecture
 import ZcashLightClientKit
 import FileManager
-import DatabaseFilesClient
+import DatabaseFiles
 import ZcashSDKEnvironment
 @testable import secant_testnet
 

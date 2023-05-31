@@ -9,31 +9,31 @@ let package = Package(
       .iOS(.v15),
     ],
     products: [
-        .library(name: "AppVersionClient", targets: ["AppVersionClient"]),
-        .library(name: "AudioServicesClient", targets: ["AudioServicesClient"]),
-        .library(name: "CaptureDeviceClient", targets: ["CaptureDeviceClient"]),
-        .library(name: "DatabaseFilesClient", targets: ["DatabaseFilesClient"]),
-        .library(name: "DateClient", targets: ["DateClient"]),
-        .library(name: "DeeplinkClient", targets: ["DeeplinkClient"]),
-        .library(name: "DerivationToolClient", targets: ["DerivationToolClient"]),
-        .library(name: "DiskSpaceCheckerClient", targets: ["DiskSpaceCheckerClient"]),
-        .library(name: "FeedbackGeneratorClient", targets: ["FeedbackGeneratorClient"]),
+        .library(name: "AppVersion", targets: ["AppVersion"]),
+        .library(name: "AudioServices", targets: ["AudioServices"]),
+        .library(name: "CaptureDevice", targets: ["CaptureDevice"]),
+        .library(name: "DatabaseFiles", targets: ["DatabaseFiles"]),
+        .library(name: "Date", targets: ["Date"]),
+        .library(name: "Deeplink", targets: ["Deeplink"]),
+        .library(name: "DerivationTool", targets: ["DerivationTool"]),
+        .library(name: "DiskSpaceChecker", targets: ["DiskSpaceChecker"]),
+        .library(name: "FeedbackGenerator", targets: ["FeedbackGenerator"]),
         .library(name: "FileManager", targets: ["FileManager"]),
         .library(name: "Generated", targets: ["Generated"]),
-        .library(name: "LocalAuthenticationClient", targets: ["LocalAuthenticationClient"]),
-        .library(name: "LogsHandlerClient", targets: ["LogsHandlerClient"]),
+        .library(name: "LocalAuthenticationHandler", targets: ["LocalAuthenticationHandler"]),
+        .library(name: "LogsHandler", targets: ["LogsHandler"]),
         .library(name: "MnemonicClient", targets: ["MnemonicClient"]),
         .library(name: "Models", targets: ["Models"]),
-        .library(name: "NumberFormatterClient", targets: ["NumberFormatterClient"]),
-        .library(name: "PasteboardClient", targets: ["PasteboardClient"]),
+        .library(name: "NumberFormatter", targets: ["NumberFormatter"]),
+        .library(name: "Pasteboard", targets: ["Pasteboard"]),
         .library(name: "RecoveryPhraseValidationFlow", targets: ["RecoveryPhraseValidationFlow"]),
-        .library(name: "ReviewRequestClient", targets: ["ReviewRequestClient"]),
-        .library(name: "SDKSynchronizerClient", targets: ["SDKSynchronizerClient"]),
+        .library(name: "ReviewRequest", targets: ["ReviewRequest"]),
+        .library(name: "SDKSynchronizer", targets: ["SDKSynchronizer"]),
         .library(name: "SecItem", targets: ["SecItem"]),
-        .library(name: "SupportDataGeneratorClient", targets: ["SupportDataGeneratorClient"]),
+        .library(name: "SupportDataGenerator", targets: ["SupportDataGenerator"]),
         .library(name: "UIComponents", targets: ["UIComponents"]),
         .library(name: "Utils", targets: ["Utils"]),
-        .library(name: "UserDefaultsClient", targets: ["UserDefaultsClient"]),
+        .library(name: "UserDefaults", targets: ["UserDefaults"]),
         .library(name: "ZcashSDKEnvironment", targets: ["ZcashSDKEnvironment"])
     ],
     dependencies: [
@@ -44,97 +44,110 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "AppVersionClient",
+            name: "AppVersion",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ]
+            ],
+            path: "Sources/Dependencies/AppVersion"
         ),
         .target(
-            name: "AudioServicesClient",
+            name: "AudioServices",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ]
+            ],
+            path: "Sources/Dependencies/AudioServices"
         ),
         .target(
-            name: "CaptureDeviceClient",
+            name: "CaptureDevice",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ]
+            ],
+            path: "Sources/Dependencies/CaptureDevice"
         ),
         .target(
-            name: "DatabaseFilesClient",
+            name: "DatabaseFiles",
             dependencies: [
                 "FileManager",
                 "Utils",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
-            ]
+            ],
+            path: "Sources/Dependencies/DatabaseFiles"
         ),
         .target(
-            name: "DateClient",
+            name: "Date",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ]
+            ],
+            path: "Sources/Dependencies/Date"
         ),
         .target(
-            name: "DeeplinkClient",
+            name: "Deeplink",
             dependencies: [
-                "DerivationToolClient",
+                "DerivationTool",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "URLRouting", package: "swift-url-routing"),
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
-            ]
+            ],
+            path: "Sources/Dependencies/Deeplink"
         ),
         .target(
-            name: "DerivationToolClient",
+            name: "DerivationTool",
             dependencies: [
                 "Utils",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
-            ]
+            ],
+            path: "Sources/Dependencies/DerivationTool"
         ),
         .target(
-            name: "DiskSpaceCheckerClient",
+            name: "DiskSpaceChecker",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-            ]
+            ],
+            path: "Sources/Dependencies/DiskSpaceChecker"
         ),
         .target(
-            name: "FeedbackGeneratorClient",
+            name: "FeedbackGenerator",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ]
+            ],
+            path: "Sources/Dependencies/FeedbackGenerator"
         ),
         .target(
             name: "FileManager",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ]
+            ],
+            path: "Sources/Dependencies/FileManager"
         ),
         .target(
             name: "Generated",
             resources: [.process("Resources")]
         ),
         .target(
-            name: "LocalAuthenticationClient",
+            name: "LocalAuthenticationHandler",
             dependencies: [
                 "Generated",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ]
+            ],
+            path: "Sources/Dependencies/LocalAuthenticationHandler"
         ),
         .target(
-            name: "LogsHandlerClient",
+            name: "LogsHandler",
             dependencies: [
                 "Utils",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ]
+            ],
+            path: "Sources/Dependencies/LogsHandler"
         ),
         .target(
             name: "MnemonicClient",
             dependencies: [
                 .product(name: "MnemonicSwift", package: "MnemonicSwift"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ]
+            ],
+            path: "Sources/Dependencies/MnemonicClient"
         ),
         .target(
             name: "Models",
@@ -144,64 +157,71 @@ let package = Package(
             ]
         ),
         .target(
-            name: "NumberFormatterClient",
+            name: "NumberFormatter",
             dependencies: [
                 "Utils",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ]
+            ],
+            path: "Sources/Dependencies/NumberFormatter"
         ),
         .target(
-            name: "PasteboardClient",
+            name: "Pasteboard",
             dependencies: [
                 "Utils",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ]
+            ],
+            path: "Sources/Dependencies/Pasteboard"
         ),
         .target(
             name: "RecoveryPhraseValidationFlow",
             dependencies: [
-                "FeedbackGeneratorClient",
+                "FeedbackGenerator",
                 "Generated",
                 "Models",
-                "PasteboardClient",
+                "Pasteboard",
                 "UIComponents",
                 "Utils",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
-            ]
+            ],
+            path: "Sources/Features/RecoveryPhraseValidationFlow"
         ),
         .target(
-            name: "ReviewRequestClient",
+            name: "ReviewRequest",
             dependencies: [
-                "AppVersionClient",
-                "DateClient",
-                "UserDefaultsClient",
+                "AppVersion",
+                "Date",
+                "UserDefaults",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ]
+            ],
+            path: "Sources/Dependencies/ReviewRequest"
         ),
         .target(
-            name: "SDKSynchronizerClient",
+            name: "SDKSynchronizer",
             dependencies: [
-                "DatabaseFilesClient",
+                "DatabaseFiles",
                 "Models",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
-            ]
+            ],
+            path: "Sources/Dependencies/SDKSynchronizer"
         ),
         .target(
             name: "SecItem",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ]
+            ],
+            path: "Sources/Dependencies/SecItem"
         ),
         .target(
-            name: "SupportDataGeneratorClient",
+            name: "SupportDataGenerator",
             dependencies: [
                 "Generated",
                 "Utils",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ]
+            ],
+            path: "Sources/Dependencies/SupportDataGenerator"
         ),
         .target(
             name: "UIComponents",
@@ -217,17 +237,19 @@ let package = Package(
             ]
         ),
         .target(
-            name: "UserDefaultsClient",
+            name: "UserDefaults",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ]
+            ],
+            path: "Sources/Dependencies/UserDefaults"
         ),
         .target(
             name: "ZcashSDKEnvironment",
             dependencies: [
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ]
+            ],
+            path: "Sources/Dependencies/ZcashSDKEnvironment"
         )
     ]
 )

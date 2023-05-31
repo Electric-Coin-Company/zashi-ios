@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0D0781C4278750E30083ACD7 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0781C3278750E30083ACD7 /* WelcomeView.swift */; };
 		0D0781C9278776D20083ACD7 /* ZcashSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0781C7278776D20083ACD7 /* ZcashSymbol.swift */; };
-		0D26103A298C3DCD00CC9DE9 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0D261039298C3DCD00CC9DE9 /* FirebaseCrashlytics */; };
 		0D26103C298C3E4800CC9DE9 /* CrashReporterInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D26103B298C3E4800CC9DE9 /* CrashReporterInterface.swift */; };
 		0D26103E298C3FA600CC9DE9 /* CrashReporterLiveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D26103D298C3FA600CC9DE9 /* CrashReporterLiveKey.swift */; };
 		0D261040298C406F00CC9DE9 /* CrashReporterTestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D26103F298C406F00CC9DE9 /* CrashReporterTestKey.swift */; };
@@ -177,14 +176,42 @@
 		6654C73A2715A38000901167 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 6654C7392715A38000901167 /* ComposableArchitecture */; };
 		6654C73E2715A41300901167 /* OnboardingFlowStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6654C73D2715A41300901167 /* OnboardingFlowStore.swift */; };
 		66A0807B271993C500118B79 /* OnboardingProgressIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A0807A271993C500118B79 /* OnboardingProgressIndicator.swift */; };
+		9E0031602A272736003DFCEB /* AppVersion in Frameworks */ = {isa = PBXBuildFile; productRef = 9E00315F2A272736003DFCEB /* AppVersion */; };
+		9E0031622A272736003DFCEB /* AudioServices in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031612A272736003DFCEB /* AudioServices */; };
+		9E0031642A272736003DFCEB /* CaptureDevice in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031632A272736003DFCEB /* CaptureDevice */; };
+		9E0031662A272736003DFCEB /* DatabaseFiles in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031652A272736003DFCEB /* DatabaseFiles */; };
+		9E0031682A272736003DFCEB /* Date in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031672A272736003DFCEB /* Date */; };
+		9E00316A2A272736003DFCEB /* Deeplink in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031692A272736003DFCEB /* Deeplink */; };
+		9E00316C2A272736003DFCEB /* DerivationTool in Frameworks */ = {isa = PBXBuildFile; productRef = 9E00316B2A272736003DFCEB /* DerivationTool */; };
+		9E00316E2A272746003DFCEB /* AppVersion in Frameworks */ = {isa = PBXBuildFile; productRef = 9E00316D2A272746003DFCEB /* AppVersion */; };
+		9E0031702A272746003DFCEB /* AudioServices in Frameworks */ = {isa = PBXBuildFile; productRef = 9E00316F2A272746003DFCEB /* AudioServices */; };
+		9E0031722A272747003DFCEB /* CaptureDevice in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031712A272747003DFCEB /* CaptureDevice */; };
+		9E0031742A272747003DFCEB /* DatabaseFiles in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031732A272747003DFCEB /* DatabaseFiles */; };
+		9E0031762A272747003DFCEB /* Date in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031752A272747003DFCEB /* Date */; };
+		9E0031782A272747003DFCEB /* Deeplink in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031772A272747003DFCEB /* Deeplink */; };
+		9E00317A2A272747003DFCEB /* DerivationTool in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031792A272747003DFCEB /* DerivationTool */; };
+		9E00317C2A2728CC003DFCEB /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 9E00317B2A2728CC003DFCEB /* FirebaseCrashlytics */; };
+		9E00317E2A272991003DFCEB /* DiskSpaceChecker in Frameworks */ = {isa = PBXBuildFile; productRef = 9E00317D2A272991003DFCEB /* DiskSpaceChecker */; };
+		9E0031802A272991003DFCEB /* FeedbackGenerator in Frameworks */ = {isa = PBXBuildFile; productRef = 9E00317F2A272991003DFCEB /* FeedbackGenerator */; };
+		9E0031822A27299A003DFCEB /* DiskSpaceChecker in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031812A27299A003DFCEB /* DiskSpaceChecker */; };
+		9E0031842A27299A003DFCEB /* FeedbackGenerator in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031832A27299A003DFCEB /* FeedbackGenerator */; };
+		9E0031882A272A52003DFCEB /* LogsHandler in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031872A272A52003DFCEB /* LogsHandler */; };
+		9E00318A2A272A52003DFCEB /* NumberFormatter in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031892A272A52003DFCEB /* NumberFormatter */; };
+		9E00318C2A272A52003DFCEB /* Pasteboard in Frameworks */ = {isa = PBXBuildFile; productRef = 9E00318B2A272A52003DFCEB /* Pasteboard */; };
+		9E0031902A272A61003DFCEB /* LogsHandler in Frameworks */ = {isa = PBXBuildFile; productRef = 9E00318F2A272A61003DFCEB /* LogsHandler */; };
+		9E0031922A272A61003DFCEB /* NumberFormatter in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031912A272A61003DFCEB /* NumberFormatter */; };
+		9E0031942A272A61003DFCEB /* Pasteboard in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031932A272A61003DFCEB /* Pasteboard */; };
+		9E0031962A272ACF003DFCEB /* LocalAuthenticationHandler in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031952A272ACF003DFCEB /* LocalAuthenticationHandler */; };
+		9E0031982A272AD7003DFCEB /* LocalAuthenticationHandler in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031972A272AD7003DFCEB /* LocalAuthenticationHandler */; };
+		9E00319A2A272BB6003DFCEB /* ReviewRequest in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031992A272BB6003DFCEB /* ReviewRequest */; };
+		9E00319C2A272BB6003DFCEB /* SDKSynchronizer in Frameworks */ = {isa = PBXBuildFile; productRef = 9E00319B2A272BB6003DFCEB /* SDKSynchronizer */; };
+		9E00319E2A272BB6003DFCEB /* SupportDataGenerator in Frameworks */ = {isa = PBXBuildFile; productRef = 9E00319D2A272BB6003DFCEB /* SupportDataGenerator */; };
+		9E0031A02A272BB7003DFCEB /* UserDefaults in Frameworks */ = {isa = PBXBuildFile; productRef = 9E00319F2A272BB7003DFCEB /* UserDefaults */; };
+		9E0031A22A272BC7003DFCEB /* ReviewRequest in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031A12A272BC7003DFCEB /* ReviewRequest */; };
+		9E0031A42A272BC7003DFCEB /* SDKSynchronizer in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031A32A272BC7003DFCEB /* SDKSynchronizer */; };
+		9E0031A62A272BC8003DFCEB /* SupportDataGenerator in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031A52A272BC8003DFCEB /* SupportDataGenerator */; };
+		9E0031A82A272BC8003DFCEB /* UserDefaults in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031A72A272BC8003DFCEB /* UserDefaults */; };
 		9E0310B52A24A4CA0021F995 /* FileManager in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0310B42A24A4CA0021F995 /* FileManager */; };
-		9E0310B72A24A4D40021F995 /* AppVersionClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0310B62A24A4D40021F995 /* AppVersionClient */; };
-		9E0310B92A24A4D40021F995 /* AudioServicesClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0310B82A24A4D40021F995 /* AudioServicesClient */; };
-		9E0310BB2A24A4D40021F995 /* CaptureDeviceClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0310BA2A24A4D40021F995 /* CaptureDeviceClient */; };
-		9E0310BD2A24A4D40021F995 /* DatabaseFilesClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0310BC2A24A4D40021F995 /* DatabaseFilesClient */; };
-		9E0310BF2A24A4D40021F995 /* DateClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0310BE2A24A4D40021F995 /* DateClient */; };
-		9E0310C12A24A4D40021F995 /* DeeplinkClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0310C02A24A4D40021F995 /* DeeplinkClient */; };
-		9E0310C32A24A4D40021F995 /* DerivationToolClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0310C22A24A4D40021F995 /* DerivationToolClient */; };
 		9E0310C52A24A4E60021F995 /* FileManager in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0310C42A24A4E60021F995 /* FileManager */; };
 		9E0310CB2A24BB420021F995 /* URIParserLive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0310C72A24BB420021F995 /* URIParserLive.swift */; };
 		9E0310CC2A24BB420021F995 /* URIParserInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0310C82A24BB420021F995 /* URIParserInterface.swift */; };
@@ -287,33 +314,14 @@
 		9E7FE0E6282E7B1100C374E8 /* StoredWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0E5282E7B1100C374E8 /* StoredWallet.swift */; };
 		9E7FE0F628327F6F00C374E8 /* ScanUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0F528327F6F00C374E8 /* ScanUIView.swift */; };
 		9E7FE0F92832824C00C374E8 /* QRCodeScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7FE0F82832824C00C374E8 /* QRCodeScanView.swift */; };
-		9E80C4482A25E8DF0049E6A7 /* PasteboardClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E80C4472A25E8DF0049E6A7 /* PasteboardClient */; };
-		9E80C44A2A25E8E70049E6A7 /* LogsHandlerClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E80C4492A25E8E70049E6A7 /* LogsHandlerClient */; };
 		9E80C44C2A25E8EC0049E6A7 /* MnemonicClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E80C44B2A25E8EC0049E6A7 /* MnemonicClient */; };
-		9E80C44E2A25E8F00049E6A7 /* NumberFormatterClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E80C44D2A25E8F00049E6A7 /* NumberFormatterClient */; };
-		9E80C4502A25E8FA0049E6A7 /* LogsHandlerClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E80C44F2A25E8FA0049E6A7 /* LogsHandlerClient */; };
 		9E80C4522A25E8FA0049E6A7 /* MnemonicClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E80C4512A25E8FA0049E6A7 /* MnemonicClient */; };
-		9E80C4542A25E8FA0049E6A7 /* NumberFormatterClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E80C4532A25E8FA0049E6A7 /* NumberFormatterClient */; };
-		9E80C4562A25E8FA0049E6A7 /* PasteboardClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E80C4552A25E8FA0049E6A7 /* PasteboardClient */; };
-		9E80C4582A25E9690049E6A7 /* DiskSpaceCheckerClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E80C4572A25E9690049E6A7 /* DiskSpaceCheckerClient */; };
-		9E80C45A2A25E96D0049E6A7 /* FeedbackGeneratorClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E80C4592A25E96D0049E6A7 /* FeedbackGeneratorClient */; };
-		9E80C45C2A25E9720049E6A7 /* DiskSpaceCheckerClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E80C45B2A25E9720049E6A7 /* DiskSpaceCheckerClient */; };
-		9E80C45E2A25E9760049E6A7 /* FeedbackGeneratorClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E80C45D2A25E9760049E6A7 /* FeedbackGeneratorClient */; };
-		9E80C4602A25E9A70049E6A7 /* LocalAuthenticationClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E80C45F2A25E9A70049E6A7 /* LocalAuthenticationClient */; };
-		9E80C4622A25E9AC0049E6A7 /* LocalAuthenticationClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E80C4612A25E9AC0049E6A7 /* LocalAuthenticationClient */; };
 		9E80C4672A25EAFB0049E6A7 /* URIParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0310C92A24BB420021F995 /* URIParser.swift */; };
 		9E80C4682A25EAFB0049E6A7 /* URIParserTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0310CA2A24BB420021F995 /* URIParserTest.swift */; };
 		9E80C4692A25EAFB0049E6A7 /* URIParserLive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0310C72A24BB420021F995 /* URIParserLive.swift */; };
 		9E80C46A2A25EAFB0049E6A7 /* URIParserInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0310C82A24BB420021F995 /* URIParserInterface.swift */; };
 		9E852D6129B098F400CF4AC1 /* RootDebug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E852D6029B098F400CF4AC1 /* RootDebug.swift */; };
 		9E852D6229B098F400CF4AC1 /* RootDebug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E852D6029B098F400CF4AC1 /* RootDebug.swift */; };
-		9E88FBA02A20D33C00DAA500 /* DateClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E88FB9F2A20D33C00DAA500 /* DateClient */; };
-		9E88FBA22A20D35800DAA500 /* AppVersionClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E88FBA12A20D35800DAA500 /* AppVersionClient */; };
-		9E88FBA42A247F6900DAA500 /* AudioServicesClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E88FBA32A247F6900DAA500 /* AudioServicesClient */; };
-		9E88FBA62A24804900DAA500 /* CaptureDeviceClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E88FBA52A24804900DAA500 /* CaptureDeviceClient */; };
-		9E88FBA82A2481DB00DAA500 /* DatabaseFilesClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E88FBA72A2481DB00DAA500 /* DatabaseFilesClient */; };
-		9E88FBAA2A24A0E000DAA500 /* DerivationToolClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E88FBA92A24A0E000DAA500 /* DerivationToolClient */; };
-		9E88FBAC2A24A0E900DAA500 /* DeeplinkClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E88FBAB2A24A0E900DAA500 /* DeeplinkClient */; };
 		9E9074FF2A260FE400269308 /* WalletEvent+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9074FE2A260FE400269308 /* WalletEvent+View.swift */; };
 		9E9075002A260FE400269308 /* WalletEvent+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9074FE2A260FE400269308 /* WalletEvent+View.swift */; };
 		9E9075022A2681F700269308 /* Generated in Frameworks */ = {isa = PBXBuildFile; productRef = 9E9075012A2681F700269308 /* Generated */; };
@@ -322,14 +330,8 @@
 		9E9075082A2689DB00269308 /* RecoveryPhraseValidationFlow in Frameworks */ = {isa = PBXBuildFile; productRef = 9E9075072A2689DB00269308 /* RecoveryPhraseValidationFlow */; };
 		9E90750A2A268CD700269308 /* SecItem in Frameworks */ = {isa = PBXBuildFile; productRef = 9E9075092A268CD700269308 /* SecItem */; };
 		9E90750C2A268CDC00269308 /* SecItem in Frameworks */ = {isa = PBXBuildFile; productRef = 9E90750B2A268CDC00269308 /* SecItem */; };
-		9E90750E2A26919B00269308 /* ReviewRequestClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E90750D2A26919B00269308 /* ReviewRequestClient */; };
-		9E9075102A2691A000269308 /* ReviewRequestClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E90750F2A2691A000269308 /* ReviewRequestClient */; };
 		9E9075122A2691B200269308 /* ZcashSDKEnvironment in Frameworks */ = {isa = PBXBuildFile; productRef = 9E9075112A2691B200269308 /* ZcashSDKEnvironment */; };
 		9E9075142A2691B700269308 /* ZcashSDKEnvironment in Frameworks */ = {isa = PBXBuildFile; productRef = 9E9075132A2691B700269308 /* ZcashSDKEnvironment */; };
-		9E9075162A2691C600269308 /* SupportDataGeneratorClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E9075152A2691C600269308 /* SupportDataGeneratorClient */; };
-		9E9075182A2691CB00269308 /* SupportDataGeneratorClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E9075172A2691CB00269308 /* SupportDataGeneratorClient */; };
-		9E90751A2A2691D900269308 /* SDKSynchronizerClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E9075192A2691D900269308 /* SDKSynchronizerClient */; };
-		9E90751C2A2691E200269308 /* SDKSynchronizerClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E90751B2A2691E200269308 /* SDKSynchronizerClient */; };
 		9E90751E2A269BE300269308 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E90751D2A269BE300269308 /* Assets.xcassets */; };
 		9E90751F2A269BE300269308 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E90751D2A269BE300269308 /* Assets.xcassets */; };
 		9E9ADA7D2938F4C00071767B /* RootInitialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ADA7C2938F4C00071767B /* RootInitialization.swift */; };
@@ -579,34 +581,35 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E0031922A272A61003DFCEB /* NumberFormatter in Frameworks */,
+				9E0031902A272A61003DFCEB /* LogsHandler in Frameworks */,
 				0D26AF71299E8196005260EE /* Lottie in Frameworks */,
 				0D26AF72299E8196005260EE /* URLRouting in Frameworks */,
 				0D26AF73299E8196005260EE /* ZcashLightClientKit in Frameworks */,
-				9E80C4502A25E8FA0049E6A7 /* LogsHandlerClient in Frameworks */,
-				9E0310BF2A24A4D40021F995 /* DateClient in Frameworks */,
+				9E0031722A272747003DFCEB /* CaptureDevice in Frameworks */,
+				9E00316E2A272746003DFCEB /* AppVersion in Frameworks */,
+				9E0031A02A272BB7003DFCEB /* UserDefaults in Frameworks */,
 				0D26AF74299E8196005260EE /* FirebaseCrashlytics in Frameworks */,
-				9E0310BD2A24A4D40021F995 /* DatabaseFilesClient in Frameworks */,
-				9E80C4622A25E9AC0049E6A7 /* LocalAuthenticationClient in Frameworks */,
-				9E80C4542A25E8FA0049E6A7 /* NumberFormatterClient in Frameworks */,
-				9E80C4562A25E8FA0049E6A7 /* PasteboardClient in Frameworks */,
+				9E0031742A272747003DFCEB /* DatabaseFiles in Frameworks */,
+				9E0031942A272A61003DFCEB /* Pasteboard in Frameworks */,
 				9E9075142A2691B700269308 /* ZcashSDKEnvironment in Frameworks */,
+				9E00319E2A272BB6003DFCEB /* SupportDataGenerator in Frameworks */,
+				9E0031822A27299A003DFCEB /* DiskSpaceChecker in Frameworks */,
 				9E0310C52A24A4E60021F995 /* FileManager in Frameworks */,
-				9E90750E2A26919B00269308 /* ReviewRequestClient in Frameworks */,
-				9E0310C12A24A4D40021F995 /* DeeplinkClient in Frameworks */,
+				9E0031982A272AD7003DFCEB /* LocalAuthenticationHandler in Frameworks */,
+				9E0031762A272747003DFCEB /* Date in Frameworks */,
+				9E0031702A272746003DFCEB /* AudioServices in Frameworks */,
+				9E0031782A272747003DFCEB /* Deeplink in Frameworks */,
 				0D26AF75299E8196005260EE /* MnemonicSwift in Frameworks */,
-				9E90751C2A2691E200269308 /* SDKSynchronizerClient in Frameworks */,
-				9E0310C32A24A4D40021F995 /* DerivationToolClient in Frameworks */,
-				9E80C4582A25E9690049E6A7 /* DiskSpaceCheckerClient in Frameworks */,
 				0D26AF76299E8196005260EE /* ComposableArchitecture in Frameworks */,
-				9E0310B72A24A4D40021F995 /* AppVersionClient in Frameworks */,
+				9E00319C2A272BB6003DFCEB /* SDKSynchronizer in Frameworks */,
 				9E9075062A2689D600269308 /* RecoveryPhraseValidationFlow in Frameworks */,
 				9E90750C2A268CDC00269308 /* SecItem in Frameworks */,
-				9E0310B92A24A4D40021F995 /* AudioServicesClient in Frameworks */,
+				9E00317A2A272747003DFCEB /* DerivationTool in Frameworks */,
+				9E0031842A27299A003DFCEB /* FeedbackGenerator in Frameworks */,
 				9E9075042A2681FF00269308 /* Generated in Frameworks */,
-				9E9075162A2691C600269308 /* SupportDataGeneratorClient in Frameworks */,
-				9E80C45A2A25E96D0049E6A7 /* FeedbackGeneratorClient in Frameworks */,
 				9E80C4522A25E8FA0049E6A7 /* MnemonicClient in Frameworks */,
-				9E0310BB2A24A4D40021F995 /* CaptureDeviceClient in Frameworks */,
+				9E00319A2A272BB6003DFCEB /* ReviewRequest in Frameworks */,
 				0D26AF77299E8196005260EE /* Parsing in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -615,35 +618,36 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E00318A2A272A52003DFCEB /* NumberFormatter in Frameworks */,
+				9E0031882A272A52003DFCEB /* LogsHandler in Frameworks */,
 				9E6612312878337F00C75B70 /* Lottie in Frameworks */,
 				0D5D9B8F2914620700DBD03F /* URLRouting in Frameworks */,
-				9E80C44E2A25E8F00049E6A7 /* NumberFormatterClient in Frameworks */,
 				34CE032B29C0938600A6626B /* ZcashLightClientKit in Frameworks */,
-				9E80C44A2A25E8E70049E6A7 /* LogsHandlerClient in Frameworks */,
-				9E88FBAC2A24A0E900DAA500 /* DeeplinkClient in Frameworks */,
-				9E80C4482A25E8DF0049E6A7 /* PasteboardClient in Frameworks */,
-				9E80C4602A25E9A70049E6A7 /* LocalAuthenticationClient in Frameworks */,
-				0D26103A298C3DCD00CC9DE9 /* FirebaseCrashlytics in Frameworks */,
-				9E88FBA22A20D35800DAA500 /* AppVersionClient in Frameworks */,
+				9E0031642A272736003DFCEB /* CaptureDevice in Frameworks */,
+				9E0031602A272736003DFCEB /* AppVersion in Frameworks */,
+				9E0031A82A272BC8003DFCEB /* UserDefaults in Frameworks */,
+				9E0031662A272736003DFCEB /* DatabaseFiles in Frameworks */,
 				9E9075122A2691B200269308 /* ZcashSDKEnvironment in Frameworks */,
+				9E00318C2A272A52003DFCEB /* Pasteboard in Frameworks */,
 				9E0310B52A24A4CA0021F995 /* FileManager in Frameworks */,
-				9E9075102A2691A000269308 /* ReviewRequestClient in Frameworks */,
+				9E0031A62A272BC8003DFCEB /* SupportDataGenerator in Frameworks */,
+				9E00317E2A272991003DFCEB /* DiskSpaceChecker in Frameworks */,
+				9E0031682A272736003DFCEB /* Date in Frameworks */,
+				9E0031962A272ACF003DFCEB /* LocalAuthenticationHandler in Frameworks */,
+				9E0031622A272736003DFCEB /* AudioServices in Frameworks */,
+				9E00316A2A272736003DFCEB /* Deeplink in Frameworks */,
 				9E2AC0FF27D8EC120042AA47 /* MnemonicSwift in Frameworks */,
-				9E88FBAA2A24A0E000DAA500 /* DerivationToolClient in Frameworks */,
-				9E90751A2A2691D900269308 /* SDKSynchronizerClient in Frameworks */,
 				9E80C44C2A25E8EC0049E6A7 /* MnemonicClient in Frameworks */,
-				9E80C45C2A25E9720049E6A7 /* DiskSpaceCheckerClient in Frameworks */,
-				9E88FBA82A2481DB00DAA500 /* DatabaseFilesClient in Frameworks */,
 				6654C73A2715A38000901167 /* ComposableArchitecture in Frameworks */,
+				9E0031A42A272BC7003DFCEB /* SDKSynchronizer in Frameworks */,
 				9E9075082A2689DB00269308 /* RecoveryPhraseValidationFlow in Frameworks */,
+				9E00316C2A272736003DFCEB /* DerivationTool in Frameworks */,
 				9E90750A2A268CD700269308 /* SecItem in Frameworks */,
+				9E0031802A272991003DFCEB /* FeedbackGenerator in Frameworks */,
 				9EAB466D285A0468002904A0 /* Parsing in Frameworks */,
+				9E00317C2A2728CC003DFCEB /* FirebaseCrashlytics in Frameworks */,
+				9E0031A22A272BC7003DFCEB /* ReviewRequest in Frameworks */,
 				9E9075022A2681F700269308 /* Generated in Frameworks */,
-				9E9075182A2691CB00269308 /* SupportDataGeneratorClient in Frameworks */,
-				9E80C45E2A25E9760049E6A7 /* FeedbackGeneratorClient in Frameworks */,
-				9E88FBA42A247F6900DAA500 /* AudioServicesClient in Frameworks */,
-				9E88FBA62A24804900DAA500 /* CaptureDeviceClient in Frameworks */,
-				9E88FBA02A20D33C00DAA500 /* DateClient in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1611,28 +1615,29 @@
 				0D26AE91299E8196005260EE /* ZcashLightClientKit */,
 				0D26AE93299E8196005260EE /* URLRouting */,
 				0D26AE95299E8196005260EE /* FirebaseCrashlytics */,
-				9E0310B62A24A4D40021F995 /* AppVersionClient */,
-				9E0310B82A24A4D40021F995 /* AudioServicesClient */,
-				9E0310BA2A24A4D40021F995 /* CaptureDeviceClient */,
-				9E0310BC2A24A4D40021F995 /* DatabaseFilesClient */,
-				9E0310BE2A24A4D40021F995 /* DateClient */,
-				9E0310C02A24A4D40021F995 /* DeeplinkClient */,
-				9E0310C22A24A4D40021F995 /* DerivationToolClient */,
 				9E0310C42A24A4E60021F995 /* FileManager */,
-				9E80C44F2A25E8FA0049E6A7 /* LogsHandlerClient */,
 				9E80C4512A25E8FA0049E6A7 /* MnemonicClient */,
-				9E80C4532A25E8FA0049E6A7 /* NumberFormatterClient */,
-				9E80C4552A25E8FA0049E6A7 /* PasteboardClient */,
-				9E80C4572A25E9690049E6A7 /* DiskSpaceCheckerClient */,
-				9E80C4592A25E96D0049E6A7 /* FeedbackGeneratorClient */,
-				9E80C4612A25E9AC0049E6A7 /* LocalAuthenticationClient */,
 				9E9075032A2681FF00269308 /* Generated */,
 				9E9075052A2689D600269308 /* RecoveryPhraseValidationFlow */,
 				9E90750B2A268CDC00269308 /* SecItem */,
-				9E90750D2A26919B00269308 /* ReviewRequestClient */,
 				9E9075132A2691B700269308 /* ZcashSDKEnvironment */,
-				9E9075152A2691C600269308 /* SupportDataGeneratorClient */,
-				9E90751B2A2691E200269308 /* SDKSynchronizerClient */,
+				9E00316D2A272746003DFCEB /* AppVersion */,
+				9E00316F2A272746003DFCEB /* AudioServices */,
+				9E0031712A272747003DFCEB /* CaptureDevice */,
+				9E0031732A272747003DFCEB /* DatabaseFiles */,
+				9E0031752A272747003DFCEB /* Date */,
+				9E0031772A272747003DFCEB /* Deeplink */,
+				9E0031792A272747003DFCEB /* DerivationTool */,
+				9E0031812A27299A003DFCEB /* DiskSpaceChecker */,
+				9E0031832A27299A003DFCEB /* FeedbackGenerator */,
+				9E00318F2A272A61003DFCEB /* LogsHandler */,
+				9E0031912A272A61003DFCEB /* NumberFormatter */,
+				9E0031932A272A61003DFCEB /* Pasteboard */,
+				9E0031972A272AD7003DFCEB /* LocalAuthenticationHandler */,
+				9E0031992A272BB6003DFCEB /* ReviewRequest */,
+				9E00319B2A272BB6003DFCEB /* SDKSynchronizer */,
+				9E00319D2A272BB6003DFCEB /* SupportDataGenerator */,
+				9E00319F2A272BB7003DFCEB /* UserDefaults */,
 			);
 			productName = secant;
 			productReference = 0D26AF94299E8196005260EE /* secant-mainnet.app */;
@@ -1661,30 +1666,31 @@
 				9EAB466C285A0468002904A0 /* Parsing */,
 				9E6612302878337F00C75B70 /* Lottie */,
 				0D5D9B8E2914620700DBD03F /* URLRouting */,
-				0D261039298C3DCD00CC9DE9 /* FirebaseCrashlytics */,
 				34CE032A29C0938600A6626B /* ZcashLightClientKit */,
-				9E88FB9F2A20D33C00DAA500 /* DateClient */,
-				9E88FBA12A20D35800DAA500 /* AppVersionClient */,
-				9E88FBA32A247F6900DAA500 /* AudioServicesClient */,
-				9E88FBA52A24804900DAA500 /* CaptureDeviceClient */,
-				9E88FBA72A2481DB00DAA500 /* DatabaseFilesClient */,
-				9E88FBA92A24A0E000DAA500 /* DerivationToolClient */,
-				9E88FBAB2A24A0E900DAA500 /* DeeplinkClient */,
 				9E0310B42A24A4CA0021F995 /* FileManager */,
-				9E80C4472A25E8DF0049E6A7 /* PasteboardClient */,
-				9E80C4492A25E8E70049E6A7 /* LogsHandlerClient */,
 				9E80C44B2A25E8EC0049E6A7 /* MnemonicClient */,
-				9E80C44D2A25E8F00049E6A7 /* NumberFormatterClient */,
-				9E80C45B2A25E9720049E6A7 /* DiskSpaceCheckerClient */,
-				9E80C45D2A25E9760049E6A7 /* FeedbackGeneratorClient */,
-				9E80C45F2A25E9A70049E6A7 /* LocalAuthenticationClient */,
 				9E9075012A2681F700269308 /* Generated */,
 				9E9075072A2689DB00269308 /* RecoveryPhraseValidationFlow */,
 				9E9075092A268CD700269308 /* SecItem */,
-				9E90750F2A2691A000269308 /* ReviewRequestClient */,
 				9E9075112A2691B200269308 /* ZcashSDKEnvironment */,
-				9E9075172A2691CB00269308 /* SupportDataGeneratorClient */,
-				9E9075192A2691D900269308 /* SDKSynchronizerClient */,
+				9E00315F2A272736003DFCEB /* AppVersion */,
+				9E0031612A272736003DFCEB /* AudioServices */,
+				9E0031632A272736003DFCEB /* CaptureDevice */,
+				9E0031652A272736003DFCEB /* DatabaseFiles */,
+				9E0031672A272736003DFCEB /* Date */,
+				9E0031692A272736003DFCEB /* Deeplink */,
+				9E00316B2A272736003DFCEB /* DerivationTool */,
+				9E00317B2A2728CC003DFCEB /* FirebaseCrashlytics */,
+				9E00317D2A272991003DFCEB /* DiskSpaceChecker */,
+				9E00317F2A272991003DFCEB /* FeedbackGenerator */,
+				9E0031872A272A52003DFCEB /* LogsHandler */,
+				9E0031892A272A52003DFCEB /* NumberFormatter */,
+				9E00318B2A272A52003DFCEB /* Pasteboard */,
+				9E0031952A272ACF003DFCEB /* LocalAuthenticationHandler */,
+				9E0031A12A272BC7003DFCEB /* ReviewRequest */,
+				9E0031A32A272BC7003DFCEB /* SDKSynchronizer */,
+				9E0031A52A272BC8003DFCEB /* SupportDataGenerator */,
+				9E0031A72A272BC8003DFCEB /* UserDefaults */,
 			);
 			productName = secant;
 			productReference = 0D4E7A0526B364170058B01E /* secant-testnet.app */;
@@ -2820,11 +2826,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		0D261039298C3DCD00CC9DE9 /* FirebaseCrashlytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0D261038298C3DCD00CC9DE9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseCrashlytics;
-		};
 		0D26AE89299E8196005260EE /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 0D26AE8A299E8196005260EE /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
@@ -2875,37 +2876,150 @@
 			package = 6654C7382715A38000901167 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
 			productName = ComposableArchitecture;
 		};
+		9E00315F2A272736003DFCEB /* AppVersion */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppVersion;
+		};
+		9E0031612A272736003DFCEB /* AudioServices */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AudioServices;
+		};
+		9E0031632A272736003DFCEB /* CaptureDevice */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CaptureDevice;
+		};
+		9E0031652A272736003DFCEB /* DatabaseFiles */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DatabaseFiles;
+		};
+		9E0031672A272736003DFCEB /* Date */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Date;
+		};
+		9E0031692A272736003DFCEB /* Deeplink */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Deeplink;
+		};
+		9E00316B2A272736003DFCEB /* DerivationTool */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DerivationTool;
+		};
+		9E00316D2A272746003DFCEB /* AppVersion */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppVersion;
+		};
+		9E00316F2A272746003DFCEB /* AudioServices */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AudioServices;
+		};
+		9E0031712A272747003DFCEB /* CaptureDevice */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CaptureDevice;
+		};
+		9E0031732A272747003DFCEB /* DatabaseFiles */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DatabaseFiles;
+		};
+		9E0031752A272747003DFCEB /* Date */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Date;
+		};
+		9E0031772A272747003DFCEB /* Deeplink */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Deeplink;
+		};
+		9E0031792A272747003DFCEB /* DerivationTool */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DerivationTool;
+		};
+		9E00317B2A2728CC003DFCEB /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0D261038298C3DCD00CC9DE9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		9E00317D2A272991003DFCEB /* DiskSpaceChecker */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DiskSpaceChecker;
+		};
+		9E00317F2A272991003DFCEB /* FeedbackGenerator */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FeedbackGenerator;
+		};
+		9E0031812A27299A003DFCEB /* DiskSpaceChecker */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DiskSpaceChecker;
+		};
+		9E0031832A27299A003DFCEB /* FeedbackGenerator */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FeedbackGenerator;
+		};
+		9E0031872A272A52003DFCEB /* LogsHandler */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LogsHandler;
+		};
+		9E0031892A272A52003DFCEB /* NumberFormatter */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NumberFormatter;
+		};
+		9E00318B2A272A52003DFCEB /* Pasteboard */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Pasteboard;
+		};
+		9E00318F2A272A61003DFCEB /* LogsHandler */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LogsHandler;
+		};
+		9E0031912A272A61003DFCEB /* NumberFormatter */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NumberFormatter;
+		};
+		9E0031932A272A61003DFCEB /* Pasteboard */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Pasteboard;
+		};
+		9E0031952A272ACF003DFCEB /* LocalAuthenticationHandler */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LocalAuthenticationHandler;
+		};
+		9E0031972A272AD7003DFCEB /* LocalAuthenticationHandler */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LocalAuthenticationHandler;
+		};
+		9E0031992A272BB6003DFCEB /* ReviewRequest */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ReviewRequest;
+		};
+		9E00319B2A272BB6003DFCEB /* SDKSynchronizer */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SDKSynchronizer;
+		};
+		9E00319D2A272BB6003DFCEB /* SupportDataGenerator */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SupportDataGenerator;
+		};
+		9E00319F2A272BB7003DFCEB /* UserDefaults */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UserDefaults;
+		};
+		9E0031A12A272BC7003DFCEB /* ReviewRequest */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ReviewRequest;
+		};
+		9E0031A32A272BC7003DFCEB /* SDKSynchronizer */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SDKSynchronizer;
+		};
+		9E0031A52A272BC8003DFCEB /* SupportDataGenerator */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SupportDataGenerator;
+		};
+		9E0031A72A272BC8003DFCEB /* UserDefaults */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UserDefaults;
+		};
 		9E0310B42A24A4CA0021F995 /* FileManager */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FileManager;
-		};
-		9E0310B62A24A4D40021F995 /* AppVersionClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AppVersionClient;
-		};
-		9E0310B82A24A4D40021F995 /* AudioServicesClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AudioServicesClient;
-		};
-		9E0310BA2A24A4D40021F995 /* CaptureDeviceClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = CaptureDeviceClient;
-		};
-		9E0310BC2A24A4D40021F995 /* DatabaseFilesClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = DatabaseFilesClient;
-		};
-		9E0310BE2A24A4D40021F995 /* DateClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = DateClient;
-		};
-		9E0310C02A24A4D40021F995 /* DeeplinkClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = DeeplinkClient;
-		};
-		9E0310C22A24A4D40021F995 /* DerivationToolClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = DerivationToolClient;
 		};
 		9E0310C42A24A4E60021F995 /* FileManager */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -2921,89 +3035,13 @@
 			package = 9E66122F2878337F00C75B70 /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
 		};
-		9E80C4472A25E8DF0049E6A7 /* PasteboardClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = PasteboardClient;
-		};
-		9E80C4492A25E8E70049E6A7 /* LogsHandlerClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = LogsHandlerClient;
-		};
 		9E80C44B2A25E8EC0049E6A7 /* MnemonicClient */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MnemonicClient;
 		};
-		9E80C44D2A25E8F00049E6A7 /* NumberFormatterClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = NumberFormatterClient;
-		};
-		9E80C44F2A25E8FA0049E6A7 /* LogsHandlerClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = LogsHandlerClient;
-		};
 		9E80C4512A25E8FA0049E6A7 /* MnemonicClient */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MnemonicClient;
-		};
-		9E80C4532A25E8FA0049E6A7 /* NumberFormatterClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = NumberFormatterClient;
-		};
-		9E80C4552A25E8FA0049E6A7 /* PasteboardClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = PasteboardClient;
-		};
-		9E80C4572A25E9690049E6A7 /* DiskSpaceCheckerClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = DiskSpaceCheckerClient;
-		};
-		9E80C4592A25E96D0049E6A7 /* FeedbackGeneratorClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = FeedbackGeneratorClient;
-		};
-		9E80C45B2A25E9720049E6A7 /* DiskSpaceCheckerClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = DiskSpaceCheckerClient;
-		};
-		9E80C45D2A25E9760049E6A7 /* FeedbackGeneratorClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = FeedbackGeneratorClient;
-		};
-		9E80C45F2A25E9A70049E6A7 /* LocalAuthenticationClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = LocalAuthenticationClient;
-		};
-		9E80C4612A25E9AC0049E6A7 /* LocalAuthenticationClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = LocalAuthenticationClient;
-		};
-		9E88FB9F2A20D33C00DAA500 /* DateClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = DateClient;
-		};
-		9E88FBA12A20D35800DAA500 /* AppVersionClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AppVersionClient;
-		};
-		9E88FBA32A247F6900DAA500 /* AudioServicesClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AudioServicesClient;
-		};
-		9E88FBA52A24804900DAA500 /* CaptureDeviceClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = CaptureDeviceClient;
-		};
-		9E88FBA72A2481DB00DAA500 /* DatabaseFilesClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = DatabaseFilesClient;
-		};
-		9E88FBA92A24A0E000DAA500 /* DerivationToolClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = DerivationToolClient;
-		};
-		9E88FBAB2A24A0E900DAA500 /* DeeplinkClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = DeeplinkClient;
 		};
 		9E9075012A2681F700269308 /* Generated */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -3029,14 +3067,6 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = SecItem;
 		};
-		9E90750D2A26919B00269308 /* ReviewRequestClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ReviewRequestClient;
-		};
-		9E90750F2A2691A000269308 /* ReviewRequestClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ReviewRequestClient;
-		};
 		9E9075112A2691B200269308 /* ZcashSDKEnvironment */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ZcashSDKEnvironment;
@@ -3044,22 +3074,6 @@
 		9E9075132A2691B700269308 /* ZcashSDKEnvironment */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ZcashSDKEnvironment;
-		};
-		9E9075152A2691C600269308 /* SupportDataGeneratorClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SupportDataGeneratorClient;
-		};
-		9E9075172A2691CB00269308 /* SupportDataGeneratorClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SupportDataGeneratorClient;
-		};
-		9E9075192A2691D900269308 /* SDKSynchronizerClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SDKSynchronizerClient;
-		};
-		9E90751B2A2691E200269308 /* SDKSynchronizerClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SDKSynchronizerClient;
 		};
 		9EAB466C285A0468002904A0 /* Parsing */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -9,7 +9,7 @@ import Foundation
 import MessageUI
 import UIKit
 import SwiftUI
-import SupportDataGeneratorClient
+import SupportDataGenerator
 
 class UIMailDialog: UIView {
     var completion: (() -> Void)?

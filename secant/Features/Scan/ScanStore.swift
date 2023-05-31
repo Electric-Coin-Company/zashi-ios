@@ -7,7 +7,7 @@
 
 import ComposableArchitecture
 import Foundation
-import CaptureDeviceClient
+import CaptureDevice
 import Utils
 
 typealias ScanStore = Store<ScanReducer.State, ScanReducer.Action>

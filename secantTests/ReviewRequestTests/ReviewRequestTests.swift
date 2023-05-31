@@ -8,10 +8,10 @@
 import XCTest
 import ComposableArchitecture
 import ZcashLightClientKit
-import DateClient
-import AppVersionClient
-import UserDefaultsClient
-import ReviewRequestClient
+import Date
+import AppVersion
+import UserDefaults
+import ReviewRequest
 @testable import secant_testnet
 
 @MainActor

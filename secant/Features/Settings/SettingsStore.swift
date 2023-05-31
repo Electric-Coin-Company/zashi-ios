@@ -1,11 +1,11 @@
 import ComposableArchitecture
 import MessageUI
 import SwiftUI
-import AppVersionClient
+import AppVersion
 import MnemonicClient
-import LogsHandlerClient
-import LocalAuthenticationClient
-import SupportDataGeneratorClient
+import LogsHandler
+import LocalAuthenticationHandler
+import SupportDataGenerator
 import Models
 
 typealias SettingsStore = Store<SettingsReducer.State, SettingsReducer.Action>

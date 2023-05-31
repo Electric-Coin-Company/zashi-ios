@@ -8,7 +8,7 @@
 import Foundation
 import ComposableArchitecture
 import ZcashLightClientKit
-import PasteboardClient
+import Pasteboard
 import Generated
 
 typealias AddressDetailsStore = Store<AddressDetailsReducer.State, AddressDetailsReducer.Action>

@@ -9,10 +9,10 @@ import Foundation
 import ComposableArchitecture
 import SwiftUI
 import Utils
-import FeedbackGeneratorClient
+import FeedbackGenerator
 import UIComponents
 import Models
-import PasteboardClient
+import Pasteboard
 
 public typealias RecoveryPhraseValidationFlowStore = Store<RecoveryPhraseValidationFlowReducer.State, RecoveryPhraseValidationFlowReducer.Action>
 public typealias RecoveryPhraseValidationFlowViewStore = ViewStore<RecoveryPhraseValidationFlowReducer.State, RecoveryPhraseValidationFlowReducer.Action>

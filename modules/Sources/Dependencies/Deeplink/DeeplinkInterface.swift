@@ -8,7 +8,7 @@
 import Foundation
 import ComposableArchitecture
 import ZcashLightClientKit
-import DerivationToolClient
+import DerivationTool
 
 extension DependencyValues {
     public var deeplink: DeeplinkClient {

@@ -8,8 +8,8 @@
 import Foundation
 import ComposableArchitecture
 import ZcashLightClientKit
-import DeeplinkClient
-import DerivationToolClient
+import Deeplink
+import DerivationTool
 
 /// In this file is a collection of helpers that control all state and action related operations
 /// for the `RootReducer` with a connection to the UI navigation.

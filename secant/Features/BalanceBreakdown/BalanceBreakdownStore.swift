@@ -8,9 +8,9 @@
 import Foundation
 import ComposableArchitecture
 import ZcashLightClientKit
-import DerivationToolClient
+import DerivationTool
 import MnemonicClient
-import NumberFormatterClient
+import NumberFormatter
 import Utils
 import Generated
 

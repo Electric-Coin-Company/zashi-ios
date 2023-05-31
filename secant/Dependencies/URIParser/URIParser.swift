@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import DerivationToolClient
+import DerivationTool
 
 public struct URIParser {
     enum URIParserError: Error { }

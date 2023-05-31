@@ -8,7 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import ZcashLightClientKit
-import AudioServicesClient
+import AudioServices
 import Utils
 
 typealias SendFlowStore = Store<SendFlowReducer.State, SendFlowReducer.Action>

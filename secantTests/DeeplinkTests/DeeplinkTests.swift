@@ -9,8 +9,8 @@ import Combine
 import XCTest
 import ComposableArchitecture
 import ZcashLightClientKit
-import DeeplinkClient
-import SDKSynchronizerClient
+import Deeplink
+import SDKSynchronizer
 @testable import secant_testnet
 
 @MainActor

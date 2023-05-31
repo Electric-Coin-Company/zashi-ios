@@ -3,12 +3,12 @@ import SwiftUI
 import AVFoundation
 import ComposableArchitecture
 import ZcashLightClientKit
-import AudioServicesClient
-import DiskSpaceCheckerClient
+import AudioServices
+import DiskSpaceChecker
 import Utils
 import Models
 import Generated
-import ReviewRequestClient
+import ReviewRequest
 
 typealias HomeStore = Store<HomeReducer.State, HomeReducer.Action>
 typealias HomeViewStore = ViewStore<HomeReducer.State, HomeReducer.Action>
