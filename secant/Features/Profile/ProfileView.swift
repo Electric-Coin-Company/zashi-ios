@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import SwiftUI
+import Generated
 
 struct ProfileView: View {
     let store: ProfileStore

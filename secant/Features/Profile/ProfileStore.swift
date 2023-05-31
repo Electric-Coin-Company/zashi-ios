@@ -2,6 +2,7 @@ import ComposableArchitecture
 import SwiftUI
 import ZcashLightClientKit
 import AppVersionClient
+import Generated
 
 typealias ProfileStore = Store<ProfileReducer.State, ProfileReducer.Action>
 typealias ProfileViewStore = ViewStore<ProfileReducer.State, ProfileReducer.Action>

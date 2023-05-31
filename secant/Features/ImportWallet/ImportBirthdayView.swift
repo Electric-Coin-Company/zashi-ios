@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import Generated
 
 struct ImportBirthdayView: View {
     var store: ImportWalletStore

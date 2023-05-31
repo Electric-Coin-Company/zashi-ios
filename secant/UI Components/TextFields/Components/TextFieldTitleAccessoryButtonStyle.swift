@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Generated
 
 struct TextFieldTitleAccessoryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {

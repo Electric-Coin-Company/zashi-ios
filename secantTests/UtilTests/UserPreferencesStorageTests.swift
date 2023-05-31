@@ -6,14 +6,15 @@
 //
 
 import XCTest
+import UserDefaultsClient
 @testable import secant_testnet
 
 class UserPreferencesStorageTests: XCTestCase {
     // swiftlint:disable:next implicitly_unwrapped_optional
     var storage: UserPreferencesStorage!
 
-    override func setUp() async throws {
-        try await super.setUp()
+    override func setUp() {
+        super.setUp()
         
         guard let userDefaults = UserDefaults.init(suiteName: "test") else {
             XCTFail("UserPreferencesStorageTests: UserDefaults.init(suiteName: \"test\") failed to initialize")
@@ -29,12 +30,12 @@ class UserPreferencesStorageTests: XCTestCase {
             userOptedOutOfCrashReporting: true,
             userDefaults: .live(userDefaults: userDefaults)
         )
-        await storage.removeAll()
+        storage.removeAll()
     }
     
-    override func tearDown() async throws {
-        try await super.tearDown()
-        await storage.removeAll()
+    override func tearDown() {
+        super.tearDown()
+        storage.removeAll()
         storage = nil
     }
     
@@ -98,8 +99,7 @@ class UserPreferencesStorageTests: XCTestCase {
         let mockedUD = UserDefaultsClient(
             objectForKey: { _ in 87654321.0 },
             remove: { _ in },
-            setValue: { _, _ in },
-            synchronize: { true }
+            setValue: { _, _ in }
         )
         
         let mockedStorage = UserPreferencesStorage(
@@ -119,8 +119,7 @@ class UserPreferencesStorageTests: XCTestCase {
         let mockedUD = UserDefaultsClient(
             objectForKey: { _ in "CZK" },
             remove: { _ in },
-            setValue: { _, _ in },
-            synchronize: { true }
+            setValue: { _, _ in }
         )
         
         let mockedStorage = UserPreferencesStorage(
@@ -140,8 +139,7 @@ class UserPreferencesStorageTests: XCTestCase {
         let mockedUD = UserDefaultsClient(
             objectForKey: { _ in false },
             remove: { _ in },
-            setValue: { _, _ in },
-            synchronize: { true }
+            setValue: { _, _ in }
         )
         
         let mockedStorage = UserPreferencesStorage(
@@ -161,8 +159,7 @@ class UserPreferencesStorageTests: XCTestCase {
         let mockedUD = UserDefaultsClient(
             objectForKey: { _ in false },
             remove: { _ in },
-            setValue: { _, _ in },
-            synchronize: { true }
+            setValue: { _, _ in }
         )
         
         let mockedStorage = UserPreferencesStorage(
@@ -182,8 +179,7 @@ class UserPreferencesStorageTests: XCTestCase {
         let mockedUD = UserDefaultsClient(
             objectForKey: { _ in true },
             remove: { _ in },
-            setValue: { _, _ in },
-            synchronize: { true }
+            setValue: { _, _ in }
         )
         
         let mockedStorage = UserPreferencesStorage(
@@ -201,7 +197,7 @@ class UserPreferencesStorageTests: XCTestCase {
 
     // MARK: - Remove all keys from the live UD environment
     
-    func testRemoveAll() async throws {
+    func testRemoveAll() throws {
         guard let userDefaults = UserDefaults.init(suiteName: "test") else {
             XCTFail("User Preferences: UserDefaults.init(suiteName: \"test\") failed to initialize")
             return
@@ -213,7 +209,7 @@ class UserPreferencesStorageTests: XCTestCase {
         }
 
         // remove it
-        await storage?.removeAll()
+        storage?.removeAll()
 
         // check the presence
         UserPreferencesStorage.Constants.allCases.forEach {

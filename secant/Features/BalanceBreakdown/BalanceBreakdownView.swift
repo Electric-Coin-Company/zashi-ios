@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import ZcashLightClientKit
+import Generated
 
 struct BalanceBreakdownView: View {
     let store: BalanceBreakdownStore

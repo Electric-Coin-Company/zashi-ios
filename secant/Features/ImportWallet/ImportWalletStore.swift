@@ -9,6 +9,7 @@ import ComposableArchitecture
 import ZcashLightClientKit
 import SwiftUI
 import Utils
+import Generated
 
 typealias ImportWalletStore = Store<ImportWalletReducer.State, ImportWalletReducer.Action>
 typealias ImportWalletViewStore = ViewStore<ImportWalletReducer.State, ImportWalletReducer.Action>
@@ -81,7 +82,7 @@ struct ImportWalletReducer: ReducerProtocol {
                 return .none
                 
             case .birthdayInputChanged(let redactedBirthday):
-                let saplingActivation = zcashSDKEnvironment.network.constants.saplingActivationHeight
+                let saplingActivation = TargetConstants.zcashNetwork.constants.saplingActivationHeight
 
                 state.birthdayHeight = redactedBirthday
 
@@ -102,7 +103,7 @@ struct ImportWalletReducer: ReducerProtocol {
                     
                     // store it to the keychain, if the user did not input a height,
                     // fall back to sapling activation
-                    let birthday = state.birthdayHeightValue ?? zcashSDKEnvironment.network.constants.saplingActivationHeight.redacted
+                    let birthday = state.birthdayHeightValue ?? TargetConstants.zcashNetwork.constants.saplingActivationHeight.redacted
                     
                     try walletStorage.importWallet(state.importedSeedPhrase.data, birthday.data, .english, false)
                     

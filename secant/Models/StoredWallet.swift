@@ -9,6 +9,7 @@ import Foundation
 import ZcashLightClientKit
 import MnemonicSwift
 import Utils
+import Models
 
 /// Representation of the wallet stored in the persistent storage (typically keychain, handled by `WalletStorage`).
 struct StoredWallet: Codable, Equatable {

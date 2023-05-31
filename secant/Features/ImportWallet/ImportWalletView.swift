@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import Generated
 
 struct ImportWalletView: View {
     var store: ImportWalletStore
@@ -58,7 +59,7 @@ extension ImportWalletView {
                     .foregroundColor(
                         viewStore.isValidNumberOfWords ?
                         Asset.Colors.Text.validMnemonic.color :
-                            Asset.Colors.Text.heading.color
+                        Asset.Colors.Text.heading.color
                     )
                     .padding(.trailing, 35)
                     .padding(.bottom, 15)

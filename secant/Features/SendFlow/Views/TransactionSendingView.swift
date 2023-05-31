@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import Foundation
 import SwiftUI
+import Generated
 
 struct TransactionSendingView: View {
     let viewStore: SendFlowViewStore

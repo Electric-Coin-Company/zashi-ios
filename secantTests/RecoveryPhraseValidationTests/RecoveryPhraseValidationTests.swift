@@ -7,6 +7,9 @@
 // swiftlint:disable type_body_length
 import XCTest
 import ComposableArchitecture
+import Models
+import UIComponents
+import RecoveryPhraseValidationFlow
 @testable import secant_testnet
 
 class RecoveryPhraseValidationTests: XCTestCase {

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import Generated
 
 struct ImportSeedEditor: View {
     var store: ImportWalletStore

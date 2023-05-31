@@ -8,6 +8,8 @@
 import Foundation
 import SwiftUI
 import ComposableArchitecture
+import UIComponents
+import Generated
 
 struct NotEnoughFreeSpaceView: View {
     let viewStore: HomeViewStore

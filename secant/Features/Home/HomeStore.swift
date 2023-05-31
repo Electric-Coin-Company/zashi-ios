@@ -6,6 +6,9 @@ import ZcashLightClientKit
 import AudioServicesClient
 import DiskSpaceCheckerClient
 import Utils
+import Models
+import Generated
+import ReviewRequestClient
 
 typealias HomeStore = Store<HomeReducer.State, HomeReducer.Action>
 typealias HomeViewStore = ViewStore<HomeReducer.State, HomeReducer.Action>
@@ -137,7 +140,7 @@ struct HomeReducer: ReducerProtocol {
             case .resolveReviewRequest:
                 if reviewRequest.canRequestReview() {
                     state.canRequestReview = true
-                    return .fireAndForget { await reviewRequest.reviewRequested() }
+                    return .fireAndForget { reviewRequest.reviewRequested() }
                 }
                 return .none
                 
@@ -163,14 +166,14 @@ struct HomeReducer: ReducerProtocol {
                     return EffectTask(value: .showSynchronizerErrorAlert(error.toZcashError()))
 
                 case .upToDate:
-                    return .fireAndForget { await reviewRequest.syncFinished() }
+                    return .fireAndForget { reviewRequest.syncFinished() }
 
                 default:
                     return .none
                 }
 
             case .foundTransactions:
-                return .fireAndForget { await reviewRequest.foundTransactions() }
+                return .fireAndForget { reviewRequest.foundTransactions() }
 
             case .updateDestination(.profile):
                 state.profileState.destination = nil

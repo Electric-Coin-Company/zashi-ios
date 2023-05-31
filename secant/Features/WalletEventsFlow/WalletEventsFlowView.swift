@@ -1,5 +1,6 @@
 import SwiftUI
 import ComposableArchitecture
+import Generated
 
 struct WalletEventsFlowView: View {
     let store: WalletEventsFlowStore

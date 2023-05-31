@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import Generated
 
 struct OnboardingFooterView: View {
     let store: Store<OnboardingFlowReducer.State, OnboardingFlowReducer.Action>

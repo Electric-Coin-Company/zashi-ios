@@ -12,6 +12,7 @@ import DerivationToolClient
 import MnemonicClient
 import NumberFormatterClient
 import Utils
+import Generated
 
 typealias BalanceBreakdownStore = Store<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>
 typealias BalanceBreakdownViewStore = ViewStore<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>

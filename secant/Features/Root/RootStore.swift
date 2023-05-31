@@ -2,6 +2,8 @@ import ComposableArchitecture
 import ZcashLightClientKit
 import DatabaseFilesClient
 import DeeplinkClient
+import RecoveryPhraseValidationFlow
+import ZcashSDKEnvironment
 
 typealias RootStore = Store<RootReducer.State, RootReducer.Action>
 typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
@@ -109,14 +111,13 @@ struct RootReducer: ReducerProtocol {
 extension RootReducer {
     static func walletInitializationState(
         databaseFiles: DatabaseFilesClient,
-        walletStorage: WalletStorageClient,
-        zcashSDKEnvironment: ZcashSDKEnvironment
+        walletStorage: WalletStorageClient
     ) -> InitializationState {
         var keysPresent = false
         do {
             keysPresent = try walletStorage.areKeysPresent()
             let databaseFilesPresent = databaseFiles.areDbFilesPresentFor(
-                zcashSDKEnvironment.network
+                TargetConstants.zcashNetwork
             )
             
             switch (keysPresent, databaseFilesPresent) {
@@ -130,7 +131,7 @@ extension RootReducer {
                 return .initialized
             }
         } catch WalletStorage.WalletStorageError.uninitializedWallet {
-            if databaseFiles.areDbFilesPresentFor(zcashSDKEnvironment.network) {
+            if databaseFiles.areDbFilesPresentFor(TargetConstants.zcashNetwork) {
                 return .keysMissing
             }
         } catch {

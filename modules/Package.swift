@@ -19,12 +19,22 @@ let package = Package(
         .library(name: "DiskSpaceCheckerClient", targets: ["DiskSpaceCheckerClient"]),
         .library(name: "FeedbackGeneratorClient", targets: ["FeedbackGeneratorClient"]),
         .library(name: "FileManager", targets: ["FileManager"]),
+        .library(name: "Generated", targets: ["Generated"]),
         .library(name: "LocalAuthenticationClient", targets: ["LocalAuthenticationClient"]),
         .library(name: "LogsHandlerClient", targets: ["LogsHandlerClient"]),
         .library(name: "MnemonicClient", targets: ["MnemonicClient"]),
+        .library(name: "Models", targets: ["Models"]),
         .library(name: "NumberFormatterClient", targets: ["NumberFormatterClient"]),
         .library(name: "PasteboardClient", targets: ["PasteboardClient"]),
-        .library(name: "Utils", targets: ["Utils"])
+        .library(name: "RecoveryPhraseValidationFlow", targets: ["RecoveryPhraseValidationFlow"]),
+        .library(name: "ReviewRequestClient", targets: ["ReviewRequestClient"]),
+        .library(name: "SDKSynchronizerClient", targets: ["SDKSynchronizerClient"]),
+        .library(name: "SecItem", targets: ["SecItem"]),
+        .library(name: "SupportDataGeneratorClient", targets: ["SupportDataGeneratorClient"]),
+        .library(name: "UIComponents", targets: ["UIComponents"]),
+        .library(name: "Utils", targets: ["Utils"]),
+        .library(name: "UserDefaultsClient", targets: ["UserDefaultsClient"]),
+        .library(name: "ZcashSDKEnvironment", targets: ["ZcashSDKEnvironment"])
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.50.3"),
@@ -102,8 +112,13 @@ let package = Package(
             ]
         ),
         .target(
+            name: "Generated",
+            resources: [.process("Resources")]
+        ),
+        .target(
             name: "LocalAuthenticationClient",
             dependencies: [
+                "Generated",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ]
         ),
@@ -122,6 +137,13 @@ let package = Package(
             ]
         ),
         .target(
+            name: "Models",
+            dependencies: [
+                "Utils",
+                "UIComponents"
+            ]
+        ),
+        .target(
             name: "NumberFormatterClient",
             dependencies: [
                 "Utils",
@@ -136,9 +158,75 @@ let package = Package(
             ]
         ),
         .target(
+            name: "RecoveryPhraseValidationFlow",
+            dependencies: [
+                "FeedbackGeneratorClient",
+                "Generated",
+                "Models",
+                "PasteboardClient",
+                "UIComponents",
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
+            ]
+        ),
+        .target(
+            name: "ReviewRequestClient",
+            dependencies: [
+                "AppVersionClient",
+                "DateClient",
+                "UserDefaultsClient",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ]
+        ),
+        .target(
+            name: "SDKSynchronizerClient",
+            dependencies: [
+                "DatabaseFilesClient",
+                "Models",
+                "ZcashSDKEnvironment",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
+            ]
+        ),
+        .target(
+            name: "SecItem",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ]
+        ),
+        .target(
+            name: "SupportDataGeneratorClient",
+            dependencies: [
+                "Generated",
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ]
+        ),
+        .target(
+            name: "UIComponents",
+            dependencies: [
+                "Generated",
+                "Utils"
+            ]
+        ),
+        .target(
             name: "Utils",
             dependencies: [
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
+            ]
+        ),
+        .target(
+            name: "UserDefaultsClient",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ]
+        ),
+        .target(
+            name: "ZcashSDKEnvironment",
+            dependencies: [
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ]
         )
     ]

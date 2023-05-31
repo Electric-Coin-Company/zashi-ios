@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import Generated
 
 struct TransactionAmountTextField: View {
     let store: TransactionAmountTextFieldStore

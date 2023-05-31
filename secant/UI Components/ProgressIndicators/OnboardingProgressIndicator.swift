@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Generated
 
 struct OnboardingProgressStyle: ProgressViewStyle {
     let height: CGFloat = 3

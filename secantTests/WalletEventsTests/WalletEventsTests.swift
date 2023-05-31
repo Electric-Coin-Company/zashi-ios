@@ -9,6 +9,7 @@ import XCTest
 import ComposableArchitecture
 import ZcashLightClientKit
 import PasteboardClient
+import Models
 @testable import secant_testnet
 
 class WalletEventsTests: XCTestCase {

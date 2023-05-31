@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Utils
 
 typealias UserDefaultsWalletConfigProvider = UserDefaultsWalletConfigStorage
 typealias UserDefaultsWalletConfigProviderCache = UserDefaultsWalletConfigStorage

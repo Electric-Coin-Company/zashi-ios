@@ -10,6 +10,7 @@ import ComposableArchitecture
 import ZcashLightClientKit
 import Combine
 import Utils
+import Generated
 @testable import secant_testnet
 
 class BalanceBreakdownTests: XCTestCase {

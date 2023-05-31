@@ -7,12 +7,14 @@
 
 import ComposableArchitecture
 import LocalAuthentication
+import Generated
 
 extension LocalAuthenticationClient: DependencyKey {
     public static let liveValue = Self(
-        authenticate: { reason in
+        authenticate: {
             let context = LAContext()
             var error: NSError?
+            let reason = L10n.LocalAuthentication.reason
             
             do {
                 /// Biometrics validation

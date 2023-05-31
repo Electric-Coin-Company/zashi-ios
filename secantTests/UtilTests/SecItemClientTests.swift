@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import SecItem
 @testable import secant_testnet
 
 extension WalletStorage.KeychainError {

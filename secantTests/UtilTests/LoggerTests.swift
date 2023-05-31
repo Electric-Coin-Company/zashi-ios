@@ -6,9 +6,10 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import OSLog
 import ZcashLightClientKit
+import Utils
+@testable import secant_testnet
 
 class LoggerTests: XCTestCase {
     let timeToPast: TimeInterval = 0.1

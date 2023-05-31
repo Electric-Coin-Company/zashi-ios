@@ -7,6 +7,7 @@
 
 import Foundation
 import ComposableArchitecture
+import Models
 
 typealias RecoveryPhraseDisplayStore = Store<RecoveryPhraseDisplayReducer.State, RecoveryPhraseDisplayReducer.Action>
 

@@ -10,6 +10,7 @@ import ComposableArchitecture
 import Foundation
 import ZcashLightClientKit
 import LogsHandlerClient
+import Utils
 
 typealias ExportLogsStore = Store<ExportLogsReducer.State, ExportLogsReducer.Action>
 typealias ExportLogsViewStore = ViewStore<ExportLogsReducer.State, ExportLogsReducer.Action>
