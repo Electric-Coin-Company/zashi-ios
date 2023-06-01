@@ -9,6 +9,8 @@ import XCTest
 import MnemonicSwift
 import ZcashLightClientKit
 import Utils
+import WalletStorage
+import Models
 @testable import secant_testnet
 
 extension WalletStorage.WalletStorageError {

@@ -4,6 +4,10 @@ import DatabaseFiles
 import Deeplink
 import RecoveryPhraseValidationFlow
 import ZcashSDKEnvironment
+import WalletStorage
+import WalletConfigProvider
+import UserPreferencesStorage
+import Models
 
 typealias RootStore = Store<RootReducer.State, RootReducer.Action>
 typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>

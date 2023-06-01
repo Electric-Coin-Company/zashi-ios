@@ -11,6 +11,7 @@ import ZcashLightClientKit
 import FileManager
 import DatabaseFiles
 import ZcashSDKEnvironment
+import WalletStorage
 @testable import secant_testnet
 
 class RootTests: XCTestCase {

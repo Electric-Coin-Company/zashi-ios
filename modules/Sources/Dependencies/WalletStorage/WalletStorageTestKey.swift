@@ -9,7 +9,7 @@ import ComposableArchitecture
 import XCTestDynamicOverlay
 
 extension WalletStorageClient: TestDependencyKey {
-    static let testValue = Self(
+    public static let testValue = Self(
         importWallet: XCTUnimplemented("\(Self.self).importWallet"),
         exportWallet: XCTUnimplemented("\(Self.self).exportWallet", placeholder: .placeholder),
         areKeysPresent: XCTUnimplemented("\(Self.self).areKeysPresent", placeholder: false),
@@ -20,7 +20,7 @@ extension WalletStorageClient: TestDependencyKey {
 }
 
 extension WalletStorageClient {
-    static let noOp = Self(
+    public static let noOp = Self(
         importWallet: { _, _, _, _ in },
         exportWallet: { .placeholder },
         areKeysPresent: { false },

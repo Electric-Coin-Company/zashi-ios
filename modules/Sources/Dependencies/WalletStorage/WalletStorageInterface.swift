@@ -8,9 +8,10 @@
 import ComposableArchitecture
 import MnemonicSwift
 import ZcashLightClientKit
+import Models
 
 extension DependencyValues {
-    var walletStorage: WalletStorageClient {
+    public var walletStorage: WalletStorageClient {
         get { self[WalletStorageClient.self] }
         set { self[WalletStorageClient.self] = newValue }
     }
@@ -22,7 +23,7 @@ extension DependencyValues {
 /// properties that live on the `WalletStorageClient` type.  Because of this, you can instantiate
 /// the `WalletStorageClient` with your own implementation of these functions for testing purposes,
 /// or you can use one of the built in static versions of the `WalletStorageClient`.
-struct WalletStorageClient {
+public struct WalletStorageClient {
     /// Store recovery phrase and optionally even birthday to the secured and persistent storage.
     /// This function creates an instance of `StoredWallet` and automatically handles versioning of the stored data.
     ///
@@ -35,7 +36,7 @@ struct WalletStorageClient {
     ///   - `WalletStorageError.unsupportedLanguage`:  when mnemonic's language is anything other than English
     ///   - `WalletStorageError.alreadyImported` when valid wallet is already in the storage
     ///   - `WalletStorageError.storageError` when some unrecognized error occurred
-    let importWallet: (String, BlockHeight?, MnemonicLanguageType, Bool) throws -> Void
+    public let importWallet: (String, BlockHeight?, MnemonicLanguageType, Bool) throws -> Void
 
     /// Load the representation of the wallet from the persistent and secured storage.
     ///
@@ -44,12 +45,12 @@ struct WalletStorageClient {
     ///   - `WalletStorageError.uninitializedWallet`:  when no wallet's data is found in the keychain.
     ///   - `WalletStorageError.storageError` when some unrecognized error occurred.
     ///   - `WalletStorageError.unsupportedVersion` when wallet's version stored in the keychain is outdated.
-    var exportWallet: () throws -> StoredWallet
+    public var exportWallet: () throws -> StoredWallet
 
     /// Check if the wallet representation `StoredWallet` is present in the persistent storage.
     ///
     /// - Returns: the information whether some wallet is stored or is not available
-    var areKeysPresent: () throws -> Bool
+    public var areKeysPresent: () throws -> Bool
 
     /// Update the birthday in the securely stored wallet.
     ///
@@ -58,7 +59,7 @@ struct WalletStorageClient {
     /// - Throws:
     ///   - `WalletStorage.KeychainError.encoding`:  when encoding the wallet's data failed.
     ///   - `WalletStorageError.storageError` when some unrecognized error occurred.
-    let updateBirthday: (BlockHeight) throws -> Void
+    public let updateBirthday: (BlockHeight) throws -> Void
 
     /// Update the information that user has passed the recovery phrase backup test.
     /// The function doesn't take any parameters, default value is the user hasn't passed the test
@@ -67,9 +68,25 @@ struct WalletStorageClient {
     /// - Throws:
     ///   - `WalletStorage.KeychainError.encoding`:  when encoding the wallet's data failed.
     ///   - `WalletStorageError.storageError` when some unrecognized error occurred.
-    let markUserPassedPhraseBackupTest: (Bool) throws -> Void
+    public let markUserPassedPhraseBackupTest: (Bool) throws -> Void
 
     /// Use carefully: deletes the stored wallet.
     /// There's no fate but what we make for ourselves - Sarah Connor.
-    let nukeWallet: () -> Void
+    public let nukeWallet: () -> Void
+    
+    public init(
+        importWallet: @escaping (String, BlockHeight?, MnemonicLanguageType, Bool) throws -> Void,
+        exportWallet: @escaping () throws -> StoredWallet,
+        areKeysPresent: @escaping () throws -> Bool,
+        updateBirthday: @escaping (BlockHeight) throws -> Void,
+        markUserPassedPhraseBackupTest: @escaping (Bool) throws -> Void,
+        nukeWallet: @escaping () -> Void
+    ) {
+        self.importWallet = importWallet
+        self.exportWallet = exportWallet
+        self.areKeysPresent = areKeysPresent
+        self.updateBirthday = updateBirthday
+        self.markUserPassedPhraseBackupTest = markUserPassedPhraseBackupTest
+        self.nukeWallet = nukeWallet
+    }
 }

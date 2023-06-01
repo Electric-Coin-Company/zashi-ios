@@ -10,6 +10,7 @@ import ZcashLightClientKit
 import SwiftUI
 import Utils
 import Generated
+import WalletStorage
 
 typealias ImportWalletStore = Store<ImportWalletReducer.State, ImportWalletReducer.Action>
 typealias ImportWalletViewStore = ViewStore<ImportWalletReducer.State, ImportWalletReducer.Action>

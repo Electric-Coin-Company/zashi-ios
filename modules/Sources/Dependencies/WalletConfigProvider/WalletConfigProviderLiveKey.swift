@@ -9,16 +9,16 @@ import ComposableArchitecture
 import Foundation
 
 extension WalletConfigProviderClient: DependencyKey {
-    static let liveValue = WalletConfigProviderClient.live()
+    public static let liveValue = WalletConfigProviderClient.live()
 
-    private static var defaultWalletConfigProvider: WalletConfigProvider {
+    public static var defaultWalletConfigProvider: WalletConfigProvider {
         WalletConfigProvider(
             configSourceProvider: UserDefaultsWalletConfigProvider(),
             cache: UserDefaultsWalletConfigProviderCache()
         )
     }
 
-    static func live(walletConfigProvider: WalletConfigProvider = WalletConfigProviderClient.defaultWalletConfigProvider) -> Self {
+    public static func live(walletConfigProvider: WalletConfigProvider = WalletConfigProviderClient.defaultWalletConfigProvider) -> Self {
         Self(
             load: { walletConfigProvider.load() },
             update: { flag, isEnabled in

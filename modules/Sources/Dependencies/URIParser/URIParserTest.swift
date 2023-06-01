@@ -9,7 +9,7 @@ import ComposableArchitecture
 import XCTestDynamicOverlay
 
 extension URIParserClient: TestDependencyKey {
-    static let testValue = Self(
+    public static let testValue = Self(
         isValidURI: XCTUnimplemented("\(Self.self).isValidURI", placeholder: false)
     )
 }

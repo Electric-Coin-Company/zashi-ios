@@ -3,6 +3,7 @@ import StoreKit
 import ComposableArchitecture
 import Generated
 import RecoveryPhraseValidationFlow
+import Models
 
 struct RootView: View {
     let store: RootStore

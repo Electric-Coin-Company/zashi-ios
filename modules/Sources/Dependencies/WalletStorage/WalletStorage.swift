@@ -10,18 +10,19 @@ import MnemonicSwift
 import ZcashLightClientKit
 import Utils
 import SecItem
+import Models
 
 /// Zcash implementation of the keychain that is not universal but designed to deliver functionality needed by the wallet itself.
 /// All the APIs should be thread safe according to official doc:
 /// https://developer.apple.com/documentation/security/certificate_key_and_trust_services/working_with_concurrency?language=objc
-struct WalletStorage {
-    enum Constants {
-        static let zcashStoredWallet = "zcashStoredWallet"
+public struct WalletStorage {
+    public enum Constants {
+        public static let zcashStoredWallet = "zcashStoredWallet"
         /// Versioning of the stored data
-        static let zcashKeychainVersion = 1
+        public static let zcashKeychainVersion = 1
     }
 
-    enum KeychainError: Error, Equatable {
+    public enum KeychainError: Error, Equatable {
         case decoding
         case duplicate
         case encoding
@@ -29,7 +30,7 @@ struct WalletStorage {
         case unknown(OSStatus)
     }
 
-    enum WalletStorageError: Error {
+    public enum WalletStorageError: Error {
         case alreadyImported
         case uninitializedWallet
         case storageError(Error)
@@ -38,13 +39,13 @@ struct WalletStorage {
     }
 
     private let secItem: SecItemClient
-    var zcashStoredWalletPrefix = ""
+    public var zcashStoredWalletPrefix = ""
     
-    init(secItem: SecItemClient) {
+    public init(secItem: SecItemClient) {
         self.secItem = secItem
     }
 
-    func importWallet(
+    public func importWallet(
         bip39 phrase: String,
         birthday: BlockHeight?,
         language: MnemonicLanguageType = .english,
@@ -76,7 +77,7 @@ struct WalletStorage {
         }
     }
     
-    func exportWallet() throws -> StoredWallet {
+    public func exportWallet() throws -> StoredWallet {
         guard let data = data(forKey: Constants.zcashStoredWallet) else {
             throw WalletStorageError.uninitializedWallet
         }
@@ -92,7 +93,7 @@ struct WalletStorage {
         return wallet
     }
     
-    func areKeysPresent() throws -> Bool {
+    public func areKeysPresent() throws -> Bool {
         do {
             _ = try exportWallet()
         } catch {
@@ -103,7 +104,7 @@ struct WalletStorage {
         return true
     }
     
-    func updateBirthday(_ height: BlockHeight) throws {
+    public func updateBirthday(_ height: BlockHeight) throws {
         do {
             var wallet = try exportWallet()
             wallet.birthday = Birthday(height)
@@ -118,7 +119,7 @@ struct WalletStorage {
         }
     }
     
-    func markUserPassedPhraseBackupTest(_ flag: Bool = true) throws {
+    public func markUserPassedPhraseBackupTest(_ flag: Bool = true) throws {
         do {
             var wallet = try exportWallet()
             wallet.hasUserPassedPhraseBackupTest = flag
@@ -133,13 +134,13 @@ struct WalletStorage {
         }
     }
     
-    func nukeWallet() {
+    public func nukeWallet() {
         deleteData(forKey: Constants.zcashStoredWallet)
     }
     
     // MARK: - Wallet Storage Codable & Query helpers
     
-    func decode<T: Decodable>(json: Data, as clazz: T.Type) throws -> T? {
+    public func decode<T: Decodable>(json: Data, as clazz: T.Type) throws -> T? {
         do {
             let decoder = JSONDecoder()
             let data = try decoder.decode(T.self, from: json)
@@ -149,7 +150,7 @@ struct WalletStorage {
         }
     }
 
-    func encode<T: Codable>(object: T) throws -> Data? {
+    public func encode<T: Codable>(object: T) throws -> Data? {
         do {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
@@ -159,7 +160,7 @@ struct WalletStorage {
         }
     }
     
-    func baseQuery(forAccount account: String = "", andKey forKey: String) -> [String: Any] {
+    public func baseQuery(forAccount account: String = "", andKey forKey: String) -> [String: Any] {
         let query: [String: AnyObject] = [
             /// Uniquely identify this keychain accessor
             kSecAttrService as String: (zcashStoredWalletPrefix + forKey) as AnyObject,
@@ -175,7 +176,7 @@ struct WalletStorage {
         return query
     }
     
-    func restoreQuery(forAccount account: String = "", andKey forKey: String) -> [String: Any] {
+    public func restoreQuery(forAccount account: String = "", andKey forKey: String) -> [String: Any] {
         var query = baseQuery(forAccount: account, andKey: forKey)
         query[kSecMatchLimit as String] = kSecMatchLimitOne
         query[kSecReturnData as String] = kCFBooleanTrue
@@ -187,7 +188,7 @@ struct WalletStorage {
     }
 
     /// Restore data for key
-    func data(
+    public func data(
         forKey: String,
         account: String = ""
     ) -> Data? {
@@ -201,7 +202,7 @@ struct WalletStorage {
     
     /// Use carefully:  Deletes data for key
     @discardableResult
-    func deleteData(
+    public func deleteData(
         forKey: String,
         account: String = ""
     ) -> Bool {
@@ -213,7 +214,7 @@ struct WalletStorage {
     }
     
     /// Store data for key
-    func setData(
+    public func setData(
         _ data: Data,
         forKey: String,
         account: String = ""
@@ -234,7 +235,7 @@ struct WalletStorage {
     }
 
     /// Use carefully:  Update data for key
-    func updateData(
+    public func updateData(
         _ data: Data,
         forKey: String,
         account: String = ""

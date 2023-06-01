@@ -8,15 +8,16 @@
 import ComposableArchitecture
 import Foundation
 import Combine
+import Models
 
 extension DependencyValues {
-    var walletConfigProvider: WalletConfigProviderClient {
+    public var walletConfigProvider: WalletConfigProviderClient {
         get { self[WalletConfigProviderClient.self] }
         set { self[WalletConfigProviderClient.self] = newValue }
     }
 }
 
-struct WalletConfigProviderClient {
-    let load: () -> AnyPublisher<WalletConfig, Never>
-    let update: (FeatureFlag, Bool) -> AnyPublisher<Void, Never>
+public struct WalletConfigProviderClient {
+    public let load: () -> AnyPublisher<WalletConfig, Never>
+    public let update: (FeatureFlag, Bool) -> AnyPublisher<Void, Never>
 }

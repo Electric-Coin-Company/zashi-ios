@@ -11,9 +11,9 @@ import ZcashLightClientKit
 import ComposableArchitecture
 
 extension WalletStorageClient: DependencyKey {
-    static let liveValue = WalletStorageClient.live()
+    public static let liveValue = WalletStorageClient.live()
 
-    static func live(walletStorage: WalletStorage = WalletStorage(secItem: .live)) -> Self {
+    public static func live(walletStorage: WalletStorage = WalletStorage(secItem: .live)) -> Self {
         Self(
             importWallet: { bip39, birthday, language, hasUserPassedPhraseBackupTest  in
                 try walletStorage.importWallet(

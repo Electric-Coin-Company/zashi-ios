@@ -65,7 +65,7 @@ class ScanTests: XCTestCase {
             reducer: ScanReducer()
         )
 
-        store.dependencies.uriParser.isValidURI = { _ in false }
+        store.dependencies.uriParser.isValidURI = { _, _ in false }
         
         let value = "test".redacted
         store.send(.scan(value)) { state in
@@ -82,7 +82,7 @@ class ScanTests: XCTestCase {
         )
         
         store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-        store.dependencies.uriParser.isValidURI = { _ in true }
+        store.dependencies.uriParser.isValidURI = { _, _ in true }
 
         let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
         store.send(.scan(address)) { state in
