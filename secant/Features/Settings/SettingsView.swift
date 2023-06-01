@@ -1,6 +1,7 @@
 import SwiftUI
 import ComposableArchitecture
 import Generated
+import RecoveryPhraseDisplay
 
 struct SettingsView: View {
     let store: SettingsStore

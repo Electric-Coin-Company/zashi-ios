@@ -1,11 +1,18 @@
 import ComposableArchitecture
 import SwiftUI
 import Generated
+import AddressDetails
+import Utils
+import UIComponents
 
-struct ProfileView: View {
+public struct ProfileView: View {
     let store: ProfileStore
 
-    var body: some View {
+    public init(store: ProfileStore) {
+        self.store = store
+    }
+    
+    public var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
                 qrCodeUA(viewStore.unifiedAddress)
@@ -47,7 +54,7 @@ struct ProfileView: View {
 }
 
 extension ProfileView {
-    func qrCodeUA(_ qrText: String) -> some View {
+    public func qrCodeUA(_ qrText: String) -> some View {
         Group {
             if let img = QRCodeGenerator.generate(from: qrText) {
                 Image(img, scale: 1, label: Text(L10n.qrCodeFor(qrText)))

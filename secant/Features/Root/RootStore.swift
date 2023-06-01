@@ -8,6 +8,8 @@ import WalletStorage
 import WalletConfigProvider
 import UserPreferencesStorage
 import Models
+import RecoveryPhraseDisplay
+import Welcome
 
 typealias RootStore = Store<RootReducer.State, RootReducer.Action>
 typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>

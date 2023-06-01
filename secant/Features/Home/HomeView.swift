@@ -2,6 +2,7 @@ import SwiftUI
 import ComposableArchitecture
 import StoreKit
 import Generated
+import Profile
 
 struct HomeView: View {
     let store: Store<HomeReducer.State, HomeReducer.Action>

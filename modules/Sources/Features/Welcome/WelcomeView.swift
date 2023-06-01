@@ -8,11 +8,16 @@
 import SwiftUI
 import ComposableArchitecture
 import Generated
+import UIComponents
 
-struct WelcomeView: View {
+public struct WelcomeView: View {
     var store: WelcomeStore
-        
-    var body: some View {
+    
+    public init(store: WelcomeStore) {
+        self.store = store
+    }
+
+    public var body: some View {
         VStack(alignment: .center, spacing: 80) {
             VStack {
                 Image(Asset.Assets.welcomeScreenLogo.name)

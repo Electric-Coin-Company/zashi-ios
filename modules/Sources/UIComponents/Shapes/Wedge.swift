@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct Wedge: Shape {
+public struct Wedge: Shape {
     var startAngle: CGFloat
     var endAngle: CGFloat
     var clockwise = true
 
-    var animatableData: AnimatablePair<CGFloat, CGFloat> {
+    public var animatableData: AnimatablePair<CGFloat, CGFloat> {
         get { AnimatablePair(startAngle, endAngle) }
         set {
             startAngle = newValue.first
@@ -20,7 +20,7 @@ struct Wedge: Shape {
         }
     }
 
-    func path(in rect: CGRect) -> Path {
+    public func path(in rect: CGRect) -> Path {
         let callback: (inout Path) -> Void = { path in
             path.addArc(
                 center: CGPoint(

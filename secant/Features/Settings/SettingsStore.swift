@@ -7,6 +7,7 @@ import LogsHandler
 import LocalAuthenticationHandler
 import SupportDataGenerator
 import Models
+import RecoveryPhraseDisplay
 
 typealias SettingsStore = Store<SettingsReducer.State, SettingsReducer.Action>
 typealias SettingsViewStore = ViewStore<SettingsReducer.State, SettingsReducer.Action>

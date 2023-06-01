@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import SwiftUI
+import Profile
 
 typealias SandboxStore = Store<SandboxReducer.State, SandboxReducer.Action>
 typealias SandboxViewStore = ViewStore<SandboxReducer.State, SandboxReducer.Action>

@@ -8,16 +8,22 @@
 import Foundation
 import ComposableArchitecture
 import Models
+import Pasteboard
 
-typealias RecoveryPhraseDisplayStore = Store<RecoveryPhraseDisplayReducer.State, RecoveryPhraseDisplayReducer.Action>
+public typealias RecoveryPhraseDisplayStore = Store<RecoveryPhraseDisplayReducer.State, RecoveryPhraseDisplayReducer.Action>
 
-struct RecoveryPhraseDisplayReducer: ReducerProtocol {
-    struct State: Equatable {
-        var phrase: RecoveryPhrase?
-        var showCopyToBufferAlert = false
+public struct RecoveryPhraseDisplayReducer: ReducerProtocol {
+    public struct State: Equatable {
+        public var phrase: RecoveryPhrase?
+        public var showCopyToBufferAlert = false
+        
+        public init(phrase: RecoveryPhrase? = nil, showCopyToBufferAlert: Bool = false) {
+            self.phrase = phrase
+            self.showCopyToBufferAlert = showCopyToBufferAlert
+        }
     }
     
-    enum Action: Equatable {
+    public enum Action: Equatable {
         case copyToBufferPressed
         case finishedPressed
         case phraseResponse(RecoveryPhrase)
@@ -25,7 +31,9 @@ struct RecoveryPhraseDisplayReducer: ReducerProtocol {
     
     @Dependency(\.pasteboard) var pasteboard
 
-    func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
+    public init() {}
+    
+    public func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
         switch action {
         case .copyToBufferPressed:
             guard let phrase = state.phrase?.toString() else { return .none }
@@ -44,7 +52,7 @@ struct RecoveryPhraseDisplayReducer: ReducerProtocol {
 }
 
 extension RecoveryPhraseDisplayReducer {
-    static let demo = AnyReducer<RecoveryPhraseDisplayReducer.State, RecoveryPhraseDisplayReducer.Action, Void> { _ in
+    public static let demo = AnyReducer<RecoveryPhraseDisplayReducer.State, RecoveryPhraseDisplayReducer.Action, Void> { _ in
         RecoveryPhraseDisplayReducer()
     }
 }

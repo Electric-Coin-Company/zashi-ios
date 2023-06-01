@@ -9,6 +9,7 @@ import Utils
 import Models
 import Generated
 import ReviewRequest
+import Profile
 
 typealias HomeStore = Store<HomeReducer.State, HomeReducer.Action>
 typealias HomeViewStore = ViewStore<HomeReducer.State, HomeReducer.Action>

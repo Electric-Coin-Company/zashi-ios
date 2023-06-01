@@ -4,6 +4,8 @@ import ComposableArchitecture
 import Generated
 import RecoveryPhraseValidationFlow
 import Models
+import RecoveryPhraseDisplay
+import Welcome
 
 struct RootView: View {
     let store: RootStore

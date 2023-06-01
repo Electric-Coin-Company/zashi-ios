@@ -6,8 +6,9 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
+import Welcome
+@testable import secant_testnet
 
 class WelcomeSnapshotTests: XCTestCase {
     func testWelcomeSnapshot() throws {

@@ -11,17 +11,17 @@ import ZcashLightClientKit
 import Pasteboard
 import Generated
 
-typealias AddressDetailsStore = Store<AddressDetailsReducer.State, AddressDetailsReducer.Action>
+public typealias AddressDetailsStore = Store<AddressDetailsReducer.State, AddressDetailsReducer.Action>
 
-struct AddressDetailsReducer: ReducerProtocol {
-    struct State: Equatable {
-        var uAddress: UnifiedAddress?
+public struct AddressDetailsReducer: ReducerProtocol {
+    public struct State: Equatable {
+        public var uAddress: UnifiedAddress?
 
-        var unifiedAddress: String {
+        public var unifiedAddress: String {
             uAddress?.stringEncoded ?? L10n.AddressDetails.Error.cantExtractUnifiedAddress
         }
 
-        var transparentAddress: String {
+        public var transparentAddress: String {
             do {
                 let address = try uAddress?.transparentReceiver().stringEncoded ?? L10n.AddressDetails.Error.cantExtractTransparentAddress
                 return address
@@ -30,7 +30,7 @@ struct AddressDetailsReducer: ReducerProtocol {
             }
         }
 
-        var saplingAddress: String {
+        public var saplingAddress: String {
             do {
                 let address = try uAddress?.saplingReceiver().stringEncoded ?? L10n.AddressDetails.Error.cantExtractSaplingAddress
                 return address
@@ -38,9 +38,13 @@ struct AddressDetailsReducer: ReducerProtocol {
                 return L10n.AddressDetails.Error.cantExtractSaplingAddress
             }
         }
+        
+        public init(uAddress: UnifiedAddress? = nil) {
+            self.uAddress = uAddress
+        }
     }
 
-    enum Action: Equatable {
+    public enum Action: Equatable {
         case copySaplingAddressToPastboard
         case copyTransparentAddressToPastboard
         case copyUnifiedAddressToPastboard
@@ -48,7 +52,9 @@ struct AddressDetailsReducer: ReducerProtocol {
     
     @Dependency(\.pasteboard) var pasteboard
     
-    func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
+    public init() {}
+    
+    public func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
         switch action {
         case .copySaplingAddressToPastboard:
             pasteboard.setString(state.saplingAddress.redacted)
@@ -64,11 +70,11 @@ struct AddressDetailsReducer: ReducerProtocol {
 // MARK: - Placeholders
 
 extension AddressDetailsReducer.State {
-    static let placeholder = AddressDetailsReducer.State()
+    public static let placeholder = AddressDetailsReducer.State()
 }
 
 extension AddressDetailsStore {
-    static let placeholder = AddressDetailsStore(
+    public static let placeholder = AddressDetailsStore(
         initialState: .placeholder,
         reducer: AddressDetailsReducer()
     )

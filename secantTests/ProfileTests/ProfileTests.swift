@@ -9,6 +9,8 @@ import XCTest
 import ComposableArchitecture
 import ZcashLightClientKit
 import Pasteboard
+import AddressDetails
+import Profile
 @testable import secant_testnet
 
 class ProfileTests: XCTestCase {

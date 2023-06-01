@@ -1,5 +1,7 @@
 import SwiftUI
 import ComposableArchitecture
+import RecoveryPhraseDisplay
+import Profile
 
 struct SandboxView: View {
     struct SandboxDestinationValue: Identifiable {

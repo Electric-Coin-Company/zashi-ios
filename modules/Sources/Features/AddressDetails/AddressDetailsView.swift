@@ -8,11 +8,17 @@
 import SwiftUI
 import ComposableArchitecture
 import Generated
+import UIComponents
+import Utils
 
-struct AddressDetailsView: View {
+public struct AddressDetailsView: View {
     let store: AddressDetailsStore
 
-    var body: some View {
+    public init(store: AddressDetailsStore) {
+        self.store = store
+    }
+    
+    public var body: some View {
         WithViewStore(store) { viewStore in
             ScrollView {
                 Text(L10n.AddressDetails.ua)
@@ -54,7 +60,7 @@ struct AddressDetailsView: View {
 }
 
 extension AddressDetailsView {
-    func qrCode(_ qrText: String) -> some View {
+    public func qrCode(_ qrText: String) -> some View {
         Group {
             if let img = QRCodeGenerator.generate(from: qrText) {
                 Image(img, scale: 1, label: Text(L10n.qrCodeFor(qrText)))

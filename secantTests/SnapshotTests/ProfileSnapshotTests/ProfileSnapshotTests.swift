@@ -6,9 +6,10 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
 import SwiftUI
+import Profile
+@testable import secant_testnet
 
 class ProfileSnapshotTests: XCTestCase {
     func testProfileSnapshot_sent() throws {

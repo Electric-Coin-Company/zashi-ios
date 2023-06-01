@@ -6,9 +6,10 @@ import PackageDescription
 let package = Package(
     name: "modules",
     platforms: [
-      .iOS(.v15),
+      .iOS(.v15)
     ],
     products: [
+        .library(name: "AddressDetails", targets: ["AddressDetails"]),
         .library(name: "AppVersion", targets: ["AppVersion"]),
         .library(name: "AudioServices", targets: ["AudioServices"]),
         .library(name: "CaptureDevice", targets: ["CaptureDevice"]),
@@ -26,6 +27,8 @@ let package = Package(
         .library(name: "Models", targets: ["Models"]),
         .library(name: "NumberFormatter", targets: ["NumberFormatter"]),
         .library(name: "Pasteboard", targets: ["Pasteboard"]),
+        .library(name: "Profile", targets: ["Profile"]),
+        .library(name: "RecoveryPhraseDisplay", targets: ["RecoveryPhraseDisplay"]),
         .library(name: "RecoveryPhraseValidationFlow", targets: ["RecoveryPhraseValidationFlow"]),
         .library(name: "ReviewRequest", targets: ["ReviewRequest"]),
         .library(name: "SDKSynchronizer", targets: ["SDKSynchronizer"]),
@@ -38,15 +41,29 @@ let package = Package(
         .library(name: "Utils", targets: ["Utils"]),
         .library(name: "WalletConfigProvider", targets: ["WalletConfigProvider"]),
         .library(name: "WalletStorage", targets: ["WalletStorage"]),
+        .library(name: "Welcome", targets: ["Welcome"]),
         .library(name: "ZcashSDKEnvironment", targets: ["ZcashSDKEnvironment"])
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.50.3"),
+        .package(url: "https://github.com/pointfreeco/swift-case-paths", from: "0.14.1"),
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.5.0"),
         .package(url: "https://github.com/zcash/ZcashLightClientKit", revision: "ee3d082155bf542aa3580c84e6140a329633319a"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.0.0")
     ],
     targets: [
+        .target(
+            name: "AddressDetails",
+            dependencies: [
+                "Generated",
+                "Pasteboard",
+                "UIComponents",
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
+            ],
+            path: "Sources/Features/AddressDetails"
+        ),
         .target(
             name: "AppVersion",
             dependencies: [
@@ -178,6 +195,32 @@ let package = Package(
             path: "Sources/Dependencies/Pasteboard"
         ),
         .target(
+            name: "Profile",
+            dependencies: [
+                "AddressDetails",
+                "AppVersion",
+                "Generated",
+                "SDKSynchronizer",
+                "UIComponents",
+                "Utils",
+                "ZcashSDKEnvironment",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
+            ],
+            path: "Sources/Features/Profile"
+        ),
+        .target(
+            name: "RecoveryPhraseDisplay",
+            dependencies: [
+                "Generated",
+                "Models",
+                "Pasteboard",
+                "UIComponents",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Features/RecoveryPhraseDisplay"
+        ),
+        .target(
             name: "RecoveryPhraseValidationFlow",
             dependencies: [
                 "FeedbackGenerator",
@@ -255,6 +298,7 @@ let package = Package(
         .target(
             name: "UserPreferencesStorage",
             dependencies: [
+                "UserDefaults",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Dependencies/UserPreferencesStorage"
@@ -262,7 +306,8 @@ let package = Package(
         .target(
             name: "Utils",
             dependencies: [
-                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit"),
+                .product(name: "CasePaths", package: "swift-case-paths")
             ],
             path: "Sources/Utils"
         ),
@@ -286,6 +331,15 @@ let package = Package(
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
             ],
             path: "Sources/Dependencies/WalletStorage"
+        ),
+        .target(
+            name: "Welcome",
+            dependencies: [
+                "Generated",
+                "UIComponents",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Features/Welcome"
         ),
         .target(
             name: "ZcashSDKEnvironment",

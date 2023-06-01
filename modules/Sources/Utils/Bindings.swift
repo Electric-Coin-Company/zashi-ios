@@ -3,7 +3,7 @@ import CasePaths
 
 /// taken largely from: https://github.com/pointfreeco/episode-code-samples/blob/main/0167-navigation-pt8/SwiftUINavigation/SwiftUINavigation/SwiftUIHelpers.swift
 extension Binding {
-    func isPresent<Wrapped>() -> Binding<Bool>
+    public func isPresent<Wrapped>() -> Binding<Bool>
     where Value == Wrapped? {
         .init(
             get: { self.wrappedValue != nil },
@@ -15,7 +15,7 @@ extension Binding {
         )
     }
 
-    func isPresent<Enum, Case>(_ casePath: CasePath<Enum, Case>) -> Binding<Bool>
+    public func isPresent<Enum, Case>(_ casePath: CasePath<Enum, Case>) -> Binding<Bool>
     where Value == Enum? {
         Binding<Bool>(
             get: {
@@ -33,7 +33,7 @@ extension Binding {
         )
     }
 
-    func `case`<Enum, Case>(_ casePath: CasePath<Enum, Case>) -> Binding<Case?>
+    public func `case`<Enum, Case>(_ casePath: CasePath<Enum, Case>) -> Binding<Case?>
     where Value == Enum? {
         Binding<Case?>(
             get: {
@@ -54,7 +54,7 @@ extension Binding {
         )
     }
 
-    func didSet(_ callback: @escaping (Value) -> Void) -> Self {
+    public func didSet(_ callback: @escaping (Value) -> Void) -> Self {
         .init(
             get: { self.wrappedValue },
             set: {
@@ -64,7 +64,7 @@ extension Binding {
         )
     }
 
-    init?(unwrap binding: Binding<Value?>) {
+    public init?(unwrap binding: Binding<Value?>) {
         guard let wrappedValue = binding.wrappedValue
         else { return nil }
 
@@ -74,14 +74,14 @@ extension Binding {
         )
     }
 
-    func map<T>(extract: @escaping (Value) -> T, embed: @escaping (T) -> Value) -> Binding<T> {
+    public func map<T>(extract: @escaping (Value) -> T, embed: @escaping (T) -> Value) -> Binding<T> {
         Binding<T>(
             get: { extract(wrappedValue) },
             set: { wrappedValue = embed($0) }
         )
     }
 
-    func compactMap<T>(extract: @escaping (Value) -> T, embed: @escaping (T) -> Value?) -> Binding<T> {
+    public func compactMap<T>(extract: @escaping (Value) -> T, embed: @escaping (T) -> Value?) -> Binding<T> {
         Binding<T>(
             get: { extract(wrappedValue) },
             set: {

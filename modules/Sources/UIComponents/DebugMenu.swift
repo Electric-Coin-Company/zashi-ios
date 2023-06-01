@@ -10,18 +10,18 @@ import SwiftUI
 // TODO: [#273] Make sure this code will never be in the production (app store) build (https://github.com/zcash/secant-ios-wallet/issues/273)
 
 // swiftlint:disable:next private_over_fileprivate strict_fileprivate
-fileprivate struct DebugMenuModifier: ViewModifier {
-    enum DragState {
+public struct DebugMenuModifier: ViewModifier {
+    public enum DragState {
         case inactive
         case pressing
         case dragging(translation: CGSize)
     }
 
     @GestureState var dragState = DragState.inactive
-    var minimumDuration: Double
-    let action: () -> Void
+    public var minimumDuration: Double
+    public let action: () -> Void
     
-    func body(content: Content) -> some View {
+    public func body(content: Content) -> some View {
         let longPressDrag = LongPressGesture(minimumDuration: minimumDuration)
             .sequenced(before: DragGesture())
             .updating($dragState) { value, state, _ in
@@ -50,7 +50,7 @@ fileprivate struct DebugMenuModifier: ViewModifier {
 }
 
 extension View {
-    func accessDebugMenuWithHiddenGesture(minimumDuration: Double = 0.75, action: @escaping () -> Void ) -> some View {
+    public func accessDebugMenuWithHiddenGesture(minimumDuration: Double = 0.75, action: @escaping () -> Void ) -> some View {
         self.modifier(
             DebugMenuModifier(minimumDuration: minimumDuration) {
                 action()

@@ -6,8 +6,9 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
+import RecoveryPhraseDisplay
+@testable import secant_testnet
 
 class RecoveryPhraseDisplaySnapshotTests: XCTestCase {
     func testRecoveryPhraseDisplaySnapshot() throws {
