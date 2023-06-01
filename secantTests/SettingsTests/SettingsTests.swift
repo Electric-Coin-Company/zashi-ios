@@ -11,6 +11,7 @@ import ComposableArchitecture
 import LogsHandler
 import Models
 import WalletStorage
+import RecoveryPhraseDisplay
 @testable import secant_testnet
 
 @MainActor

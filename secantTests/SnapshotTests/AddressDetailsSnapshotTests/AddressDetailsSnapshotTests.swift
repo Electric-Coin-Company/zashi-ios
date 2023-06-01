@@ -6,10 +6,11 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
 import ZcashLightClientKit
 import SwiftUI
+import AddressDetails
+@testable import secant_testnet
 
 class AddressDetailsSnapshotTests: XCTestCase {
     func testAddressDetailsSnapshot() throws {

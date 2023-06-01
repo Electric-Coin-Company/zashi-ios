@@ -12,6 +12,7 @@ import Models
 import UIComponents
 import RecoveryPhraseValidationFlow
 import Generated
+import RecoveryPhraseDisplay
 @testable import secant_testnet
 
 class AppInitializationTests: XCTestCase {

@@ -20,9 +20,10 @@ import SwiftUI
     |__  __|
        |_|
  */
-struct ZcashSymbol: Shape {
-    static let ratio: CGFloat = 0.56
-    func path(in rect: CGRect) -> Path {
+public struct ZcashSymbol: Shape {
+    public static let ratio: CGFloat = 0.56
+    
+    public func path(in rect: CGRect) -> Path {
         Path { path in
             let width = rect.height * Self.ratio
             let origin = CGPoint(x: rect.midX - width / 2, y: rect.origin.y)

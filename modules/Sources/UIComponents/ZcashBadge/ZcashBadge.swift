@@ -8,10 +8,12 @@
 import SwiftUI
 import Generated
 
-struct ZcashBadge: View {
+public struct ZcashBadge: View {
     @Environment(\.colorScheme) var colorScheme
 
-    var body: some View {
+    public init() {}
+    
+    public var body: some View {
         ZStack {
             GeometryReader { proxy in
                 let outterPadding = proxy.size.height * 0.015

@@ -8,11 +8,16 @@
 import SwiftUI
 import ComposableArchitecture
 import Generated
+import UIComponents
 
-struct RecoveryPhraseDisplayView: View {
+public struct RecoveryPhraseDisplayView: View {
     let store: RecoveryPhraseDisplayStore
     
-    var body: some View {
+    public init(store: RecoveryPhraseDisplayStore) {
+        self.store = store
+    }
+
+    public var body: some View {
         WithViewStore(self.store) { viewStore in
             VStack(alignment: .center, spacing: 0) {
                 if let groups = viewStore.phrase?.toGroups(groupSizeOverride: 2) {
@@ -80,7 +85,7 @@ struct RecoveryPhraseDisplayView: View {
 }
 // TODO: [#695] This should have a #DEBUG tag, but if so, it's not possible to compile this on release mode and submit it to testflight https://github.com/zcash/ZcashLightClientKit/issues/695
 extension RecoveryPhraseDisplayStore {
-    static var demo: RecoveryPhraseDisplayStore {
+    public static var demo: RecoveryPhraseDisplayStore {
         RecoveryPhraseDisplayStore(
             initialState: .init(phrase: .placeholder),
             reducer: RecoveryPhraseDisplayReducer.demo,

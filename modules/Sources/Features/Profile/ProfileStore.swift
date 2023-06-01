@@ -3,28 +3,45 @@ import SwiftUI
 import ZcashLightClientKit
 import AppVersion
 import Generated
+import AddressDetails
+import SDKSynchronizer
+import ZcashSDKEnvironment
 
-typealias ProfileStore = Store<ProfileReducer.State, ProfileReducer.Action>
-typealias ProfileViewStore = ViewStore<ProfileReducer.State, ProfileReducer.Action>
+public typealias ProfileStore = Store<ProfileReducer.State, ProfileReducer.Action>
+public typealias ProfileViewStore = ViewStore<ProfileReducer.State, ProfileReducer.Action>
 
-struct ProfileReducer: ReducerProtocol {
-    struct State: Equatable {
-        enum Destination {
+public struct ProfileReducer: ReducerProtocol {
+    public struct State: Equatable {
+        public enum Destination {
             case addressDetails
         }
 
-        var addressDetailsState: AddressDetailsReducer.State
-        var appBuild = ""
-        var appVersion = ""
-        var destination: Destination?
-        var sdkVersion = ""
+        public var addressDetailsState: AddressDetailsReducer.State
+        public var appBuild = ""
+        public var appVersion = ""
+        public var destination: Destination?
+        public var sdkVersion = ""
         
-        var unifiedAddress: String {
+        public var unifiedAddress: String {
             addressDetailsState.uAddress?.stringEncoded ?? L10n.ReceiveZec.Error.cantExtractUnifiedAddress
+        }
+        
+        public init(
+            addressDetailsState: AddressDetailsReducer.State,
+            appBuild: String = "",
+            appVersion: String = "",
+            destination: Destination? = nil,
+            sdkVersion: String = ""
+        ) {
+            self.addressDetailsState = addressDetailsState
+            self.appBuild = appBuild
+            self.appVersion = appVersion
+            self.destination = destination
+            self.sdkVersion = sdkVersion
         }
     }
 
-    enum Action: Equatable {
+    public enum Action: Equatable {
         case addressDetails(AddressDetailsReducer.Action)
         case back
         case copyUnifiedAddressToPastboard
@@ -38,7 +55,9 @@ struct ProfileReducer: ReducerProtocol {
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
-    var body: some ReducerProtocol<State, Action> {
+    public init() {}
+    
+    public var body: some ReducerProtocol<State, Action> {
         Scope(state: \.addressDetailsState, action: /Action.addressDetails) {
             AddressDetailsReducer()
         }
@@ -78,7 +97,7 @@ struct ProfileReducer: ReducerProtocol {
 // MARK: - Store
 
 extension ProfileStore {
-    func addressStore() -> AddressDetailsStore {
+    public func addressStore() -> AddressDetailsStore {
         self.scope(
             state: \.addressDetailsState,
             action: ProfileReducer.Action.addressDetails
@@ -89,14 +108,14 @@ extension ProfileStore {
 // MARK: - ViewStore
 
 extension ProfileViewStore {
-    var destinationBinding: Binding<ProfileReducer.State.Destination?> {
+    public var destinationBinding: Binding<ProfileReducer.State.Destination?> {
         self.binding(
             get: \.destination,
             send: ProfileReducer.Action.updateDestination
         )
     }
 
-    var bindingForAddressDetails: Binding<Bool> {
+    public var bindingForAddressDetails: Binding<Bool> {
         self.destinationBinding.map(
             extract: { $0 == .addressDetails },
             embed: { $0 ? .addressDetails : nil }
@@ -107,7 +126,7 @@ extension ProfileViewStore {
 // MARK: - Placeholders
 
 extension ProfileReducer.State {
-    static var placeholder: Self {
+    public static var placeholder: Self {
         .init(
             addressDetailsState: .placeholder,
             destination: nil

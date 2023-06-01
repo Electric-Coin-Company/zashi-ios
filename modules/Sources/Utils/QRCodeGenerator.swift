@@ -10,12 +10,12 @@ import Combine
 import CoreImage.CIFilterBuiltins
 import SwiftUI
 
-enum QRCodeGenerator {
-    enum QRCodeError: Error {
+public enum QRCodeGenerator {
+    public enum QRCodeError: Error {
         case failedToGenerate
     }
     
-    static func generate(from string: String) -> Future<CGImage, QRCodeError> {
+    public static func generate(from string: String) -> Future<CGImage, QRCodeError> {
         Future<CGImage, QRCodeError> { promise in
             DispatchQueue.global().async {
                 guard let image = generate(from: string) else {
@@ -28,7 +28,7 @@ enum QRCodeGenerator {
         }
     }
     
-    static func generate(from string: String, scale: CGFloat = 5) -> CGImage? {
+    public static func generate(from string: String, scale: CGFloat = 5) -> CGImage? {
         let data = string.data(using: String.Encoding.utf8)
         
         let context = CIContext()

@@ -13,6 +13,7 @@ import Models
 import UIComponents
 import Generated
 import WalletConfigProvider
+import RecoveryPhraseDisplay
 @testable import secant_testnet
 
 // swiftlint:disable:next type_name
