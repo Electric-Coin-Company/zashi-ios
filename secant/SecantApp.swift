@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import Generated
 import ZcashLightClientKit
 import SDKSynchronizer
 import Utils
@@ -40,6 +41,10 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct SecantApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    
+    init() {
+        FontFamily.registerAllCustomFonts()
+    }
 
     var body: some Scene {
         WindowGroup {
