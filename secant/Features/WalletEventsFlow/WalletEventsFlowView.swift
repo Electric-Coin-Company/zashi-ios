@@ -6,7 +6,7 @@ struct WalletEventsFlowView: View {
     let store: WalletEventsFlowStore
     
     var body: some View {
-        return WithViewStore(store) { viewStore in
+        WithViewStore(store) { viewStore in
             List {
                 walletEventsList(with: viewStore)
             }
@@ -18,6 +18,10 @@ struct WalletEventsFlowView: View {
                 viewStore.selectedWalletEvent?.detailView(store)
             }
         }
+        .alert(store: store.scope(
+            state: \.$alert,
+            action: { .alert($0) }
+        ))
     }
 }
 

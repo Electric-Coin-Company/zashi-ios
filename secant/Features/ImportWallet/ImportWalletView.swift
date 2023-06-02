@@ -44,6 +44,10 @@ struct ImportWalletView: View {
                 isActive: viewStore.bindingForDestination(.birthday),
                 destination: { ImportBirthdayView(store: store) }
             )
+            .alert(store: store.scope(
+                state: \.$alert,
+                action: { .alert($0) }
+            ))
         }
     }
 }

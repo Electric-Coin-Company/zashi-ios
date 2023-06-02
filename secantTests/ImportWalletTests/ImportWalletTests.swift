@@ -287,9 +287,9 @@ class ImportWalletTests: XCTestCase {
         store.dependencies.mnemonic = .noOp
         store.dependencies.walletStorage = .noOp
         
-        store.send(.restoreWallet)
-
-        store.receive(.alert(.importWallet(.succeed)))
+        store.send(.restoreWallet) { state in
+            state.alert = AlertState.succeed()
+        }
 
         store.receive(.initializeSDK)
     }

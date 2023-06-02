@@ -27,6 +27,7 @@ struct HomeReducer: ReducerProtocol {
             case transactionHistory
         }
 
+        @PresentationState var alert: AlertState<Action>?
         var balanceBreakdownState: BalanceBreakdownReducer.State
         var destination: Destination?
         var canRequestReview = false
@@ -68,24 +69,25 @@ struct HomeReducer: ReducerProtocol {
     }
 
     enum Action: Equatable {
-        case alert(AlertRequest)
+        case alert(PresentationAction<Action>)
         case balanceBreakdown(BalanceBreakdownReducer.Action)
         case debugMenuStartup
+        case dismissAlert
+        case foundTransactions
         case onAppear
         case onDisappear
         case profile(ProfileReducer.Action)
         case resolveReviewRequest
+        case retrySync
         case reviewRequestFinished
         case send(SendFlowReducer.Action)
         case settings(SettingsReducer.Action)
-        case syncFailed(ZcashError)
-        case foundTransactions
-        case synchronizerStateChanged(SynchronizerState)
-        case walletEvents(WalletEventsFlowReducer.Action)
-        case updateDestination(HomeReducer.State.Destination?)
         case showSynchronizerErrorAlert(ZcashError)
-        case retrySync
+        case synchronizerStateChanged(SynchronizerState)
+        case syncFailed(ZcashError)
+        case updateDestination(HomeReducer.State.Destination?)
         case updateWalletEvents([WalletEvent])
+        case walletEvents(WalletEventsFlowReducer.Action)
     }
     
     @Dependency(\.audioServices) var audioServices
@@ -214,7 +216,8 @@ struct HomeReducer: ReducerProtocol {
                 }
 
             case .showSynchronizerErrorAlert(let error):
-                return EffectTask(value: .alert(.home(.syncFailed(error, L10n.Home.SyncFailed.dismiss))))
+                state.alert = AlertState.syncFailed(error, L10n.Home.SyncFailed.dismiss)
+                return .none
                 
             case .balanceBreakdown(.onDisappear):
                 state.destination = nil
@@ -227,9 +230,13 @@ struct HomeReducer: ReducerProtocol {
                 return .none
                 
             case .syncFailed(let error):
-                return EffectTask(value: .alert(.home(.syncFailed(error, L10n.General.ok))))
-                
+                state.alert = AlertState.syncFailed(error, L10n.General.ok)
+                return .none
+
             case .alert:
+                return .none
+                
+            case .dismissAlert:
                 return .none
             }
         }
@@ -285,6 +292,25 @@ extension HomeViewStore {
                 return .updateDestination(isActive ? destination : nil)
             }
         )
+    }
+}
+
+// MARK: Alerts
+
+extension AlertState where Action == HomeReducer.Action {
+    static func syncFailed(_ error: ZcashError, _ secondaryButtonTitle: String) -> AlertState<HomeReducer.Action> {
+        AlertState<HomeReducer.Action> {
+            TextState(L10n.Home.SyncFailed.title)
+        } actions: {
+            ButtonState(action: .retrySync) {
+                TextState(L10n.Home.SyncFailed.retry)
+            }
+            ButtonState(action: .dismissAlert) {
+                TextState(secondaryButtonTitle)
+            }
+        } message: {
+            TextState("\(error.message) (code: \(error.code.rawValue))")
+        }
     }
 }
 

@@ -52,6 +52,10 @@ struct BalanceBreakdownView: View {
             .onDisappear { viewStore.send(.onDisappear) }
         }
         .applyScreenBackground()
+        .alert(store: store.scope(
+            state: \.$alert,
+            action: { .alert($0) }
+        ))
     }
 }
 

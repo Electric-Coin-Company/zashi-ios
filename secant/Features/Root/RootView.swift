@@ -114,11 +114,15 @@ private extension RootView {
                 }
             }
             .onOpenURL(perform: { viewStore.goToDeeplink($0) })
-            .alert(store.scope(
-                state: \.uniAlert,
-                action: { _ in RootReducer.Action.dismissAlert }
-            ), dismiss: .dismissAlert)
-            
+            .alert(store: store.scope(
+                state: \.$alert,
+                action: { .alert($0) }
+            ))
+            .alert(store: store.scope(
+                state: \.exportLogsState.$alert,
+                action: { .exportLogs(.alert($0)) }
+            ))
+
             shareLogsView(viewStore)
         }
     }

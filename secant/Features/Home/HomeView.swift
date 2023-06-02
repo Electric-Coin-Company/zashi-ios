@@ -42,6 +42,10 @@ struct HomeView: View {
                 }
             }
             .onDisappear { viewStore.send(.onDisappear) }
+            .alert(store: store.scope(
+                state: \.$alert,
+                action: { .alert($0) }
+            ))
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForDestination(.balanceBreakdown),
                 destination: { BalanceBreakdownView(store: store.balanceBreakdownStore()) }

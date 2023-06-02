@@ -23,6 +23,7 @@ struct BalanceBreakdownReducer: ReducerProtocol {
     private enum CancelId { case timer }
     
     struct State: Equatable {
+        @PresentationState var alert: AlertState<Action>?
         var autoShieldingThreshold: Zatoshi
         var latestBlock: String
         var shieldedBalance: Balance
@@ -43,7 +44,7 @@ struct BalanceBreakdownReducer: ReducerProtocol {
     }
 
     enum Action: Equatable {
-        case alert(AlertRequest)
+        case alert(PresentationAction<Action>)
         case onAppear
         case onDisappear
         case shieldFunds
@@ -94,11 +95,13 @@ struct BalanceBreakdownReducer: ReducerProtocol {
 
             case .shieldFundsSuccess:
                 state.shieldingFunds = false
-                return EffectTask(value: .alert(.balanceBreakdown(.shieldFundsSuccess)))
+                state.alert = AlertState.shieldFundsSuccess()
+                return .none
 
             case .shieldFundsFailure(let error):
                 state.shieldingFunds = false
-                return EffectTask(value: .alert(.balanceBreakdown(.shieldFundsFailure(error))))
+                state.alert = AlertState.shieldFundsFailure(error)
+                return .none
 
             case .synchronizerStateChanged(let latestState):
                 state.shieldedBalance = latestState.shieldedBalance.redacted
@@ -108,9 +111,29 @@ struct BalanceBreakdownReducer: ReducerProtocol {
             case .updateLatestBlock:
                 let latestBlockNumber = sdkSynchronizer.latestScannedHeight()
                 let latestBlock = numberFormatter.string(NSDecimalNumber(value: latestBlockNumber))
-                state.latestBlock = "\(String(describing: latestBlock))"
+                state.latestBlock = "\(String(describing: latestBlock ?? ""))"
                 return .none
             }
+        }
+    }
+}
+
+// MARK: Alerts
+
+extension AlertState where Action == BalanceBreakdownReducer.Action {
+    static func shieldFundsFailure(_ error: ZcashError) -> AlertState<BalanceBreakdownReducer.Action> {
+        AlertState<BalanceBreakdownReducer.Action> {
+            TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Failure.title)
+        } message: {
+            TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Failure.message(error.message, error.code.rawValue))
+        }
+    }
+    
+    static func shieldFundsSuccess() -> AlertState<BalanceBreakdownReducer.Action> {
+        AlertState<BalanceBreakdownReducer.Action> {
+            TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Success.title)
+        } message: {
+            TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Success.message)
         }
     }
 }

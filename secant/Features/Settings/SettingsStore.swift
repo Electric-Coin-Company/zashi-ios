@@ -8,6 +8,8 @@ import LocalAuthenticationHandler
 import SupportDataGenerator
 import Models
 import RecoveryPhraseDisplay
+import ZcashLightClientKit
+import Generated
 
 typealias SettingsStore = Store<SettingsReducer.State, SettingsReducer.Action>
 typealias SettingsViewStore = ViewStore<SettingsReducer.State, SettingsReducer.Action>
@@ -19,6 +21,7 @@ struct SettingsReducer: ReducerProtocol {
             case backupPhrase
         }
 
+        @PresentationState var alert: AlertState<Action>?
         var appVersion = ""
         var appBuild = ""
         var destination: Destination?
@@ -29,7 +32,7 @@ struct SettingsReducer: ReducerProtocol {
     }
 
     enum Action: BindableAction, Equatable {
-        case alert(AlertRequest)
+        case alert(PresentationAction<Action>)
         case backupWallet
         case backupWalletAccessRequest
         case binding(BindingAction<SettingsReducer.State>)
@@ -73,9 +76,10 @@ struct SettingsReducer: ReducerProtocol {
                     state.phraseDisplayState.phrase = recoveryPhrase
                     return EffectTask(value: .updateDestination(.backupPhrase))
                 } catch {
-                    return EffectTask(value: .alert(.settings(.cantBackupWallet(error.toZcashError()))))
+                    state.alert = AlertState.cantBackupWallet(error.toZcashError())
                 }
-
+                return .none
+                
             case .binding(\.$isCrashReportingOn):
                 if state.isCrashReportingOn {
                     crashReporter.optOut()
@@ -104,10 +108,10 @@ struct SettingsReducer: ReducerProtocol {
             case .sendSupportMail:
                 if MFMailComposeViewController.canSendMail() {
                     state.supportData = SupportDataGenerator.generate()
-                    return .none
                 } else {
-                    return EffectTask(value: .alert(.settings(.sendSupportMail)))
+                    state.alert = AlertState.sendSupportMail()
                 }
+                return .none
 
             case .sendSupportMailFinished:
                 state.supportData = nil
@@ -117,6 +121,7 @@ struct SettingsReducer: ReducerProtocol {
                 return .none
             }
         }
+        .ifLet(\.$alert, action: /Action.alert)
 
         Scope(state: \.phraseDisplayState, action: /Action.phraseDisplay) {
             RecoveryPhraseDisplayReducer()
@@ -161,6 +166,30 @@ extension SettingsStore {
             state: \.phraseDisplayState,
             action: SettingsReducer.Action.phraseDisplay
         )
+    }
+}
+
+// MARK: Alerts
+
+extension AlertState where Action == SettingsReducer.Action {
+    static func cantBackupWallet(_ error: ZcashError) -> AlertState<SettingsReducer.Action> {
+        AlertState<SettingsReducer.Action> {
+            TextState(L10n.Settings.Alert.CantBackupWallet.title)
+        } message: {
+            TextState(L10n.Settings.Alert.CantBackupWallet.message(error.message, error.code.rawValue))
+        }
+    }
+    
+    static func sendSupportMail() -> AlertState<SettingsReducer.Action> {
+        AlertState<SettingsReducer.Action> {
+            TextState(L10n.Settings.Alert.CantSendEmail.title)
+        } actions: {
+            ButtonState(action: .sendSupportMailFinished) {
+                TextState(L10n.General.ok)
+            }
+        } message: {
+            TextState(L10n.Settings.Alert.CantSendEmail.message)
+        }
     }
 }
 

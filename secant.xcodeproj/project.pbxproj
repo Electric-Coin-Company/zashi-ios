@@ -192,12 +192,6 @@
 		9E2DF99E27CF704D00649636 /* ImportWalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2DF99B27CF704D00649636 /* ImportWalletView.swift */; };
 		9E2F1C8C280ED6A7004E65FE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9E2F1C8B280ED6A7004E65FE /* LaunchScreen.storyboard */; };
 		9E2F1C8F280EDE09004E65FE /* Drawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2F1C8E280EDE09004E65FE /* Drawer.swift */; };
-		9E33ECD429D5D99000708DE4 /* AlertRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E33ECD029D4CCB600708DE4 /* AlertRequest.swift */; };
-		9E33ECD529D5D99700708DE4 /* AlertReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9CEA3229D32D5100599DF5 /* AlertReducer.swift */; };
-		9E33ECD629D5D99A00708DE4 /* AlertStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E33ECD229D4D1FB00708DE4 /* AlertStates.swift */; };
-		9E33ECD729D5E30200708DE4 /* AlertReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9CEA3229D32D5100599DF5 /* AlertReducer.swift */; };
-		9E33ECD829D5E30200708DE4 /* AlertStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E33ECD229D4D1FB00708DE4 /* AlertStates.swift */; };
-		9E33ECD929D5E30200708DE4 /* AlertRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E33ECD029D4CCB600708DE4 /* AlertRequest.swift */; };
 		9E33ECDA29D5E30700708DE4 /* OnChangeReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9CEA3D29D47BE000599DF5 /* OnChangeReducer.swift */; };
 		9E34519529C4A4BF00177D16 /* AddressDetailsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E207C382966EF87003E2C9B /* AddressDetailsTests.swift */; };
 		9E34519629C4A4D800177D16 /* secantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A2526B364180058B01E /* secantUITests.swift */; };
@@ -406,8 +400,6 @@
 		9E2DF99B27CF704D00649636 /* ImportWalletView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportWalletView.swift; sourceTree = "<group>"; };
 		9E2F1C8B280ED6A7004E65FE /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9E2F1C8E280EDE09004E65FE /* Drawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drawer.swift; sourceTree = "<group>"; };
-		9E33ECD029D4CCB600708DE4 /* AlertRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertRequest.swift; sourceTree = "<group>"; };
-		9E33ECD229D4D1FB00708DE4 /* AlertStates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertStates.swift; sourceTree = "<group>"; };
 		9E391123283E4CAC0073DD9A /* ImportWalletTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportWalletTests.swift; sourceTree = "<group>"; };
 		9E39112D283F91600073DD9A /* ZatoshiTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZatoshiTests.swift; sourceTree = "<group>"; };
 		9E391131284644580073DD9A /* AppInitializationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInitializationTests.swift; sourceTree = "<group>"; };
@@ -449,7 +441,6 @@
 		9E94C62228AA7EE0008256E9 /* BalanceBreakdownSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceBreakdownSnapshotTests.swift; sourceTree = "<group>"; };
 		9E9ADA7C2938F4C00071767B /* RootInitialization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootInitialization.swift; sourceTree = "<group>"; };
 		9E9ADA7E2938F5EC0071767B /* RootDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootDestination.swift; sourceTree = "<group>"; };
-		9E9CEA3229D32D5100599DF5 /* AlertReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertReducer.swift; sourceTree = "<group>"; };
 		9E9CEA3D29D47BE000599DF5 /* OnChangeReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnChangeReducer.swift; sourceTree = "<group>"; };
 		9E9ECC8C28589E150099D5A2 /* HomeSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSnapshotTests.swift; sourceTree = "<group>"; };
 		9E9ECC8E28589E150099D5A2 /* WelcomeSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeSnapshotTests.swift; sourceTree = "<group>"; };
@@ -598,13 +589,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0D0781C2278750C00083ACD7 /* Welcome */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Welcome;
-			sourceTree = "<group>";
-		};
 		0D4E79FC26B364170058B01E = {
 			isa = PBXGroup;
 			children = (
@@ -822,20 +806,17 @@
 			isa = PBXGroup;
 			children = (
 				9E0031BD2A28B21A003DFCEB /* BalanceBreakdown */,
-				9E33ECCF29D4CC9900708DE4 /* Alerts */,
 				34C5657F29B60BDF002F3A7C /* ExportLogs */,
 				F93874EC273C4DE200F0E875 /* Home */,
 				9E2DF99727CF704D00649636 /* ImportWallet */,
 				3448CB3028E4764E006ADEDB /* NotEnoughFreeSpace */,
 				6654C73C2715A3FA00901167 /* OnboardingFlow */,
-				9E7FE0E4282E753700C374E8 /* RecoveryPhraseDisplay */,
 				F9971A4927680DC400A2DB75 /* Root */,
 				9EAFEB8B2808174900199FC9 /* Sandbox */,
 				F9971A5B27680DF600A2DB75 /* Scan */,
 				F9C165B62740403600592F76 /* SendFlow */,
 				F9971A6127680DFE00A2DB75 /* Settings */,
 				F96B41E2273B501F0021B49A /* WalletEventsFlow */,
-				0D0781C2278750C00083ACD7 /* Welcome */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -936,16 +917,6 @@
 				9E2F1C8E280EDE09004E65FE /* Drawer.swift */,
 			);
 			path = Drawer;
-			sourceTree = "<group>";
-		};
-		9E33ECCF29D4CC9900708DE4 /* Alerts */ = {
-			isa = PBXGroup;
-			children = (
-				9E33ECD029D4CCB600708DE4 /* AlertRequest.swift */,
-				9E9CEA3229D32D5100599DF5 /* AlertReducer.swift */,
-				9E33ECD229D4D1FB00708DE4 /* AlertStates.swift */,
-			);
-			path = Alerts;
 			sourceTree = "<group>";
 		};
 		9E391122283E4C970073DD9A /* ImportWalletTests */ = {
@@ -1178,13 +1149,6 @@
 				669FDAE5272C2371007B9422 /* ProgressIndicators */,
 			);
 			path = "UI Components";
-			sourceTree = "<group>";
-		};
-		9E7FE0E4282E753700C374E8 /* RecoveryPhraseDisplay */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = RecoveryPhraseDisplay;
 			sourceTree = "<group>";
 		};
 		9E7FE0E9282E7CF800C374E8 /* ImportSeedEditor */ = {
@@ -1878,7 +1842,6 @@
 				0D26AEDA299E8196005260EE /* ImportSeedEditor.swift in Sources */,
 				9E486DE629B637AF003E6945 /* ImportBirthdayView.swift in Sources */,
 				0D26AEDC299E8196005260EE /* CheckCircle.swift in Sources */,
-				9E33ECD929D5E30200708DE4 /* AlertRequest.swift in Sources */,
 				0D26AEE4299E8196005260EE /* CurrencySelectionView.swift in Sources */,
 				0D26AEE7299E8196005260EE /* TransactionAddressTextFieldStore.swift in Sources */,
 				34C5658629B60C8B002F3A7C /* ExportLogsStore.swift in Sources */,
@@ -1919,7 +1882,6 @@
 				0D26AF3E299E8196005260EE /* SingleLineTextField.swift in Sources */,
 				0D26AF40299E8196005260EE /* RootDestination.swift in Sources */,
 				0D26AF41299E8196005260EE /* OnboardingProgressIndicator.swift in Sources */,
-				9E33ECD829D5E30200708DE4 /* AlertStates.swift in Sources */,
 				0D26AF44299E8196005260EE /* Memo+toString.swift in Sources */,
 				0D26AF46299E8196005260EE /* CheckCircleStore.swift in Sources */,
 				0D26AF47299E8196005260EE /* CreateTransactionView.swift in Sources */,
@@ -1932,7 +1894,6 @@
 				9E0031C72A28BD54003DFCEB /* BalanceBreakdownView.swift in Sources */,
 				0D26AF56299E8196005260EE /* ScanStore.swift in Sources */,
 				0D26AF5F299E8196005260EE /* SendFlowView.swift in Sources */,
-				9E33ECD729D5E30200708DE4 /* AlertReducer.swift in Sources */,
 				0D26AF64299E8196005260EE /* SettingsStore.swift in Sources */,
 				0D26AF65299E8196005260EE /* InitializationState.swift in Sources */,
 				9E486DF429B9EEC4003E6945 /* UIResponder+Current.swift in Sources */,
@@ -1946,14 +1907,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E33ECD629D5D99A00708DE4 /* AlertStates.swift in Sources */,
 				2EB660E02747EAB900A06A07 /* OnboardingFlowView.swift in Sources */,
 				0D261040298C406F00CC9DE9 /* CrashReporterTestKey.swift in Sources */,
 				9EAFEB902808183D00199FC9 /* SandboxStore.swift in Sources */,
 				34DA414728E4385800F8CC61 /* TransactionSendingView.swift in Sources */,
 				F96B41E9273B501F0021B49A /* WalletEventsFlowView.swift in Sources */,
 				9E4AA4F829BF76BB00752BB3 /* About.swift in Sources */,
-				9E33ECD429D5D99000708DE4 /* AlertRequest.swift in Sources */,
 				0D26103E298C3FA600CC9DE9 /* CrashReporterLiveKey.swift in Sources */,
 				2EDA07A027EDE18C00D6F09B /* TCATextField.swift in Sources */,
 				2EB7758727FC67FD00269373 /* TransactionAmountTextFieldStore.swift in Sources */,
@@ -1970,7 +1929,6 @@
 				9E9ADA7D2938F4C00071767B /* RootInitialization.swift in Sources */,
 				6654C73E2715A41300901167 /* OnboardingFlowStore.swift in Sources */,
 				2E6CF8DD27D78319004DCD7A /* CurrencySelectionStore.swift in Sources */,
-				9E33ECD529D5D99700708DE4 /* AlertReducer.swift in Sources */,
 				9E66122C2877188700C75B70 /* SyncStatusSnapshot.swift in Sources */,
 				9E2DF99D27CF704D00649636 /* ImportSeedEditor.swift in Sources */,
 				9E486DE529B637AF003E6945 /* ImportBirthdayView.swift in Sources */,
@@ -2576,7 +2534,7 @@
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
 			requirement = {
 				kind = exactVersion;
-				version = 0.53.2;
+				version = 0.54.0;
 			};
 		};
 		9E2AC0FD27D8EC120042AA47 /* XCRemoteSwiftPackageReference "MnemonicSwift" */ = {

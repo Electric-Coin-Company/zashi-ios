@@ -29,7 +29,7 @@ class BalanceBreakdownTests: XCTestCase {
         // expected side effects as a result of .onAppear registration
         store.receive(.synchronizerStateChanged(.zero))
         store.receive(.updateLatestBlock) { state in
-            state.latestBlock = "nil"
+            state.latestBlock = ""
         }
 
         // long-living (cancelable) effects need to be properly canceled.
@@ -54,9 +54,8 @@ class BalanceBreakdownTests: XCTestCase {
         }
         await store.receive(.shieldFundsSuccess) { state in
             state.shieldingFunds = false
+            state.alert = AlertState.shieldFundsSuccess()
         }
-
-        await store.receive(.alert(.balanceBreakdown(.shieldFundsSuccess)))
         
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancels the observer of the synchronizer status change.
@@ -80,15 +79,8 @@ class BalanceBreakdownTests: XCTestCase {
         }
         await store.receive(.shieldFundsFailure(ZcashError.synchronizerNotPrepared)) { state in
             state.shieldingFunds = false
+            state.alert = AlertState.shieldFundsFailure(ZcashError.synchronizerNotPrepared)
         }
-
-        await store.receive(
-            .alert(
-                .balanceBreakdown(
-                    .shieldFundsFailure(ZcashError.synchronizerNotPrepared)
-                )
-            )
-        )
 
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancels the observer of the synchronizer status change.

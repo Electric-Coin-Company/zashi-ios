@@ -9,6 +9,7 @@ import Combine
 import XCTest
 import ComposableArchitecture
 import Utils
+import Generated
 @testable import secant_testnet
 @testable import ZcashLightClientKit
 
@@ -106,14 +107,8 @@ class HomeTests: XCTestCase {
             state.synchronizerStatusSnapshot = errorSnapshot
         }
 
-        store.receive(.showSynchronizerErrorAlert(testError))
-        
-        store.receive(
-            .alert(
-                .home(
-                    .syncFailed(ZcashError.synchronizerNotPrepared, "Dismiss")
-                )
-            )
-        )
+        store.receive(.showSynchronizerErrorAlert(testError)) { state in
+            state.alert = AlertState.syncFailed(ZcashError.synchronizerNotPrepared, L10n.Home.SyncFailed.dismiss)
+        }
     }
 }

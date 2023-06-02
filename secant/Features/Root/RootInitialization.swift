@@ -85,10 +85,12 @@ extension RootReducer {
                 switch walletState {
                 case .failed:
                     state.appInitializationState = .failed
-                    return EffectTask(value: .alert(.root(.walletStateFailed(walletState))))
+                    state.alert = AlertState.walletStateFailed(walletState)
+                    return .none
                 case .keysMissing:
                     state.appInitializationState = .keysMissing
-                    return EffectTask(value: .alert(.root(.walletStateFailed(walletState))))
+                    state.alert = AlertState.walletStateFailed(walletState)
+                    return .none
                 case .initialized, .filesMissing:
                     if walletState == .filesMissing {
                         state.appInitializationState = .filesMissing
@@ -113,7 +115,8 @@ extension RootReducer {
 
                     guard let storedWallet = state.storedWallet else {
                         state.appInitializationState = .failed
-                        return EffectTask(value: .alert(.root(.cantLoadSeedPhrase)))
+                        state.alert = AlertState.cantLoadSeedPhrase()
+                        return .none
                     }
 
                     let birthday = state.storedWallet?.birthday?.value() ?? zcashSDKEnvironment.latestCheckpoint(TargetConstants.zcashNetwork)
@@ -138,7 +141,8 @@ extension RootReducer {
             case .initialization(.checkBackupPhraseValidation):
                 guard let storedWallet = state.storedWallet else {
                     state.appInitializationState = .failed
-                    return EffectTask(value: .alert(.root(.cantLoadSeedPhrase)))
+                    state.alert = AlertState.cantLoadSeedPhrase()
+                    return .none
                 }
 
                 var landingDestination = RootReducer.DestinationState.Destination.home
@@ -179,19 +183,21 @@ extension RootReducer {
                         EffectTask(value: .phraseValidation(.displayBackedUpPhrase))
                     )
                 } catch {
-                    return EffectTask(value: .alert(.root(.cantCreateNewWallet(error.toZcashError()))))
+                    state.alert = AlertState.cantCreateNewWallet(error.toZcashError())
                 }
+                return .none
 
             case .phraseValidation(.succeed):
                 do {
                     try walletStorage.markUserPassedPhraseBackupTest(true)
-                    return .none
                 } catch {
-                    return EffectTask(value: .alert(.root(.cantStoreThatUserPassedPhraseBackupTest(error.toZcashError()))))
+                    state.alert = AlertState.cantStoreThatUserPassedPhraseBackupTest(error.toZcashError())
                 }
+                return .none
 
             case .initialization(.nukeWalletRequest):
-                return EffectTask(value: .alert(.root(.wipeRequest)))
+                state.alert = AlertState.wipeRequest()
+                return .none
             
             case .initialization(.nukeWallet):
                 guard let wipePublisher = sdkSynchronizer.wipe() else {
@@ -221,8 +227,8 @@ extension RootReducer {
                 } else {
                     backDestination = EffectTask(value: .destination(.updateDestination(state.destinationState.destination)))
                 }
+                state.alert = AlertState.wipeFailed()
                 return .concatenate(
-                    EffectTask(value: .alert(.root(.wipeFailed))),
                     .cancel(id: SynchronizerCancelId.timer),
                     backDestination
                 )
@@ -256,10 +262,11 @@ extension RootReducer {
 
             case .initialization(.initializationFailed(let error)):
                 state.appInitializationState = .failed
-                return EffectTask(value: .alert(.root(.initializationFailed(error))))
+                state.alert = AlertState.initializationFailed(error)
+                return .none
                 
             case .home, .destination, .onboarding, .phraseDisplay, .phraseValidation, .sandbox,
-                .welcome, .binding, .debug, .exportLogs, .uniAlert, .dismissAlert, .alert:
+                .welcome, .binding, .debug, .exportLogs, .dismissAlert, .alert:
                 return .none
             }
         }
