@@ -3,6 +3,9 @@ import ComposableArchitecture
 import StoreKit
 import Generated
 import Profile
+import BalanceBreakdown
+import WalletEventsFlow
+import Settings
 
 struct HomeView: View {
     let store: Store<HomeReducer.State, HomeReducer.Action>
@@ -48,7 +51,12 @@ struct HomeView: View {
             ))
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForDestination(.balanceBreakdown),
-                destination: { BalanceBreakdownView(store: store.balanceBreakdownStore()) }
+                destination: {
+                    BalanceBreakdownView(
+                        store: store.balanceBreakdownStore(),
+                        tokenName: TargetConstants.tokenName
+                    )
+                }
             )
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForDestination(.notEnoughFreeDiskSpace),
@@ -56,7 +64,7 @@ struct HomeView: View {
             )
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForDestination(.transactionHistory),
-                destination: { WalletEventsFlowView(store: store.historyStore()) }
+                destination: { WalletEventsFlowView(store: store.historyStore(), tokenName: TargetConstants.tokenName) }
             )
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForDestination(.send),

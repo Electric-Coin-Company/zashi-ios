@@ -12,6 +12,8 @@ import LogsHandler
 import Models
 import WalletStorage
 import RecoveryPhraseDisplay
+import Settings
+import ExportLogs
 @testable import secant_testnet
 
 @MainActor

@@ -2,6 +2,8 @@ import SwiftUI
 import ComposableArchitecture
 import RecoveryPhraseDisplay
 import Profile
+import WalletEventsFlow
+import Scan
 
 struct SandboxView: View {
     struct SandboxDestinationValue: Identifiable {
@@ -24,7 +26,7 @@ struct SandboxView: View {
     @ViewBuilder func view(for destination: SandboxReducer.State.Destination) -> some View {
         switch destination {
         case .history:
-            WalletEventsFlowView(store: store.historyStore())
+            WalletEventsFlowView(store: store.historyStore(), tokenName: TargetConstants.tokenName)
         case .send:
             SendFlowView(
                 store: .init(
@@ -83,7 +85,7 @@ struct SandboxView: View {
                 isPresented: viewStore.bindingForDestination(.history),
                 content: {
                     NavigationView {
-                        WalletEventsFlowView(store: store.historyStore())
+                        WalletEventsFlowView(store: store.historyStore(), tokenName: TargetConstants.tokenName)
                             .toolbar {
                                 ToolbarItem {
                                     Button("Done") { viewStore.send(.updateDestination(nil)) }

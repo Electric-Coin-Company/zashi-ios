@@ -6,9 +6,10 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
 import SwiftUI
+import Settings
+@testable import secant_testnet
 
 class SettingsSnapshotTests: XCTestCase {
     func testSettingsSnapshot() throws {

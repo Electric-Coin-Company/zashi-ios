@@ -10,6 +10,10 @@ import Models
 import Generated
 import ReviewRequest
 import Profile
+import BalanceBreakdown
+import WalletEventsFlow
+import Scan
+import Settings
 
 typealias HomeStore = Store<HomeReducer.State, HomeReducer.Action>
 typealias HomeViewStore = ViewStore<HomeReducer.State, HomeReducer.Action>
@@ -115,7 +119,7 @@ struct HomeReducer: ReducerProtocol {
         }
 
         Scope(state: \.balanceBreakdownState, action: /Action.balanceBreakdown) {
-            BalanceBreakdownReducer()
+            BalanceBreakdownReducer(networkType: TargetConstants.zcashNetwork.networkType)
         }
 
         Reduce { state, action in
@@ -298,8 +302,8 @@ extension HomeViewStore {
 // MARK: Alerts
 
 extension AlertState where Action == HomeReducer.Action {
-    static func syncFailed(_ error: ZcashError, _ secondaryButtonTitle: String) -> AlertState<HomeReducer.Action> {
-        AlertState<HomeReducer.Action> {
+    static func syncFailed(_ error: ZcashError, _ secondaryButtonTitle: String) -> AlertState {
+        AlertState {
             TextState(L10n.Home.SyncFailed.title)
         } actions: {
             ButtonState(action: .retrySync) {

@@ -10,6 +10,7 @@ import ComposableArchitecture
 import ZcashLightClientKit
 import AudioServices
 import Utils
+import Scan
 
 typealias SendFlowStore = Store<SendFlowReducer.State, SendFlowReducer.Action>
 typealias SendFlowViewStore = ViewStore<SendFlowReducer.State, SendFlowReducer.Action>
@@ -122,7 +123,7 @@ struct SendFlowReducer: ReducerProtocol {
         }
 
         Scope(state: \.scanState, action: /Action.scan) {
-            ScanReducer()
+            ScanReducer(networkType: TargetConstants.zcashNetwork.networkType)
         }
 
         Reduce { state, action in

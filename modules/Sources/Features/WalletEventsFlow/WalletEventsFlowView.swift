@@ -2,10 +2,16 @@ import SwiftUI
 import ComposableArchitecture
 import Generated
 
-struct WalletEventsFlowView: View {
+public struct WalletEventsFlowView: View {
     let store: WalletEventsFlowStore
+    let tokenName: String
     
-    var body: some View {
+    public init(store: WalletEventsFlowStore, tokenName: String) {
+        self.store = store
+        self.tokenName = tokenName
+    }
+    
+    public var body: some View {
         WithViewStore(store) { viewStore in
             List {
                 walletEventsList(with: viewStore)
@@ -15,7 +21,7 @@ struct WalletEventsFlowView: View {
             .onAppear { viewStore.send(.onAppear) }
             .onDisappear(perform: { viewStore.send(.onDisappear) })
             .navigationLinkEmpty(isActive: viewStore.bindingForSelectedWalletEvent(viewStore.selectedWalletEvent)) {
-                viewStore.selectedWalletEvent?.detailView(store)
+                viewStore.selectedWalletEvent?.detailView(store, tokenName: tokenName)
             }
         }
         .alert(store: store.scope(
@@ -28,7 +34,7 @@ struct WalletEventsFlowView: View {
 extension WalletEventsFlowView {
     func walletEventsList(with viewStore: WalletEventsFlowViewStore) -> some View {
         ForEach(viewStore.walletEvents) { walletEvent in
-            walletEvent.rowView(viewStore)
+            walletEvent.rowView(viewStore, tokenName: tokenName)
                 .onTapGesture {
                     viewStore.send(.updateDestination(.showWalletEvent(walletEvent)))
                 }
@@ -43,7 +49,7 @@ extension WalletEventsFlowView {
 struct TransactionView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            WalletEventsFlowView(store: .placeholder)
+            WalletEventsFlowView(store: .placeholder, tokenName: "ZEC")
                 .preferredColorScheme(.light)
         }
     }

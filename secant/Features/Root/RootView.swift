@@ -6,6 +6,7 @@ import RecoveryPhraseValidationFlow
 import Models
 import RecoveryPhraseDisplay
 import Welcome
+import ExportLogs
 
 struct RootView: View {
     let store: RootStore

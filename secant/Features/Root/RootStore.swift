@@ -12,6 +12,7 @@ import RecoveryPhraseDisplay
 import Welcome
 import Generated
 import Foundation
+import ExportLogs
 
 typealias RootStore = Store<RootReducer.State, RootReducer.Action>
 typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
@@ -149,32 +150,32 @@ extension RootReducer {
 // MARK: Alerts
 
 extension AlertState where Action == RootReducer.Action {
-    static func cantCreateNewWallet(_ error: ZcashError) -> AlertState<RootReducer.Action> {
-        AlertState<RootReducer.Action> {
+    static func cantCreateNewWallet(_ error: ZcashError) -> AlertState {
+        AlertState {
             TextState(L10n.Root.Initialization.Alert.Failed.title)
         } message: {
             TextState(L10n.Root.Initialization.Alert.CantCreateNewWallet.message(error.message, error.code.rawValue))
         }
     }
     
-    static func cantLoadSeedPhrase() -> AlertState<RootReducer.Action> {
-        AlertState<RootReducer.Action> {
+    static func cantLoadSeedPhrase() -> AlertState {
+        AlertState {
             TextState(L10n.Root.Initialization.Alert.Failed.title)
         } message: {
             TextState(L10n.Root.Initialization.Alert.CantLoadSeedPhrase.message)
         }
     }
     
-    static func cantStartSync(_ error: ZcashError) -> AlertState<RootReducer.Action> {
-        AlertState<RootReducer.Action> {
+    static func cantStartSync(_ error: ZcashError) -> AlertState {
+        AlertState {
             TextState(L10n.Root.Debug.Alert.Rewind.CantStartSync.title)
         } message: {
             TextState(L10n.Root.Debug.Alert.Rewind.CantStartSync.message(error.message, error.code.rawValue))
         }
     }
     
-    static func cantStoreThatUserPassedPhraseBackupTest(_ error: ZcashError) -> AlertState<RootReducer.Action> {
-        AlertState<RootReducer.Action> {
+    static func cantStoreThatUserPassedPhraseBackupTest(_ error: ZcashError) -> AlertState {
+        AlertState {
             TextState(L10n.Root.Initialization.Alert.Failed.title)
         } message: {
             TextState(
@@ -183,46 +184,46 @@ extension AlertState where Action == RootReducer.Action {
         }
     }
     
-    static func failedToProcessDeeplink(_ url: URL, _ error: ZcashError) -> AlertState<RootReducer.Action> {
-        AlertState<RootReducer.Action> {
+    static func failedToProcessDeeplink(_ url: URL, _ error: ZcashError) -> AlertState {
+        AlertState {
             TextState(L10n.Root.Destination.Alert.FailedToProcessDeeplink.title)
         } message: {
             TextState(L10n.Root.Destination.Alert.FailedToProcessDeeplink.message(url, error.message, error.code.rawValue))
         }
     }
     
-    static func initializationFailed(_ error: ZcashError) -> AlertState<RootReducer.Action> {
-        AlertState<RootReducer.Action> {
+    static func initializationFailed(_ error: ZcashError) -> AlertState {
+        AlertState {
             TextState(L10n.Root.Initialization.Alert.SdkInitFailed.title)
         } message: {
             TextState(L10n.Root.Initialization.Alert.Error.message(error.message, error.code.rawValue))
         }
     }
     
-    static func rewindFailed(_ error: ZcashError) -> AlertState<RootReducer.Action> {
-        AlertState<RootReducer.Action> {
+    static func rewindFailed(_ error: ZcashError) -> AlertState {
+        AlertState {
             TextState(L10n.Root.Debug.Alert.Rewind.Failed.title)
         } message: {
             TextState(L10n.Root.Debug.Alert.Rewind.Failed.message(error.message, error.code.rawValue))
         }
     }
     
-    static func walletStateFailed(_ walletState: InitializationState) -> AlertState<RootReducer.Action> {
-        AlertState<RootReducer.Action> {
+    static func walletStateFailed(_ walletState: InitializationState) -> AlertState {
+        AlertState {
             TextState(L10n.Root.Initialization.Alert.Failed.title)
         } message: {
             TextState(L10n.Root.Initialization.Alert.WalletStateFailed.message(walletState))
         }
     }
     
-    static func wipeFailed() -> AlertState<RootReducer.Action> {
-        AlertState<RootReducer.Action> {
+    static func wipeFailed() -> AlertState {
+        AlertState {
             TextState(L10n.Root.Initialization.Alert.WipeFailed.title)
         }
     }
     
-    static func wipeRequest() -> AlertState<RootReducer.Action> {
-        AlertState<RootReducer.Action> {
+    static func wipeRequest() -> AlertState {
+        AlertState {
             TextState(L10n.Root.Initialization.Alert.Wipe.title)
         } actions: {
             ButtonState(role: .destructive, action: .initialization(.nukeWallet)) {

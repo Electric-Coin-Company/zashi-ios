@@ -13,18 +13,24 @@ import LogsHandler
 import Utils
 import Generated
 
-typealias ExportLogsStore = Store<ExportLogsReducer.State, ExportLogsReducer.Action>
-typealias ExportLogsViewStore = ViewStore<ExportLogsReducer.State, ExportLogsReducer.Action>
+public typealias ExportLogsStore = Store<ExportLogsReducer.State, ExportLogsReducer.Action>
+public typealias ExportLogsViewStore = ViewStore<ExportLogsReducer.State, ExportLogsReducer.Action>
 
-struct ExportLogsReducer: ReducerProtocol {
-    struct State: Equatable {
-        @PresentationState var alert: AlertState<Action>?
-        var exportLogsDisabled = false
-        var isSharingLogs = false
-        var zippedLogsURLs: [URL] = []
+public struct ExportLogsReducer: ReducerProtocol {
+    public struct State: Equatable {
+        @PresentationState public var alert: AlertState<Action>?
+        public var exportLogsDisabled = false
+        public var isSharingLogs = false
+        public var zippedLogsURLs: [URL] = []
+        
+        public init(exportLogsDisabled: Bool = false, isSharingLogs: Bool = false, zippedLogsURLs: [URL] = []) {
+            self.exportLogsDisabled = exportLogsDisabled
+            self.isSharingLogs = isSharingLogs
+            self.zippedLogsURLs = zippedLogsURLs
+        }
     }
 
-    indirect enum Action: Equatable {
+    public enum Action: Equatable {
         case alert(PresentationAction<Action>)
         case start
         case finished(URL?)
@@ -34,7 +40,9 @@ struct ExportLogsReducer: ReducerProtocol {
 
     @Dependency(\.logsHandler) var logsHandler
 
-    var body: some ReducerProtocol<State, Action> {
+    public init() {}
+    
+    public var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
             case .alert:
@@ -80,8 +88,8 @@ struct ExportLogsReducer: ReducerProtocol {
 // MARK: Alerts
 
 extension AlertState where Action == ExportLogsReducer.Action {
-    static func failed(_ error: ZcashError) -> AlertState<ExportLogsReducer.Action> {
-        AlertState<ExportLogsReducer.Action> {
+    public static func failed(_ error: ZcashError) -> AlertState {
+        AlertState {
             TextState(L10n.ExportLogs.Alert.Failed.title)
         } message: {
             TextState(L10n.ExportLogs.Alert.Failed.message(error.message, error.code.rawValue))
@@ -92,7 +100,7 @@ extension AlertState where Action == ExportLogsReducer.Action {
 // MARK: Placeholders
 
 extension ExportLogsReducer.State {
-    static var placeholder: Self {
+    public static var placeholder: Self {
         .init()
     }
 }

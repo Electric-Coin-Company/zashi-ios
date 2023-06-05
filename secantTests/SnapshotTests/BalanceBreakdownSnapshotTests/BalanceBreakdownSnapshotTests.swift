@@ -6,10 +6,11 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
 import ZcashLightClientKit
 import SwiftUI
+import BalanceBreakdown
+@testable import secant_testnet
 
 class BalanceBreakdownSnapshotTests: XCTestCase {
     func testBalanceBreakdownSnapshot() throws {
@@ -21,11 +22,11 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
                 shieldingFunds: false,
                 transparentBalance: WalletBalance(verified: Zatoshi(850_000_000), total: Zatoshi(850_000_000)).redacted
             ),
-            reducer: BalanceBreakdownReducer()
+            reducer: BalanceBreakdownReducer(networkType: .testnet)
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.mainQueue, .immediate)
         )
         
-        addAttachments(BalanceBreakdownView(store: store))
+        addAttachments(BalanceBreakdownView(store: store, tokenName: "ZEC"))
     }
 }

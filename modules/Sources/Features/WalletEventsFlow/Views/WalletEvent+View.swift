@@ -14,10 +14,10 @@ import ZcashLightClientKit
 // MARK: - Rows
 
 extension WalletEvent {
-    @ViewBuilder func rowView(_ viewStore: WalletEventsFlowViewStore) -> some View {
+    @ViewBuilder public func rowView(_ viewStore: WalletEventsFlowViewStore, tokenName: String) -> some View {
         switch state {
         case .transaction(let transaction):
-            TransactionRowView(transaction: transaction)
+            TransactionRowView(transaction: transaction, tokenName: tokenName)
         case .shielded(let zatoshi):
             // TODO: [#390] implement design once shielding is supported
             // https://github.com/zcash/secant-ios-wallet/issues/390
@@ -35,10 +35,10 @@ extension WalletEvent {
 // MARK: - Details
 
 extension WalletEvent {
-    @ViewBuilder func detailView(_ store: WalletEventsFlowStore) -> some View {
+    @ViewBuilder public func detailView(_ store: WalletEventsFlowStore, tokenName: String) -> some View {
         switch state {
         case .transaction(let transaction):
-            TransactionDetailView(transaction: transaction, store: store)
+            TransactionDetailView(store: store, transaction: transaction, tokenName: tokenName)
         case .shielded(let zatoshi):
             // TODO: [#390] implement design once shielding is supported
             // https://github.com/zcash/secant-ios-wallet/issues/390
@@ -75,8 +75,8 @@ private extension WalletEvent {
 }
 
 extension IdentifiedArrayOf where Element == WalletEvent {
-    static var placeholder: IdentifiedArrayOf<WalletEvent> {
-        return .init(
+    public static var placeholder: IdentifiedArrayOf<WalletEvent> {
+        .init(
             uniqueElements: (0..<30).map {
                 WalletEvent(
                     id: String($0),

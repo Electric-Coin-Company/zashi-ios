@@ -13,25 +13,26 @@ import URIParser
 import ZcashLightClientKit
 import Generated
 
-typealias ScanStore = Store<ScanReducer.State, ScanReducer.Action>
-typealias ScanViewStore = ViewStore<ScanReducer.State, ScanReducer.Action>
+public typealias ScanStore = Store<ScanReducer.State, ScanReducer.Action>
+public typealias ScanViewStore = ViewStore<ScanReducer.State, ScanReducer.Action>
 
-struct ScanReducer: ReducerProtocol {
+public struct ScanReducer: ReducerProtocol {
     private enum CancelId { case timer }
+    let networkType: NetworkType
 
-    struct State: Equatable {
-        enum ScanStatus: Equatable {
+    public struct State: Equatable {
+        public enum ScanStatus: Equatable {
             case failed
             case value(RedactableString)
             case unknown
         }
 
-        @PresentationState var alert: AlertState<Action>?
-        var isTorchAvailable = false
-        var isTorchOn = false
-        var scanStatus: ScanStatus = .unknown
+        @PresentationState public var alert: AlertState<Action>?
+        public var isTorchAvailable = false
+        public var isTorchOn = false
+        public var scanStatus: ScanStatus = .unknown
 
-        var scannedValue: String? {
+        public var scannedValue: String? {
             guard case let .value(scannedValue) = scanStatus else {
                 return nil
             }
@@ -39,11 +40,21 @@ struct ScanReducer: ReducerProtocol {
             return scannedValue.data
         }
         
-        var isValidValue: Bool {
+        public var isValidValue: Bool {
             if case .value = scanStatus {
                 return true
             }
             return false
+        }
+        
+        public init(
+            isTorchAvailable: Bool = false,
+            isTorchOn: Bool = false,
+            scanStatus: ScanStatus = .unknown
+        ) {
+            self.isTorchAvailable = isTorchAvailable
+            self.isTorchOn = isTorchOn
+            self.scanStatus = scanStatus
         }
     }
 
@@ -51,7 +62,7 @@ struct ScanReducer: ReducerProtocol {
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.uriParser) var uriParser
 
-    enum Action: Equatable {
+    public enum Action: Equatable {
         case alert(PresentationAction<Action>)
         case onAppear
         case onDisappear
@@ -61,8 +72,12 @@ struct ScanReducer: ReducerProtocol {
         case torchPressed
     }
     
+    public init(networkType: NetworkType) {
+        self.networkType = networkType
+    }
+
     // swiftlint:disable:next cyclomatic_complexity
-    var body: some ReducerProtocolOf<Self> {
+    public var body: some ReducerProtocolOf<Self> {
         Reduce { state, action in
             switch action {
             case .alert:
@@ -95,7 +110,7 @@ struct ScanReducer: ReducerProtocol {
                 if let prevCode = state.scannedValue, prevCode == code.data {
                     return .none
                 }
-                if uriParser.isValidURI(code.data, TargetConstants.zcashNetwork.networkType) {
+                if uriParser.isValidURI(code.data, networkType) {
                     state.scanStatus = .value(code)
                     // once valid URI is scanned we want to start the timer to deliver the code
                     // any new code cancels the schedule and fires new one
@@ -128,8 +143,8 @@ struct ScanReducer: ReducerProtocol {
 // MARK: Alerts
 
 extension AlertState where Action == ScanReducer.Action {
-    static func cantInitializeCamera(_ error: ZcashError) -> AlertState<ScanReducer.Action> {
-        AlertState<ScanReducer.Action> {
+    public static func cantInitializeCamera(_ error: ZcashError) -> AlertState {
+        AlertState {
             TextState(L10n.Scan.Alert.CantInitializeCamera.title)
         } message: {
             TextState(L10n.Scan.Alert.CantInitializeCamera.message(error.message, error.code.rawValue))
@@ -140,14 +155,14 @@ extension AlertState where Action == ScanReducer.Action {
 // MARK: Placeholders
 
 extension ScanReducer.State {
-    static var placeholder: Self {
+    public static var placeholder: Self {
         .init()
     }
 }
 
 extension ScanStore {
-    static let placeholder = ScanStore(
+    public static let placeholder = ScanStore(
         initialState: .placeholder,
-        reducer: ScanReducer()
+        reducer: ScanReducer(networkType: .testnet)
     )
 }

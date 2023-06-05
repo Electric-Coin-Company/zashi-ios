@@ -35,10 +35,15 @@ extension UIShareDialog {
     }
 }
 
-struct UIShareDialogView: UIViewRepresentable {
-    let activityItems: [Any]
-    let completion: () -> Void
+public struct UIShareDialogView: UIViewRepresentable {
+    public let activityItems: [Any]
+    public let completion: () -> Void
 
+    public init(activityItems: [Any], completion: @escaping () -> Void) {
+        self.activityItems = activityItems
+        self.completion = completion
+    }
+    
     public func makeUIView(context: UIViewRepresentableContext<UIShareDialogView>) -> UIShareDialog {
         let view = UIShareDialog()
         view.doInitialSetup(activityItems: activityItems, completion: completion)

@@ -11,13 +11,14 @@ import ZcashLightClientKit
 import Combine
 import Utils
 import Generated
+import BalanceBreakdown
 @testable import secant_testnet
 
 class BalanceBreakdownTests: XCTestCase {
     func testOnAppear() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: BalanceBreakdownReducer()
+            reducer: BalanceBreakdownReducer(networkType: .testnet)
         )
         
         store.dependencies.sdkSynchronizer = .mocked()
@@ -40,7 +41,7 @@ class BalanceBreakdownTests: XCTestCase {
     @MainActor func testShieldFundsSucceed() async throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: BalanceBreakdownReducer()
+            reducer: BalanceBreakdownReducer(networkType: .testnet)
         )
 
         store.dependencies.sdkSynchronizer = .mock
@@ -65,7 +66,7 @@ class BalanceBreakdownTests: XCTestCase {
     @MainActor func testShieldFundsFails() async throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: BalanceBreakdownReducer()
+            reducer: BalanceBreakdownReducer(networkType: .testnet)
         )
 
         store.dependencies.sdkSynchronizer = .mocked(shieldFunds: { _, _, _ in throw ZcashError.synchronizerNotPrepared })
@@ -90,7 +91,7 @@ class BalanceBreakdownTests: XCTestCase {
     @MainActor func testShieldFundsButtonDisabledWhenNoShieldableFunds() async throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: BalanceBreakdownReducer()
+            reducer: BalanceBreakdownReducer(networkType: .testnet)
         )
 
         XCTAssertFalse(store.state.shieldingFunds)
@@ -112,7 +113,7 @@ class BalanceBreakdownTests: XCTestCase {
                     )
                 )
             ),
-            reducer: BalanceBreakdownReducer()
+            reducer: BalanceBreakdownReducer(networkType: .testnet)
         )
 
         XCTAssertFalse(store.state.shieldingFunds)
@@ -134,7 +135,7 @@ class BalanceBreakdownTests: XCTestCase {
                     )
                 )
             ),
-            reducer: BalanceBreakdownReducer()
+            reducer: BalanceBreakdownReducer(networkType: .testnet)
         )
 
         XCTAssertTrue(store.state.shieldingFunds)

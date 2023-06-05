@@ -2,11 +2,17 @@ import SwiftUI
 import ComposableArchitecture
 import Generated
 import RecoveryPhraseDisplay
+import UIComponents
+import ExportLogs
 
-struct SettingsView: View {
+public struct SettingsView: View {
     let store: SettingsStore
     
-    var body: some View {
+    public init(store: SettingsStore) {
+        self.store = store
+    }
+    
+    public var body: some View {
         WithViewStore(store) { viewStore in
             VStack(spacing: 40) {
                 Toggle(

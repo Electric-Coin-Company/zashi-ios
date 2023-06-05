@@ -9,10 +9,14 @@ import SwiftUI
 import ComposableArchitecture
 import Generated
 
-struct About: View {
+public struct About: View {
     let store: SettingsStore
     
-    var body: some View {
+    public init(store: SettingsStore) {
+        self.store = store
+    }
+    
+    public var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
                 Text(L10n.Settings.version(viewStore.appVersion, viewStore.appBuild))

@@ -4,30 +4,49 @@ import ZcashLightClientKit
 import Utils
 import Models
 import Generated
+import Pasteboard
+import SDKSynchronizer
+import ZcashSDKEnvironment
 
-typealias WalletEventsFlowStore = Store<WalletEventsFlowReducer.State, WalletEventsFlowReducer.Action>
-typealias WalletEventsFlowViewStore = ViewStore<WalletEventsFlowReducer.State, WalletEventsFlowReducer.Action>
+public typealias WalletEventsFlowStore = Store<WalletEventsFlowReducer.State, WalletEventsFlowReducer.Action>
+public typealias WalletEventsFlowViewStore = ViewStore<WalletEventsFlowReducer.State, WalletEventsFlowReducer.Action>
 
-struct WalletEventsFlowReducer: ReducerProtocol {
+public struct WalletEventsFlowReducer: ReducerProtocol {
     private enum CancelId { case timer }
 
-    struct State: Equatable {
-        enum Destination: Equatable {
+    public struct State: Equatable {
+        public enum Destination: Equatable {
             case latest
             case all
             case showWalletEvent(WalletEvent)
         }
 
-        @PresentationState var alert: AlertState<Action>?
-        var destination: Destination?
-        var latestMinedHeight: BlockHeight?
-        var isScrollable = true
-        var requiredTransactionConfirmations = 0
-        var walletEvents = IdentifiedArrayOf<WalletEvent>.placeholder
-        var selectedWalletEvent: WalletEvent?
+        @PresentationState public var alert: AlertState<Action>?
+        public var destination: Destination?
+        public var latestMinedHeight: BlockHeight?
+        public var isScrollable = true
+        public var requiredTransactionConfirmations = 0
+        public var walletEvents = IdentifiedArrayOf<WalletEvent>.placeholder
+        public var selectedWalletEvent: WalletEvent?
+        
+        public init(
+            destination: Destination? = nil,
+            latestMinedHeight: BlockHeight? = nil,
+            isScrollable: Bool = true,
+            requiredTransactionConfirmations: Int = 0,
+            walletEvents: IdentifiedArrayOf<WalletEvent> = .placeholder,
+            selectedWalletEvent: WalletEvent? = nil
+        ) {
+            self.destination = destination
+            self.latestMinedHeight = latestMinedHeight
+            self.isScrollable = isScrollable
+            self.requiredTransactionConfirmations = requiredTransactionConfirmations
+            self.walletEvents = walletEvents
+            self.selectedWalletEvent = selectedWalletEvent
+        }
     }
 
-    enum Action: Equatable {
+    public enum Action: Equatable {
         case alert(PresentationAction<Action>)
         case copyToPastboard(RedactableString)
         case dismissAlert
@@ -46,8 +65,10 @@ struct WalletEventsFlowReducer: ReducerProtocol {
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
+    public init() {}
+    
     // swiftlint:disable:next cyclomatic_complexity
-    func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
+    public func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
         switch action {
         case .onAppear:
             state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
@@ -148,8 +169,8 @@ extension WalletEventsFlowViewStore {
 // MARK: Alerts
 
 extension AlertState where Action == WalletEventsFlowReducer.Action {
-    static func warnBeforeLeavingApp(_ blockExplorerURL: URL?) -> AlertState<WalletEventsFlowReducer.Action> {
-        AlertState<WalletEventsFlowReducer.Action> {
+    public static func warnBeforeLeavingApp(_ blockExplorerURL: URL?) -> AlertState {
+        AlertState {
             TextState(L10n.WalletEvent.Alert.LeavingApp.title)
         } actions: {
             ButtonState(action: .openBlockExplorer(blockExplorerURL)) {
@@ -167,7 +188,7 @@ extension AlertState where Action == WalletEventsFlowReducer.Action {
 // MARK: Placeholders
 
 extension TransactionState {
-    static var placeholder: Self {
+    public static var placeholder: Self {
         .init(
             zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
             fee: Zatoshi(10),
@@ -178,7 +199,7 @@ extension TransactionState {
         )
     }
     
-    static func statePlaceholder(_ status: Status) -> Self {
+    public static func statePlaceholder(_ status: Status) -> Self {
         .init(
             zAddress: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po",
             fee: Zatoshi(10),
@@ -191,17 +212,17 @@ extension TransactionState {
 }
 
 extension WalletEventsFlowReducer.State {
-    static var placeHolder: Self {
+    public static var placeHolder: Self {
         .init(walletEvents: .placeholder)
     }
 
-    static var emptyPlaceHolder: Self {
+    public static var emptyPlaceHolder: Self {
         .init(walletEvents: [])
     }
 }
 
 extension WalletEventsFlowStore {
-    static var placeholder: Store<WalletEventsFlowReducer.State, WalletEventsFlowReducer.Action> {
+    public static var placeholder: Store<WalletEventsFlowReducer.State, WalletEventsFlowReducer.Action> {
         return Store(
             initialState: .placeHolder,
             reducer: WalletEventsFlowReducer()
@@ -211,7 +232,7 @@ extension WalletEventsFlowStore {
 }
 
 extension IdentifiedArrayOf where Element == TransactionState {
-    static var placeholder: IdentifiedArrayOf<TransactionState> {
+    public static var placeholder: IdentifiedArrayOf<TransactionState> {
         return .init(
             uniqueElements: (0..<30).map {
                 TransactionState(

@@ -6,9 +6,10 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
 import ZcashLightClientKit
+import Scan
+@testable import secant_testnet
 
 class ScanTests: XCTestCase {
     func testOnAppearResetValues() throws {
@@ -19,7 +20,7 @@ class ScanTests: XCTestCase {
                     isTorchOn: true,
                     scanStatus: .value("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted)
                 ),
-            reducer: ScanReducer()
+            reducer: ScanReducer(networkType: .testnet)
         )
 
         store.dependencies.captureDevice = .noOp
@@ -34,7 +35,7 @@ class ScanTests: XCTestCase {
     func testTorchOn() throws {
         let store = TestStore(
             initialState: ScanReducer.State(),
-            reducer: ScanReducer()
+            reducer: ScanReducer(networkType: .testnet)
         )
 
         store.dependencies.captureDevice = .noOp
@@ -49,7 +50,7 @@ class ScanTests: XCTestCase {
             initialState: ScanReducer.State(
                 isTorchOn: true
             ),
-            reducer: ScanReducer()
+            reducer: ScanReducer(networkType: .testnet)
         )
 
         store.dependencies.captureDevice = .noOp
@@ -62,7 +63,7 @@ class ScanTests: XCTestCase {
     func testScannedInvalidValue() throws {
         let store = TestStore(
             initialState: ScanReducer.State(),
-            reducer: ScanReducer()
+            reducer: ScanReducer(networkType: .testnet)
         )
 
         store.dependencies.uriParser.isValidURI = { _, _ in false }
@@ -78,7 +79,7 @@ class ScanTests: XCTestCase {
         
         let store = TestStore(
             initialState: ScanReducer.State(),
-            reducer: ScanReducer()
+            reducer: ScanReducer(networkType: .testnet)
         )
         
         store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
@@ -97,7 +98,7 @@ class ScanTests: XCTestCase {
     func testScanFailed() throws {
         let store = TestStore(
             initialState: ScanReducer.State(),
-            reducer: ScanReducer()
+            reducer: ScanReducer(networkType: .testnet)
         )
 
         store.send(.scanFailed) { state in
