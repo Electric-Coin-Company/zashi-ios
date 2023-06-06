@@ -88,6 +88,14 @@ struct SettingsView: View {
                 .frame(width: 0, height: 0)
             }
         }
+        .alert(store: store.scope(
+            state: \.$alert,
+            action: { .alert($0) }
+        ))
+        .alert(store: store.scope(
+            state: \.exportLogsState.$alert,
+            action: { .exportLogs(.alert($0)) }
+        ))
     }
 
     @ViewBuilder func shareLogsView(_ viewStore: SettingsViewStore) -> some View {

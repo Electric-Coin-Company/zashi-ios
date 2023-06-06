@@ -3,6 +3,7 @@ import SwiftUI
 import ZcashLightClientKit
 import Utils
 import Models
+import Generated
 
 typealias WalletEventsFlowStore = Store<WalletEventsFlowReducer.State, WalletEventsFlowReducer.Action>
 typealias WalletEventsFlowViewStore = ViewStore<WalletEventsFlowReducer.State, WalletEventsFlowReducer.Action>
@@ -17,8 +18,8 @@ struct WalletEventsFlowReducer: ReducerProtocol {
             case showWalletEvent(WalletEvent)
         }
 
+        @PresentationState var alert: AlertState<Action>?
         var destination: Destination?
-
         var latestMinedHeight: BlockHeight?
         var isScrollable = true
         var requiredTransactionConfirmations = 0
@@ -27,8 +28,9 @@ struct WalletEventsFlowReducer: ReducerProtocol {
     }
 
     enum Action: Equatable {
-        case alert(AlertRequest)
+        case alert(PresentationAction<Action>)
         case copyToPastboard(RedactableString)
+        case dismissAlert
         case onAppear
         case onDisappear
         case openBlockExplorer(URL?)
@@ -99,9 +101,13 @@ struct WalletEventsFlowReducer: ReducerProtocol {
 
         case .alert:
             return .none
+            
+        case .dismissAlert:
+            return .none
 
         case .warnBeforeLeavingApp(let blockExplorerURL):
-            return EffectTask(value: .alert(.walletEvents(.warnBeforeLeavingApp(blockExplorerURL))))
+            state.alert = AlertState.warnBeforeLeavingApp(blockExplorerURL)
+            return .none
 
         case .openBlockExplorer(let blockExplorerURL):
             if let url = blockExplorerURL {
@@ -136,6 +142,25 @@ extension WalletEventsFlowViewStore {
                 )
             }
         )
+    }
+}
+
+// MARK: Alerts
+
+extension AlertState where Action == WalletEventsFlowReducer.Action {
+    static func warnBeforeLeavingApp(_ blockExplorerURL: URL?) -> AlertState<WalletEventsFlowReducer.Action> {
+        AlertState<WalletEventsFlowReducer.Action> {
+            TextState(L10n.WalletEvent.Alert.LeavingApp.title)
+        } actions: {
+            ButtonState(action: .openBlockExplorer(blockExplorerURL)) {
+                TextState(L10n.WalletEvent.Alert.LeavingApp.Button.seeOnline)
+            }
+            ButtonState(role: .cancel, action: .dismissAlert) {
+                TextState(L10n.WalletEvent.Alert.LeavingApp.Button.nevermind)
+            }
+        } message: {
+            TextState(L10n.WalletEvent.Alert.LeavingApp.message)
+        }
     }
 }
 

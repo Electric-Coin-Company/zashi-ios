@@ -54,6 +54,10 @@ struct ScanView: View {
             }
             .ignoresSafeArea()
         }
+        .alert(store: store.scope(
+            state: \.$alert,
+            action: { .alert($0) }
+        ))
     }
 }
 

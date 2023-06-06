@@ -113,7 +113,8 @@ extension RootReducer {
                 return .none
 
             case let .destination(.deeplinkFailed(url, error)):
-                return EffectTask(value: .alert(.root(.failedToProcessDeeplink(url, error))))
+                state.alert = AlertState.failedToProcessDeeplink(url, error)
+                return .none
 
             case .home(.walletEvents(.replyTo(let address))):
                 guard let url = URL(string: "zcash:\(address)") else {
@@ -122,7 +123,7 @@ extension RootReducer {
                 return EffectTask(value: .destination(.deeplink(url)))
 
             case .home, .initialization, .onboarding, .phraseDisplay, .phraseValidation, .sandbox, .updateStateAfterConfigUpdate, .alert,
-                .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .dismissAlert, .exportLogs, .uniAlert:
+                .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .dismissAlert, .exportLogs:
                 return .none
             }
             

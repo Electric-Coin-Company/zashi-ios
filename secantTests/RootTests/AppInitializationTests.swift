@@ -174,14 +174,7 @@ class AppInitializationTests: XCTestCase {
 
         await store.receive(.initialization(.respondToWalletInitializationState(.keysMissing))) { state in
             state.appInitializationState = .keysMissing
-        }
-        
-        await store.receive(.alert(.root(.walletStateFailed(.keysMissing)))) { state in
-            state.uniAlert = AlertState(
-                title: TextState("Wallet initialisation failed."),
-                message: TextState("App initialisation state: keysMissing."),
-                dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
-            )
+            state.alert = AlertState.walletStateFailed(.keysMissing)
         }
         
         await store.finish()

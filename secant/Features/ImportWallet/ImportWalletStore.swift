@@ -21,6 +21,7 @@ struct ImportWalletReducer: ReducerProtocol {
             case birthday
         }
 
+        @PresentationState var alert: AlertState<Action>?
         var birthdayHeight = "".redacted
         var birthdayHeightValue: RedactableBlockHeight?
         var destination: Destination?
@@ -46,8 +47,9 @@ struct ImportWalletReducer: ReducerProtocol {
     }
     
     enum Action: Equatable {
-        case alert(AlertRequest)
+        case alert(PresentationAction<Action>)
         case birthdayInputChanged(RedactableString)
+        case dismissAlert
         case restoreWallet
         case importPrivateOrViewingKey
         case initializeSDK
@@ -111,15 +113,15 @@ struct ImportWalletReducer: ReducerProtocol {
                     // update the backup phrase validation flag
                     try walletStorage.markUserPassedPhraseBackupTest(true)
                     
+                    state.alert = AlertState.succeed()
+                    
                     // notify user
-                    return .concatenate(
-                        EffectTask(value: .alert(.importWallet(.succeed))),
-                        EffectTask(value: .initializeSDK)
-                    )
+                    return EffectTask(value: .initializeSDK)
                 } catch {
-                    return EffectTask(value: .alert(.importWallet(.failed(error.toZcashError()))))
+                    state.alert = AlertState.failed(error.toZcashError())
                 }
-                
+                return .none
+
             case .updateDestination(let destination):
                 state.destination = destination
                 return .none
@@ -131,6 +133,9 @@ struct ImportWalletReducer: ReducerProtocol {
                 return .none
                 
             case .initializeSDK:
+                return .none
+                
+            case .dismissAlert:
                 return .none
             }
         }
@@ -161,6 +166,34 @@ extension ImportWalletViewStore {
             get: { _ in birthdayHeight.data },
             send: { .birthdayInputChanged($0.redacted) }
         )
+    }
+}
+
+// MARK: Alerts
+
+extension AlertState where Action == ImportWalletReducer.Action {
+    static func succeed() -> AlertState<ImportWalletReducer.Action> {
+        AlertState<ImportWalletReducer.Action> {
+            TextState(L10n.General.success)
+        } actions: {
+            ButtonState(action: .successfullyRecovered) {
+                TextState(L10n.General.ok)
+            }
+        } message: {
+            TextState(L10n.ImportWallet.Alert.Success.message)
+        }
+    }
+    
+    static func failed(_ error: ZcashError) -> AlertState<ImportWalletReducer.Action> {
+        AlertState<ImportWalletReducer.Action> {
+            TextState(L10n.ImportWallet.Alert.Failed.title)
+        } actions: {
+            ButtonState(action: .dismissAlert) {
+                TextState(L10n.General.ok)
+            }
+        } message: {
+            TextState(L10n.ImportWallet.Alert.Failed.message(error.message, error.code.rawValue))
+        }
     }
 }
 

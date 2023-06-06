@@ -118,14 +118,7 @@ class RootTests: XCTestCase {
         
         store.send(.initialization(.respondToWalletInitializationState(.keysMissing))) { state in
             state.appInitializationState = .keysMissing
-        }
-        
-        store.receive(.alert(.root(.walletStateFailed(.keysMissing)))) { state in
-            state.uniAlert = AlertState(
-                title: TextState("Wallet initialisation failed."),
-                message: TextState("App initialisation state: keysMissing."),
-                dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
-            )
+            state.alert = AlertState.walletStateFailed(.keysMissing)
         }
     }
 
@@ -150,24 +143,11 @@ class RootTests: XCTestCase {
         store.receive(.initialization(.checkBackupPhraseValidation)) { state in
             // failed is expected because environment is throwing errors
             state.appInitializationState = .failed
+            state.alert = AlertState.cantLoadSeedPhrase()
         }
 
-        store.receive(.initialization(.initializationFailed(zcashError)))
-
-        store.receive(.alert(.root(.cantLoadSeedPhrase))) { state in
-            state.uniAlert = AlertState(
-                title: TextState("Wallet initialisation failed."),
-                message: TextState("Can't load seed phrase from local storage."),
-                dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
-            )
-        }
-        
-        store.receive(.alert(.root(.initializationFailed(zcashError)))) { state in
-            state.uniAlert = AlertState(
-                title: TextState("Failed to initialize the SDK"),
-                message: TextState("Error: \(zcashError.message) (code: \(zcashError.code.rawValue))"),
-                dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
-            )
+        store.receive(.initialization(.initializationFailed(zcashError))) { state in
+            state.alert = AlertState.initializationFailed(zcashError)
         }
     }
 
@@ -190,24 +170,11 @@ class RootTests: XCTestCase {
         store.receive(.initialization(.checkBackupPhraseValidation)) { state in
             // failed is expected because environment is throwing errors
             state.appInitializationState = .failed
+            state.alert = AlertState.cantLoadSeedPhrase()
         }
         
-        store.receive(.initialization(.initializationFailed(zcashError)))
-        
-        store.receive(.alert(.root(.cantLoadSeedPhrase))) { state in
-            state.uniAlert = AlertState(
-                title: TextState("Wallet initialisation failed."),
-                message: TextState("Can't load seed phrase from local storage."),
-                dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
-            )
-        }
-        
-        store.receive(.alert(.root(.initializationFailed(zcashError)))) { state in
-            state.uniAlert = AlertState(
-                title: TextState("Failed to initialize the SDK"),
-                message: TextState("Error: \(zcashError.message) (code: \(zcashError.code.rawValue))"),
-                dismissButton: .default(TextState("Ok"), action: .send(.dismissAlert))
-            )
+        store.receive(.initialization(.initializationFailed(zcashError))) { state in
+            state.alert = AlertState.initializationFailed(zcashError)
         }
     }
     

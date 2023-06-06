@@ -10,6 +10,8 @@ import UserPreferencesStorage
 import Models
 import RecoveryPhraseDisplay
 import Welcome
+import Generated
+import Foundation
 
 typealias RootStore = Store<RootReducer.State, RootReducer.Action>
 typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
@@ -20,6 +22,7 @@ struct RootReducer: ReducerProtocol {
     enum WalletConfigCancelId { case timer }
 
     struct State: Equatable {
+        @PresentationState var alert: AlertState<Action>?
         var appInitializationState: InitializationState = .uninitialized
         var debugState: DebugState
         var destinationState: DestinationState
@@ -30,13 +33,12 @@ struct RootReducer: ReducerProtocol {
         var phraseDisplayState: RecoveryPhraseDisplayReducer.State
         var sandboxState: SandboxReducer.State
         var storedWallet: StoredWallet?
-        @BindingState var uniAlert: AlertState<RootReducer.Action>?
         var walletConfig: WalletConfig
         var welcomeState: WelcomeReducer.State
     }
 
-    enum Action: Equatable, BindableAction {
-        case alert(AlertRequest)
+    enum Action: Equatable {
+        case alert(PresentationAction<Action>)
         case binding(BindingAction<RootReducer.State>)
         case debug(DebugAction)
         case dismissAlert
@@ -50,7 +52,6 @@ struct RootReducer: ReducerProtocol {
         case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
         case phraseValidation(RecoveryPhraseValidationFlowReducer.Action)
         case sandbox(SandboxReducer.Action)
-        case uniAlert(AlertAction)
         case updateStateAfterConfigUpdate(WalletConfig)
         case walletConfigLoaded(WalletConfig)
         case welcome(WelcomeReducer.Action)
@@ -71,8 +72,6 @@ struct RootReducer: ReducerProtocol {
 
     @ReducerBuilder<State, Action>
     var core: some ReducerProtocol<State, Action> {
-        BindingReducer()
-
         Scope(state: \.homeState, action: /Action.home) {
             HomeReducer()
         }
@@ -110,7 +109,6 @@ struct RootReducer: ReducerProtocol {
     
     var body: some ReducerProtocol<State, Action> {
         self.core
-            .alerts()
     }
 }
 
@@ -145,6 +143,97 @@ extension RootReducer {
         }
         
         return .uninitialized
+    }
+}
+
+// MARK: Alerts
+
+extension AlertState where Action == RootReducer.Action {
+    static func cantCreateNewWallet(_ error: ZcashError) -> AlertState<RootReducer.Action> {
+        AlertState<RootReducer.Action> {
+            TextState(L10n.Root.Initialization.Alert.Failed.title)
+        } message: {
+            TextState(L10n.Root.Initialization.Alert.CantCreateNewWallet.message(error.message, error.code.rawValue))
+        }
+    }
+    
+    static func cantLoadSeedPhrase() -> AlertState<RootReducer.Action> {
+        AlertState<RootReducer.Action> {
+            TextState(L10n.Root.Initialization.Alert.Failed.title)
+        } message: {
+            TextState(L10n.Root.Initialization.Alert.CantLoadSeedPhrase.message)
+        }
+    }
+    
+    static func cantStartSync(_ error: ZcashError) -> AlertState<RootReducer.Action> {
+        AlertState<RootReducer.Action> {
+            TextState(L10n.Root.Debug.Alert.Rewind.CantStartSync.title)
+        } message: {
+            TextState(L10n.Root.Debug.Alert.Rewind.CantStartSync.message(error.message, error.code.rawValue))
+        }
+    }
+    
+    static func cantStoreThatUserPassedPhraseBackupTest(_ error: ZcashError) -> AlertState<RootReducer.Action> {
+        AlertState<RootReducer.Action> {
+            TextState(L10n.Root.Initialization.Alert.Failed.title)
+        } message: {
+            TextState(
+                L10n.Root.Initialization.Alert.CantStoreThatUserPassedPhraseBackupTest.message(error.message, error.code.rawValue)
+            )
+        }
+    }
+    
+    static func failedToProcessDeeplink(_ url: URL, _ error: ZcashError) -> AlertState<RootReducer.Action> {
+        AlertState<RootReducer.Action> {
+            TextState(L10n.Root.Destination.Alert.FailedToProcessDeeplink.title)
+        } message: {
+            TextState(L10n.Root.Destination.Alert.FailedToProcessDeeplink.message(url, error.message, error.code.rawValue))
+        }
+    }
+    
+    static func initializationFailed(_ error: ZcashError) -> AlertState<RootReducer.Action> {
+        AlertState<RootReducer.Action> {
+            TextState(L10n.Root.Initialization.Alert.SdkInitFailed.title)
+        } message: {
+            TextState(L10n.Root.Initialization.Alert.Error.message(error.message, error.code.rawValue))
+        }
+    }
+    
+    static func rewindFailed(_ error: ZcashError) -> AlertState<RootReducer.Action> {
+        AlertState<RootReducer.Action> {
+            TextState(L10n.Root.Debug.Alert.Rewind.Failed.title)
+        } message: {
+            TextState(L10n.Root.Debug.Alert.Rewind.Failed.message(error.message, error.code.rawValue))
+        }
+    }
+    
+    static func walletStateFailed(_ walletState: InitializationState) -> AlertState<RootReducer.Action> {
+        AlertState<RootReducer.Action> {
+            TextState(L10n.Root.Initialization.Alert.Failed.title)
+        } message: {
+            TextState(L10n.Root.Initialization.Alert.WalletStateFailed.message(walletState))
+        }
+    }
+    
+    static func wipeFailed() -> AlertState<RootReducer.Action> {
+        AlertState<RootReducer.Action> {
+            TextState(L10n.Root.Initialization.Alert.WipeFailed.title)
+        }
+    }
+    
+    static func wipeRequest() -> AlertState<RootReducer.Action> {
+        AlertState<RootReducer.Action> {
+            TextState(L10n.Root.Initialization.Alert.Wipe.title)
+        } actions: {
+            ButtonState(role: .destructive, action: .initialization(.nukeWallet)) {
+                TextState(L10n.General.yes)
+            }
+            ButtonState(role: .cancel, action: .dismissAlert) {
+                TextState(L10n.General.no)
+            }
+        } message: {
+            TextState(L10n.Root.Initialization.Alert.Wipe.message)
+        }
     }
 }
 

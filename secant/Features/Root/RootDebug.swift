@@ -67,7 +67,8 @@ extension RootReducer {
 
             case let .debug(.rewindDone(error, _)):
                 if let error {
-                    return EffectTask(value: .alert(.root(.rewindFailed(error.toZcashError()))))
+                    state.alert = AlertState.rewindFailed(error.toZcashError())
+                    return .none
                 } else {
                     return .run { send in
                         do {
@@ -96,7 +97,8 @@ extension RootReducer {
                 return EffectTask(value: .updateStateAfterConfigUpdate(walletConfig))
 
             case .debug(.cantStartSync(let error)):
-                return EffectTask(value: .alert(.root(.cantStartSync(error))))
+                state.alert = AlertState.cantStartSync(error)
+                return .none
                 
             case .debug(.rateTheApp):
                 return .none
