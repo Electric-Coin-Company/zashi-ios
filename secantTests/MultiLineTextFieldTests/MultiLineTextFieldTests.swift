@@ -6,8 +6,9 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
+import UIComponents
+@testable import secant_testnet
 
 class MultiLineTextFieldTests: XCTestCase {
     func testIsCharLimited() throws {

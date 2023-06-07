@@ -38,10 +38,8 @@ extension ZcashSDKEnvironment {
 public struct ZcashSDKEnvironment {
     public var latestCheckpoint: (ZcashNetwork) -> BlockHeight //{ BlockHeight.ofLatestCheckpoint(network: network()) }
     public let endpoint: (ZcashNetwork) -> LightWalletEndpoint
-    //public var isMainnet: Bool { network().networkType == .mainnet }
     public let memoCharLimit: Int
     public let mnemonicWordsMaxCount: Int
-    //public let network: () -> ZcashNetwork
     public let requiredTransactionConfirmations: Int
     public let sdkVersion: String
 }

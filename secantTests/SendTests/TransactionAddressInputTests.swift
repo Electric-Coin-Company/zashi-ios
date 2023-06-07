@@ -6,8 +6,9 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
+import UIComponents
+@testable import secant_testnet
 
 class TransactionAddressTextFieldTests: XCTestCase {
     func testClearValue() throws {
@@ -20,7 +21,7 @@ class TransactionAddressTextFieldTests: XCTestCase {
                             text: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
                         )
                 ),
-            reducer: TransactionAddressTextFieldReducer()
+            reducer: TransactionAddressTextFieldReducer(networkType: .testnet)
         )
 
         store.send(.clearAddress) { state in

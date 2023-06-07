@@ -6,8 +6,9 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
+import OnboardingFlow
+@testable import secant_testnet
 
 class OnboardingSnapshotTests: XCTestCase {
     func testOnboardingFlowSnapshot() throws {
@@ -16,7 +17,7 @@ class OnboardingSnapshotTests: XCTestCase {
                 walletConfig: .default,
                 importWalletState: .placeholder
             ),
-            reducer: OnboardingFlowReducer()
+            reducer: OnboardingFlowReducer(saplingActivationHeight: 280_000)
         )
         let viewStore = ViewStore(store)
 

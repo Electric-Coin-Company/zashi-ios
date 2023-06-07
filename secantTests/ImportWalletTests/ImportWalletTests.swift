@@ -8,6 +8,7 @@
 import XCTest
 import ComposableArchitecture
 import Utils
+import ImportWallet
 @testable import secant_testnet
 
 // swiftlint:disable type_body_length
@@ -15,7 +16,7 @@ class ImportWalletTests: XCTestCase {
     func testOnAppear() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: ImportWalletReducer()
+            reducer: ImportWalletReducer(saplingActivationHeight: 0)
         )
         
         store.send(.onAppear) { state in
@@ -26,7 +27,7 @@ class ImportWalletTests: XCTestCase {
     func testWordsCount() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: ImportWalletReducer()
+            reducer: ImportWalletReducer(saplingActivationHeight: 0)
         )
         
         store.dependencies.mnemonic = .noOp
@@ -43,7 +44,7 @@ class ImportWalletTests: XCTestCase {
     func testMaxWordsInvalidMnemonic() throws {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24),
-            reducer: ImportWalletReducer()
+            reducer: ImportWalletReducer(saplingActivationHeight: 0)
         )
         
         store.dependencies.mnemonic = .noOp
@@ -61,7 +62,7 @@ class ImportWalletTests: XCTestCase {
     func testValidMnemonic() throws {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24),
-            reducer: ImportWalletReducer()
+            reducer: ImportWalletReducer(saplingActivationHeight: 0)
         )
         
         store.dependencies.mnemonic = .noOp
@@ -84,7 +85,7 @@ class ImportWalletTests: XCTestCase {
     func testInvalidBirthdayHeight_lessThanSaplingActivation() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: ImportWalletReducer()
+            reducer: ImportWalletReducer(saplingActivationHeight: 280_000)
         )
         
         let birthday = "200000".redacted
@@ -96,7 +97,7 @@ class ImportWalletTests: XCTestCase {
     func testInvalidBirthdayHeight_invalidInput() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: ImportWalletReducer()
+            reducer: ImportWalletReducer(saplingActivationHeight: 0)
         )
         
         let birthday = "abc".redacted
@@ -108,7 +109,7 @@ class ImportWalletTests: XCTestCase {
     func testInvalidBirthdayHeight_validInput() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: ImportWalletReducer()
+            reducer: ImportWalletReducer(saplingActivationHeight: 0)
         )
         
         let birthday = "1700000".redacted
@@ -121,7 +122,7 @@ class ImportWalletTests: XCTestCase {
     func testFormValidity_validBirthday_invalidMnemonic() throws {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24),
-            reducer: ImportWalletReducer()
+            reducer: ImportWalletReducer(saplingActivationHeight: 0)
         )
 
         store.dependencies.mnemonic = .noOp
@@ -149,7 +150,7 @@ class ImportWalletTests: XCTestCase {
     func testFormValidity_invalidBirthday_invalidMnemonic() throws {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24),
-            reducer: ImportWalletReducer()
+            reducer: ImportWalletReducer(saplingActivationHeight: 280_000)
         )
         
         store.dependencies.mnemonic = .noOp
@@ -176,7 +177,7 @@ class ImportWalletTests: XCTestCase {
     func testFormValidity_invalidBirthday_validMnemonic() throws {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24),
-            reducer: ImportWalletReducer()
+            reducer: ImportWalletReducer(saplingActivationHeight: 280_000)
         )
         
         store.dependencies.mnemonic = .noOp
@@ -208,7 +209,7 @@ class ImportWalletTests: XCTestCase {
     func testFormValidity_validBirthday_validMnemonic() throws {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24),
-            reducer: ImportWalletReducer()
+            reducer: ImportWalletReducer(saplingActivationHeight: 0)
         )
             
         store.dependencies.mnemonic = .noOp
@@ -241,7 +242,7 @@ class ImportWalletTests: XCTestCase {
     func testFormValidity_noBirthday_validMnemonic() throws {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24),
-            reducer: ImportWalletReducer()
+            reducer: ImportWalletReducer(saplingActivationHeight: 0)
         )
         
         store.dependencies.mnemonic = .noOp
@@ -281,7 +282,7 @@ class ImportWalletTests: XCTestCase {
                 maxWordsCount: 24,
                 wordsCount: 24
             ),
-            reducer: ImportWalletReducer()
+            reducer: ImportWalletReducer(saplingActivationHeight: 0)
         )
         
         store.dependencies.mnemonic = .noOp

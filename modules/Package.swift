@@ -23,19 +23,23 @@ let package = Package(
         .library(name: "FeedbackGenerator", targets: ["FeedbackGenerator"]),
         .library(name: "FileManager", targets: ["FileManager"]),
         .library(name: "Generated", targets: ["Generated"]),
+        .library(name: "ImportWallet", targets: ["ImportWallet"]),
         .library(name: "LocalAuthenticationHandler", targets: ["LocalAuthenticationHandler"]),
         .library(name: "LogsHandler", targets: ["LogsHandler"]),
         .library(name: "MnemonicClient", targets: ["MnemonicClient"]),
         .library(name: "Models", targets: ["Models"]),
         .library(name: "NumberFormatter", targets: ["NumberFormatter"]),
+        .library(name: "OnboardingFlow", targets: ["OnboardingFlow"]),
         .library(name: "Pasteboard", targets: ["Pasteboard"]),
         .library(name: "Profile", targets: ["Profile"]),
         .library(name: "RecoveryPhraseDisplay", targets: ["RecoveryPhraseDisplay"]),
         .library(name: "RecoveryPhraseValidationFlow", targets: ["RecoveryPhraseValidationFlow"]),
         .library(name: "ReviewRequest", targets: ["ReviewRequest"]),
+        .library(name: "Sandbox", targets: ["Sandbox"]),
         .library(name: "Scan", targets: ["Scan"]),
         .library(name: "SDKSynchronizer", targets: ["SDKSynchronizer"]),
         .library(name: "SecItem", targets: ["SecItem"]),
+        .library(name: "SendFlow", targets: ["SendFlow"]),
         .library(name: "Settings", targets: ["Settings"]),
         .library(name: "SupportDataGenerator", targets: ["SupportDataGenerator"]),
         .library(name: "UIComponents", targets: ["UIComponents"]),
@@ -187,6 +191,20 @@ let package = Package(
             path: "Sources/Dependencies/LocalAuthenticationHandler"
         ),
         .target(
+            name: "ImportWallet",
+            dependencies: [
+                "Generated",
+                "MnemonicClient",
+                "UIComponents",
+                "Utils",
+                "WalletStorage",
+                "ZcashSDKEnvironment",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
+            ],
+            path: "Sources/Features/ImportWallet"
+        ),
+        .target(
             name: "LogsHandler",
             dependencies: [
                 "Utils",
@@ -217,6 +235,18 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Dependencies/NumberFormatter"
+        ),
+        .target(
+            name: "OnboardingFlow",
+            dependencies: [
+                "Generated",
+                "ImportWallet",
+                "Models",
+                "UIComponents",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
+            ],
+            path: "Sources/Features/OnboardingFlow"
         ),
         .target(
             name: "Pasteboard",
@@ -277,6 +307,19 @@ let package = Package(
             path: "Sources/Dependencies/ReviewRequest"
         ),
         .target(
+            name: "Sandbox",
+            dependencies: [
+                "Profile",
+                "RecoveryPhraseDisplay",
+                "Scan",
+                "SendFlow",
+                "WalletEventsFlow",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
+            ],
+            path: "Sources/Features/Sandbox"
+        ),
+        .target(
             name: "Scan",
             dependencies: [
                 "CaptureDevice",
@@ -306,6 +349,24 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Dependencies/SecItem"
+        ),
+        .target(
+            name: "SendFlow",
+            dependencies: [
+                "AudioServices",
+                "Generated",
+                "DerivationTool",
+                "MnemonicClient",
+                "Scan",
+                "SDKSynchronizer",
+                "UIComponents",
+                "Utils",
+                "WalletStorage",
+                "ZcashSDKEnvironment",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
+            ],
+            path: "Sources/Features/SendFlow"
         ),
         .target(
             name: "Settings",
@@ -340,8 +401,10 @@ let package = Package(
         .target(
             name: "UIComponents",
             dependencies: [
+                "DerivationTool",
                 "Generated",
-                "Utils"
+                "Utils",
+                "ZcashSDKEnvironment"
             ],
             path: "Sources/UIComponents"
         ),

@@ -6,6 +6,7 @@ import Profile
 import BalanceBreakdown
 import WalletEventsFlow
 import Settings
+import SendFlow
 
 struct HomeView: View {
     let store: Store<HomeReducer.State, HomeReducer.Action>
@@ -68,7 +69,7 @@ struct HomeView: View {
             )
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForDestination(.send),
-                destination: { SendFlowView(store: store.sendStore()) }
+                destination: { SendFlowView(store: store.sendStore(), tokenName: TargetConstants.tokenName) }
             )
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForDestination(.profile),

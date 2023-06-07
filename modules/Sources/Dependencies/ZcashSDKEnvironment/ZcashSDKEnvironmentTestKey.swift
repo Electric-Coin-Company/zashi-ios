@@ -24,7 +24,6 @@ extension ZcashSDKEnvironment: TestDependencyKey {
         },
         memoCharLimit: MemoBytes.capacity,
         mnemonicWordsMaxCount: ZcashSDKConstants.mnemonicWordsMaxCount,
-        //network: { ZcashNetworkBuilder.network(for: .testnet) },
         requiredTransactionConfirmations: ZcashSDKConstants.requiredTransactionConfirmations,
         sdkVersion: "0.18.1-beta"
     )
