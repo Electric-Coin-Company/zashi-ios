@@ -7,6 +7,7 @@
 
 import XCTest
 import ComposableArchitecture
+import OnboardingFlow
 @testable import secant_testnet
 
 class OnboardingStoreTests: XCTestCase {
@@ -16,7 +17,7 @@ class OnboardingStoreTests: XCTestCase {
                 walletConfig: .default,
                 importWalletState: .placeholder
             ),
-            reducer: OnboardingFlowReducer()
+            reducer: OnboardingFlowReducer(saplingActivationHeight: 280_000)
         )
         
         store.send(.next) { state in
@@ -57,7 +58,7 @@ class OnboardingStoreTests: XCTestCase {
                 importWalletState: .placeholder,
                 index: 3
             ),
-            reducer: OnboardingFlowReducer()
+            reducer: OnboardingFlowReducer(saplingActivationHeight: 280_000)
         )
         
         store.send(.next)
@@ -71,7 +72,7 @@ class OnboardingStoreTests: XCTestCase {
                 importWalletState: .placeholder,
                 index: 2
             ),
-            reducer: OnboardingFlowReducer()
+            reducer: OnboardingFlowReducer(saplingActivationHeight: 280_000)
         )
         
         store.send(.back) { state in
@@ -101,7 +102,7 @@ class OnboardingStoreTests: XCTestCase {
                 walletConfig: .default,
                 importWalletState: .placeholder
             ),
-            reducer: OnboardingFlowReducer()
+            reducer: OnboardingFlowReducer(saplingActivationHeight: 280_000)
         )
         
         store.send(.back)
@@ -117,7 +118,7 @@ class OnboardingStoreTests: XCTestCase {
                 importWalletState: .placeholder,
                 index: initialIndex
             ),
-            reducer: OnboardingFlowReducer()
+            reducer: OnboardingFlowReducer(saplingActivationHeight: 280_000)
         )
         
         store.send(.skip) { state in

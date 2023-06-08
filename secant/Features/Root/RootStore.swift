@@ -13,6 +13,8 @@ import Welcome
 import Generated
 import Foundation
 import ExportLogs
+import OnboardingFlow
+import Sandbox
 
 typealias RootStore = Store<RootReducer.State, RootReducer.Action>
 typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
@@ -82,7 +84,7 @@ struct RootReducer: ReducerProtocol {
         }
 
         Scope(state: \.onboardingState, action: /Action.onboarding) {
-            OnboardingFlowReducer()
+            OnboardingFlowReducer(saplingActivationHeight: TargetConstants.zcashNetwork.constants.saplingActivationHeight)
         }
 
         Scope(state: \.phraseValidationState, action: /Action.phraseValidation) {

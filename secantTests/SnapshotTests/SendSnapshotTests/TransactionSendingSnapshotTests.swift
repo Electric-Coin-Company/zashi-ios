@@ -6,10 +6,12 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
 import SwiftUI
 import ZcashLightClientKit
+import SendFlow
+import UIComponents
+@testable import secant_testnet
 
 class TransactionSendingTests: XCTestCase {
     func testTransactionSendingSnapshot() throws {
@@ -31,7 +33,7 @@ class TransactionSendingTests: XCTestCase {
 
         let store = Store(
             initialState: state,
-            reducer: SendFlowReducer()
+            reducer: SendFlowReducer(networkType: .testnet)
                 .dependency(\.derivationTool, .live())
                 .dependency(\.mainQueue, DispatchQueue.main.eraseToAnyScheduler())
                 .dependency(\.numberFormatter, .live())
@@ -40,6 +42,6 @@ class TransactionSendingTests: XCTestCase {
         )
 
         ViewStore(store).send(.onAppear)
-        addAttachments(TransactionSendingView(viewStore: ViewStore(store)))
+        addAttachments(TransactionSendingView(viewStore: ViewStore(store), tokenName: "ZEC"))
     }
 }

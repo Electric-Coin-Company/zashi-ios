@@ -6,14 +6,15 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
+import ImportWallet
+@testable import secant_testnet
 
 class ImportWalletSnapshotTests: XCTestCase {
     func testImportWalletSnapshot() throws {
         let store = ImportWalletStore(
             initialState: .placeholder,
-            reducer: ImportWalletReducer()
+            reducer: ImportWalletReducer(saplingActivationHeight: 0)
         )
         
         addAttachments(ImportWalletView(store: store))
@@ -22,7 +23,7 @@ class ImportWalletSnapshotTests: XCTestCase {
     func testImportBirthdaySnapshot() throws {
         let store = ImportWalletStore(
             initialState: .placeholder,
-            reducer: ImportWalletReducer()
+            reducer: ImportWalletReducer(saplingActivationHeight: 0)
         )
         
         addAttachments(ImportBirthdayView(store: store))

@@ -9,6 +9,7 @@ import XCTest
 import ComposableArchitecture
 import WalletConfigProvider
 import Models
+import OnboardingFlow
 @testable import secant_testnet
 
 class OnboardingFlowFeatureFlagTests: XCTestCase {
@@ -30,7 +31,7 @@ class OnboardingFlowFeatureFlagTests: XCTestCase {
 
         let store = TestStore(
             initialState: initialState,
-            reducer: OnboardingFlowReducer()
+            reducer: OnboardingFlowReducer(saplingActivationHeight: 280_000)
         )
 
         store.send(.onAppear)
@@ -53,7 +54,7 @@ class OnboardingFlowFeatureFlagTests: XCTestCase {
 
         let store = TestStore(
             initialState: initialState,
-            reducer: OnboardingFlowReducer()
+            reducer: OnboardingFlowReducer(saplingActivationHeight: 280_000)
         )
 
         store.send(.onAppear)

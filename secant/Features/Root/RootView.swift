@@ -7,6 +7,8 @@ import Models
 import RecoveryPhraseDisplay
 import Welcome
 import ExportLogs
+import OnboardingFlow
+import Sandbox
 
 struct RootView: View {
     let store: RootStore
@@ -52,7 +54,9 @@ private extension RootView {
                             store: store.scope(
                                 state: \.sandboxState,
                                 action: RootReducer.Action.sandbox
-                            )
+                            ),
+                            tokenName: TargetConstants.tokenName,
+                            networkType: TargetConstants.zcashNetwork.networkType
                         )
                     }
                     .navigationViewStyle(.stack)

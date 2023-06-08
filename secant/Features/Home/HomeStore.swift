@@ -14,6 +14,7 @@ import BalanceBreakdown
 import WalletEventsFlow
 import Scan
 import Settings
+import SendFlow
 
 typealias HomeStore = Store<HomeReducer.State, HomeReducer.Action>
 typealias HomeViewStore = ViewStore<HomeReducer.State, HomeReducer.Action>
@@ -107,7 +108,7 @@ struct HomeReducer: ReducerProtocol {
         }
 
         Scope(state: \.sendState, action: /Action.send) {
-            SendFlowReducer()
+            SendFlowReducer(networkType: TargetConstants.zcashNetwork.networkType)
         }
 
         Scope(state: \.settingsState, action: /Action.settings) {
