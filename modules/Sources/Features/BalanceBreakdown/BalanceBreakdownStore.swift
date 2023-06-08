@@ -16,34 +16,49 @@ import Generated
 import WalletStorage
 import SDKSynchronizer
 
-typealias BalanceBreakdownStore = Store<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>
-typealias BalanceBreakdownViewStore = ViewStore<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>
+public typealias BalanceBreakdownStore = Store<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>
+public typealias BalanceBreakdownViewStore = ViewStore<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>
 
-struct BalanceBreakdownReducer: ReducerProtocol {
+public struct BalanceBreakdownReducer: ReducerProtocol {
     private enum CancelId { case timer }
+    let networkType: NetworkType
     
-    struct State: Equatable {
-        @PresentationState var alert: AlertState<Action>?
-        var autoShieldingThreshold: Zatoshi
-        var latestBlock: String
-        var shieldedBalance: Balance
-        var shieldingFunds: Bool
-        var transparentBalance: Balance
+    public struct State: Equatable {
+        @PresentationState public var alert: AlertState<Action>?
+        public var autoShieldingThreshold: Zatoshi
+        public var latestBlock: String
+        public var shieldedBalance: Balance
+        public var shieldingFunds: Bool
+        public var transparentBalance: Balance
         
-        var totalSpendableBalance: Zatoshi {
+        public var totalSpendableBalance: Zatoshi {
             shieldedBalance.data.verified + transparentBalance.data.verified
         }
 
-        var isShieldableBalanceAvailable: Bool {
+        public var isShieldableBalanceAvailable: Bool {
             transparentBalance.data.verified.amount >= autoShieldingThreshold.amount
         }
 
-        var isShieldingButtonDisabled: Bool {
+        public var isShieldingButtonDisabled: Bool {
             shieldingFunds || !isShieldableBalanceAvailable
+        }
+        
+        public init(
+            autoShieldingThreshold: Zatoshi,
+            latestBlock: String,
+            shieldedBalance: Balance,
+            shieldingFunds: Bool,
+            transparentBalance: Balance
+        ) {
+            self.autoShieldingThreshold = autoShieldingThreshold
+            self.latestBlock = latestBlock
+            self.shieldedBalance = shieldedBalance
+            self.shieldingFunds = shieldingFunds
+            self.transparentBalance = transparentBalance
         }
     }
 
-    enum Action: Equatable {
+    public enum Action: Equatable {
         case alert(PresentationAction<Action>)
         case onAppear
         case onDisappear
@@ -61,7 +76,11 @@ struct BalanceBreakdownReducer: ReducerProtocol {
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.walletStorage) var walletStorage
 
-    var body: some ReducerProtocol<State, Action> {
+    public init(networkType: NetworkType) {
+        self.networkType = networkType
+    }
+    
+    public var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
             case .alert:
@@ -83,7 +102,7 @@ struct BalanceBreakdownReducer: ReducerProtocol {
                     do {
                         let storedWallet = try walletStorage.exportWallet()
                         let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
-                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, TargetConstants.zcashNetwork.networkType)
+                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, networkType)
 
                         _ = try await sdkSynchronizer.shieldFunds(spendingKey, Memo(string: ""), state.autoShieldingThreshold)
 
@@ -121,16 +140,16 @@ struct BalanceBreakdownReducer: ReducerProtocol {
 // MARK: Alerts
 
 extension AlertState where Action == BalanceBreakdownReducer.Action {
-    static func shieldFundsFailure(_ error: ZcashError) -> AlertState<BalanceBreakdownReducer.Action> {
-        AlertState<BalanceBreakdownReducer.Action> {
+    public static func shieldFundsFailure(_ error: ZcashError) -> AlertState {
+        AlertState {
             TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Failure.title)
         } message: {
             TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Failure.message(error.message, error.code.rawValue))
         }
     }
     
-    static func shieldFundsSuccess() -> AlertState<BalanceBreakdownReducer.Action> {
-        AlertState<BalanceBreakdownReducer.Action> {
+    public static func shieldFundsSuccess() -> AlertState {
+        AlertState {
             TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Success.title)
         } message: {
             TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Success.message)
@@ -141,7 +160,7 @@ extension AlertState where Action == BalanceBreakdownReducer.Action {
 // MARK: - Placeholders
 
 extension BalanceBreakdownReducer.State {
-    static let placeholder = BalanceBreakdownReducer.State(
+    public static let placeholder = BalanceBreakdownReducer.State(
         autoShieldingThreshold: Zatoshi(1_000_000),
         latestBlock: L10n.General.unknown,
         shieldedBalance: Balance.zero,
@@ -151,8 +170,8 @@ extension BalanceBreakdownReducer.State {
 }
 
 extension BalanceBreakdownStore {
-    static let placeholder = BalanceBreakdownStore(
+    public static let placeholder = BalanceBreakdownStore(
         initialState: .placeholder,
-        reducer: BalanceBreakdownReducer()
+        reducer: BalanceBreakdownReducer(networkType: .testnet)
     )
 }

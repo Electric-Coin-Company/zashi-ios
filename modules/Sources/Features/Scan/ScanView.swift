@@ -8,13 +8,18 @@
 import SwiftUI
 import ComposableArchitecture
 import Generated
+import UIComponents
 
-struct ScanView: View {
+public struct ScanView: View {
     @Environment(\.presentationMode) var presentationMode
 
     let store: ScanStore
 
-    var body: some View {
+    public init(store: ScanStore) {
+        self.store = store
+    }
+    
+    public var body: some View {
         WithViewStore(store) { viewStore in
             GeometryReader { proxy in
                 ZStack {

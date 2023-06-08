@@ -11,8 +11,8 @@ import UIKit
 import SwiftUI
 import SupportDataGenerator
 
-class UIMailDialog: UIView {
-    var completion: (() -> Void)?
+public class UIMailDialog: UIView {
+    public var completion: (() -> Void)?
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -24,7 +24,7 @@ class UIMailDialog: UIView {
 }
 
 extension UIMailDialog {
-    func doInitialSetup(supportData: SupportData, completion: @escaping () -> Void) {
+    public func doInitialSetup(supportData: SupportData, completion: @escaping () -> Void) {
         self.completion = completion
         DispatchQueue.main.async {
             let mailVC = MFMailComposeViewController()
@@ -50,25 +50,25 @@ extension UIMailDialog {
 }
 
 extension UIMailDialog: MFMailComposeViewControllerDelegate {
-    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+    public func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         controller.dismiss(animated: true, completion: completion)
     }
 }
 
-struct UIMailDialogView: UIViewRepresentable {
-    let supportData: SupportData
-    let completion: () -> Void
+public struct UIMailDialogView: UIViewRepresentable {
+    public let supportData: SupportData
+    public let completion: () -> Void
 
-    func makeUIView(context: UIViewRepresentableContext<UIMailDialogView>) -> UIMailDialog {
+    public func makeUIView(context: UIViewRepresentableContext<UIMailDialogView>) -> UIMailDialog {
         let view = UIMailDialog()
         view.doInitialSetup(supportData: supportData, completion: completion)
         return view
     }
 
-    func updateUIView(_ uiView: UIMailDialog, context: UIViewRepresentableContext<UIMailDialogView>) {
+    public func updateUIView(_ uiView: UIMailDialog, context: UIViewRepresentableContext<UIMailDialogView>) {
         // We can leave it empty here because the view is just handler how to bridge UIKit's UIActivityViewController
         // presentation into SwiftUI. The view itself is not visible, only instantiated, therefore no updates needed.
     }
 
-    typealias UIViewType = UIMailDialog
+    public typealias UIViewType = UIMailDialog
 }

@@ -1,6 +1,7 @@
 import ComposableArchitecture
 import SwiftUI
 import Profile
+import WalletEventsFlow
 
 typealias SandboxStore = Store<SandboxReducer.State, SandboxReducer.Action>
 typealias SandboxViewStore = ViewStore<SandboxReducer.State, SandboxReducer.Action>

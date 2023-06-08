@@ -9,11 +9,18 @@ import SwiftUI
 import ComposableArchitecture
 import ZcashLightClientKit
 import Generated
+import UIComponents
 
-struct BalanceBreakdownView: View {
+public struct BalanceBreakdownView: View {
     let store: BalanceBreakdownStore
+    let tokenName: String
     
-    var body: some View {
+    public init(store: BalanceBreakdownStore, tokenName: String) {
+        self.store = store
+        self.tokenName = tokenName
+    }
+    
+    public var body: some View {
         WithViewStore(store) { viewStore in
             VStack(alignment: .leading) {
                 HStack {
@@ -25,7 +32,7 @@ struct BalanceBreakdownView: View {
                 .padding(.vertical, 20)
 
                 balanceView(
-                    title: L10n.BalanceBreakdown.shieldedZec(TargetConstants.tokenName),
+                    title: L10n.BalanceBreakdown.shieldedZec(tokenName),
                     viewStore.shieldedBalance.data.verified,
                     titleColor: Asset.Colors.Mfp.fontDark.color
                 )
@@ -39,7 +46,7 @@ struct BalanceBreakdownView: View {
                     Text(
                         L10n.BalanceBreakdown.autoShieldingThreshold(
                             viewStore.autoShieldingThreshold.decimalString(),
-                            TargetConstants.tokenName
+                            tokenName
                         )
                     )
                     .foregroundColor(Asset.Colors.Mfp.fontDark.color)
@@ -67,7 +74,7 @@ extension BalanceBreakdownView {
             Text(
                 L10n.balance(
                     balance.decimalString(formatter: NumberFormatter.zcashNumberFormatter8FractionDigits),
-                    TargetConstants.tokenName
+                    tokenName
                 )
             )
             .font(.system(size: 32))
@@ -101,7 +108,7 @@ extension BalanceBreakdownView {
 
 struct BalanceBreakdown_Previews: PreviewProvider {
     static var previews: some View {
-        BalanceBreakdownView(store: .placeholder)
+        BalanceBreakdownView(store: .placeholder, tokenName: "ZEC")
             .preferredColorScheme(.light)
     }
 }

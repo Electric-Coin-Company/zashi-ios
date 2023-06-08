@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import Generated
+import Scan
 
 struct SendFlowView: View {
     let store: SendFlowStore

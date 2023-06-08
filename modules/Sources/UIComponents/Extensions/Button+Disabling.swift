@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension View {
-    func disable(when isDisabled: Bool, dimmingOpacity: Double) -> some View {
+    public func disable(when isDisabled: Bool, dimmingOpacity: Double) -> some View {
         self.modifier(
             DisableWithOpacity(isDisabled: isDisabled, opacity: dimmingOpacity)
         )

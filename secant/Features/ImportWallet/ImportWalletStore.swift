@@ -172,8 +172,8 @@ extension ImportWalletViewStore {
 // MARK: Alerts
 
 extension AlertState where Action == ImportWalletReducer.Action {
-    static func succeed() -> AlertState<ImportWalletReducer.Action> {
-        AlertState<ImportWalletReducer.Action> {
+    static func succeed() -> AlertState {
+        AlertState {
             TextState(L10n.General.success)
         } actions: {
             ButtonState(action: .successfullyRecovered) {
@@ -184,8 +184,8 @@ extension AlertState where Action == ImportWalletReducer.Action {
         }
     }
     
-    static func failed(_ error: ZcashError) -> AlertState<ImportWalletReducer.Action> {
-        AlertState<ImportWalletReducer.Action> {
+    static func failed(_ error: ZcashError) -> AlertState {
+        AlertState {
             TextState(L10n.ImportWallet.Alert.Failed.title)
         } actions: {
             ButtonState(action: .dismissAlert) {

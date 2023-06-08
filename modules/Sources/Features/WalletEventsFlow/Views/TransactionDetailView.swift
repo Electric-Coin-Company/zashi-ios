@@ -5,8 +5,8 @@ import Utils
 import Models
 import Generated
 
-struct TransactionDetailView: View {
-    enum RowMark {
+public struct TransactionDetailView: View {
+    public enum RowMark {
         case neutral
         case success
         case fail
@@ -14,10 +14,17 @@ struct TransactionDetailView: View {
         case highlight
     }
 
-    var transaction: TransactionState
-    var store: WalletEventsFlowStore
-    
-    var body: some View {
+    let store: WalletEventsFlowStore
+    let transaction: TransactionState
+    let tokenName: String
+
+    public init(store: WalletEventsFlowStore, transaction: TransactionState, tokenName: String) {
+        self.store = store
+        self.transaction = transaction
+        self.tokenName = tokenName
+    }
+
+    public var body: some View {
         WithViewStore(store) { viewStore in
             VStack(alignment: .leading) {
                 header
@@ -26,29 +33,29 @@ struct TransactionDetailView: View {
                     VStack(alignment: .leading) {
                         switch transaction.status {
                         case .paid:
-                            Text(L10n.Transaction.youSent(transaction.zecAmount.decimalString(), TargetConstants.tokenName))
+                            Text(L10n.Transaction.youSent(transaction.zecAmount.decimalString(), tokenName))
                                 .padding()
                             address(mark: .inactive, viewStore: viewStore)
                             memo(transaction, viewStore, mark: .highlight)
                             
                         case .sending:
-                            Text(L10n.Transaction.youAreSending(transaction.zecAmount.decimalString(), TargetConstants.tokenName))
+                            Text(L10n.Transaction.youAreSending(transaction.zecAmount.decimalString(), tokenName))
                                 .padding()
                             address(mark: .inactive, viewStore: viewStore)
                             memo(transaction, viewStore, mark: .highlight)
 
                         case .receiving:
-                            Text(L10n.Transaction.youAreReceiving(transaction.zecAmount.decimalString(), TargetConstants.tokenName))
+                            Text(L10n.Transaction.youAreReceiving(transaction.zecAmount.decimalString(), tokenName))
                                 .padding()
                             memo(transaction, viewStore, mark: .highlight)
 
                         case .received:
-                            Text(L10n.Transaction.youReceived(transaction.zecAmount.decimalString(), TargetConstants.tokenName))
+                            Text(L10n.Transaction.youReceived(transaction.zecAmount.decimalString(), tokenName))
                                 .padding()
                             memo(transaction, viewStore, mark: .highlight)
                             
                         case .failed:
-                            Text(L10n.Transaction.youDidNotSent(transaction.zecAmount.decimalString(), TargetConstants.tokenName))
+                            Text(L10n.Transaction.youDidNotSent(transaction.zecAmount.decimalString(), tokenName))
                                 .padding()
 
                             address(mark: .inactive, viewStore: viewStore)
@@ -201,6 +208,7 @@ struct TransactionDetail_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             TransactionDetailView(
+                store: WalletEventsFlowStore.placeholder,
                 transaction:
                     TransactionState(
                         errorMessage: L10n.Error.rollBack,
@@ -213,13 +221,14 @@ struct TransactionDetail_Previews: PreviewProvider {
                         timestamp: 1234567,
                         zecAmount: Zatoshi(25_000_000)
                     ),
-                store: WalletEventsFlowStore.placeholder
+                tokenName: "ZEC"
             )
             .preferredColorScheme(.light)
         }
         
         NavigationView {
             TransactionDetailView(
+                store: WalletEventsFlowStore.placeholder,
                 transaction:
                     TransactionState(
                         errorMessage: L10n.Error.rollBack,
@@ -232,13 +241,14 @@ struct TransactionDetail_Previews: PreviewProvider {
                         timestamp: 1234567,
                         zecAmount: Zatoshi(25_000_000)
                     ),
-                store: WalletEventsFlowStore.placeholder
+                tokenName: "ZEC"
             )
             .preferredColorScheme(.light)
         }
         
         NavigationView {
             TransactionDetailView(
+                store: WalletEventsFlowStore.placeholder,
                 transaction:
                     TransactionState(
                         errorMessage: L10n.Error.rollBack,
@@ -251,13 +261,14 @@ struct TransactionDetail_Previews: PreviewProvider {
                         timestamp: 1234567,
                         zecAmount: Zatoshi(25_000_000)
                     ),
-                store: WalletEventsFlowStore.placeholder
+                tokenName: "ZEC"
             )
             .preferredColorScheme(.light)
         }
         
         NavigationView {
             TransactionDetailView(
+                store: WalletEventsFlowStore.placeholder,
                 transaction:
                     TransactionState(
                         errorMessage: L10n.Error.rollBack,
@@ -270,7 +281,7 @@ struct TransactionDetail_Previews: PreviewProvider {
                         timestamp: 1234567,
                         zecAmount: Zatoshi(25_000_000)
                     ),
-                store: WalletEventsFlowStore.placeholder
+                tokenName: "ZEC"
             )
             .preferredColorScheme(.light)
         }

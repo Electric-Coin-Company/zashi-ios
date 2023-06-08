@@ -10,28 +10,50 @@ import Models
 import RecoveryPhraseDisplay
 import ZcashLightClientKit
 import Generated
+import WalletStorage
+import SDKSynchronizer
+import UserPreferencesStorage
+import ExportLogs
 
-typealias SettingsStore = Store<SettingsReducer.State, SettingsReducer.Action>
-typealias SettingsViewStore = ViewStore<SettingsReducer.State, SettingsReducer.Action>
+public typealias SettingsStore = Store<SettingsReducer.State, SettingsReducer.Action>
+public typealias SettingsViewStore = ViewStore<SettingsReducer.State, SettingsReducer.Action>
 
-struct SettingsReducer: ReducerProtocol {
-    struct State: Equatable {
-        enum Destination {
+public struct SettingsReducer: ReducerProtocol {
+    public struct State: Equatable {
+        public enum Destination {
             case about
             case backupPhrase
         }
 
-        @PresentationState var alert: AlertState<Action>?
-        var appVersion = ""
-        var appBuild = ""
-        var destination: Destination?
-        var exportLogsState: ExportLogsReducer.State
-        @BindingState var isCrashReportingOn: Bool
-        var phraseDisplayState: RecoveryPhraseDisplayReducer.State
-        var supportData: SupportData?
+        @PresentationState public var alert: AlertState<Action>?
+        public var appVersion = ""
+        public var appBuild = ""
+        public var destination: Destination?
+        public var exportLogsState: ExportLogsReducer.State
+        @BindingState public var isCrashReportingOn: Bool
+        public var phraseDisplayState: RecoveryPhraseDisplayReducer.State
+        public var supportData: SupportData?
+        
+        public init(
+            appVersion: String = "",
+            appBuild: String = "",
+            destination: Destination? = nil,
+            exportLogsState: ExportLogsReducer.State,
+            isCrashReportingOn: Bool,
+            phraseDisplayState: RecoveryPhraseDisplayReducer.State,
+            supportData: SupportData? = nil
+        ) {
+            self.appVersion = appVersion
+            self.appBuild = appBuild
+            self.destination = destination
+            self.exportLogsState = exportLogsState
+            self.isCrashReportingOn = isCrashReportingOn
+            self.phraseDisplayState = phraseDisplayState
+            self.supportData = supportData
+        }
     }
 
-    enum Action: BindableAction, Equatable {
+    public enum Action: BindableAction, Equatable {
         case alert(PresentationAction<Action>)
         case backupWallet
         case backupWalletAccessRequest
@@ -51,9 +73,12 @@ struct SettingsReducer: ReducerProtocol {
     @Dependency(\.logsHandler) var logsHandler
     @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.userStoredPreferences) var userStoredPreferences
-    @Dependency(\.crashReporter) var crashReporter
+    // TODO: [#747] crashReporter needs a bit of extra work, see https://github.com/zcash/secant-ios-wallet/issues/747
+    //@Dependency(\.crashReporter) var crashReporter
 
-    var body: some ReducerProtocol<State, Action> {
+    public init() {}
+    
+    public var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
             case .onAppear:
@@ -81,11 +106,12 @@ struct SettingsReducer: ReducerProtocol {
                 return .none
                 
             case .binding(\.$isCrashReportingOn):
-                if state.isCrashReportingOn {
-                    crashReporter.optOut()
-                } else {
-                    crashReporter.optIn()
-                }
+                // TODO: [#747] crashReporter needs a bit of extra work, see https://github.com/zcash/secant-ios-wallet/issues/747
+//                if state.isCrashReportingOn {
+//                    crashReporter.optOut()
+//                } else {
+//                    crashReporter.optIn()
+//                }
 
                 return .run { [state] _ in
                     await userStoredPreferences.setIsUserOptedOutOfCrashReporting(state.isCrashReportingOn)
@@ -172,16 +198,16 @@ extension SettingsStore {
 // MARK: Alerts
 
 extension AlertState where Action == SettingsReducer.Action {
-    static func cantBackupWallet(_ error: ZcashError) -> AlertState<SettingsReducer.Action> {
-        AlertState<SettingsReducer.Action> {
+    public static func cantBackupWallet(_ error: ZcashError) -> AlertState {
+        AlertState {
             TextState(L10n.Settings.Alert.CantBackupWallet.title)
         } message: {
             TextState(L10n.Settings.Alert.CantBackupWallet.message(error.message, error.code.rawValue))
         }
     }
     
-    static func sendSupportMail() -> AlertState<SettingsReducer.Action> {
-        AlertState<SettingsReducer.Action> {
+    public static func sendSupportMail() -> AlertState {
+        AlertState {
             TextState(L10n.Settings.Alert.CantSendEmail.title)
         } actions: {
             ButtonState(action: .sendSupportMailFinished) {
@@ -196,7 +222,7 @@ extension AlertState where Action == SettingsReducer.Action {
 // MARK: Placeholders
 
 extension SettingsReducer.State {
-    static let placeholder = SettingsReducer.State(
+    public static let placeholder = SettingsReducer.State(
         exportLogsState: .placeholder,
         isCrashReportingOn: true,
         phraseDisplayState: RecoveryPhraseDisplayReducer.State(
@@ -206,7 +232,7 @@ extension SettingsReducer.State {
 }
 
 extension SettingsStore {
-    static let placeholder = SettingsStore(
+    public static let placeholder = SettingsStore(
         initialState: .placeholder,
         reducer: SettingsReducer()
     )

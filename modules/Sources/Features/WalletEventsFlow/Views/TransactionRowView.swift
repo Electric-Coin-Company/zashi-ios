@@ -10,10 +10,16 @@ import ZcashLightClientKit
 import Models
 import Generated
 
-struct TransactionRowView: View {
-    var transaction: TransactionState
+public struct TransactionRowView: View {
+    let transaction: TransactionState
+    let tokenName: String
+
+    public init(transaction: TransactionState, tokenName: String) {
+        self.transaction = transaction
+        self.tokenName = tokenName
+    }
     
-    var body: some View {
+    public var body: some View {
         ZStack {
             icon
             
@@ -35,7 +41,7 @@ struct TransactionRowView: View {
                     Text(transaction.unarySymbol)
                         .font(.system(size: 16))
                         .foregroundColor(Asset.Colors.Mfp.fontDark.color)
-                    + Text(L10n.balance(transaction.zecAmount.decimalString(), TargetConstants.tokenName))
+                    + Text(L10n.balance(transaction.zecAmount.decimalString(), tokenName))
                         .font(.system(size: 16))
                         .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                 }
@@ -111,7 +117,8 @@ struct TransactionRowView_Previews: PreviewProvider {
                     status: .paid(success: true),
                     timestamp: 1234567,
                     zecAmount: Zatoshi(123_000_000)
-                )
+                ),
+            tokenName: "ZEC"
         )
         .applyScreenBackground()
         .previewLayout(.fixed(width: 428, height: 60))
@@ -125,7 +132,8 @@ struct TransactionRowView_Previews: PreviewProvider {
                     status: .failed,
                     timestamp: 1234567,
                     zecAmount: Zatoshi(123_000_000)
-                )
+                ),
+            tokenName: "ZEC"
         )
         .applyScreenBackground()
         .previewLayout(.fixed(width: 428, height: 60))
@@ -139,7 +147,8 @@ struct TransactionRowView_Previews: PreviewProvider {
                     status: .sending,
                     timestamp: 1234567,
                     zecAmount: Zatoshi(123_000_000)
-                )
+                ),
+            tokenName: "ZEC"
         )
         .applyScreenBackground()
         .previewLayout(.fixed(width: 428, height: 60))
@@ -153,7 +162,8 @@ struct TransactionRowView_Previews: PreviewProvider {
                     status: .received,
                     timestamp: 1234567,
                     zecAmount: Zatoshi(123_000_000)
-                )
+                ),
+            tokenName: "ZEC"
         )
         .applyScreenBackground()
         .previewLayout(.fixed(width: 428, height: 60))

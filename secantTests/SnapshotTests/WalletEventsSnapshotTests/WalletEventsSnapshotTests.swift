@@ -9,6 +9,7 @@ import XCTest
 import ComposableArchitecture
 import ZcashLightClientKit
 import Models
+import WalletEventsFlow
 @testable import secant_testnet
 
 class WalletEventsSnapshotTests: XCTestCase {
@@ -23,7 +24,7 @@ class WalletEventsSnapshotTests: XCTestCase {
         // landing wallet events screen
         addAttachments(
             name: "\(#function)_initial",
-            WalletEventsFlowView(store: store)
+            WalletEventsFlowView(store: store, tokenName: "ZEC")
         )
     }
     
@@ -76,7 +77,7 @@ class WalletEventsSnapshotTests: XCTestCase {
         
         addAttachments(
             name: "\(#function)_WalletEventDetail",
-            TransactionDetailView(transaction: transaction, store: walletEventsStore)
+            TransactionDetailView(store: walletEventsStore, transaction: transaction, tokenName: "ZEC")
         )
     }
     
@@ -129,7 +130,7 @@ class WalletEventsSnapshotTests: XCTestCase {
         
         addAttachments(
             name: "\(#function)_WalletEventDetail",
-            TransactionDetailView(transaction: transaction, store: walletEventsStore)
+            TransactionDetailView(store: walletEventsStore, transaction: transaction, tokenName: "ZEC")
         )
     }
     
@@ -187,7 +188,7 @@ class WalletEventsSnapshotTests: XCTestCase {
         
         addAttachments(
             name: "\(#function)_WalletEventDetail",
-            TransactionDetailView(transaction: transaction, store: walletEventsStore)
+            TransactionDetailView(store: walletEventsStore, transaction: transaction, tokenName: "ZEC")
         )
     }
     
@@ -241,7 +242,7 @@ class WalletEventsSnapshotTests: XCTestCase {
         
         addAttachments(
             name: "\(#function)_WalletEventDetail",
-            TransactionDetailView(transaction: transaction, store: walletEventsStore)
+            TransactionDetailView(store: walletEventsStore, transaction: transaction, tokenName: "ZEC")
         )
     }
 }
