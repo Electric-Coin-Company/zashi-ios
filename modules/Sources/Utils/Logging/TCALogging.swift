@@ -11,9 +11,9 @@ import ZcashLightClientKit
 import Utils
 
 extension OSLogger {
-    static let live = OSLogger(logLevel: .debug, category: LoggerConstants.tcaLogs)
+    public static let live = OSLogger(logLevel: .debug, category: LoggerConstants.tcaLogs)
 
-    func tcaDebug(_ message: String) {
+    public func tcaDebug(_ message: String) {
         guard let oslog else { return }
         
         os_log(

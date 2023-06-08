@@ -11,6 +11,7 @@ import ComposableArchitecture
 import ZcashLightClientKit
 import Deeplink
 import SDKSynchronizer
+import Root
 @testable import secant_testnet
 
 @MainActor
@@ -21,7 +22,7 @@ class DeeplinkTests: XCTestCase {
         
         let store = TestStore(
             initialState: appState,
-            reducer: RootReducer()
+            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         
         store.send(.destination(.deeplinkHome)) { state in
@@ -36,7 +37,7 @@ class DeeplinkTests: XCTestCase {
         
         let store = TestStore(
             initialState: appState,
-            reducer: RootReducer()
+            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         
         store.send(.destination(.deeplinkHome)) { state in
@@ -51,7 +52,7 @@ class DeeplinkTests: XCTestCase {
         
         let store = TestStore(
             initialState: appState,
-            reducer: RootReducer()
+            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         
         let amount = Zatoshi(123_000_000)
@@ -84,7 +85,7 @@ class DeeplinkTests: XCTestCase {
         
         let store = TestStore(
             initialState: appState,
-            reducer: RootReducer()
+            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         
         store.dependencies.deeplink = DeeplinkClient(
@@ -129,7 +130,7 @@ class DeeplinkTests: XCTestCase {
         
         let store = TestStore(
             initialState: appState,
-            reducer: RootReducer()
+            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         
         store.dependencies.deeplink = DeeplinkClient(

@@ -11,9 +11,16 @@ import Generated
 import ZcashLightClientKit
 import SDKSynchronizer
 import Utils
+import Root
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
-    var rootStore: RootStore = .placeholder
+    var rootStore = RootStore(
+        initialState: .placeholder,
+        reducer: RootReducer(
+            tokenName: TargetConstants.tokenName,
+            zcashNetwork: TargetConstants.zcashNetwork
+        ).logging()
+    )
     lazy var rootViewStore = ViewStore(
         rootStore.stateless,
         removeDuplicates: ==
@@ -48,8 +55,12 @@ struct SecantApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView(store: appDelegate.rootStore)
-                .preferredColorScheme(.light)
+            RootView(
+                store: appDelegate.rootStore,
+                tokenName: TargetConstants.tokenName,
+                networkType: TargetConstants.zcashNetwork.networkType
+            )
+            .preferredColorScheme(.light)
         }
     }
 }

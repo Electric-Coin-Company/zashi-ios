@@ -9,11 +9,21 @@ import Welcome
 import ExportLogs
 import OnboardingFlow
 import Sandbox
+import Home
+import ZcashLightClientKit
 
-struct RootView: View {
+public struct RootView: View {
     let store: RootStore
+    let tokenName: String
+    let networkType: NetworkType
 
-    var body: some View {
+    public init(store: RootStore, tokenName: String, networkType: NetworkType) {
+        self.store = store
+        self.tokenName = tokenName
+        self.networkType = networkType
+    }
+    
+    public var body: some View {
         switchOverDestination()
     }
 }
@@ -43,7 +53,8 @@ private extension RootView {
                             store: store.scope(
                                 state: \.homeState,
                                 action: RootReducer.Action.home
-                            )
+                            ),
+                            tokenName: tokenName
                         )
                     }
                     .navigationViewStyle(.stack)
@@ -55,8 +66,8 @@ private extension RootView {
                                 state: \.sandboxState,
                                 action: RootReducer.Action.sandbox
                             ),
-                            tokenName: TargetConstants.tokenName,
-                            networkType: TargetConstants.zcashNetwork.networkType
+                            tokenName: tokenName,
+                            networkType: networkType
                         )
                     }
                     .navigationViewStyle(.stack)
@@ -247,8 +258,10 @@ struct RootView_Previews: PreviewProvider {
             RootView(
                 store: RootStore(
                     initialState: .placeholder,
-                    reducer: RootReducer()
-                )
+                    reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+                ),
+                tokenName: "ZEC",
+                networkType: .testnet
             )
         }
     }

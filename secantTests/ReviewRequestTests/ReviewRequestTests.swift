@@ -12,6 +12,8 @@ import Date
 import AppVersion
 import UserDefaults
 import ReviewRequest
+import Home
+import Models
 @testable import secant_testnet
 
 @MainActor
@@ -24,7 +26,7 @@ final class ReviewRequestTests: XCTestCase {
         
         let store = TestStore(
             initialState: .placeholder,
-            reducer: HomeReducer()
+            reducer: HomeReducer(networkType: .testnet)
         )
         
         let now = Date.now
@@ -59,7 +61,7 @@ final class ReviewRequestTests: XCTestCase {
 
         let store = TestStore(
             initialState: .placeholder,
-            reducer: HomeReducer()
+            reducer: HomeReducer(networkType: .testnet)
         )
 
         let now = Date.now

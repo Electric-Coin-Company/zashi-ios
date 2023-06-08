@@ -12,6 +12,7 @@ import FileManager
 import DatabaseFiles
 import ZcashSDKEnvironment
 import WalletStorage
+import Root
 @testable import secant_testnet
 
 class RootTests: XCTestCase {
@@ -20,7 +21,8 @@ class RootTests: XCTestCase {
     func testWalletInitializationState_Uninitialized() throws {
         let walletState = RootReducer.walletInitializationState(
             databaseFiles: .noOp,
-            walletStorage: .noOp
+            walletStorage: .noOp,
+            zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
         )
 
         XCTAssertEqual(walletState, .uninitialized)
@@ -35,7 +37,8 @@ class RootTests: XCTestCase {
 
         let walletState = RootReducer.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
-            walletStorage: .noOp
+            walletStorage: .noOp,
+            zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
         )
 
         XCTAssertEqual(walletState, .keysMissing)
@@ -50,7 +53,8 @@ class RootTests: XCTestCase {
 
         let walletState = RootReducer.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
-            walletStorage: .noOp
+            walletStorage: .noOp,
+            zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
         )
 
         XCTAssertEqual(walletState, .uninitialized)
@@ -68,7 +72,8 @@ class RootTests: XCTestCase {
         
         let walletState = RootReducer.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
-            walletStorage: walletStorage
+            walletStorage: walletStorage,
+            zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
         )
 
         XCTAssertEqual(walletState, .filesMissing)
@@ -86,7 +91,8 @@ class RootTests: XCTestCase {
         
         let walletState = RootReducer.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
-            walletStorage: walletStorage
+            walletStorage: walletStorage,
+            zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
         )
 
         XCTAssertEqual(walletState, .initialized)
@@ -95,7 +101,7 @@ class RootTests: XCTestCase {
     func testRespondToWalletInitializationState_Uninitialized() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: RootReducer()
+            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
 
         store.dependencies.mainQueue = Self.testScheduler.eraseToAnyScheduler()
@@ -113,7 +119,7 @@ class RootTests: XCTestCase {
     func testRespondToWalletInitializationState_KeysMissing() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: RootReducer()
+            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         
         store.send(.initialization(.respondToWalletInitializationState(.keysMissing))) { state in
@@ -128,7 +134,7 @@ class RootTests: XCTestCase {
 
         let store = TestStore(
             initialState: .placeholder,
-            reducer: RootReducer()
+            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         
         store.dependencies.walletStorage = .noOp
@@ -157,7 +163,7 @@ class RootTests: XCTestCase {
 
         let store = TestStore(
             initialState: .placeholder,
-            reducer: RootReducer()
+            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         
         store.dependencies.walletStorage = .noOp
@@ -181,7 +187,7 @@ class RootTests: XCTestCase {
     func testWalletEventReplyTo_validAddress() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: RootReducer()
+            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         
         let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted

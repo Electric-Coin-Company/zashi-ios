@@ -14,8 +14,8 @@ import DerivationTool
 /// In this file is a collection of helpers that control all state and action related operations
 /// for the `RootReducer` with a connection to the UI navigation.
 extension RootReducer {
-    struct DestinationState: Equatable {
-        enum Destination: Equatable {
+    public struct DestinationState: Equatable {
+        public enum Destination: Equatable {
             case home
             case onboarding
             case phraseDisplay
@@ -25,10 +25,10 @@ extension RootReducer {
             case welcome
         }
         
-        var internalDestination: Destination = .welcome
-        var previousDestination: Destination?
+        public var internalDestination: Destination = .welcome
+        public var previousDestination: Destination?
 
-        var destination: Destination {
+        public var destination: Destination {
             get { internalDestination }
             set {
                 previousDestination = internalDestination
@@ -37,7 +37,7 @@ extension RootReducer {
         }
     }
     
-    enum DestinationAction: Equatable {
+    public enum DestinationAction: Equatable {
         case deeplink(URL)
         case deeplinkHome
         case deeplinkSend(Zatoshi, String, String)
@@ -46,7 +46,7 @@ extension RootReducer {
     }
 
     // swiftlint:disable:next cyclomatic_complexity
-    func destinationReduce() -> Reduce<RootReducer.State, RootReducer.Action> {
+    public func destinationReduce() -> Reduce<RootReducer.State, RootReducer.Action> {
         Reduce { state, action in
             switch action {
             case let .destination(.updateDestination(destination)):
@@ -133,12 +133,12 @@ extension RootReducer {
 }
 
 private extension RootReducer {
-    func process(
+    public func process(
         url: URL,
         deeplink: DeeplinkClient,
         derivationTool: DerivationToolClient
     ) async throws -> RootReducer.Action {
-        let deeplink = try deeplink.resolveDeeplinkURL(url, TargetConstants.zcashNetwork.networkType, derivationTool)
+        let deeplink = try deeplink.resolveDeeplinkURL(url, zcashNetwork.networkType, derivationTool)
         
         switch deeplink {
         case .home:
@@ -150,11 +150,11 @@ private extension RootReducer {
 }
 
 extension RootViewStore {
-    func goToDestination(_ destination: RootReducer.DestinationState.Destination) {
+    public func goToDestination(_ destination: RootReducer.DestinationState.Destination) {
         send(.destination(.updateDestination(destination)))
     }
     
-    func goToDeeplink(_ deeplink: URL) {
+    public func goToDeeplink(_ deeplink: URL) {
         send(.destination(.deeplink(deeplink)))
     }
 }
@@ -162,7 +162,7 @@ extension RootViewStore {
 // MARK: Placeholders
 
 extension RootReducer.DestinationState {
-    static var placeholder: Self {
+    public static var placeholder: Self {
         .init()
     }
 }

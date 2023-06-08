@@ -8,9 +8,10 @@
 import Foundation
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
 import ZcashLightClientKit
+import Home
+@testable import secant_testnet
 
 class NotEnoughFeeSpaceSnapshots: XCTestCase {
     func testNotEnoughFreeSpaceSnapshot() throws {

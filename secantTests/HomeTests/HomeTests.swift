@@ -10,6 +10,8 @@ import XCTest
 import ComposableArchitecture
 import Utils
 import Generated
+import Models
+import Home
 @testable import secant_testnet
 @testable import ZcashLightClientKit
 
@@ -31,7 +33,7 @@ class HomeTests: XCTestCase {
                 walletConfig: .default,
                 walletEventsState: .emptyPlaceHolder
             ),
-            reducer: HomeReducer()
+            reducer: HomeReducer(networkType: .testnet)
         )
 
         XCTAssertTrue(store.state.isSyncing)
@@ -43,7 +45,7 @@ class HomeTests: XCTestCase {
     func testOnAppear() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: HomeReducer()
+            reducer: HomeReducer(networkType: .testnet)
         )
 
         store.dependencies.mainQueue = .immediate
@@ -69,7 +71,7 @@ class HomeTests: XCTestCase {
     func testOnAppear_notEnoughSpaceOnDisk() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: HomeReducer()
+            reducer: HomeReducer(networkType: .testnet)
         )
 
         store.dependencies.diskSpaceChecker = .mockFullDisk
@@ -100,7 +102,7 @@ class HomeTests: XCTestCase {
         
         let store = TestStore(
             initialState: .placeholder,
-            reducer: HomeReducer()
+            reducer: HomeReducer(networkType: .testnet)
         )
 
         store.send(.synchronizerStateChanged(state)) { state in

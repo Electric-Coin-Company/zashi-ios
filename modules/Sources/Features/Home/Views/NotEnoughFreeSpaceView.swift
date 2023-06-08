@@ -11,10 +11,14 @@ import ComposableArchitecture
 import UIComponents
 import Generated
 
-struct NotEnoughFreeSpaceView: View {
+public struct NotEnoughFreeSpaceView: View {
     let viewStore: HomeViewStore
     
-    var body: some View {
+    public init(viewStore: HomeViewStore) {
+        self.viewStore = viewStore
+    }
+    
+    public var body: some View {
         Text(L10n.Nefs.message)
             .applyScreenBackground()
     }

@@ -13,6 +13,8 @@ import UIComponents
 import RecoveryPhraseValidationFlow
 import Generated
 import RecoveryPhraseDisplay
+import Root
+import ZcashLightClientKit
 @testable import secant_testnet
 
 class AppInitializationTests: XCTestCase {
@@ -93,7 +95,7 @@ class AppInitializationTests: XCTestCase {
 
         let store = TestStore(
             initialState: appState,
-            reducer: RootReducer()
+            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         
         let testQueue = DispatchQueue.test
@@ -150,7 +152,7 @@ class AppInitializationTests: XCTestCase {
     @MainActor func testDidFinishLaunching_to_KeysMissing() async throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: RootReducer()
+            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
 
         store.dependencies.databaseFiles = .noOp
@@ -184,7 +186,7 @@ class AppInitializationTests: XCTestCase {
     @MainActor func testDidFinishLaunching_to_Uninitialized() async throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: RootReducer()
+            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         
         store.dependencies.databaseFiles = .noOp

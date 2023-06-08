@@ -7,6 +7,7 @@
 import SwiftUI
 import Generated
 import UIComponents
+import OnboardingFlow
 
 struct DesignGuide: View {
     let columns = [GridItem(.adaptive(minimum: 320, maximum: .infinity))]

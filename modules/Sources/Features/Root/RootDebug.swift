@@ -15,11 +15,11 @@ import Models
 /// In this file is a collection of helpers that control all state and action related operations
 /// for the `RootReducer` with a connection to the UI navigation.
 extension RootReducer {
-    struct DebugState: Equatable {
-        var rescanDialog: ConfirmationDialogState<RootReducer.Action>?
+    public struct DebugState: Equatable {
+        public var rescanDialog: ConfirmationDialogState<RootReducer.Action>?
     }
     
-    indirect enum DebugAction: Equatable {
+    public indirect enum DebugAction: Equatable {
         case cancelRescan
         case cantStartSync(ZcashError)
         case flagUpdated
@@ -34,11 +34,12 @@ extension RootReducer {
     }
 
     // swiftlint:disable:next cyclomatic_complexity
-    func debugReduce() -> Reduce<RootReducer.State, RootReducer.Action> {
+    public func debugReduce() -> Reduce<RootReducer.State, RootReducer.Action> {
         Reduce { state, action in
             switch action {
             case .debug(.testCrashReporter):
-                crashReporter.testCrash()
+                // TODO: [#747] crashReporter needs a bit of extra work, see https://github.com/zcash/secant-ios-wallet/issues/747
+                //crashReporter.testCrash()
                 return .none
                 
             case .debug(.rescanBlockchain):
@@ -124,7 +125,7 @@ extension RootReducer {
 // MARK: Placeholders
 
 extension RootReducer.DebugState {
-    static var placeholder: Self {
+    public static var placeholder: Self {
         .init()
     }
 }
