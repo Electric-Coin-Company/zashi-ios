@@ -9,6 +9,7 @@ import XCTest
 import ComposableArchitecture
 import ZcashLightClientKit
 import Models
+import Home
 @testable import secant_testnet
 
 class HomeSnapshotTests: XCTestCase {
@@ -48,7 +49,7 @@ class HomeSnapshotTests: XCTestCase {
                 walletConfig: .default,
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: walletEvents))
             ),
-            reducer: HomeReducer()
+            reducer: HomeReducer(networkType: .testnet)
                 .dependency(\.diskSpaceChecker, .mockEmptyDisk)
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.mainQueue, .immediate)
@@ -56,6 +57,6 @@ class HomeSnapshotTests: XCTestCase {
         )
 
         // landing home screen
-        addAttachments(HomeView(store: store))
+        addAttachments(HomeView(store: store, tokenName: "ZEC"))
     }
 }

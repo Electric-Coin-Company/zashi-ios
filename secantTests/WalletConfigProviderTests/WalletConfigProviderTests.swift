@@ -10,6 +10,8 @@ import XCTest
 import ComposableArchitecture
 import WalletConfigProvider
 import Models
+import Root
+import ZcashLightClientKit
 @testable import secant_testnet
 
 class WalletConfigProviderTests: XCTestCase {
@@ -121,7 +123,7 @@ class WalletConfigProviderTests: XCTestCase {
     func testPropagationOfFlagUpdate() throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: RootReducer()
+            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         
         // Change any of the flags from the default value

@@ -14,7 +14,7 @@ import Utils
 /// In this file is a collection of helpers that control all state and action related operations
 /// for the `RootReducer` with a connection to the app/wallet initialization and erasure of the wallet.
 extension RootReducer {
-    enum InitializationAction: Equatable {
+    public enum InitializationAction: Equatable {
         case appDelegate(AppDelegateAction)
         case checkBackupPhraseValidation
         case checkWalletInitialization
@@ -31,7 +31,7 @@ extension RootReducer {
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    func initializationReduce() -> Reduce<RootReducer.State, RootReducer.Action> {
+    public func initializationReduce() -> Reduce<RootReducer.State, RootReducer.Action> {
         Reduce { state, action in
             switch action {
             case .initialization(.appDelegate(.didFinishLaunching)):
@@ -76,7 +76,8 @@ extension RootReducer {
             case .initialization(.checkWalletInitialization):
                 let walletState = RootReducer.walletInitializationState(
                     databaseFiles: databaseFiles,
-                    walletStorage: walletStorage
+                    walletStorage: walletStorage,
+                    zcashNetwork: zcashNetwork
                 )
                 return EffectTask(value: .initialization(.respondToWalletInitializationState(walletState)))
 
@@ -119,12 +120,12 @@ extension RootReducer {
                         return .none
                     }
 
-                    let birthday = state.storedWallet?.birthday?.value() ?? zcashSDKEnvironment.latestCheckpoint(TargetConstants.zcashNetwork)
+                    let birthday = state.storedWallet?.birthday?.value() ?? zcashSDKEnvironment.latestCheckpoint(zcashNetwork)
 
                     try mnemonic.isValid(storedWallet.seedPhrase.value())
                     let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
-                    let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, TargetConstants.zcashNetwork.networkType)
-                    let viewingKey = try derivationTool.deriveUnifiedFullViewingKey(spendingKey, TargetConstants.zcashNetwork.networkType)
+                    let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, zcashNetwork.networkType)
+                    let viewingKey = try derivationTool.deriveUnifiedFullViewingKey(spendingKey, zcashNetwork.networkType)
                     
                     return .run { send in
                         do {
@@ -167,7 +168,7 @@ extension RootReducer {
                 do {
                     // get the random english mnemonic
                     let newRandomPhrase = try mnemonic.randomMnemonic()
-                    let birthday = zcashSDKEnvironment.latestCheckpoint(TargetConstants.zcashNetwork)
+                    let birthday = zcashSDKEnvironment.latestCheckpoint(zcashNetwork)
 
                     // store the wallet to the keychain
                     try walletStorage.importWallet(newRandomPhrase, birthday, .english, !state.walletConfig.isEnabled(.testBackupPhraseFlow))
@@ -249,9 +250,10 @@ extension RootReducer {
                 return EffectTask(value: .initialization(.createNewWallet))
 
             case .initialization(.configureCrashReporter):
-                crashReporter.configure(
-                    !userStoredPreferences.isUserOptedOutOfCrashReporting()
-                )
+                // TODO: [#747] crashReporter needs a bit of extra work, see https://github.com/zcash/secant-ios-wallet/issues/747
+//                crashReporter.configure(
+//                    !userStoredPreferences.isUserOptedOutOfCrashReporting()
+//                )
                 return .none
                 
             case .updateStateAfterConfigUpdate(let walletConfig):

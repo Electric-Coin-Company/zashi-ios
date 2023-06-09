@@ -6,15 +6,17 @@
 //
 
 import XCTest
-@testable import secant_testnet
 import ComposableArchitecture
+import Root
+import ZcashLightClientKit
+@testable import secant_testnet
 
 @MainActor
 class DebugTests: XCTestCase {
     func testRescanBlockchain() async throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: RootReducer()
+            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         
         await store.send(.debug(.rescanBlockchain)) { state in
@@ -45,7 +47,7 @@ class DebugTests: XCTestCase {
         
         let store = TestStore(
             initialState: mockState,
-            reducer: RootReducer()
+            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         
         await store.send(.debug(.cancelRescan)) { state in
@@ -68,7 +70,7 @@ class DebugTests: XCTestCase {
         
         let store = TestStore(
             initialState: mockState,
-            reducer: RootReducer()
+            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
 
         store.dependencies.mainQueue = .immediate
@@ -97,7 +99,7 @@ class DebugTests: XCTestCase {
         
         let store = TestStore(
             initialState: mockState,
-            reducer: RootReducer()
+            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
 
         store.dependencies.mainQueue = .immediate

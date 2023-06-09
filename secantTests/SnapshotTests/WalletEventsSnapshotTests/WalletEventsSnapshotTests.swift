@@ -10,6 +10,7 @@ import ComposableArchitecture
 import ZcashLightClientKit
 import Models
 import WalletEventsFlow
+import Home
 @testable import secant_testnet
 
 class WalletEventsSnapshotTests: XCTestCase {
@@ -66,7 +67,7 @@ class WalletEventsSnapshotTests: XCTestCase {
                 walletConfig: .default,
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent]))
             ),
-            reducer: HomeReducer()
+            reducer: HomeReducer(networkType: .testnet)
         )
         
         ViewStore(store).send(.walletEvents(.updateDestination(.showWalletEvent(walletEvent))))
@@ -119,7 +120,7 @@ class WalletEventsSnapshotTests: XCTestCase {
                 walletConfig: .default,
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent]))
             ),
-            reducer: HomeReducer()
+            reducer: HomeReducer(networkType: .testnet)
         )
         
         ViewStore(store).send(.walletEvents(.updateDestination(.showWalletEvent(walletEvent))))
@@ -172,7 +173,7 @@ class WalletEventsSnapshotTests: XCTestCase {
                 walletConfig: .default,
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent]))
             ),
-            reducer: HomeReducer()
+            reducer: HomeReducer(networkType: .testnet)
         )
         
         let walletEventsState = WalletEventsFlowReducer.State(
@@ -231,7 +232,7 @@ class WalletEventsSnapshotTests: XCTestCase {
                 walletConfig: .default,
                 walletEventsState: .init(walletEvents: IdentifiedArrayOf(uniqueElements: [walletEvent]))
             ),
-            reducer: HomeReducer()
+            reducer: HomeReducer(networkType: .testnet)
         )
         
         ViewStore(store).send(.walletEvents(.updateDestination(.showWalletEvent(walletEvent))))

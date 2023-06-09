@@ -8,10 +8,16 @@ import WalletEventsFlow
 import Settings
 import SendFlow
 
-struct HomeView: View {
-    let store: Store<HomeReducer.State, HomeReducer.Action>
+public struct HomeView: View {
+    let store: HomeStore
+    let tokenName: String
     
-    var body: some View {
+    public init(store: HomeStore, tokenName: String) {
+        self.store = store
+        self.tokenName = tokenName
+    }
+    
+    public var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
                 balance(viewStore)
@@ -55,7 +61,7 @@ struct HomeView: View {
                 destination: {
                     BalanceBreakdownView(
                         store: store.balanceBreakdownStore(),
-                        tokenName: TargetConstants.tokenName
+                        tokenName: tokenName
                     )
                 }
             )
@@ -65,11 +71,11 @@ struct HomeView: View {
             )
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForDestination(.transactionHistory),
-                destination: { WalletEventsFlowView(store: store.historyStore(), tokenName: TargetConstants.tokenName) }
+                destination: { WalletEventsFlowView(store: store.historyStore(), tokenName: tokenName) }
             )
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForDestination(.send),
-                destination: { SendFlowView(store: store.sendStore(), tokenName: TargetConstants.tokenName) }
+                destination: { SendFlowView(store: store.sendStore(), tokenName: tokenName) }
             )
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForDestination(.profile),
@@ -100,7 +106,7 @@ extension HomeView {
         Button(action: {
             viewStore.send(.updateDestination(.send))
         }, label: {
-            Text(L10n.Home.sendZec(TargetConstants.tokenName))
+            Text(L10n.Home.sendZec(tokenName))
         })
         .activeButtonStyle
         .padding(.bottom, 30)
@@ -114,7 +120,7 @@ extension HomeView {
         Button(action: {
             viewStore.send(.updateDestination(.profile))
         }, label: {
-            Text(L10n.Home.receiveZec(TargetConstants.tokenName))
+            Text(L10n.Home.receiveZec(tokenName))
         })
         .activeButtonStyle
         .padding(.bottom, 30)
@@ -125,7 +131,7 @@ extension HomeView {
             Button {
                 viewStore.send(.updateDestination(.balanceBreakdown))
             } label: {
-                Text(L10n.balance(viewStore.shieldedBalance.data.verified.decimalString(), TargetConstants.tokenName))
+                Text(L10n.balance(viewStore.shieldedBalance.data.verified.decimalString(), tokenName))
                     .font(.system(size: 32))
                     .fontWeight(.bold)
             }
@@ -149,7 +155,7 @@ extension HomeView {
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            HomeView(store: .placeholder)
+            HomeView(store: .placeholder, tokenName: "ZEC")
         }
     }
 }

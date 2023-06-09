@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum InitializationState: Equatable {
+public enum InitializationState: Equatable {
     case failed
     case initialized
     case keysMissing
@@ -15,6 +15,6 @@ enum InitializationState: Equatable {
     case uninitialized
 }
 
-enum SDKInitializationError: Error {
+public enum SDKInitializationError: Error {
     case failed
 }

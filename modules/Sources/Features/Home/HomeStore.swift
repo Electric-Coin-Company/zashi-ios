@@ -16,14 +16,15 @@ import Scan
 import Settings
 import SendFlow
 
-typealias HomeStore = Store<HomeReducer.State, HomeReducer.Action>
-typealias HomeViewStore = ViewStore<HomeReducer.State, HomeReducer.Action>
+public typealias HomeStore = Store<HomeReducer.State, HomeReducer.Action>
+public typealias HomeViewStore = ViewStore<HomeReducer.State, HomeReducer.Action>
 
-struct HomeReducer: ReducerProtocol {
+public struct HomeReducer: ReducerProtocol {
     private enum CancelId { case timer }
+    let networkType: NetworkType
 
-    struct State: Equatable {
-        enum Destination: Equatable {
+    public struct State: Equatable {
+        public enum Destination: Equatable {
             case balanceBreakdown
             case notEnoughFreeDiskSpace
             case profile
@@ -32,48 +33,78 @@ struct HomeReducer: ReducerProtocol {
             case transactionHistory
         }
 
-        @PresentationState var alert: AlertState<Action>?
-        var balanceBreakdownState: BalanceBreakdownReducer.State
-        var destination: Destination?
-        var canRequestReview = false
-        var profileState: ProfileReducer.State
-        var requiredTransactionConfirmations = 0
-        var scanState: ScanReducer.State
-        var sendState: SendFlowReducer.State
-        var settingsState: SettingsReducer.State
-        var shieldedBalance: Balance
-        var synchronizerStatusSnapshot: SyncStatusSnapshot
-        var walletConfig: WalletConfig
-        var walletEventsState: WalletEventsFlowReducer.State
+        @PresentationState public var alert: AlertState<Action>?
+        public var balanceBreakdownState: BalanceBreakdownReducer.State
+        public var destination: Destination?
+        public var canRequestReview = false
+        public var profileState: ProfileReducer.State
+        public var requiredTransactionConfirmations = 0
+        public var scanState: ScanReducer.State
+        public var sendState: SendFlowReducer.State
+        public var settingsState: SettingsReducer.State
+        public var shieldedBalance: Balance
+        public var synchronizerStatusSnapshot: SyncStatusSnapshot
+        public var walletConfig: WalletConfig
+        public var walletEventsState: WalletEventsFlowReducer.State
         // TODO: [#311] - Get the ZEC price from the SDK, https://github.com/zcash/secant-ios-wallet/issues/311
-        var zecPrice = Decimal(140.0)
+        public var zecPrice = Decimal(140.0)
 
-        var totalCurrencyBalance: Zatoshi {
+        public var totalCurrencyBalance: Zatoshi {
             Zatoshi.from(decimal: shieldedBalance.data.verified.decimalValue.decimalValue * zecPrice)
         }
 
-        var isSyncing: Bool {
+        public var isSyncing: Bool {
             if case .syncing = synchronizerStatusSnapshot.syncStatus {
                 return true
             }
             return false
         }
         
-        var isUpToDate: Bool {
+        public var isUpToDate: Bool {
             if case .upToDate = synchronizerStatusSnapshot.syncStatus {
                 return true
             }
             return false
         }
 
-        var isSendButtonDisabled: Bool {
+        public var isSendButtonDisabled: Bool {
             // If the destination is `.send` the button must be enabled
             // to avoid involuntary navigation pop.
             (self.destination != .send && self.isSyncing) || shieldedBalance.data.verified.amount == 0
         }
+        
+        public init(
+            balanceBreakdownState: BalanceBreakdownReducer.State,
+            destination: Destination? = nil,
+            canRequestReview: Bool = false,
+            profileState: ProfileReducer.State,
+            requiredTransactionConfirmations: Int = 0,
+            scanState: ScanReducer.State,
+            sendState: SendFlowReducer.State,
+            settingsState: SettingsReducer.State,
+            shieldedBalance: Balance,
+            synchronizerStatusSnapshot: SyncStatusSnapshot,
+            walletConfig: WalletConfig,
+            walletEventsState: WalletEventsFlowReducer.State,
+            zecPrice: Decimal = Decimal(140.0)
+        ) {
+            self.balanceBreakdownState = balanceBreakdownState
+            self.destination = destination
+            self.canRequestReview = canRequestReview
+            self.profileState = profileState
+            self.requiredTransactionConfirmations = requiredTransactionConfirmations
+            self.scanState = scanState
+            self.sendState = sendState
+            self.settingsState = settingsState
+            self.shieldedBalance = shieldedBalance
+            self.synchronizerStatusSnapshot = synchronizerStatusSnapshot
+            self.walletConfig = walletConfig
+            self.walletEventsState = walletEventsState
+            self.zecPrice = zecPrice
+        }
     }
 
-    enum Action: Equatable {
+    public enum Action: Equatable {
         case alert(PresentationAction<Action>)
         case balanceBreakdown(BalanceBreakdownReducer.Action)
         case debugMenuStartup
@@ -102,13 +133,17 @@ struct HomeReducer: ReducerProtocol {
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
-    var body: some ReducerProtocol<State, Action> {
+    public init(networkType: NetworkType) {
+        self.networkType = networkType
+    }
+    
+    public var body: some ReducerProtocol<State, Action> {
         Scope(state: \.walletEventsState, action: /Action.walletEvents) {
             WalletEventsFlowReducer()
         }
 
         Scope(state: \.sendState, action: /Action.send) {
-            SendFlowReducer(networkType: TargetConstants.zcashNetwork.networkType)
+            SendFlowReducer(networkType: networkType)
         }
 
         Scope(state: \.settingsState, action: /Action.settings) {
@@ -120,7 +155,7 @@ struct HomeReducer: ReducerProtocol {
         }
 
         Scope(state: \.balanceBreakdownState, action: /Action.balanceBreakdown) {
-            BalanceBreakdownReducer(networkType: TargetConstants.zcashNetwork.networkType)
+            BalanceBreakdownReducer(networkType: networkType)
         }
 
         Reduce { state, action in
@@ -303,7 +338,7 @@ extension HomeViewStore {
 // MARK: Alerts
 
 extension AlertState where Action == HomeReducer.Action {
-    static func syncFailed(_ error: ZcashError, _ secondaryButtonTitle: String) -> AlertState {
+    public static func syncFailed(_ error: ZcashError, _ secondaryButtonTitle: String) -> AlertState {
         AlertState {
             TextState(L10n.Home.SyncFailed.title)
         } actions: {
@@ -322,7 +357,7 @@ extension AlertState where Action == HomeReducer.Action {
 // MARK: Placeholders
 
 extension HomeReducer.State {
-    static var placeholder: Self {
+    public static var placeholder: Self {
         .init(
             balanceBreakdownState: .placeholder,
             profileState: .placeholder,
@@ -338,14 +373,14 @@ extension HomeReducer.State {
 }
 
 extension HomeStore {
-    static var placeholder: HomeStore {
+    public static var placeholder: HomeStore {
         HomeStore(
             initialState: .placeholder,
-            reducer: HomeReducer()
+            reducer: HomeReducer(networkType: .testnet)
         )
     }
 
-    static var error: HomeStore {
+    public static var error: HomeStore {
         HomeStore(
             initialState: .init(
                 balanceBreakdownState: .placeholder,
@@ -360,7 +395,7 @@ extension HomeStore {
                 walletConfig: .default,
                 walletEventsState: .emptyPlaceHolder
             ),
-            reducer: HomeReducer()
+            reducer: HomeReducer(networkType: .testnet)
         )
     }
 }

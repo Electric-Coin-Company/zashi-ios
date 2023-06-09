@@ -9,16 +9,16 @@ import Foundation
 import ZcashLightClientKit
 import Generated
 
-struct SyncStatusSnapshot: Equatable {
-    let message: String
-    let syncStatus: SyncStatus
+public struct SyncStatusSnapshot: Equatable {
+    public let message: String
+    public let syncStatus: SyncStatus
     
-    init(_ syncStatus: SyncStatus = .unprepared, _ message: String = "") {
+    public init(_ syncStatus: SyncStatus = .unprepared, _ message: String = "") {
         self.message = message
         self.syncStatus = syncStatus
     }
     
-    static func snapshotFor(state: SyncStatus) -> SyncStatusSnapshot {
+    public static func snapshotFor(state: SyncStatus) -> SyncStatusSnapshot {
         switch state {
         case .upToDate:
             return SyncStatusSnapshot(state, L10n.Sync.Message.uptodate)
@@ -36,5 +36,5 @@ struct SyncStatusSnapshot: Equatable {
 }
 
 extension SyncStatusSnapshot {
-    static let `default` = SyncStatusSnapshot()
+    public static let `default` = SyncStatusSnapshot()
 }
