@@ -123,7 +123,7 @@ extension RootReducer {
                 return EffectTask(value: .destination(.deeplink(url)))
 
             case .home, .initialization, .onboarding, .phraseDisplay, .phraseValidation, .sandbox, .updateStateAfterConfigUpdate, .alert,
-                .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .dismissAlert, .exportLogs:
+                .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .exportLogs:
                 return .none
             }
             
@@ -133,7 +133,7 @@ extension RootReducer {
 }
 
 private extension RootReducer {
-    public func process(
+    func process(
         url: URL,
         deeplink: DeeplinkClient,
         derivationTool: DerivationToolClient

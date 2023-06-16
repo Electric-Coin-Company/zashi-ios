@@ -45,6 +45,13 @@ public struct ExportLogsReducer: ReducerProtocol {
     public var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
+            case .alert(.presented(let action)):
+                return EffectTask(value: action)
+
+            case .alert(.dismiss):
+                state.alert = nil
+                return .none
+
             case .alert:
                 return .none
 
