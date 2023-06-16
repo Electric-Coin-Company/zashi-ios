@@ -242,6 +242,7 @@
 "root.debug.option.nukeWallet" = "[Be careful] Nuke Wallet";
 "root.debug.option.exportLogs" = "Export Logs";
 "root.debug.option.appReview" = "Rate the App";
+"root.debug.option.testCrashReporter" = "Test Crash Reporter";
 "root.debug.featureFlags" = "Feature flags";
 "root.debug.dialog.rescan.title" = "Rescan";
 "root.debug.dialog.rescan.message" = "Select the rescan you want";

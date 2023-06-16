@@ -16,6 +16,7 @@ import ExportLogs
 import OnboardingFlow
 import Sandbox
 import Home
+import CrashReporter
 
 public typealias RootStore = Store<RootReducer.State, RootReducer.Action>
 public typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
@@ -90,8 +91,7 @@ public struct RootReducer: ReducerProtocol {
         case welcome(WelcomeReducer.Action)
     }
 
-    // TODO: [#747] crashReporter needs a bit of extra work, see https://github.com/zcash/secant-ios-wallet/issues/747
-    //@Dependency(\.crashReporter) var crashReporter
+    @Dependency(\.crashReporter) var crashReporter
     @Dependency(\.databaseFiles) var databaseFiles
     @Dependency(\.deeplink) var deeplink
     @Dependency(\.derivationTool) var derivationTool

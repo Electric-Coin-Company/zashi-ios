@@ -204,6 +204,7 @@ class RecoveryPhraseValidationFlowFeatureFlagTests: XCTestCase {
         store.dependencies.walletStorage.areKeysPresent = { true }
         store.dependencies.walletConfigProvider = .noOp
         store.dependencies.sdkSynchronizer = .noOp
+        store.dependencies.crashReporter = .noOp
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         await store.send(.initialization(.appDelegate(.didFinishLaunching)))

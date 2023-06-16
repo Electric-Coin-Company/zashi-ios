@@ -250,10 +250,9 @@ extension RootReducer {
                 return EffectTask(value: .initialization(.createNewWallet))
 
             case .initialization(.configureCrashReporter):
-                // TODO: [#747] crashReporter needs a bit of extra work, see https://github.com/zcash/secant-ios-wallet/issues/747
-//                crashReporter.configure(
-//                    !userStoredPreferences.isUserOptedOutOfCrashReporting()
-//                )
+                crashReporter.configure(
+                    !userStoredPreferences.isUserOptedOutOfCrashReporting()
+                )
                 return .none
                 
             case .updateStateAfterConfigUpdate(let walletConfig):

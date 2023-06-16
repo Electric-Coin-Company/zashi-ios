@@ -14,6 +14,7 @@ let package = Package(
         .library(name: "AudioServices", targets: ["AudioServices"]),
         .library(name: "BalanceBreakdown", targets: ["BalanceBreakdown"]),
         .library(name: "CaptureDevice", targets: ["CaptureDevice"]),
+        .library(name: "CrashReporter", targets: ["CrashReporter"]),
         .library(name: "DatabaseFiles", targets: ["DatabaseFiles"]),
         .library(name: "Date", targets: ["Date"]),
         .library(name: "Deeplink", targets: ["Deeplink"]),
@@ -60,8 +61,9 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-case-paths", from: "0.14.1"),
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.5.0"),
         .package(url: "https://github.com/SwiftGen/SwiftGenPlugin", from: "6.6.0"),
-        .package(url: "https://github.com/zcash/ZcashLightClientKit", revision: "b9524ae1abfa54bbcaac802dbccb9e4eecc847cc"),
-        .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.4")
+        .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.4"),
+        .package(url: "https://github.com/zcash/ZcashLightClientKit", revision: "4d95f2cb9df23be534540b569597df8bd16717a6"),
+        .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.11.0")
     ],
     targets: [
         .target(
@@ -112,6 +114,14 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Dependencies/CaptureDevice"
+        ),
+        .target(
+            name: "CrashReporter",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "FirebaseCrashlytics", package: "firebase-ios-sdk")
+            ],
+            path: "Sources/Dependencies/CrashReporter"
         ),
         .target(
             name: "DatabaseFiles",
@@ -338,6 +348,7 @@ let package = Package(
         .target(
             name: "Root",
             dependencies: [
+                "CrashReporter",
                 "DatabaseFiles",
                 "Deeplink",
                 "DerivationTool",
@@ -429,6 +440,7 @@ let package = Package(
             name: "Settings",
             dependencies: [
                 "AppVersion",
+                "CrashReporter",
                 "ExportLogs",
                 "Generated",
                 "LocalAuthenticationHandler",
