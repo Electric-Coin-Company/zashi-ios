@@ -81,7 +81,7 @@ struct TransactionAmountTextField_Previews: PreviewProvider {
             titleAccessoryView: { EmptyView() },
             inputPrefixView: { EmptyView() },
             inputAccessoryView: {
-                Image(Asset.Assets.Icons.qrCode.name)
+                Image(systemName: "qrcode")
                     .resizable()
                     .frame(width: 30, height: 30)
             }

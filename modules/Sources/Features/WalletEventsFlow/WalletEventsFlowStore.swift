@@ -49,7 +49,6 @@ public struct WalletEventsFlowReducer: ReducerProtocol {
     public enum Action: Equatable {
         case alert(PresentationAction<Action>)
         case copyToPastboard(RedactableString)
-        case dismissAlert
         case onAppear
         case onDisappear
         case openBlockExplorer(URL?)
@@ -120,12 +119,16 @@ public struct WalletEventsFlowReducer: ReducerProtocol {
         case .replyTo:
             return .none
 
+        case .alert(.presented(let action)):
+            return EffectTask(value: action)
+
+        case .alert(.dismiss):
+            state.alert = nil
+            return .none
+
         case .alert:
             return .none
             
-        case .dismissAlert:
-            return .none
-
         case .warnBeforeLeavingApp(let blockExplorerURL):
             state.alert = AlertState.warnBeforeLeavingApp(blockExplorerURL)
             return .none
@@ -176,7 +179,7 @@ extension AlertState where Action == WalletEventsFlowReducer.Action {
             ButtonState(action: .openBlockExplorer(blockExplorerURL)) {
                 TextState(L10n.WalletEvent.Alert.LeavingApp.Button.seeOnline)
             }
-            ButtonState(role: .cancel, action: .dismissAlert) {
+            ButtonState(role: .cancel, action: .alert(.dismiss)) {
                 TextState(L10n.WalletEvent.Alert.LeavingApp.Button.nevermind)
             }
         } message: {

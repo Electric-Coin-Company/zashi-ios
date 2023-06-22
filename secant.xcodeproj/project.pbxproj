@@ -815,9 +815,9 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/secant/Resources/Colors.xcassets",
-				"$(SRCROOT)/secant/Resources/Assets/xcassets",
-				"$(SRCROOT)/secant/Resources/Localizable.strings",
+				"$(SRCROOT)/modules/Sources/Generated/Resources/Colors.xcassets",
+				"$(SRCROOT)/modules/Sources/Generated/Resources/Assets/xcassets",
+				"$(SRCROOT)/modules/Sources/Generated/Resources/Localizable.strings",
 				"$(SRCROOT)/swiftgen.yml",
 			);
 			name = SwiftGen;
@@ -918,9 +918,9 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/secant/Resources/Colors.xcassets",
-				"$(SRCROOT)/secant/Resources/Assets/xcassets",
-				"$(SRCROOT)/secant/Resources/Localizable.strings",
+				"$(SRCROOT)/modules/Sources/Generated/Resources/Colors.xcassets",
+				"$(SRCROOT)/modules/Sources/Generated/Resources/Assets/xcassets",
+				"$(SRCROOT)/modules/Sources/Generated/Resources/Localizable.strings",
 				"$(SRCROOT)/swiftgen.yml",
 			);
 			name = SwiftGen;

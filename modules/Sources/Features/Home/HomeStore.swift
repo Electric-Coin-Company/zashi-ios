@@ -108,7 +108,6 @@ public struct HomeReducer: ReducerProtocol {
         case alert(PresentationAction<Action>)
         case balanceBreakdown(BalanceBreakdownReducer.Action)
         case debugMenuStartup
-        case dismissAlert
         case foundTransactions
         case onAppear
         case onDisappear
@@ -273,10 +272,14 @@ public struct HomeReducer: ReducerProtocol {
                 state.alert = AlertState.syncFailed(error, L10n.General.ok)
                 return .none
 
-            case .alert:
+            case .alert(.presented(let action)):
+                return EffectTask(value: action)
+
+            case .alert(.dismiss):
+                state.alert = nil
                 return .none
-                
-            case .dismissAlert:
+
+            case .alert:
                 return .none
             }
         }
@@ -345,7 +348,7 @@ extension AlertState where Action == HomeReducer.Action {
             ButtonState(action: .retrySync) {
                 TextState(L10n.Home.SyncFailed.retry)
             }
-            ButtonState(action: .dismissAlert) {
+            ButtonState(action: .alert(.dismiss)) {
                 TextState(secondaryButtonTitle)
             }
         } message: {

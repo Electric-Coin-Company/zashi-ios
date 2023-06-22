@@ -143,6 +143,13 @@ public struct SettingsReducer: ReducerProtocol {
                 state.supportData = nil
                 return .none
                 
+            case .alert(.presented(let action)):
+                return EffectTask(value: action)
+
+            case .alert(.dismiss):
+                state.alert = nil
+                return .none
+
             case .alert:
                 return .none
             }

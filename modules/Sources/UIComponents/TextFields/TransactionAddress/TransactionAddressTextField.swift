@@ -32,9 +32,10 @@ public struct TransactionAddressTextField: View {
                         Button {
                             viewStore.send(.scanQR)
                         } label: {
-                            Image(Asset.Assets.Icons.qrCode.name)
+                            Image(systemName: "qrcode")
                                 .resizable()
                                 .frame(width: 25, height: 25)
+                                .tint(Asset.Colors.Mfp.primary.color)
                         }
                         .padding(.trailing, 10)
                     }

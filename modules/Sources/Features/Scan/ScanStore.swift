@@ -80,6 +80,13 @@ public struct ScanReducer: ReducerProtocol {
     public var body: some ReducerProtocolOf<Self> {
         Reduce { state, action in
             switch action {
+            case .alert(.presented(let action)):
+                return EffectTask(value: action)
+
+            case .alert(.dismiss):
+                state.alert = nil
+                return .none
+
             case .alert:
                 return .none
                 

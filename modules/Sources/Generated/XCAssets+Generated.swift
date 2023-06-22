@@ -33,9 +33,6 @@ public enum Asset {
       public static let calloutBackupFlow1 = ImageAsset(name: "calloutBackupFlow1")
       public static let calloutBackupSucceeded = ImageAsset(name: "calloutBackupSucceeded")
     }
-    public enum Icons {
-      public static let qrCode = ImageAsset(name: "qrCode")
-    }
     public static let welcomeScreenLogo = ImageAsset(name: "WelcomeScreenLogo")
   }
   public enum Colors {

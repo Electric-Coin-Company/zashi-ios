@@ -74,7 +74,6 @@ public struct ImportWalletReducer: ReducerProtocol {
     public enum Action: Equatable {
         case alert(PresentationAction<Action>)
         case birthdayInputChanged(RedactableString)
-        case dismissAlert
         case restoreWallet
         case importPrivateOrViewingKey
         case initializeSDK
@@ -125,6 +124,13 @@ public struct ImportWalletReducer: ReducerProtocol {
                 }
                 return .none
                 
+            case .alert(.presented(let action)):
+                return EffectTask(value: action)
+
+            case .alert(.dismiss):
+                state.alert = nil
+                return .none
+
             case .alert:
                 return .none
                 
@@ -162,9 +168,6 @@ public struct ImportWalletReducer: ReducerProtocol {
                 return .none
                 
             case .initializeSDK:
-                return .none
-                
-            case .dismissAlert:
                 return .none
             }
         }
@@ -217,7 +220,7 @@ extension AlertState where Action == ImportWalletReducer.Action {
         AlertState {
             TextState(L10n.ImportWallet.Alert.Failed.title)
         } actions: {
-            ButtonState(action: .dismissAlert) {
+            ButtonState(action: .alert(.dismiss)) {
                 TextState(L10n.General.ok)
             }
         } message: {
