@@ -613,7 +613,6 @@
 				0D26AE9A299E8196005260EE /* Sources */,
 				0D26AF70299E8196005260EE /* Frameworks */,
 				0D26AF78299E8196005260EE /* Resources */,
-				0D26AF90299E8196005260EE /* Upload crashlytics symbols */,
 			);
 			buildRules = (
 			);
@@ -642,7 +641,6 @@
 				0D4E7A0126B364170058B01E /* Sources */,
 				0D4E7A0226B364170058B01E /* Frameworks */,
 				0D4E7A0326B364170058B01E /* Resources */,
-				0D300FA72996EAF200576003 /* Upload crashlytics symbols */,
 			);
 			buildRules = (
 			);
@@ -850,44 +848,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/zsh;
 			shellScript = "swiftlint_version=0.50.3\n\nif which swiftlint >/dev/null; then\n  if [[ $(swiftlint version) != $swiftlint_version ]]; then\n    echo \"warning: Compatible SwiftLint version not installed, download version $swiftlint_version from https://github.com/realm/SwiftLint. Currently installed version is $(swiftlint version)\"\n  fi\n   \n  echo \"Linting the Secant code\"\n  swiftlint lint --config .swiftlint.yml\n  echo \"Linting tests\"\n  swiftlint lint --config .swiftlint_tests.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
-		};
-		0D26AF90299E8196005260EE /* Upload crashlytics symbols */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 12;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Upload crashlytics symbols";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif [[ $UPLOAD_CRASHLYTICS_SYMBOLS = \"NO\" ]]; then\n   echo \"DEBUG BUILD: SKIPPING UPLOAD SYMBOLS STEP\"\nelse\n${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\nfi\n";
-		};
-		0D300FA72996EAF200576003 /* Upload crashlytics symbols */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 12;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Upload crashlytics symbols";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif [[ $UPLOAD_CRASHLYTICS_SYMBOLS = \"NO\" ]]; then\n   echo \"DEBUG BUILD: SKIPPING UPLOAD SYMBOLS STEP\"\nelse\n${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\nfi\n";
 		};
 		0D3B01ED298DB0FE007EBCDA /* Generate GoogleService-Info.plist  */ = {
 			isa = PBXShellScriptBuildPhase;
