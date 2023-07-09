@@ -1,5 +1,5 @@
-input_dir: modules/Sources/Generated/Resources/
-output_dir: modules/Sources/Generated/
+input_dir: Sources/Generated/Resources/
+output_dir: Sources/Generated/
 
 xcassets:
   inputs:
