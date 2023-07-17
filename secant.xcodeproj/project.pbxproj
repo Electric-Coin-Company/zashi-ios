@@ -608,7 +608,6 @@
 			buildConfigurationList = 0D26AF91299E8196005260EE /* Build configuration list for PBXNativeTarget "secant-mainnet" */;
 			buildPhases = (
 				0D26AE97299E8196005260EE /* Generate GoogleService-Info.plist  */,
-				0D26AE98299E8196005260EE /* SwiftGen */,
 				0D26AE99299E8196005260EE /* SwiftLint */,
 				0D26AE9A299E8196005260EE /* Sources */,
 				0D26AF70299E8196005260EE /* Frameworks */,
@@ -636,7 +635,6 @@
 			buildConfigurationList = 0D4E7A2A26B364180058B01E /* Build configuration list for PBXNativeTarget "secant-testnet" */;
 			buildPhases = (
 				0D3B01ED298DB0FE007EBCDA /* Generate GoogleService-Info.plist  */,
-				664E39ED270C693C0044AD7E /* SwiftGen */,
 				6696BA8726F0B1D200D5C875 /* SwiftLint */,
 				0D4E7A0126B364170058B01E /* Sources */,
 				0D4E7A0226B364170058B01E /* Frameworks */,
@@ -805,31 +803,6 @@
 			shellPath = /bin/zsh;
 			shellScript = "# this creates an empty file for the firebase SDK\n\necho \"Creating an empty file for the firebase SDK\"\n\nCRASH_REPORTER_FILE=\"./secant/Resources/GoogleService-Info.plist\"\nif [[ -f $CRASH_REPORTER_FILE ]]; then\n    echo \"$CRASH_REPORTER_FILE Exists. Not doing anything.\"\nelse \n    echo \"$CRASH_REPORTER_FILE does not exist. Will insert a DUMMY FILE\"\n\n    echo \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxLjAiPgo8ZGljdD4KICAgIDxrZXk+SVNfRFVNTVlfRklMRTwva2V5PgogICAgPHRydWU+PC90cnVlPgo8L2RpY3Q+CjwvcGxpc3Q+Cg==\" | base64 --decode > $CRASH_REPORTER_FILE\nfi\n";
 		};
-		0D26AE98299E8196005260EE /* SwiftGen */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/modules/Sources/Generated/Resources/Colors.xcassets",
-				"$(SRCROOT)/modules/Sources/Generated/Resources/Assets/xcassets",
-				"$(SRCROOT)/modules/Sources/Generated/Resources/Localizable.strings",
-				"$(SRCROOT)/swiftgen.yml",
-			);
-			name = SwiftGen;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Resources/Generated/XCAssets+Generated.swift",
-				"$(DERIVED_FILE_DIR)/Resources/Generated/Fonts+Generated.swift",
-				"$(DERIVED_FILE_DIR)/Resources/Generated/L10n.swift",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/zsh;
-			shellScript = "swiftgen_version=\"v6.6.2\"\n\nif which swiftgen >/dev/null; then\n    current_version=`swiftgen --version | awk -F'\\ ' '{print $2}'`\n    if [[ $current_version != $swiftgen_version ]]; then\n        echo \"error: Compatible SwiftGen version not installed. Install version ${swiftgen_version}.\"\n        exit 1\n    fi\n\n    swiftgen\nelse\n  echo \"Error: SwiftGen not installed. Install version ${swiftgen_version}.\"\n  exit 1\nfi\n";
-		};
 		0D26AE99299E8196005260EE /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -869,31 +842,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/zsh;
 			shellScript = "# this creates an empty file for the firebase SDK\n\necho \"Creating an empty file for the firebase SDK\"\n\nCRASH_REPORTER_FILE=\"./secant/Resources/GoogleService-Info.plist\"\nif [[ -f $CRASH_REPORTER_FILE ]]; then\n    echo \"$CRASH_REPORTER_FILE Exists. Not doing anything.\"\nelse \n    echo \"$CRASH_REPORTER_FILE does not exist. Will insert a DUMMY FILE\"\n\n    echo \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxLjAiPgo8ZGljdD4KICAgIDxrZXk+SVNfRFVNTVlfRklMRTwva2V5PgogICAgPHRydWU+PC90cnVlPgo8L2RpY3Q+CjwvcGxpc3Q+Cg==\" | base64 --decode > $CRASH_REPORTER_FILE\nfi\n";
-		};
-		664E39ED270C693C0044AD7E /* SwiftGen */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/modules/Sources/Generated/Resources/Colors.xcassets",
-				"$(SRCROOT)/modules/Sources/Generated/Resources/Assets/xcassets",
-				"$(SRCROOT)/modules/Sources/Generated/Resources/Localizable.strings",
-				"$(SRCROOT)/swiftgen.yml",
-			);
-			name = SwiftGen;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Resources/Generated/XCAssets+Generated.swift",
-				"$(DERIVED_FILE_DIR)/Resources/Generated/Fonts+Generated.swift",
-				"$(DERIVED_FILE_DIR)/Resources/Generated/L10n.swift",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/zsh;
-			shellScript = "swiftgen_version=\"v6.6.2\"\n\nif which swiftgen >/dev/null; then\n    current_version=`swiftgen --version | awk -F'\\ ' '{print $2}'`\n    if [[ $current_version != $swiftgen_version ]]; then\n        echo \"error: Compatible SwiftGen version not installed. Install version ${swiftgen_version}.\"\n        exit 1\n    fi\n\n    swiftgen\nelse\n  echo \"Error: SwiftGen not installed. Install version ${swiftgen_version}.\"\n  exit 1\nfi\n";
 		};
 		6696BA8726F0B1D200D5C875 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
