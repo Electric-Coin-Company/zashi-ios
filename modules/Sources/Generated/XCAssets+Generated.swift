@@ -66,6 +66,7 @@ public enum Asset {
     }
     public enum Mfp {
       public static let background = ColorAsset(name: "background")
+      public static let error = ColorAsset(name: "error")
       public static let fontDark = ColorAsset(name: "fontDark")
       public static let fontLight = ColorAsset(name: "fontLight")
       public static let primary = ColorAsset(name: "primary")

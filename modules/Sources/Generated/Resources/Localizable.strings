@@ -118,6 +118,9 @@
 "send.memo" = " memo: %@";
 "send.includeMemo" = "Want to include memo? Tap here.";
 "send.editMemo" = "Memo included. Tap to edit.";
+"send.error.insufficientFunds" = "Insufficient funds";
+"send.error.invalidAmount" = "Invalid amount";
+"send.error.invalidAddress" = "Invalid address";
 
 // MARK: - Settings
 "settings.crashReporting" = "Enable Crash Reporting";

@@ -484,6 +484,14 @@ public enum L10n {
     public static let succeeded = L10n.tr("Localizable", "send.succeeded", fallback: "Sending transaction succeeded")
     /// Send Zcash
     public static let title = L10n.tr("Localizable", "send.title", fallback: "Send Zcash")
+    public enum Error {
+      /// insufficient funds
+      public static let insufficientFunds = L10n.tr("Localizable", "send.error.insufficientFunds", fallback: "insufficient funds")
+      /// invalid address
+      public static let invalidAddress = L10n.tr("Localizable", "send.error.invalidAddress", fallback: "invalid address")
+      /// invalid amount
+      public static let invalidAmount = L10n.tr("Localizable", "send.error.invalidAmount", fallback: "invalid amount")
+    }
   }
   public enum Settings {
     /// About

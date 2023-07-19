@@ -30,22 +30,39 @@ public struct CreateTransaction: View {
                 .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                 .padding(.horizontal)
 
-                TransactionAddressTextField(
-                    store: store.scope(
-                        state: \.transactionAddressInputState,
-                        action: SendFlowReducer.Action.transactionAddressInput
+                VStack(alignment: .leading) {
+                    TransactionAddressTextField(
+                        store: store.scope(
+                            state: \.transactionAddressInputState,
+                            action: SendFlowReducer.Action.transactionAddressInput
+                        )
                     )
-                )
+                    
+                    if viewStore.isInvalidAddressFormat {
+                        Text(L10n.Send.Error.invalidAddress)
+                            .foregroundColor(Asset.Colors.Mfp.error.color)
+                    }
+                }
                 .padding(.horizontal)
                 .padding(.bottom, 5)
 
-                TransactionAmountTextField(
-                    store: store.scope(
-                        state: \.transactionAmountInputState,
-                        action: SendFlowReducer.Action.transactionAmountInput
-                    ),
-                    tokenName: tokenName
-                )
+                VStack(alignment: .leading) {
+                    TransactionAmountTextField(
+                        store: store.scope(
+                            state: \.transactionAmountInputState,
+                            action: SendFlowReducer.Action.transactionAmountInput
+                        ),
+                        tokenName: tokenName
+                    )
+
+                    if viewStore.isInvalidAmountFormat {
+                        Text(L10n.Send.Error.invalidAmount)
+                            .foregroundColor(Asset.Colors.Mfp.error.color)
+                    } else if viewStore.isInsufficientFunds {
+                        Text(L10n.Send.Error.insufficientFunds)
+                            .foregroundColor(Asset.Colors.Mfp.error.color)
+                    }
+                }
                 .padding(.horizontal)
 
                 Button {
