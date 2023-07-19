@@ -60,7 +60,6 @@ struct SecantApp: App {
                 tokenName: TargetConstants.tokenName,
                 networkType: TargetConstants.zcashNetwork.networkType
             )
-            .preferredColorScheme(.light)
         }
     }
 }
