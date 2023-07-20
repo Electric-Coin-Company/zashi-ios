@@ -88,7 +88,7 @@ extension TransactionRowView {
                     .frame(width: 12, height: 12)
                     .foregroundColor(inTransaction ? .yellow : .white)
                     .padding(10)
-                    .background(Asset.Colors.Mfp.primary.color)
+                    .background(Asset.Colors.Mfp.walletEvents.color)
                     .cornerRadius(40)
                     .rotationEffect(Angle(degrees: inTransaction ? 135 : -45))
                     .padding(.leading, 14)

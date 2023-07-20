@@ -22,11 +22,10 @@ public struct WelcomeView: View {
             VStack {
                 Image(Asset.Assets.welcomeScreenLogo.name)
                     .resizable()
-                    .frame(width: 210, height: 210)
-                    .padding(.bottom, 14)
+                    .frame(width: 150, height: 150)
+                    .padding(.top, 100)
                 
-                Text(L10n.WelcomeScreen.title)
-                    .font(.system(size: 23))
+                Spacer()
             }
             .accessDebugMenuWithHiddenGesture {
                 ViewStore(store).send(.debugMenuStartup)

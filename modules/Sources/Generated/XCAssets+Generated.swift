@@ -69,6 +69,7 @@ public enum Asset {
       public static let fontDark = ColorAsset(name: "fontDark")
       public static let fontLight = ColorAsset(name: "fontLight")
       public static let primary = ColorAsset(name: "primary")
+      public static let walletEvents = ColorAsset(name: "walletEvents")
     }
     public enum Onboarding {
       public static let badgeShadow = ColorAsset(name: "BadgeShadow")

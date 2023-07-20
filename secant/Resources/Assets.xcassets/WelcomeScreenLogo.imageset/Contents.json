@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "eccLogo.png",
+      "filename" : "zashiDark.png",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "zashiLight.png",
       "idiom" : "universal"
     }
   ],
