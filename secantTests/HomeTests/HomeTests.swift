@@ -59,9 +59,7 @@ class HomeTests: XCTestCase {
 
         // expected side effects as a result of .onAppear registration
         store.receive(.updateDestination(nil))
-        store.receive(.synchronizerStateChanged(.zero)) { state in
-            state.synchronizerStatusSnapshot = SyncStatusSnapshot.snapshotFor(state: .unprepared)
-        }
+        store.receive(.synchronizerStateChanged(.zero))
 
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancels the observer of the synchronizer status change.
@@ -107,6 +105,7 @@ class HomeTests: XCTestCase {
 
         store.send(.synchronizerStateChanged(state)) { state in
             state.synchronizerStatusSnapshot = errorSnapshot
+            state.migratingDatabase = false
         }
 
         store.receive(.showSynchronizerErrorAlert(testError)) { state in

@@ -47,6 +47,7 @@ final class ReviewRequestTests: XCTestCase {
         
         await store.send(.synchronizerStateChanged(syncState)) { state in
             state.synchronizerStatusSnapshot = snapshot
+            state.migratingDatabase = false
         }
         
         let storedDate = userDefaultsClient.objectForKey(ReviewRequestClient.Constants.latestSyncKey) as? TimeInterval
