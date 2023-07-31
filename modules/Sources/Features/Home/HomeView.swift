@@ -141,10 +141,14 @@ extension HomeView {
                     .font(.system(size: 20))
             }
             
-            Text(viewStore.synchronizerStatusSnapshot.message)
-                .accessDebugMenuWithHiddenGesture {
-                    viewStore.send(.debugMenuStartup)
-                }
+            if viewStore.migratingDatabase {
+                Text(L10n.Home.migratingDatabases)
+            } else {
+                Text(viewStore.synchronizerStatusSnapshot.message)
+                    .accessDebugMenuWithHiddenGesture {
+                        viewStore.send(.debugMenuStartup)
+                    }
+            }
         }
         .foregroundColor(Asset.Colors.Mfp.primary.color)
     }

@@ -75,6 +75,8 @@
 "home.syncFailed.title" = "Sync failed!";
 "home.syncFailed.dismiss" = "Dismiss";
 "home.syncFailed.retry" = "Retry";
+"home.migratingDatabases" = "Upgrading databases…";
+
 // MARK: - Receive ZEC (Formerly Profile Screen)
 "receiveZec.yourAddress" = "Your Address";
 "receiveZec.error.cantExtractUnifiedAddress" = "could not extract UA";

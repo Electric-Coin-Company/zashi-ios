@@ -46,6 +46,7 @@ public struct HomeReducer: ReducerProtocol {
         public var synchronizerStatusSnapshot: SyncStatusSnapshot
         public var walletConfig: WalletConfig
         public var walletEventsState: WalletEventsFlowReducer.State
+        public var migratingDatabase = true
         // TODO: [#311] - Get the ZEC price from the SDK, https://github.com/zcash/secant-ios-wallet/issues/311
         public var zecPrice = Decimal(140.0)
 
@@ -196,8 +197,12 @@ public struct HomeReducer: ReducerProtocol {
             case .synchronizerStateChanged(let latestState):
                 let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.syncStatus)
 
-                guard snapshot != state.synchronizerStatusSnapshot else {
+                guard snapshot.syncStatus != state.synchronizerStatusSnapshot.syncStatus else {
                     return .none
+                }
+
+                if snapshot.syncStatus != .unprepared {
+                    state.migratingDatabase = false
                 }
 
                 state.synchronizerStatusSnapshot = snapshot

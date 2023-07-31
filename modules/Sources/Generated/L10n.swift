@@ -147,6 +147,8 @@ public enum L10n {
     public static let yes = L10n.tr("Localizable", "general.yes", fallback: "Yes")
   }
   public enum Home {
+    /// Upgrading databases…
+    public static let migratingDatabases = L10n.tr("Localizable", "home.migratingDatabases", fallback: "Upgrading databases…")
     /// Receive %@
     public static func receiveZec(_ p1: Any) -> String {
       return L10n.tr("Localizable", "home.receiveZec", String(describing: p1), fallback: "Receive %@")
@@ -485,12 +487,12 @@ public enum L10n {
     /// Send Zcash
     public static let title = L10n.tr("Localizable", "send.title", fallback: "Send Zcash")
     public enum Error {
-      /// insufficient funds
-      public static let insufficientFunds = L10n.tr("Localizable", "send.error.insufficientFunds", fallback: "insufficient funds")
-      /// invalid address
-      public static let invalidAddress = L10n.tr("Localizable", "send.error.invalidAddress", fallback: "invalid address")
-      /// invalid amount
-      public static let invalidAmount = L10n.tr("Localizable", "send.error.invalidAmount", fallback: "invalid amount")
+      /// Insufficient funds
+      public static let insufficientFunds = L10n.tr("Localizable", "send.error.insufficientFunds", fallback: "Insufficient funds")
+      /// Invalid address
+      public static let invalidAddress = L10n.tr("Localizable", "send.error.invalidAddress", fallback: "Invalid address")
+      /// Invalid amount
+      public static let invalidAmount = L10n.tr("Localizable", "send.error.invalidAmount", fallback: "Invalid amount")
     }
   }
   public enum Settings {

@@ -60,7 +60,7 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-case-paths", from: "0.14.1"),
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.5.0"),
         .package(url: "https://github.com/SwiftGen/SwiftGenPlugin", from: "6.6.0"),
-        .package(url: "https://github.com/zcash/ZcashLightClientKit", revision: "ee3d082155bf542aa3580c84e6140a329633319a"),
+        .package(url: "https://github.com/zcash/ZcashLightClientKit", revision: "e4cea0c265e803ad2820d358c1daa565c3107497"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.4")
     ],
     targets: [
