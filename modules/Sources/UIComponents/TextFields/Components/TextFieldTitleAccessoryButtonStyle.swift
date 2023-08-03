@@ -13,7 +13,7 @@ struct TextFieldTitleAccessoryButtonStyle: ButtonStyle {
         configuration.label
             .padding(.horizontal, 10)
             .padding(.vertical, 3)
-            .foregroundColor(.white)
+            .foregroundColor(Asset.Colors.Mfp.fontLight.color)
             .background(
                 configuration.isPressed ?
                 Asset.Colors.TextField.titleAccessoryButtonPressed.color :

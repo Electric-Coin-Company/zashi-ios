@@ -173,52 +173,34 @@ private extension RootView {
 
             List {
                 Section(header: Text(L10n.Root.Debug.title)) {
-                    Button(L10n.Root.Debug.Option.gotoSandbox) {
-                        viewStore.goToDestination(.sandbox)
-                    }
-
-                    Button(L10n.Root.Debug.Option.gotoOnboarding) {
-                        viewStore.goToDestination(.onboarding)
-                    }
-
-                    Button(L10n.Root.Debug.Option.gotoPhraseValidationDemo) {
-                        viewStore.goToDestination(.phraseValidation)
-                    }
-
-                    Button(L10n.Root.Debug.Option.restartApp) {
-                        viewStore.goToDestination(.welcome)
-                    }
-
-                    Button(L10n.Root.Debug.Option.testCrashReporter) {
-                        viewStore.send(.debug(.testCrashReporter))
-                    }
-
                     Button(L10n.Root.Debug.Option.exportLogs) {
                         viewStore.send(.exportLogs(.start))
                     }
                     .disabled(viewStore.exportLogsState.exportLogsDisabled)
 
+#if DEBUG
                     Button(L10n.Root.Debug.Option.appReview) {
                         viewStore.send(.debug(.rateTheApp))
                         if let currentScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
                             SKStoreReviewController.requestReview(in: currentScene)
                         }
                     }
-
+#endif
+                    
                     Button(L10n.Root.Debug.Option.rescanBlockchain) {
                         viewStore.send(.debug(.rescanBlockchain))
                     }
-
+                    
                     Button(L10n.Root.Debug.Option.nukeWallet) {
                         viewStore.send(.initialization(.nukeWalletRequest))
                     }
                 }
-
+#if DEBUG
                 Section(header: Text(L10n.Root.Debug.featureFlags)) {
                     let flags = viewStore.state.walletConfig.flags
                         .map { FeatureFlagWrapper(name: $0.key, isEnabled: $0.value) }
                         .sorted()
-
+                    
                     ForEach(flags) { flag in
                         HStack {
                             Toggle(
@@ -237,11 +219,12 @@ private extension RootView {
                         }
                     }
                 }
+#endif
             }
             .confirmationDialog(
                 store.scope(
                     state: \.debugState.rescanDialog,
-                    action: { _ in RootReducer.Action.debug(.cancelRescan) }
+                    action: { $0 }
                 ),
                 dismiss: .debug(.cancelRescan)
             )

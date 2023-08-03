@@ -318,8 +318,8 @@ public enum L10n {
       public static let featureFlags = L10n.tr("Localizable", "root.debug.featureFlags", fallback: "Feature flags")
       /// Startup
       public static let navigationTitle = L10n.tr("Localizable", "root.debug.navigationTitle", fallback: "Startup")
-      /// Debug options
-      public static let title = L10n.tr("Localizable", "root.debug.title", fallback: "Debug options")
+      /// Support options
+      public static let title = L10n.tr("Localizable", "root.debug.title", fallback: "Support options")
       public enum Alert {
         public enum Rewind {
           public enum CantStartSync {
@@ -355,24 +355,16 @@ public enum L10n {
         }
       }
       public enum Option {
-        /// Rate the app
-        public static let appReview = L10n.tr("Localizable", "root.debug.option.appReview", fallback: "Rate the app")
-        /// Export logs
-        public static let exportLogs = L10n.tr("Localizable", "root.debug.option.exportLogs", fallback: "Export logs")
-        /// Go To Onboarding
-        public static let gotoOnboarding = L10n.tr("Localizable", "root.debug.option.gotoOnboarding", fallback: "Go To Onboarding")
-        /// Go To Phrase Validation Demo
-        public static let gotoPhraseValidationDemo = L10n.tr("Localizable", "root.debug.option.gotoPhraseValidationDemo", fallback: "Go To Phrase Validation Demo")
-        /// Go To Sandbox (navigation proof)
-        public static let gotoSandbox = L10n.tr("Localizable", "root.debug.option.gotoSandbox", fallback: "Go To Sandbox (navigation proof)")
+        /// Rate the App
+        public static let appReview = L10n.tr("Localizable", "root.debug.option.appReview", fallback: "Rate the App")
+        /// Export Logs
+        public static let exportLogs = L10n.tr("Localizable", "root.debug.option.exportLogs", fallback: "Export Logs")
         /// [Be careful] Nuke Wallet
         public static let nukeWallet = L10n.tr("Localizable", "root.debug.option.nukeWallet", fallback: "[Be careful] Nuke Wallet")
         /// Rescan Blockchain
         public static let rescanBlockchain = L10n.tr("Localizable", "root.debug.option.rescanBlockchain", fallback: "Rescan Blockchain")
-        /// Restart the app
-        public static let restartApp = L10n.tr("Localizable", "root.debug.option.restartApp", fallback: "Restart the app")
-        /// Test Crash Reporter
-        public static let testCrashReporter = L10n.tr("Localizable", "root.debug.option.testCrashReporter", fallback: "Test Crash Reporter")
+        /// Restart the App
+        public static let restartApp = L10n.tr("Localizable", "root.debug.option.restartApp", fallback: "Restart the App")
       }
     }
     public enum Destination {

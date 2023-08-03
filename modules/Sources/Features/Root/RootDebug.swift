@@ -16,7 +16,7 @@ import Models
 /// for the `RootReducer` with a connection to the UI navigation.
 extension RootReducer {
     public struct DebugState: Equatable {
-        public var rescanDialog: ConfirmationDialogState<RootReducer.Action>?
+        @PresentationState public var rescanDialog: ConfirmationDialogState<Action>?
     }
     
     public indirect enum DebugAction: Equatable {
@@ -43,15 +43,7 @@ extension RootReducer {
                 return .none
                 
             case .debug(.rescanBlockchain):
-                state.debugState.rescanDialog = .init(
-                    title: TextState(L10n.Root.Debug.Dialog.Rescan.title),
-                    message: TextState(L10n.Root.Debug.Dialog.Rescan.message),
-                    buttons: [
-                        .default(TextState(L10n.Root.Debug.Dialog.Rescan.Option.quick), action: .send(.debug(.quickRescan))),
-                        .default(TextState(L10n.Root.Debug.Dialog.Rescan.Option.full), action: .send(.debug(.fullRescan))),
-                        .cancel(TextState(L10n.General.cancel))
-                    ]
-                )
+                state.debugState.rescanDialog = ConfirmationDialogState.rescanRequest()
                 return .none
 
             case .debug(.cancelRescan):
@@ -103,7 +95,7 @@ extension RootReducer {
                 
             case .debug(.rateTheApp):
                 return .none
-                
+
             default: return .none
             }
         }
