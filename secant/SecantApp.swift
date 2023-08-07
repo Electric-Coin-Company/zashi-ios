@@ -60,6 +60,9 @@ struct SecantApp: App {
                 tokenName: TargetConstants.tokenName,
                 networkType: TargetConstants.zcashNetwork.networkType
             )
+            .font(
+                .custom(FontFamily.Inter.regular.name, size: 17)
+            )
         }
     }
 }

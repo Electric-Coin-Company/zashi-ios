@@ -25,7 +25,9 @@ public struct SingleLineTextField<TitleAccessoryContent, InputPrefixContent, Inp
                 Text(title)
                     .lineLimit(1)
                     .truncationMode(.middle)
-                    .font(.system(size: 13))
+                    .font(
+                        .custom(FontFamily.Inter.regular.name, size: 13)
+                    )
 
                 Spacer()
 

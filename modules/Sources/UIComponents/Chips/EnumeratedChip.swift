@@ -26,7 +26,9 @@ public struct EnumeratedChip: View {
     public var body: some View {
         Text(text.data)
             .foregroundColor(Asset.Colors.Text.button.color)
-            .font(.custom(FontFamily.Rubik.regular.name, size: 14))
+            .font(
+                .custom(FontFamily.Inter.regular.name, size: 14)
+            )
             .frame(
                 maxWidth: .infinity,
                 minHeight: 30,
@@ -49,7 +51,9 @@ public struct EnumeratedChip: View {
                 GeometryReader { proxy in
                     Text("\(index)")
                         .foregroundColor(Asset.Colors.Text.highlightedSuperscriptText.color)
-                        .font(.custom(FontFamily.Roboto.bold.name, size: 10))
+                        .font(
+                            .custom(FontFamily.Inter.regular.name, size: 10)
+                        )
                         .frame(width: proxy.size.width, height: proxy.size.height, alignment: .topLeading)
                         .padding(.leading, basePadding)
                         .padding(.top, 4)

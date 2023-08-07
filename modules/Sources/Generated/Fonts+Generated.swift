@@ -19,43 +19,32 @@ public typealias SystemFont = FontConvertible.SystemFont
 
 // swiftlint:disable identifier_name line_length type_body_length
 public enum FontFamily {
-  public enum Roboto {
-    public static let black = FontConvertible(name: "Roboto-Black", family: "Roboto", path: "Roboto-Black.ttf")
-    public static let blackItalic = FontConvertible(name: "Roboto-BlackItalic", family: "Roboto", path: "Roboto-BlackItalic.ttf")
-    public static let bold = FontConvertible(name: "Roboto-Bold", family: "Roboto", path: "Roboto-Bold.ttf")
-    public static let boldItalic = FontConvertible(name: "Roboto-BoldItalic", family: "Roboto", path: "Roboto-BoldItalic.ttf")
-    public static let italic = FontConvertible(name: "Roboto-Italic", family: "Roboto", path: "Roboto-Italic.ttf")
-    public static let light = FontConvertible(name: "Roboto-Light", family: "Roboto", path: "Roboto-Light.ttf")
-    public static let lightItalic = FontConvertible(name: "Roboto-LightItalic", family: "Roboto", path: "Roboto-LightItalic.ttf")
-    public static let medium = FontConvertible(name: "Roboto-Medium", family: "Roboto", path: "Roboto-Medium.ttf")
-    public static let mediumItalic = FontConvertible(name: "Roboto-MediumItalic", family: "Roboto", path: "Roboto-MediumItalic.ttf")
-    public static let regular = FontConvertible(name: "Roboto-Regular", family: "Roboto", path: "Roboto-Regular.ttf")
-    public static let thin = FontConvertible(name: "Roboto-Thin", family: "Roboto", path: "Roboto-Thin.ttf")
-    public static let thinItalic = FontConvertible(name: "Roboto-ThinItalic", family: "Roboto", path: "Roboto-ThinItalic.ttf")
-    public static let all: [FontConvertible] = [black, blackItalic, bold, boldItalic, italic, light, lightItalic, medium, mediumItalic, regular, thin, thinItalic]
-  }
-  public enum Rubik {
-    public static let light = FontConvertible(name: "Rubik-Light", family: "Rubik", path: "Rubik-VariableFont_wght.ttf")
-    public static let lightItalic = FontConvertible(name: "Rubik-LightItalic", family: "Rubik", path: "Rubik-Italic-VariableFont_wght.ttf")
-    public static let blackItalic = FontConvertible(name: "RubikItalic-Black", family: "Rubik", path: "Rubik-Italic-VariableFont_wght.ttf")
-    public static let boldItalic = FontConvertible(name: "RubikItalic-Bold", family: "Rubik", path: "Rubik-Italic-VariableFont_wght.ttf")
-    public static let extraBoldItalic = FontConvertible(name: "RubikItalic-ExtraBold", family: "Rubik", path: "Rubik-Italic-VariableFont_wght.ttf")
-    public static let mediumItalic = FontConvertible(name: "RubikItalic-Medium", family: "Rubik", path: "Rubik-Italic-VariableFont_wght.ttf")
-    public static let italic = FontConvertible(name: "RubikItalic-Regular", family: "Rubik", path: "Rubik-Italic-VariableFont_wght.ttf")
-    public static let semiBoldItalic = FontConvertible(name: "RubikItalic-SemiBold", family: "Rubik", path: "Rubik-Italic-VariableFont_wght.ttf")
-    public static let black = FontConvertible(name: "RubikRoman-Black", family: "Rubik", path: "Rubik-VariableFont_wght.ttf")
-    public static let bold = FontConvertible(name: "RubikRoman-Bold", family: "Rubik", path: "Rubik-VariableFont_wght.ttf")
-    public static let extraBold = FontConvertible(name: "RubikRoman-ExtraBold", family: "Rubik", path: "Rubik-VariableFont_wght.ttf")
-    public static let medium = FontConvertible(name: "RubikRoman-Medium", family: "Rubik", path: "Rubik-VariableFont_wght.ttf")
-    public static let regular = FontConvertible(name: "RubikRoman-Regular", family: "Rubik", path: "Rubik-VariableFont_wght.ttf")
-    public static let semiBold = FontConvertible(name: "RubikRoman-SemiBold", family: "Rubik", path: "Rubik-VariableFont_wght.ttf")
-    public static let all: [FontConvertible] = [light, lightItalic, blackItalic, boldItalic, extraBoldItalic, mediumItalic, italic, semiBoldItalic, black, bold, extraBold, medium, regular, semiBold]
+  public enum Inter {
+    public static let black = FontConvertible(name: "Inter-Black", family: "Inter", path: "Inter-Black.otf")
+    public static let blackItalic = FontConvertible(name: "Inter-BlackItalic", family: "Inter", path: "Inter-BlackItalic.otf")
+    public static let bold = FontConvertible(name: "Inter-Bold", family: "Inter", path: "Inter-Bold.otf")
+    public static let boldItalic = FontConvertible(name: "Inter-BoldItalic", family: "Inter", path: "Inter-BoldItalic.otf")
+    public static let extraBold = FontConvertible(name: "Inter-ExtraBold", family: "Inter", path: "Inter-ExtraBold.otf")
+    public static let extraBoldItalic = FontConvertible(name: "Inter-ExtraBoldItalic", family: "Inter", path: "Inter-ExtraBoldItalic.otf")
+    public static let extraLight = FontConvertible(name: "Inter-ExtraLight", family: "Inter", path: "Inter-ExtraLight.otf")
+    public static let extraLightItalic = FontConvertible(name: "Inter-ExtraLightItalic", family: "Inter", path: "Inter-ExtraLightItalic.otf")
+    public static let italic = FontConvertible(name: "Inter-Italic", family: "Inter", path: "Inter-Italic.otf")
+    public static let light = FontConvertible(name: "Inter-Light", family: "Inter", path: "Inter-Light.otf")
+    public static let lightItalic = FontConvertible(name: "Inter-LightItalic", family: "Inter", path: "Inter-LightItalic.otf")
+    public static let medium = FontConvertible(name: "Inter-Medium", family: "Inter", path: "Inter-Medium.otf")
+    public static let mediumItalic = FontConvertible(name: "Inter-MediumItalic", family: "Inter", path: "Inter-MediumItalic.otf")
+    public static let regular = FontConvertible(name: "Inter-Regular", family: "Inter", path: "Inter-Regular.otf")
+    public static let semiBold = FontConvertible(name: "Inter-SemiBold", family: "Inter", path: "Inter-SemiBold.otf")
+    public static let semiBoldItalic = FontConvertible(name: "Inter-SemiBoldItalic", family: "Inter", path: "Inter-SemiBoldItalic.otf")
+    public static let thin = FontConvertible(name: "Inter-Thin", family: "Inter", path: "Inter-Thin.otf")
+    public static let thinItalic = FontConvertible(name: "Inter-ThinItalic", family: "Inter", path: "Inter-ThinItalic.otf")
+    public static let all: [FontConvertible] = [black, blackItalic, bold, boldItalic, extraBold, extraBoldItalic, extraLight, extraLightItalic, italic, light, lightItalic, medium, mediumItalic, regular, semiBold, semiBoldItalic, thin, thinItalic]
   }
   public enum Zboto {
     public static let regular = FontConvertible(name: "ZbotoRegular", family: "Zboto", path: "Zboto.otf")
     public static let all: [FontConvertible] = [regular]
   }
-  public static let allCustomFonts: [FontConvertible] = [Roboto.all, Rubik.all, Zboto.all].flatMap { $0 }
+  public static let allCustomFonts: [FontConvertible] = [Inter.all, Zboto.all].flatMap { $0 }
   public static func registerAllCustomFonts() {
     allCustomFonts.forEach { $0.register() }
   }

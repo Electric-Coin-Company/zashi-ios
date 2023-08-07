@@ -31,7 +31,9 @@ extension Text {
         func body(content: Content) -> some View {
             content
                 .foregroundColor(Asset.Colors.Text.body.color)
-                .font(.custom(FontFamily.Rubik.regular.name, size: 18))
+                .font(
+                    .custom(FontFamily.Inter.regular.name, size: 18)
+                )
         }
     }
 
@@ -40,7 +42,9 @@ extension Text {
         func body(content: Content) -> some View {
             content
                 .foregroundColor(Asset.Colors.Text.heading.color)
-                .font(.custom(FontFamily.Rubik.regular.name, size: 16))
+                .font(
+                    .custom(FontFamily.Inter.regular.name, size: 16)
+                )
         }
     }
 
@@ -48,7 +52,9 @@ extension Text {
         func body(content: Content) -> some View {
             content
                 .foregroundColor(Asset.Colors.Text.heading.color)
-                .font(.custom(FontFamily.Rubik.medium.name, size: 24, relativeTo: .callout))
+                .font(
+                    .custom(FontFamily.Inter.regular.name, size: 24)
+                )
                 .shadow(color: Asset.Colors.Text.captionTextShadow.color, radius: 1, x: 0, y: 1)
         }
     }
@@ -57,7 +63,9 @@ extension Text {
         func body(content: Content) -> some View {
             content
                 .foregroundColor(Asset.Colors.Text.captionText.color)
-                .font(.custom(FontFamily.Rubik.regular.name, size: 16))
+                .font(
+                    .custom(FontFamily.Inter.regular.name, size: 16)
+                )
                 .shadow(color: Asset.Colors.Text.captionTextShadow.color, radius: 1, x: 0, y: 1)
         }
     }

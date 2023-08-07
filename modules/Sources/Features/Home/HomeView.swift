@@ -132,13 +132,17 @@ extension HomeView {
                 viewStore.send(.updateDestination(.balanceBreakdown))
             } label: {
                 Text(L10n.balance(viewStore.shieldedBalance.data.verified.decimalString(), tokenName))
-                    .font(.system(size: 32))
-                    .fontWeight(.bold)
+                    .font(
+                        .custom(FontFamily.Inter.regular.name, size: 32)
+                        .weight(.bold)
+                    )
             }
 
             if viewStore.walletConfig.isEnabled(.showFiatConversion) {
                 Text("$\(viewStore.totalCurrencyBalance.decimalString())")
-                    .font(.system(size: 20))
+                    .font(
+                        .custom(FontFamily.Inter.regular.name, size: 20)
+                    )
             }
             
             if viewStore.migratingDatabase {

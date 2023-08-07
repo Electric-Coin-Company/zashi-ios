@@ -28,7 +28,9 @@ public struct TCATextField: View {
                 )
             )
             .autocapitalization(.none)
-            .font(.system(size: 13))
+            .font(
+                .custom(FontFamily.Inter.regular.name, size: 13)
+            )
             .lineLimit(1)
             .truncationMode(.middle)
             .accentColor(Asset.Colors.Cursor.bar.color)

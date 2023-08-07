@@ -77,8 +77,10 @@ extension BalanceBreakdownView {
                     tokenName
                 )
             )
-            .font(.system(size: 32))
-            .fontWeight(.bold)
+            .font(
+                .custom(FontFamily.Inter.regular.name, size: 32)
+                .weight(.bold)
+            )
             .foregroundColor(Asset.Colors.Mfp.fontDark.color)
         }
         .padding(.horizontal, 50)

@@ -75,7 +75,9 @@ extension ScanView {
                 }, label: {
                     Image(systemName: "arrow.backward")
                         .foregroundColor(Asset.Colors.Mfp.background.color)
-                        .font(.system(size: 30.0))
+                        .font(
+                            .custom(FontFamily.Inter.regular.name, size: 30)
+                        )
                 })
                 .padding(.top, 10)
 
@@ -100,7 +102,9 @@ extension ScanView {
                             systemName: viewStore.isTorchOn ? "lightbulb.fill" : "lightbulb.slash"
                         )
                         .foregroundColor(Asset.Colors.Mfp.background.color)
-                        .font(.system(size: 30.0))
+                        .font(
+                            .custom(FontFamily.Inter.regular.name, size: 30)
+                        )
                     }
                 )
                 .padding(.top, 10)
