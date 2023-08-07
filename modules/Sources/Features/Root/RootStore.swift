@@ -148,6 +148,19 @@ public struct RootReducer: ReducerProtocol {
     
     public var body: some ReducerProtocol<State, Action> {
         self.core
+
+        Reduce { state, action in
+            switch action {
+            case .alert(.presented(let action)):
+                return EffectTask(value: action)
+
+            case .alert(.dismiss):
+                state.alert = nil
+                return .none
+
+            default: return .none
+            }
+        }
     }
 }
 
@@ -275,6 +288,27 @@ extension AlertState where Action == RootReducer.Action {
             TextState(L10n.Root.Initialization.Alert.Wipe.message)
         }
     }
+}
+     
+extension ConfirmationDialogState where Action == RootReducer.Action {
+    public static func rescanRequest() -> ConfirmationDialogState {
+        ConfirmationDialogState {
+            TextState(L10n.Root.Debug.Dialog.Rescan.title)
+        } actions: {
+            ButtonState(role: .destructive, action: .debug(.quickRescan)) {
+                TextState(L10n.Root.Debug.Dialog.Rescan.Option.quick)
+            }
+            ButtonState(role: .destructive, action: .debug(.fullRescan)) {
+                TextState(L10n.Root.Debug.Dialog.Rescan.Option.full)
+            }
+            ButtonState(role: .cancel, action: .alert(.dismiss)) {
+                TextState(L10n.General.cancel)
+            }
+        } message: {
+            TextState(L10n.Root.Debug.Dialog.Rescan.message)
+        }
+    }
+
 }
 
 // MARK: Placeholders

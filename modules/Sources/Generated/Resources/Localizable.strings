@@ -235,17 +235,13 @@
 "root.destination.alert.failedToProcessDeeplink.title" = "Failed to process deeplink.";
 "root.destination.alert.failedToProcessDeeplink.message" = "Deeplink: \(%@))\nError: \(%@) (code: %@)";
 
-"root.debug.title" = "Debug options";
+"root.debug.title" = "Support options";
 "root.debug.navigationTitle" = "Startup";
-"root.debug.option.gotoSandbox" = "Go To Sandbox (navigation proof)";
-"root.debug.option.gotoOnboarding" = "Go To Onboarding";
-"root.debug.option.gotoPhraseValidationDemo" = "Go To Phrase Validation Demo";
-"root.debug.option.restartApp" = "Restart the app";
-"root.debug.option.testCrashReporter" = "Test Crash Reporter";
+"root.debug.option.restartApp" = "Restart the App";
 "root.debug.option.rescanBlockchain" = "Rescan Blockchain";
 "root.debug.option.nukeWallet" = "[Be careful] Nuke Wallet";
-"root.debug.option.exportLogs" = "Export logs";
-"root.debug.option.appReview" = "Rate the app";
+"root.debug.option.exportLogs" = "Export Logs";
+"root.debug.option.appReview" = "Rate the App";
 "root.debug.featureFlags" = "Feature flags";
 "root.debug.dialog.rescan.title" = "Rescan";
 "root.debug.dialog.rescan.message" = "Select the rescan you want";

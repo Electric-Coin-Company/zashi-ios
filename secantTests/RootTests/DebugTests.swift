@@ -20,30 +20,14 @@ class DebugTests: XCTestCase {
         )
         
         await store.send(.debug(.rescanBlockchain)) { state in
-            state.debugState.rescanDialog = .init(
-                title: TextState("Rescan"),
-                message: TextState("Select the rescan you want"),
-                buttons: [
-                    .default(TextState("Quick rescan"), action: .send(.debug(.quickRescan))),
-                    .default(TextState("Full rescan"), action: .send(.debug(.fullRescan))),
-                    .cancel(TextState("Cancel"))
-                ]
-            )
+            state.debugState.rescanDialog = ConfirmationDialogState.rescanRequest()
         }
     }
     
     func testRescanBlockchain_Cancelling() async throws {
         var mockState = RootReducer.State.placeholder
         
-        mockState.debugState.rescanDialog = .init(
-            title: TextState("Rescan"),
-            message: TextState("Select the rescan you want"),
-            buttons: [
-                .default(TextState("Quick rescan"), action: .send(.debug(.quickRescan))),
-                .default(TextState("Full rescan"), action: .send(.debug(.fullRescan))),
-                .cancel(TextState("Cancel"))
-            ]
-        )
+        mockState.debugState.rescanDialog = ConfirmationDialogState.rescanRequest()
         
         let store = TestStore(
             initialState: mockState,
@@ -58,15 +42,7 @@ class DebugTests: XCTestCase {
     func testRescanBlockchain_QuickRescanClearance() async throws {
         var mockState = RootReducer.State.placeholder
         
-        mockState.debugState.rescanDialog = .init(
-            title: TextState("Rescan"),
-            message: TextState("Select the rescan you want"),
-            buttons: [
-                .default(TextState("Quick rescan"), action: .send(.debug(.quickRescan))),
-                .default(TextState("Full rescan"), action: .send(.debug(.fullRescan))),
-                .cancel(TextState("Cancel"))
-            ]
-        )
+        mockState.debugState.rescanDialog = ConfirmationDialogState.rescanRequest()
         
         let store = TestStore(
             initialState: mockState,
@@ -87,15 +63,7 @@ class DebugTests: XCTestCase {
     func testRescanBlockchain_FullRescanClearance() async throws {
         var mockState = RootReducer.State.placeholder
         
-        mockState.debugState.rescanDialog = .init(
-            title: TextState("Rescan"),
-            message: TextState("Select the rescan you want"),
-            buttons: [
-                .default(TextState("Quick rescan"), action: .send(.debug(.quickRescan))),
-                .default(TextState("Full rescan"), action: .send(.debug(.fullRescan))),
-                .cancel(TextState("Cancel"))
-            ]
-        )
+        mockState.debugState.rescanDialog = ConfirmationDialogState.rescanRequest()
         
         let store = TestStore(
             initialState: mockState,

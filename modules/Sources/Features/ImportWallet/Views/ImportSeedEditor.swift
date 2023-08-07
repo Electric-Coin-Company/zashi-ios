@@ -12,17 +12,11 @@ import Generated
 public struct ImportSeedEditor: View {
     var store: ImportWalletStore
     
-    /// Clearance of the black color for the TextEditor under the text (.dark colorScheme)
-    public init(store: ImportWalletStore) {
-        self.store = store
-        UITextView.appearance().backgroundColor = .clear
-    }
-    
     public var body: some View {
         WithViewStore(store) { viewStore in
             TextEditor(text: viewStore.bindingForRedactableSeedPhrase(viewStore.importedSeedPhrase))
                 .autocapitalization(.none)
-                .importSeedEditorModifier()
+                .importSeedEditorModifier(Asset.Colors.Mfp.fontDark.color)
                 .padding(.horizontal, 28)
                 .padding(.vertical, 10)
         }
@@ -34,13 +28,9 @@ struct ImportSeedEditorModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .foregroundColor(Asset.Colors.Text.importSeedEditor.color)
-            .padding()
+            .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+            .padding(1)
             .background(backgroundColor)
-            .overlay(
-                Rectangle()
-                    .stroke(Asset.Colors.Mfp.primary.color, lineWidth: 2)
-            )
     }
 }
 

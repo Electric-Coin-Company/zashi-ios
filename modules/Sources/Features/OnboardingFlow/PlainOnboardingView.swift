@@ -43,7 +43,7 @@ public struct PlainOnboardingView: View {
                     viewStore.send(.importExistingWallet, animation: .easeInOut(duration: animationDuration))
                 }
                 .frame(height: 80)
-                .foregroundColor(.black)
+                .foregroundColor(Asset.Colors.Mfp.fontDark.color)
             }
             .padding(.all)
             .navigationLinkEmpty(

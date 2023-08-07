@@ -266,9 +266,6 @@ extension RootReducer {
                 state.appInitializationState = .failed
                 state.alert = AlertState.initializationFailed(error)
                 return .none
-                
-            case .alert(.presented(let action)):
-                return EffectTask(value: action)
 
             case .home, .destination, .onboarding, .phraseDisplay, .phraseValidation, .sandbox,
                 .welcome, .binding, .debug, .exportLogs, .alert:
