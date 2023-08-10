@@ -19,7 +19,9 @@ public struct ColoredChip: View {
     
     public var body: some View {
         Text(word.data)
-            .font(.custom(FontFamily.Rubik.regular.name, size: 15))
+            .font(
+                .custom(FontFamily.Inter.regular.name, size: 15)
+            )
             .frame(
                 minWidth: 0,
                 maxWidth: .infinity,

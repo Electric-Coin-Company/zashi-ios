@@ -34,7 +34,9 @@ public struct MultipleLineTextField<TitleAccessoryContent>: View
             VStack {
                 HStack {
                     Text(title)
-                        .font(.custom(FontFamily.Rubik.regular.name, size: 13))
+                        .font(
+                            .custom(FontFamily.Inter.regular.name, size: 13)
+                        )
                     Spacer()
                     titleAccessoryView
                 }
@@ -50,7 +52,9 @@ public struct MultipleLineTextField<TitleAccessoryContent>: View
                     HStack {
                         Spacer()
                         Text(viewStore.charLimitText)
-                            .font(.custom(FontFamily.Rubik.regular.name, size: 14))
+                            .font(
+                                .custom(FontFamily.Inter.regular.name, size: 14)
+                            )
                             .foregroundColor(
                                 viewStore.isValid
                                 ? Asset.Colors.TextField.multilineOutline.color
@@ -101,7 +105,9 @@ struct MultipleLineTextField_Previews: PreviewProvider {
             title: "Memo",
             titleAccessoryView: {
                 Text("accessory")
-                    .font(.custom(FontFamily.Rubik.regular.name, size: 13))
+                    .font(
+                        .custom(FontFamily.Inter.regular.name, size: 13)
+                    )
             }(),
             isFocused: _isFocused
         )

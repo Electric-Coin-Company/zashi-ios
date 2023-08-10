@@ -20,12 +20,16 @@ public struct CreateTransaction: View {
             VStack(spacing: 5) {
                 VStack(spacing: 0) {
                     Text(L10n.Balance.available(viewStore.shieldedBalance.data.verified.decimalString(), tokenName))
-                        .font(.system(size: 26))
-                        .fontWeight(.bold)
+                        .font(
+                            .custom(FontFamily.Inter.regular.name, size: 26)
+                            .weight(.bold)
+                        )
                         .multilineTextAlignment(.center)
                         .minimumScaleFactor(0.5)
                     Text(L10n.Send.fundsInfo)
-                        .font(.system(size: 14))
+                        .font(
+                            .custom(FontFamily.Inter.regular.name, size: 14)
+                        )
                 }
                 .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                 .padding(.horizontal)

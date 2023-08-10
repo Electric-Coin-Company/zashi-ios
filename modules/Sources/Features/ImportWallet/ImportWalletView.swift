@@ -21,8 +21,10 @@ public struct ImportWalletView: View {
         WithViewStore(store) { viewStore in
             VStack {
                 Text(L10n.ImportWallet.description)
-                    .font(.system(size: 27))
-                    .fontWeight(.bold)
+                    .font(
+                        .custom(FontFamily.Inter.regular.name, size: 27)
+                        .weight(.bold)
+                    )
                     .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                     .minimumScaleFactor(0.3)
 
@@ -64,7 +66,9 @@ extension ImportWalletView {
             HStack {
                 Spacer()
                 Text(viewStore.mnemonicStatus)
-                    .font(.custom(FontFamily.Rubik.regular.name, size: 14))
+                    .font(
+                        .custom(FontFamily.Inter.regular.name, size: 14)
+                    )
                     .foregroundColor(
                         viewStore.isValidNumberOfWords ?
                         Asset.Colors.Text.validMnemonic.color :

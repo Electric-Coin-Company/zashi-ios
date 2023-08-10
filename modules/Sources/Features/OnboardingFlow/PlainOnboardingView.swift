@@ -17,18 +17,22 @@ public struct PlainOnboardingView: View {
     public init(store: OnboardingFlowStore) {
         self.store = store
     }
-    
+
     public var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
                 VStack(alignment: .leading, spacing: 80) {
                     Text(L10n.PlainOnboarding.title)
-                        .fontWeight(.heavy)
-                        .font(.largeTitle)
-                    
+                        .font(
+                            .custom(FontFamily.Inter.regular.name, size: 34, relativeTo: .largeTitle)
+                            .weight(.heavy)
+                        )
+
                     Text(L10n.PlainOnboarding.caption)
-                        .fontWeight(.semibold)
-                        .font(.body)
+                        .font(
+                            .custom(FontFamily.Inter.regular.name, size: 16, relativeTo: .body)
+                            .weight(.semibold)
+                        )
                 }
                 .padding(0)
                 

@@ -21,8 +21,10 @@ public struct ImportBirthdayView: View {
         WithViewStore(store) { viewStore in
             VStack {
                 Text(L10n.ImportWallet.Birthday.description)
-                    .font(.system(size: 16))
-                    .fontWeight(.bold)
+                    .font(
+                        .custom(FontFamily.Inter.regular.name, size: 16)
+                        .weight(.bold)
+                    )
                     .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                 
                 TextField(

@@ -23,13 +23,17 @@ public struct RecoveryPhraseDisplayView: View {
                 if let groups = viewStore.phrase?.toGroups(groupSizeOverride: 2) {
                     VStack(spacing: 20) {
                         Text(L10n.RecoveryPhraseDisplay.title)
-                            .font(.system(size: 20))
-                            .fontWeight(.bold)
+                            .font(
+                                .custom(FontFamily.Inter.regular.name, size: 20)
+                                .weight(.bold)
+                            )
                             .multilineTextAlignment(.center)
                         
                         VStack(alignment: .center, spacing: 4) {
                             Text(L10n.RecoveryPhraseDisplay.description)
-                                .font(.system(size: 16))
+                                .font(
+                                    .custom(FontFamily.Inter.regular.name, size: 16)
+                                )
                                 .padding(.horizontal, 20)
                         }
                     }

@@ -26,7 +26,9 @@ struct OnboardingProgressStyle: ProgressViewStyle {
             HStack {
                 configuration.label
                     .foregroundColor(Asset.Colors.Text.heading.color)
-                    .font(.custom(FontFamily.Rubik.regular.name, size: 16))
+                    .font(
+                        .custom(FontFamily.Inter.regular.name, size: 16)
+                    )
                     .opacity(0.3)
                 
                 Spacer()
