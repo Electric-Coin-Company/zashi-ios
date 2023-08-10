@@ -14,6 +14,7 @@ import WalletStorage
 import SDKSynchronizer
 import UserPreferencesStorage
 import ExportLogs
+import CrashReporter
 
 public typealias SettingsStore = Store<SettingsReducer.State, SettingsReducer.Action>
 public typealias SettingsViewStore = ViewStore<SettingsReducer.State, SettingsReducer.Action>
@@ -73,8 +74,7 @@ public struct SettingsReducer: ReducerProtocol {
     @Dependency(\.logsHandler) var logsHandler
     @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.userStoredPreferences) var userStoredPreferences
-    // TODO: [#747] crashReporter needs a bit of extra work, see https://github.com/zcash/secant-ios-wallet/issues/747
-    //@Dependency(\.crashReporter) var crashReporter
+    @Dependency(\.crashReporter) var crashReporter
 
     public init() {}
     
@@ -106,12 +106,11 @@ public struct SettingsReducer: ReducerProtocol {
                 return .none
                 
             case .binding(\.$isCrashReportingOn):
-                // TODO: [#747] crashReporter needs a bit of extra work, see https://github.com/zcash/secant-ios-wallet/issues/747
-//                if state.isCrashReportingOn {
-//                    crashReporter.optOut()
-//                } else {
-//                    crashReporter.optIn()
-//                }
+                if state.isCrashReportingOn {
+                    crashReporter.optOut()
+                } else {
+                    crashReporter.optIn()
+                }
 
                 return .run { [state] _ in
                     await userStoredPreferences.setIsUserOptedOutOfCrashReporting(state.isCrashReportingOn)

@@ -38,8 +38,7 @@ extension RootReducer {
         Reduce { state, action in
             switch action {
             case .debug(.testCrashReporter):
-                // TODO: [#747] crashReporter needs a bit of extra work, see https://github.com/zcash/secant-ios-wallet/issues/747
-                //crashReporter.testCrash()
+                crashReporter.testCrash()
                 return .none
                 
             case .debug(.rescanBlockchain):

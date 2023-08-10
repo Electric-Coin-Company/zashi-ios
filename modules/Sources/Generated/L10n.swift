@@ -365,6 +365,8 @@ public enum L10n {
         public static let rescanBlockchain = L10n.tr("Localizable", "root.debug.option.rescanBlockchain", fallback: "Rescan Blockchain")
         /// Restart the App
         public static let restartApp = L10n.tr("Localizable", "root.debug.option.restartApp", fallback: "Restart the App")
+        /// Test Crash Reporter
+        public static let testCrashReporter = L10n.tr("Localizable", "root.debug.option.testCrashReporter", fallback: "Test Crash Reporter")
       }
     }
     public enum Destination {
