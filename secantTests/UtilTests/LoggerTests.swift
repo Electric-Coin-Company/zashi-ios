@@ -161,7 +161,7 @@ class LoggerTests: XCTestCase {
         
         guard let logs else { return }
         
-        XCTAssertEqual(logs.count, 4)
+        XCTAssertEqual(logs.count, 1)
     }
     
     func testOSLogger_WarningLevel_OtherLogs() throws {
@@ -179,7 +179,7 @@ class LoggerTests: XCTestCase {
         
         guard let logs else { return }
 
-        XCTAssertEqual(logs.count, 3)
+        XCTAssertEqual(logs.count, 2)
     }
     
     func testOSLogger_EventLevel_OtherLogs() throws {
@@ -197,7 +197,7 @@ class LoggerTests: XCTestCase {
         
         guard let logs else { return }
 
-        XCTAssertEqual(logs.count, 2)
+        XCTAssertEqual(logs.count, 3)
     }
     
     func testOSLogger_InfoLevel_OtherLogs() throws {
@@ -215,7 +215,7 @@ class LoggerTests: XCTestCase {
         
         guard let logs else { return }
 
-        XCTAssertEqual(logs.count, 1)
+        XCTAssertEqual(logs.count, 4)
     }
     
     func testWalletLogger() throws {
