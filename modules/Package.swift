@@ -62,7 +62,7 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.5.0"),
         .package(url: "https://github.com/SwiftGen/SwiftGenPlugin", from: "6.6.0"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.4"),
-        .package(url: "https://github.com/zcash/ZcashLightClientKit", revision: "d446c6d3369ed7c5a2e2e0d23e772968dd6a32b4"),
+        .package(url: "https://github.com/zcash/ZcashLightClientKit", revision: "9a82acbd5e33495a3ac7353bde77cfd741a75244"),
         .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.11.0")
     ],
     targets: [
