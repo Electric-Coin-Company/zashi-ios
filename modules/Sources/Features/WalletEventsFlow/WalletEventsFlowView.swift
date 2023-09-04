@@ -17,6 +17,7 @@ public struct WalletEventsFlowView: View {
                 walletEventsList(with: viewStore)
             }
             .navigationTitle(L10n.Transactions.title)
+            .replaceNavigationBackButton()
             .listStyle(.plain)
             .onAppear { viewStore.send(.onAppear) }
             .onDisappear(perform: { viewStore.send(.onDisappear) })

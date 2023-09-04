@@ -15,30 +15,47 @@ public struct StandardButtonStyle: ButtonStyle {
     let background: Color
     let pressedBackgroundColor: Color
     let disabledBackgroundColor: Color
+    
+    let overlayColor: Color
 
     public init(
         foregroundColor: Color,
         background: Color,
         pressedBackgroundColor: Color,
-        disabledBackgroundColor: Color
+        disabledBackgroundColor: Color,
+        overlayColor: Color
     ) {
         self.foregroundColor = foregroundColor
         self.background = background
         self.pressedBackgroundColor = pressedBackgroundColor
         self.disabledBackgroundColor = disabledBackgroundColor
+        self.overlayColor = overlayColor
     }
     
     public func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .frame(
-                minWidth: 0,
-                maxWidth: .infinity,
-                minHeight: 0,
-                maxHeight: .infinity
-            )
-            .frame(height: 60)
-            .foregroundColor(Asset.Colors.Mfp.fontLight.color)
-            .background(Asset.Colors.Mfp.primary.color)
+        ZStack {
+                    Rectangle()
+                        .frame(height: 60)
+                        .overlay(
+                            Rectangle()
+                                .border(Color.black)
+                                .foregroundColor(overlayColor)
+                                .offset(y: 8)
+                                .padding(.trailing, -10)
+                                .padding(.leading, 13)
+                        )
+                    configuration.label
+                        .frame(
+                            minWidth: 0,
+                            maxWidth: .infinity,
+                            minHeight: 0,
+                            maxHeight: .infinity
+                        )
+                        .frame(height: 60)
+                        .foregroundColor(foregroundColor)
+                        .background(background)
+                        .border(Color.black)
+        }
     }
 }
 
@@ -49,7 +66,8 @@ private extension Button {
                 foregroundColor: Asset.Colors.Text.button.color,
                 background: Asset.Colors.Buttons.activeButton.color,
                 pressedBackgroundColor: Asset.Colors.Buttons.activeButtonPressed.color,
-                disabledBackgroundColor: Asset.Colors.Buttons.activeButtonDisabled.color
+                disabledBackgroundColor: Asset.Colors.Buttons.activeButtonDisabled.color,
+                overlayColor: Asset.Colors.Text.button.color
             )
         )
     }

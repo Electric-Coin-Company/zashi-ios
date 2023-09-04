@@ -31,3 +31,11 @@ extension View {
             )
     }
 }
+
+extension View {
+    public func replaceNavigationBackButton () -> some View {
+        self.modifier(
+            CustomNavigationButton()
+        )
+    }
+}

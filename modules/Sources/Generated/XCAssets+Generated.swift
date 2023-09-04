@@ -34,6 +34,8 @@ public enum Asset {
       public static let calloutBackupSucceeded = ImageAsset(name: "calloutBackupSucceeded")
     }
     public static let welcomeScreenLogo = ImageAsset(name: "WelcomeScreenLogo")
+    public static let zashiLogo = ImageAsset(name: "zashi_logo")
+    public static let zashiLogoText = ImageAsset(name: "zashi_logo_text")
   }
   public enum Colors {
     public enum BackgroundColors {

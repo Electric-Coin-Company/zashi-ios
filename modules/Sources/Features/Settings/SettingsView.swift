@@ -19,6 +19,7 @@ public struct SettingsView: View {
                     L10n.Settings.crashReporting,
                     isOn: viewStore.binding(\.$isCrashReportingOn)
                 )
+                .tint(Color.black)
                 Button(
                     action: { viewStore.send(.backupWalletAccessRequest) },
                     label: { Text(L10n.Settings.backupWallet) }
@@ -65,6 +66,7 @@ public struct SettingsView: View {
             }
             .padding(.horizontal, 30)
             .navigationTitle(L10n.Settings.title)
+            .replaceNavigationBackButton()
             .applyScreenBackground()
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForBackupPhrase,

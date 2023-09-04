@@ -15,7 +15,32 @@ extension Button {
                 foregroundColor: Asset.Colors.Text.activeButtonText.color,
                 background: Asset.Colors.Buttons.activeButton.color,
                 pressedBackgroundColor: Asset.Colors.Buttons.activeButtonPressed.color,
-                disabledBackgroundColor: Asset.Colors.Buttons.activeButtonDisabled.color
+                disabledBackgroundColor: Asset.Colors.Buttons.activeButtonDisabled.color,
+                overlayColor: Asset.Colors.Text.activeButtonText.color
+            )
+        )
+    }
+    
+    public var activeWhiteButtonStyle: some View {
+        buttonStyle(
+            StandardButtonStyle(
+                foregroundColor: Asset.Colors.Buttons.activeButton.color,
+                background: Asset.Colors.Text.activeButtonText.color,
+                pressedBackgroundColor: Asset.Colors.Buttons.activeButtonPressed.color,
+                disabledBackgroundColor: Asset.Colors.Buttons.activeButtonDisabled.color,
+                overlayColor: Asset.Colors.Buttons.activeButton.color
+            )
+        )
+    }
+ 
+    public var disableButtonStyle: some View {
+        buttonStyle(
+            StandardButtonStyle(
+                foregroundColor: Asset.Colors.Text.activeButtonText.color,
+                background: Asset.Colors.Text.transactionRowSubtitle.color,
+                pressedBackgroundColor: Asset.Colors.Buttons.activeButtonPressed.color,
+                disabledBackgroundColor: Asset.Colors.Buttons.activeButtonDisabled.color,
+                overlayColor: Asset.Colors.Text.activeButtonText.color
             )
         )
     }
