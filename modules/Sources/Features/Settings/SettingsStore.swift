@@ -65,6 +65,8 @@ public struct SettingsReducer: ReducerProtocol {
         case sendSupportMail
         case sendSupportMailFinished
         case updateDestination(SettingsReducer.State.Destination?)
+        case privacyPolicy
+        case documentation
     }
 
     @Dependency(\.appVersion) var appVersion
@@ -118,7 +120,13 @@ public struct SettingsReducer: ReducerProtocol {
                 
             case .exportLogs:
                 return .none
-
+                
+            case .privacyPolicy:
+                return .none
+                
+            case .documentation:
+                return .none
+                
             case .phraseDisplay:
                 state.destination = nil
                 return .none

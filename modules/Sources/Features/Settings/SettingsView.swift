@@ -15,44 +15,65 @@ public struct SettingsView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             VStack(spacing: 40) {
-                Toggle(
-                    L10n.Settings.crashReporting,
-                    isOn: viewStore.binding(\.$isCrashReportingOn)
-                )
-                .tint(Color.black)
+                
+                /// Commenting CrashReport according to updated Figma Design
+//                Toggle(
+//                    L10n.Settings.crashReporting,
+//                    isOn: viewStore.binding(\.$isCrashReportingOn)
+//                )
+//                .tint(Color.black)
+                
                 Button(
                     action: { viewStore.send(.backupWalletAccessRequest) },
                     label: { Text(L10n.Settings.backupWallet) }
                 )
                 .activeButtonStyle
-                .frame(height: 50)
-                
-                Button(
-                    action: { viewStore.send(.exportLogs(.start)) },
-                    label: {
-                        if viewStore.exportLogsState.exportLogsDisabled {
-                            HStack {
-                                ProgressView()
-                                Text(L10n.Settings.exporting)
-                            }
-                        } else {
-                            Text(L10n.Settings.exportLogs)
-                        }
-                    }
-                )
-                .activeButtonStyle
-                .frame(height: 50)
-                .disable(
-                    when: viewStore.exportLogsState.exportLogsDisabled,
-                    dimmingOpacity: 0.5
-                )
+                .frame(height: 70)
                 
                 Button(
                     action: { viewStore.send(.sendSupportMail) },
                     label: { Text(L10n.Settings.feedback) }
                 )
                 .activeButtonStyle
-                .frame(height: 50)
+                .frame(height: 70)
+                
+                Button(
+                    action: { viewStore.send(.privacyPolicy) },
+                    label: { Text(L10n.Settings.privacyPolicy) }
+                )
+                .activeButtonStyle
+                .frame(height: 70)
+               
+                
+                ///Commenting Export & Share logs Option according to updated Figma Design
+//                Button(
+//                    action: { viewStore.send(.exportLogs(.start)) },
+//                    label: {
+//                        if viewStore.exportLogsState.exportLogsDisabled {
+//                            HStack {
+//                                ProgressView()
+//                                Text(L10n.Settings.exporting)
+//                            }
+//                        } else {
+//                            Text(L10n.Settings.exportLogs)
+//                        }
+//                    }
+//                )
+//                .activeButtonStyle
+//                .frame(height: 50)
+//                .disable(
+//                    when: viewStore.exportLogsState.exportLogsDisabled,
+//                    dimmingOpacity: 0.5
+//                )
+                
+                Button(
+                    action: { viewStore.send(.documentation) },
+                    label: { Text(L10n.Settings.documentation) }
+                )
+                .activeButtonStyle
+                .frame(height: 70)
+                
+                
 
                 Spacer()
                 
@@ -64,6 +85,7 @@ public struct SettingsView: View {
                 .frame(maxHeight: 50)
                 .padding(.bottom, 50)
             }
+            .padding(.top, 30)
             .padding(.horizontal, 30)
             .navigationTitle(L10n.Settings.title)
             .replaceNavigationBackButton()
