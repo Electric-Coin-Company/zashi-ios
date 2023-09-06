@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Generated
 
 struct CustomNavigationButton: ViewModifier {
     @Environment(\.dismiss) private var dismiss
@@ -21,7 +22,7 @@ struct CustomNavigationButton: ViewModifier {
                         HStack {
                             Image(systemName: "arrow.left")
                                 .foregroundColor(.black)
-                            Text("Back")
+                            Text(L10n.General.back.uppercased())
                                 .foregroundColor(.black)
                         }
                     }

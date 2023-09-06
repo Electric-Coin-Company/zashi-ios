@@ -126,15 +126,15 @@
 
 // MARK: - Settings
 "settings.crashReporting" = "Enable Crash Reporting";
-"settings.backupWallet" = "BACKUP WALLET";
+"settings.backupWallet" = "Backup Wallet";
 "settings.exporting" = "Exporting...";
 "settings.exportLogs" = "Export & share logs";
-"settings.feedback" = "SEND US FEEDBACK";
-"settings.about" = "ABOUT";
-"settings.privacyPolicy" = "PRIVACY POLICY";
-"settings.documentation" = "DOCUMENTATION";
+"settings.feedback" = "Send us feedback";
+"settings.about" = "About";
+"settings.privacyPolicy" = "Privacy Policy";
+"settings.documentation" = "Documentation";
 "settings.version" = "Version %@ (%@)";
-"settings.title" = "SETTINGS";
+"settings.title" = "Settings";
 "settings.alert.cantBackupWallet.title" = "Can't backup wallet";
 "settings.alert.cantBackupWallet.message" = "Error: %@ (code: %@)";
 "settings.alert.cantSendEmail.title" = "Can't send email";

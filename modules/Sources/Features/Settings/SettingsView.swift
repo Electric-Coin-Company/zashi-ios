@@ -14,80 +14,49 @@ public struct SettingsView: View {
     
     public var body: some View {
         WithViewStore(store) { viewStore in
-            VStack(spacing: 40) {
-                
-                /// Commenting CrashReport according to updated Figma Design
-//                Toggle(
-//                    L10n.Settings.crashReporting,
-//                    isOn: viewStore.binding(\.$isCrashReportingOn)
-//                )
-//                .tint(Color.black)
-                
+            VStack(spacing: 25) {
+            
                 Button(
                     action: { viewStore.send(.backupWalletAccessRequest) },
-                    label: { Text(L10n.Settings.backupWallet) }
+                    label: { Text(L10n.Settings.backupWallet.uppercased()) }
                 )
                 .activeButtonStyle
                 .frame(height: 70)
                 
                 Button(
                     action: { viewStore.send(.sendSupportMail) },
-                    label: { Text(L10n.Settings.feedback) }
+                    label: { Text(L10n.Settings.feedback.uppercased()) }
                 )
                 .activeButtonStyle
                 .frame(height: 70)
                 
                 Button(
                     action: { viewStore.send(.privacyPolicy) },
-                    label: { Text(L10n.Settings.privacyPolicy) }
+                    label: { Text(L10n.Settings.privacyPolicy.uppercased()) }
                 )
                 .activeButtonStyle
                 .frame(height: 70)
-               
-                
-                ///Commenting Export & Share logs Option according to updated Figma Design
-//                Button(
-//                    action: { viewStore.send(.exportLogs(.start)) },
-//                    label: {
-//                        if viewStore.exportLogsState.exportLogsDisabled {
-//                            HStack {
-//                                ProgressView()
-//                                Text(L10n.Settings.exporting)
-//                            }
-//                        } else {
-//                            Text(L10n.Settings.exportLogs)
-//                        }
-//                    }
-//                )
-//                .activeButtonStyle
-//                .frame(height: 50)
-//                .disable(
-//                    when: viewStore.exportLogsState.exportLogsDisabled,
-//                    dimmingOpacity: 0.5
-//                )
                 
                 Button(
                     action: { viewStore.send(.documentation) },
-                    label: { Text(L10n.Settings.documentation) }
+                    label: { Text(L10n.Settings.documentation.uppercased()) }
                 )
                 .activeButtonStyle
                 .frame(height: 70)
                 
-                
-
                 Spacer()
                 
                 Button(
                     action: { viewStore.send(.updateDestination(.about)) },
-                    label: { Text(L10n.Settings.about) }
+                    label: { Text(L10n.Settings.about.uppercased()) }
                 )
                 .activeButtonStyle
                 .frame(maxHeight: 50)
                 .padding(.bottom, 50)
             }
-            .padding(.top, 30)
+            .padding(EdgeInsets(top: 30.0, leading: 50.0, bottom: 0, trailing: 50.0))
             .padding(.horizontal, 30)
-            .navigationTitle(L10n.Settings.title)
+            .navigationTitle(L10n.Settings.title.uppercased())
             .replaceNavigationBackButton()
             .applyScreenBackground()
             .navigationLinkEmpty(

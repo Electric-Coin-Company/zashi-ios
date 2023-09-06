@@ -490,24 +490,24 @@ public enum L10n {
     }
   }
   public enum Settings {
-    /// ABOUT
-    public static let about = L10n.tr("Localizable", "settings.about", fallback: "ABOUT")
-    /// BACKUP WALLET
-    public static let backupWallet = L10n.tr("Localizable", "settings.backupWallet", fallback: "BACKUP WALLET")
+    /// About
+    public static let about = L10n.tr("Localizable", "settings.about", fallback: "About")
+    /// Backup Wallet
+    public static let backupWallet = L10n.tr("Localizable", "settings.backupWallet", fallback: "Backup Wallet")
     /// Enable Crash Reporting
     public static let crashReporting = L10n.tr("Localizable", "settings.crashReporting", fallback: "Enable Crash Reporting")
-    /// DOCUMENTATION
-    public static let documentation = L10n.tr("Localizable", "settings.documentation", fallback: "DOCUMENTATION")
+    /// Documentation
+    public static let documentation = L10n.tr("Localizable", "settings.documentation", fallback: "Documentation")
     /// Exporting...
     public static let exporting = L10n.tr("Localizable", "settings.exporting", fallback: "Exporting...")
     /// Export & share logs
     public static let exportLogs = L10n.tr("Localizable", "settings.exportLogs", fallback: "Export & share logs")
-    /// SEND US FEEDBACK
-    public static let feedback = L10n.tr("Localizable", "settings.feedback", fallback: "SEND US FEEDBACK")
-    /// PRIVACY POLICY
-    public static let privacyPolicy = L10n.tr("Localizable", "settings.privacyPolicy", fallback: "PRIVACY POLICY")
-    /// SETTINGS
-    public static let title = L10n.tr("Localizable", "settings.title", fallback: "SETTINGS")
+    /// Send us feedback
+    public static let feedback = L10n.tr("Localizable", "settings.feedback", fallback: "Send us feedback")
+    /// Privacy Policy
+    public static let privacyPolicy = L10n.tr("Localizable", "settings.privacyPolicy", fallback: "Privacy Policy")
+    /// Settings
+    public static let title = L10n.tr("Localizable", "settings.title", fallback: "Settings")
     /// Version %@ (%@)
     public static func version(_ p1: Any, _ p2: Any) -> String {
       return L10n.tr("Localizable", "settings.version", String(describing: p1), String(describing: p2), fallback: "Version %@ (%@)")
