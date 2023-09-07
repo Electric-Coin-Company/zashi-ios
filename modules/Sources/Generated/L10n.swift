@@ -18,6 +18,11 @@ public enum L10n {
   public static func qrCodeFor(_ p1: Any) -> String {
     return L10n.tr("Localizable", "qrCodeFor", String(describing: p1), fallback: "QR Code for %@")
   }
+  public enum About {
+    /// Send and receive ZEC on Zashi! 
+    /// Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.
+    public static let description = L10n.tr("Localizable", "about.description", fallback: "Send and receive ZEC on Zashi! \nZashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.")
+  }
   public enum AddressDetails {
     /// Sapling Address
     public static let sa = L10n.tr("Localizable", "addressDetails.sa", fallback: "Sapling Address")

@@ -140,6 +140,9 @@
 "settings.alert.cantSendEmail.title" = "Can't send email";
 "settings.alert.cantSendEmail.message" = "It looks like that you don't have any email account configured on your device. Therefore it's not possible to send a support email.";
 
+// MARK: - About
+"about.description" = "Send and receive ZEC on Zashi! \nZashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.";
+
 // MARK: - Sync message
 "sync.message.uptodate" = "Up-To-Date";
 "sync.message.unprepared" = "Unprepared";

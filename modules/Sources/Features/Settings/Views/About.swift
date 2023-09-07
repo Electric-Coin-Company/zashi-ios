@@ -30,11 +30,17 @@ public struct About: View {
                 }
                 VStack(alignment: .leading, spacing: 25) {
                     Text(L10n.Settings.version(viewStore.appVersion, viewStore.appBuild))
-                        .font(Font.system(size: 14, weight: .bold))
+                        .font(
+                            .custom(FontFamily.Inter.bold.name, size: 14)
+                            .weight(.bold)
+                        )
                         .foregroundColor(Asset.Colors.Mfp.fontDark.color)
-                    Text("Send and receive ZEC on Zashi! Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.")
+                    Text(L10n.About.description)
                         .foregroundColor(Asset.Colors.Mfp.fontDark.color)
-                        .font(Font.system(size: 14, weight: .regular))
+                        .font(
+                            .custom(FontFamily.Inter.regular.name, size: 14)
+                            .weight(.regular)
+                        )
                 }
                 
                 .padding(.leading, 12)
@@ -43,8 +49,11 @@ public struct About: View {
             }
             .padding(.top, 50)
             .padding(.leading, 48)
-            .navigationTitle(L10n.Settings.about)
-            .font(Font.system(size: 14.0, weight: .bold))
+            .navigationTitle(L10n.Settings.about.uppercased())
+            .font(
+                .custom(FontFamily.Inter.bold.name, size: 14)
+                .weight(.bold)
+            )
             .applyScreenBackground()
             .replaceNavigationBackButton()
         }
