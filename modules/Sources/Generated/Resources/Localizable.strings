@@ -1,6 +1,7 @@
 // MARK: - Welcome Screen
 "welcomeScreen.title" = "Powered by Zcash";
 "welcomeScreen.subtitle" = "Just Loading, one sec";
+"welcomeScreen.description" = "A no frills wallet for sending and receiving Zcash (ZEC)";
 
 // MARK: - Plain Onboarding Flow
 "plainOnboarding.title" = "It's time to setup your Secant, powered by Zcash, no-frills wallet.";

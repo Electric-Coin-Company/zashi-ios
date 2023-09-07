@@ -34,6 +34,9 @@ public enum Asset {
       public static let calloutBackupSucceeded = ImageAsset(name: "calloutBackupSucceeded")
     }
     public static let welcomeScreenLogo = ImageAsset(name: "WelcomeScreenLogo")
+    public static let isolationModeLogo = ImageAsset(name: "isolationModeLogo")
+    public static let isolationModeLogoText = ImageAsset(name: "isolationModeLogoText")
+    public static let splashBG = ImageAsset(name: "splashBG")
     public static let zashiLogo = ImageAsset(name: "zashi_logo")
     public static let zashiLogoText = ImageAsset(name: "zashi_logo_text")
   }
@@ -42,6 +45,7 @@ public enum Asset {
       public static let numberedChip = ColorAsset(name: "numberedChip")
       public static let phraseGridDarkGray = ColorAsset(name: "phraseGridDarkGray")
       public static let red = ColorAsset(name: "red")
+      public static let splashBGColor = ColorAsset(name: "splashBGColor")
       public static let staticWelcomeScreen = ColorAsset(name: "staticWelcomeScreen")
     }
     public enum Buttons {

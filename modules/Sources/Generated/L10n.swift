@@ -709,6 +709,8 @@ public enum L10n {
     }
   }
   public enum WelcomeScreen {
+    /// A no frills wallet for sending and receiving Zcash (ZEC)
+    public static let description = L10n.tr("Localizable", "welcomeScreen.description", fallback: "A no frills wallet for sending and receiving Zcash (ZEC)")
     /// Just Loading, one sec
     public static let subtitle = L10n.tr("Localizable", "welcomeScreen.subtitle", fallback: "Just Loading, one sec")
     /// Powered by Zcash

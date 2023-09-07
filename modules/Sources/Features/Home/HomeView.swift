@@ -21,16 +21,18 @@ public struct HomeView: View {
         WithViewStore(store) { viewStore in
             VStack {
                 balance(viewStore)
-
                 Spacer()
-                
-                if viewStore.isSendButtonDisabled {
-                    dismissButton(viewStore)
-                }else {
-                    sendButton(viewStore)
+                VStack {
+                    if viewStore.isSendButtonDisabled {
+                        dismissButton(viewStore)
+                    }else {
+                        sendButton(viewStore)
+                    }
+                    
+                    receiveButton(viewStore)
                 }
+                .padding(EdgeInsets(top: 0.0, leading: 50.0, bottom: 0, trailing: 50.0))
                 
-                receiveButton(viewStore)
                 
                 Button {
                     viewStore.send(.updateDestination(.transactionHistory))

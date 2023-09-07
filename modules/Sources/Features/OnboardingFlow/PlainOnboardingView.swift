@@ -21,33 +21,64 @@ public struct PlainOnboardingView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
-                VStack(alignment: .leading, spacing: 80) {
-                    Text(L10n.PlainOnboarding.title)
+                
+                //Commenting Following Two text and Adding Image and Text accroding to updated Figma Design
+//                VStack(alignment: .leading, spacing: 80) {
+//                    Text(L10n.PlainOnboarding.title)
+//                        .font(
+//                            .custom(FontFamily.Inter.regular.name, size: 34, relativeTo: .largeTitle)
+//                            .weight(.heavy)
+//                        )
+//
+//                    Text(L10n.PlainOnboarding.caption)
+//                        .font(
+//                            .custom(FontFamily.Inter.regular.name, size: 16, relativeTo: .body)
+//                            .weight(.semibold)
+//                        )
+//                }
+//                .padding(0)
+                VStack(spacing: 27) {
+                    Image(Asset.Assets.welcomeScreenLogo.name)
+                        .resizable()
+                        .frame(width: 150, height: 150)
+                    Text(L10n.WelcomeScreen.description)
                         .font(
-                            .custom(FontFamily.Inter.regular.name, size: 34, relativeTo: .largeTitle)
-                            .weight(.heavy)
+                            .custom(FontFamily.Inter.regular.name, size: 22)
+                            .weight(.regular)
                         )
-
-                    Text(L10n.PlainOnboarding.caption)
-                        .font(
-                            .custom(FontFamily.Inter.regular.name, size: 16, relativeTo: .body)
-                            .weight(.semibold)
-                        )
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(.black)
+                        .frame(width: 277, height: 147, alignment: .top)
+                    Spacer()
                 }
-                .padding(0)
+                .padding(.top, 75.0)
                 
                 Spacer()
                 
-                Button(L10n.PlainOnboarding.Button.createNewWallet) {
-                    viewStore.send(.createNewWallet, animation: .easeInOut(duration: animationDuration))
+                VStack(spacing: 23) {
+                    Button(L10n.PlainOnboarding.Button.createNewWallet.uppercased()) {
+                        viewStore.send(.createNewWallet, animation: .easeInOut(duration: animationDuration))
+                    }
+                    .activeButtonStyle
+                    .font(
+                        .custom(FontFamily.Inter.medium.name, size: 14)
+                        .weight(.medium)
+                    )
+                    .frame(height: 70)
+                    
+                    Button(L10n.PlainOnboarding.Button.restoreWallet.uppercased()) {
+                        viewStore.send(.importExistingWallet, animation: .easeInOut(duration: animationDuration))
+                    }
+                    .activeWhiteButtonStyle
+                    .font(
+                        .custom(FontFamily.Inter.medium.name, size: 14)
+                        .weight(.medium)
+                    )
+                    .frame(height: 70)
+                    .foregroundColor(Asset.Colors.Mfp.fontDark.color)
                 }
-                .activeButtonStyle
+                .padding(EdgeInsets(top: 0.0, leading: 50.0, bottom: 0, trailing: 50.0))
                 
-                Button(L10n.PlainOnboarding.Button.restoreWallet) {
-                    viewStore.send(.importExistingWallet, animation: .easeInOut(duration: animationDuration))
-                }
-                .frame(height: 80)
-                .foregroundColor(Asset.Colors.Mfp.fontDark.color)
             }
             .padding(.all)
             .navigationLinkEmpty(
