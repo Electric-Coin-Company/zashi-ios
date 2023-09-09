@@ -18,6 +18,7 @@
 		0D3B01EC298DAF89007EBCDA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D3B01EB298DAF89007EBCDA /* GoogleService-Info.plist */; };
 		0D4E7A0926B364170058B01E /* SecantApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0826B364170058B01E /* SecantApp.swift */; };
 		0D4E7A1026B364180058B01E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0F26B364180058B01E /* Preview Assets.xcassets */; };
+		201F7C5A2AAB523100D12019 /* SecuirtyWarningSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 201F7C592AAB523100D12019 /* SecuirtyWarningSnapshotTests.swift */; };
 		34DA414928E439CD00F8CC61 /* sendingTransaction.json in Resources */ = {isa = PBXBuildFile; fileRef = 34DA414828E439CD00F8CC61 /* sendingTransaction.json */; };
 		9E00319C2A272BB6003DFCEB /* SDKSynchronizer in Frameworks */ = {isa = PBXBuildFile; productRef = 9E00319B2A272BB6003DFCEB /* SDKSynchronizer */; };
 		9E0031A42A272BC7003DFCEB /* SDKSynchronizer in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031A32A272BC7003DFCEB /* SDKSynchronizer */; };
@@ -118,6 +119,7 @@
 		0DEF4766299EA5920032708B /* secant-mainnet-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "secant-mainnet-Info.plist"; sourceTree = "<group>"; };
 		0DFE93DE272C6D4B000FCCA5 /* RecoveryPhraseBackupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseBackupTests.swift; sourceTree = "<group>"; };
 		0DFE93E5272CB6F7000FCCA5 /* RecoveryPhraseValidationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseValidationTests.swift; sourceTree = "<group>"; };
+		201F7C592AAB523100D12019 /* SecuirtyWarningSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecuirtyWarningSnapshotTests.swift; sourceTree = "<group>"; };
 		341B30BA29B78D1000697081 /* HomeFeatureFlagTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeatureFlagTests.swift; sourceTree = "<group>"; };
 		34429C6D28E703CD00F2B929 /* TransactionSendingSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionSendingSnapshotTests.swift; sourceTree = "<group>"; };
 		3448CB3628E485CB006ADEDB /* NotEnoughFeeSpaceSnapshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotEnoughFeeSpaceSnapshots.swift; sourceTree = "<group>"; };
@@ -311,6 +313,14 @@
 			path = RecoveryPhraseValidationTests;
 			sourceTree = "<group>";
 		};
+		201F7C582AAB520500D12019 /* SecurityWarningSnapshotTests */ = {
+			isa = PBXGroup;
+			children = (
+				201F7C592AAB523100D12019 /* SecuirtyWarningSnapshotTests.swift */,
+			);
+			path = SecurityWarningSnapshotTests;
+			sourceTree = "<group>";
+		};
 		343CF3F429BB5A14009E44DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -387,6 +397,7 @@
 		9E391162284E3ECF0073DD9A /* SnapshotTests */ = {
 			isa = PBXGroup;
 			children = (
+				201F7C582AAB520500D12019 /* SecurityWarningSnapshotTests */,
 				9E207C342966EC60003E2C9B /* AddressDetailsSnapshotTests */,
 				9E94C62128AA7ECD008256E9 /* BalanceBreakdownSnapshotTests */,
 				9E9ECC8B28589E150099D5A2 /* HomeSnapshotTests */,
@@ -934,6 +945,7 @@
 				9E3451AD29C84F0E00177D16 /* TransactionAmountInputTests.swift in Sources */,
 				9E3451C329C857DD00177D16 /* SettingsSnapshotTests.swift in Sources */,
 				9E34519D29C8484D00177D16 /* HomeFeatureFlagTests.swift in Sources */,
+				201F7C5A2AAB523100D12019 /* SecuirtyWarningSnapshotTests.swift in Sources */,
 				9E3451A229C84A5300177D16 /* OnboardingFlowFeatureFlagTests.swift in Sources */,
 				9E3451AC29C84F0000177D16 /* TransactionAddressInputTests.swift in Sources */,
 				9E3451A429C84B3E00177D16 /* RecoveryPhraseValidationTests.swift in Sources */,

@@ -38,6 +38,7 @@ public struct RootReducer: ReducerProtocol {
         public var onboardingState: OnboardingFlowReducer.State
         public var phraseValidationState: RecoveryPhraseValidationFlowReducer.State
         public var phraseDisplayState: RecoveryPhraseDisplayReducer.State
+        public var securityWarningState: SecurityWarningReducer.State
         public var sandboxState: SandboxReducer.State
         public var storedWallet: StoredWallet?
         public var walletConfig: WalletConfig
@@ -52,6 +53,7 @@ public struct RootReducer: ReducerProtocol {
             onboardingState: OnboardingFlowReducer.State,
             phraseValidationState: RecoveryPhraseValidationFlowReducer.State,
             phraseDisplayState: RecoveryPhraseDisplayReducer.State,
+            securityWarningState: SecurityWarningReducer.State,
             sandboxState: SandboxReducer.State,
             storedWallet: StoredWallet? = nil,
             walletConfig: WalletConfig,
@@ -65,6 +67,7 @@ public struct RootReducer: ReducerProtocol {
             self.onboardingState = onboardingState
             self.phraseValidationState = phraseValidationState
             self.phraseDisplayState = phraseDisplayState
+            self.securityWarningState = securityWarningState
             self.sandboxState = sandboxState
             self.storedWallet = storedWallet
             self.walletConfig = walletConfig
@@ -84,6 +87,7 @@ public struct RootReducer: ReducerProtocol {
         case nukeWalletSucceeded
         case onboarding(OnboardingFlowReducer.Action)
         case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
+        case securityWarning(SecurityWarningReducer.Action)
         case phraseValidation(RecoveryPhraseValidationFlowReducer.Action)
         case sandbox(SandboxReducer.Action)
         case updateStateAfterConfigUpdate(WalletConfig)
@@ -137,6 +141,10 @@ public struct RootReducer: ReducerProtocol {
 
         Scope(state: \.welcomeState, action: /Action.welcome) {
             WelcomeReducer()
+        }
+        
+        Scope(state: \.securityWarningState, action: /Action.securityWarning) {
+            SecurityWarningReducer()
         }
 
         initializationReduce()
@@ -328,6 +336,7 @@ extension RootReducer.State {
             phraseDisplayState: RecoveryPhraseDisplayReducer.State(
                 phrase: .placeholder
             ),
+            securityWarningState: .placeholder,
             sandboxState: .placeholder,
             walletConfig: .default,
             welcomeState: .placeholder

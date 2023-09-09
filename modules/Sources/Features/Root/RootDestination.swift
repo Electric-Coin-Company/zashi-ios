@@ -125,6 +125,8 @@ extension RootReducer {
             case .home, .initialization, .onboarding, .phraseDisplay, .phraseValidation, .sandbox, .updateStateAfterConfigUpdate, .alert,
                 .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .exportLogs:
                 return .none
+            case .securityWarning(_):
+                return .none
             }
             
             return .none

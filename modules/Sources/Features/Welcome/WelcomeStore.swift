@@ -38,3 +38,40 @@ extension WelcomeStore {
 extension WelcomeReducer.State {
     public static let placeholder = WelcomeReducer.State()
 }
+
+
+
+///
+///
+///
+///
+public typealias WelcomeBackStore = Store<WelcomeBackReducer.State, WelcomeBackReducer.Action>
+
+public struct WelcomeBackReducer: ReducerProtocol {
+    public struct State: Equatable {}
+    
+    public enum Action: Equatable {
+        case debugMenuStartup
+    }
+    
+    public init() {}
+    
+    public func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
+        return .none
+    }
+}
+
+// MARK: - Store
+
+extension WelcomeBackStore {
+    public static var demo = WelcomeBackStore(
+        initialState: .placeholder,
+        reducer: WelcomeBackReducer()
+    )
+}
+
+// MARK: - Placeholders
+
+extension WelcomeBackReducer.State {
+    public static let placeholder = WelcomeBackReducer.State()
+}
