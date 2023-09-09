@@ -290,17 +290,19 @@ public enum L10n {
     public static let title = L10n.tr("Localizable", "recoveryPhraseBackupValidation.title", fallback: "Verify Your Backup")
   }
   public enum RecoveryPhraseDisplay {
-    /// The following 24 words represent your funds and the security used to protect them. Back them up now!
-    public static let description = L10n.tr("Localizable", "recoveryPhraseDisplay.description", fallback: "The following 24 words represent your funds and the security used to protect them. Back them up now!")
+    /// The following 24 words are the keys to your funds and are the only way to recover your funds if you get locked out or get a new device. Protect your ZEC by storing this phrase in a place you trust and never share it with anyone!
+    public static let description = L10n.tr("Localizable", "recoveryPhraseDisplay.description", fallback: "The following 24 words are the keys to your funds and are the only way to recover your funds if you get locked out or get a new device. Protect your ZEC by storing this phrase in a place you trust and never share it with anyone!")
     /// Oops no words
     public static let noWords = L10n.tr("Localizable", "recoveryPhraseDisplay.noWords", fallback: "Oops no words")
+    /// Wallet birthday height: 1598622
+    public static let subtext = L10n.tr("Localizable", "recoveryPhraseDisplay.subtext", fallback: "Wallet birthday height: 1598622")
     /// Your Secret Recovery Phrase
     public static let title = L10n.tr("Localizable", "recoveryPhraseDisplay.title", fallback: "Your Secret Recovery Phrase")
     public enum Button {
       /// Copy To Buffer
       public static let copyToBuffer = L10n.tr("Localizable", "recoveryPhraseDisplay.button.copyToBuffer", fallback: "Copy To Buffer")
-      /// I wrote it down!
-      public static let wroteItDown = L10n.tr("Localizable", "recoveryPhraseDisplay.button.wroteItDown", fallback: "I wrote it down!")
+      /// I GOT IT!
+      public static let wroteItDown = L10n.tr("Localizable", "recoveryPhraseDisplay.button.wroteItDown", fallback: "I GOT IT!")
     }
   }
   public enum RecoveryPhraseTestPreamble {

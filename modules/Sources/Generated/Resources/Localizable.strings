@@ -27,10 +27,11 @@
 
 // MARK: - Secret Recovery Phrase Display
 "recoveryPhraseDisplay.title" = "Your Secret Recovery Phrase";
-"recoveryPhraseDisplay.description" = "The following 24 words represent your funds and the security used to protect them. Back them up now!";
-"recoveryPhraseDisplay.button.wroteItDown" = "I wrote it down!";
+"recoveryPhraseDisplay.description" = "The following 24 words are the keys to your funds and are the only way to recover your funds if you get locked out or get a new device. Protect your ZEC by storing this phrase in a place you trust and never share it with anyone!";
+"recoveryPhraseDisplay.button.wroteItDown" = "I GOT IT!";
 "recoveryPhraseDisplay.button.copyToBuffer" = "Copy To Buffer";
 "recoveryPhraseDisplay.noWords" = "Oops no words";
+"recoveryPhraseDisplay.subtext" = "Wallet birthday height: 1598622";
 
 // MARK: - Recovery Phrase Backup Validation & Success/Failed
 "recoveryPhraseBackupValidation.title" = "Verify Your Backup";
