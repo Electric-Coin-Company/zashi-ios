@@ -133,7 +133,7 @@ class AppInitializationTests: XCTestCase {
 
         await testQueue.advance(by: 3.00)
 
-        await store.receive(.initialization(.initializeSDK)) { state in
+        await store.receive(.initialization(.initializeSDK(.existingWallet))) { state in
             state.storedWallet = .placeholder
         }
 

@@ -144,7 +144,7 @@ class RootTests: XCTestCase {
             state.appInitializationState = .filesMissing
         }
         
-        store.receive(.initialization(.initializeSDK))
+        store.receive(.initialization(.initializeSDK(.existingWallet)))
 
         store.receive(.initialization(.checkBackupPhraseValidation)) { state in
             // failed is expected because environment is throwing errors
@@ -171,7 +171,7 @@ class RootTests: XCTestCase {
 
         store.send(.initialization(.respondToWalletInitializationState(.initialized)))
 
-        store.receive(.initialization(.initializeSDK))
+        store.receive(.initialization(.initializeSDK(.existingWallet)))
 
         store.receive(.initialization(.checkBackupPhraseValidation)) { state in
             // failed is expected because environment is throwing errors

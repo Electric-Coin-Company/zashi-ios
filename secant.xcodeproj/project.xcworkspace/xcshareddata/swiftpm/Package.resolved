@@ -329,7 +329,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/zcash-hackworks/zcash-light-client-ffi",
       "state" : {
-        "revision" : "c3b5f4ebee758b619aa81e844d791aa1fd35b918"
+        "revision" : "8607dc26a637697e53e0be1fb09b81cba9d8475a",
+        "version" : "0.4.0-rc.2"
       }
     },
     {
@@ -337,7 +338,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/zcash/ZcashLightClientKit",
       "state" : {
-        "revision" : "9a82acbd5e33495a3ac7353bde77cfd741a75244"
+        "revision" : "552d31eb649bbce7ecddcbab976138a8472929ab",
+        "version" : "2.0.0-rc.1"
       }
     }
   ],

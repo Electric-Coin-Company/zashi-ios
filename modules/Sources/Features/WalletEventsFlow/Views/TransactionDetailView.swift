@@ -109,7 +109,7 @@ extension TransactionDetailView {
         mark: RowMark = .neutral
     ) -> some View {
         Group {
-            if let memoText = transaction.memos?.first?.toString() {
+            if let memoText = transaction.textMemo?.toString() {
                 VStack(alignment: .leading) {
                     Text(L10n.Transaction.withMemo)
                         .padding(.leading)

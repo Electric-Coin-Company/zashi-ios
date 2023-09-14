@@ -60,6 +60,18 @@ public struct TransactionState: Equatable, Identifiable {
         URL(string: "https://zcashblockexplorer.com/transactions/\(id)")
     }
     
+    public var textMemo: Memo? {
+        guard let memos else { return nil }
+        
+        for memo in memos {
+            if case .text = memo {
+                return memo
+            }
+        }
+        
+        return nil
+    }
+    
     public init(
         errorMessage: String? = nil,
         expiryHeight: BlockHeight? = nil,
