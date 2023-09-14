@@ -135,7 +135,7 @@ public struct BalanceBreakdownReducer: ReducerProtocol {
                 return EffectTask(value: .updateLatestBlock)
 
             case .updateLatestBlock:
-                let latestBlockNumber = sdkSynchronizer.latestScannedHeight()
+                let latestBlockNumber = sdkSynchronizer.latestState().latestBlockHeight
                 let latestBlock = numberFormatter.string(NSDecimalNumber(value: latestBlockNumber))
                 state.latestBlock = "\(String(describing: latestBlock ?? ""))"
                 return .none

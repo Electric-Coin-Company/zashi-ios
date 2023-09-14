@@ -22,9 +22,8 @@ public struct SDKSynchronizerClient {
     public let stateStream: () -> AnyPublisher<SynchronizerState, Never>
     public let eventStream: () -> AnyPublisher<SynchronizerEvent, Never>
     public let latestState: () -> SynchronizerState
-    public let latestScannedHeight: () -> BlockHeight
 
-    public let prepareWith: ([UInt8], UnifiedFullViewingKey, BlockHeight) async throws -> Void
+    public let prepareWith: ([UInt8], BlockHeight, WalletInitMode) async throws -> Void
     public let start: (_ retry: Bool) async throws -> Void
     public let stop: () -> Void
     public let isSyncing: () -> Bool

@@ -21,7 +21,7 @@ extension RootReducer {
         case configureCrashReporter
         case createNewWallet
         case checkWalletConfig
-        case initializeSDK
+        case initializeSDK(WalletInitMode)
         case initialSetups
         case initializationFailed(ZcashError)
         case nukeWallet
@@ -97,7 +97,7 @@ extension RootReducer {
                         state.appInitializationState = .filesMissing
                     }
                     return .concatenate(
-                        EffectTask(value: .initialization(.initializeSDK)),
+                        EffectTask(value: .initialization(.initializeSDK(.existingWallet))),
                         EffectTask(value: .initialization(.checkBackupPhraseValidation))
                     )
                 case .uninitialized:
@@ -110,7 +110,7 @@ extension RootReducer {
 
                 /// Stored wallet is present, database files may or may not be present, trying to initialize app state variables and environments.
                 /// When initialization succeeds user is taken to the home screen.
-            case .initialization(.initializeSDK):
+            case .initialization(.initializeSDK(let walletMode)):
                 do {
                     state.storedWallet = try walletStorage.exportWallet()
 
@@ -124,12 +124,10 @@ extension RootReducer {
 
                     try mnemonic.isValid(storedWallet.seedPhrase.value())
                     let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
-                    let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, zcashNetwork.networkType)
-                    let viewingKey = try derivationTool.deriveUnifiedFullViewingKey(spendingKey, zcashNetwork.networkType)
                     
                     return .run { send in
                         do {
-                            try await sdkSynchronizer.prepareWith(seedBytes, viewingKey, birthday)
+                            try await sdkSynchronizer.prepareWith(seedBytes, birthday, walletMode)
                             try await sdkSynchronizer.start(false)
                         } catch {
                             await send(.initialization(.initializationFailed(error.toZcashError())))
@@ -180,7 +178,7 @@ extension RootReducer {
                     state.phraseValidationState = randomRecoveryPhrase.random(recoveryPhrase)
 
                     return .concatenate(
-                        EffectTask(value: .initialization(.initializeSDK)),
+                        EffectTask(value: .initialization(.initializeSDK(.newWallet))),
                         EffectTask(value: .phraseValidation(.displayBackedUpPhrase))
                     )
                 } catch {
@@ -244,7 +242,7 @@ extension RootReducer {
                 return EffectTask(value: .destination(.updateDestination(.home)))
 
             case .onboarding(.importWallet(.initializeSDK)):
-                return EffectTask(value: .initialization(.initializeSDK))
+                return EffectTask(value: .initialization(.initializeSDK(.restoreWallet)))
 
             case .onboarding(.createNewWallet):
                 return EffectTask(value: .initialization(.createNewWallet))
