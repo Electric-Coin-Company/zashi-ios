@@ -410,6 +410,12 @@ public enum L10n {
           /// Wallet initialisation failed.
           public static let title = L10n.tr("Localizable", "root.initialization.alert.failed.title", fallback: "Wallet initialisation failed.")
         }
+        public enum RetryStartFailed {
+          /// The app was in background so re-start of the synchronizer is needed but this operation failed.
+          public static let message = L10n.tr("Localizable", "root.initialization.alert.retryStartFailed.message", fallback: "The app was in background so re-start of the synchronizer is needed but this operation failed.")
+          /// Synchronizer failed to start
+          public static let title = L10n.tr("Localizable", "root.initialization.alert.retryStartFailed.title", fallback: "Synchronizer failed to start")
+        }
         public enum SdkInitFailed {
           /// Failed to initialize the SDK
           public static let title = L10n.tr("Localizable", "root.initialization.alert.sdkInitFailed.title", fallback: "Failed to initialize the SDK")
@@ -573,6 +579,8 @@ public enum L10n {
       public static func error(_ p1: Any) -> String {
         return L10n.tr("Localizable", "sync.message.error", String(describing: p1), fallback: "Error: %@")
       }
+      /// Stopped
+      public static let stopped = L10n.tr("Localizable", "sync.message.stopped", fallback: "Stopped")
       /// %@%% Synced
       public static func sync(_ p1: Any) -> String {
         return L10n.tr("Localizable", "sync.message.sync", String(describing: p1), fallback: "%@%% Synced")

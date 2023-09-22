@@ -71,11 +71,16 @@ public struct WalletEventsFlowReducer: ReducerProtocol {
         switch action {
         case .onAppear:
             state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
-            return sdkSynchronizer.stateStream()
-                .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                .map { WalletEventsFlowReducer.Action.synchronizerStateChanged($0.syncStatus) }
-                .eraseToEffect()
-                .cancellable(id: CancelId.timer, cancelInFlight: true)
+            return .merge(
+                sdkSynchronizer.stateStream()
+                    .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                    .map { WalletEventsFlowReducer.Action.synchronizerStateChanged($0.syncStatus) }
+                    .eraseToEffect()
+                    .cancellable(id: CancelId.timer, cancelInFlight: true),
+                .run { send in
+                    await send(.updateWalletEvents(try await sdkSynchronizer.getAllTransactions()))
+                }
+            )
 
         case .onDisappear:
             return .cancel(id: CancelId.timer)

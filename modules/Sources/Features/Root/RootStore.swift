@@ -288,6 +288,18 @@ extension AlertState where Action == RootReducer.Action {
             TextState(L10n.Root.Initialization.Alert.Wipe.message)
         }
     }
+    
+    public static func retryStartFailed(_ error: ZcashError) -> AlertState {
+        AlertState {
+            TextState(L10n.Root.Initialization.Alert.RetryStartFailed.title)
+        } actions: {
+            ButtonState(action: .initialization(.retryStart)) {
+                TextState(L10n.Home.SyncFailed.retry)
+            }
+        } message: {
+            TextState(L10n.Root.Initialization.Alert.RetryStartFailed.message)
+        }
+    }
 }
      
 extension ConfirmationDialogState where Action == RootReducer.Action {

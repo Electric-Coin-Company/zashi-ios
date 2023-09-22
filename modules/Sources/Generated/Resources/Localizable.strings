@@ -142,6 +142,7 @@
 "sync.message.uptodate" = "Up-To-Date";
 "sync.message.unprepared" = "Unprepared";
 "sync.message.error" = "Error: %@";
+"sync.message.stopped" = "Stopped";
 "sync.message.sync" = "%@%% Synced";
 
 // MARK: - Transactions
@@ -231,6 +232,8 @@
 "root.initialization.alert.wipe.title" = "Wipe of the wallet";
 "root.initialization.alert.wipe.message" = "Are you sure?";
 "root.initialization.alert.wipeFailed.title" = "Nuke of the wallet failed";
+"root.initialization.alert.retryStartFailed.title" = "Synchronizer failed to start";
+"root.initialization.alert.retryStartFailed.message" = "The app was in background so re-start of the synchronizer is needed but this operation failed.";
 
 "root.destination.alert.failedToProcessDeeplink.title" = "Failed to process deeplink.";
 "root.destination.alert.failedToProcessDeeplink.message" = "Deeplink: \(%@))\nError: \(%@) (code: %@)";

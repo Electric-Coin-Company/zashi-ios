@@ -48,6 +48,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct SecantApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    @Environment (\.scenePhase) private var scenePhase
     
     init() {
         FontFamily.registerAllCustomFonts()
@@ -63,6 +64,13 @@ struct SecantApp: App {
             .font(
                 .custom(FontFamily.Inter.regular.name, size: 17)
             )
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+                appDelegate.rootViewStore.send(.initialization(.appDelegate(.willEnterForeground)))
+            }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
+                appDelegate.rootViewStore.send(.initialization(.appDelegate(.didEnterBackground)))
+            }
+            .preferredColorScheme(.light)
         }
     }
 }
