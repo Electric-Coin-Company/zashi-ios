@@ -57,6 +57,7 @@ private extension RootView {
                         )
                     }
                     .navigationViewStyle(.stack)
+                    .overlayedWithSplash()
                     
                 case .sandbox:
                     NavigationView {
@@ -81,7 +82,8 @@ private extension RootView {
                         )
                     }
                     .navigationViewStyle(.stack)
-                    
+                    .overlayedWithSplash()
+
                 case .startup:
                     ZStack(alignment: .topTrailing) {
                         debugView(viewStore)
