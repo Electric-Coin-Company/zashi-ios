@@ -190,6 +190,8 @@ class RootTests: XCTestCase {
             reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         
+        store.dependencies.sdkSynchronizer = .noOp
+        
         let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
         store.send(.home(.walletEvents(.replyTo(address))))
         

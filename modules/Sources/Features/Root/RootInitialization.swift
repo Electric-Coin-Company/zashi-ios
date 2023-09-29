@@ -27,6 +27,8 @@ extension RootReducer {
         case nukeWallet
         case nukeWalletRequest
         case respondToWalletInitializationState(InitializationState)
+        case synchronizerStartFailed(ZcashError)
+        case retryStart
         case walletConfigChanged(WalletConfig)
     }
 
@@ -34,10 +36,32 @@ extension RootReducer {
     public func initializationReduce() -> Reduce<RootReducer.State, RootReducer.Action> {
         Reduce { state, action in
             switch action {
+            case .initialization(.appDelegate(.didEnterBackground)):
+                sdkSynchronizer.stop()
+                return .none
+                
+            case .initialization(.appDelegate(.willEnterForeground)):
+                return EffectTask(value: .initialization(.retryStart))
+                    .delay(for: 1.0, scheduler: mainQueue)
+                    .eraseToEffect()
+                
+            case .initialization(.synchronizerStartFailed(let zcashError)):
+                state.alert = AlertState.retryStartFailed(zcashError)
+                return .none
+
+            case .initialization(.retryStart):
+                return .run { send in
+                    do {
+                        try await sdkSynchronizer.start(true)
+                    } catch {
+                        await send(.initialization(.synchronizerStartFailed(error.toZcashError())))
+                    }
+                }
+
             case .initialization(.appDelegate(.didFinishLaunching)):
                 // TODO: [#704], trigger the review request logic when approved by the team,
                 // https://github.com/zcash/secant-ios-wallet/issues/704
-                return EffectTask(value: .initialization(.checkWalletConfig))
+                return EffectTask(value: .initialization(.initialSetups))
                     .delay(for: 0.02, scheduler: mainQueue)
                     .eraseToEffect()
 

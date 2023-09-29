@@ -33,7 +33,7 @@ public struct SDKSynchronizerClient {
 
     public let getShieldedBalance: () -> WalletBalance?
     public let getTransparentBalance: () -> WalletBalance?
-    public let getAllTransactions: () async throws -> [WalletEvent]
+    public var getAllTransactions: () async throws -> [WalletEvent]
 
     public let getUnifiedAddress: (_ account: Int) async throws -> UnifiedAddress?
     public let getTransparentAddress: (_ account: Int) async throws -> TransparentAddress?

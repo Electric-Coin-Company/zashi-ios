@@ -117,10 +117,6 @@ class AppInitializationTests: XCTestCase {
 
         await testQueue.advance(by: 0.02)
 
-        await store.receive(.initialization(.checkWalletConfig))
-        
-        await store.receive(.walletConfigLoaded(WalletConfig.default))
-
         await store.receive(.initialization(.initialSetups))
 
         await testQueue.advance(by: 0.02)
@@ -166,10 +162,6 @@ class AppInitializationTests: XCTestCase {
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         await store.send(.initialization(.appDelegate(.didFinishLaunching)))
 
-        await store.receive(.initialization(.checkWalletConfig))
-        
-        await store.receive(.walletConfigLoaded(WalletConfig.default))
-
         await store.receive(.initialization(.initialSetups))
 
         await store.receive(.initialization(.configureCrashReporter))
@@ -199,10 +191,6 @@ class AppInitializationTests: XCTestCase {
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         await store.send(.initialization(.appDelegate(.didFinishLaunching)))
-
-        await store.receive(.initialization(.checkWalletConfig))
-
-        await store.receive(.walletConfigLoaded(WalletConfig.default))
 
         await store.receive(.initialization(.initialSetups))
 

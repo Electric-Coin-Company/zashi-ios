@@ -14,7 +14,7 @@ import WalletEventsFlow
 @testable import secant_testnet
 
 class WalletEventsTests: XCTestCase {
-    func testSynchronizerSubscription() throws {
+    @MainActor func testSynchronizerSubscription() async throws {
         let store = TestStore(
             initialState: WalletEventsFlowReducer.State(
                 destination: .latest,
@@ -25,16 +25,21 @@ class WalletEventsTests: XCTestCase {
         )
 
         store.dependencies.sdkSynchronizer = .mocked()
+        store.dependencies.sdkSynchronizer.getAllTransactions = { [] }
         store.dependencies.mainQueue = .immediate
 
-        store.send(.onAppear) { state in
+        await store.send(.onAppear) { state in
             state.requiredTransactionConfirmations = 10
         }
 
-        store.receive(.synchronizerStateChanged(.unprepared))
+        await store.receive(.synchronizerStateChanged(.unprepared))
+
+        await store.receive(.updateWalletEvents([]))
 
         // ending the subscription
-        store.send(.onDisappear)
+        await store.send(.onDisappear)
+
+        await store.finish()
     }
 
     @MainActor func testSynchronizerStateChanged2Synced() async throws {

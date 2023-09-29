@@ -9,4 +9,6 @@ import Foundation
 
 public enum AppDelegateAction: Equatable {
     case didFinishLaunching
+    case didEnterBackground
+    case willEnterForeground
 }

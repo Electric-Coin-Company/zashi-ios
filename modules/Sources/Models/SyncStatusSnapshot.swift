@@ -29,6 +29,9 @@ public struct SyncStatusSnapshot: Equatable {
         case .error(let error):
             return SyncStatusSnapshot(state, L10n.Sync.Message.error(error.toZcashError().message))
 
+        case .stopped:
+            return SyncStatusSnapshot(state, L10n.Sync.Message.stopped)
+
         case .syncing(let progress):
             return SyncStatusSnapshot(state, L10n.Sync.Message.sync(String(format: "%0.1f", progress * 100)))
         }
