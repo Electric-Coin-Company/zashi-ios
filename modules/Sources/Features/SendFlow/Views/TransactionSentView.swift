@@ -18,10 +18,11 @@ public struct TransactionSent: View {
                 action: {
                     viewStore.send(.updateDestination(.done))
                 },
-                label: { Text(L10n.General.close) }
+                label: { Text(L10n.General.close.uppercased()) }
             )
-            .activeButtonStyle
+            .zcashStyle()
             .frame(height: 50)
+            .padding(.horizontal, 70)
             .padding()
 
             Text(L10n.Send.amount(viewStore.amount.decimalString()))

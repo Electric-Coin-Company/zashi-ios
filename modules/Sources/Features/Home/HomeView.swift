@@ -32,7 +32,7 @@ public struct HomeView: View {
                     viewStore.send(.updateDestination(.transactionHistory))
                 } label: {
                     Text(L10n.Home.transactionHistory)
-                        .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+                        .foregroundColor(Asset.Colors.primary.color)
                 }
             }
             .padding()
@@ -99,30 +99,29 @@ extension HomeView {
                     SettingsView(store: store.settingsStore())
                 }
             )
-            .tint(Asset.Colors.Mfp.primary.color)
+            .tint(Asset.Colors.primary.color)
     }
 
     func sendButton(_ viewStore: HomeViewStore) -> some View {
         Button(action: {
             viewStore.send(.updateDestination(.send))
         }, label: {
-            Text(L10n.Home.sendZec(tokenName))
+            Text(L10n.Home.sendZec(tokenName).uppercased())
         })
-        .activeButtonStyle
+        .zcashStyle()
+        .padding(.horizontal, 70)
         .padding(.bottom, 30)
-        .disable(
-            when: viewStore.isSendButtonDisabled,
-            dimmingOpacity: 0.5
-        )
+        .disabled(viewStore.isSendButtonDisabled)
     }
     
     func receiveButton(_ viewStore: HomeViewStore) -> some View {
         Button(action: {
             viewStore.send(.updateDestination(.profile))
         }, label: {
-            Text(L10n.Home.receiveZec(tokenName))
+            Text(L10n.Home.receiveZec(tokenName).uppercased())
         })
-        .activeButtonStyle
+        .zcashStyle()
+        .padding(.horizontal, 70)
         .padding(.bottom, 30)
     }
     
@@ -154,7 +153,7 @@ extension HomeView {
                     }
             }
         }
-        .foregroundColor(Asset.Colors.Mfp.primary.color)
+        .foregroundColor(Asset.Colors.primary.color)
     }
 }
 

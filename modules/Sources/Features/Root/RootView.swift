@@ -2,7 +2,6 @@ import SwiftUI
 import StoreKit
 import ComposableArchitecture
 import Generated
-import RecoveryPhraseValidationFlow
 import Models
 import RecoveryPhraseDisplay
 import Welcome
@@ -74,22 +73,12 @@ private extension RootView {
                     
                 case .onboarding:
                     NavigationView {
-                        if viewStore.walletConfig
-                            .isEnabled(.onboardingFlow) {
-                            OnboardingScreen(
-                                store: store.scope(
-                                    state: \.onboardingState,
-                                    action: RootReducer.Action.onboarding
-                                )
+                        PlainOnboardingView(
+                            store: store.scope(
+                                state: \.onboardingState,
+                                action: RootReducer.Action.onboarding
                             )
-                        } else {
-                            PlainOnboardingView(
-                                store: store.scope(
-                                    state: \.onboardingState,
-                                    action: RootReducer.Action.onboarding
-                                )
-                            )
-                        }
+                        )
                     }
                     .navigationViewStyle(.stack)
                     
@@ -98,18 +87,7 @@ private extension RootView {
                         debugView(viewStore)
                             .transition(.opacity)
                     }
-                    
-                case .phraseValidation:
-                    NavigationView {
-                        RecoveryPhraseValidationFlowView(
-                            store: store.scope(
-                                state: \.phraseValidationState,
-                                action: RootReducer.Action.phraseValidation
-                            )
-                        )
-                    }
-                    .navigationViewStyle(.stack)
-                    
+                                        
                 case .phraseDisplay:
                     NavigationView {
                         RecoveryPhraseDisplayView(
@@ -163,10 +141,10 @@ private extension RootView {
     @ViewBuilder func debugView(_ viewStore: RootViewStore) -> some View {
         VStack(alignment: .leading) {
             if viewStore.destinationState.previousDestination == .home {
-                Button(L10n.General.back) {
+                Button(L10n.General.back.uppercased()) {
                     viewStore.goToDestination(.home)
                 }
-                .activeButtonStyle
+                .zcashStyle()
                 .frame(width: 150)
                 .padding()
             }

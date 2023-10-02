@@ -38,16 +38,19 @@ public struct PlainOnboardingView: View {
                 
                 Spacer()
                 
-                Button(L10n.PlainOnboarding.Button.createNewWallet) {
+                Button(L10n.PlainOnboarding.Button.createNewWallet.uppercased()) {
                     viewStore.send(.createNewWallet, animation: .easeInOut(duration: animationDuration))
                 }
-                .activeButtonStyle
-                
-                Button(L10n.PlainOnboarding.Button.restoreWallet) {
+                .zcashStyle()
+                .padding(.horizontal, 70)
+                .padding(.bottom, 30)
+
+                Button(L10n.PlainOnboarding.Button.restoreWallet.uppercased()) {
                     viewStore.send(.importExistingWallet, animation: .easeInOut(duration: animationDuration))
                 }
-                .frame(height: 80)
-                .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+                .zcashStyle(.secondary)
+                .padding(.horizontal, 70)
+                .padding(.bottom, 20)
             }
             .padding(.all)
             .navigationLinkEmpty(

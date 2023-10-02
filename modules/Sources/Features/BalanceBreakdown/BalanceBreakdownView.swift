@@ -26,7 +26,7 @@ public struct BalanceBreakdownView: View {
                 HStack {
                     Spacer()
                     Text(L10n.BalanceBreakdown.blockId(viewStore.latestBlock))
-                        .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+                        .foregroundColor(Asset.Colors.primary.color)
                 }
                 .padding(.horizontal, 50)
                 .padding(.vertical, 20)
@@ -34,7 +34,7 @@ public struct BalanceBreakdownView: View {
                 balanceView(
                     title: L10n.BalanceBreakdown.shieldedZec(tokenName),
                     viewStore.shieldedBalance.data.verified,
-                    titleColor: Asset.Colors.Mfp.fontDark.color
+                    titleColor: Asset.Colors.primary.color
                 )
                 balanceView(title: L10n.BalanceBreakdown.transparentBalance, viewStore.transparentBalance.data.verified)
                 balanceView(title: L10n.BalanceBreakdown.totalSpendableBalance, viewStore.totalSpendableBalance)
@@ -49,7 +49,7 @@ public struct BalanceBreakdownView: View {
                             tokenName
                         )
                     )
-                    .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+                    .foregroundColor(Asset.Colors.primary.color)
                 }
                 .padding(.horizontal, 50)
                 
@@ -67,7 +67,7 @@ public struct BalanceBreakdownView: View {
 }
 
 extension BalanceBreakdownView {
-    func balanceView(title: String, _ balance: Zatoshi, titleColor: Color = Asset.Colors.Mfp.fontDark.color) -> some View {
+    func balanceView(title: String, _ balance: Zatoshi, titleColor: Color = Asset.Colors.primary.color) -> some View {
         VStack(alignment: .leading) {
             Text("\(title)")
                 .foregroundColor(titleColor)
@@ -81,7 +81,7 @@ extension BalanceBreakdownView {
                 .custom(FontFamily.Inter.regular.name, size: 32)
                 .weight(.bold)
             )
-            .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+            .foregroundColor(Asset.Colors.primary.color)
         }
         .padding(.horizontal, 50)
     }
@@ -93,18 +93,18 @@ extension BalanceBreakdownView {
                 if viewStore.shieldingFunds {
                     HStack(spacing: 10) {
                         ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: Asset.Colors.Text.activeButtonText.color))
-                        Text(L10n.BalanceBreakdown.shieldingFunds)
+                            .progressViewStyle(CircularProgressViewStyle(tint: Asset.Colors.primary.color))
+                        Text(L10n.BalanceBreakdown.shieldingFunds.uppercased())
                     }
                 } else {
                     Text(L10n.BalanceBreakdown.shieldFunds)
                 }
             }
         )
-        .activeButtonStyle
-        .padding(.horizontal, 50)
+        .zcashStyle()
+        .padding(.horizontal, 70)
         .padding(.vertical, 20)
-        .disable(when: !viewStore.isShieldableBalanceAvailable || viewStore.shieldingFunds, dimmingOpacity: 0.5)
+        .disabled(!viewStore.isShieldableBalanceAvailable || viewStore.shieldingFunds)
     }
 }
 

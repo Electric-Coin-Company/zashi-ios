@@ -2,7 +2,6 @@ import ComposableArchitecture
 import ZcashLightClientKit
 import DatabaseFiles
 import Deeplink
-import RecoveryPhraseValidationFlow
 import ZcashSDKEnvironment
 import WalletStorage
 import WalletConfigProvider
@@ -36,7 +35,6 @@ public struct RootReducer: ReducerProtocol {
         public var exportLogsState: ExportLogsReducer.State
         public var homeState: HomeReducer.State
         public var onboardingState: OnboardingFlowReducer.State
-        public var phraseValidationState: RecoveryPhraseValidationFlowReducer.State
         public var phraseDisplayState: RecoveryPhraseDisplayReducer.State
         public var sandboxState: SandboxReducer.State
         public var storedWallet: StoredWallet?
@@ -50,7 +48,6 @@ public struct RootReducer: ReducerProtocol {
             exportLogsState: ExportLogsReducer.State,
             homeState: HomeReducer.State,
             onboardingState: OnboardingFlowReducer.State,
-            phraseValidationState: RecoveryPhraseValidationFlowReducer.State,
             phraseDisplayState: RecoveryPhraseDisplayReducer.State,
             sandboxState: SandboxReducer.State,
             storedWallet: StoredWallet? = nil,
@@ -63,7 +60,6 @@ public struct RootReducer: ReducerProtocol {
             self.exportLogsState = exportLogsState
             self.homeState = homeState
             self.onboardingState = onboardingState
-            self.phraseValidationState = phraseValidationState
             self.phraseDisplayState = phraseDisplayState
             self.sandboxState = sandboxState
             self.storedWallet = storedWallet
@@ -84,7 +80,6 @@ public struct RootReducer: ReducerProtocol {
         case nukeWalletSucceeded
         case onboarding(OnboardingFlowReducer.Action)
         case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
-        case phraseValidation(RecoveryPhraseValidationFlowReducer.Action)
         case sandbox(SandboxReducer.Action)
         case updateStateAfterConfigUpdate(WalletConfig)
         case walletConfigLoaded(WalletConfig)
@@ -97,7 +92,6 @@ public struct RootReducer: ReducerProtocol {
     @Dependency(\.derivationTool) var derivationTool
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.mnemonic) var mnemonic
-    @Dependency(\.randomRecoveryPhrase) var randomRecoveryPhrase
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.walletConfigProvider) var walletConfigProvider
@@ -121,10 +115,6 @@ public struct RootReducer: ReducerProtocol {
 
         Scope(state: \.onboardingState, action: /Action.onboarding) {
             OnboardingFlowReducer(saplingActivationHeight: zcashNetwork.constants.saplingActivationHeight)
-        }
-
-        Scope(state: \.phraseValidationState, action: /Action.phraseValidation) {
-            RecoveryPhraseValidationFlowReducer()
         }
 
         Scope(state: \.phraseDisplayState, action: /Action.phraseDisplay) {
@@ -336,7 +326,6 @@ extension RootReducer.State {
                 walletConfig: .default,
                 importWalletState: .placeholder
             ),
-            phraseValidationState: .placeholder,
             phraseDisplayState: RecoveryPhraseDisplayReducer.State(
                 phrase: .placeholder
             ),

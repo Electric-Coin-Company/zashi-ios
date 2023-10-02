@@ -25,21 +25,19 @@ public struct ImportWalletView: View {
                         .custom(FontFamily.Inter.regular.name, size: 27)
                         .weight(.bold)
                     )
-                    .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+                    .foregroundColor(Asset.Colors.primary.color)
                     .minimumScaleFactor(0.3)
 
                 ImportSeedEditor(store: store)
                     .frame(width: nil, height: 200, alignment: .center)
 
-                Button(L10n.General.next) {
+                Button(L10n.General.next.uppercased()) {
                     viewStore.send(.updateDestination(.birthday))
                 }
-                .activeButtonStyle
+                .zcashStyle()
+                .padding(.horizontal, 70)
                 .importWalletButtonLayout()
-                .disable(
-                    when: !viewStore.isValidForm,
-                    dimmingOpacity: 0.5
-                )
+                .disabled(!viewStore.isValidForm)
 
                 Spacer()
             }
@@ -71,8 +69,8 @@ extension ImportWalletView {
                     )
                     .foregroundColor(
                         viewStore.isValidNumberOfWords ?
-                        Asset.Colors.Text.validMnemonic.color :
-                        Asset.Colors.Text.heading.color
+                        Asset.Colors.primary.color :
+                        Asset.Colors.primary.color
                     )
                     .padding(.trailing, 35)
                     .padding(.bottom, 15)

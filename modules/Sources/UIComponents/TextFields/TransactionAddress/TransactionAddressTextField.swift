@@ -35,7 +35,7 @@ public struct TransactionAddressTextField: View {
                             Image(systemName: "qrcode")
                                 .resizable()
                                 .frame(width: 25, height: 25)
-                                .tint(Asset.Colors.Mfp.primary.color)
+                                .tint(Asset.Colors.primary.color)
                         }
                         .padding(.trailing, 10)
                     }

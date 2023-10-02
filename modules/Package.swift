@@ -35,7 +35,6 @@ let package = Package(
         .library(name: "Pasteboard", targets: ["Pasteboard"]),
         .library(name: "Profile", targets: ["Profile"]),
         .library(name: "RecoveryPhraseDisplay", targets: ["RecoveryPhraseDisplay"]),
-        .library(name: "RecoveryPhraseValidationFlow", targets: ["RecoveryPhraseValidationFlow"]),
         .library(name: "ReviewRequest", targets: ["ReviewRequest"]),
         .library(name: "Root", targets: ["Root"]),
         .library(name: "Sandbox", targets: ["Sandbox"]),
@@ -318,20 +317,6 @@ let package = Package(
             path: "Sources/Features/RecoveryPhraseDisplay"
         ),
         .target(
-            name: "RecoveryPhraseValidationFlow",
-            dependencies: [
-                "FeedbackGenerator",
-                "Generated",
-                "Models",
-                "Pasteboard",
-                "UIComponents",
-                "Utils",
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
-            ],
-            path: "Sources/Features/RecoveryPhraseValidationFlow"
-        ),
-        .target(
             name: "ReviewRequest",
             dependencies: [
                 "AppVersion",
@@ -355,7 +340,6 @@ let package = Package(
                 "Models",
                 "OnboardingFlow",
                 "RecoveryPhraseDisplay",
-                "RecoveryPhraseValidationFlow",
                 "Sandbox",
                 "SDKSynchronizer",
                 "UIComponents",

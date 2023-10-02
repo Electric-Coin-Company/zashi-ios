@@ -33,7 +33,7 @@ public struct TCATextField: View {
             )
             .lineLimit(1)
             .truncationMode(.middle)
-            .accentColor(Asset.Colors.Cursor.bar.color)
+            .accentColor(Asset.Colors.primary.color)
         }
     }
 }

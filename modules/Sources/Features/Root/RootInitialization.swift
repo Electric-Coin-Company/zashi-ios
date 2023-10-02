@@ -175,7 +175,6 @@ extension RootReducer {
 
                     let recoveryPhrase = RecoveryPhrase(words: phraseWords.map { $0.redacted })
                     state.phraseDisplayState.phrase = recoveryPhrase
-                    state.phraseValidationState = randomRecoveryPhrase.random(recoveryPhrase)
                     landingDestination = .phraseDisplay
                 }
 
@@ -199,22 +198,13 @@ extension RootReducer {
                     let randomRecoveryPhraseWords = mnemonic.asWords(newRandomPhrase)
                     let recoveryPhrase = RecoveryPhrase(words: randomRecoveryPhraseWords.map { $0.redacted })
                     state.phraseDisplayState.phrase = recoveryPhrase
-                    state.phraseValidationState = randomRecoveryPhrase.random(recoveryPhrase)
 
                     return .concatenate(
                         EffectTask(value: .initialization(.initializeSDK(.newWallet))),
-                        EffectTask(value: .phraseValidation(.displayBackedUpPhrase))
+                        EffectTask(value: .destination(.updateDestination(.phraseDisplay)))
                     )
                 } catch {
                     state.alert = AlertState.cantCreateNewWallet(error.toZcashError())
-                }
-                return .none
-
-            case .phraseValidation(.succeed):
-                do {
-                    try walletStorage.markUserPassedPhraseBackupTest(true)
-                } catch {
-                    state.alert = AlertState.cantStoreThatUserPassedPhraseBackupTest(error.toZcashError())
                 }
                 return .none
 
@@ -237,7 +227,6 @@ extension RootReducer {
             case .nukeWalletSucceeded:
                 walletStorage.nukeWallet()
                 state.onboardingState.destination = nil
-                state.onboardingState.index = 0
                 return .concatenate(
                     .cancel(id: SynchronizerCancelId.timer),
                     EffectTask(value: .initialization(.checkWalletInitialization))
@@ -288,7 +277,7 @@ extension RootReducer {
                 state.alert = AlertState.initializationFailed(error)
                 return .none
 
-            case .home, .destination, .onboarding, .phraseDisplay, .phraseValidation, .sandbox,
+            case .home, .destination, .onboarding, .phraseDisplay, .sandbox,
                 .welcome, .binding, .debug, .exportLogs, .alert:
                 return .none
             }

@@ -25,11 +25,11 @@ public struct TransactionSendingView: View {
             VStack(alignment: .center, spacing: 40) {
                 Spacer()
                 Text(L10n.Send.sendingTo(viewStore.amount.decimalString(), tokenName))
-                    .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+                    .foregroundColor(Asset.Colors.primary.color)
 
                 Text(viewStore.address)
                     .truncationMode(.middle)
-                    .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+                    .foregroundColor(Asset.Colors.primary.color)
                     .lineLimit(1)
 
                 Spacer()

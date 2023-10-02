@@ -24,58 +24,27 @@ public struct OnboardingFlowReducer: ReducerProtocol {
             case createNewWallet
             case importExistingWallet
         }
-        
-        public struct Step: Equatable, Identifiable {
-            public let id: UUID
-            public let title: String
-            public let description: String
-            public let background: Image
-        }
 
         public var destination: Destination?
         public var walletConfig: WalletConfig
         public var importWalletState: ImportWalletReducer.State
-        public var index = 0
-        public var skippedAtindex: Int?
-        public var steps: IdentifiedArrayOf<Step> = Self.onboardingSteps
-
-        public var currentStep: Step { steps[index] }
-        public var isFinalStep: Bool { steps.count == index + 1 }
-        public var isInitialStep: Bool { index == 0 }
-        public var progress: Int { ((index + 1) * 100) / (steps.count) }
-        
-        public var offset: CGFloat {
-            let maxOffset = CGFloat(-60)
-            let stepOffset = CGFloat(maxOffset / CGFloat(steps.count - 1))
-            guard index != 0 else { return .zero }
-            return stepOffset * CGFloat(index)
-        }
         
         public init(
             destination: Destination? = nil,
             walletConfig: WalletConfig,
-            importWalletState: ImportWalletReducer.State,
-            index: Int = 0,
-            skippedAtindex: Int? = nil,
-            steps: IdentifiedArrayOf<Step> = Self.onboardingSteps
+            importWalletState: ImportWalletReducer.State
         ) {
             self.destination = destination
             self.walletConfig = walletConfig
             self.importWalletState = importWalletState
-            self.index = index
-            self.skippedAtindex = skippedAtindex
-            self.steps = steps
         }
     }
 
     public enum Action: Equatable {
-        case back
         case createNewWallet
         case importExistingWallet
         case importWallet(ImportWalletReducer.Action)
-        case next
         case onAppear
-        case skip
         case updateDestination(OnboardingFlowReducer.State.Destination?)
     }
     
@@ -91,30 +60,6 @@ public struct OnboardingFlowReducer: ReducerProtocol {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                if !state.walletConfig.isEnabled(.onboardingFlow) {
-                    return EffectTask(value: .skip)
-                }
-                return .none
-                
-            case .back:
-                guard state.index > 0 else { return .none }
-                if let skippedFrom = state.skippedAtindex {
-                    state.index = skippedFrom
-                    state.skippedAtindex = nil
-                } else {
-                    state.index -= 1
-                }
-                return .none
-                
-            case .next:
-                guard state.index < state.steps.count - 1 else { return .none }
-                state.index += 1
-                return .none
-                
-            case .skip:
-                guard state.skippedAtindex == nil else { return .none }
-                state.skippedAtindex = state.index
-                state.index = state.steps.count - 1
                 return .none
                 
             case .updateDestination(let destination):
@@ -134,37 +79,6 @@ public struct OnboardingFlowReducer: ReducerProtocol {
             }
         }
     }
-}
-
-extension OnboardingFlowReducer.State {
-    public static let onboardingSteps = IdentifiedArray(
-        uniqueElements: [
-            Step(
-                id: UUID(),
-                title: L10n.Onboarding.Step1.title,
-                description: L10n.Onboarding.Step1.description,
-                background: Asset.Assets.Backgrounds.callout1.image
-            ),
-            Step(
-                id: UUID(),
-                title: L10n.Onboarding.Step2.title,
-                description: L10n.Onboarding.Step2.description,
-                background: Asset.Assets.Backgrounds.callout2.image
-            ),
-            Step(
-                id: UUID(),
-                title: L10n.Onboarding.Step3.title,
-                description: L10n.Onboarding.Step3.description,
-                background: Asset.Assets.Backgrounds.callout3.image
-            ),
-            Step(
-                id: UUID(),
-                title: L10n.Onboarding.Step4.title,
-                description: L10n.Onboarding.Step4.description,
-                background: Asset.Assets.Backgrounds.callout4.image
-            )
-        ]
-    )
 }
 
 // MARK: - ViewStore

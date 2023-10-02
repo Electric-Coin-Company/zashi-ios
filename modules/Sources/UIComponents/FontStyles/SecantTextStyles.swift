@@ -30,7 +30,7 @@ extension Text {
     private struct BodyTextStyle: ViewModifier {
         func body(content: Content) -> some View {
             content
-                .foregroundColor(Asset.Colors.Text.body.color)
+                .foregroundColor(Asset.Colors.primary.color)
                 .font(
                     .custom(FontFamily.Inter.regular.name, size: 18)
                 )
@@ -41,7 +41,7 @@ extension Text {
     private struct ParagraphStyle: ViewModifier {
         func body(content: Content) -> some View {
             content
-                .foregroundColor(Asset.Colors.Text.heading.color)
+                .foregroundColor(Asset.Colors.primary.color)
                 .font(
                     .custom(FontFamily.Inter.regular.name, size: 16)
                 )
@@ -51,22 +51,22 @@ extension Text {
     private struct TitleTextStyle: ViewModifier {
         func body(content: Content) -> some View {
             content
-                .foregroundColor(Asset.Colors.Text.heading.color)
+                .foregroundColor(Asset.Colors.primary.color)
                 .font(
                     .custom(FontFamily.Inter.regular.name, size: 24)
                 )
-                .shadow(color: Asset.Colors.Text.captionTextShadow.color, radius: 1, x: 0, y: 1)
+                .shadow(color: Asset.Colors.primary.color, radius: 1, x: 0, y: 1)
         }
     }
 
     private struct CaptionTextStyle: ViewModifier {
         func body(content: Content) -> some View {
             content
-                .foregroundColor(Asset.Colors.Text.captionText.color)
+                .foregroundColor(Asset.Colors.primary.color)
                 .font(
                     .custom(FontFamily.Inter.regular.name, size: 16)
                 )
-                .shadow(color: Asset.Colors.Text.captionTextShadow.color, radius: 1, x: 0, y: 1)
+                .shadow(color: Asset.Colors.primary.color, radius: 1, x: 0, y: 1)
         }
     }
 }

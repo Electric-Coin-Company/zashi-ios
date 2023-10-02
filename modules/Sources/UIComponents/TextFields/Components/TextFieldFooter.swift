@@ -14,11 +14,11 @@ public struct TextFieldFooter: View {
         HStack(spacing: 0) {
             Rectangle()
                 .frame(height: 1.5)
-                .foregroundColor(Asset.Colors.TextField.Underline.purple.color)
+                .foregroundColor(Asset.Colors.primary.color)
 
             Rectangle()
                 .frame(height: 1.5)
-                .foregroundColor(Asset.Colors.TextField.Underline.gray.color)
+                .foregroundColor(Asset.Colors.primary.color)
         }
     }
 }

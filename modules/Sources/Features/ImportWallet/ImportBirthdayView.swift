@@ -25,7 +25,7 @@ public struct ImportBirthdayView: View {
                         .custom(FontFamily.Inter.regular.name, size: 16)
                         .weight(.bold)
                     )
-                    .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+                    .foregroundColor(Asset.Colors.primary.color)
                 
                 TextField(
                     L10n.ImportWallet.Birthday.placeholder,
@@ -35,15 +35,13 @@ public struct ImportBirthdayView: View {
                 .autocapitalization(.none)
                 .importSeedEditorModifier()
                 
-                Button(L10n.ImportWallet.Button.restoreWallet) {
+                Button(L10n.ImportWallet.Button.restoreWallet.uppercased()) {
                     viewStore.send(.restoreWallet)
                 }
-                .activeButtonStyle
+                .zcashStyle()
+                .padding(.horizontal, 70)
                 .importWalletButtonLayout()
-                .disable(
-                    when: !viewStore.isValidForm,
-                    dimmingOpacity: 0.5
-                )
+                .disabled(!viewStore.isValidForm)
                 
                 Spacer()
             }

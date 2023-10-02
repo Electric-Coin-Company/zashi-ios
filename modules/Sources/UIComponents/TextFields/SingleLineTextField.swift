@@ -50,7 +50,7 @@ public struct SingleLineTextField<TitleAccessoryContent, InputPrefixContent, Inp
             .frame(maxHeight: 40)
             .overlay(
                 Rectangle()
-                    .stroke(Asset.Colors.Mfp.primary.color, lineWidth: 2)
+                    .stroke(Asset.Colors.primary.color, lineWidth: 2)
             )
         }
     }

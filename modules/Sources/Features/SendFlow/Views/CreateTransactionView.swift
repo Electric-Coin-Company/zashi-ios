@@ -31,7 +31,7 @@ public struct CreateTransaction: View {
                             .custom(FontFamily.Inter.regular.name, size: 14)
                         )
                 }
-                .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+                .foregroundColor(Asset.Colors.primary.color)
                 .padding(.horizontal)
 
                 VStack(alignment: .leading) {
@@ -44,7 +44,7 @@ public struct CreateTransaction: View {
                     
                     if viewStore.isInvalidAddressFormat {
                         Text(L10n.Send.Error.invalidAddress)
-                            .foregroundColor(Asset.Colors.Mfp.error.color)
+                            .foregroundColor(Asset.Colors.error.color)
                     }
                 }
                 .padding(.horizontal)
@@ -61,10 +61,10 @@ public struct CreateTransaction: View {
 
                     if viewStore.isInvalidAmountFormat {
                         Text(L10n.Send.Error.invalidAmount)
-                            .foregroundColor(Asset.Colors.Mfp.error.color)
+                            .foregroundColor(Asset.Colors.error.color)
                     } else if viewStore.isInsufficientFunds {
                         Text(L10n.Send.Error.insufficientFunds)
-                            .foregroundColor(Asset.Colors.Mfp.error.color)
+                            .foregroundColor(Asset.Colors.error.color)
                     }
                 }
                 .padding(.horizontal)
@@ -77,19 +77,19 @@ public struct CreateTransaction: View {
                         L10n.Send.editMemo
                         : L10n.Send.includeMemo
                     )
-                    .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+                    .foregroundColor(Asset.Colors.primary.color)
                 }
                 .padding(.top, 10)
-                .disable(when: !viewStore.isMemoInputEnabled, dimmingOpacity: 0.5)
+                .disabled(!viewStore.isMemoInputEnabled)
 
                 Button(
                     action: { viewStore.send(.sendPressed) },
-                    label: { Text(L10n.General.send) }
+                    label: { Text(L10n.General.send.uppercased()) }
                 )
-                .activeButtonStyle
-                .disable(when: !viewStore.isValidForm, dimmingOpacity: 0.5)
+                .zcashStyle()
+                .disabled(!viewStore.isValidForm)
                 .padding(.top, 10)
-                .padding(.horizontal)
+                .padding(.horizontal, 70)
 
                 Spacer()
             }
