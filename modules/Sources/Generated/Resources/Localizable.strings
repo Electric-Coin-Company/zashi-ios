@@ -3,7 +3,7 @@
 "welcomeScreen.subtitle" = "Just Loading, one sec";
 
 // MARK: - Plain Onboarding Flow
-"plainOnboarding.title" = "It's time to setup your Secant, powered by Zcash, no-frills wallet.";
+"plainOnboarding.title" = "It's time to setup your Zashi, powered by Zcash, no-frills wallet.";
 "plainOnboarding.caption" = "We need to create a new wallet or restore an existing one. Select your path:";
 "plainOnboarding.button.createNewWallet" = "Create a new Wallet";
 "plainOnboarding.button.restoreWallet" = "Restore an existing wallet";
@@ -71,7 +71,7 @@
 "home.sendZec" = "Send %@";
 "home.receiveZec" = "Receive %@";
 "home.transactionHistory" = "See transaction history";
-"home.title" = "Secant Wallet";
+"home.title" = "Zashi Wallet";
 "home.syncFailed.title" = "Sync failed!";
 "home.syncFailed.dismiss" = "Dismiss";
 "home.syncFailed.retry" = "Retry";
