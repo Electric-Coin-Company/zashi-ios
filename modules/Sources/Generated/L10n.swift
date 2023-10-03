@@ -157,8 +157,8 @@ public enum L10n {
     public static func sendZec(_ p1: Any) -> String {
       return L10n.tr("Localizable", "home.sendZec", String(describing: p1), fallback: "Send %@")
     }
-    /// Secant Wallet
-    public static let title = L10n.tr("Localizable", "home.title", fallback: "Secant Wallet")
+    /// Zashi Wallet
+    public static let title = L10n.tr("Localizable", "home.title", fallback: "Zashi Wallet")
     /// See transaction history
     public static let transactionHistory = L10n.tr("Localizable", "home.transactionHistory", fallback: "See transaction history")
     public enum SyncFailed {
@@ -257,8 +257,8 @@ public enum L10n {
   public enum PlainOnboarding {
     /// We need to create a new wallet or restore an existing one. Select your path:
     public static let caption = L10n.tr("Localizable", "plainOnboarding.caption", fallback: "We need to create a new wallet or restore an existing one. Select your path:")
-    /// It's time to setup your Secant, powered by Zcash, no-frills wallet.
-    public static let title = L10n.tr("Localizable", "plainOnboarding.title", fallback: "It's time to setup your Secant, powered by Zcash, no-frills wallet.")
+    /// It's time to setup your Zashi, powered by Zcash, no-frills wallet.
+    public static let title = L10n.tr("Localizable", "plainOnboarding.title", fallback: "It's time to setup your Zashi, powered by Zcash, no-frills wallet.")
     public enum Button {
       /// Create a new Wallet
       public static let createNewWallet = L10n.tr("Localizable", "plainOnboarding.button.createNewWallet", fallback: "Create a new Wallet")
