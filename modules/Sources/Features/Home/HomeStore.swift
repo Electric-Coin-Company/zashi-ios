@@ -69,9 +69,7 @@ public struct HomeReducer: ReducerProtocol {
         }
 
         public var isSendButtonDisabled: Bool {
-            // If the destination is `.send` the button must be enabled
-            // to avoid involuntary navigation pop.
-            (self.destination != .send && self.isSyncing) || shieldedBalance.data.verified.amount == 0
+            shieldedBalance.data.verified.amount == 0
         }
         
         public init(
