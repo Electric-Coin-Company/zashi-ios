@@ -43,8 +43,8 @@ public struct MultipleLineTextField<TitleAccessoryContent>: View
                 
                 TextEditor(text: viewStore.bindingForRedactableMemo(viewStore.text))
                     .multilineTextEditorModifier(
-                        Asset.Colors.Text.activeButtonText.color,
-                        Asset.Colors.TextField.multilineOutline.color
+                        Asset.Colors.primary.color,
+                        Asset.Colors.primary.color
                     )
                     .focused($isFocused)
                 
@@ -57,8 +57,8 @@ public struct MultipleLineTextField<TitleAccessoryContent>: View
                             )
                             .foregroundColor(
                                 viewStore.isValid
-                                ? Asset.Colors.TextField.multilineOutline.color
-                                : Asset.Colors.Text.invalidEntry.color
+                                ? Asset.Colors.primary.color
+                                : Asset.Colors.primary.color
                             )
                     }
                 }
@@ -74,7 +74,7 @@ struct MultilineTextEditorModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+            .foregroundColor(Asset.Colors.primary.color)
             .overlay(
                 Rectangle()
                     .stroke(outlineColor, lineWidth: 2)

@@ -16,7 +16,7 @@ public struct ImportSeedEditor: View {
         WithViewStore(store) { viewStore in
             TextEditor(text: viewStore.bindingForRedactableSeedPhrase(viewStore.importedSeedPhrase))
                 .autocapitalization(.none)
-                .importSeedEditorModifier(Asset.Colors.Mfp.fontDark.color)
+                .importSeedEditorModifier(Asset.Colors.primary.color)
                 .padding(.horizontal, 28)
                 .padding(.vertical, 10)
         }
@@ -28,7 +28,7 @@ struct ImportSeedEditorModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+            .foregroundColor(Asset.Colors.primary.color)
             .padding(1)
             .background(backgroundColor)
     }

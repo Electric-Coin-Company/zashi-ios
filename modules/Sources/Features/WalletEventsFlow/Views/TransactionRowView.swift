@@ -29,13 +29,13 @@ public struct TransactionRowView: View {
                         .font(
                             .custom(FontFamily.Inter.regular.name, size: 16)
                         )
-                        .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+                        .foregroundColor(Asset.Colors.primary.color)
                     
                     Text("\(transaction.date?.asHumanReadable() ?? L10n.General.dateNotAvailable)")
                         .font(
                             .custom(FontFamily.Inter.regular.name, size: 16)
                         )
-                        .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+                        .foregroundColor(Asset.Colors.primary.color)
                         .opacity(0.5)
                 }
 
@@ -46,12 +46,12 @@ public struct TransactionRowView: View {
                         .font(
                             .custom(FontFamily.Inter.regular.name, size: 16)
                         )
-                        .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+                        .foregroundColor(Asset.Colors.primary.color)
                     + Text(L10n.balance(transaction.zecAmount.decimalString(), tokenName))
                         .font(
                             .custom(FontFamily.Inter.regular.name, size: 16)
                         )
-                        .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+                        .foregroundColor(Asset.Colors.primary.color)
                 }
                 .padding(.trailing, 30)
             }
@@ -62,7 +62,7 @@ public struct TransactionRowView: View {
                 Rectangle()
                     .padding(.horizontal, 30)
                     .frame(height: 1, alignment: .center)
-                    .foregroundColor(Asset.Colors.Text.transactionRowSubtitle.color)
+                    .foregroundColor(Asset.Colors.primary.color)
             }
         }
         .frame(height: 60)
@@ -96,7 +96,7 @@ extension TransactionRowView {
                     .frame(width: 12, height: 12)
                     .foregroundColor(inTransaction ? .yellow : .white)
                     .padding(10)
-                    .background(Asset.Colors.Mfp.walletEvents.color)
+                    .background(Asset.Colors.suppressed72.color)
                     .cornerRadius(40)
                     .rotationEffect(Angle(degrees: inTransaction ? 135 : -45))
                     .padding(.leading, 14)

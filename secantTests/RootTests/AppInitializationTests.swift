@@ -10,7 +10,6 @@ import ComposableArchitecture
 import MnemonicClient
 import Models
 import UIComponents
-import RecoveryPhraseValidationFlow
 import Generated
 import RecoveryPhraseDisplay
 import Root
@@ -22,54 +21,6 @@ class AppInitializationTests: XCTestCase {
     @MainActor func testDidFinishLaunching_to_InitializedWallet() async throws {
         // setup the store and environment to be fully mocked
         let recoveryPhrase = RecoveryPhrase(words: try MnemonicClient.mock.randomMnemonicWords().map { $0.redacted })
-
-        let phraseValidationState = RecoveryPhraseValidationFlowReducer.State(
-            phrase: recoveryPhrase,
-            missingIndices: [2, 0, 3, 5],
-            missingWordChips: [
-                .unassigned(word: "voice".redacted),
-                .empty,
-                .unassigned(word: "survey".redacted),
-                .unassigned(word: "spread".redacted)
-            ],
-            validationWords: [
-                .init(groupIndex: 2, word: "dizzy".redacted)
-            ],
-            destination: nil
-        )
-
-        let recoveryPhraseRandomizer = RecoveryPhraseRandomizerClient(
-            random: { _ in
-                let missingIndices = [2, 0, 3, 5]
-                let missingWordChipKind = [
-                    PhraseChip.Kind.unassigned(
-                        word: "voice".redacted,
-                        color: Asset.Colors.Buttons.activeButton.color
-                    ),
-                    PhraseChip.Kind.empty,
-                    PhraseChip.Kind.unassigned(
-                        word: "survey".redacted,
-                        color: Asset.Colors.Buttons.activeButton.color
-                    ),
-                    PhraseChip.Kind.unassigned(
-                        word: "spread".redacted,
-                        color: Asset.Colors.Buttons.activeButton.color
-                    )
-                ]
-
-                return RecoveryPhraseValidationFlowReducer.State(
-                    phrase: recoveryPhrase,
-                    missingIndices: missingIndices,
-                    missingWordChips: missingWordChipKind,
-                    validationWords: [
-                        ValidationWord(
-                            groupIndex: 2,
-                            word: "dizzy".redacted
-                        )
-                    ]
-                )
-            }
-        )
 
         var defaultRawFlags = WalletConfig.default.flags
         defaultRawFlags[.testBackupPhraseFlow] = true
@@ -84,7 +35,6 @@ class AppInitializationTests: XCTestCase {
                 walletConfig: .default,
                 importWalletState: .placeholder
             ),
-            phraseValidationState: phraseValidationState,
             phraseDisplayState: RecoveryPhraseDisplayReducer.State(
                 phrase: recoveryPhrase
             ),
@@ -105,7 +55,6 @@ class AppInitializationTests: XCTestCase {
         store.dependencies.derivationTool = .liveValue
         store.dependencies.mainQueue = .immediate// testQueue.eraseToAnyScheduler()
         store.dependencies.mnemonic = .mock
-        store.dependencies.randomRecoveryPhrase = recoveryPhraseRandomizer
         store.dependencies.walletStorage.exportWallet = { .placeholder }
         store.dependencies.walletStorage.areKeysPresent = { true }
         store.dependencies.walletConfigProvider = .noOp

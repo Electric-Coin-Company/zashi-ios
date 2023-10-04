@@ -43,14 +43,6 @@ public struct RecoveryPhrase: Equatable, Redactable {
             .joined(separator: " ")
         return result.redacted
     }
-
-    public func words(fromMissingIndices indices: [Int]) -> [PhraseChip.Kind] {
-        assert((indices.count - 1) * groupSize <= self.words.count)
-
-        return indices.enumerated().map { index, position in
-                .unassigned(word: self.words[(index * groupSize) + position])
-        }
-    }
 }
 
 // TODO: [#695] This should have a #DEBUG tag, but if so, it's not possible to compile this on release mode and submit it to testflight https://github.com/zcash/ZcashLightClientKit/issues/695

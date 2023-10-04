@@ -68,10 +68,10 @@ public struct RecoveryPhraseDisplayView: View {
                     VStack {
                         Button(
                             action: { viewStore.send(.finishedPressed) },
-                            label: { Text(L10n.RecoveryPhraseDisplay.Button.wroteItDown) }
+                            label: { Text(L10n.RecoveryPhraseDisplay.Button.wroteItDown.uppercased()) }
                         )
-                        .activeButtonStyle
-                        .frame(height: 60)
+                        .zcashStyle()
+                        .padding(.horizontal, 70)
                     }
                     .padding()
                 } else {

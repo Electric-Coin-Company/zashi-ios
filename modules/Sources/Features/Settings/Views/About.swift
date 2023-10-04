@@ -20,7 +20,7 @@ public struct About: View {
         WithViewStore(store) { viewStore in
             VStack {
                 Text(L10n.Settings.version(viewStore.appVersion, viewStore.appBuild))
-                    .foregroundColor(Asset.Colors.Mfp.fontDark.color)
+                    .foregroundColor(Asset.Colors.primary.color)
                 
                 Spacer()
             }

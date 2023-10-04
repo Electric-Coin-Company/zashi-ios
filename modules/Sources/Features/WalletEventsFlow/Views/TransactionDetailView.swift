@@ -175,11 +175,11 @@ struct TransactionDetailRow: ViewModifier {
         let markColor: Color
         
         switch mark {
-        case .neutral: markColor = Asset.Colors.TransactionDetail.neutralMark.color
-        case .success: markColor = Asset.Colors.TransactionDetail.succeededMark.color
-        case .fail:  markColor = Asset.Colors.TransactionDetail.failedMark.color
-        case .inactive:  markColor = Asset.Colors.TransactionDetail.inactiveMark.color
-        case .highlight:  markColor = Asset.Colors.TransactionDetail.highlightMark.color
+        case .neutral: markColor = Asset.Colors.primary.color
+        case .success: markColor = Asset.Colors.primary.color
+        case .fail:  markColor = Asset.Colors.primary.color
+        case .inactive:  markColor = Asset.Colors.primary.color
+        case .highlight:  markColor = Asset.Colors.primary.color
         }
         
         return markColor
@@ -194,9 +194,9 @@ extension View {
             TransactionDetailRow(
                 mark: mark,
                 textColor: mark == .inactive ?
-                Asset.Colors.TransactionDetail.inactiveMark.color :
-                Asset.Colors.Text.transactionDetailText.color,
-                backgroundColor: Asset.Colors.BackgroundColors.numberedChip.color
+                Asset.Colors.primary.color :
+                Asset.Colors.primary.color,
+                backgroundColor: Asset.Colors.primary.color
             )
         )
     }

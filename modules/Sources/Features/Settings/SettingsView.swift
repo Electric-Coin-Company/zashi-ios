@@ -19,48 +19,46 @@ public struct SettingsView: View {
                     L10n.Settings.crashReporting,
                     isOn: viewStore.binding(\.$isCrashReportingOn)
                 )
+                
                 Button(
                     action: { viewStore.send(.backupWalletAccessRequest) },
-                    label: { Text(L10n.Settings.backupWallet) }
+                    label: { Text(L10n.Settings.backupWallet.uppercased()) }
                 )
-                .activeButtonStyle
-                .frame(height: 50)
-                
+                .zcashStyle()
+                .padding(.horizontal, 70)
+
                 Button(
                     action: { viewStore.send(.exportLogs(.start)) },
                     label: {
                         if viewStore.exportLogsState.exportLogsDisabled {
                             HStack {
                                 ProgressView()
-                                Text(L10n.Settings.exporting)
+                                Text(L10n.Settings.exporting.uppercased())
                             }
                         } else {
-                            Text(L10n.Settings.exportLogs)
+                            Text(L10n.Settings.exportLogs.uppercased())
                         }
                     }
                 )
-                .activeButtonStyle
-                .frame(height: 50)
-                .disable(
-                    when: viewStore.exportLogsState.exportLogsDisabled,
-                    dimmingOpacity: 0.5
-                )
+                .zcashStyle()
+                .padding(.horizontal, 70)
+                .disabled(viewStore.exportLogsState.exportLogsDisabled)
                 
                 Button(
                     action: { viewStore.send(.sendSupportMail) },
-                    label: { Text(L10n.Settings.feedback) }
+                    label: { Text(L10n.Settings.feedback.uppercased()) }
                 )
-                .activeButtonStyle
-                .frame(height: 50)
+                .zcashStyle()
+                .padding(.horizontal, 70)
 
                 Spacer()
                 
                 Button(
                     action: { viewStore.send(.updateDestination(.about)) },
-                    label: { Text(L10n.Settings.about) }
+                    label: { Text(L10n.Settings.about.uppercased()) }
                 )
-                .activeButtonStyle
-                .frame(maxHeight: 50)
+                .zcashStyle()
+                .padding(.horizontal, 70)
                 .padding(.bottom, 50)
             }
             .padding(.horizontal, 30)

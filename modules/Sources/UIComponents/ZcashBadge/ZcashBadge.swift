@@ -26,8 +26,8 @@ public struct ZcashBadge: View {
                     .fill(
                         LinearGradient(
                             colors: [
-                                Asset.Colors.ZcashBadge.outerRingGradientStart.color,
-                                Asset.Colors.ZcashBadge.outerRingGradientEnd.color
+                                Asset.Colors.primary.color,
+                                Asset.Colors.primary.color
                             ],
                             startPoint: UnitPoint(x: 0.5, y: 0),
                             endPoint: UnitPoint(x: 0.5, y: 1)
@@ -35,7 +35,7 @@ public struct ZcashBadge: View {
                     )
                     .if(colorScheme == .light) { view in
                         view.shadow(
-                            color: Asset.Colors.ZcashBadge.shadowColor.color,
+                            color: Asset.Colors.primary.color,
                             radius: outerShadowDrop,
                             x: outerShadowOffset,
                             y: outerShadowOffset
@@ -43,19 +43,19 @@ public struct ZcashBadge: View {
                     }
 
                 Circle()
-                    .foregroundColor(Asset.Colors.ZcashBadge.thickRing.color)
+                    .foregroundColor(Asset.Colors.primary.color)
                     .padding(outterPadding)
 
                 Circle()
-                    .foregroundColor(Asset.Colors.ZcashBadge.thinRing.color)
+                    .foregroundColor(Asset.Colors.primary.color)
                     .padding(firstPadding)
 
                 Circle()
-                    .foregroundColor(Asset.Colors.ZcashBadge.innerCircle.color)
+                    .foregroundColor(Asset.Colors.primary.color)
                     .padding(secondRingPadding)
 
                 ZcashSymbol()
-                    .fill(Asset.Colors.ZcashBadge.zcashLogoFill.color)
+                    .fill(Asset.Colors.primary.color)
                     .padding(firstPadding + secondRingPadding)
             }
         }
