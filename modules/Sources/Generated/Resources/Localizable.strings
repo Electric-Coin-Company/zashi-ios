@@ -8,6 +8,14 @@
 "plainOnboarding.button.createNewWallet" = "Create a new Wallet";
 "plainOnboarding.button.restoreWallet" = "Restore an existing wallet";
 
+// MARK: - Security Warning
+"securityWarning.title" = "Security warning:";
+"securityWarning.warningPart1" = "Zashi %@ (%@) is a Zcash-only shielded wallet, built by Zcashers for Zcashers. The purpose of this release is primarily to test functionality and collect feedback. While Zashi has been engineered for your privacy and safety (read the privacy policy here), this release has not yet been security audited.";
+"securityWarning.warningPart2" = " Users are cautioned to deposit, send, and receive only small amounts of ZEC.";
+"securityWarning.warningPart3" = " Please click below to proceed.";
+"securityWarning.acknowledge" = "I acknowledge";
+"securityWarning.confirm" = "Confirm";
+
 // MARK: - Onboarding Flow
 "onboarding.step1.title" = "Welcome!";
 "onboarding.step1.description" = "As a privacy focused wallet, we shield by default. Your wallet uses the shielded address for sending and moves transparent funds to that address automatically.\n\nIn other words, the 'privacy-please' sign is on the knob.";

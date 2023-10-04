@@ -33,10 +33,8 @@ class AppInitializationTests: XCTestCase {
             homeState: .placeholder,
             onboardingState: .init(
                 walletConfig: .default,
-                importWalletState: .placeholder
-            ),
-            phraseDisplayState: RecoveryPhraseDisplayReducer.State(
-                phrase: recoveryPhrase
+                importWalletState: .placeholder,
+                securityWarningState: .placeholder
             ),
             sandboxState: .placeholder,
             walletConfig: walletConfig,
@@ -86,9 +84,9 @@ class AppInitializationTests: XCTestCase {
             state.appInitializationState = .initialized
         }
 
-        await store.receive(.destination(.updateDestination(.phraseDisplay))) { state in
+        await store.receive(.destination(.updateDestination(.home))) { state in
             state.destinationState.previousDestination = .welcome
-            state.destinationState.internalDestination = .phraseDisplay
+            state.destinationState.internalDestination = .home
         }
         
         await store.finish()

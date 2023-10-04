@@ -57,7 +57,9 @@ private extension RootView {
                         )
                     }
                     .navigationViewStyle(.stack)
-                    .overlayedWithSplash()
+                    .overlayedWithSplash(viewStore.splashAppeared) {
+                        viewStore.send(.splashRemovalRequested)
+                    }
                     
                 case .sandbox:
                     NavigationView {
@@ -82,7 +84,9 @@ private extension RootView {
                         )
                     }
                     .navigationViewStyle(.stack)
-                    .overlayedWithSplash()
+                    .overlayedWithSplash(viewStore.splashAppeared) {
+                        viewStore.send(.splashRemovalRequested)
+                    }
 
                 case .startup:
                     ZStack(alignment: .topTrailing) {
@@ -90,16 +94,6 @@ private extension RootView {
                             .transition(.opacity)
                     }
                                         
-                case .phraseDisplay:
-                    NavigationView {
-                        RecoveryPhraseDisplayView(
-                            store: store.scope(
-                                state: \.phraseDisplayState,
-                                action: RootReducer.Action.phraseDisplay
-                            )
-                        )
-                    }
-                    
                 case .welcome:
                     WelcomeView(
                         store: store.scope(

@@ -19,7 +19,6 @@ extension RootReducer {
         case checkBackupPhraseValidation
         case checkWalletInitialization
         case configureCrashReporter
-        case createNewWallet
         case checkWalletConfig
         case initializeSDK(WalletInitMode)
         case initialSetups
@@ -168,45 +167,12 @@ extension RootReducer {
                     return .none
                 }
 
-                var landingDestination = RootReducer.DestinationState.Destination.home
-
-                if !storedWallet.hasUserPassedPhraseBackupTest && state.walletConfig.isEnabled(.testBackupPhraseFlow) {
-                    let phraseWords = mnemonic.asWords(storedWallet.seedPhrase.value())
-
-                    let recoveryPhrase = RecoveryPhrase(words: phraseWords.map { $0.redacted })
-                    state.phraseDisplayState.phrase = recoveryPhrase
-                    landingDestination = .phraseDisplay
-                }
-
                 state.appInitializationState = .initialized
 
-                return EffectTask(value: .destination(.updateDestination(landingDestination)))
+                return EffectTask(value: .destination(.updateDestination(.home)))
                     .delay(for: 3, scheduler: mainQueue)
                     .eraseToEffect()
                     .cancellable(id: CancelId.timer, cancelInFlight: true)
-
-            case .initialization(.createNewWallet):
-                do {
-                    // get the random english mnemonic
-                    let newRandomPhrase = try mnemonic.randomMnemonic()
-                    let birthday = zcashSDKEnvironment.latestCheckpoint(zcashNetwork)
-
-                    // store the wallet to the keychain
-                    try walletStorage.importWallet(newRandomPhrase, birthday, .english, !state.walletConfig.isEnabled(.testBackupPhraseFlow))
-
-                    // start the backup phrase validation test
-                    let randomRecoveryPhraseWords = mnemonic.asWords(newRandomPhrase)
-                    let recoveryPhrase = RecoveryPhrase(words: randomRecoveryPhraseWords.map { $0.redacted })
-                    state.phraseDisplayState.phrase = recoveryPhrase
-
-                    return .concatenate(
-                        EffectTask(value: .initialization(.initializeSDK(.newWallet))),
-                        EffectTask(value: .destination(.updateDestination(.phraseDisplay)))
-                    )
-                } catch {
-                    state.alert = AlertState.cantCreateNewWallet(error.toZcashError())
-                }
-                return .none
 
             case .initialization(.nukeWalletRequest):
                 state.alert = AlertState.wipeRequest()
@@ -257,9 +223,6 @@ extension RootReducer {
             case .onboarding(.importWallet(.initializeSDK)):
                 return EffectTask(value: .initialization(.initializeSDK(.restoreWallet)))
 
-            case .onboarding(.createNewWallet):
-                return EffectTask(value: .initialization(.createNewWallet))
-
             case .initialization(.configureCrashReporter):
                 crashReporter.configure(
                     !userStoredPreferences.isUserOptedOutOfCrashReporting()
@@ -277,8 +240,14 @@ extension RootReducer {
                 state.alert = AlertState.initializationFailed(error)
                 return .none
 
-            case .home, .destination, .onboarding, .phraseDisplay, .sandbox,
-                .welcome, .binding, .debug, .exportLogs, .alert:
+            case .onboarding(.securityWarning(.newWalletCreated)):
+                return EffectTask(value: .initialization(.initializeSDK(.newWallet)))
+
+            case .onboarding(.securityWarning(.recoveryPhraseDisplay(.finishedPressed))):
+                return EffectTask(value: .destination(.updateDestination(.home)))
+                
+            case .home, .destination, .onboarding, .sandbox,
+            .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested:
                 return .none
             }
         }

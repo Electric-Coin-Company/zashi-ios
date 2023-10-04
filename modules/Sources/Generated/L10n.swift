@@ -455,6 +455,22 @@ public enum L10n {
       }
     }
   }
+  public enum SecurityWarning {
+    /// I acknowledge
+    public static let acknowledge = L10n.tr("Localizable", "securityWarning.acknowledge", fallback: "I acknowledge")
+    /// Confirm
+    public static let confirm = L10n.tr("Localizable", "securityWarning.confirm", fallback: "Confirm")
+    /// Security warning:
+    public static let title = L10n.tr("Localizable", "securityWarning.title", fallback: "Security warning:")
+    /// Zashi %@ (%@) is a Zcash-only shielded wallet, built by Zcashers for Zcashers. The purpose of this release is primarily to test functionality and collect feedback. While Zashi has been engineered for your privacy and safety (read the privacy policy here), this release has not yet been security audited.
+    public static func warningPart1(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "securityWarning.warningPart1", String(describing: p1), String(describing: p2), fallback: "Zashi %@ (%@) is a Zcash-only shielded wallet, built by Zcashers for Zcashers. The purpose of this release is primarily to test functionality and collect feedback. While Zashi has been engineered for your privacy and safety (read the privacy policy here), this release has not yet been security audited.")
+    }
+    ///  Users are cautioned to deposit, send, and receive only small amounts of ZEC.
+    public static let warningPart2 = L10n.tr("Localizable", "securityWarning.warningPart2", fallback: " Users are cautioned to deposit, send, and receive only small amounts of ZEC.")
+    ///  Please click below to proceed.
+    public static let warningPart3 = L10n.tr("Localizable", "securityWarning.warningPart3", fallback: " Please click below to proceed.")
+  }
   public enum Send {
     ///  address: %@
     public static func address(_ p1: Any) -> String {
