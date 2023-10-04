@@ -18,22 +18,27 @@ public struct WelcomeView: View {
     }
 
     public var body: some View {
-        VStack(alignment: .center, spacing: 80) {
-            VStack {
-                Image(Asset.Assets.welcomeScreenLogo.name)
-                    .resizable()
-                    .frame(width: 150, height: 150)
-                    .padding(.top, 100)
-                
-                Spacer()
-            }
-            .accessDebugMenuWithHiddenGesture {
-                ViewStore(store).send(.debugMenuStartup)
-            }
+        GeometryReader { proxy in
+            Asset.Assets.zashiLogo.image
+                .resizable()
+                .frame(width: 249, height: 321)
+                .scaleEffect(0.35)
+                .position(
+                    x: proxy.frame(in: .local).midX,
+                    y: proxy.frame(in: .local).midY * 0.5
+                )
+            
+            Asset.Assets.splashHi.image
+                .resizable()
+                .frame(width: 246, height: 213)
+                .scaleEffect(0.35)
+                .position(
+                    x: proxy.frame(in: .local).midX,
+                    y: proxy.frame(in: .local).midY * 0.8
+                )
         }
-        .frame(alignment: .center)
-        .applyScreenBackground()
-        .animation(.easeInOut, value: 3)
+        .background(Asset.Colors.splash.color)
+        .ignoresSafeArea()
     }
 }
 

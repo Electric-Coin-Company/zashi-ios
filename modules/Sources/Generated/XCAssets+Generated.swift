@@ -23,12 +23,15 @@ public typealias AssetImageTypeAlias = ImageAsset.UniversalImage
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
 public enum Asset {
   public enum Assets {
+    public static let splashHi = ImageAsset(name: "SplashHi")
     public static let welcomeScreenLogo = ImageAsset(name: "WelcomeScreenLogo")
+    public static let zashiLogo = ImageAsset(name: "ZashiLogo")
   }
   public enum Colors {
     public static let error = ColorAsset(name: "error")
     public static let primary = ColorAsset(name: "primary")
     public static let secondary = ColorAsset(name: "secondary")
+    public static let splash = ColorAsset(name: "splash")
     public static let suppressed72 = ColorAsset(name: "suppressed72")
   }
 }
