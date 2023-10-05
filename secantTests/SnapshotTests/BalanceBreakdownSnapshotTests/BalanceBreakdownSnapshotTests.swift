@@ -20,6 +20,7 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
                 latestBlock: "unknown",
                 shieldedBalance: WalletBalance(verified: Zatoshi(123_000_000_000), total: Zatoshi(123_000_000_000)).redacted,
                 shieldingFunds: false,
+                synchronizerStatusSnapshot: .default,
                 transparentBalance: WalletBalance(verified: Zatoshi(850_000_000), total: Zatoshi(850_000_000)).redacted
             ),
             reducer: BalanceBreakdownReducer(networkType: .testnet)

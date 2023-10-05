@@ -54,20 +54,6 @@ public struct HomeReducer: ReducerProtocol {
             Zatoshi.from(decimal: shieldedBalance.data.verified.decimalValue.decimalValue * zecPrice)
         }
 
-        public var isSyncing: Bool {
-            if case .syncing = synchronizerStatusSnapshot.syncStatus {
-                return true
-            }
-            return false
-        }
-        
-        public var isUpToDate: Bool {
-            if case .upToDate = synchronizerStatusSnapshot.syncStatus {
-                return true
-            }
-            return false
-        }
-
         public var isSendButtonDisabled: Bool {
             shieldedBalance.data.verified.amount == 0
         }

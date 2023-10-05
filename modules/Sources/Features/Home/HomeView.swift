@@ -131,23 +131,19 @@ extension HomeView {
                 viewStore.send(.updateDestination(.balanceBreakdown))
             } label: {
                 Text(L10n.balance(viewStore.shieldedBalance.data.total.decimalString(), tokenName))
-                    .font(
-                        .custom(FontFamily.Inter.regular.name, size: 32)
-                        .weight(.bold)
-                    )
+                    .font(.custom(FontFamily.Archivo.semiBold.name, size: 36))
             }
 
             if viewStore.walletConfig.isEnabled(.showFiatConversion) {
                 Text("$\(viewStore.totalCurrencyBalance.decimalString())")
-                    .font(
-                        .custom(FontFamily.Inter.regular.name, size: 20)
-                    )
+                    .font(.custom(FontFamily.Inter.regular.name, size: 20))
             }
             
             if viewStore.migratingDatabase {
                 Text(L10n.Home.migratingDatabases)
             } else {
-                Text(viewStore.synchronizerStatusSnapshot.message)
+                Text(L10n.Balance.available(viewStore.shieldedBalance.data.verified.decimalString(), tokenName))
+                    .font(.custom(FontFamily.Inter.regular.name, size: 12))
                     .accessDebugMenuWithHiddenGesture {
                         viewStore.send(.debugMenuStartup)
                     }

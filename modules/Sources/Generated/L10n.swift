@@ -35,9 +35,9 @@ public enum L10n {
     }
   }
   public enum Balance {
-    /// %@ %@ Available
+    /// Available balance %@ %@
     public static func available(_ p1: Any, _ p2: Any) -> String {
-      return L10n.tr("Localizable", "balance.available", String(describing: p1), String(describing: p2), fallback: "%@ %@ Available")
+      return L10n.tr("Localizable", "balance.available", String(describing: p1), String(describing: p2), fallback: "Available balance %@ %@")
     }
   }
   public enum BalanceBreakdown {
@@ -157,8 +157,8 @@ public enum L10n {
     public static func sendZec(_ p1: Any) -> String {
       return L10n.tr("Localizable", "home.sendZec", String(describing: p1), fallback: "Send %@")
     }
-    /// Zashi Wallet
-    public static let title = L10n.tr("Localizable", "home.title", fallback: "Zashi Wallet")
+    /// ZASHI
+    public static let title = L10n.tr("Localizable", "home.title", fallback: "ZASHI")
     /// See transaction history
     public static let transactionHistory = L10n.tr("Localizable", "home.transactionHistory", fallback: "See transaction history")
     public enum SyncFailed {

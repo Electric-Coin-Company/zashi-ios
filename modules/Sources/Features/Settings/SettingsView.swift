@@ -100,6 +100,7 @@ public struct SettingsView: View {
             state: \.exportLogsState.$alert,
             action: { .exportLogs(.alert($0)) }
         ))
+        .zashiBack()
     }
 
     @ViewBuilder func shareLogsView(_ viewStore: SettingsViewStore) -> some View {
