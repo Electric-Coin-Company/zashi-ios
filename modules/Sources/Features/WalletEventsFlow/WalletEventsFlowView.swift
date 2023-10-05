@@ -1,6 +1,7 @@
 import SwiftUI
 import ComposableArchitecture
 import Generated
+import UIComponents
 
 public struct WalletEventsFlowView: View {
     let store: WalletEventsFlowStore
@@ -28,6 +29,7 @@ public struct WalletEventsFlowView: View {
             state: \.$alert,
             action: { .alert($0) }
         ))
+        .zashiBack()
     }
 }
 

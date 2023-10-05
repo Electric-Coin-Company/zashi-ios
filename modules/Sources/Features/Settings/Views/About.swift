@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import Generated
+import UIComponents
 
 public struct About: View {
     let store: SettingsStore
@@ -25,6 +26,7 @@ public struct About: View {
                 Spacer()
             }
             .applyScreenBackground()
+            .zashiBack()
         }
     }
 }

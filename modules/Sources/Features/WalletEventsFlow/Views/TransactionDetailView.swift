@@ -4,6 +4,7 @@ import ZcashLightClientKit
 import Utils
 import Models
 import Generated
+import UIComponents
 
 public struct TransactionDetailView: View {
     public enum RowMark {
@@ -74,6 +75,7 @@ public struct TransactionDetailView: View {
             .applyScreenBackground()
             .navigationTitle(L10n.TransactionDetail.title)
         }
+        .zashiBack()
     }
 }
 

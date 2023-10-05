@@ -25,8 +25,11 @@ public struct BalanceBreakdownView: View {
             VStack(alignment: .leading) {
                 HStack {
                     Spacer()
-                    Text(L10n.BalanceBreakdown.blockId(viewStore.latestBlock))
-                        .foregroundColor(Asset.Colors.primary.color)
+                    VStack(alignment: .trailing) {
+                        Text(viewStore.synchronizerStatusSnapshot.message)
+                        Text(L10n.BalanceBreakdown.blockId(viewStore.latestBlock))
+                    }
+                    .foregroundColor(Asset.Colors.primary.color)
                 }
                 .padding(.horizontal, 50)
                 .padding(.vertical, 20)
@@ -63,6 +66,7 @@ public struct BalanceBreakdownView: View {
             state: \.$alert,
             action: { .alert($0) }
         ))
+        .zashiBack()
     }
 }
 

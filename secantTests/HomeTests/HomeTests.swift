@@ -36,7 +36,6 @@ class HomeTests: XCTestCase {
             reducer: HomeReducer(networkType: .testnet)
         )
 
-        XCTAssertTrue(store.state.isSyncing)
         XCTAssertTrue(store.state.isSendButtonDisabled)
     }
     

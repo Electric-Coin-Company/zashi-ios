@@ -79,7 +79,7 @@
 "home.sendZec" = "Send %@";
 "home.receiveZec" = "Receive %@";
 "home.transactionHistory" = "See transaction history";
-"home.title" = "Zashi Wallet";
+"home.title" = "ZASHI";
 "home.syncFailed.title" = "Sync failed!";
 "home.syncFailed.dismiss" = "Dismiss";
 "home.syncFailed.retry" = "Retry";
@@ -197,7 +197,7 @@
 "general.success" = "Success";
 "general.unknown" = "Unknown";
 "balance" = "%@ %@";
-"balance.available" = "%@ %@ Available";
+"balance.available" = "Available balance %@ %@";
 "qrCodeFor" = "QR Code for %@";
 "general.dateNotAvailable" = "date not available";
 

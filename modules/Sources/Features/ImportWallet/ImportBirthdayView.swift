@@ -49,6 +49,7 @@ public struct ImportBirthdayView: View {
             .applyScreenBackground()
             .scrollableWhenScaledUp()
             .onAppear(perform: { viewStore.send(.onAppear) })
+            .zashiBack()
         }
     }
 }

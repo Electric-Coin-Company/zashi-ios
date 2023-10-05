@@ -106,6 +106,7 @@ class BalanceBreakdownTests: XCTestCase {
                 latestBlock: L10n.General.unknown,
                 shieldedBalance: Balance.zero,
                 shieldingFunds: false,
+                synchronizerStatusSnapshot: .default,
                 transparentBalance: Balance(
                     WalletBalance(
                         verified: Zatoshi(1_000_000),
@@ -128,6 +129,7 @@ class BalanceBreakdownTests: XCTestCase {
                 latestBlock: L10n.General.unknown,
                 shieldedBalance: Balance.zero,
                 shieldingFunds: true,
+                synchronizerStatusSnapshot: .default,
                 transparentBalance: Balance(
                     WalletBalance(
                         verified: Zatoshi(1_000_000),

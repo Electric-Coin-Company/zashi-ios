@@ -15,6 +15,7 @@ import Utils
 import Generated
 import WalletStorage
 import SDKSynchronizer
+import Models
 
 public typealias BalanceBreakdownStore = Store<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>
 public typealias BalanceBreakdownViewStore = ViewStore<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>
@@ -29,8 +30,9 @@ public struct BalanceBreakdownReducer: ReducerProtocol {
         public var latestBlock: String
         public var shieldedBalance: Balance
         public var shieldingFunds: Bool
+        public var synchronizerStatusSnapshot: SyncStatusSnapshot
         public var transparentBalance: Balance
-        
+
         public var totalSpendableBalance: Zatoshi {
             shieldedBalance.data.verified + transparentBalance.data.verified
         }
@@ -48,12 +50,14 @@ public struct BalanceBreakdownReducer: ReducerProtocol {
             latestBlock: String,
             shieldedBalance: Balance,
             shieldingFunds: Bool,
+            synchronizerStatusSnapshot: SyncStatusSnapshot,
             transparentBalance: Balance
         ) {
             self.autoShieldingThreshold = autoShieldingThreshold
             self.latestBlock = latestBlock
             self.shieldedBalance = shieldedBalance
             self.shieldingFunds = shieldingFunds
+            self.synchronizerStatusSnapshot = synchronizerStatusSnapshot
             self.transparentBalance = transparentBalance
         }
     }
@@ -132,6 +136,12 @@ public struct BalanceBreakdownReducer: ReducerProtocol {
             case .synchronizerStateChanged(let latestState):
                 state.shieldedBalance = latestState.shieldedBalance.redacted
                 state.transparentBalance = latestState.transparentBalance.redacted
+                
+                let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.syncStatus)
+                if snapshot.syncStatus != state.synchronizerStatusSnapshot.syncStatus {
+                    state.synchronizerStatusSnapshot = snapshot
+                }
+
                 return EffectTask(value: .updateLatestBlock)
 
             case .updateLatestBlock:
@@ -172,6 +182,7 @@ extension BalanceBreakdownReducer.State {
         latestBlock: L10n.General.unknown,
         shieldedBalance: Balance.zero,
         shieldingFunds: false,
+        synchronizerStatusSnapshot: .placeholder,
         transparentBalance: Balance.zero
     )
 }

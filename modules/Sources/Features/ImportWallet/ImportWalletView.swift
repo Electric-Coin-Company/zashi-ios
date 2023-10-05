@@ -53,6 +53,7 @@ public struct ImportWalletView: View {
                 state: \.$alert,
                 action: { .alert($0) }
             ))
+            .zashiBack()
         }
     }
 }
