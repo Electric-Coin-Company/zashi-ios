@@ -41,6 +41,7 @@ let package = Package(
         .library(name: "Scan", targets: ["Scan"]),
         .library(name: "SDKSynchronizer", targets: ["SDKSynchronizer"]),
         .library(name: "SecItem", targets: ["SecItem"]),
+        .library(name: "SecurityWarning", targets: ["SecurityWarning"]),
         .library(name: "SendFlow", targets: ["SendFlow"]),
         .library(name: "Settings", targets: ["Settings"]),
         .library(name: "SupportDataGenerator", targets: ["SupportDataGenerator"]),
@@ -276,6 +277,7 @@ let package = Package(
                 "Generated",
                 "ImportWallet",
                 "Models",
+                "SecurityWarning",
                 "UIComponents",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
@@ -339,7 +341,6 @@ let package = Package(
                 "MnemonicClient",
                 "Models",
                 "OnboardingFlow",
-                "RecoveryPhraseDisplay",
                 "Sandbox",
                 "SDKSynchronizer",
                 "UIComponents",
@@ -399,6 +400,22 @@ let package = Package(
             path: "Sources/Dependencies/SecItem"
         ),
         .target(
+            name: "SecurityWarning",
+            dependencies: [
+                "AppVersion",
+                "Generated",
+                "MnemonicClient",
+                "Models",
+                "NumberFormatter",
+                "RecoveryPhraseDisplay",
+                "UIComponents",
+                "WalletStorage",
+                "ZcashSDKEnvironment",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Features/SecurityWarning"
+        ),
+        .target(
             name: "SendFlow",
             dependencies: [
                 "AudioServices",
@@ -452,6 +469,7 @@ let package = Package(
             dependencies: [
                 "DerivationTool",
                 "Generated",
+                "NumberFormatter",
                 "Utils",
                 "ZcashSDKEnvironment"
             ],
@@ -528,6 +546,7 @@ let package = Package(
             name: "Welcome",
             dependencies: [
                 "Generated",
+                "NumberFormatter",
                 "UIComponents",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],

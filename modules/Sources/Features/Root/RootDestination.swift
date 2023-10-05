@@ -18,7 +18,6 @@ extension RootReducer {
         public enum Destination: Equatable {
             case home
             case onboarding
-            case phraseDisplay
             case sandbox
             case startup
             case welcome
@@ -53,9 +52,6 @@ extension RootReducer {
 
             case .sandbox(.reset):
                 state.destinationState.destination = .startup
-
-            case .phraseDisplay(.finishedPressed):
-                state.destinationState.destination = .home
 
             case .destination(.deeplink(let url)):
                 // get the latest synchronizer state
@@ -104,8 +100,18 @@ extension RootReducer {
                 }
                 return EffectTask(value: .destination(.deeplink(url)))
 
-            case .home, .initialization, .onboarding, .phraseDisplay, .sandbox, .updateStateAfterConfigUpdate, .alert,
-                .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .exportLogs:
+            case .splashRemovalRequested:
+                return .run { send in
+                    try await Task.sleep(nanoseconds: 10_000_000)
+                    await send(.splashFinished)
+                }
+            
+            case .splashFinished:
+                state.splashAppeared = true
+                return .none
+
+            case .home, .initialization, .onboarding, .sandbox, .updateStateAfterConfigUpdate, .alert,
+            .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .exportLogs:
                 return .none
             }
             

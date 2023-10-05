@@ -9,6 +9,8 @@ import SwiftUI
 import ComposableArchitecture
 import Generated
 import ImportWallet
+import SecurityWarning
+import ZcashLightClientKit
 
 public struct PlainOnboardingView: View {
     let store: OnboardingFlowStore
@@ -64,6 +66,17 @@ public struct PlainOnboardingView: View {
                     )
                 }
             )
+            .navigationLinkEmpty(
+                isActive: viewStore.bindingForDestination(.createNewWallet),
+                destination: {
+                    SecurityWarningView(
+                        store: store.scope(
+                            state: \.securityWarningState,
+                            action: OnboardingFlowReducer.Action.securityWarning
+                        )
+                    )
+                }
+            )
         }
     }
 }
@@ -75,9 +88,13 @@ struct PlainOnboardingView_Previews: PreviewProvider {
                 store: Store(
                     initialState: OnboardingFlowReducer.State(
                         walletConfig: .default,
-                        importWalletState: .placeholder
+                        importWalletState: .placeholder,
+                        securityWarningState: .placeholder
                     ),
-                    reducer: OnboardingFlowReducer(saplingActivationHeight: 0)
+                    reducer: OnboardingFlowReducer(
+                        saplingActivationHeight: 0,
+                        zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
+                    )
                 )
             )
         }

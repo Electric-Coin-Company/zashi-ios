@@ -7,7 +7,6 @@ import WalletStorage
 import WalletConfigProvider
 import UserPreferencesStorage
 import Models
-import RecoveryPhraseDisplay
 import Welcome
 import Generated
 import Foundation
@@ -35,8 +34,8 @@ public struct RootReducer: ReducerProtocol {
         public var exportLogsState: ExportLogsReducer.State
         public var homeState: HomeReducer.State
         public var onboardingState: OnboardingFlowReducer.State
-        public var phraseDisplayState: RecoveryPhraseDisplayReducer.State
         public var sandboxState: SandboxReducer.State
+        public var splashAppeared = false
         public var storedWallet: StoredWallet?
         public var walletConfig: WalletConfig
         public var welcomeState: WelcomeReducer.State
@@ -48,7 +47,6 @@ public struct RootReducer: ReducerProtocol {
             exportLogsState: ExportLogsReducer.State,
             homeState: HomeReducer.State,
             onboardingState: OnboardingFlowReducer.State,
-            phraseDisplayState: RecoveryPhraseDisplayReducer.State,
             sandboxState: SandboxReducer.State,
             storedWallet: StoredWallet? = nil,
             walletConfig: WalletConfig,
@@ -60,7 +58,6 @@ public struct RootReducer: ReducerProtocol {
             self.exportLogsState = exportLogsState
             self.homeState = homeState
             self.onboardingState = onboardingState
-            self.phraseDisplayState = phraseDisplayState
             self.sandboxState = sandboxState
             self.storedWallet = storedWallet
             self.walletConfig = walletConfig
@@ -79,7 +76,8 @@ public struct RootReducer: ReducerProtocol {
         case nukeWalletFailed
         case nukeWalletSucceeded
         case onboarding(OnboardingFlowReducer.Action)
-        case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
+        case splashFinished
+        case splashRemovalRequested
         case sandbox(SandboxReducer.Action)
         case updateStateAfterConfigUpdate(WalletConfig)
         case walletConfigLoaded(WalletConfig)
@@ -114,11 +112,10 @@ public struct RootReducer: ReducerProtocol {
         }
 
         Scope(state: \.onboardingState, action: /Action.onboarding) {
-            OnboardingFlowReducer(saplingActivationHeight: zcashNetwork.constants.saplingActivationHeight)
-        }
-
-        Scope(state: \.phraseDisplayState, action: /Action.phraseDisplay) {
-            RecoveryPhraseDisplayReducer()
+            OnboardingFlowReducer(
+                saplingActivationHeight: zcashNetwork.constants.saplingActivationHeight,
+                zcashNetwork: zcashNetwork
+            )
         }
 
         Scope(state: \.sandboxState, action: /Action.sandbox) {
@@ -192,14 +189,6 @@ extension RootReducer {
 // MARK: Alerts
 
 extension AlertState where Action == RootReducer.Action {
-    public static func cantCreateNewWallet(_ error: ZcashError) -> AlertState {
-        AlertState {
-            TextState(L10n.Root.Initialization.Alert.Failed.title)
-        } message: {
-            TextState(L10n.Root.Initialization.Alert.CantCreateNewWallet.message(error.message, error.code.rawValue))
-        }
-    }
-    
     public static func cantLoadSeedPhrase() -> AlertState {
         AlertState {
             TextState(L10n.Root.Initialization.Alert.Failed.title)
@@ -324,10 +313,8 @@ extension RootReducer.State {
             homeState: .placeholder,
             onboardingState: .init(
                 walletConfig: .default,
-                importWalletState: .placeholder
-            ),
-            phraseDisplayState: RecoveryPhraseDisplayReducer.State(
-                phrase: .placeholder
+                importWalletState: .placeholder,
+                securityWarningState: .placeholder
             ),
             sandboxState: .placeholder,
             walletConfig: .default,

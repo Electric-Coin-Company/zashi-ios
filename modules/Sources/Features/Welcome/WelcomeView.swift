@@ -9,6 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import Generated
 import UIComponents
+import NumberFormatter
 
 public struct WelcomeView: View {
     var store: WelcomeStore

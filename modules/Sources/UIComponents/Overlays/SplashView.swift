@@ -8,7 +8,7 @@
 import SwiftUI
 import Generated
 
-private final class SplashManager: ObservableObject {
+final class SplashManager: ObservableObject {
     struct SplashShape: Shape {
         var points: [CGPoint]
         
@@ -24,30 +24,33 @@ private final class SplashManager: ObservableObject {
 
     @Published var points: [CGPoint] = []
 
+    let isHidden: Bool
     let screenSize: CGSize
     var task: Task<(), Never>?
     var currentMaxHeight: CGFloat = 0.0
     var step: CGFloat = 0.0
-    var isOn = true
-    
-    init() {
+    @Published var isOn = true
+    let completion: () -> Void
+
+    init(_ isHidden: Bool, completion: @escaping () -> Void) {
+        self.isHidden = isHidden
         self.screenSize = UIScreen.main.bounds.size
-        preparePoints()
-        self.spinTheWheel()
+        self.completion = completion
+        
+        if !isHidden {
+            preparePoints()
+            self.spinTheWheel()
+        }
     }
     
     func spinTheWheel() {
-        let start = Date.now.timeIntervalSince1970
-        
         Timer.scheduledTimer(withTimeInterval: 1.0 / 60.0, repeats: true) { timer in
             if self.isOn {
                 Task {
                     await self.tick()
                     
                     if self.currentMaxHeight <= 0.0 {
-                        let end = Date.now.timeIntervalSince1970
-                        print("end of animation \(end - start)")
-                        self.isOn.toggle()
+                        await self.finished()
                     }
                 }
             }
@@ -112,13 +115,19 @@ private final class SplashManager: ObservableObject {
         
         currentMaxHeight = newMaxHeight
     }
+    
+    @MainActor func finished() {
+        self.isOn.toggle()
+        completion()
+    }
 }
 
 struct SplashView: View {
-    @StateObject private var splashManager = SplashManager()
+    @StateObject var splashManager: SplashManager
+    let isHidden: Bool
     
     var body: some View {
-        if splashManager.isOn {
+        if splashManager.isOn && !isHidden {
             GeometryReader { proxy in
                 Asset.Assets.zashiLogo.image
                     .resizable()
@@ -148,16 +157,24 @@ struct SplashView: View {
 }
 
 struct SplashModifier: ViewModifier {
+    let isHidden: Bool
+    let completion: () -> Void
+    
     func body(content: Content) -> some View {
         content
             .overlay {
-                SplashView()
+                SplashView(
+                    splashManager: SplashManager(isHidden) {
+                        completion()
+                    },
+                    isHidden: isHidden
+                )
             }
     }
 }
 
 extension View {
-    public func overlayedWithSplash() -> some View {
-        modifier(SplashModifier())
+    public func overlayedWithSplash(_ isHidden: Bool = false, completion: @escaping () -> Void) -> some View {
+        modifier(SplashModifier(isHidden: isHidden, completion: completion))
     }
 }
