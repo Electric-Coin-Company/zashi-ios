@@ -23,8 +23,8 @@ class HomeTests: XCTestCase {
 
         let store = TestStore(
             initialState: .init(
+                addressDetailsState: .placeholder,
                 balanceBreakdownState: .placeholder,
-                profileState: .placeholder,
                 scanState: .placeholder,
                 sendState: .placeholder,
                 settingsState: .placeholder,

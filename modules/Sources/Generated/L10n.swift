@@ -19,10 +19,14 @@ public enum L10n {
     return L10n.tr("Localizable", "qrCodeFor", String(describing: p1), fallback: "QR Code for %@")
   }
   public enum AddressDetails {
+    /// Receive
+    public static let receiveTitle = L10n.tr("Localizable", "addressDetails.receiveTitle", fallback: "Receive")
     /// Sapling Address
     public static let sa = L10n.tr("Localizable", "addressDetails.sa", fallback: "Sapling Address")
     /// Transparent Address
     public static let ta = L10n.tr("Localizable", "addressDetails.ta", fallback: "Transparent Address")
+    /// Tap to Copy
+    public static let tapToCopy = L10n.tr("Localizable", "addressDetails.tapToCopy", fallback: "Tap to Copy")
     /// Unified Address
     public static let ua = L10n.tr("Localizable", "addressDetails.ua", fallback: "Unified Address")
     public enum Error {

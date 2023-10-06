@@ -1,7 +1,6 @@
 import SwiftUI
 import ComposableArchitecture
 import RecoveryPhraseDisplay
-import Profile
 import WalletEventsFlow
 import Scan
 import SendFlow
@@ -43,8 +42,6 @@ public struct SandboxView: View {
             RecoveryPhraseDisplayView(store: .placeholder)
         case .scan:
             ScanView(store: .placeholder)
-        case .profile:
-            ProfileView(store: store.profileStore())
         }
     }
 

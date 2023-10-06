@@ -1,6 +1,5 @@
 import ComposableArchitecture
 import SwiftUI
-import Profile
 import WalletEventsFlow
 
 public typealias SandboxStore = Store<SandboxReducer.State, SandboxReducer.Action>
@@ -12,18 +11,15 @@ public struct SandboxReducer: ReducerProtocol {
             case history
             case send
             case recoveryPhraseDisplay
-            case profile
             case scan
         }
         public var walletEventsState: WalletEventsFlowReducer.State
-        public var profileState: ProfileReducer.State
         public var destination: Destination?
     }
 
     public enum Action: Equatable {
         case updateDestination(SandboxReducer.State.Destination?)
         case walletEvents(WalletEventsFlowReducer.Action)
-        case profile(ProfileReducer.Action)
         case reset
     }
     
@@ -39,12 +35,6 @@ public struct SandboxReducer: ReducerProtocol {
             return WalletEventsFlowReducer()
                 .reduce(into: &state.walletEventsState, action: walletEventsAction)
                 .map(SandboxReducer.Action.walletEvents)
-
-        case .profile:
-            return Scope(state: \SandboxReducer.State.profileState, action: /SandboxReducer.Action.profile) {
-                ProfileReducer()
-            }
-            .reduce(into: &state, action: action)
             
         case .reset:
             return .none
@@ -59,13 +49,6 @@ extension SandboxStore {
         self.scope(
             state: \.walletEventsState,
             action: SandboxReducer.Action.walletEvents
-        )
-    }
-
-    func profileStore() -> ProfileStore {
-        self.scope(
-            state: \.profileState,
-            action: SandboxReducer.Action.profile
         )
     }
 }
@@ -103,7 +86,6 @@ extension SandboxReducer.State {
     public static var placeholder: Self {
         .init(
             walletEventsState: .placeHolder,
-            profileState: .placeholder,
             destination: nil
         )
     }
@@ -114,7 +96,6 @@ extension SandboxStore {
         SandboxStore(
             initialState: SandboxReducer.State(
                 walletEventsState: .placeHolder,
-                profileState: .placeholder,
                 destination: nil
             ),
             reducer: SandboxReducer()

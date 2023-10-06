@@ -33,7 +33,6 @@ let package = Package(
         .library(name: "NumberFormatter", targets: ["NumberFormatter"]),
         .library(name: "OnboardingFlow", targets: ["OnboardingFlow"]),
         .library(name: "Pasteboard", targets: ["Pasteboard"]),
-        .library(name: "Profile", targets: ["Profile"]),
         .library(name: "RecoveryPhraseDisplay", targets: ["RecoveryPhraseDisplay"]),
         .library(name: "ReviewRequest", targets: ["ReviewRequest"]),
         .library(name: "Root", targets: ["Root"]),
@@ -198,12 +197,12 @@ let package = Package(
         .target(
             name: "Home",
             dependencies: [
+                "AddressDetails",
                 "AudioServices",
                 "BalanceBreakdown",
                 "DiskSpaceChecker",
                 "Generated",
                 "Models",
-                "Profile",
                 "ReviewRequest",
                 "Scan",
                 "SendFlow",
@@ -260,7 +259,8 @@ let package = Package(
             name: "Models",
             dependencies: [
                 "Utils",
-                "UIComponents"
+                "UIComponents",
+                .product(name: "MnemonicSwift", package: "MnemonicSwift")
             ],
             path: "Sources/Models"
         ),
@@ -292,21 +292,6 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Dependencies/Pasteboard"
-        ),
-        .target(
-            name: "Profile",
-            dependencies: [
-                "AddressDetails",
-                "AppVersion",
-                "Generated",
-                "SDKSynchronizer",
-                "UIComponents",
-                "Utils",
-                "ZcashSDKEnvironment",
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
-            ],
-            path: "Sources/Features/Profile"
         ),
         .target(
             name: "RecoveryPhraseDisplay",
@@ -364,7 +349,6 @@ let package = Package(
         .target(
             name: "Sandbox",
             dependencies: [
-                "Profile",
                 "RecoveryPhraseDisplay",
                 "Scan",
                 "SendFlow",

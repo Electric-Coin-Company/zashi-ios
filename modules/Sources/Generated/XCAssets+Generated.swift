@@ -32,6 +32,7 @@ public enum Asset {
     public static let primary = ColorAsset(name: "primary")
     public static let secondary = ColorAsset(name: "secondary")
     public static let splash = ColorAsset(name: "splash")
+    public static let suppressed47 = ColorAsset(name: "suppressed47")
     public static let suppressed72 = ColorAsset(name: "suppressed72")
   }
 }
