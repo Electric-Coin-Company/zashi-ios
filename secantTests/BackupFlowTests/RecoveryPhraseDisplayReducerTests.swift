@@ -33,18 +33,6 @@ class RecoveryPhraseDisplayReducerTests: XCTestCase {
             RecoveryPhrase.placeholder.toString()
         )
     }
-    
-    func testNewPhrase() {
-        let store = TestStore(
-            initialState: RecoveryPhraseDisplayStore.empty,
-            reducer: RecoveryPhraseDisplayReducer()
-        )
-                
-        store.send(.phraseResponse(.placeholder)) { state in
-            state.phrase = .placeholder
-            state.showCopyToBufferAlert = false
-        }
-    }
 }
 
 private extension RecoveryPhraseDisplayStore {

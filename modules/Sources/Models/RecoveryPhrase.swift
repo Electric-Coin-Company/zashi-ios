@@ -29,12 +29,20 @@ public struct RecoveryPhrase: Equatable, Redactable {
         self.words = words
     }
     
-    public func toGroups(groupSizeOverride: Int? = nil) -> [Group] {
-        let internalGroupSize = groupSizeOverride ?? groupSize
-        let chunks = words.count / internalGroupSize
-        return zip(0 ..< chunks, words.chunked(into: internalGroupSize)).map {
-            Group(startIndex: $0 * internalGroupSize + 1, words: $1)
+    public func toGroups() -> [Group] {
+        let chunks = words.count / 2
+
+        var res: [Group] = []
+        
+        for i in 0..<2 {
+            var subwords: [RedactableString] = []
+            for j in (i * chunks)..<((i + 1) * chunks) {
+                subwords.append(words[j])
+            }
+            res.append(Group(startIndex: i * chunks, words: subwords))
         }
+        
+        return res
     }
 
     public func toString() -> RedactableString {

@@ -9,6 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import Generated
 import UIComponents
+import MnemonicSwift
 
 public struct RecoveryPhraseDisplayView: View {
     let store: RecoveryPhraseDisplayStore
@@ -20,91 +21,90 @@ public struct RecoveryPhraseDisplayView: View {
     public var body: some View {
         WithViewStore(self.store) { viewStore in
             VStack(alignment: .center, spacing: 0) {
-                if let groups = viewStore.phrase?.toGroups(groupSizeOverride: 2) {
-                    VStack(spacing: 20) {
-                        Text(L10n.RecoveryPhraseDisplay.title)
-                            .font(
-                                .custom(FontFamily.Inter.regular.name, size: 20)
-                                .weight(.bold)
-                            )
-                            .multilineTextAlignment(.center)
-                        
-                        VStack(alignment: .center, spacing: 4) {
-                            Text(L10n.RecoveryPhraseDisplay.description)
-                                .font(
-                                    .custom(FontFamily.Inter.regular.name, size: 16)
-                                )
-                                .padding(.horizontal, 20)
-                        }
+                Spacer()
+
+                Asset.Assets.zashiLogo.image
+                    .resizable()
+                    .renderingMode(.template)
+                    .tint(Asset.Colors.primary.color)
+                    .frame(width: 33, height: 43)
+
+                Spacer()
+
+                if let groups = viewStore.phrase?.toGroups() {
+                    VStack {
+                        Text(L10n.RecoveryPhraseDisplay.titlePart1)
+                            .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
+                        Text(L10n.RecoveryPhraseDisplay.titlePart2)
+                            .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
                     }
-                    .padding(.top, 0)
-                    .padding(.bottom, 20)
-                    
+
                     Spacer()
 
-                    VStack(alignment: .leading, spacing: 10) {
+                    Text(L10n.RecoveryPhraseDisplay.description)
+                        .font(.custom(FontFamily.Inter.medium.name, size: 14))
+
+                    Spacer()
+                    
+                    HStack(spacing: 75) {
                         ForEach(groups, id: \.startIndex) { group in
-                            VStack {
-                                HStack(alignment: .center) {
-                                    HStack {
-                                        Spacer()
-                                        Text("\(group.startIndex). \(group.words[0].data)")
-                                        Spacer()
+                            VStack(alignment: .leading) {
+                                HStack {
+                                    VStack(alignment: .trailing, spacing: 2) {
+                                        ForEach(Array(group.words.enumerated()), id: \.offset) { seedWord in
+                                            Text("\(seedWord.offset + group.startIndex + 1).")
+                                                .font(.custom(FontFamily.Inter.medium.name, size: 16))
+                                        }
                                     }
-                                    .padding(.leading, 20)
-                                    HStack {
-                                        Spacer()
-                                        Text("\(group.startIndex + 1). \(group.words[1].data)")
-                                        Spacer()
+                                    
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        ForEach(Array(group.words.enumerated()), id: \.offset) { seedWord in
+                                            Text("\(seedWord.element.data)")
+                                                .font(.custom(FontFamily.Inter.medium.name, size: 16))
+                                        }
                                     }
-                                    .padding(.trailing, 20)
                                 }
                             }
                         }
                     }
                     
                     Spacer()
-                    
-                    VStack {
-                        Button(
-                            action: { viewStore.send(.finishedPressed) },
-                            label: { Text(L10n.RecoveryPhraseDisplay.Button.wroteItDown.uppercased()) }
-                        )
-                        .zcashStyle()
-                        .padding(.horizontal, 70)
+
+                    if let birthdayValue = viewStore.birthdayValue {
+                        Text(L10n.RecoveryPhraseDisplay.birthdayHeight(birthdayValue))
+                            .font(.custom(FontFamily.Inter.regular.name, size: 14))
                     }
-                    .padding()
+
+                    Spacer()
+                    
+                    Button(
+                        action: { viewStore.send(.finishedPressed) },
+                        label: { Text(L10n.RecoveryPhraseDisplay.Button.wroteItDown.uppercased()) }
+                    )
+                    .zcashStyle()
+                    .frame(width: 236)
+                    .padding(.bottom, 50)
                 } else {
                     Text(L10n.RecoveryPhraseDisplay.noWords)
+                    
+                    Spacer()
                 }
             }
-            .padding(.bottom, 20)
-            .padding(.horizontal)
-            .padding(.top, 0)
             .applyScreenBackground()
+            .padding(.horizontal, 60)
+            .onAppear { viewStore.send(.onAppear) }
+            .alert(store: store.scope(
+                state: \.$alert,
+                action: { .alert($0) }
+            ))
+            .navigationBarHidden(viewStore.phrase?.toGroups() != nil)
+            .zashiBack()
         }
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarHidden(true)
-    }
-}
-// TODO: [#695] This should have a #DEBUG tag, but if so, it's not possible to compile this on release mode and submit it to testflight https://github.com/zcash/ZcashLightClientKit/issues/695
-extension RecoveryPhraseDisplayStore {
-    public static var demo: RecoveryPhraseDisplayStore {
-        RecoveryPhraseDisplayStore(
-            initialState: .init(phrase: .placeholder),
-            reducer: RecoveryPhraseDisplayReducer.demo,
-            environment: Void()
-        )
     }
 }
 
-struct RecoveryPhraseDisplayView_Previews: PreviewProvider {
-    static let scheduler = DispatchQueue.main
-    static let store = RecoveryPhraseDisplayStore.demo
-
-    static var previews: some View {
-        NavigationView {
-            RecoveryPhraseDisplayView(store: store)
-        }
+#Preview {
+    NavigationView {
+        RecoveryPhraseDisplayView(store: .placeholder)
     }
 }

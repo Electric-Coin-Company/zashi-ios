@@ -50,6 +50,7 @@ public struct ProfileView: View {
         }
         .applyScreenBackground()
         .navigationBarTitleDisplayMode(.inline)
+        .zashiBack()
     }
 }
 

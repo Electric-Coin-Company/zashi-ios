@@ -15,6 +15,7 @@ import ZcashSDKEnvironment
 import ZcashLightClientKit
 import Models
 import Generated
+import Utils
 import SwiftUI
 
 public typealias SecurityWarningStore = Store<SecurityWarningReducer.State, SecurityWarningReducer.Action>
@@ -97,10 +98,6 @@ public struct SecurityWarningReducer: ReducerProtocol {
                     // store the wallet to the keychain
                     try walletStorage.importWallet(newRandomPhrase, birthday, .english, true)
                     
-                    // start the backup phrase validation test
-                    let randomRecoveryPhraseWords = mnemonic.asWords(newRandomPhrase)
-                    let recoveryPhrase = RecoveryPhrase(words: randomRecoveryPhraseWords.map { $0.redacted })
-                    state.recoveryPhraseDisplayState.phrase = recoveryPhrase
                     return .concatenate(
                         EffectTask(value: .newWalletCreated),
                         EffectTask(value: .updateDestination(.createNewWallet))

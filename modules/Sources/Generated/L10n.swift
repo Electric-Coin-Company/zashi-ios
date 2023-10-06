@@ -285,17 +285,33 @@ public enum L10n {
     public static let title = L10n.tr("Localizable", "recoveryPhraseBackupValidation.title", fallback: "Verify Your Backup")
   }
   public enum RecoveryPhraseDisplay {
-    /// The following 24 words represent your funds and the security used to protect them. Back them up now!
-    public static let description = L10n.tr("Localizable", "recoveryPhraseDisplay.description", fallback: "The following 24 words represent your funds and the security used to protect them. Back them up now!")
+    /// Wallet birthday height: %@
+    public static func birthdayHeight(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "recoveryPhraseDisplay.birthdayHeight", String(describing: p1), fallback: "Wallet birthday height: %@")
+    }
+    /// The following 24 words are the keys to your funds and are the only way to recover your funds if you get locked out or get a new device. Protect your ZEC by storing this phrase in a place you trust and never share it with anyone!
+    public static let description = L10n.tr("Localizable", "recoveryPhraseDisplay.description", fallback: "The following 24 words are the keys to your funds and are the only way to recover your funds if you get locked out or get a new device. Protect your ZEC by storing this phrase in a place you trust and never share it with anyone!")
     /// Oops no words
     public static let noWords = L10n.tr("Localizable", "recoveryPhraseDisplay.noWords", fallback: "Oops no words")
-    /// Your Secret Recovery Phrase
-    public static let title = L10n.tr("Localizable", "recoveryPhraseDisplay.title", fallback: "Your Secret Recovery Phrase")
+    /// Your Secret
+    public static let titlePart1 = L10n.tr("Localizable", "recoveryPhraseDisplay.titlePart1", fallback: "Your Secret")
+    /// Recovery Phrase
+    public static let titlePart2 = L10n.tr("Localizable", "recoveryPhraseDisplay.titlePart2", fallback: "Recovery Phrase")
+    public enum Alert {
+      public enum Failed {
+        /// Attempt to load the stored wallet from the keychain failed. Error: %@ (code: %@)
+        public static func message(_ p1: Any, _ p2: Any) -> String {
+          return L10n.tr("Localizable", "recoveryPhraseDisplay.alert.failed.message", String(describing: p1), String(describing: p2), fallback: "Attempt to load the stored wallet from the keychain failed. Error: %@ (code: %@)")
+        }
+        /// Failed to load stored wallet
+        public static let title = L10n.tr("Localizable", "recoveryPhraseDisplay.alert.failed.title", fallback: "Failed to load stored wallet")
+      }
+    }
     public enum Button {
       /// Copy To Buffer
       public static let copyToBuffer = L10n.tr("Localizable", "recoveryPhraseDisplay.button.copyToBuffer", fallback: "Copy To Buffer")
-      /// I wrote it down!
-      public static let wroteItDown = L10n.tr("Localizable", "recoveryPhraseDisplay.button.wroteItDown", fallback: "I wrote it down!")
+      /// I got it!
+      public static let wroteItDown = L10n.tr("Localizable", "recoveryPhraseDisplay.button.wroteItDown", fallback: "I got it!")
     }
   }
   public enum RecoveryPhraseTestPreamble {
