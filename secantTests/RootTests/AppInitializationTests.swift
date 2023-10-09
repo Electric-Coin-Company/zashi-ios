@@ -30,13 +30,13 @@ class AppInitializationTests: XCTestCase {
             debugState: .placeholder,
             destinationState: .placeholder,
             exportLogsState: .placeholder,
-            homeState: .placeholder,
             onboardingState: .init(
                 walletConfig: .default,
                 importWalletState: .placeholder,
                 securityWarningState: .placeholder
             ),
             sandboxState: .placeholder,
+            tabsState: .placeholder,
             walletConfig: walletConfig,
             welcomeState: .placeholder
         )
@@ -84,9 +84,9 @@ class AppInitializationTests: XCTestCase {
             state.appInitializationState = .initialized
         }
 
-        await store.receive(.destination(.updateDestination(.home))) { state in
+        await store.receive(.destination(.updateDestination(.tabs))) { state in
             state.destinationState.previousDestination = .welcome
-            state.destinationState.internalDestination = .home
+            state.destinationState.internalDestination = .tabs
         }
         
         await store.finish()

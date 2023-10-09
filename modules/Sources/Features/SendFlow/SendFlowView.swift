@@ -59,7 +59,6 @@ public struct SendFlowView: View {
                     ScanView(store: store.scanStore())
                 }
             )
-            .zashiBack()
         }
     }
 }

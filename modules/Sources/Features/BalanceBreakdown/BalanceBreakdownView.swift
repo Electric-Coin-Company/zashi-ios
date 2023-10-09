@@ -40,7 +40,7 @@ public struct BalanceBreakdownView: View {
                     titleColor: Asset.Colors.primary.color
                 )
                 balanceView(title: L10n.BalanceBreakdown.transparentBalance, viewStore.transparentBalance.data.verified)
-                balanceView(title: L10n.BalanceBreakdown.totalSpendableBalance, viewStore.totalSpendableBalance)
+                balanceView(title: L10n.BalanceBreakdown.totalSpendableBalance, viewStore.totalBalance)
                 
                 shieldButton(viewStore)
                 
@@ -66,7 +66,6 @@ public struct BalanceBreakdownView: View {
             state: \.$alert,
             action: { .alert($0) }
         ))
-        .zashiBack()
     }
 }
 

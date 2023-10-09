@@ -14,7 +14,6 @@ struct ZashiTitleModifier<ZashiTitleContent>: ViewModifier where ZashiTitleConte
     
     func body(content: Content) -> some View {
         content
-            .navigationBarBackButtonHidden(true)
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     zashiTitleContent

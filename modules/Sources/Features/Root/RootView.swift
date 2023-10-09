@@ -8,7 +8,7 @@ import Welcome
 import ExportLogs
 import OnboardingFlow
 import Sandbox
-import Home
+import Tabs
 import ZcashLightClientKit
 
 public struct RootView: View {
@@ -46,12 +46,12 @@ private extension RootView {
         WithViewStore(store) { viewStore in
             Group {
                 switch viewStore.destinationState.destination {
-                case .home:
+                case .tabs:
                     NavigationView {
-                        HomeView(
+                        TabsView(
                             store: store.scope(
-                                state: \.homeState,
-                                action: RootReducer.Action.home
+                                state: \.tabsState,
+                                action: RootReducer.Action.tabs
                             ),
                             tokenName: tokenName
                         )
@@ -136,9 +136,9 @@ private extension RootView {
 
     @ViewBuilder func debugView(_ viewStore: RootViewStore) -> some View {
         VStack(alignment: .leading) {
-            if viewStore.destinationState.previousDestination == .home {
+            if viewStore.destinationState.previousDestination == .tabs {
                 Button(L10n.General.back.uppercased()) {
-                    viewStore.goToDestination(.home)
+                    viewStore.goToDestination(.tabs)
                 }
                 .zcashStyle()
                 .frame(width: 150)
@@ -173,31 +173,6 @@ private extension RootView {
                         viewStore.send(.initialization(.nukeWalletRequest))
                     }
                 }
-#if DEBUG
-                Section(header: Text(L10n.Root.Debug.featureFlags)) {
-                    let flags = viewStore.state.walletConfig.flags
-                        .map { FeatureFlagWrapper(name: $0.key, isEnabled: $0.value) }
-                        .sorted()
-                    
-                    ForEach(flags) { flag in
-                        HStack {
-                            Toggle(
-                                isOn: Binding(
-                                    get: { flag.isEnabled },
-                                    set: { _ in
-                                        viewStore.send(.debug(.updateFlag(flag.name, flag.isEnabled)))
-                                    }
-                                ),
-                                label: {
-                                    Text(flag.name.rawValue)
-                                        .foregroundColor(flag.isEnabled ? .green : .red)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                }
-                            )
-                        }
-                    }
-                }
-#endif
             }
             .confirmationDialog(
                 store.scope(

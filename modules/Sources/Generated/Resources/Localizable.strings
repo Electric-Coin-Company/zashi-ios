@@ -79,6 +79,13 @@
 "importWallet.alert.failed.title" = "Failed to restore wallet";
 "importWallet.alert.failed.message" = "Error: %@ (code: %@)";
 
+// MARK: - Tabs
+"tabs.account" = "Account";
+"tabs.send" = "Send";
+"tabs.receive" = "Receive";
+"tabs.details" = "Details";
+"tabs.balances" = "Balances";
+
 // MARK: - Home Screen
 "home.sendZec" = "Send %@";
 "home.receiveZec" = "Receive %@";

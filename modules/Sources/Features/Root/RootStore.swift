@@ -13,7 +13,7 @@ import Foundation
 import ExportLogs
 import OnboardingFlow
 import Sandbox
-import Home
+import Tabs
 import CrashReporter
 
 public typealias RootStore = Store<RootReducer.State, RootReducer.Action>
@@ -32,11 +32,11 @@ public struct RootReducer: ReducerProtocol {
         public var debugState: DebugState
         public var destinationState: DestinationState
         public var exportLogsState: ExportLogsReducer.State
-        public var homeState: HomeReducer.State
         public var onboardingState: OnboardingFlowReducer.State
         public var sandboxState: SandboxReducer.State
         public var splashAppeared = false
         public var storedWallet: StoredWallet?
+        public var tabsState: TabsReducer.State
         public var walletConfig: WalletConfig
         public var welcomeState: WelcomeReducer.State
         
@@ -45,10 +45,10 @@ public struct RootReducer: ReducerProtocol {
             debugState: DebugState,
             destinationState: DestinationState,
             exportLogsState: ExportLogsReducer.State,
-            homeState: HomeReducer.State,
             onboardingState: OnboardingFlowReducer.State,
             sandboxState: SandboxReducer.State,
             storedWallet: StoredWallet? = nil,
+            tabsState: TabsReducer.State,
             walletConfig: WalletConfig,
             welcomeState: WelcomeReducer.State
         ) {
@@ -56,10 +56,10 @@ public struct RootReducer: ReducerProtocol {
             self.debugState = debugState
             self.destinationState = destinationState
             self.exportLogsState = exportLogsState
-            self.homeState = homeState
             self.onboardingState = onboardingState
             self.sandboxState = sandboxState
             self.storedWallet = storedWallet
+            self.tabsState = tabsState
             self.walletConfig = walletConfig
             self.welcomeState = welcomeState
         }
@@ -71,7 +71,7 @@ public struct RootReducer: ReducerProtocol {
         case debug(DebugAction)
         case destination(DestinationAction)
         case exportLogs(ExportLogsReducer.Action)
-        case home(HomeReducer.Action)
+        case tabs(TabsReducer.Action)
         case initialization(InitializationAction)
         case nukeWalletFailed
         case nukeWalletSucceeded
@@ -103,8 +103,8 @@ public struct RootReducer: ReducerProtocol {
     
     @ReducerBuilder<State, Action>
     var core: some ReducerProtocol<State, Action> {
-        Scope(state: \.homeState, action: /Action.home) {
-            HomeReducer(networkType: zcashNetwork.networkType)
+        Scope(state: \.tabsState, action: /Action.tabs) {
+            TabsReducer(tokenName: tokenName, networkType: zcashNetwork.networkType)
         }
 
         Scope(state: \.exportLogsState, action: /Action.exportLogs) {
@@ -310,13 +310,13 @@ extension RootReducer.State {
             debugState: .placeholder,
             destinationState: .placeholder,
             exportLogsState: .placeholder,
-            homeState: .placeholder,
             onboardingState: .init(
                 walletConfig: .default,
                 importWalletState: .placeholder,
                 securityWarningState: .placeholder
             ),
             sandboxState: .placeholder,
+            tabsState: .placeholder,
             walletConfig: .default,
             welcomeState: .placeholder
         )

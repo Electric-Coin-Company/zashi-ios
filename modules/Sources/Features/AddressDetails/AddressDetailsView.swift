@@ -36,11 +36,6 @@ public struct AddressDetailsView: View {
                 }
             }
             .applyScreenBackground()
-            .zashiBack()
-            .zashiTitle {
-                Text(L10n.AddressDetails.receiveTitle.uppercased())
-                    .font(.custom(FontFamily.Archivo.bold.name, size: 14))
-            }
         }
     }
     

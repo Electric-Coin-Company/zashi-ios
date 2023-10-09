@@ -169,7 +169,7 @@ extension RootReducer {
 
                 state.appInitializationState = .initialized
 
-                return EffectTask(value: .destination(.updateDestination(.home)))
+                return EffectTask(value: .destination(.updateDestination(.tabs)))
                     .delay(for: 3, scheduler: mainQueue)
                     .eraseToEffect()
                     .cancellable(id: CancelId.timer, cancelInFlight: true)
@@ -211,14 +211,14 @@ extension RootReducer {
                     backDestination
                 )
 
-            case .welcome(.debugMenuStartup), .home(.debugMenuStartup):
+            case .welcome(.debugMenuStartup), .tabs(.home(.debugMenuStartup)):
                 return .concatenate(
                     EffectTask.cancel(id: CancelId.timer),
                     EffectTask(value: .destination(.updateDestination(.startup)))
                 )
 
             case .onboarding(.importWallet(.successfullyRecovered)):
-                return EffectTask(value: .destination(.updateDestination(.home)))
+                return EffectTask(value: .destination(.updateDestination(.tabs)))
 
             case .onboarding(.importWallet(.initializeSDK)):
                 return EffectTask(value: .initialization(.initializeSDK(.restoreWallet)))
@@ -232,7 +232,7 @@ extension RootReducer {
             case .updateStateAfterConfigUpdate(let walletConfig):
                 state.walletConfig = walletConfig
                 state.onboardingState.walletConfig = walletConfig
-                state.homeState.walletConfig = walletConfig
+//                state.tabsState.walletConfig = walletConfig
                 return .none
 
             case .initialization(.initializationFailed(let error)):
@@ -244,9 +244,9 @@ extension RootReducer {
                 return EffectTask(value: .initialization(.initializeSDK(.newWallet)))
 
             case .onboarding(.securityWarning(.recoveryPhraseDisplay(.finishedPressed))):
-                return EffectTask(value: .destination(.updateDestination(.home)))
+                return EffectTask(value: .destination(.updateDestination(.tabs)))
                 
-            case .home, .destination, .onboarding, .sandbox,
+            case .tabs, .destination, .onboarding, .sandbox,
             .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested:
                 return .none
             }

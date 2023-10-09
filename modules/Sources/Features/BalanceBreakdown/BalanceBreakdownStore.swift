@@ -33,8 +33,8 @@ public struct BalanceBreakdownReducer: ReducerProtocol {
         public var synchronizerStatusSnapshot: SyncStatusSnapshot
         public var transparentBalance: Balance
 
-        public var totalSpendableBalance: Zatoshi {
-            shieldedBalance.data.verified + transparentBalance.data.verified
+        public var totalBalance: Zatoshi {
+            shieldedBalance.data.total + transparentBalance.data.total
         }
 
         public var isShieldableBalanceAvailable: Bool {
@@ -105,6 +105,7 @@ public struct BalanceBreakdownReducer: ReducerProtocol {
                     .cancellable(id: CancelId.timer, cancelInFlight: true)
 
             case .onDisappear:
+                return .none
                 return .cancel(id: CancelId.timer)
 
             case .shieldFunds:

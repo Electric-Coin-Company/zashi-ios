@@ -50,11 +50,11 @@ extension RootReducer {
                 return .none
 
             case .debug(.quickRescan):
-                state.destinationState.destination = .home
+                state.destinationState.destination = .tabs
                 return rewind(policy: .quick, sourceAction: .quickRescan)
 
             case .debug(.fullRescan):
-                state.destinationState.destination = .home
+                state.destinationState.destination = .tabs
                 return rewind(policy: .birthday, sourceAction: .fullRescan)
 
             case let .debug(.rewindDone(error, _)):

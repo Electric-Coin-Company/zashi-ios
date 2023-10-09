@@ -43,10 +43,7 @@ public struct SecurityWarningView: View {
                 HStack {
                     Toggle(isOn: viewStore.binding(\.$isAcknowledged), label: {
                         Text(L10n.SecurityWarning.acknowledge)
-                            .font(
-                                .custom(FontFamily.Inter.medium.name, size: 14)
-                                .weight(.medium)
-                            )
+                            .font(.custom(FontFamily.Inter.medium.name, size: 14))
                     })
                     .toggleStyle(CheckboxToggleStyle())
                     
