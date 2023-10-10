@@ -56,7 +56,6 @@ public struct SettingsReducer: ReducerProtocol {
 
     public enum Action: BindableAction, Equatable {
         case alert(PresentationAction<Action>)
-        case backupWallet
         case backupWalletAccessRequest
         case binding(BindingAction<SettingsReducer.State>)
         case exportLogs(ExportLogsReducer.Action)
@@ -89,22 +88,10 @@ public struct SettingsReducer: ReducerProtocol {
             case .backupWalletAccessRequest:
                 return .run { send in
                     if await localAuthentication.authenticate() {
-                        await send(.backupWallet)
+                        await send(.updateDestination(.backupPhrase))
                     }
                 }
-                
-            case .backupWallet:
-                do {
-                    let storedWallet = try walletStorage.exportWallet()
-                    let phraseWords = mnemonic.asWords(storedWallet.seedPhrase.value())
-                    let recoveryPhrase = RecoveryPhrase(words: phraseWords.map { $0.redacted })
-                    state.phraseDisplayState.phrase = recoveryPhrase
-                    return EffectTask(value: .updateDestination(.backupPhrase))
-                } catch {
-                    state.alert = AlertState.cantBackupWallet(error.toZcashError())
-                }
-                return .none
-                
+                                
             case .binding(\.$isCrashReportingOn):
                 if state.isCrashReportingOn {
                     crashReporter.optOut()
@@ -119,8 +106,11 @@ public struct SettingsReducer: ReducerProtocol {
             case .exportLogs:
                 return .none
 
-            case .phraseDisplay:
+            case .phraseDisplay(.finishedPressed):
                 state.destination = nil
+                return .none
+                                
+            case .phraseDisplay:
                 return .none
                 
             case .updateDestination(let destination):
@@ -204,14 +194,6 @@ extension SettingsStore {
 // MARK: Alerts
 
 extension AlertState where Action == SettingsReducer.Action {
-    public static func cantBackupWallet(_ error: ZcashError) -> AlertState {
-        AlertState {
-            TextState(L10n.Settings.Alert.CantBackupWallet.title)
-        } message: {
-            TextState(L10n.Settings.Alert.CantBackupWallet.message(error.message, error.code.rawValue))
-        }
-    }
-    
     public static func sendSupportMail() -> AlertState {
         AlertState {
             TextState(L10n.Settings.Alert.CantSendEmail.title)
@@ -232,7 +214,9 @@ extension SettingsReducer.State {
         exportLogsState: .placeholder,
         isCrashReportingOn: true,
         phraseDisplayState: RecoveryPhraseDisplayReducer.State(
-            phrase: .placeholder
+            phrase: nil,
+            showCopyToBufferAlert: false,
+            birthday: nil
         )
     )
 }

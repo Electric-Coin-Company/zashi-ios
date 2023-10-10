@@ -312,10 +312,15 @@ let package = Package(
             name: "RecoveryPhraseDisplay",
             dependencies: [
                 "Generated",
+                "MnemonicClient",
                 "Models",
+                "NumberFormatter",
                 "Pasteboard",
                 "UIComponents",
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+                "Utils",
+                "WalletStorage",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
             ],
             path: "Sources/Features/RecoveryPhraseDisplay"
         ),
@@ -410,6 +415,7 @@ let package = Package(
                 "NumberFormatter",
                 "RecoveryPhraseDisplay",
                 "UIComponents",
+                "Utils",
                 "WalletStorage",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")

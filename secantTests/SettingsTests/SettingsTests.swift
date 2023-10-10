@@ -67,9 +67,6 @@ class SettingsTests: XCTestCase {
 
         await store.send(.backupWalletAccessRequest)
         
-        await store.receive(.backupWallet) { state in
-            state.phraseDisplayState.phrase = RecoveryPhrase(words: mnemonic.components(separatedBy: " ").map { $0.redacted })
-        }
         await store.receive(.updateDestination(.backupPhrase)) { state in
             state.destination = .backupPhrase
         }
