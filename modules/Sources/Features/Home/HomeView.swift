@@ -2,7 +2,7 @@ import SwiftUI
 import ComposableArchitecture
 import StoreKit
 import Generated
-import Profile
+import AddressDetails
 import BalanceBreakdown
 import WalletEventsFlow
 import Settings
@@ -78,8 +78,8 @@ public struct HomeView: View {
                 destination: { SendFlowView(store: store.sendStore(), tokenName: tokenName) }
             )
             .navigationLinkEmpty(
-                isActive: viewStore.bindingForDestination(.profile),
-                destination: { ProfileView(store: store.profileStore()) }
+                isActive: viewStore.bindingForDestination(.addressDetails),
+                destination: { AddressDetailsView(store: store.addressDetailsStore()) }
             )
         }
     }
@@ -116,7 +116,7 @@ extension HomeView {
     
     func receiveButton(_ viewStore: HomeViewStore) -> some View {
         Button(action: {
-            viewStore.send(.updateDestination(.profile))
+            viewStore.send(.updateDestination(.addressDetails))
         }, label: {
             Text(L10n.Home.receiveZec(tokenName).uppercased())
         })

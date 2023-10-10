@@ -89,7 +89,7 @@
 "home.syncFailed.retry" = "Retry";
 "home.migratingDatabases" = "Upgrading databases…";
 
-// MARK: - Receive ZEC (Formerly Profile Screen)
+// MARK: - Receive ZEC
 "receiveZec.yourAddress" = "Your Address";
 "receiveZec.error.cantExtractUnifiedAddress" = "could not extract UA";
 
@@ -97,6 +97,8 @@
 "addressDetails.ua" = "Unified Address";
 "addressDetails.sa" = "Sapling Address";
 "addressDetails.ta" = "Transparent Address";
+"addressDetails.receiveTitle" = "Receive";
+"addressDetails.tapToCopy" = "Tap to Copy";
 "addressDetails.error.cantExtractUnifiedAddress" = "could not extract UA";
 "addressDetails.error.cantExtractTransparentAddress" = "could not extract transparent receiver from UA";
 "addressDetails.error.cantExtractSaplingAddress" = "could not extract sapling receiver from UA";

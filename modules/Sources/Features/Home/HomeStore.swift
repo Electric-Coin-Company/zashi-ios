@@ -9,7 +9,7 @@ import Utils
 import Models
 import Generated
 import ReviewRequest
-import Profile
+import AddressDetails
 import BalanceBreakdown
 import WalletEventsFlow
 import Scan
@@ -27,17 +27,17 @@ public struct HomeReducer: ReducerProtocol {
         public enum Destination: Equatable {
             case balanceBreakdown
             case notEnoughFreeDiskSpace
-            case profile
+            case addressDetails
             case send
             case settings
             case transactionHistory
         }
 
         @PresentationState public var alert: AlertState<Action>?
+        public var addressDetailsState: AddressDetailsReducer.State
         public var balanceBreakdownState: BalanceBreakdownReducer.State
         public var destination: Destination?
         public var canRequestReview = false
-        public var profileState: ProfileReducer.State
         public var requiredTransactionConfirmations = 0
         public var scanState: ScanReducer.State
         public var sendState: SendFlowReducer.State
@@ -59,10 +59,10 @@ public struct HomeReducer: ReducerProtocol {
         }
         
         public init(
+            addressDetailsState: AddressDetailsReducer.State,
             balanceBreakdownState: BalanceBreakdownReducer.State,
             destination: Destination? = nil,
             canRequestReview: Bool = false,
-            profileState: ProfileReducer.State,
             requiredTransactionConfirmations: Int = 0,
             scanState: ScanReducer.State,
             sendState: SendFlowReducer.State,
@@ -73,10 +73,10 @@ public struct HomeReducer: ReducerProtocol {
             walletEventsState: WalletEventsFlowReducer.State,
             zecPrice: Decimal = Decimal(140.0)
         ) {
+            self.addressDetailsState = addressDetailsState
             self.balanceBreakdownState = balanceBreakdownState
             self.destination = destination
             self.canRequestReview = canRequestReview
-            self.profileState = profileState
             self.requiredTransactionConfirmations = requiredTransactionConfirmations
             self.scanState = scanState
             self.sendState = sendState
@@ -90,13 +90,13 @@ public struct HomeReducer: ReducerProtocol {
     }
 
     public enum Action: Equatable {
+        case addressDetails(AddressDetailsReducer.Action)
         case alert(PresentationAction<Action>)
         case balanceBreakdown(BalanceBreakdownReducer.Action)
         case debugMenuStartup
         case foundTransactions
         case onAppear
         case onDisappear
-        case profile(ProfileReducer.Action)
         case resolveReviewRequest
         case retrySync
         case reviewRequestFinished
@@ -134,8 +134,8 @@ public struct HomeReducer: ReducerProtocol {
             SettingsReducer()
         }
 
-        Scope(state: \.profileState, action: /Action.profile) {
-            ProfileReducer()
+        Scope(state: \.addressDetailsState, action: /Action.addressDetails) {
+            AddressDetailsReducer()
         }
 
         Scope(state: \.balanceBreakdownState, action: /Action.balanceBreakdown) {
@@ -206,23 +206,14 @@ public struct HomeReducer: ReducerProtocol {
             case .foundTransactions:
                 return .fireAndForget { reviewRequest.foundTransactions() }
 
-            case .updateDestination(.profile):
-                state.profileState.destination = nil
-                state.destination = .profile
-                return .none
-                
             case .updateDestination(let destination):
                 state.destination = destination
                 return .none
                 
-            case .profile(.back):
-                state.destination = nil
-                return .none
-            
             case .settings:
                 return .none
 
-            case .profile:
+            case .addressDetails:
                 return .none
                 
             case .walletEvents:
@@ -285,10 +276,10 @@ extension HomeStore {
         )
     }
     
-    func profileStore() -> ProfileStore {
+    func addressDetailsStore() -> AddressDetailsStore {
         self.scope(
-            state: \.profileState,
-            action: HomeReducer.Action.profile
+            state: \.addressDetailsState,
+            action: HomeReducer.Action.addressDetails
         )
     }
 
@@ -351,8 +342,8 @@ extension AlertState where Action == HomeReducer.Action {
 extension HomeReducer.State {
     public static var placeholder: Self {
         .init(
+            addressDetailsState: .placeholder,
             balanceBreakdownState: .placeholder,
-            profileState: .placeholder,
             scanState: .placeholder,
             sendState: .placeholder,
             settingsState: .placeholder,
@@ -375,8 +366,8 @@ extension HomeStore {
     public static var error: HomeStore {
         HomeStore(
             initialState: .init(
+                addressDetailsState: .placeholder,
                 balanceBreakdownState: .placeholder,
-                profileState: .placeholder,
                 scanState: .placeholder,
                 sendState: .placeholder,
                 settingsState: .placeholder,

@@ -57,8 +57,8 @@ class WalletEventsSnapshotTests: XCTestCase {
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
         let store = HomeStore(
             initialState: .init(
+                addressDetailsState: .placeholder,
                 balanceBreakdownState: .placeholder,
-                profileState: .placeholder,
                 scanState: .placeholder,
                 sendState: .placeholder,
                 settingsState: .placeholder,
@@ -110,8 +110,8 @@ class WalletEventsSnapshotTests: XCTestCase {
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
         let store = HomeStore(
             initialState: .init(
+                addressDetailsState: .placeholder,
                 balanceBreakdownState: .placeholder,
-                profileState: .placeholder,
                 scanState: .placeholder,
                 sendState: .placeholder,
                 settingsState: .placeholder,
@@ -163,8 +163,8 @@ class WalletEventsSnapshotTests: XCTestCase {
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
         let store = HomeStore(
             initialState: .init(
+                addressDetailsState: .placeholder,
                 balanceBreakdownState: .placeholder,
-                profileState: .placeholder,
                 scanState: .placeholder,
                 sendState: .placeholder,
                 settingsState: .placeholder,
@@ -222,8 +222,8 @@ class WalletEventsSnapshotTests: XCTestCase {
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
         let store = HomeStore(
             initialState: .init(
+                addressDetailsState: .placeholder,
                 balanceBreakdownState: .placeholder,
-                profileState: .placeholder,
                 scanState: .placeholder,
                 sendState: .placeholder,
                 settingsState: .placeholder,

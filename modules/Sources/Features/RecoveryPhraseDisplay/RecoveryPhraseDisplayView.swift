@@ -77,10 +77,9 @@ public struct RecoveryPhraseDisplayView: View {
 
                     Spacer()
                     
-                    Button(
-                        action: { viewStore.send(.finishedPressed) },
-                        label: { Text(L10n.RecoveryPhraseDisplay.Button.wroteItDown.uppercased()) }
-                    )
+                    Button(L10n.RecoveryPhraseDisplay.Button.wroteItDown.uppercased()) {
+                        viewStore.send(.finishedPressed)
+                    }
                     .zcashStyle()
                     .frame(width: 236)
                     .padding(.bottom, 50)

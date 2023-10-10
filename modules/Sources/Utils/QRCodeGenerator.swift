@@ -28,7 +28,7 @@ public enum QRCodeGenerator {
         }
     }
     
-    public static func generate(from string: String, scale: CGFloat = 5) -> CGImage? {
+    public static func generate(from string: String, scale: CGFloat = 15) -> CGImage? {
         let data = string.data(using: String.Encoding.utf8)
         
         let context = CIContext()

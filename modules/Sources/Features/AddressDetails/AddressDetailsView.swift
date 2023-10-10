@@ -21,41 +21,59 @@ public struct AddressDetailsView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             ScrollView {
-                Text(L10n.AddressDetails.ua)
-                    .fontWeight(.bold)
-                qrCode(viewStore.unifiedAddress)
-                    .padding(30)
+                addressBlock(L10n.AddressDetails.ua, viewStore.unifiedAddress) {
+                    viewStore.send(.copyUnifiedAddressToPastboard)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.top, 20)
                 
-                Text(viewStore.unifiedAddress)
-                    .onTapGesture {
-                        viewStore.send(.copyUnifiedAddressToPastboard)
-                    }
-
-                Text(L10n.AddressDetails.sa)
-                    .fontWeight(.bold)
-                    .padding(.top, 20)
-                qrCode(viewStore.saplingAddress)
-                    .padding(30)
-
-                Text(viewStore.saplingAddress)
-                    .onTapGesture {
-                        viewStore.send(.copySaplingAddressToPastboard)
-                    }
-
-                Text(L10n.AddressDetails.ta)
-                    .fontWeight(.bold)
-                    .padding(.top, 20)
-                qrCode(viewStore.transparentAddress)
-                    .padding(30)
-
-                Text(viewStore.transparentAddress)
-                    .onTapGesture {
-                        viewStore.send(.copyTransparentAddressToPastboard)
-                    }
+                addressBlock(L10n.AddressDetails.sa, viewStore.saplingAddress) {
+                    viewStore.send(.copySaplingAddressToPastboard)
+                }
+                
+                addressBlock(L10n.AddressDetails.ta, viewStore.transparentAddress) {
+                    viewStore.send(.copyTransparentAddressToPastboard)
+                }
             }
-            .padding(20)
             .applyScreenBackground()
+            .zashiBack()
+            .zashiTitle {
+                Text(L10n.AddressDetails.receiveTitle.uppercased())
+                    .font(.custom(FontFamily.Archivo.bold.name, size: 14))
+            }
         }
+    }
+    
+    @ViewBuilder private func addressBlock(
+        _ title: String,
+        _ address: String,
+        _ tapToCopyAction: @escaping () -> Void
+    ) -> some View {
+        VStack {
+            Text(title)
+                .font(.custom(FontFamily.Archivo.semiBold.name, size: 16))
+                .padding(.bottom, 20)
+            
+            qrCode(address)
+                .frame(width: 270, height: 270)
+                .padding(.bottom, 20)
+            
+            Text(address)
+                .font(.custom(FontFamily.Inter.regular.name, size: 16))
+                .foregroundColor(Asset.Colors.suppressed47.color)
+                .frame(width: 270)
+                .padding(.bottom, 20)
+            
+            Button {
+                tapToCopyAction()
+            } label: {
+                Text(L10n.AddressDetails.tapToCopy)
+                    .font(.custom(FontFamily.Inter.bold.name, size: 11))
+                    .underline()
+                    .foregroundColor(Asset.Colors.primary.color)
+            }
+        }
+        .padding(.bottom, 40)
     }
 }
 
@@ -64,15 +82,17 @@ extension AddressDetailsView {
         Group {
             if let img = QRCodeGenerator.generate(from: qrText) {
                 Image(img, scale: 1, label: Text(L10n.qrCodeFor(qrText)))
+                    .resizable()
             } else {
                 Image(systemName: "qrcode")
+                    .resizable()
             }
         }
     }
 }
 
-struct AddressDetails_Previews: PreviewProvider {
-    static var previews: some View {
-    AddressDetailsView(store: .placeholder)
+#Preview {
+    NavigationView {
+        AddressDetailsView(store: .placeholder)
     }
 }
