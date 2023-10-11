@@ -259,15 +259,13 @@ public enum L10n {
     }
   }
   public enum PlainOnboarding {
-    /// We need to create a new wallet or restore an existing one. Select your path:
-    public static let caption = L10n.tr("Localizable", "plainOnboarding.caption", fallback: "We need to create a new wallet or restore an existing one. Select your path:")
-    /// It's time to setup your Zashi, powered by Zcash, no-frills wallet.
-    public static let title = L10n.tr("Localizable", "plainOnboarding.title", fallback: "It's time to setup your Zashi, powered by Zcash, no-frills wallet.")
+    /// A no-frills wallet for sending and receiving Zcash (ZEC).
+    public static let title = L10n.tr("Localizable", "plainOnboarding.title", fallback: "A no-frills wallet for sending and receiving Zcash (ZEC).")
     public enum Button {
-      /// Create a new Wallet
-      public static let createNewWallet = L10n.tr("Localizable", "plainOnboarding.button.createNewWallet", fallback: "Create a new Wallet")
-      /// Restore an existing wallet
-      public static let restoreWallet = L10n.tr("Localizable", "plainOnboarding.button.restoreWallet", fallback: "Restore an existing wallet")
+      /// Create new Wallet
+      public static let createNewWallet = L10n.tr("Localizable", "plainOnboarding.button.createNewWallet", fallback: "Create new Wallet")
+      /// Restore existing wallet
+      public static let restoreWallet = L10n.tr("Localizable", "plainOnboarding.button.restoreWallet", fallback: "Restore existing wallet")
     }
   }
   public enum ReceiveZec {
