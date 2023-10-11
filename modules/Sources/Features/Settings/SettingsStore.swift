@@ -226,4 +226,19 @@ extension SettingsStore {
         initialState: .placeholder,
         reducer: SettingsReducer()
     )
+    
+    public static let demo = SettingsStore(
+        initialState: .init(
+            appVersion: "0.0.1",
+            appBuild: "54",
+            exportLogsState: .placeholder,
+            isCrashReportingOn: true,
+            phraseDisplayState: RecoveryPhraseDisplayReducer.State(
+                phrase: nil,
+                showCopyToBufferAlert: false,
+                birthday: nil
+            )
+        ),
+        reducer: SettingsReducer()
+    )
 }

@@ -552,6 +552,11 @@ public enum L10n {
     public static func version(_ p1: Any, _ p2: Any) -> String {
       return L10n.tr("Localizable", "settings.version", String(describing: p1), String(describing: p2), fallback: "Version %@ (%@)")
     }
+    public enum About {
+      /// Send and receive ZEC on Zashi!
+      /// Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.
+      public static let info = L10n.tr("Localizable", "settings.about.info", fallback: "Send and receive ZEC on Zashi!\nZashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.")
+    }
     public enum Alert {
       public enum CantBackupWallet {
         /// Error: %@ (code: %@)
