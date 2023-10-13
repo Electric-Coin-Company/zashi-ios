@@ -32,13 +32,18 @@ public struct SecurityWarningView: View {
                 Text(L10n.SecurityWarning.title)
                     .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
                     .padding(.bottom, 8)
-                
-                Text(L10n.SecurityWarning.warningPart1(viewStore.appVersion, viewStore.appBuild))
-                    .font(.custom(FontFamily.Inter.medium.name, size: 16))
-                + Text(L10n.SecurityWarning.warningPart2)
-                    .font(.custom(FontFamily.Inter.bold.name, size: 16))
-                + Text(L10n.SecurityWarning.warningPart3)
-                    .font(.custom(FontFamily.Inter.medium.name, size: 16))
+
+                Group {
+                    Text(L10n.SecurityWarning.warningPart1a(viewStore.appVersion, viewStore.appBuild))
+                    + Text("[\(L10n.SecurityWarning.warningPart1b)](https://z.cash/privacy-policy/)")
+                        .underline()
+                    + Text(L10n.SecurityWarning.warningPart1c)
+                    + Text(L10n.SecurityWarning.warningPart2)
+                        .font(.custom(FontFamily.Inter.bold.name, size: 16))
+                    + Text(L10n.SecurityWarning.warningPart3)
+                }
+                .font(.custom(FontFamily.Inter.medium.name, size: 16))
+                .accentColor(.black)
 
                 HStack {
                     Toggle(isOn: viewStore.binding(\.$isAcknowledged), label: {

@@ -49,6 +49,10 @@ extension RootReducer {
                 return .none
 
             case .initialization(.retryStart):
+                // Try the start only if the synchronizer has been already prepared
+                guard sdkSynchronizer.latestState().syncStatus.isPrepared else {
+                    return .none
+                }
                 return .run { send in
                     do {
                         try await sdkSynchronizer.start(true)

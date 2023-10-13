@@ -482,10 +482,14 @@ public enum L10n {
     public static let confirm = L10n.tr("Localizable", "securityWarning.confirm", fallback: "Confirm")
     /// Security warning:
     public static let title = L10n.tr("Localizable", "securityWarning.title", fallback: "Security warning:")
-    /// Zashi %@ (%@) is a Zcash-only shielded wallet, built by Zcashers for Zcashers. The purpose of this release is primarily to test functionality and collect feedback. While Zashi has been engineered for your privacy and safety (read the privacy policy here), this release has not yet been security audited.
-    public static func warningPart1(_ p1: Any, _ p2: Any) -> String {
-      return L10n.tr("Localizable", "securityWarning.warningPart1", String(describing: p1), String(describing: p2), fallback: "Zashi %@ (%@) is a Zcash-only shielded wallet, built by Zcashers for Zcashers. The purpose of this release is primarily to test functionality and collect feedback. While Zashi has been engineered for your privacy and safety (read the privacy policy here), this release has not yet been security audited.")
+    /// Zashi %@ (%@) is a Zcash-only shielded wallet, built by Zcashers for Zcashers. The purpose of this release is primarily to test functionality and collect feedback. While Zashi has been engineered for your privacy and safety (read the privacy policy 
+    public static func warningPart1a(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "securityWarning.warningPart1a", String(describing: p1), String(describing: p2), fallback: "Zashi %@ (%@) is a Zcash-only shielded wallet, built by Zcashers for Zcashers. The purpose of this release is primarily to test functionality and collect feedback. While Zashi has been engineered for your privacy and safety (read the privacy policy ")
     }
+    /// here
+    public static let warningPart1b = L10n.tr("Localizable", "securityWarning.warningPart1b", fallback: "here")
+    /// ), this release has not yet been security audited.
+    public static let warningPart1c = L10n.tr("Localizable", "securityWarning.warningPart1c", fallback: "), this release has not yet been security audited.")
     ///  Users are cautioned to deposit, send, and receive only small amounts of ZEC.
     public static let warningPart2 = L10n.tr("Localizable", "securityWarning.warningPart2", fallback: " Users are cautioned to deposit, send, and receive only small amounts of ZEC.")
     ///  Please click below to proceed.
