@@ -21,11 +21,14 @@ struct ZashiBackModifier: ViewModifier {
                     } label: {
                         HStack {
                             Image(systemName: "arrow.backward")
+                                .resizable()
                                 .renderingMode(.template)
+                                .frame(width: 10, height: 10)
                                 .tint(Asset.Colors.primary.color)
 
-                            Text("BACK")
+                            Text(L10n.General.back.uppercased())
                                 .foregroundColor(Asset.Colors.primary.color)
+                                .font(.custom(FontFamily.Inter.regular.name, size: 14))
                         }
                     }
                 }
