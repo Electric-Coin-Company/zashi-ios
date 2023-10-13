@@ -57,11 +57,7 @@ class WalletEventsSnapshotTests: XCTestCase {
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
         let store = HomeStore(
             initialState: .init(
-                addressDetailsState: .placeholder,
-                balanceBreakdownState: .placeholder,
                 scanState: .placeholder,
-                sendState: .placeholder,
-                settingsState: .placeholder,
                 shieldedBalance: balance.redacted,
                 synchronizerStatusSnapshot: .default,
                 walletConfig: .default,
@@ -110,11 +106,7 @@ class WalletEventsSnapshotTests: XCTestCase {
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
         let store = HomeStore(
             initialState: .init(
-                addressDetailsState: .placeholder,
-                balanceBreakdownState: .placeholder,
                 scanState: .placeholder,
-                sendState: .placeholder,
-                settingsState: .placeholder,
                 shieldedBalance: balance.redacted,
                 synchronizerStatusSnapshot: .default,
                 walletConfig: .default,
@@ -163,11 +155,7 @@ class WalletEventsSnapshotTests: XCTestCase {
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
         let store = HomeStore(
             initialState: .init(
-                addressDetailsState: .placeholder,
-                balanceBreakdownState: .placeholder,
                 scanState: .placeholder,
-                sendState: .placeholder,
-                settingsState: .placeholder,
                 shieldedBalance: balance.redacted,
                 synchronizerStatusSnapshot: .default,
                 walletConfig: .default,
@@ -222,11 +210,7 @@ class WalletEventsSnapshotTests: XCTestCase {
         let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
         let store = HomeStore(
             initialState: .init(
-                addressDetailsState: .placeholder,
-                balanceBreakdownState: .placeholder,
                 scanState: .placeholder,
-                sendState: .placeholder,
-                settingsState: .placeholder,
                 shieldedBalance: balance.redacted,
                 synchronizerStatusSnapshot: .default,
                 walletConfig: .default,

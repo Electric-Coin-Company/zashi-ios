@@ -26,6 +26,7 @@ public enum Asset {
     public static let splashHi = ImageAsset(name: "SplashHi")
     public static let welcomeScreenLogo = ImageAsset(name: "WelcomeScreenLogo")
     public static let zashiLogo = ImageAsset(name: "ZashiLogo")
+    public static let zashiTitle = ImageAsset(name: "zashiTitle")
   }
   public enum Colors {
     public static let error = ColorAsset(name: "error")
@@ -34,6 +35,7 @@ public enum Asset {
     public static let splash = ColorAsset(name: "splash")
     public static let suppressed47 = ColorAsset(name: "suppressed47")
     public static let suppressed72 = ColorAsset(name: "suppressed72")
+    public static let tabsUnderline = ColorAsset(name: "tabsUnderline")
   }
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name

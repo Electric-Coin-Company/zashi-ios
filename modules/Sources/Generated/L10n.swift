@@ -627,6 +627,18 @@ public enum L10n {
       public static let uptodate = L10n.tr("Localizable", "sync.message.uptodate", fallback: "Up-To-Date")
     }
   }
+  public enum Tabs {
+    /// Account
+    public static let account = L10n.tr("Localizable", "tabs.account", fallback: "Account")
+    /// Balances
+    public static let balances = L10n.tr("Localizable", "tabs.balances", fallback: "Balances")
+    /// Details
+    public static let details = L10n.tr("Localizable", "tabs.details", fallback: "Details")
+    /// Receive
+    public static let receive = L10n.tr("Localizable", "tabs.receive", fallback: "Receive")
+    /// Send
+    public static let send = L10n.tr("Localizable", "tabs.send", fallback: "Send")
+  }
   public enum Transaction {
     /// Confirmed
     public static let confirmed = L10n.tr("Localizable", "transaction.confirmed", fallback: "Confirmed")

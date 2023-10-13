@@ -56,14 +56,6 @@ public struct TransactionRowView: View {
                 .padding(.trailing, 30)
             }
             .padding(.leading, 80)
-            
-            VStack {
-                Spacer()
-                Rectangle()
-                    .padding(.horizontal, 30)
-                    .frame(height: 1, alignment: .center)
-                    .foregroundColor(Asset.Colors.primary.color)
-            }
         }
         .frame(height: 60)
     }
@@ -91,14 +83,11 @@ extension TransactionRowView {
         return HStack {
             switch transaction.status {
             case .paid, .received, .sending, .receiving:
-                Image(systemName: "arrow.forward")
+                Image(systemName: "envelope.fill")
                     .resizable()
-                    .frame(width: 12, height: 12)
-                    .foregroundColor(inTransaction ? .yellow : .white)
+                    .frame(width: 16, height: 12)
+                    .foregroundColor(Asset.Colors.primary.color)
                     .padding(10)
-                    .background(Asset.Colors.suppressed72.color)
-                    .cornerRadius(40)
-                    .rotationEffect(Angle(degrees: inTransaction ? 135 : -45))
                     .padding(.leading, 14)
             case .failed:
                 // TODO: [#392] final icon to be provided (https://github.com/zcash/secant-ios-wallet/issues/392)

@@ -44,6 +44,7 @@ let package = Package(
         .library(name: "SendFlow", targets: ["SendFlow"]),
         .library(name: "Settings", targets: ["Settings"]),
         .library(name: "SupportDataGenerator", targets: ["SupportDataGenerator"]),
+        .library(name: "Tabs", targets: ["Tabs"]),
         .library(name: "UIComponents", targets: ["UIComponents"]),
         .library(name: "URIParser", targets: ["URIParser"]),
         .library(name: "UserDefaults", targets: ["UserDefaults"]),
@@ -197,15 +198,12 @@ let package = Package(
         .target(
             name: "Home",
             dependencies: [
-                "AddressDetails",
                 "AudioServices",
-                "BalanceBreakdown",
                 "DiskSpaceChecker",
                 "Generated",
                 "Models",
                 "ReviewRequest",
                 "Scan",
-                "SendFlow",
                 "Settings",
                 "SDKSynchronizer",
                 "UIComponents",
@@ -328,12 +326,12 @@ let package = Package(
                 "DerivationTool",
                 "ExportLogs",
                 "Generated",
-                "Home",
                 "MnemonicClient",
                 "Models",
                 "OnboardingFlow",
                 "Sandbox",
                 "SDKSynchronizer",
+                "Tabs",
                 "UIComponents",
                 "UserPreferencesStorage",
                 "Utils",
@@ -454,6 +452,20 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Dependencies/SupportDataGenerator"
+        ),
+        .target(
+            name: "Tabs",
+            dependencies: [
+                "AddressDetails",
+                "BalanceBreakdown",
+                "Generated",
+                "Home",
+                "SendFlow",
+                "Settings",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
+            ],
+            path: "Sources/Features/Tabs"
         ),
         .target(
             name: "UIComponents",

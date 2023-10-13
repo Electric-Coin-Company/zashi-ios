@@ -16,7 +16,7 @@ import DerivationTool
 extension RootReducer {
     public struct DestinationState: Equatable {
         public enum Destination: Equatable {
-            case home
+            case tabs
             case onboarding
             case sandbox
             case startup
@@ -78,27 +78,21 @@ extension RootReducer {
                 }
 
             case .destination(.deeplinkHome):
-                state.destinationState.destination = .home
-                state.homeState.destination = nil
+                state.destinationState.destination = .tabs
+                //state.tabsState.destination = nil
                 return .none
 
             case let .destination(.deeplinkSend(amount, address, memo)):
-                state.destinationState.destination = .home
-                state.homeState.destination = .send
-                state.homeState.sendState.amount = amount
-                state.homeState.sendState.address = address
-                state.homeState.sendState.memoState.text = memo.redacted
+                state.destinationState.destination = .tabs
+                state.tabsState.selectedTab = .send
+                state.tabsState.sendState.amount = amount
+                state.tabsState.sendState.address = address
+                state.tabsState.sendState.memoState.text = memo.redacted
                 return .none
 
             case let .destination(.deeplinkFailed(url, error)):
                 state.alert = AlertState.failedToProcessDeeplink(url, error)
                 return .none
-
-            case .home(.walletEvents(.replyTo(let address))):
-                guard let url = URL(string: "zcash:\(address)") else {
-                    return .none
-                }
-                return EffectTask(value: .destination(.deeplink(url)))
 
             case .splashRemovalRequested:
                 return .run { send in
@@ -110,7 +104,7 @@ extension RootReducer {
                 state.splashAppeared = true
                 return .none
 
-            case .home, .initialization, .onboarding, .sandbox, .updateStateAfterConfigUpdate, .alert,
+            case .tabs, .initialization, .onboarding, .sandbox, .updateStateAfterConfigUpdate, .alert,
             .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .exportLogs:
                 return .none
             }

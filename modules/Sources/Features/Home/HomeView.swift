@@ -2,11 +2,8 @@ import SwiftUI
 import ComposableArchitecture
 import StoreKit
 import Generated
-import AddressDetails
-import BalanceBreakdown
 import WalletEventsFlow
 import Settings
-import SendFlow
 
 public struct HomeView: View {
     let store: HomeStore
@@ -22,24 +19,10 @@ public struct HomeView: View {
             VStack {
                 balance(viewStore)
 
-                Spacer()
-
-                sendButton(viewStore)
-
-                receiveButton(viewStore)
-                
-                Button {
-                    viewStore.send(.updateDestination(.transactionHistory))
-                } label: {
-                    Text(L10n.Home.transactionHistory)
-                        .foregroundColor(Asset.Colors.primary.color)
-                }
+                WalletEventsFlowView(store: store.historyStore(), tokenName: tokenName)
             }
             .padding()
             .applyScreenBackground()
-            .navigationTitle(L10n.Home.title)
-            .navigationBarItems(trailing: settingsButton(viewStore))
-            .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 viewStore.send(.onAppear)
             }
@@ -57,29 +40,8 @@ public struct HomeView: View {
                 action: { .alert($0) }
             ))
             .navigationLinkEmpty(
-                isActive: viewStore.bindingForDestination(.balanceBreakdown),
-                destination: {
-                    BalanceBreakdownView(
-                        store: store.balanceBreakdownStore(),
-                        tokenName: tokenName
-                    )
-                }
-            )
-            .navigationLinkEmpty(
                 isActive: viewStore.bindingForDestination(.notEnoughFreeDiskSpace),
                 destination: { NotEnoughFreeSpaceView(viewStore: viewStore) }
-            )
-            .navigationLinkEmpty(
-                isActive: viewStore.bindingForDestination(.transactionHistory),
-                destination: { WalletEventsFlowView(store: store.historyStore(), tokenName: tokenName) }
-            )
-            .navigationLinkEmpty(
-                isActive: viewStore.bindingForDestination(.send),
-                destination: { SendFlowView(store: store.sendStore(), tokenName: tokenName) }
-            )
-            .navigationLinkEmpty(
-                isActive: viewStore.bindingForDestination(.addressDetails),
-                destination: { AddressDetailsView(store: store.addressDetailsStore()) }
             )
         }
     }
@@ -88,47 +50,10 @@ public struct HomeView: View {
 // MARK: - Buttons
 
 extension HomeView {
-    func settingsButton(_ viewStore: HomeViewStore) -> some View {
-        Image(systemName: "gear")
-            .resizable()
-            .frame(width: 30, height: 30)
-            .padding(15)
-            .navigationLink(
-                isActive: viewStore.bindingForDestination(.settings),
-                destination: {
-                    SettingsView(store: store.settingsStore())
-                }
-            )
-            .tint(Asset.Colors.primary.color)
-    }
-
-    func sendButton(_ viewStore: HomeViewStore) -> some View {
-        Button(action: {
-            viewStore.send(.updateDestination(.send))
-        }, label: {
-            Text(L10n.Home.sendZec(tokenName).uppercased())
-        })
-        .zcashStyle()
-        .padding(.horizontal, 70)
-        .padding(.bottom, 30)
-        .disabled(viewStore.isSendButtonDisabled)
-    }
-    
-    func receiveButton(_ viewStore: HomeViewStore) -> some View {
-        Button(action: {
-            viewStore.send(.updateDestination(.addressDetails))
-        }, label: {
-            Text(L10n.Home.receiveZec(tokenName).uppercased())
-        })
-        .zcashStyle()
-        .padding(.horizontal, 70)
-        .padding(.bottom, 30)
-    }
-    
     func balance(_ viewStore: HomeViewStore) -> some View {
         Group {
             Button {
-                viewStore.send(.updateDestination(.balanceBreakdown))
+                viewStore.send(.balanceBreakdown)
             } label: {
                 Text(L10n.balance(viewStore.shieldedBalance.data.total.decimalString(), tokenName))
                     .font(.custom(FontFamily.Archivo.semiBold.name, size: 36))

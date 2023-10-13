@@ -183,20 +183,4 @@ class RootTests: XCTestCase {
             state.alert = AlertState.initializationFailed(zcashError)
         }
     }
-    
-    func testWalletEventReplyTo_validAddress() throws {
-        let store = TestStore(
-            initialState: .placeholder,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
-        
-        store.dependencies.sdkSynchronizer = .noOp
-        
-        let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
-        store.send(.home(.walletEvents(.replyTo(address))))
-        
-        if let url = URL(string: "zcash:\(address)") {
-            store.receive(.destination(.deeplink(url)))
-        }
-    }
 }

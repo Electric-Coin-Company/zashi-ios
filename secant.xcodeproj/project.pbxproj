@@ -62,6 +62,7 @@
 		9E3451C429C857DF00177D16 /* View+UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E92AF0728530EBF007367AD /* View+UIImage.swift */; };
 		9E3451C529C857E400177D16 /* WalletEventsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7CB6112869882D00A02233 /* WalletEventsSnapshotTests.swift */; };
 		9E3451C629C857E700177D16 /* WelcomeSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ECC8E28589E150099D5A2 /* WelcomeSnapshotTests.swift */; };
+		9E46919A2AD5735E0082D7DF /* TabsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4691992AD5735E0082D7DF /* TabsTests.swift */; };
 		9E4938D82ACE8E8F003C4C1D /* SecurityWarningSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4938D72ACE8E8F003C4C1D /* SecurityWarningSnapshotTests.swift */; };
 		9E5AAEC02A67CEC4003F283D /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E5AAEBF2A67CEC4003F283D /* Colors.xcassets */; };
 		9E5AAEC12A67CEC4003F283D /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E5AAEBF2A67CEC4003F283D /* Colors.xcassets */; };
@@ -125,6 +126,7 @@
 		9E39112D283F91600073DD9A /* ZatoshiTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZatoshiTests.swift; sourceTree = "<group>"; };
 		9E391131284644580073DD9A /* AppInitializationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInitializationTests.swift; sourceTree = "<group>"; };
 		9E3911382848AD500073DD9A /* HomeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTests.swift; sourceTree = "<group>"; };
+		9E4691992AD5735E0082D7DF /* TabsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsTests.swift; sourceTree = "<group>"; };
 		9E4938D72ACE8E8F003C4C1D /* SecurityWarningSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityWarningSnapshotTests.swift; sourceTree = "<group>"; };
 		9E5AAEBF2A67CEC4003F283D /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		9E5BF63E2819542C00BA3F17 /* WalletEventsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletEventsTests.swift; sourceTree = "<group>"; };
@@ -260,6 +262,7 @@
 				9E612C7729913F2300D09B09 /* SensitiveDataTests */,
 				9E66129C2889388C00C75B70 /* SettingsTests */,
 				9E391162284E3ECF0073DD9A /* SnapshotTests */,
+				9E4691982AD573420082D7DF /* TabsTests */,
 				9EF8135927ECC25E0075AF48 /* UtilTests */,
 				34F039B129ABCE8500CF0053 /* WalletConfigProviderTests */,
 				9E5BF63D281953F900BA3F17 /* WalletEventsTests */,
@@ -365,6 +368,14 @@
 				9E9ECC8D28589E150099D5A2 /* WelcomeSnapshotTests */,
 			);
 			path = SnapshotTests;
+			sourceTree = "<group>";
+		};
+		9E4691982AD573420082D7DF /* TabsTests */ = {
+			isa = PBXGroup;
+			children = (
+				9E4691992AD5735E0082D7DF /* TabsTests.swift */,
+			);
+			path = TabsTests;
 			sourceTree = "<group>";
 		};
 		9E4938D62ACE8E6C003C4C1D /* SecurityWarningSnapshotTests */ = {
@@ -905,6 +916,7 @@
 				9E3451A629C84B6600177D16 /* RootTests.swift in Sources */,
 				9E3451AE29C84F2800177D16 /* SendTests.swift in Sources */,
 				9E34519A29C4A52F00177D16 /* BalanceBreakdownTests.swift in Sources */,
+				9E46919A2AD5735E0082D7DF /* TabsTests.swift in Sources */,
 				9E3451AD29C84F0E00177D16 /* TransactionAmountInputTests.swift in Sources */,
 				9E3451C329C857DD00177D16 /* SettingsSnapshotTests.swift in Sources */,
 				9E34519D29C8484D00177D16 /* HomeFeatureFlagTests.swift in Sources */,

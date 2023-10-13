@@ -53,7 +53,6 @@ public struct WalletEventsFlowReducer: ReducerProtocol {
         case onDisappear
         case openBlockExplorer(URL?)
         case updateDestination(WalletEventsFlowReducer.State.Destination?)
-        case replyTo(RedactableString)
         case synchronizerStateChanged(SyncStatus)
         case updateWalletEvents([WalletEvent])
         case warnBeforeLeavingApp(URL?)
@@ -121,9 +120,6 @@ public struct WalletEventsFlowReducer: ReducerProtocol {
             pasteboard.setString(value)
             return .none
             
-        case .replyTo:
-            return .none
-
         case .alert(.presented(let action)):
             return EffectTask(value: action)
 

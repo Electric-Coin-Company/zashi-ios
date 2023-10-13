@@ -53,7 +53,7 @@ class DebugTests: XCTestCase {
         store.dependencies.sdkSynchronizer = .noOp
 
         await store.send(.debug(.quickRescan)) { state in
-            state.destinationState.internalDestination = .home
+            state.destinationState.internalDestination = .tabs
             state.destinationState.previousDestination = .welcome
         }
         
@@ -74,7 +74,7 @@ class DebugTests: XCTestCase {
         store.dependencies.sdkSynchronizer = .noOp
                 
         await store.send(.debug(.fullRescan)) { state in
-            state.destinationState.internalDestination = .home
+            state.destinationState.internalDestination = .tabs
             state.destinationState.previousDestination = .welcome
         }
         

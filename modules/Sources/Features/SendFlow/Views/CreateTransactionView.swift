@@ -93,8 +93,6 @@ public struct CreateTransaction: View {
 
                 Spacer()
             }
-            .navigationTitle(L10n.Send.title)
-            .navigationBarTitleDisplayMode(.inline)
             .padding(.horizontal)
         }
     }

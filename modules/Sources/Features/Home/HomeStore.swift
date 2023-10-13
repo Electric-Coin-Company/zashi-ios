@@ -9,12 +9,8 @@ import Utils
 import Models
 import Generated
 import ReviewRequest
-import AddressDetails
-import BalanceBreakdown
 import WalletEventsFlow
 import Scan
-import Settings
-import SendFlow
 
 public typealias HomeStore = Store<HomeReducer.State, HomeReducer.Action>
 public typealias HomeViewStore = ViewStore<HomeReducer.State, HomeReducer.Action>
@@ -25,23 +21,14 @@ public struct HomeReducer: ReducerProtocol {
 
     public struct State: Equatable {
         public enum Destination: Equatable {
-            case balanceBreakdown
             case notEnoughFreeDiskSpace
-            case addressDetails
-            case send
-            case settings
-            case transactionHistory
         }
 
         @PresentationState public var alert: AlertState<Action>?
-        public var addressDetailsState: AddressDetailsReducer.State
-        public var balanceBreakdownState: BalanceBreakdownReducer.State
         public var destination: Destination?
         public var canRequestReview = false
         public var requiredTransactionConfirmations = 0
         public var scanState: ScanReducer.State
-        public var sendState: SendFlowReducer.State
-        public var settingsState: SettingsReducer.State
         public var shieldedBalance: Balance
         public var synchronizerStatusSnapshot: SyncStatusSnapshot
         public var walletConfig: WalletConfig
@@ -59,28 +46,20 @@ public struct HomeReducer: ReducerProtocol {
         }
         
         public init(
-            addressDetailsState: AddressDetailsReducer.State,
-            balanceBreakdownState: BalanceBreakdownReducer.State,
             destination: Destination? = nil,
             canRequestReview: Bool = false,
             requiredTransactionConfirmations: Int = 0,
             scanState: ScanReducer.State,
-            sendState: SendFlowReducer.State,
-            settingsState: SettingsReducer.State,
             shieldedBalance: Balance,
             synchronizerStatusSnapshot: SyncStatusSnapshot,
             walletConfig: WalletConfig,
             walletEventsState: WalletEventsFlowReducer.State,
             zecPrice: Decimal = Decimal(140.0)
         ) {
-            self.addressDetailsState = addressDetailsState
-            self.balanceBreakdownState = balanceBreakdownState
             self.destination = destination
             self.canRequestReview = canRequestReview
             self.requiredTransactionConfirmations = requiredTransactionConfirmations
             self.scanState = scanState
-            self.sendState = sendState
-            self.settingsState = settingsState
             self.shieldedBalance = shieldedBalance
             self.synchronizerStatusSnapshot = synchronizerStatusSnapshot
             self.walletConfig = walletConfig
@@ -90,9 +69,8 @@ public struct HomeReducer: ReducerProtocol {
     }
 
     public enum Action: Equatable {
-        case addressDetails(AddressDetailsReducer.Action)
         case alert(PresentationAction<Action>)
-        case balanceBreakdown(BalanceBreakdownReducer.Action)
+        case balanceBreakdown
         case debugMenuStartup
         case foundTransactions
         case onAppear
@@ -100,8 +78,6 @@ public struct HomeReducer: ReducerProtocol {
         case resolveReviewRequest
         case retrySync
         case reviewRequestFinished
-        case send(SendFlowReducer.Action)
-        case settings(SettingsReducer.Action)
         case showSynchronizerErrorAlert(ZcashError)
         case synchronizerStateChanged(SynchronizerState)
         case syncFailed(ZcashError)
@@ -126,22 +102,6 @@ public struct HomeReducer: ReducerProtocol {
             WalletEventsFlowReducer()
         }
 
-        Scope(state: \.sendState, action: /Action.send) {
-            SendFlowReducer(networkType: networkType)
-        }
-
-        Scope(state: \.settingsState, action: /Action.settings) {
-            SettingsReducer()
-        }
-
-        Scope(state: \.addressDetailsState, action: /Action.addressDetails) {
-            AddressDetailsReducer()
-        }
-
-        Scope(state: \.balanceBreakdownState, action: /Action.balanceBreakdown) {
-            BalanceBreakdownReducer(networkType: networkType)
-        }
-
         Reduce { state, action in
             switch action {
             case .onAppear:
@@ -162,6 +122,7 @@ public struct HomeReducer: ReducerProtocol {
                 }
                 
             case .onDisappear:
+                return .none
                 return .cancel(id: CancelId.timer)
                 
             case .resolveReviewRequest:
@@ -210,21 +171,9 @@ public struct HomeReducer: ReducerProtocol {
                 state.destination = destination
                 return .none
                 
-            case .settings:
-                return .none
-
-            case .addressDetails:
-                return .none
-                
             case .walletEvents:
                 return .none
                 
-            case .send(.updateDestination(.done)):
-                return EffectTask(value: .updateDestination(nil))
-                
-            case .send:
-                return .none
-
             case .retrySync:
                 return .run { send in
                     do {
@@ -238,13 +187,6 @@ public struct HomeReducer: ReducerProtocol {
                 state.alert = AlertState.syncFailed(error, L10n.Home.SyncFailed.dismiss)
                 return .none
                 
-            case .balanceBreakdown(.onDisappear):
-                state.destination = nil
-                return .none
-
-            case .balanceBreakdown:
-                return .none
-
             case .debugMenuStartup:
                 return .none
                 
@@ -252,6 +194,9 @@ public struct HomeReducer: ReducerProtocol {
                 state.alert = AlertState.syncFailed(error, L10n.General.ok)
                 return .none
 
+            case .balanceBreakdown:
+                return .none
+                
             case .alert(.presented(let action)):
                 return EffectTask(value: action)
 
@@ -273,34 +218,6 @@ extension HomeStore {
         self.scope(
             state: \.walletEventsState,
             action: HomeReducer.Action.walletEvents
-        )
-    }
-    
-    func addressDetailsStore() -> AddressDetailsStore {
-        self.scope(
-            state: \.addressDetailsState,
-            action: HomeReducer.Action.addressDetails
-        )
-    }
-
-    func sendStore() -> SendFlowStore {
-        self.scope(
-            state: \.sendState,
-            action: HomeReducer.Action.send
-        )
-    }
-
-    func settingsStore() -> SettingsStore {
-        self.scope(
-            state: \.settingsState,
-            action: HomeReducer.Action.settings
-        )
-    }
-
-    func balanceBreakdownStore() -> BalanceBreakdownStore {
-        self.scope(
-            state: \.balanceBreakdownState,
-            action: HomeReducer.Action.balanceBreakdown
         )
     }
 }
@@ -342,11 +259,7 @@ extension AlertState where Action == HomeReducer.Action {
 extension HomeReducer.State {
     public static var placeholder: Self {
         .init(
-            addressDetailsState: .placeholder,
-            balanceBreakdownState: .placeholder,
             scanState: .placeholder,
-            sendState: .placeholder,
-            settingsState: .placeholder,
             shieldedBalance: Balance.zero,
             synchronizerStatusSnapshot: .default,
             walletConfig: .default,
@@ -366,11 +279,7 @@ extension HomeStore {
     public static var error: HomeStore {
         HomeStore(
             initialState: .init(
-                addressDetailsState: .placeholder,
-                balanceBreakdownState: .placeholder,
                 scanState: .placeholder,
-                sendState: .placeholder,
-                settingsState: .placeholder,
                 shieldedBalance: Balance.zero,
                 synchronizerStatusSnapshot: .snapshotFor(
                     state: .error(ZcashError.synchronizerNotPrepared)
