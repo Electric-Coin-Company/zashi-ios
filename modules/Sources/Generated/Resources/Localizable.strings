@@ -90,11 +90,6 @@
 // MARK: - Home Screen
 "home.sendZec" = "Send %@";
 "home.receiveZec" = "Receive %@";
-"home.transactionHistory" = "See transaction history";
-"home.title" = "ZASHI";
-"home.syncFailed.title" = "Sync failed!";
-"home.syncFailed.dismiss" = "Dismiss";
-"home.syncFailed.retry" = "Retry";
 "home.migratingDatabases" = "Upgrading databases…";
 
 // MARK: - Receive ZEC

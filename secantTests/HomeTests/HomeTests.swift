@@ -103,8 +103,6 @@ class HomeTests: XCTestCase {
             state.migratingDatabase = false
         }
 
-        store.receive(.showSynchronizerErrorAlert(testError)) { state in
-            state.alert = AlertState.syncFailed(ZcashError.synchronizerNotPrepared, L10n.Home.SyncFailed.dismiss)
-        }
+        store.receive(.showSynchronizerErrorAlert(testError))
     }
 }

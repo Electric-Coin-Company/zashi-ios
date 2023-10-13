@@ -20,7 +20,7 @@ public struct RecoveryPhraseDisplayView: View {
 
     public var body: some View {
         WithViewStore(self.store) { viewStore in
-            VStack(alignment: .center, spacing: 0) {
+            VStack(alignment: .center) {
                 Spacer()
 
                 Asset.Assets.zashiLogo.image
@@ -46,10 +46,10 @@ public struct RecoveryPhraseDisplayView: View {
 
                     Spacer()
                     
-                    HStack(spacing: 75) {
+                    HStack {
                         ForEach(groups, id: \.startIndex) { group in
                             VStack(alignment: .leading) {
-                                HStack {
+                                HStack(spacing: 2) {
                                     VStack(alignment: .trailing, spacing: 2) {
                                         ForEach(Array(group.words.enumerated()), id: \.offset) { seedWord in
                                             Text("\(seedWord.offset + group.startIndex + 1).")
@@ -61,13 +61,20 @@ public struct RecoveryPhraseDisplayView: View {
                                         ForEach(Array(group.words.enumerated()), id: \.offset) { seedWord in
                                             Text("\(seedWord.element.data)")
                                                 .font(.custom(FontFamily.Inter.medium.name, size: 16))
+                                                .minimumScaleFactor(0.5)
                                         }
+                                    }
+                                    
+                                    if group.startIndex == 0 {
+                                        Spacer()
                                     }
                                 }
                             }
                         }
                     }
-                    
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, 15)
+
                     Spacer()
 
                     if let birthdayValue = viewStore.birthdayValue {

@@ -23,6 +23,7 @@ extension RootReducer {
         case initializeSDK(WalletInitMode)
         case initialSetups
         case initializationFailed(ZcashError)
+        case initializationSuccessfullyDone(UnifiedAddress?)
         case nukeWallet
         case nukeWalletRequest
         case respondToWalletInitializationState(InitializationState)
@@ -44,8 +45,7 @@ extension RootReducer {
                     .delay(for: 1.0, scheduler: mainQueue)
                     .eraseToEffect()
                 
-            case .initialization(.synchronizerStartFailed(let zcashError)):
-                state.alert = AlertState.retryStartFailed(zcashError)
+            case .initialization(.synchronizerStartFailed):
                 return .none
 
             case .initialization(.retryStart):
@@ -156,6 +156,9 @@ extension RootReducer {
                         do {
                             try await sdkSynchronizer.prepareWith(seedBytes, birthday, walletMode)
                             try await sdkSynchronizer.start(false)
+
+                            let uAddress = try? await sdkSynchronizer.getUnifiedAddress(0)
+                            await send(.initialization(.initializationSuccessfullyDone(uAddress)))
                         } catch {
                             await send(.initialization(.initializationFailed(error.toZcashError())))
                         }
@@ -163,6 +166,10 @@ extension RootReducer {
                 } catch {
                     return EffectTask(value: .initialization(.initializationFailed(error.toZcashError())))
                 }
+
+            case .initialization(.initializationSuccessfullyDone(let uAddress)):
+                state.tabsState.addressDetailsState.uAddress = uAddress
+                return .none
 
             case .initialization(.checkBackupPhraseValidation):
                 guard let storedWallet = state.storedWallet else {
@@ -236,7 +243,7 @@ extension RootReducer {
             case .updateStateAfterConfigUpdate(let walletConfig):
                 state.walletConfig = walletConfig
                 state.onboardingState.walletConfig = walletConfig
-//                state.tabsState.walletConfig = walletConfig
+                state.tabsState.homeState.walletConfig = walletConfig
                 return .none
 
             case .initialization(.initializationFailed(let error)):
