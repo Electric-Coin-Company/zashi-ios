@@ -51,15 +51,17 @@ public struct AddressDetailsReducer: ReducerProtocol {
     }
     
     @Dependency(\.pasteboard) var pasteboard
-    
+
     public init() {}
     
     public func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
         switch action {
         case .copySaplingAddressToPastboard:
             pasteboard.setString(state.saplingAddress.redacted)
+            
         case .copyTransparentAddressToPastboard:
             pasteboard.setString(state.transparentAddress.redacted)
+            
         case .copyUnifiedAddressToPastboard:
             pasteboard.setString(state.unifiedAddress.redacted)
         }
@@ -70,7 +72,9 @@ public struct AddressDetailsReducer: ReducerProtocol {
 // MARK: - Placeholders
 
 extension AddressDetailsReducer.State {
-    public static let placeholder = AddressDetailsReducer.State(
+    public static let placeholder = AddressDetailsReducer.State()
+    
+    public static let demo = AddressDetailsReducer.State(
         uAddress: try! UnifiedAddress(
             encoding: "utest1vergg5jkp4xy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzjanqtl8uqp5vln3zyy246ejtx86vqftp73j7jg9099jxafyjhfm6u956j3",
             network: .testnet)

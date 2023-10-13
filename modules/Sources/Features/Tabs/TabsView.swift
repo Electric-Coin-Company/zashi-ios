@@ -88,6 +88,7 @@ public struct TabsView: View {
                                             .foregroundColor(.clear)
                                     }
                                 }
+                                .frame(minHeight: 50)
                             }
                             
                             if item.rawValue < TabsReducer.State.Tab.allCases.count-1 {

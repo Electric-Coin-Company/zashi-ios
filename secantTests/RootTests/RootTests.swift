@@ -183,4 +183,19 @@ class RootTests: XCTestCase {
             state.alert = AlertState.initializationFailed(zcashError)
         }
     }
+    
+    func testInitializationSuccessfullyDone() throws {
+        let store = TestStore(
+            initialState: .placeholder,
+            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        )
+        
+        // swiftlint:disable line_length
+        let uAddress = try UnifiedAddress(encoding: "utest1zkkkjfxkamagznjr6ayemffj2d2gacdwpzcyw669pvg06xevzqslpmm27zjsctlkstl2vsw62xrjktmzqcu4yu9zdhdxqz3kafa4j2q85y6mv74rzjcgjg8c0ytrg7dwyzwtgnuc76h", network: .testnet
+        )
+        
+        store.send(.initialization(.initializationSuccessfullyDone(uAddress))) { state in
+            state.tabsState.addressDetailsState.uAddress = uAddress
+        }
+    }
 }

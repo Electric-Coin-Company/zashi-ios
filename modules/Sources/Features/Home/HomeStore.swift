@@ -183,15 +183,13 @@ public struct HomeReducer: ReducerProtocol {
                     }
                 }
 
-            case .showSynchronizerErrorAlert(let error):
-                state.alert = AlertState.syncFailed(error, L10n.Home.SyncFailed.dismiss)
+            case .showSynchronizerErrorAlert:
                 return .none
                 
             case .debugMenuStartup:
                 return .none
                 
-            case .syncFailed(let error):
-                state.alert = AlertState.syncFailed(error, L10n.General.ok)
+            case .syncFailed:
                 return .none
 
             case .balanceBreakdown:
@@ -232,25 +230,6 @@ extension HomeViewStore {
                 return .updateDestination(isActive ? destination : nil)
             }
         )
-    }
-}
-
-// MARK: Alerts
-
-extension AlertState where Action == HomeReducer.Action {
-    public static func syncFailed(_ error: ZcashError, _ secondaryButtonTitle: String) -> AlertState {
-        AlertState {
-            TextState(L10n.Home.SyncFailed.title)
-        } actions: {
-            ButtonState(action: .retrySync) {
-                TextState(L10n.Home.SyncFailed.retry)
-            }
-            ButtonState(action: .alert(.dismiss)) {
-                TextState(secondaryButtonTitle)
-            }
-        } message: {
-            TextState("\(error.message) (code: \(error.code.rawValue))")
-        }
     }
 }
 

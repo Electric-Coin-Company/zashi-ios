@@ -161,18 +161,6 @@ public enum L10n {
     public static func sendZec(_ p1: Any) -> String {
       return L10n.tr("Localizable", "home.sendZec", String(describing: p1), fallback: "Send %@")
     }
-    /// ZASHI
-    public static let title = L10n.tr("Localizable", "home.title", fallback: "ZASHI")
-    /// See transaction history
-    public static let transactionHistory = L10n.tr("Localizable", "home.transactionHistory", fallback: "See transaction history")
-    public enum SyncFailed {
-      /// Dismiss
-      public static let dismiss = L10n.tr("Localizable", "home.syncFailed.dismiss", fallback: "Dismiss")
-      /// Retry
-      public static let retry = L10n.tr("Localizable", "home.syncFailed.retry", fallback: "Retry")
-      /// Sync failed!
-      public static let title = L10n.tr("Localizable", "home.syncFailed.title", fallback: "Sync failed!")
-    }
   }
   public enum ImportWallet {
     /// Enter your secret backup seed phrase.
