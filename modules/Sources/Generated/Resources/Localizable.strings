@@ -3,10 +3,9 @@
 "welcomeScreen.subtitle" = "Just Loading, one sec";
 
 // MARK: - Plain Onboarding Flow
-"plainOnboarding.title" = "It's time to setup your Zashi, powered by Zcash, no-frills wallet.";
-"plainOnboarding.caption" = "We need to create a new wallet or restore an existing one. Select your path:";
-"plainOnboarding.button.createNewWallet" = "Create a new Wallet";
-"plainOnboarding.button.restoreWallet" = "Restore an existing wallet";
+"plainOnboarding.title" = "A no-frills wallet for sending and receiving Zcash (ZEC).";
+"plainOnboarding.button.createNewWallet" = "Create new Wallet";
+"plainOnboarding.button.restoreWallet" = "Restore existing wallet";
 
 // MARK: - Security Warning
 "securityWarning.title" = "Security warning:";

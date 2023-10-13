@@ -14,7 +14,6 @@ import ZcashLightClientKit
 
 public struct PlainOnboardingView: View {
     let store: OnboardingFlowStore
-    let animationDuration: CGFloat = 0.8
 
     public init(store: OnboardingFlowStore) {
         self.store = store
@@ -23,38 +22,33 @@ public struct PlainOnboardingView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
-                VStack(alignment: .leading, spacing: 80) {
-                    Text(L10n.PlainOnboarding.title)
-                        .font(
-                            .custom(FontFamily.Inter.regular.name, size: 34, relativeTo: .largeTitle)
-                            .weight(.heavy)
-                        )
-
-                    Text(L10n.PlainOnboarding.caption)
-                        .font(
-                            .custom(FontFamily.Inter.regular.name, size: 16, relativeTo: .body)
-                            .weight(.semibold)
-                        )
-                }
-                .padding(0)
+                Asset.Assets.welcomeScreenLogo.image
+                    .resizable()
+                    .frame(width: 169, height: 160)
+                    .padding(.top, 60)
                 
+                Text(L10n.PlainOnboarding.title)
+                    .font(.custom(FontFamily.Inter.regular.name, size: 22))
+                    .padding(.top, 25)
+                    .multilineTextAlignment(.center)
+
                 Spacer()
                 
                 Button(L10n.PlainOnboarding.Button.createNewWallet.uppercased()) {
-                    viewStore.send(.createNewWallet, animation: .easeInOut(duration: animationDuration))
+                    viewStore.send(.createNewWallet)
                 }
                 .zcashStyle()
-                .padding(.horizontal, 70)
+                .frame(minWidth: 236)
                 .padding(.bottom, 30)
 
                 Button(L10n.PlainOnboarding.Button.restoreWallet.uppercased()) {
-                    viewStore.send(.importExistingWallet, animation: .easeInOut(duration: animationDuration))
+                    viewStore.send(.importExistingWallet)
                 }
                 .zcashStyle(.secondary)
-                .padding(.horizontal, 70)
-                .padding(.bottom, 20)
+                .frame(minWidth: 236)
+                .padding(.bottom, 50)
             }
-            .padding(.all)
+            .padding(.horizontal, 70)
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForDestination(.importExistingWallet),
                 destination: {
@@ -81,22 +75,19 @@ public struct PlainOnboardingView: View {
     }
 }
 
-struct PlainOnboardingView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            PlainOnboardingView(
-                store: Store(
-                    initialState: OnboardingFlowReducer.State(
-                        walletConfig: .default,
-                        importWalletState: .placeholder,
-                        securityWarningState: .placeholder
-                    ),
-                    reducer: OnboardingFlowReducer(
-                        saplingActivationHeight: 0,
-                        zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
-                    )
+#Preview {
+    PlainOnboardingView(
+        store:
+            Store(
+                initialState: OnboardingFlowReducer.State(
+                    walletConfig: .default,
+                    importWalletState: .placeholder,
+                    securityWarningState: .placeholder
+                ),
+                reducer: OnboardingFlowReducer(
+                    saplingActivationHeight: 0,
+                    zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
                 )
             )
-        }
-    }
+    )
 }

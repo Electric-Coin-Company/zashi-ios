@@ -39,9 +39,7 @@ public struct ZcashButtonStyle: ButtonStyle {
                 .border(Asset.Colors.primary.color)
                 .overlay(content: {
                     configuration.label
-                        .font(
-                            .custom(FontFamily.Inter.medium.name, size: 14)
-                        )
+                        .font(.custom(FontFamily.Inter.medium.name, size: 14))
                         .foregroundColor(
                             appearance == .primary ? Asset.Colors.secondary.color
                             : isEnabled ? Asset.Colors.primary.color : Asset.Colors.suppressed72.color
