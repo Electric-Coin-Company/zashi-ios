@@ -204,22 +204,22 @@ public struct SendFlowReducer: ReducerProtocol {
                         }
                     }
                 } catch {
-                    return EffectTask(value: .updateDestination(.failure))
+                    return Effect.send(.updateDestination(.failure))
                 }
                 
             case .sendTransactionSuccess:
                 state.isSendingTransaction = false
-                return EffectTask(value: .updateDestination(.success))
+                return Effect.send(.updateDestination(.success))
 
             case .sendTransactionFailure:
                 state.isSendingTransaction = false
-                return EffectTask(value: .updateDestination(.failure))
+                return Effect.send(.updateDestination(.failure))
 
             case .transactionAmountInput:
                 return .none
 
             case .transactionAddressInput(.scanQR):
-                return EffectTask(value: .updateDestination(.scanQR))
+                return Effect.send(.updateDestination(.scanQR))
 
             case .transactionAddressInput:
                 return .none
@@ -254,7 +254,7 @@ public struct SendFlowReducer: ReducerProtocol {
                     networkType
                 )
                 audioServices.systemSoundVibrate()
-                return EffectTask(value: .updateDestination(nil))
+                return Effect.send(.updateDestination(nil))
 
             case .scan:
                 return .none

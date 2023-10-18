@@ -139,7 +139,7 @@ public struct RootReducer: ReducerProtocol {
         Reduce { state, action in
             switch action {
             case .alert(.presented(let action)):
-                return EffectTask(value: action)
+                return Effect.send(action)
 
             case .alert(.dismiss):
                 state.alert = nil
@@ -265,6 +265,14 @@ extension AlertState where Action == RootReducer.Action {
             }
         } message: {
             TextState(L10n.Root.Initialization.Alert.Wipe.message)
+        }
+    }
+    
+    public static func successfullyRecovered() -> AlertState {
+        AlertState {
+            TextState(L10n.General.success)
+        } message: {
+            TextState(L10n.ImportWallet.Alert.Success.message)
         }
     }
 }

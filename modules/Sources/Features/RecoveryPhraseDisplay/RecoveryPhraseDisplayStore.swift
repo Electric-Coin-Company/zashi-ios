@@ -72,7 +72,7 @@ public struct RecoveryPhraseDisplayReducer: ReducerProtocol {
                 return .none
                 
             case .alert(.presented(let action)):
-                return EffectTask(value: action)
+                return Effect.send(action)
 
             case .alert(.dismiss):
                 state.alert = nil

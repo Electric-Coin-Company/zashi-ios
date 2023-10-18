@@ -114,11 +114,11 @@ public struct HomeReducer: ReducerProtocol {
                         .eraseToEffect()
                         .cancellable(id: CancelId.timer, cancelInFlight: true)
                     return .merge(
-                        EffectTask(value: .updateDestination(nil)),
+                        Effect.send(.updateDestination(nil)),
                         syncEffect
                     )
                 } else {
-                    return EffectTask(value: .updateDestination(.notEnoughFreeDiskSpace))
+                    return Effect.send(.updateDestination(.notEnoughFreeDiskSpace))
                 }
                 
             case .onDisappear:
@@ -155,7 +155,7 @@ public struct HomeReducer: ReducerProtocol {
 
                 switch snapshot.syncStatus {
                 case .error(let error):
-                    return EffectTask(value: .showSynchronizerErrorAlert(error.toZcashError()))
+                    return Effect.send(.showSynchronizerErrorAlert(error.toZcashError()))
 
                 case .upToDate:
                     return .fireAndForget { reviewRequest.syncFinished() }
@@ -196,7 +196,7 @@ public struct HomeReducer: ReducerProtocol {
                 return .none
                 
             case .alert(.presented(let action)):
-                return EffectTask(value: action)
+                return Effect.send(action)
 
             case .alert(.dismiss):
                 state.alert = nil
