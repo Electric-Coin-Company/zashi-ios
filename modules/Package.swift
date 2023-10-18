@@ -426,18 +426,14 @@ let package = Package(
             name: "Settings",
             dependencies: [
                 "AppVersion",
-                "CrashReporter",
-                "ExportLogs",
                 "Generated",
                 "LocalAuthenticationHandler",
-                "LogsHandler",
                 "MnemonicClient",
                 "Models",
                 "RecoveryPhraseDisplay",
                 "SDKSynchronizer",
                 "SupportDataGenerator",
                 "UIComponents",
-                "UserPreferencesStorage",
                 "WalletStorage",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")

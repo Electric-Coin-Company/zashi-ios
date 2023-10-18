@@ -142,16 +142,14 @@
 "send.error.invalidAddress" = "Invalid address";
 
 // MARK: - Settings
-"settings.crashReporting" = "Enable Crash Reporting";
-"settings.backupWallet" = "Backup Wallet";
-"settings.exporting" = "Exporting...";
-"settings.exportLogs" = "Export & share logs";
-"settings.feedback" = "Send us feedback!";
+"settings.recoveryPhrase" = "Recovery Phrase";
+"settings.feedback" = "Send us feedback";
+"settings.privacyPolicy" = "Privacy Policy";
+"settings.documentation" = "Documentation";
 "settings.about" = "About";
 "settings.about.info" = "Send and receive ZEC on Zashi!
 Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.";
 "settings.version" = "Version %@ (%@)";
-"settings.title" = "Settings";
 "settings.alert.cantBackupWallet.title" = "Can't backup wallet";
 "settings.alert.cantBackupWallet.message" = "Error: %@ (code: %@)";
 "settings.alert.cantSendEmail.title" = "Can't send email";
