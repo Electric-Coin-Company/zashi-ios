@@ -12,7 +12,7 @@ import Utils
 extension NumberFormatterClient: DependencyKey {
     public static let liveValue = NumberFormatterClient.live()
 
-    public static func live(numberFormatter: NumberFormatter = NumberFormatter.zcashNumberFormatter) -> Self {
+    public static func live(numberFormatter: NumberFormatter = NumberFormatter.zashiBalanceFormatter) -> Self {
         Self(
             string: { numberFormatter.string(from: $0) },
             number: { numberFormatter.number(from: $0) }

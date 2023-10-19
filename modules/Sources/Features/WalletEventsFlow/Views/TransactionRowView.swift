@@ -26,16 +26,12 @@ public struct TransactionRowView: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text(operationTitle)
-                        .font(
-                            .custom(FontFamily.Inter.regular.name, size: 16)
-                        )
+                        .font(.custom(FontFamily.Inter.bold.name, size: 12))
                         .foregroundColor(Asset.Colors.primary.color)
                     
                     Text("\(transaction.date?.asHumanReadable() ?? L10n.General.dateNotAvailable)")
-                        .font(
-                            .custom(FontFamily.Inter.regular.name, size: 16)
-                        )
-                        .foregroundColor(Asset.Colors.primary.color)
+                        .font(.custom(FontFamily.Inter.regular.name, size: 12))
+                        .foregroundColor(Asset.Colors.suppressed72.color)
                         .opacity(0.5)
                 }
 
@@ -43,16 +39,10 @@ public struct TransactionRowView: View {
 
                 Group {
                     Text(transaction.unarySymbol)
-                        .font(
-                            .custom(FontFamily.Inter.regular.name, size: 16)
-                        )
-                        .foregroundColor(Asset.Colors.primary.color)
-                    + Text(L10n.balance(transaction.zecAmount.decimalString(), tokenName))
-                        .font(
-                            .custom(FontFamily.Inter.regular.name, size: 16)
-                        )
-                        .foregroundColor(Asset.Colors.primary.color)
+                    + Text(transaction.zecAmount.decimalZashiFormatted())
                 }
+                .font(.custom(FontFamily.Inter.regular.name, size: 12))
+                .foregroundColor(Asset.Colors.primary.color)
                 .padding(.trailing, 30)
             }
             .padding(.leading, 80)

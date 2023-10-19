@@ -4,6 +4,7 @@ import StoreKit
 import Generated
 import WalletEventsFlow
 import Settings
+import UIComponents
 
 public struct HomeView: View {
     let store: HomeStore
@@ -55,19 +56,18 @@ extension HomeView {
             Button {
                 viewStore.send(.balanceBreakdown)
             } label: {
-                Text(L10n.balance(viewStore.shieldedBalance.data.total.decimalString(), tokenName))
-                    .font(.custom(FontFamily.Archivo.semiBold.name, size: 36))
+                BalanceTitle(balance: viewStore.shieldedBalance.data.total)
             }
 
             if viewStore.walletConfig.isEnabled(.showFiatConversion) {
-                Text("$\(viewStore.totalCurrencyBalance.decimalString())")
+                Text("$\(viewStore.totalCurrencyBalance.decimalZashiFormatted())")
                     .font(.custom(FontFamily.Inter.regular.name, size: 20))
             }
             
             if viewStore.migratingDatabase {
                 Text(L10n.Home.migratingDatabases)
             } else {
-                Text(L10n.Balance.available(viewStore.shieldedBalance.data.verified.decimalString(), tokenName))
+                Text(L10n.Balance.available(viewStore.shieldedBalance.data.verified.decimalZashiFormatted(), tokenName))
                     .font(.custom(FontFamily.Inter.regular.name, size: 12))
                     .accessDebugMenuWithHiddenGesture {
                         viewStore.send(.debugMenuStartup)

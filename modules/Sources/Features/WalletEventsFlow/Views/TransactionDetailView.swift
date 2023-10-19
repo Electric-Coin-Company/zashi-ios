@@ -34,29 +34,29 @@ public struct TransactionDetailView: View {
                     VStack(alignment: .leading) {
                         switch transaction.status {
                         case .paid:
-                            Text(L10n.Transaction.youSent(transaction.zecAmount.decimalString(), tokenName))
+                            Text(L10n.Transaction.youSent(transaction.zecAmount.decimalZashiFormatted(), tokenName))
                                 .padding()
                             address(mark: .inactive, viewStore: viewStore)
                             memo(transaction, viewStore, mark: .highlight)
                             
                         case .sending:
-                            Text(L10n.Transaction.youAreSending(transaction.zecAmount.decimalString(), tokenName))
+                            Text(L10n.Transaction.youAreSending(transaction.zecAmount.decimalZashiFormatted(), tokenName))
                                 .padding()
                             address(mark: .inactive, viewStore: viewStore)
                             memo(transaction, viewStore, mark: .highlight)
 
                         case .receiving:
-                            Text(L10n.Transaction.youAreReceiving(transaction.zecAmount.decimalString(), tokenName))
+                            Text(L10n.Transaction.youAreReceiving(transaction.zecAmount.decimalZashiFormatted(), tokenName))
                                 .padding()
                             memo(transaction, viewStore, mark: .highlight)
 
                         case .received:
-                            Text(L10n.Transaction.youReceived(transaction.zecAmount.decimalString(), tokenName))
+                            Text(L10n.Transaction.youReceived(transaction.zecAmount.decimalZashiFormatted(), tokenName))
                                 .padding()
                             memo(transaction, viewStore, mark: .highlight)
                             
                         case .failed:
-                            Text(L10n.Transaction.youDidNotSent(transaction.zecAmount.decimalString(), tokenName))
+                            Text(L10n.Transaction.youDidNotSent(transaction.zecAmount.decimalZashiFormatted(), tokenName))
                                 .padding()
 
                             address(mark: .inactive, viewStore: viewStore)

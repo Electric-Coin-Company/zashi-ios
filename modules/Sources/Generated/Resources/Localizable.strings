@@ -174,8 +174,6 @@ Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps you
 "transaction.youAreReceiving" = "You are receiving %@ %@";
 "transaction.youReceived" = "You received %@ %@";
 "transaction.youDidNotSent" = "You DID NOT send %@ %@";
-"transaction.sending" = "SENDING";
-"transaction.receiving" = "RECEIVING";
 "transaction.confirmed" = "Confirmed";
 "transaction.confirmedTimes" = "%@ times";
 "transaction.confirming" = "Confirming ~%@mins";
@@ -205,7 +203,6 @@ Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps you
 "general.cancel" = "Cancel";
 "general.success" = "Success";
 "general.unknown" = "Unknown";
-"balance" = "%@ %@";
 "balance.available" = "Available balance %@ %@";
 "qrCodeFor" = "QR Code for %@";
 "general.dateNotAvailable" = "date not available";

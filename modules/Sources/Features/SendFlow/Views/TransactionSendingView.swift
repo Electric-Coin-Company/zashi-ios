@@ -24,7 +24,7 @@ public struct TransactionSendingView: View {
         ZStack {
             VStack(alignment: .center, spacing: 40) {
                 Spacer()
-                Text(L10n.Send.sendingTo(viewStore.amount.decimalString(), tokenName))
+                Text(L10n.Send.sendingTo(viewStore.amount.decimalZashiFormatted(), tokenName))
                     .foregroundColor(Asset.Colors.primary.color)
 
                 Text(viewStore.address)

@@ -21,7 +21,7 @@ extension WalletEvent {
         case .shielded(let zatoshi):
             // TODO: [#390] implement design once shielding is supported
             // https://github.com/zcash/secant-ios-wallet/issues/390
-            Text(L10n.WalletEvent.Row.shielded(zatoshi.decimalString()))
+            Text(L10n.WalletEvent.Row.shielded(zatoshi.decimalZashiFormatted()))
                 .padding(.leading, 30)
         case .walletImport:
             // TODO: [#391] implement design once shielding is supported
@@ -42,7 +42,7 @@ extension WalletEvent {
         case .shielded(let zatoshi):
             // TODO: [#390] implement design once shielding is supported
             // https://github.com/zcash/secant-ios-wallet/issues/390
-            Text(L10n.WalletEvent.Detail.shielded(zatoshi.decimalString()))
+            Text(L10n.WalletEvent.Detail.shielded(zatoshi.decimalZashiFormatted()))
         case .walletImport:
             // TODO: [#391] implement design once shielding is supported
             // https://github.com/zcash/secant-ios-wallet/issues/391
