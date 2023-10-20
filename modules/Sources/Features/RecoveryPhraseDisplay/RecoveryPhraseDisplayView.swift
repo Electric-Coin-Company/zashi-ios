@@ -95,6 +95,7 @@ public struct RecoveryPhraseDisplayView: View {
                     Spacer()
                 }
             }
+            .navigationBarBackButtonHidden()
             .applyScreenBackground()
             .padding(.horizontal, 60)
             .onAppear { viewStore.send(.onAppear) }
@@ -102,8 +103,16 @@ public struct RecoveryPhraseDisplayView: View {
                 state: \.$alert,
                 action: { .alert($0) }
             ))
-            .navigationBarHidden(viewStore.phrase?.toGroups() != nil)
-            .zashiBack()
+            .toolbarAction {
+                Button {
+                    viewStore.send(.copyToBufferPressed)
+                } label: {
+                    Text(L10n.AddressDetails.tapToCopy)
+                        .font(.custom(FontFamily.Inter.bold.name, size: 11))
+                        .underline()
+                        .foregroundColor(Asset.Colors.primary.color)
+                }
+            }
         }
     }
 }
