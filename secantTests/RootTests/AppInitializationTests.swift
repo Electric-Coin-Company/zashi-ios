@@ -89,6 +89,8 @@ class AppInitializationTests: XCTestCase {
             state.destinationState.internalDestination = .tabs
         }
         
+        await store.receive(.initialization(.initializationSuccessfullyDone(nil)))
+        
         await store.finish()
     }
     

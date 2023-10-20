@@ -64,6 +64,7 @@ struct ZcashButtonModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .buttonStyle(ZcashButtonStyle(isEnabled: isEnabled, appearance: appearance))
+            .frame(minWidth: 236)
     }
 }
 

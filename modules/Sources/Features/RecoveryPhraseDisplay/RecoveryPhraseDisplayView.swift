@@ -88,7 +88,6 @@ public struct RecoveryPhraseDisplayView: View {
                         viewStore.send(.finishedPressed)
                     }
                     .zcashStyle()
-                    .frame(width: 236)
                     .padding(.bottom, 50)
                 } else {
                     Text(L10n.RecoveryPhraseDisplay.noWords)

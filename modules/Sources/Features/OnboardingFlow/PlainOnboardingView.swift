@@ -38,14 +38,12 @@ public struct PlainOnboardingView: View {
                     viewStore.send(.createNewWallet)
                 }
                 .zcashStyle()
-                .frame(minWidth: 236)
                 .padding(.bottom, 30)
 
                 Button(L10n.PlainOnboarding.Button.restoreWallet.uppercased()) {
                     viewStore.send(.importExistingWallet)
                 }
                 .zcashStyle(.secondary)
-                .frame(minWidth: 236)
                 .padding(.bottom, 50)
             }
             .padding(.horizontal, 70)

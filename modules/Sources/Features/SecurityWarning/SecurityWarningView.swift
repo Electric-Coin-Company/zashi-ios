@@ -62,7 +62,6 @@ public struct SecurityWarningView: View {
                     viewStore.send(.confirmTapped)
                 }
                 .zcashStyle()
-                .frame(width: 236)
                 .disabled(!viewStore.isAcknowledged)
                 .padding(.bottom, 50)
             }

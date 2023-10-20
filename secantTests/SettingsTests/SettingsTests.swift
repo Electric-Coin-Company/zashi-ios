@@ -53,8 +53,6 @@ class SettingsTests: XCTestCase {
         
         let store = TestStore(
             initialState: SettingsReducer.State(
-                exportLogsState: .placeholder,
-                isCrashReportingOn: false,
                 phraseDisplayState: RecoveryPhraseDisplayReducer.State(phrase: nil)
             ),
             reducer: SettingsReducer()
@@ -83,46 +81,5 @@ class SettingsTests: XCTestCase {
         await store.send(.backupWalletAccessRequest)
         
         await store.finish()
-    }
-    
-    func testExportLogs_ButtonDisableShareEnable() async throws {
-        let store = TestStore(
-            initialState: SettingsReducer.State(
-                destination: nil,
-                exportLogsState: .placeholder,
-                isCrashReportingOn: false,
-                phraseDisplayState: .init()
-            ),
-            reducer: SettingsReducer()
-        )
-        
-        store.dependencies.logsHandler = LogsHandlerClient(exportAndStoreLogs: { _, _, _ in nil })
-        
-        await store.send(.exportLogs(.start)) { state in
-            state.exportLogsState.exportLogsDisabled = true
-        }
-        
-        await store.receive(.exportLogs(.finished(nil))) { state in
-            state.exportLogsState.exportLogsDisabled = false
-            state.exportLogsState.isSharingLogs = true
-        }
-    }
-    
-    func testLogShareFinished() async throws {
-        let store = TestStore(
-            initialState: SettingsReducer.State(
-                destination: nil,
-                exportLogsState: ExportLogsReducer.State(
-                    isSharingLogs: true
-                ),
-                isCrashReportingOn: false,
-                phraseDisplayState: .init()
-            ),
-            reducer: SettingsReducer()
-        )
-        
-        await store.send(.exportLogs(.shareFinished)) { state in
-            state.exportLogsState.isSharingLogs = false
-        }
     }
 }

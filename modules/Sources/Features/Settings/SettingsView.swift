@@ -3,9 +3,10 @@ import ComposableArchitecture
 import Generated
 import RecoveryPhraseDisplay
 import UIComponents
-import ExportLogs
 
 public struct SettingsView: View {
+    @Environment(\.openURL) var openURL
+
     let store: SettingsStore
     
     public init(store: SettingsStore) {
@@ -14,55 +15,41 @@ public struct SettingsView: View {
     
     public var body: some View {
         WithViewStore(store) { viewStore in
-            VStack(spacing: 40) {
-                Toggle(
-                    L10n.Settings.crashReporting,
-                    isOn: viewStore.binding(\.$isCrashReportingOn)
-                )
-                
-                Button(
-                    action: { viewStore.send(.backupWalletAccessRequest) },
-                    label: { Text(L10n.Settings.backupWallet.uppercased()) }
-                )
+            VStack {
+                Button(L10n.Settings.recoveryPhrase.uppercased()) {
+                    viewStore.send(.backupWalletAccessRequest)
+                }
                 .zcashStyle()
-                .padding(.horizontal, 70)
+                .padding(.vertical, 25)
 
-                Button(
-                    action: { viewStore.send(.exportLogs(.start)) },
-                    label: {
-                        if viewStore.exportLogsState.exportLogsDisabled {
-                            HStack {
-                                ProgressView()
-                                Text(L10n.Settings.exporting.uppercased())
-                            }
-                        } else {
-                            Text(L10n.Settings.exportLogs.uppercased())
-                        }
+                Button(L10n.Settings.feedback.uppercased()) {
+                    viewStore.send(.sendSupportMail)
+                }
+                .zcashStyle()
+                .padding(.bottom, 25)
+
+                Button(L10n.Settings.privacyPolicy.uppercased()) {
+                    if let url = URL(string: "https://z.cash/privacy-policy/") {
+                        openURL(url)
                     }
-                )
+                }
                 .zcashStyle()
-                .padding(.horizontal, 70)
-                .disabled(viewStore.exportLogsState.exportLogsDisabled)
-                
-                Button(
-                    action: { viewStore.send(.sendSupportMail) },
-                    label: { Text(L10n.Settings.feedback.uppercased()) }
-                )
+                .padding(.bottom, 25)
+
+                Button(L10n.Settings.documentation.uppercased()) {
+                    // TODO: - [#866] finish the documentation button action
+                    // https://github.com/zcash/secant-ios-wallet/issues/866
+                }
                 .zcashStyle()
-                .padding(.horizontal, 70)
 
                 Spacer()
                 
-                Button(
-                    action: { viewStore.send(.updateDestination(.about)) },
-                    label: { Text(L10n.Settings.about.uppercased()) }
-                )
+                Button(L10n.Settings.about.uppercased()) {
+                    viewStore.send(.updateDestination(.about))
+                }
                 .zcashStyle()
-                .padding(.horizontal, 70)
                 .padding(.bottom, 50)
             }
-            .padding(.horizontal, 30)
-            .navigationTitle(L10n.Settings.title)
             .applyScreenBackground()
             .navigationLinkEmpty(
                 isActive: viewStore.bindingForBackupPhrase,
@@ -78,8 +65,6 @@ public struct SettingsView: View {
             )
             .onAppear { viewStore.send(.onAppear) }
 
-            shareLogsView(viewStore)
-
             if let supportData = viewStore.supportData {
                 UIMailDialogView(
                     supportData: supportData,
@@ -92,37 +77,24 @@ public struct SettingsView: View {
                 .frame(width: 0, height: 0)
             }
         }
+        .padding(.horizontal, 70)
         .alert(store: store.scope(
             state: \.$alert,
             action: { .alert($0) }
         ))
-        .alert(store: store.scope(
-            state: \.exportLogsState.$alert,
-            action: { .exportLogs(.alert($0)) }
-        ))
         .zashiBack()
-    }
-
-    @ViewBuilder func shareLogsView(_ viewStore: SettingsViewStore) -> some View {
-        if viewStore.exportLogsState.isSharingLogs {
-            UIShareDialogView(
-                activityItems: viewStore.exportLogsState.zippedLogsURLs
-            ) {
-                viewStore.send(.exportLogs(.shareFinished))
-            }
-            // UIShareDialogView only wraps UIActivityViewController presentation
-            // so frame is set to 0 to not break SwiftUIs layout
-            .frame(width: 0, height: 0)
-        } else {
-            EmptyView()
+        .zashiTitle {
+            Asset.Assets.zashiTitle.image
+                .resizable()
+                .frame(width: 62, height: 17)
         }
     }
 }
 
 // MARK: - Previews
 
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
+#Preview {
+    NavigationView {
         SettingsView(store: .placeholder)
     }
 }
