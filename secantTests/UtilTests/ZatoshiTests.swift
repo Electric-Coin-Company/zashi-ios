@@ -181,4 +181,44 @@ class ZatoshiTests: XCTestCase {
             XCTFail("Zatoshi tests: `testStringToZatoshi` failed to convert number.")
         }
     }
+    
+    func testZashiRounding() throws {
+        let zashiBalanceFormatter = NumberFormatter.zashiBalanceFormatter
+        zashiBalanceFormatter.locale = Locale(identifier: "en_US")
+        
+        var balance = zashiBalanceFormatter.string(from: Zatoshi(11_440_000).decimalValue) ?? ""
+        XCTAssertEqual(
+            balance,
+            "0.114",
+            "Zatoshi tests: `testZashiRounding` the value is expected to be 0.114 but it's \(balance)"
+        )
+
+        balance = zashiBalanceFormatter.string(from: Zatoshi(11_410_000).decimalValue) ?? ""
+        XCTAssertEqual(
+            balance,
+            "0.114",
+            "Zatoshi tests: `testZashiRounding` the value is expected to be 0.114 but it's \(balance)"
+        )
+
+        balance = zashiBalanceFormatter.string(from: Zatoshi(11_440_000).decimalValue) ?? ""
+        XCTAssertEqual(
+            balance,
+            "0.114",
+            "Zatoshi tests: `testZashiRounding` the value is expected to be 0.114 but it's \(balance)"
+        )
+
+        balance = zashiBalanceFormatter.string(from: Zatoshi(11_450_000).decimalValue) ?? ""
+        XCTAssertEqual(
+            balance,
+            "0.115",
+            "Zatoshi tests: `testZashiRounding` the value is expected to be 0.115 but it's \(balance)"
+        )
+
+        balance = zashiBalanceFormatter.string(from: Zatoshi(11_490_000).decimalValue) ?? ""
+        XCTAssertEqual(
+            balance,
+            "0.115",
+            "Zatoshi tests: `testZashiRounding` the value is expected to be 0.115 but it's \(balance)"
+        )
+    }
 }

@@ -10,10 +10,6 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 public enum L10n {
-  /// %@ %@
-  public static func balance(_ p1: Any, _ p2: Any) -> String {
-    return L10n.tr("Localizable", "balance", String(describing: p1), String(describing: p2), fallback: "%@ %@")
-  }
   /// QR Code for %@
   public static func qrCodeFor(_ p1: Any) -> String {
     return L10n.tr("Localizable", "qrCodeFor", String(describing: p1), fallback: "QR Code for %@")
@@ -645,10 +641,10 @@ public enum L10n {
     public static let failed = L10n.tr("Localizable", "transaction.failed", fallback: "Failed")
     /// Received
     public static let received = L10n.tr("Localizable", "transaction.received", fallback: "Received")
-    /// RECEIVING
-    public static let receiving = L10n.tr("Localizable", "transaction.receiving", fallback: "RECEIVING")
-    /// SENDING
-    public static let sending = L10n.tr("Localizable", "transaction.sending", fallback: "SENDING")
+    /// Receiving
+    public static let receiving = L10n.tr("Localizable", "transaction.receiving", fallback: "Receiving")
+    /// Sending
+    public static let sending = L10n.tr("Localizable", "transaction.sending", fallback: "Sending")
     /// Sent
     public static let sent = L10n.tr("Localizable", "transaction.sent", fallback: "Sent")
     /// to

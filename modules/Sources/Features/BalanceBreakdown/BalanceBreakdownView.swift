@@ -48,7 +48,7 @@ public struct BalanceBreakdownView: View {
                     Spacer()
                     Text(
                         L10n.BalanceBreakdown.autoShieldingThreshold(
-                            viewStore.autoShieldingThreshold.decimalString(),
+                            viewStore.autoShieldingThreshold.decimalZashiFormatted(),
                             tokenName
                         )
                     )
@@ -74,17 +74,8 @@ extension BalanceBreakdownView {
         VStack(alignment: .leading) {
             Text("\(title)")
                 .foregroundColor(titleColor)
-            Text(
-                L10n.balance(
-                    balance.decimalString(formatter: NumberFormatter.zcashNumberFormatter8FractionDigits),
-                    tokenName
-                )
-            )
-            .font(
-                .custom(FontFamily.Inter.regular.name, size: 32)
-                .weight(.bold)
-            )
-            .foregroundColor(Asset.Colors.primary.color)
+            
+            BalanceTitle(balance: balance)
         }
         .padding(.horizontal, 50)
     }

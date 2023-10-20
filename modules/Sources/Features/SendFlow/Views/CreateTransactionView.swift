@@ -19,17 +19,7 @@ public struct CreateTransaction: View {
         return WithViewStore(store) { viewStore in
             VStack(spacing: 5) {
                 VStack(spacing: 0) {
-                    Text(L10n.Balance.available(viewStore.shieldedBalance.data.verified.decimalString(), tokenName))
-                        .font(
-                            .custom(FontFamily.Inter.regular.name, size: 26)
-                            .weight(.bold)
-                        )
-                        .multilineTextAlignment(.center)
-                        .minimumScaleFactor(0.5)
-                    Text(L10n.Send.fundsInfo)
-                        .font(
-                            .custom(FontFamily.Inter.regular.name, size: 14)
-                        )
+                    BalanceTitle(balance: viewStore.shieldedBalance.data.verified)
                 }
                 .foregroundColor(Asset.Colors.primary.color)
                 .padding(.horizontal)
