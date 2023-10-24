@@ -88,7 +88,7 @@ public struct BalanceBreakdownReducer: ReducerProtocol {
         Reduce { state, action in
             switch action {
             case .alert(.presented(let action)):
-                return EffectTask(value: action)
+                return Effect.send(action)
 
             case .alert(.dismiss):
                 state.alert = nil
@@ -105,7 +105,6 @@ public struct BalanceBreakdownReducer: ReducerProtocol {
                     .cancellable(id: CancelId.timer, cancelInFlight: true)
 
             case .onDisappear:
-                return .none
                 return .cancel(id: CancelId.timer)
 
             case .shieldFunds:
@@ -143,7 +142,7 @@ public struct BalanceBreakdownReducer: ReducerProtocol {
                     state.synchronizerStatusSnapshot = snapshot
                 }
 
-                return EffectTask(value: .updateLatestBlock)
+                return Effect.send(.updateLatestBlock)
 
             case .updateLatestBlock:
                 let latestBlockNumber = sdkSynchronizer.latestState().latestBlockHeight

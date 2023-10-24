@@ -69,16 +69,16 @@
 
 // MARK: - Import Wallet Screen
 "importWallet.title" = "Wallet Import";
-"importWallet.description" = "Enter your secret backup seed phrase.";
-"importWallet.button.restoreWallet" = "Restore wallet";
-"importWallet.button.importPrivateKey" = "Import a private or viewing key";
-"importWallet.birthday.description" = "Do you know the wallet's creation date? This will allow a faster sync. If you don't know the wallet's birthday, don't worry!";
-"importWallet.birthday.placeholder" = "Enter birthday height";
+"importWallet.description" = "Enter secret\nrecovery phrase";
+"importWallet.message" = "Enter your 24-word seed phrase to restore the associated wallet.";
+"importWallet.button.restoreWallet" = "Restore";
+"importWallet.birthday.title" = "Enter birthday\nheight";
 "importWallet.seed.valid" = "VALID SEED PHRASE";
 "importWallet.alert.success.title" = "Success";
 "importWallet.alert.success.message" = "The wallet has been successfully recovered.";
 "importWallet.alert.failed.title" = "Failed to restore wallet";
 "importWallet.alert.failed.message" = "Error: %@ (code: %@)";
+"importWallet.optionalBirthday" = "optional";
 
 // MARK: - Tabs
 "tabs.account" = "Account";
@@ -203,6 +203,7 @@ Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps you
 "general.cancel" = "Cancel";
 "general.success" = "Success";
 "general.unknown" = "Unknown";
+"general.done" = "Done";
 "balance.available" = "Available balance %@ %@";
 "qrCodeFor" = "QR Code for %@";
 "general.dateNotAvailable" = "date not available";

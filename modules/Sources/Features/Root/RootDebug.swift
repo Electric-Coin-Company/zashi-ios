@@ -86,7 +86,7 @@ extension RootReducer {
                     .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
 
             case let .debug(.walletConfigLoaded(walletConfig)):
-                return EffectTask(value: .updateStateAfterConfigUpdate(walletConfig))
+                return Effect.send(.updateStateAfterConfigUpdate(walletConfig))
 
             case .debug(.cantStartSync(let error)):
                 state.alert = AlertState.cantStartSync(error)

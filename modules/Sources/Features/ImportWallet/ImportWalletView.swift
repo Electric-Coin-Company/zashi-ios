@@ -13,47 +13,69 @@ import UIComponents
 public struct ImportWalletView: View {
     var store: ImportWalletStore
 
+    @FocusState private var seedFieldFocused: Bool
+    
     public init(store: ImportWalletStore) {
         self.store = store
     }
     
     public var body: some View {
-        WithViewStore(store) { viewStore in
-            VStack {
-                Text(L10n.ImportWallet.description)
-                    .font(
-                        .custom(FontFamily.Inter.regular.name, size: 27)
-                        .weight(.bold)
-                    )
-                    .foregroundColor(Asset.Colors.primary.color)
-                    .minimumScaleFactor(0.3)
-
-                ImportSeedEditor(store: store)
-                    .frame(width: nil, height: 200, alignment: .center)
-
-                Button(L10n.General.next.uppercased()) {
-                    viewStore.send(.updateDestination(.birthday))
+        ScrollView {
+            WithViewStore(store) { viewStore in
+                VStack(alignment: .center) {
+                    ZashiIcon()
+                        .padding(.vertical, 30)
+                    
+                    Text(L10n.ImportWallet.description)
+                        .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
+                        .foregroundColor(Asset.Colors.primary.color)
+                        .multilineTextAlignment(.center)
+                        .padding(.bottom, 10)
+                    
+                    Text(L10n.ImportWallet.message)
+                        .font(.custom(FontFamily.Inter.medium.name, size: 14))
+                        .foregroundColor(Asset.Colors.primary.color)
+                        .multilineTextAlignment(.center)
+                        .padding(.bottom, 20)
+                        .padding(.horizontal, 10)
+                    
+                    ImportSeedEditor(store: store)
+                        .frame(minWidth: 270)
+                        .frame(height: 215)
+                        .focused($seedFieldFocused)
+                        .toolbar {
+                            ToolbarItemGroup(placement: .keyboard) {
+                                Spacer()
+                                
+                                Button(L10n.General.done.uppercased()) {
+                                    seedFieldFocused = false
+                                }
+                                .foregroundColor(Asset.Colors.primary.color)
+                                .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                            }
+                        }
+                    
+                    Button(L10n.General.next.uppercased()) {
+                        viewStore.send(.updateDestination(.birthday))
+                    }
+                    .zcashStyle()
+                    .frame(width: 236)
+                    .disabled(!viewStore.isValidForm)
+                    .padding(.top, 50)
                 }
-                .zcashStyle()
+                .applyScreenBackground()
                 .padding(.horizontal, 70)
-                .importWalletButtonLayout()
-                .disabled(!viewStore.isValidForm)
-
-                Spacer()
+                .onAppear(perform: { viewStore.send(.onAppear) })
+                .navigationLinkEmpty(
+                    isActive: viewStore.bindingForDestination(.birthday),
+                    destination: { ImportBirthdayView(store: store) }
+                )
+                .alert(store: store.scope(
+                    state: \.$alert,
+                    action: { .alert($0) }
+                ))
+                .zashiBack()
             }
-            .padding(.horizontal, 20)
-            .applyScreenBackground()
-            .scrollableWhenScaledUp()
-            .onAppear(perform: { viewStore.send(.onAppear) })
-            .navigationLinkEmpty(
-                isActive: viewStore.bindingForDestination(.birthday),
-                destination: { ImportBirthdayView(store: store) }
-            )
-            .alert(store: store.scope(
-                state: \.$alert,
-                action: { .alert($0) }
-            ))
-            .zashiBack()
         }
     }
 }
@@ -106,13 +128,8 @@ extension View {
 
 // MARK: - Previews
 
-struct ImportWalletView_Previews: PreviewProvider {
-    static var previews: some View {
+#Preview {
+    NavigationView {
         ImportWalletView(store: .demo)
-            .preferredColorScheme(.light)
-
-        ImportWalletView(store: .demo)
-            .previewDevice(PreviewDevice(rawValue: "iPhone SE (2nd generation)"))
-            .preferredColorScheme(.light)
     }
 }

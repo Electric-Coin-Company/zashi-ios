@@ -125,7 +125,7 @@ public struct ImportWalletReducer: ReducerProtocol {
                 return .none
                 
             case .alert(.presented(let action)):
-                return EffectTask(value: action)
+                return Effect.send(action)
 
             case .alert(.dismiss):
                 state.alert = nil
@@ -147,11 +147,16 @@ public struct ImportWalletReducer: ReducerProtocol {
                     
                     // update the backup phrase validation flag
                     try walletStorage.markUserPassedPhraseBackupTest(true)
-                    
-                    state.alert = AlertState.succeed()
+
+                    state.birthdayHeight = "".redacted
+                    state.importedSeedPhrase = "".redacted
+                    state.destination = nil
                     
                     // notify user
-                    return EffectTask(value: .initializeSDK)
+                    return .concatenate(
+                        Effect.send(.successfullyRecovered),
+                        Effect.send(.initializeSDK)
+                    )
                 } catch {
                     state.alert = AlertState.failed(error.toZcashError())
                 }
@@ -204,18 +209,6 @@ extension ImportWalletViewStore {
 // MARK: Alerts
 
 extension AlertState where Action == ImportWalletReducer.Action {
-    public static func succeed() -> AlertState {
-        AlertState {
-            TextState(L10n.General.success)
-        } actions: {
-            ButtonState(action: .successfullyRecovered) {
-                TextState(L10n.General.ok)
-            }
-        } message: {
-            TextState(L10n.ImportWallet.Alert.Success.message)
-        }
-    }
-    
     public static func failed(_ error: ZcashError) -> AlertState {
         AlertState {
             TextState(L10n.ImportWallet.Alert.Failed.title)

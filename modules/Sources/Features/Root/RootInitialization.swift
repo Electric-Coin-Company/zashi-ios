@@ -41,7 +41,7 @@ extension RootReducer {
                 return .none
                 
             case .initialization(.appDelegate(.willEnterForeground)):
-                return EffectTask(value: .initialization(.retryStart))
+                return Effect.send(.initialization(.retryStart))
                     .delay(for: 1.0, scheduler: mainQueue)
                     .eraseToEffect()
                 
@@ -64,7 +64,7 @@ extension RootReducer {
             case .initialization(.appDelegate(.didFinishLaunching)):
                 // TODO: [#704], trigger the review request logic when approved by the team,
                 // https://github.com/zcash/secant-ios-wallet/issues/704
-                return EffectTask(value: .initialization(.initialSetups))
+                return Effect.send(.initialization(.initialSetups))
                     .delay(for: 0.02, scheduler: mainQueue)
                     .eraseToEffect()
 
@@ -77,15 +77,15 @@ extension RootReducer {
 
             case .walletConfigLoaded(let walletConfig):
                 if walletConfig == WalletConfig.default {
-                    return EffectTask(value: .initialization(.initialSetups))
+                    return Effect.send(.initialization(.initialSetups))
                 } else {
-                    return EffectTask(value: .initialization(.walletConfigChanged(walletConfig)))
+                    return Effect.send(.initialization(.walletConfigChanged(walletConfig)))
                 }
             
             case .initialization(.walletConfigChanged(let walletConfig)):
                 return .concatenate(
-                    EffectTask(value: .updateStateAfterConfigUpdate(walletConfig)),
-                    EffectTask(value: .initialization(.initialSetups))
+                    Effect.send(.updateStateAfterConfigUpdate(walletConfig)),
+                    Effect.send(.initialization(.initialSetups))
                 )
                 
             case .initialization(.initialSetups):
@@ -93,8 +93,8 @@ extension RootReducer {
                 LoggerProxy.event(".appDelegate(.didFinishLaunching)")
                 /// We need to fetch data from keychain, in order to be 100% sure the keychain can be read we delay the check a bit
                 return .concatenate(
-                    EffectTask(value: .initialization(.configureCrashReporter)),
-                    EffectTask(value: .initialization(.checkWalletInitialization))
+                    Effect.send(.initialization(.configureCrashReporter)),
+                    Effect.send(.initialization(.checkWalletInitialization))
                         .delay(for: 0.02, scheduler: mainQueue)
                         .eraseToEffect()
                 )
@@ -106,7 +106,7 @@ extension RootReducer {
                     walletStorage: walletStorage,
                     zcashNetwork: zcashNetwork
                 )
-                return EffectTask(value: .initialization(.respondToWalletInitializationState(walletState)))
+                return Effect.send(.initialization(.respondToWalletInitializationState(walletState)))
 
                 /// Respond to all possible states of the wallet and initiate appropriate side effects including errors handling
             case .initialization(.respondToWalletInitializationState(let walletState)):
@@ -124,12 +124,12 @@ extension RootReducer {
                         state.appInitializationState = .filesMissing
                     }
                     return .concatenate(
-                        EffectTask(value: .initialization(.initializeSDK(.existingWallet))),
-                        EffectTask(value: .initialization(.checkBackupPhraseValidation))
+                        Effect.send(.initialization(.initializeSDK(.existingWallet))),
+                        Effect.send(.initialization(.checkBackupPhraseValidation))
                     )
                 case .uninitialized:
                     state.appInitializationState = .uninitialized
-                    return EffectTask(value: .destination(.updateDestination(.onboarding)))
+                    return Effect.send(.destination(.updateDestination(.onboarding)))
                         .delay(for: 3, scheduler: mainQueue)
                         .eraseToEffect()
                         .cancellable(id: CancelId.timer, cancelInFlight: true)
@@ -164,7 +164,7 @@ extension RootReducer {
                         }
                     }
                 } catch {
-                    return EffectTask(value: .initialization(.initializationFailed(error.toZcashError())))
+                    return Effect.send(.initialization(.initializationFailed(error.toZcashError())))
                 }
 
             case .initialization(.initializationSuccessfullyDone(let uAddress)):
@@ -180,7 +180,7 @@ extension RootReducer {
 
                 state.appInitializationState = .initialized
 
-                return EffectTask(value: .destination(.updateDestination(.tabs)))
+                return Effect.send(.destination(.updateDestination(.tabs)))
                     .delay(for: 3, scheduler: mainQueue)
                     .eraseToEffect()
                     .cancellable(id: CancelId.timer, cancelInFlight: true)
@@ -191,7 +191,7 @@ extension RootReducer {
             
             case .initialization(.nukeWallet):
                 guard let wipePublisher = sdkSynchronizer.wipe() else {
-                    return EffectTask(value: .nukeWalletFailed)
+                    return Effect.send(.nukeWalletFailed)
                 }
                 return wipePublisher
                     .replaceEmpty(with: Void())
@@ -206,15 +206,15 @@ extension RootReducer {
                 state.onboardingState.destination = nil
                 return .concatenate(
                     .cancel(id: SynchronizerCancelId.timer),
-                    EffectTask(value: .initialization(.checkWalletInitialization))
+                    Effect.send(.initialization(.checkWalletInitialization))
                 )
 
             case .nukeWalletFailed:
                 let backDestination: EffectTask<RootReducer.Action>
                 if let previousDestination = state.destinationState.previousDestination {
-                    backDestination = EffectTask(value: .destination(.updateDestination(previousDestination)))
+                    backDestination = Effect.send(.destination(.updateDestination(previousDestination)))
                 } else {
-                    backDestination = EffectTask(value: .destination(.updateDestination(state.destinationState.destination)))
+                    backDestination = Effect.send(.destination(.updateDestination(state.destinationState.destination)))
                 }
                 state.alert = AlertState.wipeFailed()
                 return .concatenate(
@@ -225,14 +225,15 @@ extension RootReducer {
             case .welcome(.debugMenuStartup), .tabs(.home(.debugMenuStartup)):
                 return .concatenate(
                     EffectTask.cancel(id: CancelId.timer),
-                    EffectTask(value: .destination(.updateDestination(.startup)))
+                    Effect.send(.destination(.updateDestination(.startup)))
                 )
 
             case .onboarding(.importWallet(.successfullyRecovered)):
-                return EffectTask(value: .destination(.updateDestination(.tabs)))
+                state.alert = AlertState.successfullyRecovered()
+                return Effect.send(.destination(.updateDestination(.tabs)))
 
             case .onboarding(.importWallet(.initializeSDK)):
-                return EffectTask(value: .initialization(.initializeSDK(.restoreWallet)))
+                return Effect.send(.initialization(.initializeSDK(.restoreWallet)))
 
             case .initialization(.configureCrashReporter):
                 crashReporter.configure(
@@ -252,10 +253,10 @@ extension RootReducer {
                 return .none
 
             case .onboarding(.securityWarning(.newWalletCreated)):
-                return EffectTask(value: .initialization(.initializeSDK(.newWallet)))
+                return Effect.send(.initialization(.initializeSDK(.newWallet)))
 
             case .onboarding(.securityWarning(.recoveryPhraseDisplay(.finishedPressed))):
-                return EffectTask(value: .destination(.updateDestination(.tabs)))
+                return Effect.send(.destination(.updateDestination(.tabs)))
                 
             case .tabs, .destination, .onboarding, .sandbox,
             .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested:

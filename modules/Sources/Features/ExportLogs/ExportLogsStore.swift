@@ -46,7 +46,7 @@ public struct ExportLogsReducer: ReducerProtocol {
         Reduce { state, action in
             switch action {
             case .alert(.presented(let action)):
-                return EffectTask(value: action)
+                return Effect.send(action)
 
             case .alert(.dismiss):
                 state.alert = nil

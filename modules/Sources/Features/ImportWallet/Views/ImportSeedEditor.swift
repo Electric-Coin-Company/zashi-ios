@@ -17,8 +17,6 @@ public struct ImportSeedEditor: View {
             TextEditor(text: viewStore.bindingForRedactableSeedPhrase(viewStore.importedSeedPhrase))
                 .autocapitalization(.none)
                 .importSeedEditorModifier(Asset.Colors.primary.color)
-                .padding(.horizontal, 28)
-                .padding(.vertical, 10)
         }
     }
 }

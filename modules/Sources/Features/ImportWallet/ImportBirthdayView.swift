@@ -19,33 +19,40 @@ public struct ImportBirthdayView: View {
     
     public var body: some View {
         WithViewStore(store) { viewStore in
-            VStack {
-                Text(L10n.ImportWallet.Birthday.description)
-                    .font(
-                        .custom(FontFamily.Inter.regular.name, size: 16)
-                        .weight(.bold)
-                    )
+            VStack(alignment: .center) {
+                ZashiIcon()
+                    .padding(.vertical, 30)
+
+                Text(L10n.ImportWallet.Birthday.title)
+                    .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
                     .foregroundColor(Asset.Colors.primary.color)
+                    .minimumScaleFactor(0.3)
+                    .multilineTextAlignment(.center)
+                    .padding(.bottom, 10)
+
+                TextField(L10n.ImportWallet.optionalBirthday, text: viewStore.bindingForRedactableBirthday(viewStore.birthdayHeight))
+                    .frame(height: 40)
+                    .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
+                    .keyboardType(.numberPad)
+                    .autocapitalization(.none)
+                    .multilineTextAlignment(.center)
+                    .overlay {
+                        Color.black
+                            .frame(height: 1)
+                            .offset(x: 0, y: 20)
+                    }
                 
-                TextField(
-                    L10n.ImportWallet.Birthday.placeholder,
-                    text: viewStore.bindingForRedactableBirthday(viewStore.birthdayHeight)
-                )
-                .keyboardType(.numberPad)
-                .autocapitalization(.none)
-                .importSeedEditorModifier()
-                
+                Spacer()
+
                 Button(L10n.ImportWallet.Button.restoreWallet.uppercased()) {
                     viewStore.send(.restoreWallet)
                 }
                 .zcashStyle()
-                .padding(.horizontal, 70)
-                .importWalletButtonLayout()
                 .disabled(!viewStore.isValidForm)
-                
-                Spacer()
+                .frame(width: 236)
+                .padding(.bottom, 50)
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 70)
             .applyScreenBackground()
             .scrollableWhenScaledUp()
             .onAppear(perform: { viewStore.send(.onAppear) })

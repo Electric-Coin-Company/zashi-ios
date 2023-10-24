@@ -83,7 +83,7 @@ public struct SecurityWarningReducer: ReducerProtocol {
                 return .none
 
             case .alert(.presented(let action)):
-                return EffectTask(value: action)
+                return Effect.send(action)
 
             case .alert(.dismiss):
                 state.alert = nil
@@ -99,8 +99,8 @@ public struct SecurityWarningReducer: ReducerProtocol {
                     try walletStorage.importWallet(newRandomPhrase, birthday, .english, true)
                     
                     return .concatenate(
-                        EffectTask(value: .newWalletCreated),
-                        EffectTask(value: .updateDestination(.createNewWallet))
+                        Effect.send(.newWalletCreated),
+                        Effect.send(.updateDestination(.createNewWallet))
                     )
                 } catch {
                     state.alert = AlertState.cantCreateNewWallet(error.toZcashError())

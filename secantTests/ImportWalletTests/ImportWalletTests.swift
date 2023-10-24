@@ -289,9 +289,12 @@ class ImportWalletTests: XCTestCase {
         store.dependencies.walletStorage = .noOp
         
         store.send(.restoreWallet) { state in
-            state.alert = AlertState.succeed()
+            state.importedSeedPhrase = "".redacted
+            state.birthdayHeight = "".redacted
+            state.destination = nil
         }
 
+        store.receive(.successfullyRecovered)
         store.receive(.initializeSDK)
     }
 }
