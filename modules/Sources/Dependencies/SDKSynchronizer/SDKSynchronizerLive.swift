@@ -53,11 +53,12 @@ extension SDKSynchronizerClient {
                 let clearedTransactions = try await synchronizer.allTransactions()
 
                 var clearedTxs: [WalletEvent] = []
+                
                 for clearedTransaction in clearedTransactions {
                     var transaction = TransactionState.init(
                         transaction: clearedTransaction,
                         memos: clearedTransaction.memoCount > 0 ? try await synchronizer.getMemos(for: clearedTransaction) : nil,
-                        latestBlockHeight: synchronizer.latestState.latestBlockHeight
+                        latestBlockHeight: try await SDKSynchronizerClient.latestBlockHeight(synchronizer: synchronizer)
                     )
 
                     let recipients = await synchronizer.getRecipients(for: clearedTransaction)
@@ -92,7 +93,11 @@ extension SDKSynchronizerClient {
                     toAddress: recipient,
                     memo: memo
                 )
-                return TransactionState(transaction: pendingTransaction)
+                
+                return TransactionState(
+                    transaction: pendingTransaction,
+                    latestBlockHeight: try await SDKSynchronizerClient.latestBlockHeight(synchronizer: synchronizer)
+                )
             },
             shieldFunds: { spendingKey, memo, shieldingThreshold in
                 let pendingTransaction = try await synchronizer.shieldFunds(
@@ -100,9 +105,30 @@ extension SDKSynchronizerClient {
                     memo: memo,
                     shieldingThreshold: shieldingThreshold
                 )
-                return TransactionState(transaction: pendingTransaction)
+                
+                return TransactionState(
+                    transaction: pendingTransaction,
+                    latestBlockHeight: try await SDKSynchronizerClient.latestBlockHeight(synchronizer: synchronizer)
+                )
             },
             wipe: { synchronizer.wipe() }
         )
+    }
+}
+
+// TODO: [#1313] SDK improvements so a client doesn't need to determing if the transaction isPending
+// https://github.com/zcash/ZcashLightClientKit/issues/1313
+// Once #1313 is done, cleint will no longer need to call for a `latestHeight()`
+private extension SDKSynchronizerClient {
+    static func latestBlockHeight(synchronizer: SDKSynchronizer) async throws -> BlockHeight {
+        let latestBlockHeight: BlockHeight
+        
+        if synchronizer.latestState.latestBlockHeight > 0 {
+            latestBlockHeight = synchronizer.latestState.latestBlockHeight
+        } else {
+            latestBlockHeight = try await synchronizer.latestHeight()
+        }
+        
+        return latestBlockHeight
     }
 }
