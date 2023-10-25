@@ -108,7 +108,7 @@ public struct TransactionState: Equatable, Identifiable {
 }
 
 extension TransactionState {
-    public init(transaction: ZcashTransaction.Overview, memos: [Memo]? = nil, latestBlockHeight: BlockHeight? = nil) {
+    public init(transaction: ZcashTransaction.Overview, memos: [Memo]? = nil, latestBlockHeight: BlockHeight) {
         expiryHeight = transaction.expiryHeight
         minedHeight = transaction.minedHeight
         fee = transaction.fee ?? .zero
@@ -118,7 +118,15 @@ extension TransactionState {
         self.memos = memos
 
         let isSent = transaction.isSentTransaction
-        let isPending = transaction.isPending(currentHeight: latestBlockHeight ?? 0)
+        
+        // TODO: [#1313] SDK improvements so a client doesn't need to determing if the transaction isPending
+        // https://github.com/zcash/ZcashLightClientKit/issues/1313
+        // The only reason why `latestBlockHeight` is provided here is to determine pending
+        // state of the transaction. SDK knows the latestBlockHeight so ideally ZcashTransaction.Overview
+        // already knows and provides isPending as a bool value.
+        // Once SDK's #1313 is done, adopt the SDK and remove latestBlockHeight here.
+        let isPending = transaction.isPending(currentHeight: latestBlockHeight)
+        
         switch (isSent, isPending) {
         case (true, true): status = .sending
         case (true, false): status = .paid(success: minedHeight ?? 0 > 0)
