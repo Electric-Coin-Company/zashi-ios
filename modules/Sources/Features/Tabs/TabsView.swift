@@ -27,7 +27,7 @@ public struct TabsView: View {
     public var body: some View {
         WithViewStore(self.store, observe: \.selectedTab) { tab in
             WithViewStore(store) { viewStore in
-                ZStack(alignment: .bottom) {
+                ZStack {
                     TabView(selection: tab.binding(send: TabsReducer.Action.selectedTabChanged)) {
                         HomeView(
                             store: self.store.scope(
@@ -37,7 +37,7 @@ public struct TabsView: View {
                             tokenName: tokenName
                         )
                         .tag(TabsReducer.State.Tab.account)
-                        
+
                         SendFlowView(
                             store: self.store.scope(
                                 state: \.sendState,
@@ -46,7 +46,7 @@ public struct TabsView: View {
                             tokenName: tokenName
                         )
                         .tag(TabsReducer.State.Tab.send)
-                        
+
                         AddressDetailsView(
                             store: self.store.scope(
                                 state: \.addressDetailsState,
@@ -65,44 +65,44 @@ public struct TabsView: View {
                         .tag(TabsReducer.State.Tab.details)
                     }
                     
-                    HStack {
-                        ForEach((TabsReducer.State.Tab.allCases), id: \.self) { item in
-                            Button {
-                                viewStore.send(.selectedTabChanged(item), animation: .easeInOut)
-                            } label: {
-                                VStack {
-                                    if viewStore.selectedTab == item {
-                                        Text("\(item.title)")
-                                            .font(.custom(FontFamily.Archivo.black.name, size: 12))
-                                            .foregroundColor(Asset.Colors.primary.color)
-                                        Rectangle()
-                                            .frame(height: 2)
-                                            .foregroundColor(Asset.Colors.tabsUnderline.color)
-                                            .matchedGeometryEffect(id: "Tabs", in: tabsID, properties: .frame)
-                                    } else {
-                                        Text("\(item.title)")
-                                            .font(.custom(FontFamily.Archivo.regular.name, size: 12))
-                                            .foregroundColor(Asset.Colors.primary.color)
-                                        Rectangle()
-                                            .frame(height: 2)
-                                            .foregroundColor(.clear)
+                    VStack {
+                        Spacer()
+                        
+                        HStack {
+                            ForEach((TabsReducer.State.Tab.allCases), id: \.self) { item in
+                                Button {
+                                    viewStore.send(.selectedTabChanged(item), animation: .easeInOut)
+                                } label: {
+                                    VStack {
+                                        if viewStore.selectedTab == item {
+                                            Text("\(item.title)")
+                                                .font(.custom(FontFamily.Archivo.black.name, size: 12))
+                                                .foregroundColor(Asset.Colors.primary.color)
+                                            Rectangle()
+                                                .frame(height: 2)
+                                                .foregroundColor(Asset.Colors.tabsUnderline.color)
+                                                .matchedGeometryEffect(id: "Tabs", in: tabsID, properties: .frame)
+                                        } else {
+                                            Text("\(item.title)")
+                                                .font(.custom(FontFamily.Archivo.regular.name, size: 12))
+                                                .foregroundColor(Asset.Colors.primary.color)
+                                            Rectangle()
+                                                .frame(height: 2)
+                                                .foregroundColor(.clear)
+                                        }
                                     }
+                                    .frame(minHeight: 50)
                                 }
-                                .frame(minHeight: 50)
-                            }
-                            
-                            if item.rawValue < TabsReducer.State.Tab.allCases.count-1 {
-                                Spacer()
+                                
+                                if item.rawValue < TabsReducer.State.Tab.allCases.count-1 {
+                                    Spacer()
+                                }
                             }
                         }
+                        .padding(.horizontal, 40)
+                        .background(Asset.Colors.secondary.color)
                     }
-                    .padding(.horizontal, 40)
-                }
-                .safeAreaInset(edge: .top) {
-                    Color.clear
-                        .frame(height: 0)
-                        .background(.white)
-                        .opacity(0.95)
+                    .ignoresSafeArea(.keyboard)
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(trailing: settingsButton(viewStore))
@@ -144,5 +144,7 @@ public struct TabsView: View {
 }
 
 #Preview {
-    TabsView(store: .demo, tokenName: "TAZ")
+    NavigationView {
+        TabsView(store: .demo, tokenName: "TAZ")
+    }
 }

@@ -13,50 +13,51 @@ import Generated
 @testable import secant_testnet
 @testable import ZcashLightClientKit
 
+@MainActor
 class TabsTests: XCTestCase {
-    func testHomeBalanceRedirectToTheDetailsTab() {
+    func testHomeBalanceRedirectToTheDetailsTab() async {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: TabsReducer(tokenName: "TAZ", networkType: .testnet)
+            reducer: { TabsReducer(tokenName: "TAZ", networkType: .testnet) }
         )
         
-        store.send(.home(.balanceBreakdown)) { state in
+        await store.send(.home(.balanceBreakdown)) { state in
             state.selectedTab = .details
         }
     }
     
-    func testSelectionOfTheTab() {
+    func testSelectionOfTheTab() async {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: TabsReducer(tokenName: "TAZ", networkType: .testnet)
+            reducer: { TabsReducer(tokenName: "TAZ", networkType: .testnet) }
         )
         
-        store.send(.selectedTabChanged(.send)) { state in
+        await store.send(.selectedTabChanged(.send)) { state in
             state.selectedTab = .send
         }
     }
     
-    func testSettingDestination() {
+    func testSettingDestination() async {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: TabsReducer(tokenName: "TAZ", networkType: .testnet)
+            reducer: { TabsReducer(tokenName: "TAZ", networkType: .testnet) }
         )
         
-        store.send(.updateDestination(.settings)) { state in
+        await store.send(.updateDestination(.settings)) { state in
             state.destination = .settings
         }
     }
     
-    func testSettingDestinationDismissal() {
+    func testSettingDestinationDismissal() async {
         var placeholderState = TabsReducer.State.placeholder
         placeholderState.destination = .settings
         
         let store = TestStore(
             initialState: placeholderState,
-            reducer: TabsReducer(tokenName: "TAZ", networkType: .testnet)
+            reducer: { TabsReducer(tokenName: "TAZ", networkType: .testnet) }
         )
         
-        store.send(.updateDestination(nil)) { state in
+        await store.send(.updateDestination(nil)) { state in
             state.destination = nil
         }
     }
@@ -103,5 +104,19 @@ class TabsTests: XCTestCase {
             L10n.Tabs.details,
             "Name of the details tab should be '\(L10n.Tabs.details)' but received \(tabsState.selectedTab.title)"
         )
+    }
+    
+    func testSendRedirectsBackToAccount() async {
+        var placeholderState = TabsReducer.State.placeholder
+        placeholderState.selectedTab = .send
+        
+        let store = TestStore(
+            initialState: placeholderState,
+            reducer: { TabsReducer(tokenName: "TAZ", networkType: .testnet) }
+        )
+        
+        await store.send(.send(.sendDone)) { state in
+            state.selectedTab = .account
+        }
     }
 }

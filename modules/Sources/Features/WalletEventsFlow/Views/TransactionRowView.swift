@@ -29,7 +29,7 @@ public struct TransactionRowView: View {
                         .font(.custom(FontFamily.Inter.bold.name, size: 12))
                         .foregroundColor(Asset.Colors.primary.color)
                     
-                    Text("\(transaction.date?.asHumanReadable() ?? L10n.General.dateNotAvailable)")
+                    Text("\(transaction.dateString ?? L10n.General.dateNotAvailable)")
                         .font(.custom(FontFamily.Inter.regular.name, size: 12))
                         .foregroundColor(Asset.Colors.suppressed72.color)
                         .opacity(0.5)
@@ -42,7 +42,11 @@ public struct TransactionRowView: View {
                     + Text(transaction.zecAmount.decimalZashiFormatted())
                 }
                 .font(.custom(FontFamily.Inter.regular.name, size: 12))
-                .foregroundColor(Asset.Colors.primary.color)
+                .foregroundColor(
+                    transaction.unarySymbol == "-"
+                    ? Asset.Colors.error.color
+                    : Asset.Colors.primary.color
+                )
                 .padding(.trailing, 30)
             }
             .padding(.leading, 80)

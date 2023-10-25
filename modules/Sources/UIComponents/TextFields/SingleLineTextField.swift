@@ -25,14 +25,13 @@ public struct SingleLineTextField<TitleAccessoryContent, InputPrefixContent, Inp
                 Text(title)
                     .lineLimit(1)
                     .truncationMode(.middle)
-                    .font(
-                        .custom(FontFamily.Inter.regular.name, size: 13)
-                    )
+                    .font(.custom(FontFamily.Inter.regular.name, size: 14))
 
                 Spacer()
 
                 titleAccessoryView
             }
+            .padding(.bottom, 6)
 
             HStack {
                 inputPrefixView
@@ -41,7 +40,7 @@ public struct SingleLineTextField<TitleAccessoryContent, InputPrefixContent, Inp
                     placeholder: placeholderText,
                     store: store
                 )
-                .padding(2)
+                .padding(10)
 
                 Spacer()
 
@@ -50,7 +49,7 @@ public struct SingleLineTextField<TitleAccessoryContent, InputPrefixContent, Inp
             .frame(maxHeight: 40)
             .overlay(
                 Rectangle()
-                    .stroke(Asset.Colors.primary.color, lineWidth: 2)
+                    .stroke(Asset.Colors.primary.color, lineWidth: 1)
             )
         }
     }

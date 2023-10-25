@@ -1,5 +1,5 @@
 //
-//  MultiLineTextFieldStore.swift
+//  MessageEditorStore.swift
 //  secant-testnet
 //
 //  Created by Lukáš Korba on 22.07.2022.
@@ -11,10 +11,10 @@ import SwiftUI
 import Utils
 import Generated
 
-public typealias MultiLineTextFieldStore = Store<MultiLineTextFieldReducer.State, MultiLineTextFieldReducer.Action>
-public typealias MultiLineTextFieldViewStore = ViewStore<MultiLineTextFieldReducer.State, MultiLineTextFieldReducer.Action>
+public typealias MessageEditorStore = Store<MessageEditorReducer.State, MessageEditorReducer.Action>
+public typealias MessageEditorViewStore = ViewStore<MessageEditorReducer.State, MessageEditorReducer.Action>
 
-public struct MultiLineTextFieldReducer: ReducerProtocol {
+public struct MessageEditorReducer: ReducerProtocol {
     public struct State: Equatable {
         /// default 0, no char limit
         public var charLimit = 0
@@ -24,24 +24,24 @@ public struct MultiLineTextFieldReducer: ReducerProtocol {
             charLimit > 0
         }
         
-        public var textLength: Int {
-            text.data.count
+        public var byteLength: Int {
+            // The memo supports unicode so the overall count is not char count of text
+            // but byte representation instead
+            text.data.utf8.count
         }
         
         public var isValid: Bool {
             charLimit > 0
-            ? textLength <= charLimit
+            ? byteLength <= charLimit
             : true
         }
         
         public var charLimitText: String {
             charLimit > 0
-            ? isValid
-            ? "\(textLength)/\(charLimit)"
-            : "\(L10n.Field.Multiline.charLimitExceeded) \(textLength)/\(charLimit)"
+            ? "\(charLimit - byteLength)/\(charLimit)"
             : ""
         }
-        
+
         public init(charLimit: Int = 0, text: RedactableString = "".redacted) {
             self.charLimit = charLimit
             self.text = text
@@ -65,32 +65,22 @@ public struct MultiLineTextFieldReducer: ReducerProtocol {
     }
 }
 
-// MARK: - ViewStore
-
-extension MultiLineTextFieldViewStore {
-    func bindingForRedactableMemo(_ memo: RedactableString) -> Binding<String> {
-        self.binding(
-            get: { _ in memo.data },
-            send: { .memoInputChanged($0.redacted) }
-        )
-    }
-}
-
 // MARK: - Store
 
-extension MultiLineTextFieldStore {
-    public static let placeholder = MultiLineTextFieldStore(
+extension MessageEditorStore {
+    public static let placeholder = MessageEditorStore(
         initialState: .placeholder,
-        reducer: MultiLineTextFieldReducer()
+        reducer: MessageEditorReducer()
     )
 }
 
 // MARK: - Placeholders
 
-extension MultiLineTextFieldReducer.State {
-    public static let placeholder: MultiLineTextFieldReducer.State = {
-        var state = MultiLineTextFieldReducer.State()
+extension MessageEditorReducer.State {
+    public static let placeholder: MessageEditorReducer.State = {
+        var state = MessageEditorReducer.State()
         state.text = "".redacted
+        state.charLimit = 0
         return state
     }()
 }

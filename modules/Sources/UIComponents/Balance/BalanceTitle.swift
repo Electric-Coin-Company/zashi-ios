@@ -19,9 +19,7 @@ public struct BalanceTitle: View {
     public var body: some View {
         HStack {
             Text(balance.decimalString(formatter: NumberFormatter.zashiBalanceFormatter))
-                .font(
-                    .custom(FontFamily.Archivo.semiBold.name, size: 36)
-                )
+                .font(.custom(FontFamily.Archivo.semiBold.name, size: 36))
                 .foregroundColor(Asset.Colors.primary.color)
             
             

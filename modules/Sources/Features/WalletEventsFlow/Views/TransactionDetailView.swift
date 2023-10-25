@@ -90,9 +90,9 @@ extension TransactionDetailView {
                 Text(L10n.Transaction.receiving)
                 Spacer()
             case .failed:
-                Text("\(transaction.date?.asHumanReadable() ?? L10n.General.dateNotAvailable)")
+                Text("\(transaction.dateString ?? L10n.General.dateNotAvailable)")
             default:
-                Text("\(transaction.date?.asHumanReadable() ?? L10n.General.dateNotAvailable)")
+                Text("\(transaction.dateString ?? L10n.General.dateNotAvailable)")
             }
         }
         .padding()

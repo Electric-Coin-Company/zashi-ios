@@ -39,6 +39,8 @@ public enum L10n {
     public static func available(_ p1: Any, _ p2: Any) -> String {
       return L10n.tr("Localizable", "balance.available", String(describing: p1), String(describing: p2), fallback: "Available balance %@ %@")
     }
+    /// Available Balance
+    public static let availableTitle = L10n.tr("Localizable", "balance.availableTitle", fallback: "Available Balance")
   }
   public enum BalanceBreakdown {
     /// Shielding Threshold: %@ %@
@@ -104,8 +106,8 @@ public enum L10n {
     public enum TransactionAddress {
       /// To:
       public static let to = L10n.tr("Localizable", "field.transactionAddress.to", fallback: "To:")
-      /// Valid Zcash Address
-      public static let validZcashAddress = L10n.tr("Localizable", "field.transactionAddress.validZcashAddress", fallback: "Valid Zcash Address")
+      /// Zcash Address
+      public static let validZcashAddress = L10n.tr("Localizable", "field.transactionAddress.validZcashAddress", fallback: "Zcash Address")
     }
     public enum TransactionAmount {
       /// Amount:
@@ -508,6 +510,10 @@ public enum L10n {
     public static let editMemo = L10n.tr("Localizable", "send.editMemo", fallback: "Memo included. Tap to edit.")
     /// Sending transaction failed
     public static let failed = L10n.tr("Localizable", "send.failed", fallback: "Sending transaction failed")
+    /// (Fee < %@)
+    public static func fee(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "send.fee", String(describing: p1), fallback: "(Fee < %@)")
+    }
     /// Aditional funds may be in transit
     public static let fundsInfo = L10n.tr("Localizable", "send.fundsInfo", fallback: "Aditional funds may be in transit")
     /// Want to include memo? Tap here.
@@ -516,8 +522,10 @@ public enum L10n {
     public static func memo(_ p1: Any) -> String {
       return L10n.tr("Localizable", "send.memo", String(describing: p1), fallback: " memo: %@")
     }
-    /// Write a private message here
-    public static let memoPlaceholder = L10n.tr("Localizable", "send.memoPlaceholder", fallback: "Write a private message here")
+    /// Write private message here...
+    public static let memoPlaceholder = L10n.tr("Localizable", "send.memoPlaceholder", fallback: "Write private message here...")
+    /// Message
+    public static let message = L10n.tr("Localizable", "send.message", fallback: "Message")
     /// Sending %@ %@ to
     public static func sendingTo(_ p1: Any, _ p2: Any) -> String {
       return L10n.tr("Localizable", "send.sendingTo", String(describing: p1), String(describing: p2), fallback: "Sending %@ %@ to")

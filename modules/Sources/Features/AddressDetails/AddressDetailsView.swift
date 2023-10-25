@@ -35,6 +35,7 @@ public struct AddressDetailsView: View {
                     viewStore.send(.copyTransparentAddressToPastboard)
                 }
             }
+            .padding(.vertical, 1)
             .applyScreenBackground()
         }
     }

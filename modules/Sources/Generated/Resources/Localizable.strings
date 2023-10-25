@@ -128,7 +128,8 @@
 // MARK: - Send
 "send.title" = "Send Zcash";
 "send.fundsInfo" = "Aditional funds may be in transit";
-"send.memoPlaceholder" = "Write a private message here";
+"send.message" = "Message";
+"send.memoPlaceholder" = "Write private message here...";
 "send.failed" = "Sending transaction failed";
 "send.succeeded" = "Sending transaction succeeded";
 "send.sendingTo" = "Sending %@ %@ to";
@@ -140,6 +141,7 @@
 "send.error.insufficientFunds" = "Insufficient funds";
 "send.error.invalidAmount" = "Invalid amount";
 "send.error.invalidAddress" = "Invalid address";
+"send.fee" = "(Fee < %@)";
 
 // MARK: - Settings
 "settings.recoveryPhrase" = "Recovery Phrase";
@@ -214,6 +216,7 @@ Sharing this private data is irrevocable — once you have shared this private d
 "general.unknown" = "Unknown";
 "general.done" = "Done";
 "balance.available" = "Available balance %@ %@";
+"balance.availableTitle" = "Available Balance";
 "qrCodeFor" = "QR Code for %@";
 "general.dateNotAvailable" = "date not available";
 
@@ -287,7 +290,7 @@ Sharing this private data is irrevocable — once you have shared this private d
 // MARK: - Text Fields
 "field.multiline.charLimitExceeded" = "char limit exceeded";
 
-"field.transactionAddress.validZcashAddress" = "Valid Zcash Address";
+"field.transactionAddress.validZcashAddress" = "Zcash Address";
 "field.transactionAddress.to" = "To:";
 
 "field.transactionAmount.zecAmount" = "%@ Amount";

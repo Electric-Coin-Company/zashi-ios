@@ -26,22 +26,18 @@ public struct SendFlowReducer: ReducerProtocol {
 
     public struct State: Equatable {
         public enum Destination: Equatable {
-            case done
-            case failure
-            case inProgress
-            case memo
             case scanQR
-            case success
         }
 
         public var addMemoState: Bool
         public var destination: Destination?
-        public var isSendingTransaction = false
-        public var memoState: MultiLineTextFieldReducer.State
+        public var isSending = false
+        public var memoState: MessageEditorReducer.State
         public var scanState: ScanReducer.State
         public var shieldedBalance = Balance.zero
         public var transactionAddressInputState: TransactionAddressTextFieldReducer.State
         public var transactionAmountInputState: TransactionAmountTextFieldReducer.State
+        public var fee = Zatoshi(10_000)
 
         public var address: String {
             get { transactionAddressInputState.textFieldState.text.data }
@@ -80,18 +76,22 @@ public struct SendFlowReducer: ReducerProtocol {
         }
         
         public var isMemoInputEnabled: Bool {
-            transactionAddressInputState.isValidAddress && !transactionAddressInputState.isValidTransparentAddress
+            transactionAddressInputState.textFieldState.text.data.isEmpty ||
+            !transactionAddressInputState.isValidTransparentAddress
         }
         
         public var totalCurrencyBalance: Zatoshi {
             Zatoshi.from(decimal: shieldedBalance.data.verified.decimalValue.decimalValue * transactionAmountInputState.zecPrice)
         }
         
+        public var spendableBalanceString: String {
+            shieldedBalance.data.verified.decimalString(formatter: NumberFormatter.zashiBalanceFormatter)
+        }
+        
         public init(
             addMemoState: Bool,
             destination: Destination? = nil,
-            isSendingTransaction: Bool = false,
-            memoState: MultiLineTextFieldReducer.State,
+            memoState: MessageEditorReducer.State,
             scanState: ScanReducer.State,
             shieldedBalance: Balance = Balance.zero,
             transactionAddressInputState: TransactionAddressTextFieldReducer.State,
@@ -99,7 +99,6 @@ public struct SendFlowReducer: ReducerProtocol {
         ) {
             self.addMemoState = addMemoState
             self.destination = destination
-            self.isSendingTransaction = isSendingTransaction
             self.memoState = memoState
             self.scanState = scanState
             self.shieldedBalance = shieldedBalance
@@ -109,13 +108,12 @@ public struct SendFlowReducer: ReducerProtocol {
     }
 
     public enum Action: Equatable {
-        case memo(MultiLineTextFieldReducer.Action)
+        case memo(MessageEditorReducer.Action)
         case onAppear
         case onDisappear
         case scan(ScanReducer.Action)
         case sendPressed
-        case sendTransactionSuccess
-        case sendTransactionFailure(ZcashError)
+        case sendDone
         case synchronizerStateChanged(SynchronizerState)
         case transactionAddressInput(TransactionAddressTextFieldReducer.Action)
         case transactionAmountInput(TransactionAmountTextFieldReducer.Action)
@@ -136,7 +134,7 @@ public struct SendFlowReducer: ReducerProtocol {
     
     public var body: some ReducerProtocol<State, Action> {
         Scope(state: \.memoState, action: /Action.memo) {
-            MultiLineTextFieldReducer()
+            MessageEditorReducer()
         }
 
         Scope(state: \.transactionAddressInputState, action: /Action.transactionAddressInput) {
@@ -153,37 +151,31 @@ public struct SendFlowReducer: ReducerProtocol {
 
         Reduce { state, action in
             switch action {
-            case .updateDestination(.done):
-                state.destination = nil
-                state.memoState.text = "".redacted
-                state.transactionAmountInputState.textFieldState.text = "".redacted
-                state.transactionAmountInputState.amount = Int64(0).redacted
-                state.transactionAddressInputState.textFieldState.text = "".redacted
-                return .none
+            case .onAppear:
+                state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
+                return Effect.publisher {
+                    sdkSynchronizer.stateStream()
+                        .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                        .map(SendFlowReducer.Action.synchronizerStateChanged)
+                }
+                .cancellable(id: SyncStatusUpdatesID.timer, cancelInFlight: true)
 
-            case .updateDestination(.failure):
-                state.destination = .failure
-                state.isSendingTransaction = false
-                return .none
+            case .onDisappear:
+                return .cancel(id: SyncStatusUpdatesID.timer)
 
             case let .updateDestination(destination):
                 state.destination = destination
                 return .none
                 
             case .sendPressed:
-                guard !state.isSendingTransaction else {
-                    return .none
-                }
                 state.amount = Zatoshi(state.transactionAmountInputState.amount.data)
                 state.address = state.transactionAddressInputState.textFieldState.text.data
-
+                
                 do {
                     let storedWallet = try walletStorage.exportWallet()
                     let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
                     let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, networkType)
-
-                    state.isSendingTransaction = true
-
+                    
                     let memo: Memo?
                     if state.transactionAddressInputState.isValidTransparentAddress {
                         memo = nil
@@ -192,29 +184,27 @@ public struct SendFlowReducer: ReducerProtocol {
                     } else {
                         memo = nil
                     }
-
+                    
                     let recipient = try Recipient(state.address, network: networkType)
+                    state.isSending = true
+                    
                     return .run { [state] send in
-                        do {
-                            await send(SendFlowReducer.Action.updateDestination(.inProgress))
-                            _ = try await sdkSynchronizer.sendTransaction(spendingKey, state.amount, recipient, memo)
-                            await send(SendFlowReducer.Action.sendTransactionSuccess)
-                        } catch {
-                            await send(SendFlowReducer.Action.sendTransactionFailure(error.toZcashError()))
-                        }
+                        _ = try? await sdkSynchronizer.sendTransaction(spendingKey, state.amount, recipient, memo)
+                        await send(.sendDone)
                     }
                 } catch {
-                    return Effect.send(.updateDestination(.failure))
                 }
+                return .none
                 
-            case .sendTransactionSuccess:
-                state.isSendingTransaction = false
-                return Effect.send(.updateDestination(.success))
-
-            case .sendTransactionFailure:
-                state.isSendingTransaction = false
-                return Effect.send(.updateDestination(.failure))
-
+            case .sendDone:
+                state.destination = nil
+                state.memoState.text = "".redacted
+                state.transactionAmountInputState.textFieldState.text = "".redacted
+                state.transactionAmountInputState.amount = Int64(0).redacted
+                state.transactionAddressInputState.textFieldState.text = "".redacted
+                state.isSending = false
+                return .none
+                
             case .transactionAmountInput:
                 return .none
 
@@ -223,17 +213,6 @@ public struct SendFlowReducer: ReducerProtocol {
 
             case .transactionAddressInput:
                 return .none
-
-            case .onAppear:
-                state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
-                return sdkSynchronizer.stateStream()
-                    .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                    .map(SendFlowReducer.Action.synchronizerStateChanged)
-                    .eraseToEffect()
-                    .cancellable(id: SyncStatusUpdatesID.timer, cancelInFlight: true)
-                
-            case .onDisappear:
-                return .cancel(id: SyncStatusUpdatesID.timer)
                 
             case .synchronizerStateChanged(let latestState):
                 let shieldedBalance = latestState.shieldedBalance
@@ -266,7 +245,7 @@ public struct SendFlowReducer: ReducerProtocol {
 // MARK: - Store
 
 extension SendFlowStore {
-    func memoStore() -> MultiLineTextFieldStore {
+    func memoStore() -> MessageEditorStore {
         self.scope(
             state: \.memoState,
             action: SendFlowReducer.Action.memo
@@ -288,38 +267,6 @@ extension SendFlowViewStore {
         self.binding(
             get: \.destination,
             send: SendFlowReducer.Action.updateDestination
-        )
-    }
-
-    var bindingForInProgress: Binding<Bool> {
-        self.destinationBinding.map(
-            extract: {
-                $0 == .inProgress ||
-                $0 == .success ||
-                $0 == .failure
-            },
-            embed: { $0 ? SendFlowReducer.State.Destination.inProgress : nil }
-        )
-    }
-
-    var bindingForSuccess: Binding<Bool> {
-        self.destinationBinding.map(
-            extract: { $0 == .success },
-            embed: { _ in SendFlowReducer.State.Destination.success }
-        )
-    }
-
-    var bindingForFailure: Binding<Bool> {
-        self.destinationBinding.map(
-            extract: { $0 == .failure },
-            embed: { _ in SendFlowReducer.State.Destination.failure }
-        )
-    }
-
-    var bindingForMemo: Binding<Bool> {
-        self.destinationBinding.map(
-            extract: { $0 == .memo },
-            embed: { _ in SendFlowReducer.State.Destination.memo }
         )
     }
 
@@ -364,7 +311,7 @@ extension SendFlowStore {
     public static var placeholder: SendFlowStore {
         return SendFlowStore(
             initialState: .emptyPlaceholder,
-            reducer: SendFlowReducer(networkType: .testnet)
+            reducer: { SendFlowReducer(networkType: .testnet) }
         )
     }
 }
