@@ -32,7 +32,7 @@ public struct TabsReducer: ReducerProtocol {
             case account = 0
             case send
             case receive
-            case details
+            case balances
             
             public var title: String {
                 switch self {
@@ -42,8 +42,8 @@ public struct TabsReducer: ReducerProtocol {
                     return L10n.Tabs.send
                 case .receive:
                     return L10n.Tabs.receive
-                case .details:
-                    return L10n.Tabs.details
+                case .balances:
+                    return L10n.Tabs.balances
                 }
             }
         }
@@ -120,7 +120,7 @@ public struct TabsReducer: ReducerProtocol {
                 return .none
                 
             case .home(.balanceBreakdown):
-                state.selectedTab = .details
+                state.selectedTab = .balances
                 return .none
                 
             case .home:

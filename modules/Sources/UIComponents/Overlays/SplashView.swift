@@ -79,7 +79,7 @@ final class SplashManager: ObservableObject {
             let y = screenSize.height + prevHeight
             
             if (allPoints - i) % 2 == 0 {
-                prevHeight += CGFloat.random(in: 10...40)
+                prevHeight += CGFloat.random(in: 30...70)
             }
 
             points.append(CGPoint(x: x, y: y))

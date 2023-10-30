@@ -22,7 +22,7 @@ class TabsTests: XCTestCase {
         )
         
         await store.send(.home(.balanceBreakdown)) { state in
-            state.selectedTab = .details
+            state.selectedTab = .balances
         }
     }
     
@@ -97,12 +97,12 @@ class TabsTests: XCTestCase {
     
     func testDetailsTabTitle() {
         var tabsState = TabsReducer.State.placeholder
-        tabsState.selectedTab = .details
+        tabsState.selectedTab = .balances
         
         XCTAssertEqual(
             tabsState.selectedTab.title,
-            L10n.Tabs.details,
-            "Name of the details tab should be '\(L10n.Tabs.details)' but received \(tabsState.selectedTab.title)"
+            L10n.Tabs.balances,
+            "Name of the balances tab should be '\(L10n.Tabs.balances)' but received \(tabsState.selectedTab.title)"
         )
     }
     

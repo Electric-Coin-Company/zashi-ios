@@ -166,10 +166,12 @@ public enum L10n {
     /// Enter secret
     /// recovery phrase
     public static let description = L10n.tr("Localizable", "importWallet.description", fallback: "Enter secret\nrecovery phrase")
+    /// Enter private seed here…
+    public static let enterPlaceholder = L10n.tr("Localizable", "importWallet.enterPlaceholder", fallback: "Enter private seed here…")
     /// Enter your 24-word seed phrase to restore the associated wallet.
     public static let message = L10n.tr("Localizable", "importWallet.message", fallback: "Enter your 24-word seed phrase to restore the associated wallet.")
-    /// optional
-    public static let optionalBirthday = L10n.tr("Localizable", "importWallet.optionalBirthday", fallback: "optional")
+    /// (optional)
+    public static let optionalBirthday = L10n.tr("Localizable", "importWallet.optionalBirthday", fallback: "(optional)")
     /// Wallet Import
     public static let title = L10n.tr("Localizable", "importWallet.title", fallback: "Wallet Import")
     public enum Alert {
@@ -189,9 +191,8 @@ public enum L10n {
       }
     }
     public enum Birthday {
-      /// Enter birthday
-      /// height
-      public static let title = L10n.tr("Localizable", "importWallet.birthday.title", fallback: "Enter birthday\nheight")
+      /// Wallet birthday height
+      public static let title = L10n.tr("Localizable", "importWallet.birthday.title", fallback: "Wallet birthday height")
     }
     public enum Button {
       /// Restore
@@ -647,8 +648,6 @@ public enum L10n {
     public static let account = L10n.tr("Localizable", "tabs.account", fallback: "Account")
     /// Balances
     public static let balances = L10n.tr("Localizable", "tabs.balances", fallback: "Balances")
-    /// Details
-    public static let details = L10n.tr("Localizable", "tabs.details", fallback: "Details")
     /// Receive
     public static let receive = L10n.tr("Localizable", "tabs.receive", fallback: "Receive")
     /// Send

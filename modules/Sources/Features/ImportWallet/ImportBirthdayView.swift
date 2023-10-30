@@ -28,9 +28,10 @@ public struct ImportBirthdayView: View {
                     .foregroundColor(Asset.Colors.primary.color)
                     .minimumScaleFactor(0.3)
                     .multilineTextAlignment(.center)
-                    .padding(.bottom, 10)
 
-                TextField(L10n.ImportWallet.optionalBirthday, text: viewStore.bindingForRedactableBirthday(viewStore.birthdayHeight))
+                Text(L10n.ImportWallet.optionalBirthday)
+
+                TextField("", text: viewStore.bindingForRedactableBirthday(viewStore.birthdayHeight))
                     .frame(height: 40)
                     .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
                     .keyboardType(.numberPad)

@@ -72,19 +72,20 @@
 "importWallet.description" = "Enter secret\nrecovery phrase";
 "importWallet.message" = "Enter your 24-word seed phrase to restore the associated wallet.";
 "importWallet.button.restoreWallet" = "Restore";
-"importWallet.birthday.title" = "Enter birthday\nheight";
+"importWallet.birthday.title" = "Wallet birthday height";
 "importWallet.seed.valid" = "VALID SEED PHRASE";
 "importWallet.alert.success.title" = "Success";
 "importWallet.alert.success.message" = "The wallet has been successfully recovered.";
 "importWallet.alert.failed.title" = "Failed to restore wallet";
 "importWallet.alert.failed.message" = "Error: %@ (code: %@)";
-"importWallet.optionalBirthday" = "optional";
+"importWallet.optionalBirthday" = "(optional)";
+"importWallet.enterPlaceholder" = "Enter private seed here…";
+
 
 // MARK: - Tabs
 "tabs.account" = "Account";
 "tabs.send" = "Send";
 "tabs.receive" = "Receive";
-"tabs.details" = "Details";
 "tabs.balances" = "Balances";
 
 // MARK: - Home Screen

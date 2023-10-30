@@ -9,11 +9,17 @@ import SwiftUI
 import ComposableArchitecture
 import Generated
 import UIComponents
+import Utils
 
 public struct ImportWalletView: View {
+    private enum InputID: Hashable {
+        case seed
+    }
+    
     var store: ImportWalletStore
 
-    @FocusState private var seedFieldFocused: Bool
+    @FocusState public var isFocused: Bool
+    @State private var message = ""
     
     public init(store: ImportWalletStore) {
         self.store = store
@@ -21,62 +27,100 @@ public struct ImportWalletView: View {
     
     public var body: some View {
         ScrollView {
-            WithViewStore(store) { viewStore in
-                VStack(alignment: .center) {
-                    ZashiIcon()
-                        .padding(.vertical, 30)
-                    
-                    Text(L10n.ImportWallet.description)
-                        .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
-                        .foregroundColor(Asset.Colors.primary.color)
-                        .multilineTextAlignment(.center)
-                        .padding(.bottom, 10)
-                    
-                    Text(L10n.ImportWallet.message)
-                        .font(.custom(FontFamily.Inter.medium.name, size: 14))
-                        .foregroundColor(Asset.Colors.primary.color)
-                        .multilineTextAlignment(.center)
-                        .padding(.bottom, 20)
-                        .padding(.horizontal, 10)
-                    
-                    ImportSeedEditor(store: store)
-                        .frame(minWidth: 270)
-                        .frame(height: 215)
-                        .focused($seedFieldFocused)
-                        .toolbar {
-                            ToolbarItemGroup(placement: .keyboard) {
-                                Spacer()
-                                
-                                Button(L10n.General.done.uppercased()) {
-                                    seedFieldFocused = false
+            ScrollViewReader { value in
+                WithViewStore(store) { viewStore in
+                    VStack(alignment: .center) {
+                        ZashiIcon()
+                            .padding(.vertical, 30)
+                        
+                        Text(L10n.ImportWallet.description)
+                            .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
+                            .foregroundColor(Asset.Colors.primary.color)
+                            .multilineTextAlignment(.center)
+                            .padding(.bottom, 10)
+                        
+                        Text(L10n.ImportWallet.message)
+                            .font(.custom(FontFamily.Inter.medium.name, size: 14))
+                            .foregroundColor(Asset.Colors.primary.color)
+                            .multilineTextAlignment(.center)
+                            .padding(.bottom, 20)
+                            .padding(.horizontal, 10)
+                        
+                        TextEditor(text: $message)
+                            .autocapitalization(.none)
+                            .recoveryPhraseShape()
+                            .frame(minWidth: 270)
+                            .frame(height: 215)
+                            .focused($isFocused)
+                            .id(InputID.seed)
+                            .toolbar {
+                                ToolbarItemGroup(placement: .keyboard) {
+                                    Spacer()
+                                    
+                                    Button(L10n.General.done.uppercased()) {
+                                        isFocused = false
+                                    }
+                                    .foregroundColor(Asset.Colors.primary.color)
+                                    .font(.custom(FontFamily.Inter.regular.name, size: 14))
                                 }
-                                .foregroundColor(Asset.Colors.primary.color)
-                                .font(.custom(FontFamily.Inter.regular.name, size: 14))
                             }
+                            .overlay {
+                                if message.isEmpty {
+                                    HStack {
+                                        VStack {
+                                            Text(L10n.ImportWallet.enterPlaceholder)
+                                                .font(.custom(FontFamily.Inter.regular.name, size: 13))
+                                                .foregroundColor(Asset.Colors.suppressed72.color)
+                                                .onTapGesture {
+                                                    isFocused = true
+                                                }
+                                            
+                                            Spacer()
+                                        }
+                                        .padding(.top, 10)
+                                        
+                                        Spacer()
+                                    }
+                                    .padding(.leading, 10)
+                                } else {
+                                    EmptyView()
+                                }
+                            }
+                            .onChange(of: message) { value in
+                                viewStore.send(.seedPhraseInputChanged(RedactableString(message)))
+                            }
+                            .onChange(of: isFocused) { update in
+                                withAnimation {
+                                    if update {
+                                        value.scrollTo(InputID.seed, anchor: .center)
+                                    }
+                                }
+                            }
+                        
+                        Button(L10n.General.next.uppercased()) {
+                            viewStore.send(.updateDestination(.birthday))
                         }
-                    
-                    Button(L10n.General.next.uppercased()) {
-                        viewStore.send(.updateDestination(.birthday))
+                        .zcashStyle()
+                        .frame(width: 236)
+                        .disabled(!viewStore.isValidForm)
+                        .padding(.top, 50)
                     }
-                    .zcashStyle()
-                    .frame(width: 236)
-                    .disabled(!viewStore.isValidForm)
-                    .padding(.top, 50)
+                    .padding(.horizontal, 70)
+                    .onAppear(perform: { viewStore.send(.onAppear) })
+                    .navigationLinkEmpty(
+                        isActive: viewStore.bindingForDestination(.birthday),
+                        destination: { ImportBirthdayView(store: store) }
+                    )
+                    .alert(store: store.scope(
+                        state: \.$alert,
+                        action: { .alert($0) }
+                    ))
+                    .zashiBack()
                 }
-                .applyScreenBackground()
-                .padding(.horizontal, 70)
-                .onAppear(perform: { viewStore.send(.onAppear) })
-                .navigationLinkEmpty(
-                    isActive: viewStore.bindingForDestination(.birthday),
-                    destination: { ImportBirthdayView(store: store) }
-                )
-                .alert(store: store.scope(
-                    state: \.$alert,
-                    action: { .alert($0) }
-                ))
-                .zashiBack()
             }
         }
+        .padding(.vertical, 1)
+        .applyScreenBackground()
     }
 }
 
