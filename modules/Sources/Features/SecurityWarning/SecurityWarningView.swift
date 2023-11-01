@@ -2,7 +2,7 @@
 //  SecurityWarningView.swift
 //  secant-testnet
 //
-//  Created by Francisco Gindre on 1/6/22.
+//  Created by Lukáš Korba on 04.10.2023.
 //
 
 import SwiftUI

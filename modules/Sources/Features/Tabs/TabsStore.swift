@@ -108,7 +108,7 @@ public struct TabsReducer: ReducerProtocol {
         }
 
         Scope(state: \.settingsState, action: /Action.settings) {
-            SettingsReducer()
+            SettingsReducer(networkType: networkType)
         }
 
         Reduce { state, action in

@@ -11,15 +11,19 @@ import ZcashLightClientKit
 import Generated
 import WalletStorage
 import SDKSynchronizer
+import PrivateDataConsent
 
 public typealias SettingsStore = Store<SettingsReducer.State, SettingsReducer.Action>
 public typealias SettingsViewStore = ViewStore<SettingsReducer.State, SettingsReducer.Action>
 
 public struct SettingsReducer: ReducerProtocol {
+    let networkType: NetworkType
+
     public struct State: Equatable {
         public enum Destination {
             case about
             case backupPhrase
+            case privateDataConsent
         }
 
         @PresentationState public var alert: AlertState<Action>?
@@ -27,6 +31,7 @@ public struct SettingsReducer: ReducerProtocol {
         public var appBuild = ""
         public var destination: Destination?
         public var phraseDisplayState: RecoveryPhraseDisplayReducer.State
+        public var privateDataConsentState: PrivateDataConsentReducer.State
         public var supportData: SupportData?
         
         public init(
@@ -34,12 +39,14 @@ public struct SettingsReducer: ReducerProtocol {
             appBuild: String = "",
             destination: Destination? = nil,
             phraseDisplayState: RecoveryPhraseDisplayReducer.State,
+            privateDataConsentState: PrivateDataConsentReducer.State,
             supportData: SupportData? = nil
         ) {
             self.appVersion = appVersion
             self.appBuild = appBuild
             self.destination = destination
             self.phraseDisplayState = phraseDisplayState
+            self.privateDataConsentState = privateDataConsentState
             self.supportData = supportData
         }
     }
@@ -49,6 +56,7 @@ public struct SettingsReducer: ReducerProtocol {
         case backupWalletAccessRequest
         case onAppear
         case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
+        case privateDataConsent(PrivateDataConsentReducer.Action)
         case sendSupportMail
         case sendSupportMailFinished
         case updateDestination(SettingsReducer.State.Destination?)
@@ -60,8 +68,10 @@ public struct SettingsReducer: ReducerProtocol {
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.walletStorage) var walletStorage
 
-    public init() {}
-    
+    public init(networkType: NetworkType) {
+        self.networkType = networkType
+    }
+
     public var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
@@ -106,6 +116,13 @@ public struct SettingsReducer: ReducerProtocol {
                 state.alert = nil
                 return .none
 
+            case .privateDataConsent(.shareFinished):
+                state.destination = nil
+                return .none
+
+            case .privateDataConsent:
+                return .none
+
             case .alert:
                 return .none
             }
@@ -114,6 +131,10 @@ public struct SettingsReducer: ReducerProtocol {
 
         Scope(state: \.phraseDisplayState, action: /Action.phraseDisplay) {
             RecoveryPhraseDisplayReducer()
+        }
+
+        Scope(state: \.privateDataConsentState, action: /Action.privateDataConsent) {
+            PrivateDataConsentReducer(networkType: networkType)
         }
     }
 }
@@ -141,6 +162,13 @@ extension SettingsViewStore {
             embed: { $0 ? .about : nil }
         )
     }
+    
+    var bindingForPrivateDataConsent: Binding<Bool> {
+        self.destinationBinding.map(
+            extract: { $0 == .privateDataConsent },
+            embed: { $0 ? .privateDataConsent : nil }
+        )
+    }
 }
 
 // MARK: - Store
@@ -150,6 +178,13 @@ extension SettingsStore {
         self.scope(
             state: \.phraseDisplayState,
             action: SettingsReducer.Action.phraseDisplay
+        )
+    }
+    
+    func privateDataConsentStore() -> PrivateDataConsentStore {
+        self.scope(
+            state: \.privateDataConsentState,
+            action: SettingsReducer.Action.privateDataConsent
         )
     }
 }
@@ -178,14 +213,15 @@ extension SettingsReducer.State {
             phrase: nil,
             showCopyToBufferAlert: false,
             birthday: nil
-        )
+        ),
+        privateDataConsentState: .placeholder
     )
 }
 
 extension SettingsStore {
     public static let placeholder = SettingsStore(
         initialState: .placeholder,
-        reducer: SettingsReducer()
+        reducer: SettingsReducer(networkType: .testnet)
     )
     
     public static let demo = SettingsStore(
@@ -196,8 +232,9 @@ extension SettingsStore {
                 phrase: nil,
                 showCopyToBufferAlert: false,
                 birthday: nil
-            )
+            ),
+            privateDataConsentState: .placeholder
         ),
-        reducer: SettingsReducer()
+        reducer: SettingsReducer(networkType: .testnet)
     )
 }
