@@ -146,6 +146,7 @@
 "settings.feedback" = "Send us feedback";
 "settings.privacyPolicy" = "Privacy Policy";
 "settings.documentation" = "Documentation";
+"settings.exportPrivateData" = "Export private data";
 "settings.about" = "About";
 "settings.about.info" = "Send and receive ZEC on Zashi!
 Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.";
@@ -154,6 +155,14 @@ Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps you
 "settings.alert.cantBackupWallet.message" = "Error: %@ (code: %@)";
 "settings.alert.cantSendEmail.title" = "Can't send email";
 "settings.alert.cantSendEmail.message" = "It looks like that you don't have any email account configured on your device. Therefore it's not possible to send a support email.";
+
+// MARK: - Private Data Consent
+"privateDataConsent.title" = "Consent for Exporting Private Data";
+"privateDataConsent.message" = "By clicking \"I Agree\" below, you give your consent to export Zashi’s private data which includes the entire history of the wallet, all private information, memos, amounts and recipient addresses, even for your shielded activity.*\n
+This private data also gives the ability to see certain future actions you take with Zashi.\n
+Sharing this private data is irrevocable — once you have shared this private data with someone, there is no way to revoke their access.";
+"privateDataConsent.note" = "*Note that this private data does not give them the ability to spend your funds, only the ability to see what you do with your funds.";
+"privateDataConsent.confirmation" = "I agree";
 
 // MARK: - Sync message
 "sync.message.uptodate" = "Up-To-Date";

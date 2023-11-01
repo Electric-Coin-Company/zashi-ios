@@ -256,6 +256,20 @@ public enum L10n {
       public static let restoreWallet = L10n.tr("Localizable", "plainOnboarding.button.restoreWallet", fallback: "Restore existing wallet")
     }
   }
+  public enum PrivateDataConsent {
+    /// I agree
+    public static let confirmation = L10n.tr("Localizable", "privateDataConsent.confirmation", fallback: "I agree")
+    /// By clicking "I Agree" below, you give your consent to export Zashi’s private data which includes the entire history of the wallet, all private information, memos, amounts and recipient addresses, even for your shielded activity.*
+    /// 
+    /// This private data also gives the ability to see certain future actions you take with Zashi.
+    /// 
+    /// Sharing this private data is irrevocable — once you have shared this private data with someone, there is no way to revoke their access.
+    public static let message = L10n.tr("Localizable", "privateDataConsent.message", fallback: "By clicking \"I Agree\" below, you give your consent to export Zashi’s private data which includes the entire history of the wallet, all private information, memos, amounts and recipient addresses, even for your shielded activity.*\n\nThis private data also gives the ability to see certain future actions you take with Zashi.\n\nSharing this private data is irrevocable — once you have shared this private data with someone, there is no way to revoke their access.")
+    /// *Note that this private data does not give them the ability to spend your funds, only the ability to see what you do with your funds.
+    public static let note = L10n.tr("Localizable", "privateDataConsent.note", fallback: "*Note that this private data does not give them the ability to spend your funds, only the ability to see what you do with your funds.")
+    /// Consent for Exporting Private Data
+    public static let title = L10n.tr("Localizable", "privateDataConsent.title", fallback: "Consent for Exporting Private Data")
+  }
   public enum ReceiveZec {
     /// Your Address
     public static let yourAddress = L10n.tr("Localizable", "receiveZec.yourAddress", fallback: "Your Address")
@@ -526,6 +540,8 @@ public enum L10n {
     public static let about = L10n.tr("Localizable", "settings.about", fallback: "About")
     /// Documentation
     public static let documentation = L10n.tr("Localizable", "settings.documentation", fallback: "Documentation")
+    /// Export private data
+    public static let exportPrivateData = L10n.tr("Localizable", "settings.exportPrivateData", fallback: "Export private data")
     /// Send us feedback
     public static let feedback = L10n.tr("Localizable", "settings.feedback", fallback: "Send us feedback")
     /// Privacy Policy

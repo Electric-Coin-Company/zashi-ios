@@ -53,9 +53,10 @@ class SettingsTests: XCTestCase {
         
         let store = TestStore(
             initialState: SettingsReducer.State(
-                phraseDisplayState: RecoveryPhraseDisplayReducer.State(phrase: nil)
+                phraseDisplayState: RecoveryPhraseDisplayReducer.State(phrase: nil),
+                privateDataConsentState: .placeholder
             ),
-            reducer: SettingsReducer()
+            reducer: SettingsReducer(networkType: .testnet)
         )
 
         store.dependencies.localAuthentication = .mockAuthenticationSucceeded
@@ -73,7 +74,7 @@ class SettingsTests: XCTestCase {
     func testBackupWalletAccessRequest_AuthenticateFailedPath() async throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: SettingsReducer()
+            reducer: SettingsReducer(networkType: .testnet)
         )
 
         store.dependencies.localAuthentication = .mockAuthenticationFailed

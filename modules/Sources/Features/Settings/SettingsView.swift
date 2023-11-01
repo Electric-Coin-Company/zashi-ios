@@ -3,6 +3,7 @@ import ComposableArchitecture
 import Generated
 import RecoveryPhraseDisplay
 import UIComponents
+import PrivateDataConsent
 
 public struct SettingsView: View {
     @Environment(\.openURL) var openURL
@@ -41,6 +42,12 @@ public struct SettingsView: View {
                     // https://github.com/zcash/secant-ios-wallet/issues/866
                 }
                 .zcashStyle()
+                .padding(.bottom, 25)
+
+                Button(L10n.Settings.exportPrivateData.uppercased()) {
+                    viewStore.send(.updateDestination(.privateDataConsent))
+                }
+                .zcashStyle()
 
                 Spacer()
                 
@@ -61,6 +68,12 @@ public struct SettingsView: View {
                 isActive: viewStore.bindingForAbout,
                 destination: {
                     About(store: store)
+                }
+            )
+            .navigationLinkEmpty(
+                isActive: viewStore.bindingForPrivateDataConsent,
+                destination: {
+                    PrivateDataConsentView(store: store.privateDataConsentStore())
                 }
             )
             .onAppear { viewStore.send(.onAppear) }

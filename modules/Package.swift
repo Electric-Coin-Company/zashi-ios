@@ -33,6 +33,7 @@ let package = Package(
         .library(name: "NumberFormatter", targets: ["NumberFormatter"]),
         .library(name: "OnboardingFlow", targets: ["OnboardingFlow"]),
         .library(name: "Pasteboard", targets: ["Pasteboard"]),
+        .library(name: "PrivateDataConsent", targets: ["PrivateDataConsent"]),
         .library(name: "RecoveryPhraseDisplay", targets: ["RecoveryPhraseDisplay"]),
         .library(name: "ReviewRequest", targets: ["ReviewRequest"]),
         .library(name: "Root", targets: ["Root"]),
@@ -292,6 +293,19 @@ let package = Package(
             path: "Sources/Dependencies/Pasteboard"
         ),
         .target(
+            name: "PrivateDataConsent",
+            dependencies: [
+                "ExportLogs",
+                "DatabaseFiles",
+                "Generated",
+                "Models",
+                "UIComponents",
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Features/PrivateDataConsent"
+        ),
+        .target(
             name: "RecoveryPhraseDisplay",
             dependencies: [
                 "Generated",
@@ -430,6 +444,7 @@ let package = Package(
                 "LocalAuthenticationHandler",
                 "MnemonicClient",
                 "Models",
+                "PrivateDataConsent",
                 "RecoveryPhraseDisplay",
                 "SDKSynchronizer",
                 "SupportDataGenerator",
