@@ -7,6 +7,7 @@
 
 import Foundation
 import ZcashLightClientKit
+import Generated
 
 /// Representation of the transaction on the SDK side, used as a bridge to the TCA wallet side. 
 public struct TransactionState: Equatable, Identifiable {
@@ -46,10 +47,11 @@ public struct TransactionState: Equatable, Identifiable {
         }
     }
 
-    public var date: Date? {
+    public var dateString: String? {
+        guard let minedHeight else { return "" }
         guard let timestamp else { return nil }
         
-        return Date(timeIntervalSince1970: timestamp)
+        return Date(timeIntervalSince1970: timestamp).asHumanReadable()
     }
 
     public var totalAmount: Zatoshi {

@@ -13,8 +13,8 @@ import SendFlow
 import UIComponents
 @testable import secant_testnet
 
-class TransactionSendingTests: XCTestCase {
-    func testTransactionSendingSnapshot() throws {
+class SendSnapshotTests: XCTestCase {
+    func testTransactionSendSnapshot() throws {
         var state = SendFlowReducer.State.placeholder
         state.addMemoState = true
         state.transactionAddressInputState = TransactionAddressTextFieldReducer.State(
@@ -33,15 +33,16 @@ class TransactionSendingTests: XCTestCase {
 
         let store = Store(
             initialState: state,
-            reducer: SendFlowReducer(networkType: .testnet)
-                .dependency(\.derivationTool, .live())
-                .dependency(\.mainQueue, DispatchQueue.main.eraseToAnyScheduler())
-                .dependency(\.numberFormatter, .live())
-                .dependency(\.walletStorage, .live())
-                .dependency(\.sdkSynchronizer, .mock)
+            reducer: {
+                SendFlowReducer(networkType: .testnet)
+                    .dependency(\.derivationTool, .live())
+                    .dependency(\.mainQueue, DispatchQueue.main.eraseToAnyScheduler())
+                    .dependency(\.numberFormatter, .live())
+                    .dependency(\.walletStorage, .live())
+                    .dependency(\.sdkSynchronizer, .mock)
+            }
         )
 
-        ViewStore(store).send(.onAppear)
-        addAttachments(TransactionSendingView(viewStore: ViewStore(store), tokenName: "ZEC"))
+        addAttachments(SendFlowView(store: store, tokenName: "ZEC"))
     }
 }

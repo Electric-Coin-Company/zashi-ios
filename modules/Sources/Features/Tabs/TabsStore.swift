@@ -125,7 +125,11 @@ public struct TabsReducer: ReducerProtocol {
                 
             case .home:
                 return .none
-                
+            
+            case .send(.sendDone):
+                state.selectedTab = .account
+                return .none
+            
             case .send:
                 return .none
 
@@ -149,7 +153,7 @@ public struct TabsReducer: ReducerProtocol {
 extension TabsStore {
     public static var demo = TabsStore(
         initialState: .placeholder,
-        reducer: TabsReducer(tokenName: "TAZ", networkType: ZcashNetworkBuilder.network(for: .testnet).networkType)
+        reducer: { TabsReducer(tokenName: "TAZ", networkType: ZcashNetworkBuilder.network(for: .testnet).networkType) }
     )
 }
 

@@ -20,23 +20,28 @@ public struct WelcomeView: View {
 
     public var body: some View {
         GeometryReader { proxy in
-            Asset.Assets.zashiLogo.image
-                .resizable()
-                .frame(width: 249, height: 321)
-                .scaleEffect(0.35)
-                .position(
-                    x: proxy.frame(in: .local).midX,
-                    y: proxy.frame(in: .local).midY * 0.5
-                )
-            
-            Asset.Assets.splashHi.image
-                .resizable()
-                .frame(width: 246, height: 213)
-                .scaleEffect(0.35)
-                .position(
-                    x: proxy.frame(in: .local).midX,
-                    y: proxy.frame(in: .local).midY * 0.8
-                )
+            WithViewStore(store) { viewStore in
+                Asset.Assets.zashiLogo.image
+                    .resizable()
+                    .frame(width: 249, height: 321)
+                    .scaleEffect(0.35)
+                    .position(
+                        x: proxy.frame(in: .local).midX,
+                        y: proxy.frame(in: .local).midY * 0.5
+                    )
+                
+                Asset.Assets.splashHi.image
+                    .resizable()
+                    .frame(width: 246, height: 213)
+                    .scaleEffect(0.35)
+                    .position(
+                        x: proxy.frame(in: .local).midX,
+                        y: proxy.frame(in: .local).midY * 0.8
+                    )
+                    .accessDebugMenuWithHiddenGesture {
+                        viewStore.send(.debugMenuStartup)
+                    }
+            }
         }
         .background(Asset.Colors.splash.color)
         .ignoresSafeArea()

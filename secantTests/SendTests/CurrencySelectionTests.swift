@@ -10,25 +10,26 @@ import ComposableArchitecture
 import UIComponents
 @testable import secant_testnet
 
+@MainActor
 class CurrencySelectionTests: XCTestCase {
-    func testCurrencySwapUsdToZec() throws {
+    func testCurrencySwapUsdToZec() async throws {
         let store = TestStore(
             initialState: CurrencySelectionReducer.State(currencyType: .usd),
-            reducer: CurrencySelectionReducer()
+            reducer: { CurrencySelectionReducer() }
         )
 
-        store.send(.swapCurrencyType) { state in
+        await store.send(.swapCurrencyType) { state in
             state.currencyType = .zec
         }
     }
 
-    func testCurrencySwapZecToUsd() throws {
+    func testCurrencySwapZecToUsd() async throws {
         let store = TestStore(
             initialState: CurrencySelectionReducer.State(currencyType: .zec),
-            reducer: CurrencySelectionReducer()
+            reducer: { CurrencySelectionReducer() }
         )
 
-        store.send(.swapCurrencyType) { state in
+        await store.send(.swapCurrencyType) { state in
             state.currencyType = .usd
         }
     }

@@ -10,8 +10,9 @@ import ComposableArchitecture
 import UIComponents
 @testable import secant_testnet
 
+@MainActor
 class TransactionAddressTextFieldTests: XCTestCase {
-    func testClearValue() throws {
+    func testClearValue() async throws {
         let store = TestStore(
             initialState:
                 TransactionAddressTextFieldReducer.State(
@@ -21,10 +22,10 @@ class TransactionAddressTextFieldTests: XCTestCase {
                             text: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
                         )
                 ),
-            reducer: TransactionAddressTextFieldReducer(networkType: .testnet)
+            reducer: { TransactionAddressTextFieldReducer(networkType: .testnet) }
         )
 
-        store.send(.clearAddress) { state in
+        await store.send(.clearAddress) { state in
             state.textFieldState.text = "".redacted
         }
     }

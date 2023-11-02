@@ -17,6 +17,7 @@ import UIComponents
 @testable import secant_testnet
 
 // swiftlint:disable type_body_length
+@MainActor
 class SendTests: XCTestCase {
     var storage = WalletStorage(secItem: .live)
     let usNumberFormatter = NumberFormatter()
@@ -51,7 +52,7 @@ class SendTests: XCTestCase {
 
         let store = TestStore(
             initialState: initialState,
-            reducer: SendFlowReducer(networkType: .testnet)
+            reducer: { SendFlowReducer(networkType: .testnet) }
         )
         
         store.dependencies.derivationTool = .liveValue
@@ -63,153 +64,31 @@ class SendTests: XCTestCase {
         // simulate the sending confirmation button to be pressed
         _ = await store.send(.sendPressed) { state in
             // once sending is confirmed, the attempts to try to send again by pressing the button
-            // needs to be eliminated, indicated by the flag `isSendingTransaction`, need to be true
-            state.isSendingTransaction = true
+            // needs to be eliminated, indicated by the flag `isSending`, need to be true
+            state.isSending = true
         }
-
-        await testScheduler.advance(by: 0.01)
-
-        // first it's expected that progress screen is showed
-        await store.receive(.updateDestination(.inProgress)) { state in
-            state.destination = .inProgress
-        }
-
-        // check the success transaction to be received back
-        await store.receive(.sendTransactionSuccess) { state in
-            // from this moment on the sending next transaction is allowed again
-            // the 'isSendingTransaction' needs to be false again
-            state.isSendingTransaction = false
-        }
-
-        // all went well, the success screen is triggered
-        await store.receive(.updateDestination(.success)) { state in
-            state.destination = .success
-        }
-    }
-
-    @MainActor func testSendSucceededWithoutMemo() async throws {
-        // the test needs to pass the exportWallet() so we simulate some in the keychain
-        try storage.importWallet(bip39: "one two three", birthday: nil)
-
-        // setup the store and environment to be fully mocked
-        let testScheduler = DispatchQueue.test
-
-        var state = SendFlowReducer.State.placeholder
-        state.addMemoState = false
-        state.transactionAddressInputState = TransactionAddressTextFieldReducer.State(
-            textFieldState:
-                TCATextFieldReducer.State(
-                    validationType: nil,
-                    text: "ztestsapling1psqa06alcfj9t6s246hht3n7kcw5h900r6z40qnuu7l58qs55kzeqa98879z9hzy596dca4hmsr".redacted
-                )
-        )
-
-        let store = TestStore(
-            initialState: state,
-            reducer: SendFlowReducer(networkType: .testnet)
-        )
         
-        store.dependencies.derivationTool = .liveValue
-        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-        store.dependencies.mnemonic = .liveValue
-        store.dependencies.sdkSynchronizer = .mocked()
-        store.dependencies.walletStorage = .noOp
-
-        // simulate the sending confirmation button to be pressed
-        _ = await store.send(.sendPressed) { state in
-            // once sending is confirmed, the attempts to try to send again by pressing the button
-            // needs to be eliminated, indicated by the flag `isSendingTransaction`, need to be true
-            state.isSendingTransaction = true
+        await store.receive(.sendDone) { state in
+            state.isSending = false
+            state.transactionAddressInputState.textFieldState.text = "".redacted
+            state.transactionAmountInputState.textFieldState.text = "".redacted
         }
 
         await testScheduler.advance(by: 0.01)
-
-        // first it's expected that progress screen is showed
-        await store.receive(.updateDestination(.inProgress)) { state in
-            state.destination = .inProgress
-        }
-
-        // check the success transaction to be received back
-        await store.receive(.sendTransactionSuccess) { state in
-            // from this moment on the sending next transaction is allowed again
-            // the 'isSendingTransaction' needs to be false again
-            state.isSendingTransaction = false
-        }
-
-        // all went well, the success screen is triggered
-        await store.receive(.updateDestination(.success)) { state in
-            state.destination = .success
-        }
     }
 
-    @MainActor func testSendFailed() async throws {
-        // the test needs to pass the exportWallet() so we simulate some in the keychain
-        try storage.importWallet(bip39: "one two three", birthday: nil)
-
-        // setup the store and environment to be fully mocked
-        let testScheduler = DispatchQueue.test
-
-        var initialState = SendFlowReducer.State.placeholder
-        initialState.transactionAddressInputState = TransactionAddressTextFieldReducer.State(
-            textFieldState:
-                TCATextFieldReducer.State(
-                    validationType: nil,
-                    text: "ztestsapling1psqa06alcfj9t6s246hht3n7kcw5h900r6z40qnuu7l58qs55kzeqa98879z9hzy596dca4hmsr".redacted
-                )
-        )
-
-        let store = TestStore(
-            initialState: initialState,
-            reducer: SendFlowReducer(networkType: .testnet)
-        )
-        
-        store.dependencies.derivationTool = .liveValue
-        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
-        store.dependencies.mnemonic = .liveValue
-        store.dependencies.walletStorage = .noOp
-        store.dependencies.sdkSynchronizer = .noOp
-        store.dependencies.sdkSynchronizer.sendTransaction = { _, _, _, _ in throw ZcashError.synchronizerNotPrepared }
-
-        // simulate the sending confirmation button to be pressed
-        _ = await store.send(.sendPressed) { state in
-            // once sending is confirmed, the attempts to try to send again by pressing the button
-            // needs to be eliminated, indicated by the flag `isSendingTransaction`, need to be true
-            state.isSendingTransaction = true
-        }
-
-        await testScheduler.advance(by: 0.01)
-
-        // first it's expected that progress screen is showed
-        await store.receive(.updateDestination(.inProgress)) { state in
-            state.destination = .inProgress
-        }
-
-        // check the failure transaction to be received back
-        await store.receive(
-            .sendTransactionFailure(ZcashError.synchronizerNotPrepared)
-        ) { state in
-            // from this moment on the sending next transaction is allowed again
-            // the 'isSendingTransaction' needs to be false again
-            state.isSendingTransaction = false
-        }
-
-        // the failure screen is triggered as expected
-        await store.receive(.updateDestination(.failure)) { state in
-            state.destination = .failure
-        }
-    }
-
-    func testAddressValidation_Invalid() throws {
+    func testAddressValidation_Invalid() async throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: SendFlowReducer(networkType: .testnet)
+            reducer: { SendFlowReducer(networkType: .testnet) }
         )
 
         store.dependencies.derivationTool = .noOp
         store.dependencies.derivationTool.isZcashAddress = { _, _ in false }
 
         let address = "3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr".redacted
-        store.send(.transactionAddressInput(.textField(.set(address)))) { state in
+        
+        await store.send(.transactionAddressInput(.textField(.set(address)))) { state in
             state.transactionAddressInputState.textFieldState.text = address
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
             // isValid function returns true, `guard let validationType else { return true }`
@@ -222,17 +101,18 @@ class SendTests: XCTestCase {
         }
     }
 
-    func testAddressValidation_Valid() throws {
+    func testAddressValidation_Valid() async throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: SendFlowReducer(networkType: .testnet)
+            reducer: { SendFlowReducer(networkType: .testnet) }
         )
         
         store.dependencies.derivationTool = .noOp
         store.dependencies.derivationTool.isZcashAddress = { _, _ in true }
 
         let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
-        store.send(.transactionAddressInput(.textField(.set(address)))) { state in
+        
+        await store.send(.transactionAddressInput(.textField(.set(address)))) { state in
             state.transactionAddressInputState.textFieldState.text = address
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
             // isValid function returns true, `guard let validationType else { return true }`
@@ -245,32 +125,32 @@ class SendTests: XCTestCase {
         }
     }
 
-    func testInvalidAmountFormatEmptyInput() throws {
+    func testInvalidAmountFormatEmptyInput() async throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: SendFlowReducer(networkType: .testnet)
+            reducer: { SendFlowReducer(networkType: .testnet) }
         )
         
         store.dependencies.numberFormatter = .noOp
 
         // Checks the computed property `isInvalidAmountFormat` which controls the error message to be shown on the screen
         // With empty input it must be false
-        store.send(.transactionAmountInput(.textField(.set("".redacted))))
+        await store.send(.transactionAmountInput(.textField(.set("".redacted))))
 
-        store.receive(.transactionAmountInput(.updateAmount))
+        await store.receive(.transactionAmountInput(.updateAmount))
     }
 
-    func testInvalidAddressFormatEmptyInput() throws {
+    func testInvalidAddressFormatEmptyInput() async throws {
         let store = TestStore(
             initialState: .placeholder,
-            reducer: SendFlowReducer(networkType: .testnet)
+            reducer: { SendFlowReducer(networkType: .testnet) }
         )
 
         store.dependencies.derivationTool = .noOp
 
         // Checks the computed property `isInvalidAddressFormat` which controls the error message to be shown on the screen
         // With empty input it must be false
-        store.send(.transactionAddressInput(.textField(.set("".redacted)))) { state in
+        await store.send(.transactionAddressInput(.textField(.set("".redacted)))) { state in
             state.transactionAddressInputState.textFieldState.text = "".redacted
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
             // isValid function returns true, `guard let validationType else { return true }`
@@ -282,7 +162,7 @@ class SendTests: XCTestCase {
         }
     }
 
-    func testFundsSufficiency_SufficientAmount() throws {
+    func testFundsSufficiency_SufficientAmount() async throws {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .placeholder,
@@ -302,14 +182,15 @@ class SendTests: XCTestCase {
 
         let store = TestStore(
             initialState: sendState,
-            reducer: SendFlowReducer(networkType: .testnet)
+            reducer: { SendFlowReducer(networkType: .testnet) }
         )
 
         store.dependencies.numberFormatter = .noOp
         store.dependencies.numberFormatter.number = { _ in NSNumber(0.00501299) }
 
         let address = "0.00501299".redacted
-        store.send(.transactionAmountInput(.textField(.set(address)))) { state in
+        
+        await store.send(.transactionAmountInput(.textField(.set(address)))) { state in
             state.transactionAmountInputState.textFieldState.text = address
             state.transactionAmountInputState.textFieldState.valid = true
             XCTAssertFalse(
@@ -318,12 +199,12 @@ class SendTests: XCTestCase {
             )
         }
 
-        store.receive(.transactionAmountInput(.updateAmount)) { state in
+        await store.receive(.transactionAmountInput(.updateAmount)) { state in
             state.transactionAmountInputState.amount = Int64(501_299).redacted
         }
     }
 
-    func testFundsSufficiency_InsufficientAmount() throws {
+    func testFundsSufficiency_InsufficientAmount() async throws {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .placeholder,
@@ -343,14 +224,15 @@ class SendTests: XCTestCase {
 
         let store = TestStore(
             initialState: sendState,
-            reducer: SendFlowReducer(networkType: .testnet)
+            reducer: { SendFlowReducer(networkType: .testnet) }
         )
 
         store.dependencies.numberFormatter = .noOp
         store.dependencies.numberFormatter.number = { _ in NSNumber(0.00501301) }
 
         let value = "0.00501301".redacted
-        store.send(.transactionAmountInput(.textField(.set(value)))) { state in
+        
+        await store.send(.transactionAmountInput(.textField(.set(value)))) { state in
             state.transactionAmountInputState.textFieldState.text = value
             state.transactionAmountInputState.textFieldState.valid = true
             XCTAssertFalse(
@@ -359,7 +241,7 @@ class SendTests: XCTestCase {
             )
         }
 
-        store.receive(.transactionAmountInput(.updateAmount)) { state in
+        await store.receive(.transactionAmountInput(.updateAmount)) { state in
             state.transactionAmountInputState.amount = Int64(501_301).redacted
             XCTAssertTrue(
                 state.isInsufficientFunds,
@@ -383,7 +265,7 @@ class SendTests: XCTestCase {
         try numberFormatTest("1.2.3", nil)
     }
 
-    func testValidForm() throws {
+    func testValidForm() async throws {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .placeholder,
@@ -404,14 +286,15 @@ class SendTests: XCTestCase {
 
         let store = TestStore(
             initialState: sendState,
-            reducer: SendFlowReducer(networkType: .testnet)
+            reducer: { SendFlowReducer(networkType: .testnet) }
         )
 
         store.dependencies.derivationTool = .noOp
         store.dependencies.derivationTool.isZcashAddress = { _, _ in true }
 
         let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
-        store.send(.transactionAddressInput(.textField(.set(address)))) { state in
+        
+        await store.send(.transactionAddressInput(.textField(.set(address)))) { state in
             state.transactionAddressInputState.textFieldState.text = address
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
             // isValid function returns true, `guard let validationType else { return true }`
@@ -424,7 +307,7 @@ class SendTests: XCTestCase {
         }
     }
 
-    func testInvalidForm_InsufficientFunds() throws {
+    func testInvalidForm_InsufficientFunds() async throws {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .placeholder,
@@ -444,14 +327,15 @@ class SendTests: XCTestCase {
 
         let store = TestStore(
             initialState: sendState,
-            reducer: SendFlowReducer(networkType: .testnet)
+            reducer: { SendFlowReducer(networkType: .testnet) }
         )
 
         store.dependencies.derivationTool = .noOp
         store.dependencies.derivationTool.isZcashAddress = { _, _ in true }
 
         let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
-        store.send(.transactionAddressInput(.textField(.set(address)))) { state in
+        
+        await store.send(.transactionAddressInput(.textField(.set(address)))) { state in
             state.transactionAddressInputState.textFieldState.text = address
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
             // isValid function returns true, `guard let validationType else { return true }`
@@ -464,7 +348,7 @@ class SendTests: XCTestCase {
         }
     }
 
-    func testInvalidForm_AddressFormat() throws {
+    func testInvalidForm_AddressFormat() async throws {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .placeholder,
@@ -484,13 +368,14 @@ class SendTests: XCTestCase {
 
         let store = TestStore(
             initialState: sendState,
-            reducer: SendFlowReducer(networkType: .testnet)
+            reducer: { SendFlowReducer(networkType: .testnet) }
         )
 
         store.dependencies.derivationTool = .noOp
 
         let address = "3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr".redacted
-        store.send(.transactionAddressInput(.textField(.set(address)))) { state in
+        
+        await store.send(.transactionAddressInput(.textField(.set(address)))) { state in
             state.transactionAddressInputState.textFieldState.text = address
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
             // isValid function returns true, `guard let validationType else { return true }`
@@ -503,7 +388,7 @@ class SendTests: XCTestCase {
         }
     }
 
-    func testInvalidForm_AmountFormat() throws {
+    func testInvalidForm_AmountFormat() async throws {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .placeholder,
@@ -523,7 +408,7 @@ class SendTests: XCTestCase {
 
         let store = TestStore(
             initialState: sendState,
-            reducer: SendFlowReducer(networkType: .testnet)
+            reducer: { SendFlowReducer(networkType: .testnet) }
         )
 
         store.dependencies.derivationTool = .noOp
@@ -531,7 +416,8 @@ class SendTests: XCTestCase {
         store.dependencies.derivationTool.isTransparentAddress = { _, _ in true }
 
         let address = "tmGh6ttAnQRJra81moqYcedFadW9XtUT5Eq".redacted
-        store.send(.transactionAddressInput(.textField(.set(address)))) { state in
+        
+        await store.send(.transactionAddressInput(.textField(.set(address)))) { state in
             state.transactionAddressInputState.textFieldState.text = address
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
             // isValid function returns true, `guard let validationType else { return true }`
@@ -545,10 +431,10 @@ class SendTests: XCTestCase {
         }
     }
 
-    func testInvalidForm_ExceededMemoCharLimit() throws {
+    func testInvalidForm_ExceededMemoCharLimit() async throws {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
-            memoState: MultiLineTextFieldReducer.State(charLimit: 3),
+            memoState: MessageEditorReducer.State(charLimit: 3),
             scanState: .placeholder,
             shieldedBalance: WalletBalance(verified: Zatoshi(1), total: Zatoshi(1)).redacted,
             transactionAddressInputState:
@@ -575,11 +461,12 @@ class SendTests: XCTestCase {
 
         let store = TestStore(
             initialState: sendState,
-            reducer: SendFlowReducer(networkType: .testnet)
+            reducer: { SendFlowReducer(networkType: .testnet) }
         )
 
         let value = "test".redacted
-        store.send(.memo(.memoInputChanged(value))) { state in
+        
+        await store.send(.memo(.memoInputChanged(value))) { state in
             state.memoState.text = value
             XCTAssertFalse(
                 state.isValidForm,
@@ -588,7 +475,7 @@ class SendTests: XCTestCase {
         }
     }
 
-    func testMemoCharLimitSet() throws {
+    func testMemoCharLimitSet() async throws {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .placeholder,
@@ -608,22 +495,22 @@ class SendTests: XCTestCase {
 
         let store = TestStore(
             initialState: sendState,
-            reducer: SendFlowReducer(networkType: .testnet)
+            reducer: { SendFlowReducer(networkType: .testnet) }
         )
 
         store.dependencies.mainQueue = .immediate
         store.dependencies.sdkSynchronizer = .noOp
 
-        store.send(.onAppear) { state in
+        await store.send(.onAppear) { state in
             state.memoState.charLimit = 512
         }
 
         // .onAppear action starts long living cancelable action .synchronizerStateChanged
         // .onDisappear cancels it, must have for the test to pass
-        store.send(.onDisappear)
+        await store.send(.onDisappear)
     }
 
-    func testScannedAddress() throws {
+    func testScannedAddress() async throws {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .placeholder,
@@ -634,7 +521,7 @@ class SendTests: XCTestCase {
 
         let store = TestStore(
             initialState: sendState,
-            reducer: SendFlowReducer(networkType: .testnet)
+            reducer: { SendFlowReducer(networkType: .testnet) }
         )
 
         store.dependencies.audioServices = AudioServicesClient(systemSoundVibrate: { })
@@ -643,12 +530,13 @@ class SendTests: XCTestCase {
         // We don't need to pass a valid address here, we just need to confirm some
         // found string is received and the `isValidAddress` flag is set to `true`
         let address = "address".redacted
-        store.send(.scan(.found(address))) { state in
+        
+        await store.send(.scan(.found(address))) { state in
             state.transactionAddressInputState.textFieldState.text = address
             state.transactionAddressInputState.isValidAddress = true
         }
 
-        store.receive(.updateDestination(nil))
+        await store.receive(.updateDestination(nil))
     }
 }
 
