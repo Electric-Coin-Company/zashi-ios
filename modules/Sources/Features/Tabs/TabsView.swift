@@ -62,8 +62,10 @@ public struct TabsView: View {
                             ),
                             tokenName: tokenName
                         )
-                        .tag(TabsReducer.State.Tab.details)
+                        .tag(TabsReducer.State.Tab.balances)
                     }
+                    .tabViewStyle(.page(indexDisplayMode: .never))
+                    .padding(.bottom, 50)
                     
                     VStack {
                         Spacer()
@@ -122,7 +124,7 @@ public struct TabsView: View {
                 .resizable()
                 .frame(width: 62, height: 17)
             
-        case .details:
+        case .balances:
             Text(L10n.Tabs.balances.uppercased())
                 .font(.custom(FontFamily.Archivo.bold.name, size: 14))
         }
