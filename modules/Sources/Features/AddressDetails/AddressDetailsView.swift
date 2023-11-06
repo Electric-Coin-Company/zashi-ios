@@ -56,7 +56,7 @@ public struct AddressDetailsView: View {
             
             Text(address)
                 .font(.custom(FontFamily.Inter.regular.name, size: 16))
-                .foregroundColor(Asset.Colors.suppressed47.color)
+                .foregroundColor(Asset.Colors.shade47.color)
                 .frame(width: 270)
                 .padding(.bottom, 20)
             

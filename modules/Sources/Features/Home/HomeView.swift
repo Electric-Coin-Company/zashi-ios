@@ -2,7 +2,7 @@ import SwiftUI
 import ComposableArchitecture
 import StoreKit
 import Generated
-import WalletEventsFlow
+import TransactionList
 import Settings
 import UIComponents
 
@@ -20,9 +20,8 @@ public struct HomeView: View {
             VStack {
                 balance(viewStore)
 
-                WalletEventsFlowView(store: store.historyStore(), tokenName: tokenName)
+                TransactionListView(store: store.historyStore(), tokenName: tokenName)
             }
-            .padding()
             .applyScreenBackground()
             .onAppear {
                 viewStore.send(.onAppear)
@@ -52,26 +51,26 @@ public struct HomeView: View {
 
 extension HomeView {
     func balance(_ viewStore: HomeViewStore) -> some View {
-        Group {
+        VStack(spacing: 0) {
             Button {
                 viewStore.send(.balanceBreakdown)
             } label: {
                 BalanceTitle(balance: viewStore.shieldedBalance.data.total)
             }
+            .padding(.top, 40)
 
-            if viewStore.walletConfig.isEnabled(.showFiatConversion) {
-                Text("$\(viewStore.totalCurrencyBalance.decimalZashiFormatted())")
-                    .font(.custom(FontFamily.Inter.regular.name, size: 20))
-            }
-            
             if viewStore.migratingDatabase {
                 Text(L10n.Home.migratingDatabases)
+                    .padding(.top, 10)
+                    .padding(.bottom, 30)
             } else {
                 Text(L10n.Balance.available(viewStore.shieldedBalance.data.verified.decimalZashiFormatted(), tokenName))
                     .font(.custom(FontFamily.Inter.regular.name, size: 12))
                     .accessDebugMenuWithHiddenGesture {
                         viewStore.send(.debugMenuStartup)
                     }
+                    .padding(.top, 10)
+                    .padding(.bottom, 30)
             }
         }
         .foregroundColor(Asset.Colors.primary.color)

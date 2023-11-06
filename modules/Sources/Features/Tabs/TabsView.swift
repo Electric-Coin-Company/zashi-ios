@@ -82,7 +82,7 @@ public struct TabsView: View {
                                                 .foregroundColor(Asset.Colors.primary.color)
                                             Rectangle()
                                                 .frame(height: 2)
-                                                .foregroundColor(Asset.Colors.tabsUnderline.color)
+                                                .foregroundColor(Asset.Colors.primaryTint.color)
                                                 .matchedGeometryEffect(id: "Tabs", in: tabsID, properties: .frame)
                                         } else {
                                             Text("\(item.title)")

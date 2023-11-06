@@ -1,6 +1,6 @@
 import ComposableArchitecture
 import SwiftUI
-import WalletEventsFlow
+import TransactionList
 
 public typealias SandboxStore = Store<SandboxReducer.State, SandboxReducer.Action>
 public typealias SandboxViewStore = ViewStore<SandboxReducer.State, SandboxReducer.Action>
@@ -13,13 +13,13 @@ public struct SandboxReducer: ReducerProtocol {
             case recoveryPhraseDisplay
             case scan
         }
-        public var walletEventsState: WalletEventsFlowReducer.State
+        public var transactionListState: TransactionListReducer.State
         public var destination: Destination?
     }
 
     public enum Action: Equatable {
         case updateDestination(SandboxReducer.State.Destination?)
-        case walletEvents(WalletEventsFlowReducer.Action)
+        case transactionList(TransactionListReducer.Action)
         case reset
     }
     
@@ -31,10 +31,10 @@ public struct SandboxReducer: ReducerProtocol {
             state.destination = destination
             return .none
             
-        case let .walletEvents(walletEventsAction):
-            return WalletEventsFlowReducer()
-                .reduce(into: &state.walletEventsState, action: walletEventsAction)
-                .map(SandboxReducer.Action.walletEvents)
+        case let .transactionList(transactionListAction):
+            return TransactionListReducer()
+                .reduce(into: &state.transactionListState, action: transactionListAction)
+                .map(SandboxReducer.Action.transactionList)
             
         case .reset:
             return .none
@@ -45,10 +45,10 @@ public struct SandboxReducer: ReducerProtocol {
 // MARK: - Store
 
 extension SandboxStore {
-    func historyStore() -> WalletEventsFlowStore {
+    func historyStore() -> TransactionListStore {
         self.scope(
-            state: \.walletEventsState,
-            action: SandboxReducer.Action.walletEvents
+            state: \.transactionListState,
+            action: SandboxReducer.Action.transactionList
         )
     }
 }
@@ -56,20 +56,6 @@ extension SandboxStore {
 // MARK: - ViewStore
 
 extension SandboxViewStore {
-    func toggleSelectedTransaction() {
-        let isAlreadySelected = (self.selectedTranactionID != nil)
-        let walletEvent = self.walletEventsState.walletEvents[5]
-        let newDestination = isAlreadySelected ? nil : WalletEventsFlowReducer.State.Destination.showWalletEvent(walletEvent)
-        send(.walletEvents(.updateDestination(newDestination)))
-    }
-
-    var selectedTranactionID: String? {
-        self.walletEventsState
-            .destination
-            .flatMap(/WalletEventsFlowReducer.State.Destination.showWalletEvent)
-            .map(\.id)
-    }
-
     func bindingForDestination(_ destination: SandboxReducer.State.Destination) -> Binding<Bool> {
         self.binding(
             get: { $0.destination == destination },
@@ -85,7 +71,7 @@ extension SandboxViewStore {
 extension SandboxReducer.State {
     public static var placeholder: Self {
         .init(
-            walletEventsState: .placeHolder,
+            transactionListState: .placeHolder,
             destination: nil
         )
     }
@@ -95,7 +81,7 @@ extension SandboxStore {
     public static var placeholder: SandboxStore {
         SandboxStore(
             initialState: SandboxReducer.State(
-                walletEventsState: .placeHolder,
+                transactionListState: .placeHolder,
                 destination: nil
             ),
             reducer: SandboxReducer()
