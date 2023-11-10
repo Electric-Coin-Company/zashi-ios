@@ -305,8 +305,8 @@ extension TransactionState {
         timestamp: 1699290621,
         zecAmount: Zatoshi(25_000_000),
         isSentTransaction: true,
-        isAddressExpanded: false,
-        isExpanded: false,
+        isAddressExpanded: true,
+        isExpanded: true,
         isIdExpanded: false
     )
     

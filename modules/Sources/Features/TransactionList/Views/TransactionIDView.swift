@@ -49,7 +49,10 @@ struct TransactionIdView: View {
 
                     Spacer(minLength: 100)
                 }
-                .padding(.bottom, 20)
+                .padding(.bottom, 10)
+
+                TapToCopyTransactionDataView(viewStore: viewStore, data: transaction.id.redacted)
+                    .padding(.bottom, 20)
             }
         }
         .font(.custom(FontFamily.Inter.regular.name, size: 13))
@@ -58,8 +61,11 @@ struct TransactionIdView: View {
 }
 
 #Preview {
-    TransactionIdView(
+    var transaction = TransactionState.placeholder()
+    transaction.isIdExpanded = true
+    
+    return TransactionIdView(
         viewStore: ViewStore(.placeholder, observe: { $0 }),
-        transaction: .placeholder()
+        transaction: transaction
     )
 }
