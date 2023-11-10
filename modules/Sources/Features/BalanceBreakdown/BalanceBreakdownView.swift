@@ -75,7 +75,7 @@ extension BalanceBreakdownView {
             Text("\(title)")
                 .foregroundColor(titleColor)
             
-            BalanceTitle(balance: balance)
+            BalanceWithIconView(balance: balance)
         }
         .padding(.horizontal, 50)
     }

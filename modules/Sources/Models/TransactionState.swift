@@ -90,24 +90,6 @@ public struct TransactionState: Equatable, Identifiable {
         }
     }
 
-    public var expandedAmountString: (primary: String, secondary: String) {
-        let formatted = zecAmount.decimalZashiFullFormatted()
-        
-        let smallPart = String(formatted.suffix(5))
-        let normal = formatted.dropLast(5)
-        
-        switch status {
-        case .paid, .sending:
-            return (primary: "-\(normal)", secondary: smallPart)
-        case .received, .receiving:
-            return (primary: "+\(normal)", secondary: smallPart)
-        case .failed:
-            return isSentTransaction 
-            ? (primary: "-\(normal)", secondary: smallPart)
-            : (primary: "+\(normal)", secondary: smallPart)
-        }
-    }
-
     public var dateString: String? {
         guard minedHeight != nil else { return "" }
         guard let timestamp else { return nil }
