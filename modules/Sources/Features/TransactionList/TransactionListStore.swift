@@ -141,6 +141,8 @@ public struct TransactionListReducer: ReducerProtocol {
                     if !transaction.isSpending {
                         if let tsTimestamp = copiedTransaction.timestamp, tsTimestamp > timestamp {
                             copiedTransaction.isMarkedAsRead = readIds[copiedTransaction.id.redacted] ?? false
+                        } else {
+                            copiedTransaction.isMarkedAsRead = true
                         }
                     }
 
