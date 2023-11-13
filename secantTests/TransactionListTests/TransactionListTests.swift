@@ -586,8 +586,9 @@ class TransactionListTests: XCTestCase {
             state.transactionList = IdentifiedArrayOf(transactionList)
             state.latestTransactionList = transactionList
             state.latestTranassctionId = id
+            state.transactionList[0].isMarkedAsRead = true
             
-            XCTAssertTrue(state.transactionList[0].isUnread)
+            XCTAssertFalse(state.transactionList[0].isUnread)
         }
         
         await store.finish()
