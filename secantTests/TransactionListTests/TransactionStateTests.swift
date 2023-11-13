@@ -346,53 +346,6 @@ final class TransactionStateTests: XCTestCase {
         
         XCTAssertEqual(transaction.balanceColor, Asset.Colors.primary.color)
     }
-    
-    // MARK: - Balances and String representations for collapsed/expanded states
-    
-    func testExpandedPaidAmountTupple() throws {
-        let transaction = TransactionState(
-            memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
-            minedHeight: BlockHeight(1),
-            zAddress: "tmP3uLtGx5GPddkq8a6ddmXhqJJ3vy6tpTE",
-            fee: Zatoshi(10_000),
-            id: "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja",
-            status: .paid,
-            timestamp: 1699290621,
-            zecAmount: Zatoshi(25_793_456),
-            isSentTransaction: false,
-            isAddressExpanded: false,
-            isExpanded: false,
-            isIdExpanded: false
-        )
-        
-        // 0.025793456
-        let expandedString = transaction.expandedAmountString
-        
-        XCTAssertEqual(expandedString.primary, "-0.257")
-        XCTAssertEqual(expandedString.secondary, "93456")
-    }
-    
-    func testExpandedReceivedAmountTupple() throws {
-        let transaction = TransactionState(
-            memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
-            minedHeight: BlockHeight(1),
-            zAddress: "tmP3uLtGx5GPddkq8a6ddmXhqJJ3vy6tpTE",
-            fee: Zatoshi(10_000),
-            id: "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja",
-            status: .received,
-            timestamp: 1699290621,
-            zecAmount: Zatoshi(25_793_456),
-            isSentTransaction: false,
-            isAddressExpanded: false,
-            isExpanded: false,
-            isIdExpanded: false
-        )
-        
-        let expandedString = transaction.expandedAmountString
-        
-        XCTAssertEqual(expandedString.primary, "+0.257")
-        XCTAssertEqual(expandedString.secondary, "93456")
-    }
 
     func testCollapsedPrimaryAmountRoundingForSend() throws {
         let transaction = TransactionState(

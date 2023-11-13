@@ -34,17 +34,14 @@ public struct SendFlowView: View {
                 ScrollView {
                     ScrollViewReader { value in
                         VStack(alignment: .center) {
-                            BalanceTitle(balance: viewStore.shieldedBalance.data.total)
+                            BalanceWithIconView(balance: viewStore.shieldedBalance.data.total)
+                                .padding(.top, 40)
                                 .padding(.bottom, 5)
                             
-                            Text(L10n.Balance.availableTitle)
-                                .underline()
-                                .font(.custom(FontFamily.Inter.regular.name, size: 12))
-                            + Text(" \(viewStore.spendableBalanceString) "
+                            AvailableBalanceView(
+                                balance: viewStore.shieldedBalance.data.verified,
+                                tokenName: tokenName
                             )
-                            .font(.custom(FontFamily.Inter.bold.name, size: 12))
-                            + Text(tokenName)
-                                .font(.custom(FontFamily.Inter.regular.name, size: 12))
                             
                             VStack(alignment: .leading) {
                                 VStack(alignment: .leading) {

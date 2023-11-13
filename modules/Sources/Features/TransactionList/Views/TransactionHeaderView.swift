@@ -118,12 +118,12 @@ struct TransactionHeaderView: View {
     @ViewBuilder private func balanceView() -> some View {
         if transaction.isExpanded {
             HStack(spacing: 0) {
-                FullBalanceTitle(
-                    primary: transaction.expandedAmountString.primary,
-                    secondary: transaction.expandedAmountString.secondary,
+                Balance8FloatingDigitsView(
+                    balance: transaction.zecAmount,
                     fontName: FontFamily.Inter.regular.name,
-                    primaryFontSize: 12,
-                    secondaryFontSize: 8
+                    mainFontSize: 12,
+                    restFontSize: 8,
+                    prefixSymbol: transaction.isSpending ? .minus : .plus
                 )
             }
             .foregroundColor(transaction.balanceColor)

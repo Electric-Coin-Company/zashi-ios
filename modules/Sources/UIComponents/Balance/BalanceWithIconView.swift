@@ -1,5 +1,5 @@
 //
-//  BalanceTitle.swift
+//  BalanceWithIconView.swift
 //
 //
 //  Created by Lukáš Korba on 19.10.2023.
@@ -9,7 +9,7 @@ import SwiftUI
 import Generated
 import ZcashLightClientKit
 
-public struct BalanceTitle: View {
+public struct BalanceWithIconView: View {
     let balance: Zatoshi
     
     public init(balance: Zatoshi) {
@@ -18,10 +18,12 @@ public struct BalanceTitle: View {
     
     public var body: some View {
         HStack {
-            Text(balance.decimalString(formatter: NumberFormatter.zashiBalanceFormatter))
-                .font(.custom(FontFamily.Archivo.semiBold.name, size: 36))
-                .foregroundColor(Asset.Colors.primary.color)
-            
+            Balance8FloatingDigitsView(
+                balance: balance,
+                fontName: FontFamily.Archivo.semiBold.name,
+                mainFontSize: 42,
+                restFontSize: 10
+            )
             
             Circle()
                 .frame(width: 25, height: 25)
@@ -37,12 +39,14 @@ public struct BalanceTitle: View {
 
 #Preview {
     VStack {
-        BalanceTitle(balance: Zatoshi(1_4050_000))
-
-        BalanceTitle(balance: Zatoshi(1_4364_000))
+        BalanceWithIconView(balance: Zatoshi(25_793_456))
         
-        BalanceTitle(balance: Zatoshi(1_000_000))
+        BalanceWithIconView(balance: Zatoshi(1_4050_000))
 
-        BalanceTitle(balance: Zatoshi(0))
+        BalanceWithIconView(balance: Zatoshi(1_4364_000))
+        
+        BalanceWithIconView(balance: Zatoshi(1_000_000))
+
+        BalanceWithIconView(balance: Zatoshi(0))
     }
 }

@@ -55,7 +55,7 @@ extension HomeView {
             Button {
                 viewStore.send(.balanceBreakdown)
             } label: {
-                BalanceTitle(balance: viewStore.shieldedBalance.data.total)
+                BalanceWithIconView(balance: viewStore.shieldedBalance.data.total)
             }
             .padding(.top, 40)
 
@@ -64,13 +64,15 @@ extension HomeView {
                     .padding(.top, 10)
                     .padding(.bottom, 30)
             } else {
-                Text(L10n.Balance.available(viewStore.shieldedBalance.data.verified.decimalZashiFormatted(), tokenName))
-                    .font(.custom(FontFamily.Inter.regular.name, size: 12))
-                    .accessDebugMenuWithHiddenGesture {
-                        viewStore.send(.debugMenuStartup)
-                    }
-                    .padding(.top, 10)
-                    .padding(.bottom, 30)
+                AvailableBalanceView(
+                    balance: viewStore.shieldedBalance.data.verified,
+                    tokenName: tokenName
+                )
+                .accessDebugMenuWithHiddenGesture {
+                    viewStore.send(.debugMenuStartup)
+                }
+                .padding(.top, 10)
+                .padding(.bottom, 30)
             }
         }
         .foregroundColor(Asset.Colors.primary.color)
