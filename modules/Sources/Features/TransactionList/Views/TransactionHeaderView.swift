@@ -58,6 +58,10 @@ struct TransactionHeaderView: View {
                         }
                         .padding(.horizontal, 60)
                         .padding(.bottom, 5)
+                        
+                        TapToCopyTransactionDataView(viewStore: viewStore, data: transaction.address.redacted)
+                            .padding(.horizontal, 60)
+                            .padding(.bottom, 20)
                     }
 
                     Text("\(transaction.dateString ?? "")")

@@ -21,8 +21,8 @@ public enum L10n {
     public static let sa = L10n.tr("Localizable", "addressDetails.sa", fallback: "Sapling Address")
     /// Transparent Address
     public static let ta = L10n.tr("Localizable", "addressDetails.ta", fallback: "Transparent Address")
-    /// Tap to Copy
-    public static let tapToCopy = L10n.tr("Localizable", "addressDetails.tapToCopy", fallback: "Tap to Copy")
+    /// Tap to copy
+    public static let tapToCopy = L10n.tr("Localizable", "addressDetails.tapToCopy", fallback: "Tap to copy")
     /// Unified Address
     public static let ua = L10n.tr("Localizable", "addressDetails.ua", fallback: "Unified Address")
     public enum Error {

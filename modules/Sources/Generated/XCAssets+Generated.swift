@@ -23,6 +23,7 @@ public typealias AssetImageTypeAlias = ImageAsset.UniversalImage
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
 public enum Asset {
   public enum Assets {
+    public static let copy = ImageAsset(name: "copy")
     public static let fly = ImageAsset(name: "fly")
     public static let flyReceived = ImageAsset(name: "flyReceived")
     public static let flyReceivedFilled = ImageAsset(name: "flyReceivedFilled")
