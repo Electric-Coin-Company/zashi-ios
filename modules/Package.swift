@@ -45,6 +45,7 @@ let package = Package(
         .library(name: "SendFlow", targets: ["SendFlow"]),
         .library(name: "Settings", targets: ["Settings"]),
         .library(name: "SupportDataGenerator", targets: ["SupportDataGenerator"]),
+        .library(name: "ReadTransactionsStorage", targets: ["ReadTransactionsStorage"]),
         .library(name: "Tabs", targets: ["Tabs"]),
         .library(name: "UIComponents", targets: ["UIComponents"]),
         .library(name: "URIParser", targets: ["URIParser"]),
@@ -465,6 +466,14 @@ let package = Package(
             path: "Sources/Dependencies/SupportDataGenerator"
         ),
         .target(
+            name: "ReadTransactionsStorage",
+            dependencies: [
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Dependencies/ReadTransactionsStorage"
+        ),
+        .target(
             name: "Tabs",
             dependencies: [
                 "AddressDetails",
@@ -537,6 +546,7 @@ let package = Package(
                 "Models",
                 "Pasteboard",
                 "SDKSynchronizer",
+                "ReadTransactionsStorage",
                 "UIComponents",
                 "Utils",
                 "ZcashSDKEnvironment",

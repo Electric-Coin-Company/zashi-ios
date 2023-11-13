@@ -37,6 +37,7 @@ public struct TransactionState: Equatable, Identifiable {
     public var isAddressExpanded: Bool
     public var isExpanded: Bool
     public var isIdExpanded: Bool
+    public var isMarkedAsRead = false
 
     // UI Colors
     public var balanceColor: Color {
@@ -53,6 +54,30 @@ public struct TransactionState: Equatable, Identifiable {
         : isPending
         ? Asset.Colors.shade47.color
         : Asset.Colors.primary.color
+    }
+    
+    public var isUnread: Bool {
+        // there must be memos
+        guard let memos else { return false }
+        
+        // it must be a textual one
+        var textMemoExists = false
+        
+        for memo in memos {
+            if case .text = memo {
+                if let memoText = memo.toString(), !memoText.isEmpty {
+                    textMemoExists = true
+                    break
+                }
+            }
+        }
+
+        if !textMemoExists {
+            return false
+        }
+        
+        // and it must be externally marked as read
+        return !isMarkedAsRead
     }
 
     // UI Texts
@@ -161,7 +186,8 @@ public struct TransactionState: Equatable, Identifiable {
         isSentTransaction: Bool = false,
         isAddressExpanded: Bool = false,
         isExpanded: Bool = false,
-        isIdExpanded: Bool = false
+        isIdExpanded: Bool = false,
+        isMarkedAsRead: Bool = false
     ) {
         self.errorMessage = errorMessage
         self.expiryHeight = expiryHeight
@@ -178,6 +204,7 @@ public struct TransactionState: Equatable, Identifiable {
         self.isAddressExpanded = isAddressExpanded
         self.isExpanded = isExpanded
         self.isIdExpanded = isIdExpanded
+        self.isMarkedAsRead = isMarkedAsRead
     }
     
     public func confirmationsWith(_ latestMinedHeight: BlockHeight?) -> BlockHeight {

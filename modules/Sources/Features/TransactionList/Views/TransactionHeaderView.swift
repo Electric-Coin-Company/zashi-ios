@@ -140,15 +140,21 @@ extension TransactionHeaderView {
     var icon: some View {
         HStack {
             switch transaction.status {
-            case .paid, .failed:
+            case .paid, .failed, .sending:
                 Asset.Assets.fly.image
                     .resizable()
                     .frame(width: 20, height: 16)
 
-            case .received, .sending, .receiving:
-                Asset.Assets.flyReceived.image
-                    .resizable()
-                    .frame(width: 17, height: 11)
+            case .received, .receiving:
+                if transaction.isUnread {
+                    Asset.Assets.flyReceivedFilled.image
+                        .resizable()
+                        .frame(width: 17, height: 11)
+                } else {
+                    Asset.Assets.flyReceived.image
+                        .resizable()
+                        .frame(width: 17, height: 11)
+                }
             }
         }
     }

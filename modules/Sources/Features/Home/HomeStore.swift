@@ -106,7 +106,7 @@ public struct HomeReducer: ReducerProtocol {
             switch action {
             case .onAppear:
                 state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
-                
+
                 if diskSpaceChecker.hasEnoughFreeSpaceForSync() {
                     let syncEffect = sdkSynchronizer.stateStream()
                         .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
