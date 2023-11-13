@@ -9,7 +9,7 @@ import Utils
 import Models
 import Generated
 import ReviewRequest
-import WalletEventsFlow
+import TransactionList
 import Scan
 
 public typealias HomeStore = Store<HomeReducer.State, HomeReducer.Action>
@@ -32,7 +32,7 @@ public struct HomeReducer: ReducerProtocol {
         public var shieldedBalance: Balance
         public var synchronizerStatusSnapshot: SyncStatusSnapshot
         public var walletConfig: WalletConfig
-        public var walletEventsState: WalletEventsFlowReducer.State
+        public var transactionListState: TransactionListReducer.State
         public var migratingDatabase = true
         // TODO: [#311] - Get the ZEC price from the SDK, https://github.com/zcash/secant-ios-wallet/issues/311
         public var zecPrice = Decimal(140.0)
@@ -53,7 +53,7 @@ public struct HomeReducer: ReducerProtocol {
             shieldedBalance: Balance,
             synchronizerStatusSnapshot: SyncStatusSnapshot,
             walletConfig: WalletConfig,
-            walletEventsState: WalletEventsFlowReducer.State,
+            transactionListState: TransactionListReducer.State,
             zecPrice: Decimal = Decimal(140.0)
         ) {
             self.destination = destination
@@ -63,7 +63,7 @@ public struct HomeReducer: ReducerProtocol {
             self.shieldedBalance = shieldedBalance
             self.synchronizerStatusSnapshot = synchronizerStatusSnapshot
             self.walletConfig = walletConfig
-            self.walletEventsState = walletEventsState
+            self.transactionListState = transactionListState
             self.zecPrice = zecPrice
         }
     }
@@ -82,8 +82,8 @@ public struct HomeReducer: ReducerProtocol {
         case synchronizerStateChanged(SynchronizerState)
         case syncFailed(ZcashError)
         case updateDestination(HomeReducer.State.Destination?)
-        case updateWalletEvents([WalletEvent])
-        case walletEvents(WalletEventsFlowReducer.Action)
+        case updateTransactionList([TransactionState])
+        case transactionList(TransactionListReducer.Action)
     }
     
     @Dependency(\.audioServices) var audioServices
@@ -98,8 +98,8 @@ public struct HomeReducer: ReducerProtocol {
     }
     
     public var body: some ReducerProtocol<State, Action> {
-        Scope(state: \.walletEventsState, action: /Action.walletEvents) {
-            WalletEventsFlowReducer()
+        Scope(state: \.transactionListState, action: /Action.transactionList) {
+            TransactionListReducer()
         }
 
         Reduce { state, action in
@@ -136,7 +136,7 @@ public struct HomeReducer: ReducerProtocol {
                 state.canRequestReview = false
                 return .none
                                 
-            case .updateWalletEvents:
+            case .updateTransactionList:
                 return .none
                 
             case .synchronizerStateChanged(let latestState):
@@ -171,7 +171,7 @@ public struct HomeReducer: ReducerProtocol {
                 state.destination = destination
                 return .none
                 
-            case .walletEvents:
+            case .transactionList:
                 return .none
                 
             case .retrySync:
@@ -212,10 +212,10 @@ public struct HomeReducer: ReducerProtocol {
 // MARK: - Store
 
 extension HomeStore {
-    func historyStore() -> WalletEventsFlowStore {
+    func historyStore() -> TransactionListStore {
         self.scope(
-            state: \.walletEventsState,
-            action: HomeReducer.Action.walletEvents
+            state: \.transactionListState,
+            action: HomeReducer.Action.transactionList
         )
     }
 }
@@ -242,7 +242,7 @@ extension HomeReducer.State {
             shieldedBalance: Balance.zero,
             synchronizerStatusSnapshot: .default,
             walletConfig: .default,
-            walletEventsState: .emptyPlaceHolder
+            transactionListState: .emptyPlaceHolder
         )
     }
 }
@@ -264,7 +264,7 @@ extension HomeStore {
                     state: .error(ZcashError.synchronizerNotPrepared)
                 ),
                 walletConfig: .default,
-                walletEventsState: .emptyPlaceHolder
+                transactionListState: .emptyPlaceHolder
             ),
             reducer: HomeReducer(networkType: .testnet)
         )

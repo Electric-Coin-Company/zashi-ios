@@ -27,7 +27,7 @@ class HomeTests: XCTestCase {
                 shieldedBalance: Balance.zero,
                 synchronizerStatusSnapshot: mockSnapshot,
                 walletConfig: .default,
-                walletEventsState: .emptyPlaceHolder
+                transactionListState: .emptyPlaceHolder
             ),
             reducer: HomeReducer(networkType: .testnet)
         )

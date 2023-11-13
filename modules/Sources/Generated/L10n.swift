@@ -664,14 +664,16 @@ public enum L10n {
     public static func confirming(_ p1: Any) -> String {
       return L10n.tr("Localizable", "transaction.confirming", String(describing: p1), fallback: "Confirming ~%@mins")
     }
-    /// Failed
-    public static let failed = L10n.tr("Localizable", "transaction.failed", fallback: "Failed")
+    /// Receive failed
+    public static let failedReceive = L10n.tr("Localizable", "transaction.failedReceive", fallback: "Receive failed")
+    /// Send failed
+    public static let failedSend = L10n.tr("Localizable", "transaction.failedSend", fallback: "Send failed")
     /// Received
     public static let received = L10n.tr("Localizable", "transaction.received", fallback: "Received")
-    /// Receiving
-    public static let receiving = L10n.tr("Localizable", "transaction.receiving", fallback: "Receiving")
-    /// Sending
-    public static let sending = L10n.tr("Localizable", "transaction.sending", fallback: "Sending")
+    /// Receiving...
+    public static let receiving = L10n.tr("Localizable", "transaction.receiving", fallback: "Receiving...")
+    /// Sending...
+    public static let sending = L10n.tr("Localizable", "transaction.sending", fallback: "Sending...")
     /// Sent
     public static let sent = L10n.tr("Localizable", "transaction.sent", fallback: "Sent")
     /// to
@@ -709,6 +711,18 @@ public enum L10n {
     /// Transaction detail
     public static let title = L10n.tr("Localizable", "transactionDetail.title", fallback: "Transaction detail")
   }
+  public enum TransactionList {
+    /// Collapse transaction
+    public static let collapse = L10n.tr("Localizable", "transactionList.collapse", fallback: "Collapse transaction")
+    /// Message
+    public static let messageTitle = L10n.tr("Localizable", "transactionList.messageTitle", fallback: "Message")
+    /// No message included in transaction
+    public static let noMessageIncluded = L10n.tr("Localizable", "transactionList.noMessageIncluded", fallback: "No message included in transaction")
+    /// Transaction Fee
+    public static let transactionFee = L10n.tr("Localizable", "transactionList.transactionFee", fallback: "Transaction Fee")
+    /// Transaction ID
+    public static let transactionId = L10n.tr("Localizable", "transactionList.transactionId", fallback: "Transaction ID")
+  }
   public enum Transactions {
     /// Transactions
     public static let title = L10n.tr("Localizable", "transactions.title", fallback: "Transactions")
@@ -735,38 +749,6 @@ public enum L10n {
       public static let goToWallet = L10n.tr("Localizable", "validationSuccess.button.goToWallet", fallback: "Take me to my wallet!")
       /// Show me my phrase again
       public static let phraseAgain = L10n.tr("Localizable", "validationSuccess.button.phraseAgain", fallback: "Show me my phrase again")
-    }
-  }
-  public enum WalletEvent {
-    public enum Alert {
-      public enum LeavingApp {
-        /// While usually an acceptable risk, you will possibly exposing your behavior and interest in this transaction by going online. OH NOES! What will you do?
-        public static let message = L10n.tr("Localizable", "walletEvent.alert.leavingApp.message", fallback: "While usually an acceptable risk, you will possibly exposing your behavior and interest in this transaction by going online. OH NOES! What will you do?")
-        /// You are exiting your wallet
-        public static let title = L10n.tr("Localizable", "walletEvent.alert.leavingApp.title", fallback: "You are exiting your wallet")
-        public enum Button {
-          /// NEVERMIND
-          public static let nevermind = L10n.tr("Localizable", "walletEvent.alert.leavingApp.button.nevermind", fallback: "NEVERMIND")
-          /// SEE TX ONLINE
-          public static let seeOnline = L10n.tr("Localizable", "walletEvent.alert.leavingApp.button.seeOnline", fallback: "SEE TX ONLINE")
-        }
-      }
-    }
-    public enum Detail {
-      /// wallet import wallet event
-      public static let `import` = L10n.tr("Localizable", "walletEvent.detail.import", fallback: "wallet import wallet event")
-      /// shielded %@ detail
-      public static func shielded(_ p1: Any) -> String {
-        return L10n.tr("Localizable", "walletEvent.detail.shielded", String(describing: p1), fallback: "shielded %@ detail")
-      }
-    }
-    public enum Row {
-      /// wallet import wallet event
-      public static let `import` = L10n.tr("Localizable", "walletEvent.row.import", fallback: "wallet import wallet event")
-      /// shielded wallet event %@
-      public static func shielded(_ p1: Any) -> String {
-        return L10n.tr("Localizable", "walletEvent.row.shielded", String(describing: p1), fallback: "shielded wallet event %@")
-      }
     }
   }
   public enum WelcomeScreen {

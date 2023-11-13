@@ -1,7 +1,7 @@
 import SwiftUI
 import ComposableArchitecture
 import RecoveryPhraseDisplay
-import WalletEventsFlow
+import TransactionList
 import Scan
 import SendFlow
 import ZcashLightClientKit
@@ -29,7 +29,7 @@ public struct SandboxView: View {
     @ViewBuilder func view(for destination: SandboxReducer.State.Destination) -> some View {
         switch destination {
         case .history:
-            WalletEventsFlowView(store: store.historyStore(), tokenName: tokenName)
+            TransactionListView(store: store.historyStore(), tokenName: tokenName)
         case .send:
             SendFlowView(
                 store: .init(
@@ -78,11 +78,6 @@ public struct SandboxView: View {
 
                     Section(header: Text("Other Actions")) {
                         Button(
-                            action: { viewStore.toggleSelectedTransaction() },
-                            label: { Text("Toggle Selected Transaction") }
-                        )
-
-                        Button(
                             action: { viewStore.send(.reset) },
                             label: { Text("Reset (to startup)") }
                         )
@@ -93,7 +88,7 @@ public struct SandboxView: View {
                 isPresented: viewStore.bindingForDestination(.history),
                 content: {
                     NavigationView {
-                        WalletEventsFlowView(store: store.historyStore(), tokenName: tokenName)
+                        TransactionListView(store: store.historyStore(), tokenName: tokenName)
                             .toolbar {
                                 ToolbarItem {
                                     Button("Done") { viewStore.send(.updateDestination(nil)) }

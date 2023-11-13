@@ -23,21 +23,27 @@ public typealias AssetImageTypeAlias = ImageAsset.UniversalImage
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
 public enum Asset {
   public enum Assets {
-    public static let fly = ImageAsset(name: "Fly")
-    public static let splashHi = ImageAsset(name: "SplashHi")
-    public static let welcomeScreenLogo = ImageAsset(name: "WelcomeScreenLogo")
-    public static let zashiLogo = ImageAsset(name: "ZashiLogo")
+    public static let fly = ImageAsset(name: "fly")
+    public static let flyReceived = ImageAsset(name: "flyReceived")
+    public static let flyReceivedFilled = ImageAsset(name: "flyReceivedFilled")
+    public static let shield = ImageAsset(name: "shield")
+    public static let splashHi = ImageAsset(name: "splashHi")
+    public static let upArrow = ImageAsset(name: "upArrow")
+    public static let welcomeScreenLogo = ImageAsset(name: "welcomeScreenLogo")
+    public static let zashiLogo = ImageAsset(name: "zashiLogo")
     public static let zashiTitle = ImageAsset(name: "zashiTitle")
   }
   public enum Colors {
     public static let error = ColorAsset(name: "error")
+    public static let messageBcgReceived = ColorAsset(name: "messageBcgReceived")
     public static let primary = ColorAsset(name: "primary")
+    public static let primaryTint = ColorAsset(name: "primaryTint")
     public static let secondary = ColorAsset(name: "secondary")
+    public static let shade30 = ColorAsset(name: "shade30")
+    public static let shade47 = ColorAsset(name: "shade47")
+    public static let shade72 = ColorAsset(name: "shade72")
+    public static let shade97 = ColorAsset(name: "shade97")
     public static let splash = ColorAsset(name: "splash")
-    public static let suppressed30 = ColorAsset(name: "suppressed30")
-    public static let suppressed47 = ColorAsset(name: "suppressed47")
-    public static let suppressed72 = ColorAsset(name: "suppressed72")
-    public static let tabsUnderline = ColorAsset(name: "tabsUnderline")
   }
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name

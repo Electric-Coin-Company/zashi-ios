@@ -25,7 +25,7 @@ public struct BalanceTitle: View {
             
             Circle()
                 .frame(width: 25, height: 25)
-                .foregroundColor(Asset.Colors.tabsUnderline.color)
+                .foregroundColor(Asset.Colors.primaryTint.color)
                 .overlay {
                     ZcashSymbol()
                         .frame(width: 15, height: 15)

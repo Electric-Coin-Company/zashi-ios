@@ -52,7 +52,7 @@ let package = Package(
         .library(name: "UserPreferencesStorage", targets: ["UserPreferencesStorage"]),
         .library(name: "Utils", targets: ["Utils"]),
         .library(name: "WalletConfigProvider", targets: ["WalletConfigProvider"]),
-        .library(name: "WalletEventsFlow", targets: ["WalletEventsFlow"]),
+        .library(name: "TransactionList", targets: ["TransactionList"]),
         .library(name: "WalletStorage", targets: ["WalletStorage"]),
         .library(name: "Welcome", targets: ["Welcome"]),
         .library(name: "ZcashSDKEnvironment", targets: ["ZcashSDKEnvironment"])
@@ -209,7 +209,7 @@ let package = Package(
                 "SDKSynchronizer",
                 "UIComponents",
                 "Utils",
-                "WalletEventsFlow",
+                "TransactionList",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
@@ -364,7 +364,7 @@ let package = Package(
                 "RecoveryPhraseDisplay",
                 "Scan",
                 "SendFlow",
-                "WalletEventsFlow",
+                "TransactionList",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
             ],
@@ -531,7 +531,7 @@ let package = Package(
             path: "Sources/Dependencies/WalletConfigProvider"
         ),
         .target(
-            name: "WalletEventsFlow",
+            name: "TransactionList",
             dependencies: [
                 "Generated",
                 "Models",
@@ -543,7 +543,7 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
             ],
-            path: "Sources/Features/WalletEventsFlow"
+            path: "Sources/Features/TransactionList"
         ),
         .target(
             name: "WalletStorage",

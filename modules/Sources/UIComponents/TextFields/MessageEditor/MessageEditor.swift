@@ -42,14 +42,18 @@ public struct MessageEditor: View {
                     .focused($isFocused)
                     .padding(2)
                     .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                    .messageShape(filled: !isEnabled)
+                    .messageShape(
+                        filled: isEnabled
+                        ? nil
+                        : Asset.Colors.shade72.color
+                    )
                     .overlay {
                         if message.isEmpty || !isEnabled {
                             HStack {
                                 VStack {
                                     Text(L10n.Send.memoPlaceholder)
                                         .font(.custom(FontFamily.Inter.regular.name, size: 13))
-                                        .foregroundColor(Asset.Colors.suppressed72.color)
+                                        .foregroundColor(Asset.Colors.shade72.color)
                                         .onTapGesture {
                                             isFocused = true
                                         }
@@ -80,7 +84,7 @@ public struct MessageEditor: View {
                             .font(.custom(FontFamily.Inter.bold.name, size: 13))
                             .foregroundColor(
                                 viewStore.isValid
-                                ? Asset.Colors.suppressed72.color
+                                ? Asset.Colors.shade72.color
                                 : Asset.Colors.error.color
                             )
                     }

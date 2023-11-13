@@ -44,7 +44,7 @@ public struct About: View {
 
                 Text(L10n.Settings.About.info)
                     .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                    .foregroundColor(Asset.Colors.suppressed30.color)
+                    .foregroundColor(Asset.Colors.shade30.color)
 
                 Spacer()
             }

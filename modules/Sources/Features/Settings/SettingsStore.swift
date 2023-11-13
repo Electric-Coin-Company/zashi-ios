@@ -117,7 +117,6 @@ public struct SettingsReducer: ReducerProtocol {
                 return .none
 
             case .privateDataConsent(.shareFinished):
-                state.destination = nil
                 return .none
 
             case .privateDataConsent:

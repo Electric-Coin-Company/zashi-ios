@@ -81,7 +81,6 @@
 "importWallet.optionalBirthday" = "(optional)";
 "importWallet.enterPlaceholder" = "Enter private seed here…";
 
-
 // MARK: - Tabs
 "tabs.account" = "Account";
 "tabs.send" = "Send";
@@ -174,27 +173,6 @@ Sharing this private data is irrevocable — once you have shared this private d
 "sync.message.stopped" = "Stopped";
 "sync.message.sync" = "%@%% Synced";
 
-// MARK: - Transactions
-"transactions.title" = "Transactions";
-"transaction.sent" = "Sent";
-"transaction.sending" = "Sending";
-"transaction.receiving" = "Receiving";
-"transaction.received" = "Received";
-"transaction.failed" = "Failed";
-"transaction.youSent" = "You sent %@ %@";
-"transaction.youAreSending" = "You are sending %@ %@";
-"transaction.youAreReceiving" = "You are receiving %@ %@";
-"transaction.youReceived" = "You received %@ %@";
-"transaction.youDidNotSent" = "You DID NOT send %@ %@";
-"transaction.confirmed" = "Confirmed";
-"transaction.confirmedTimes" = "%@ times";
-"transaction.confirming" = "Confirming ~%@mins";
-"transaction.withMemo" = "With memo:";
-"transaction.to" = "to";
-"transaction.unconfirmed" = "unconfirmed";
-"transactionDetail.title" = "Transaction detail";
-"transactionDetail.error" = "Error: %@";
-
 // MARK: - Not Enough Free Space
 "nefs.message" = "Not enough space on disk to do synchronisation!";
 
@@ -221,15 +199,34 @@ Sharing this private data is irrevocable — once you have shared this private d
 "qrCodeFor" = "QR Code for %@";
 "general.dateNotAvailable" = "date not available";
 
-// MARK: - Wallet event
-"walletEvent.row.shielded" = "shielded wallet event %@";
-"walletEvent.row.import" = "wallet import wallet event";
-"walletEvent.detail.shielded" = "shielded %@ detail";
-"walletEvent.detail.import" = "wallet import wallet event";
-"walletEvent.alert.leavingApp.title" = "You are exiting your wallet";
-"walletEvent.alert.leavingApp.message" = "While usually an acceptable risk, you will possibly exposing your behavior and interest in this transaction by going online. OH NOES! What will you do?";
-"walletEvent.alert.leavingApp.button.nevermind" = "NEVERMIND";
-"walletEvent.alert.leavingApp.button.seeOnline" = "SEE TX ONLINE";
+// MARK: - Transaction List
+"transactionList.collapse" = "Collapse transaction";
+"transactionList.messageTitle" = "Message";
+"transactionList.noMessageIncluded" = "No message included in transaction";
+"transactionList.transactionFee" = "Transaction Fee";
+"transactionList.transactionId" = "Transaction ID";
+
+// MARK: - Transactions
+"transactions.title" = "Transactions";
+"transaction.sent" = "Sent";
+"transaction.sending" = "Sending...";
+"transaction.receiving" = "Receiving...";
+"transaction.received" = "Received";
+"transaction.failedSend" = "Send failed";
+"transaction.failedReceive" = "Receive failed";
+"transaction.youSent" = "You sent %@ %@";
+"transaction.youAreSending" = "You are sending %@ %@";
+"transaction.youAreReceiving" = "You are receiving %@ %@";
+"transaction.youReceived" = "You received %@ %@";
+"transaction.youDidNotSent" = "You DID NOT send %@ %@";
+"transaction.confirmed" = "Confirmed";
+"transaction.confirmedTimes" = "%@ times";
+"transaction.confirming" = "Confirming ~%@mins";
+"transaction.withMemo" = "With memo:";
+"transaction.to" = "to";
+"transaction.unconfirmed" = "unconfirmed";
+"transactionDetail.title" = "Transaction detail";
+"transactionDetail.error" = "Error: %@";
 
 // MARK: - Local authentication
 "localAuthentication.reason" = "The Following content requires authentication.";

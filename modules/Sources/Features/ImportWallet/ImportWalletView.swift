@@ -70,7 +70,7 @@ public struct ImportWalletView: View {
                                         VStack {
                                             Text(L10n.ImportWallet.enterPlaceholder)
                                                 .font(.custom(FontFamily.Inter.regular.name, size: 13))
-                                                .foregroundColor(Asset.Colors.suppressed72.color)
+                                                .foregroundColor(Asset.Colors.shade72.color)
                                                 .onTapGesture {
                                                     isFocused = true
                                                 }

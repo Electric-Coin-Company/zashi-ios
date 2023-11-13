@@ -24,16 +24,16 @@ public struct ZcashButtonStyle: ButtonStyle {
                 .frame(height: 60)
                 .foregroundColor(
                     appearance == .primary ? .clear
-                    : isEnabled ? Asset.Colors.primary.color : Asset.Colors.suppressed72.color
+                    : isEnabled ? Asset.Colors.primary.color : Asset.Colors.shade72.color
                 )
-                .border(isEnabled ? Asset.Colors.primary.color : Asset.Colors.suppressed72.color)
+                .border(isEnabled ? Asset.Colors.primary.color : Asset.Colors.shade72.color)
                 .offset(CGSize(width: 10, height: 10))
 
             Rectangle()
                 .frame(height: 60)
                 .foregroundColor(
                     appearance == .primary ?
-                    isEnabled ? Asset.Colors.primary.color : Asset.Colors.suppressed72.color
+                    isEnabled ? Asset.Colors.primary.color : Asset.Colors.shade72.color
                     : Asset.Colors.secondary.color
                 )
                 .border(Asset.Colors.primary.color)
@@ -42,7 +42,7 @@ public struct ZcashButtonStyle: ButtonStyle {
                         .font(.custom(FontFamily.Inter.medium.name, size: 14))
                         .foregroundColor(
                             appearance == .primary ? Asset.Colors.secondary.color
-                            : isEnabled ? Asset.Colors.primary.color : Asset.Colors.suppressed72.color
+                            : isEnabled ? Asset.Colors.primary.color : Asset.Colors.shade72.color
                         )
                 })
                 .offset(CGSize(width: offset, height: offset))

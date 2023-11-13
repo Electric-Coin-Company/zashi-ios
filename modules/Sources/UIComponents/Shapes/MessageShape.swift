@@ -8,15 +8,28 @@
 import SwiftUI
 import Generated
 
-struct MessageShape: Shape {
-    func path(in rect: CGRect) -> Path {
+public struct MessageShape: Shape {
+    public enum Orientation: Sendable {
+        case left
+        case right
+    }
+    
+    let orientation: MessageShape.Orientation
+    
+    public func path(in rect: CGRect) -> Path {
         Path { path in
             path.move(to: CGPoint(x: 0, y: 0))
             path.addLine(to: CGPoint(x: 0, y: rect.height))
 
-            path.addLine(to: CGPoint(x: 15, y: rect.height))
-            path.addLine(to: CGPoint(x: 15, y: rect.height + 7))
-            path.addLine(to: CGPoint(x: 35, y: rect.height))
+            if orientation == .left {
+                path.addLine(to: CGPoint(x: 15, y: rect.height))
+                path.addLine(to: CGPoint(x: 15, y: rect.height + 7))
+                path.addLine(to: CGPoint(x: 35, y: rect.height))
+            } else {
+                path.addLine(to: CGPoint(x: rect.width - 35, y: rect.height))
+                path.addLine(to: CGPoint(x: rect.width - 15, y: rect.height + 7))
+                path.addLine(to: CGPoint(x: rect.width - 15, y: rect.height))
+            }
 
             path.addLine(to: CGPoint(x: rect.width, y: rect.height))
             path.addLine(to: CGPoint(x: rect.width, y: 0))
@@ -25,33 +38,56 @@ struct MessageShape: Shape {
     }
 }
 
-struct MessageShapeModifier: ViewModifier {
-    let filled: Bool
+public struct MessageShapeModifier: ViewModifier {
+    let filled: Color?
+    let orientation: MessageShape.Orientation
     
-    func body(content: Content) -> some View {
+    public func body(content: Content) -> some View {
         content
-            .overlay {
-                if filled {
-                    MessageShape()
-                        .foregroundColor(Asset.Colors.suppressed72.color)
-                    MessageShape()
-                        .stroke()
-                } else {
-                    MessageShape()
-                        .stroke()
+            .background {
+                if let filled {
+                    MessageShape(orientation: orientation)
+                        .foregroundColor(filled)
                 }
+            }
+            .overlay {
+                MessageShape(orientation: orientation)
+                    .stroke()
             }
     }
 }
 
 extension View {
-    public func messageShape(filled: Bool = false) -> some View {
-        modifier(MessageShapeModifier(filled: filled))
+    public func messageShape(
+        filled: Color? = nil,
+        orientation: MessageShape.Orientation = .left
+    ) -> some View {
+        modifier(
+            MessageShapeModifier(
+                filled: filled,
+                orientation: orientation
+            )
+        )
     }
 }
 
 #Preview {
-    Text("some message")
-        .frame(width: 320, height: 145)
-        .messageShape(filled: true)
+    VStack {
+        Text("some message")
+            .padding(5)
+            .messageShape(
+                filled: Asset.Colors.messageBcgReceived.color,
+                orientation: .right
+            )
+            .padding(.bottom, 20)
+
+        Text("some message")
+            .padding(5)
+            .messageShape()
+            .padding(.bottom, 20)
+        
+        Text("some message")
+            .frame(width: 320, height: 145)
+            .messageShape(filled: Asset.Colors.shade72.color)
+    }
 }

@@ -52,7 +52,7 @@ extension SDKSynchronizerClient {
             getAllTransactions: {
                 let clearedTransactions = try await synchronizer.allTransactions()
 
-                var clearedTxs: [WalletEvent] = []
+                var clearedTxs: [TransactionState] = []
                 
                 for clearedTransaction in clearedTransactions {
                     var transaction = TransactionState.init(
@@ -72,13 +72,7 @@ extension SDKSynchronizerClient {
                     
                     transaction.zAddress = addresses.first?.stringEncoded
                     
-                    clearedTxs.append(
-                        WalletEvent(
-                            id: transaction.id,
-                            state: .transaction(transaction),
-                            timestamp: transaction.timestamp
-                        )
-                    )
+                    clearedTxs.append(transaction)
                 }
                 
                 return clearedTxs
