@@ -17,9 +17,10 @@ import BalanceBreakdown
 class BalanceBreakdownTests: XCTestCase {
     func testOnAppear() throws {
         let store = TestStore(
-            initialState: .placeholder,
-            reducer: BalanceBreakdownReducer(networkType: .testnet)
-        )
+            initialState: .placeholder
+        ) {
+            BalanceBreakdownReducer(networkType: .testnet)
+        }
         
         store.dependencies.sdkSynchronizer = .mocked()
         store.dependencies.mainQueue = .immediate
@@ -40,9 +41,10 @@ class BalanceBreakdownTests: XCTestCase {
 
     @MainActor func testShieldFundsSucceed() async throws {
         let store = TestStore(
-            initialState: .placeholder,
-            reducer: BalanceBreakdownReducer(networkType: .testnet)
-        )
+            initialState: .placeholder
+        ) {
+            BalanceBreakdownReducer(networkType: .testnet)
+        }
 
         store.dependencies.sdkSynchronizer = .mock
         store.dependencies.derivationTool = .liveValue
@@ -65,9 +67,10 @@ class BalanceBreakdownTests: XCTestCase {
 
     @MainActor func testShieldFundsFails() async throws {
         let store = TestStore(
-            initialState: .placeholder,
-            reducer: BalanceBreakdownReducer(networkType: .testnet)
-        )
+            initialState: .placeholder
+        ) {
+            BalanceBreakdownReducer(networkType: .testnet)
+        }
 
         store.dependencies.sdkSynchronizer = .mocked(shieldFunds: { _, _, _ in throw ZcashError.synchronizerNotPrepared })
         store.dependencies.derivationTool = .liveValue
@@ -90,9 +93,10 @@ class BalanceBreakdownTests: XCTestCase {
 
     @MainActor func testShieldFundsButtonDisabledWhenNoShieldableFunds() async throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: BalanceBreakdownReducer(networkType: .testnet)
-        )
+            initialState: .initial
+        ) {
+            BalanceBreakdownReducer(networkType: .testnet)
+        }
 
         XCTAssertFalse(store.state.shieldingFunds)
         XCTAssertFalse(store.state.isShieldableBalanceAvailable)
@@ -113,9 +117,10 @@ class BalanceBreakdownTests: XCTestCase {
                         total: Zatoshi(1_000_000)
                     )
                 )
-            ),
-            reducer: BalanceBreakdownReducer(networkType: .testnet)
-        )
+            )
+        ) {
+            BalanceBreakdownReducer(networkType: .testnet)
+        }
 
         XCTAssertFalse(store.state.shieldingFunds)
         XCTAssertTrue(store.state.isShieldableBalanceAvailable)
@@ -136,9 +141,10 @@ class BalanceBreakdownTests: XCTestCase {
                         total: Zatoshi(1_000_000)
                     )
                 )
-            ),
-            reducer: BalanceBreakdownReducer(networkType: .testnet)
-        )
+            )
+        ) {
+            BalanceBreakdownReducer(networkType: .testnet)
+        }
 
         XCTAssertTrue(store.state.shieldingFunds)
         XCTAssertTrue(store.state.isShieldableBalanceAvailable)

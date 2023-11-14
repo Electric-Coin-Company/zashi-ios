@@ -18,7 +18,7 @@ public struct About: View {
     }
     
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             VStack(alignment: .leading) {
                 HStack {
                     Asset.Assets.zashiLogo.image

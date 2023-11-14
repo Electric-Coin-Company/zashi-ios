@@ -19,7 +19,7 @@ public struct PrivateDataConsentView: View {
     }
 
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             ScrollView {
                 Group {
                     Asset.Assets.zashiLogo.image

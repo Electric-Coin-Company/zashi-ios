@@ -19,9 +19,10 @@ class ScanTests: XCTestCase {
                     isTorchAvailable: true,
                     isTorchOn: true,
                     scanStatus: .value("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted)
-                ),
-            reducer: ScanReducer(networkType: .testnet)
-        )
+                )
+        ) {
+            ScanReducer(networkType: .testnet)
+        }
 
         store.dependencies.captureDevice = .noOp
         
@@ -34,9 +35,10 @@ class ScanTests: XCTestCase {
     
     func testTorchOn() throws {
         let store = TestStore(
-            initialState: ScanReducer.State(),
-            reducer: ScanReducer(networkType: .testnet)
-        )
+            initialState: ScanReducer.State()
+        ) {
+            ScanReducer(networkType: .testnet)
+        }
 
         store.dependencies.captureDevice = .noOp
 
@@ -49,9 +51,10 @@ class ScanTests: XCTestCase {
         let store = TestStore(
             initialState: ScanReducer.State(
                 isTorchOn: true
-            ),
-            reducer: ScanReducer(networkType: .testnet)
-        )
+            )
+        ) {
+            ScanReducer(networkType: .testnet)
+        }
 
         store.dependencies.captureDevice = .noOp
 
@@ -62,9 +65,10 @@ class ScanTests: XCTestCase {
 
     func testScannedInvalidValue() throws {
         let store = TestStore(
-            initialState: ScanReducer.State(),
-            reducer: ScanReducer(networkType: .testnet)
-        )
+            initialState: ScanReducer.State()
+        ) {
+            ScanReducer(networkType: .testnet)
+        }
 
         store.dependencies.uriParser.isValidURI = { _, _ in false }
         
@@ -78,9 +82,10 @@ class ScanTests: XCTestCase {
         let testScheduler = DispatchQueue.test
         
         let store = TestStore(
-            initialState: ScanReducer.State(),
-            reducer: ScanReducer(networkType: .testnet)
-        )
+            initialState: ScanReducer.State()
+        ) {
+            ScanReducer(networkType: .testnet)
+        }
         
         store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
         store.dependencies.uriParser.isValidURI = { _, _ in true }
@@ -97,9 +102,10 @@ class ScanTests: XCTestCase {
 
     func testScanFailed() throws {
         let store = TestStore(
-            initialState: ScanReducer.State(),
-            reducer: ScanReducer(networkType: .testnet)
-        )
+            initialState: ScanReducer.State()
+        ) {
+            ScanReducer(networkType: .testnet)
+        }
 
         store.send(.scanFailed) { state in
             state.scanStatus = .failed

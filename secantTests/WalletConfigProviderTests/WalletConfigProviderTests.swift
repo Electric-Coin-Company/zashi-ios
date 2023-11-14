@@ -122,9 +122,10 @@ class WalletConfigProviderTests: XCTestCase {
     
     func testPropagationOfFlagUpdate() throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: .initial
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
         
         // Change any of the flags from the default value
         var defaultRawFlags = WalletConfig.initial.flags

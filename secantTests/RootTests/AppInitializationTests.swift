@@ -30,9 +30,10 @@ class AppInitializationTests: XCTestCase {
         appState.walletConfig = walletConfig
 
         let store = TestStore(
-            initialState: appState,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: appState
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
         
         let testQueue = DispatchQueue.test
         
@@ -85,9 +86,10 @@ class AppInitializationTests: XCTestCase {
     /// Integration test validating the side effects work together properly when no wallet is stored but database files are present.
     @MainActor func testDidFinishLaunching_to_KeysMissing() async throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: .initial
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
 
         store.dependencies.databaseFiles = .noOp
         store.dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
@@ -116,9 +118,10 @@ class AppInitializationTests: XCTestCase {
     /// Integration test validating the side effects work together properly when no wallet is stored and no database files are present.
     @MainActor func testDidFinishLaunching_to_Uninitialized() async throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: .initial
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
         
         store.dependencies.databaseFiles = .noOp
         store.dependencies.mainQueue = .immediate

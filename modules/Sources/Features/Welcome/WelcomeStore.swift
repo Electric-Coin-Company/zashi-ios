@@ -10,7 +10,7 @@ import ComposableArchitecture
 
 public typealias WelcomeStore = Store<WelcomeReducer.State, WelcomeReducer.Action>
 
-public struct WelcomeReducer: ReducerProtocol {
+public struct WelcomeReducer: Reducer {
     public struct State: Equatable { }
     
     public enum Action: Equatable {
@@ -19,7 +19,7 @@ public struct WelcomeReducer: ReducerProtocol {
     
     public init() {}
     
-    public func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
+    public func reduce(into state: inout State, action: Action) -> ComposableArchitecture.Effect<Action> {
         return .none
     }
 }
@@ -28,9 +28,10 @@ public struct WelcomeReducer: ReducerProtocol {
 
 extension WelcomeStore {
     public static var demo = WelcomeStore(
-        initialState: .initial,
-        reducer: WelcomeReducer()
-    )
+        initialState: .initial
+    ) {
+        WelcomeReducer()
+    }
 }
 
 // MARK: - Placeholders

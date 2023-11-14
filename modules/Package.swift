@@ -59,12 +59,12 @@ let package = Package(
         .library(name: "ZcashSDKEnvironment", targets: ["ZcashSDKEnvironment"])
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.59.0"),
-        .package(url: "https://github.com/pointfreeco/swift-case-paths", from: "0.14.1"),
-        .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.5.0"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.4.0"),
+        .package(url: "https://github.com/pointfreeco/swift-case-paths", from: "1.1.0"),
+        .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.6.0"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.4"),
         .package(url: "https://github.com/zcash/ZcashLightClientKit", from: "2.0.3"),
-        .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.11.0")
+        .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.17.0")
     ],
     targets: [
         .target(
@@ -527,7 +527,8 @@ let package = Package(
             name: "Utils",
             dependencies: [
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit"),
-                .product(name: "CasePaths", package: "swift-case-paths")
+                .product(name: "CasePaths", package: "swift-case-paths"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Utils"
         ),

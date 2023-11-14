@@ -26,7 +26,7 @@ public struct TabsView: View {
 
     public var body: some View {
         WithViewStore(self.store, observe: \.selectedTab) { tab in
-            WithViewStore(store) { viewStore in
+            WithViewStore(store, observe: { $0 }) { viewStore in
                 ZStack {
                     TabView(selection: tab.binding(send: TabsReducer.Action.selectedTabChanged)) {
                         HomeView(

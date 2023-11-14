@@ -51,9 +51,10 @@ class SendTests: XCTestCase {
         )
 
         let store = TestStore(
-            initialState: initialState,
-            reducer: { SendFlowReducer(networkType: .testnet) }
-        )
+            initialState: initialState
+        ) {
+            SendFlowReducer(networkType: .testnet)
+        }
         
         store.dependencies.derivationTool = .liveValue
         store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
@@ -79,9 +80,10 @@ class SendTests: XCTestCase {
 
     func testAddressValidation_Invalid() async throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: { SendFlowReducer(networkType: .testnet) }
-        )
+            initialState: .initial
+        ) {
+            SendFlowReducer(networkType: .testnet)
+        }
 
         store.dependencies.derivationTool = .noOp
         store.dependencies.derivationTool.isZcashAddress = { _, _ in false }
@@ -103,10 +105,11 @@ class SendTests: XCTestCase {
 
     func testAddressValidation_Valid() async throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: { SendFlowReducer(networkType: .testnet) }
-        )
-        
+            initialState: .initial
+        ) {
+            SendFlowReducer(networkType: .testnet)
+        }
+
         store.dependencies.derivationTool = .noOp
         store.dependencies.derivationTool.isZcashAddress = { _, _ in true }
 
@@ -130,10 +133,11 @@ class SendTests: XCTestCase {
         state.transactionAmountInputState = .amount
         
         let store = TestStore(
-            initialState: state,
-            reducer: { SendFlowReducer(networkType: .testnet) }
-        )
-        
+            initialState: state
+        ) {
+            SendFlowReducer(networkType: .testnet)
+        }
+
         store.dependencies.numberFormatter = .noOp
 
         // Checks the computed property `isInvalidAmountFormat` which controls the error message to be shown on the screen
@@ -145,9 +149,10 @@ class SendTests: XCTestCase {
 
     func testInvalidAddressFormatEmptyInput() async throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: { SendFlowReducer(networkType: .testnet) }
-        )
+            initialState: .initial
+        ) {
+            SendFlowReducer(networkType: .testnet)
+        }
 
         store.dependencies.derivationTool = .noOp
 
@@ -184,9 +189,10 @@ class SendTests: XCTestCase {
         )
 
         let store = TestStore(
-            initialState: sendState,
-            reducer: { SendFlowReducer(networkType: .testnet) }
-        )
+            initialState: sendState
+        ) {
+            SendFlowReducer(networkType: .testnet)
+        }
 
         store.dependencies.numberFormatter = .noOp
         store.dependencies.numberFormatter.number = { _ in NSNumber(0.00501299) }
@@ -226,9 +232,10 @@ class SendTests: XCTestCase {
         )
 
         let store = TestStore(
-            initialState: sendState,
-            reducer: { SendFlowReducer(networkType: .testnet) }
-        )
+            initialState: sendState
+        ) {
+            SendFlowReducer(networkType: .testnet)
+        }
 
         store.dependencies.numberFormatter = .noOp
         store.dependencies.numberFormatter.number = { _ in NSNumber(0.00501301) }
@@ -288,9 +295,10 @@ class SendTests: XCTestCase {
         )
 
         let store = TestStore(
-            initialState: sendState,
-            reducer: { SendFlowReducer(networkType: .testnet) }
-        )
+            initialState: sendState
+        ) {
+            SendFlowReducer(networkType: .testnet)
+        }
 
         store.dependencies.derivationTool = .noOp
         store.dependencies.derivationTool.isZcashAddress = { _, _ in true }
@@ -329,9 +337,10 @@ class SendTests: XCTestCase {
         )
 
         let store = TestStore(
-            initialState: sendState,
-            reducer: { SendFlowReducer(networkType: .testnet) }
-        )
+            initialState: sendState
+        ) {
+            SendFlowReducer(networkType: .testnet)
+        }
 
         store.dependencies.derivationTool = .noOp
         store.dependencies.derivationTool.isZcashAddress = { _, _ in true }
@@ -370,9 +379,10 @@ class SendTests: XCTestCase {
         )
 
         let store = TestStore(
-            initialState: sendState,
-            reducer: { SendFlowReducer(networkType: .testnet) }
-        )
+            initialState: sendState
+        ) {
+            SendFlowReducer(networkType: .testnet)
+        }
 
         store.dependencies.derivationTool = .noOp
 
@@ -410,9 +420,10 @@ class SendTests: XCTestCase {
         )
 
         let store = TestStore(
-            initialState: sendState,
-            reducer: { SendFlowReducer(networkType: .testnet) }
-        )
+            initialState: sendState
+        ) {
+            SendFlowReducer(networkType: .testnet)
+        }
 
         store.dependencies.derivationTool = .noOp
         store.dependencies.derivationTool.isZcashAddress = { _, _ in true }
@@ -463,9 +474,10 @@ class SendTests: XCTestCase {
         )
 
         let store = TestStore(
-            initialState: sendState,
-            reducer: { SendFlowReducer(networkType: .testnet) }
-        )
+            initialState: sendState
+        ) {
+            SendFlowReducer(networkType: .testnet)
+        }
 
         let value = "test".redacted
         
@@ -497,9 +509,10 @@ class SendTests: XCTestCase {
         )
 
         let store = TestStore(
-            initialState: sendState,
-            reducer: { SendFlowReducer(networkType: .testnet) }
-        )
+            initialState: sendState
+        ) {
+            SendFlowReducer(networkType: .testnet)
+        }
 
         store.dependencies.mainQueue = .immediate
         store.dependencies.sdkSynchronizer = .noOp
@@ -523,9 +536,10 @@ class SendTests: XCTestCase {
         )
 
         let store = TestStore(
-            initialState: sendState,
-            reducer: { SendFlowReducer(networkType: .testnet) }
-        )
+            initialState: sendState
+        ) {
+            SendFlowReducer(networkType: .testnet)
+        }
 
         store.dependencies.audioServices = AudioServicesClient(systemSoundVibrate: { })
         store.dependencies.derivationTool = .noOp

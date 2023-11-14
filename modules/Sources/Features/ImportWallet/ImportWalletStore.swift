@@ -17,7 +17,7 @@ import ZcashSDKEnvironment
 public typealias ImportWalletStore = Store<ImportWalletReducer.State, ImportWalletReducer.Action>
 public typealias ImportWalletViewStore = ViewStore<ImportWalletReducer.State, ImportWalletReducer.Action>
 
-public struct ImportWalletReducer: ReducerProtocol {
+public struct ImportWalletReducer: Reducer {
     let saplingActivationHeight: BlockHeight
     
     public struct State: Equatable {
@@ -91,7 +91,7 @@ public struct ImportWalletReducer: ReducerProtocol {
         self.saplingActivationHeight = saplingActivationHeight
     }
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case .onAppear:
@@ -230,7 +230,8 @@ extension ImportWalletReducer.State {
 
 extension ImportWalletStore {
     public static let demo = Store(
-        initialState: .initial,
-        reducer: ImportWalletReducer(saplingActivationHeight: 0)
-    )
+        initialState: .initial
+    ) {
+        ImportWalletReducer(saplingActivationHeight: 0)
+    }
 }

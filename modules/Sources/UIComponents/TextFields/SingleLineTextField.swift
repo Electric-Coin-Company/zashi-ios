@@ -61,7 +61,7 @@ struct SingleLineTextField_Previews: PreviewProvider {
         let maxTransactionValue = 500.0
 
         var body: some View {
-            WithViewStore(store) { viewStore in
+            WithViewStore(store, observe: { $0 }) { viewStore in
                 VStack {
                     SingleLineTextField(
                         placeholderText: "$0",
@@ -107,9 +107,10 @@ struct SingleLineTextField_Previews: PreviewProvider {
                 initialState: .init(
                     validationType: .floatingPoint,
                     text: "".redacted
-                ),
-                reducer: TCATextFieldReducer()
-            )
+                )
+            ) {
+                TCATextFieldReducer()
+            }
         )
         .preferredColorScheme(.light)
         .padding(.horizontal, 50)
@@ -121,9 +122,10 @@ struct SingleLineTextField_Previews: PreviewProvider {
                 initialState: .init(
                     validationType: .email,
                     text: "".redacted
-                ),
-                reducer: TCATextFieldReducer()
-            )
+                )
+            ) {
+                TCATextFieldReducer()
+            }
         )
         .preferredColorScheme(.light)
         .padding(.horizontal, 50)

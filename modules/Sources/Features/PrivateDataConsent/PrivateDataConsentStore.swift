@@ -18,7 +18,7 @@ import DatabaseFiles
 public typealias PrivateDataConsentStore = Store<PrivateDataConsentReducer.State, PrivateDataConsentReducer.Action>
 public typealias PrivateDataConsentViewStore = ViewStore<PrivateDataConsentReducer.State, PrivateDataConsentReducer.Action>
 
-public struct PrivateDataConsentReducer: ReducerProtocol {
+public struct PrivateDataConsentReducer: Reducer {
     let networkType: NetworkType
 
     public struct State: Equatable {
@@ -48,7 +48,7 @@ public struct PrivateDataConsentReducer: ReducerProtocol {
 
     @Dependency(\.databaseFiles) var databaseFiles
 
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         BindingReducer()
 
         Reduce { state, action in
@@ -79,9 +79,10 @@ public struct PrivateDataConsentReducer: ReducerProtocol {
 
 extension PrivateDataConsentStore {
     public static var demo = PrivateDataConsentStore(
-        initialState: .initial,
-        reducer: PrivateDataConsentReducer(networkType: .testnet)
-    )
+        initialState: .initial
+    ) {
+        PrivateDataConsentReducer(networkType: .testnet)
+    }
 }
 
 // MARK: - Placeholders

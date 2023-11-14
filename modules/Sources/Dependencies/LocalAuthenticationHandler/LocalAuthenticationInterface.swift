@@ -6,7 +6,6 @@
 //
 
 import ComposableArchitecture
-import LocalAuthenticationHandler
 
 extension DependencyValues {
     public var localAuthentication: LocalAuthenticationClient {

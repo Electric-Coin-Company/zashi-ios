@@ -20,7 +20,7 @@ import ReadTransactionsStorage
 public typealias RootStore = Store<RootReducer.State, RootReducer.Action>
 public typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
 
-public struct RootReducer: ReducerProtocol {
+public struct RootReducer: Reducer {
     enum CancelId { case timer }
     enum SynchronizerCancelId { case timer }
     enum WalletConfigCancelId { case timer }
@@ -104,7 +104,7 @@ public struct RootReducer: ReducerProtocol {
     }
     
     @ReducerBuilder<State, Action>
-    var core: some ReducerProtocol<State, Action> {
+    var core: some Reducer<State, Action> {
         Scope(state: \.tabsState, action: /Action.tabs) {
             TabsReducer(tokenName: tokenName, networkType: zcashNetwork.networkType)
         }
@@ -135,7 +135,7 @@ public struct RootReducer: ReducerProtocol {
         debugReduce()
     }
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         self.core
 
         Reduce { state, action in
@@ -320,11 +320,12 @@ extension RootReducer.State {
 extension RootStore {
     public static var placeholder: RootStore {
         RootStore(
-            initialState: .initial,
-            reducer: RootReducer(
+            initialState: .initial
+        ) {
+            RootReducer(
                 tokenName: "ZEC",
                 zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
             ).logging()
-        )
+        }
     }
 }

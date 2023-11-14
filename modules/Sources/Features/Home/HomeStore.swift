@@ -15,7 +15,7 @@ import Scan
 public typealias HomeStore = Store<HomeReducer.State, HomeReducer.Action>
 public typealias HomeViewStore = ViewStore<HomeReducer.State, HomeReducer.Action>
 
-public struct HomeReducer: ReducerProtocol {
+public struct HomeReducer: Reducer {
     private enum CancelId { case timer }
     let networkType: NetworkType
 
@@ -97,7 +97,7 @@ public struct HomeReducer: ReducerProtocol {
         self.networkType = networkType
     }
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         Scope(state: \.transactionListState, action: /Action.transactionList) {
             TransactionListReducer()
         }
@@ -108,15 +108,17 @@ public struct HomeReducer: ReducerProtocol {
                 state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
 
                 if diskSpaceChecker.hasEnoughFreeSpaceForSync() {
-                    let syncEffect = sdkSynchronizer.stateStream()
-                        .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                        .map(HomeReducer.Action.synchronizerStateChanged)
-                        .eraseToEffect()
-                        .cancellable(id: CancelId.timer, cancelInFlight: true)
-                    return .merge(
-                        Effect.send(.updateDestination(nil)),
-                        syncEffect
-                    )
+                    // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
+                    return .none
+//                    let syncEffect = sdkSynchronizer.stateStream()
+//                        .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+//                        .map(HomeReducer.Action.synchronizerStateChanged)
+//                        .eraseToEffect()
+//                        .cancellable(id: CancelId.timer, cancelInFlight: true)
+//                    return .merge(
+//                        Effect.send(.updateDestination(nil)),
+//                        syncEffect
+//                    )
                 } else {
                     return Effect.send(.updateDestination(.notEnoughFreeDiskSpace))
                 }
@@ -126,10 +128,11 @@ public struct HomeReducer: ReducerProtocol {
                 return .cancel(id: CancelId.timer)
                 
             case .resolveReviewRequest:
-                if reviewRequest.canRequestReview() {
-                    state.canRequestReview = true
-                    return .fireAndForget { reviewRequest.reviewRequested() }
-                }
+                // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
+//                if reviewRequest.canRequestReview() {
+//                    state.canRequestReview = true
+//                    return .fireAndForget { reviewRequest.reviewRequested() }
+//                }
                 return .none
                 
             case .reviewRequestFinished:
@@ -158,15 +161,19 @@ public struct HomeReducer: ReducerProtocol {
                     return Effect.send(.showSynchronizerErrorAlert(error.toZcashError()))
 
                 case .upToDate:
-                    return .fireAndForget { reviewRequest.syncFinished() }
+                    // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
+//                    return .fireAndForget { reviewRequest.syncFinished() }
+                    return .none
 
                 default:
                     return .none
                 }
 
             case .foundTransactions:
-                return .fireAndForget { reviewRequest.foundTransactions() }
-
+                // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
+//                return .fireAndForget { reviewRequest.foundTransactions() }
+                return .none
+                
             case .updateDestination(let destination):
                 state.destination = destination
                 return .none
@@ -250,9 +257,10 @@ extension HomeReducer.State {
 extension HomeStore {
     public static var placeholder: HomeStore {
         HomeStore(
-            initialState: .initial,
-            reducer: HomeReducer(networkType: .testnet)
-        )
+            initialState: .initial
+        ) {
+            HomeReducer(networkType: .testnet)
+        }
     }
 
     public static var error: HomeStore {
@@ -265,8 +273,9 @@ extension HomeStore {
                 ),
                 walletConfig: .initial,
                 transactionListState: .initial
-            ),
-            reducer: HomeReducer(networkType: .testnet)
-        )
+            )
+        ) {
+            HomeReducer(networkType: .testnet)
+        }
     }
 }

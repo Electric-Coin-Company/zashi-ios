@@ -15,9 +15,10 @@ import ZcashLightClientKit
 class DebugTests: XCTestCase {
     func testRescanBlockchain() async throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: .initial
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
         
         await store.send(.debug(.rescanBlockchain)) { state in
             state.debugState.rescanDialog = ConfirmationDialogState.rescanRequest()
@@ -30,9 +31,10 @@ class DebugTests: XCTestCase {
         mockState.debugState.rescanDialog = ConfirmationDialogState.rescanRequest()
         
         let store = TestStore(
-            initialState: mockState,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: mockState
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
         
         await store.send(.debug(.cancelRescan)) { state in
             state.debugState.rescanDialog = nil
@@ -45,9 +47,10 @@ class DebugTests: XCTestCase {
         mockState.debugState.rescanDialog = ConfirmationDialogState.rescanRequest()
         
         let store = TestStore(
-            initialState: mockState,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: mockState
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
 
         store.dependencies.mainQueue = .immediate
         store.dependencies.sdkSynchronizer = .noOp
@@ -66,9 +69,10 @@ class DebugTests: XCTestCase {
         mockState.debugState.rescanDialog = ConfirmationDialogState.rescanRequest()
         
         let store = TestStore(
-            initialState: mockState,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: mockState
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
 
         store.dependencies.mainQueue = .immediate
         store.dependencies.sdkSynchronizer = .noOp

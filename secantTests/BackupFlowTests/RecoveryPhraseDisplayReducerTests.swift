@@ -17,9 +17,10 @@ class RecoveryPhraseDisplayReducerTests: XCTestCase {
         let testPasteboard = PasteboardClient.testPasteboard
 
         let store = TestStore(
-            initialState: RecoveryPhraseDisplayStore.test,
-            reducer: RecoveryPhraseDisplayReducer()
-        )
+            initialState: RecoveryPhraseDisplayStore.test
+        ) {
+            RecoveryPhraseDisplayReducer()
+        }
 
         store.dependencies.pasteboard = testPasteboard
 

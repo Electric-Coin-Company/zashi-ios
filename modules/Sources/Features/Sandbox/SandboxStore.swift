@@ -5,7 +5,7 @@ import TransactionList
 public typealias SandboxStore = Store<SandboxReducer.State, SandboxReducer.Action>
 public typealias SandboxViewStore = ViewStore<SandboxReducer.State, SandboxReducer.Action>
 
-public struct SandboxReducer: ReducerProtocol {
+public struct SandboxReducer: Reducer {
     public struct State: Equatable {
         public enum Destination: Equatable, CaseIterable {
             case history
@@ -25,7 +25,7 @@ public struct SandboxReducer: ReducerProtocol {
     
     public init() {}
     
-    public func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
+    public func reduce(into state: inout State, action: Action) -> ComposableArchitecture.Effect<Action> {
         switch action {
         case let .updateDestination(destination):
             state.destination = destination
@@ -90,8 +90,9 @@ extension SandboxStore {
             initialState: SandboxReducer.State(
                 transactionListState: .placeholder,
                 destination: nil
-            ),
-            reducer: SandboxReducer()
-        )
+            )
+        ) {
+            SandboxReducer()
+        }
     }
 }

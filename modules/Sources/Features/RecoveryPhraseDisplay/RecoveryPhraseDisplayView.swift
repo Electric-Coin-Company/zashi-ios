@@ -19,7 +19,7 @@ public struct RecoveryPhraseDisplayView: View {
     }
 
     public var body: some View {
-        WithViewStore(self.store) { viewStore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             VStack(alignment: .center) {
                 Spacer()
 

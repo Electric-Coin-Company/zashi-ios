@@ -30,7 +30,7 @@ public struct SendFlowView: View {
     
     public var body: some View {
         ZStack {
-            WithViewStore(store) { viewStore in
+            WithViewStore(store, observe: { $0 }) { viewStore in
                 ScrollView {
                     ScrollViewReader { value in
                         VStack(alignment: .center) {
@@ -179,9 +179,10 @@ public struct SendFlowView: View {
                     scanState: .initial,
                     transactionAddressInputState: .initial,
                     transactionAmountInputState: .initial
-                ),
-                reducer: SendFlowReducer(networkType: .testnet)
-            ),
+                )
+            ) {
+                SendFlowReducer(networkType: .testnet)
+            },
             tokenName: "ZEC"
         )
     }
