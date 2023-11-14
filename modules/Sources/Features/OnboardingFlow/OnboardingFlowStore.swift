@@ -107,3 +107,15 @@ extension OnboardingFlowViewStore {
         )
     }
 }
+
+// MARK: Placeholders
+
+extension OnboardingFlowReducer.State {
+    public static var initial: Self {
+        .init(
+            walletConfig: .initial,
+            importWalletState: .initial,
+            securityWarningState: .initial
+        )
+    }
+}

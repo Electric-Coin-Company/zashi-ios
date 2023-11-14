@@ -122,9 +122,9 @@ public struct TransactionAmountTextFieldReducer: ReducerProtocol {
 // MARK: - Placeholders
 
 extension TransactionAmountTextFieldReducer.State {
-    public static let placeholder = TransactionAmountTextFieldReducer.State(
+    public static let initial = TransactionAmountTextFieldReducer.State(
         currencySelectionState: CurrencySelectionReducer.State(),
-        textFieldState: .placeholder
+        textFieldState: .initial
     )
 
     public static let amount = TransactionAmountTextFieldReducer.State(
@@ -135,7 +135,7 @@ extension TransactionAmountTextFieldReducer.State {
 
 extension TransactionAmountTextFieldStore {
     public static let placeholder = TransactionAmountTextFieldStore(
-        initialState: .placeholder,
+        initialState: .initial,
         reducer: TransactionAmountTextFieldReducer()
     )
 }

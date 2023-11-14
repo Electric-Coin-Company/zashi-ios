@@ -100,7 +100,7 @@ class RootTests: XCTestCase {
 
     func testRespondToWalletInitializationState_Uninitialized() throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
 
@@ -118,7 +118,7 @@ class RootTests: XCTestCase {
 
     func testRespondToWalletInitializationState_KeysMissing() throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         
@@ -133,7 +133,7 @@ class RootTests: XCTestCase {
         let zcashError = ZcashError.unknown(walletStorageError)
 
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         
@@ -162,7 +162,7 @@ class RootTests: XCTestCase {
         let zcashError = ZcashError.unknown(walletStorageError)
 
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         
@@ -186,7 +186,7 @@ class RootTests: XCTestCase {
     
     func testInitializationSuccessfullyDone() throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         

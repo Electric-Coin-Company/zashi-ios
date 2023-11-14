@@ -207,19 +207,19 @@ extension AlertState where Action == SettingsReducer.Action {
 // MARK: Placeholders
 
 extension SettingsReducer.State {
-    public static let placeholder = SettingsReducer.State(
+    public static let initial = SettingsReducer.State(
         phraseDisplayState: RecoveryPhraseDisplayReducer.State(
             phrase: nil,
             showCopyToBufferAlert: false,
             birthday: nil
         ),
-        privateDataConsentState: .placeholder
+        privateDataConsentState: .initial
     )
 }
 
 extension SettingsStore {
     public static let placeholder = SettingsStore(
-        initialState: .placeholder,
+        initialState: .initial,
         reducer: SettingsReducer(networkType: .testnet)
     )
     
@@ -232,7 +232,7 @@ extension SettingsStore {
                 showCopyToBufferAlert: false,
                 birthday: nil
             ),
-            privateDataConsentState: .placeholder
+            privateDataConsentState: .initial
         ),
         reducer: SettingsReducer(networkType: .testnet)
     )

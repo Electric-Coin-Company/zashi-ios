@@ -17,7 +17,7 @@ import Generated
 class TabsTests: XCTestCase {
     func testHomeBalanceRedirectToTheDetailsTab() async {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: { TabsReducer(tokenName: "TAZ", networkType: .testnet) }
         )
         
@@ -28,7 +28,7 @@ class TabsTests: XCTestCase {
     
     func testSelectionOfTheTab() async {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: { TabsReducer(tokenName: "TAZ", networkType: .testnet) }
         )
         
@@ -39,7 +39,7 @@ class TabsTests: XCTestCase {
     
     func testSettingDestination() async {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: { TabsReducer(tokenName: "TAZ", networkType: .testnet) }
         )
         
@@ -49,7 +49,7 @@ class TabsTests: XCTestCase {
     }
     
     func testSettingDestinationDismissal() async {
-        var placeholderState = TabsReducer.State.placeholder
+        var placeholderState = TabsReducer.State.initial
         placeholderState.destination = .settings
         
         let store = TestStore(
@@ -63,7 +63,7 @@ class TabsTests: XCTestCase {
     }
     
     func testAccountTabTitle() {
-        var tabsState = TabsReducer.State.placeholder
+        var tabsState = TabsReducer.State.initial
         tabsState.selectedTab = .account
         
         XCTAssertEqual(
@@ -74,7 +74,7 @@ class TabsTests: XCTestCase {
     }
     
     func testSendTabTitle() {
-        var tabsState = TabsReducer.State.placeholder
+        var tabsState = TabsReducer.State.initial
         tabsState.selectedTab = .send
         
         XCTAssertEqual(
@@ -85,7 +85,7 @@ class TabsTests: XCTestCase {
     }
     
     func testReceiveTabTitle() {
-        var tabsState = TabsReducer.State.placeholder
+        var tabsState = TabsReducer.State.initial
         tabsState.selectedTab = .receive
         
         XCTAssertEqual(
@@ -96,7 +96,7 @@ class TabsTests: XCTestCase {
     }
     
     func testDetailsTabTitle() {
-        var tabsState = TabsReducer.State.placeholder
+        var tabsState = TabsReducer.State.initial
         tabsState.selectedTab = .balances
         
         XCTAssertEqual(
@@ -107,7 +107,7 @@ class TabsTests: XCTestCase {
     }
     
     func testSendRedirectsBackToAccount() async {
-        var placeholderState = TabsReducer.State.placeholder
+        var placeholderState = TabsReducer.State.initial
         placeholderState.selectedTab = .send
         
         let store = TestStore(

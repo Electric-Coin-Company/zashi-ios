@@ -79,7 +79,7 @@ public struct PrivateDataConsentReducer: ReducerProtocol {
 
 extension PrivateDataConsentStore {
     public static var demo = PrivateDataConsentStore(
-        initialState: .placeholder,
+        initialState: .initial,
         reducer: PrivateDataConsentReducer(networkType: .testnet)
     )
 }
@@ -87,7 +87,7 @@ extension PrivateDataConsentStore {
 // MARK: - Placeholders
 
 extension PrivateDataConsentReducer.State {
-    public static let placeholder = PrivateDataConsentReducer.State(
+    public static let initial = PrivateDataConsentReducer.State(
         isExporting: false,
         dataDbURL: []
     )

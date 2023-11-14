@@ -25,7 +25,7 @@ final class ReviewRequestTests: XCTestCase {
         }
         
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: HomeReducer(networkType: .testnet)
         )
         
@@ -61,7 +61,7 @@ final class ReviewRequestTests: XCTestCase {
         }
 
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: HomeReducer(networkType: .testnet)
         )
 

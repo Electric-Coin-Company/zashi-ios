@@ -90,7 +90,7 @@ class BalanceBreakdownTests: XCTestCase {
 
     @MainActor func testShieldFundsButtonDisabledWhenNoShieldableFunds() async throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: BalanceBreakdownReducer(networkType: .testnet)
         )
 
@@ -106,7 +106,7 @@ class BalanceBreakdownTests: XCTestCase {
                 latestBlock: L10n.General.unknown,
                 shieldedBalance: Balance.zero,
                 shieldingFunds: false,
-                synchronizerStatusSnapshot: .default,
+                synchronizerStatusSnapshot: .initial,
                 transparentBalance: Balance(
                     WalletBalance(
                         verified: Zatoshi(1_000_000),
@@ -129,7 +129,7 @@ class BalanceBreakdownTests: XCTestCase {
                 latestBlock: L10n.General.unknown,
                 shieldedBalance: Balance.zero,
                 shieldingFunds: true,
-                synchronizerStatusSnapshot: .default,
+                synchronizerStatusSnapshot: .initial,
                 transparentBalance: Balance(
                     WalletBalance(
                         verified: Zatoshi(1_000_000),

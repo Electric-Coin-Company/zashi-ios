@@ -12,14 +12,14 @@ import Models
 
 extension WalletConfigProviderClient: TestDependencyKey {
     public static let testValue = Self(
-        load: XCTUnimplemented("\(Self.self).load", placeholder: Just(WalletConfig.default).eraseToAnyPublisher()),
+        load: XCTUnimplemented("\(Self.self).load", placeholder: Just(WalletConfig.initial).eraseToAnyPublisher()),
         update: XCTUnimplemented("\(Self.self).update")
     )
 }
 
 extension WalletConfigProviderClient {
     public static let noOp = Self(
-        load: { Just(WalletConfig.default).eraseToAnyPublisher() },
+        load: { Just(WalletConfig.initial).eraseToAnyPublisher() },
         update: { _, _ in Just(Void()).eraseToAnyPublisher() }
     )
 }

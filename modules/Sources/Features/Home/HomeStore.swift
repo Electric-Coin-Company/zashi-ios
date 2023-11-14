@@ -236,13 +236,13 @@ extension HomeViewStore {
 // MARK: Placeholders
 
 extension HomeReducer.State {
-    public static var placeholder: Self {
+    public static var initial: Self {
         .init(
-            scanState: .placeholder,
+            scanState: .initial,
             shieldedBalance: Balance.zero,
-            synchronizerStatusSnapshot: .default,
-            walletConfig: .default,
-            transactionListState: .emptyPlaceHolder
+            synchronizerStatusSnapshot: .initial,
+            walletConfig: .initial,
+            transactionListState: .initial
         )
     }
 }
@@ -250,7 +250,7 @@ extension HomeReducer.State {
 extension HomeStore {
     public static var placeholder: HomeStore {
         HomeStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: HomeReducer(networkType: .testnet)
         )
     }
@@ -258,13 +258,13 @@ extension HomeStore {
     public static var error: HomeStore {
         HomeStore(
             initialState: .init(
-                scanState: .placeholder,
+                scanState: .initial,
                 shieldedBalance: Balance.zero,
                 synchronizerStatusSnapshot: .snapshotFor(
                     state: .error(ZcashError.synchronizerNotPrepared)
                 ),
-                walletConfig: .default,
-                transactionListState: .emptyPlaceHolder
+                walletConfig: .initial,
+                transactionListState: .initial
             ),
             reducer: HomeReducer(networkType: .testnet)
         )

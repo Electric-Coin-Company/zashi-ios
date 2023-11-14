@@ -15,6 +15,7 @@ import OnboardingFlow
 import Sandbox
 import Tabs
 import CrashReporter
+import ReadTransactionsStorage
 
 public typealias RootStore = Store<RootReducer.State, RootReducer.Action>
 public typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
@@ -95,6 +96,7 @@ public struct RootReducer: ReducerProtocol {
     @Dependency(\.walletConfigProvider) var walletConfigProvider
     @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
+    @Dependency(\.readTransactionsStorage) var readTransactionsStorage
 
     public init(tokenName: String, zcashNetwork: ZcashNetwork) {
         self.tokenName = tokenName
@@ -301,20 +303,16 @@ extension ConfirmationDialogState where Action == RootReducer.Action {
 // MARK: Placeholders
 
 extension RootReducer.State {
-    public static var placeholder: Self {
+    public static var initial: Self {
         .init(
-            debugState: .placeholder,
-            destinationState: .placeholder,
-            exportLogsState: .placeholder,
-            onboardingState: .init(
-                walletConfig: .default,
-                importWalletState: .placeholder,
-                securityWarningState: .placeholder
-            ),
-            sandboxState: .placeholder,
-            tabsState: .placeholder,
-            walletConfig: .default,
-            welcomeState: .placeholder
+            debugState: .initial,
+            destinationState: .initial,
+            exportLogsState: .initial,
+            onboardingState: .initial,
+            sandboxState: .initial,
+            tabsState: .initial,
+            walletConfig: .initial,
+            welcomeState: .initial
         )
     }
 }
@@ -322,7 +320,7 @@ extension RootReducer.State {
 extension RootStore {
     public static var placeholder: RootStore {
         RootStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: RootReducer(
                 tokenName: "ZEC",
                 zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)

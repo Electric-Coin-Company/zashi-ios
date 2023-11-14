@@ -50,11 +50,11 @@ public struct WalletConfigProvider {
             if let cachedConfiguration = await cache.load() {
                 configuration = cachedConfiguration
             } else {
-                configuration = WalletConfig.default
+                configuration = WalletConfig.initial
             }
         }
 
-        let finalConfiguration = merge(configuration: configuration, withDefaultConfiguration: WalletConfig.default)
+        let finalConfiguration = merge(configuration: configuration, withDefaultConfiguration: WalletConfig.initial)
 
         await cache.store(finalConfiguration)
 

@@ -16,7 +16,7 @@ extension UserPreferencesStorageClient: TestDependencyKey {
             activeAppSessionFrom: { mock.activeAppSessionFrom },
             setActiveAppSessionFrom: mock.setActiveAppSessionFrom(_:),
             currency: { mock.currency },
-            setCurrenty: mock.setCurrency(_:),
+            setCurrency: mock.setCurrency(_:),
             isFiatConverted: { mock.isFiatConverted },
             setIsFiatConverted: mock.setIsFiatConverted(_:),
             isRecoveryPhraseTestCompleted: {

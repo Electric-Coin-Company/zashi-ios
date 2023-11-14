@@ -104,6 +104,28 @@ extension ReadTransactionsStorageClient: DependencyKey {
             } catch {
                 throw error
             }
+        },
+        nukeWallet: {
+            let context = persistentContainer.viewContext
+
+            let deleteRequestIds = NSBatchDeleteRequest(
+                fetchRequest: NSFetchRequest<NSFetchRequestResult>(
+                    entityName: ReadTransactionsStorageClient.Constants.entityName
+                )
+            )
+            let deleteRequestTimestamp = NSBatchDeleteRequest(
+                fetchRequest: NSFetchRequest<NSFetchRequestResult>(
+                    entityName: ReadTransactionsStorageClient.Constants.availabilityEntityName
+                )
+            )
+
+            do {
+                try context.execute(deleteRequestIds)
+                try context.execute(deleteRequestTimestamp)
+                try context.save()
+            } catch {
+                throw error
+            }
         }
     )
 }

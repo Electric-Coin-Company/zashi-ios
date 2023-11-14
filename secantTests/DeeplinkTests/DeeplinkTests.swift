@@ -17,7 +17,7 @@ import Root
 @MainActor
 class DeeplinkTests: XCTestCase {
     func testActionDeeplinkHome_SameDestinationLevel() throws {
-        var appState = RootReducer.State.placeholder
+        var appState = RootReducer.State.initial
         appState.destinationState.destination = .welcome
         
         let store = TestStore(
@@ -31,9 +31,8 @@ class DeeplinkTests: XCTestCase {
     }
 
     func testActionDeeplinkHome_GeetingBack() throws {
-        var appState = RootReducer.State.placeholder
+        var appState = RootReducer.State.initial
         appState.destinationState.destination = .tabs
-//        appState.homeState.destination = .send
         
         let store = TestStore(
             initialState: appState,
@@ -46,7 +45,7 @@ class DeeplinkTests: XCTestCase {
     }
     
     func testActionDeeplinkSend() throws {
-        var appState = RootReducer.State.placeholder
+        var appState = RootReducer.State.initial
         appState.destinationState.destination = .welcome
         
         let store = TestStore(
@@ -78,7 +77,7 @@ class DeeplinkTests: XCTestCase {
     }
 
     func testDeeplinkRequest_Received_Home() async throws {
-        var appState = RootReducer.State.placeholder
+        var appState = RootReducer.State.initial
         appState.destinationState.destination = .welcome
         appState.appInitializationState = .initialized
         
@@ -123,7 +122,7 @@ class DeeplinkTests: XCTestCase {
     }
     
     func testDeeplinkRequest_Received_Send() async throws {
-        var appState = RootReducer.State.placeholder
+        var appState = RootReducer.State.initial
         appState.destinationState.destination = .welcome
         appState.appInitializationState = .initialized
         

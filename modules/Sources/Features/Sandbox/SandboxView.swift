@@ -33,7 +33,7 @@ public struct SandboxView: View {
         case .send:
             SendFlowView(
                 store: .init(
-                    initialState: .placeholder,
+                    initialState: .initial,
                     reducer: SendFlowReducer(networkType: networkType)
                 ),
                 tokenName: tokenName

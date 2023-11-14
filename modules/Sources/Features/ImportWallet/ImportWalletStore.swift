@@ -225,14 +225,12 @@ extension AlertState where Action == ImportWalletReducer.Action {
 // MARK: - Placeholders
 
 extension ImportWalletReducer.State {
-    public static let placeholder = ImportWalletReducer.State()
-
-    public static let live = ImportWalletReducer.State()
+    public static let initial = ImportWalletReducer.State()
 }
 
 extension ImportWalletStore {
     public static let demo = Store(
-        initialState: .placeholder,
+        initialState: .initial,
         reducer: ImportWalletReducer(saplingActivationHeight: 0)
     )
 }

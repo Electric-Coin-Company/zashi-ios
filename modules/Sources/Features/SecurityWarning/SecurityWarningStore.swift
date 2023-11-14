@@ -171,4 +171,10 @@ extension SecurityWarningReducer.State {
     public static let placeholder = SecurityWarningReducer.State(
         recoveryPhraseDisplayState: RecoveryPhraseDisplayReducer.State(phrase: .placeholder)
     )
+    
+    public static let initial = SecurityWarningReducer.State(
+        recoveryPhraseDisplayState: RecoveryPhraseDisplayReducer.State(
+            phrase: .initial
+        )
+    )
 }

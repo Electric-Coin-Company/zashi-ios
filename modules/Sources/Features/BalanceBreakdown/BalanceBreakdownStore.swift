@@ -185,6 +185,15 @@ extension BalanceBreakdownReducer.State {
         synchronizerStatusSnapshot: .placeholder,
         transparentBalance: Balance.zero
     )
+    
+    public static let initial = BalanceBreakdownReducer.State(
+        autoShieldingThreshold: Zatoshi(1_000_000),
+        latestBlock: L10n.General.unknown,
+        shieldedBalance: Balance.zero,
+        shieldingFunds: false,
+        synchronizerStatusSnapshot: .initial,
+        transparentBalance: Balance.zero
+    )
 }
 
 extension BalanceBreakdownStore {

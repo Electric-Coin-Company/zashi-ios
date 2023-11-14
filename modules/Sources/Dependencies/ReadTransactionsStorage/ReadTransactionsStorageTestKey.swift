@@ -12,7 +12,8 @@ extension ReadTransactionsStorageClient: TestDependencyKey {
     public static let testValue = Self(
         markIdAsRead: XCTUnimplemented("\(Self.self).markIdAsRead"),
         readIds: XCTUnimplemented("\(Self.self).readIds", placeholder: [:]),
-        availabilityTimestamp: XCTUnimplemented("\(Self.self).availabilityTimestamp", placeholder: 0)
+        availabilityTimestamp: XCTUnimplemented("\(Self.self).availabilityTimestamp", placeholder: 0),
+        nukeWallet: XCTUnimplemented("\(Self.self).nukeWallet")
     )
 }
 
@@ -20,6 +21,7 @@ extension ReadTransactionsStorageClient {
     public static let noOp = Self(
         markIdAsRead: { _ in },
         readIds: { [:] },
-        availabilityTimestamp: { 0 }
+        availabilityTimestamp: { 0 },
+        nukeWallet: { }
     )
 }

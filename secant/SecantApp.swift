@@ -12,10 +12,11 @@ import ZcashLightClientKit
 import SDKSynchronizer
 import Utils
 import Root
+import XCTestDynamicOverlay
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
     var rootStore = RootStore(
-        initialState: .placeholder,
+        initialState: .initial,
         reducer: RootReducer(
             tokenName: TargetConstants.tokenName,
             zcashNetwork: TargetConstants.zcashNetwork

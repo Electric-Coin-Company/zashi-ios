@@ -49,7 +49,7 @@ public struct UserDefaultsWalletConfigStorage {
 
     // This is used only in debug menu to change configuration for specific flag
     public func store(featureFlag: FeatureFlag, isEnabled: Bool) async {
-        let currentConfig = (try? await load(key: Constants.providerKey)) ?? WalletConfig.default
+        let currentConfig = (try? await load(key: Constants.providerKey)) ?? WalletConfig.initial
         var rawFlags = currentConfig.flags
         rawFlags[featureFlag] = isEnabled
 

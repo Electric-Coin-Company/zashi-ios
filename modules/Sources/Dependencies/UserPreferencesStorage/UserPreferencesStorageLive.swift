@@ -16,7 +16,7 @@ extension UserPreferencesStorageClient: DependencyKey {
             activeAppSessionFrom: { live.activeAppSessionFrom },
             setActiveAppSessionFrom: live.setActiveAppSessionFrom(_:),
             currency: { live.currency },
-            setCurrenty: live.setCurrency(_:),
+            setCurrency: live.setCurrency(_:),
             isFiatConverted: { live.isFiatConverted },
             setIsFiatConverted: live.setIsFiatConverted(_:),
             isRecoveryPhraseTestCompleted: {

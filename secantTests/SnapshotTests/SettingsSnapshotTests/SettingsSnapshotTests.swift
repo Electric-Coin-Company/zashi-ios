@@ -14,7 +14,7 @@ import Settings
 class SettingsSnapshotTests: XCTestCase {
     func testSettingsSnapshot() throws {
         let store = Store(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: SettingsReducer(networkType: .mainnet)
                 .dependency(\.localAuthentication, .mockAuthenticationFailed)
                 .dependency(\.sdkSynchronizer, .noOp)
@@ -27,7 +27,7 @@ class SettingsSnapshotTests: XCTestCase {
     
     func testAboutSnapshot() throws {
         let store = Store(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: SettingsReducer(networkType: .mainnet)
                 .dependency(\.localAuthentication, .mockAuthenticationFailed)
                 .dependency(\.sdkSynchronizer, .noOp)

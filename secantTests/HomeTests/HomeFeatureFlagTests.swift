@@ -18,6 +18,6 @@ class HomeFeatureFlagTests: XCTestCase {
     }
 
     func testShowFiatConversionOffByDefault() throws {
-        XCTAssertFalse(WalletConfig.default.isEnabled(.showFiatConversion))
+        XCTAssertFalse(WalletConfig.initial.isEnabled(.showFiatConversion))
     }
 }

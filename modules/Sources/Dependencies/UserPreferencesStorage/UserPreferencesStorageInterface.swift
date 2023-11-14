@@ -20,7 +20,7 @@ public struct UserPreferencesStorageClient {
     public var setActiveAppSessionFrom: (TimeInterval) async -> Void
 
     public var currency: () -> String
-    public var setCurrenty: (String) async -> Void
+    public var setCurrency: (String) async -> Void
 
     public var isFiatConverted: () -> Bool
     public var setIsFiatConverted: (Bool) async -> Void

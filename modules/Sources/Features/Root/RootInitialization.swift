@@ -76,7 +76,7 @@ extension RootReducer {
                     .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
 
             case .walletConfigLoaded(let walletConfig):
-                if walletConfig == WalletConfig.default {
+                if walletConfig == WalletConfig.initial {
                     return Effect.send(.initialization(.initialSetups))
                 } else {
                     return Effect.send(.initialization(.walletConfigChanged(walletConfig)))
@@ -202,10 +202,15 @@ extension RootReducer {
                     .cancellable(id: SynchronizerCancelId.timer, cancelInFlight: true)
 
             case .nukeWalletSucceeded:
+                state = .initial
+                state.splashAppeared = true
                 walletStorage.nukeWallet()
-                state.onboardingState.destination = nil
+                try? readTransactionsStorage.nukeWallet()
                 return .concatenate(
                     .cancel(id: SynchronizerCancelId.timer),
+                    .run { send in
+                        await userStoredPreferences.removeAll()
+                    },
                     Effect.send(.initialization(.checkWalletInitialization))
                 )
 

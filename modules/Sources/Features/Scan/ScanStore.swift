@@ -162,14 +162,14 @@ extension AlertState where Action == ScanReducer.Action {
 // MARK: Placeholders
 
 extension ScanReducer.State {
-    public static var placeholder: Self {
+    public static var initial: Self {
         .init()
     }
 }
 
 extension ScanStore {
     public static let placeholder = ScanStore(
-        initialState: .placeholder,
+        initialState: .initial,
         reducer: ScanReducer(networkType: .testnet)
     )
 }

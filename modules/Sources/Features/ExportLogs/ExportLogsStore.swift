@@ -23,7 +23,11 @@ public struct ExportLogsReducer: ReducerProtocol {
         public var isSharingLogs = false
         public var zippedLogsURLs: [URL] = []
         
-        public init(exportLogsDisabled: Bool = false, isSharingLogs: Bool = false, zippedLogsURLs: [URL] = []) {
+        public init(
+            exportLogsDisabled: Bool = false,
+            isSharingLogs: Bool = false,
+            zippedLogsURLs: [URL] = []
+        ) {
             self.exportLogsDisabled = exportLogsDisabled
             self.isSharingLogs = isSharingLogs
             self.zippedLogsURLs = zippedLogsURLs
@@ -107,7 +111,7 @@ extension AlertState where Action == ExportLogsReducer.Action {
 // MARK: Placeholders
 
 extension ExportLogsReducer.State {
-    public static var placeholder: Self {
+    public static var initial: Self {
         .init()
     }
 }

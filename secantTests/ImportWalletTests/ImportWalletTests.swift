@@ -15,7 +15,7 @@ import ImportWallet
 class ImportWalletTests: XCTestCase {
     func testOnAppear() throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: ImportWalletReducer(saplingActivationHeight: 0)
         )
         
@@ -26,7 +26,7 @@ class ImportWalletTests: XCTestCase {
     
     func testWordsCount() throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: ImportWalletReducer(saplingActivationHeight: 0)
         )
         
@@ -84,7 +84,7 @@ class ImportWalletTests: XCTestCase {
     
     func testInvalidBirthdayHeight_lessThanSaplingActivation() throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: ImportWalletReducer(saplingActivationHeight: 280_000)
         )
         
@@ -96,7 +96,7 @@ class ImportWalletTests: XCTestCase {
 
     func testInvalidBirthdayHeight_invalidInput() throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: ImportWalletReducer(saplingActivationHeight: 0)
         )
         
@@ -108,7 +108,7 @@ class ImportWalletTests: XCTestCase {
 
     func testInvalidBirthdayHeight_validInput() throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: ImportWalletReducer(saplingActivationHeight: 0)
         )
         

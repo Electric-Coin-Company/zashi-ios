@@ -15,7 +15,7 @@ import UIComponents
 
 class SendSnapshotTests: XCTestCase {
     func testTransactionSendSnapshot() throws {
-        var state = SendFlowReducer.State.placeholder
+        var state = SendFlowReducer.State.initial
         state.addMemoState = true
         state.transactionAddressInputState = TransactionAddressTextFieldReducer.State(
             textFieldState: TCATextFieldReducer.State(

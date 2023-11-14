@@ -152,8 +152,13 @@ public struct TabsReducer: ReducerProtocol {
 
 extension TabsStore {
     public static var demo = TabsStore(
-        initialState: .placeholder,
-        reducer: { TabsReducer(tokenName: "TAZ", networkType: ZcashNetworkBuilder.network(for: .testnet).networkType) }
+        initialState: .initial,
+        reducer: {
+            TabsReducer(
+                tokenName: "TAZ",
+                networkType: ZcashNetworkBuilder.network(for: .testnet).networkType
+            )
+        }
     )
 }
 
@@ -182,13 +187,13 @@ extension TabsViewStore {
 // MARK: - Placeholders
 
 extension TabsReducer.State {
-    public static let placeholder = TabsReducer.State(
-        addressDetailsState: .placeholder,
-        balanceBreakdownState: .placeholder,
+    public static let initial = TabsReducer.State(
+        addressDetailsState: .initial,
+        balanceBreakdownState: .initial,
         destination: nil,
-        homeState: .placeholder,
+        homeState: .initial,
         selectedTab: .account,
-        sendState: .placeholder,
-        settingsState: .placeholder
+        sendState: .initial,
+        settingsState: .initial
     )
 }

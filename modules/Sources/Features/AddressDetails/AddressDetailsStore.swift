@@ -39,7 +39,9 @@ public struct AddressDetailsReducer: ReducerProtocol {
             }
         }
         
-        public init(uAddress: UnifiedAddress? = nil) {
+        public init(
+            uAddress: UnifiedAddress? = nil
+        ) {
             self.uAddress = uAddress
         }
     }
@@ -72,7 +74,7 @@ public struct AddressDetailsReducer: ReducerProtocol {
 // MARK: - Placeholders
 
 extension AddressDetailsReducer.State {
-    public static let placeholder = AddressDetailsReducer.State()
+    public static let initial = AddressDetailsReducer.State()
     
     public static let demo = AddressDetailsReducer.State(
         uAddress: try! UnifiedAddress(
@@ -83,7 +85,7 @@ extension AddressDetailsReducer.State {
 
 extension AddressDetailsStore {
     public static let placeholder = AddressDetailsStore(
-        initialState: .placeholder,
+        initialState: .initial,
         reducer: AddressDetailsReducer()
     )
 }

@@ -13,7 +13,7 @@ import Welcome
 class WelcomeSnapshotTests: XCTestCase {
     func testWelcomeSnapshot() throws {
         let store = Store(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: WelcomeReducer()
         )
 

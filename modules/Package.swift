@@ -344,6 +344,7 @@ let package = Package(
                 "MnemonicClient",
                 "Models",
                 "OnboardingFlow",
+                "ReadTransactionsStorage",
                 "Sandbox",
                 "SDKSynchronizer",
                 "Tabs",
