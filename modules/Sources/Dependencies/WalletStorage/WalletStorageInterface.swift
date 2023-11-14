@@ -72,7 +72,7 @@ public struct WalletStorageClient {
 
     /// Use carefully: deletes the stored wallet.
     /// There's no fate but what we make for ourselves - Sarah Connor.
-    public let nukeWallet: () -> Void
+    public var nukeWallet: () -> Void
     
     public init(
         importWallet: @escaping (String, BlockHeight?, MnemonicLanguageType, Bool) throws -> Void,

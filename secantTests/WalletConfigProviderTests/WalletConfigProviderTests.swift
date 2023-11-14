@@ -28,8 +28,8 @@ class WalletConfigProviderTests: XCTestCase {
     }
 
     func testTestFlagsAreDisabledByDefault() {
-        XCTAssertFalse(WalletConfig.default.isEnabled(.testFlag1))
-        XCTAssertFalse(WalletConfig.default.isEnabled(.testFlag2))
+        XCTAssertFalse(WalletConfig.initial.isEnabled(.testFlag1))
+        XCTAssertFalse(WalletConfig.initial.isEnabled(.testFlag2))
     }
 
     func testLoadFlagsFromProvider() async {
@@ -122,12 +122,12 @@ class WalletConfigProviderTests: XCTestCase {
     
     func testPropagationOfFlagUpdate() throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         
         // Change any of the flags from the default value
-        var defaultRawFlags = WalletConfig.default.flags
+        var defaultRawFlags = WalletConfig.initial.flags
         defaultRawFlags[.onboardingFlow] = true
         let flags = WalletConfig(flags: defaultRawFlags)
         

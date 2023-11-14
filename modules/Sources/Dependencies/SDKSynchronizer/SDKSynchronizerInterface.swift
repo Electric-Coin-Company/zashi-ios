@@ -42,5 +42,5 @@ public struct SDKSynchronizerClient {
     public var sendTransaction: (UnifiedSpendingKey, Zatoshi, Recipient, Memo?) async throws -> TransactionState
     public let shieldFunds: (UnifiedSpendingKey, Memo, Zatoshi) async throws -> TransactionState
 
-    public let wipe: () -> AnyPublisher<Void, Error>?
+    public var wipe: () -> AnyPublisher<Void, Error>?
 }

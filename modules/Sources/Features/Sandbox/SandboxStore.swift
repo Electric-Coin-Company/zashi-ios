@@ -71,7 +71,14 @@ extension SandboxViewStore {
 extension SandboxReducer.State {
     public static var placeholder: Self {
         .init(
-            transactionListState: .placeHolder,
+            transactionListState: .placeholder,
+            destination: nil
+        )
+    }
+    
+    public static var initial: Self {
+        .init(
+            transactionListState: .initial,
             destination: nil
         )
     }
@@ -81,7 +88,7 @@ extension SandboxStore {
     public static var placeholder: SandboxStore {
         SandboxStore(
             initialState: SandboxReducer.State(
-                transactionListState: .placeHolder,
+                transactionListState: .placeholder,
                 destination: nil
             ),
             reducer: SandboxReducer()

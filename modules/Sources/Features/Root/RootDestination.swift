@@ -144,7 +144,7 @@ extension RootViewStore {
 // MARK: Placeholders
 
 extension RootReducer.DestinationState {
-    public static var placeholder: Self {
+    public static var initial: Self {
         .init()
     }
 }

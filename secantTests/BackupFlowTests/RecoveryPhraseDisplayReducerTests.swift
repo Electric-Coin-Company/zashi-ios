@@ -42,7 +42,7 @@ private extension RecoveryPhraseDisplayStore {
     )
     
     static let empty = RecoveryPhraseDisplayReducer.State(
-        phrase: .empty,
+        phrase: .initial,
         showCopyToBufferAlert: false
     )
 }

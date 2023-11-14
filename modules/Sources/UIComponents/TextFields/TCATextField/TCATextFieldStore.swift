@@ -57,7 +57,7 @@ extension TCATextFieldStore {
 // MARK: - Placeholders
 
 extension TCATextFieldReducer.State {
-    public static let placeholder = TCATextFieldReducer.State(
+    public static let initial = TCATextFieldReducer.State(
         validationType: nil,
         text: "".redacted
     )

@@ -41,7 +41,7 @@ class SendTests: XCTestCase {
         // setup the store and environment to be fully mocked
         let testScheduler = DispatchQueue.test
 
-        var initialState = SendFlowReducer.State.placeholder
+        var initialState = SendFlowReducer.State.initial
         initialState.transactionAddressInputState = TransactionAddressTextFieldReducer.State(
             textFieldState:
                 TCATextFieldReducer.State(
@@ -79,7 +79,7 @@ class SendTests: XCTestCase {
 
     func testAddressValidation_Invalid() async throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: { SendFlowReducer(networkType: .testnet) }
         )
 
@@ -103,7 +103,7 @@ class SendTests: XCTestCase {
 
     func testAddressValidation_Valid() async throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: { SendFlowReducer(networkType: .testnet) }
         )
         
@@ -126,8 +126,11 @@ class SendTests: XCTestCase {
     }
 
     func testInvalidAmountFormatEmptyInput() async throws {
+        var state = SendFlowReducer.State.initial
+        state.transactionAmountInputState = .amount
+        
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: state,
             reducer: { SendFlowReducer(networkType: .testnet) }
         )
         
@@ -142,7 +145,7 @@ class SendTests: XCTestCase {
 
     func testInvalidAddressFormatEmptyInput() async throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: { SendFlowReducer(networkType: .testnet) }
         )
 
@@ -165,9 +168,9 @@ class SendTests: XCTestCase {
     func testFundsSufficiency_SufficientAmount() async throws {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
-            memoState: .placeholder,
-            scanState: .placeholder,
-            transactionAddressInputState: .placeholder,
+            memoState: .initial,
+            scanState: .initial,
+            transactionAddressInputState: .initial,
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
                     currencySelectionState: CurrencySelectionReducer.State(),
@@ -207,9 +210,9 @@ class SendTests: XCTestCase {
     func testFundsSufficiency_InsufficientAmount() async throws {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
-            memoState: .placeholder,
-            scanState: .placeholder,
-            transactionAddressInputState: .placeholder,
+            memoState: .initial,
+            scanState: .initial,
+            transactionAddressInputState: .initial,
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
                     currencySelectionState: CurrencySelectionReducer.State(),
@@ -268,9 +271,9 @@ class SendTests: XCTestCase {
     func testValidForm() async throws {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
-            memoState: .placeholder,
-            scanState: .placeholder,
-            transactionAddressInputState: .placeholder,
+            memoState: .initial,
+            scanState: .initial,
+            transactionAddressInputState: .initial,
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
                     amount: Int64(501_301).redacted,
@@ -310,9 +313,9 @@ class SendTests: XCTestCase {
     func testInvalidForm_InsufficientFunds() async throws {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
-            memoState: .placeholder,
-            scanState: .placeholder,
-            transactionAddressInputState: .placeholder,
+            memoState: .initial,
+            scanState: .initial,
+            transactionAddressInputState: .initial,
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
                     currencySelectionState: CurrencySelectionReducer.State(),
@@ -351,9 +354,9 @@ class SendTests: XCTestCase {
     func testInvalidForm_AddressFormat() async throws {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
-            memoState: .placeholder,
-            scanState: .placeholder,
-            transactionAddressInputState: .placeholder,
+            memoState: .initial,
+            scanState: .initial,
+            transactionAddressInputState: .initial,
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
                     currencySelectionState: CurrencySelectionReducer.State(),
@@ -391,9 +394,9 @@ class SendTests: XCTestCase {
     func testInvalidForm_AmountFormat() async throws {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
-            memoState: .placeholder,
-            scanState: .placeholder,
-            transactionAddressInputState: .placeholder,
+            memoState: .initial,
+            scanState: .initial,
+            transactionAddressInputState: .initial,
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
                     currencySelectionState: CurrencySelectionReducer.State(),
@@ -435,7 +438,7 @@ class SendTests: XCTestCase {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: MessageEditorReducer.State(charLimit: 3),
-            scanState: .placeholder,
+            scanState: .initial,
             shieldedBalance: WalletBalance(verified: Zatoshi(1), total: Zatoshi(1)).redacted,
             transactionAddressInputState:
                 TransactionAddressTextFieldReducer.State(
@@ -478,9 +481,9 @@ class SendTests: XCTestCase {
     func testMemoCharLimitSet() async throws {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
-            memoState: .placeholder,
-            scanState: .placeholder,
-            transactionAddressInputState: .placeholder,
+            memoState: .initial,
+            scanState: .initial,
+            transactionAddressInputState: .initial,
             transactionAmountInputState:
                 TransactionAmountTextFieldReducer.State(
                     currencySelectionState: CurrencySelectionReducer.State(),
@@ -513,10 +516,10 @@ class SendTests: XCTestCase {
     func testScannedAddress() async throws {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
-            memoState: .placeholder,
-            scanState: .placeholder,
-            transactionAddressInputState: .placeholder,
-            transactionAmountInputState: .placeholder
+            memoState: .initial,
+            scanState: .initial,
+            transactionAddressInputState: .initial,
+            transactionAmountInputState: .initial
         )
 
         let store = TestStore(

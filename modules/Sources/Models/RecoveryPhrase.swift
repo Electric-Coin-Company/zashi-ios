@@ -71,7 +71,7 @@ extension RecoveryPhrase {
     ]
 
     public static let placeholder = RecoveryPhrase(words: testPhrase.map { $0.redacted })
-    public static let empty = RecoveryPhrase(words: [])
+    public static let initial = RecoveryPhrase(words: [])
 }
 
 extension RecoveryPhrase.Group {

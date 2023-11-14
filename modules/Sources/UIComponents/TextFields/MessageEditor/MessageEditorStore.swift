@@ -69,7 +69,7 @@ public struct MessageEditorReducer: ReducerProtocol {
 
 extension MessageEditorStore {
     public static let placeholder = MessageEditorStore(
-        initialState: .placeholder,
+        initialState: .initial,
         reducer: MessageEditorReducer()
     )
 }
@@ -77,7 +77,7 @@ extension MessageEditorStore {
 // MARK: - Placeholders
 
 extension MessageEditorReducer.State {
-    public static let placeholder: MessageEditorReducer.State = {
+    public static let initial: MessageEditorReducer.State = {
         var state = MessageEditorReducer.State()
         state.text = "".redacted
         state.charLimit = 0

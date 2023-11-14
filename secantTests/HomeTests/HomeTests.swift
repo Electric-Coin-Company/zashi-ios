@@ -23,11 +23,11 @@ class HomeTests: XCTestCase {
 
         let store = TestStore(
             initialState: .init(
-                scanState: .placeholder,
+                scanState: .initial,
                 shieldedBalance: Balance.zero,
                 synchronizerStatusSnapshot: mockSnapshot,
-                walletConfig: .default,
-                transactionListState: .emptyPlaceHolder
+                walletConfig: .initial,
+                transactionListState: .initial
             ),
             reducer: HomeReducer(networkType: .testnet)
         )
@@ -39,7 +39,7 @@ class HomeTests: XCTestCase {
     /// The integration tests make sure registrations and side effects are properly implemented.
     func testOnAppear() throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: HomeReducer(networkType: .testnet)
         )
 
@@ -63,7 +63,7 @@ class HomeTests: XCTestCase {
 
     func testOnAppear_notEnoughSpaceOnDisk() throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: HomeReducer(networkType: .testnet)
         )
 
@@ -94,7 +94,7 @@ class HomeTests: XCTestCase {
         state.syncStatus = .error(testError)
         
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: HomeReducer(networkType: .testnet)
         )
 

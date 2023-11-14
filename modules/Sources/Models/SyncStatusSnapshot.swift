@@ -39,7 +39,7 @@ public struct SyncStatusSnapshot: Equatable {
 }
 
 extension SyncStatusSnapshot {
-    public static let `default` = SyncStatusSnapshot()
+    public static let initial = SyncStatusSnapshot()
     
     public static let placeholder = SyncStatusSnapshot(.unprepared, "23% synced")
 }

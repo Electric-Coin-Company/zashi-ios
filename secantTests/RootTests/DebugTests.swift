@@ -15,7 +15,7 @@ import ZcashLightClientKit
 class DebugTests: XCTestCase {
     func testRescanBlockchain() async throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         
@@ -25,7 +25,7 @@ class DebugTests: XCTestCase {
     }
     
     func testRescanBlockchain_Cancelling() async throws {
-        var mockState = RootReducer.State.placeholder
+        var mockState = RootReducer.State.initial
         
         mockState.debugState.rescanDialog = ConfirmationDialogState.rescanRequest()
         
@@ -40,7 +40,7 @@ class DebugTests: XCTestCase {
     }
     
     func testRescanBlockchain_QuickRescanClearance() async throws {
-        var mockState = RootReducer.State.placeholder
+        var mockState = RootReducer.State.initial
         
         mockState.debugState.rescanDialog = ConfirmationDialogState.rescanRequest()
         
@@ -61,7 +61,7 @@ class DebugTests: XCTestCase {
     }
     
     func testRescanBlockchain_FullRescanClearance() async throws {
-        var mockState = RootReducer.State.placeholder
+        var mockState = RootReducer.State.initial
         
         mockState.debugState.rescanDialog = ConfirmationDialogState.rescanRequest()
         

@@ -67,14 +67,14 @@ public struct TransactionAddressTextFieldReducer: ReducerProtocol {
 // MARK: - Placeholders
 
 extension TransactionAddressTextFieldReducer.State {
-    public static let placeholder = TransactionAddressTextFieldReducer.State(
-        textFieldState: .placeholder
+    public static let initial = TransactionAddressTextFieldReducer.State(
+        textFieldState: .initial
     )
 }
 
 extension TransactionAddressTextFieldStore {
     public static let placeholder = TransactionAddressTextFieldStore(
-        initialState: .placeholder,
+        initialState: .initial,
         reducer: TransactionAddressTextFieldReducer(networkType: .testnet)
     )
 }

@@ -175,10 +175,10 @@ public struct SendFlowView: View {
                 initialState: .init(
                     addMemoState: true,
                     destination: nil,
-                    memoState: .placeholder,
-                    scanState: .placeholder,
-                    transactionAddressInputState: .placeholder,
-                    transactionAmountInputState: .placeholder
+                    memoState: .initial,
+                    scanState: .initial,
+                    transactionAddressInputState: .initial,
+                    transactionAmountInputState: .initial
                 ),
                 reducer: SendFlowReducer(networkType: .testnet)
             ),

@@ -18,7 +18,6 @@ public struct TransactionListReducer: ReducerProtocol {
 
     public struct State: Equatable {
         public var latestMinedHeight: BlockHeight?
-        public var isScrollable = true
         public var requiredTransactionConfirmations = 0
         public var latestTransactionList: [TransactionState] = []
         public var transactionList: IdentifiedArrayOf<TransactionState>
@@ -26,13 +25,11 @@ public struct TransactionListReducer: ReducerProtocol {
         
         public init(
             latestMinedHeight: BlockHeight? = nil,
-            isScrollable: Bool = true,
             requiredTransactionConfirmations: Int = 0,
             latestTransactionList: [TransactionState] = [],
             transactionList: IdentifiedArrayOf<TransactionState>
         ) {
             self.latestMinedHeight = latestMinedHeight
-            self.isScrollable = isScrollable
             self.requiredTransactionConfirmations = requiredTransactionConfirmations
             self.latestTransactionList = latestTransactionList
             self.transactionList = transactionList
@@ -216,19 +213,19 @@ extension TransactionListViewStore {
 // MARK: Placeholders
 
 extension TransactionListReducer.State {
-    public static var placeHolder: Self {
+    public static var placeholder: Self {
         .init(transactionList: .mocked)
     }
 
-    public static var emptyPlaceHolder: Self {
+    public static var initial: Self {
         .init(transactionList: [])
     }
 }
 
 extension TransactionListStore {
     public static var placeholder: Store<TransactionListReducer.State, TransactionListReducer.Action> {
-        return Store(
-            initialState: .placeHolder,
+        Store(
+            initialState: .placeholder,
             reducer: TransactionListReducer()
                 .dependency(\.zcashSDKEnvironment, .testnet)
         )
@@ -237,7 +234,7 @@ extension TransactionListStore {
 
 extension IdentifiedArrayOf where Element == TransactionState {
     public static var placeholder: IdentifiedArrayOf<TransactionState> {
-        return .init(
+        .init(
             uniqueElements: (0..<30).map {
                 TransactionState(
                     fee: Zatoshi(10),
@@ -251,7 +248,7 @@ extension IdentifiedArrayOf where Element == TransactionState {
     }
     
     public static var mocked: IdentifiedArrayOf<TransactionState> {
-        return .init(
+        .init(
             uniqueElements: [
                 TransactionState.mockedSent,
                 TransactionState.mockedReceived

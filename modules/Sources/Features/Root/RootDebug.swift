@@ -116,7 +116,7 @@ extension RootReducer {
 // MARK: Placeholders
 
 extension RootReducer.DebugState {
-    public static var placeholder: Self {
+    public static var initial: Self {
         .init()
     }
 }

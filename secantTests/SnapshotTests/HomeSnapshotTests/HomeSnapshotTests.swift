@@ -39,10 +39,10 @@ class HomeSnapshotTests: XCTestCase {
 
         let store = HomeStore(
             initialState: .init(
-                scanState: .placeholder,
+                scanState: .initial,
                 shieldedBalance: balance.redacted,
-                synchronizerStatusSnapshot: .default,
-                walletConfig: .default,
+                synchronizerStatusSnapshot: .initial,
+                walletConfig: .initial,
                 transactionListState: .init(transactionList: IdentifiedArrayOf(uniqueElements: transactionList))
             ),
             reducer: HomeReducer(networkType: .testnet)

@@ -54,7 +54,7 @@ class SettingsTests: XCTestCase {
         let store = TestStore(
             initialState: SettingsReducer.State(
                 phraseDisplayState: RecoveryPhraseDisplayReducer.State(phrase: nil),
-                privateDataConsentState: .placeholder
+                privateDataConsentState: .initial
             ),
             reducer: SettingsReducer(networkType: .testnet)
         )
@@ -73,7 +73,7 @@ class SettingsTests: XCTestCase {
     
     func testBackupWalletAccessRequest_AuthenticateFailedPath() async throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: SettingsReducer(networkType: .testnet)
         )
 

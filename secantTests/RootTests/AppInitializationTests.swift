@@ -22,24 +22,12 @@ class AppInitializationTests: XCTestCase {
         // setup the store and environment to be fully mocked
         let recoveryPhrase = RecoveryPhrase(words: try MnemonicClient.mock.randomMnemonicWords().map { $0.redacted })
 
-        var defaultRawFlags = WalletConfig.default.flags
+        var defaultRawFlags = WalletConfig.initial.flags
         defaultRawFlags[.testBackupPhraseFlow] = true
         let walletConfig = WalletConfig(flags: defaultRawFlags)
 
-        let appState = RootReducer.State(
-            debugState: .placeholder,
-            destinationState: .placeholder,
-            exportLogsState: .placeholder,
-            onboardingState: .init(
-                walletConfig: .default,
-                importWalletState: .placeholder,
-                securityWarningState: .placeholder
-            ),
-            sandboxState: .placeholder,
-            tabsState: .placeholder,
-            walletConfig: walletConfig,
-            welcomeState: .placeholder
-        )
+        var appState = RootReducer.State.initial
+        appState.walletConfig = walletConfig
 
         let store = TestStore(
             initialState: appState,
@@ -97,7 +85,7 @@ class AppInitializationTests: XCTestCase {
     /// Integration test validating the side effects work together properly when no wallet is stored but database files are present.
     @MainActor func testDidFinishLaunching_to_KeysMissing() async throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
 
@@ -128,7 +116,7 @@ class AppInitializationTests: XCTestCase {
     /// Integration test validating the side effects work together properly when no wallet is stored and no database files are present.
     @MainActor func testDidFinishLaunching_to_Uninitialized() async throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         )
         

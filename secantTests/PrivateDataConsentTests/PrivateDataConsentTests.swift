@@ -13,7 +13,7 @@ import PrivateDataConsent
 final class PrivateDataConsentTests: XCTestCase {
     func testURLsProperlyPrepared() throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: PrivateDataConsentReducer(networkType: .testnet)
         )
         
@@ -28,7 +28,7 @@ final class PrivateDataConsentTests: XCTestCase {
     
     func testExportRequestSet() throws {
         let store = TestStore(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: PrivateDataConsentReducer(networkType: .testnet)
         )
         

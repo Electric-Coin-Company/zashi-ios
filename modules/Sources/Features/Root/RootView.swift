@@ -193,7 +193,7 @@ struct RootView_Previews: PreviewProvider {
         NavigationView {
             RootView(
                 store: RootStore(
-                    initialState: .placeholder,
+                    initialState: .initial,
                     reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
                 ),
                 tokenName: "ZEC",

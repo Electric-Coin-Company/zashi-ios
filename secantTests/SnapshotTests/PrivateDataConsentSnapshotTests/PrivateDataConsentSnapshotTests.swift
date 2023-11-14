@@ -13,7 +13,7 @@ import PrivateDataConsent
 class PrivateDataConsentSnapshotTests: XCTestCase {
     func testPrivateDataConsentSnapshot() throws {
         let store = Store(
-            initialState: .placeholder,
+            initialState: .initial,
             reducer: PrivateDataConsentReducer(networkType: .mainnet)
                 .dependency(\.databaseFiles, .noOp)
         )

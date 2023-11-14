@@ -78,9 +78,9 @@ public struct PlainOnboardingView: View {
         store:
             Store(
                 initialState: OnboardingFlowReducer.State(
-                    walletConfig: .default,
-                    importWalletState: .placeholder,
-                    securityWarningState: .placeholder
+                    walletConfig: .initial,
+                    importWalletState: .initial,
+                    securityWarningState: .initial
                 ),
                 reducer: OnboardingFlowReducer(
                     saplingActivationHeight: 0,

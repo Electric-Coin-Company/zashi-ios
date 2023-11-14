@@ -17,7 +17,6 @@ class TransactionListTests: XCTestCase {
     @MainActor func testSynchronizerSubscription() async throws {
         let store = TestStore(
             initialState: TransactionListReducer.State(
-                isScrollable: true,
                 transactionList: []
             ),
             reducer: TransactionListReducer()
@@ -75,7 +74,6 @@ class TransactionListTests: XCTestCase {
 
         let store = TestStore(
             initialState: TransactionListReducer.State(
-                isScrollable: true,
                 transactionList: identifiedTransactionList
             ),
             reducer: TransactionListReducer()
@@ -143,7 +141,6 @@ class TransactionListTests: XCTestCase {
 
         let store = TestStore(
             initialState: TransactionListReducer.State(
-                isScrollable: true,
                 latestTransactionList: transactionList,
                 transactionList: identifiedTransactionList
             ),
@@ -168,7 +165,6 @@ class TransactionListTests: XCTestCase {
 
         let store = TestStore(
             initialState: TransactionListReducer.State(
-                isScrollable: true,
                 transactionList: []
             ),
             reducer: TransactionListReducer()
@@ -206,7 +202,6 @@ class TransactionListTests: XCTestCase {
 
         let store = TestStore(
             initialState: TransactionListReducer.State(
-                isScrollable: true,
                 transactionList: [transaction]
             ),
             reducer: TransactionListReducer()
@@ -237,7 +232,6 @@ class TransactionListTests: XCTestCase {
 
         let store = TestStore(
             initialState: TransactionListReducer.State(
-                isScrollable: true,
                 transactionList: [transaction]
             ),
             reducer: TransactionListReducer()
@@ -269,7 +263,6 @@ class TransactionListTests: XCTestCase {
 
         let store = TestStore(
             initialState: TransactionListReducer.State(
-                isScrollable: true,
                 transactionList: [transaction]
             ),
             reducer: TransactionListReducer()
@@ -302,7 +295,6 @@ class TransactionListTests: XCTestCase {
 
         let store = TestStore(
             initialState: TransactionListReducer.State(
-                isScrollable: true,
                 transactionList: [transaction]
             ),
             reducer: TransactionListReducer()
@@ -333,7 +325,6 @@ class TransactionListTests: XCTestCase {
 
         let store = TestStore(
             initialState: TransactionListReducer.State(
-                isScrollable: true,
                 transactionList: [transaction]
             ),
             reducer: TransactionListReducer()
@@ -362,7 +353,6 @@ class TransactionListTests: XCTestCase {
 
         let store = TestStore(
             initialState: TransactionListReducer.State(
-                isScrollable: true,
                 transactionList: [transaction]
             ),
             reducer: TransactionListReducer()
@@ -391,7 +381,6 @@ class TransactionListTests: XCTestCase {
 
         let store = TestStore(
             initialState: TransactionListReducer.State(
-                isScrollable: true,
                 transactionList: [transaction]
             ),
             reducer: TransactionListReducer()
@@ -420,7 +409,6 @@ class TransactionListTests: XCTestCase {
 
         let store = TestStore(
             initialState: TransactionListReducer.State(
-                isScrollable: true,
                 transactionList: [transaction]
             ),
             reducer: TransactionListReducer()
@@ -456,7 +444,6 @@ class TransactionListTests: XCTestCase {
 
         let store = TestStore(
             initialState: TransactionListReducer.State(
-                isScrollable: true,
                 transactionList: identifiedTransactionList
             ),
             reducer: TransactionListReducer()
@@ -509,7 +496,6 @@ class TransactionListTests: XCTestCase {
 
         let store = TestStore(
             initialState: TransactionListReducer.State(
-                isScrollable: true,
                 transactionList: identifiedTransactionList
             ),
             reducer: TransactionListReducer()
@@ -564,7 +550,6 @@ class TransactionListTests: XCTestCase {
 
         let store = TestStore(
             initialState: TransactionListReducer.State(
-                isScrollable: true,
                 transactionList: identifiedTransactionList
             ),
             reducer: TransactionListReducer()

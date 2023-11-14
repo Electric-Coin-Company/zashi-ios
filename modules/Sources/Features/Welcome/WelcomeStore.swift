@@ -11,7 +11,7 @@ import ComposableArchitecture
 public typealias WelcomeStore = Store<WelcomeReducer.State, WelcomeReducer.Action>
 
 public struct WelcomeReducer: ReducerProtocol {
-    public struct State: Equatable {}
+    public struct State: Equatable { }
     
     public enum Action: Equatable {
         case debugMenuStartup
@@ -28,7 +28,7 @@ public struct WelcomeReducer: ReducerProtocol {
 
 extension WelcomeStore {
     public static var demo = WelcomeStore(
-        initialState: .placeholder,
+        initialState: .initial,
         reducer: WelcomeReducer()
     )
 }
@@ -36,5 +36,5 @@ extension WelcomeStore {
 // MARK: - Placeholders
 
 extension WelcomeReducer.State {
-    public static let placeholder = WelcomeReducer.State()
+    public static let initial = WelcomeReducer.State()
 }

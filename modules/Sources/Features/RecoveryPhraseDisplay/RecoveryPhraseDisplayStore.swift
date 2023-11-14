@@ -106,7 +106,7 @@ extension AlertState where Action == RecoveryPhraseDisplayReducer.Action {
 // MARK: Placeholders
 
 extension RecoveryPhraseDisplayReducer.State {
-    public static let placeholder = RecoveryPhraseDisplayReducer.State(
+    public static let initial = RecoveryPhraseDisplayReducer.State(
         phrase: nil,
         showCopyToBufferAlert: false,
         birthday: nil
@@ -115,7 +115,7 @@ extension RecoveryPhraseDisplayReducer.State {
 
 extension RecoveryPhraseDisplayStore {
     public static let placeholder = RecoveryPhraseDisplayStore(
-        initialState: .placeholder,
+        initialState: .initial,
         reducer: RecoveryPhraseDisplayReducer()
     )
 }

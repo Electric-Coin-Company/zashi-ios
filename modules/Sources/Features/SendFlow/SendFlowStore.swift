@@ -283,25 +283,14 @@ extension SendFlowViewStore {
 // MARK: Placeholders
 
 extension SendFlowReducer.State {
-    public static var placeholder: Self {
+    public static var initial: Self {
         .init(
             addMemoState: true,
             destination: nil,
-            memoState: .placeholder,
-            scanState: .placeholder,
-            transactionAddressInputState: .placeholder,
-            transactionAmountInputState: .amount
-        )
-    }
-
-    public static var emptyPlaceholder: Self {
-        .init(
-            addMemoState: true,
-            destination: nil,
-            memoState: .placeholder,
-            scanState: .placeholder,
-            transactionAddressInputState: .placeholder,
-            transactionAmountInputState: .placeholder
+            memoState: .initial,
+            scanState: .initial,
+            transactionAddressInputState: .initial,
+            transactionAmountInputState: .initial
         )
     }
 }
@@ -310,7 +299,7 @@ extension SendFlowReducer.State {
 extension SendFlowStore {
     public static var placeholder: SendFlowStore {
         return SendFlowStore(
-            initialState: .emptyPlaceholder,
+            initialState: .initial,
             reducer: { SendFlowReducer(networkType: .testnet) }
         )
     }

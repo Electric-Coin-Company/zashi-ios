@@ -16,7 +16,7 @@ import Home
 class TransactionListSnapshotTests: XCTestCase {
     func testFullTransactionListSnapshot() throws {
         let store = TransactionListStore(
-            initialState: .placeHolder,
+            initialState: .placeholder,
             reducer: TransactionListReducer()
                 .dependency(\.sdkSynchronizer, .mock)
                 .dependency(\.mainQueue, .immediate)
