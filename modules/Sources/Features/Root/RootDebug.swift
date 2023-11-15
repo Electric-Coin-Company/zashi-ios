@@ -51,15 +51,11 @@ extension RootReducer {
 
             case .debug(.quickRescan):
                 state.destinationState.destination = .tabs
-                // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
-//                return rewind(policy: .quick, sourceAction: .quickRescan)
-                return .none
+                return rewind(policy: .quick, sourceAction: .quickRescan)
 
             case .debug(.fullRescan):
                 state.destinationState.destination = .tabs
-                // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
-//                return rewind(policy: .birthday, sourceAction: .fullRescan)
-                return .none
+                return rewind(policy: .birthday, sourceAction: .fullRescan)
 
             case let .debug(.rewindDone(error, _)):
                 if let error {
@@ -76,22 +72,20 @@ extension RootReducer {
                 }
                 
             case let .debug(.updateFlag(flag, isEnabled)):
-                // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
-//                return walletConfigProvider.update(flag, !isEnabled)
-//                    .receive(on: mainQueue)
-//                    .map { _ in return Action.debug(.flagUpdated) }
-//                    .eraseToEffect()
-//                    .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
-                return .none
+                return .publisher {
+                    walletConfigProvider.update(flag, !isEnabled)
+                        .receive(on: mainQueue)
+                        .map { _ in return Action.debug(.flagUpdated) }
+                }
+                .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
 
             case .debug(.flagUpdated):
-                // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
-//                return walletConfigProvider.load()
-//                    .receive(on: mainQueue)
-//                    .map { Action.debug(.walletConfigLoaded($0)) }
-//                    .eraseToEffect()
-//                    .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
-                return .none
+                return .publisher {
+                    walletConfigProvider.load()
+                        .receive(on: mainQueue)
+                        .map { Action.debug(.walletConfigLoaded($0)) }
+                }
+                .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
 
             case let .debug(.walletConfigLoaded(walletConfig)):
                 return Effect.send(.updateStateAfterConfigUpdate(walletConfig))
@@ -108,18 +102,18 @@ extension RootReducer {
         }
     }
 
-    // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
-//    private func rewind(policy: RewindPolicy, sourceAction: DebugAction) -> EffectPublisher<RootReducer.Action, Never> {
-//        return sdkSynchronizer.rewind(policy)
-//            .replaceEmpty(with: Void())
-//            .map { _ in return RootReducer.Action.debug(.rewindDone(nil, .debug(sourceAction))) }
-//            .catch { error in
-//                return Just(RootReducer.Action.debug(.rewindDone(error.toZcashError(), .debug(sourceAction)))).eraseToAnyPublisher()
-//            }
-//            .receive(on: mainQueue)
-//            .eraseToEffect()
-//            .cancellable(id: SynchronizerCancelId.timer, cancelInFlight: true)
-//    }
+    private func rewind(policy: RewindPolicy, sourceAction: DebugAction) -> Effect<RootReducer.Action> {
+        Effect.publisher {
+            sdkSynchronizer.rewind(policy)
+                .replaceEmpty(with: Void())
+                .map { _ in return RootReducer.Action.debug(.rewindDone(nil, .debug(sourceAction))) }
+                .catch { error in
+                    return Just(RootReducer.Action.debug(.rewindDone(error.toZcashError(), .debug(sourceAction)))).eraseToAnyPublisher()
+                }
+                .receive(on: mainQueue)
+        }
+        .cancellable(id: SynchronizerCancelId.timer, cancelInFlight: true)
+    }
 }
 
 // MARK: Placeholders
