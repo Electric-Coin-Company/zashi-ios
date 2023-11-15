@@ -37,7 +37,8 @@ class SettingsSnapshotTests: XCTestCase {
                 .dependency(\.appVersion, .liveValue)
         }
         
-        ViewStore(store).send(.onAppear)
+        ViewStore(store, observe: { $0 }).send(.onAppear)
+        
         addAttachments(About(store: store))
     }
 }

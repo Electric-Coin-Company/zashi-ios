@@ -21,7 +21,7 @@ class PrivateDataConsentSnapshotTests: XCTestCase {
 
         addAttachments(PrivateDataConsentView(store: store))
         
-        ViewStore(store).send(.binding(.set(\.isAcknowledged, true)))
+        ViewStore(store, observe: { $0 }).send(.binding(.set(\.$isAcknowledged, true)))
 
         addAttachments(PrivateDataConsentView(store: store))
     }

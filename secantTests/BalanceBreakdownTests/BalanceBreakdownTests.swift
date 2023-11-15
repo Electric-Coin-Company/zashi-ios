@@ -15,7 +15,7 @@ import BalanceBreakdown
 @testable import secant_testnet
 
 class BalanceBreakdownTests: XCTestCase {
-    func testOnAppear() throws {
+    @MainActor func testOnAppear() async throws {
         let store = TestStore(
             initialState: .placeholder
         ) {
@@ -26,17 +26,19 @@ class BalanceBreakdownTests: XCTestCase {
         store.dependencies.mainQueue = .immediate
         store.dependencies.numberFormatter = .noOp
         
-        store.send(.onAppear)
+        await store.send(.onAppear)
         
         // expected side effects as a result of .onAppear registration
-        store.receive(.synchronizerStateChanged(.zero))
-        store.receive(.updateLatestBlock) { state in
+        await store.receive(.synchronizerStateChanged(.zero))
+        await store.receive(.updateLatestBlock) { state in
             state.latestBlock = ""
         }
 
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancels the observer of the synchronizer status change.
-        store.send(.onDisappear)
+        await store.send(.onDisappear)
+        
+        await store.finish()
     }
 
     @MainActor func testShieldFundsSucceed() async throws {
@@ -63,6 +65,8 @@ class BalanceBreakdownTests: XCTestCase {
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancels the observer of the synchronizer status change.
         await store.send(.onDisappear)
+        
+        await store.finish()
     }
 
     @MainActor func testShieldFundsFails() async throws {
@@ -89,6 +93,8 @@ class BalanceBreakdownTests: XCTestCase {
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancels the observer of the synchronizer status change.
         await store.send(.onDisappear)
+        
+        await store.finish()
     }
 
     @MainActor func testShieldFundsButtonDisabledWhenNoShieldableFunds() async throws {

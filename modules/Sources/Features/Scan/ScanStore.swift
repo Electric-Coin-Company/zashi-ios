@@ -124,7 +124,7 @@ public struct ScanReducer: Reducer {
                     return .concatenate(
                         Effect.cancel(id: CancelId.timer),
                         .run { send in
-                            try? await Task.sleep(nanoseconds: 1_000_000_000)
+                            try await mainQueue.sleep(for: .seconds(1))
                             await send(.found(code))
                         }
                         .cancellable(id: CancelId.timer, cancelInFlight: true)

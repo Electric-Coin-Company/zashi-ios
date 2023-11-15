@@ -15,6 +15,6 @@ import Home
 
 class NotEnoughFeeSpaceSnapshots: XCTestCase {
     func testNotEnoughFreeSpaceSnapshot() throws {
-        addAttachments(NotEnoughFreeSpaceView(viewStore: ViewStore(HomeStore.placeholder)))
+        addAttachments(NotEnoughFreeSpaceView(viewStore: ViewStore(HomeStore.placeholder, observe: { $0 })))
     }
 }

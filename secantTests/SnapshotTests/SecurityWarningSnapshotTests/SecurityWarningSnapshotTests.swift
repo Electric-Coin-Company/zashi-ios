@@ -22,7 +22,7 @@ class SecurityWarningSnapshotTests: XCTestCase {
 
         addAttachments(SecurityWarningView(store: store))
         
-        ViewStore(store).send(.binding(.set(\.isAcknowledged, true)))
+        ViewStore(store, observe: { $0 }).send(.binding(.set(\.$isAcknowledged, true)))
 
         addAttachments(SecurityWarningView(store: store))
     }

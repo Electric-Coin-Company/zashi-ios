@@ -16,7 +16,7 @@ import Root
 
 @MainActor
 class DeeplinkTests: XCTestCase {
-    func testActionDeeplinkHome_SameDestinationLevel() throws {
+    func testActionDeeplinkHome_SameDestinationLevel() async throws {
         var appState = RootReducer.State.initial
         appState.destinationState.destination = .welcome
         
@@ -26,12 +26,14 @@ class DeeplinkTests: XCTestCase {
             RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         }
         
-        store.send(.destination(.deeplinkHome)) { state in
+        await store.send(.destination(.deeplinkHome)) { state in
             state.destinationState.destination = .tabs
         }
+        
+        await store.finish()
     }
 
-    func testActionDeeplinkHome_GeetingBack() throws {
+    func testActionDeeplinkHome_GeetingBack() async throws {
         var appState = RootReducer.State.initial
         appState.destinationState.destination = .tabs
         
@@ -41,12 +43,14 @@ class DeeplinkTests: XCTestCase {
             RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         }
         
-        store.send(.destination(.deeplinkHome)) { state in
+        await store.send(.destination(.deeplinkHome)) { state in
             state.destinationState.destination = .tabs
         }
+        
+        await store.finish()
     }
     
-    func testActionDeeplinkSend() throws {
+    func testActionDeeplinkSend() async throws {
         var appState = RootReducer.State.initial
         appState.destinationState.destination = .welcome
         
@@ -60,13 +64,15 @@ class DeeplinkTests: XCTestCase {
         let address = "address"
         let memo = "testing some memo"
         
-        store.send(.destination(.deeplinkSend(amount, address, memo))) { state in
+        await store.send(.destination(.deeplinkSend(amount, address, memo))) { state in
             state.destinationState.destination = .tabs
             state.tabsState.selectedTab = .send
             state.tabsState.sendState.amount = amount
             state.tabsState.sendState.address = address
             state.tabsState.sendState.memoState.text = memo.redacted
         }
+        
+        await store.finish()
     }
 
     func testHomeURLParsing() throws {

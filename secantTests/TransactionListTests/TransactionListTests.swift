@@ -163,7 +163,7 @@ class TransactionListTests: XCTestCase {
         await store.finish()
     }
 
-    func testCopyToPasteboard() throws {
+    @MainActor func testCopyToPasteboard() async throws {
         let testPasteboard = PasteboardClient.testPasteboard
 
         let store = TestStore(
@@ -177,18 +177,21 @@ class TransactionListTests: XCTestCase {
         store.dependencies.pasteboard = testPasteboard
 
         let testText = "test text".redacted
-        store.send(.copyToPastboard(testText))
+        
+        await store.send(.copyToPastboard(testText))
 
         XCTAssertEqual(
             testPasteboard.getString()?.data,
             testText.data,
             "WalletEvetns: `testCopyToPasteboard` is expected to match the input `\(testText.data)`"
         )
+        
+        await store.finish()
     }
     
     // MARK: - Expansion
     
-    func testTransactionExpansion() throws {
+    @MainActor func testTransactionExpansion() async throws {
         let id = "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja"
         let transaction = TransactionState(
             memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
@@ -214,12 +217,14 @@ class TransactionListTests: XCTestCase {
 
         store.dependencies.readTransactionsStorage = .noOp
         
-        store.send(.transactionExpandRequested(id)) { state in
+        await store.send(.transactionExpandRequested(id)) { state in
             state.transactionList[0].isExpanded = true
         }
+        
+        await store.finish()
     }
     
-    func testTransactionExpansionMarkedAsRead_receiving() throws {
+    @MainActor func testTransactionExpansionMarkedAsRead_receiving() async throws {
         let id = "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja"
         let transaction = TransactionState(
             memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
@@ -245,13 +250,15 @@ class TransactionListTests: XCTestCase {
 
         store.dependencies.readTransactionsStorage = .noOp
         
-        store.send(.transactionExpandRequested(id)) { state in
+        await store.send(.transactionExpandRequested(id)) { state in
             state.transactionList[0].isExpanded = true
             state.transactionList[0].isMarkedAsRead = true
         }
+        
+        await store.finish()
     }
     
-    func testTransactionExpansionMarkedAsRead_received() throws {
+    @MainActor func testTransactionExpansionMarkedAsRead_received() async throws {
         let id = "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja"
         let transaction = TransactionState(
             memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
@@ -277,13 +284,15 @@ class TransactionListTests: XCTestCase {
 
         store.dependencies.readTransactionsStorage = .noOp
         
-        store.send(.transactionExpandRequested(id)) { state in
+        await store.send(.transactionExpandRequested(id)) { state in
             state.transactionList[0].isExpanded = true
             state.transactionList[0].isMarkedAsRead = true
         }
+        
+        await store.finish()
     }
     
-    func testTransactionExpansionMarkedAsRead_skippedForAlreadyMarked() throws {
+    @MainActor func testTransactionExpansionMarkedAsRead_skippedForAlreadyMarked() async throws {
         let id = "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja"
         let transaction = TransactionState(
             memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
@@ -310,13 +319,16 @@ class TransactionListTests: XCTestCase {
 
         store.dependencies.readTransactionsStorage = .noOp
         
-        store.send(.transactionExpandRequested(id)) { state in
+        await store.send(.transactionExpandRequested(id)) { state in
             state.transactionList[0].isExpanded = true
         }
+        
+        await store.finish()
     }
     
-    func testAddressExpansionRequestedButTransactionIsNot() throws {
+    @MainActor func testAddressExpansionRequestedButTransactionIsNot() async throws {
         let id = "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja"
+        
         let transaction = TransactionState(
             memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
             minedHeight: BlockHeight(1),
@@ -339,12 +351,16 @@ class TransactionListTests: XCTestCase {
             TransactionListReducer()
         }
 
-        store.send(.transactionAddressExpandRequested(id)) { state in
+        store.dependencies.readTransactionsStorage = .noOp
+        
+        await store.send(.transactionAddressExpandRequested(id)) { state in
             state.transactionList[0].isExpanded = true
         }
+        
+        await store.finish()
     }
     
-    func testAddressExpansion() throws {
+    @MainActor func testAddressExpansion() async throws {
         let id = "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja"
         let transaction = TransactionState(
             memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
@@ -368,12 +384,14 @@ class TransactionListTests: XCTestCase {
             TransactionListReducer()
         }
 
-        store.send(.transactionAddressExpandRequested(id)) { state in
+        await store.send(.transactionAddressExpandRequested(id)) { state in
             state.transactionList[0].isAddressExpanded = true
         }
+        
+        await store.finish()
     }
     
-    func testIdExpansionRequestedButTransactionIsNot() throws {
+    @MainActor func testIdExpansionRequestedButTransactionIsNot() async throws {
         let id = "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja"
         let transaction = TransactionState(
             memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
@@ -397,12 +415,14 @@ class TransactionListTests: XCTestCase {
             TransactionListReducer()
         }
 
-        store.send(.transactionIdExpandRequested(id)) { state in
+        await store.send(.transactionIdExpandRequested(id)) { state in
             state.transactionList[0].isExpanded = true
         }
+        
+        await store.finish()
     }
     
-    func testIdExpansion() throws {
+    @MainActor func testIdExpansion() async throws {
         let id = "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja"
         let transaction = TransactionState(
             memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
@@ -426,9 +446,11 @@ class TransactionListTests: XCTestCase {
             TransactionListReducer()
         }
 
-        store.send(.transactionIdExpandRequested(id)) { state in
+        await store.send(.transactionIdExpandRequested(id)) { state in
             state.transactionList[0].isIdExpanded = true
         }
+        
+        await store.finish()
     }
     
     @MainActor func testSynchronizerStateChanged2Synced_MarkUnread() async throws {

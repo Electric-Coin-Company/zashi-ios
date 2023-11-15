@@ -15,7 +15,7 @@ import Root
 import XCTestDynamicOverlay
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
-    var rootStore = RootStore(
+    let rootStore = RootStore(
         initialState: .initial
     ) {
         RootReducer(
@@ -23,21 +23,21 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             zcashNetwork: TargetConstants.zcashNetwork
         ).logging()
     }
-    
-    lazy var rootViewStore = ViewStore(
-        rootStore,
-        observe: { $0 },
-        removeDuplicates: ==
-    )
 
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
+#if DEBUG
+        // Short-circuit if running unit tests to avoid side-effects from the app running.
+        guard !_XCTIsTesting else { return true }
+#endif
+        
         walletLogger = OSLogger(logLevel: .debug, category: LoggerConstants.walletLogs)
+        
         // set the default behavior for the NSDecimalNumber
         NSDecimalNumber.defaultBehavior = Zatoshi.decimalHandler
-        rootViewStore.send(.initialization(.appDelegate(.didFinishLaunching)))
+        rootStore.send(.initialization(.appDelegate(.didFinishLaunching)))
         return true
     }
 
@@ -60,21 +60,23 @@ struct SecantApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView(
-                store: appDelegate.rootStore,
-                tokenName: TargetConstants.tokenName,
-                networkType: TargetConstants.zcashNetwork.networkType
-            )
-            .font(
-                .custom(FontFamily.Inter.regular.name, size: 17)
-            )
-            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-                appDelegate.rootViewStore.send(.initialization(.appDelegate(.willEnterForeground)))
+            if !_XCTIsTesting {
+                RootView(
+                    store: appDelegate.rootStore,
+                    tokenName: TargetConstants.tokenName,
+                    networkType: TargetConstants.zcashNetwork.networkType
+                )
+                .font(
+                    .custom(FontFamily.Inter.regular.name, size: 17)
+                )
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+                    appDelegate.rootStore.send(.initialization(.appDelegate(.willEnterForeground)))
+                }
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
+                    appDelegate.rootStore.send(.initialization(.appDelegate(.didEnterBackground)))
+                }
+                .preferredColorScheme(.light)
             }
-            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
-                appDelegate.rootViewStore.send(.initialization(.appDelegate(.didEnterBackground)))
-            }
-            .preferredColorScheme(.light)
         }
     }
 }
