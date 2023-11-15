@@ -17,9 +17,10 @@ import Generated
 class TabsTests: XCTestCase {
     func testHomeBalanceRedirectToTheDetailsTab() async {
         let store = TestStore(
-            initialState: .initial,
-            reducer: { TabsReducer(tokenName: "TAZ", networkType: .testnet) }
-        )
+            initialState: .initial
+        ) {
+            TabsReducer(tokenName: "TAZ", networkType: .testnet)
+        }
         
         await store.send(.home(.balanceBreakdown)) { state in
             state.selectedTab = .balances
@@ -28,9 +29,10 @@ class TabsTests: XCTestCase {
     
     func testSelectionOfTheTab() async {
         let store = TestStore(
-            initialState: .initial,
-            reducer: { TabsReducer(tokenName: "TAZ", networkType: .testnet) }
-        )
+            initialState: .initial
+        ) {
+            TabsReducer(tokenName: "TAZ", networkType: .testnet)
+        }
         
         await store.send(.selectedTabChanged(.send)) { state in
             state.selectedTab = .send
@@ -39,9 +41,10 @@ class TabsTests: XCTestCase {
     
     func testSettingDestination() async {
         let store = TestStore(
-            initialState: .initial,
-            reducer: { TabsReducer(tokenName: "TAZ", networkType: .testnet) }
-        )
+            initialState: .initial
+        ) {
+            TabsReducer(tokenName: "TAZ", networkType: .testnet)
+        }
         
         await store.send(.updateDestination(.settings)) { state in
             state.destination = .settings
@@ -53,9 +56,10 @@ class TabsTests: XCTestCase {
         placeholderState.destination = .settings
         
         let store = TestStore(
-            initialState: placeholderState,
-            reducer: { TabsReducer(tokenName: "TAZ", networkType: .testnet) }
-        )
+            initialState: placeholderState
+        ) {
+            TabsReducer(tokenName: "TAZ", networkType: .testnet)
+        }
         
         await store.send(.updateDestination(nil)) { state in
             state.destination = nil
@@ -111,9 +115,10 @@ class TabsTests: XCTestCase {
         placeholderState.selectedTab = .send
         
         let store = TestStore(
-            initialState: placeholderState,
-            reducer: { TabsReducer(tokenName: "TAZ", networkType: .testnet) }
-        )
+            initialState: placeholderState
+        ) {
+            TabsReducer(tokenName: "TAZ", networkType: .testnet)
+        }
         
         await store.send(.send(.sendDone)) { state in
             state.selectedTab = .account

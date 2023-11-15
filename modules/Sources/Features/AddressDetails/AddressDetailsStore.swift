@@ -13,7 +13,7 @@ import Generated
 
 public typealias AddressDetailsStore = Store<AddressDetailsReducer.State, AddressDetailsReducer.Action>
 
-public struct AddressDetailsReducer: ReducerProtocol {
+public struct AddressDetailsReducer: Reducer {
     public struct State: Equatable {
         public var uAddress: UnifiedAddress?
 
@@ -56,7 +56,7 @@ public struct AddressDetailsReducer: ReducerProtocol {
 
     public init() {}
     
-    public func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
+    public func reduce(into state: inout State, action: Action) -> ComposableArchitecture.Effect<Action> {
         switch action {
         case .copySaplingAddressToPastboard:
             pasteboard.setString(state.saplingAddress.redacted)
@@ -85,7 +85,8 @@ extension AddressDetailsReducer.State {
 
 extension AddressDetailsStore {
     public static let placeholder = AddressDetailsStore(
-        initialState: .initial,
-        reducer: AddressDetailsReducer()
-    )
+        initialState: .initial
+    ) {
+        AddressDetailsReducer()
+    }
 }

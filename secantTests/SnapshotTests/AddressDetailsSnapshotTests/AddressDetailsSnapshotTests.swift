@@ -21,10 +21,11 @@ class AddressDetailsSnapshotTests: XCTestCase {
         )
 
         let store = Store(
-            initialState: AddressDetailsReducer.State(uAddress: uAddress),
-            reducer: AddressDetailsReducer()
+            initialState: AddressDetailsReducer.State(uAddress: uAddress)
+        ) {
+            AddressDetailsReducer()
                 .dependency(\.walletConfigProvider, .noOp)
-        )
+        }
         
         addAttachments(AddressDetailsView(store: store))
     }

@@ -20,7 +20,7 @@ import Models
 public typealias BalanceBreakdownStore = Store<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>
 public typealias BalanceBreakdownViewStore = ViewStore<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>
 
-public struct BalanceBreakdownReducer: ReducerProtocol {
+public struct BalanceBreakdownReducer: Reducer {
     private enum CancelId { case timer }
     let networkType: NetworkType
     
@@ -84,7 +84,7 @@ public struct BalanceBreakdownReducer: ReducerProtocol {
         self.networkType = networkType
     }
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case .alert(.presented(let action)):
@@ -98,12 +98,14 @@ public struct BalanceBreakdownReducer: ReducerProtocol {
                 return .none
 
             case .onAppear:
-                return sdkSynchronizer.stateStream()
-                    .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                    .map(BalanceBreakdownReducer.Action.synchronizerStateChanged)
-                    .eraseToEffect()
-                    .cancellable(id: CancelId.timer, cancelInFlight: true)
-
+                // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
+//                return sdkSynchronizer.stateStream()
+//                    .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+//                    .map(BalanceBreakdownReducer.Action.synchronizerStateChanged)
+//                    .eraseToEffect()
+//                    .cancellable(id: CancelId.timer, cancelInFlight: true)
+                return .none
+                
             case .onDisappear:
                 return .cancel(id: CancelId.timer)
 
@@ -198,7 +200,8 @@ extension BalanceBreakdownReducer.State {
 
 extension BalanceBreakdownStore {
     public static let placeholder = BalanceBreakdownStore(
-        initialState: .placeholder,
-        reducer: BalanceBreakdownReducer(networkType: .testnet)
-    )
+        initialState: .placeholder
+    ) {
+        BalanceBreakdownReducer(networkType: .testnet)
+    }
 }

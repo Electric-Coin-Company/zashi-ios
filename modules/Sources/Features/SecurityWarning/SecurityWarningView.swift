@@ -19,7 +19,9 @@ public struct SecurityWarningView: View {
     }
 
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        // TODO: [#909] divide the view co it compiles again
+        // https://github.com/Electric-Coin-Company/zashi-ios/issues/909
+        WithViewStore(store, observe: { $0 }) { viewStore in
             VStack(alignment: .center) {
                 Asset.Assets.zashiLogo.image
                     .resizable()
@@ -33,24 +35,26 @@ public struct SecurityWarningView: View {
                     .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
                     .padding(.bottom, 8)
 
-                Group {
-                    Text(L10n.SecurityWarning.warningPart1a(viewStore.appVersion, viewStore.appBuild))
-                    + Text("[\(L10n.SecurityWarning.warningPart1b)](https://z.cash/privacy-policy/)")
-                        .underline()
-                    + Text(L10n.SecurityWarning.warningPart1c)
-                    + Text(L10n.SecurityWarning.warningPart2)
-                        .font(.custom(FontFamily.Inter.bold.name, size: 16))
-                    + Text(L10n.SecurityWarning.warningPart3)
-                }
-                .font(.custom(FontFamily.Inter.medium.name, size: 16))
-                .accentColor(.black)
+//                Group {
+//                    Text(L10n.SecurityWarning.warningPart1a(viewStore.appVersion, viewStore.appBuild))
+//                    + Text("[\(L10n.SecurityWarning.warningPart1b)](https://z.cash/privacy-policy/)")
+//                        .underline()
+//                    + Text(L10n.SecurityWarning.warningPart1c)
+//                    + Text(L10n.SecurityWarning.warningPart2)
+//                        .font(.custom(FontFamily.Inter.bold.name, size: 16))
+//                    + Text(L10n.SecurityWarning.warningPart3)
+//                }
+//                .font(.custom(FontFamily.Inter.medium.name, size: 16))
+//                .accentColor(.black)
 
                 HStack {
-                    Toggle(isOn: viewStore.binding(\.$isAcknowledged), label: {
-                        Text(L10n.SecurityWarning.acknowledge)
-                            .font(.custom(FontFamily.Inter.medium.name, size: 14))
-                    })
-                    .toggleStyle(CheckboxToggleStyle())
+                    // TODO: [#909] divide the view co it compiles again
+                    // https://github.com/Electric-Coin-Company/zashi-ios/issues/909
+//                    Toggle(isOn: viewStore.binding(\.$isAcknowledged), label: {
+//                        Text(L10n.SecurityWarning.acknowledge)
+//                            .font(.custom(FontFamily.Inter.medium.name, size: 14))
+//                    })
+//                    .toggleStyle(CheckboxToggleStyle())
                     
                     Spacer()
                 }

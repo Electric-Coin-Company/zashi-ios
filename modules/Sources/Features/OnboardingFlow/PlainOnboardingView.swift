@@ -20,7 +20,7 @@ public struct PlainOnboardingView: View {
     }
 
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             VStack {
                 Asset.Assets.welcomeScreenLogo.image
                     .resizable()
@@ -81,11 +81,12 @@ public struct PlainOnboardingView: View {
                     walletConfig: .initial,
                     importWalletState: .initial,
                     securityWarningState: .initial
-                ),
-                reducer: OnboardingFlowReducer(
+                )
+            ) {
+                OnboardingFlowReducer(
                     saplingActivationHeight: 0,
                     zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
                 )
-            )
+            }
     )
 }

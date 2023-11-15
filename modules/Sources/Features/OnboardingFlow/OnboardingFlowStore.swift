@@ -17,7 +17,7 @@ import ZcashLightClientKit
 public typealias OnboardingFlowStore = Store<OnboardingFlowReducer.State, OnboardingFlowReducer.Action>
 public typealias OnboardingFlowViewStore = ViewStore<OnboardingFlowReducer.State, OnboardingFlowReducer.Action>
 
-public struct OnboardingFlowReducer: ReducerProtocol {
+public struct OnboardingFlowReducer: Reducer {
     let saplingActivationHeight: BlockHeight
     let zcashNetwork: ZcashNetwork
 
@@ -59,7 +59,7 @@ public struct OnboardingFlowReducer: ReducerProtocol {
         self.zcashNetwork = zcashNetwork
     }
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         Scope(state: \.importWalletState, action: /Action.importWallet) {
             ImportWalletReducer(saplingActivationHeight: saplingActivationHeight)
         }

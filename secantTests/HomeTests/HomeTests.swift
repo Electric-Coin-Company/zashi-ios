@@ -28,9 +28,10 @@ class HomeTests: XCTestCase {
                 synchronizerStatusSnapshot: mockSnapshot,
                 walletConfig: .initial,
                 transactionListState: .initial
-            ),
-            reducer: HomeReducer(networkType: .testnet)
-        )
+            )
+        ) {
+            HomeReducer(networkType: .testnet)
+        }
 
         XCTAssertTrue(store.state.isSendButtonDisabled)
     }
@@ -39,9 +40,10 @@ class HomeTests: XCTestCase {
     /// The integration tests make sure registrations and side effects are properly implemented.
     func testOnAppear() throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: HomeReducer(networkType: .testnet)
-        )
+            initialState: .initial
+        ) {
+            HomeReducer(networkType: .testnet)
+        }
 
         store.dependencies.mainQueue = .immediate
         store.dependencies.diskSpaceChecker = .mockEmptyDisk
@@ -63,9 +65,10 @@ class HomeTests: XCTestCase {
 
     func testOnAppear_notEnoughSpaceOnDisk() throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: HomeReducer(networkType: .testnet)
-        )
+            initialState: .initial
+        ) {
+            HomeReducer(networkType: .testnet)
+        }
 
         store.dependencies.diskSpaceChecker = .mockFullDisk
         store.dependencies.reviewRequest = .noOp
@@ -94,9 +97,10 @@ class HomeTests: XCTestCase {
         state.syncStatus = .error(testError)
         
         let store = TestStore(
-            initialState: .initial,
-            reducer: HomeReducer(networkType: .testnet)
-        )
+            initialState: .initial
+        ) {
+            HomeReducer(networkType: .testnet)
+        }
 
         store.send(.synchronizerStateChanged(state)) { state in
             state.synchronizerStatusSnapshot = errorSnapshot

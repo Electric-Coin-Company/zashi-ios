@@ -20,7 +20,7 @@ import UIComponents
 public typealias SendFlowStore = Store<SendFlowReducer.State, SendFlowReducer.Action>
 public typealias SendFlowViewStore = ViewStore<SendFlowReducer.State, SendFlowReducer.Action>
 
-public struct SendFlowReducer: ReducerProtocol {
+public struct SendFlowReducer: Reducer {
     private enum SyncStatusUpdatesID { case timer }
     let networkType: NetworkType
 
@@ -132,7 +132,7 @@ public struct SendFlowReducer: ReducerProtocol {
         self.networkType = networkType
     }
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         Scope(state: \.memoState, action: /Action.memo) {
             MessageEditorReducer()
         }
@@ -298,10 +298,11 @@ extension SendFlowReducer.State {
 // #if DEBUG // FIX: Issue #306 - Release build is broken
 extension SendFlowStore {
     public static var placeholder: SendFlowStore {
-        return SendFlowStore(
-            initialState: .initial,
-            reducer: { SendFlowReducer(networkType: .testnet) }
-        )
+        SendFlowStore(
+            initialState: .initial
+        ) {
+            SendFlowReducer(networkType: .testnet)
+        }
     }
 }
 // #endif

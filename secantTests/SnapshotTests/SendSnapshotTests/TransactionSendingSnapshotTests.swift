@@ -32,16 +32,15 @@ class SendSnapshotTests: XCTestCase {
         )
 
         let store = Store(
-            initialState: state,
-            reducer: {
-                SendFlowReducer(networkType: .testnet)
-                    .dependency(\.derivationTool, .live())
-                    .dependency(\.mainQueue, DispatchQueue.main.eraseToAnyScheduler())
-                    .dependency(\.numberFormatter, .live())
-                    .dependency(\.walletStorage, .live())
-                    .dependency(\.sdkSynchronizer, .mock)
-            }
-        )
+            initialState: state
+        ) {
+            SendFlowReducer(networkType: .testnet)
+                .dependency(\.derivationTool, .live())
+                .dependency(\.mainQueue, DispatchQueue.main.eraseToAnyScheduler())
+                .dependency(\.numberFormatter, .live())
+                .dependency(\.walletStorage, .live())
+                .dependency(\.sdkSynchronizer, .mock)
+        }
 
         addAttachments(SendFlowView(store: store, tokenName: "ZEC"))
     }

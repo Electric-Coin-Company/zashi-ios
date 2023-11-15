@@ -43,7 +43,7 @@ private struct FeatureFlagWrapper: Identifiable, Equatable, Comparable {
 
 private extension RootView {
     @ViewBuilder func switchOverDestination() -> some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             Group {
                 switch viewStore.destinationState.destination {
                 case .tabs:
@@ -174,13 +174,14 @@ private extension RootView {
                     }
                 }
             }
-            .confirmationDialog(
-                store.scope(
-                    state: \.debugState.rescanDialog,
-                    action: { $0 }
-                ),
-                dismiss: .debug(.cancelRescan)
-            )
+            // TODO: [#908] refactor needed https://github.com/Electric-Coin-Company/zashi-ios/issues/908
+//            .confirmationDialog(
+//                store.scope(
+//                    state: \.debugState.rescanDialog,
+//                    action: { $0 }
+//                ),
+//                dismiss: .debug(.cancelRescan)
+//            )
         }
         .navigationBarTitle(L10n.Root.Debug.navigationTitle)
     }
@@ -193,9 +194,10 @@ struct RootView_Previews: PreviewProvider {
         NavigationView {
             RootView(
                 store: RootStore(
-                    initialState: .initial,
-                    reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-                ),
+                    initialState: .initial
+                ) {
+                    RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+                },
                 tokenName: "ZEC",
                 networkType: .testnet
             )

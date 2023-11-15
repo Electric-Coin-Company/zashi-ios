@@ -16,7 +16,7 @@ import Generated
 public typealias ScanStore = Store<ScanReducer.State, ScanReducer.Action>
 public typealias ScanViewStore = ViewStore<ScanReducer.State, ScanReducer.Action>
 
-public struct ScanReducer: ReducerProtocol {
+public struct ScanReducer: Reducer {
     private enum CancelId { case timer }
     let networkType: NetworkType
 
@@ -77,7 +77,7 @@ public struct ScanReducer: ReducerProtocol {
     }
 
     // swiftlint:disable:next cyclomatic_complexity
-    public var body: some ReducerProtocolOf<Self> {
+    public var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
             case .alert(.presented(let action)):
@@ -122,11 +122,12 @@ public struct ScanReducer: ReducerProtocol {
                     // once valid URI is scanned we want to start the timer to deliver the code
                     // any new code cancels the schedule and fires new one
                     return .concatenate(
-                        EffectTask.cancel(id: CancelId.timer),
-                        Effect.send(.found(code))
-                            .delay(for: 1.0, scheduler: mainQueue)
-                            .eraseToEffect()
-                            .cancellable(id: CancelId.timer, cancelInFlight: true)
+                        Effect.cancel(id: CancelId.timer)
+                        // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
+//                        Effect.send(.found(code))
+//                            .delay(for: 1.0, scheduler: mainQueue)
+//                            .eraseToEffect()
+//                            .cancellable(id: CancelId.timer, cancelInFlight: true)
                     )
                 } else {
                     state.scanStatus = .failed
@@ -169,7 +170,8 @@ extension ScanReducer.State {
 
 extension ScanStore {
     public static let placeholder = ScanStore(
-        initialState: .initial,
-        reducer: ScanReducer(networkType: .testnet)
-    )
+        initialState: .initial
+    ) {
+        ScanReducer(networkType: .testnet)
+    }
 }

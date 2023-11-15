@@ -15,7 +15,7 @@ public struct SettingsView: View {
     }
     
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             VStack {
                 Button(L10n.Settings.recoveryPhrase.uppercased()) {
                     viewStore.send(.backupWalletAccessRequest)

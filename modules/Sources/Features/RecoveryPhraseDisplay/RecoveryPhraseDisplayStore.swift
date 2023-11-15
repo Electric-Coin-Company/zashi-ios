@@ -18,7 +18,7 @@ import NumberFormatter
 public typealias RecoveryPhraseDisplayStore = Store<RecoveryPhraseDisplayReducer.State, RecoveryPhraseDisplayReducer.Action>
 public typealias RecoveryPhraseDisplayViewStore = ViewStore<RecoveryPhraseDisplayReducer.State, RecoveryPhraseDisplayReducer.Action>
 
-public struct RecoveryPhraseDisplayReducer: ReducerProtocol {
+public struct RecoveryPhraseDisplayReducer: Reducer {
     public struct State: Equatable {
         @PresentationState public var alert: AlertState<Action>?
         public var phrase: RecoveryPhrase?
@@ -50,7 +50,7 @@ public struct RecoveryPhraseDisplayReducer: ReducerProtocol {
 
     public init() {}
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case .onAppear:
@@ -115,7 +115,8 @@ extension RecoveryPhraseDisplayReducer.State {
 
 extension RecoveryPhraseDisplayStore {
     public static let placeholder = RecoveryPhraseDisplayStore(
-        initialState: .initial,
-        reducer: RecoveryPhraseDisplayReducer()
-    )
+        initialState: .initial
+    ) {
+        RecoveryPhraseDisplayReducer()
+    }
 }

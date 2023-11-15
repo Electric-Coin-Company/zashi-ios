@@ -100,9 +100,10 @@ class RootTests: XCTestCase {
 
     func testRespondToWalletInitializationState_Uninitialized() throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: .initial
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
 
         store.dependencies.mainQueue = Self.testScheduler.eraseToAnyScheduler()
 
@@ -118,9 +119,10 @@ class RootTests: XCTestCase {
 
     func testRespondToWalletInitializationState_KeysMissing() throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: .initial
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
         
         store.send(.initialization(.respondToWalletInitializationState(.keysMissing))) { state in
             state.appInitializationState = .keysMissing
@@ -133,9 +135,10 @@ class RootTests: XCTestCase {
         let zcashError = ZcashError.unknown(walletStorageError)
 
         let store = TestStore(
-            initialState: .initial,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: .initial
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
         
         store.dependencies.walletStorage = .noOp
         store.dependencies.walletStorage.exportWallet = { throw walletStorageError }
@@ -162,9 +165,10 @@ class RootTests: XCTestCase {
         let zcashError = ZcashError.unknown(walletStorageError)
 
         let store = TestStore(
-            initialState: .initial,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: .initial
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
         
         store.dependencies.walletStorage = .noOp
         store.dependencies.walletStorage.exportWallet = { throw walletStorageError }
@@ -186,9 +190,10 @@ class RootTests: XCTestCase {
     
     func testInitializationSuccessfullyDone() throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: .initial
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
         
         // swiftlint:disable line_length
         let uAddress = try UnifiedAddress(encoding: "utest1zkkkjfxkamagznjr6ayemffj2d2gacdwpzcyw669pvg06xevzqslpmm27zjsctlkstl2vsw62xrjktmzqcu4yu9zdhdxqz3kafa4j2q85y6mv74rzjcgjg8c0ytrg7dwyzwtgnuc76h", network: .testnet

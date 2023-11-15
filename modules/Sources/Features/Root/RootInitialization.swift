@@ -41,9 +41,11 @@ extension RootReducer {
                 return .none
                 
             case .initialization(.appDelegate(.willEnterForeground)):
-                return Effect.send(.initialization(.retryStart))
-                    .delay(for: 1.0, scheduler: mainQueue)
-                    .eraseToEffect()
+                // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
+//                return Effect.send(.initialization(.retryStart))
+//                    .delay(for: 1.0, scheduler: mainQueue)
+//                    .eraseToEffect()
+                return .none
                 
             case .initialization(.synchronizerStartFailed):
                 return .none
@@ -64,16 +66,20 @@ extension RootReducer {
             case .initialization(.appDelegate(.didFinishLaunching)):
                 // TODO: [#704], trigger the review request logic when approved by the team,
                 // https://github.com/zcash/secant-ios-wallet/issues/704
-                return Effect.send(.initialization(.initialSetups))
-                    .delay(for: 0.02, scheduler: mainQueue)
-                    .eraseToEffect()
+                // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
+//                return Effect.send(.initialization(.initialSetups))
+//                    .delay(for: 0.02, scheduler: mainQueue)
+//                    .eraseToEffect()
+                return .none
 
             case .initialization(.checkWalletConfig):
-                return walletConfigProvider.load()
-                    .receive(on: mainQueue)
-                    .map(RootReducer.Action.walletConfigLoaded)
-                    .eraseToEffect()
-                    .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
+                // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
+//                return walletConfigProvider.load()
+//                    .receive(on: mainQueue)
+//                    .map(RootReducer.Action.walletConfigLoaded)
+//                    .eraseToEffect()
+//                    .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
+                return .none
 
             case .walletConfigLoaded(let walletConfig):
                 if walletConfig == WalletConfig.initial {
@@ -93,10 +99,11 @@ extension RootReducer {
                 LoggerProxy.event(".appDelegate(.didFinishLaunching)")
                 /// We need to fetch data from keychain, in order to be 100% sure the keychain can be read we delay the check a bit
                 return .concatenate(
-                    Effect.send(.initialization(.configureCrashReporter)),
-                    Effect.send(.initialization(.checkWalletInitialization))
-                        .delay(for: 0.02, scheduler: mainQueue)
-                        .eraseToEffect()
+                    Effect.send(.initialization(.configureCrashReporter))
+                    // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
+//                    Effect.send(.initialization(.checkWalletInitialization))
+//                        .delay(for: 0.02, scheduler: mainQueue)
+//                        .eraseToEffect()
                 )
 
                 /// Evaluate the wallet's state based on keychain keys and database files presence
@@ -129,10 +136,12 @@ extension RootReducer {
                     )
                 case .uninitialized:
                     state.appInitializationState = .uninitialized
-                    return Effect.send(.destination(.updateDestination(.onboarding)))
-                        .delay(for: 3, scheduler: mainQueue)
-                        .eraseToEffect()
-                        .cancellable(id: CancelId.timer, cancelInFlight: true)
+                    // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
+//                    return Effect.send(.destination(.updateDestination(.onboarding)))
+//                        .delay(for: 3, scheduler: mainQueue)
+//                        .eraseToEffect()
+//                        .cancellable(id: CancelId.timer, cancelInFlight: true)
+                    return .none
                 }
 
                 /// Stored wallet is present, database files may or may not be present, trying to initialize app state variables and environments.
@@ -180,10 +189,12 @@ extension RootReducer {
 
                 state.appInitializationState = .initialized
 
-                return Effect.send(.destination(.updateDestination(.tabs)))
-                    .delay(for: 3, scheduler: mainQueue)
-                    .eraseToEffect()
-                    .cancellable(id: CancelId.timer, cancelInFlight: true)
+                // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
+//                return Effect.send(.destination(.updateDestination(.tabs)))
+//                    .delay(for: 3, scheduler: mainQueue)
+//                    .eraseToEffect()
+//                    .cancellable(id: CancelId.timer, cancelInFlight: true)
+                return .none
 
             case .initialization(.nukeWalletRequest):
                 state.alert = AlertState.wipeRequest()
@@ -193,13 +204,15 @@ extension RootReducer {
                 guard let wipePublisher = sdkSynchronizer.wipe() else {
                     return Effect.send(.nukeWalletFailed)
                 }
-                return wipePublisher
-                    .replaceEmpty(with: Void())
-                    .map { _ in return RootReducer.Action.nukeWalletSucceeded }
-                    .replaceError(with: RootReducer.Action.nukeWalletFailed)
-                    .receive(on: mainQueue)
-                    .eraseToEffect()
-                    .cancellable(id: SynchronizerCancelId.timer, cancelInFlight: true)
+                // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
+//                return wipePublisher
+//                    .replaceEmpty(with: Void())
+//                    .map { _ in return RootReducer.Action.nukeWalletSucceeded }
+//                    .replaceError(with: RootReducer.Action.nukeWalletFailed)
+//                    .receive(on: mainQueue)
+//                    .eraseToEffect()
+//                    .cancellable(id: SynchronizerCancelId.timer, cancelInFlight: true)
+                return .none
 
             case .nukeWalletSucceeded:
                 state = .initial
@@ -215,7 +228,7 @@ extension RootReducer {
                 )
 
             case .nukeWalletFailed:
-                let backDestination: EffectTask<RootReducer.Action>
+                let backDestination: Effect<RootReducer.Action>
                 if let previousDestination = state.destinationState.previousDestination {
                     backDestination = Effect.send(.destination(.updateDestination(previousDestination)))
                 } else {
@@ -229,7 +242,7 @@ extension RootReducer {
 
             case .welcome(.debugMenuStartup), .tabs(.home(.debugMenuStartup)):
                 return .concatenate(
-                    EffectTask.cancel(id: CancelId.timer),
+                    Effect.cancel(id: CancelId.timer),
                     Effect.send(.destination(.updateDestination(.startup)))
                 )
 

@@ -14,10 +14,11 @@ import ZcashLightClientKit
 class SecurityWarningSnapshotTests: XCTestCase {
     func testSecurityWarningSnapshot() throws {
         let store = Store(
-            initialState: .initial,
-            reducer: SecurityWarningReducer(zcashNetwork: ZcashNetworkBuilder.network(for: .mainnet))
+            initialState: .initial
+        ) {
+            SecurityWarningReducer(zcashNetwork: ZcashNetworkBuilder.network(for: .mainnet))
                 .dependency(\.appVersion, .mock)
-        )
+        }
 
         addAttachments(SecurityWarningView(store: store))
         

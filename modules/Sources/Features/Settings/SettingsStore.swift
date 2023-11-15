@@ -16,7 +16,7 @@ import PrivateDataConsent
 public typealias SettingsStore = Store<SettingsReducer.State, SettingsReducer.Action>
 public typealias SettingsViewStore = ViewStore<SettingsReducer.State, SettingsReducer.Action>
 
-public struct SettingsReducer: ReducerProtocol {
+public struct SettingsReducer: Reducer {
     let networkType: NetworkType
 
     public struct State: Equatable {
@@ -72,7 +72,7 @@ public struct SettingsReducer: ReducerProtocol {
         self.networkType = networkType
     }
 
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case .onAppear:
@@ -219,9 +219,10 @@ extension SettingsReducer.State {
 
 extension SettingsStore {
     public static let placeholder = SettingsStore(
-        initialState: .initial,
-        reducer: SettingsReducer(networkType: .testnet)
-    )
+        initialState: .initial
+    ) {
+        SettingsReducer(networkType: .testnet)
+    }
     
     public static let demo = SettingsStore(
         initialState: .init(
@@ -233,7 +234,8 @@ extension SettingsStore {
                 birthday: nil
             ),
             privateDataConsentState: .initial
-        ),
-        reducer: SettingsReducer(networkType: .testnet)
-    )
+        )
+    ) {
+        SettingsReducer(networkType: .testnet)
+    }
 }

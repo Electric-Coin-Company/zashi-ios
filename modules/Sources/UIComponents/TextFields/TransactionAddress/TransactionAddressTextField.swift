@@ -17,7 +17,7 @@ public struct TransactionAddressTextField: View {
     }
     
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             VStack {
                 SingleLineTextField(
                     placeholderText: L10n.Field.TransactionAddress.validZcashAddress,
@@ -54,9 +54,10 @@ struct TransactionAddressTextField_Previews: PreviewProvider {
                         validationType: .floatingPoint,
                         text: "".redacted
                     )
-                ),
-                reducer: TransactionAddressTextFieldReducer(networkType: .testnet)
-            )
+                )
+            ) {
+                TransactionAddressTextFieldReducer(networkType: .testnet)
+            }
         )
         .preferredColorScheme(.light)
         .padding(.horizontal, 50)

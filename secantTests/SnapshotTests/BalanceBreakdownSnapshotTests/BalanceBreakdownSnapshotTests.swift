@@ -22,11 +22,12 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
                 shieldingFunds: false,
                 synchronizerStatusSnapshot: .initial,
                 transparentBalance: WalletBalance(verified: Zatoshi(850_000_000), total: Zatoshi(850_000_000)).redacted
-            ),
-            reducer: BalanceBreakdownReducer(networkType: .testnet)
+            )
+        ) {
+            BalanceBreakdownReducer(networkType: .testnet)
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.mainQueue, .immediate)
-        )
+        }
         
         addAttachments(BalanceBreakdownView(store: store, tokenName: "ZEC"))
     }

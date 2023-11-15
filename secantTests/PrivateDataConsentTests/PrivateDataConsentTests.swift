@@ -13,9 +13,10 @@ import PrivateDataConsent
 final class PrivateDataConsentTests: XCTestCase {
     func testURLsProperlyPrepared() throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: PrivateDataConsentReducer(networkType: .testnet)
-        )
+            initialState: .initial
+        ) {
+            PrivateDataConsentReducer(networkType: .testnet)
+        }
         
         let URL = URL(string: "https://electriccoin.co")!
         
@@ -28,9 +29,10 @@ final class PrivateDataConsentTests: XCTestCase {
     
     func testExportRequestSet() throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: PrivateDataConsentReducer(networkType: .testnet)
-        )
+            initialState: .initial
+        ) {
+            PrivateDataConsentReducer(networkType: .testnet)
+        }
         
         store.send(.exportRequested) { state in
             state.isExporting = true
@@ -42,9 +44,10 @@ final class PrivateDataConsentTests: XCTestCase {
             initialState: PrivateDataConsentReducer.State(
                 isExporting: true,
                 dataDbURL: []
-            ),
-            reducer: PrivateDataConsentReducer(networkType: .testnet)
-        )
+            )
+        ) {
+            PrivateDataConsentReducer(networkType: .testnet)
+        }
         
         store.send(.shareFinished) { state in
             state.isExporting = false

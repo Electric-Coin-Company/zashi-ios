@@ -18,9 +18,10 @@ class TransactionListTests: XCTestCase {
         let store = TestStore(
             initialState: TransactionListReducer.State(
                 transactionList: []
-            ),
-            reducer: TransactionListReducer()
-        )
+            )
+        ) {
+            TransactionListReducer()
+        }
 
         store.dependencies.sdkSynchronizer = .mocked()
         store.dependencies.sdkSynchronizer.getAllTransactions = { [] }
@@ -75,9 +76,10 @@ class TransactionListTests: XCTestCase {
         let store = TestStore(
             initialState: TransactionListReducer.State(
                 transactionList: identifiedTransactionList
-            ),
-            reducer: TransactionListReducer()
-        )
+            )
+        ) {
+            TransactionListReducer()
+        }
 
         store.dependencies.mainQueue = .immediate
         store.dependencies.sdkSynchronizer = .mocked()
@@ -143,9 +145,10 @@ class TransactionListTests: XCTestCase {
             initialState: TransactionListReducer.State(
                 latestTransactionList: transactionList,
                 transactionList: identifiedTransactionList
-            ),
-            reducer: TransactionListReducer()
-        )
+            )
+        ) {
+            TransactionListReducer()
+        }
 
         store.dependencies.mainQueue = .immediate
         store.dependencies.sdkSynchronizer = .mocked()
@@ -166,10 +169,11 @@ class TransactionListTests: XCTestCase {
         let store = TestStore(
             initialState: TransactionListReducer.State(
                 transactionList: []
-            ),
-            reducer: TransactionListReducer()
-        )
-            
+            )
+        ) {
+            TransactionListReducer()
+        }
+
         store.dependencies.pasteboard = testPasteboard
 
         let testText = "test text".redacted
@@ -203,10 +207,11 @@ class TransactionListTests: XCTestCase {
         let store = TestStore(
             initialState: TransactionListReducer.State(
                 transactionList: [transaction]
-            ),
-            reducer: TransactionListReducer()
-        )
-        
+            )
+        ) {
+            TransactionListReducer()
+        }
+
         store.dependencies.readTransactionsStorage = .noOp
         
         store.send(.transactionExpandRequested(id)) { state in
@@ -233,10 +238,11 @@ class TransactionListTests: XCTestCase {
         let store = TestStore(
             initialState: TransactionListReducer.State(
                 transactionList: [transaction]
-            ),
-            reducer: TransactionListReducer()
-        )
-        
+            )
+        ) {
+            TransactionListReducer()
+        }
+
         store.dependencies.readTransactionsStorage = .noOp
         
         store.send(.transactionExpandRequested(id)) { state in
@@ -264,10 +270,11 @@ class TransactionListTests: XCTestCase {
         let store = TestStore(
             initialState: TransactionListReducer.State(
                 transactionList: [transaction]
-            ),
-            reducer: TransactionListReducer()
-        )
-        
+            )
+        ) {
+            TransactionListReducer()
+        }
+
         store.dependencies.readTransactionsStorage = .noOp
         
         store.send(.transactionExpandRequested(id)) { state in
@@ -296,10 +303,11 @@ class TransactionListTests: XCTestCase {
         let store = TestStore(
             initialState: TransactionListReducer.State(
                 transactionList: [transaction]
-            ),
-            reducer: TransactionListReducer()
-        )
-        
+            )
+        ) {
+            TransactionListReducer()
+        }
+
         store.dependencies.readTransactionsStorage = .noOp
         
         store.send(.transactionExpandRequested(id)) { state in
@@ -326,10 +334,11 @@ class TransactionListTests: XCTestCase {
         let store = TestStore(
             initialState: TransactionListReducer.State(
                 transactionList: [transaction]
-            ),
-            reducer: TransactionListReducer()
-        )
-        
+            )
+        ) {
+            TransactionListReducer()
+        }
+
         store.send(.transactionAddressExpandRequested(id)) { state in
             state.transactionList[0].isExpanded = true
         }
@@ -354,10 +363,11 @@ class TransactionListTests: XCTestCase {
         let store = TestStore(
             initialState: TransactionListReducer.State(
                 transactionList: [transaction]
-            ),
-            reducer: TransactionListReducer()
-        )
-        
+            )
+        ) {
+            TransactionListReducer()
+        }
+
         store.send(.transactionAddressExpandRequested(id)) { state in
             state.transactionList[0].isAddressExpanded = true
         }
@@ -382,10 +392,11 @@ class TransactionListTests: XCTestCase {
         let store = TestStore(
             initialState: TransactionListReducer.State(
                 transactionList: [transaction]
-            ),
-            reducer: TransactionListReducer()
-        )
-        
+            )
+        ) {
+            TransactionListReducer()
+        }
+
         store.send(.transactionIdExpandRequested(id)) { state in
             state.transactionList[0].isExpanded = true
         }
@@ -410,10 +421,11 @@ class TransactionListTests: XCTestCase {
         let store = TestStore(
             initialState: TransactionListReducer.State(
                 transactionList: [transaction]
-            ),
-            reducer: TransactionListReducer()
-        )
-        
+            )
+        ) {
+            TransactionListReducer()
+        }
+
         store.send(.transactionIdExpandRequested(id)) { state in
             state.transactionList[0].isIdExpanded = true
         }
@@ -445,9 +457,10 @@ class TransactionListTests: XCTestCase {
         let store = TestStore(
             initialState: TransactionListReducer.State(
                 transactionList: identifiedTransactionList
-            ),
-            reducer: TransactionListReducer()
-        )
+            )
+        ) {
+            TransactionListReducer()
+        }
 
         store.dependencies.mainQueue = .immediate
         store.dependencies.sdkSynchronizer = .mocked()
@@ -497,9 +510,10 @@ class TransactionListTests: XCTestCase {
         let store = TestStore(
             initialState: TransactionListReducer.State(
                 transactionList: identifiedTransactionList
-            ),
-            reducer: TransactionListReducer()
-        )
+            )
+        ) {
+            TransactionListReducer()
+        }
 
         store.dependencies.mainQueue = .immediate
         store.dependencies.sdkSynchronizer = .mocked()
@@ -551,9 +565,10 @@ class TransactionListTests: XCTestCase {
         let store = TestStore(
             initialState: TransactionListReducer.State(
                 transactionList: identifiedTransactionList
-            ),
-            reducer: TransactionListReducer()
-        )
+            )
+        ) {
+            TransactionListReducer()
+        }
 
         store.dependencies.mainQueue = .immediate
         store.dependencies.sdkSynchronizer = .mocked()

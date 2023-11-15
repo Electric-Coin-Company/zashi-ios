@@ -21,9 +21,10 @@ class AddressDetailsTests: XCTestCase {
         let uAddress = try UnifiedAddress(encoding: uAddressEncoding, network: .testnet)
 
         let store = TestStore(
-            initialState: AddressDetailsReducer.State(uAddress: uAddress),
-            reducer: AddressDetailsReducer()
-        )
+            initialState: AddressDetailsReducer.State(uAddress: uAddress)
+        ) {
+            AddressDetailsReducer()
+        }
 
         store.dependencies.pasteboard = testPasteboard
 
@@ -43,9 +44,10 @@ class AddressDetailsTests: XCTestCase {
         let uAddress = try UnifiedAddress(encoding: uAddressEncoding, network: .testnet)
 
         let store = TestStore(
-            initialState: AddressDetailsReducer.State(uAddress: uAddress),
-            reducer: AddressDetailsReducer()
-        )
+            initialState: AddressDetailsReducer.State(uAddress: uAddress)
+        ) {
+            AddressDetailsReducer()
+        }
         
         store.dependencies.pasteboard = testPasteboard
 
@@ -65,9 +67,10 @@ class AddressDetailsTests: XCTestCase {
         let uAddress = try UnifiedAddress(encoding: uAddressEncoding, network: .testnet)
 
         let store = TestStore(
-            initialState: AddressDetailsReducer.State(uAddress: uAddress),
-            reducer: AddressDetailsReducer()
-        )
+            initialState: AddressDetailsReducer.State(uAddress: uAddress)
+        ) {
+            AddressDetailsReducer()
+        }
         
         store.dependencies.pasteboard = testPasteboard
 

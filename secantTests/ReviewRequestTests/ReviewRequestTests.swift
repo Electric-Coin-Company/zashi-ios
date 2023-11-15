@@ -25,9 +25,10 @@ final class ReviewRequestTests: XCTestCase {
         }
         
         let store = TestStore(
-            initialState: .initial,
-            reducer: HomeReducer(networkType: .testnet)
-        )
+            initialState: .initial
+        ) {
+            HomeReducer(networkType: .testnet)
+        }
         
         let now = Date.now
         let userDefaultsClient: UserDefaultsClient = .live(userDefaults: userDefaults)
@@ -61,9 +62,10 @@ final class ReviewRequestTests: XCTestCase {
         }
 
         let store = TestStore(
-            initialState: .initial,
-            reducer: HomeReducer(networkType: .testnet)
-        )
+            initialState: .initial
+        ) {
+            HomeReducer(networkType: .testnet)
+        }
 
         let now = Date.now
         let userDefaultsClient: UserDefaultsClient = .live(userDefaults: userDefaults)

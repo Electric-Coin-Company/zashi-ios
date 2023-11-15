@@ -12,7 +12,7 @@ import ZcashSDKEnvironment
 public typealias TransactionListStore = Store<TransactionListReducer.State, TransactionListReducer.Action>
 public typealias TransactionListViewStore = ViewStore<TransactionListReducer.State, TransactionListReducer.Action>
 
-public struct TransactionListReducer: ReducerProtocol {
+public struct TransactionListReducer: Reducer {
     private enum CancelStateId { case timer }
     private enum CancelEventId { case timer }
 
@@ -58,27 +58,28 @@ public struct TransactionListReducer: ReducerProtocol {
     public init() {}
     
     // swiftlint:disable:next cyclomatic_complexity
-    public func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
+    public func reduce(into state: inout State, action: Action) -> ComposableArchitecture.Effect<Action> {
         switch action {
         case .onAppear:
             state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
             
             return .merge(
-                sdkSynchronizer.stateStream()
-                    .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                    .map { TransactionListReducer.Action.synchronizerStateChanged($0.syncStatus) }
-                    .eraseToEffect()
-                    .cancellable(id: CancelStateId.timer, cancelInFlight: true),
-                sdkSynchronizer.eventStream()
-                    .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                    .compactMap {
-                        if case SynchronizerEvent.foundTransactions = $0 {
-                            return TransactionListReducer.Action.foundTransactions
-                        }
-                        return nil
-                    }
-                    .eraseToEffect()
-                    .cancellable(id: CancelEventId.timer, cancelInFlight: true),
+                // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
+//                sdkSynchronizer.stateStream()
+//                    .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+//                    .map { TransactionListReducer.Action.synchronizerStateChanged($0.syncStatus) }
+//                    .eraseToEffect()
+//                    .cancellable(id: CancelStateId.timer, cancelInFlight: true),
+//                sdkSynchronizer.eventStream()
+//                    .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+//                    .compactMap {
+//                        if case SynchronizerEvent.foundTransactions = $0 {
+//                            return TransactionListReducer.Action.foundTransactions
+//                        }
+//                        return nil
+//                    }
+//                    .eraseToEffect()
+//                    .cancellable(id: CancelEventId.timer, cancelInFlight: true),
                 .run { send in
                     await send(.updateTransactionList(try await sdkSynchronizer.getAllTransactions()))
                 }
@@ -92,16 +93,16 @@ public struct TransactionListReducer: ReducerProtocol {
 
         case .synchronizerStateChanged(.upToDate):
             state.latestMinedHeight = sdkSynchronizer.latestState().latestBlockHeight
-            return .task {
-                return .updateTransactionList(try await sdkSynchronizer.getAllTransactions())
+            return .run { send in
+                await send(.updateTransactionList(try await sdkSynchronizer.getAllTransactions()))
             }
             
         case .synchronizerStateChanged:
             return .none
         
         case .foundTransactions:
-            return .task {
-                return .updateTransactionList(try await sdkSynchronizer.getAllTransactions())
+            return .run { send in
+                await send(.updateTransactionList(try await sdkSynchronizer.getAllTransactions()))
             }
 
         case .updateTransactionList(let transactionList):
@@ -225,10 +226,11 @@ extension TransactionListReducer.State {
 extension TransactionListStore {
     public static var placeholder: Store<TransactionListReducer.State, TransactionListReducer.Action> {
         Store(
-            initialState: .placeholder,
-            reducer: TransactionListReducer()
+            initialState: .placeholder
+        ) {
+            TransactionListReducer()
                 .dependency(\.zcashSDKEnvironment, .testnet)
-        )
+        }
     }
 }
 

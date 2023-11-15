@@ -34,9 +34,10 @@ class TransactionAmountTextFieldTests: XCTestCase {
                             validationType: .customFloatingPoint(usNumberFormatter),
                             text: "0.002".redacted
                         )
-                ),
-            reducer: { TransactionAmountTextFieldReducer() }
-        )
+                )
+        ) {
+            TransactionAmountTextFieldReducer()
+        }
 
         store.dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
         store.dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
@@ -61,9 +62,10 @@ class TransactionAmountTextFieldTests: XCTestCase {
                             validationType: .floatingPoint,
                             text: "0.002".redacted
                         )
-                ),
-            reducer: { TransactionAmountTextFieldReducer() }
-        )
+                )
+        ) {
+            TransactionAmountTextFieldReducer()
+        }
 
         await store.send(.clearValue) { state in
             state.textFieldState.text = "".redacted
@@ -85,9 +87,10 @@ class TransactionAmountTextFieldTests: XCTestCase {
                             text: "1.0".redacted
                         ),
                     zecPrice: 1000.0
-                ),
-            reducer: { TransactionAmountTextFieldReducer() }
-        )
+                )
+        ) {
+            TransactionAmountTextFieldReducer()
+        }
 
         store.dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
         store.dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
@@ -116,9 +119,10 @@ class TransactionAmountTextFieldTests: XCTestCase {
                             text: "25000".redacted
                         ),
                     zecPrice: 1000.0
-                ),
-            reducer: { TransactionAmountTextFieldReducer() }
-        )
+                )
+        ) {
+            TransactionAmountTextFieldReducer()
+        }
 
         store.dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
         store.dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
@@ -147,9 +151,10 @@ class TransactionAmountTextFieldTests: XCTestCase {
                             text: "1 000".redacted
                         ),
                     zecPrice: 1000.0
-                ),
-            reducer: { TransactionAmountTextFieldReducer() }
-        )
+                )
+        ) {
+            TransactionAmountTextFieldReducer()
+        }
 
         store.dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
         store.dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
@@ -179,9 +184,10 @@ class TransactionAmountTextFieldTests: XCTestCase {
                             text: "5".redacted
                         ),
                     zecPrice: 1000.0
-                ),
-            reducer: { TransactionAmountTextFieldReducer() }
-        )
+                )
+        ) {
+            TransactionAmountTextFieldReducer()
+        }
 
         store.dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
         store.dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
@@ -222,9 +228,10 @@ class TransactionAmountTextFieldTests: XCTestCase {
                             text: "5".redacted
                         ),
                     zecPrice: 1000.0
-                ),
-            reducer: { TransactionAmountTextFieldReducer() }
-        )
+                )
+        ) {
+            TransactionAmountTextFieldReducer()
+        }
 
         store.dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
         store.dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }
@@ -253,9 +260,10 @@ class TransactionAmountTextFieldTests: XCTestCase {
                             text: "5".redacted
                         ),
                     zecPrice: 1000.0
-                ),
-            reducer: { TransactionAmountTextFieldReducer() }
-        )
+                )
+        ) {
+            TransactionAmountTextFieldReducer()
+        }
 
         store.dependencies.numberFormatter.string = { self.usNumberFormatter.string(from: $0) }
         store.dependencies.numberFormatter.number = { self.usNumberFormatter.number(from: $0) }

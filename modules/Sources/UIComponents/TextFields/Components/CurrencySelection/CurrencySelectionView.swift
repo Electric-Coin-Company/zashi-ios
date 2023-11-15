@@ -12,7 +12,7 @@ public struct CurrencySelectionView: View {
     let store: CurrencySelectionStore
 
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             Button(
                 action: { viewStore.send(.swapCurrencyType) },
                 label: {

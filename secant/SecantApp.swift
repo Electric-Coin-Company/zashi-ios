@@ -16,14 +16,17 @@ import XCTestDynamicOverlay
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
     var rootStore = RootStore(
-        initialState: .initial,
-        reducer: RootReducer(
+        initialState: .initial
+    ) {
+        RootReducer(
             tokenName: TargetConstants.tokenName,
             zcashNetwork: TargetConstants.zcashNetwork
         ).logging()
-    )
+    }
+    
     lazy var rootViewStore = ViewStore(
-        rootStore.stateless,
+        rootStore,
+        observe: { $0 },
         removeDuplicates: ==
     )
 

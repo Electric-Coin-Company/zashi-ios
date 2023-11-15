@@ -33,9 +33,10 @@ public struct SandboxView: View {
         case .send:
             SendFlowView(
                 store: .init(
-                    initialState: .initial,
-                    reducer: SendFlowReducer(networkType: networkType)
-                ),
+                    initialState: .initial
+                ) {
+                    SendFlowReducer(networkType: networkType)
+                },
                 tokenName: tokenName
             )
         case .recoveryPhraseDisplay:
@@ -52,7 +53,7 @@ public struct SandboxView: View {
     }
     
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             VStack {
                 List {
                     Section(header: Text("Navigation Stack Destinations")) {

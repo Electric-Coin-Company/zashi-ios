@@ -21,9 +21,10 @@ class DeeplinkTests: XCTestCase {
         appState.destinationState.destination = .welcome
         
         let store = TestStore(
-            initialState: appState,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: appState
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
         
         store.send(.destination(.deeplinkHome)) { state in
             state.destinationState.destination = .tabs
@@ -35,9 +36,10 @@ class DeeplinkTests: XCTestCase {
         appState.destinationState.destination = .tabs
         
         let store = TestStore(
-            initialState: appState,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: appState
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
         
         store.send(.destination(.deeplinkHome)) { state in
             state.destinationState.destination = .tabs
@@ -49,9 +51,10 @@ class DeeplinkTests: XCTestCase {
         appState.destinationState.destination = .welcome
         
         let store = TestStore(
-            initialState: appState,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: appState
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
         
         let amount = Zatoshi(123_000_000)
         let address = "address"
@@ -82,9 +85,10 @@ class DeeplinkTests: XCTestCase {
         appState.appInitializationState = .initialized
         
         let store = TestStore(
-            initialState: appState,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: appState
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
         
         store.dependencies.deeplink = DeeplinkClient(
             resolveDeeplinkURL: { _, _, _ in Deeplink.Destination.home }
@@ -127,9 +131,10 @@ class DeeplinkTests: XCTestCase {
         appState.appInitializationState = .initialized
         
         let store = TestStore(
-            initialState: appState,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: appState
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
         
         store.dependencies.deeplink = DeeplinkClient(
             resolveDeeplinkURL: { _, _, _ in Deeplink.Destination.send(amount: 123_000_000, address: "address", memo: "some text") }
