@@ -122,12 +122,12 @@ public struct ScanReducer: Reducer {
                     // once valid URI is scanned we want to start the timer to deliver the code
                     // any new code cancels the schedule and fires new one
                     return .concatenate(
-                        Effect.cancel(id: CancelId.timer)
-                        // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
-//                        Effect.send(.found(code))
-//                            .delay(for: 1.0, scheduler: mainQueue)
-//                            .eraseToEffect()
-//                            .cancellable(id: CancelId.timer, cancelInFlight: true)
+                        Effect.cancel(id: CancelId.timer),
+                        .run { send in
+                            try? await Task.sleep(nanoseconds: 1_000_000_000)
+                            await send(.found(code))
+                        }
+                        .cancellable(id: CancelId.timer, cancelInFlight: true)
                     )
                 } else {
                     state.scanStatus = .failed

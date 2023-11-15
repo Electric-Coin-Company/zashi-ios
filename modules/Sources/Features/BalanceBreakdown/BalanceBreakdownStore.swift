@@ -98,13 +98,12 @@ public struct BalanceBreakdownReducer: Reducer {
                 return .none
 
             case .onAppear:
-                // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
-//                return sdkSynchronizer.stateStream()
-//                    .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-//                    .map(BalanceBreakdownReducer.Action.synchronizerStateChanged)
-//                    .eraseToEffect()
-//                    .cancellable(id: CancelId.timer, cancelInFlight: true)
-                return .none
+                return .publisher {
+                    sdkSynchronizer.stateStream()
+                        .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                        .map(BalanceBreakdownReducer.Action.synchronizerStateChanged)
+                }
+                .cancellable(id: CancelId.timer, cancelInFlight: true)
                 
             case .onDisappear:
                 return .cancel(id: CancelId.timer)

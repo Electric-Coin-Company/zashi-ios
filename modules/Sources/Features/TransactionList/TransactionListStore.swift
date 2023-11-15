@@ -64,22 +64,23 @@ public struct TransactionListReducer: Reducer {
             state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
             
             return .merge(
-                // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
-//                sdkSynchronizer.stateStream()
-//                    .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-//                    .map { TransactionListReducer.Action.synchronizerStateChanged($0.syncStatus) }
-//                    .eraseToEffect()
-//                    .cancellable(id: CancelStateId.timer, cancelInFlight: true),
-//                sdkSynchronizer.eventStream()
-//                    .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-//                    .compactMap {
-//                        if case SynchronizerEvent.foundTransactions = $0 {
-//                            return TransactionListReducer.Action.foundTransactions
-//                        }
-//                        return nil
-//                    }
-//                    .eraseToEffect()
-//                    .cancellable(id: CancelEventId.timer, cancelInFlight: true),
+                .publisher {
+                    sdkSynchronizer.stateStream()
+                        .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                        .map { TransactionListReducer.Action.synchronizerStateChanged($0.syncStatus) }
+                }
+                .cancellable(id: CancelStateId.timer, cancelInFlight: true),
+                .publisher {
+                    sdkSynchronizer.eventStream()
+                        .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                        .compactMap {
+                            if case SynchronizerEvent.foundTransactions = $0 {
+                                return TransactionListReducer.Action.foundTransactions
+                            }
+                            return nil
+                        }
+                }
+                .cancellable(id: CancelEventId.timer, cancelInFlight: true),
                 .run { send in
                     await send(.updateTransactionList(try await sdkSynchronizer.getAllTransactions()))
                 }

@@ -16,7 +16,8 @@ public typealias HomeStore = Store<HomeReducer.State, HomeReducer.Action>
 public typealias HomeViewStore = ViewStore<HomeReducer.State, HomeReducer.Action>
 
 public struct HomeReducer: Reducer {
-    private enum CancelId { case timer }
+    private enum CancelStateId { case timer }
+    private enum CancelEventId { case timer }
     let networkType: NetworkType
 
     public struct State: Equatable {
@@ -108,31 +109,43 @@ public struct HomeReducer: Reducer {
                 state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
 
                 if diskSpaceChecker.hasEnoughFreeSpaceForSync() {
-                    // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
-                    return .none
-//                    let syncEffect = sdkSynchronizer.stateStream()
-//                        .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-//                        .map(HomeReducer.Action.synchronizerStateChanged)
-//                        .eraseToEffect()
-//                        .cancellable(id: CancelId.timer, cancelInFlight: true)
-//                    return .merge(
-//                        Effect.send(.updateDestination(nil)),
-//                        syncEffect
-//                    )
+                    return .merge(
+                        Effect.send(.updateDestination(nil)),
+                        .publisher {
+                            sdkSynchronizer.stateStream()
+                                .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                                .map(HomeReducer.Action.synchronizerStateChanged)
+                        }
+                        .cancellable(id: CancelStateId.timer, cancelInFlight: true),
+                        .publisher {
+                            sdkSynchronizer.eventStream()
+                                .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                                .compactMap {
+                                    if case SynchronizerEvent.foundTransactions = $0 {
+                                        return HomeReducer.Action.foundTransactions
+                                    }
+                                    return nil
+                                }
+                        }
+                        .cancellable(id: CancelEventId.timer, cancelInFlight: true)
+                    )
                 } else {
                     return Effect.send(.updateDestination(.notEnoughFreeDiskSpace))
                 }
                 
             case .onDisappear:
-                return .none
-                return .cancel(id: CancelId.timer)
-                
+                return .concatenate(
+                    .cancel(id: CancelStateId.timer),
+                    .cancel(id: CancelEventId.timer)
+                )
+
             case .resolveReviewRequest:
-                // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
-//                if reviewRequest.canRequestReview() {
-//                    state.canRequestReview = true
-//                    return .fireAndForget { reviewRequest.reviewRequested() }
-//                }
+                if reviewRequest.canRequestReview() {
+                    state.canRequestReview = true
+                    return .run { _ in
+                        reviewRequest.reviewRequested()
+                    }
+                }
                 return .none
                 
             case .reviewRequestFinished:
@@ -161,18 +174,18 @@ public struct HomeReducer: Reducer {
                     return Effect.send(.showSynchronizerErrorAlert(error.toZcashError()))
 
                 case .upToDate:
-                    // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
-//                    return .fireAndForget { reviewRequest.syncFinished() }
-                    return .none
+                    return .run { _ in
+                        reviewRequest.syncFinished()
+                    }
 
                 default:
                     return .none
                 }
 
             case .foundTransactions:
-                // TODO: [#904] side effects refactor, https://github.com/Electric-Coin-Company/zashi-ios/issues/904
-//                return .fireAndForget { reviewRequest.foundTransactions() }
-                return .none
+                return .run { _ in
+                    reviewRequest.foundTransactions()
+                }
                 
             case .updateDestination(let destination):
                 state.destination = destination
