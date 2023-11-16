@@ -15,7 +15,7 @@ extension Binding {
         )
     }
 
-    public func isPresent<Enum, Case>(_ casePath: CasePath<Enum, Case>) -> Binding<Bool>
+    public func isPresent<Enum, Case>(_ casePath: AnyCasePath<Enum, Case>) -> Binding<Bool>
     where Value == Enum? {
         Binding<Bool>(
             get: {
@@ -33,7 +33,7 @@ extension Binding {
         )
     }
 
-    public func `case`<Enum, Case>(_ casePath: CasePath<Enum, Case>) -> Binding<Case?>
+    public func `case`<Enum, Case>(_ casePath: AnyCasePath<Enum, Case>) -> Binding<Case?>
     where Value == Enum? {
         Binding<Case?>(
             get: {

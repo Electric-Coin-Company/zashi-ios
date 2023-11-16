@@ -30,6 +30,7 @@ public struct RootReducer: Reducer {
     public struct State: Equatable {
         @PresentationState public var alert: AlertState<Action>?
         public var appInitializationState: InitializationState = .uninitialized
+        @PresentationState public var confirmationDialog: ConfirmationDialogState<Action.ConfirmationDialog>?
         public var debugState: DebugState
         public var destinationState: DestinationState
         public var exportLogsState: ExportLogsReducer.State
@@ -67,8 +68,14 @@ public struct RootReducer: Reducer {
     }
 
     public enum Action: Equatable {
+        public enum ConfirmationDialog: Equatable {
+            case fullRescan
+            case quickRescan
+        }
+
         case alert(PresentationAction<Action>)
         case binding(BindingAction<RootReducer.State>)
+        case confirmationDialog(PresentationAction<ConfirmationDialog>)
         case debug(DebugAction)
         case destination(DestinationAction)
         case exportLogs(ExportLogsReducer.Action)
@@ -150,6 +157,7 @@ public struct RootReducer: Reducer {
             default: return .none
             }
         }
+        .ifLet(\.$confirmationDialog, action: /Action.confirmationDialog)
     }
 }
 
@@ -279,18 +287,18 @@ extension AlertState where Action == RootReducer.Action {
     }
 }
      
-extension ConfirmationDialogState where Action == RootReducer.Action {
+extension ConfirmationDialogState where Action == RootReducer.Action.ConfirmationDialog {
     public static func rescanRequest() -> ConfirmationDialogState {
         ConfirmationDialogState {
             TextState(L10n.Root.Debug.Dialog.Rescan.title)
         } actions: {
-            ButtonState(role: .destructive, action: .debug(.quickRescan)) {
+            ButtonState(role: .destructive, action: .quickRescan) {
                 TextState(L10n.Root.Debug.Dialog.Rescan.Option.quick)
             }
-            ButtonState(role: .destructive, action: .debug(.fullRescan)) {
+            ButtonState(role: .destructive, action: .fullRescan) {
                 TextState(L10n.Root.Debug.Dialog.Rescan.Option.full)
             }
-            ButtonState(role: .cancel, action: .alert(.dismiss)) {
+            ButtonState(role: .cancel) {
                 TextState(L10n.General.cancel)
             }
         } message: {

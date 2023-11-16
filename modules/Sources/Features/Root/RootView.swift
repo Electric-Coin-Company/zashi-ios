@@ -174,14 +174,9 @@ private extension RootView {
                     }
                 }
             }
-            // TODO: [#908] refactor needed https://github.com/Electric-Coin-Company/zashi-ios/issues/908
-//            .confirmationDialog(
-//                store.scope(
-//                    state: \.debugState.rescanDialog,
-//                    action: { $0 }
-//                ),
-//                dismiss: .debug(.cancelRescan)
-//            )
+            .confirmationDialog(
+              store: self.store.scope(state: \.$confirmationDialog, action: { .confirmationDialog($0) })
+            )
         }
         .navigationBarTitle(L10n.Root.Debug.navigationTitle)
     }
