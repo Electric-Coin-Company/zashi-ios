@@ -42,7 +42,7 @@ extension RootReducer {
                 
             case .initialization(.appDelegate(.willEnterForeground)):
                 return .run { send in
-                    try? await Task.sleep(nanoseconds: 1_000_000_000)
+                    try await mainQueue.sleep(for: .seconds(1))
                     await send(.initialization(.retryStart))
                 }
                 
@@ -66,7 +66,7 @@ extension RootReducer {
                 // TODO: [#704], trigger the review request logic when approved by the team,
                 // https://github.com/zcash/secant-ios-wallet/issues/704
                 return .run { send in
-                    try? await Task.sleep(nanoseconds: 20_000_000)
+                    try await mainQueue.sleep(for: .seconds(0.02))
                     await send(.initialization(.initialSetups))
                 }
 
@@ -98,7 +98,7 @@ extension RootReducer {
                 return .concatenate(
                     Effect.send(.initialization(.configureCrashReporter)),
                     .run { send in
-                        try? await Task.sleep(nanoseconds: 20_000_000)
+                        try await mainQueue.sleep(for: .seconds(0.02))
                         await send(.initialization(.checkWalletInitialization))
                     }
                 )
@@ -134,7 +134,7 @@ extension RootReducer {
                 case .uninitialized:
                     state.appInitializationState = .uninitialized
                     return .run { send in
-                        try? await Task.sleep(nanoseconds: 3_000_000_000)
+                        try await mainQueue.sleep(for: .seconds(3))
                         await send(.destination(.updateDestination(.onboarding)))
                     }
                     .cancellable(id: CancelId.timer, cancelInFlight: true)
@@ -186,7 +186,7 @@ extension RootReducer {
                 state.appInitializationState = .initialized
 
                 return .run { send in
-                    try? await Task.sleep(nanoseconds: 3_000_000_000)
+                    try await mainQueue.sleep(for: .seconds(3))
                     await send(.destination(.updateDestination(.tabs)))
                 }
                 .cancellable(id: CancelId.timer, cancelInFlight: true)

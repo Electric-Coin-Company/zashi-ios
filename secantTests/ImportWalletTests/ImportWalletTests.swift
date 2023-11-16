@@ -12,20 +12,23 @@ import ImportWallet
 @testable import secant_testnet
 
 // swiftlint:disable type_body_length
+@MainActor
 class ImportWalletTests: XCTestCase {
-    func testOnAppear() throws {
+    func testOnAppear() async throws {
         let store = TestStore(
             initialState: .initial
         ) {
             ImportWalletReducer(saplingActivationHeight: 0)
         }
         
-        store.send(.onAppear) { state in
+        await store.send(.onAppear) { state in
             state.maxWordsCount = 24
         }
+        
+        await store.finish()
     }
     
-    func testWordsCount() throws {
+    func testWordsCount() async throws {
         let store = TestStore(
             initialState: .initial
         ) {
@@ -36,14 +39,17 @@ class ImportWalletTests: XCTestCase {
         store.dependencies.mnemonic.isValid = { _ in throw "invalid mnemonic" }
         
         let seedPhrase = "one two three".redacted
-        store.send(.seedPhraseInputChanged(seedPhrase)) { state in
+        
+        await store.send(.seedPhraseInputChanged(seedPhrase)) { state in
             state.importedSeedPhrase = seedPhrase
             state.wordsCount = 3
             state.isValidMnemonic = false
         }
+        
+        await store.finish()
     }
 
-    func testMaxWordsInvalidMnemonic() throws {
+    func testMaxWordsInvalidMnemonic() async throws {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24)
         ) {
@@ -54,15 +60,18 @@ class ImportWalletTests: XCTestCase {
         store.dependencies.mnemonic.isValid = { _ in throw "invalid mnemonic" }
 
         let seedPhrase = "a a a a a a a a a a a a a a a a a a a a a a a a".redacted
-        store.send(.seedPhraseInputChanged(seedPhrase)) { state in
+        
+        await store.send(.seedPhraseInputChanged(seedPhrase)) { state in
             state.importedSeedPhrase = seedPhrase
             state.wordsCount = 24
             state.isValidNumberOfWords = true
             state.isValidMnemonic = false
         }
+        
+        await store.finish()
     }
 
-    func testValidMnemonic() throws {
+    func testValidMnemonic() async throws {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24)
         ) {
@@ -78,15 +87,18 @@ class ImportWalletTests: XCTestCase {
             carbon truly provide dizzy crush flush \
             breeze blouse charge solid fish spread
             """.redacted
-        store.send(.seedPhraseInputChanged(seedPhrase)) { state in
+        
+        await store.send(.seedPhraseInputChanged(seedPhrase)) { state in
             state.importedSeedPhrase = seedPhrase
             state.wordsCount = 24
             state.isValidNumberOfWords = true
             state.isValidMnemonic = true
         }
+        
+        await store.finish()
     }
     
-    func testInvalidBirthdayHeight_lessThanSaplingActivation() throws {
+    func testInvalidBirthdayHeight_lessThanSaplingActivation() async throws {
         let store = TestStore(
             initialState: .initial
         ) {
@@ -94,12 +106,15 @@ class ImportWalletTests: XCTestCase {
         }
         
         let birthday = "200000".redacted
-        store.send(.birthdayInputChanged(birthday)) { state in
+        
+        await store.send(.birthdayInputChanged(birthday)) { state in
             state.birthdayHeight = birthday
         }
+        
+        await store.finish()
     }
 
-    func testInvalidBirthdayHeight_invalidInput() throws {
+    func testInvalidBirthdayHeight_invalidInput() async throws {
         let store = TestStore(
             initialState: .initial
         ) {
@@ -107,12 +122,15 @@ class ImportWalletTests: XCTestCase {
         }
         
         let birthday = "abc".redacted
-        store.send(.birthdayInputChanged(birthday)) { state in
+        
+        await store.send(.birthdayInputChanged(birthday)) { state in
             state.birthdayHeight = birthday
         }
+        
+        await store.finish()
     }
 
-    func testInvalidBirthdayHeight_validInput() throws {
+    func testInvalidBirthdayHeight_validInput() async throws {
         let store = TestStore(
             initialState: .initial
         ) {
@@ -120,13 +138,16 @@ class ImportWalletTests: XCTestCase {
         }
         
         let birthday = "1700000".redacted
-        store.send(.birthdayInputChanged(birthday)) { state in
+        
+        await store.send(.birthdayInputChanged(birthday)) { state in
             state.birthdayHeight = birthday
             state.birthdayHeightValue = RedactableBlockHeight(1_700_000)
         }
+        
+        await store.finish()
     }
         
-    func testFormValidity_validBirthday_invalidMnemonic() throws {
+    func testFormValidity_validBirthday_invalidMnemonic() async throws {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24)
         ) {
@@ -137,13 +158,15 @@ class ImportWalletTests: XCTestCase {
         store.dependencies.mnemonic.isValid = { _ in throw "invalid mnemonic" }
         
         let birthday = "1700000".redacted
-        store.send(.birthdayInputChanged(birthday)) { state in
+        
+        await store.send(.birthdayInputChanged(birthday)) { state in
             state.birthdayHeight = birthday
             state.birthdayHeightValue = RedactableBlockHeight(1_700_000)
         }
         
         let seedPhrase = "a a a a a a a a a a a a a a a a a a a a a a a a".redacted
-        store.send(.seedPhraseInputChanged(seedPhrase)) { state in
+        
+        await store.send(.seedPhraseInputChanged(seedPhrase)) { state in
             state.importedSeedPhrase = seedPhrase
             state.wordsCount = 24
             state.isValidNumberOfWords = true
@@ -153,9 +176,11 @@ class ImportWalletTests: XCTestCase {
                 "Import Wallet tests: `testFormValidity_validBirthday_validMnemonic` is expected to be false but it is \(state.isValidForm)"
             )
         }
+        
+        await store.finish()
     }
     
-    func testFormValidity_invalidBirthday_invalidMnemonic() throws {
+    func testFormValidity_invalidBirthday_invalidMnemonic() async throws {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24)
         ) {
@@ -166,12 +191,14 @@ class ImportWalletTests: XCTestCase {
         store.dependencies.mnemonic.isValid = { _ in throw "invalid mnemonic" }
 
         let birthday = "200000".redacted
-        store.send(.birthdayInputChanged(birthday)) { state in
+        
+        await store.send(.birthdayInputChanged(birthday)) { state in
             state.birthdayHeight = birthday
         }
         
         let seedPhrase = "a a a a a a a a a a a a a a a a a a a a a a a a".redacted
-        store.send(.seedPhraseInputChanged(seedPhrase)) { state in
+        
+        await store.send(.seedPhraseInputChanged(seedPhrase)) { state in
             state.importedSeedPhrase = seedPhrase
             state.wordsCount = 24
             state.isValidNumberOfWords = true
@@ -181,9 +208,11 @@ class ImportWalletTests: XCTestCase {
                 "Import Wallet tests: `testFormValidity_validBirthday_validMnemonic` is expected to be false but it is \(state.isValidForm)"
             )
         }
+        
+        await store.finish()
     }
     
-    func testFormValidity_invalidBirthday_validMnemonic() throws {
+    func testFormValidity_invalidBirthday_validMnemonic() async throws {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24)
         ) {
@@ -193,7 +222,8 @@ class ImportWalletTests: XCTestCase {
         store.dependencies.mnemonic = .noOp
 
         let birthday = "200000".redacted
-        store.send(.birthdayInputChanged(birthday)) { state in
+        
+        await store.send(.birthdayInputChanged(birthday)) { state in
             state.birthdayHeight = birthday
         }
         
@@ -204,7 +234,8 @@ class ImportWalletTests: XCTestCase {
             carbon truly provide dizzy crush flush \
             breeze blouse charge solid fish spread
             """.redacted
-        store.send(.seedPhraseInputChanged(seedPhrase)) { state in
+        
+        await store.send(.seedPhraseInputChanged(seedPhrase)) { state in
             state.importedSeedPhrase = seedPhrase
             state.wordsCount = 24
             state.isValidNumberOfWords = true
@@ -214,9 +245,11 @@ class ImportWalletTests: XCTestCase {
                 "Import Wallet tests: `testFormValidity_validBirthday_validMnemonic` is expected to be false but it is \(state.isValidForm)"
             )
         }
+        
+        await store.finish()
     }
     
-    func testFormValidity_validBirthday_validMnemonic() throws {
+    func testFormValidity_validBirthday_validMnemonic() async throws {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24)
         ) {
@@ -226,7 +259,8 @@ class ImportWalletTests: XCTestCase {
         store.dependencies.mnemonic = .noOp
 
         let birthday = "1700000".redacted
-        store.send(.birthdayInputChanged(birthday)) { state in
+        
+        await store.send(.birthdayInputChanged(birthday)) { state in
             state.birthdayHeight = birthday
             state.birthdayHeightValue = RedactableBlockHeight(1_700_000)
         }
@@ -238,7 +272,8 @@ class ImportWalletTests: XCTestCase {
             carbon truly provide dizzy crush flush \
             breeze blouse charge solid fish spread
             """.redacted
-        store.send(.seedPhraseInputChanged(seedPhrase)) { state in
+        
+        await store.send(.seedPhraseInputChanged(seedPhrase)) { state in
             state.importedSeedPhrase = seedPhrase
             state.wordsCount = 24
             state.isValidNumberOfWords = true
@@ -248,9 +283,11 @@ class ImportWalletTests: XCTestCase {
                 "Import Wallet tests: `testFormValidity_validBirthday_validMnemonic` is expected to be true but it is \(state.isValidForm)"
             )
         }
+        
+        await store.finish()
     }
     
-    func testFormValidity_noBirthday_validMnemonic() throws {
+    func testFormValidity_noBirthday_validMnemonic() async throws {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24)
         ) {
@@ -266,7 +303,8 @@ class ImportWalletTests: XCTestCase {
             carbon truly provide dizzy crush flush \
             breeze blouse charge solid fish spread
             """.redacted
-        store.send(.seedPhraseInputChanged(seedPhrase)) { state in
+        
+        await store.send(.seedPhraseInputChanged(seedPhrase)) { state in
             state.importedSeedPhrase = seedPhrase
             state.wordsCount = 24
             state.isValidNumberOfWords = true
@@ -276,9 +314,11 @@ class ImportWalletTests: XCTestCase {
                 "Import Wallet tests: `testFormValidity_validBirthday_validMnemonic` is expected to be true but it is \(state.isValidForm)"
             )
         }
+        
+        await store.finish()
     }
 
-    func testRestoreWallet() throws {
+    func testRestoreWallet() async throws {
         let store = TestStore(
             initialState: ImportWalletReducer.State(
                 birthdayHeight: "1700000".redacted,
@@ -301,13 +341,16 @@ class ImportWalletTests: XCTestCase {
         store.dependencies.mnemonic = .noOp
         store.dependencies.walletStorage = .noOp
         
-        store.send(.restoreWallet) { state in
+        await store.send(.restoreWallet) { state in
             state.importedSeedPhrase = "".redacted
             state.birthdayHeight = "".redacted
             state.destination = nil
         }
 
-        store.receive(.successfullyRecovered)
-        store.receive(.initializeSDK)
+        await store.receive(.successfullyRecovered)
+        
+        await store.receive(.initializeSDK)
+        
+        await store.finish()
     }
 }

@@ -38,9 +38,6 @@ class SendTests: XCTestCase {
         // the test needs to pass the exportWallet() so we simulate some in the keychain
         try storage.importWallet(bip39: "one two three", birthday: nil)
 
-        // setup the store and environment to be fully mocked
-        let testScheduler = DispatchQueue.test
-
         var initialState = SendFlowReducer.State.initial
         initialState.transactionAddressInputState = TransactionAddressTextFieldReducer.State(
             textFieldState:
@@ -57,13 +54,13 @@ class SendTests: XCTestCase {
         }
         
         store.dependencies.derivationTool = .liveValue
-        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+        store.dependencies.mainQueue = .immediate
         store.dependencies.mnemonic = .liveValue
         store.dependencies.sdkSynchronizer = .mocked()
         store.dependencies.walletStorage = .noOp
         
         // simulate the sending confirmation button to be pressed
-        _ = await store.send(.sendPressed) { state in
+        await store.send(.sendPressed) { state in
             // once sending is confirmed, the attempts to try to send again by pressing the button
             // needs to be eliminated, indicated by the flag `isSending`, need to be true
             state.isSending = true
@@ -75,7 +72,7 @@ class SendTests: XCTestCase {
             state.transactionAmountInputState.textFieldState.text = "".redacted
         }
 
-        await testScheduler.advance(by: 0.01)
+        await store.finish()
     }
 
     func testAddressValidation_Invalid() async throws {

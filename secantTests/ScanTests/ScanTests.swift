@@ -11,8 +11,9 @@ import ZcashLightClientKit
 import Scan
 @testable import secant_testnet
 
+@MainActor
 class ScanTests: XCTestCase {
-    func testOnAppearResetValues() throws {
+    func testOnAppearResetValues() async throws {
         let store = TestStore(
             initialState:
                 ScanReducer.State(
@@ -26,14 +27,16 @@ class ScanTests: XCTestCase {
 
         store.dependencies.captureDevice = .noOp
         
-        store.send(.onAppear) { state in
+        await store.send(.onAppear) { state in
             state.isTorchAvailable = false
             state.isTorchOn = false
             state.scanStatus = .unknown
         }
+        
+        await store.finish()
     }
     
-    func testTorchOn() throws {
+    func testTorchOn() async throws {
         let store = TestStore(
             initialState: ScanReducer.State()
         ) {
@@ -42,12 +45,14 @@ class ScanTests: XCTestCase {
 
         store.dependencies.captureDevice = .noOp
 
-        store.send(.torchPressed) { state in
+        await store.send(.torchPressed) { state in
             state.isTorchOn = true
         }
+        
+        await store.finish()
     }
 
-    func testTorchOff() throws {
+    func testTorchOff() async throws {
         let store = TestStore(
             initialState: ScanReducer.State(
                 isTorchOn: true
@@ -58,12 +63,14 @@ class ScanTests: XCTestCase {
 
         store.dependencies.captureDevice = .noOp
 
-        store.send(.torchPressed) { state in
+        await store.send(.torchPressed) { state in
             state.isTorchOn = false
         }
+        
+        await store.finish()
     }
 
-    func testScannedInvalidValue() throws {
+    func testScannedInvalidValue() async throws {
         let store = TestStore(
             initialState: ScanReducer.State()
         ) {
@@ -73,42 +80,46 @@ class ScanTests: XCTestCase {
         store.dependencies.uriParser.isValidURI = { _, _ in false }
         
         let value = "test".redacted
-        store.send(.scan(value)) { state in
+        
+        await store.send(.scan(value)) { state in
             state.scanStatus = .failed
         }
+        
+        await store.finish()
     }
 
-    func testScannedValidAddress() throws {
-        let testScheduler = DispatchQueue.test
-        
+    @MainActor func testScannedValidAddress() async throws {
         let store = TestStore(
             initialState: ScanReducer.State()
         ) {
             ScanReducer(networkType: .testnet)
         }
         
-        store.dependencies.mainQueue = testScheduler.eraseToAnyScheduler()
+        store.dependencies.mainQueue = .immediate
         store.dependencies.uriParser.isValidURI = { _, _ in true }
 
         let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
-        store.send(.scan(address)) { state in
+        
+        await store.send(.scan(address)) { state in
             state.scanStatus = .value(address)
         }
         
-        testScheduler.advance(by: 1.01)
+        await store.receive(.found(address))
         
-        store.receive(.found(address))
+        await store.finish()
     }
 
-    func testScanFailed() throws {
+    func testScanFailed() async throws {
         let store = TestStore(
             initialState: ScanReducer.State()
         ) {
             ScanReducer(networkType: .testnet)
         }
 
-        store.send(.scanFailed) { state in
+        await store.send(.scanFailed) { state in
             state.scanStatus = .failed
         }
+        
+        await store.finish()
     }
 }
