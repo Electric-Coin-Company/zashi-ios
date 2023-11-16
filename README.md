@@ -1,4 +1,4 @@
-# Zashi IOS Wallet
+# Zashi iOS Wallet
 
 This is the official home of the Zashi Zcash wallet for Wallet, a no-frills
 Zcash mobile wallet leveraging the [Zcash Swift SDK](https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk).
@@ -17,7 +17,7 @@ If you'd like to report a technical issue or feature request for the IOS
 Wallet, please file a GitHub issue [here](https://github.com/Electric-Coin-Company/zashi-ios/issues/new/choose).
 
 For feature requests and issues related to the Zashi user interface that are
-not IOS-specific, please file a GitHub issue [here](https://github.com/Electric-Coin-Company/zashi/issues/new/choose).
+not iOS-specific, please file a GitHub issue [here](https://github.com/Electric-Coin-Company/zashi/issues/new/choose).
 
 If you wish to report a security issue, please follow our
 [Responsible Disclosure guidelines](https://github.com/Electric-Coin-Company/zashi/blob/master/responsible_disclosure.md).
@@ -35,7 +35,7 @@ and [Code of Conduct](/CONDUCT.md). Our backlog has many Issues tagged with the
 `good first issue` label. Please fork the repo and make a pull request for us
 to review.
 
-Secant Wallet uses [SwiftLint](https://github.com/realm/SwiftLint) and 
+Zashi Wallet uses [SwiftLint](https://github.com/realm/SwiftLint) and 
 [SwiftGen](https://github.com/SwiftGen/SwiftGen) to conform to our coding
 guidelines for source code and generate accessors for assets. Please install
 these locally when contributing to the project, they are run automatically when
