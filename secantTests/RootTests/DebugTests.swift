@@ -21,14 +21,14 @@ class DebugTests: XCTestCase {
         }
         
         await store.send(.debug(.rescanBlockchain)) { state in
-            state.debugState.rescanDialog = ConfirmationDialogState.rescanRequest()
+            state.confirmationDialog = ConfirmationDialogState.rescanRequest()
         }
     }
     
     func testRescanBlockchain_Cancelling() async throws {
         var mockState = RootReducer.State.initial
         
-        mockState.debugState.rescanDialog = ConfirmationDialogState.rescanRequest()
+        mockState.confirmationDialog = ConfirmationDialogState.rescanRequest()
         
         let store = TestStore(
             initialState: mockState
@@ -37,14 +37,14 @@ class DebugTests: XCTestCase {
         }
         
         await store.send(.debug(.cancelRescan)) { state in
-            state.debugState.rescanDialog = nil
+            state.confirmationDialog = nil
         }
     }
     
     func testRescanBlockchain_QuickRescanClearance() async throws {
         var mockState = RootReducer.State.initial
         
-        mockState.debugState.rescanDialog = ConfirmationDialogState.rescanRequest()
+        mockState.confirmationDialog = ConfirmationDialogState.rescanRequest()
         
         let store = TestStore(
             initialState: mockState
@@ -55,18 +55,19 @@ class DebugTests: XCTestCase {
         store.dependencies.mainQueue = .immediate
         store.dependencies.sdkSynchronizer = .noOp
 
-        await store.send(.debug(.quickRescan)) { state in
+        await store.send(.confirmationDialog(.presented(.quickRescan))) { state in
             state.destinationState.internalDestination = .tabs
             state.destinationState.previousDestination = .welcome
+            state.confirmationDialog = nil
         }
         
-        await store.receive(.debug(.rewindDone(nil, .debug(.quickRescan))))
+        await store.receive(.debug(.rewindDone(nil, .confirmationDialog(.presented(.quickRescan)))))
     }
     
     func testRescanBlockchain_FullRescanClearance() async throws {
         var mockState = RootReducer.State.initial
         
-        mockState.debugState.rescanDialog = ConfirmationDialogState.rescanRequest()
+        mockState.confirmationDialog = ConfirmationDialogState.rescanRequest()
         
         let store = TestStore(
             initialState: mockState
@@ -77,11 +78,12 @@ class DebugTests: XCTestCase {
         store.dependencies.mainQueue = .immediate
         store.dependencies.sdkSynchronizer = .noOp
                 
-        await store.send(.debug(.fullRescan)) { state in
+        await store.send(.confirmationDialog(.presented(.fullRescan))) { state in
             state.destinationState.internalDestination = .tabs
             state.destinationState.previousDestination = .welcome
+            state.confirmationDialog = nil
         }
         
-        await store.receive(.debug(.rewindDone(nil, .debug(.fullRescan))))
+        await store.receive(.debug(.rewindDone(nil, .confirmationDialog(.presented(.fullRescan)))))
     }
 }

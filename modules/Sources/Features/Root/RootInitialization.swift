@@ -177,7 +177,7 @@ extension RootReducer {
                 return .none
 
             case .initialization(.checkBackupPhraseValidation):
-                guard let storedWallet = state.storedWallet else {
+                guard let _ = state.storedWallet else {
                     state.appInitializationState = .failed
                     state.alert = AlertState.cantLoadSeedPhrase()
                     return .none
@@ -271,7 +271,7 @@ extension RootReducer {
                 return Effect.send(.destination(.updateDestination(.tabs)))
                 
             case .tabs, .destination, .onboarding, .sandbox,
-            .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested:
+                    .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, .confirmationDialog:
                 return .none
             }
         }

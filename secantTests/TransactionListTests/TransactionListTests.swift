@@ -13,8 +13,9 @@ import Models
 import TransactionList
 @testable import secant_testnet
 
+@MainActor
 class TransactionListTests: XCTestCase {
-    @MainActor func testSynchronizerSubscription() async throws {
+    func testSynchronizerSubscription() async throws {
         let store = TestStore(
             initialState: TransactionListReducer.State(
                 transactionList: []
@@ -41,7 +42,7 @@ class TransactionListTests: XCTestCase {
         await store.finish()
     }
 
-    @MainActor func testSynchronizerStateChanged2Synced() async throws {
+    func testSynchronizerStateChanged2Synced() async throws {
         let mocked: [TransactionStateMockHelper] = [
             TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid, uuid: "aa11"),
             TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),
@@ -109,7 +110,7 @@ class TransactionListTests: XCTestCase {
         await store.finish()
     }
     
-    @MainActor func testSynchronizerStateChanged2Synced_skippedTransactionListUpdate() async throws {
+    func testSynchronizerStateChanged2Synced_skippedTransactionListUpdate() async throws {
         let mocked: [TransactionStateMockHelper] = [
             TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid, uuid: "aa11"),
             TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),
@@ -163,7 +164,7 @@ class TransactionListTests: XCTestCase {
         await store.finish()
     }
 
-    @MainActor func testCopyToPasteboard() async throws {
+    func testCopyToPasteboard() async throws {
         let testPasteboard = PasteboardClient.testPasteboard
 
         let store = TestStore(
@@ -191,7 +192,7 @@ class TransactionListTests: XCTestCase {
     
     // MARK: - Expansion
     
-    @MainActor func testTransactionExpansion() async throws {
+    func testTransactionExpansion() async throws {
         let id = "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja"
         let transaction = TransactionState(
             memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
@@ -224,7 +225,7 @@ class TransactionListTests: XCTestCase {
         await store.finish()
     }
     
-    @MainActor func testTransactionExpansionMarkedAsRead_receiving() async throws {
+    func testTransactionExpansionMarkedAsRead_receiving() async throws {
         let id = "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja"
         let transaction = TransactionState(
             memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
@@ -258,7 +259,7 @@ class TransactionListTests: XCTestCase {
         await store.finish()
     }
     
-    @MainActor func testTransactionExpansionMarkedAsRead_received() async throws {
+    func testTransactionExpansionMarkedAsRead_received() async throws {
         let id = "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja"
         let transaction = TransactionState(
             memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
@@ -292,7 +293,7 @@ class TransactionListTests: XCTestCase {
         await store.finish()
     }
     
-    @MainActor func testTransactionExpansionMarkedAsRead_skippedForAlreadyMarked() async throws {
+    func testTransactionExpansionMarkedAsRead_skippedForAlreadyMarked() async throws {
         let id = "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja"
         let transaction = TransactionState(
             memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
@@ -326,7 +327,7 @@ class TransactionListTests: XCTestCase {
         await store.finish()
     }
     
-    @MainActor func testAddressExpansionRequestedButTransactionIsNot() async throws {
+    func testAddressExpansionRequestedButTransactionIsNot() async throws {
         let id = "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja"
         
         let transaction = TransactionState(
@@ -360,8 +361,9 @@ class TransactionListTests: XCTestCase {
         await store.finish()
     }
     
-    @MainActor func testAddressExpansion() async throws {
+    func testAddressExpansion() async throws {
         let id = "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja"
+        
         let transaction = TransactionState(
             memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
             minedHeight: BlockHeight(1),
@@ -391,8 +393,9 @@ class TransactionListTests: XCTestCase {
         await store.finish()
     }
     
-    @MainActor func testIdExpansionRequestedButTransactionIsNot() async throws {
+    func testIdExpansionRequestedButTransactionIsNot() async throws {
         let id = "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja"
+        
         let transaction = TransactionState(
             memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
             minedHeight: BlockHeight(1),
@@ -422,8 +425,9 @@ class TransactionListTests: XCTestCase {
         await store.finish()
     }
     
-    @MainActor func testIdExpansion() async throws {
+    func testIdExpansion() async throws {
         let id = "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja"
+        
         let transaction = TransactionState(
             memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
             minedHeight: BlockHeight(1),
@@ -453,7 +457,7 @@ class TransactionListTests: XCTestCase {
         await store.finish()
     }
     
-    @MainActor func testSynchronizerStateChanged2Synced_MarkUnread() async throws {
+    func testSynchronizerStateChanged2Synced_MarkUnread() async throws {
         let id = "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja"
 
         let transactionList = [
@@ -496,7 +500,7 @@ class TransactionListTests: XCTestCase {
         XCTAssertTrue(transactionList[0].isUnread)
 
         await store.receive(.updateTransactionList(transactionList)) { state in
-            state.transactionList = IdentifiedArrayOf(transactionList)
+            state.transactionList = IdentifiedArrayOf(uniqueElements: transactionList)
             state.latestTransactionList = transactionList
             state.latestTranassctionId = id
             
@@ -506,7 +510,7 @@ class TransactionListTests: XCTestCase {
         await store.finish()
     }
     
-    @MainActor func testSynchronizerStateChanged2Synced_MarkRead() async throws {
+    func testSynchronizerStateChanged2Synced_MarkRead() async throws {
         let id = "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja"
         
         let transactionList = [
@@ -550,7 +554,7 @@ class TransactionListTests: XCTestCase {
         XCTAssertTrue(transactionList[0].isUnread)
 
         await store.receive(.updateTransactionList(transactionList)) { state in
-            state.transactionList = IdentifiedArrayOf(transactionList)
+            state.transactionList = IdentifiedArrayOf(uniqueElements: transactionList)
             state.latestTransactionList = transactionList
             state.latestTranassctionId = id
             state.transactionList[0].isMarkedAsRead = true
@@ -561,7 +565,7 @@ class TransactionListTests: XCTestCase {
         await store.finish()
     }
     
-    @MainActor func testSynchronizerStateChanged2Synced_OldTransaction() async throws {
+    func testSynchronizerStateChanged2Synced_OldTransaction() async throws {
         let id = "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja"
         
         let transactionList = [
@@ -605,7 +609,7 @@ class TransactionListTests: XCTestCase {
         XCTAssertTrue(transactionList[0].isUnread)
 
         await store.receive(.updateTransactionList(transactionList)) { state in
-            state.transactionList = IdentifiedArrayOf(transactionList)
+            state.transactionList = IdentifiedArrayOf(uniqueElements: transactionList)
             state.latestTransactionList = transactionList
             state.latestTranassctionId = id
             state.transactionList[0].isMarkedAsRead = true

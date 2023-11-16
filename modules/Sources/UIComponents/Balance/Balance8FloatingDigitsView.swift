@@ -41,21 +41,21 @@ public struct Balance8FloatingDigitsView: View {
 
 #Preview {
     let mainSize: CGFloat = 30
-    let restSize: CGFloat = 16
+    let restSize: CGFloat = 9
     
     return VStack(spacing: 30) {
         Balance8FloatingDigitsView(
             balance: Zatoshi(25_793_456),
             fontName: FontFamily.Inter.regular.name,
             mainFontSize: mainSize,
-            restFontSize: 9
+            restFontSize: restSize
         )
         
         Balance8FloatingDigitsView(
             balance: Zatoshi(25_793_456),
             fontName: FontFamily.Inter.regular.name,
             mainFontSize: mainSize,
-            restFontSize: 9,
+            restFontSize: restSize,
             prefixSymbol: .plus
         )
         
@@ -63,7 +63,7 @@ public struct Balance8FloatingDigitsView: View {
             balance: Zatoshi(25_793_456),
             fontName: FontFamily.Inter.regular.name,
             mainFontSize: mainSize,
-            restFontSize: 9,
+            restFontSize: restSize,
             prefixSymbol: .minus
         )
     }

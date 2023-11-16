@@ -105,7 +105,7 @@ extension RootReducer {
                 return .none
 
             case .tabs, .initialization, .onboarding, .sandbox, .updateStateAfterConfigUpdate, .alert,
-            .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .exportLogs:
+                    .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .exportLogs, .confirmationDialog:
                 return .none
             }
             
