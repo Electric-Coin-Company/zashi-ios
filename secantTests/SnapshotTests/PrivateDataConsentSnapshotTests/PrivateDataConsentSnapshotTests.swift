@@ -13,14 +13,15 @@ import PrivateDataConsent
 class PrivateDataConsentSnapshotTests: XCTestCase {
     func testPrivateDataConsentSnapshot() throws {
         let store = Store(
-            initialState: .initial,
-            reducer: PrivateDataConsentReducer(networkType: .mainnet)
+            initialState: .initial
+        ) {
+            PrivateDataConsentReducer(networkType: .mainnet)
                 .dependency(\.databaseFiles, .noOp)
-        )
+        }
 
         addAttachments(PrivateDataConsentView(store: store))
         
-        ViewStore(store).send(.binding(.set(\.isAcknowledged, true)))
+        ViewStore(store, observe: { $0 }).send(.binding(.set(\.$isAcknowledged, true)))
 
         addAttachments(PrivateDataConsentView(store: store))
     }

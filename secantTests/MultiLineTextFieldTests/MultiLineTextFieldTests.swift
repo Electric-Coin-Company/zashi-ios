@@ -14,9 +14,10 @@ import UIComponents
 class MessageEditorTests: XCTestCase {
     func testIsCharLimited() async throws {
         let store = TestStore(
-            initialState: MessageEditorReducer.State(charLimit: 1),
-            reducer: { MessageEditorReducer() }
-        )
+            initialState: MessageEditorReducer.State(charLimit: 1)
+        ) {
+            MessageEditorReducer()
+        }
         
         let value = "test".redacted
         await store.send(.memoInputChanged(value)) { state in
@@ -30,10 +31,11 @@ class MessageEditorTests: XCTestCase {
 
     func testIsNotCharLimited() async throws {
         let store = TestStore(
-            initialState: MessageEditorReducer.State(),
-            reducer: { MessageEditorReducer() }
-        )
-        
+            initialState: MessageEditorReducer.State()
+        ) {
+            MessageEditorReducer()
+        }
+
         let value = "test".redacted
         await store.send(.memoInputChanged(value)) { state in
             state.text = value
@@ -46,10 +48,11 @@ class MessageEditorTests: XCTestCase {
 
     func testByteLength() async throws {
         let store = TestStore(
-            initialState: MessageEditorReducer.State(),
-            reducer: { MessageEditorReducer() }
-        )
-        
+            initialState: MessageEditorReducer.State()
+        ) {
+            MessageEditorReducer()
+        }
+
         let value = "test".redacted
         await store.send(.memoInputChanged(value)) { state in
             state.text = value
@@ -63,10 +66,11 @@ class MessageEditorTests: XCTestCase {
     
     func testByteLengthUnicode() async throws {
         let store = TestStore(
-            initialState: MessageEditorReducer.State(),
-            reducer: { MessageEditorReducer() }
-        )
-        
+            initialState: MessageEditorReducer.State()
+        ) {
+            MessageEditorReducer()
+        }
+
         // unicode char 😊 takes 4 bytes
         let value = "😊😊😊😊😊".redacted
         await store.send(.memoInputChanged(value)) { state in
@@ -81,10 +85,11 @@ class MessageEditorTests: XCTestCase {
     
     func testIsValid_CharLimit() async throws {
         let store = TestStore(
-            initialState: MessageEditorReducer.State(charLimit: 4),
-            reducer: { MessageEditorReducer() }
-        )
-        
+            initialState: MessageEditorReducer.State(charLimit: 4)
+        ) {
+            MessageEditorReducer()
+        }
+
         let value = "test".redacted
         await store.send(.memoInputChanged(value)) { state in
             state.text = value
@@ -97,10 +102,11 @@ class MessageEditorTests: XCTestCase {
 
     func testIsValid_NoCharLimit() async throws {
         let store = TestStore(
-            initialState: MessageEditorReducer.State(),
-            reducer: { MessageEditorReducer() }
-        )
-        
+            initialState: MessageEditorReducer.State()
+        ) {
+            MessageEditorReducer()
+        }
+
         let value = "test".redacted
         await store.send(.memoInputChanged(value)) { state in
             state.text = value
@@ -113,10 +119,11 @@ class MessageEditorTests: XCTestCase {
     
     func testIsInvalid() async throws {
         let store = TestStore(
-            initialState: MessageEditorReducer.State(charLimit: 3),
-            reducer: { MessageEditorReducer() }
-        )
-        
+            initialState: MessageEditorReducer.State(charLimit: 3)
+        ) {
+            MessageEditorReducer()
+        }
+
         let value = "test".redacted
         await store.send(.memoInputChanged(value)) { state in
             state.text = value
@@ -129,10 +136,11 @@ class MessageEditorTests: XCTestCase {
     
     func testCharLimitText_NoCharLimit() async throws {
         let store = TestStore(
-            initialState: MessageEditorReducer.State(),
-            reducer: { MessageEditorReducer() }
-        )
-        
+            initialState: MessageEditorReducer.State()
+        ) {
+            MessageEditorReducer()
+        }
+
         let value = "test".redacted
         await store.send(.memoInputChanged(value)) { state in
             state.text = value
@@ -146,10 +154,11 @@ class MessageEditorTests: XCTestCase {
     
     func testCharLimitText_CharLimit_LessCharacters() async throws {
         let store = TestStore(
-            initialState: MessageEditorReducer.State(charLimit: 5),
-            reducer: { MessageEditorReducer() }
-        )
-        
+            initialState: MessageEditorReducer.State(charLimit: 5)
+        ) {
+            MessageEditorReducer()
+        }
+
         let value = "test".redacted
         await store.send(.memoInputChanged(value)) { state in
             state.text = value
@@ -163,10 +172,11 @@ class MessageEditorTests: XCTestCase {
     
     func testCharLimitText_CharLimit_Exceeded() async throws {
         let store = TestStore(
-            initialState: MessageEditorReducer.State(charLimit: 3),
-            reducer: { MessageEditorReducer() }
-        )
-        
+            initialState: MessageEditorReducer.State(charLimit: 3)
+        ) {
+            MessageEditorReducer()
+        }
+
         let value = "test".redacted
         await store.send(.memoInputChanged(value)) { state in
             state.text = value

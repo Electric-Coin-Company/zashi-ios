@@ -45,9 +45,10 @@ struct TransactionAmountTextField_Previews: PreviewProvider {
                         validationType: .floatingPoint,
                         text: "".redacted
                     )
-                ),
-                reducer: TransactionAmountTextFieldReducer()
-            ),
+                )
+            ) {
+                TransactionAmountTextFieldReducer()
+            },
             tokenName: "ZEC"
         )
         .preferredColorScheme(.light)

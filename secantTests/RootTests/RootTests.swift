@@ -15,9 +15,8 @@ import WalletStorage
 import Root
 @testable import secant_testnet
 
+@MainActor
 class RootTests: XCTestCase {
-    static let testScheduler = DispatchQueue.test
-
     func testWalletInitializationState_Uninitialized() throws {
         let walletState = RootReducer.walletInitializationState(
             databaseFiles: .noOp,
@@ -98,104 +97,126 @@ class RootTests: XCTestCase {
         XCTAssertEqual(walletState, .initialized)
     }
 
-    func testRespondToWalletInitializationState_Uninitialized() throws {
+    @MainActor func testRespondToWalletInitializationState_Uninitialized() async throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: .initial
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
 
-        store.dependencies.mainQueue = Self.testScheduler.eraseToAnyScheduler()
+        store.dependencies.mainQueue = .immediate
+        store.dependencies.crashReporter = .noOp
+        store.dependencies.walletStorage = .noOp
+        store.dependencies.databaseFiles = .noOp
 
-        store.send(.initialization(.respondToWalletInitializationState(.uninitialized)))
-        
-        Self.testScheduler.advance(by: 3)
+        await store.send(.initialization(.respondToWalletInitializationState(.uninitialized)))
 
-        store.receive(.destination(.updateDestination(.onboarding))) { state in
+        await store.receive(.destination(.updateDestination(.onboarding))) { state in
             state.destinationState.destination = .onboarding
             state.appInitializationState = .uninitialized
         }
+        
+        await store.finish()
     }
 
-    func testRespondToWalletInitializationState_KeysMissing() throws {
+    func testRespondToWalletInitializationState_KeysMissing() async throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
-        
-        store.send(.initialization(.respondToWalletInitializationState(.keysMissing))) { state in
+            initialState: .initial
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
+
+        store.dependencies.mainQueue = .immediate
+        store.dependencies.crashReporter = .noOp
+        store.dependencies.walletStorage = .noOp
+        store.dependencies.databaseFiles = .noOp
+
+        await store.send(.initialization(.respondToWalletInitializationState(.keysMissing))) { state in
             state.appInitializationState = .keysMissing
             state.alert = AlertState.walletStateFailed(.keysMissing)
         }
+        
+        await store.finish()
     }
 
-    func testRespondToWalletInitializationState_FilesMissing() throws {
+    func testRespondToWalletInitializationState_FilesMissing() async throws {
         let walletStorageError: Error = "export failed"
         let zcashError = ZcashError.unknown(walletStorageError)
 
         let store = TestStore(
-            initialState: .initial,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: .initial
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
         
         store.dependencies.walletStorage = .noOp
         store.dependencies.walletStorage.exportWallet = { throw walletStorageError }
 
-        store.send(.initialization(.respondToWalletInitializationState(.filesMissing))) { state in
+        await store.send(.initialization(.respondToWalletInitializationState(.filesMissing))) { state in
             state.appInitializationState = .filesMissing
         }
         
-        store.receive(.initialization(.initializeSDK(.existingWallet)))
+        await store.receive(.initialization(.initializeSDK(.existingWallet)))
 
-        store.receive(.initialization(.checkBackupPhraseValidation)) { state in
+        await store.receive(.initialization(.checkBackupPhraseValidation)) { state in
             // failed is expected because environment is throwing errors
             state.appInitializationState = .failed
             state.alert = AlertState.cantLoadSeedPhrase()
         }
 
-        store.receive(.initialization(.initializationFailed(zcashError))) { state in
+        await store.receive(.initialization(.initializationFailed(zcashError))) { state in
             state.alert = AlertState.initializationFailed(zcashError)
         }
+        
+        await store.finish()
     }
 
-    func testRespondToWalletInitializationState_Initialized() throws {
+    func testRespondToWalletInitializationState_Initialized() async throws {
         let walletStorageError: Error = "export failed"
         let zcashError = ZcashError.unknown(walletStorageError)
 
         let store = TestStore(
-            initialState: .initial,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: .initial
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
         
         store.dependencies.walletStorage = .noOp
         store.dependencies.walletStorage.exportWallet = { throw walletStorageError }
 
-        store.send(.initialization(.respondToWalletInitializationState(.initialized)))
+        await store.send(.initialization(.respondToWalletInitializationState(.initialized)))
 
-        store.receive(.initialization(.initializeSDK(.existingWallet)))
+        await store.receive(.initialization(.initializeSDK(.existingWallet)))
 
-        store.receive(.initialization(.checkBackupPhraseValidation)) { state in
+        await store.receive(.initialization(.checkBackupPhraseValidation)) { state in
             // failed is expected because environment is throwing errors
             state.appInitializationState = .failed
             state.alert = AlertState.cantLoadSeedPhrase()
         }
         
-        store.receive(.initialization(.initializationFailed(zcashError))) { state in
+        await store.receive(.initialization(.initializationFailed(zcashError))) { state in
             state.alert = AlertState.initializationFailed(zcashError)
         }
+        
+        await store.finish()
     }
     
-    func testInitializationSuccessfullyDone() throws {
+    func testInitializationSuccessfullyDone() async throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: .initial
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
         
         // swiftlint:disable line_length
-        let uAddress = try UnifiedAddress(encoding: "utest1zkkkjfxkamagznjr6ayemffj2d2gacdwpzcyw669pvg06xevzqslpmm27zjsctlkstl2vsw62xrjktmzqcu4yu9zdhdxqz3kafa4j2q85y6mv74rzjcgjg8c0ytrg7dwyzwtgnuc76h", network: .testnet
+        let uAddress = try UnifiedAddress(
+            encoding: "utest1zkkkjfxkamagznjr6ayemffj2d2gacdwpzcyw669pvg06xevzqslpmm27zjsctlkstl2vsw62xrjktmzqcu4yu9zdhdxqz3kafa4j2q85y6mv74rzjcgjg8c0ytrg7dwyzwtgnuc76h", network: .testnet
         )
         
-        store.send(.initialization(.initializationSuccessfullyDone(uAddress))) { state in
+        await store.send(.initialization(.initializationSuccessfullyDone(uAddress))) { state in
             state.tabsState.addressDetailsState.uAddress = uAddress
         }
+        
+        await store.finish()
     }
 }

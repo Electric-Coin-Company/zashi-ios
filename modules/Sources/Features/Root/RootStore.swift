@@ -20,7 +20,7 @@ import ReadTransactionsStorage
 public typealias RootStore = Store<RootReducer.State, RootReducer.Action>
 public typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
 
-public struct RootReducer: ReducerProtocol {
+public struct RootReducer: Reducer {
     enum CancelId { case timer }
     enum SynchronizerCancelId { case timer }
     enum WalletConfigCancelId { case timer }
@@ -30,6 +30,7 @@ public struct RootReducer: ReducerProtocol {
     public struct State: Equatable {
         @PresentationState public var alert: AlertState<Action>?
         public var appInitializationState: InitializationState = .uninitialized
+        @PresentationState public var confirmationDialog: ConfirmationDialogState<Action.ConfirmationDialog>?
         public var debugState: DebugState
         public var destinationState: DestinationState
         public var exportLogsState: ExportLogsReducer.State
@@ -67,8 +68,14 @@ public struct RootReducer: ReducerProtocol {
     }
 
     public enum Action: Equatable {
+        public enum ConfirmationDialog: Equatable {
+            case fullRescan
+            case quickRescan
+        }
+
         case alert(PresentationAction<Action>)
         case binding(BindingAction<RootReducer.State>)
+        case confirmationDialog(PresentationAction<ConfirmationDialog>)
         case debug(DebugAction)
         case destination(DestinationAction)
         case exportLogs(ExportLogsReducer.Action)
@@ -104,7 +111,7 @@ public struct RootReducer: ReducerProtocol {
     }
     
     @ReducerBuilder<State, Action>
-    var core: some ReducerProtocol<State, Action> {
+    var core: some Reducer<State, Action> {
         Scope(state: \.tabsState, action: /Action.tabs) {
             TabsReducer(tokenName: tokenName, networkType: zcashNetwork.networkType)
         }
@@ -135,7 +142,7 @@ public struct RootReducer: ReducerProtocol {
         debugReduce()
     }
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         self.core
 
         Reduce { state, action in
@@ -150,6 +157,7 @@ public struct RootReducer: ReducerProtocol {
             default: return .none
             }
         }
+        .ifLet(\.$confirmationDialog, action: /Action.confirmationDialog)
     }
 }
 
@@ -279,18 +287,18 @@ extension AlertState where Action == RootReducer.Action {
     }
 }
      
-extension ConfirmationDialogState where Action == RootReducer.Action {
+extension ConfirmationDialogState where Action == RootReducer.Action.ConfirmationDialog {
     public static func rescanRequest() -> ConfirmationDialogState {
         ConfirmationDialogState {
             TextState(L10n.Root.Debug.Dialog.Rescan.title)
         } actions: {
-            ButtonState(role: .destructive, action: .debug(.quickRescan)) {
+            ButtonState(role: .destructive, action: .quickRescan) {
                 TextState(L10n.Root.Debug.Dialog.Rescan.Option.quick)
             }
-            ButtonState(role: .destructive, action: .debug(.fullRescan)) {
+            ButtonState(role: .destructive, action: .fullRescan) {
                 TextState(L10n.Root.Debug.Dialog.Rescan.Option.full)
             }
-            ButtonState(role: .cancel, action: .alert(.dismiss)) {
+            ButtonState(role: .cancel) {
                 TextState(L10n.General.cancel)
             }
         } message: {
@@ -320,11 +328,12 @@ extension RootReducer.State {
 extension RootStore {
     public static var placeholder: RootStore {
         RootStore(
-            initialState: .initial,
-            reducer: RootReducer(
+            initialState: .initial
+        ) {
+            RootReducer(
                 tokenName: "ZEC",
                 zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
             ).logging()
-        )
+        }
     }
 }

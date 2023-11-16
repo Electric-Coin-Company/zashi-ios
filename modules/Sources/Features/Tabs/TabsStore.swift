@@ -19,7 +19,7 @@ import SwiftUI
 public typealias TabsStore = Store<TabsReducer.State, TabsReducer.Action>
 public typealias TabsViewStore = ViewStore<TabsReducer.State, TabsReducer.Action>
 
-public struct TabsReducer: ReducerProtocol {
+public struct TabsReducer: Reducer {
     let tokenName: String
     let networkType: NetworkType
 
@@ -90,7 +90,7 @@ public struct TabsReducer: ReducerProtocol {
         self.networkType = networkType
     }
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         Scope(state: \.sendState, action: /Action.send) {
             SendFlowReducer(networkType: networkType)
         }
@@ -152,14 +152,13 @@ public struct TabsReducer: ReducerProtocol {
 
 extension TabsStore {
     public static var demo = TabsStore(
-        initialState: .initial,
-        reducer: {
-            TabsReducer(
-                tokenName: "TAZ",
-                networkType: ZcashNetworkBuilder.network(for: .testnet).networkType
-            )
-        }
-    )
+        initialState: .initial
+    ) {
+        TabsReducer(
+            tokenName: "TAZ",
+            networkType: ZcashNetworkBuilder.network(for: .testnet).networkType
+        )
+    }
 }
 
 extension TabsStore {

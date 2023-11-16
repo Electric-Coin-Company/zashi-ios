@@ -15,8 +15,9 @@ import Scan
 public typealias HomeStore = Store<HomeReducer.State, HomeReducer.Action>
 public typealias HomeViewStore = ViewStore<HomeReducer.State, HomeReducer.Action>
 
-public struct HomeReducer: ReducerProtocol {
-    private enum CancelId { case timer }
+public struct HomeReducer: Reducer {
+    private enum CancelStateId { case timer }
+    private enum CancelEventId { case timer }
     let networkType: NetworkType
 
     public struct State: Equatable {
@@ -97,7 +98,7 @@ public struct HomeReducer: ReducerProtocol {
         self.networkType = networkType
     }
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         Scope(state: \.transactionListState, action: /Action.transactionList) {
             TransactionListReducer()
         }
@@ -108,27 +109,42 @@ public struct HomeReducer: ReducerProtocol {
                 state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
 
                 if diskSpaceChecker.hasEnoughFreeSpaceForSync() {
-                    let syncEffect = sdkSynchronizer.stateStream()
-                        .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                        .map(HomeReducer.Action.synchronizerStateChanged)
-                        .eraseToEffect()
-                        .cancellable(id: CancelId.timer, cancelInFlight: true)
                     return .merge(
                         Effect.send(.updateDestination(nil)),
-                        syncEffect
+                        .publisher {
+                            sdkSynchronizer.stateStream()
+                                .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                                .map(HomeReducer.Action.synchronizerStateChanged)
+                        }
+                        .cancellable(id: CancelStateId.timer, cancelInFlight: true),
+                        .publisher {
+                            sdkSynchronizer.eventStream()
+                                .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                                .compactMap {
+                                    if case SynchronizerEvent.foundTransactions = $0 {
+                                        return HomeReducer.Action.foundTransactions
+                                    }
+                                    return nil
+                                }
+                        }
+                        .cancellable(id: CancelEventId.timer, cancelInFlight: true)
                     )
                 } else {
                     return Effect.send(.updateDestination(.notEnoughFreeDiskSpace))
                 }
                 
             case .onDisappear:
-                return .none
-                return .cancel(id: CancelId.timer)
-                
+                return .concatenate(
+                    .cancel(id: CancelStateId.timer),
+                    .cancel(id: CancelEventId.timer)
+                )
+
             case .resolveReviewRequest:
                 if reviewRequest.canRequestReview() {
                     state.canRequestReview = true
-                    return .fireAndForget { reviewRequest.reviewRequested() }
+                    return .run { _ in
+                        reviewRequest.reviewRequested()
+                    }
                 }
                 return .none
                 
@@ -158,15 +174,19 @@ public struct HomeReducer: ReducerProtocol {
                     return Effect.send(.showSynchronizerErrorAlert(error.toZcashError()))
 
                 case .upToDate:
-                    return .fireAndForget { reviewRequest.syncFinished() }
+                    return .run { _ in
+                        reviewRequest.syncFinished()
+                    }
 
                 default:
                     return .none
                 }
 
             case .foundTransactions:
-                return .fireAndForget { reviewRequest.foundTransactions() }
-
+                return .run { _ in
+                    reviewRequest.foundTransactions()
+                }
+                
             case .updateDestination(let destination):
                 state.destination = destination
                 return .none
@@ -250,9 +270,10 @@ extension HomeReducer.State {
 extension HomeStore {
     public static var placeholder: HomeStore {
         HomeStore(
-            initialState: .initial,
-            reducer: HomeReducer(networkType: .testnet)
-        )
+            initialState: .initial
+        ) {
+            HomeReducer(networkType: .testnet)
+        }
     }
 
     public static var error: HomeStore {
@@ -265,8 +286,9 @@ extension HomeStore {
                 ),
                 walletConfig: .initial,
                 transactionListState: .initial
-            ),
-            reducer: HomeReducer(networkType: .testnet)
-        )
+            )
+        ) {
+            HomeReducer(networkType: .testnet)
+        }
     }
 }

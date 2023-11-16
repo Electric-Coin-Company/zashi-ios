@@ -41,9 +41,10 @@ extension RootReducer {
                 return .none
                 
             case .initialization(.appDelegate(.willEnterForeground)):
-                return Effect.send(.initialization(.retryStart))
-                    .delay(for: 1.0, scheduler: mainQueue)
-                    .eraseToEffect()
+                return .run { send in
+                    try await mainQueue.sleep(for: .seconds(1))
+                    await send(.initialization(.retryStart))
+                }
                 
             case .initialization(.synchronizerStartFailed):
                 return .none
@@ -64,16 +65,18 @@ extension RootReducer {
             case .initialization(.appDelegate(.didFinishLaunching)):
                 // TODO: [#704], trigger the review request logic when approved by the team,
                 // https://github.com/zcash/secant-ios-wallet/issues/704
-                return Effect.send(.initialization(.initialSetups))
-                    .delay(for: 0.02, scheduler: mainQueue)
-                    .eraseToEffect()
+                return .run { send in
+                    try await mainQueue.sleep(for: .seconds(0.02))
+                    await send(.initialization(.initialSetups))
+                }
 
             case .initialization(.checkWalletConfig):
-                return walletConfigProvider.load()
-                    .receive(on: mainQueue)
-                    .map(RootReducer.Action.walletConfigLoaded)
-                    .eraseToEffect()
-                    .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
+                return .publisher {
+                    walletConfigProvider.load()
+                        .receive(on: mainQueue)
+                        .map(RootReducer.Action.walletConfigLoaded)
+                }
+                .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
 
             case .walletConfigLoaded(let walletConfig):
                 if walletConfig == WalletConfig.initial {
@@ -94,9 +97,10 @@ extension RootReducer {
                 /// We need to fetch data from keychain, in order to be 100% sure the keychain can be read we delay the check a bit
                 return .concatenate(
                     Effect.send(.initialization(.configureCrashReporter)),
-                    Effect.send(.initialization(.checkWalletInitialization))
-                        .delay(for: 0.02, scheduler: mainQueue)
-                        .eraseToEffect()
+                    .run { send in
+                        try await mainQueue.sleep(for: .seconds(0.02))
+                        await send(.initialization(.checkWalletInitialization))
+                    }
                 )
 
                 /// Evaluate the wallet's state based on keychain keys and database files presence
@@ -129,10 +133,11 @@ extension RootReducer {
                     )
                 case .uninitialized:
                     state.appInitializationState = .uninitialized
-                    return Effect.send(.destination(.updateDestination(.onboarding)))
-                        .delay(for: 3, scheduler: mainQueue)
-                        .eraseToEffect()
-                        .cancellable(id: CancelId.timer, cancelInFlight: true)
+                    return .run { send in
+                        try await mainQueue.sleep(for: .seconds(3))
+                        await send(.destination(.updateDestination(.onboarding)))
+                    }
+                    .cancellable(id: CancelId.timer, cancelInFlight: true)
                 }
 
                 /// Stored wallet is present, database files may or may not be present, trying to initialize app state variables and environments.
@@ -172,7 +177,7 @@ extension RootReducer {
                 return .none
 
             case .initialization(.checkBackupPhraseValidation):
-                guard let storedWallet = state.storedWallet else {
+                guard let _ = state.storedWallet else {
                     state.appInitializationState = .failed
                     state.alert = AlertState.cantLoadSeedPhrase()
                     return .none
@@ -180,10 +185,11 @@ extension RootReducer {
 
                 state.appInitializationState = .initialized
 
-                return Effect.send(.destination(.updateDestination(.tabs)))
-                    .delay(for: 3, scheduler: mainQueue)
-                    .eraseToEffect()
-                    .cancellable(id: CancelId.timer, cancelInFlight: true)
+                return .run { send in
+                    try await mainQueue.sleep(for: .seconds(3))
+                    await send(.destination(.updateDestination(.tabs)))
+                }
+                .cancellable(id: CancelId.timer, cancelInFlight: true)
 
             case .initialization(.nukeWalletRequest):
                 state.alert = AlertState.wipeRequest()
@@ -193,13 +199,14 @@ extension RootReducer {
                 guard let wipePublisher = sdkSynchronizer.wipe() else {
                     return Effect.send(.nukeWalletFailed)
                 }
-                return wipePublisher
-                    .replaceEmpty(with: Void())
-                    .map { _ in return RootReducer.Action.nukeWalletSucceeded }
-                    .replaceError(with: RootReducer.Action.nukeWalletFailed)
-                    .receive(on: mainQueue)
-                    .eraseToEffect()
-                    .cancellable(id: SynchronizerCancelId.timer, cancelInFlight: true)
+                return .publisher {
+                    wipePublisher
+                        .replaceEmpty(with: Void())
+                        .map { _ in return RootReducer.Action.nukeWalletSucceeded }
+                        .replaceError(with: RootReducer.Action.nukeWalletFailed)
+                        .receive(on: mainQueue)
+                }
+                .cancellable(id: SynchronizerCancelId.timer, cancelInFlight: true)
 
             case .nukeWalletSucceeded:
                 state = .initial
@@ -215,7 +222,7 @@ extension RootReducer {
                 )
 
             case .nukeWalletFailed:
-                let backDestination: EffectTask<RootReducer.Action>
+                let backDestination: Effect<RootReducer.Action>
                 if let previousDestination = state.destinationState.previousDestination {
                     backDestination = Effect.send(.destination(.updateDestination(previousDestination)))
                 } else {
@@ -229,7 +236,7 @@ extension RootReducer {
 
             case .welcome(.debugMenuStartup), .tabs(.home(.debugMenuStartup)):
                 return .concatenate(
-                    EffectTask.cancel(id: CancelId.timer),
+                    Effect.cancel(id: CancelId.timer),
                     Effect.send(.destination(.updateDestination(.startup)))
                 )
 
@@ -264,7 +271,7 @@ extension RootReducer {
                 return Effect.send(.destination(.updateDestination(.tabs)))
                 
             case .tabs, .destination, .onboarding, .sandbox,
-            .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested:
+                    .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, .confirmationDialog:
                 return .none
             }
         }

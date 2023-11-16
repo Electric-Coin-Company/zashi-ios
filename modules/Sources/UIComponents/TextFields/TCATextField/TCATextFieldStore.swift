@@ -10,7 +10,7 @@ import Utils
 
 public typealias TCATextFieldStore = Store<TCATextFieldReducer.State, TCATextFieldReducer.Action>
 
-public struct TCATextFieldReducer: ReducerProtocol {
+public struct TCATextFieldReducer: Reducer {
     public struct State: Equatable {
         public var validationType: String.ValidationType?
         public var text = "".redacted
@@ -26,7 +26,7 @@ public struct TCATextFieldReducer: ReducerProtocol {
         case set(RedactableString)
     }
     
-    public func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
+    public func reduce(into state: inout State, action: Action) -> ComposableArchitecture.Effect<Action> {
         switch action {
         case .set(let text):
             state.text = text
@@ -41,16 +41,18 @@ public struct TCATextFieldReducer: ReducerProtocol {
 extension TCATextFieldStore {
     public static var transaction: Self {
         .init(
-            initialState: .init(validationType: .customFloatingPoint(.zcashNumberFormatter), text: "".redacted),
-            reducer: TCATextFieldReducer()
-        )
+            initialState: .init(validationType: .customFloatingPoint(.zcashNumberFormatter), text: "".redacted)
+        ) {
+            TCATextFieldReducer()
+        }
     }
 
     public static var address: Self {
         .init(
-            initialState: .init(validationType: .email, text: "".redacted),
-            reducer: TCATextFieldReducer()
-        )
+            initialState: .init(validationType: .email, text: "".redacted)
+        ) {
+            TCATextFieldReducer()
+        }
     }
 }
 

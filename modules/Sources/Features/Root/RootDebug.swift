@@ -15,16 +15,12 @@ import Models
 /// In this file is a collection of helpers that control all state and action related operations
 /// for the `RootReducer` with a connection to the UI navigation.
 extension RootReducer {
-    public struct DebugState: Equatable {
-        @PresentationState public var rescanDialog: ConfirmationDialogState<Action>?
-    }
+    public struct DebugState: Equatable { }
     
     public indirect enum DebugAction: Equatable {
         case cancelRescan
         case cantStartSync(ZcashError)
         case flagUpdated
-        case fullRescan
-        case quickRescan
         case rateTheApp
         case rescanBlockchain
         case rewindDone(ZcashError?, RootReducer.Action)
@@ -42,18 +38,18 @@ extension RootReducer {
                 return .none
                 
             case .debug(.rescanBlockchain):
-                state.debugState.rescanDialog = ConfirmationDialogState.rescanRequest()
+                state.confirmationDialog = ConfirmationDialogState.rescanRequest()
                 return .none
 
             case .debug(.cancelRescan):
-                state.debugState.rescanDialog = nil
+                state.confirmationDialog = nil
                 return .none
 
-            case .debug(.quickRescan):
+            case .confirmationDialog(.presented(.quickRescan)):
                 state.destinationState.destination = .tabs
                 return rewind(policy: .quick, sourceAction: .quickRescan)
 
-            case .debug(.fullRescan):
+            case .confirmationDialog(.presented(.fullRescan)):
                 state.destinationState.destination = .tabs
                 return rewind(policy: .birthday, sourceAction: .fullRescan)
 
@@ -72,18 +68,20 @@ extension RootReducer {
                 }
                 
             case let .debug(.updateFlag(flag, isEnabled)):
-                return walletConfigProvider.update(flag, !isEnabled)
-                    .receive(on: mainQueue)
-                    .map { _ in return Action.debug(.flagUpdated) }
-                    .eraseToEffect()
-                    .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
+                return .publisher {
+                    walletConfigProvider.update(flag, !isEnabled)
+                        .receive(on: mainQueue)
+                        .map { _ in return Action.debug(.flagUpdated) }
+                }
+                .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
 
             case .debug(.flagUpdated):
-                return walletConfigProvider.load()
-                    .receive(on: mainQueue)
-                    .map { Action.debug(.walletConfigLoaded($0)) }
-                    .eraseToEffect()
-                    .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
+                return .publisher {
+                    walletConfigProvider.load()
+                        .receive(on: mainQueue)
+                        .map { Action.debug(.walletConfigLoaded($0)) }
+                }
+                .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
 
             case let .debug(.walletConfigLoaded(walletConfig)):
                 return Effect.send(.updateStateAfterConfigUpdate(walletConfig))
@@ -100,16 +98,22 @@ extension RootReducer {
         }
     }
 
-    private func rewind(policy: RewindPolicy, sourceAction: DebugAction) -> EffectPublisher<RootReducer.Action, Never> {
-        return sdkSynchronizer.rewind(policy)
-            .replaceEmpty(with: Void())
-            .map { _ in return RootReducer.Action.debug(.rewindDone(nil, .debug(sourceAction))) }
-            .catch { error in
-                return Just(RootReducer.Action.debug(.rewindDone(error.toZcashError(), .debug(sourceAction)))).eraseToAnyPublisher()
-            }
-            .receive(on: mainQueue)
-            .eraseToEffect()
-            .cancellable(id: SynchronizerCancelId.timer, cancelInFlight: true)
+    private func rewind(policy: RewindPolicy, sourceAction: Action.ConfirmationDialog) -> Effect<RootReducer.Action> {
+        Effect.publisher {
+            sdkSynchronizer.rewind(policy)
+                .replaceEmpty(with: Void())
+                .map { _ in
+                    RootReducer.Action.debug(.rewindDone(nil, .confirmationDialog(.presented(sourceAction))))
+                }
+                .catch { error in
+                    Just(
+                        RootReducer.Action.debug(.rewindDone(error.toZcashError(), .confirmationDialog(.presented(sourceAction))))
+                    )
+                    .eraseToAnyPublisher()
+                }
+                .receive(on: mainQueue)
+        }
+        .cancellable(id: SynchronizerCancelId.timer, cancelInFlight: true)
     }
 }
 

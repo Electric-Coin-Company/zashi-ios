@@ -11,7 +11,7 @@ import ComposableArchitecture
 
 public typealias CurrencySelectionStore = Store<CurrencySelectionReducer.State, CurrencySelectionReducer.Action>
 
-public struct CurrencySelectionReducer: ReducerProtocol {
+public struct CurrencySelectionReducer: Reducer {
     public struct State: Equatable {
         public enum Currency: Equatable {
             case usd
@@ -38,7 +38,7 @@ public struct CurrencySelectionReducer: ReducerProtocol {
     
     public init() {}
     
-    public func reduce(into state: inout State, action: Action) -> ComposableArchitecture.EffectTask<Action> {
+    public func reduce(into state: inout State, action: Action) -> ComposableArchitecture.Effect<Action> {
         switch action {
         case .swapCurrencyType:
             switch state.currencyType {

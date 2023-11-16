@@ -18,7 +18,7 @@ public struct ImportBirthdayView: View {
     }
     
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             VStack(alignment: .center) {
                 ZashiIcon()
                     .padding(.vertical, 30)

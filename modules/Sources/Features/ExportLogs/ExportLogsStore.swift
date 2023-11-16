@@ -16,7 +16,7 @@ import Generated
 public typealias ExportLogsStore = Store<ExportLogsReducer.State, ExportLogsReducer.Action>
 public typealias ExportLogsViewStore = ViewStore<ExportLogsReducer.State, ExportLogsReducer.Action>
 
-public struct ExportLogsReducer: ReducerProtocol {
+public struct ExportLogsReducer: Reducer {
     public struct State: Equatable {
         @PresentationState public var alert: AlertState<Action>?
         public var exportLogsDisabled = false
@@ -46,7 +46,7 @@ public struct ExportLogsReducer: ReducerProtocol {
 
     public init() {}
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case .alert(.presented(let action)):

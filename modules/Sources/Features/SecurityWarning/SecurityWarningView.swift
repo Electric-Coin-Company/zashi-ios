@@ -19,7 +19,7 @@ public struct SecurityWarningView: View {
     }
 
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             VStack(alignment: .center) {
                 Asset.Assets.zashiLogo.image
                     .resizable()
@@ -46,7 +46,7 @@ public struct SecurityWarningView: View {
                 .accentColor(.black)
 
                 HStack {
-                    Toggle(isOn: viewStore.binding(\.$isAcknowledged), label: {
+                    Toggle(isOn: viewStore.$isAcknowledged, label: {
                         Text(L10n.SecurityWarning.acknowledge)
                             .font(.custom(FontFamily.Inter.medium.name, size: 14))
                     })

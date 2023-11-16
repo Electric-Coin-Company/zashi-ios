@@ -28,6 +28,6 @@ public struct NotEnoughFreeSpaceView: View {
 
 struct NotEnoughFreeSpaceView_Previews: PreviewProvider {
     static var previews: some View {
-        NotEnoughFreeSpaceView(viewStore: ViewStore(HomeStore.placeholder))
+        NotEnoughFreeSpaceView(viewStore: ViewStore(HomeStore.placeholder, observe: { $0 }))
     }
 }

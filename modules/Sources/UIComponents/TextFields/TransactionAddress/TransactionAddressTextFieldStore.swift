@@ -13,7 +13,7 @@ import ZcashSDKEnvironment
 
 public typealias TransactionAddressTextFieldStore = Store<TransactionAddressTextFieldReducer.State, TransactionAddressTextFieldReducer.Action>
 
-public struct TransactionAddressTextFieldReducer: ReducerProtocol {
+public struct TransactionAddressTextFieldReducer: Reducer {
     let networkType: NetworkType
     
     public struct State: Equatable {
@@ -41,7 +41,7 @@ public struct TransactionAddressTextFieldReducer: ReducerProtocol {
         self.networkType = networkType
     }
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case .clearAddress:
@@ -74,7 +74,8 @@ extension TransactionAddressTextFieldReducer.State {
 
 extension TransactionAddressTextFieldStore {
     public static let placeholder = TransactionAddressTextFieldStore(
-        initialState: .initial,
-        reducer: TransactionAddressTextFieldReducer(networkType: .testnet)
-    )
+        initialState: .initial
+    ) {
+        TransactionAddressTextFieldReducer(networkType: .testnet)
+    }
 }

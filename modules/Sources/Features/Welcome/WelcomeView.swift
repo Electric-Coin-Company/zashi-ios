@@ -20,7 +20,7 @@ public struct WelcomeView: View {
 
     public var body: some View {
         GeometryReader { proxy in
-            WithViewStore(store) { viewStore in
+            WithViewStore(store, observe: { $0 }) { viewStore in
                 Asset.Assets.zashiLogo.image
                     .resizable()
                     .frame(width: 249, height: 321)

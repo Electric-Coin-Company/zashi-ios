@@ -8,7 +8,6 @@
 import Foundation
 import os
 import ZcashLightClientKit
-import Utils
 
 extension OSLogger {
     public static let live = OSLogger(logLevel: .debug, category: LoggerConstants.tcaLogs)

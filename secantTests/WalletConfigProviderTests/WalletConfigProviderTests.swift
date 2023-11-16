@@ -120,25 +120,28 @@ class WalletConfigProviderTests: XCTestCase {
         return configuration
     }
     
-    func testPropagationOfFlagUpdate() throws {
+    @MainActor func testPropagationOfFlagUpdate() async throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-        )
+            initialState: .initial
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
         
         // Change any of the flags from the default value
         var defaultRawFlags = WalletConfig.initial.flags
         defaultRawFlags[.onboardingFlow] = true
         let flags = WalletConfig(flags: defaultRawFlags)
         
-        store.send(.debug(.walletConfigLoaded(flags)))
+        await store.send(.debug(.walletConfigLoaded(flags)))
         
         // The new flag's value has to be propagated to all `walletConfig` instances
-        store.receive(.updateStateAfterConfigUpdate(flags)) { state in
+        await store.receive(.updateStateAfterConfigUpdate(flags)) { state in
             state.walletConfig = flags
             state.onboardingState.walletConfig = flags
             state.tabsState.homeState.walletConfig = flags
         }
+        
+        await store.finish()
     }
 }
 

@@ -13,17 +13,18 @@ import RecoveryPhraseDisplay
 @testable import secant_testnet
 
 class RecoveryPhraseDisplayReducerTests: XCTestCase {
-    func testCopyToBuffer() {
+    @MainActor func testCopyToBuffer() async {
         let testPasteboard = PasteboardClient.testPasteboard
 
         let store = TestStore(
-            initialState: RecoveryPhraseDisplayStore.test,
-            reducer: RecoveryPhraseDisplayReducer()
-        )
+            initialState: RecoveryPhraseDisplayStore.test
+        ) {
+            RecoveryPhraseDisplayReducer()
+        }
 
         store.dependencies.pasteboard = testPasteboard
 
-        store.send(.copyToBufferPressed) { state in
+        await store.send(.copyToBufferPressed) { state in
             state.phrase = .placeholder
             state.showCopyToBufferAlert = true
         }
@@ -32,6 +33,8 @@ class RecoveryPhraseDisplayReducerTests: XCTestCase {
             testPasteboard.getString(),
             RecoveryPhrase.placeholder.toString()
         )
+        
+        await store.finish()
     }
 }
 

@@ -14,7 +14,7 @@ import Generated
 public typealias MessageEditorStore = Store<MessageEditorReducer.State, MessageEditorReducer.Action>
 public typealias MessageEditorViewStore = ViewStore<MessageEditorReducer.State, MessageEditorReducer.Action>
 
-public struct MessageEditorReducer: ReducerProtocol {
+public struct MessageEditorReducer: Reducer {
     public struct State: Equatable {
         /// default 0, no char limit
         public var charLimit = 0
@@ -54,7 +54,7 @@ public struct MessageEditorReducer: ReducerProtocol {
     
     public init() {}
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case .memoInputChanged(let text):
@@ -69,9 +69,10 @@ public struct MessageEditorReducer: ReducerProtocol {
 
 extension MessageEditorStore {
     public static let placeholder = MessageEditorStore(
-        initialState: .initial,
-        reducer: MessageEditorReducer()
-    )
+        initialState: .initial
+    ) {
+        MessageEditorReducer()
+    }
 }
 
 // MARK: - Placeholders

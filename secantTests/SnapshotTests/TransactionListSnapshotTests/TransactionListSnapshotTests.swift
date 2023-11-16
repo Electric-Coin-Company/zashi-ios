@@ -16,11 +16,12 @@ import Home
 class TransactionListSnapshotTests: XCTestCase {
     func testFullTransactionListSnapshot() throws {
         let store = TransactionListStore(
-            initialState: .placeholder,
-            reducer: TransactionListReducer()
+            initialState: .placeholder
+        ) {
+            TransactionListReducer()
                 .dependency(\.sdkSynchronizer, .mock)
                 .dependency(\.mainQueue, .immediate)
-        )
+        }
         
         // landing wallet events screen
         addAttachments(

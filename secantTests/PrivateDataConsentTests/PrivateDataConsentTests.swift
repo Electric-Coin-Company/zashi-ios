@@ -10,44 +10,54 @@ import ComposableArchitecture
 import PrivateDataConsent
 @testable import secant_testnet
 
+@MainActor
 final class PrivateDataConsentTests: XCTestCase {
-    func testURLsProperlyPrepared() throws {
+    func testURLsProperlyPrepared() async throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: PrivateDataConsentReducer(networkType: .testnet)
-        )
+            initialState: .initial
+        ) {
+            PrivateDataConsentReducer(networkType: .testnet)
+        }
         
         let URL = URL(string: "https://electriccoin.co")!
         
         store.dependencies.databaseFiles.dataDbURLFor = { _ in URL }
         
-        store.send(.onAppear) { state in
+        await store.send(.onAppear) { state in
             state.dataDbURL = [URL]
         }
+        
+        await store.finish()
     }
     
-    func testExportRequestSet() throws {
+    func testExportRequestSet() async throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: PrivateDataConsentReducer(networkType: .testnet)
-        )
+            initialState: .initial
+        ) {
+            PrivateDataConsentReducer(networkType: .testnet)
+        }
         
-        store.send(.exportRequested) { state in
+        await store.send(.exportRequested) { state in
             state.isExporting = true
         }
+        
+        await store.finish()
     }
     
-    func testExportingDoneWhenFinished() throws {
+    func testExportingDoneWhenFinished() async throws {
         let store = TestStore(
             initialState: PrivateDataConsentReducer.State(
                 isExporting: true,
                 dataDbURL: []
-            ),
-            reducer: PrivateDataConsentReducer(networkType: .testnet)
-        )
+            )
+        ) {
+            PrivateDataConsentReducer(networkType: .testnet)
+        }
         
-        store.send(.shareFinished) { state in
+        await store.send(.shareFinished) { state in
             state.isExporting = false
         }
+        
+        await store.finish()
     }
 }

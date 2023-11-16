@@ -44,13 +44,14 @@ class HomeSnapshotTests: XCTestCase {
                 synchronizerStatusSnapshot: .initial,
                 walletConfig: .initial,
                 transactionListState: .init(transactionList: IdentifiedArrayOf(uniqueElements: transactionList))
-            ),
-            reducer: HomeReducer(networkType: .testnet)
+            )
+        ) {
+            HomeReducer(networkType: .testnet)
                 .dependency(\.diskSpaceChecker, .mockEmptyDisk)
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.mainQueue, .immediate)
                 .dependency(\.reviewRequest, .noOp)
-        )
+        }
 
         // landing home screen
         addAttachments(HomeView(store: store, tokenName: "ZEC"))

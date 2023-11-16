@@ -96,7 +96,7 @@ extension RootReducer {
 
             case .splashRemovalRequested:
                 return .run { send in
-                    try await Task.sleep(nanoseconds: 10_000_000)
+                    try await mainQueue.sleep(for: .seconds(0.01))
                     await send(.splashFinished)
                 }
             
@@ -105,7 +105,7 @@ extension RootReducer {
                 return .none
 
             case .tabs, .initialization, .onboarding, .sandbox, .updateStateAfterConfigUpdate, .alert,
-            .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .exportLogs:
+                    .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .exportLogs, .confirmationDialog:
                 return .none
             }
             

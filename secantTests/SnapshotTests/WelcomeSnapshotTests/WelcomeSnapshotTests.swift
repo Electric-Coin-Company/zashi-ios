@@ -13,9 +13,10 @@ import Welcome
 class WelcomeSnapshotTests: XCTestCase {
     func testWelcomeSnapshot() throws {
         let store = Store(
-            initialState: .initial,
-            reducer: WelcomeReducer()
-        )
+            initialState: .initial
+        ) {
+            WelcomeReducer()
+        }
 
         addAttachments(WelcomeView(store: store))
     }

@@ -8,7 +8,7 @@
 import ComposableArchitecture
 import ZcashLightClientKit
 
-extension ReducerProtocol {
+extension Reducer {
     @inlinable
     public func logging(
         _ logger: ReducerLogger<State, Action>? = .tcaLogger
@@ -44,7 +44,7 @@ extension ReducerLogger {
     }
 }
 
-public struct LogChangesReducer<Base: ReducerProtocol>: ReducerProtocol {
+public struct LogChangesReducer<Base: Reducer>: Reducer {
     @usableFromInline let base: Base
     
     @usableFromInline let logger: ReducerLogger<Base.State, Base.Action>?
@@ -58,7 +58,7 @@ public struct LogChangesReducer<Base: ReducerProtocol>: ReducerProtocol {
     @inlinable
     public func reduce(
         into state: inout Base.State, action: Base.Action
-    ) -> EffectTask<Base.Action> {
+    ) -> Effect<Base.Action> {
         guard let logger else {
             return self.base.reduce(into: &state, action: action)
         }
@@ -66,7 +66,7 @@ public struct LogChangesReducer<Base: ReducerProtocol>: ReducerProtocol {
         let oldState = state
         let effects = self.base.reduce(into: &state, action: action)
         return effects.merge(
-            with: .fireAndForget { [newState = state] in
+            with: .run { [newState = state] _ in
                 logger.logChange(receivedAction: action, oldState: oldState, newState: newState)
             }
         )

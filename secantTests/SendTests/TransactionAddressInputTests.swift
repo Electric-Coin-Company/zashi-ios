@@ -21,9 +21,10 @@ class TransactionAddressTextFieldTests: XCTestCase {
                             validationType: nil,
                             text: "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
                         )
-                ),
-            reducer: { TransactionAddressTextFieldReducer(networkType: .testnet) }
-        )
+                )
+        ) {
+            TransactionAddressTextFieldReducer(networkType: .testnet)
+        }
 
         await store.send(.clearAddress) { state in
             state.textFieldState.text = "".redacted

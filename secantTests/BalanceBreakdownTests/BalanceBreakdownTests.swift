@@ -15,34 +15,38 @@ import BalanceBreakdown
 @testable import secant_testnet
 
 class BalanceBreakdownTests: XCTestCase {
-    func testOnAppear() throws {
+    @MainActor func testOnAppear() async throws {
         let store = TestStore(
-            initialState: .placeholder,
-            reducer: BalanceBreakdownReducer(networkType: .testnet)
-        )
+            initialState: .placeholder
+        ) {
+            BalanceBreakdownReducer(networkType: .testnet)
+        }
         
         store.dependencies.sdkSynchronizer = .mocked()
         store.dependencies.mainQueue = .immediate
         store.dependencies.numberFormatter = .noOp
         
-        store.send(.onAppear)
+        await store.send(.onAppear)
         
         // expected side effects as a result of .onAppear registration
-        store.receive(.synchronizerStateChanged(.zero))
-        store.receive(.updateLatestBlock) { state in
+        await store.receive(.synchronizerStateChanged(.zero))
+        await store.receive(.updateLatestBlock) { state in
             state.latestBlock = ""
         }
 
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancels the observer of the synchronizer status change.
-        store.send(.onDisappear)
+        await store.send(.onDisappear)
+        
+        await store.finish()
     }
 
     @MainActor func testShieldFundsSucceed() async throws {
         let store = TestStore(
-            initialState: .placeholder,
-            reducer: BalanceBreakdownReducer(networkType: .testnet)
-        )
+            initialState: .placeholder
+        ) {
+            BalanceBreakdownReducer(networkType: .testnet)
+        }
 
         store.dependencies.sdkSynchronizer = .mock
         store.dependencies.derivationTool = .liveValue
@@ -61,13 +65,16 @@ class BalanceBreakdownTests: XCTestCase {
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancels the observer of the synchronizer status change.
         await store.send(.onDisappear)
+        
+        await store.finish()
     }
 
     @MainActor func testShieldFundsFails() async throws {
         let store = TestStore(
-            initialState: .placeholder,
-            reducer: BalanceBreakdownReducer(networkType: .testnet)
-        )
+            initialState: .placeholder
+        ) {
+            BalanceBreakdownReducer(networkType: .testnet)
+        }
 
         store.dependencies.sdkSynchronizer = .mocked(shieldFunds: { _, _, _ in throw ZcashError.synchronizerNotPrepared })
         store.dependencies.derivationTool = .liveValue
@@ -86,13 +93,16 @@ class BalanceBreakdownTests: XCTestCase {
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancels the observer of the synchronizer status change.
         await store.send(.onDisappear)
+        
+        await store.finish()
     }
 
     @MainActor func testShieldFundsButtonDisabledWhenNoShieldableFunds() async throws {
         let store = TestStore(
-            initialState: .initial,
-            reducer: BalanceBreakdownReducer(networkType: .testnet)
-        )
+            initialState: .initial
+        ) {
+            BalanceBreakdownReducer(networkType: .testnet)
+        }
 
         XCTAssertFalse(store.state.shieldingFunds)
         XCTAssertFalse(store.state.isShieldableBalanceAvailable)
@@ -113,9 +123,10 @@ class BalanceBreakdownTests: XCTestCase {
                         total: Zatoshi(1_000_000)
                     )
                 )
-            ),
-            reducer: BalanceBreakdownReducer(networkType: .testnet)
-        )
+            )
+        ) {
+            BalanceBreakdownReducer(networkType: .testnet)
+        }
 
         XCTAssertFalse(store.state.shieldingFunds)
         XCTAssertTrue(store.state.isShieldableBalanceAvailable)
@@ -136,9 +147,10 @@ class BalanceBreakdownTests: XCTestCase {
                         total: Zatoshi(1_000_000)
                     )
                 )
-            ),
-            reducer: BalanceBreakdownReducer(networkType: .testnet)
-        )
+            )
+        ) {
+            BalanceBreakdownReducer(networkType: .testnet)
+        }
 
         XCTAssertTrue(store.state.shieldingFunds)
         XCTAssertTrue(store.state.isShieldableBalanceAvailable)

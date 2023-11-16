@@ -14,28 +14,31 @@ import Settings
 class SettingsSnapshotTests: XCTestCase {
     func testSettingsSnapshot() throws {
         let store = Store(
-            initialState: .initial,
-            reducer: SettingsReducer(networkType: .mainnet)
+            initialState: .initial
+        ) {
+            SettingsReducer(networkType: .mainnet)
                 .dependency(\.localAuthentication, .mockAuthenticationFailed)
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.walletStorage, .noOp)
                 .dependency(\.appVersion, .mock)
-        )
+        }
         
         addAttachments(SettingsView(store: store))
     }
     
     func testAboutSnapshot() throws {
         let store = Store(
-            initialState: .initial,
-            reducer: SettingsReducer(networkType: .mainnet)
+            initialState: .initial
+        ) {
+            SettingsReducer(networkType: .mainnet)
                 .dependency(\.localAuthentication, .mockAuthenticationFailed)
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.walletStorage, .noOp)
                 .dependency(\.appVersion, .liveValue)
-        )
+        }
         
-        ViewStore(store).send(.onAppear)
+        ViewStore(store, observe: { $0 }).send(.onAppear)
+        
         addAttachments(About(store: store))
     }
 }

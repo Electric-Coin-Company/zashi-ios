@@ -21,7 +21,7 @@ import SwiftUI
 public typealias SecurityWarningStore = Store<SecurityWarningReducer.State, SecurityWarningReducer.Action>
 public typealias SecurityWarningViewStore = ViewStore<SecurityWarningReducer.State, SecurityWarningReducer.Action>
 
-public struct SecurityWarningReducer: ReducerProtocol {
+public struct SecurityWarningReducer: Reducer {
     let zcashNetwork: ZcashNetwork
 
     public struct State: Equatable {
@@ -68,7 +68,7 @@ public struct SecurityWarningReducer: ReducerProtocol {
         self.zcashNetwork = zcashNetwork
     }
 
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         BindingReducer()
         
         Scope(state: \.recoveryPhraseDisplayState, action: /Action.recoveryPhraseDisplay) {
@@ -135,9 +135,10 @@ public struct SecurityWarningReducer: ReducerProtocol {
 
 extension SecurityWarningStore {
     public static var demo = SecurityWarningStore(
-        initialState: .placeholder,
-        reducer: SecurityWarningReducer(zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
-    )
+        initialState: .placeholder
+    ) {
+        SecurityWarningReducer(zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+    }
 }
 
 // MARK: - ViewStore
