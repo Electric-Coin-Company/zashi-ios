@@ -38,6 +38,7 @@ final class WalletNukeTests: XCTestCase {
         
         store.dependencies.sdkSynchronizer = .noOp
         store.dependencies.sdkSynchronizer.wipe = { nil }
+        store.dependencies.readTransactionsStorage = .noOp
 
         await store.send(.initialization(.nukeWallet))
         

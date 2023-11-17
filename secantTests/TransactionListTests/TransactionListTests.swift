@@ -27,6 +27,7 @@ class TransactionListTests: XCTestCase {
         store.dependencies.sdkSynchronizer = .mocked()
         store.dependencies.sdkSynchronizer.getAllTransactions = { [] }
         store.dependencies.mainQueue = .immediate
+        store.dependencies.readTransactionsStorage = .noOp
 
         await store.send(.onAppear) { state in
             state.requiredTransactionConfirmations = 10
@@ -176,6 +177,7 @@ class TransactionListTests: XCTestCase {
         }
 
         store.dependencies.pasteboard = testPasteboard
+        store.dependencies.readTransactionsStorage = .noOp
 
         let testText = "test text".redacted
         
@@ -386,6 +388,8 @@ class TransactionListTests: XCTestCase {
             TransactionListReducer()
         }
 
+        store.dependencies.readTransactionsStorage = .noOp
+
         await store.send(.transactionAddressExpandRequested(id)) { state in
             state.transactionList[0].isAddressExpanded = true
         }
@@ -418,6 +422,8 @@ class TransactionListTests: XCTestCase {
             TransactionListReducer()
         }
 
+        store.dependencies.readTransactionsStorage = .noOp
+
         await store.send(.transactionIdExpandRequested(id)) { state in
             state.transactionList[0].isExpanded = true
         }
@@ -449,6 +455,8 @@ class TransactionListTests: XCTestCase {
         ) {
             TransactionListReducer()
         }
+
+        store.dependencies.readTransactionsStorage = .noOp
 
         await store.send(.transactionIdExpandRequested(id)) { state in
             state.transactionList[0].isIdExpanded = true
