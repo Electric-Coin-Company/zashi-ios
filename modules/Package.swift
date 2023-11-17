@@ -13,6 +13,7 @@ let package = Package(
         .library(name: "AppVersion", targets: ["AppVersion"]),
         .library(name: "AudioServices", targets: ["AudioServices"]),
         .library(name: "BalanceBreakdown", targets: ["BalanceBreakdown"]),
+        .library(name: "BalanceFormatter", targets: ["BalanceFormatter"]),
         .library(name: "CaptureDevice", targets: ["CaptureDevice"]),
         .library(name: "CrashReporter", targets: ["CrashReporter"]),
         .library(name: "DatabaseFiles", targets: ["DatabaseFiles"]),
@@ -47,13 +48,13 @@ let package = Package(
         .library(name: "SupportDataGenerator", targets: ["SupportDataGenerator"]),
         .library(name: "ReadTransactionsStorage", targets: ["ReadTransactionsStorage"]),
         .library(name: "Tabs", targets: ["Tabs"]),
+        .library(name: "TransactionList", targets: ["TransactionList"]),
         .library(name: "UIComponents", targets: ["UIComponents"]),
         .library(name: "URIParser", targets: ["URIParser"]),
         .library(name: "UserDefaults", targets: ["UserDefaults"]),
         .library(name: "UserPreferencesStorage", targets: ["UserPreferencesStorage"]),
         .library(name: "Utils", targets: ["Utils"]),
         .library(name: "WalletConfigProvider", targets: ["WalletConfigProvider"]),
-        .library(name: "TransactionList", targets: ["TransactionList"]),
         .library(name: "WalletStorage", targets: ["WalletStorage"]),
         .library(name: "Welcome", targets: ["Welcome"]),
         .library(name: "ZcashSDKEnvironment", targets: ["ZcashSDKEnvironment"])
@@ -109,6 +110,15 @@ let package = Package(
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
             ],
             path: "Sources/Features/BalanceBreakdown"
+        ),
+        .target(
+            name: "BalanceFormatter",
+            dependencies: [
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
+            ],
+            path: "Sources/Dependencies/BalanceFormatter"
         ),
         .target(
             name: "CaptureDevice",
@@ -489,8 +499,25 @@ let package = Package(
             path: "Sources/Features/Tabs"
         ),
         .target(
+            name: "TransactionList",
+            dependencies: [
+                "Generated",
+                "Models",
+                "Pasteboard",
+                "SDKSynchronizer",
+                "ReadTransactionsStorage",
+                "UIComponents",
+                "Utils",
+                "ZcashSDKEnvironment",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
+            ],
+            path: "Sources/Features/TransactionList"
+        ),
+        .target(
             name: "UIComponents",
             dependencies: [
+                "BalanceFormatter",
                 "DerivationTool",
                 "Generated",
                 "NumberFormatter",
@@ -540,22 +567,6 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Dependencies/WalletConfigProvider"
-        ),
-        .target(
-            name: "TransactionList",
-            dependencies: [
-                "Generated",
-                "Models",
-                "Pasteboard",
-                "SDKSynchronizer",
-                "ReadTransactionsStorage",
-                "UIComponents",
-                "Utils",
-                "ZcashSDKEnvironment",
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
-            ],
-            path: "Sources/Features/TransactionList"
         ),
         .target(
             name: "WalletStorage",

@@ -24,11 +24,12 @@ public struct AvailableBalanceView: View {
                 .font(.custom(FontFamily.Inter.regular.name, size: 14))
                 .underline()
             
-            Balance8FloatingDigitsView(
+            ZatoshiRepresentationView(
                 balance: balance,
                 fontName: FontFamily.Inter.bold.name,
-                mainFontSize: 14,
-                restFontSize: 7
+                mostSignificantFontSize: 14,
+                leastSignificantFontSize: 7,
+                format: .expanded
             )
             
             Text(tokenName)

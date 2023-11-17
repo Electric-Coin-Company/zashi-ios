@@ -8,10 +8,11 @@
 import SwiftUI
 import Generated
 import ZcashLightClientKit
+import UIComponents
 
 public struct TransactionFeeView: View {
     let fee: Zatoshi
-    
+
     public init(fee: Zatoshi) {
         self.fee = fee
     }
@@ -23,9 +24,13 @@ public struct TransactionFeeView: View {
                     .font(.custom(FontFamily.Inter.regular.name, size: 13))
                     .foregroundColor(Asset.Colors.shade47.color)
                 
-                Text(fee.decimalString(formatter: NumberFormatter.zashiBalanceFormatter))
-                    .font(.custom(FontFamily.Inter.bold.name, size: 13))
-                    .foregroundColor(Asset.Colors.shade47.color)
+                ZatoshiRepresentationView(
+                    balance: fee,
+                    fontName: FontFamily.Inter.bold.name,
+                    mostSignificantFontSize: 13,
+                    isFee: true
+                )
+                .foregroundColor(Asset.Colors.shade47.color)
             }
             
             Color.clear

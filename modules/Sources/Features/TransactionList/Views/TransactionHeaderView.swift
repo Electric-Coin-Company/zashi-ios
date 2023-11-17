@@ -116,23 +116,16 @@ struct TransactionHeaderView: View {
     }
     
     @ViewBuilder private func balanceView() -> some View {
-        if transaction.isExpanded {
-            HStack(spacing: 0) {
-                Balance8FloatingDigitsView(
-                    balance: transaction.zecAmount,
-                    fontName: FontFamily.Inter.regular.name,
-                    mainFontSize: 12,
-                    restFontSize: 8,
-                    prefixSymbol: transaction.isSpending ? .minus : .plus
-                )
-            }
-            .foregroundColor(transaction.balanceColor)
-        } else {
-            Text(transaction.roundedAmountString)
-                .font(.custom(FontFamily.Inter.regular.name, size: 12))
-                .conditionalStrikethrough(transaction.status == .failed)
-                .foregroundColor(transaction.balanceColor)
-        }
+        ZatoshiRepresentationView(
+            balance: transaction.zecAmount,
+            fontName: FontFamily.Inter.regular.name,
+            mostSignificantFontSize: 12,
+            leastSignificantFontSize: 8,
+            prefixSymbol: transaction.isSpending ? .minus : .plus,
+            format: transaction.isExpanded ? .expanded : .abbreviated,
+            strikethrough: transaction.status == .failed
+        )
+        .foregroundColor(transaction.balanceColor)
     }
 }
 
