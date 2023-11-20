@@ -102,19 +102,6 @@ public struct TransactionState: Equatable, Identifiable {
         }
     }
 
-    public var roundedAmountString: String {
-        let formatted = zecAmount.decimalZashiFormatted()
-        
-        switch status {
-        case .paid, .sending:
-            return "-\(formatted)"
-        case .received, .receiving:
-            return "+\(formatted)"
-        case .failed:
-            return isSentTransaction ? "-\(formatted)" : "+\(formatted)"
-        }
-    }
-
     public var dateString: String? {
         guard minedHeight != nil else { return "" }
         guard let timestamp else { return nil }
@@ -312,7 +299,7 @@ extension TransactionState {
         id: "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja",
         status: .failed,
         timestamp: 1699290621,
-        zecAmount: Zatoshi(25_000_000),
+        zecAmount: Zatoshi(25_108_700),
         isSentTransaction: true,
         isAddressExpanded: true,
         isExpanded: true,
@@ -326,7 +313,7 @@ extension TransactionState {
         id: "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja",
         status: .failed,
         timestamp: 1699290621,
-        zecAmount: Zatoshi(25_000_000),
+        zecAmount: Zatoshi(25_001_000),
         isSentTransaction: false,
         isAddressExpanded: false,
         isExpanded: false,

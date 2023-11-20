@@ -18,11 +18,12 @@ public struct BalanceWithIconView: View {
     
     public var body: some View {
         HStack {
-            Balance8FloatingDigitsView(
+            ZatoshiRepresentationView(
                 balance: balance,
                 fontName: FontFamily.Archivo.semiBold.name,
-                mainFontSize: 42,
-                restFontSize: 10
+                mostSignificantFontSize: 42,
+                leastSignificantFontSize: 10,
+                format: .expanded
             )
             
             Circle()
@@ -46,6 +47,8 @@ public struct BalanceWithIconView: View {
         BalanceWithIconView(balance: Zatoshi(1_4364_000))
         
         BalanceWithIconView(balance: Zatoshi(1_000_000))
+
+        BalanceWithIconView(balance: Zatoshi(98_000))
 
         BalanceWithIconView(balance: Zatoshi(0))
     }
