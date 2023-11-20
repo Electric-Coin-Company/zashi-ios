@@ -51,8 +51,8 @@ struct TransactionHeaderView: View {
                     if transaction.zAddress != nil && transaction.isAddressExpanded {
                         HStack {
                             Text(transaction.address)
-                                .font(.custom(FontFamily.Inter.bold.name, size: 13))
-                                .foregroundColor(Asset.Colors.shade47.color)
+                                .font(.custom(FontFamily.Inter.regular.name, size: 13))
+                                .foregroundColor(Asset.Colors.primary.color)
 
                             Spacer(minLength: 100)
                         }

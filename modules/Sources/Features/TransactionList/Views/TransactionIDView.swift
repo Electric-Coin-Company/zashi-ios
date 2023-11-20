@@ -45,7 +45,8 @@ struct TransactionIdView: View {
 
                 HStack {
                     Text(transaction.id)
-                        .font(.custom(FontFamily.Inter.bold.name, size: 13))
+                        .font(.custom(FontFamily.Inter.regular.name, size: 13))
+                        .foregroundColor(Asset.Colors.primary.color)
 
                     Spacer(minLength: 100)
                 }
