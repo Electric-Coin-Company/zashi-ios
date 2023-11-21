@@ -27,10 +27,6 @@ public struct AddressDetailsView: View {
                 .frame(maxWidth: .infinity)
                 .padding(.top, 20)
                 
-                addressBlock(L10n.AddressDetails.sa, viewStore.saplingAddress) {
-                    viewStore.send(.copySaplingAddressToPastboard)
-                }
-                
                 addressBlock(L10n.AddressDetails.ta, viewStore.transparentAddress) {
                     viewStore.send(.copyTransparentAddressToPastboard)
                 }

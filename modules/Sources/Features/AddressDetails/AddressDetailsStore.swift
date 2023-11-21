@@ -30,15 +30,6 @@ public struct AddressDetailsReducer: Reducer {
             }
         }
 
-        public var saplingAddress: String {
-            do {
-                let address = try uAddress?.saplingReceiver().stringEncoded ?? L10n.AddressDetails.Error.cantExtractSaplingAddress
-                return address
-            } catch {
-                return L10n.AddressDetails.Error.cantExtractSaplingAddress
-            }
-        }
-        
         public init(
             uAddress: UnifiedAddress? = nil
         ) {
@@ -47,7 +38,6 @@ public struct AddressDetailsReducer: Reducer {
     }
 
     public enum Action: Equatable {
-        case copySaplingAddressToPastboard
         case copyTransparentAddressToPastboard
         case copyUnifiedAddressToPastboard
     }
@@ -58,9 +48,6 @@ public struct AddressDetailsReducer: Reducer {
     
     public func reduce(into state: inout State, action: Action) -> ComposableArchitecture.Effect<Action> {
         switch action {
-        case .copySaplingAddressToPastboard:
-            pasteboard.setString(state.saplingAddress.redacted)
-            
         case .copyTransparentAddressToPastboard:
             pasteboard.setString(state.transparentAddress.redacted)
             

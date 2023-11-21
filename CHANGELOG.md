@@ -9,6 +9,9 @@ directly impact users rather than highlighting other crucial architectural updat
 ### Changed
 - The way how the balances (zatoshi amounts/values) are represented has been updated accoridng to the latest requirements. In general any zatoshi value has 2 major states, expanded or abbreviated. Trailing zeroes are trimmed when expanded.
 
+### Removed
+- The sapling address and the QR of it has been removed from the receive screen. The only meaningful options are the UA and the transparent addresses. 
+
 ## 0.2.0 build 9 (2023-11-14)
 
 ### Changed
