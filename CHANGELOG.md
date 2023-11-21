@@ -1,11 +1,75 @@
 # Changelog
-# 0.0.1 build 52
+All notable changes to this application will be documented in this file.
+
+Please be aware that this changelog primarily focuses on user-related modifications, emphasizing changes that can 
+directly impact users rather than highlighting other crucial architectural updates. 
+
+## [Unreleased]
+
+### Changed
+- The way how the balances (zatoshi amounts/values) are represented has been updated accoridng to the latest requirements. In general any zatoshi value has 2 major states, expanded or abbreviated. Trailing zeroes are trimmed when expanded.
+
+## 0.2.0 build 9 (2023-11-14)
+
+### Changed
+- Send (tab) redesigned: All the input fields are at the same screen. The screen is scrollable so it's usable on every possible iPhone.  
+- Complete redesign of transactions on the Account tab. Expandable transactions show details of it, including options to copy transaction IDs as well as addresses. 
+
+### Added
+- The concept of read/unread transactions with the message (memo) implemented. The color of the icon of received transaction that holds message and hasn't been read yet is yellow. Once the transaction is expanded, the icon's color flips to the black and the state is persisted.
+
+## 0.2.0 build 6 (2023-11-01)
+
+### Added
+- Option to export private data: brand new screen accessible via Settings, where once consent acknowledged, a user can export a database of data. Important note: the data are sensitive because it holds some information about user's transactions and history but spending keys are not exported so lost of funds is not possible. 
+
+## 0.2.0 build 5 (2023-10-26)
+
+### Changed
+- Settings screen has been redesigned and options on the screen changed. 
+- Truncation of the balances changed from 8 floating points to the 3 only.
+- Restore from the seed flow and UI updated.
+
+### Added
+- Option to copy the seed to the pasteboard when a new wallet is created and the seed presented.  
+
+## 0.2.0 build 4 (2023-10-13)
+
+### Changed
+- About screen UI updated.
+- The main navigation of the Zashi changed, now the wallet is tab based with Account, Send, Receive and Balances tabs.
+- Home screen is now called Account.
+- Receive screen UI updated.
+- Recovery screen UI updated (the screen with the seed presented).
+
+### Added
+- The security warning screen with that is presented when the new wallet is created now holds a link in the text that takes a user to the privacy policy.   
+
+## 0.2.0 build 3 (2023-10-05)
+
+### Changed
+- Zashi design buttons
+- Splash screen: new animated screen with the logo + HI text.
+- Security warning screen UI updated.
+- State and progress of the synchronizer moved from the Home screen to the balance breakdown screen.
+
+## 0.2.0 build 1 (2023-10-03)
+
+### Changed
+- The send button is disabled until the spendable balance is not a zero.
+
+### Added
+- The wallet now handles lifecycle events: when the app goes to the background and back to the foreground. That fixed lightwalletd errors.  
+
+# Previous Changelog records before we rethink the idea of the changelog and before Zashi design 
+
+## 0.0.1 build 52
 - [#709] Better error handling in tests (#713)
 
-# 0.0.1 build 51
+## 0.0.1 build 51
 - [#711] Transaction History not shown (#715) 
 
-# 0.0.1 build 50
+## 0.0.1 build 50
 - [#707] Adopt latest SDK (#708)
 - [#705] Transaction detail lacks memo and addresses (#706)
 - [#265] Integrate App Rating Alert (#703)
@@ -16,14 +80,14 @@
 - [#678] Adopt TCA 0.52.0 (#688)
 - [#682] Adopt removal of the Notification center on the SDK side (#687)
 
-# 0.0.1 build 49
+## 0.0.1 build 49
 - [#673] End to end bugfix (#679)
 Bugs fixed:
  - derivation tool live key has hardcoded mainnet so it doesn't recognise and validate zcash testnet addresses
  - send to transparent address fails because of Memo("") provided instead of nil
  - when transparent address is filled in a send form, the memo input is still present in the UI, memo is not supported by transparent addresses so it should be removed
 
-# 0.0.1 build 48
+## 0.0.1 build 48
 - [#676] fix About.swift not being present on mainnet target (#677)
 - [#654] Convert SDKSynchronizerDependency to regular TCA dependency (#672)
 # 0.0.1 build 47
@@ -37,7 +101,7 @@ Bugs fixed:
 - [#658] About Screen with version (#659)
 - [#652] Each logged TCA actions appears twice in the log (#657)
 
-# 0.0.1 build 46
+## 0.0.1 build 46
 - [#626] Small UI-UX fixes for 0.0.1-45 (#649)
 - [#650] Layout changes for the send screen (#651)
 - [#647] Adopt 0.19.1-beta (#648)
