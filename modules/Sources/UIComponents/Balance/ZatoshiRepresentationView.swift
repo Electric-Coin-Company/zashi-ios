@@ -11,6 +11,7 @@ import ZcashLightClientKit
 import Utils
 import ComposableArchitecture
 import BalanceFormatter
+import XCTestDynamicOverlay
 
 public struct ZatoshiRepresentationView: View {
     let zatoshiStringRepresentation: ZatoshiStringRepresentation
@@ -31,13 +32,21 @@ public struct ZatoshiRepresentationView: View {
         format: ZatoshiStringRepresentation.Format = .abbreviated,
         strikethrough: Bool = false
     ) {
-        @Dependency(\.balanceFormatter) var balanceFormatter
-        
-        self.zatoshiStringRepresentation = balanceFormatter.convert(
-            balance,
-            prefixSymbol,
-            format
-        )
+        if !_XCTIsTesting {
+            @Dependency(\.balanceFormatter) var balanceFormatter
+            
+            self.zatoshiStringRepresentation = balanceFormatter.convert(
+                balance,
+                prefixSymbol,
+                format
+            )
+        } else {
+            self.zatoshiStringRepresentation = ZatoshiStringRepresentation(
+                balance,
+                prefixSymbol: prefixSymbol,
+                format: format
+            )
+        }
         self.fontName = fontName
         self.mostSignificantFontSize = mostSignificantFontSize
         self.leastSignificantFontSize = leastSignificantFontSize
@@ -79,7 +88,6 @@ public struct ZatoshiRepresentationView: View {
 
         Text("abbreviated")
 
-        // 0 zatoshi -> "0.000"
         ZatoshiRepresentationView(
             balance: Zatoshi(0),
             fontName: FontFamily.Inter.regular.name,
@@ -87,7 +95,6 @@ public struct ZatoshiRepresentationView: View {
             leastSignificantFontSize: leastSignificantFontSize
         )
 
-        // < 100_000 zatoshi -> "0.000..."
         ZatoshiRepresentationView(
             balance: Zatoshi(99_000),
             fontName: FontFamily.Inter.regular.name,
@@ -95,7 +102,6 @@ public struct ZatoshiRepresentationView: View {
             leastSignificantFontSize: leastSignificantFontSize
         )
 
-        // >= 100_000 zatoshi -> "0.000..."
         ZatoshiRepresentationView(
             balance: Zatoshi(100_000),
             fontName: FontFamily.Inter.regular.name,
@@ -103,7 +109,6 @@ public struct ZatoshiRepresentationView: View {
             leastSignificantFontSize: leastSignificantFontSize
         )
 
-        // >= 100_000 zatoshi -> "0.000..."
         ZatoshiRepresentationView(
             balance: Zatoshi(25_793_456),
             fontName: FontFamily.Inter.regular.name,
@@ -113,7 +118,6 @@ public struct ZatoshiRepresentationView: View {
 
         Text("expanded")
 
-        // 0 zatoshi -> "0.000"
         ZatoshiRepresentationView(
             balance: Zatoshi(0),
             fontName: FontFamily.Inter.regular.name,
@@ -122,7 +126,6 @@ public struct ZatoshiRepresentationView: View {
             format: .expanded
         )
 
-        // < 100_000 zatoshi -> "0.000..."
         ZatoshiRepresentationView(
             balance: Zatoshi(5_000),
             fontName: FontFamily.Inter.regular.name,
@@ -131,7 +134,6 @@ public struct ZatoshiRepresentationView: View {
             format: .expanded
         )
         
-        // >= 100_000 zatoshi -> "0.000..."
         ZatoshiRepresentationView(
             balance: Zatoshi(100_000),
             fontName: FontFamily.Inter.regular.name,
@@ -140,7 +142,6 @@ public struct ZatoshiRepresentationView: View {
             format: .expanded
         )
 
-        // >= 100_000 zatoshi -> "0.000..."
         ZatoshiRepresentationView(
             balance: Zatoshi(25_793_456),
             fontName: FontFamily.Inter.regular.name,
@@ -154,7 +155,6 @@ public struct ZatoshiRepresentationView: View {
 
         Text("abbreviated")
 
-        // 0 zatoshi -> "0.000"
         ZatoshiRepresentationView(
             balance: Zatoshi(0),
             fontName: FontFamily.Inter.regular.name,
@@ -163,7 +163,6 @@ public struct ZatoshiRepresentationView: View {
             prefixSymbol: .plus
         )
 
-        // < 100_000 zatoshi -> "0.000..."
         ZatoshiRepresentationView(
             balance: Zatoshi(99_000),
             fontName: FontFamily.Inter.regular.name,
@@ -172,7 +171,6 @@ public struct ZatoshiRepresentationView: View {
             prefixSymbol: .plus
         )
 
-        // >= 100_000 zatoshi -> "0.000..."
         ZatoshiRepresentationView(
             balance: Zatoshi(100_000),
             fontName: FontFamily.Inter.regular.name,
@@ -181,7 +179,6 @@ public struct ZatoshiRepresentationView: View {
             prefixSymbol: .plus
         )
 
-        // >= 100_000 zatoshi -> "0.000..."
         ZatoshiRepresentationView(
             balance: Zatoshi(25_793_456),
             fontName: FontFamily.Inter.regular.name,
@@ -192,7 +189,6 @@ public struct ZatoshiRepresentationView: View {
 
         Text("expanded")
 
-        // 0 zatoshi -> "0.000"
         ZatoshiRepresentationView(
             balance: Zatoshi(0),
             fontName: FontFamily.Inter.regular.name,
@@ -202,7 +198,6 @@ public struct ZatoshiRepresentationView: View {
             format: .expanded
         )
 
-        // < 100_000 zatoshi -> "0.000..."
         ZatoshiRepresentationView(
             balance: Zatoshi(5_000),
             fontName: FontFamily.Inter.regular.name,
@@ -212,7 +207,6 @@ public struct ZatoshiRepresentationView: View {
             format: .expanded
         )
         
-        // >= 100_000 zatoshi -> "0.000..."
         ZatoshiRepresentationView(
             balance: Zatoshi(100_000),
             fontName: FontFamily.Inter.regular.name,
@@ -222,7 +216,6 @@ public struct ZatoshiRepresentationView: View {
             format: .expanded
         )
 
-        // >= 100_000 zatoshi -> "0.000..."
         ZatoshiRepresentationView(
             balance: Zatoshi(25_793_456),
             fontName: FontFamily.Inter.regular.name,
@@ -237,7 +230,6 @@ public struct ZatoshiRepresentationView: View {
 
         Text("abbreviated")
 
-        // 0 zatoshi -> "0.000"
         ZatoshiRepresentationView(
             balance: Zatoshi(0),
             fontName: FontFamily.Inter.regular.name,
@@ -246,7 +238,6 @@ public struct ZatoshiRepresentationView: View {
             prefixSymbol: .minus
         )
 
-        // < 100_000 zatoshi -> "0.000..."
         ZatoshiRepresentationView(
             balance: Zatoshi(99_000),
             fontName: FontFamily.Inter.regular.name,
@@ -255,7 +246,6 @@ public struct ZatoshiRepresentationView: View {
             prefixSymbol: .minus
         )
 
-        // >= 100_000 zatoshi -> "0.000..."
         ZatoshiRepresentationView(
             balance: Zatoshi(100_000),
             fontName: FontFamily.Inter.regular.name,
@@ -264,7 +254,6 @@ public struct ZatoshiRepresentationView: View {
             prefixSymbol: .minus
         )
 
-        // >= 100_000 zatoshi -> "0.000..."
         ZatoshiRepresentationView(
             balance: Zatoshi(25_793_456),
             fontName: FontFamily.Inter.regular.name,
@@ -275,7 +264,6 @@ public struct ZatoshiRepresentationView: View {
 
         Text("expanded")
 
-        // 0 zatoshi -> "0.000"
         ZatoshiRepresentationView(
             balance: Zatoshi(0),
             fontName: FontFamily.Inter.regular.name,
@@ -285,7 +273,6 @@ public struct ZatoshiRepresentationView: View {
             format: .expanded
         )
 
-        // < 100_000 zatoshi -> "0.000..."
         ZatoshiRepresentationView(
             balance: Zatoshi(5_000),
             fontName: FontFamily.Inter.regular.name,
@@ -295,7 +282,6 @@ public struct ZatoshiRepresentationView: View {
             format: .expanded
         )
         
-        // >= 100_000 zatoshi -> "0.000..."
         ZatoshiRepresentationView(
             balance: Zatoshi(100_000),
             fontName: FontFamily.Inter.regular.name,
@@ -305,7 +291,6 @@ public struct ZatoshiRepresentationView: View {
             format: .expanded
         )
 
-        // >= 100_000 zatoshi -> "0.000..."
         ZatoshiRepresentationView(
             balance: Zatoshi(25_793_456),
             fontName: FontFamily.Inter.regular.name,

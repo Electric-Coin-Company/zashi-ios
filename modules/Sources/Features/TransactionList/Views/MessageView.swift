@@ -33,17 +33,15 @@ struct MessageView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     Color.clear.frame(height: 0)
                     
-                    if isFailed {
-                        Text(memoText)
-                            .font(.custom(FontFamily.Inter.bold.name, size: 13))
-                            .foregroundColor(Asset.Colors.error.color)
-                            .strikethrough()
-                            .padding()
-                    } else {
-                        Text(memoText)
-                            .font(.custom(FontFamily.Inter.bold.name, size: 13))
-                            .padding()
-                    }
+                    Text(memoText)
+                        .font(.custom(FontFamily.Inter.regular.name, size: 13))
+                        .foregroundColor(
+                            isFailed ?
+                            Asset.Colors.error.color
+                            : Asset.Colors.primary.color
+                        )
+                        .conditionalStrikethrough(isFailed)
+                        .padding()
                 }
                 .messageShape(
                     filled: !isSpending
@@ -58,8 +56,8 @@ struct MessageView: View {
             .padding(.vertical, 10)
         } else {
             Text(L10n.TransactionList.noMessageIncluded)
-                .font(.custom(FontFamily.Inter.italic.name, size: 13))
-                .foregroundColor(Asset.Colors.shade47.color)
+                .font(.custom(FontFamily.Inter.regular.name, size: 13))
+                .foregroundColor(Asset.Colors.primary.color)
         }
     }
 }
@@ -73,5 +71,7 @@ struct MessageView: View {
             .padding(.bottom, 50)
 
         MessageView(message: "Test", isSpending: false)
+
+        MessageView(message: nil, isSpending: false)
     }
 }
