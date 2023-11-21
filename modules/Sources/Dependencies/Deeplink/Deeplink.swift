@@ -24,7 +24,7 @@ public struct Deeplink {
         isValidZcashAddress: (String, NetworkType) throws -> Bool
     ) throws -> Destination {
         // simplified format zcash:<address>
-        // TODO: [#109] simplified for now until ZIP-321 is implememnted (https://github.com/zcash/secant-ios-wallet/issues/109)
+        // TODO: [#109] simplified for now until ZIP-321 is implememnted (https://github.com/Electric-Coin-Company/zashi-ios/issues/109)
         let address = url.absoluteString.replacingOccurrences(of: "zcash:", with: "")
         do {
             if try isValidZcashAddress(address, networkType) {

@@ -97,7 +97,7 @@ public struct WalletStorage {
         do {
             _ = try exportWallet()
         } catch {
-            // TODO: [#219] - report & log error.localizedDescription, https://github.com/zcash/secant-ios-wallet/issues/219]
+            // TODO: [#219] - report & log error.localizedDescription, https://github.com/Electric-Coin-Company/zashi-ios/issues/219]
             throw error
         }
         

@@ -64,7 +64,7 @@ extension RootReducer {
 
             case .initialization(.appDelegate(.didFinishLaunching)):
                 // TODO: [#704], trigger the review request logic when approved by the team,
-                // https://github.com/zcash/secant-ios-wallet/issues/704
+                // https://github.com/Electric-Coin-Company/zashi-ios/issues/704
                 return .run { send in
                     try await mainQueue.sleep(for: .seconds(0.02))
                     await send(.initialization(.initialSetups))
@@ -92,7 +92,7 @@ extension RootReducer {
                 )
                 
             case .initialization(.initialSetups):
-                // TODO: [#524] finish all the wallet events according to definition, https://github.com/zcash/secant-ios-wallet/issues/524
+                // TODO: [#524] finish all the wallet events according to definition, https://github.com/Electric-Coin-Company/zashi-ios/issues/524
                 LoggerProxy.event(".appDelegate(.didFinishLaunching)")
                 /// We need to fetch data from keychain, in order to be 100% sure the keychain can be read we delay the check a bit
                 return .concatenate(
