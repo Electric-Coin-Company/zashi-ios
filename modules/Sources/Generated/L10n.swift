@@ -42,42 +42,36 @@ public enum L10n {
     /// Available Balance
     public static let availableTitle = L10n.tr("Localizable", "balance.availableTitle", fallback: "Available Balance")
   }
-  public enum BalanceBreakdown {
-    /// Shielding Threshold: %@ %@
-    public static func autoShieldingThreshold(_ p1: Any, _ p2: Any) -> String {
-      return L10n.tr("Localizable", "balanceBreakdown.autoShieldingThreshold", String(describing: p1), String(describing: p2), fallback: "Shielding Threshold: %@ %@")
+  public enum Balances {
+    /// Change pending
+    public static let changePending = L10n.tr("Localizable", "balances.changePending", fallback: "Change pending")
+    /// (Fee %@)
+    public static func fee(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "balances.fee", String(describing: p1), fallback: "(Fee %@)")
     }
-    /// Block: %@
-    public static func blockId(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "balanceBreakdown.blockId", String(describing: p1), fallback: "Block: %@")
-    }
-    /// SHIELDED %@ (SPENDABLE)
-    public static func shieldedZec(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "balanceBreakdown.shieldedZec", String(describing: p1), fallback: "SHIELDED %@ (SPENDABLE)")
-    }
-    /// Shield funds
-    public static let shieldFunds = L10n.tr("Localizable", "balanceBreakdown.shieldFunds", fallback: "Shield funds")
+    /// Pending transactions
+    public static let pendingTransactions = L10n.tr("Localizable", "balances.pendingTransactions", fallback: "Pending transactions")
+    /// Shield and consolidate funds
+    public static let shieldButtonTitle = L10n.tr("Localizable", "balances.shieldButtonTitle", fallback: "Shield and consolidate funds")
     /// Shielding funds
-    public static let shieldingFunds = L10n.tr("Localizable", "balanceBreakdown.shieldingFunds", fallback: "Shielding funds")
-    /// TOTAL BALANCE
-    public static let totalSpendableBalance = L10n.tr("Localizable", "balanceBreakdown.totalSpendableBalance", fallback: "TOTAL BALANCE")
-    /// TRANSPARENT BALANCE
-    public static let transparentBalance = L10n.tr("Localizable", "balanceBreakdown.transparentBalance", fallback: "TRANSPARENT BALANCE")
+    public static let shieldingInProgress = L10n.tr("Localizable", "balances.shieldingInProgress", fallback: "Shielding funds")
+    /// Shielded zec (spendable)
+    public static let spendableBalance = L10n.tr("Localizable", "balances.spendableBalance", fallback: "Shielded zec (spendable)")
+    /// Synced
+    public static let synced = L10n.tr("Localizable", "balances.synced", fallback: "Synced")
+    /// Syncing
+    public static let syncing = L10n.tr("Localizable", "balances.syncing", fallback: "Syncing")
+    /// Transparent balance
+    public static let transparentBalance = L10n.tr("Localizable", "balances.transparentBalance", fallback: "Transparent balance")
     public enum Alert {
       public enum ShieldFunds {
         public enum Failure {
           /// Error: %@ (code: %@)
           public static func message(_ p1: Any, _ p2: Any) -> String {
-            return L10n.tr("Localizable", "balanceBreakdown.alert.shieldFunds.failure.message", String(describing: p1), String(describing: p2), fallback: "Error: %@ (code: %@)")
+            return L10n.tr("Localizable", "balances.alert.shieldFunds.failure.message", String(describing: p1), String(describing: p2), fallback: "Error: %@ (code: %@)")
           }
           /// Failed to shield funds
-          public static let title = L10n.tr("Localizable", "balanceBreakdown.alert.shieldFunds.failure.title", fallback: "Failed to shield funds")
-        }
-        public enum Success {
-          /// Shielding transaction created
-          public static let message = L10n.tr("Localizable", "balanceBreakdown.alert.shieldFunds.success.message", fallback: "Shielding transaction created")
-          /// Done
-          public static let title = L10n.tr("Localizable", "balanceBreakdown.alert.shieldFunds.success.title", fallback: "Done")
+          public static let title = L10n.tr("Localizable", "balances.alert.shieldFunds.failure.title", fallback: "Failed to shield funds")
         }
       }
     }

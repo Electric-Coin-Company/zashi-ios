@@ -17,9 +17,10 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
         let store = Store(
             initialState: BalanceBreakdownReducer.State(
                 autoShieldingThreshold: Zatoshi(1_000_000),
-                latestBlock: "unknown",
+                changePending: .zero,
+                isShieldingFunds: false,
+                pendingTransactions: .zero,
                 shieldedBalance: WalletBalance(verified: Zatoshi(123_000_000_000), total: Zatoshi(123_000_000_000)).redacted,
-                shieldingFunds: false,
                 synchronizerStatusSnapshot: .initial,
                 transparentBalance: WalletBalance(verified: Zatoshi(850_000_000), total: Zatoshi(850_000_000)).redacted
             )

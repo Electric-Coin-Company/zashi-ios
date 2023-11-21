@@ -24,7 +24,7 @@ public struct ZatoshiStringRepresentation: Equatable {
 
     public let mostSignificantDigits: String
     public let leastSignificantDigits: String
-    public let feeFormat: String
+    public let feeFormat = ZatoshiStringRepresentation.feeFormat
 
     public init(
         _ zatoshi: Zatoshi,
@@ -78,11 +78,13 @@ public struct ZatoshiStringRepresentation: Equatable {
                 self.leastSignificantDigits = ""
             }
         }
-
-        self.feeFormat = "< 0.001"
     }
 }
 
 extension ZatoshiStringRepresentation {
     static let placeholer = Self(Zatoshi(123_456_000))
+}
+
+extension ZatoshiStringRepresentation {
+    public static let feeFormat = "< 0.001"
 }

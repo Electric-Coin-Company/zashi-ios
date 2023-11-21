@@ -27,10 +27,13 @@ public struct BalanceBreakdownReducer: Reducer {
     public struct State: Equatable {
         @PresentationState public var alert: AlertState<Action>?
         public var autoShieldingThreshold: Zatoshi
-        public var latestBlock: String
+        public var changePending: Zatoshi
+        public var isShieldingFunds: Bool
+        public var lastKnownSyncPercentage: Float = 0
+        public var pendingTransactions: Zatoshi
         public var shieldedBalance: Balance
-        public var shieldingFunds: Bool
         public var synchronizerStatusSnapshot: SyncStatusSnapshot
+        public var syncStatusMessage = ""
         public var transparentBalance: Balance
 
         public var totalBalance: Zatoshi {
@@ -42,22 +45,40 @@ public struct BalanceBreakdownReducer: Reducer {
         }
 
         public var isShieldingButtonDisabled: Bool {
-            shieldingFunds || !isShieldableBalanceAvailable
+            isShieldingFunds || !isShieldableBalanceAvailable
+        }
+        
+        public var isSyncing: Bool {
+            synchronizerStatusSnapshot.syncStatus.isSyncing
+        }
+        
+        public var syncingPercentage: Float {
+            if case .syncing(let progress) = synchronizerStatusSnapshot.syncStatus {
+                return progress * 0.999
+            }
+            
+            return lastKnownSyncPercentage
         }
         
         public init(
             autoShieldingThreshold: Zatoshi,
-            latestBlock: String,
+            changePending: Zatoshi,
+            isShieldingFunds: Bool,
+            lastKnownSyncPercentage: Float = 0,
+            pendingTransactions: Zatoshi,
             shieldedBalance: Balance,
-            shieldingFunds: Bool,
             synchronizerStatusSnapshot: SyncStatusSnapshot,
+            syncStatusMessage: String = "",
             transparentBalance: Balance
         ) {
             self.autoShieldingThreshold = autoShieldingThreshold
-            self.latestBlock = latestBlock
+            self.changePending = changePending
+            self.isShieldingFunds = isShieldingFunds
+            self.lastKnownSyncPercentage = lastKnownSyncPercentage
+            self.pendingTransactions = pendingTransactions
             self.shieldedBalance = shieldedBalance
-            self.shieldingFunds = shieldingFunds
             self.synchronizerStatusSnapshot = synchronizerStatusSnapshot
+            self.syncStatusMessage = syncStatusMessage
             self.transparentBalance = transparentBalance
         }
     }
@@ -67,10 +88,9 @@ public struct BalanceBreakdownReducer: Reducer {
         case onAppear
         case onDisappear
         case shieldFunds
-        case shieldFundsSuccess
+        case shieldFundsSuccess(TransactionState)
         case shieldFundsFailure(ZcashError)
         case synchronizerStateChanged(SynchronizerState)
-        case updateLatestBlock
     }
 
     @Dependency(\.derivationTool) var derivationTool
@@ -109,28 +129,28 @@ public struct BalanceBreakdownReducer: Reducer {
                 return .cancel(id: CancelId.timer)
 
             case .shieldFunds:
-                state.shieldingFunds = true
+                state.isShieldingFunds = true
                 return .run { [state] send in
                     do {
                         let storedWallet = try walletStorage.exportWallet()
                         let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
                         let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, networkType)
 
-                        _ = try await sdkSynchronizer.shieldFunds(spendingKey, Memo(string: ""), state.autoShieldingThreshold)
+                        let transaction = try await sdkSynchronizer.shieldFunds(spendingKey, Memo(string: ""), state.autoShieldingThreshold)
 
-                        await send(.shieldFundsSuccess)
+                        await send(.shieldFundsSuccess(transaction))
                     } catch {
                         await send(.shieldFundsFailure(error.toZcashError()))
                     }
                 }
 
             case .shieldFundsSuccess:
-                state.shieldingFunds = false
-                state.alert = AlertState.shieldFundsSuccess()
+                state.isShieldingFunds = false
+                state.transparentBalance = .zero
                 return .none
 
             case .shieldFundsFailure(let error):
-                state.shieldingFunds = false
+                state.isShieldingFunds = false
                 state.alert = AlertState.shieldFundsFailure(error)
                 return .none
 
@@ -141,14 +161,25 @@ public struct BalanceBreakdownReducer: Reducer {
                 let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.syncStatus)
                 if snapshot.syncStatus != state.synchronizerStatusSnapshot.syncStatus {
                     state.synchronizerStatusSnapshot = snapshot
+                    
+                    if case .syncing(let progress) = snapshot.syncStatus {
+                        state.lastKnownSyncPercentage = progress
+                    }
+                    
+                    // TODO: [#931] The statuses of the sync process
+                    // https://github.com/Electric-Coin-Company/zashi-ios/issues/931
+                    // until then, this is temporary quick solution
+                    switch snapshot.syncStatus {
+                    case .syncing:
+                        state.syncStatusMessage = L10n.Balances.syncing
+                    case .upToDate:
+                        state.lastKnownSyncPercentage = 1
+                        state.syncStatusMessage = L10n.Balances.synced
+                    case .error, .stopped, .unprepared:
+                        state.syncStatusMessage = snapshot.message
+                    }
                 }
 
-                return Effect.send(.updateLatestBlock)
-
-            case .updateLatestBlock:
-                let latestBlockNumber = sdkSynchronizer.latestState().latestBlockHeight
-                let latestBlock = numberFormatter.string(NSDecimalNumber(value: latestBlockNumber))
-                state.latestBlock = "\(String(describing: latestBlock ?? ""))"
                 return .none
             }
         }
@@ -160,17 +191,9 @@ public struct BalanceBreakdownReducer: Reducer {
 extension AlertState where Action == BalanceBreakdownReducer.Action {
     public static func shieldFundsFailure(_ error: ZcashError) -> AlertState {
         AlertState {
-            TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Failure.title)
+            TextState(L10n.Balances.Alert.ShieldFunds.Failure.title)
         } message: {
-            TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Failure.message(error.message, error.code.rawValue))
-        }
-    }
-    
-    public static func shieldFundsSuccess() -> AlertState {
-        AlertState {
-            TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Success.title)
-        } message: {
-            TextState(L10n.BalanceBreakdown.Alert.ShieldFunds.Success.message)
+            TextState(L10n.Balances.Alert.ShieldFunds.Failure.message(error.message, error.code.rawValue))
         }
     }
 }
@@ -180,18 +203,20 @@ extension AlertState where Action == BalanceBreakdownReducer.Action {
 extension BalanceBreakdownReducer.State {
     public static let placeholder = BalanceBreakdownReducer.State(
         autoShieldingThreshold: Zatoshi(1_000_000),
-        latestBlock: L10n.General.unknown,
+        changePending: .zero,
+        isShieldingFunds: false,
+        pendingTransactions: .zero,
         shieldedBalance: Balance.zero,
-        shieldingFunds: false,
         synchronizerStatusSnapshot: .placeholder,
         transparentBalance: Balance.zero
     )
     
     public static let initial = BalanceBreakdownReducer.State(
         autoShieldingThreshold: Zatoshi(1_000_000),
-        latestBlock: L10n.General.unknown,
+        changePending: .zero,
+        isShieldingFunds: false,
+        pendingTransactions: .zero,
         shieldedBalance: Balance.zero,
-        shieldingFunds: false,
         synchronizerStatusSnapshot: .initial,
         transparentBalance: Balance.zero
     )

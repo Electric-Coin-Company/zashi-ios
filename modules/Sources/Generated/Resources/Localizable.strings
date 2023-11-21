@@ -106,18 +106,18 @@
 "addressDetails.error.cantExtractTransparentAddress" = "could not extract transparent receiver from UA";
 "addressDetails.error.cantExtractSaplingAddress" = "could not extract sapling receiver from UA";
 
-// MARK: - Balance Breakdown
-"balanceBreakdown.blockId" = "Block: %@";
-"balanceBreakdown.shieldedZec" = "SHIELDED %@ (SPENDABLE)";
-"balanceBreakdown.transparentBalance" = "TRANSPARENT BALANCE";
-"balanceBreakdown.totalSpendableBalance" = "TOTAL BALANCE";
-"balanceBreakdown.autoShieldingThreshold" = "Shielding Threshold: %@ %@";
-"balanceBreakdown.shieldFunds" = "Shield funds";
-"balanceBreakdown.shieldingFunds" = "Shielding funds";
-"balanceBreakdown.alert.shieldFunds.failure.title" = "Failed to shield funds";
-"balanceBreakdown.alert.shieldFunds.failure.message" = "Error: %@ (code: %@)";
-"balanceBreakdown.alert.shieldFunds.success.title" = "Done";
-"balanceBreakdown.alert.shieldFunds.success.message" = "Shielding transaction created";
+// MARK: - Balances
+"balances.spendableBalance" = "Shielded zec (spendable)";
+"balances.changePending" = "Change pending";
+"balances.pendingTransactions" = "Pending transactions";
+"balances.transparentBalance" = "Transparent balance";
+"balances.shieldButtonTitle" = "Shield and consolidate funds";
+"balances.shieldingInProgress" = "Shielding funds";
+"balances.fee" = "(Fee %@)";
+"balances.synced" = "Synced";
+"balances.syncing" = "Syncing";
+"balances.alert.shieldFunds.failure.title" = "Failed to shield funds";
+"balances.alert.shieldFunds.failure.message" = "Error: %@ (code: %@)";
 
 // MARK: - Scan
 "scan.info" = "We will validate any Zcash URI and take you to the appropriate action.";

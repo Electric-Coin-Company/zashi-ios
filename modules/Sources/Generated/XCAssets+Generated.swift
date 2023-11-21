@@ -31,6 +31,7 @@ public enum Asset {
     public static let copy = ImageAsset(name: "copy")
     public static let flyReceivedFilled = ImageAsset(name: "flyReceivedFilled")
     public static let shield = ImageAsset(name: "shield")
+    public static let surroundedShield = ImageAsset(name: "surroundedShield")
     public static let upArrow = ImageAsset(name: "upArrow")
     public static let zashiTitle = ImageAsset(name: "zashiTitle")
   }
@@ -42,7 +43,10 @@ public enum Asset {
     public static let secondary = ColorAsset(name: "secondary")
     public static let shade30 = ColorAsset(name: "shade30")
     public static let shade47 = ColorAsset(name: "shade47")
+    public static let shade55 = ColorAsset(name: "shade55")
     public static let shade72 = ColorAsset(name: "shade72")
+    public static let shade85 = ColorAsset(name: "shade85")
+    public static let shade92 = ColorAsset(name: "shade92")
     public static let shade97 = ColorAsset(name: "shade97")
     public static let splash = ColorAsset(name: "splash")
   }

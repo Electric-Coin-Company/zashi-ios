@@ -21,11 +21,11 @@ public struct ZcashButtonStyle: ButtonStyle {
     public func makeBody(configuration: Self.Configuration) -> some View {
         ZStack {
             Rectangle()
-                .frame(height: 60)
-                .foregroundColor(
-                    appearance == .primary ? .clear
+                .fill(
+                    appearance == .primary ? .white
                     : isEnabled ? Asset.Colors.primary.color : Asset.Colors.shade72.color
                 )
+                .frame(height: 60)
                 .border(isEnabled ? Asset.Colors.primary.color : Asset.Colors.shade72.color)
                 .offset(CGSize(width: 10, height: 10))
 

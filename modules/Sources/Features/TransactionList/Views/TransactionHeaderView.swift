@@ -98,7 +98,7 @@ struct TransactionHeaderView: View {
 
     @ViewBuilder private func addressArea() -> some View {
         if transaction.zAddress == nil {
-            Asset.Assets.shield.image
+            Asset.Assets.surroundedShield.image
                 .resizable()
                 .frame(width: 17, height: 13)
         } else if !transaction.isAddressExpanded {
