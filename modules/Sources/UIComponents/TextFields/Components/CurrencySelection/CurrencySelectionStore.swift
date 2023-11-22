@@ -7,7 +7,7 @@
 
 import ComposableArchitecture
 
-// TODO: [#315] Reimplement this into multicurrency supporter (https://github.com/zcash/secant-ios-wallet/issues/315)
+// TODO: [#315] Reimplement this into multicurrency supporter (https://github.com/Electric-Coin-Company/zashi-ios/issues/315)
 
 public typealias CurrencySelectionStore = Store<CurrencySelectionReducer.State, CurrencySelectionReducer.Action>
 

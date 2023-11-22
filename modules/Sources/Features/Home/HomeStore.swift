@@ -35,7 +35,7 @@ public struct HomeReducer: Reducer {
         public var walletConfig: WalletConfig
         public var transactionListState: TransactionListReducer.State
         public var migratingDatabase = true
-        // TODO: [#311] - Get the ZEC price from the SDK, https://github.com/zcash/secant-ios-wallet/issues/311
+        // TODO: [#311] - Get the ZEC price from the SDK, https://github.com/Electric-Coin-Company/zashi-ios/issues/311
         public var zecPrice = Decimal(140.0)
 
         public var totalCurrencyBalance: Zatoshi {

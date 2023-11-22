@@ -39,7 +39,7 @@ public struct SettingsView: View {
 
                 Button(L10n.Settings.documentation.uppercased()) {
                     // TODO: - [#866] finish the documentation button action
-                    // https://github.com/zcash/secant-ios-wallet/issues/866
+                    // https://github.com/Electric-Coin-Company/zashi-ios/issues/866
                 }
                 .zcashStyle()
                 .padding(.bottom, 25)
