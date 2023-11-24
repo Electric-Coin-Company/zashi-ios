@@ -120,7 +120,11 @@ public struct SendFlowView: View {
                                 viewStore.send(.sendPressed)
                             } label: {
                                 if viewStore.isSending {
-                                    ProgressView()
+                                    HStack {
+                                        Text(L10n.Send.sending.uppercased())
+                                        
+                                        ProgressView()
+                                    }
                                 } else {
                                     Text(L10n.General.send.uppercased())
                                 }

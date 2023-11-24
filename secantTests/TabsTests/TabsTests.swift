@@ -116,14 +116,30 @@ class TabsTests: XCTestCase {
         var placeholderState = TabsReducer.State.initial
         placeholderState.selectedTab = .send
         
+        placeholderState.homeState.transactionListState.transactionList = IdentifiedArrayOf(
+            uniqueElements: [
+                TransactionState.placeholder(uuid: "1"),
+                TransactionState.placeholder(uuid: "2")
+            ]
+        )
+        
         let store = TestStore(
             initialState: placeholderState
         ) {
             TabsReducer(tokenName: "TAZ", networkType: .testnet)
         }
         
-        await store.send(.send(.sendDone)) { state in
+        let transaction = TransactionState.placeholder(uuid: "3")
+        
+        await store.send(.send(.sendDone(transaction))) { state in
             state.selectedTab = .account
+            state.homeState.transactionListState.transactionList = IdentifiedArrayOf(
+                uniqueElements: [
+                    transaction,
+                    TransactionState.placeholder(uuid: "1"),
+                    TransactionState.placeholder(uuid: "2")
+                ]
+            )
         }
     }
     

@@ -438,6 +438,7 @@ let package = Package(
                 "Generated",
                 "DerivationTool",
                 "MnemonicClient",
+                "Models",
                 "Scan",
                 "SDKSynchronizer",
                 "UIComponents",

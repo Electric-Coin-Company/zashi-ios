@@ -66,7 +66,20 @@ class SendTests: XCTestCase {
             state.isSending = true
         }
         
-        await store.receive(.sendDone) { state in
+        let transaction = TransactionState(
+            expiryHeight: 40,
+            memos: [],
+            minedHeight: 50,
+            shielded: true,
+            zAddress: "tteafadlamnelkqe",
+            fee: Zatoshi(10),
+            id: "id",
+            status: .paid,
+            timestamp: 1234567,
+            zecAmount: Zatoshi(10)
+        )
+        
+        await store.receive(.sendDone(transaction)) { state in
             state.isSending = false
             state.transactionAddressInputState.textFieldState.text = "".redacted
             state.transactionAmountInputState.textFieldState.text = "".redacted
