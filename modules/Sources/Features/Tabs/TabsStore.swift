@@ -130,7 +130,8 @@ public struct TabsReducer: Reducer {
             case .home:
                 return .none
             
-            case .send(.sendDone):
+            case .send(.sendDone(let transaction)):
+                state.homeState.transactionListState.transactionList.insert(transaction, at: 0)
                 state.selectedTab = .account
                 return .none
             

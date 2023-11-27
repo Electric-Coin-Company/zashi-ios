@@ -127,6 +127,7 @@
 
 // MARK: - Send
 "send.title" = "Send Zcash";
+"send.sending" = "Sending";
 "send.fundsInfo" = "Aditional funds may be in transit";
 "send.message" = "Message";
 "send.memoPlaceholder" = "Write private message here...";

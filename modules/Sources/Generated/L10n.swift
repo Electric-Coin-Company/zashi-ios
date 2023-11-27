@@ -521,6 +521,8 @@ public enum L10n {
     public static let memoPlaceholder = L10n.tr("Localizable", "send.memoPlaceholder", fallback: "Write private message here...")
     /// Message
     public static let message = L10n.tr("Localizable", "send.message", fallback: "Message")
+    /// Sending
+    public static let sending = L10n.tr("Localizable", "send.sending", fallback: "Sending")
     /// Sending %@ %@ to
     public static func sendingTo(_ p1: Any, _ p2: Any) -> String {
       return L10n.tr("Localizable", "send.sendingTo", String(describing: p1), String(describing: p2), fallback: "Sending %@ %@ to")

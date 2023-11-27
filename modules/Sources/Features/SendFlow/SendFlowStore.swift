@@ -16,6 +16,7 @@ import SDKSynchronizer
 import WalletStorage
 import ZcashSDKEnvironment
 import UIComponents
+import Models
 
 public typealias SendFlowStore = Store<SendFlowReducer.State, SendFlowReducer.Action>
 public typealias SendFlowViewStore = ViewStore<SendFlowReducer.State, SendFlowReducer.Action>
@@ -29,6 +30,7 @@ public struct SendFlowReducer: Reducer {
             case scanQR
         }
 
+        @PresentationState public var alert: AlertState<Action>?
         public var addMemoState: Bool
         public var destination: Destination?
         public var isSending = false
@@ -108,12 +110,14 @@ public struct SendFlowReducer: Reducer {
     }
 
     public enum Action: Equatable {
+        case alert(PresentationAction<Action>)
         case memo(MessageEditorReducer.Action)
         case onAppear
         case onDisappear
         case scan(ScanReducer.Action)
         case sendPressed
-        case sendDone
+        case sendDone(TransactionState)
+        case sendFailed(ZcashError)
         case synchronizerStateChanged(SynchronizerState)
         case transactionAddressInput(TransactionAddressTextFieldReducer.Action)
         case transactionAmountInput(TransactionAmountTextFieldReducer.Action)
@@ -151,6 +155,16 @@ public struct SendFlowReducer: Reducer {
 
         Reduce { state, action in
             switch action {
+            case .alert(.presented(let action)):
+                return Effect.send(action)
+
+            case .alert(.dismiss):
+                state.alert = nil
+                return .none
+
+            case .alert:
+                return .none
+
             case .onAppear:
                 state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
                 return Effect.publisher {
@@ -189,8 +203,12 @@ public struct SendFlowReducer: Reducer {
                     state.isSending = true
                     
                     return .run { [state] send in
-                        _ = try? await sdkSynchronizer.sendTransaction(spendingKey, state.amount, recipient, memo)
-                        await send(.sendDone)
+                        do {
+                            let transaction = try await sdkSynchronizer.sendTransaction(spendingKey, state.amount, recipient, memo)
+                            await send(.sendDone(transaction))
+                        } catch {
+                            await send(.sendFailed(error.toZcashError()))
+                        }
                     }
                 } catch {
                 }
@@ -203,6 +221,10 @@ public struct SendFlowReducer: Reducer {
                 state.transactionAmountInputState.amount = Int64(0).redacted
                 state.transactionAddressInputState.textFieldState.text = "".redacted
                 state.isSending = false
+                return .none
+                
+            case .sendFailed(let error):
+                state.alert = AlertState.sendFailure(error)
                 return .none
                 
             case .transactionAmountInput:
@@ -238,6 +260,18 @@ public struct SendFlowReducer: Reducer {
             case .scan:
                 return .none
             }
+        }
+    }
+}
+
+// MARK: Alerts
+
+extension AlertState where Action == SendFlowReducer.Action {
+    public static func sendFailure(_ error: ZcashError) -> AlertState {
+        AlertState {
+            TextState("L10n.Balances.Alert.ShieldFunds.Failure.title")
+        } message: {
+            TextState("L10n.Balances.Alert.ShieldFunds.Failure.message(error.message, error.code.rawValue)")
         }
     }
 }
