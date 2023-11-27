@@ -162,7 +162,7 @@ extension SDKSynchronizerClient {
             )
         },
         shieldFunds: @escaping (UnifiedSpendingKey, Memo, Zatoshi) async throws -> TransactionState = { _, memo, _  in
-            return TransactionState(
+            TransactionState(
                 expiryHeight: 40,
                 memos: [memo],
                 minedHeight: 50,

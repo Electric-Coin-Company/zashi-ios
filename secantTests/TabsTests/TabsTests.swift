@@ -10,6 +10,8 @@ import XCTest
 import ComposableArchitecture
 import Tabs
 import Generated
+import Models
+import Utils
 @testable import secant_testnet
 @testable import ZcashLightClientKit
 
@@ -123,5 +125,48 @@ class TabsTests: XCTestCase {
         await store.send(.send(.sendDone)) { state in
             state.selectedTab = .account
         }
+    }
+    
+    func testShieldFundsSucceedAndTransactionListUpdated() async throws {
+        var placeholderState = TabsReducer.State.initial
+        placeholderState.selectedTab = .send
+        placeholderState.balanceBreakdownState.transparentBalance = Balance(WalletBalance(verified: Zatoshi(10_000), total: Zatoshi(10_000)))
+        
+        let store = TestStore(
+            initialState: placeholderState
+        ) {
+            TabsReducer(tokenName: "TAZ", networkType: .testnet)
+        }
+        
+        store.dependencies.sdkSynchronizer = .mock
+        store.dependencies.derivationTool = .liveValue
+        store.dependencies.mnemonic = .mock
+        store.dependencies.walletStorage.exportWallet = { .placeholder }
+        store.dependencies.walletStorage.areKeysPresent = { true }
+
+        await store.send(.balanceBreakdown(.shieldFunds)) { state in
+            state.balanceBreakdownState.isShieldingFunds = true
+        }
+        
+        let shieldedTransaction = TransactionState(
+            expiryHeight: 40,
+            memos: [try Memo(string: "")],
+            minedHeight: 50,
+            shielded: true,
+            zAddress: "tteafadlamnelkqe",
+            fee: Zatoshi(10),
+            id: "id",
+            status: .paid,
+            timestamp: 1234567,
+            zecAmount: Zatoshi(10)
+        )
+        
+        await store.receive(.balanceBreakdown(.shieldFundsSuccess(shieldedTransaction))) { state in
+            state.balanceBreakdownState.isShieldingFunds = false
+            state.balanceBreakdownState.transparentBalance = .zero
+            state.homeState.transactionListState.transactionList = IdentifiedArrayOf(uniqueElements: [shieldedTransaction])
+        }
+        
+        await store.finish()
     }
 }

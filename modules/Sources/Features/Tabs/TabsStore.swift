@@ -115,7 +115,11 @@ public struct TabsReducer: Reducer {
             switch action {
             case .addressDetails:
                 return .none
-                
+            
+            case .balanceBreakdown(.shieldFundsSuccess(let transaction)):
+                state.homeState.transactionListState.transactionList.insert(transaction, at: 0)
+                return .none
+            
             case .balanceBreakdown:
                 return .none
                 
