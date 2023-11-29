@@ -61,6 +61,7 @@ extension HomeView {
 
             if viewStore.migratingDatabase {
                 Text(L10n.Home.migratingDatabases)
+                    .font(.custom(FontFamily.Inter.regular.name, size: 14))
                     .padding(.top, 10)
                     .padding(.bottom, 30)
             } else {

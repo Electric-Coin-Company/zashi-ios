@@ -17,6 +17,8 @@ import WalletStorage
 import ZcashSDKEnvironment
 import UIComponents
 import Models
+import Generated
+import BalanceFormatter
 
 public typealias SendFlowStore = Store<SendFlowReducer.State, SendFlowReducer.Action>
 public typealias SendFlowViewStore = ViewStore<SendFlowReducer.State, SendFlowReducer.Action>
@@ -27,6 +29,7 @@ public struct SendFlowReducer: Reducer {
 
     public struct State: Equatable {
         public enum Destination: Equatable {
+            case sendConfirmation
             case scanQR
         }
 
@@ -39,7 +42,6 @@ public struct SendFlowReducer: Reducer {
         public var shieldedBalance = Balance.zero
         public var transactionAddressInputState: TransactionAddressTextFieldReducer.State
         public var transactionAmountInputState: TransactionAmountTextFieldReducer.State
-        public var fee = Zatoshi(10_000)
 
         public var address: String {
             get { transactionAddressInputState.textFieldState.text.data }
@@ -54,6 +56,14 @@ public struct SendFlowReducer: Reducer {
                 "".redacted :
                 newValue.decimalString().redacted
             }
+        }
+
+        public var feeFormat: String {
+            L10n.Send.fee(ZatoshiStringRepresentation.feeFormat)
+        }
+        
+        public var message: String {
+            memoState.text.data
         }
 
         public var isInvalidAddressFormat: Bool {
@@ -111,9 +121,11 @@ public struct SendFlowReducer: Reducer {
 
     public enum Action: Equatable {
         case alert(PresentationAction<Action>)
+        case goBackPressed
         case memo(MessageEditorReducer.Action)
         case onAppear
         case onDisappear
+        case reviewPressed
         case scan(ScanReducer.Action)
         case sendPressed
         case sendDone(TransactionState)
@@ -177,10 +189,19 @@ public struct SendFlowReducer: Reducer {
             case .onDisappear:
                 return .cancel(id: SyncStatusUpdatesID.timer)
 
+            case .goBackPressed:
+                state.destination = nil
+                state.isSending = false
+                return .none
+                
             case let .updateDestination(destination):
                 state.destination = destination
                 return .none
-                
+
+            case .reviewPressed:
+                state.destination = .sendConfirmation
+                return .none
+
             case .sendPressed:
                 state.amount = Zatoshi(state.transactionAmountInputState.amount.data)
                 state.address = state.transactionAddressInputState.textFieldState.text.data
@@ -303,13 +324,22 @@ extension SendFlowViewStore {
             send: SendFlowReducer.Action.updateDestination
         )
     }
-
+    
     var bindingForScanQR: Binding<Bool> {
         self.destinationBinding.map(
             extract: {
                 $0 == .scanQR
             },
             embed: { $0 ? SendFlowReducer.State.Destination.scanQR : nil }
+        )
+    }
+    
+    var bindingForSendConfirmation: Binding<Bool> {
+        self.destinationBinding.map(
+            extract: {
+                $0 == .sendConfirmation
+            },
+            embed: { $0 ? SendFlowReducer.State.Destination.sendConfirmation : nil }
         )
     }
 }

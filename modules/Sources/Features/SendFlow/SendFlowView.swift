@@ -10,6 +10,7 @@ import ComposableArchitecture
 import Generated
 import Scan
 import UIComponents
+import BalanceFormatter
 
 public struct SendFlowView: View {
     private enum InputID: Hashable {
@@ -117,30 +118,16 @@ public struct SendFlowView: View {
                                 .id(InputID.message)
                             
                             Button {
-                                viewStore.send(.sendPressed)
+                                viewStore.send(.reviewPressed)
                             } label: {
-                                if viewStore.isSending {
-                                    HStack {
-                                        Text(L10n.Send.sending.uppercased())
-                                        
-                                        ProgressView()
-                                    }
-                                } else {
-                                    Text(L10n.General.send.uppercased())
-                                }
+                                Text(L10n.Send.review.uppercased())
                             }
                             .zcashStyle()
                             .disabled(!viewStore.isValidForm || viewStore.isSending)
                             .padding(.top, 40)
                             .padding(.horizontal, 30)
                             
-                            // This is hardcoded purposely, as discussed with the core team
-                            // we claim the fee is always bellow 0.001 ZEC.
-                            // This label is prepared for a dynamic representation but due to
-                            // 3 floating points rounding, 10K Zatoshi fee would render as 0.000
-                            // TODO: [#879] replace the string with value returned from the balance formatter dependency
-                            // https://github.com/Electric-Coin-Company/zashi-ios/issues/879
-                            Text(L10n.Send.fee("0.001"))
+                            Text(viewStore.feeFormat)
                                 .font(.custom(FontFamily.Inter.semiBold.name, size: 11))
                                 .padding(.top, 20)
                         }
@@ -160,6 +147,12 @@ public struct SendFlowView: View {
                         isActive: viewStore.bindingForScanQR,
                         destination: {
                             ScanView(store: store.scanStore())
+                        }
+                    )
+                    .navigationLinkEmpty(
+                        isActive: viewStore.bindingForSendConfirmation,
+                        destination: {
+                            SendFlowConfirmationView(store: store, tokenName: tokenName)
                         }
                     )
                 }

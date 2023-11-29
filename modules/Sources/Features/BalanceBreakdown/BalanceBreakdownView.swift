@@ -183,7 +183,11 @@ extension BalanceBreakdownView {
                         .font(.custom(FontFamily.Inter.medium.name, size: 10))
                 }
             }
-            .zcashStyle()
+            .zcashStyle(
+                minWidth: nil,
+                height: 38,
+                shadowOffset: 6
+            )
             .padding(.bottom, 15)
             .disabled(!viewStore.isShieldableBalanceAvailable || viewStore.isShieldingFunds)
             

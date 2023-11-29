@@ -435,6 +435,7 @@ let package = Package(
             name: "SendFlow",
             dependencies: [
                 "AudioServices",
+                "BalanceFormatter",
                 "Generated",
                 "DerivationTool",
                 "MnemonicClient",
