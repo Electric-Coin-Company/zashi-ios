@@ -142,7 +142,13 @@
 "send.error.insufficientFunds" = "Insufficient funds";
 "send.error.invalidAmount" = "Invalid amount";
 "send.error.invalidAddress" = "Invalid address";
-"send.fee" = "(Fee < %@)";
+"send.fee" = "(Fee %@)";
+"send.amountSummary" = "Amount:";
+"send.toSummary" = "To:";
+"send.feeSummary" = "Fee:";
+"send.confirmationTitle" = "Confirmation";
+"send.goBack" = "Go back";
+"send.review" = "Review";
 
 // MARK: - Settings
 "settings.recoveryPhrase" = "Recovery Phrase";

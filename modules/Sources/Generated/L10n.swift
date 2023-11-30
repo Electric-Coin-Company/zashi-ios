@@ -501,16 +501,24 @@ public enum L10n {
     public static func amount(_ p1: Any) -> String {
       return L10n.tr("Localizable", "send.amount", String(describing: p1), fallback: "amount: %@")
     }
+    /// Amount:
+    public static let amountSummary = L10n.tr("Localizable", "send.amountSummary", fallback: "Amount:")
+    /// Confirmation
+    public static let confirmationTitle = L10n.tr("Localizable", "send.confirmationTitle", fallback: "Confirmation")
     /// Memo included. Tap to edit.
     public static let editMemo = L10n.tr("Localizable", "send.editMemo", fallback: "Memo included. Tap to edit.")
     /// Sending transaction failed
     public static let failed = L10n.tr("Localizable", "send.failed", fallback: "Sending transaction failed")
-    /// (Fee < %@)
+    /// (Fee %@)
     public static func fee(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "send.fee", String(describing: p1), fallback: "(Fee < %@)")
+      return L10n.tr("Localizable", "send.fee", String(describing: p1), fallback: "(Fee %@)")
     }
+    /// Fee:
+    public static let feeSummary = L10n.tr("Localizable", "send.feeSummary", fallback: "Fee:")
     /// Aditional funds may be in transit
     public static let fundsInfo = L10n.tr("Localizable", "send.fundsInfo", fallback: "Aditional funds may be in transit")
+    /// Go back
+    public static let goBack = L10n.tr("Localizable", "send.goBack", fallback: "Go back")
     /// Want to include memo? Tap here.
     public static let includeMemo = L10n.tr("Localizable", "send.includeMemo", fallback: "Want to include memo? Tap here.")
     ///  memo: %@
@@ -521,6 +529,8 @@ public enum L10n {
     public static let memoPlaceholder = L10n.tr("Localizable", "send.memoPlaceholder", fallback: "Write private message here...")
     /// Message
     public static let message = L10n.tr("Localizable", "send.message", fallback: "Message")
+    /// Review
+    public static let review = L10n.tr("Localizable", "send.review", fallback: "Review")
     /// Sending
     public static let sending = L10n.tr("Localizable", "send.sending", fallback: "Sending")
     /// Sending %@ %@ to
@@ -531,6 +541,8 @@ public enum L10n {
     public static let succeeded = L10n.tr("Localizable", "send.succeeded", fallback: "Sending transaction succeeded")
     /// Send Zcash
     public static let title = L10n.tr("Localizable", "send.title", fallback: "Send Zcash")
+    /// To:
+    public static let toSummary = L10n.tr("Localizable", "send.toSummary", fallback: "To:")
     public enum Error {
       /// Insufficient funds
       public static let insufficientFunds = L10n.tr("Localizable", "send.error.insufficientFunds", fallback: "Insufficient funds")

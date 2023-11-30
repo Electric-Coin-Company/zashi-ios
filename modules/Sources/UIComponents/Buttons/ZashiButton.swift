@@ -16,6 +16,8 @@ public struct ZcashButtonStyle: ButtonStyle {
 
     let isEnabled: Bool
     let appearance: Appearance
+    let height: CGFloat
+    let shadowOffset: CGFloat
     @State private var offset = 0.0
     
     public func makeBody(configuration: Self.Configuration) -> some View {
@@ -25,12 +27,12 @@ public struct ZcashButtonStyle: ButtonStyle {
                     appearance == .primary ? .white
                     : isEnabled ? Asset.Colors.primary.color : Asset.Colors.shade72.color
                 )
-                .frame(height: 60)
+                .frame(height: height)
                 .border(isEnabled ? Asset.Colors.primary.color : Asset.Colors.shade72.color)
-                .offset(CGSize(width: 10, height: 10))
+                .offset(CGSize(width: shadowOffset, height: shadowOffset))
 
             Rectangle()
-                .frame(height: 60)
+                .frame(height: height)
                 .foregroundColor(
                     appearance == .primary ?
                     isEnabled ? Asset.Colors.primary.color : Asset.Colors.shade72.color
@@ -49,7 +51,7 @@ public struct ZcashButtonStyle: ButtonStyle {
         }
         .onChange(of: configuration.isPressed) { newValue in
             if newValue {
-                withAnimation(.easeInOut(duration: 0.05)) { offset = 10.0 }
+                withAnimation(.easeInOut(duration: 0.05)) { offset = shadowOffset }
                 withAnimation(.easeInOut(duration: 0.05).delay(0.05)) { offset = 0.0 }
             }
         }
@@ -60,17 +62,51 @@ struct ZcashButtonModifier: ViewModifier {
     @Environment(\.isEnabled) private var isEnabled
 
     let appearance: ZcashButtonStyle.Appearance
-    
+    let minWidth: CGFloat?
+    let height: CGFloat
+    let shadowOffset: CGFloat
+
     func body(content: Content) -> some View {
-        content
-            .buttonStyle(ZcashButtonStyle(isEnabled: isEnabled, appearance: appearance))
-            .frame(minWidth: 236)
+        if let minWidth {
+            content
+                .buttonStyle(
+                    ZcashButtonStyle(
+                        isEnabled: isEnabled,
+                        appearance: appearance,
+                        height: height,
+                        shadowOffset: shadowOffset
+                    )
+                )
+                .frame(minWidth: minWidth)
+        } else {
+            content
+                .buttonStyle(
+                    ZcashButtonStyle(
+                        isEnabled: isEnabled,
+                        appearance: appearance,
+                        height: height,
+                        shadowOffset: shadowOffset
+                    )
+                )
+        }
     }
 }
 
 extension Button {
-    public func zcashStyle(_ appearance: ZcashButtonStyle.Appearance = .primary) -> some View {
-        modifier(ZcashButtonModifier(appearance: appearance))
+    public func zcashStyle(
+        _ appearance: ZcashButtonStyle.Appearance = .primary,
+        minWidth: CGFloat? = 236,
+        height: CGFloat = 60,
+        shadowOffset: CGFloat = 10
+    ) -> some View {
+        modifier(
+            ZcashButtonModifier(
+                appearance: appearance,
+                minWidth: minWidth,
+                height: height,
+                shadowOffset: shadowOffset
+            )
+        )
     }
 }
 

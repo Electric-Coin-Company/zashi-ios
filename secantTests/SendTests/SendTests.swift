@@ -565,6 +565,66 @@ class SendTests: XCTestCase {
 
         await store.receive(.updateDestination(nil))
     }
+    
+    func testReviewPressed() async throws {
+        let sendState = SendFlowReducer.State(
+            addMemoState: true,
+            memoState: .initial,
+            scanState: .initial,
+            transactionAddressInputState: .initial,
+            transactionAmountInputState: .initial
+        )
+
+        let store = TestStore(
+            initialState: sendState
+        ) {
+            SendFlowReducer(networkType: .testnet)
+        }
+
+        await store.send(.reviewPressed) { state in
+            state.destination = .sendConfirmation
+        }
+    }
+    
+    func testMemoToMessage() throws {
+        let testMessage = "test message".redacted
+        
+        let sendState = SendFlowReducer.State(
+            addMemoState: true,
+            memoState: MessageEditorReducer.State(charLimit: 512, text: testMessage),
+            scanState: .initial,
+            transactionAddressInputState: .initial,
+            transactionAmountInputState: .initial
+        )
+
+        let store = TestStore(
+            initialState: sendState
+        ) {
+            SendFlowReducer(networkType: .testnet)
+        }
+        
+        XCTAssertEqual(store.state.message, testMessage.data)
+    }
+    
+    func testFeeFormat() throws {
+        let feeFormat = "(Fee < 0.001)"
+        
+        let sendState = SendFlowReducer.State(
+            addMemoState: true,
+            memoState: .initial,
+            scanState: .initial,
+            transactionAddressInputState: .initial,
+            transactionAmountInputState: .initial
+        )
+
+        let store = TestStore(
+            initialState: sendState
+        ) {
+            SendFlowReducer(networkType: .testnet)
+        }
+        
+        XCTAssertEqual(store.state.feeFormat, feeFormat)
+    }
 }
 
 private extension SendTests {
