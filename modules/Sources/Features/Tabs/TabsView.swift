@@ -7,6 +7,8 @@
 
 import SwiftUI
 import ComposableArchitecture
+import ZcashLightClientKit
+
 import Generated
 import AddressDetails
 import BalanceBreakdown
@@ -15,13 +17,15 @@ import SendFlow
 import Settings
 
 public struct TabsView: View {
+    let networkType: NetworkType
     var store: TabsStore
     let tokenName: String
     @Namespace var tabsID
 
-    public init(store: TabsStore, tokenName: String) {
+    public init(store: TabsStore, tokenName: String, networkType: NetworkType) {
         self.store = store
         self.tokenName = tokenName
+        self.networkType = networkType
     }
 
     public var body: some View {
@@ -51,7 +55,8 @@ public struct TabsView: View {
                             store: self.store.scope(
                                 state: \.addressDetailsState,
                                 action: TabsReducer.Action.addressDetails
-                            )
+                            ),
+                            networkType: networkType
                         )
                         .tag(TabsReducer.State.Tab.receive)
 
@@ -147,6 +152,6 @@ public struct TabsView: View {
 
 #Preview {
     NavigationView {
-        TabsView(store: .demo, tokenName: "TAZ")
+        TabsView(store: .demo, tokenName: "TAZ", networkType: .testnet)
     }
 }

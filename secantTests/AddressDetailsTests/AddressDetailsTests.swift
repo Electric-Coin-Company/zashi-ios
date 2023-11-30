@@ -24,14 +24,14 @@ class AddressDetailsTests: XCTestCase {
         let store = TestStore(
             initialState: AddressDetailsReducer.State(uAddress: uAddress)
         ) {
-            AddressDetailsReducer()
+            AddressDetailsReducer(networkType: .testnet)
         }
         
         store.dependencies.pasteboard = testPasteboard
 
-        await store.send(.copyTransparentAddressToPastboard)
-        
         let expectedAddress = try uAddress.transparentReceiver().stringEncoded
+
+        await store.send(.copyToPastboard(expectedAddress.redacted))
         
         XCTAssertEqual(
             testPasteboard.getString()?.data,
@@ -49,17 +49,42 @@ class AddressDetailsTests: XCTestCase {
         let store = TestStore(
             initialState: AddressDetailsReducer.State(uAddress: uAddress)
         ) {
-            AddressDetailsReducer()
+            AddressDetailsReducer(networkType: .testnet)
         }
         
         store.dependencies.pasteboard = testPasteboard
 
-        await store.send(.copyUnifiedAddressToPastboard)
+        await store.send(.copyToPastboard(uAddress.stringEncoded.redacted))
         
         XCTAssertEqual(
             testPasteboard.getString()?.data,
             uAddress.stringEncoded,
             "AddressDetails: `testCopyUnifiedAddressToPasteboard` is expected to match the input `\(uAddress.stringEncoded)`"
+        )
+        
+        await store.finish()
+    }
+    
+    func testCopySaplingAddressToPasteboard() async throws {
+        let testPasteboard = PasteboardClient.testPasteboard
+        let uAddress = try UnifiedAddress(encoding: uAddressEncoding, network: .testnet)
+        
+        let store = TestStore(
+            initialState: AddressDetailsReducer.State(uAddress: uAddress)
+        ) {
+            AddressDetailsReducer(networkType: .testnet)
+        }
+        
+        store.dependencies.pasteboard = testPasteboard
+
+        let expectedAddress = try uAddress.saplingReceiver().stringEncoded
+
+        await store.send(.copyToPastboard(expectedAddress.redacted))
+        
+        XCTAssertEqual(
+            testPasteboard.getString()?.data,
+            expectedAddress,
+            "AddressDetails: `testCopySaplingAddressToPasteboard` is expected to match the input `\(expectedAddress)`"
         )
         
         await store.finish()

@@ -96,7 +96,7 @@ public struct TabsReducer: Reducer {
         }
         
         Scope(state: \.addressDetailsState, action: /Action.addressDetails) {
-            AddressDetailsReducer()
+            AddressDetailsReducer(networkType: networkType)
         }
         
         Scope(state: \.balanceBreakdownState, action: /Action.balanceBreakdown) {

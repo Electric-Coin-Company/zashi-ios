@@ -12,7 +12,7 @@ directly impact users rather than highlighting other crucial architectural updat
 - When the send button is tapped, the sending title + spinner is shown instead of just the spinner. Also, when the send is done, and redirect to the Account page is done, the sending transaction is already populated in the list. The lag between it was presented has been fixed.
 
 ### Removed
-- The sapling address and the QR of it has been removed from the receive screen. The only meaningful options are the UA and the transparent addresses. 
+- [testnet only] The sapling address and the QR of it has been removed from the receive screen. The only meaningful options are the UA and the transparent addresses. 
 
 ### Added
 - Confirmation screen when sending funds. The initial screen is about filling in the address, amount and message (optional). The butoon `review` leads to a brand new screen where the summary of the transaction is presented. The send is confirmed by tapping the send button. Going back to update send data is possible via `go back` button.
