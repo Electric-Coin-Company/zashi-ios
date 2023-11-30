@@ -6,6 +6,8 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 0.2.0 build 10 (2023-11-30)
+
 ### Changed
 - The way how the balances (zatoshi amounts/values) are represented has been updated accoridng to the latest requirements. In general any zatoshi value has 2 major states, expanded or abbreviated. Trailing zeroes are trimmed when expanded.
 - The `Balances` screen has been redesigned: new progress bar with the status of the synchronization, all balances available. Penging fields are disabled for now and show only zeroes until support from the SDK is implemented.

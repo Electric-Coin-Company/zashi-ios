@@ -10,6 +10,15 @@
       }
     },
     {
+      "identity" : "app-check",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/google/app-check.git",
+      "state" : {
+        "revision" : "5746b2d35c91c50581590ed97abe4c06b5037274",
+        "version" : "10.18.0"
+      }
+    },
+    {
       "identity" : "combine-schedulers",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/combine-schedulers",
@@ -23,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/firebase-ios-sdk",
       "state" : {
-        "revision" : "8872dbd7d947acf757abab933da10e83c1842280",
-        "version" : "10.17.0"
+        "revision" : "5de0369ee79ad096c164eb3afeb7921d92a43b58",
+        "version" : "10.18.0"
       }
     },
     {
@@ -41,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleDataTransport.git",
       "state" : {
-        "revision" : "aae45a320fd0d11811820335b1eabc8753902a40",
-        "version" : "9.2.5"
+        "revision" : "a732a4b47f59e4f725a2ea10f0c77e93a7131117",
+        "version" : "9.3.0"
       }
     },
     {
@@ -77,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/gtm-session-fetcher.git",
       "state" : {
-        "revision" : "d415594121c9e8a4f9d79cecee0965cf35e74dbd",
-        "version" : "3.1.1"
+        "revision" : "115f75e43851774934d695449a4836123c3246e1",
+        "version" : "3.2.0"
       }
     },
     {
@@ -149,8 +158,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-case-paths",
       "state" : {
-        "revision" : "40773cbaf8d71ed5357f297b1ba4073f5b24faaa",
-        "version" : "1.1.0"
+        "revision" : "ed7facdd4a361514b46e3bbc6238cd41c84be4ec",
+        "version" : "1.1.1"
       }
     },
     {
@@ -176,8 +185,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-composable-architecture",
       "state" : {
-        "revision" : "eddc1869b37ce42e3b34e72b1e1355d049e73970",
-        "version" : "1.4.2"
+        "revision" : "3f80eb9ed07c16a9f42ac4f23d4dafaa0494568c",
+        "version" : "1.5.0"
       }
     },
     {
@@ -203,8 +212,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-custom-dump",
       "state" : {
-        "revision" : "65fc9e2b62727cacfab9fc60d580c284a4b9308c",
-        "version" : "1.1.1"
+        "revision" : "aedcf6f4cd486ccef5b312ccac85d4b3f6e58605",
+        "version" : "1.1.2"
       }
     },
     {
@@ -212,8 +221,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-dependencies",
       "state" : {
-        "revision" : "4e1eb6e28afe723286d8cc60611237ffbddba7c5",
-        "version" : "1.0.0"
+        "revision" : "9783b58167f7618cb86011156e741cbc6f4cc864",
+        "version" : "1.1.2"
       }
     },
     {
@@ -248,8 +257,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio.git",
       "state" : {
-        "revision" : "853522d90871b4b63262843196685795b5008c46",
-        "version" : "2.61.1"
+        "revision" : "702cd7c56d5d44eeba73fdf83918339b26dc855c",
+        "version" : "2.62.0"
       }
     },
     {
@@ -302,8 +311,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-protobuf.git",
       "state" : {
-        "revision" : "07f7f26ded8df9645c072f220378879c4642e063",
-        "version" : "1.25.1"
+        "revision" : "65e8f29b2d63c4e38e736b25c27b83e012159be8",
+        "version" : "1.25.2"
       }
     },
     {
@@ -329,8 +338,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swiftui-navigation",
       "state" : {
-        "revision" : "a3aa5d46e8bf174d773d23b030f1c103999398ac",
-        "version" : "1.1.0"
+        "revision" : "78f9d72cf667adb47e2040aa373185c88c63f0dc",
+        "version" : "1.2.0"
       }
     },
     {
