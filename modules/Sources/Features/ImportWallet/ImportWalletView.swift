@@ -31,7 +31,6 @@ public struct ImportWalletView: View {
                 WithViewStore(store, observe: { $0 }) { viewStore in
                     VStack(alignment: .center) {
                         ZashiIcon()
-                            .padding(.vertical, 30)
                         
                         Text(L10n.ImportWallet.description)
                             .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
@@ -119,8 +118,9 @@ public struct ImportWalletView: View {
                 }
             }
         }
+        .navigationBarTitleDisplayMode(.inline)
         .padding(.vertical, 1)
-        .applyScreenBackground()
+        .applyScreenBackground(withPattern: true)
     }
 }
 

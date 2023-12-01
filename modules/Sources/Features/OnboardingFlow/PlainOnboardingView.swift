@@ -25,11 +25,11 @@ public struct PlainOnboardingView: View {
                 Asset.Assets.welcomeScreenLogo.image
                     .resizable()
                     .frame(width: 169, height: 160)
-                    .padding(.top, 60)
+                    .padding(.top, 10)
                 
                 Text(L10n.PlainOnboarding.title)
                     .font(.custom(FontFamily.Inter.regular.name, size: 22))
-                    .padding(.top, 25)
+                    .padding(.top, 15)
                     .multilineTextAlignment(.center)
 
                 Spacer()
@@ -70,6 +70,8 @@ public struct PlainOnboardingView: View {
                 }
             )
         }
+        .navigationBarTitleDisplayMode(.inline)
+        .applyScreenBackground(withPattern: true)
     }
 }
 

@@ -17,6 +17,7 @@ public struct ZashiIcon: View {
             .renderingMode(.template)
             .tint(Asset.Colors.primary.color)
             .frame(width: 33, height: 43)
+            .padding(.bottom, 30)
     }
 }
 

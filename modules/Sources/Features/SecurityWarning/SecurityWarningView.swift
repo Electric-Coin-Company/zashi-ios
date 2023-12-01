@@ -21,13 +21,7 @@ public struct SecurityWarningView: View {
     public var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             VStack(alignment: .center) {
-                Asset.Assets.zashiLogo.image
-                    .resizable()
-                    .renderingMode(.template)
-                    .tint(Asset.Colors.primary.color)
-                    .frame(width: 33, height: 43)
-                    .padding(.bottom, 40)
-                    .padding(.top, 30)
+                ZashiIcon()
                 
                 Text(L10n.SecurityWarning.title)
                     .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
@@ -67,7 +61,6 @@ public struct SecurityWarningView: View {
             }
             .zashiBack()
             .padding(.horizontal, 60)
-            .applyScreenBackground()
             .alert(store: store.scope(
                 state: \.$alert,
                 action: { .alert($0) }
@@ -85,6 +78,8 @@ public struct SecurityWarningView: View {
             )
             .onAppear { viewStore.send(.onAppear) }
         }
+        .navigationBarTitleDisplayMode(.inline)
+        .applyScreenBackground(withPattern: true)
     }
 }
 

@@ -22,12 +22,7 @@ public struct PrivateDataConsentView: View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             ScrollView {
                 Group {
-                    Asset.Assets.zashiLogo.image
-                        .resizable()
-                        .renderingMode(.template)
-                        .tint(Asset.Colors.primary.color)
-                        .frame(width: 33, height: 43)
-                        .padding(.vertical, 40)
+                    ZashiIcon()
                     
                     Text(L10n.PrivateDataConsent.title)
                         .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
@@ -67,13 +62,14 @@ public struct PrivateDataConsentView: View {
             }
             .padding(.vertical, 1)
             .zashiBack()
-            .applyScreenBackground()
             .onAppear {
                 viewStore.send(.onAppear)
             }
             
             shareLogsView(viewStore)
         }
+        .navigationBarTitleDisplayMode(.inline)
+        .applyScreenBackground(withPattern: true)
     }
 }
 

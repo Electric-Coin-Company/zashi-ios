@@ -21,7 +21,6 @@ public struct ImportBirthdayView: View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             VStack(alignment: .center) {
                 ZashiIcon()
-                    .padding(.vertical, 30)
 
                 Text(L10n.ImportWallet.Birthday.title)
                     .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
@@ -54,11 +53,12 @@ public struct ImportBirthdayView: View {
                 .padding(.bottom, 50)
             }
             .padding(.horizontal, 70)
-            .applyScreenBackground()
             .scrollableWhenScaledUp()
             .onAppear(perform: { viewStore.send(.onAppear) })
             .zashiBack()
         }
+        .navigationBarTitleDisplayMode(.inline)
+        .applyScreenBackground(withPattern: true)
     }
 }
 

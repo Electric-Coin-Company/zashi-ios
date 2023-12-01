@@ -10,21 +10,32 @@ import Generated
 
 public struct ScreenBackgroundModifier: ViewModifier {
     var color: Color
+    let isPatternOn: Bool
 
     public func body(content: Content) -> some View {
         ZStack {
             color
                 .edgesIgnoringSafeArea(.all)
             
+            if isPatternOn {
+                Asset.Assets.gridTile.image
+                    .resizable(resizingMode: .tile)
+                    .edgesIgnoringSafeArea(.all)
+                    .opacity(0.18)
+            }
+
             content
         }
     }
 }
 
 extension View {
-    public func applyScreenBackground() -> some View {
+    public func applyScreenBackground(withPattern: Bool = false) -> some View {
         self.modifier(
-            ScreenBackgroundModifier(color: Asset.Colors.secondary.color)
+            ScreenBackgroundModifier(
+                color: Asset.Colors.secondary.color,
+                isPatternOn: withPattern
+            )
         )
     }
 }

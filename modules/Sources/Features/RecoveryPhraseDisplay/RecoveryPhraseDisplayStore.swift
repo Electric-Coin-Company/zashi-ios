@@ -29,11 +29,13 @@ public struct RecoveryPhraseDisplayReducer: Reducer {
         public init(
             phrase: RecoveryPhrase? = nil,
             showCopyToBufferAlert: Bool = false,
-            birthday: Birthday? = nil
+            birthday: Birthday? = nil,
+            birthdayValue: String? = nil
         ) {
             self.phrase = phrase
             self.showCopyToBufferAlert = showCopyToBufferAlert
             self.birthday = birthday
+            self.birthdayValue = birthdayValue
         }
     }
     

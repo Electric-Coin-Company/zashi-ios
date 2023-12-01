@@ -48,7 +48,6 @@ public struct About: View {
 
                 Spacer()
             }
-            .applyScreenBackground()
             .zashiBack()
             .zashiTitle {
                 Text(L10n.Settings.about.uppercased())
@@ -56,6 +55,8 @@ public struct About: View {
             }
             .padding(.horizontal, 70)
         }
+        .navigationBarTitleDisplayMode(.inline)
+        .applyScreenBackground(withPattern: true)
     }
 }
 
