@@ -87,6 +87,48 @@ class SendTests: XCTestCase {
 
         await store.finish()
     }
+    
+    @MainActor func testSendFailed() async throws {
+        // the test needs to pass the exportWallet() so we simulate some in the keychain
+        try storage.importWallet(bip39: "one two three", birthday: nil)
+
+        var initialState = SendFlowReducer.State.initial
+        initialState.transactionAddressInputState = TransactionAddressTextFieldReducer.State(
+            textFieldState:
+                TCATextFieldReducer.State(
+                    validationType: nil,
+                    text: "ztestsapling1psqa06alcfj9t6s246hht3n7kcw5h900r6z40qnuu7l58qs55kzeqa98879z9hzy596dca4hmsr".redacted
+                )
+        )
+
+        let store = TestStore(
+            initialState: initialState
+        ) {
+            SendFlowReducer(networkType: .testnet)
+        }
+        
+        let error = "send failed".toZcashError()
+        
+        store.dependencies.derivationTool = .liveValue
+        store.dependencies.mainQueue = .immediate
+        store.dependencies.mnemonic = .liveValue
+        store.dependencies.sdkSynchronizer = .mocked(sendTransaction: { _, _, _, _ in throw error })
+        store.dependencies.walletStorage = .noOp
+        
+        // simulate the sending confirmation button to be pressed
+        await store.send(.sendPressed) { state in
+            // once sending is confirmed, the attempts to try to send again by pressing the button
+            // needs to be eliminated, indicated by the flag `isSending`, need to be true
+            state.isSending = true
+        }
+                
+        await store.receive(.sendFailed(error)) { state in
+            state.isSending = false
+            state.alert = AlertState.sendFailure(error)
+        }
+
+        await store.finish()
+    }
 
     func testAddressValidation_Invalid() async throws {
         let store = TestStore(
