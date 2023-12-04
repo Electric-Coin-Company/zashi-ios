@@ -68,24 +68,26 @@ public struct SendFlowConfirmationView: View {
                     .padding(.horizontal, 35)
                     .padding(.bottom, 20)
 
-                    HStack {
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text(L10n.Send.message)
-                                .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                            VStack(alignment: .leading, spacing: 0) {
-                                Color.clear.frame(height: 0)
-                                
-                                Text(viewStore.message)
-                                    .font(.custom(FontFamily.Inter.regular.name, size: 13))
-                                    .foregroundColor(Asset.Colors.primary.color)
-                                    .padding()
+                    if !viewStore.message.isEmpty {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text(L10n.Send.message)
+                                    .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                                VStack(alignment: .leading, spacing: 0) {
+                                    Color.clear.frame(height: 0)
+                                    
+                                    Text(viewStore.message)
+                                        .font(.custom(FontFamily.Inter.regular.name, size: 13))
+                                        .foregroundColor(Asset.Colors.primary.color)
+                                        .padding()
+                                }
+                                .messageShape()
                             }
-                            .messageShape()
+                            Spacer()
                         }
-                        Spacer()
+                        .padding(.horizontal, 35)
+                        .padding(.bottom, 40)
                     }
-                    .padding(.horizontal, 35)
-                    .padding(.bottom, 40)
 
                     HStack(spacing: 30) {
                         Button {

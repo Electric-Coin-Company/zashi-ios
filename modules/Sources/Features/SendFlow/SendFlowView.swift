@@ -160,6 +160,10 @@ public struct SendFlowView: View {
         }
         .padding(.vertical, 1)
         .applyScreenBackground()
+        .alert(store: store.scope(
+            state: \.$alert,
+            action: { .alert($0) }
+        ))
     }
 }
 

@@ -245,6 +245,7 @@ public struct SendFlowReducer: Reducer {
                 return .none
                 
             case .sendFailed(let error):
+                state.isSending = false
                 state.alert = AlertState.sendFailure(error)
                 return .none
                 
