@@ -13,20 +13,41 @@ import AddressDetails
 @testable import secant_testnet
 
 class AddressDetailsSnapshotTests: XCTestCase {
-    func testAddressDetailsSnapshot() throws {
+    func testAddressDetailsSnapshot_testnet() throws {
         // swiftlint:disable line_length
         let uAddress = try UnifiedAddress(
             encoding: "utest1zkkkjfxkamagznjr6ayemffj2d2gacdwpzcyw669pvg06xevzqslpmm27zjsctlkstl2vsw62xrjktmzqcu4yu9zdhdxqz3kafa4j2q85y6mv74rzjcgjg8c0ytrg7dwyzwtgnuc76h",
             network: .testnet
         )
 
+        let networkType = NetworkType.testnet
+        
         let store = Store(
             initialState: AddressDetailsReducer.State(uAddress: uAddress)
         ) {
-            AddressDetailsReducer()
+            AddressDetailsReducer(networkType: networkType)
                 .dependency(\.walletConfigProvider, .noOp)
         }
         
-        addAttachments(AddressDetailsView(store: store))
+        addAttachments(AddressDetailsView(store: store, networkType: networkType))
+    }
+    
+    func testAddressDetailsSnapshot_mainnet() throws {
+        // swiftlint:disable line_length
+        let uAddress = try UnifiedAddress(
+            encoding: "utest1zkkkjfxkamagznjr6ayemffj2d2gacdwpzcyw669pvg06xevzqslpmm27zjsctlkstl2vsw62xrjktmzqcu4yu9zdhdxqz3kafa4j2q85y6mv74rzjcgjg8c0ytrg7dwyzwtgnuc76h",
+            network: .testnet
+        )
+
+        let networkType = NetworkType.mainnet
+        
+        let store = Store(
+            initialState: AddressDetailsReducer.State(uAddress: uAddress)
+        ) {
+            AddressDetailsReducer(networkType: networkType)
+                .dependency(\.walletConfigProvider, .noOp)
+        }
+        
+        addAttachments(AddressDetailsView(store: store, networkType: networkType))
     }
 }

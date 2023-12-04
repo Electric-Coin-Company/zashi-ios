@@ -7,28 +7,40 @@
 
 import SwiftUI
 import ComposableArchitecture
+import ZcashLightClientKit
+
 import Generated
 import UIComponents
 import Utils
 
 public struct AddressDetailsView: View {
     let store: AddressDetailsStore
-
-    public init(store: AddressDetailsStore) {
+    let networkType: NetworkType
+    
+    public init(store: AddressDetailsStore, networkType: NetworkType) {
         self.store = store
+        self.networkType = networkType
     }
     
     public var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             ScrollView {
                 addressBlock(L10n.AddressDetails.ua, viewStore.unifiedAddress) {
-                    viewStore.send(.copyUnifiedAddressToPastboard)
+                    viewStore.send(.copyToPastboard(viewStore.unifiedAddress.redacted))
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.top, 20)
                 
+#if DEBUG
+                if networkType == .testnet {
+                    addressBlock(L10n.AddressDetails.sa, viewStore.saplingAddress) {
+                        viewStore.send(.copyToPastboard(viewStore.saplingAddress.redacted))
+                    }
+                }
+#endif
+                
                 addressBlock(L10n.AddressDetails.ta, viewStore.transparentAddress) {
-                    viewStore.send(.copyTransparentAddressToPastboard)
+                    viewStore.send(.copyToPastboard(viewStore.transparentAddress.redacted))
                 }
             }
             .padding(.vertical, 1)
@@ -85,6 +97,6 @@ extension AddressDetailsView {
 
 #Preview {
     NavigationView {
-        AddressDetailsView(store: .placeholder)
+        AddressDetailsView(store: .placeholder, networkType: .testnet)
     }
 }

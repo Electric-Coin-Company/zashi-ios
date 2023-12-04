@@ -53,7 +53,8 @@ private extension RootView {
                                 state: \.tabsState,
                                 action: RootReducer.Action.tabs
                             ),
-                            tokenName: tokenName
+                            tokenName: tokenName,
+                            networkType: networkType
                         )
                     }
                     .navigationViewStyle(.stack)
