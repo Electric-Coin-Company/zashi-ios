@@ -17,10 +17,18 @@ public struct CheckboxToggleStyle: ToggleStyle {
                     Image(systemName: "checkmark.square.fill")
                         .resizable()
                         .frame(width: 20, height: 20, alignment: .center)
+                        .background {
+                            Color.white
+                                .scaleEffect(x: 0.94, y: 0.94)
+                        }
                 } else {
                     Image(systemName: "square")
                         .resizable()
                         .frame(width: 20, height: 20, alignment: .center)
+                        .background {
+                            Color.white
+                                .scaleEffect(x: 0.94, y: 0.94)
+                        }
                 }
             }
             .onTapGesture {

@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Changed
+- The background of Onboarding and some of the Settings screen has been updated to show a subtle texture of a grid pattern.
+
 ## 0.2.0 build 10 (2023-11-30)
 
 ### Changed

@@ -30,6 +30,7 @@ public enum Asset {
     public static let zashiLogo = ImageAsset(name: "ZashiLogo")
     public static let copy = ImageAsset(name: "copy")
     public static let flyReceivedFilled = ImageAsset(name: "flyReceivedFilled")
+    public static let gridTile = ImageAsset(name: "gridTile")
     public static let shield = ImageAsset(name: "shield")
     public static let surroundedShield = ImageAsset(name: "surroundedShield")
     public static let upArrow = ImageAsset(name: "upArrow")
