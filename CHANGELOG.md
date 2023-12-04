@@ -8,6 +8,11 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ### Changed
 - The background of Onboarding and some of the Settings screen has been updated to show a subtle texture of a grid pattern.
+- The sapling address + QR code has been restored on the Receive tab (for testnet only.)
+
+### Fixed
+- Fixed a bug that caused spends to appear to be stuck.
+- The confirmation screen has been altered such that the message bubble is rendered only when the message is non-empty. 
 
 ## 0.2.0 build 10 (2023-11-30)
 
