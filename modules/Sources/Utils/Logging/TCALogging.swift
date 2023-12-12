@@ -18,6 +18,7 @@ extension OSLogger {
         os_log(
             "%{public}@",
             log: oslog,
+            type: .default,
             message
         )
     }

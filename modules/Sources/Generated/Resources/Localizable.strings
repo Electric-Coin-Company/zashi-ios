@@ -156,6 +156,7 @@
 "settings.privacyPolicy" = "Privacy Policy";
 "settings.documentation" = "Documentation";
 "settings.exportPrivateData" = "Export private data";
+"settings.exportLogsOnly" = "Export logs only";
 "settings.about" = "About";
 "settings.about.info" = "Send and receive ZEC on Zashi!
 Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.";

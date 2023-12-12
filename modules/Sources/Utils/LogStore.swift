@@ -7,10 +7,11 @@
 
 import Foundation
 import OSLog
-    
+
 public enum LogStore {
     public static func exportCategory(
         _ category: String,
+        level: OSLogEntryLog.Level = .debug,
         hoursToThePast: TimeInterval = 168,
         fileSize: Int = 1_000_000
     ) async throws -> [String]? {
@@ -22,12 +23,21 @@ public enum LogStore {
         var res: [String] = []
         var size = 0
         
-        let entries = try store.getEntries(at: position).reversed()
+        let entries = try store.getEntries(at: position)
         for entry in entries {
-            guard let logEntry = entry as? OSLogEntryLog else { continue }
-            guard logEntry.subsystem == bundle && logEntry.category == category else { continue }
+            guard let logEntry = entry as? OSLogEntryLog else {
+                continue
+            }
             
-            guard size < fileSize else { break }
+            guard logEntry.subsystem == bundle
+                    && logEntry.category == category
+                    && level.rawValue <= logEntry.level.rawValue else {
+                continue
+            }
+            
+            guard size < fileSize else {
+                break
+            }
             
             size += logEntry.composedMessage.utf8.count
             res.append("[\(logEntry.date.timestamp())] \(logEntry.composedMessage)")
