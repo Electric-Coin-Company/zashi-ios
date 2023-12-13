@@ -6,6 +6,8 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 0.2.0 build 11 (2023-12-13)
+
 ### Added
 - Option to export SDK and wallet logs in `Export private data` screen.
 
