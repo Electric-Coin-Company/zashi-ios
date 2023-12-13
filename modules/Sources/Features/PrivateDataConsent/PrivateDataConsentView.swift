@@ -53,6 +53,14 @@ public struct PrivateDataConsentView: View {
                     Button(L10n.Settings.exportPrivateData.uppercased()) {
                         viewStore.send(.exportRequested)
                     }
+                    .zcashStyle(.secondary)
+                    .disabled(!viewStore.isAcknowledged)
+                    .padding(.horizontal, 8)
+                    .padding(.bottom, 25)
+
+                    Button(L10n.Settings.exportLogsOnly.uppercased()) {
+                        viewStore.send(.exportLogsRequested)
+                    }
                     .zcashStyle()
                     .disabled(!viewStore.isAcknowledged)
                     .padding(.horizontal, 8)
@@ -76,9 +84,7 @@ public struct PrivateDataConsentView: View {
 private extension PrivateDataConsentView {
     @ViewBuilder func shareLogsView(_ viewStore: PrivateDataConsentViewStore) -> some View {
         if viewStore.isExporting {
-            UIShareDialogView(
-                activityItems: viewStore.dataDbURL
-            ) {
+            UIShareDialogView(activityItems: viewStore.exportURLs) {
                 viewStore.send(.shareFinished)
             }
             // UIShareDialogView only wraps UIActivityViewController presentation

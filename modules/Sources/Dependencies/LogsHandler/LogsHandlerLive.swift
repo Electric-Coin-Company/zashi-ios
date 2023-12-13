@@ -7,6 +7,8 @@
 
 import Foundation
 import ComposableArchitecture
+import OSLog
+
 import Utils
 
 extension LogsHandlerClient: DependencyKey {
@@ -17,9 +19,14 @@ extension LogsHandlerClient: DependencyKey {
             try FileManager.default.createDirectory(atPath: logsURL.path, withIntermediateDirectories: true)
             
             // export the logs
-            async let sdkLogs = LogsHandlerClient.exportAndStoreLogsFor(
+            async let sdkLogsVerbose = LogsHandlerClient.exportAndStoreLogsFor(
                 key: sdkLogs,
-                atURL: logsURL.appendingPathComponent("sdkLogs.txt")
+                atURL: logsURL.appendingPathComponent("sdkLogs_verbose.txt")
+            )
+            async let sdkLogsSync = LogsHandlerClient.exportAndStoreLogsFor(
+                key: sdkLogs,
+                atURL: logsURL.appendingPathComponent("sdkLogs_sync.txt"),
+                level: .info // The info level represents the sync log in the SDK
             )
             async let tcaLogs = LogsHandlerClient.exportAndStoreLogsFor(
                 key: tcaLogs,
@@ -30,7 +37,7 @@ extension LogsHandlerClient: DependencyKey {
                 atURL: logsURL.appendingPathComponent("walletLogs.txt")
             )
 
-            let logs = try await [sdkLogs, tcaLogs, walletLogs]
+            let logs = try await [sdkLogsVerbose, sdkLogsSync, tcaLogs, walletLogs]
             
             // store the log files into the logs folder
             try logs.forEach { logsHandler in
@@ -66,8 +73,16 @@ extension LogsHandlerClient: DependencyKey {
 }
 
 private extension LogsHandlerClient {
-    static func exportAndStoreLogsFor(key: String, atURL: URL) async throws -> (result: String, dir: URL) {
-        let logsStr = try await LogStore.exportCategory(key)
+    static func exportAndStoreLogsFor(
+        key: String,
+        atURL: URL,
+        level: OSLogEntryLog.Level = .debug
+    ) async throws -> (result: String, dir: URL) {
+        let logsStr = try await LogStore.exportCategory(
+            key,
+            level: level,
+            fileSize: 2_000_000 // ~ 2MB of data
+        )
         
         var result = ""
         logsStr?.forEach({ line in

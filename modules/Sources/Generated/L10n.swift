@@ -557,6 +557,8 @@ public enum L10n {
     public static let about = L10n.tr("Localizable", "settings.about", fallback: "About")
     /// Documentation
     public static let documentation = L10n.tr("Localizable", "settings.documentation", fallback: "Documentation")
+    /// Export logs only
+    public static let exportLogsOnly = L10n.tr("Localizable", "settings.exportLogsOnly", fallback: "Export logs only")
     /// Export private data
     public static let exportPrivateData = L10n.tr("Localizable", "settings.exportPrivateData", fallback: "Export private data")
     /// Send us feedback

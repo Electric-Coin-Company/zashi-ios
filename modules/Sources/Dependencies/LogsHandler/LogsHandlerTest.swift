@@ -13,3 +13,9 @@ extension LogsHandlerClient: TestDependencyKey {
         exportAndStoreLogs: XCTUnimplemented("\(Self.self).exportAndStoreLogs", placeholder: nil)
     )
 }
+
+extension LogsHandlerClient {
+    public static let noOp = Self(
+        exportAndStoreLogs: { _, _, _ in nil }
+    )
+}
