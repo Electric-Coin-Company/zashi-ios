@@ -177,17 +177,32 @@ extension RootReducer {
                 return .none
 
             case .initialization(.checkBackupPhraseValidation):
-                guard let _ = state.storedWallet else {
+                guard let storedWallet = state.storedWallet else {
                     state.appInitializationState = .failed
                     state.alert = AlertState.cantLoadSeedPhrase()
                     return .none
                 }
 
+                var landingDestination = RootReducer.DestinationState.Destination.tabs
+                
+                if !storedWallet.hasUserPassedPhraseBackupTest {
+                    let phraseWords = mnemonic.asWords(storedWallet.seedPhrase.value())
+                    
+                    let recoveryPhrase = RecoveryPhrase(words: phraseWords.map { $0.redacted })
+                    state.phraseDisplayState.phrase = recoveryPhrase
+                    state.phraseDisplayState.birthday = storedWallet.birthday
+                    if let value = storedWallet.birthday?.value() {
+                        let latestBlock = numberFormatter.string(NSDecimalNumber(value: value))
+                        state.phraseDisplayState.birthdayValue = "\(String(describing: latestBlock ?? ""))"
+                    }
+                    landingDestination = .phraseDisplay
+                }
+
                 state.appInitializationState = .initialized
 
-                return .run { send in
+                return .run { [landingDestination] send in
                     try await mainQueue.sleep(for: .seconds(3))
-                    await send(.destination(.updateDestination(.tabs)))
+                    await send(.destination(.updateDestination(landingDestination)))
                 }
                 .cancellable(id: CancelId.timer, cancelInFlight: true)
 
@@ -234,6 +249,15 @@ extension RootReducer {
                     backDestination
                 )
 
+            case .phraseDisplay(.finishedPressed):
+                do {
+                    try walletStorage.markUserPassedPhraseBackupTest(true)
+                    state.destinationState.destination = .tabs
+                } catch {
+                    state.alert = AlertState.cantStoreThatUserPassedPhraseBackupTest(error.toZcashError())
+                }
+                return .none
+                
             case .welcome(.debugMenuStartup), .tabs(.home(.debugMenuStartup)):
                 return .concatenate(
                     Effect.cancel(id: CancelId.timer),
@@ -270,7 +294,7 @@ extension RootReducer {
             case .onboarding(.securityWarning(.recoveryPhraseDisplay(.finishedPressed))):
                 return Effect.send(.destination(.updateDestination(.tabs)))
                 
-            case .tabs, .destination, .onboarding, .sandbox,
+            case .tabs, .destination, .onboarding, .sandbox, .phraseDisplay,
                     .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, .confirmationDialog:
                 return .none
             }

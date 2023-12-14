@@ -96,7 +96,7 @@ public struct SecurityWarningReducer: Reducer {
                     let birthday = zcashSDKEnvironment.latestCheckpoint(zcashNetwork)
                     
                     // store the wallet to the keychain
-                    try walletStorage.importWallet(newRandomPhrase, birthday, .english, true)
+                    try walletStorage.importWallet(newRandomPhrase, birthday, .english, false)
                     
                     return .concatenate(
                         Effect.send(.newWalletCreated),

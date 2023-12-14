@@ -9,6 +9,7 @@ import Foundation
 import MnemonicSwift
 import ZcashLightClientKit
 import ComposableArchitecture
+import SecItem
 
 extension WalletStorageClient: DependencyKey {
     public static let liveValue = WalletStorageClient.live()

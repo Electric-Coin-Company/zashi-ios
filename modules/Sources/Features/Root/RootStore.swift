@@ -16,6 +16,7 @@ import Sandbox
 import Tabs
 import CrashReporter
 import ReadTransactionsStorage
+import RecoveryPhraseDisplay
 
 public typealias RootStore = Store<RootReducer.State, RootReducer.Action>
 public typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
@@ -35,6 +36,7 @@ public struct RootReducer: Reducer {
         public var destinationState: DestinationState
         public var exportLogsState: ExportLogsReducer.State
         public var onboardingState: OnboardingFlowReducer.State
+        public var phraseDisplayState: RecoveryPhraseDisplayReducer.State
         public var sandboxState: SandboxReducer.State
         public var splashAppeared = false
         public var storedWallet: StoredWallet?
@@ -48,6 +50,7 @@ public struct RootReducer: Reducer {
             destinationState: DestinationState,
             exportLogsState: ExportLogsReducer.State,
             onboardingState: OnboardingFlowReducer.State,
+            phraseDisplayState: RecoveryPhraseDisplayReducer.State,
             sandboxState: SandboxReducer.State,
             storedWallet: StoredWallet? = nil,
             tabsState: TabsReducer.State,
@@ -59,6 +62,7 @@ public struct RootReducer: Reducer {
             self.destinationState = destinationState
             self.exportLogsState = exportLogsState
             self.onboardingState = onboardingState
+            self.phraseDisplayState = phraseDisplayState
             self.sandboxState = sandboxState
             self.storedWallet = storedWallet
             self.tabsState = tabsState
@@ -84,6 +88,7 @@ public struct RootReducer: Reducer {
         case nukeWalletFailed
         case nukeWalletSucceeded
         case onboarding(OnboardingFlowReducer.Action)
+        case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
         case splashFinished
         case splashRemovalRequested
         case sandbox(SandboxReducer.Action)
@@ -98,6 +103,7 @@ public struct RootReducer: Reducer {
     @Dependency(\.derivationTool) var derivationTool
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.mnemonic) var mnemonic
+    @Dependency(\.numberFormatter) var numberFormatter
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.walletConfigProvider) var walletConfigProvider
@@ -317,6 +323,7 @@ extension RootReducer.State {
             destinationState: .initial,
             exportLogsState: .initial,
             onboardingState: .initial,
+            phraseDisplayState: .initial,
             sandboxState: .initial,
             tabsState: .initial,
             walletConfig: .initial,

@@ -14,6 +14,7 @@ import Generated
 import RecoveryPhraseDisplay
 import Root
 import ZcashLightClientKit
+import Utils
 @testable import secant_testnet
 
 class AppInitializationTests: XCTestCase {
@@ -33,17 +34,26 @@ class AppInitializationTests: XCTestCase {
         }
         
         let testQueue = DispatchQueue.test
+
+        let storedWallet = StoredWallet(
+            language: .english,
+            seedPhrase: SeedPhrase(RecoveryPhrase.testPhrase.joined(separator: " ")),
+            version: 0,
+            birthday: Birthday(0),
+            hasUserPassedPhraseBackupTest: true
+        )
         
         store.dependencies.databaseFiles = .noOp
         store.dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
         store.dependencies.derivationTool = .liveValue
-        store.dependencies.mainQueue = .immediate// testQueue.eraseToAnyScheduler()
+        store.dependencies.mainQueue = .immediate
         store.dependencies.mnemonic = .mock
-        store.dependencies.walletStorage.exportWallet = { .placeholder }
+        store.dependencies.walletStorage.exportWallet = { storedWallet }
         store.dependencies.walletStorage.areKeysPresent = { true }
         store.dependencies.walletConfigProvider = .noOp
         store.dependencies.sdkSynchronizer = .noOp
         store.dependencies.crashReporter = .noOp
+        store.dependencies.numberFormatter = .noOp
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         await store.send(.initialization(.appDelegate(.didFinishLaunching)))
@@ -63,7 +73,7 @@ class AppInitializationTests: XCTestCase {
         await testQueue.advance(by: 3.00)
 
         await store.receive(.initialization(.initializeSDK(.existingWallet))) { state in
-            state.storedWallet = .placeholder
+            state.storedWallet = storedWallet
         }
 
         await store.receive(.initialization(.checkBackupPhraseValidation)) { state in
@@ -75,6 +85,82 @@ class AppInitializationTests: XCTestCase {
         await store.receive(.destination(.updateDestination(.tabs))) { state in
             state.destinationState.previousDestination = .welcome
             state.destinationState.internalDestination = .tabs
+        }
+
+        await store.finish()
+    }
+    
+    @MainActor func testDidFinishLaunching_AwaitingPhraseConfirmation() async throws {
+        var defaultRawFlags = WalletConfig.initial.flags
+        defaultRawFlags[.testBackupPhraseFlow] = true
+        let walletConfig = WalletConfig(flags: defaultRawFlags)
+
+        var appState = RootReducer.State.initial
+        appState.walletConfig = walletConfig
+
+        let store = TestStore(
+            initialState: appState
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
+        
+        let testQueue = DispatchQueue.test
+
+        let storedWallet = StoredWallet(
+            language: .english,
+            seedPhrase: SeedPhrase(RecoveryPhrase.testPhrase.joined(separator: " ")),
+            version: 0,
+            birthday: Birthday(300_000),
+            hasUserPassedPhraseBackupTest: false
+        )
+        
+        store.dependencies.databaseFiles = .noOp
+        store.dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
+        store.dependencies.derivationTool = .liveValue
+        store.dependencies.mainQueue = .immediate
+        store.dependencies.mnemonic = .mock
+        store.dependencies.walletStorage.exportWallet = { storedWallet }
+        store.dependencies.walletStorage.areKeysPresent = { true }
+        store.dependencies.walletConfigProvider = .noOp
+        store.dependencies.sdkSynchronizer = .noOp
+        store.dependencies.crashReporter = .noOp
+        store.dependencies.numberFormatter = .noOp
+
+        // Root of the test, the app finished the launch process and triggers the checks and initializations.
+        await store.send(.initialization(.appDelegate(.didFinishLaunching)))
+
+        await testQueue.advance(by: 0.02)
+
+        await store.receive(.initialization(.initialSetups))
+
+        await testQueue.advance(by: 0.02)
+
+        await store.receive(.initialization(.configureCrashReporter))
+
+        await store.receive(.initialization(.checkWalletInitialization))
+
+        await store.receive(.initialization(.respondToWalletInitializationState(.initialized)))
+
+        await testQueue.advance(by: 3.00)
+
+        await store.receive(.initialization(.initializeSDK(.existingWallet))) { state in
+            state.storedWallet = storedWallet
+        }
+
+        let recoveryPhrase = RecoveryPhrase(words: try store.dependencies.mnemonic.randomMnemonicWords().map { $0.redacted })
+
+        await store.receive(.initialization(.checkBackupPhraseValidation)) { state in
+            state.appInitializationState = .initialized
+            state.phraseDisplayState.phrase = recoveryPhrase
+            state.phraseDisplayState.birthdayValue = ""
+            state.phraseDisplayState.birthday = Birthday(300_000)
+        }
+        
+        await store.receive(.initialization(.initializationSuccessfullyDone(nil)))
+
+        await store.receive(.destination(.updateDestination(.phraseDisplay))) { state in
+            state.destinationState.previousDestination = .welcome
+            state.destinationState.internalDestination = .phraseDisplay
         }
 
         await store.finish()
