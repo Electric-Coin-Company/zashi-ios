@@ -24,11 +24,17 @@ public struct PrivateDataConsentReducer: Reducer {
 
     public struct State: Equatable {
         @BindingState public var isAcknowledged: Bool = false
-        public var isExporting: Bool
+        public var exportBinding: Bool
         public var exportOnlyLogs = true
+        public var isExportingData: Bool
+        public var isExportingLogs: Bool
         public var dataDbURL: [URL] = []
         public var exportLogsState: ExportLogsReducer.State
         
+        public var isExportPossible: Bool {
+            !isExportingData && !isExportingLogs && isAcknowledged
+        }
+
         public var exportURLs: [URL] {
             exportOnlyLogs
             ? exportLogsState.zippedLogsURLs
@@ -36,15 +42,21 @@ public struct PrivateDataConsentReducer: Reducer {
         }
         
         public init(
-            isExporting: Bool,
+            isAcknowledged: Bool = false,
             dataDbURL: [URL],
+            exportBinding: Bool,
+            exportLogsState: ExportLogsReducer.State,
             exportOnlyLogs: Bool = true,
-            exportLogsState: ExportLogsReducer.State
+            isExportingData: Bool = false,
+            isExportingLogs: Bool = false
         ) {
-            self.isExporting = isExporting
+            self.isAcknowledged = isAcknowledged
             self.dataDbURL = dataDbURL
-            self.exportOnlyLogs = exportOnlyLogs
+            self.exportBinding = exportBinding
             self.exportLogsState = exportLogsState
+            self.exportOnlyLogs = exportOnlyLogs
+            self.isExportingData = isExportingData
+            self.isExportingLogs = isExportingLogs
         }
     }
     
@@ -74,25 +86,30 @@ public struct PrivateDataConsentReducer: Reducer {
             switch action {
             case .onAppear:
                 state.dataDbURL = [databaseFiles.dataDbURLFor(ZcashNetworkBuilder.network(for: networkType))]
+                state.isAcknowledged = false
                 return .none
 
             case .exportLogs(.finished):
-                state.isExporting = true
+                state.exportBinding = true
                 return .none
                 
             case .exportLogs:
                 return .none
 
             case .exportLogsRequested:
+                state.isExportingLogs = true
                 state.exportOnlyLogs = true
                 return .send(.exportLogs(.start))
 
             case .exportRequested:
+                state.isExportingData = true
                 state.exportOnlyLogs = false
                 return .send(.exportLogs(.start))
 
             case .shareFinished:
-                state.isExporting = false
+                state.isExportingData = false
+                state.isExportingLogs = false
+                state.exportBinding = false
                 return .none
                 
             case .binding(\.$isAcknowledged):
@@ -119,8 +136,8 @@ extension PrivateDataConsentStore {
 
 extension PrivateDataConsentReducer.State {
     public static let initial = PrivateDataConsentReducer.State(
-        isExporting: false,
         dataDbURL: [],
+        exportBinding: false,
         exportLogsState: .initial
     )
 }
