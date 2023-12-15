@@ -6,6 +6,12 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Added
+- The exported logs also show the shielded balances (total & verified) for every finished sync metric.
+
+### Fixed
+- The export buttons are disabled when exporting of the private data is in progress.  
+
 ## 0.2.0 build 11 (2023-12-13)
 
 ### Added

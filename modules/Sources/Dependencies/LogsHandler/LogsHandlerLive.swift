@@ -15,7 +15,7 @@ extension LogsHandlerClient: DependencyKey {
     public static let liveValue = LogsHandlerClient(
         exportAndStoreLogs: { sdkLogs, tcaLogs, walletLogs in
             // create a directory
-            let logsURL = FileManager.default.temporaryDirectory.appendingPathComponent("logs")
+            let logsURL = FileManager.default.temporaryDirectory.appendingPathComponent("zashiPrivateData")
             try FileManager.default.createDirectory(atPath: logsURL.path, withIntermediateDirectories: true)
             
             // export the logs
@@ -58,7 +58,7 @@ extension LogsHandlerClient: DependencyKey {
                             appropriateFor: zipURL,
                             create: true
                         )
-                        .appendingPathComponent("logs.zip")
+                        .appendingPathComponent("zashiPrivateData.zip")
                         try FileManager.default.moveItem(at: zipURL, to: tmpURL)
                         continuation.resume(returning: tmpURL)
                     } catch {

@@ -50,19 +50,33 @@ public struct PrivateDataConsentView: View {
                     .padding(.top, 20)
                     .padding(.bottom, 40)
 
-                    Button(L10n.Settings.exportPrivateData.uppercased()) {
+                    Button {
                         viewStore.send(.exportRequested)
+                    } label: {
+                        HStack(spacing: 10) {
+                            Text(L10n.Settings.exportPrivateData.uppercased())
+                            if viewStore.isExportingData {
+                                ProgressView()
+                            }
+                        }
                     }
                     .zcashStyle(.secondary)
-                    .disabled(!viewStore.isAcknowledged)
+                    .disabled(!viewStore.isExportPossible)
                     .padding(.horizontal, 8)
                     .padding(.bottom, 25)
 
-                    Button(L10n.Settings.exportLogsOnly.uppercased()) {
+                    Button {
                         viewStore.send(.exportLogsRequested)
+                    } label: {
+                        HStack(spacing: 10) {
+                            Text(L10n.Settings.exportLogsOnly.uppercased())
+                            if viewStore.isExportingLogs {
+                                ProgressView()
+                            }
+                        }
                     }
                     .zcashStyle()
-                    .disabled(!viewStore.isAcknowledged)
+                    .disabled(!viewStore.isExportPossible)
                     .padding(.horizontal, 8)
                     .padding(.bottom, 50)
                 }
@@ -83,7 +97,7 @@ public struct PrivateDataConsentView: View {
 
 private extension PrivateDataConsentView {
     @ViewBuilder func shareLogsView(_ viewStore: PrivateDataConsentViewStore) -> some View {
-        if viewStore.isExporting {
+        if viewStore.exportBinding {
             UIShareDialogView(activityItems: viewStore.exportURLs) {
                 viewStore.send(.shareFinished)
             }
