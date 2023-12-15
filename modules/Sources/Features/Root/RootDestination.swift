@@ -16,10 +16,11 @@ import DerivationTool
 extension RootReducer {
     public struct DestinationState: Equatable {
         public enum Destination: Equatable {
-            case tabs
             case onboarding
+            case phraseDisplay
             case sandbox
             case startup
+            case tabs
             case welcome
         }
         
@@ -104,7 +105,7 @@ extension RootReducer {
                 state.splashAppeared = true
                 return .none
 
-            case .tabs, .initialization, .onboarding, .sandbox, .updateStateAfterConfigUpdate, .alert,
+            case .tabs, .initialization, .onboarding, .sandbox, .updateStateAfterConfigUpdate, .alert, .phraseDisplay,
                     .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .exportLogs, .confirmationDialog:
                 return .none
             }

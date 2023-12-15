@@ -62,6 +62,19 @@ private extension RootView {
                         viewStore.send(.splashRemovalRequested)
                     }
                     
+                case .phraseDisplay:
+                    NavigationView {
+                        RecoveryPhraseDisplayView(
+                            store: store.scope(
+                                state: \.phraseDisplayState,
+                                action: RootReducer.Action.phraseDisplay
+                            )
+                        )
+                    }
+                    .overlayedWithSplash(viewStore.splashAppeared) {
+                        viewStore.send(.splashRemovalRequested)
+                    }
+
                 case .sandbox:
                     NavigationView {
                         SandboxView(
@@ -94,7 +107,7 @@ private extension RootView {
                         debugView(viewStore)
                             .transition(.opacity)
                     }
-                                        
+                      
                 case .welcome:
                     WelcomeView(
                         store: store.scope(
