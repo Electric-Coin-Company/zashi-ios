@@ -26,8 +26,9 @@ class HomeTests: XCTestCase {
                 scanState: .initial,
                 shieldedBalance: Balance.zero,
                 synchronizerStatusSnapshot: mockSnapshot,
-                walletConfig: .initial,
-                transactionListState: .initial
+                syncProgressState: .initial,
+                transactionListState: .initial,
+                walletConfig: .initial
             )
         ) {
             HomeReducer(networkType: .testnet)
@@ -112,6 +113,33 @@ class HomeTests: XCTestCase {
         }
 
         await store.receive(.showSynchronizerErrorAlert(testError))
+        
+        await store.finish()
+    }
+    
+    @MainActor func testRestoreWalletSubscription() async throws {
+        var initialState = HomeReducer.State.initial
+        initialState.isRestoringWallet = false
+
+        let store = TestStore(
+            initialState: initialState
+        ) {
+            HomeReducer(networkType: .testnet)
+        }
+
+        store.dependencies.restoreWalletStorage = .noOp
+        store.dependencies.restoreWalletStorage.value = {
+            AsyncStream { continuation in
+                continuation.yield(true)
+                continuation.finish()
+            }
+        }
+        
+        await store.send(.restoreWalletTask)
+        
+        await store.receive(.restoreWalletValue(true)) { state in
+            state.isRestoringWallet = true
+        }
         
         await store.finish()
     }

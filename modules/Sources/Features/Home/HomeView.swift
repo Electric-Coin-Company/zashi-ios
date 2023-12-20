@@ -5,6 +5,9 @@ import Generated
 import TransactionList
 import Settings
 import UIComponents
+import SyncProgress
+import Utils
+import Models
 
 public struct HomeView: View {
     let store: HomeStore
@@ -20,6 +23,18 @@ public struct HomeView: View {
             VStack {
                 balance(viewStore)
 
+                if viewStore.isRestoringWallet {
+                    SyncProgressView(
+                        store: store.scope(
+                            state: \.syncProgressState,
+                            action: HomeReducer.Action.syncProgress
+                        )
+                    )
+                    .frame(height: 94)
+                    .frame(maxWidth: .infinity)
+                    .background(Asset.Colors.shade92.color)
+                }
+                
                 TransactionListView(store: store.historyStore(), tokenName: tokenName)
             }
             .applyScreenBackground()
@@ -44,6 +59,7 @@ public struct HomeView: View {
                 destination: { NotEnoughFreeSpaceView(viewStore: viewStore) }
             )
         }
+        .task { await store.send(.restoreWalletTask).finish() }
     }
 }
 
@@ -85,7 +101,34 @@ extension HomeView {
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            HomeView(store: .placeholder, tokenName: "ZEC")
+            HomeView(
+                store:
+                    HomeStore(
+                        initialState:
+                                .init(
+                                    scanState: .initial,
+                                    shieldedBalance: Balance.zero,
+                                    synchronizerStatusSnapshot: .initial,
+                                    syncProgressState: .init(
+                                        lastKnownSyncPercentage: Float(0.43),
+                                        synchronizerStatusSnapshot: SyncStatusSnapshot(.syncing(0.41)),
+                                        syncStatusMessage: "Syncing"
+                                    ),
+                                    transactionListState: .initial,
+                                    walletConfig: .initial
+                                )
+                    ) {
+                        HomeReducer(networkType: .testnet)
+                    },
+                tokenName: "ZEC"
+            )
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(
+                trailing: Text("M")
+            )
+            .zashiTitle {
+                Text("Title")
+            }
         }
     }
 }

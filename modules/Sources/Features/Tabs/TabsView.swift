@@ -15,6 +15,7 @@ import BalanceBreakdown
 import Home
 import SendFlow
 import Settings
+import UIComponents
 
 public struct TabsView: View {
     let networkType: NetworkType
@@ -30,7 +31,7 @@ public struct TabsView: View {
 
     public var body: some View {
         WithViewStore(self.store, observe: \.selectedTab) { tab in
-            WithViewStore(store, observe: { $0 }) { viewStore in
+            WithViewStore(self.store, observe: \.isRestoringWallet) { isRestoringWallet in
                 ZStack {
                     TabView(selection: tab.binding(send: TabsReducer.Action.selectedTabChanged)) {
                         HomeView(
@@ -71,17 +72,17 @@ public struct TabsView: View {
                     }
                     .tabViewStyle(.page(indexDisplayMode: .never))
                     .padding(.bottom, 50)
-                    
+
                     VStack {
                         Spacer()
                         
                         HStack {
                             ForEach((TabsReducer.State.Tab.allCases), id: \.self) { item in
                                 Button {
-                                    viewStore.send(.selectedTabChanged(item), animation: .easeInOut)
+                                    store.send(.selectedTabChanged(item), animation: .easeInOut)
                                 } label: {
                                     VStack {
-                                        if viewStore.selectedTab == item {
+                                        if tab.state == item {//viewStore.selectedTab == item {
                                             Text("\(item.title)")
                                                 .font(.custom(FontFamily.Archivo.black.name, size: 12))
                                                 .foregroundColor(Asset.Colors.primary.color)
@@ -112,8 +113,10 @@ public struct TabsView: View {
                     .ignoresSafeArea(.keyboard)
                 }
                 .navigationBarTitleDisplayMode(.inline)
-                .navigationBarItems(trailing: settingsButton(viewStore))
+                .navigationBarItems(trailing: settingsButton(store))
                 .zashiTitle { navBarView(tab.state) }
+                .restoringWalletBadge(isOn: isRestoringWallet.state)
+                .task { await store.send(.restoreWalletTask).finish() }
             }
         }
     }
@@ -135,18 +138,20 @@ public struct TabsView: View {
         }
     }
     
-    func settingsButton(_ viewStore: TabsViewStore) -> some View {
-        Image(systemName: "line.3.horizontal")
-            .resizable()
-            .frame(width: 21, height: 15)
-            .padding(15)
-            .navigationLink(
-                isActive: viewStore.bindingForDestination(.settings),
-                destination: {
-                    SettingsView(store: store.settingsStore())
-                }
-            )
-            .tint(Asset.Colors.primary.color)
+    func settingsButton(_ store: TabsStore) -> some View {
+        WithViewStore(store, observe: { $0 }) { viewStore in
+            Image(systemName: "line.3.horizontal")
+                .resizable()
+                .frame(width: 21, height: 15)
+                .padding(15)
+                .navigationLink(
+                    isActive: viewStore.bindingForDestination(.settings),
+                    destination: {
+                        SettingsView(store: store.settingsStore())
+                    }
+                )
+                .tint(Asset.Colors.primary.color)
+        }
     }
 }
 

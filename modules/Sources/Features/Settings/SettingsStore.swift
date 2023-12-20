@@ -12,6 +12,7 @@ import Generated
 import WalletStorage
 import SDKSynchronizer
 import PrivateDataConsent
+import RestoreWalletStorage
 
 public typealias SettingsStore = Store<SettingsReducer.State, SettingsReducer.Action>
 public typealias SettingsViewStore = ViewStore<SettingsReducer.State, SettingsReducer.Action>
@@ -30,6 +31,7 @@ public struct SettingsReducer: Reducer {
         public var appVersion = ""
         public var appBuild = ""
         public var destination: Destination?
+        public var isRestoringWallet = false
         public var phraseDisplayState: RecoveryPhraseDisplayReducer.State
         public var privateDataConsentState: PrivateDataConsentReducer.State
         public var supportData: SupportData?
@@ -38,6 +40,7 @@ public struct SettingsReducer: Reducer {
             appVersion: String = "",
             appBuild: String = "",
             destination: Destination? = nil,
+            isRestoringWallet: Bool = false,
             phraseDisplayState: RecoveryPhraseDisplayReducer.State,
             privateDataConsentState: PrivateDataConsentReducer.State,
             supportData: SupportData? = nil
@@ -45,6 +48,7 @@ public struct SettingsReducer: Reducer {
             self.appVersion = appVersion
             self.appBuild = appBuild
             self.destination = destination
+            self.isRestoringWallet = isRestoringWallet
             self.phraseDisplayState = phraseDisplayState
             self.privateDataConsentState = privateDataConsentState
             self.supportData = supportData
@@ -57,6 +61,8 @@ public struct SettingsReducer: Reducer {
         case onAppear
         case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
         case privateDataConsent(PrivateDataConsentReducer.Action)
+        case restoreWalletTask
+        case restoreWalletValue(Bool)
         case sendSupportMail
         case sendSupportMailFinished
         case updateDestination(SettingsReducer.State.Destination?)
@@ -67,6 +73,7 @@ public struct SettingsReducer: Reducer {
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.walletStorage) var walletStorage
+    @Dependency(\.restoreWalletStorage) var restoreWalletStorage
 
     public init(networkType: NetworkType) {
         self.networkType = networkType
@@ -79,6 +86,7 @@ public struct SettingsReducer: Reducer {
                 state.appVersion = appVersion.appVersion()
                 state.appBuild = appVersion.appBuild()
                 return .none
+
             case .backupWalletAccessRequest:
                 return .run { send in
                     if await localAuthentication.authenticate() {
@@ -92,9 +100,25 @@ public struct SettingsReducer: Reducer {
                                 
             case .phraseDisplay:
                 return .none
-                
+
+            case .updateDestination(.privateDataConsent):
+                state.destination = .privateDataConsent
+                state.privateDataConsentState.isAcknowledged = false
+                return .none
+
             case .updateDestination(let destination):
                 state.destination = destination
+                return .none
+
+            case .restoreWalletTask:
+                return .run { send in
+                    for await value in await restoreWalletStorage.value() {
+                            await send(.restoreWalletValue(value))
+                    }
+                }
+
+            case .restoreWalletValue(let value):
+                state.isRestoringWallet = value
                 return .none
 
             case .sendSupportMail:

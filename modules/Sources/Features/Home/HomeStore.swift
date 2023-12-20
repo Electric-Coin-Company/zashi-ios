@@ -11,6 +11,8 @@ import Generated
 import ReviewRequest
 import TransactionList
 import Scan
+import SyncProgress
+import RestoreWalletStorage
 
 public typealias HomeStore = Store<HomeReducer.State, HomeReducer.Action>
 public typealias HomeViewStore = ViewStore<HomeReducer.State, HomeReducer.Action>
@@ -28,10 +30,12 @@ public struct HomeReducer: Reducer {
         @PresentationState public var alert: AlertState<Action>?
         public var destination: Destination?
         public var canRequestReview = false
+        public var isRestoringWallet = false
         public var requiredTransactionConfirmations = 0
         public var scanState: ScanReducer.State
         public var shieldedBalance: Balance
         public var synchronizerStatusSnapshot: SyncStatusSnapshot
+        public var syncProgressState: SyncProgressReducer.State
         public var walletConfig: WalletConfig
         public var transactionListState: TransactionListReducer.State
         public var migratingDatabase = true
@@ -49,22 +53,26 @@ public struct HomeReducer: Reducer {
         public init(
             destination: Destination? = nil,
             canRequestReview: Bool = false,
+            isRestoringWallet: Bool = false,
             requiredTransactionConfirmations: Int = 0,
             scanState: ScanReducer.State,
             shieldedBalance: Balance,
             synchronizerStatusSnapshot: SyncStatusSnapshot,
-            walletConfig: WalletConfig,
+            syncProgressState: SyncProgressReducer.State,
             transactionListState: TransactionListReducer.State,
+            walletConfig: WalletConfig,
             zecPrice: Decimal = Decimal(140.0)
         ) {
             self.destination = destination
             self.canRequestReview = canRequestReview
+            self.isRestoringWallet = isRestoringWallet
             self.requiredTransactionConfirmations = requiredTransactionConfirmations
             self.scanState = scanState
             self.shieldedBalance = shieldedBalance
             self.synchronizerStatusSnapshot = synchronizerStatusSnapshot
-            self.walletConfig = walletConfig
+            self.syncProgressState = syncProgressState
             self.transactionListState = transactionListState
+            self.walletConfig = walletConfig
             self.zecPrice = zecPrice
         }
     }
@@ -77,11 +85,14 @@ public struct HomeReducer: Reducer {
         case onAppear
         case onDisappear
         case resolveReviewRequest
+        case restoreWalletTask
+        case restoreWalletValue(Bool)
         case retrySync
         case reviewRequestFinished
         case showSynchronizerErrorAlert(ZcashError)
         case synchronizerStateChanged(SynchronizerState)
         case syncFailed(ZcashError)
+        case syncProgress(SyncProgressReducer.Action)
         case updateDestination(HomeReducer.State.Destination?)
         case updateTransactionList([TransactionState])
         case transactionList(TransactionListReducer.Action)
@@ -90,6 +101,7 @@ public struct HomeReducer: Reducer {
     @Dependency(\.audioServices) var audioServices
     @Dependency(\.diskSpaceChecker) var diskSpaceChecker
     @Dependency(\.mainQueue) var mainQueue
+    @Dependency(\.restoreWalletStorage) var restoreWalletStorage
     @Dependency(\.reviewRequest) var reviewRequest
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
@@ -101,6 +113,10 @@ public struct HomeReducer: Reducer {
     public var body: some Reducer<State, Action> {
         Scope(state: \.transactionListState, action: /Action.transactionList) {
             TransactionListReducer()
+        }
+
+        Scope(state: \.syncProgressState, action: /Action.syncProgress) {
+            SyncProgressReducer()
         }
 
         Reduce { state, action in
@@ -148,6 +164,17 @@ public struct HomeReducer: Reducer {
                 }
                 return .none
                 
+            case .restoreWalletTask:
+                return .run { send in
+                    for await value in await restoreWalletStorage.value() {
+                        await send(.restoreWalletValue(value))
+                    }
+                }
+
+            case .restoreWalletValue(let value):
+                state.isRestoringWallet = value
+                return .none
+
             case .reviewRequestFinished:
                 state.canRequestReview = false
                 return .none
@@ -181,6 +208,9 @@ public struct HomeReducer: Reducer {
                 default:
                     return .none
                 }
+
+            case .syncProgress:
+                return .none
 
             case .foundTransactions:
                 return .run { _ in
@@ -261,8 +291,9 @@ extension HomeReducer.State {
             scanState: .initial,
             shieldedBalance: Balance.zero,
             synchronizerStatusSnapshot: .initial,
-            walletConfig: .initial,
-            transactionListState: .initial
+            syncProgressState: .initial,
+            transactionListState: .initial,
+            walletConfig: .initial
         )
     }
 }
@@ -284,8 +315,9 @@ extension HomeStore {
                 synchronizerStatusSnapshot: .snapshotFor(
                     state: .error(ZcashError.synchronizerNotPrepared)
                 ),
-                walletConfig: .initial,
-                transactionListState: .initial
+                syncProgressState: .initial,
+                transactionListState: .initial,
+                walletConfig: .initial
             )
         ) {
             HomeReducer(networkType: .testnet)

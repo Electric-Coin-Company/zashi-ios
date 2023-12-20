@@ -30,30 +30,6 @@ final class PrivateDataConsentTests: XCTestCase {
         await store.finish()
     }
     
-    func testClearOutAcknowledgeConfirmation() async throws {
-        let store = TestStore(
-            initialState: PrivateDataConsentReducer.State(
-                isAcknowledged: true,
-                dataDbURL: [],
-                exportBinding: false,
-                exportLogsState: .initial
-            )
-        ) {
-            PrivateDataConsentReducer(networkType: .testnet)
-        }
-        
-        let URL = URL(string: "https://electriccoin.co")!
-        
-        store.dependencies.databaseFiles.dataDbURLFor = { _ in URL }
-        
-        await store.send(.onAppear) { state in
-            state.dataDbURL = [URL]
-            state.isAcknowledged = false
-        }
-        
-        await store.finish()
-    }
-    
     func testExportRequestSet() async throws {
         let store = TestStore(
             initialState: PrivateDataConsentReducer.State(
@@ -139,6 +115,33 @@ final class PrivateDataConsentTests: XCTestCase {
         await store.finish()
     }
     
+    func testRestoreWalletSubscription() async throws {
+        var initialState = PrivateDataConsentReducer.State.initial
+        initialState.isRestoringWallet = false
+
+        let store = TestStore(
+            initialState: initialState
+        ) {
+            PrivateDataConsentReducer(networkType: .testnet)
+        }
+
+        store.dependencies.restoreWalletStorage = .noOp
+        store.dependencies.restoreWalletStorage.value = {
+            AsyncStream { continuation in
+                continuation.yield(true)
+                continuation.finish()
+            }
+        }
+        
+        await store.send(.restoreWalletTask)
+        
+        await store.receive(.restoreWalletValue(true)) { state in
+            state.isRestoringWallet = true
+        }
+        
+        await store.finish()
+    }
+    
     func testExportURLs_logsOnly() async throws {
         let URLdb = URL(string: "http://db.url")!
         let URLlogs = URL(string: "http://logs.url")!
@@ -169,11 +172,11 @@ final class PrivateDataConsentTests: XCTestCase {
     
     func testIsExportPossible_NoBecauseNotAcknowledged() async throws {
         let state = PrivateDataConsentReducer.State(
-            isAcknowledged: false,
             dataDbURL: [],
             exportBinding: true,
             exportLogsState: .initial,
-            exportOnlyLogs: true
+            exportOnlyLogs: true,
+            isAcknowledged: false
         )
         
         XCTAssertFalse(state.isExportPossible)
@@ -181,11 +184,11 @@ final class PrivateDataConsentTests: XCTestCase {
     
     func testIsExportPossible_NoBecauseExportingLogs() async throws {
         let state = PrivateDataConsentReducer.State(
-            isAcknowledged: true,
             dataDbURL: [],
             exportBinding: true,
             exportLogsState: .initial,
             exportOnlyLogs: true,
+            isAcknowledged: true,
             isExportingLogs: true
         )
         
@@ -194,11 +197,11 @@ final class PrivateDataConsentTests: XCTestCase {
     
     func testIsExportPossible_NoBecauseExportingData() async throws {
         let state = PrivateDataConsentReducer.State(
-            isAcknowledged: true,
             dataDbURL: [],
             exportBinding: true,
             exportLogsState: .initial,
             exportOnlyLogs: true,
+            isAcknowledged: true,
             isExportingData: true
         )
         
@@ -207,11 +210,11 @@ final class PrivateDataConsentTests: XCTestCase {
     
     func testIsExportPossible() async throws {
         let state = PrivateDataConsentReducer.State(
-            isAcknowledged: true,
             dataDbURL: [],
             exportBinding: true,
             exportLogsState: .initial,
-            exportOnlyLogs: true
+            exportOnlyLogs: true,
+            isAcknowledged: true
         )
         
         XCTAssertTrue(state.isExportPossible)

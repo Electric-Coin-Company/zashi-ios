@@ -16,6 +16,8 @@ import Generated
 import WalletStorage
 import SDKSynchronizer
 import Models
+import SyncProgress
+import RestoreWalletStorage
 
 public typealias BalanceBreakdownStore = Store<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>
 public typealias BalanceBreakdownViewStore = ViewStore<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>
@@ -28,12 +30,11 @@ public struct BalanceBreakdownReducer: Reducer {
         @PresentationState public var alert: AlertState<Action>?
         public var autoShieldingThreshold: Zatoshi
         public var changePending: Zatoshi
+        public var isRestoringWallet = false
         public var isShieldingFunds: Bool
-        public var lastKnownSyncPercentage: Float = 0
         public var pendingTransactions: Zatoshi
         public var shieldedBalance: Balance
-        public var synchronizerStatusSnapshot: SyncStatusSnapshot
-        public var syncStatusMessage = ""
+        public var syncProgressState: SyncProgressReducer.State
         public var transparentBalance: Balance
 
         public var totalBalance: Zatoshi {
@@ -48,37 +49,23 @@ public struct BalanceBreakdownReducer: Reducer {
             isShieldingFunds || !isShieldableBalanceAvailable
         }
         
-        public var isSyncing: Bool {
-            synchronizerStatusSnapshot.syncStatus.isSyncing
-        }
-        
-        public var syncingPercentage: Float {
-            if case .syncing(let progress) = synchronizerStatusSnapshot.syncStatus {
-                return progress * 0.999
-            }
-            
-            return lastKnownSyncPercentage
-        }
-        
         public init(
             autoShieldingThreshold: Zatoshi,
             changePending: Zatoshi,
+            isRestoringWallet: Bool = false,
             isShieldingFunds: Bool,
-            lastKnownSyncPercentage: Float = 0,
             pendingTransactions: Zatoshi,
             shieldedBalance: Balance,
-            synchronizerStatusSnapshot: SyncStatusSnapshot,
-            syncStatusMessage: String = "",
+            syncProgressState: SyncProgressReducer.State,
             transparentBalance: Balance
         ) {
             self.autoShieldingThreshold = autoShieldingThreshold
             self.changePending = changePending
+            self.isRestoringWallet = isRestoringWallet
             self.isShieldingFunds = isShieldingFunds
-            self.lastKnownSyncPercentage = lastKnownSyncPercentage
             self.pendingTransactions = pendingTransactions
             self.shieldedBalance = shieldedBalance
-            self.synchronizerStatusSnapshot = synchronizerStatusSnapshot
-            self.syncStatusMessage = syncStatusMessage
+            self.syncProgressState = syncProgressState
             self.transparentBalance = transparentBalance
         }
     }
@@ -87,16 +74,20 @@ public struct BalanceBreakdownReducer: Reducer {
         case alert(PresentationAction<Action>)
         case onAppear
         case onDisappear
+        case restoreWalletTask
+        case restoreWalletValue(Bool)
         case shieldFunds
         case shieldFundsSuccess(TransactionState)
         case shieldFundsFailure(ZcashError)
         case synchronizerStateChanged(SynchronizerState)
+        case syncProgress(SyncProgressReducer.Action)
     }
 
     @Dependency(\.derivationTool) var derivationTool
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.numberFormatter) var numberFormatter
+    @Dependency(\.restoreWalletStorage) var restoreWalletStorage
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.walletStorage) var walletStorage
 
@@ -105,6 +96,10 @@ public struct BalanceBreakdownReducer: Reducer {
     }
     
     public var body: some Reducer<State, Action> {
+        Scope(state: \.syncProgressState, action: /Action.syncProgress) {
+            SyncProgressReducer()
+        }
+        
         Reduce { state, action in
             switch action {
             case .alert(.presented(let action)):
@@ -121,12 +116,23 @@ public struct BalanceBreakdownReducer: Reducer {
                 return .publisher {
                     sdkSynchronizer.stateStream()
                         .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                        .map(BalanceBreakdownReducer.Action.synchronizerStateChanged)
+                        .map(Action.synchronizerStateChanged)
                 }
                 .cancellable(id: CancelId.timer, cancelInFlight: true)
                 
             case .onDisappear:
                 return .cancel(id: CancelId.timer)
+
+            case .restoreWalletTask:
+                return .run { send in
+                    for await value in await restoreWalletStorage.value() {
+                        await send(.restoreWalletValue(value))
+                    }
+                }
+
+            case .restoreWalletValue(let value):
+                state.isRestoringWallet = value
+                return .none
 
             case .shieldFunds:
                 state.isShieldingFunds = true
@@ -157,29 +163,9 @@ public struct BalanceBreakdownReducer: Reducer {
             case .synchronizerStateChanged(let latestState):
                 state.shieldedBalance = latestState.shieldedBalance.redacted
                 state.transparentBalance = latestState.transparentBalance.redacted
+                return .none
                 
-                let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.syncStatus)
-                if snapshot.syncStatus != state.synchronizerStatusSnapshot.syncStatus {
-                    state.synchronizerStatusSnapshot = snapshot
-                    
-                    if case .syncing(let progress) = snapshot.syncStatus {
-                        state.lastKnownSyncPercentage = progress
-                    }
-                    
-                    // TODO: [#931] The statuses of the sync process
-                    // https://github.com/Electric-Coin-Company/zashi-ios/issues/931
-                    // until then, this is temporary quick solution
-                    switch snapshot.syncStatus {
-                    case .syncing:
-                        state.syncStatusMessage = L10n.Balances.syncing
-                    case .upToDate:
-                        state.lastKnownSyncPercentage = 1
-                        state.syncStatusMessage = L10n.Balances.synced
-                    case .error, .stopped, .unprepared:
-                        state.syncStatusMessage = snapshot.message
-                    }
-                }
-
+            case .syncProgress:
                 return .none
             }
         }
@@ -207,7 +193,7 @@ extension BalanceBreakdownReducer.State {
         isShieldingFunds: false,
         pendingTransactions: .zero,
         shieldedBalance: Balance.zero,
-        synchronizerStatusSnapshot: .placeholder,
+        syncProgressState: .initial,
         transparentBalance: Balance.zero
     )
     
@@ -217,7 +203,7 @@ extension BalanceBreakdownReducer.State {
         isShieldingFunds: false,
         pendingTransactions: .zero,
         shieldedBalance: Balance.zero,
-        synchronizerStatusSnapshot: .initial,
+        syncProgressState: .initial,
         transparentBalance: Balance.zero
     )
 }

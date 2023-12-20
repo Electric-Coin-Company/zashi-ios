@@ -85,4 +85,31 @@ class SettingsTests: XCTestCase {
         
         await store.finish()
     }
+    
+    func testRestoreWalletSubscription() async throws {
+        var initialState = SettingsReducer.State.initial
+        initialState.isRestoringWallet = false
+
+        let store = TestStore(
+            initialState: initialState
+        ) {
+            SettingsReducer(networkType: .testnet)
+        }
+
+        store.dependencies.restoreWalletStorage = .noOp
+        store.dependencies.restoreWalletStorage.value = {
+            AsyncStream { continuation in
+                continuation.yield(true)
+                continuation.finish()
+            }
+        }
+        
+        await store.send(.restoreWalletTask)
+        
+        await store.receive(.restoreWalletValue(true)) { state in
+            state.isRestoringWallet = true
+        }
+        
+        await store.finish()
+    }
 }

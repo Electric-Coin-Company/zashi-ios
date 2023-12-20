@@ -42,8 +42,9 @@ class HomeSnapshotTests: XCTestCase {
                 scanState: .initial,
                 shieldedBalance: balance.redacted,
                 synchronizerStatusSnapshot: .initial,
-                walletConfig: .initial,
-                transactionListState: .init(transactionList: IdentifiedArrayOf(uniqueElements: transactionList))
+                syncProgressState: .initial,
+                transactionListState: .init(transactionList: IdentifiedArrayOf(uniqueElements: transactionList)),
+                walletConfig: .initial
             )
         ) {
             HomeReducer(networkType: .testnet)

@@ -18,6 +18,7 @@ import CrashReporter
 import ReadTransactionsStorage
 import RecoveryPhraseDisplay
 import BackgroundTasks
+import RestoreWalletStorage
 
 public typealias RootStore = Store<RootReducer.State, RootReducer.Action>
 public typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
@@ -38,6 +39,7 @@ public struct RootReducer: Reducer {
         public var debugState: DebugState
         public var destinationState: DestinationState
         public var exportLogsState: ExportLogsReducer.State
+        public var isRestoringWallet = false
         public var onboardingState: OnboardingFlowReducer.State
         public var phraseDisplayState: RecoveryPhraseDisplayReducer.State
         public var sandboxState: SandboxReducer.State
@@ -52,6 +54,7 @@ public struct RootReducer: Reducer {
             debugState: DebugState,
             destinationState: DestinationState,
             exportLogsState: ExportLogsReducer.State,
+            isRestoringWallet: Bool = false,
             onboardingState: OnboardingFlowReducer.State,
             phraseDisplayState: RecoveryPhraseDisplayReducer.State,
             sandboxState: SandboxReducer.State,
@@ -64,6 +67,7 @@ public struct RootReducer: Reducer {
             self.debugState = debugState
             self.destinationState = destinationState
             self.exportLogsState = exportLogsState
+            self.isRestoringWallet = isRestoringWallet
             self.onboardingState = onboardingState
             self.phraseDisplayState = phraseDisplayState
             self.sandboxState = sandboxState
@@ -114,6 +118,7 @@ public struct RootReducer: Reducer {
     @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
     @Dependency(\.readTransactionsStorage) var readTransactionsStorage
+    @Dependency(\.restoreWalletStorage) var restoreWalletStorage
 
     public init(tokenName: String, zcashNetwork: ZcashNetwork) {
         self.tokenName = tokenName

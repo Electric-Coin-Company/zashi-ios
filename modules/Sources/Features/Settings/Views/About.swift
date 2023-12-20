@@ -54,9 +54,11 @@ public struct About: View {
                     .font(.custom(FontFamily.Archivo.bold.name, size: 14))
             }
             .padding(.horizontal, 70)
+            .restoringWalletBadge(isOn: viewStore.isRestoringWallet, background: .transparent)
         }
         .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground(withPattern: true)
+        .task { await store.send(.restoreWalletTask).finish() }
     }
 }
 
