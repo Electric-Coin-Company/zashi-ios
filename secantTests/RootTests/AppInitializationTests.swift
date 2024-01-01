@@ -82,6 +82,8 @@ class AppInitializationTests: XCTestCase {
         
         await store.receive(.initialization(.initializationSuccessfullyDone(nil)))
 
+        await store.receive(.initialization(.registerForSynchronizersUpdate))
+
         await store.receive(.destination(.updateDestination(.tabs))) { state in
             state.destinationState.previousDestination = .welcome
             state.destinationState.internalDestination = .tabs
@@ -157,6 +159,8 @@ class AppInitializationTests: XCTestCase {
         }
         
         await store.receive(.initialization(.initializationSuccessfullyDone(nil)))
+
+        await store.receive(.initialization(.registerForSynchronizersUpdate))
 
         await store.receive(.destination(.updateDestination(.phraseDisplay))) { state in
             state.destinationState.previousDestination = .welcome

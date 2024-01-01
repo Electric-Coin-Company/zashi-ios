@@ -105,7 +105,7 @@ extension RootReducer {
                 state.splashAppeared = true
                 return .none
 
-            case .tabs, .initialization, .onboarding, .sandbox, .updateStateAfterConfigUpdate, .alert, .phraseDisplay,
+            case .tabs, .initialization, .onboarding, .sandbox, .updateStateAfterConfigUpdate, .alert, .phraseDisplay, .synchronizerStateChanged,
                     .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .exportLogs, .confirmationDialog:
                 return .none
             }

@@ -12,42 +12,6 @@ import ZcashLightClientKit
 import SDKSynchronizer
 import Utils
 import Root
-import XCTestDynamicOverlay
-
-final class AppDelegate: NSObject, UIApplicationDelegate {
-    let rootStore = RootStore(
-        initialState: .initial
-    ) {
-        RootReducer(
-            tokenName: TargetConstants.tokenName,
-            zcashNetwork: TargetConstants.zcashNetwork
-        ).logging()
-    }
-
-    func application(
-        _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
-    ) -> Bool {
-#if DEBUG
-        // Short-circuit if running unit tests to avoid side-effects from the app running.
-        guard !_XCTIsTesting else { return true }
-#endif
-        
-        walletLogger = OSLogger(logLevel: .debug, category: LoggerConstants.walletLogs)
-        
-        // set the default behavior for the NSDecimalNumber
-        NSDecimalNumber.defaultBehavior = Zatoshi.decimalHandler
-        rootStore.send(.initialization(.appDelegate(.didFinishLaunching)))
-        return true
-    }
-
-    func application(
-        _ application: UIApplication,
-        shouldAllowExtensionPointIdentifier extensionPointIdentifier: UIApplication.ExtensionPointIdentifier
-    ) -> Bool {
-        return extensionPointIdentifier != UIApplication.ExtensionPointIdentifier.keyboard
-    }
-}
 
 @main
 struct SecantApp: App {
@@ -74,6 +38,8 @@ struct SecantApp: App {
                 }
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
                     appDelegate.rootStore.send(.initialization(.appDelegate(.didEnterBackground)))
+                    appDelegate.scheduleBackgroundTask()
+                    appDelegate.scheduleSchedulerBackgroundTask()
                 }
                 .preferredColorScheme(.light)
             }

@@ -17,12 +17,14 @@ import Tabs
 import CrashReporter
 import ReadTransactionsStorage
 import RecoveryPhraseDisplay
+import BackgroundTasks
 
 public typealias RootStore = Store<RootReducer.State, RootReducer.Action>
 public typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
 
 public struct RootReducer: Reducer {
     enum CancelId { case timer }
+    enum CancelStateId { case timer }
     enum SynchronizerCancelId { case timer }
     enum WalletConfigCancelId { case timer }
     let tokenName: String
@@ -31,6 +33,7 @@ public struct RootReducer: Reducer {
     public struct State: Equatable {
         @PresentationState public var alert: AlertState<Action>?
         public var appInitializationState: InitializationState = .uninitialized
+        public var bgTask: BGProcessingTask?
         @PresentationState public var confirmationDialog: ConfirmationDialogState<Action.ConfirmationDialog>?
         public var debugState: DebugState
         public var destinationState: DestinationState
@@ -92,6 +95,7 @@ public struct RootReducer: Reducer {
         case splashFinished
         case splashRemovalRequested
         case sandbox(SandboxReducer.Action)
+        case synchronizerStateChanged(SynchronizerState)
         case updateStateAfterConfigUpdate(WalletConfig)
         case walletConfigLoaded(WalletConfig)
         case welcome(WelcomeReducer.Action)
