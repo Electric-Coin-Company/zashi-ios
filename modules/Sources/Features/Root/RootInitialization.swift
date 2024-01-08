@@ -28,6 +28,7 @@ extension RootReducer {
         case nukeWalletRequest
         case respondToWalletInitializationState(InitializationState)
         case synchronizerStartFailed(ZcashError)
+        case registerForSynchronizersUpdate
         case retryStart
         case walletConfigChanged(WalletConfig)
     }
@@ -38,13 +39,52 @@ extension RootReducer {
             switch action {
             case .initialization(.appDelegate(.didEnterBackground)):
                 sdkSynchronizer.stop()
-                return .none
+                state.bgTask?.setTaskCompleted(success: false)
+                state.bgTask = nil
+                return .cancel(id: CancelStateId.timer)
+                
+            case .initialization(.appDelegate(.backgroundTask(let task))):
+                state.bgTask = task
+                return .run { send in
+                    await send(.initialization(.retryStart))
+                }
                 
             case .initialization(.appDelegate(.willEnterForeground)):
                 return .run { send in
                     try await mainQueue.sleep(for: .seconds(1))
                     await send(.initialization(.retryStart))
                 }
+                
+            case .synchronizerStateChanged(let latestState):
+                guard state.bgTask != nil else {
+                    return .none
+                }
+                
+                let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.syncStatus)
+
+                var finishBGTask = false
+                var successOfBGTask = false
+                
+                switch snapshot.syncStatus {
+                case .upToDate:
+                    successOfBGTask = true
+                    finishBGTask = true
+                case .stopped, .error:
+                    successOfBGTask = false
+                    finishBGTask = true
+                default: break
+                }
+
+                LoggerProxy.event("BGTask .synchronizerStateChanged(let latestState): \(snapshot.syncStatus)")
+                
+                if finishBGTask  {
+                    LoggerProxy.event("BGTask setTaskCompleted(success: \(successOfBGTask)) from TCA")
+                    state.bgTask?.setTaskCompleted(success: successOfBGTask)
+                    state.bgTask = nil
+                    return .cancel(id: CancelStateId.timer)
+                }
+
+                return .none
                 
             case .initialization(.synchronizerStartFailed):
                 return .none
@@ -54,13 +94,28 @@ extension RootReducer {
                 guard sdkSynchronizer.latestState().syncStatus.isPrepared else {
                     return .none
                 }
-                return .run { send in
+                return .run { [state] send in
                     do {
                         try await sdkSynchronizer.start(true)
+                        if state.bgTask != nil {
+                            LoggerProxy.event("BGTask synchronizer.start() PASSED")
+                        }
+                        await send(.initialization(.registerForSynchronizersUpdate))
                     } catch {
+                        if state.bgTask != nil {
+                            LoggerProxy.event("BGTask synchronizer.start() failed \(error.toZcashError())")
+                        }
                         await send(.initialization(.synchronizerStartFailed(error.toZcashError())))
                     }
                 }
+                
+            case .initialization(.registerForSynchronizersUpdate):
+                return .publisher {
+                    sdkSynchronizer.stateStream()
+                        .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                        .map(RootReducer.Action.synchronizerStateChanged)
+                }
+                .cancellable(id: CancelStateId.timer, cancelInFlight: true)
 
             case .initialization(.appDelegate(.didFinishLaunching)):
                 // TODO: [#704], trigger the review request logic when approved by the team,
@@ -174,7 +229,7 @@ extension RootReducer {
 
             case .initialization(.initializationSuccessfullyDone(let uAddress)):
                 state.tabsState.addressDetailsState.uAddress = uAddress
-                return .none
+                return .send(.initialization(.registerForSynchronizersUpdate))
 
             case .initialization(.checkBackupPhraseValidation):
                 guard let storedWallet = state.storedWallet else {

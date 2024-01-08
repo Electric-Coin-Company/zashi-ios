@@ -83,6 +83,8 @@
 		9EB35D632A31F1DD00A2149B /* Root in Frameworks */ = {isa = PBXBuildFile; productRef = 9EB35D622A31F1DD00A2149B /* Root */; };
 		9EB35D6A2A3A2D7B00A2149B /* Utils in Frameworks */ = {isa = PBXBuildFile; productRef = 9EB35D692A3A2D7B00A2149B /* Utils */; };
 		9EB35D6C2A3A2D9200A2149B /* Utils in Frameworks */ = {isa = PBXBuildFile; productRef = 9EB35D6B2A3A2D9200A2149B /* Utils */; };
+		9EEB06C82B405A0400EEE50F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEB06C72B405A0400EEE50F /* AppDelegate.swift */; };
+		9EEB06C92B405A0400EEE50F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEB06C72B405A0400EEE50F /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -168,6 +170,7 @@
 		9EDDEA9F2829610D00B4100C /* CurrencySelectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencySelectionTests.swift; sourceTree = "<group>"; };
 		9EDDEAA02829610D00B4100C /* TransactionAmountInputTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAmountInputTests.swift; sourceTree = "<group>"; };
 		9EDDEAA12829610D00B4100C /* TransactionAddressInputTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAddressInputTests.swift; sourceTree = "<group>"; };
+		9EEB06C72B405A0400EEE50F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9EF8135A27ECC25E0075AF48 /* WalletStorageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletStorageTests.swift; sourceTree = "<group>"; };
 		9EF8135B27ECC25E0075AF48 /* UserPreferencesStorageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserPreferencesStorageTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -242,6 +245,7 @@
 			isa = PBXGroup;
 			children = (
 				9E7FE0B6282D1D9800C374E8 /* Resources */,
+				9EEB06C72B405A0400EEE50F /* AppDelegate.swift */,
 				0D4E7A0826B364170058B01E /* SecantApp.swift */,
 				9E2F1C8B280ED6A7004E65FE /* LaunchScreen.storyboard */,
 				0DEF4766299EA5920032708B /* secant-mainnet-Info.plist */,
@@ -910,6 +914,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9EEB06C92B405A0400EEE50F /* AppDelegate.swift in Sources */,
 				0D26AF24299E8196005260EE /* SecantApp.swift in Sources */,
 				9E2706682AFF99F5000DA6EC /* ReadTransactionsStorageModel.xcdatamodeld in Sources */,
 			);
@@ -919,6 +924,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9EEB06C82B405A0400EEE50F /* AppDelegate.swift in Sources */,
 				0D4E7A0926B364170058B01E /* SecantApp.swift in Sources */,
 				9E2706672AFF99F5000DA6EC /* ReadTransactionsStorageModel.xcdatamodeld in Sources */,
 			);
@@ -1011,7 +1017,7 @@
 				CURRENT_PROJECT_VERSION = 11;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
-				DEVELOPMENT_TEAM = RLPRR8CPQG;
+				DEVELOPMENT_TEAM = W5KABFU8SV;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "secant/secant-mainnet-Info.plist";
@@ -1039,7 +1045,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
-				DEVELOPMENT_TEAM = RLPRR8CPQG;
+				DEVELOPMENT_TEAM = W5KABFU8SV;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "secant/secant-mainnet-Info.plist";

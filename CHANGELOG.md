@@ -8,6 +8,7 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ### Added
 - The exported logs also show the shielded balances (total & verified) for every finished sync metric.
+- Synchronization in the background. When the iPhone is connected to the power and wifi, the background task will try to synchronize randomly between 3-4am.
 
 ### Fixed
 - The export buttons are disabled when exporting of the private data is in progress.  
