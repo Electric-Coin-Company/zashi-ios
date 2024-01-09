@@ -29,6 +29,7 @@ public struct SyncProgressReducer: Reducer {
         
         public var syncingPercentage: Float {
             if case .syncing(let progress) = synchronizerStatusSnapshot.syncStatus {
+                // Report at most 99.9% until the wallet is fully ready.
                 return progress * 0.999
             }
             

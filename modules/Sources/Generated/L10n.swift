@@ -547,6 +547,16 @@ public enum L10n {
     public static let title = L10n.tr("Localizable", "send.title", fallback: "Send Zcash")
     /// To:
     public static let toSummary = L10n.tr("Localizable", "send.toSummary", fallback: "To:")
+    public enum Alert {
+      public enum Failure {
+        /// Error: %@ (code: %@)
+        public static func message(_ p1: Any, _ p2: Any) -> String {
+          return L10n.tr("Localizable", "send.alert.failure.message", String(describing: p1), String(describing: p2), fallback: "Error: %@ (code: %@)")
+        }
+        /// Failed to send funds
+        public static let title = L10n.tr("Localizable", "send.alert.failure.title", fallback: "Failed to send funds")
+      }
+    }
     public enum Error {
       /// Insufficient funds
       public static let insufficientFunds = L10n.tr("Localizable", "send.error.insufficientFunds", fallback: "Insufficient funds")

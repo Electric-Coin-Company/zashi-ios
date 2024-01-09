@@ -150,6 +150,8 @@
 "send.confirmationTitle" = "Confirmation";
 "send.goBack" = "Go back";
 "send.review" = "Review";
+"send.alert.failure.title" = "Failed to send funds";
+"send.alert.failure.message" = "Error: %@ (code: %@)";
 
 // MARK: - Settings
 "settings.recoveryPhrase" = "Recovery Phrase";
