@@ -23,6 +23,7 @@ public struct PrivateDataConsentView: View {
             ScrollView {
                 Group {
                     ZashiIcon()
+                        .padding(.top, viewStore.isRestoringWallet ? 30 : 0)
                     
                     Text(L10n.PrivateDataConsent.title)
                         .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
@@ -87,11 +88,13 @@ public struct PrivateDataConsentView: View {
             .onAppear {
                 viewStore.send(.onAppear)
             }
-            
+            .restoringWalletBadge(isOn: viewStore.isRestoringWallet, background: .pattern)
+
             shareLogsView(viewStore)
         }
         .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground(withPattern: true)
+        .task { await store.send(.restoreWalletTask).finish() }
     }
 }
 

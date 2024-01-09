@@ -67,7 +67,9 @@ class SendSnapshotTests: XCTestCase {
                         textFieldState:
                             TCATextFieldReducer.State(
                                 validationType: nil,
-                                text: "utest1zkkkjfxkamagznjr6ayemffj2d2gacdwpzcyw669pvg06xevzqslpmm27zjsctlkstl2vsw62xrjktmzqcu4yu9zdhdxqz3kafa4j2q85y6mv74rzjcgjg8c0ytrg7dwyzwtgnuc76h".redacted
+                                text:
+                                    // swiftlint:disable line_length
+                                    "utest1zkkkjfxkamagznjr6ayemffj2d2gacdwpzcyw669pvg06xevzqslpmm27zjsctlkstl2vsw62xrjktmzqcu4yu9zdhdxqz3kafa4j2q85y6mv74rzjcgjg8c0ytrg7dwyzwtgnuc76h".redacted
                             )
                     ),
                 transactionAmountInputState: TransactionAmountTextFieldReducer.State(
@@ -109,7 +111,9 @@ class SendSnapshotTests: XCTestCase {
                         textFieldState:
                             TCATextFieldReducer.State(
                                 validationType: nil,
-                                text: "utest1zkkkjfxkamagznjr6ayemffj2d2gacdwpzcyw669pvg06xevzqslpmm27zjsctlkstl2vsw62xrjktmzqcu4yu9zdhdxqz3kafa4j2q85y6mv74rzjcgjg8c0ytrg7dwyzwtgnuc76h".redacted
+                                text:
+                                    // swiftlint:disable line_length
+                                    "utest1zkkkjfxkamagznjr6ayemffj2d2gacdwpzcyw669pvg06xevzqslpmm27zjsctlkstl2vsw62xrjktmzqcu4yu9zdhdxqz3kafa4j2q85y6mv74rzjcgjg8c0ytrg7dwyzwtgnuc76h".redacted
                             )
                     ),
                 transactionAmountInputState: TransactionAmountTextFieldReducer.State(

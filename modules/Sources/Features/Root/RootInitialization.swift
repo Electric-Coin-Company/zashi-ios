@@ -17,6 +17,7 @@ extension RootReducer {
     public enum InitializationAction: Equatable {
         case appDelegate(AppDelegateAction)
         case checkBackupPhraseValidation
+        case checkRestoreWalletFlag(SyncStatus)
         case checkWalletInitialization
         case configureCrashReporter
         case checkWalletConfig
@@ -56,11 +57,11 @@ extension RootReducer {
                 }
                 
             case .synchronizerStateChanged(let latestState):
-                guard state.bgTask != nil else {
-                    return .none
-                }
-                
                 let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.syncStatus)
+
+                guard state.bgTask != nil else {
+                    return .send(.initialization(.checkRestoreWalletFlag(snapshot.syncStatus)))
+                }
 
                 var finishBGTask = false
                 var successOfBGTask = false
@@ -84,8 +85,18 @@ extension RootReducer {
                     return .cancel(id: CancelStateId.timer)
                 }
 
-                return .none
-                
+                return .send(.initialization(.checkRestoreWalletFlag(snapshot.syncStatus)))
+            
+            case .initialization(.checkRestoreWalletFlag(let syncStatus)):
+                if state.isRestoringWallet && syncStatus == .upToDate {
+                    state.isRestoringWallet = false
+                    return .run { _ in
+                        await restoreWalletStorage.updateValue(false)
+                    }
+                } else {
+                    return .none
+                }
+
             case .initialization(.synchronizerStartFailed):
                 return .none
 
@@ -324,7 +335,13 @@ extension RootReducer {
                 return Effect.send(.destination(.updateDestination(.tabs)))
 
             case .onboarding(.importWallet(.initializeSDK)):
-                return Effect.send(.initialization(.initializeSDK(.restoreWallet)))
+                state.isRestoringWallet = true
+                return .merge(
+                    Effect.send(.initialization(.initializeSDK(.restoreWallet))),
+                    .run { _ in
+                        await restoreWalletStorage.updateValue(true)
+                    }
+                )
 
             case .initialization(.configureCrashReporter):
                 crashReporter.configure(

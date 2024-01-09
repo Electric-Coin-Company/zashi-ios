@@ -68,6 +68,33 @@ class TabsTests: XCTestCase {
         }
     }
     
+    func testRestoreWalletSubscription() async throws {
+        var initialState = TabsReducer.State.initial
+        initialState.isRestoringWallet = false
+
+        let store = TestStore(
+            initialState: initialState
+        ) {
+            TabsReducer(tokenName: "TAZ", networkType: .testnet)
+        }
+
+        store.dependencies.restoreWalletStorage = .noOp
+        store.dependencies.restoreWalletStorage.value = {
+            AsyncStream { continuation in
+                continuation.yield(true)
+                continuation.finish()
+            }
+        }
+        
+        await store.send(.restoreWalletTask)
+        
+        await store.receive(.restoreWalletValue(true)) { state in
+            state.isRestoringWallet = true
+        }
+        
+        await store.finish()
+    }
+    
     func testAccountTabTitle() {
         var tabsState = TabsReducer.State.initial
         tabsState.selectedTab = .account

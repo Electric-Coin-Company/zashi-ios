@@ -51,6 +51,8 @@ public enum L10n {
     }
     /// Pending transactions
     public static let pendingTransactions = L10n.tr("Localizable", "balances.pendingTransactions", fallback: "Pending transactions")
+    /// The restore process can take several hours on lower-powered devices, and even on powerful devices is likely to take more than an hour.
+    public static let restoringWalletWarning = L10n.tr("Localizable", "balances.restoringWalletWarning", fallback: "The restore process can take several hours on lower-powered devices, and even on powerful devices is likely to take more than an hour.")
     /// Shield and consolidate funds
     public static let shieldButtonTitle = L10n.tr("Localizable", "balances.shieldButtonTitle", fallback: "Shield and consolidate funds")
     /// Shielding funds
@@ -133,6 +135,8 @@ public enum L10n {
     public static let no = L10n.tr("Localizable", "general.no", fallback: "No")
     /// Ok
     public static let ok = L10n.tr("Localizable", "general.ok", fallback: "Ok")
+    /// [RESTORING YOUR WALLET…]
+    public static let restoringWallet = L10n.tr("Localizable", "general.restoringWallet", fallback: "[RESTORING YOUR WALLET…]")
     /// Send
     public static let send = L10n.tr("Localizable", "general.send", fallback: "Send")
     /// Skip

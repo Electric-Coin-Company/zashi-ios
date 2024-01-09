@@ -13,6 +13,7 @@ import UIComponents
 import Utils
 import Models
 import BalanceFormatter
+import SyncProgress
 
 public struct BalanceBreakdownView: View {
     let store: BalanceBreakdownStore
@@ -24,30 +25,43 @@ public struct BalanceBreakdownView: View {
     }
     
     public var body: some View {
-        ZStack {
+        ScrollView {
             WithViewStore(store, observe: { $0 }) { viewStore in
-                ScrollView {
-                    BalanceWithIconView(balance: viewStore.shieldedBalance.data.total)
-                        .padding(.top, 40)
-                        .padding(.bottom, 5)
-                    
-                    AvailableBalanceView(
-                        balance: viewStore.shieldedBalance.data.verified,
-                        tokenName: tokenName
-                    )
-                    
-                    Asset.Colors.primary.color
-                        .frame(height: 1)
-                        .padding(EdgeInsets(top: 30, leading: 30, bottom: 10, trailing: 30))
-                    
-                    balancesBlock(viewStore)
-                    
-                    transparentBlock(viewStore)
-                    
-                    progressBlock(viewStore)
+                BalanceWithIconView(balance: viewStore.shieldedBalance.data.total)
+                    .padding(.top, 40)
+                    .padding(.bottom, 5)
+                    .onAppear { viewStore.send(.onAppear) }
+                    .onDisappear { viewStore.send(.onDisappear) }
+
+                AvailableBalanceView(
+                    balance: viewStore.shieldedBalance.data.verified,
+                    tokenName: tokenName
+                )
+                
+                Asset.Colors.primary.color
+                    .frame(height: 1)
+                    .padding(EdgeInsets(top: 30, leading: 30, bottom: 10, trailing: 30))
+                
+                balancesBlock(viewStore)
+                
+                transparentBlock(viewStore)
+                
+                if viewStore.isRestoringWallet {
+                    Text(L10n.Balances.restoringWalletWarning)
+                        .font(.custom(FontFamily.Inter.medium.name, size: 10))
+                        .foregroundColor(Asset.Colors.error.color)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 60)
+                        .padding(.vertical, 20)
                 }
-                .onAppear { viewStore.send(.onAppear) }
-                .onDisappear { viewStore.send(.onDisappear) }
+                
+                SyncProgressView(
+                    store: store.scope(
+                        state: \.syncProgressState,
+                        action: BalanceBreakdownReducer.Action.syncProgress
+                    )
+                )
+                .padding(.top, viewStore.isRestoringWallet ? 0 : 40)
             }
         }
         .padding(.vertical, 1)
@@ -56,6 +70,7 @@ public struct BalanceBreakdownView: View {
             state: \.$alert,
             action: { .alert($0) }
         ))
+        .task { await store.send(.restoreWalletTask).finish() }
     }
 }
 
@@ -212,29 +227,6 @@ extension BalanceBreakdownView {
 //        }
     }
     
-    @ViewBuilder func progressBlock(_ viewStore: BalanceBreakdownViewStore) -> some View {
-        VStack(spacing: 5) {
-            HStack {
-                Text(viewStore.syncStatusMessage)
-                    .font(.custom(FontFamily.Inter.regular.name, size: 10))
-                
-                if viewStore.isSyncing {
-                    progressViewLooping()
-                }
-            }
-            .frame(height: 16)
-            .padding(.bottom, 5)
-
-            Text(String(format: "%0.1f%%", viewStore.syncingPercentage * 100))
-                .font(.custom(FontFamily.Inter.black.name, size: 10))
-                .foregroundColor(Asset.Colors.primary.color)
-
-            ProgressView(value: viewStore.syncingPercentage, total: 1.0)
-                .progressViewStyle(ZashiSyncingProgressStyle())
-        }
-        .padding(.top, 40)
-    }
-    
     @ViewBuilder func progressViewLooping() -> some View {
         ProgressView()
             .scaleEffect(0.7)
@@ -254,8 +246,11 @@ extension BalanceBreakdownView {
                     isShieldingFunds: true,
                     pendingTransactions: .zero,
                     shieldedBalance: Balance(WalletBalance(verified: Zatoshi(25_234_778), total: Zatoshi(35_814_169))),
-                    synchronizerStatusSnapshot: SyncStatusSnapshot(.syncing(0.41)),
-                    syncStatusMessage: "Syncing",
+                    syncProgressState: .init(
+                        lastKnownSyncPercentage: 0.43,
+                        synchronizerStatusSnapshot: SyncStatusSnapshot(.syncing(0.41)),
+                        syncStatusMessage: "Syncing"
+                    ),
                     transparentBalance: Balance(WalletBalance(verified: Zatoshi(25_234_778), total: Zatoshi(35_814_169)))
                 )
             ) {

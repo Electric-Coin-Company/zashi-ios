@@ -46,7 +46,9 @@ let package = Package(
         .library(name: "SendFlow", targets: ["SendFlow"]),
         .library(name: "Settings", targets: ["Settings"]),
         .library(name: "SupportDataGenerator", targets: ["SupportDataGenerator"]),
+        .library(name: "SyncProgress", targets: ["SyncProgress"]),
         .library(name: "ReadTransactionsStorage", targets: ["ReadTransactionsStorage"]),
+        .library(name: "RestoreWalletStorage", targets: ["RestoreWalletStorage"]),
         .library(name: "Tabs", targets: ["Tabs"]),
         .library(name: "TransactionList", targets: ["TransactionList"]),
         .library(name: "UIComponents", targets: ["UIComponents"]),
@@ -103,7 +105,9 @@ let package = Package(
                 "MnemonicClient",
                 "Models",
                 "NumberFormatter",
+                "RestoreWalletStorage",
                 "SDKSynchronizer",
+                "SyncProgress",
                 "UIComponents",
                 "Utils",
                 "WalletStorage",
@@ -215,10 +219,12 @@ let package = Package(
                 "DiskSpaceChecker",
                 "Generated",
                 "Models",
+                "RestoreWalletStorage",
                 "ReviewRequest",
                 "Scan",
                 "Settings",
                 "SDKSynchronizer",
+                "SyncProgress",
                 "UIComponents",
                 "Utils",
                 "TransactionList",
@@ -311,6 +317,7 @@ let package = Package(
                 "DatabaseFiles",
                 "Generated",
                 "Models",
+                "RestoreWalletStorage",
                 "UIComponents",
                 "Utils",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
@@ -332,6 +339,13 @@ let package = Package(
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
             ],
             path: "Sources/Features/RecoveryPhraseDisplay"
+        ),
+        .target(
+            name: "RestoreWalletStorage",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Dependencies/RestoreWalletStorage"
         ),
         .target(
             name: "ReviewRequest",
@@ -358,6 +372,7 @@ let package = Package(
                 "OnboardingFlow",
                 "ReadTransactionsStorage",
                 "RecoveryPhraseDisplay",
+                "RestoreWalletStorage",
                 "Sandbox",
                 "SDKSynchronizer",
                 "Tabs",
@@ -463,6 +478,7 @@ let package = Package(
                 "Models",
                 "PrivateDataConsent",
                 "RecoveryPhraseDisplay",
+                "RestoreWalletStorage",
                 "SDKSynchronizer",
                 "SupportDataGenerator",
                 "UIComponents",
@@ -482,6 +498,18 @@ let package = Package(
             path: "Sources/Dependencies/SupportDataGenerator"
         ),
         .target(
+            name: "SyncProgress",
+            dependencies: [
+                "Generated",
+                "Models",
+                "SDKSynchronizer",
+                "UIComponents",
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Features/SyncProgress"
+        ),
+        .target(
             name: "ReadTransactionsStorage",
             dependencies: [
                 "Utils",
@@ -496,8 +524,10 @@ let package = Package(
                 "BalanceBreakdown",
                 "Generated",
                 "Home",
+                "RestoreWalletStorage",
                 "SendFlow",
                 "Settings",
+                "UIComponents",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
             ],

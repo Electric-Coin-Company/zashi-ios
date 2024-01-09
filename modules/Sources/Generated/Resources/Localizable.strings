@@ -116,6 +116,7 @@
 "balances.fee" = "(Fee %@)";
 "balances.synced" = "Synced";
 "balances.syncing" = "Syncing";
+"balances.restoringWalletWarning" = "The restore process can take several hours on lower-powered devices, and even on powerful devices is likely to take more than an hour.";
 "balances.alert.shieldFunds.failure.title" = "Failed to shield funds";
 "balances.alert.shieldFunds.failure.message" = "Error: %@ (code: %@)";
 
@@ -202,6 +203,7 @@ Sharing this private data is irrevocable — once you have shared this private d
 "general.success" = "Success";
 "general.unknown" = "Unknown";
 "general.done" = "Done";
+"general.restoringWallet" = "[RESTORING YOUR WALLET…]";
 "balance.available" = "Available balance %@ %@";
 "balance.availableTitle" = "Available Balance";
 "qrCodeFor" = "QR Code for %@";

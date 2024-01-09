@@ -21,7 +21,6 @@ public struct ScreenBackgroundModifier: ViewModifier {
                 Asset.Assets.gridTile.image
                     .resizable(resizingMode: .tile)
                     .edgesIgnoringSafeArea(.all)
-                    .opacity(0.18)
             }
 
             content

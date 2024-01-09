@@ -72,6 +72,7 @@
 		9E4938D82ACE8E8F003C4C1D /* SecurityWarningSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4938D72ACE8E8F003C4C1D /* SecurityWarningSnapshotTests.swift */; };
 		9E5AAEC02A67CEC4003F283D /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E5AAEBF2A67CEC4003F283D /* Colors.xcassets */; };
 		9E5AAEC12A67CEC4003F283D /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E5AAEBF2A67CEC4003F283D /* Colors.xcassets */; };
+		9E5B8E742B46E04E00CA3616 /* RestoreWalletTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5B8E732B46E04E00CA3616 /* RestoreWalletTests.swift */; };
 		9E6612362878345000C75B70 /* endlessCircleProgress.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E6612352878345000C75B70 /* endlessCircleProgress.json */; };
 		9E683E472B0377F0002E7B5D /* WalletNukeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E683E462B0377F0002E7B5D /* WalletNukeTests.swift */; };
 		9E74CCD029DC0628003D6E32 /* ReviewRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E74CCCF29DC0628003D6E32 /* ReviewRequestTests.swift */; };
@@ -83,6 +84,7 @@
 		9EB35D632A31F1DD00A2149B /* Root in Frameworks */ = {isa = PBXBuildFile; productRef = 9EB35D622A31F1DD00A2149B /* Root */; };
 		9EB35D6A2A3A2D7B00A2149B /* Utils in Frameworks */ = {isa = PBXBuildFile; productRef = 9EB35D692A3A2D7B00A2149B /* Utils */; };
 		9EB35D6C2A3A2D9200A2149B /* Utils in Frameworks */ = {isa = PBXBuildFile; productRef = 9EB35D6B2A3A2D9200A2149B /* Utils */; };
+		9EEB06C62B344F1E00EEE50F /* SyncProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEB06C52B344F1E00EEE50F /* SyncProgressTests.swift */; };
 		9EEB06C82B405A0400EEE50F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEB06C72B405A0400EEE50F /* AppDelegate.swift */; };
 		9EEB06C92B405A0400EEE50F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEB06C72B405A0400EEE50F /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
@@ -144,6 +146,7 @@
 		9E4938D72ACE8E8F003C4C1D /* SecurityWarningSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityWarningSnapshotTests.swift; sourceTree = "<group>"; };
 		9E4A01762B0C9ABD005AFC7E /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		9E5AAEBF2A67CEC4003F283D /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
+		9E5B8E732B46E04E00CA3616 /* RestoreWalletTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreWalletTests.swift; sourceTree = "<group>"; };
 		9E5BF63E2819542C00BA3F17 /* TransactionListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListTests.swift; sourceTree = "<group>"; };
 		9E5BF643281FEC9900BA3F17 /* SendTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendTests.swift; sourceTree = "<group>"; };
 		9E612C7829913F3600D09B09 /* SensitiveDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensitiveDataTests.swift; sourceTree = "<group>"; };
@@ -170,6 +173,7 @@
 		9EDDEA9F2829610D00B4100C /* CurrencySelectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencySelectionTests.swift; sourceTree = "<group>"; };
 		9EDDEAA02829610D00B4100C /* TransactionAmountInputTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAmountInputTests.swift; sourceTree = "<group>"; };
 		9EDDEAA12829610D00B4100C /* TransactionAddressInputTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAddressInputTests.swift; sourceTree = "<group>"; };
+		9EEB06C52B344F1E00EEE50F /* SyncProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncProgressTests.swift; sourceTree = "<group>"; };
 		9EEB06C72B405A0400EEE50F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9EF8135A27ECC25E0075AF48 /* WalletStorageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletStorageTests.swift; sourceTree = "<group>"; };
 		9EF8135B27ECC25E0075AF48 /* UserPreferencesStorageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserPreferencesStorageTests.swift; sourceTree = "<group>"; };
@@ -266,14 +270,13 @@
 		0D4E7A1926B364180058B01E /* secantTests */ = {
 			isa = PBXGroup;
 			children = (
-				9E139AAD2B07B39700D104B8 /* ZatoshiStringRepresentation */,
-				0D4E7A1C26B364180058B01E /* Info.plist */,
 				9E207C372966EF6E003E2C9B /* AddressDetailsTests */,
 				0DFE93DD272C6D4B000FCCA5 /* BackupFlowTests */,
 				9E94C61E28AA7DD5008256E9 /* BalanceBreakdownTests */,
 				9EAB4674285B5C68002904A0 /* DeeplinkTests */,
 				9E3911372848AD3A0073DD9A /* HomeTests */,
 				9E391122283E4C970073DD9A /* ImportWalletTests */,
+				0D4E7A1C26B364180058B01E /* Info.plist */,
 				9E6713EF2897F80A00A6796F /* MultiLineTextFieldTests */,
 				9E1FAFB82AF2C7DA0084CA3D /* PrivateDataConsentTests */,
 				9E74CCCE29DC060B003D6E32 /* ReviewRequestTests */,
@@ -283,10 +286,12 @@
 				9E612C7729913F2300D09B09 /* SensitiveDataTests */,
 				9E66129C2889388C00C75B70 /* SettingsTests */,
 				9E391162284E3ECF0073DD9A /* SnapshotTests */,
+				9EEB06C42B344F0E00EEE50F /* SyncProgressTests */,
 				9E4691982AD573420082D7DF /* TabsTests */,
+				9E5BF63D281953F900BA3F17 /* TransactionListTests */,
 				9EF8135927ECC25E0075AF48 /* UtilTests */,
 				34F039B129ABCE8500CF0053 /* WalletConfigProviderTests */,
-				9E5BF63D281953F900BA3F17 /* TransactionListTests */,
+				9E139AAD2B07B39700D104B8 /* ZatoshiStringRepresentation */,
 			);
 			path = secantTests;
 			sourceTree = "<group>";
@@ -585,8 +590,17 @@
 				9E391131284644580073DD9A /* AppInitializationTests.swift */,
 				9E852D6429B0A86300CF4AC1 /* DebugTests.swift */,
 				9E683E462B0377F0002E7B5D /* WalletNukeTests.swift */,
+				9E5B8E732B46E04E00CA3616 /* RestoreWalletTests.swift */,
 			);
 			path = RootTests;
+			sourceTree = "<group>";
+		};
+		9EEB06C42B344F0E00EEE50F /* SyncProgressTests */ = {
+			isa = PBXGroup;
+			children = (
+				9EEB06C52B344F1E00EEE50F /* SyncProgressTests.swift */,
+			);
+			path = SyncProgressTests;
 			sourceTree = "<group>";
 		};
 		9EF8135927ECC25E0075AF48 /* UtilTests */ = {
@@ -950,6 +964,7 @@
 				9E3451C429C857DF00177D16 /* View+UIImage.swift in Sources */,
 				9E34519729C4A51100177D16 /* RecoveryPhraseBackupTests.swift in Sources */,
 				9E0C0D702AFB842B00D69A16 /* TransactionStateTests.swift in Sources */,
+				9E5B8E742B46E04E00CA3616 /* RestoreWalletTests.swift in Sources */,
 				9E683E472B0377F0002E7B5D /* WalletNukeTests.swift in Sources */,
 				9E3451BC29C857C800177D16 /* NotEnoughFeeSpaceSnapshots.swift in Sources */,
 				9E3451B229C8565500177D16 /* SecItemClientTests.swift in Sources */,
@@ -957,6 +972,7 @@
 				9E3451B329C8565500177D16 /* WalletBalance+testing.swift in Sources */,
 				9E3451AA29C84ED500177D16 /* CurrencySelectionTests.swift in Sources */,
 				9E3451C529C857E400177D16 /* TransactionListSnapshotTests.swift in Sources */,
+				9EEB06C62B344F1E00EEE50F /* SyncProgressTests.swift in Sources */,
 				9E34519829C4A51100177D16 /* RecoveryPhraseDisplayReducerTests.swift in Sources */,
 				9E34519C29C4A91A00177D16 /* HomeTests.swift in Sources */,
 				9E1FAFB72AF2C6D40084CA3D /* PrivateDataConsentSnapshotTests.swift in Sources */,
@@ -1192,7 +1208,7 @@
 				CURRENT_PROJECT_VERSION = 11;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
-				DEVELOPMENT_TEAM = RLPRR8CPQG;
+				DEVELOPMENT_TEAM = W5KABFU8SV;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "secant/secant-testnet-Info.plist";
@@ -1220,7 +1236,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
-				DEVELOPMENT_TEAM = RLPRR8CPQG;
+				DEVELOPMENT_TEAM = W5KABFU8SV;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "secant/secant-testnet-Info.plist";

@@ -21,7 +21,7 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
                 isShieldingFunds: false,
                 pendingTransactions: .zero,
                 shieldedBalance: WalletBalance(verified: Zatoshi(123_000_000_000), total: Zatoshi(123_000_000_000)).redacted,
-                synchronizerStatusSnapshot: .initial,
+                syncProgressState: .initial,
                 transparentBalance: WalletBalance(verified: Zatoshi(850_000_000), total: Zatoshi(850_000_000)).redacted
             )
         ) {
