@@ -232,8 +232,8 @@ public struct SendFlowReducer: Reducer {
                         }
                     }
                 } catch {
+                    return .send(.sendFailed(error.toZcashError()))
                 }
-                return .none
                 
             case .sendDone:
                 state.destination = nil
@@ -291,9 +291,9 @@ public struct SendFlowReducer: Reducer {
 extension AlertState where Action == SendFlowReducer.Action {
     public static func sendFailure(_ error: ZcashError) -> AlertState {
         AlertState {
-            TextState("L10n.Balances.Alert.ShieldFunds.Failure.title")
+            TextState(L10n.Send.Alert.Failure.title)
         } message: {
-            TextState("L10n.Balances.Alert.ShieldFunds.Failure.message(error.message, error.code.rawValue)")
+            TextState(L10n.Send.Alert.Failure.message(error.message, error.code.rawValue))
         }
     }
 }

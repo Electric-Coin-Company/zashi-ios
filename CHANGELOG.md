@@ -12,7 +12,8 @@ directly impact users rather than highlighting other crucial architectural updat
 - Restore of the wallet is now indiated in the UI throughout the application.
 
 ### Fixed
-- The export buttons are disabled when exporting of the private data is in progress.  
+- The export buttons are disabled when exporting of the private data is in progress.
+- The alert message and title for the failed transaction send.  
 
 ## 0.2.0 build 11 (2023-12-13)
 
