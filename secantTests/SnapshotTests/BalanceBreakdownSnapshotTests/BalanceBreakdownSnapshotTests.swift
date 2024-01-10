@@ -32,4 +32,25 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
         
         addAttachments(BalanceBreakdownView(store: store, tokenName: "ZEC"))
     }
+    
+    func testBalanceBreakdownSnapshot_HintBox() throws {
+        let store = Store(
+            initialState: BalanceBreakdownReducer.State(
+                autoShieldingThreshold: Zatoshi(1_000_000),
+                changePending: .zero,
+                isShieldingFunds: false,
+                isHintBoxVisible: true,
+                pendingTransactions: .zero,
+                shieldedBalance: WalletBalance(verified: Zatoshi(123_000_000_000), total: Zatoshi(123_000_000_000)).redacted,
+                syncProgressState: .initial,
+                transparentBalance: WalletBalance(verified: Zatoshi(850_000_000), total: Zatoshi(850_000_000)).redacted
+            )
+        ) {
+            BalanceBreakdownReducer(networkType: .testnet)
+                .dependency(\.sdkSynchronizer, .noOp)
+                .dependency(\.mainQueue, .immediate)
+        }
+        
+        addAttachments(BalanceBreakdownView(store: store, tokenName: "ZEC"))
+    }
 }

@@ -45,7 +45,13 @@ public struct BalanceBreakdownView: View {
                 balancesBlock(viewStore)
                 
                 transparentBlock(viewStore)
-                
+                    .frame(minHeight: 166)
+                    .padding(.horizontal, viewStore.isHintBoxVisible ? 15 : 30)
+                    .background {
+                        Asset.Colors.shade92.color
+                    }
+                    .padding(.horizontal, 30)
+
                 if viewStore.isRestoringWallet {
                     Text(L10n.Balances.restoringWalletWarning)
                         .font(.custom(FontFamily.Inter.medium.name, size: 10))
@@ -150,6 +156,15 @@ extension BalanceBreakdownView {
     }
     
     @ViewBuilder func transparentBlock(_ viewStore: BalanceBreakdownViewStore) -> some View {
+        if viewStore.isHintBoxVisible {
+            transparentBlockHintBox(viewStore)
+                .frame(maxWidth: .infinity)
+        } else {
+            transparentBlockShielding(viewStore)
+        }
+    }
+
+    @ViewBuilder private func transparentBlockShielding(_ viewStore: BalanceBreakdownViewStore) -> some View {
         VStack {
             HStack(spacing: 0) {
                 Text(L10n.Balances.transparentBalance.uppercased())
@@ -157,8 +172,7 @@ extension BalanceBreakdownView {
                     .fixedSize()
                 
                 Button {
-                    // TODO: [#933] open the hint box
-                    // https://github.com/Electric-Coin-Company/zashi-ios/issues/933
+                    viewStore.send(.updateHintBoxVisibility(true))
                 } label: {
                     Image(systemName: "questionmark.circle.fill")
                         .resizable()
@@ -209,22 +223,28 @@ extension BalanceBreakdownView {
             Text(L10n.Balances.fee(ZatoshiStringRepresentation.feeFormat))
                 .font(.custom(FontFamily.Inter.semiBold.name, size: 11))
         }
-        .frame(height: 166)
-        .padding(.horizontal, 30)
-        .background {
-            Asset.Colors.shade92.color
+    }
+
+    @ViewBuilder private func transparentBlockHintBox(_ viewStore: BalanceBreakdownViewStore) -> some View {
+        VStack {
+            Text(L10n.Balances.HintBox.message)
+                .font(.custom(FontFamily.Inter.regular.name, size: 11))
+                .multilineTextAlignment(.center)
+                .foregroundColor(Asset.Colors.primary.color)
+            
+            Spacer()
+            
+            Button {
+                viewStore.send(.updateHintBoxVisibility(false))
+            } label: {
+                Text(L10n.Balances.HintBox.dismiss.uppercased())
+                    .font(.custom(FontFamily.Inter.semiBold.name, size: 10))
+                  .underline()
+                  .foregroundColor(Asset.Colors.primary.color)
+            }
         }
-        .padding(.horizontal, 30)
-        // TODO: [#933] implement the hint box
-        // https://github.com/Electric-Coin-Company/zashi-ios/issues/933
-//        .overlay(alignment: .top) {
-//            Text("Shield these funds to add them to your available balance.")
-//                .font(Font.custom("Inter", size: 11))
-//                .frame(width: 292, height: 62)
-//                .alignmentGuide(.bottom) { $0[.top] }
-//                .tooltipShape()
-//                .padding(.top, 40)
-//        }
+        .hintBoxShape()
+        .padding(.vertical, 15)
     }
     
     @ViewBuilder func progressViewLooping() -> some View {
@@ -244,6 +264,7 @@ extension BalanceBreakdownView {
                     autoShieldingThreshold: Zatoshi(1_000_000),
                     changePending: .zero,
                     isShieldingFunds: true,
+                    isHintBoxVisible: true,
                     pendingTransactions: .zero,
                     shieldedBalance: Balance(WalletBalance(verified: Zatoshi(25_234_778), total: Zatoshi(35_814_169))),
                     syncProgressState: .init(

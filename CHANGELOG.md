@@ -10,6 +10,7 @@ directly impact users rather than highlighting other crucial architectural updat
 - The exported logs also show the shielded balances (total & verified) for every finished sync metric.
 - Synchronization in the background. When the iPhone is connected to the power and wifi, the background task will try to synchronize randomly between 3-4am.
 - Restore of the wallet is now indiated in the UI throughout the application.
+- A hint box that elucidates transparent funds and shielding on the Balances tab.
 
 ### Fixed
 - The export buttons are disabled when exporting of the private data is in progress.
