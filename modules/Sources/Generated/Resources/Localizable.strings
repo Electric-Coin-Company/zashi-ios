@@ -116,6 +116,8 @@
 "balances.fee" = "(Fee %@)";
 "balances.synced" = "Synced";
 "balances.syncing" = "Syncing";
+"balances.hintBox.message" = "Zashi uses the latest network upgrade and does does not support sending transparent (unshielded) ZEC. Converting your funds will move them to your available balance so you can send or spend them.";
+"balances.hintBox.dismiss" = "I got it!";
 "balances.restoringWalletWarning" = "The restore process can take several hours on lower-powered devices, and even on powerful devices is likely to take more than an hour.";
 "balances.alert.shieldFunds.failure.title" = "Failed to shield funds";
 "balances.alert.shieldFunds.failure.message" = "Error: %@ (code: %@)";

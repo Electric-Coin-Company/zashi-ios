@@ -1,5 +1,5 @@
 //
-//  TooltipShape.swift
+//  HintBoxShape.swift
 //  
 //
 //  Created by Lukáš Korba on 23.11.2023.
@@ -8,18 +8,11 @@
 import SwiftUI
 import Generated
 
-public struct TooltipShape: Shape {
+public struct HintBoxShape: Shape {
     public func path(in rect: CGRect) -> Path {
-        let arrowXRatio = CGFloat(0.6)
-        
-        return Path { path in
+        Path { path in
             path.move(to: CGPoint(x: 0, y: 0))
-            path.addLine(to: CGPoint(x: rect.width * arrowXRatio, y: 0))
-
-            path.addLine(to: CGPoint(x: rect.width * arrowXRatio + 10, y: -10))
-            path.addLine(to: CGPoint(x: rect.width * arrowXRatio + 20, y: 0))
             path.addLine(to: CGPoint(x: rect.width, y: 0))
-
             path.addLine(to: CGPoint(x: rect.width, y: rect.height))
             path.addLine(to: CGPoint(x: 0, y: rect.height))
 
@@ -28,24 +21,35 @@ public struct TooltipShape: Shape {
     }
 }
 
-public struct TooltipShapeModifier: ViewModifier {
+public struct HintBoxShapeModifier: ViewModifier {
     public func body(content: Content) -> some View {
         content
+            .padding(20)
             .background {
-                TooltipShape()
+                HintBoxShape()
                     .foregroundColor(Asset.Colors.secondary.color)
+                    .shadow(radius: 5, y: 6)
             }
             .overlay {
-                TooltipShape()
+                HintBoxShape()
                     .stroke()
             }
     }
 }
 
 extension View {
-    public func tooltipShape() -> some View {
+    public func hintBoxShape() -> some View {
         modifier(
-            TooltipShapeModifier()
+            HintBoxShapeModifier()
         )
     }
+}
+
+#Preview {
+    VStack {
+        Text("Hi, this is a test of the hintBox shape with the shadow")
+            .hintBoxShape()
+    }
+    .padding(40)
+    .background(.green)
 }

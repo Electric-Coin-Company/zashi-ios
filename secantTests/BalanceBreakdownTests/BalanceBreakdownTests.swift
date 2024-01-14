@@ -156,4 +156,38 @@ class BalanceBreakdownTests: XCTestCase {
         
         await store.finish()
     }
+    
+    func testShowHintbox() async throws {
+        var initialState = BalanceBreakdownReducer.State.initial
+        initialState.isHintBoxVisible = false
+
+        let store = TestStore(
+            initialState: initialState
+        ) {
+            BalanceBreakdownReducer(networkType: .testnet)
+        }
+        
+        await store.send(.updateHintBoxVisibility(true)) { state in
+            state.isHintBoxVisible = true
+        }
+        
+        await store.finish()
+    }
+    
+    func testHideHintbox() async throws {
+        var initialState = BalanceBreakdownReducer.State.initial
+        initialState.isHintBoxVisible = true
+        
+        let store = TestStore(
+            initialState: initialState
+        ) {
+            BalanceBreakdownReducer(networkType: .testnet)
+        }
+        
+        await store.send(.updateHintBoxVisibility(false)) { state in
+            state.isHintBoxVisible = false
+        }
+        
+        await store.finish()
+    }
 }

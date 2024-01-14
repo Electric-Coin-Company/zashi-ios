@@ -32,6 +32,7 @@ public struct BalanceBreakdownReducer: Reducer {
         public var changePending: Zatoshi
         public var isRestoringWallet = false
         public var isShieldingFunds: Bool
+        public var isHintBoxVisible = false
         public var pendingTransactions: Zatoshi
         public var shieldedBalance: Balance
         public var syncProgressState: SyncProgressReducer.State
@@ -54,6 +55,7 @@ public struct BalanceBreakdownReducer: Reducer {
             changePending: Zatoshi,
             isRestoringWallet: Bool = false,
             isShieldingFunds: Bool,
+            isHintBoxVisible: Bool = false,
             pendingTransactions: Zatoshi,
             shieldedBalance: Balance,
             syncProgressState: SyncProgressReducer.State,
@@ -63,6 +65,7 @@ public struct BalanceBreakdownReducer: Reducer {
             self.changePending = changePending
             self.isRestoringWallet = isRestoringWallet
             self.isShieldingFunds = isShieldingFunds
+            self.isHintBoxVisible = isHintBoxVisible
             self.pendingTransactions = pendingTransactions
             self.shieldedBalance = shieldedBalance
             self.syncProgressState = syncProgressState
@@ -81,6 +84,7 @@ public struct BalanceBreakdownReducer: Reducer {
         case shieldFundsFailure(ZcashError)
         case synchronizerStateChanged(SynchronizerState)
         case syncProgress(SyncProgressReducer.Action)
+        case updateHintBoxVisibility(Bool)
     }
 
     @Dependency(\.derivationTool) var derivationTool
@@ -166,6 +170,10 @@ public struct BalanceBreakdownReducer: Reducer {
                 return .none
                 
             case .syncProgress:
+                return .none
+                
+            case .updateHintBoxVisibility(let visibility):
+                state.isHintBoxVisible = visibility
                 return .none
             }
         }
