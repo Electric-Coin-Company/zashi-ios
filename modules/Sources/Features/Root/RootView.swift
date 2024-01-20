@@ -10,6 +10,7 @@ import OnboardingFlow
 import Sandbox
 import Tabs
 import ZcashLightClientKit
+import UIComponents
 
 public struct RootView: View {
     let store: RootStore

@@ -89,4 +89,56 @@ class AddressDetailsTests: XCTestCase {
         
         await store.finish()
     }
+    
+    func testShareTransparentAddress() async throws {
+        let uAddress = try UnifiedAddress(encoding: uAddressEncoding, network: .testnet)
+
+        let store = TestStore(
+            initialState: AddressDetailsReducer.State(uAddress: uAddress)
+        ) {
+            AddressDetailsReducer(networkType: .testnet)
+        }
+
+        let expectedAddress = try uAddress.transparentReceiver().stringEncoded
+
+        await store.send(.shareQR(expectedAddress.redacted)) { state in
+            state.addressToShare = expectedAddress.redacted
+        }
+        
+        await store.finish()
+    }
+    
+    func testShareUnifiedAddress() async throws {
+        let uAddress = try UnifiedAddress(encoding: uAddressEncoding, network: .testnet)
+
+        let store = TestStore(
+            initialState: AddressDetailsReducer.State(uAddress: uAddress)
+        ) {
+            AddressDetailsReducer(networkType: .testnet)
+        }
+
+        await store.send(.shareQR(uAddress.stringEncoded.redacted)) { state in
+            state.addressToShare = uAddress.stringEncoded.redacted
+        }
+        
+        await store.finish()
+    }
+
+    func testShareSaplingAddress() async throws {
+        let uAddress = try UnifiedAddress(encoding: uAddressEncoding, network: .testnet)
+
+        let store = TestStore(
+            initialState: AddressDetailsReducer.State(uAddress: uAddress)
+        ) {
+            AddressDetailsReducer(networkType: .testnet)
+        }
+
+        let expectedAddress = try uAddress.saplingReceiver().stringEncoded
+
+        await store.send(.shareQR(expectedAddress.redacted)) { state in
+            state.addressToShare = expectedAddress.redacted
+        }
+        
+        await store.finish()
+    }
 }

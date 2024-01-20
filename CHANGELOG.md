@@ -7,6 +7,11 @@ directly impact users rather than highlighting other crucial architectural updat
 ## [Unreleased]
 
 ### Added
+- Share QR code of addresses via system share dialog.
+
+## 0.2.0 build 12 (2024-01-20)
+
+### Added
 - The exported logs also show the shielded balances (total & verified) for every finished sync metric.
 - Synchronization in the background. When the iPhone is connected to the power and wifi, the background task will try to synchronize randomly between 3-4am.
 - Restore of the wallet is now indiated in the UI throughout the application.

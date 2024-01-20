@@ -13,11 +13,13 @@ import Generated
 import Utils
 
 public typealias AddressDetailsStore = Store<AddressDetailsReducer.State, AddressDetailsReducer.Action>
+public typealias AddressDetailsViewStore = ViewStore<AddressDetailsReducer.State, AddressDetailsReducer.Action>
 
 public struct AddressDetailsReducer: Reducer {
     let networkType: NetworkType
 
     public struct State: Equatable {
+        public var addressToShare: RedactableString?
         public var uAddress: UnifiedAddress?
 
         public var unifiedAddress: String {
@@ -43,14 +45,18 @@ public struct AddressDetailsReducer: Reducer {
         }
 
         public init(
+            addressToShare: RedactableString? = nil,
             uAddress: UnifiedAddress? = nil
         ) {
+            self.addressToShare = addressToShare
             self.uAddress = uAddress
         }
     }
 
     public enum Action: Equatable {
         case copyToPastboard(RedactableString)
+        case shareFinished
+        case shareQR(RedactableString)
     }
     
     @Dependency(\.pasteboard) var pasteboard
@@ -63,8 +69,16 @@ public struct AddressDetailsReducer: Reducer {
         switch action {
         case .copyToPastboard(let text):
             pasteboard.setString(text)
+            return .none
+        
+        case .shareFinished:
+            state.addressToShare = nil
+            return .none
+
+        case .shareQR(let text):
+            state.addressToShare = text
+            return .none
         }
-        return .none
     }
 }
 
