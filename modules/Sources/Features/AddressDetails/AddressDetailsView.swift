@@ -27,6 +27,8 @@ public struct AddressDetailsView: View {
             ScrollView {
                 addressBlock(L10n.AddressDetails.ua, viewStore.unifiedAddress) {
                     viewStore.send(.copyToPastboard(viewStore.unifiedAddress.redacted))
+                } shareAction: {
+                    viewStore.send(.shareQR(viewStore.unifiedAddress.redacted))
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.top, 20)
@@ -35,13 +37,19 @@ public struct AddressDetailsView: View {
                 if networkType == .testnet {
                     addressBlock(L10n.AddressDetails.sa, viewStore.saplingAddress) {
                         viewStore.send(.copyToPastboard(viewStore.saplingAddress.redacted))
+                    } shareAction: {
+                        viewStore.send(.shareQR(viewStore.saplingAddress.redacted))
                     }
                 }
 #endif
                 
                 addressBlock(L10n.AddressDetails.ta, viewStore.transparentAddress) {
                     viewStore.send(.copyToPastboard(viewStore.transparentAddress.redacted))
+                } shareAction: {
+                    viewStore.send(.shareQR(viewStore.transparentAddress.redacted))
                 }
+                
+                shareLogsView(viewStore)
             }
             .padding(.vertical, 1)
             .applyScreenBackground()
@@ -51,7 +59,8 @@ public struct AddressDetailsView: View {
     @ViewBuilder private func addressBlock(
         _ title: String,
         _ address: String,
-        _ tapToCopyAction: @escaping () -> Void
+        _ copyAction: @escaping () -> Void,
+        shareAction: @escaping () -> Void
     ) -> some View {
         VStack {
             Text(title)
@@ -68,13 +77,36 @@ public struct AddressDetailsView: View {
                 .frame(width: 270)
                 .padding(.bottom, 20)
             
-            Button {
-                tapToCopyAction()
-            } label: {
-                Text(L10n.AddressDetails.tapToCopy)
-                    .font(.custom(FontFamily.Inter.bold.name, size: 11))
-                    .underline()
-                    .foregroundColor(Asset.Colors.primary.color)
+            HStack(spacing: 25) {
+                Button {
+                    copyAction()
+                } label: {
+                    HStack(spacing: 5) {
+                        Asset.Assets.copy.image
+                            .resizable()
+                            .frame(width: 11, height: 11)
+                        
+                        Text(L10n.AddressDetails.copy)
+                            .font(.custom(FontFamily.Inter.bold.name, size: 12))
+                            .underline()
+                            .foregroundColor(Asset.Colors.primary.color)
+                    }
+                }
+                
+                Button {
+                    shareAction()
+                } label: {
+                    HStack(spacing: 5) {
+                        Asset.Assets.share.image
+                            .resizable()
+                            .frame(width: 11, height: 11)
+                        
+                        Text(L10n.AddressDetails.share)
+                            .font(.custom(FontFamily.Inter.bold.name, size: 12))
+                            .underline()
+                            .foregroundColor(Asset.Colors.primary.color)
+                    }
+                }
             }
         }
         .padding(.bottom, 40)
@@ -91,6 +123,20 @@ extension AddressDetailsView {
                 Image(systemName: "qrcode")
                     .resizable()
             }
+        }
+    }
+    
+    @ViewBuilder func shareLogsView(_ viewStore: AddressDetailsViewStore) -> some View {
+        if let addressToShare = viewStore.addressToShare,
+           let cgImg = QRCodeGenerator.generate(from: addressToShare.data) {
+            UIShareDialogView(activityItems: [UIImage(cgImage: cgImg)]) {
+                viewStore.send(.shareFinished)
+            }
+            // UIShareDialogView only wraps UIActivityViewController presentation
+            // so frame is set to 0 to not break SwiftUIs layout
+            .frame(width: 0, height: 0)
+        } else {
+            EmptyView()
         }
     }
 }

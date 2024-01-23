@@ -28,7 +28,7 @@ struct TapToCopyTransactionDataView: View {
                     .resizable()
                     .frame(width: 11, height: 11)
                 
-                Text(L10n.AddressDetails.tapToCopy)
+                Text(L10n.General.tapToCopy)
                     .font(.custom(FontFamily.Inter.regular.name, size: 13))
                     .foregroundColor(Asset.Colors.shade47.color)
             }

@@ -94,7 +94,7 @@ public struct RecoveryPhraseDisplayView: View {
                     Button {
                         viewStore.send(.copyToBufferPressed)
                     } label: {
-                        Text(L10n.AddressDetails.tapToCopy)
+                        Text(L10n.General.tapToCopy)
                             .font(.custom(FontFamily.Inter.bold.name, size: 11))
                             .underline()
                             .foregroundColor(Asset.Colors.primary.color)
