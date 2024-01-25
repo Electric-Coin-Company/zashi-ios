@@ -133,7 +133,21 @@ class RootTests: XCTestCase {
 
         await store.send(.initialization(.respondToWalletInitializationState(.keysMissing))) { state in
             state.appInitializationState = .keysMissing
-            state.alert = AlertState.walletStateFailed(.keysMissing)
+        }
+        
+        await store.receive(.initialization(.retryKeychainRead(.keysMissing))) { state in
+            state.keychainReadRetries = 1
+        }
+        
+        await store.receive(.initialization(.checkWalletInitialization))
+        
+        await store.receive(.initialization(.respondToWalletInitializationState(.uninitialized))) { state in
+            state.appInitializationState = .uninitialized
+        }
+        
+        await store.receive(.destination(.updateDestination(.onboarding))) { state in
+            state.destinationState.internalDestination = .onboarding
+            state.destinationState.previousDestination = .welcome
         }
         
         await store.finish()

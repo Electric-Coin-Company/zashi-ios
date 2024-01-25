@@ -25,6 +25,7 @@ extension RootReducer {
         case initialSetups
         case initializationFailed(ZcashError)
         case initializationSuccessfullyDone(UnifiedAddress?)
+        case retryKeychainRead(InitializationState)
         case nukeWallet
         case nukeWalletRequest
         case respondToWalletInitializationState(InitializationState)
@@ -183,12 +184,10 @@ extension RootReducer {
                 switch walletState {
                 case .failed:
                     state.appInitializationState = .failed
-                    state.alert = AlertState.walletStateFailed(walletState)
-                    return .none
+                    return .send(.initialization(.retryKeychainRead(walletState)))
                 case .keysMissing:
                     state.appInitializationState = .keysMissing
-                    state.alert = AlertState.walletStateFailed(walletState)
-                    return .none
+                    return .send(.initialization(.retryKeychainRead(walletState)))
                 case .initialized, .filesMissing:
                     if walletState == .filesMissing {
                         state.appInitializationState = .filesMissing
@@ -206,6 +205,18 @@ extension RootReducer {
                     .cancellable(id: CancelId.timer, cancelInFlight: true)
                 }
 
+            case .initialization(.retryKeychainRead(let walletState)):
+                if state.keychainReadRetries < state.maxKeychainReadRetries {
+                    state.keychainReadRetries += 1
+                    return .run { [retries = state.keychainReadRetries] send in
+                        try await mainQueue.sleep(for: .seconds(0.1 * Double(retries)))
+                        await send(.initialization(.checkWalletInitialization))
+                    }
+                } else {
+                    state.alert = AlertState.walletStateFailed(walletState)
+                    return .send(.destination(.updateDestination(RootReducer.DestinationState.Destination.tabs)))
+                }
+                
                 /// Stored wallet is present, database files may or may not be present, trying to initialize app state variables and environments.
                 /// When initialization succeeds user is taken to the home screen.
             case .initialization(.initializeSDK(let walletMode)):
