@@ -14,6 +14,7 @@ import WalletStorage
 import RecoveryPhraseDisplay
 import Settings
 import ExportLogs
+import SupportDataGenerator
 @testable import secant_testnet
 
 @MainActor
@@ -111,5 +112,17 @@ class SettingsTests: XCTestCase {
         }
         
         await store.finish()
+    }
+    
+    func testSupportDataGeneratorSubject() async throws {
+        let generator = SupportDataGenerator.generate()
+        
+        XCTAssertEqual(generator.subject, "Zashi")
+    }
+
+    func testSupportDataGeneratorEmail() async throws {
+        let generator = SupportDataGenerator.generate()
+        
+        XCTAssertEqual(generator.toAddress, "support@electriccoin.co")
     }
 }

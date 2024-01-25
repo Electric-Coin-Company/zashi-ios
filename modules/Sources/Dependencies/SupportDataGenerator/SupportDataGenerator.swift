@@ -36,7 +36,7 @@ public enum SupportDataGenerator {
             .map { "\($0.0): \($0.1)" }
             .joined(separator: "\n")
 
-        return SupportData(toAddress: "support@electriccoin.co", subject: "sECCant", message: message)
+        return SupportData(toAddress: "support@electriccoin.co", subject: "Zashi", message: message)
     }
 }
 
