@@ -9,6 +9,9 @@ directly impact users rather than highlighting other crucial architectural updat
 ### Added
 - Share QR code of addresses via system share dialog.
 
+### Fixed
+- `Keys Missing` error dialog was sometimes triggered as a false positive due to system overload and keychain API unresponsivity in expected time. Retry logic was implemented to pass this state. Also the app always lands users to the Account tab instead of lock them on a splash screen with no options to solve this state.
+
 ## 0.2.0 build 12 (2024-01-20)
 
 ### Added

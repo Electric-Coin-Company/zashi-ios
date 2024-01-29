@@ -82,6 +82,8 @@ public struct RecoveryPhraseDisplayView: View {
                         .padding(.bottom, 50)
                     } else {
                         Text(L10n.RecoveryPhraseDisplay.noWords)
+                            .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                            .multilineTextAlignment(.center)
                     }
                 }
                 .padding(.horizontal, 60)

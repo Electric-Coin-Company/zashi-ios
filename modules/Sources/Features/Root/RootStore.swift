@@ -40,6 +40,8 @@ public struct RootReducer: Reducer {
         public var destinationState: DestinationState
         public var exportLogsState: ExportLogsReducer.State
         public var isRestoringWallet = false
+        public var keychainReadRetries = 0
+        public var maxKeychainReadRetries = 3
         public var onboardingState: OnboardingFlowReducer.State
         public var phraseDisplayState: RecoveryPhraseDisplayReducer.State
         public var sandboxState: SandboxReducer.State
@@ -55,6 +57,8 @@ public struct RootReducer: Reducer {
             destinationState: DestinationState,
             exportLogsState: ExportLogsReducer.State,
             isRestoringWallet: Bool = false,
+            keychainReadRetries: Int = 0,
+            maxKeychainReadRetries: Int = 3,
             onboardingState: OnboardingFlowReducer.State,
             phraseDisplayState: RecoveryPhraseDisplayReducer.State,
             sandboxState: SandboxReducer.State,
@@ -68,6 +72,8 @@ public struct RootReducer: Reducer {
             self.destinationState = destinationState
             self.exportLogsState = exportLogsState
             self.isRestoringWallet = isRestoringWallet
+            self.keychainReadRetries = keychainReadRetries
+            self.maxKeychainReadRetries = maxKeychainReadRetries
             self.onboardingState = onboardingState
             self.phraseDisplayState = phraseDisplayState
             self.sandboxState = sandboxState

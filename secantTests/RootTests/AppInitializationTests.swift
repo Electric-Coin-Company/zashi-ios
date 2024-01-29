@@ -174,8 +174,11 @@ class AppInitializationTests: XCTestCase {
     
     /// Integration test validating the side effects work together properly when no wallet is stored but database files are present.
     @MainActor func testDidFinishLaunching_to_KeysMissing() async throws {
+        var initialState = RootReducer.State.initial
+        initialState.keychainReadRetries = 3
+        
         let store = TestStore(
-            initialState: .initial
+            initialState: initialState
         ) {
             RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
         }
@@ -199,9 +202,79 @@ class AppInitializationTests: XCTestCase {
 
         await store.receive(.initialization(.respondToWalletInitializationState(.keysMissing))) { state in
             state.appInitializationState = .keysMissing
+        }
+        
+        await store.receive(.initialization(.retryKeychainRead(.keysMissing))) { state in
             state.alert = AlertState.walletStateFailed(.keysMissing)
         }
         
+        await store.receive(.destination(.updateDestination(.tabs))) { state in
+            state.destinationState.internalDestination = .tabs
+            state.destinationState.previousDestination = .welcome
+        }
+        
+        await store.finish()
+    }
+    
+    @MainActor func testDidFinishLaunching_to_KeysMissing_3attempts() async throws {
+        let store = TestStore(
+            initialState: .initial
+        ) {
+            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        }
+
+        store.dependencies.databaseFiles = .noOp
+        store.dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
+        store.dependencies.walletStorage = .noOp
+        store.dependencies.mainQueue = .immediate
+        store.dependencies.walletConfigProvider = .noOp
+        store.dependencies.crashReporter = .noOp
+        store.dependencies.restoreWalletStorage = .noOp
+
+        // Root of the test, the app finished the launch process and triggers the checks and initializations.
+        await store.send(.initialization(.appDelegate(.didFinishLaunching)))
+
+        await store.receive(.initialization(.initialSetups))
+
+        await store.receive(.initialization(.configureCrashReporter))
+
+        // initial attempt
+        await store.receive(.initialization(.checkWalletInitialization))
+
+        await store.receive(.initialization(.respondToWalletInitializationState(.keysMissing))) { state in
+            state.appInitializationState = .keysMissing
+        }
+        
+        await store.receive(.initialization(.retryKeychainRead(.keysMissing))) { state in
+            state.keychainReadRetries = 1
+        }
+
+        // 1st attempt
+        await store.receive(.initialization(.checkWalletInitialization))
+        await store.receive(.initialization(.respondToWalletInitializationState(.keysMissing)))
+        await store.receive(.initialization(.retryKeychainRead(.keysMissing))) { state in
+            state.keychainReadRetries = 2
+        }
+
+        // 2nd attempt
+        await store.receive(.initialization(.checkWalletInitialization))
+        await store.receive(.initialization(.respondToWalletInitializationState(.keysMissing)))
+        await store.receive(.initialization(.retryKeychainRead(.keysMissing))) { state in
+            state.keychainReadRetries = 3
+        }
+
+        // 3rd attempt
+        await store.receive(.initialization(.checkWalletInitialization))
+        await store.receive(.initialization(.respondToWalletInitializationState(.keysMissing)))
+        await store.receive(.initialization(.retryKeychainRead(.keysMissing))) { state in
+            state.alert = AlertState.walletStateFailed(.keysMissing)
+        }
+        
+        await store.receive(.destination(.updateDestination(.tabs))) { state in
+            state.destinationState.internalDestination = .tabs
+            state.destinationState.previousDestination = .welcome
+        }
+
         await store.finish()
     }
     
