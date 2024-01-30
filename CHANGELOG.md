@@ -4,7 +4,12 @@ All notable changes to this application will be documented in this file.
 Please be aware that this changelog primarily focuses on user-related modifications, emphasizing changes that can 
 directly impact users rather than highlighting other crucial architectural updates. 
 
-## [Unreleased]
+## 0.2.0 build 14 (2024-01-30)
+
+### Updated
+- SDK 2.0.7 adopted with the performance optimizations on the rust side.
+
+## 0.2.0 build 13 (2024-01-28)
 
 ### Added
 - Share QR code of addresses via system share dialog.
