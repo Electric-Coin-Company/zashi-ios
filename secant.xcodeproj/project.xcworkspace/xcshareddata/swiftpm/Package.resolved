@@ -158,8 +158,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-case-paths",
       "state" : {
-        "revision" : "76d7791b5bda47df7e3d4690c4c3aaf089730707",
-        "version" : "1.2.1"
+        "revision" : "8cc3bc05d0cc956f7374c6c208a11f66a7cac3db",
+        "version" : "1.2.2"
       }
     },
     {
@@ -185,8 +185,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-composable-architecture",
       "state" : {
-        "revision" : "30ab89daa4e392ecd2150f737c42dbb2336bbc04",
-        "version" : "1.7.0"
+        "revision" : "776bc5c28f3beb0ab9897678b5ec63596360f786",
+        "version" : "1.7.1"
       }
     },
     {
@@ -356,8 +356,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swiftui-navigation",
       "state" : {
-        "revision" : "78f9d72cf667adb47e2040aa373185c88c63f0dc",
-        "version" : "1.2.0"
+        "revision" : "d9e72f3083c08375794afa216fb2f89c0114f303",
+        "version" : "1.2.1"
       }
     },
     {
