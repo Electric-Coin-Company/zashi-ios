@@ -4,6 +4,11 @@ All notable changes to this application will be documented in this file.
 Please be aware that this changelog primarily focuses on user-related modifications, emphasizing changes that can 
 directly impact users rather than highlighting other crucial architectural updates. 
 
+## 0.2.0 build 15 (2024-01-31)
+
+### Fixed
+- Shileding of transparent funds.
+
 ## 0.2.0 build 14 (2024-01-30)
 
 ### Updated
