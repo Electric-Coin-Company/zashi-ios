@@ -24,7 +24,7 @@ class HomeTests: XCTestCase {
         let store = TestStore(
             initialState: .init(
                 scanState: .initial,
-                shieldedBalance: Balance.zero,
+                shieldedBalance: .zero,
                 synchronizerStatusSnapshot: mockSnapshot,
                 syncProgressState: .initial,
                 transactionListState: .initial,
@@ -55,9 +55,15 @@ class HomeTests: XCTestCase {
             state.requiredTransactionConfirmations = 10
         }
 
+        var syncState: SynchronizerState = .zero
+        syncState.syncStatus = .unprepared
+        let snapshot = SyncStatusSnapshot.snapshotFor(state: syncState.syncStatus)
+
         // expected side effects as a result of .onAppear registration
         await store.receive(.updateDestination(nil))
-        await store.receive(.synchronizerStateChanged(.zero))
+        await store.receive(.synchronizerStateChanged(.zero)) { state in
+            state.synchronizerStatusSnapshot = snapshot
+        }
 
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancels the observer of the synchronizer status change.

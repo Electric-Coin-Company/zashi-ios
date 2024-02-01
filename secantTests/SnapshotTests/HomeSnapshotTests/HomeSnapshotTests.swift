@@ -35,12 +35,10 @@ class HomeSnapshotTests: XCTestCase {
             return transaction
         }
         
-        let balance = WalletBalance(verified: 12_345_000, total: 12_345_000)
-
         let store = HomeStore(
             initialState: .init(
                 scanState: .initial,
-                shieldedBalance: balance.redacted,
+                shieldedBalance: Zatoshi(12_345_000),
                 synchronizerStatusSnapshot: .initial,
                 syncProgressState: .initial,
                 transactionListState: .init(transactionList: IdentifiedArrayOf(uniqueElements: transactionList)),

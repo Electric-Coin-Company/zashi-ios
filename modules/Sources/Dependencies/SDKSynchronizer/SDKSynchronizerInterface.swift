@@ -31,8 +31,6 @@ public struct SDKSynchronizerClient {
 
     public let rewind: (RewindPolicy) -> AnyPublisher<Void, Error>
 
-    public let getShieldedBalance: () -> WalletBalance?
-    public let getTransparentBalance: () -> WalletBalance?
     public var getAllTransactions: () async throws -> [TransactionState]
 
     public let getUnifiedAddress: (_ account: Int) async throws -> UnifiedAddress?

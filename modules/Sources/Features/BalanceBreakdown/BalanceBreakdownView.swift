@@ -27,14 +27,14 @@ public struct BalanceBreakdownView: View {
     public var body: some View {
         ScrollView {
             WithViewStore(store, observe: { $0 }) { viewStore in
-                BalanceWithIconView(balance: viewStore.shieldedBalance.data.total)
+                BalanceWithIconView(balance: viewStore.shieldedBalance)
                     .padding(.top, 40)
                     .padding(.bottom, 5)
                     .onAppear { viewStore.send(.onAppear) }
                     .onDisappear { viewStore.send(.onDisappear) }
 
                 AvailableBalanceView(
-                    balance: viewStore.shieldedBalance.data.verified,
+                    balance: viewStore.shieldedBalance,
                     tokenName: tokenName
                 )
                 
@@ -90,7 +90,7 @@ extension BalanceBreakdownView {
                 Spacer()
                 
                 ZatoshiRepresentationView(
-                    balance: viewStore.shieldedBalance.data.verified,
+                    balance: viewStore.shieldedBalance,
                     fontName: FontFamily.Archivo.semiBold.name,
                     mostSignificantFontSize: 16,
                     leastSignificantFontSize: 8,
@@ -266,12 +266,13 @@ extension BalanceBreakdownView {
                     isShieldingFunds: true,
                     isHintBoxVisible: true,
                     pendingTransactions: .zero,
-                    shieldedBalance: Balance(WalletBalance(verified: Zatoshi(25_234_778), total: Zatoshi(35_814_169))),
+                    shieldedBalance: Zatoshi(25_234_778),
                     syncProgressState: .init(
                         lastKnownSyncPercentage: 0.43,
                         synchronizerStatusSnapshot: SyncStatusSnapshot(.syncing(0.41)),
                         syncStatusMessage: "Syncing"
                     ),
+                    totalBalance: Zatoshi(25_234_778),
                     transparentBalance: Balance(WalletBalance(verified: Zatoshi(25_234_778), total: Zatoshi(35_814_169)))
                 )
             ) {

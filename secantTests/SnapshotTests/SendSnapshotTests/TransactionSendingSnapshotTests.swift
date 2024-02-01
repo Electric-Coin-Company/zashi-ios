@@ -56,12 +56,7 @@ class SendSnapshotTests: XCTestCase {
                     text: "This is some message I want to see in the preview and long enough to have at least two lines".redacted
                 ),
                 scanState: .initial,
-                shieldedBalance: Balance(
-                    WalletBalance(
-                        verified: Zatoshi(4412323012_345),
-                        total: Zatoshi(4412323012_345)
-                    )
-                ),
+                shieldedBalance: Zatoshi(4412323012_345),
                 transactionAddressInputState:
                     TransactionAddressTextFieldReducer.State(
                         textFieldState:
@@ -100,12 +95,7 @@ class SendSnapshotTests: XCTestCase {
                 destination: nil,
                 memoState: MessageEditorReducer.State(),
                 scanState: .initial,
-                shieldedBalance: Balance(
-                    WalletBalance(
-                        verified: Zatoshi(4412323012_345),
-                        total: Zatoshi(4412323012_345)
-                    )
-                ),
+                shieldedBalance: Zatoshi(4412323012_345),
                 transactionAddressInputState:
                     TransactionAddressTextFieldReducer.State(
                         textFieldState:

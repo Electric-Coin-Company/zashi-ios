@@ -71,7 +71,7 @@ extension HomeView {
             Button {
                 viewStore.send(.balanceBreakdown)
             } label: {
-                BalanceWithIconView(balance: viewStore.shieldedBalance.data.total)
+                BalanceWithIconView(balance: viewStore.totalBalance)
             }
             .padding(.top, 40)
 
@@ -82,7 +82,7 @@ extension HomeView {
                     .padding(.bottom, 30)
             } else {
                 AvailableBalanceView(
-                    balance: viewStore.shieldedBalance.data.verified,
+                    balance: viewStore.shieldedBalance,
                     tokenName: tokenName
                 )
                 .accessDebugMenuWithHiddenGesture {
@@ -107,13 +107,14 @@ struct HomeView_Previews: PreviewProvider {
                         initialState:
                                 .init(
                                     scanState: .initial,
-                                    shieldedBalance: Balance.zero,
+                                    shieldedBalance: .zero,
                                     synchronizerStatusSnapshot: .initial,
                                     syncProgressState: .init(
                                         lastKnownSyncPercentage: Float(0.43),
                                         synchronizerStatusSnapshot: SyncStatusSnapshot(.syncing(0.41)),
                                         syncStatusMessage: "Syncing"
                                     ),
+                                    totalBalance: .zero,
                                     transactionListState: .initial,
                                     walletConfig: .initial
                                 )

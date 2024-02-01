@@ -33,21 +33,22 @@ public struct HomeReducer: Reducer {
         public var isRestoringWallet = false
         public var requiredTransactionConfirmations = 0
         public var scanState: ScanReducer.State
-        public var shieldedBalance: Balance
+        public var shieldedBalance: Zatoshi
         public var synchronizerStatusSnapshot: SyncStatusSnapshot
         public var syncProgressState: SyncProgressReducer.State
         public var walletConfig: WalletConfig
+        public var totalBalance: Zatoshi
         public var transactionListState: TransactionListReducer.State
         public var migratingDatabase = true
         // TODO: [#311] - Get the ZEC price from the SDK, https://github.com/Electric-Coin-Company/zashi-ios/issues/311
         public var zecPrice = Decimal(140.0)
 
         public var totalCurrencyBalance: Zatoshi {
-            Zatoshi.from(decimal: shieldedBalance.data.verified.decimalValue.decimalValue * zecPrice)
+            Zatoshi.from(decimal: shieldedBalance.decimalValue.decimalValue * zecPrice)
         }
 
         public var isSendButtonDisabled: Bool {
-            shieldedBalance.data.verified.amount == 0
+            shieldedBalance.amount == 0
         }
         
         public init(
@@ -56,9 +57,10 @@ public struct HomeReducer: Reducer {
             isRestoringWallet: Bool = false,
             requiredTransactionConfirmations: Int = 0,
             scanState: ScanReducer.State,
-            shieldedBalance: Balance,
+            shieldedBalance: Zatoshi,
             synchronizerStatusSnapshot: SyncStatusSnapshot,
             syncProgressState: SyncProgressReducer.State,
+            totalBalance: Zatoshi = .zero,
             transactionListState: TransactionListReducer.State,
             walletConfig: WalletConfig,
             zecPrice: Decimal = Decimal(140.0)
@@ -71,6 +73,7 @@ public struct HomeReducer: Reducer {
             self.shieldedBalance = shieldedBalance
             self.synchronizerStatusSnapshot = synchronizerStatusSnapshot
             self.syncProgressState = syncProgressState
+            self.totalBalance = totalBalance
             self.transactionListState = transactionListState
             self.walletConfig = walletConfig
             self.zecPrice = zecPrice
@@ -185,16 +188,13 @@ public struct HomeReducer: Reducer {
             case .synchronizerStateChanged(let latestState):
                 let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.syncStatus)
 
-                guard snapshot.syncStatus != state.synchronizerStatusSnapshot.syncStatus else {
-                    return .none
-                }
-
                 if snapshot.syncStatus != .unprepared {
                     state.migratingDatabase = false
                 }
 
                 state.synchronizerStatusSnapshot = snapshot
-                state.shieldedBalance = latestState.shieldedBalance.redacted
+                state.shieldedBalance = latestState.accountBalances.saplingBalance.spendableValue
+                state.totalBalance = latestState.accountBalances.saplingBalance.total()
 
                 switch snapshot.syncStatus {
                 case .error(let error):
@@ -289,7 +289,7 @@ extension HomeReducer.State {
     public static var initial: Self {
         .init(
             scanState: .initial,
-            shieldedBalance: Balance.zero,
+            shieldedBalance: .zero,
             synchronizerStatusSnapshot: .initial,
             syncProgressState: .initial,
             transactionListState: .initial,
@@ -311,7 +311,7 @@ extension HomeStore {
         HomeStore(
             initialState: .init(
                 scanState: .initial,
-                shieldedBalance: Balance.zero,
+                shieldedBalance: .zero,
                 synchronizerStatusSnapshot: .snapshotFor(
                     state: .error(ZcashError.synchronizerNotPrepared)
                 ),

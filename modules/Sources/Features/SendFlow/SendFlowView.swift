@@ -35,12 +35,12 @@ public struct SendFlowView: View {
                 ScrollView {
                     ScrollViewReader { value in
                         VStack(alignment: .center) {
-                            BalanceWithIconView(balance: viewStore.shieldedBalance.data.total)
+                            BalanceWithIconView(balance: viewStore.totalBalance)
                                 .padding(.top, 40)
                                 .padding(.bottom, 5)
                             
                             AvailableBalanceView(
-                                balance: viewStore.shieldedBalance.data.verified,
+                                balance: viewStore.shieldedBalance,
                                 tokenName: tokenName
                             )
                             

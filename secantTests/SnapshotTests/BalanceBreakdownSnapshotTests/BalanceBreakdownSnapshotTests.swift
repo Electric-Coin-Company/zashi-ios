@@ -20,8 +20,9 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
                 changePending: .zero,
                 isShieldingFunds: false,
                 pendingTransactions: .zero,
-                shieldedBalance: WalletBalance(verified: Zatoshi(123_000_000_000), total: Zatoshi(123_000_000_000)).redacted,
+                shieldedBalance: Zatoshi(123_000_000_000),
                 syncProgressState: .initial,
+                totalBalance: Zatoshi(123_000_000_000),
                 transparentBalance: WalletBalance(verified: Zatoshi(850_000_000), total: Zatoshi(850_000_000)).redacted
             )
         ) {
@@ -41,8 +42,9 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
                 isShieldingFunds: false,
                 isHintBoxVisible: true,
                 pendingTransactions: .zero,
-                shieldedBalance: WalletBalance(verified: Zatoshi(123_000_000_000), total: Zatoshi(123_000_000_000)).redacted,
+                shieldedBalance: Zatoshi(123_000_000_000),
                 syncProgressState: .initial,
+                totalBalance: Zatoshi(123_000_000_000),
                 transparentBalance: WalletBalance(verified: Zatoshi(850_000_000), total: Zatoshi(850_000_000)).redacted
             )
         ) {
