@@ -47,8 +47,6 @@ extension SDKSynchronizerClient {
             isSyncing: { synchronizer.latestState.syncStatus.isSyncing },
             isInitialized: { synchronizer.latestState.syncStatus != SyncStatus.unprepared },
             rewind: { synchronizer.rewind($0) },
-            getShieldedBalance: { synchronizer.latestState.shieldedBalance },
-            getTransparentBalance: { synchronizer.latestState.transparentBalance },
             getAllTransactions: {
                 let clearedTransactions = try await synchronizer.allTransactions()
 

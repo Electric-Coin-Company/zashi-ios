@@ -87,8 +87,9 @@ class BalanceBreakdownTests: XCTestCase {
                 changePending: .zero,
                 isShieldingFunds: false,
                 pendingTransactions: .zero,
-                shieldedBalance: Balance.zero,
+                shieldedBalance: .zero,
                 syncProgressState: .initial,
+                totalBalance: .zero,
                 transparentBalance: Balance(
                     WalletBalance(
                         verified: Zatoshi(1_000_000),
@@ -112,8 +113,9 @@ class BalanceBreakdownTests: XCTestCase {
                 changePending: .zero,
                 isShieldingFunds: true,
                 pendingTransactions: .zero,
-                shieldedBalance: Balance.zero,
+                shieldedBalance: .zero,
                 syncProgressState: .initial,
+                totalBalance: .zero,
                 transparentBalance: Balance(
                     WalletBalance(
                         verified: Zatoshi(1_000_000),

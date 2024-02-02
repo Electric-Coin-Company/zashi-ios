@@ -39,7 +39,8 @@ public struct SendFlowReducer: Reducer {
         public var isSending = false
         public var memoState: MessageEditorReducer.State
         public var scanState: ScanReducer.State
-        public var shieldedBalance = Balance.zero
+        public var shieldedBalance = Zatoshi.zero
+        public var totalBalance = Zatoshi.zero
         public var transactionAddressInputState: TransactionAddressTextFieldReducer.State
         public var transactionAmountInputState: TransactionAmountTextFieldReducer.State
 
@@ -93,11 +94,11 @@ public struct SendFlowReducer: Reducer {
         }
         
         public var totalCurrencyBalance: Zatoshi {
-            Zatoshi.from(decimal: shieldedBalance.data.verified.decimalValue.decimalValue * transactionAmountInputState.zecPrice)
+            Zatoshi.from(decimal: shieldedBalance.decimalValue.decimalValue * transactionAmountInputState.zecPrice)
         }
         
         public var spendableBalanceString: String {
-            shieldedBalance.data.verified.decimalString(formatter: NumberFormatter.zashiBalanceFormatter)
+            shieldedBalance.decimalString(formatter: NumberFormatter.zashiBalanceFormatter)
         }
         
         public init(
@@ -105,7 +106,8 @@ public struct SendFlowReducer: Reducer {
             destination: Destination? = nil,
             memoState: MessageEditorReducer.State,
             scanState: ScanReducer.State,
-            shieldedBalance: Balance = Balance.zero,
+            shieldedBalance: Zatoshi = .zero,
+            totalBalance: Zatoshi = .zero,
             transactionAddressInputState: TransactionAddressTextFieldReducer.State,
             transactionAmountInputState: TransactionAmountTextFieldReducer.State
         ) {
@@ -114,6 +116,7 @@ public struct SendFlowReducer: Reducer {
             self.memoState = memoState
             self.scanState = scanState
             self.shieldedBalance = shieldedBalance
+            self.totalBalance = totalBalance
             self.transactionAddressInputState = transactionAddressInputState
             self.transactionAmountInputState = transactionAmountInputState
         }
@@ -259,9 +262,9 @@ public struct SendFlowReducer: Reducer {
                 return .none
                 
             case .synchronizerStateChanged(let latestState):
-                let shieldedBalance = latestState.shieldedBalance
-                state.shieldedBalance = shieldedBalance.redacted
-                state.transactionAmountInputState.maxValue = shieldedBalance.verified.amount.redacted
+                state.shieldedBalance = latestState.accountBalances.saplingBalance.spendableValue
+                state.totalBalance = latestState.accountBalances.saplingBalance.total()
+                state.transactionAmountInputState.maxValue = state.shieldedBalance.amount.redacted
                 return .none
 
             case .memo:

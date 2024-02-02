@@ -4,6 +4,15 @@ All notable changes to this application will be documented in this file.
 Please be aware that this changelog primarily focuses on user-related modifications, emphasizing changes that can 
 directly impact users rather than highlighting other crucial architectural updates. 
 
+## [Unreleased]
+
+### Added
+- Pending values (changes) at the Balances tab.
+
+### Fixed
+- Failed transactions are no longer at the top of the transaction history but mixed with the transactions around the time it failed.
+- Synchronization progress bar starts at the expected percentage as oposed to previous behaviour when it started with 0% and jumped to the expected one in a few seconds. 
+
 ## 0.2.0 build 15 (2024-01-31)
 
 ### Fixed
