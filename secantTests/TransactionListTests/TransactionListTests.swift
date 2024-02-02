@@ -91,30 +91,14 @@ class TransactionListTests: XCTestCase {
             state.latestMinedHeight = 0
         }
 
-        let chainTip = store.dependencies.sdkSynchronizer.latestState().latestBlockHeight + 1
+        let mempoolHeight = store.dependencies.sdkSynchronizer.latestState().latestBlockHeight + 1
         
         await store.receive(.updateTransactionList(transactionList)) { state in
             let receivedTransactionList = IdentifiedArrayOf(
                 uniqueElements:
                     transactionList
                     .sorted(by: { lhs, rhs in
-                        var lhsHeight = chainTip
-                        
-                        if let lhsMinedHeight = lhs.minedHeight {
-                            lhsHeight = lhsMinedHeight
-                        } else if let lhsExpiredHeight = lhs.expiryHeight, lhsExpiredHeight > 0 {
-                            lhsHeight = lhsExpiredHeight
-                        }
-                        
-                        var rhsHeight = chainTip
-                        
-                        if let rhsMinedHeight = rhs.minedHeight {
-                            rhsHeight = rhsMinedHeight
-                        } else if let rhsExpiredHeight = rhs.expiryHeight, rhsExpiredHeight > 0 {
-                            rhsHeight = rhsExpiredHeight
-                        }
-
-                        return lhsHeight > rhsHeight
+                        lhs.transactionListHeight(mempoolHeight) > rhs.transactionListHeight(mempoolHeight)
                     })
             )
 
