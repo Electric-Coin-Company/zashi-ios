@@ -201,6 +201,18 @@ public struct TransactionState: Equatable, Identifiable {
         
         return latestMinedHeight - minedHeight
     }
+    
+    public func transactionListHeight(_ mempoolHeight: BlockHeight) -> BlockHeight {
+        var tlHeight = mempoolHeight
+        
+        if let minedHeight = minedHeight {
+            tlHeight = minedHeight
+        } else if let expiredHeight = expiryHeight, expiredHeight > 0 {
+            tlHeight = expiredHeight
+        }
+        
+        return tlHeight
+    }
 }
 
 extension TransactionState {

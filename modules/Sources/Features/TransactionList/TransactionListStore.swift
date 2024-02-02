@@ -120,27 +120,11 @@ public struct TransactionListReducer: Reducer {
             
             let timestamp: TimeInterval = (try? readTransactionsStorage.availabilityTimestamp()) ?? 0
             
-            let chainTip = sdkSynchronizer.latestState().latestBlockHeight + 1
+            let mempoolHeight = sdkSynchronizer.latestState().latestBlockHeight + 1
             
             let sortedTransactionList = transactionList
                 .sorted(by: { lhs, rhs in
-                    var lhsHeight = chainTip
-                    
-                    if let lhsMinedHeight = lhs.minedHeight {
-                        lhsHeight = lhsMinedHeight
-                    } else if let lhsExpiredHeight = lhs.expiryHeight, lhsExpiredHeight > 0 {
-                        lhsHeight = lhsExpiredHeight
-                    }
-                    
-                    var rhsHeight = chainTip
-                    
-                    if let rhsMinedHeight = rhs.minedHeight {
-                        rhsHeight = rhsMinedHeight
-                    } else if let rhsExpiredHeight = rhs.expiryHeight, rhsExpiredHeight > 0 {
-                        rhsHeight = rhsExpiredHeight
-                    }
-
-                    return lhsHeight > rhsHeight
+                    lhs.transactionListHeight(mempoolHeight) > rhs.transactionListHeight(mempoolHeight)
                 }).map { transaction in
                     var copiedTransaction = transaction
                     
