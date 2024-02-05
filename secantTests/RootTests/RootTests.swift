@@ -164,22 +164,25 @@ class RootTests: XCTestCase {
         }
         
         store.dependencies.walletStorage = .noOp
-        store.dependencies.walletStorage.exportWallet = { throw walletStorageError }
+        store.dependencies.walletStorage.exportWallet = { throw zcashError }
+        store.dependencies.restoreWalletStorage = .noOp
 
         await store.send(.initialization(.respondToWalletInitializationState(.filesMissing))) { state in
             state.appInitializationState = .filesMissing
+            state.isRestoringWallet = true
         }
         
-        await store.receive(.initialization(.initializeSDK(.existingWallet)))
+        await store.receive(.initialization(.initializeSDK(.restoreWallet)))
+
+        await store.receive(.initialization(.initializationFailed(zcashError))) { state in
+            state.appInitializationState = .failed
+            state.alert = AlertState.initializationFailed(zcashError)
+        }
 
         await store.receive(.initialization(.checkBackupPhraseValidation)) { state in
             // failed is expected because environment is throwing errors
             state.appInitializationState = .failed
             state.alert = AlertState.cantLoadSeedPhrase()
-        }
-
-        await store.receive(.initialization(.initializationFailed(zcashError))) { state in
-            state.alert = AlertState.initializationFailed(zcashError)
         }
         
         await store.finish()
