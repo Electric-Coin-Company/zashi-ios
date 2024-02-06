@@ -20,7 +20,7 @@ public struct HomeView: View {
     
     public var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
-            VStack {
+            VStack(spacing: 0) {
                 balance(viewStore)
 
                 if viewStore.isRestoringWallet {
@@ -33,6 +33,7 @@ public struct HomeView: View {
                     .frame(height: 94)
                     .frame(maxWidth: .infinity)
                     .background(Asset.Colors.shade92.color)
+                    .padding(.top, 7)
                 }
                 
                 TransactionListView(store: store.historyStore(), tokenName: tokenName)
@@ -106,6 +107,7 @@ struct HomeView_Previews: PreviewProvider {
                     HomeStore(
                         initialState:
                                 .init(
+                                    isRestoringWallet: true,
                                     scanState: .initial,
                                     shieldedBalance: .zero,
                                     synchronizerStatusSnapshot: .initial,
@@ -115,7 +117,7 @@ struct HomeView_Previews: PreviewProvider {
                                         syncStatusMessage: "Syncing"
                                     ),
                                     totalBalance: .zero,
-                                    transactionListState: .initial,
+                                    transactionListState: .placeholder,
                                     walletConfig: .initial
                                 )
                     ) {

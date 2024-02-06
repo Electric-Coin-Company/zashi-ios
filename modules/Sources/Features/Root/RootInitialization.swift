@@ -191,11 +191,22 @@ extension RootReducer {
                 case .initialized, .filesMissing:
                     if walletState == .filesMissing {
                         state.appInitializationState = .filesMissing
+                        state.isRestoringWallet = true
+                        return .concatenate(
+                            .merge(
+                                Effect.send(.initialization(.initializeSDK(.restoreWallet))),
+                                .run { _ in
+                                    await restoreWalletStorage.updateValue(true)
+                                }
+                            ),
+                            Effect.send(.initialization(.checkBackupPhraseValidation))
+                        )
+                    } else {
+                        return .concatenate(
+                            Effect.send(.initialization(.initializeSDK(.existingWallet))),
+                            Effect.send(.initialization(.checkBackupPhraseValidation))
+                        )
                     }
-                    return .concatenate(
-                        Effect.send(.initialization(.initializeSDK(.existingWallet))),
-                        Effect.send(.initialization(.checkBackupPhraseValidation))
-                    )
                 case .uninitialized:
                     state.appInitializationState = .uninitialized
                     return .run { send in
