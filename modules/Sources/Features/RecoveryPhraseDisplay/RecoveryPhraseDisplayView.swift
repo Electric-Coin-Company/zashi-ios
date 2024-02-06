@@ -74,17 +74,18 @@ public struct RecoveryPhraseDisplayView: View {
                                 .font(.custom(FontFamily.Inter.regular.name, size: 14))
                                 .padding(.bottom, 15)
                         }
-                        
-                        Button(L10n.RecoveryPhraseDisplay.Button.wroteItDown.uppercased()) {
-                            viewStore.send(.finishedPressed)
-                        }
-                        .zcashStyle()
-                        .padding(.bottom, 50)
                     } else {
                         Text(L10n.RecoveryPhraseDisplay.noWords)
                             .font(.custom(FontFamily.Inter.regular.name, size: 14))
                             .multilineTextAlignment(.center)
+                            .padding(.bottom, 35)
                     }
+
+                    Button(L10n.RecoveryPhraseDisplay.Button.wroteItDown.uppercased()) {
+                        viewStore.send(.finishedPressed)
+                    }
+                    .zcashStyle()
+                    .padding(.bottom, 50)
                 }
                 .padding(.horizontal, 60)
                 .onAppear { viewStore.send(.onAppear) }
