@@ -120,7 +120,8 @@ extension BalanceBreakdownView {
                     format: .expanded
                 )
                 .foregroundColor(Asset.Colors.shade47.color)
-                
+                .padding(.trailing, viewStore.changePending.amount > 0 ? 0 : 21)
+
                 if viewStore.changePending.amount > 0 {
                     progressViewLooping()
                         .padding(.leading, 10)
@@ -144,6 +145,7 @@ extension BalanceBreakdownView {
                     format: .expanded
                 )
                 .foregroundColor(Asset.Colors.shade47.color)
+                .padding(.trailing, viewStore.pendingTransactions.amount > 0 ? 0 : 21)
 
                 if viewStore.pendingTransactions.amount > 0 {
                     progressViewLooping()
@@ -262,10 +264,10 @@ extension BalanceBreakdownView {
             store: BalanceBreakdownStore(
                 initialState: BalanceBreakdownReducer.State(
                     autoShieldingThreshold: Zatoshi(1_000_000),
-                    changePending: .zero,
+                    changePending: Zatoshi(25_234_000),
                     isShieldingFunds: true,
                     isHintBoxVisible: true,
-                    pendingTransactions: .zero,
+                    pendingTransactions: Zatoshi(25_234_000),
                     shieldedBalance: Zatoshi(25_234_778),
                     syncProgressState: .init(
                         lastKnownSyncPercentage: 0.43,
