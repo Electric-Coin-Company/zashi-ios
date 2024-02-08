@@ -44,6 +44,7 @@ let package = Package(
         .library(name: "SecItem", targets: ["SecItem"]),
         .library(name: "SecurityWarning", targets: ["SecurityWarning"]),
         .library(name: "SendFlow", targets: ["SendFlow"]),
+        .library(name: "ServerSetup", targets: ["ServerSetup"]),
         .library(name: "Settings", targets: ["Settings"]),
         .library(name: "SupportDataGenerator", targets: ["SupportDataGenerator"]),
         .library(name: "SyncProgress", targets: ["SyncProgress"]),
@@ -62,11 +63,11 @@ let package = Package(
         .library(name: "ZcashSDKEnvironment", targets: ["ZcashSDKEnvironment"])
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.4.2"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.7.0"),
         .package(url: "https://github.com/pointfreeco/swift-case-paths", from: "1.1.0"),
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.6.0"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.4"),
-        .package(url: "https://github.com/zcash/ZcashLightClientKit", from: "2.0.9"),
+        .package(url: "https://github.com/zcash/ZcashLightClientKit", from: "2.0.10"),
         .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.17.0")
     ],
     targets: [
@@ -469,6 +470,19 @@ let package = Package(
             path: "Sources/Features/SendFlow"
         ),
         .target(
+            name: "ServerSetup",
+            dependencies: [
+                "Generated",
+                "SDKSynchronizer",
+                "UIComponents",
+                "UserDefaults",
+                "ZcashSDKEnvironment",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
+            ],
+            path: "Sources/Features/ServerSetup"
+        ),
+        .target(
             name: "Settings",
             dependencies: [
                 "AppVersion",
@@ -480,6 +494,7 @@ let package = Package(
                 "RecoveryPhraseDisplay",
                 "RestoreWalletStorage",
                 "SDKSynchronizer",
+                "ServerSetup",
                 "SupportDataGenerator",
                 "UIComponents",
                 "WalletStorage",
@@ -628,6 +643,7 @@ let package = Package(
         .target(
             name: "ZcashSDKEnvironment",
             dependencies: [
+                "UserDefaults",
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],

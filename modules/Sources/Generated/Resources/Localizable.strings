@@ -107,6 +107,12 @@
 "addressDetails.error.cantExtractTransparentAddress" = "could not extract transparent receiver from UA";
 "addressDetails.error.cantExtractSaplingAddress" = "could not extract sapling receiver from UA";
 
+// MARK: - Address Details
+"serverSetup.title" = "Server";
+"serverSetup.placeholder" = "<hostname>:<port>";
+"serverSetup.alert.failed.title" = "Invalid endpoint";
+"serverSetup.alert.failed.message" = "Error: %@ (code: %@)";
+
 // MARK: - Balances
 "balances.spendableBalance" = "Shielded zec (spendable)";
 "balances.changePending" = "Change pending";
@@ -161,6 +167,7 @@
 "settings.feedback" = "Send us feedback";
 "settings.privacyPolicy" = "Privacy Policy";
 "settings.documentation" = "Documentation";
+"settings.chooseServer" = "Choose a server";
 "settings.exportPrivateData" = "Export private data";
 "settings.exportLogsOnly" = "Export logs only";
 "settings.about" = "About";
@@ -208,6 +215,7 @@ Sharing this private data is irrevocable — once you have shared this private d
 "general.success" = "Success";
 "general.unknown" = "Unknown";
 "general.done" = "Done";
+"general.save" = "Save";
 "general.restoringWallet" = "[RESTORING YOUR WALLET…]";
 "balance.available" = "Available balance %@ %@";
 "balance.availableTitle" = "Available Balance";

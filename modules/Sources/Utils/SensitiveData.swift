@@ -82,23 +82,23 @@ extension BlockHeight {
     public var redacted: RedactableBlockHeight { RedactableBlockHeight(self) }
 }
 
-// MARK: - Redactable WalletBalance
+// MARK: - Redactable AccountBalance & SynchronizerState
 
-/// Redactable holder for a wallet balance.
-public struct Balance: Equatable, Redactable {
-    public let data: WalletBalance
+/// Redactable holder for a block height.
+public struct RedactableAccountBalance: Equatable, Redactable {
+    public let data: AccountBalance?
 
-    public init(_ data: WalletBalance = .zero) { self.data = data }
+    public init(_ data: AccountBalance? = nil) { self.data = data }
 }
 
-/// Utility that converts a string to a redacted counterpart.
-extension WalletBalance {
-    public var redacted: Balance { Balance(self) }
+/// Utility that converts a block height to a redacted counterpart.
+extension AccountBalance {
+    public var redacted: RedactableAccountBalance? { RedactableAccountBalance(self) }
 }
 
-extension Balance {
-    public static var zero: Balance {
-        Self(WalletBalance(verified: .zero, total: .zero))
+extension SynchronizerState {
+    public var redacted: SynchronizerState {
+        SynchronizerState
     }
 }
 

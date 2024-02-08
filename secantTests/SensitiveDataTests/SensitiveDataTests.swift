@@ -43,15 +43,7 @@ class SensitiveDataTests: XCTestCase {
         XCTAssertNotNil(RedactableBlockHeight.self as? Undescribable)
         #endif
     }
-    
-    func testBalanceConformsToUndescribable() throws {
-        #if UNREDACTED
-        XCTAssertNil(Balance.self as? Undescribable)
-        #else
-        XCTAssertNotNil(Balance.self as? Undescribable)
-        #endif
-    }
-    
+        
     func testRedactableInt64ConformsToUndescribable() throws {
         #if UNREDACTED
         XCTAssertNil(RedactableInt64.self as? Undescribable)

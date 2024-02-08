@@ -173,7 +173,7 @@ class TabsTests: XCTestCase {
     func testShieldFundsSucceedAndTransactionListUpdated() async throws {
         var placeholderState = TabsReducer.State.initial
         placeholderState.selectedTab = .send
-        placeholderState.balanceBreakdownState.transparentBalance = Balance(WalletBalance(verified: Zatoshi(10_000), total: Zatoshi(10_000)))
+        placeholderState.balanceBreakdownState.transparentBalance = Zatoshi(10_000)
         
         let store = TestStore(
             initialState: placeholderState

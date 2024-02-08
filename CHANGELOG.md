@@ -13,6 +13,7 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ### Added
 - Pending values (changes) at the Balances tab.
+- Choose a Server feature: available at settings, pre-defined servers + custom server setup.
 
 ### Fixed
 - Failed transactions are no longer at the top of the transaction history but mixed with the transactions around the time it failed.

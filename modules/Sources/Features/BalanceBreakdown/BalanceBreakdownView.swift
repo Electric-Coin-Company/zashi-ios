@@ -188,7 +188,7 @@ extension BalanceBreakdownView {
                 Spacer()
                 
                 ZatoshiRepresentationView(
-                    balance: viewStore.transparentBalance.data.verified,
+                    balance: viewStore.transparentBalance,
                     fontName: FontFamily.Archivo.semiBold.name,
                     mostSignificantFontSize: 16,
                     leastSignificantFontSize: 8,
@@ -275,7 +275,7 @@ extension BalanceBreakdownView {
                         syncStatusMessage: "Syncing"
                     ),
                     totalBalance: Zatoshi(25_234_778),
-                    transparentBalance: Balance(WalletBalance(verified: Zatoshi(25_234_778), total: Zatoshi(35_814_169)))
+                    transparentBalance: Zatoshi(25_234_778)
                 )
             ) {
                 BalanceBreakdownReducer(networkType: .testnet)

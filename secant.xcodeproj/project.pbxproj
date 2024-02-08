@@ -51,7 +51,6 @@
 		9E3451B029C855E600177D16 /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E66129D288938A300C75B70 /* SettingsTests.swift */; };
 		9E3451B129C8565500177D16 /* UserPreferencesStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF8135B27ECC25E0075AF48 /* UserPreferencesStorageTests.swift */; };
 		9E3451B229C8565500177D16 /* SecItemClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAFEB852805A23100199FC9 /* SecItemClientTests.swift */; };
-		9E3451B329C8565500177D16 /* WalletBalance+testing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB4E0B02881F2DB00947B78 /* WalletBalance+testing.swift */; };
 		9E3451B429C8565500177D16 /* WalletStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF8135A27ECC25E0075AF48 /* WalletStorageTests.swift */; };
 		9E3451B529C8565500177D16 /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0F574A2980260D005304FA /* LoggerTests.swift */; };
 		9E3451B629C8565500177D16 /* ZatoshiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E39112D283F91600073DD9A /* ZatoshiTests.swift */; };
@@ -119,7 +118,6 @@
 		0D4E7A2126B364180058B01E /* secantUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = secantUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D4E7A2526B364180058B01E /* secantUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = secantUITests.swift; sourceTree = "<group>"; };
 		0D4E7A2726B364180058B01E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0DB4E0B02881F2DB00947B78 /* WalletBalance+testing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WalletBalance+testing.swift"; sourceTree = "<group>"; };
 		0DEF4766299EA5920032708B /* secant-mainnet-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "secant-mainnet-Info.plist"; sourceTree = "<group>"; };
 		0DFE93DE272C6D4B000FCCA5 /* RecoveryPhraseBackupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseBackupTests.swift; sourceTree = "<group>"; };
 		341B30BA29B78D1000697081 /* HomeFeatureFlagTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeatureFlagTests.swift; sourceTree = "<group>"; };
@@ -610,7 +608,6 @@
 				9E0F574A2980260D005304FA /* LoggerTests.swift */,
 				9EAFEB852805A23100199FC9 /* SecItemClientTests.swift */,
 				9EF8135B27ECC25E0075AF48 /* UserPreferencesStorageTests.swift */,
-				0DB4E0B02881F2DB00947B78 /* WalletBalance+testing.swift */,
 				9EF8135A27ECC25E0075AF48 /* WalletStorageTests.swift */,
 				9E39112D283F91600073DD9A /* ZatoshiTests.swift */,
 			);
@@ -969,7 +966,6 @@
 				9E3451BC29C857C800177D16 /* NotEnoughFeeSpaceSnapshots.swift in Sources */,
 				9E3451B229C8565500177D16 /* SecItemClientTests.swift in Sources */,
 				9E3451C629C857E700177D16 /* WelcomeSnapshotTests.swift in Sources */,
-				9E3451B329C8565500177D16 /* WalletBalance+testing.swift in Sources */,
 				9E3451AA29C84ED500177D16 /* CurrencySelectionTests.swift in Sources */,
 				9E3451C529C857E400177D16 /* TransactionListSnapshotTests.swift in Sources */,
 				9EEB06C62B344F1E00EEE50F /* SyncProgressTests.swift in Sources */,
