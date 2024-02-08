@@ -9,6 +9,7 @@ directly impact users rather than highlighting other crucial architectural updat
 ### Fixed
 - Restore mode in the UI was missing when Zashi was deleted from an iPhone and reinstalled again.
 - Syncing bar in the restore mode bottom padding.
+- Missing exit button at backup phrase screen when no words are stored in the keychain.
 
 ### Added
 - Pending values (changes) at the Balances tab.
