@@ -8,6 +8,8 @@
 import Foundation
 import ZcashLightClientKit
 import ComposableArchitecture
+
+import Generated
 import Utils
 
 public struct ZatoshiStringRepresentation: Equatable {
@@ -41,11 +43,11 @@ public struct ZatoshiStringRepresentation: Equatable {
         
         // 0 zatoshi case
         if zatoshi.amount == 0 {
-            self.mostSignificantDigits = "\(symbol)0.000"
+            self.mostSignificantDigits = "\(symbol)\(Zatoshi(0).decimalZashiFormatted())"
             self.leastSignificantDigits = ""
         } else if zatoshi.amount < 100_000 && format == .abbreviated {
             // 0 for most significant but non-0 for least ones
-            self.mostSignificantDigits = "\(symbol)0.000..."
+            self.mostSignificantDigits = "\(symbol)\(Zatoshi(0).decimalZashiFormatted())..."
             self.leastSignificantDigits = ""
         } else {
             if format == .expanded {
@@ -86,5 +88,5 @@ extension ZatoshiStringRepresentation {
 }
 
 extension ZatoshiStringRepresentation {
-    public static let feeFormat = "< 0.001"
+    public static let feeFormat = L10n.General.fee(Zatoshi(100_000).decimalZashiFormatted())
 }

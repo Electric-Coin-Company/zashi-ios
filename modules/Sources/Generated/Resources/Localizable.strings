@@ -223,6 +223,7 @@ Sharing this private data is irrevocable — once you have shared this private d
 "qrCodeFor" = "QR Code for %@";
 "general.dateNotAvailable" = "date not available";
 "general.tapToCopy" = "Tap to copy";
+"general.fee" = "< %@";
 
 // MARK: - Transaction List
 "transactionList.collapse" = "Collapse transaction";
