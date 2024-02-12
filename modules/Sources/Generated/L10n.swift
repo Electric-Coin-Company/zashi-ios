@@ -597,18 +597,20 @@ public enum L10n {
   public enum Settings {
     /// About
     public static let about = L10n.tr("Localizable", "settings.about", fallback: "About")
+    /// Advanced
+    public static let advanced = L10n.tr("Localizable", "settings.advanced", fallback: "Advanced")
     /// Choose a server
     public static let chooseServer = L10n.tr("Localizable", "settings.chooseServer", fallback: "Choose a server")
-    /// Documentation
-    public static let documentation = L10n.tr("Localizable", "settings.documentation", fallback: "Documentation")
     /// Export logs only
     public static let exportLogsOnly = L10n.tr("Localizable", "settings.exportLogsOnly", fallback: "Export logs only")
     /// Export private data
     public static let exportPrivateData = L10n.tr("Localizable", "settings.exportPrivateData", fallback: "Export private data")
     /// Send us feedback
     public static let feedback = L10n.tr("Localizable", "settings.feedback", fallback: "Send us feedback")
-    /// Privacy Policy
-    public static let privacyPolicy = L10n.tr("Localizable", "settings.privacyPolicy", fallback: "Privacy Policy")
+    /// See our Privacy Policy 
+    public static let privacyPolicyPart1 = L10n.tr("Localizable", "settings.privacyPolicyPart1", fallback: "See our Privacy Policy ")
+    /// here.
+    public static let privacyPolicyPart2 = L10n.tr("Localizable", "settings.privacyPolicyPart2", fallback: "here.")
     /// Recovery Phrase
     public static let recoveryPhrase = L10n.tr("Localizable", "settings.recoveryPhrase", fallback: "Recovery Phrase")
     /// Version %@ (%@)

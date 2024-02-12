@@ -163,14 +163,13 @@
 "send.alert.failure.message" = "Error: %@ (code: %@)";
 
 // MARK: - Settings
-"settings.recoveryPhrase" = "Recovery Phrase";
 "settings.feedback" = "Send us feedback";
-"settings.privacyPolicy" = "Privacy Policy";
-"settings.documentation" = "Documentation";
-"settings.chooseServer" = "Choose a server";
-"settings.exportPrivateData" = "Export private data";
-"settings.exportLogsOnly" = "Export logs only";
+"settings.advanced" = "Advanced";
 "settings.about" = "About";
+"settings.recoveryPhrase" = "Recovery Phrase";
+"settings.exportPrivateData" = "Export private data";
+"settings.chooseServer" = "Choose a server";
+"settings.exportLogsOnly" = "Export logs only";
 "settings.about.info" = "Send and receive ZEC on Zashi!
 Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.";
 "settings.version" = "Version %@ (%@)";
@@ -178,6 +177,8 @@ Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps you
 "settings.alert.cantBackupWallet.message" = "Error: %@ (code: %@)";
 "settings.alert.cantSendEmail.title" = "Can't send email";
 "settings.alert.cantSendEmail.message" = "It looks like that you don't have any email account configured on your device. Therefore it's not possible to send a support email.";
+"settings.privacyPolicyPart1" = "See our Privacy Policy ";
+"settings.privacyPolicyPart2" = "here.";
 
 // MARK: - Private Data Consent
 "privateDataConsent.title" = "Consent for Exporting Private Data";
