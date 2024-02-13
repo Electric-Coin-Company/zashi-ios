@@ -15,7 +15,7 @@ public typealias AdvancedSettingsStore = Store<AdvancedSettingsReducer.State, Ad
 public typealias AdvancedSettingsViewStore = ViewStore<AdvancedSettingsReducer.State, AdvancedSettingsReducer.Action>
 
 public struct AdvancedSettingsReducer: Reducer {
-    let networkType: NetworkType
+    let network: ZcashNetwork
 
     public struct State: Equatable {
         public enum Destination {
@@ -58,8 +58,8 @@ public struct AdvancedSettingsReducer: Reducer {
     @Dependency(\.localAuthentication) var localAuthentication
     @Dependency(\.restoreWalletStorage) var restoreWalletStorage
 
-    public init(networkType: NetworkType) {
-        self.networkType = networkType
+    public init(network: ZcashNetwork) {
+        self.network = network
     }
 
     public var body: some Reducer<State, Action> {
@@ -115,7 +115,7 @@ public struct AdvancedSettingsReducer: Reducer {
         }
 
         Scope(state: \.privateDataConsentState, action: /Action.privateDataConsent) {
-            PrivateDataConsentReducer(networkType: networkType)
+            PrivateDataConsentReducer(network: network)
         }
 
         Scope(state: \.serverSetupState, action: /Action.serverSetup) {
@@ -199,7 +199,7 @@ extension AdvancedSettingsStore {
     public static let placeholder = AdvancedSettingsStore(
         initialState: .initial
     ) {
-        AdvancedSettingsReducer(networkType: .testnet)
+        AdvancedSettingsReducer(network: ZcashNetworkBuilder.network(for: .testnet))
     }
     
     public static let demo = AdvancedSettingsStore(
@@ -213,6 +213,6 @@ extension AdvancedSettingsStore {
             serverSetupState: ServerSetup.State()
         )
     ) {
-        AdvancedSettingsReducer(networkType: .testnet)
+        AdvancedSettingsReducer(network: ZcashNetworkBuilder.network(for: .testnet))
     }
 }

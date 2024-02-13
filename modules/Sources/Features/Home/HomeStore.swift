@@ -20,7 +20,7 @@ public typealias HomeViewStore = ViewStore<HomeReducer.State, HomeReducer.Action
 public struct HomeReducer: Reducer {
     private enum CancelStateId { case timer }
     private enum CancelEventId { case timer }
-    let networkType: NetworkType
+    let network: ZcashNetwork
 
     public struct State: Equatable {
         public enum Destination: Equatable {
@@ -109,8 +109,8 @@ public struct HomeReducer: Reducer {
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
-    public init(networkType: NetworkType) {
-        self.networkType = networkType
+    public init(network: ZcashNetwork) {
+        self.network = network
     }
     
     public var body: some Reducer<State, Action> {
@@ -303,7 +303,7 @@ extension HomeStore {
         HomeStore(
             initialState: .initial
         ) {
-            HomeReducer(networkType: .testnet)
+            HomeReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
     }
 
@@ -320,7 +320,7 @@ extension HomeStore {
                 walletConfig: .initial
             )
         ) {
-            HomeReducer(networkType: .testnet)
+            HomeReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
     }
 }

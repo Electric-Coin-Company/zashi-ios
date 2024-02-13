@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import Generated
+import ZcashLightClientKit
 
 public struct TransactionAddressTextField: View {
     let store: TransactionAddressTextFieldStore
@@ -56,7 +57,7 @@ struct TransactionAddressTextField_Previews: PreviewProvider {
                     )
                 )
             ) {
-                TransactionAddressTextFieldReducer(networkType: .testnet)
+                TransactionAddressTextFieldReducer(network: ZcashNetworkBuilder.network(for: .testnet))
             }
         )
         .preferredColorScheme(.light)

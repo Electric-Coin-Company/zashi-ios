@@ -35,7 +35,7 @@ class SendSnapshotTests: XCTestCase {
         let store = Store(
             initialState: state
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
                 .dependency(\.derivationTool, .live())
                 .dependency(\.mainQueue, DispatchQueue.main.eraseToAnyScheduler())
                 .dependency(\.numberFormatter, .live())
@@ -43,7 +43,7 @@ class SendSnapshotTests: XCTestCase {
                 .dependency(\.sdkSynchronizer, .mock)
         }
 
-        addAttachments(SendFlowView(store: store, tokenName: "ZEC"))
+        addAttachments(SendFlowView(store: store, tokenName: "ZEC", network: ZcashNetworkBuilder.network(for: .testnet)))
     }
     
     func testTransactionConfirmationScreen_withMemo() throws {
@@ -77,7 +77,7 @@ class SendSnapshotTests: XCTestCase {
                 )
             )
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
                 .dependency(\.derivationTool, .live())
                 .dependency(\.mainQueue, DispatchQueue.main.eraseToAnyScheduler())
                 .dependency(\.numberFormatter, .live())
@@ -116,7 +116,7 @@ class SendSnapshotTests: XCTestCase {
                 )
             )
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
                 .dependency(\.derivationTool, .live())
                 .dependency(\.mainQueue, DispatchQueue.main.eraseToAnyScheduler())
                 .dependency(\.numberFormatter, .live())

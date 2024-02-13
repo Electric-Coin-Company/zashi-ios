@@ -21,7 +21,7 @@ class BalanceBreakdownTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder
         ) {
-            BalanceBreakdownReducer(networkType: .testnet)
+            BalanceBreakdownReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         store.dependencies.sdkSynchronizer = .mocked()
@@ -44,7 +44,7 @@ class BalanceBreakdownTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder
         ) {
-            BalanceBreakdownReducer(networkType: .testnet)
+            BalanceBreakdownReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.sdkSynchronizer = .mocked(shieldFunds: { _, _, _ in throw ZcashError.synchronizerNotPrepared })
@@ -72,7 +72,7 @@ class BalanceBreakdownTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            BalanceBreakdownReducer(networkType: .testnet)
+            BalanceBreakdownReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         XCTAssertFalse(store.state.isShieldingFunds)
@@ -93,7 +93,7 @@ class BalanceBreakdownTests: XCTestCase {
                 transparentBalance: Zatoshi(1_000_000)
             )
         ) {
-            BalanceBreakdownReducer(networkType: .testnet)
+            BalanceBreakdownReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         XCTAssertFalse(store.state.isShieldingFunds)
@@ -114,7 +114,7 @@ class BalanceBreakdownTests: XCTestCase {
                 transparentBalance: Zatoshi(1_000_000)
             )
         ) {
-            BalanceBreakdownReducer(networkType: .testnet)
+            BalanceBreakdownReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         XCTAssertTrue(store.state.isShieldingFunds)
@@ -129,7 +129,7 @@ class BalanceBreakdownTests: XCTestCase {
         let store = TestStore(
             initialState: initialState
         ) {
-            BalanceBreakdownReducer(networkType: .testnet)
+            BalanceBreakdownReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.restoreWalletStorage = .noOp
@@ -156,7 +156,7 @@ class BalanceBreakdownTests: XCTestCase {
         let store = TestStore(
             initialState: initialState
         ) {
-            BalanceBreakdownReducer(networkType: .testnet)
+            BalanceBreakdownReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         await store.send(.updateHintBoxVisibility(true)) { state in
@@ -173,7 +173,7 @@ class BalanceBreakdownTests: XCTestCase {
         let store = TestStore(
             initialState: initialState
         ) {
-            BalanceBreakdownReducer(networkType: .testnet)
+            BalanceBreakdownReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         await store.send(.updateHintBoxVisibility(false)) { state in

@@ -9,6 +9,7 @@ import XCTest
 import ComposableArchitecture
 import SwiftUI
 import Settings
+import ZcashLightClientKit
 @testable import secant_testnet
 
 class SettingsSnapshotTests: XCTestCase {
@@ -16,7 +17,7 @@ class SettingsSnapshotTests: XCTestCase {
         let store = Store(
             initialState: .initial
         ) {
-            SettingsReducer(networkType: .mainnet)
+            SettingsReducer(network: ZcashNetworkBuilder.network(for: .mainnet))
                 .dependency(\.localAuthentication, .mockAuthenticationFailed)
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.walletStorage, .noOp)
@@ -30,7 +31,7 @@ class SettingsSnapshotTests: XCTestCase {
         let store = Store(
             initialState: .initial
         ) {
-            SettingsReducer(networkType: .mainnet)
+            SettingsReducer(network: ZcashNetworkBuilder.network(for: .mainnet))
                 .dependency(\.localAuthentication, .mockAuthenticationFailed)
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.walletStorage, .noOp)

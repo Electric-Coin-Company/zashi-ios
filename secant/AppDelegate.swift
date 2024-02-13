@@ -26,7 +26,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     ) {
         RootReducer(
             tokenName: TargetConstants.tokenName,
-            zcashNetwork: TargetConstants.zcashNetwork
+            network: TargetConstants.zcashNetwork
         ).logging()
     }
 

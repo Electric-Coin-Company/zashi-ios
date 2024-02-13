@@ -20,16 +20,16 @@ class AddressDetailsSnapshotTests: XCTestCase {
             network: .testnet
         )
 
-        let networkType = NetworkType.testnet
+        let network = ZcashNetworkBuilder.network(for: .testnet)
         
         let store = Store(
             initialState: AddressDetailsReducer.State(uAddress: uAddress)
         ) {
-            AddressDetailsReducer(networkType: networkType)
+            AddressDetailsReducer(network: network)
                 .dependency(\.walletConfigProvider, .noOp)
         }
         
-        addAttachments(AddressDetailsView(store: store, networkType: networkType))
+        addAttachments(AddressDetailsView(store: store, networkType: network.networkType))
     }
     
     func testAddressDetailsSnapshot_mainnet() throws {
@@ -39,15 +39,15 @@ class AddressDetailsSnapshotTests: XCTestCase {
             network: .testnet
         )
 
-        let networkType = NetworkType.mainnet
-        
+        let network = ZcashNetworkBuilder.network(for: .mainnet)
+
         let store = Store(
             initialState: AddressDetailsReducer.State(uAddress: uAddress)
         ) {
-            AddressDetailsReducer(networkType: networkType)
+            AddressDetailsReducer(network: network)
                 .dependency(\.walletConfigProvider, .noOp)
         }
         
-        addAttachments(AddressDetailsView(store: store, networkType: networkType))
+        addAttachments(AddressDetailsView(store: store, networkType: network.networkType))
     }
 }

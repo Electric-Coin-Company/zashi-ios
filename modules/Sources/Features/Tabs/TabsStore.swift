@@ -23,7 +23,7 @@ public typealias TabsViewStore = ViewStore<TabsReducer.State, TabsReducer.Action
 
 public struct TabsReducer: Reducer {
     let tokenName: String
-    let networkType: NetworkType
+    let network: ZcashNetwork
 
     public struct State: Equatable {
         public enum Destination: Equatable {
@@ -94,30 +94,30 @@ public struct TabsReducer: Reducer {
 
     @Dependency(\.restoreWalletStorage) var restoreWalletStorage
 
-    public init(tokenName: String, networkType: NetworkType) {
+    public init(tokenName: String, network: ZcashNetwork) {
         self.tokenName = tokenName
-        self.networkType = networkType
+        self.network = network
     }
 
     public var body: some Reducer<State, Action> {
         Scope(state: \.sendState, action: /Action.send) {
-            SendFlowReducer(networkType: networkType)
+            SendFlowReducer(network: network)
         }
         
         Scope(state: \.addressDetailsState, action: /Action.addressDetails) {
-            AddressDetailsReducer(networkType: networkType)
+            AddressDetailsReducer(network: network)
         }
         
         Scope(state: \.balanceBreakdownState, action: /Action.balanceBreakdown) {
-            BalanceBreakdownReducer(networkType: networkType)
+            BalanceBreakdownReducer(network: network)
         }
 
         Scope(state: \.homeState, action: /Action.home) {
-            HomeReducer(networkType: networkType)
+            HomeReducer(network: network)
         }
 
         Scope(state: \.settingsState, action: /Action.settings) {
-            SettingsReducer(networkType: networkType)
+            SettingsReducer(network: network)
         }
 
         Reduce { state, action in
@@ -181,7 +181,7 @@ extension TabsStore {
     ) {
         TabsReducer(
             tokenName: "TAZ",
-            networkType: ZcashNetworkBuilder.network(for: .testnet).networkType
+            network: ZcashNetworkBuilder.network(for: .testnet)
         )
     }
 }

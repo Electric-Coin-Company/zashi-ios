@@ -8,6 +8,7 @@
 import XCTest
 import ComposableArchitecture
 import PrivateDataConsent
+import ZcashLightClientKit
 @testable import secant_testnet
 
 class PrivateDataConsentSnapshotTests: XCTestCase {
@@ -15,7 +16,7 @@ class PrivateDataConsentSnapshotTests: XCTestCase {
         let store = Store(
             initialState: .initial
         ) {
-            PrivateDataConsentReducer(networkType: .mainnet)
+            PrivateDataConsentReducer(network: ZcashNetworkBuilder.network(for: .testnet))
                 .dependency(\.databaseFiles, .noOp)
         }
 

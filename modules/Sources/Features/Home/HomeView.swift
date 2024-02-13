@@ -8,6 +8,7 @@ import UIComponents
 import SyncProgress
 import Utils
 import Models
+import ZcashLightClientKit
 
 public struct HomeView: View {
     let store: HomeStore
@@ -121,7 +122,7 @@ struct HomeView_Previews: PreviewProvider {
                                     walletConfig: .initial
                                 )
                     ) {
-                        HomeReducer(networkType: .testnet)
+                        HomeReducer(network: ZcashNetworkBuilder.network(for: .testnet))
                     },
                 tokenName: "ZEC"
             )

@@ -25,7 +25,7 @@ public typealias SendFlowViewStore = ViewStore<SendFlowReducer.State, SendFlowRe
 
 public struct SendFlowReducer: Reducer {
     private enum SyncStatusUpdatesID { case timer }
-    let networkType: NetworkType
+    let network: ZcashNetwork
 
     public struct State: Equatable {
         public enum Destination: Equatable {
@@ -77,13 +77,6 @@ public struct SendFlowReducer: Reducer {
             && !transactionAmountInputState.textFieldState.text.data.isEmpty
         }
         
-        public var isValidForm: Bool {
-            transactionAmountInputState.amount.data > 0
-            && transactionAddressInputState.isValidAddress
-            && !isInsufficientFunds
-            && memoState.isValid
-        }
-        
         public var isInsufficientFunds: Bool {
             transactionAmountInputState.amount.data > transactionAmountInputState.maxValue.data
         }
@@ -120,6 +113,13 @@ public struct SendFlowReducer: Reducer {
             self.transactionAddressInputState = transactionAddressInputState
             self.transactionAmountInputState = transactionAmountInputState
         }
+        
+        public func isValidForm(fee: Zatoshi) -> Bool {
+            transactionAmountInputState.amount.data > fee.amount
+            && transactionAddressInputState.isValidAddress
+            && !isInsufficientFunds
+            && memoState.isValid
+        }
     }
 
     public enum Action: Equatable {
@@ -147,8 +147,8 @@ public struct SendFlowReducer: Reducer {
     @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
-    public init(networkType: NetworkType) {
-        self.networkType = networkType
+    public init(network: ZcashNetwork) {
+        self.network = network
     }
     
     public var body: some Reducer<State, Action> {
@@ -157,7 +157,7 @@ public struct SendFlowReducer: Reducer {
         }
 
         Scope(state: \.transactionAddressInputState, action: /Action.transactionAddressInput) {
-            TransactionAddressTextFieldReducer(networkType: networkType)
+            TransactionAddressTextFieldReducer(network: network)
         }
 
         Scope(state: \.transactionAmountInputState, action: /Action.transactionAmountInput) {
@@ -165,7 +165,7 @@ public struct SendFlowReducer: Reducer {
         }
 
         Scope(state: \.scanState, action: /Action.scan) {
-            ScanReducer(networkType: networkType)
+            ScanReducer(network: network)
         }
 
         Reduce { state, action in
@@ -212,7 +212,7 @@ public struct SendFlowReducer: Reducer {
                 do {
                     let storedWallet = try walletStorage.exportWallet()
                     let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
-                    let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, networkType)
+                    let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, network.networkType)
                     
                     let memo: Memo?
                     if state.transactionAddressInputState.isValidTransparentAddress {
@@ -223,7 +223,7 @@ public struct SendFlowReducer: Reducer {
                         memo = nil
                     }
                     
-                    let recipient = try Recipient(state.address, network: networkType)
+                    let recipient = try Recipient(state.address, network: network.networkType)
                     state.isSending = true
                     
                     return .run { [state] send in
@@ -277,7 +277,7 @@ public struct SendFlowReducer: Reducer {
                 state.transactionAddressInputState.isValidAddress = true
                 state.transactionAddressInputState.isValidTransparentAddress = derivationTool.isTransparentAddress(
                     address.data,
-                    networkType
+                    network.networkType
                 )
                 audioServices.systemSoundVibrate()
                 return Effect.send(.updateDestination(nil))
@@ -369,7 +369,7 @@ extension SendFlowStore {
         SendFlowStore(
             initialState: .initial
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
     }
 }

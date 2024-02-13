@@ -163,7 +163,7 @@ public struct SendFlowConfirmationView: View {
                     transactionAmountInputState: .initial
                 )
             ) {
-                SendFlowReducer(networkType: .testnet)
+                SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
             },
             tokenName: "ZEC"
         )

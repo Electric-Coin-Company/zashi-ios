@@ -27,7 +27,7 @@ final class ReviewRequestTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            HomeReducer(networkType: .testnet)
+            HomeReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         let now = Date.now
@@ -64,7 +64,7 @@ final class ReviewRequestTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            HomeReducer(networkType: .testnet)
+            HomeReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         let now = Date.now

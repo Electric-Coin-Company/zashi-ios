@@ -29,7 +29,7 @@ public struct RootReducer: Reducer {
     enum SynchronizerCancelId { case timer }
     enum WalletConfigCancelId { case timer }
     let tokenName: String
-    let zcashNetwork: ZcashNetwork
+    let network: ZcashNetwork
 
     public struct State: Equatable {
         @PresentationState public var alert: AlertState<Action>?
@@ -126,15 +126,15 @@ public struct RootReducer: Reducer {
     @Dependency(\.readTransactionsStorage) var readTransactionsStorage
     @Dependency(\.restoreWalletStorage) var restoreWalletStorage
 
-    public init(tokenName: String, zcashNetwork: ZcashNetwork) {
+    public init(tokenName: String, network: ZcashNetwork) {
         self.tokenName = tokenName
-        self.zcashNetwork = zcashNetwork
+        self.network = network
     }
     
     @ReducerBuilder<State, Action>
     var core: some Reducer<State, Action> {
         Scope(state: \.tabsState, action: /Action.tabs) {
-            TabsReducer(tokenName: tokenName, networkType: zcashNetwork.networkType)
+            TabsReducer(tokenName: tokenName, network: network)
         }
 
         Scope(state: \.exportLogsState, action: /Action.exportLogs) {
@@ -143,8 +143,8 @@ public struct RootReducer: Reducer {
 
         Scope(state: \.onboardingState, action: /Action.onboarding) {
             OnboardingFlowReducer(
-                saplingActivationHeight: zcashNetwork.constants.saplingActivationHeight,
-                zcashNetwork: zcashNetwork
+                saplingActivationHeight: network.constants.saplingActivationHeight,
+                network: network
             )
         }
 
@@ -186,13 +186,13 @@ extension RootReducer {
     public static func walletInitializationState(
         databaseFiles: DatabaseFilesClient,
         walletStorage: WalletStorageClient,
-        zcashNetwork: ZcashNetwork
+        network: ZcashNetwork
     ) -> InitializationState {
         var keysPresent = false
         do {
             keysPresent = try walletStorage.areKeysPresent()
             let databaseFilesPresent = databaseFiles.areDbFilesPresentFor(
-                zcashNetwork
+                network
             )
             
             switch (keysPresent, databaseFilesPresent) {
@@ -206,7 +206,7 @@ extension RootReducer {
                 return .initialized
             }
         } catch WalletStorage.WalletStorageError.uninitializedWallet {
-            if databaseFiles.areDbFilesPresentFor(zcashNetwork) {
+            if databaseFiles.areDbFilesPresentFor(network) {
                 return .keysMissing
             }
         } catch {
@@ -354,7 +354,7 @@ extension RootStore {
         ) {
             RootReducer(
                 tokenName: "ZEC",
-                zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
+                network: ZcashNetworkBuilder.network(for: .testnet)
             ).logging()
         }
     }

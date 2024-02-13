@@ -14,7 +14,7 @@ import ZcashSDKEnvironment
 public typealias TransactionAddressTextFieldStore = Store<TransactionAddressTextFieldReducer.State, TransactionAddressTextFieldReducer.Action>
 
 public struct TransactionAddressTextFieldReducer: Reducer {
-    let networkType: NetworkType
+    let network: ZcashNetwork
     
     public struct State: Equatable {
         public var isValidAddress = false
@@ -37,8 +37,8 @@ public struct TransactionAddressTextFieldReducer: Reducer {
     @Dependency(\.derivationTool) var derivationTool
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
-    public init(networkType: NetworkType) {
-        self.networkType = networkType
+    public init(network: ZcashNetwork) {
+        self.network = network
     }
     
     public var body: some Reducer<State, Action> {
@@ -52,8 +52,8 @@ public struct TransactionAddressTextFieldReducer: Reducer {
                 return .none
 
             case .textField(.set(let address)):
-                state.isValidAddress = derivationTool.isZcashAddress(address.data, networkType)
-                state.isValidTransparentAddress = derivationTool.isTransparentAddress(address.data, networkType)
+                state.isValidAddress = derivationTool.isZcashAddress(address.data, network.networkType)
+                state.isValidTransparentAddress = derivationTool.isTransparentAddress(address.data, network.networkType)
                 return .none
             }
         }
@@ -76,6 +76,6 @@ extension TransactionAddressTextFieldStore {
     public static let placeholder = TransactionAddressTextFieldStore(
         initialState: .initial
     ) {
-        TransactionAddressTextFieldReducer(networkType: .testnet)
+        TransactionAddressTextFieldReducer(network: ZcashNetworkBuilder.network(for: .testnet))
     }
 }

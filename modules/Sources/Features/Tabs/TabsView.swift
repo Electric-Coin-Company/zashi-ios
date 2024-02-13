@@ -18,15 +18,15 @@ import Settings
 import UIComponents
 
 public struct TabsView: View {
-    let networkType: NetworkType
+    let network: ZcashNetwork
     var store: TabsStore
     let tokenName: String
     @Namespace var tabsID
 
-    public init(store: TabsStore, tokenName: String, networkType: NetworkType) {
+    public init(store: TabsStore, tokenName: String, network: ZcashNetwork) {
         self.store = store
         self.tokenName = tokenName
-        self.networkType = networkType
+        self.network = network
     }
 
     public var body: some View {
@@ -48,7 +48,8 @@ public struct TabsView: View {
                                 state: \.sendState,
                                 action: TabsReducer.Action.send
                             ),
-                            tokenName: tokenName
+                            tokenName: tokenName,
+                            network: network
                         )
                         .tag(TabsReducer.State.Tab.send)
 
@@ -57,7 +58,7 @@ public struct TabsView: View {
                                 state: \.addressDetailsState,
                                 action: TabsReducer.Action.addressDetails
                             ),
-                            networkType: networkType
+                            networkType: network.networkType
                         )
                         .tag(TabsReducer.State.Tab.receive)
 
@@ -157,6 +158,6 @@ public struct TabsView: View {
 
 #Preview {
     NavigationView {
-        TabsView(store: .demo, tokenName: "TAZ", networkType: .testnet)
+        TabsView(store: .demo, tokenName: "TAZ", network: ZcashNetworkBuilder.network(for: .testnet))
     }
 }

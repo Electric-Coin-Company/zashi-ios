@@ -28,7 +28,7 @@ struct SecantApp: App {
                 RootView(
                     store: appDelegate.rootStore,
                     tokenName: TargetConstants.tokenName,
-                    networkType: TargetConstants.zcashNetwork.networkType
+                    network: TargetConstants.zcashNetwork
                 )
                 .font(
                     .custom(FontFamily.Inter.regular.name, size: 17)

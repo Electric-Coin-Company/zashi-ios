@@ -22,7 +22,7 @@ class ScanTests: XCTestCase {
                     scanStatus: .value("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted)
                 )
         ) {
-            ScanReducer(networkType: .testnet)
+            ScanReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.captureDevice = .noOp
@@ -40,7 +40,7 @@ class ScanTests: XCTestCase {
         let store = TestStore(
             initialState: ScanReducer.State()
         ) {
-            ScanReducer(networkType: .testnet)
+            ScanReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.captureDevice = .noOp
@@ -58,7 +58,7 @@ class ScanTests: XCTestCase {
                 isTorchOn: true
             )
         ) {
-            ScanReducer(networkType: .testnet)
+            ScanReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.captureDevice = .noOp
@@ -74,7 +74,7 @@ class ScanTests: XCTestCase {
         let store = TestStore(
             initialState: ScanReducer.State()
         ) {
-            ScanReducer(networkType: .testnet)
+            ScanReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.uriParser.isValidURI = { _, _ in false }
@@ -92,7 +92,7 @@ class ScanTests: XCTestCase {
         let store = TestStore(
             initialState: ScanReducer.State()
         ) {
-            ScanReducer(networkType: .testnet)
+            ScanReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         store.dependencies.mainQueue = .immediate
@@ -113,7 +113,7 @@ class ScanTests: XCTestCase {
         let store = TestStore(
             initialState: ScanReducer.State()
         ) {
-            ScanReducer(networkType: .testnet)
+            ScanReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         await store.send(.scanFailed) { state in

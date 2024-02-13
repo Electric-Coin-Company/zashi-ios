@@ -50,7 +50,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: initialState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         store.dependencies.derivationTool = .liveValue
@@ -104,7 +104,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: initialState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         let error = "send failed".toZcashError()
@@ -146,7 +146,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: initialState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         store.dependencies.derivationTool = .liveValue
@@ -173,7 +173,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.derivationTool = .noOp
@@ -198,7 +198,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.derivationTool = .noOp
@@ -226,7 +226,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: state
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.numberFormatter = .noOp
@@ -242,7 +242,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.derivationTool = .noOp
@@ -282,7 +282,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.numberFormatter = .noOp
@@ -325,7 +325,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.numberFormatter = .noOp
@@ -388,7 +388,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.derivationTool = .noOp
@@ -403,8 +403,51 @@ class SendTests: XCTestCase {
             state.transactionAddressInputState.textFieldState.valid = true
             state.transactionAddressInputState.isValidAddress = true
             XCTAssertTrue(
-                state.isValidForm,
+                state.isValidForm(fee: Zatoshi(10_000)),
                 "Send Tests: `testValidForm` is expected to be true but it's \(state.isValidForm)"
+            )
+        }
+    }
+    
+    func testValidForm_NoFees() async throws {
+        let sendState = SendFlowReducer.State(
+            addMemoState: true,
+            memoState: .initial,
+            scanState: .initial,
+            transactionAddressInputState: .initial,
+            transactionAmountInputState:
+                TransactionAmountTextFieldReducer.State(
+                    amount: Int64(9_000).redacted,
+                    currencySelectionState: CurrencySelectionReducer.State(),
+                    maxValue: Int64(501_302).redacted,
+                    textFieldState:
+                        TCATextFieldReducer.State(
+                            validationType: .customFloatingPoint(usNumberFormatter),
+                            text: "0.00501301".redacted
+                        )
+                )
+        )
+
+        let store = TestStore(
+            initialState: sendState
+        ) {
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
+        }
+
+        store.dependencies.derivationTool = .noOp
+        store.dependencies.derivationTool.isZcashAddress = { _, _ in true }
+
+        let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
+        
+        await store.send(.transactionAddressInput(.textField(.set(address)))) { state in
+            state.transactionAddressInputState.textFieldState.text = address
+            // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
+            // isValid function returns true, `guard let validationType else { return true }`
+            state.transactionAddressInputState.textFieldState.valid = true
+            state.transactionAddressInputState.isValidAddress = true
+            XCTAssertFalse(
+                state.isValidForm(fee: Zatoshi(10_000)),
+                "Send Tests: `testValidForm` is expected to be false but it's \(state.isValidForm)"
             )
         }
     }
@@ -430,7 +473,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.derivationTool = .noOp
@@ -445,7 +488,7 @@ class SendTests: XCTestCase {
             state.transactionAddressInputState.textFieldState.valid = true
             state.transactionAddressInputState.isValidAddress = true
             XCTAssertFalse(
-                state.isValidForm,
+                state.isValidForm(fee: Zatoshi(10_000)),
                 "Send Tests: `testValidForm` is expected to be false but it's \(state.isValidForm)"
             )
         }
@@ -472,7 +515,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.derivationTool = .noOp
@@ -486,7 +529,7 @@ class SendTests: XCTestCase {
             state.transactionAddressInputState.textFieldState.valid = true
             state.transactionAddressInputState.isValidAddress = false
             XCTAssertFalse(
-                state.isValidForm,
+                state.isValidForm(fee: Zatoshi(10_000)),
                 "Send Tests: `testValidForm` is expected to be false but it's \(state.isValidForm)"
             )
         }
@@ -513,7 +556,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.derivationTool = .noOp
@@ -530,7 +573,7 @@ class SendTests: XCTestCase {
             state.transactionAddressInputState.isValidAddress = true
             state.transactionAddressInputState.isValidTransparentAddress = true
             XCTAssertFalse(
-                state.isValidForm,
+                state.isValidForm(fee: Zatoshi(10_000)),
                 "Send Tests: `testValidForm` is expected to be false but it's \(state.isValidForm)"
             )
         }
@@ -567,7 +610,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         let value = "test".redacted
@@ -575,7 +618,7 @@ class SendTests: XCTestCase {
         await store.send(.memo(.memoInputChanged(value))) { state in
             state.memoState.text = value
             XCTAssertFalse(
-                state.isValidForm,
+                state.isValidForm(fee: Zatoshi(10_000)),
                 "Send Tests: `testValidForm` is expected to be false but it's \(state.isValidForm)"
             )
         }
@@ -602,7 +645,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.mainQueue = .immediate
@@ -629,7 +672,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.audioServices = AudioServicesClient(systemSoundVibrate: { })
@@ -659,7 +702,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         await store.send(.reviewPressed) { state in
@@ -681,7 +724,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         XCTAssertEqual(store.state.message, testMessage.data)
@@ -701,7 +744,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         XCTAssertEqual(store.state.feeFormat, feeFormat)

@@ -15,6 +15,7 @@ import RecoveryPhraseDisplay
 import Settings
 import ExportLogs
 import SupportDataGenerator
+import ZcashLightClientKit
 @testable import secant_testnet
 
 @MainActor
@@ -59,7 +60,7 @@ class SettingsTests: XCTestCase {
                 serverSetupState: .initial
             )
         ) {
-            AdvancedSettingsReducer(networkType: .testnet)
+            AdvancedSettingsReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.localAuthentication = .mockAuthenticationSucceeded
@@ -78,7 +79,7 @@ class SettingsTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            AdvancedSettingsReducer(networkType: .testnet)
+            AdvancedSettingsReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.localAuthentication = .mockAuthenticationFailed
@@ -95,7 +96,7 @@ class SettingsTests: XCTestCase {
         let store = TestStore(
             initialState: initialState
         ) {
-            SettingsReducer(networkType: .testnet)
+            SettingsReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.restoreWalletStorage = .noOp

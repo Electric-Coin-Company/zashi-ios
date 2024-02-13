@@ -21,7 +21,7 @@ class RootTests: XCTestCase {
         let walletState = RootReducer.walletInitializationState(
             databaseFiles: .noOp,
             walletStorage: .noOp,
-            zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
+            network: ZcashNetworkBuilder.network(for: .testnet)
         )
 
         XCTAssertEqual(walletState, .uninitialized)
@@ -37,7 +37,7 @@ class RootTests: XCTestCase {
         let walletState = RootReducer.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
             walletStorage: .noOp,
-            zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
+            network: ZcashNetworkBuilder.network(for: .testnet)
         )
 
         XCTAssertEqual(walletState, .keysMissing)
@@ -53,7 +53,7 @@ class RootTests: XCTestCase {
         let walletState = RootReducer.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
             walletStorage: .noOp,
-            zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
+            network: ZcashNetworkBuilder.network(for: .testnet)
         )
 
         XCTAssertEqual(walletState, .uninitialized)
@@ -72,7 +72,7 @@ class RootTests: XCTestCase {
         let walletState = RootReducer.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
             walletStorage: walletStorage,
-            zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
+            network: ZcashNetworkBuilder.network(for: .testnet)
         )
 
         XCTAssertEqual(walletState, .filesMissing)
@@ -91,7 +91,7 @@ class RootTests: XCTestCase {
         let walletState = RootReducer.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
             walletStorage: walletStorage,
-            zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
+            network: ZcashNetworkBuilder.network(for: .testnet)
         )
 
         XCTAssertEqual(walletState, .initialized)
@@ -101,7 +101,7 @@ class RootTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer(tokenName: "ZEC", network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.mainQueue = .immediate
@@ -123,7 +123,7 @@ class RootTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer(tokenName: "ZEC", network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.mainQueue = .immediate
@@ -160,7 +160,7 @@ class RootTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer(tokenName: "ZEC", network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         store.dependencies.walletStorage = .noOp
@@ -195,7 +195,7 @@ class RootTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer(tokenName: "ZEC", network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         store.dependencies.walletStorage = .noOp
@@ -222,7 +222,7 @@ class RootTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer(tokenName: "ZEC", network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         store.dependencies.mainQueue = .immediate

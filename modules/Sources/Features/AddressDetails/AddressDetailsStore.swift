@@ -16,7 +16,7 @@ public typealias AddressDetailsStore = Store<AddressDetailsReducer.State, Addres
 public typealias AddressDetailsViewStore = ViewStore<AddressDetailsReducer.State, AddressDetailsReducer.Action>
 
 public struct AddressDetailsReducer: Reducer {
-    let networkType: NetworkType
+    let network: ZcashNetwork
 
     public struct State: Equatable {
         public var addressToShare: RedactableString?
@@ -61,8 +61,8 @@ public struct AddressDetailsReducer: Reducer {
     
     @Dependency(\.pasteboard) var pasteboard
 
-    public init(networkType: NetworkType) {
-        self.networkType = networkType
+    public init(network: ZcashNetwork) {
+        self.network = network
     }
 
     public func reduce(into state: inout State, action: Action) -> ComposableArchitecture.Effect<Action> {
@@ -98,6 +98,6 @@ extension AddressDetailsStore {
     public static let placeholder = AddressDetailsStore(
         initialState: .initial
     ) {
-        AddressDetailsReducer(networkType: .testnet)
+        AddressDetailsReducer(network: ZcashNetworkBuilder.network(for: .testnet))
     }
 }

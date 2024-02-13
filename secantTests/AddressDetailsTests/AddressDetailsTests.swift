@@ -24,7 +24,7 @@ class AddressDetailsTests: XCTestCase {
         let store = TestStore(
             initialState: AddressDetailsReducer.State(uAddress: uAddress)
         ) {
-            AddressDetailsReducer(networkType: .testnet)
+            AddressDetailsReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         store.dependencies.pasteboard = testPasteboard
@@ -49,7 +49,7 @@ class AddressDetailsTests: XCTestCase {
         let store = TestStore(
             initialState: AddressDetailsReducer.State(uAddress: uAddress)
         ) {
-            AddressDetailsReducer(networkType: .testnet)
+            AddressDetailsReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         store.dependencies.pasteboard = testPasteboard
@@ -72,7 +72,7 @@ class AddressDetailsTests: XCTestCase {
         let store = TestStore(
             initialState: AddressDetailsReducer.State(uAddress: uAddress)
         ) {
-            AddressDetailsReducer(networkType: .testnet)
+            AddressDetailsReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         store.dependencies.pasteboard = testPasteboard
@@ -96,7 +96,7 @@ class AddressDetailsTests: XCTestCase {
         let store = TestStore(
             initialState: AddressDetailsReducer.State(uAddress: uAddress)
         ) {
-            AddressDetailsReducer(networkType: .testnet)
+            AddressDetailsReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         let expectedAddress = try uAddress.transparentReceiver().stringEncoded
@@ -114,7 +114,7 @@ class AddressDetailsTests: XCTestCase {
         let store = TestStore(
             initialState: AddressDetailsReducer.State(uAddress: uAddress)
         ) {
-            AddressDetailsReducer(networkType: .testnet)
+            AddressDetailsReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         await store.send(.shareQR(uAddress.stringEncoded.redacted)) { state in
@@ -130,7 +130,7 @@ class AddressDetailsTests: XCTestCase {
         let store = TestStore(
             initialState: AddressDetailsReducer.State(uAddress: uAddress)
         ) {
-            AddressDetailsReducer(networkType: .testnet)
+            AddressDetailsReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         let expectedAddress = try uAddress.saplingReceiver().stringEncoded

@@ -24,7 +24,7 @@ public typealias BalanceBreakdownViewStore = ViewStore<BalanceBreakdownReducer.S
 
 public struct BalanceBreakdownReducer: Reducer {
     private enum CancelId { case timer }
-    let networkType: NetworkType
+    let network: ZcashNetwork
     
     public struct State: Equatable {
         @PresentationState public var alert: AlertState<Action>?
@@ -94,8 +94,8 @@ public struct BalanceBreakdownReducer: Reducer {
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.walletStorage) var walletStorage
 
-    public init(networkType: NetworkType) {
-        self.networkType = networkType
+    public init(network: ZcashNetwork) {
+        self.network = network
     }
     
     public var body: some Reducer<State, Action> {
@@ -143,7 +143,7 @@ public struct BalanceBreakdownReducer: Reducer {
                     do {
                         let storedWallet = try walletStorage.exportWallet()
                         let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
-                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, networkType)
+                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, network.networkType)
 
                         let transaction = try await sdkSynchronizer.shieldFunds(spendingKey, Memo(string: ""), state.autoShieldingThreshold)
 
@@ -224,6 +224,6 @@ extension BalanceBreakdownStore {
     public static let placeholder = BalanceBreakdownStore(
         initialState: .placeholder
     ) {
-        BalanceBreakdownReducer(networkType: .testnet)
+        BalanceBreakdownReducer(network: ZcashNetworkBuilder.network(for: .testnet))
     }
 }

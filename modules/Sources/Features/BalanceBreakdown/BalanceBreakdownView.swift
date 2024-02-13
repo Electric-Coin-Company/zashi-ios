@@ -278,7 +278,7 @@ extension BalanceBreakdownView {
                     transparentBalance: Zatoshi(25_234_778)
                 )
             ) {
-                BalanceBreakdownReducer(networkType: .testnet)
+                BalanceBreakdownReducer(network: ZcashNetworkBuilder.network(for: .testnet))
             },
             tokenName: "ZEC"
         )

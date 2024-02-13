@@ -26,7 +26,7 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
                 transparentBalance: Zatoshi(850_000_000)
             )
         ) {
-            BalanceBreakdownReducer(networkType: .testnet)
+            BalanceBreakdownReducer(network: ZcashNetworkBuilder.network(for: .testnet))
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.mainQueue, .immediate)
         }
@@ -48,7 +48,7 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
                 transparentBalance: Zatoshi(850_000_000)
             )
         ) {
-            BalanceBreakdownReducer(networkType: .testnet)
+            BalanceBreakdownReducer(network: ZcashNetworkBuilder.network(for: .testnet))
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.mainQueue, .immediate)
         }

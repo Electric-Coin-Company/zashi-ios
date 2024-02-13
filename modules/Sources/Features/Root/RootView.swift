@@ -15,12 +15,12 @@ import UIComponents
 public struct RootView: View {
     let store: RootStore
     let tokenName: String
-    let networkType: NetworkType
+    let network: ZcashNetwork
 
-    public init(store: RootStore, tokenName: String, networkType: NetworkType) {
+    public init(store: RootStore, tokenName: String, network: ZcashNetwork) {
         self.store = store
         self.tokenName = tokenName
-        self.networkType = networkType
+        self.network = network
     }
     
     public var body: some View {
@@ -55,7 +55,7 @@ private extension RootView {
                                 action: RootReducer.Action.tabs
                             ),
                             tokenName: tokenName,
-                            networkType: networkType
+                            network: network
                         )
                     }
                     .navigationViewStyle(.stack)
@@ -84,7 +84,7 @@ private extension RootView {
                                 action: RootReducer.Action.sandbox
                             ),
                             tokenName: tokenName,
-                            networkType: networkType
+                            network: network
                         )
                     }
                     .navigationViewStyle(.stack)
@@ -206,10 +206,10 @@ struct RootView_Previews: PreviewProvider {
                 store: RootStore(
                     initialState: .initial
                 ) {
-                    RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+                    RootReducer(tokenName: "ZEC", network: ZcashNetworkBuilder.network(for: .testnet))
                 },
                 tokenName: "ZEC",
-                networkType: .testnet
+                network: ZcashNetworkBuilder.network(for: .testnet)
             )
         }
     }

@@ -87,7 +87,7 @@ public struct PlainOnboardingView: View {
             ) {
                 OnboardingFlowReducer(
                     saplingActivationHeight: 0,
-                    zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
+                    network: ZcashNetworkBuilder.network(for: .testnet)
                 )
             }
     )

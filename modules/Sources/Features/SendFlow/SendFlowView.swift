@@ -11,6 +11,7 @@ import Generated
 import Scan
 import UIComponents
 import BalanceFormatter
+import ZcashLightClientKit
 
 public struct SendFlowView: View {
     private enum InputID: Hashable {
@@ -19,14 +20,16 @@ public struct SendFlowView: View {
     
     let store: SendFlowStore
     let tokenName: String
+    let network: ZcashNetwork
     
     @FocusState private var isAddressFocused
     @FocusState private var isAmountFocused
     @FocusState private var isMessageFocused
 
-    public init(store: SendFlowStore, tokenName: String) {
+    public init(store: SendFlowStore, tokenName: String, network: ZcashNetwork) {
         self.store = store
         self.tokenName = tokenName
+        self.network = network
     }
     
     public var body: some View {
@@ -123,7 +126,7 @@ public struct SendFlowView: View {
                                 Text(L10n.Send.review.uppercased())
                             }
                             .zcashStyle()
-                            .disabled(!viewStore.isValidForm || viewStore.isSending)
+                            .disabled(!viewStore.state.isValidForm(fee: network.constants.defaultFee()) || viewStore.isSending)
                             .padding(.top, 40)
                             .padding(.horizontal, 30)
                             
@@ -182,9 +185,10 @@ public struct SendFlowView: View {
                     transactionAmountInputState: .initial
                 )
             ) {
-                SendFlowReducer(networkType: .testnet)
+                SendFlowReducer(network: ZcashNetworkBuilder.network(for: .testnet))
             },
-            tokenName: "ZEC"
+            tokenName: "ZEC",
+            network: ZcashNetworkBuilder.network(for: .testnet)
         )
     }
     .navigationViewStyle(.stack)

@@ -124,7 +124,7 @@ class WalletConfigProviderTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer(tokenName: "ZEC", network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         // Change any of the flags from the default value

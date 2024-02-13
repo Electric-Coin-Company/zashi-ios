@@ -8,6 +8,7 @@
 import XCTest
 import ComposableArchitecture
 import UIComponents
+import ZcashLightClientKit
 @testable import secant_testnet
 
 @MainActor
@@ -23,7 +24,7 @@ class TransactionAddressTextFieldTests: XCTestCase {
                         )
                 )
         ) {
-            TransactionAddressTextFieldReducer(networkType: .testnet)
+            TransactionAddressTextFieldReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         await store.send(.clearAddress) { state in

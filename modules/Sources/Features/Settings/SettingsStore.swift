@@ -13,7 +13,7 @@ public typealias SettingsStore = Store<SettingsReducer.State, SettingsReducer.Ac
 public typealias SettingsViewStore = ViewStore<SettingsReducer.State, SettingsReducer.Action>
 
 public struct SettingsReducer: Reducer {
-    let networkType: NetworkType
+    let network: ZcashNetwork
 
     public struct State: Equatable {
         public enum Destination {
@@ -60,8 +60,8 @@ public struct SettingsReducer: Reducer {
     @Dependency(\.appVersion) var appVersion
     @Dependency(\.restoreWalletStorage) var restoreWalletStorage
 
-    public init(networkType: NetworkType) {
-        self.networkType = networkType
+    public init(network: ZcashNetwork) {
+        self.network = network
     }
 
     public var body: some Reducer<State, Action> {
@@ -116,7 +116,7 @@ public struct SettingsReducer: Reducer {
         .ifLet(\.$alert, action: /Action.alert)
 
         Scope(state: \.advancedSettingsState, action: /Action.advancedSettings) {
-            AdvancedSettingsReducer(networkType: networkType)
+            AdvancedSettingsReducer(network: network)
         }
     }
 }
@@ -185,7 +185,7 @@ extension SettingsStore {
     public static let placeholder = SettingsStore(
         initialState: .initial
     ) {
-        SettingsReducer(networkType: .testnet)
+        SettingsReducer(network: ZcashNetworkBuilder.network(for: .testnet))
     }
     
     public static let demo = SettingsStore(
@@ -195,6 +195,6 @@ extension SettingsStore {
             appBuild: "54"
         )
     ) {
-        SettingsReducer(networkType: .testnet)
+        SettingsReducer(network: ZcashNetworkBuilder.network(for: .testnet))
     }
 }

@@ -16,7 +16,7 @@ class SecurityWarningSnapshotTests: XCTestCase {
         let store = Store(
             initialState: .initial
         ) {
-            SecurityWarningReducer(zcashNetwork: ZcashNetworkBuilder.network(for: .mainnet))
+            SecurityWarningReducer(network: ZcashNetworkBuilder.network(for: .mainnet))
                 .dependency(\.appVersion, .mock)
         }
 

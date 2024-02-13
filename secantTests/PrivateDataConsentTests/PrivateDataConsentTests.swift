@@ -8,6 +8,7 @@
 import XCTest
 import ComposableArchitecture
 import PrivateDataConsent
+import ZcashLightClientKit
 @testable import secant_testnet
 
 @MainActor
@@ -16,7 +17,7 @@ final class PrivateDataConsentTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            PrivateDataConsentReducer(networkType: .testnet)
+            PrivateDataConsentReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         let URL = URL(string: "https://electriccoin.co")!
@@ -39,7 +40,7 @@ final class PrivateDataConsentTests: XCTestCase {
                 exportOnlyLogs: true
             )
         ) {
-            PrivateDataConsentReducer(networkType: .testnet)
+            PrivateDataConsentReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         store.dependencies.logsHandler = .noOp
@@ -71,7 +72,7 @@ final class PrivateDataConsentTests: XCTestCase {
                 exportOnlyLogs: false
             )
         ) {
-            PrivateDataConsentReducer(networkType: .testnet)
+            PrivateDataConsentReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         store.dependencies.logsHandler = .noOp
@@ -103,7 +104,7 @@ final class PrivateDataConsentTests: XCTestCase {
                 isExportingLogs: true
             )
         ) {
-            PrivateDataConsentReducer(networkType: .testnet)
+            PrivateDataConsentReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
         
         await store.send(.shareFinished) { state in
@@ -122,7 +123,7 @@ final class PrivateDataConsentTests: XCTestCase {
         let store = TestStore(
             initialState: initialState
         ) {
-            PrivateDataConsentReducer(networkType: .testnet)
+            PrivateDataConsentReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.restoreWalletStorage = .noOp

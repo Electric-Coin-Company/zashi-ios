@@ -31,7 +31,7 @@ class HomeTests: XCTestCase {
                 walletConfig: .initial
             )
         ) {
-            HomeReducer(networkType: .testnet)
+            HomeReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         XCTAssertTrue(store.state.isSendButtonDisabled)
@@ -43,7 +43,7 @@ class HomeTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            HomeReducer(networkType: .testnet)
+            HomeReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.mainQueue = .immediate
@@ -76,7 +76,7 @@ class HomeTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            HomeReducer(networkType: .testnet)
+            HomeReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.diskSpaceChecker = .mockFullDisk
@@ -110,7 +110,7 @@ class HomeTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            HomeReducer(networkType: .testnet)
+            HomeReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         await store.send(.synchronizerStateChanged(state)) { state in
@@ -130,7 +130,7 @@ class HomeTests: XCTestCase {
         let store = TestStore(
             initialState: initialState
         ) {
-            HomeReducer(networkType: .testnet)
+            HomeReducer(network: ZcashNetworkBuilder.network(for: .testnet))
         }
 
         store.dependencies.restoreWalletStorage = .noOp

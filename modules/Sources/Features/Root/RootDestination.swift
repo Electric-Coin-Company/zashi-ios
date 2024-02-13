@@ -121,7 +121,7 @@ private extension RootReducer {
         deeplink: DeeplinkClient,
         derivationTool: DerivationToolClient
     ) async throws -> RootReducer.Action {
-        let deeplink = try deeplink.resolveDeeplinkURL(url, zcashNetwork.networkType, derivationTool)
+        let deeplink = try deeplink.resolveDeeplinkURL(url, network.networkType, derivationTool)
         
         switch deeplink {
         case .home:

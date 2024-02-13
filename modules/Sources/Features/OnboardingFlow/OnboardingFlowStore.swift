@@ -19,7 +19,7 @@ public typealias OnboardingFlowViewStore = ViewStore<OnboardingFlowReducer.State
 
 public struct OnboardingFlowReducer: Reducer {
     let saplingActivationHeight: BlockHeight
-    let zcashNetwork: ZcashNetwork
+    let network: ZcashNetwork
 
     public struct State: Equatable {
         public enum Destination: Equatable, CaseIterable {
@@ -54,9 +54,9 @@ public struct OnboardingFlowReducer: Reducer {
         case updateDestination(OnboardingFlowReducer.State.Destination?)
     }
     
-    public init(saplingActivationHeight: BlockHeight, zcashNetwork: ZcashNetwork) {
+    public init(saplingActivationHeight: BlockHeight, network: ZcashNetwork) {
         self.saplingActivationHeight = saplingActivationHeight
-        self.zcashNetwork = zcashNetwork
+        self.network = network
     }
     
     public var body: some Reducer<State, Action> {
@@ -65,7 +65,7 @@ public struct OnboardingFlowReducer: Reducer {
         }
 
         Scope(state: \.securityWarningState, action: /Action.securityWarning) {
-            SecurityWarningReducer(zcashNetwork: zcashNetwork)
+            SecurityWarningReducer(network: network)
         }
 
         Reduce { state, action in

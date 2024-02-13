@@ -22,7 +22,7 @@ public typealias SecurityWarningStore = Store<SecurityWarningReducer.State, Secu
 public typealias SecurityWarningViewStore = ViewStore<SecurityWarningReducer.State, SecurityWarningReducer.Action>
 
 public struct SecurityWarningReducer: Reducer {
-    let zcashNetwork: ZcashNetwork
+    let network: ZcashNetwork
 
     public struct State: Equatable {
         public enum Destination: Equatable, CaseIterable {
@@ -64,8 +64,8 @@ public struct SecurityWarningReducer: Reducer {
     @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
-    public init(zcashNetwork: ZcashNetwork) {
-        self.zcashNetwork = zcashNetwork
+    public init(network: ZcashNetwork) {
+        self.network = network
     }
 
     public var body: some Reducer<State, Action> {
@@ -93,7 +93,7 @@ public struct SecurityWarningReducer: Reducer {
                 do {
                     // get the random english mnemonic
                     let newRandomPhrase = try mnemonic.randomMnemonic()
-                    let birthday = zcashSDKEnvironment.latestCheckpoint(zcashNetwork)
+                    let birthday = zcashSDKEnvironment.latestCheckpoint(network)
                     
                     // store the wallet to the keychain
                     try walletStorage.importWallet(newRandomPhrase, birthday, .english, false)
@@ -137,7 +137,7 @@ extension SecurityWarningStore {
     public static var demo = SecurityWarningStore(
         initialState: .placeholder
     ) {
-        SecurityWarningReducer(zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        SecurityWarningReducer(network: ZcashNetworkBuilder.network(for: .testnet))
     }
 }
 

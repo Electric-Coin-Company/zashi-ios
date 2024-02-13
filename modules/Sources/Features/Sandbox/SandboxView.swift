@@ -14,7 +14,7 @@ public struct SandboxView: View {
     
     let store: SandboxStore
     let tokenName: String
-    let networkType: NetworkType
+    let network: ZcashNetwork
 
     var navigationDestinationValues: [SandboxDestinationValue] = SandboxReducer.State.Destination.allCases
         .enumerated()
@@ -35,9 +35,10 @@ public struct SandboxView: View {
                 store: .init(
                     initialState: .initial
                 ) {
-                    SendFlowReducer(networkType: networkType)
+                    SendFlowReducer(network: network)
                 },
-                tokenName: tokenName
+                tokenName: tokenName,
+                network: network
             )
         case .recoveryPhraseDisplay:
             RecoveryPhraseDisplayView(store: .placeholder)
@@ -46,10 +47,10 @@ public struct SandboxView: View {
         }
     }
 
-    public init(store: SandboxStore, tokenName: String, networkType: NetworkType) {
+    public init(store: SandboxStore, tokenName: String, network: ZcashNetwork) {
         self.store = store
         self.tokenName = tokenName
-        self.networkType = networkType
+        self.network = network
     }
     
     public var body: some View {
@@ -108,7 +109,13 @@ public struct SandboxView: View {
 struct SandboxView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            SandboxView(store: .placeholder, tokenName: "ZEC", networkType: .testnet)
+            SandboxView(
+                store: .placeholder,
+                tokenName: "ZEC",
+                network: ZcashNetworkBuilder.network(
+                    for: .testnet
+                )
+            )
         }
     }
 }

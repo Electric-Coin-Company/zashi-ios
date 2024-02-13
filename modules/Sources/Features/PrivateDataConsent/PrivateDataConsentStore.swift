@@ -21,7 +21,7 @@ public typealias PrivateDataConsentStore = Store<PrivateDataConsentReducer.State
 public typealias PrivateDataConsentViewStore = ViewStore<PrivateDataConsentReducer.State, PrivateDataConsentReducer.Action>
 
 public struct PrivateDataConsentReducer: Reducer {
-    let networkType: NetworkType
+    let network: ZcashNetwork
 
     public struct State: Equatable {
         public var exportBinding: Bool
@@ -75,8 +75,8 @@ public struct PrivateDataConsentReducer: Reducer {
         case shareFinished
     }
 
-    public init(networkType: NetworkType) {
-        self.networkType = networkType
+    public init(network: ZcashNetwork) {
+        self.network = network
     }
 
     @Dependency(\.databaseFiles) var databaseFiles
@@ -92,7 +92,7 @@ public struct PrivateDataConsentReducer: Reducer {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                state.dataDbURL = [databaseFiles.dataDbURLFor(ZcashNetworkBuilder.network(for: networkType))]
+                state.dataDbURL = [databaseFiles.dataDbURLFor(ZcashNetworkBuilder.network(for: network.networkType))]
                 return .none
 
             case .exportLogs(.finished):
@@ -145,7 +145,7 @@ extension PrivateDataConsentStore {
     public static var demo = PrivateDataConsentStore(
         initialState: .initial
     ) {
-        PrivateDataConsentReducer(networkType: .testnet)
+        PrivateDataConsentReducer(network: ZcashNetworkBuilder.network(for: .testnet))
     }
 }
 
