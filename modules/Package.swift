@@ -120,6 +120,7 @@ let package = Package(
         .target(
             name: "BalanceFormatter",
             dependencies: [
+                "Generated",
                 "Utils",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
