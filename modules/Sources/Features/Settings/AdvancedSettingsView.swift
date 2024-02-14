@@ -1,3 +1,10 @@
+//
+//  AdvancedSettingsView.swift
+//
+//
+//  Created by Lukáš Korba on 2024-02-12.
+//
+
 import SwiftUI
 import ComposableArchitecture
 import Generated
@@ -6,76 +13,65 @@ import UIComponents
 import PrivateDataConsent
 import ServerSetup
 
-public struct SettingsView: View {
+public struct AdvancedSettingsView: View {
     @State private var isRestoringWalletBadgeOn = false
 
-    let store: SettingsStore
+    let store: AdvancedSettingsStore
     
-    public init(store: SettingsStore) {
+    public init(store: AdvancedSettingsStore) {
         self.store = store
     }
     
     public var body: some View {
         VStack {
             WithViewStore(store, observe: { $0 }) { viewStore in
-                Button(L10n.Settings.feedback.uppercased()) {
-                    viewStore.send(.sendSupportMail)
+                Button(L10n.Settings.recoveryPhrase.uppercased()) {
+                    viewStore.send(.backupWalletAccessRequest)
                 }
                 .zcashStyle()
                 .padding(.vertical, 25)
                 .padding(.top, 40)
                 .navigationLinkEmpty(
-                    isActive: viewStore.bindingForAbout,
+                    isActive: viewStore.bindingForBackupPhrase,
                     destination: {
-                        About(store: store)
+                        RecoveryPhraseDisplayView(store: store.backupPhraseStore())
                     }
                 )
                 .navigationLinkEmpty(
-                    isActive: viewStore.bindingForAdvanced,
+                    isActive: viewStore.bindingForPrivateDataConsent,
                     destination: {
-                        AdvancedSettingsView(store: store.advancedSettingsStore())
+                        PrivateDataConsentView(store: store.privateDataConsentStore())
+                    }
+                )
+                .navigationLinkEmpty(
+                    isActive: viewStore.bindingForServerSetup,
+                    destination: {
+                        ServerSetupView(store: store.serverSetupStore())
                     }
                 )
                 .onAppear {
-                    viewStore.send(.onAppear)
                     isRestoringWalletBadgeOn = viewStore.isRestoringWallet
                 }
                 .onChange(of: viewStore.isRestoringWallet) { isRestoringWalletBadgeOn = $0 }
 
-                if let supportData = viewStore.supportData {
-                    UIMailDialogView(
-                        supportData: supportData,
-                        completion: {
-                            viewStore.send(.sendSupportMailFinished)
-                        }
-                    )
-                    // UIMailDialogView only wraps MFMailComposeViewController presentation
-                    // so frame is set to 0 to not break SwiftUIs layout
-                    .frame(width: 0, height: 0)
-                }
-
-                Button(L10n.Settings.advanced.uppercased()) {
-                    viewStore.send(.updateDestination(.advanced))
+                Button(L10n.Settings.exportPrivateData.uppercased()) {
+                    viewStore.send(.updateDestination(.privateDataConsent))
                 }
                 .zcashStyle()
                 .padding(.bottom, 25)
 
-                Spacer()
-                
-                Button(L10n.Settings.about.uppercased()) {
-                    viewStore.send(.updateDestination(.about))
+                Button(L10n.Settings.chooseServer.uppercased()) {
+                    viewStore.send(.updateDestination(.serverSetup))
                 }
                 .zcashStyle()
-                .padding(.bottom, 40)
+                .padding(.bottom, 80)
+
+                Spacer()
             }
             .padding(.horizontal, 70)
         }
         .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground()
-        .alert(store: store.scope(
-            state: \.$alert,
-            action: { .alert($0) }
-        ))
         .zashiBack()
         .zashiTitle {
             Asset.Assets.zashiTitle.image
@@ -91,6 +87,6 @@ public struct SettingsView: View {
 
 #Preview {
     NavigationView {
-        SettingsView(store: .placeholder)
+        AdvancedSettingsView(store: .placeholder)
     }
 }

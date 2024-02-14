@@ -45,6 +45,18 @@ public struct About: View {
                 Text(L10n.Settings.About.info)
                     .font(.custom(FontFamily.Inter.regular.name, size: 14))
                     .foregroundColor(Asset.Colors.shade30.color)
+                    .padding(.bottom, 20)
+
+                // TODO: [#940] final privacy policy link
+                // https://github.com/Electric-Coin-Company/zashi-ios/issues/940
+                Group {
+                    Text(L10n.Settings.privacyPolicyPart1)
+                    + Text("[\(L10n.Settings.privacyPolicyPart2)](https://z.cash/privacy-policy/)")
+                        .underline()
+                }
+                .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                .foregroundColor(Asset.Colors.shade30.color)
+                .accentColor(Asset.Colors.shade30.color)
 
                 Spacer()
             }

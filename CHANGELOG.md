@@ -6,16 +6,17 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
-### Fixed
-- Restore mode in the UI was missing when Zashi was deleted from an iPhone and reinstalled again.
-- Syncing bar in the restore mode bottom padding.
-- Missing exit button at backup phrase screen when no words are stored in the keychain.
+### Changed
+- Settings screen options have been reduced and some were moved to the new Advanced Settings screen.
 
 ### Added
 - Pending values (changes) at the Balances tab.
 - Choose a Server feature: available at settings, pre-defined servers + custom server setup.
 
 ### Fixed
+- Restore mode in the UI was missing when Zashi was deleted from an iPhone and reinstalled again.
+- Syncing bar in the restore mode bottom padding.
+- Missing exit button at backup phrase screen when no words are stored in the keychain.
 - Failed transactions are no longer at the top of the transaction history but mixed with the transactions around the time it failed.
 - Synchronization progress bar starts at the expected percentage as oposed to previous behaviour when it started with 0% and jumped to the expected one in a few seconds. 
 

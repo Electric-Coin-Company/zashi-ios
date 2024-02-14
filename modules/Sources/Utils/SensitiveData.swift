@@ -96,12 +96,6 @@ extension AccountBalance {
     public var redacted: RedactableAccountBalance? { RedactableAccountBalance(self) }
 }
 
-extension SynchronizerState {
-    public var redacted: SynchronizerState {
-        SynchronizerState
-    }
-}
-
 // MARK: - Redactable Int64
 
 /// Redactable holder for an Int64.

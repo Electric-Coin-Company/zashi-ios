@@ -1,19 +1,13 @@
+import SwiftUI
 import ComposableArchitecture
 import MessageUI
-import SwiftUI
+
 import AppVersion
-import MnemonicClient
-import LocalAuthenticationHandler
-import SupportDataGenerator
-import Models
-import RecoveryPhraseDisplay
-import ZcashLightClientKit
 import Generated
-import WalletStorage
-import ServerSetup
-import SDKSynchronizer
-import PrivateDataConsent
+import Models
 import RestoreWalletStorage
+import SupportDataGenerator
+import ZcashLightClientKit
 
 public typealias SettingsStore = Store<SettingsReducer.State, SettingsReducer.Action>
 public typealias SettingsViewStore = ViewStore<SettingsReducer.State, SettingsReducer.Action>
@@ -24,61 +18,46 @@ public struct SettingsReducer: Reducer {
     public struct State: Equatable {
         public enum Destination {
             case about
-            case backupPhrase
-            case privateDataConsent
-            case serverSetup
+            case advanced
         }
 
+        public var advancedSettingsState: AdvancedSettingsReducer.State
         @PresentationState public var alert: AlertState<Action>?
         public var appVersion = ""
         public var appBuild = ""
         public var destination: Destination?
         public var isRestoringWallet = false
-        public var phraseDisplayState: RecoveryPhraseDisplayReducer.State
-        public var privateDataConsentState: PrivateDataConsentReducer.State
-        public var serverSetupState: ServerSetup.State
         public var supportData: SupportData?
         
         public init(
+            advancedSettingsState: AdvancedSettingsReducer.State,
             appVersion: String = "",
             appBuild: String = "",
             destination: Destination? = nil,
             isRestoringWallet: Bool = false,
-            phraseDisplayState: RecoveryPhraseDisplayReducer.State,
-            privateDataConsentState: PrivateDataConsentReducer.State,
-            serverSetupState: ServerSetup.State,
             supportData: SupportData? = nil
         ) {
+            self.advancedSettingsState = advancedSettingsState
             self.appVersion = appVersion
             self.appBuild = appBuild
             self.destination = destination
             self.isRestoringWallet = isRestoringWallet
-            self.phraseDisplayState = phraseDisplayState
-            self.privateDataConsentState = privateDataConsentState
-            self.serverSetupState = serverSetupState
             self.supportData = supportData
         }
     }
 
     public enum Action: Equatable {
+        case advancedSettings(AdvancedSettingsReducer.Action)
         case alert(PresentationAction<Action>)
-        case backupWalletAccessRequest
         case onAppear
-        case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
-        case privateDataConsent(PrivateDataConsentReducer.Action)
         case restoreWalletTask
         case restoreWalletValue(Bool)
         case sendSupportMail
         case sendSupportMailFinished
-        case serverSetup(ServerSetup.Action)
         case updateDestination(SettingsReducer.State.Destination?)
     }
 
     @Dependency(\.appVersion) var appVersion
-    @Dependency(\.localAuthentication) var localAuthentication
-    @Dependency(\.mnemonic) var mnemonic
-    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
-    @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.restoreWalletStorage) var restoreWalletStorage
 
     public init(networkType: NetworkType) {
@@ -91,25 +70,6 @@ public struct SettingsReducer: Reducer {
             case .onAppear:
                 state.appVersion = appVersion.appVersion()
                 state.appBuild = appVersion.appBuild()
-                return .none
-
-            case .backupWalletAccessRequest:
-                return .run { send in
-                    if await localAuthentication.authenticate() {
-                        await send(.updateDestination(.backupPhrase))
-                    }
-                }
-                                
-            case .phraseDisplay(.finishedPressed):
-                state.destination = nil
-                return .none
-                                
-            case .phraseDisplay:
-                return .none
-
-            case .updateDestination(.privateDataConsent):
-                state.destination = .privateDataConsent
-                state.privateDataConsentState.isAcknowledged = false
                 return .none
 
             case .updateDestination(let destination):
@@ -138,10 +98,7 @@ public struct SettingsReducer: Reducer {
             case .sendSupportMailFinished:
                 state.supportData = nil
                 return .none
-                
-            case .serverSetup:
-                return .none
-                
+
             case .alert(.presented(let action)):
                 return Effect.send(action)
 
@@ -149,28 +106,17 @@ public struct SettingsReducer: Reducer {
                 state.alert = nil
                 return .none
 
-            case .privateDataConsent(.shareFinished):
+            case .advancedSettings:
                 return .none
-
-            case .privateDataConsent:
-                return .none
-
+                
             case .alert:
                 return .none
             }
         }
         .ifLet(\.$alert, action: /Action.alert)
 
-        Scope(state: \.phraseDisplayState, action: /Action.phraseDisplay) {
-            RecoveryPhraseDisplayReducer()
-        }
-
-        Scope(state: \.privateDataConsentState, action: /Action.privateDataConsent) {
-            PrivateDataConsentReducer(networkType: networkType)
-        }
-
-        Scope(state: \.serverSetupState, action: /Action.serverSetup) {
-            ServerSetup()
+        Scope(state: \.advancedSettingsState, action: /Action.advancedSettings) {
+            AdvancedSettingsReducer(networkType: networkType)
         }
     }
 }
@@ -185,31 +131,17 @@ extension SettingsViewStore {
         )
     }
     
-    var bindingForBackupPhrase: Binding<Bool> {
+    var bindingForAdvanced: Binding<Bool> {
         self.destinationBinding.map(
-            extract: { $0 == .backupPhrase },
-            embed: { $0 ? .backupPhrase : nil }
+            extract: { $0 == .advanced },
+            embed: { $0 ? .advanced : nil }
         )
     }
-    
+
     var bindingForAbout: Binding<Bool> {
         self.destinationBinding.map(
             extract: { $0 == .about },
             embed: { $0 ? .about : nil }
-        )
-    }
-    
-    var bindingForPrivateDataConsent: Binding<Bool> {
-        self.destinationBinding.map(
-            extract: { $0 == .privateDataConsent },
-            embed: { $0 ? .privateDataConsent : nil }
-        )
-    }
-    
-    var bindingForServerSetup: Binding<Bool> {
-        self.destinationBinding.map(
-            extract: { $0 == .serverSetup },
-            embed: { $0 ? .serverSetup : nil }
         )
     }
 }
@@ -217,24 +149,10 @@ extension SettingsViewStore {
 // MARK: - Store
 
 extension SettingsStore {
-    func backupPhraseStore() -> RecoveryPhraseDisplayStore {
+    func advancedSettingsStore() -> StoreOf<AdvancedSettingsReducer> {
         self.scope(
-            state: \.phraseDisplayState,
-            action: SettingsReducer.Action.phraseDisplay
-        )
-    }
-    
-    func privateDataConsentStore() -> PrivateDataConsentStore {
-        self.scope(
-            state: \.privateDataConsentState,
-            action: SettingsReducer.Action.privateDataConsent
-        )
-    }
-    
-    func serverSetupStore() -> StoreOf<ServerSetup> {
-        self.scope(
-            state: \.serverSetupState,
-            action: SettingsReducer.Action.serverSetup
+            state: \.advancedSettingsState,
+            action: SettingsReducer.Action.advancedSettings
         )
     }
 }
@@ -259,13 +177,7 @@ extension AlertState where Action == SettingsReducer.Action {
 
 extension SettingsReducer.State {
     public static let initial = SettingsReducer.State(
-        phraseDisplayState: RecoveryPhraseDisplayReducer.State(
-            phrase: nil,
-            showCopyToBufferAlert: false,
-            birthday: nil
-        ),
-        privateDataConsentState: .initial,
-        serverSetupState: ServerSetup.State()
+        advancedSettingsState: .initial
     )
 }
 
@@ -278,15 +190,9 @@ extension SettingsStore {
     
     public static let demo = SettingsStore(
         initialState: .init(
+            advancedSettingsState: .initial,
             appVersion: "0.0.1",
-            appBuild: "54",
-            phraseDisplayState: RecoveryPhraseDisplayReducer.State(
-                phrase: nil,
-                showCopyToBufferAlert: false,
-                birthday: nil
-            ),
-            privateDataConsentState: .initial,
-            serverSetupState: ServerSetup.State()
+            appBuild: "54"
         )
     ) {
         SettingsReducer(networkType: .testnet)
