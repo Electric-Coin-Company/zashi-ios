@@ -12,6 +12,7 @@ import ZcashLightClientKit
 import SDKSynchronizer
 import Utils
 import Root
+import ZcashSDKEnvironment
 
 @main
 struct SecantApp: App {
@@ -74,6 +75,6 @@ public enum TargetConstants {
     }
 }
 
-extension SDKSynchronizerClient: DependencyKey {
-    public static let liveValue: SDKSynchronizerClient = Self.live(network: TargetConstants.zcashNetwork)
+extension ZcashSDKEnvironment: DependencyKey {
+    public static let liveValue: ZcashSDKEnvironment = Self.live(network: TargetConstants.zcashNetwork)
 }
