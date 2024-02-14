@@ -10,6 +10,7 @@ import Generated
 
 struct ZashiBackModifier: ViewModifier {
     @Environment(\.dismiss) private var dismiss
+    let disabled: Bool
     
     func body(content: Content) -> some View {
         content
@@ -27,17 +28,22 @@ struct ZashiBackModifier: ViewModifier {
                                 .tint(Asset.Colors.primary.color)
 
                             Text(L10n.General.back.uppercased())
-                                .foregroundColor(Asset.Colors.primary.color)
+                                .foregroundColor(
+                                    disabled 
+                                    ? Asset.Colors.shade72.color
+                                    : Asset.Colors.primary.color
+                                )
                                 .font(.custom(FontFamily.Inter.regular.name, size: 14))
                         }
                     }
+                    .disabled(disabled)
                 }
             }
     }
 }
 
 extension View {
-    public func zashiBack() -> some View {
-        modifier(ZashiBackModifier())
+    public func zashiBack(_ disabled: Bool = false) -> some View {
+        modifier(ZashiBackModifier(disabled: disabled))
     }
 }

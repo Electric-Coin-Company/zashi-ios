@@ -4,6 +4,7 @@ import Generated
 import RecoveryPhraseDisplay
 import UIComponents
 import PrivateDataConsent
+import ServerSetup
 
 public struct SettingsView: View {
     @Environment(\.openURL) var openURL
@@ -39,6 +40,12 @@ public struct SettingsView: View {
                     isActive: viewStore.bindingForPrivateDataConsent,
                     destination: {
                         PrivateDataConsentView(store: store.privateDataConsentStore())
+                    }
+                )
+                .navigationLinkEmpty(
+                    isActive: viewStore.bindingForServerSetup,
+                    destination: {
+                        ServerSetupView(store: store.serverSetupStore())
                     }
                 )
                 .onAppear {
@@ -82,6 +89,12 @@ public struct SettingsView: View {
                 
                 Button(L10n.Settings.exportPrivateData.uppercased()) {
                     viewStore.send(.updateDestination(.privateDataConsent))
+                }
+                .zcashStyle()
+                .padding(.bottom, 25)
+
+                Button(L10n.Settings.chooseServer.uppercased()) {
+                    viewStore.send(.updateDestination(.serverSetup))
                 }
                 .zcashStyle()
                 .padding(.bottom, 80)

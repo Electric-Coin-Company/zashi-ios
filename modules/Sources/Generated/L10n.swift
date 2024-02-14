@@ -145,6 +145,8 @@ public enum L10n {
     public static let ok = L10n.tr("Localizable", "general.ok", fallback: "Ok")
     /// [RESTORING YOUR WALLET…]
     public static let restoringWallet = L10n.tr("Localizable", "general.restoringWallet", fallback: "[RESTORING YOUR WALLET…]")
+    /// Save
+    public static let save = L10n.tr("Localizable", "general.save", fallback: "Save")
     /// Send
     public static let send = L10n.tr("Localizable", "general.send", fallback: "Send")
     /// Skip
@@ -576,9 +578,27 @@ public enum L10n {
       public static let invalidAmount = L10n.tr("Localizable", "send.error.invalidAmount", fallback: "Invalid amount")
     }
   }
+  public enum ServerSetup {
+    /// <hostname>:<port>
+    public static let placeholder = L10n.tr("Localizable", "serverSetup.placeholder", fallback: "<hostname>:<port>")
+    /// Server
+    public static let title = L10n.tr("Localizable", "serverSetup.title", fallback: "Server")
+    public enum Alert {
+      public enum Failed {
+        /// Error: %@ (code: %@)
+        public static func message(_ p1: Any, _ p2: Any) -> String {
+          return L10n.tr("Localizable", "serverSetup.alert.failed.message", String(describing: p1), String(describing: p2), fallback: "Error: %@ (code: %@)")
+        }
+        /// Invalid endpoint
+        public static let title = L10n.tr("Localizable", "serverSetup.alert.failed.title", fallback: "Invalid endpoint")
+      }
+    }
+  }
   public enum Settings {
     /// About
     public static let about = L10n.tr("Localizable", "settings.about", fallback: "About")
+    /// Choose a server
+    public static let chooseServer = L10n.tr("Localizable", "settings.chooseServer", fallback: "Choose a server")
     /// Documentation
     public static let documentation = L10n.tr("Localizable", "settings.documentation", fallback: "Documentation")
     /// Export logs only

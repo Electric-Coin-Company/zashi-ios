@@ -55,7 +55,8 @@ class SettingsTests: XCTestCase {
         let store = TestStore(
             initialState: SettingsReducer.State(
                 phraseDisplayState: RecoveryPhraseDisplayReducer.State(phrase: nil),
-                privateDataConsentState: .initial
+                privateDataConsentState: .initial,
+                serverSetupState: .initial
             )
         ) {
             SettingsReducer(networkType: .testnet)

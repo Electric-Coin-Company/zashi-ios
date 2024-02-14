@@ -77,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/grpc/grpc-swift.git",
       "state" : {
-        "revision" : "6ade19f0b57f5fc436dfecfced83f3c84d1095b9",
-        "version" : "1.21.0"
+        "revision" : "5d0cf1c7b2e641e3a8961089e7e4672f4fe8abac",
+        "version" : "1.21.1"
       }
     },
     {
@@ -383,8 +383,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/zcash/ZcashLightClientKit",
       "state" : {
-        "revision" : "170408d5d685e81f71f700c8f508f14e748ab603",
-        "version" : "2.0.9"
+        "revision" : "2ef0e00385a8495b9d7115f7d0f9f1f19f91afa8",
+        "version" : "2.0.10"
       }
     }
   ],

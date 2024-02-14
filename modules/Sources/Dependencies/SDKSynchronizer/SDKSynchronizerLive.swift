@@ -103,7 +103,10 @@ extension SDKSynchronizerClient {
                     latestBlockHeight: try await SDKSynchronizerClient.latestBlockHeight(synchronizer: synchronizer)
                 )
             },
-            wipe: { synchronizer.wipe() }
+            wipe: { synchronizer.wipe() },
+            switchToEndpoint: { endpoint in
+                try await synchronizer.switchTo(endpoint: endpoint)
+            }
         )
     }
 }

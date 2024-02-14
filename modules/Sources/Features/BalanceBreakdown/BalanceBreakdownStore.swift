@@ -37,10 +37,10 @@ public struct BalanceBreakdownReducer: Reducer {
         public var shieldedBalance: Zatoshi
         public var totalBalance: Zatoshi
         public var syncProgressState: SyncProgressReducer.State
-        public var transparentBalance: Balance
+        public var transparentBalance: Zatoshi
 
         public var isShieldableBalanceAvailable: Bool {
-            transparentBalance.data.verified.amount >= autoShieldingThreshold.amount
+            transparentBalance.amount >= autoShieldingThreshold.amount
         }
 
         public var isShieldingButtonDisabled: Bool {
@@ -57,7 +57,7 @@ public struct BalanceBreakdownReducer: Reducer {
             shieldedBalance: Zatoshi,
             syncProgressState: SyncProgressReducer.State,
             totalBalance: Zatoshi,
-            transparentBalance: Balance
+            transparentBalance: Zatoshi
         ) {
             self.autoShieldingThreshold = autoShieldingThreshold
             self.changePending = changePending
@@ -164,11 +164,11 @@ public struct BalanceBreakdownReducer: Reducer {
                 return .none
 
             case .synchronizerStateChanged(let latestState):
-                state.shieldedBalance = latestState.accountBalances.saplingBalance.spendableValue
-                state.totalBalance = latestState.accountBalances.saplingBalance.total()
-                state.transparentBalance = latestState.transparentBalance.redacted
-                state.changePending = latestState.accountBalances.saplingBalance.changePendingConfirmation
-                state.pendingTransactions = latestState.accountBalances.saplingBalance.valuePendingSpendability
+                state.shieldedBalance = latestState.accountBalance?.saplingBalance.spendableValue ?? .zero
+                state.totalBalance = latestState.accountBalance?.saplingBalance.total() ?? .zero
+                state.transparentBalance = latestState.accountBalance?.unshielded ?? .zero
+                state.changePending = latestState.accountBalance?.saplingBalance.changePendingConfirmation ?? .zero
+                state.pendingTransactions = latestState.accountBalance?.saplingBalance.valuePendingSpendability ?? .zero
                 return .none
                 
             case .syncProgress:
@@ -205,7 +205,7 @@ extension BalanceBreakdownReducer.State {
         shieldedBalance: .zero,
         syncProgressState: .initial,
         totalBalance: .zero,
-        transparentBalance: Balance.zero
+        transparentBalance: .zero
     )
     
     public static let initial = BalanceBreakdownReducer.State(
@@ -216,7 +216,7 @@ extension BalanceBreakdownReducer.State {
         shieldedBalance: .zero,
         syncProgressState: .initial,
         totalBalance: .zero,
-        transparentBalance: Balance.zero
+        transparentBalance: .zero
     )
 }
 

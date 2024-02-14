@@ -10,6 +10,7 @@ import RecoveryPhraseDisplay
 import ZcashLightClientKit
 import Generated
 import WalletStorage
+import ServerSetup
 import SDKSynchronizer
 import PrivateDataConsent
 import RestoreWalletStorage
@@ -25,6 +26,7 @@ public struct SettingsReducer: Reducer {
             case about
             case backupPhrase
             case privateDataConsent
+            case serverSetup
         }
 
         @PresentationState public var alert: AlertState<Action>?
@@ -34,6 +36,7 @@ public struct SettingsReducer: Reducer {
         public var isRestoringWallet = false
         public var phraseDisplayState: RecoveryPhraseDisplayReducer.State
         public var privateDataConsentState: PrivateDataConsentReducer.State
+        public var serverSetupState: ServerSetup.State
         public var supportData: SupportData?
         
         public init(
@@ -43,6 +46,7 @@ public struct SettingsReducer: Reducer {
             isRestoringWallet: Bool = false,
             phraseDisplayState: RecoveryPhraseDisplayReducer.State,
             privateDataConsentState: PrivateDataConsentReducer.State,
+            serverSetupState: ServerSetup.State,
             supportData: SupportData? = nil
         ) {
             self.appVersion = appVersion
@@ -51,6 +55,7 @@ public struct SettingsReducer: Reducer {
             self.isRestoringWallet = isRestoringWallet
             self.phraseDisplayState = phraseDisplayState
             self.privateDataConsentState = privateDataConsentState
+            self.serverSetupState = serverSetupState
             self.supportData = supportData
         }
     }
@@ -65,6 +70,7 @@ public struct SettingsReducer: Reducer {
         case restoreWalletValue(Bool)
         case sendSupportMail
         case sendSupportMailFinished
+        case serverSetup(ServerSetup.Action)
         case updateDestination(SettingsReducer.State.Destination?)
     }
 
@@ -133,6 +139,9 @@ public struct SettingsReducer: Reducer {
                 state.supportData = nil
                 return .none
                 
+            case .serverSetup:
+                return .none
+                
             case .alert(.presented(let action)):
                 return Effect.send(action)
 
@@ -158,6 +167,10 @@ public struct SettingsReducer: Reducer {
 
         Scope(state: \.privateDataConsentState, action: /Action.privateDataConsent) {
             PrivateDataConsentReducer(networkType: networkType)
+        }
+
+        Scope(state: \.serverSetupState, action: /Action.serverSetup) {
+            ServerSetup()
         }
     }
 }
@@ -192,6 +205,13 @@ extension SettingsViewStore {
             embed: { $0 ? .privateDataConsent : nil }
         )
     }
+    
+    var bindingForServerSetup: Binding<Bool> {
+        self.destinationBinding.map(
+            extract: { $0 == .serverSetup },
+            embed: { $0 ? .serverSetup : nil }
+        )
+    }
 }
 
 // MARK: - Store
@@ -208,6 +228,13 @@ extension SettingsStore {
         self.scope(
             state: \.privateDataConsentState,
             action: SettingsReducer.Action.privateDataConsent
+        )
+    }
+    
+    func serverSetupStore() -> StoreOf<ServerSetup> {
+        self.scope(
+            state: \.serverSetupState,
+            action: SettingsReducer.Action.serverSetup
         )
     }
 }
@@ -237,7 +264,8 @@ extension SettingsReducer.State {
             showCopyToBufferAlert: false,
             birthday: nil
         ),
-        privateDataConsentState: .initial
+        privateDataConsentState: .initial,
+        serverSetupState: ServerSetup.State()
     )
 }
 
@@ -257,7 +285,8 @@ extension SettingsStore {
                 showCopyToBufferAlert: false,
                 birthday: nil
             ),
-            privateDataConsentState: .initial
+            privateDataConsentState: .initial,
+            serverSetupState: ServerSetup.State()
         )
     ) {
         SettingsReducer(networkType: .testnet)

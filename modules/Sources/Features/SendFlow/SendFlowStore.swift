@@ -262,8 +262,8 @@ public struct SendFlowReducer: Reducer {
                 return .none
                 
             case .synchronizerStateChanged(let latestState):
-                state.shieldedBalance = latestState.accountBalances.saplingBalance.spendableValue
-                state.totalBalance = latestState.accountBalances.saplingBalance.total()
+                state.shieldedBalance = latestState.accountBalance?.saplingBalance.spendableValue ?? .zero
+                state.totalBalance = latestState.accountBalance?.saplingBalance.total() ?? .zero
                 state.transactionAmountInputState.maxValue = state.shieldedBalance.amount.redacted
                 return .none
 

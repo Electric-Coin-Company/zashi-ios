@@ -90,12 +90,7 @@ class BalanceBreakdownTests: XCTestCase {
                 shieldedBalance: .zero,
                 syncProgressState: .initial,
                 totalBalance: .zero,
-                transparentBalance: Balance(
-                    WalletBalance(
-                        verified: Zatoshi(1_000_000),
-                        total: Zatoshi(1_000_000)
-                    )
-                )
+                transparentBalance: Zatoshi(1_000_000)
             )
         ) {
             BalanceBreakdownReducer(networkType: .testnet)
@@ -116,12 +111,7 @@ class BalanceBreakdownTests: XCTestCase {
                 shieldedBalance: .zero,
                 syncProgressState: .initial,
                 totalBalance: .zero,
-                transparentBalance: Balance(
-                    WalletBalance(
-                        verified: Zatoshi(1_000_000),
-                        total: Zatoshi(1_000_000)
-                    )
-                )
+                transparentBalance: Zatoshi(1_000_000)
             )
         ) {
             BalanceBreakdownReducer(networkType: .testnet)
