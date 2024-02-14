@@ -22,8 +22,6 @@ public typealias SecurityWarningStore = Store<SecurityWarningReducer.State, Secu
 public typealias SecurityWarningViewStore = ViewStore<SecurityWarningReducer.State, SecurityWarningReducer.Action>
 
 public struct SecurityWarningReducer: Reducer {
-    let zcashNetwork: ZcashNetwork
-
     public struct State: Equatable {
         public enum Destination: Equatable, CaseIterable {
             case createNewWallet
@@ -64,9 +62,7 @@ public struct SecurityWarningReducer: Reducer {
     @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
-    public init(zcashNetwork: ZcashNetwork) {
-        self.zcashNetwork = zcashNetwork
-    }
+    public init() { }
 
     public var body: some Reducer<State, Action> {
         BindingReducer()
@@ -137,7 +133,7 @@ extension SecurityWarningStore {
     public static var demo = SecurityWarningStore(
         initialState: .placeholder
     ) {
-        SecurityWarningReducer(zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+        SecurityWarningReducer()
     }
 }
 

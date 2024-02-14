@@ -18,8 +18,6 @@ public typealias ImportWalletStore = Store<ImportWalletReducer.State, ImportWall
 public typealias ImportWalletViewStore = ViewStore<ImportWalletReducer.State, ImportWalletReducer.Action>
 
 public struct ImportWalletReducer: Reducer {
-    let saplingActivationHeight: BlockHeight
-    
     public struct State: Equatable {
         public enum Destination: Equatable {
             case birthday
@@ -87,9 +85,7 @@ public struct ImportWalletReducer: Reducer {
     @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
-    public init(saplingActivationHeight: BlockHeight) {
-        self.saplingActivationHeight = saplingActivationHeight
-    }
+    public init() { }
     
     public var body: some Reducer<State, Action> {
         Reduce { state, action in
@@ -113,7 +109,7 @@ public struct ImportWalletReducer: Reducer {
                 return .none
                 
             case .birthdayInputChanged(let redactedBirthday):
-                let saplingActivation = saplingActivationHeight
+                let saplingActivation = zcashSDKEnvironment.network.constants.saplingActivationHeight
 
                 state.birthdayHeight = redactedBirthday
 
@@ -141,7 +137,7 @@ public struct ImportWalletReducer: Reducer {
                     
                     // store it to the keychain, if the user did not input a height,
                     // fall back to sapling activation
-                    let birthday = state.birthdayHeightValue ?? saplingActivationHeight.redacted
+                    let birthday = state.birthdayHeightValue ?? zcashSDKEnvironment.network.constants.saplingActivationHeight.redacted
                     
                     try walletStorage.importWallet(state.importedSeedPhrase.data, birthday.data, .english, false)
                     
@@ -232,6 +228,6 @@ extension ImportWalletStore {
     public static let demo = Store(
         initialState: .initial
     ) {
-        ImportWalletReducer(saplingActivationHeight: 0)
+        ImportWalletReducer()
     }
 }

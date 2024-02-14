@@ -16,7 +16,7 @@ final class PrivateDataConsentTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            PrivateDataConsentReducer(networkType: .testnet)
+            PrivateDataConsentReducer()
         }
         
         let URL = URL(string: "https://electriccoin.co")!
@@ -39,7 +39,7 @@ final class PrivateDataConsentTests: XCTestCase {
                 exportOnlyLogs: true
             )
         ) {
-            PrivateDataConsentReducer(networkType: .testnet)
+            PrivateDataConsentReducer()
         }
         
         store.dependencies.logsHandler = .noOp
@@ -71,7 +71,7 @@ final class PrivateDataConsentTests: XCTestCase {
                 exportOnlyLogs: false
             )
         ) {
-            PrivateDataConsentReducer(networkType: .testnet)
+            PrivateDataConsentReducer()
         }
         
         store.dependencies.logsHandler = .noOp
@@ -103,7 +103,7 @@ final class PrivateDataConsentTests: XCTestCase {
                 isExportingLogs: true
             )
         ) {
-            PrivateDataConsentReducer(networkType: .testnet)
+            PrivateDataConsentReducer()
         }
         
         await store.send(.shareFinished) { state in
@@ -122,7 +122,7 @@ final class PrivateDataConsentTests: XCTestCase {
         let store = TestStore(
             initialState: initialState
         ) {
-            PrivateDataConsentReducer(networkType: .testnet)
+            PrivateDataConsentReducer()
         }
 
         store.dependencies.restoreWalletStorage = .noOp

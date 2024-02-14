@@ -35,7 +35,7 @@ public struct SandboxView: View {
                 store: .init(
                     initialState: .initial
                 ) {
-                    SendFlowReducer(networkType: networkType)
+                    SendFlowReducer()
                 },
                 tokenName: tokenName
             )

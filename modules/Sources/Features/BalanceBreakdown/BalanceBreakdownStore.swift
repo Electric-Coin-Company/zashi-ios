@@ -18,13 +18,13 @@ import SDKSynchronizer
 import Models
 import SyncProgress
 import RestoreWalletStorage
+import ZcashSDKEnvironment
 
 public typealias BalanceBreakdownStore = Store<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>
 public typealias BalanceBreakdownViewStore = ViewStore<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>
 
 public struct BalanceBreakdownReducer: Reducer {
     private enum CancelId { case timer }
-    let networkType: NetworkType
     
     public struct State: Equatable {
         @PresentationState public var alert: AlertState<Action>?
@@ -93,10 +93,9 @@ public struct BalanceBreakdownReducer: Reducer {
     @Dependency(\.restoreWalletStorage) var restoreWalletStorage
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.walletStorage) var walletStorage
+    @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
-    public init(networkType: NetworkType) {
-        self.networkType = networkType
-    }
+    public init() { }
     
     public var body: some Reducer<State, Action> {
         Scope(state: \.syncProgressState, action: /Action.syncProgress) {
@@ -143,7 +142,7 @@ public struct BalanceBreakdownReducer: Reducer {
                     do {
                         let storedWallet = try walletStorage.exportWallet()
                         let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
-                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, networkType)
+                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, zcashSDKEnvironment.network.networkType)
 
                         let transaction = try await sdkSynchronizer.shieldFunds(spendingKey, Memo(string: ""), state.autoShieldingThreshold)
 
@@ -224,6 +223,6 @@ extension BalanceBreakdownStore {
     public static let placeholder = BalanceBreakdownStore(
         initialState: .placeholder
     ) {
-        BalanceBreakdownReducer(networkType: .testnet)
+        BalanceBreakdownReducer()
     }
 }

@@ -30,7 +30,7 @@ class AppInitializationTests: XCTestCase {
         let store = TestStore(
             initialState: appState
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer()
         }
         
         let testQueue = DispatchQueue.test
@@ -104,7 +104,7 @@ class AppInitializationTests: XCTestCase {
         let store = TestStore(
             initialState: appState
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer()
         }
         
         let testQueue = DispatchQueue.test
@@ -180,7 +180,7 @@ class AppInitializationTests: XCTestCase {
         let store = TestStore(
             initialState: initialState
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer()
         }
 
         store.dependencies.databaseFiles = .noOp
@@ -220,7 +220,7 @@ class AppInitializationTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer()
         }
 
         store.dependencies.databaseFiles = .noOp
@@ -283,7 +283,7 @@ class AppInitializationTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer()
         }
         
         store.dependencies.databaseFiles = .noOp

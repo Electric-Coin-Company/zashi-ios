@@ -24,10 +24,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     let rootStore = RootStore(
         initialState: .initial
     ) {
-        RootReducer(
-            tokenName: TargetConstants.tokenName,
-            zcashNetwork: TargetConstants.zcashNetwork
-        ).logging()
+        RootReducer()
+            .logging()
     }
 
     func application(

@@ -206,7 +206,7 @@ struct RootView_Previews: PreviewProvider {
                 store: RootStore(
                     initialState: .initial
                 ) {
-                    RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+                    RootReducer()
                 },
                 tokenName: "ZEC",
                 networkType: .testnet

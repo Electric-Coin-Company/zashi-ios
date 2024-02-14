@@ -182,7 +182,7 @@ public struct SendFlowView: View {
                     transactionAmountInputState: .initial
                 )
             ) {
-                SendFlowReducer(networkType: .testnet)
+                SendFlowReducer()
             },
             tokenName: "ZEC"
         )

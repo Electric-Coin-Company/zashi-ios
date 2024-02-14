@@ -21,7 +21,7 @@ class TabsTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            TabsReducer(tokenName: "TAZ", networkType: .testnet)
+            TabsReducer()
         }
         
         await store.send(.home(.balanceBreakdown)) { state in
@@ -33,7 +33,7 @@ class TabsTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            TabsReducer(tokenName: "TAZ", networkType: .testnet)
+            TabsReducer()
         }
         
         await store.send(.selectedTabChanged(.send)) { state in
@@ -45,7 +45,7 @@ class TabsTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            TabsReducer(tokenName: "TAZ", networkType: .testnet)
+            TabsReducer()
         }
         
         await store.send(.updateDestination(.settings)) { state in
@@ -60,7 +60,7 @@ class TabsTests: XCTestCase {
         let store = TestStore(
             initialState: placeholderState
         ) {
-            TabsReducer(tokenName: "TAZ", networkType: .testnet)
+            TabsReducer()
         }
         
         await store.send(.updateDestination(nil)) { state in
@@ -75,7 +75,7 @@ class TabsTests: XCTestCase {
         let store = TestStore(
             initialState: initialState
         ) {
-            TabsReducer(tokenName: "TAZ", networkType: .testnet)
+            TabsReducer()
         }
 
         store.dependencies.restoreWalletStorage = .noOp
@@ -153,7 +153,7 @@ class TabsTests: XCTestCase {
         let store = TestStore(
             initialState: placeholderState
         ) {
-            TabsReducer(tokenName: "TAZ", networkType: .testnet)
+            TabsReducer()
         }
         
         let transaction = TransactionState.placeholder(uuid: "3")
@@ -178,7 +178,7 @@ class TabsTests: XCTestCase {
         let store = TestStore(
             initialState: placeholderState
         ) {
-            TabsReducer(tokenName: "TAZ", networkType: .testnet)
+            TabsReducer()
         }
         
         store.dependencies.sdkSynchronizer = .mock

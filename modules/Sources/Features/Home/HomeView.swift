@@ -121,7 +121,7 @@ struct HomeView_Previews: PreviewProvider {
                                     walletConfig: .initial
                                 )
                     ) {
-                        HomeReducer(networkType: .testnet)
+                        HomeReducer()
                     },
                 tokenName: "ZEC"
             )

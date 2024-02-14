@@ -59,7 +59,7 @@ class SettingsTests: XCTestCase {
                 serverSetupState: .initial
             )
         ) {
-            AdvancedSettingsReducer(networkType: .testnet)
+            AdvancedSettingsReducer()
         }
 
         store.dependencies.localAuthentication = .mockAuthenticationSucceeded
@@ -78,7 +78,7 @@ class SettingsTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            AdvancedSettingsReducer(networkType: .testnet)
+            AdvancedSettingsReducer()
         }
 
         store.dependencies.localAuthentication = .mockAuthenticationFailed
@@ -95,7 +95,7 @@ class SettingsTests: XCTestCase {
         let store = TestStore(
             initialState: initialState
         ) {
-            SettingsReducer(networkType: .testnet)
+            SettingsReducer()
         }
 
         store.dependencies.restoreWalletStorage = .noOp

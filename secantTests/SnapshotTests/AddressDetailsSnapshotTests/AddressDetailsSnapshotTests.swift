@@ -25,7 +25,7 @@ class AddressDetailsSnapshotTests: XCTestCase {
         let store = Store(
             initialState: AddressDetailsReducer.State(uAddress: uAddress)
         ) {
-            AddressDetailsReducer(networkType: networkType)
+            AddressDetailsReducer()
                 .dependency(\.walletConfigProvider, .noOp)
         }
         
@@ -44,7 +44,7 @@ class AddressDetailsSnapshotTests: XCTestCase {
         let store = Store(
             initialState: AddressDetailsReducer.State(uAddress: uAddress)
         ) {
-            AddressDetailsReducer(networkType: networkType)
+            AddressDetailsReducer()
                 .dependency(\.walletConfigProvider, .noOp)
         }
         

@@ -16,13 +16,12 @@ import ExportLogs
 import DatabaseFiles
 import ExportLogs
 import RestoreWalletStorage
+import ZcashSDKEnvironment
 
 public typealias PrivateDataConsentStore = Store<PrivateDataConsentReducer.State, PrivateDataConsentReducer.Action>
 public typealias PrivateDataConsentViewStore = ViewStore<PrivateDataConsentReducer.State, PrivateDataConsentReducer.Action>
 
 public struct PrivateDataConsentReducer: Reducer {
-    let networkType: NetworkType
-
     public struct State: Equatable {
         public var exportBinding: Bool
         public var exportOnlyLogs = true
@@ -75,12 +74,11 @@ public struct PrivateDataConsentReducer: Reducer {
         case shareFinished
     }
 
-    public init(networkType: NetworkType) {
-        self.networkType = networkType
-    }
+    public init() { }
 
     @Dependency(\.databaseFiles) var databaseFiles
     @Dependency(\.restoreWalletStorage) var restoreWalletStorage
+    @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public var body: some Reducer<State, Action> {
         BindingReducer()
@@ -92,7 +90,7 @@ public struct PrivateDataConsentReducer: Reducer {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                state.dataDbURL = [databaseFiles.dataDbURLFor(ZcashNetworkBuilder.network(for: networkType))]
+                state.dataDbURL = [databaseFiles.dataDbURLFor(zcashSDKEnvironment.network)]
                 return .none
 
             case .exportLogs(.finished):
@@ -145,7 +143,7 @@ extension PrivateDataConsentStore {
     public static var demo = PrivateDataConsentStore(
         initialState: .initial
     ) {
-        PrivateDataConsentReducer(networkType: .testnet)
+        PrivateDataConsentReducer()
     }
 }
 

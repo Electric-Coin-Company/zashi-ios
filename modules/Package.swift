@@ -112,6 +112,7 @@ let package = Package(
                 "UIComponents",
                 "Utils",
                 "WalletStorage",
+                "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
             ],
@@ -322,6 +323,7 @@ let package = Package(
                 "RestoreWalletStorage",
                 "UIComponents",
                 "Utils",
+                "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Features/PrivateDataConsent"
@@ -410,6 +412,7 @@ let package = Package(
                 "URIParser",
                 "UIComponents",
                 "Utils",
+                "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
             ],

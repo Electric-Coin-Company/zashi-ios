@@ -17,7 +17,7 @@ class DebugTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer()
         }
         
         await store.send(.debug(.rescanBlockchain)) { state in
@@ -33,7 +33,7 @@ class DebugTests: XCTestCase {
         let store = TestStore(
             initialState: mockState
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer()
         }
         
         await store.send(.debug(.cancelRescan)) { state in
@@ -49,7 +49,7 @@ class DebugTests: XCTestCase {
         let store = TestStore(
             initialState: mockState
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer()
         }
 
         store.dependencies.mainQueue = .immediate
@@ -72,7 +72,7 @@ class DebugTests: XCTestCase {
         let store = TestStore(
             initialState: mockState
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer()
         }
 
         store.dependencies.mainQueue = .immediate

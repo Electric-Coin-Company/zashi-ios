@@ -18,9 +18,6 @@ public typealias OnboardingFlowStore = Store<OnboardingFlowReducer.State, Onboar
 public typealias OnboardingFlowViewStore = ViewStore<OnboardingFlowReducer.State, OnboardingFlowReducer.Action>
 
 public struct OnboardingFlowReducer: Reducer {
-    let saplingActivationHeight: BlockHeight
-    let zcashNetwork: ZcashNetwork
-
     public struct State: Equatable {
         public enum Destination: Equatable, CaseIterable {
             case createNewWallet
@@ -54,18 +51,15 @@ public struct OnboardingFlowReducer: Reducer {
         case updateDestination(OnboardingFlowReducer.State.Destination?)
     }
     
-    public init(saplingActivationHeight: BlockHeight, zcashNetwork: ZcashNetwork) {
-        self.saplingActivationHeight = saplingActivationHeight
-        self.zcashNetwork = zcashNetwork
-    }
+    public init() { }
     
     public var body: some Reducer<State, Action> {
         Scope(state: \.importWalletState, action: /Action.importWallet) {
-            ImportWalletReducer(saplingActivationHeight: saplingActivationHeight)
+            ImportWalletReducer()
         }
 
         Scope(state: \.securityWarningState, action: /Action.securityWarning) {
-            SecurityWarningReducer(zcashNetwork: zcashNetwork)
+            SecurityWarningReducer()
         }
 
         Reduce { state, action in
