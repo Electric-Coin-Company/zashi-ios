@@ -19,7 +19,7 @@ final class WalletNukeTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer()
         }
         
         await store.send(.initialization(.nukeWalletRequest)) { state in
@@ -33,7 +33,7 @@ final class WalletNukeTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer()
         }
         
         store.dependencies.sdkSynchronizer = .noOp
@@ -57,7 +57,7 @@ final class WalletNukeTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer()
         }
 
         var readIds: [RedactableString: Bool] = ["id1".redacted: true]

@@ -85,10 +85,7 @@ public struct PlainOnboardingView: View {
                     securityWarningState: .initial
                 )
             ) {
-                OnboardingFlowReducer(
-                    saplingActivationHeight: 0,
-                    zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
-                )
+                OnboardingFlowReducer()
             }
     )
 }

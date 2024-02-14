@@ -18,7 +18,7 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            ImportWalletReducer(saplingActivationHeight: 0)
+            ImportWalletReducer()
         }
         
         await store.send(.onAppear) { state in
@@ -32,7 +32,7 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            ImportWalletReducer(saplingActivationHeight: 0)
+            ImportWalletReducer()
         }
         
         store.dependencies.mnemonic = .noOp
@@ -53,7 +53,7 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24)
         ) {
-            ImportWalletReducer(saplingActivationHeight: 0)
+            ImportWalletReducer()
         }
         
         store.dependencies.mnemonic = .noOp
@@ -75,7 +75,7 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24)
         ) {
-            ImportWalletReducer(saplingActivationHeight: 0)
+            ImportWalletReducer()
         }
         
         store.dependencies.mnemonic = .noOp
@@ -102,7 +102,7 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            ImportWalletReducer(saplingActivationHeight: 280_000)
+            ImportWalletReducer()
         }
         
         let birthday = "200000".redacted
@@ -118,7 +118,7 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            ImportWalletReducer(saplingActivationHeight: 0)
+            ImportWalletReducer()
         }
         
         let birthday = "abc".redacted
@@ -134,7 +134,7 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            ImportWalletReducer(saplingActivationHeight: 0)
+            ImportWalletReducer()
         }
         
         let birthday = "1700000".redacted
@@ -151,7 +151,7 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24)
         ) {
-            ImportWalletReducer(saplingActivationHeight: 0)
+            ImportWalletReducer()
         }
 
         store.dependencies.mnemonic = .noOp
@@ -184,7 +184,7 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24)
         ) {
-            ImportWalletReducer(saplingActivationHeight: 280_000)
+            ImportWalletReducer()
         }
         
         store.dependencies.mnemonic = .noOp
@@ -216,7 +216,7 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24)
         ) {
-            ImportWalletReducer(saplingActivationHeight: 280_000)
+            ImportWalletReducer()
         }
         
         store.dependencies.mnemonic = .noOp
@@ -253,7 +253,7 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24)
         ) {
-            ImportWalletReducer(saplingActivationHeight: 0)
+            ImportWalletReducer()
         }
             
         store.dependencies.mnemonic = .noOp
@@ -291,7 +291,7 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: ImportWalletReducer.State(maxWordsCount: 24)
         ) {
-            ImportWalletReducer(saplingActivationHeight: 0)
+            ImportWalletReducer()
         }
         
         store.dependencies.mnemonic = .noOp
@@ -335,7 +335,7 @@ class ImportWalletTests: XCTestCase {
                 wordsCount: 24
             )
         ) {
-            ImportWalletReducer(saplingActivationHeight: 0)
+            ImportWalletReducer()
         }
         
         store.dependencies.mnemonic = .noOp

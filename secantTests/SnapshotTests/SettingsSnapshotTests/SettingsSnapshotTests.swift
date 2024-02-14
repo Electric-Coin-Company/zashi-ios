@@ -16,7 +16,7 @@ class SettingsSnapshotTests: XCTestCase {
         let store = Store(
             initialState: .initial
         ) {
-            SettingsReducer(networkType: .mainnet)
+            SettingsReducer()
                 .dependency(\.localAuthentication, .mockAuthenticationFailed)
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.walletStorage, .noOp)
@@ -30,7 +30,7 @@ class SettingsSnapshotTests: XCTestCase {
         let store = Store(
             initialState: .initial
         ) {
-            SettingsReducer(networkType: .mainnet)
+            SettingsReducer()
                 .dependency(\.localAuthentication, .mockAuthenticationFailed)
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.walletStorage, .noOp)

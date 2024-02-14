@@ -35,7 +35,7 @@ class SendSnapshotTests: XCTestCase {
         let store = Store(
             initialState: state
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
                 .dependency(\.derivationTool, .live())
                 .dependency(\.mainQueue, DispatchQueue.main.eraseToAnyScheduler())
                 .dependency(\.numberFormatter, .live())
@@ -77,7 +77,7 @@ class SendSnapshotTests: XCTestCase {
                 )
             )
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
                 .dependency(\.derivationTool, .live())
                 .dependency(\.mainQueue, DispatchQueue.main.eraseToAnyScheduler())
                 .dependency(\.numberFormatter, .live())
@@ -116,7 +116,7 @@ class SendSnapshotTests: XCTestCase {
                 )
             )
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
                 .dependency(\.derivationTool, .live())
                 .dependency(\.mainQueue, DispatchQueue.main.eraseToAnyScheduler())
                 .dependency(\.numberFormatter, .live())

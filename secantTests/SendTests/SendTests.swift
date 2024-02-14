@@ -50,7 +50,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: initialState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
         }
         
         store.dependencies.derivationTool = .liveValue
@@ -104,7 +104,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: initialState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
         }
         
         let error = "send failed".toZcashError()
@@ -146,7 +146,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: initialState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
         }
         
         store.dependencies.derivationTool = .liveValue
@@ -173,7 +173,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
         }
 
         store.dependencies.derivationTool = .noOp
@@ -198,7 +198,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
         }
 
         store.dependencies.derivationTool = .noOp
@@ -226,7 +226,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: state
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
         }
 
         store.dependencies.numberFormatter = .noOp
@@ -242,7 +242,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
         }
 
         store.dependencies.derivationTool = .noOp
@@ -282,7 +282,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
         }
 
         store.dependencies.numberFormatter = .noOp
@@ -325,7 +325,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
         }
 
         store.dependencies.numberFormatter = .noOp
@@ -352,6 +352,9 @@ class SendTests: XCTestCase {
     }
 
     func testDifferentNumberFormats_LiveNumberFormatter() throws {
+        let zcashNumberFormatter = NumberFormatter.zcashNumberFormatter
+        zcashNumberFormatter.locale = Locale(identifier: "en_US")
+        
         try numberFormatTest("1.234", NSNumber(1.234))
         try numberFormatTest("1,234", NSNumber(1_234))
         try numberFormatTest("1 234", NSNumber(1_234))
@@ -388,7 +391,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
         }
 
         store.dependencies.derivationTool = .noOp
@@ -431,7 +434,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
         }
         
         store.dependencies.derivationTool = .noOp
@@ -473,7 +476,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
         }
 
         store.dependencies.derivationTool = .noOp
@@ -515,7 +518,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
         }
 
         store.dependencies.derivationTool = .noOp
@@ -556,7 +559,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
         }
 
         store.dependencies.derivationTool = .noOp
@@ -610,7 +613,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
         }
 
         let value = "test".redacted
@@ -645,7 +648,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
         }
 
         store.dependencies.mainQueue = .immediate
@@ -672,7 +675,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
         }
 
         store.dependencies.audioServices = AudioServicesClient(systemSoundVibrate: { })
@@ -702,7 +705,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
         }
 
         await store.send(.reviewPressed) { state in
@@ -724,13 +727,16 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
         }
         
         XCTAssertEqual(store.state.message, testMessage.data)
     }
     
     func testFeeFormat() throws {
+        let zashiBalanceFormatter = NumberFormatter.zashiBalanceFormatter
+        zashiBalanceFormatter.locale = Locale(identifier: "en_US")
+
         let feeFormat = "(Fee < 0.001)"
         
         let sendState = SendFlowReducer.State(
@@ -744,7 +750,7 @@ class SendTests: XCTestCase {
         let store = TestStore(
             initialState: sendState
         ) {
-            SendFlowReducer(networkType: .testnet)
+            SendFlowReducer()
         }
         
         XCTAssertEqual(store.state.feeFormat, feeFormat)
@@ -756,7 +762,7 @@ private extension SendTests {
         _ amount: String,
         _ expectedResult: NSNumber?
     ) throws {
-        if let number = NumberFormatterClient.liveValue.number(amount) {
+        if let number = NumberFormatter.zcashNumberFormatter.number(from: amount) {
             XCTAssertEqual(number, expectedResult)
             return
         } else {

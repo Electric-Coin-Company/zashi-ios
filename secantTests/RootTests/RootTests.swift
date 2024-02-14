@@ -101,7 +101,7 @@ class RootTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer()
         }
 
         store.dependencies.mainQueue = .immediate
@@ -123,7 +123,7 @@ class RootTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer()
         }
 
         store.dependencies.mainQueue = .immediate
@@ -160,7 +160,7 @@ class RootTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer()
         }
         
         store.dependencies.walletStorage = .noOp
@@ -195,7 +195,7 @@ class RootTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer()
         }
         
         store.dependencies.walletStorage = .noOp
@@ -222,7 +222,7 @@ class RootTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer()
         }
         
         store.dependencies.mainQueue = .immediate

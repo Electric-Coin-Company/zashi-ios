@@ -12,13 +12,13 @@ import Utils
 import URIParser
 import ZcashLightClientKit
 import Generated
+import ZcashSDKEnvironment
 
 public typealias ScanStore = Store<ScanReducer.State, ScanReducer.Action>
 public typealias ScanViewStore = ViewStore<ScanReducer.State, ScanReducer.Action>
 
 public struct ScanReducer: Reducer {
     private enum CancelId { case timer }
-    let networkType: NetworkType
 
     public struct State: Equatable {
         public enum ScanStatus: Equatable {
@@ -61,6 +61,7 @@ public struct ScanReducer: Reducer {
     @Dependency(\.captureDevice) var captureDevice
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.uriParser) var uriParser
+    @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public enum Action: Equatable {
         case alert(PresentationAction<Action>)
@@ -72,9 +73,7 @@ public struct ScanReducer: Reducer {
         case torchPressed
     }
     
-    public init(networkType: NetworkType) {
-        self.networkType = networkType
-    }
+    public init() { }
 
     // swiftlint:disable:next cyclomatic_complexity
     public var body: some ReducerOf<Self> {
@@ -117,7 +116,7 @@ public struct ScanReducer: Reducer {
                 if let prevCode = state.scannedValue, prevCode == code.data {
                     return .none
                 }
-                if uriParser.isValidURI(code.data, networkType) {
+                if uriParser.isValidURI(code.data, zcashSDKEnvironment.network.networkType) {
                     state.scanStatus = .value(code)
                     // once valid URI is scanned we want to start the timer to deliver the code
                     // any new code cancels the schedule and fires new one
@@ -172,6 +171,6 @@ extension ScanStore {
     public static let placeholder = ScanStore(
         initialState: .initial
     ) {
-        ScanReducer(networkType: .testnet)
+        ScanReducer()
     }
 }

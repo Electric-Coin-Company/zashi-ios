@@ -19,7 +19,7 @@ final class RestoreWalletTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer(tokenName: "ZEC", zcashNetwork: ZcashNetworkBuilder.network(for: .testnet))
+            RootReducer()
         }
         
         store.dependencies.mainQueue = .immediate
@@ -53,10 +53,7 @@ final class RestoreWalletTests: XCTestCase {
         let store = TestStore(
             initialState: state
         ) {
-            RootReducer(
-                tokenName: "ZEC",
-                zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
-            )
+            RootReducer()
         }
         
         store.dependencies.mainQueue = .immediate

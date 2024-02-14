@@ -175,7 +175,7 @@ extension RootReducer {
                 let walletState = RootReducer.walletInitializationState(
                     databaseFiles: databaseFiles,
                     walletStorage: walletStorage,
-                    zcashNetwork: zcashNetwork
+                    zcashNetwork: zcashSDKEnvironment.network
                 )
                 return Effect.send(.initialization(.respondToWalletInitializationState(walletState)))
 

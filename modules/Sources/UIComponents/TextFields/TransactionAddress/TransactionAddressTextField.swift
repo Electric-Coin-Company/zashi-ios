@@ -56,7 +56,7 @@ struct TransactionAddressTextField_Previews: PreviewProvider {
                     )
                 )
             ) {
-                TransactionAddressTextFieldReducer(networkType: .testnet)
+                TransactionAddressTextFieldReducer()
             }
         )
         .preferredColorScheme(.light)

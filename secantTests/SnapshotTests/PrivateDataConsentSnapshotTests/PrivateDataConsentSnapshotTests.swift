@@ -15,7 +15,7 @@ class PrivateDataConsentSnapshotTests: XCTestCase {
         let store = Store(
             initialState: .initial
         ) {
-            PrivateDataConsentReducer(networkType: .mainnet)
+            PrivateDataConsentReducer()
                 .dependency(\.databaseFiles, .noOp)
         }
 

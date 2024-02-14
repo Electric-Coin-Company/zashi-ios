@@ -45,7 +45,7 @@ class HomeSnapshotTests: XCTestCase {
                 walletConfig: .initial
             )
         ) {
-            HomeReducer(networkType: .testnet)
+            HomeReducer()
                 .dependency(\.diskSpaceChecker, .mockEmptyDisk)
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.mainQueue, .immediate)

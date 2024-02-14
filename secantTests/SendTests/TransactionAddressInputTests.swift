@@ -23,7 +23,7 @@ class TransactionAddressTextFieldTests: XCTestCase {
                         )
                 )
         ) {
-            TransactionAddressTextFieldReducer(networkType: .testnet)
+            TransactionAddressTextFieldReducer()
         }
 
         await store.send(.clearAddress) { state in
