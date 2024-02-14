@@ -13,18 +13,22 @@ import DatabaseFiles
 import Models
 import ZcashSDKEnvironment
 
-extension SDKSynchronizerClient {
+extension SDKSynchronizerClient: DependencyKey {
+    public static let liveValue: SDKSynchronizerClient = Self.live()
+    
     public static func live(
-        databaseFiles: DatabaseFilesClient = .liveValue,
-        environment: ZcashSDKEnvironment = .liveValue,
-        network: ZcashNetwork
+        databaseFiles: DatabaseFilesClient = .liveValue
     ) -> Self {
+        @Dependency (\.zcashSDKEnvironment) var zcashSDKEnvironment
+        
+        let network = zcashSDKEnvironment.network
+        
         let initializer = Initializer(
             cacheDbURL: databaseFiles.cacheDbURLFor(network),
             fsBlockDbRoot: databaseFiles.fsBlockDbRootFor(network),
             generalStorageURL: databaseFiles.documentsDirectory(),
             dataDbURL: databaseFiles.dataDbURLFor(network),
-            endpoint: environment.endpoint(network),
+            endpoint: zcashSDKEnvironment.endpoint(),
             network: network,
             spendParamsURL: databaseFiles.spendParamsURLFor(network),
             outputParamsURL: databaseFiles.outputParamsURLFor(network),

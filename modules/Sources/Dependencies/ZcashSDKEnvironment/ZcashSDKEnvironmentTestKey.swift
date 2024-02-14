@@ -10,11 +10,11 @@ import ZcashLightClientKit
 import XCTestDynamicOverlay
 
 extension ZcashSDKEnvironment: TestDependencyKey {
-    public static let testnet = ZcashSDKEnvironment.liveValue
+    public static let testnet = ZcashSDKEnvironment.live(network: ZcashNetworkBuilder.network(for: .testnet))
 
     public static let testValue = Self(
-        latestCheckpoint: { _ in 0 },
-        endpoint: { _ in
+        latestCheckpoint: 0,
+        endpoint: {
             LightWalletEndpoint(
                 address: ZcashSDKConstants.endpointTestnetAddress,
                 port: ZcashSDKConstants.endpointPort,
@@ -24,7 +24,9 @@ extension ZcashSDKEnvironment: TestDependencyKey {
         },
         memoCharLimit: MemoBytes.capacity,
         mnemonicWordsMaxCount: ZcashSDKConstants.mnemonicWordsMaxCount,
+        network: ZcashNetworkBuilder.network(for: .testnet),
         requiredTransactionConfirmations: ZcashSDKConstants.requiredTransactionConfirmations,
-        sdkVersion: "0.18.1-beta"
+        sdkVersion: "0.18.1-beta",
+        tokenName: "TAZ"
     )
 }

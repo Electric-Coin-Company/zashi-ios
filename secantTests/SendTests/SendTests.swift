@@ -409,6 +409,49 @@ class SendTests: XCTestCase {
         }
     }
 
+    func testValidForm_NoFees() async throws {
+        let sendState = SendFlowReducer.State(
+            addMemoState: true,
+            memoState: .initial,
+            scanState: .initial,
+            transactionAddressInputState: .initial,
+            transactionAmountInputState:
+                TransactionAmountTextFieldReducer.State(
+                    amount: Int64(9_000).redacted,
+                    currencySelectionState: CurrencySelectionReducer.State(),
+                    maxValue: Int64(501_302).redacted,
+                    textFieldState:
+                        TCATextFieldReducer.State(
+                            validationType: .customFloatingPoint(usNumberFormatter),
+                            text: "0.00501301".redacted
+                        )
+                )
+        )
+        
+        let store = TestStore(
+            initialState: sendState
+        ) {
+            SendFlowReducer(networkType: .testnet)
+        }
+        
+        store.dependencies.derivationTool = .noOp
+        store.dependencies.derivationTool.isZcashAddress = { _, _ in true }
+        
+        let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
+        
+        await store.send(.transactionAddressInput(.textField(.set(address)))) { state in
+            state.transactionAddressInputState.textFieldState.text = address
+            // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
+            // isValid function returns true, `guard let validationType else { return true }`
+            state.transactionAddressInputState.textFieldState.valid = true
+            state.transactionAddressInputState.isValidAddress = true
+            XCTAssertFalse(
+                state.isValidForm,
+                "Send Tests: `testValidForm` is expected to be false but it's \(state.isValidForm)"
+            )
+        }
+    }
+
     func testInvalidForm_InsufficientFunds() async throws {
         let sendState = SendFlowReducer.State(
             addMemoState: true,

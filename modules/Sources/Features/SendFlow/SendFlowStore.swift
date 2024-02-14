@@ -78,7 +78,9 @@ public struct SendFlowReducer: Reducer {
         }
         
         public var isValidForm: Bool {
-            transactionAmountInputState.amount.data > 0
+            @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
+
+            return transactionAmountInputState.amount.data > zcashSDKEnvironment.network.constants.defaultFee().amount
             && transactionAddressInputState.isValidAddress
             && !isInsufficientFunds
             && memoState.isValid

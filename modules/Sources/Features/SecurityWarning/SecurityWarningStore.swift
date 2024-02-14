@@ -93,7 +93,7 @@ public struct SecurityWarningReducer: Reducer {
                 do {
                     // get the random english mnemonic
                     let newRandomPhrase = try mnemonic.randomMnemonic()
-                    let birthday = zcashSDKEnvironment.latestCheckpoint(zcashNetwork)
+                    let birthday = zcashSDKEnvironment.latestCheckpoint
                     
                     // store the wallet to the keychain
                     try walletStorage.importWallet(newRandomPhrase, birthday, .english, false)

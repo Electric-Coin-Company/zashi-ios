@@ -108,7 +108,7 @@ extension ZcashSDKEnvironment {
         static let streamingCallTimeoutInMillis = Int64(10 * 60 * 60 * 1000) // ten hours
     }
 
-    public static func endpoint(for network: ZcashNetwork) -> String {
+    public static func endpointString(for network: ZcashNetwork) -> String {
         switch network.networkType {
         case .testnet:
             return ZcashSDKConstants.endpointTestnetAddress
@@ -119,10 +119,12 @@ extension ZcashSDKEnvironment {
 }
 
 public struct ZcashSDKEnvironment {
-    public var latestCheckpoint: (ZcashNetwork) -> BlockHeight //{ BlockHeight.ofLatestCheckpoint(network: network()) }
-    public let endpoint: (ZcashNetwork) -> LightWalletEndpoint
+    public var latestCheckpoint: BlockHeight
+    public let endpoint: () -> LightWalletEndpoint
     public let memoCharLimit: Int
     public let mnemonicWordsMaxCount: Int
+    public let network: ZcashNetwork
     public let requiredTransactionConfirmations: Int
     public let sdkVersion: String
+    public let tokenName: String
 }
