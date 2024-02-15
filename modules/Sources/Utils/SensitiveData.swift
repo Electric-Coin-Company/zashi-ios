@@ -14,11 +14,11 @@ import ZcashLightClientKit
 /// destriptions and dumps never print outs the exact value but `--redacted--` instead.
 /// `Redactable` protocol is just a helper so we can let developers to see the sensitive data when
 /// developing and debugging but production or release builds (even testflight) are set to redacted by default.
-#if DEBUG
-public protocol Redactable { }
-#else
+//#if DEBUG
+//public protocol Redactable { }
+//#else
 public protocol Redactable: Undescribable { }
-#endif
+//#endif
 
 // MARK: - Redactable Seed Phrase
 
@@ -82,7 +82,7 @@ extension BlockHeight {
     public var redacted: RedactableBlockHeight { RedactableBlockHeight(self) }
 }
 
-// MARK: - Redactable AccountBalance & SynchronizerState
+// MARK: - Redactable AccountBalance
 
 /// Redactable holder for a block height.
 public struct RedactableAccountBalance: Equatable, Redactable {
@@ -94,6 +94,36 @@ public struct RedactableAccountBalance: Equatable, Redactable {
 /// Utility that converts a block height to a redacted counterpart.
 extension AccountBalance {
     public var redacted: RedactableAccountBalance? { RedactableAccountBalance(self) }
+}
+
+// MARK: - Redactable SynchronizerState
+
+/// Redactable holder for a block height.
+public struct RedactableSynchronizerState: Equatable, Redactable {
+    public struct SynchronizerStateWrapper: Equatable {
+        public var syncSessionID: UUID
+        public var accountBalance: RedactableAccountBalance?
+        public var syncStatus: SyncStatus
+        public var latestBlockHeight: BlockHeight
+    }
+
+    public let data: SynchronizerStateWrapper
+
+    public init(_ data: SynchronizerState) {
+        self.data = SynchronizerStateWrapper(
+            syncSessionID: data.syncSessionID,
+            accountBalance: data.accountBalance?.redacted,
+            syncStatus: data.syncStatus,
+            latestBlockHeight: data.latestBlockHeight
+        )
+    }
+}
+
+/// Utility that converts a block height to a redacted counterpart.
+extension SynchronizerState {
+    public var redacted: RedactableSynchronizerState {
+        RedactableSynchronizerState(self)
+    }
 }
 
 // MARK: - Redactable Int64

@@ -58,7 +58,7 @@ extension RootReducer {
                 }
                 
             case .synchronizerStateChanged(let latestState):
-                let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.syncStatus)
+                let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.data.syncStatus)
 
                 guard state.bgTask != nil else {
                     return .send(.initialization(.checkRestoreWalletFlag(snapshot.syncStatus)))
@@ -125,6 +125,7 @@ extension RootReducer {
                 return .publisher {
                     sdkSynchronizer.stateStream()
                         .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                        .map { $0.redacted }
                         .map(RootReducer.Action.synchronizerStateChanged)
                 }
                 .cancellable(id: CancelStateId.timer, cancelInFlight: true)

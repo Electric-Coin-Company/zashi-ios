@@ -12,6 +12,7 @@ import ZcashLightClientKit
 import Generated
 import Models
 import SDKSynchronizer
+import Utils
 
 public typealias SyncProgressStore = Store<SyncProgressReducer.State, SyncProgressReducer.Action>
 
@@ -50,7 +51,7 @@ public struct SyncProgressReducer: Reducer {
     public enum Action: Equatable {
         case onAppear
         case onDisappear
-        case synchronizerStateChanged(SynchronizerState)
+        case synchronizerStateChanged(RedactableSynchronizerState)
     }
     
     @Dependency(\.mainQueue) var mainQueue
@@ -65,6 +66,7 @@ public struct SyncProgressReducer: Reducer {
                 return .publisher {
                     sdkSynchronizer.stateStream()
                         .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                        .map { $0.redacted }
                         .map(Action.synchronizerStateChanged)
                 }
                 .cancellable(id: CancelId.timer, cancelInFlight: true)
@@ -73,7 +75,7 @@ public struct SyncProgressReducer: Reducer {
                 return .cancel(id: CancelId.timer)
 
             case .synchronizerStateChanged(let latestState):
-                let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.syncStatus)
+                let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.data.syncStatus)
                 if snapshot.syncStatus != state.synchronizerStatusSnapshot.syncStatus {
                     state.synchronizerStatusSnapshot = snapshot
 

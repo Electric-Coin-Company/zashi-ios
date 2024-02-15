@@ -92,7 +92,7 @@ public struct HomeReducer: Reducer {
         case retrySync
         case reviewRequestFinished
         case showSynchronizerErrorAlert(ZcashError)
-        case synchronizerStateChanged(SynchronizerState)
+        case synchronizerStateChanged(RedactableSynchronizerState)
         case syncFailed(ZcashError)
         case syncProgress(SyncProgressReducer.Action)
         case updateDestination(HomeReducer.State.Destination?)
@@ -130,6 +130,7 @@ public struct HomeReducer: Reducer {
                         .publisher {
                             sdkSynchronizer.stateStream()
                                 .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                                .map { $0.redacted }
                                 .map(HomeReducer.Action.synchronizerStateChanged)
                         }
                         .cancellable(id: CancelStateId.timer, cancelInFlight: true),
@@ -183,15 +184,16 @@ public struct HomeReducer: Reducer {
                 return .none
                 
             case .synchronizerStateChanged(let latestState):
-                let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.syncStatus)
+                let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.data.syncStatus)
 
                 if snapshot.syncStatus != .unprepared {
                     state.migratingDatabase = false
                 }
 
                 state.synchronizerStatusSnapshot = snapshot
-                state.shieldedBalance = latestState.accountBalance?.saplingBalance.spendableValue ?? .zero
-                state.totalBalance = latestState.accountBalance?.saplingBalance.total() ?? .zero
+                let accountBalance = latestState.data.accountBalance?.data
+                state.shieldedBalance = accountBalance?.saplingBalance.spendableValue ?? .zero
+                state.totalBalance = accountBalance?.saplingBalance.total() ?? .zero
 
                 switch snapshot.syncStatus {
                 case .error(let error):
