@@ -198,8 +198,8 @@ public enum L10n {
         public static let title = L10n.tr("Localizable", "importWallet.alert.failed.title", fallback: "Failed to restore wallet")
       }
       public enum Success {
-        /// The wallet has been successfully recovered.
-        public static let message = L10n.tr("Localizable", "importWallet.alert.success.message", fallback: "The wallet has been successfully recovered.")
+        /// Your wallet has been successfully restored! During the initial sync, your funds cannot be spent or sent. Depending on the age of your wallet, it may take a few hours to fully sync.
+        public static let message = L10n.tr("Localizable", "importWallet.alert.success.message", fallback: "Your wallet has been successfully restored! During the initial sync, your funds cannot be spent or sent. Depending on the age of your wallet, it may take a few hours to fully sync.")
         /// Success
         public static let title = L10n.tr("Localizable", "importWallet.alert.success.title", fallback: "Success")
       }
