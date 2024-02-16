@@ -75,7 +75,7 @@
 "importWallet.birthday.title" = "Wallet birthday height";
 "importWallet.seed.valid" = "VALID SEED PHRASE";
 "importWallet.alert.success.title" = "Success";
-"importWallet.alert.success.message" = "The wallet has been successfully recovered.";
+"importWallet.alert.success.message" = "Your wallet has been successfully restored! During the initial sync, your funds cannot be spent or sent. Depending on the age of your wallet, it may take a few hours to fully sync.";
 "importWallet.alert.failed.title" = "Failed to restore wallet";
 "importWallet.alert.failed.message" = "Error: %@ (code: %@)";
 "importWallet.optionalBirthday" = "(optional)";
