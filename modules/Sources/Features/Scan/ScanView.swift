@@ -11,134 +11,165 @@ import Generated
 import UIComponents
 
 public struct ScanView: View {
-    @Environment(\.presentationMode) var presentationMode
+    let store: StoreOf<Scan>
 
-    let store: ScanStore
-
-    public init(store: ScanStore) {
+    
+    public init(store: StoreOf<Scan>) {
         self.store = store
     }
     
     public var body: some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
-            GeometryReader { proxy in
-                ZStack {
+        WithPerceptionTracking {
+            ZStack {
+                GeometryReader { proxy in
                     QRCodeScanView(
                         rectOfInterest: normalizedRectOfInterest(proxy.size),
-                        onQRScanningDidFail: { viewStore.send(.scanFailed) },
-                        onQRScanningSucceededWithCode: { viewStore.send(.scan($0.redacted)) }
+                        onQRScanningDidFail: { store.send(.scanFailed) },
+                        onQRScanningSucceededWithCode: { store.send(.scan($0.redacted)) }
                     )
-                    
-                    backButton
-                    
-                    if viewStore.isTorchAvailable {
-                        torchButton(viewStore)
-                    }
                     
                     frameOfInterest(proxy.size)
                     
-                    VStack {
-                        Spacer()
-                        
-                        Text(L10n.Scan.info)
-                            .padding(.bottom, 10)
-                        
-                        if let scannedValue = viewStore.scannedValue {
-                            Text(scannedValue)
-                                .foregroundColor(viewStore.isValidValue ? .green : .red)
-                        } else {
-                            Text(L10n.Scan.scanning)
-                        }
+                    if store.isTorchAvailable {
+                        torchButton(store, size: proxy.size)
                     }
-                    .padding()
                 }
-                .navigationBarHidden(true)
-                .applyScreenBackground()
-                .onAppear { viewStore.send(.onAppear) }
-                .onDisappear { viewStore.send(.onDisappear) }
+                
+                VStack {
+                    Spacer()
+                    
+                    Text(store.info)
+                        .font(Font.custom("Inter", size: 14))
+                        .foregroundColor(Asset.Colors.secondary.color)
+                        .multilineTextAlignment(.center)
+                        .padding(.bottom, 20)
+                    
+                    Button(L10n.General.cancel.uppercased()) {
+                        store.send(.cancelPressed)
+                    }
+                    .zcashStyle(.secondary)
+                    .padding(.horizontal, 50)
+                    .padding(.bottom, 70)
+                }
+                .padding(.horizontal, 30)
             }
+            .edgesIgnoringSafeArea(.all)
             .ignoresSafeArea()
+            .navigationBarHidden(true)
+            .applyScreenBackground()
+            .onAppear { store.send(.onAppear) }
+            .onDisappear { store.send(.onDisappear) }
         }
-        .alert(store: store.scope(
-            state: \.$alert,
-            action: { .alert($0) }
-        ))
     }
 }
 
 extension ScanView {
-    var backButton: some View {
-        VStack {
-            HStack {
-                Button(action: {
-                    presentationMode.wrappedValue.dismiss()
-                }, label: {
-                    Image(systemName: "arrow.backward")
-                        .foregroundColor(Asset.Colors.primary.color)
-                        .font(
-                            .custom(FontFamily.Inter.regular.name, size: 30)
-                        )
-                })
-                .padding(.top, 10)
-
-                Spacer()
+    func torchButton(_ store: StoreOf<Scan>, size: CGSize) -> some View {
+        let center = ScanView.rectOfInterest(size).origin
+        let frameHalfSize = ScanView.frameSize(size) * 0.5
+        
+        return Button {
+            store.send(.torchPressed)
+        } label: {
+            if store.isTorchOn {
+                Asset.Assets.torchOff.image
+                    .renderingMode(.template)
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                    .tint(.white)
+            } else {
+                Asset.Assets.torchOn.image
+                    .renderingMode(.template)
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                    .tint(.white)
             }
-            .padding()
-            
-            Spacer()
         }
-        .padding()
-    }
-
-    func torchButton(_ viewStore: ScanViewStore) -> some View {
-        VStack {
-            HStack {
-                Spacer()
-
-                Button(
-                    action: { viewStore.send(.torchPressed) },
-                    label: {
-                        Image(
-                            systemName: viewStore.isTorchOn ? "lightbulb.fill" : "lightbulb.slash"
-                        )
-                        .foregroundColor(Asset.Colors.primary.color)
-                        .font(
-                            .custom(FontFamily.Inter.regular.name, size: 30)
-                        )
-                    }
-                )
-                .padding(.top, 10)
-            }
-            .padding()
-            
-            Spacer()
-        }
-        .padding()
+        .position(
+            x: center.x + frameHalfSize - 5,
+            y: center.y + frameHalfSize + 20
+        )
     }
 
     func frameOfInterest(_ size: CGSize) -> some View {
-        Rectangle()
-            .stroke(Asset.Colors.primary.color, lineWidth: 5.0)
-            .frame(
-                width: frameSize(size),
-                height: frameSize(size),
-                alignment: .center
-            )
-            .edgesIgnoringSafeArea(.all)
-            .ignoresSafeArea()
-            .position(
-                x: rectOfInterest(size).origin.x,
-                y: rectOfInterest(size).origin.y
-            )
+        let center = ScanView.rectOfInterest(size).origin
+        let frameSize = ScanView.frameSize(size)
+        let halfSize = frameSize * 0.5
+        let cornersLength = 36.0
+        let cornersHalfLength = cornersLength * 0.5
+        let leadMarkColor = Color.white
+
+        return ZStack {
+            Color.black
+                .opacity(0.65)
+                .edgesIgnoringSafeArea(.all)
+                .ignoresSafeArea()
+                .reverseMask {
+                    Rectangle()
+                        .frame(
+                            width: frameSize,
+                            height: frameSize,
+                            alignment: .center
+                        )
+                        .position(
+                            x: center.x,
+                            y: center.y
+                        )
+                }
+
+            // horizontal lead marks
+            leadMarkColor
+                .frame(width: cornersLength, height: 1)
+                .position(x: center.x - halfSize + cornersHalfLength, y: center.y - halfSize)
+            leadMarkColor
+                .frame(width: cornersLength, height: 1)
+                .position(x: center.x + halfSize - cornersHalfLength, y: center.y - halfSize)
+            leadMarkColor
+                .frame(width: cornersLength, height: 1)
+                .position(x: center.x - halfSize + cornersHalfLength, y: center.y + halfSize)
+            leadMarkColor
+                .frame(width: cornersLength, height: 1)
+                .position(x: center.x + halfSize - cornersHalfLength, y: center.y + halfSize)
+
+            // vertical lead marks
+            leadMarkColor
+                .frame(width: 1, height: cornersLength)
+                .position(x: center.x - halfSize, y: center.y - halfSize + cornersHalfLength)
+            leadMarkColor
+                .frame(width: 1, height: cornersLength)
+                .position(x: center.x - halfSize, y: center.y + halfSize - cornersHalfLength)
+            leadMarkColor
+                .frame(width: 1, height: cornersLength)
+                .position(x: center.x + halfSize, y: center.y - halfSize + cornersHalfLength)
+            leadMarkColor
+                .frame(width: 1, height: cornersLength)
+                .position(x: center.x + halfSize, y: center.y + halfSize - cornersHalfLength)
+        }
+    }
+}
+
+extension View {
+    @inlinable
+    public func reverseMask<Mask: View>(
+        alignment: Alignment = .center,
+        @ViewBuilder _ mask: () -> Mask
+    ) -> some View {
+        self.mask {
+            Rectangle()
+                .overlay(alignment: alignment) {
+                    mask()
+                        .blendMode(.destinationOut)
+                }
+        }
     }
 }
 
 extension ScanView {
-    func frameSize(_ size: CGSize) -> CGFloat {
+    static func frameSize(_ size: CGSize) -> CGFloat {
         size.width * 0.55
     }
 
-    func rectOfInterest(_ size: CGSize) -> CGRect {
+    static func rectOfInterest(_ size: CGSize) -> CGRect {
         CGRect(
             x: size.width * 0.5,
             y: size.height * 0.5,
@@ -161,6 +192,20 @@ extension ScanView {
 
 struct ScanView_Previews: PreviewProvider {
     static var previews: some View {
-        ScanView(store: .placeholder)
+        ScanView(store: Scan.placeholder)
+    }
+}
+
+// MARK: Placeholders
+
+extension Scan.State {
+    public static var initial = Scan.State()
+}
+
+extension Scan {
+    public static let placeholder = StoreOf<Scan>(
+        initialState: .initial
+    ) {
+        Scan()
     }
 }

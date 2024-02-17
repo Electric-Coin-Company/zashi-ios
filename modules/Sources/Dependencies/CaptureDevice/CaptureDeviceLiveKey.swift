@@ -10,16 +10,19 @@ import ComposableArchitecture
 
 extension CaptureDeviceClient: DependencyKey {
     public static let liveValue = Self(
+        isAuthorized: {
+            AVCaptureDevice.authorizationStatus(for: .video) == .authorized
+        },
         isTorchAvailable: {
             guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else {
-                throw CaptureDeviceClientError.captureDeviceFailed
+                return false
             }
 
             return videoCaptureDevice.hasTorch
         },
         torch: { isTorchOn in
             guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else {
-                throw CaptureDeviceClientError.captureDeviceFailed
+                throw CaptureDeviceClientError.captureDevice
             }
             
             guard videoCaptureDevice.hasTorch else {
@@ -31,7 +34,7 @@ extension CaptureDeviceClient: DependencyKey {
                 videoCaptureDevice.torchMode = isTorchOn ? .on : .off
                 videoCaptureDevice.unlockForConfiguration()
             } catch {
-                throw CaptureDeviceClientError.lockForConfigurationFailed
+                throw CaptureDeviceClientError.lockForConfiguration
             }
         }
     )

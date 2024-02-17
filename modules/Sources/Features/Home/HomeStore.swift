@@ -31,7 +31,7 @@ public struct HomeReducer: Reducer {
         public var canRequestReview = false
         public var isRestoringWallet = false
         public var requiredTransactionConfirmations = 0
-        public var scanState: ScanReducer.State
+        public var scanState: Scan.State
         public var shieldedBalance: Zatoshi
         public var synchronizerStatusSnapshot: SyncStatusSnapshot
         public var syncProgressState: SyncProgressReducer.State
@@ -55,7 +55,7 @@ public struct HomeReducer: Reducer {
             canRequestReview: Bool = false,
             isRestoringWallet: Bool = false,
             requiredTransactionConfirmations: Int = 0,
-            scanState: ScanReducer.State,
+            scanState: Scan.State,
             shieldedBalance: Zatoshi,
             synchronizerStatusSnapshot: SyncStatusSnapshot,
             syncProgressState: SyncProgressReducer.State,

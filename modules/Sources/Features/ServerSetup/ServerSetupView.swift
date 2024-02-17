@@ -111,19 +111,14 @@ public struct ServerSetupView: View {
 
 #Preview {
     ServerSetupView(
-        store: .init(
-            initialState:
-                ServerSetup.State(server: .custom)
-        ) {
-            ServerSetup()
-        }
+        store: ServerSetup.placeholder
     )
 }
 
 // MARK: Placeholders
 
 extension ServerSetup.State {
-    public static let initial = ServerSetup.State()
+    public static var initial = ServerSetup.State()
 }
 
 extension ServerSetup {
