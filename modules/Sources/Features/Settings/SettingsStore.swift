@@ -5,6 +5,7 @@ import MessageUI
 import AppVersion
 import Generated
 import Models
+import Pasteboard
 import RestoreWalletStorage
 import SupportDataGenerator
 import ZcashLightClientKit
@@ -47,6 +48,7 @@ public struct SettingsReducer: Reducer {
     public enum Action: Equatable {
         case advancedSettings(AdvancedSettingsReducer.Action)
         case alert(PresentationAction<Action>)
+        case copyEmail
         case onAppear
         case restoreWalletTask
         case restoreWalletValue(Bool)
@@ -56,6 +58,7 @@ public struct SettingsReducer: Reducer {
     }
 
     @Dependency(\.appVersion) var appVersion
+    @Dependency(\.pasteboard) var pasteboard
     @Dependency(\.restoreWalletStorage) var restoreWalletStorage
 
     public init() { }
@@ -67,7 +70,11 @@ public struct SettingsReducer: Reducer {
                 state.appVersion = appVersion.appVersion()
                 state.appBuild = appVersion.appBuild()
                 return .none
-
+                
+            case .copyEmail:
+                pasteboard.setString(SupportDataGenerator.Constants.email.redacted)
+                return .none
+                
             case .updateDestination(let destination):
                 state.destination = destination
                 return .none
@@ -160,8 +167,11 @@ extension AlertState where Action == SettingsReducer.Action {
         AlertState {
             TextState(L10n.Settings.Alert.CantSendEmail.title)
         } actions: {
+            ButtonState(action: .copyEmail) {
+                TextState(L10n.Settings.Alert.CantSendEmail.copyEmail(SupportDataGenerator.Constants.email))
+            }
             ButtonState(action: .sendSupportMailFinished) {
-                TextState(L10n.General.ok)
+                TextState(L10n.General.close)
             }
         } message: {
             TextState(L10n.Settings.Alert.CantSendEmail.message)

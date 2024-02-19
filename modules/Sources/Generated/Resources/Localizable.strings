@@ -175,8 +175,9 @@ Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps you
 "settings.version" = "Version %@ (%@)";
 "settings.alert.cantBackupWallet.title" = "Can't backup wallet";
 "settings.alert.cantBackupWallet.message" = "Error: %@ (code: %@)";
-"settings.alert.cantSendEmail.title" = "Can't send email";
-"settings.alert.cantSendEmail.message" = "It looks like that you don't have any email account configured on your device. Therefore it's not possible to send a support email.";
+"settings.alert.cantSendEmail.title" = "Oh, no!";
+"settings.alert.cantSendEmail.message" = "It looks like you don't have a default email app configured on your device. Copy the address below, and use your favorite email client to send us a message.";
+"settings.alert.cantSendEmail.copyEmail" = "Copy %@";
 "settings.privacyPolicyPart1" = "See our Privacy Policy ";
 "settings.privacyPolicyPart2" = "here.";
 

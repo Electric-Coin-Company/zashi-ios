@@ -15,6 +15,7 @@ import RecoveryPhraseDisplay
 import Settings
 import ExportLogs
 import SupportDataGenerator
+import Pasteboard
 @testable import secant_testnet
 
 @MainActor
@@ -112,6 +113,29 @@ class SettingsTests: XCTestCase {
             state.isRestoringWallet = true
         }
         
+        await store.finish()
+    }
+    
+    func testCopySupportEmail() async throws {
+        let store = TestStore(
+            initialState: .initial
+        ) {
+            SettingsReducer()
+        }
+
+        let testPasteboard = PasteboardClient.testPasteboard
+        store.dependencies.pasteboard = testPasteboard
+        
+        await store.send(.copyEmail)
+
+        let supportEmail = SupportDataGenerator.Constants.email
+        
+        XCTAssertEqual(
+            testPasteboard.getString()?.data,
+            supportEmail,
+            "SettingsTests: `testCopySupportEmail` is expected to match the input `\(supportEmail)`"
+        )
+
         await store.finish()
     }
     
