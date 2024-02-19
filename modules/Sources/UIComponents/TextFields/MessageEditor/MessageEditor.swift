@@ -37,50 +37,51 @@ public struct MessageEditor: View {
                     Spacer()
                 }
                 .padding(.bottom, 2)
-                
-                TextEditor(text: $message)
-                    .focused($isFocused)
-                    .padding(2)
-                    .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                    .messageShape(
-                        filled: isEnabled
-                        ? nil
-                        : Asset.Colors.shade72.color
-                    )
-                    .overlay {
-                        if message.isEmpty || !isEnabled {
-                            HStack {
-                                VStack {
-                                    Text(L10n.Send.memoPlaceholder)
-                                        .font(.custom(FontFamily.Inter.regular.name, size: 13))
-                                        .foregroundColor(Asset.Colors.shade72.color)
-                                        .onTapGesture {
-                                            isFocused = true
-                                        }
+
+                if !isEnabled {
+                    Asset.Colors.shade72.color
+                        .messageShape(filled: Asset.Colors.shade72.color)
+                } else {
+                    TextEditor(text: $message)
+                        .focused($isFocused)
+                        .padding(2)
+                        .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                        .messageShape(filled: nil)
+                        .overlay {
+                            if message.isEmpty {
+                                HStack {
+                                    VStack {
+                                        Text(L10n.Send.memoPlaceholder)
+                                            .font(.custom(FontFamily.Inter.regular.name, size: 13))
+                                            .foregroundColor(Asset.Colors.shade72.color)
+                                            .onTapGesture {
+                                                isFocused = true
+                                            }
+                                        
+                                        Spacer()
+                                    }
+                                    .padding(.top, 10)
                                     
                                     Spacer()
                                 }
-                                .padding(.top, 10)
-                                
-                                Spacer()
+                                .padding(.leading, 10)
+                            } else {
+                                EmptyView()
                             }
-                            .padding(.leading, 10)
-                        } else {
-                            EmptyView()
                         }
-                    }
-                    .onChange(of: message) { value in
-                        viewStore.send(.memoInputChanged(RedactableString(message)))
-                    }
-                    .onAppear {
-                        message = viewStore.text.data
-                    }
+                        .onChange(of: message) { value in
+                            viewStore.send(.memoInputChanged(RedactableString(message)))
+                        }
+                        .onAppear {
+                            message = viewStore.text.data
+                        }
+                }
                 
                 if viewStore.isCharLimited {
                     HStack {
                         Spacer()
                         
-                        Text(viewStore.charLimitText)
+                        Text(isEnabled ? viewStore.charLimitText : "")
                             .font(.custom(FontFamily.Inter.bold.name, size: 13))
                             .foregroundColor(
                                 viewStore.isValid
@@ -88,6 +89,7 @@ public struct MessageEditor: View {
                                 : Asset.Colors.error.color
                             )
                     }
+                    .frame(height: 20)
                 }
             }
         }
@@ -96,11 +98,20 @@ public struct MessageEditor: View {
 
 struct MessageEditor_Previews: PreviewProvider {
     static var previews: some View {
-        MessageEditor(store: .placeholder)
-            .frame(height: 200)
-            .padding()
-            .applyScreenBackground()
-            .preferredColorScheme(.light)
-            .disabled(false)
+        VStack {
+            MessageEditor(store: .placeholder)
+                .frame(height: 200)
+                .padding()
+                .applyScreenBackground()
+                .preferredColorScheme(.light)
+                .disabled(false)
+
+            MessageEditor(store: .placeholder)
+                .frame(height: 200)
+                .padding()
+                .applyScreenBackground()
+                .preferredColorScheme(.light)
+                .disabled(true)
+        }
     }
 }

@@ -99,7 +99,7 @@ public struct SendFlowView: View {
                             .padding(.top, 40)
                             
                             MessageEditor(store: store.memoStore())
-                                .frame(height: 140)
+                                .frame(height: 175)
                                 .disabled(!viewStore.isMemoInputEnabled)
                                 .focused($isMessageFocused)
                                 .toolbar {

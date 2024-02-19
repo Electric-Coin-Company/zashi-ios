@@ -90,7 +90,6 @@ public struct SendFlowReducer: Reducer {
         }
         
         public var isMemoInputEnabled: Bool {
-            transactionAddressInputState.textFieldState.text.data.isEmpty ||
             !transactionAddressInputState.isValidTransparentAddress
         }
         
@@ -256,6 +255,12 @@ public struct SendFlowReducer: Reducer {
             case .transactionAmountInput:
                 return .none
 
+            case .transactionAddressInput(.textField):
+                if !state.isMemoInputEnabled {
+                    state.memoState.text = "".redacted
+                }
+                return .none
+                
             case .transactionAddressInput(.scanQR):
                 return Effect.send(.updateDestination(.scanQR))
 
