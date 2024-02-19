@@ -23,6 +23,12 @@ extension SDKSynchronizerClient: DependencyKey {
         
         let network = zcashSDKEnvironment.network
         
+        #if DEBUG
+        let loggingPolicy = Initializer.LoggingPolicy.default(.debug)
+        #else
+        let loggingPolicy = Initializer.LoggingPolicy.noLogging
+        #endif
+        
         let initializer = Initializer(
             cacheDbURL: databaseFiles.cacheDbURLFor(network),
             fsBlockDbRoot: databaseFiles.fsBlockDbRootFor(network),
@@ -33,7 +39,7 @@ extension SDKSynchronizerClient: DependencyKey {
             spendParamsURL: databaseFiles.spendParamsURLFor(network),
             outputParamsURL: databaseFiles.outputParamsURLFor(network),
             saplingParamsSourceURL: SaplingParamsSourceURL.default,
-            loggingPolicy: .default(.debug)
+            loggingPolicy: loggingPolicy
         )
         
         let synchronizer = SDKSynchronizer(initializer: initializer)

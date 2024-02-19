@@ -14,12 +14,14 @@ extension OSLogger {
 
     public func tcaDebug(_ message: String) {
         guard let oslog else { return }
-        
+
+        #if DEBUG
         os_log(
             "%{public}@",
             log: oslog,
             type: .default,
             message
         )
+        #endif
     }
 }

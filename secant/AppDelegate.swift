@@ -35,9 +35,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 #if DEBUG
         // Short-circuit if running unit tests to avoid side-effects from the app running.
         guard !_XCTIsTesting else { return true }
-#endif
-        
         walletLogger = OSLogger(logLevel: .debug, category: LoggerConstants.walletLogs)
+#endif
         
         handleBackgroundTask()
 
