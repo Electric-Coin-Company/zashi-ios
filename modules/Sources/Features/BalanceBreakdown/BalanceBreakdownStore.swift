@@ -81,7 +81,7 @@ public struct BalanceBreakdownReducer: Reducer {
         case shieldFunds
         case shieldFundsSuccess(TransactionState)
         case shieldFundsFailure(ZcashError)
-        case synchronizerStateChanged(SynchronizerState)
+        case synchronizerStateChanged(RedactableSynchronizerState)
         case syncProgress(SyncProgressReducer.Action)
         case updateHintBoxVisibility(Bool)
     }
@@ -118,6 +118,7 @@ public struct BalanceBreakdownReducer: Reducer {
                 return .publisher {
                     sdkSynchronizer.stateStream()
                         .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                        .map { $0.redacted }
                         .map(Action.synchronizerStateChanged)
                 }
                 .cancellable(id: CancelId.timer, cancelInFlight: true)
@@ -163,11 +164,12 @@ public struct BalanceBreakdownReducer: Reducer {
                 return .none
 
             case .synchronizerStateChanged(let latestState):
-                state.shieldedBalance = latestState.accountBalance?.saplingBalance.spendableValue ?? .zero
-                state.totalBalance = latestState.accountBalance?.saplingBalance.total() ?? .zero
-                state.transparentBalance = latestState.accountBalance?.unshielded ?? .zero
-                state.changePending = latestState.accountBalance?.saplingBalance.changePendingConfirmation ?? .zero
-                state.pendingTransactions = latestState.accountBalance?.saplingBalance.valuePendingSpendability ?? .zero
+                let accountBalance = latestState.data.accountBalance?.data
+                state.shieldedBalance = accountBalance?.saplingBalance.spendableValue ?? .zero
+                state.totalBalance = accountBalance?.saplingBalance.total() ?? .zero
+                state.transparentBalance = accountBalance?.unshielded ?? .zero
+                state.changePending = accountBalance?.saplingBalance.changePendingConfirmation ?? .zero
+                state.pendingTransactions = accountBalance?.saplingBalance.valuePendingSpendability ?? .zero
                 return .none
                 
             case .syncProgress:

@@ -46,7 +46,7 @@ final class ReviewRequestTests: XCTestCase {
         syncState.syncStatus = .upToDate
         let snapshot = SyncStatusSnapshot.snapshotFor(state: syncState.syncStatus)
         
-        await store.send(.synchronizerStateChanged(syncState)) { state in
+        await store.send(.synchronizerStateChanged(syncState.redacted)) { state in
             state.synchronizerStatusSnapshot = snapshot
             state.migratingDatabase = false
         }

@@ -68,7 +68,7 @@ final class RestoreWalletTests: XCTestCase {
         var syncState: SynchronizerState = .zero
         syncState.syncStatus = .upToDate
 
-        await store.send(.synchronizerStateChanged(syncState))
+        await store.send(.synchronizerStateChanged(syncState.redacted))
         
         await store.receive(.initialization(.checkRestoreWalletFlag(syncState.syncStatus))) { state in
             state.isRestoringWallet = false

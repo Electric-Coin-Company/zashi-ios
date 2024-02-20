@@ -31,7 +31,7 @@ class BalanceBreakdownTests: XCTestCase {
         await store.send(.onAppear)
         
         // expected side effects as a result of .onAppear registration
-        await store.receive(.synchronizerStateChanged(.zero))
+        await store.receive(.synchronizerStateChanged(SynchronizerState.zero.redacted))
 
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancels the observer of the synchronizer status change.

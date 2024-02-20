@@ -61,7 +61,7 @@ class HomeTests: XCTestCase {
 
         // expected side effects as a result of .onAppear registration
         await store.receive(.updateDestination(nil))
-        await store.receive(.synchronizerStateChanged(.zero)) { state in
+        await store.receive(.synchronizerStateChanged(SynchronizerState.zero.redacted)) { state in
             state.synchronizerStatusSnapshot = snapshot
         }
 
@@ -113,7 +113,7 @@ class HomeTests: XCTestCase {
             HomeReducer()
         }
 
-        await store.send(.synchronizerStateChanged(state)) { state in
+        await store.send(.synchronizerStateChanged(state.redacted)) { state in
             state.synchronizerStatusSnapshot = errorSnapshot
             state.migratingDatabase = false
         }

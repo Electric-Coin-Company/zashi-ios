@@ -134,7 +134,7 @@ public struct SendFlowReducer: Reducer {
         case sendPressed
         case sendDone(TransactionState)
         case sendFailed(ZcashError)
-        case synchronizerStateChanged(SynchronizerState)
+        case synchronizerStateChanged(RedactableSynchronizerState)
         case transactionAddressInput(TransactionAddressTextFieldReducer.Action)
         case transactionAmountInput(TransactionAmountTextFieldReducer.Action)
         case updateDestination(SendFlowReducer.State.Destination?)
@@ -184,6 +184,7 @@ public struct SendFlowReducer: Reducer {
                 return Effect.publisher {
                     sdkSynchronizer.stateStream()
                         .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                        .map{ $0.redacted }
                         .map(SendFlowReducer.Action.synchronizerStateChanged)
                 }
                 .cancellable(id: SyncStatusUpdatesID.timer, cancelInFlight: true)
@@ -262,8 +263,8 @@ public struct SendFlowReducer: Reducer {
                 return .none
                 
             case .synchronizerStateChanged(let latestState):
-                state.shieldedBalance = latestState.accountBalance?.saplingBalance.spendableValue ?? .zero
-                state.totalBalance = latestState.accountBalance?.saplingBalance.total() ?? .zero
+                state.shieldedBalance = latestState.data.accountBalance?.data?.saplingBalance.spendableValue ?? .zero
+                state.totalBalance = latestState.data.accountBalance?.data?.saplingBalance.total() ?? .zero
                 state.transactionAmountInputState.maxValue = state.shieldedBalance.amount.redacted
                 return .none
 

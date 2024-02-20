@@ -70,7 +70,7 @@ final class SyncProgressTests: XCTestCase {
         syncState.syncStatus = .upToDate
         let snapshot = SyncStatusSnapshot.snapshotFor(state: syncState.syncStatus)
         
-        await store.send(.synchronizerStateChanged(syncState)) { state in
+        await store.send(.synchronizerStateChanged(syncState.redacted)) { state in
             state.synchronizerStatusSnapshot = snapshot
             state.syncStatusMessage = "Synced"
             state.lastKnownSyncPercentage = 1.0
@@ -91,7 +91,7 @@ final class SyncProgressTests: XCTestCase {
         syncState.syncStatus = .syncing(0.545)
         let snapshot = SyncStatusSnapshot.snapshotFor(state: syncState.syncStatus)
         
-        await store.send(.synchronizerStateChanged(syncState)) { state in
+        await store.send(.synchronizerStateChanged(syncState.redacted)) { state in
             state.synchronizerStatusSnapshot = snapshot
             state.syncStatusMessage = "Syncing"
             state.lastKnownSyncPercentage = 0.545

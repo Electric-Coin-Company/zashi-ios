@@ -19,6 +19,7 @@ import ReadTransactionsStorage
 import RecoveryPhraseDisplay
 import BackgroundTasks
 import RestoreWalletStorage
+import Utils
 
 public typealias RootStore = Store<RootReducer.State, RootReducer.Action>
 public typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
@@ -103,7 +104,7 @@ public struct RootReducer: Reducer {
         case splashFinished
         case splashRemovalRequested
         case sandbox(SandboxReducer.Action)
-        case synchronizerStateChanged(SynchronizerState)
+        case synchronizerStateChanged(RedactableSynchronizerState)
         case updateStateAfterConfigUpdate(WalletConfig)
         case walletConfigLoaded(WalletConfig)
         case welcome(WelcomeReducer.Action)
