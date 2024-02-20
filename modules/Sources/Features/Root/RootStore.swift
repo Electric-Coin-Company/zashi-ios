@@ -42,7 +42,7 @@ public struct RootReducer: Reducer {
         public var keychainReadRetries = 0
         public var maxKeychainReadRetries = 3
         public var onboardingState: OnboardingFlowReducer.State
-        public var phraseDisplayState: RecoveryPhraseDisplayReducer.State
+        public var phraseDisplayState: RecoveryPhraseDisplay.State
         public var sandboxState: SandboxReducer.State
         public var splashAppeared = false
         public var storedWallet: StoredWallet?
@@ -59,7 +59,7 @@ public struct RootReducer: Reducer {
             keychainReadRetries: Int = 0,
             maxKeychainReadRetries: Int = 3,
             onboardingState: OnboardingFlowReducer.State,
-            phraseDisplayState: RecoveryPhraseDisplayReducer.State,
+            phraseDisplayState: RecoveryPhraseDisplay.State,
             sandboxState: SandboxReducer.State,
             storedWallet: StoredWallet? = nil,
             tabsState: TabsReducer.State,
@@ -100,7 +100,7 @@ public struct RootReducer: Reducer {
         case nukeWalletFailed
         case nukeWalletSucceeded
         case onboarding(OnboardingFlowReducer.Action)
-        case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
+        case phraseDisplay(RecoveryPhraseDisplay.Action)
         case splashFinished
         case splashRemovalRequested
         case sandbox(SandboxReducer.Action)

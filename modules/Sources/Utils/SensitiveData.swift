@@ -14,11 +14,11 @@ import ZcashLightClientKit
 /// destriptions and dumps never print outs the exact value but `--redacted--` instead.
 /// `Redactable` protocol is just a helper so we can let developers to see the sensitive data when
 /// developing and debugging but production or release builds (even testflight) are set to redacted by default.
-//#if DEBUG
-//public protocol Redactable { }
-//#else
+#if DEBUG
+public protocol Redactable { }
+#else
 public protocol Redactable: Undescribable { }
-//#endif
+#endif
 
 // MARK: - Redactable Seed Phrase
 

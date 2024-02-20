@@ -55,7 +55,7 @@ class SettingsTests: XCTestCase {
         
         let store = TestStore(
             initialState: AdvancedSettingsReducer.State(
-                phraseDisplayState: RecoveryPhraseDisplayReducer.State(phrase: nil),
+                phraseDisplayState: RecoveryPhraseDisplay.State(phrase: nil),
                 privateDataConsentState: .initial,
                 serverSetupState: .initial
             )
@@ -72,6 +72,7 @@ class SettingsTests: XCTestCase {
         
         await store.receive(.updateDestination(.backupPhrase)) { state in
             state.destination = .backupPhrase
+            state.phraseDisplayState.showBackButton = true
         }
     }
     

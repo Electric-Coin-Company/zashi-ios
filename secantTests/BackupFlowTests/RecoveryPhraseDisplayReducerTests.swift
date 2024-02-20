@@ -12,14 +12,14 @@ import Models
 import RecoveryPhraseDisplay
 @testable import secant_testnet
 
-class RecoveryPhraseDisplayReducerTests: XCTestCase {
+class RecoveryPhraseDisplayTests: XCTestCase {
     @MainActor func testCopyToBuffer() async {
         let testPasteboard = PasteboardClient.testPasteboard
 
         let store = TestStore(
-            initialState: RecoveryPhraseDisplayStore.test
+            initialState: RecoveryPhraseDisplay.test
         ) {
-            RecoveryPhraseDisplayReducer()
+            RecoveryPhraseDisplay()
         }
 
         store.dependencies.pasteboard = testPasteboard
@@ -38,13 +38,13 @@ class RecoveryPhraseDisplayReducerTests: XCTestCase {
     }
 }
 
-private extension RecoveryPhraseDisplayStore {
-    static let test = RecoveryPhraseDisplayReducer.State(
+private extension RecoveryPhraseDisplay {
+    static let test = RecoveryPhraseDisplay.State(
         phrase: .placeholder,
         showCopyToBufferAlert: false
     )
     
-    static let empty = RecoveryPhraseDisplayReducer.State(
+    static let empty = RecoveryPhraseDisplay.State(
         phrase: .initial,
         showCopyToBufferAlert: false
     )

@@ -56,12 +56,17 @@ class WalletStorageTests: XCTestCase {
     }
 
     func testWalletDuplicate() throws {
+        // the test must fail for the 2nd call of importWallet
+        var isAfterFirstCall = false
         do {
             try storage.importWallet(bip39: seedPhrase, birthday: birthday)
+            isAfterFirstCall = true
             try storage.importWallet(bip39: seedPhrase, birthday: birthday)
             
             XCTFail("Keychain: `testRecoveryPhraseDuplicate` is expected to throw a `duplicate` error but passed instead.")
         } catch {
+            XCTAssertTrue(isAfterFirstCall)
+            
             guard let error = error as? WalletStorage.WalletStorageError else {
                 XCTFail("Keychain: the error is expected to be WalletStorageError but it's \(error).")
                 
@@ -119,6 +124,8 @@ class WalletStorageTests: XCTestCase {
             let data = data(forKey: WalletStorage.Constants.zcashStoredWallet)
             
             XCTAssertEqual(data, nil, "Keychain: keychain is expected to not find anything for key `zcashStoredWallet` but received some data.")
+        } catch {
+            XCTFail("`testDeleteWallet` no error is expected.")
         }
     }
     

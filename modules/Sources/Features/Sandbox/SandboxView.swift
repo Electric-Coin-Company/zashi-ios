@@ -40,7 +40,7 @@ public struct SandboxView: View {
                 tokenName: tokenName
             )
         case .recoveryPhraseDisplay:
-            RecoveryPhraseDisplayView(store: .placeholder)
+            RecoveryPhraseDisplayView(store: RecoveryPhraseDisplay.placeholder)
         case .scan:
             ScanView(store: .placeholder)
         }
