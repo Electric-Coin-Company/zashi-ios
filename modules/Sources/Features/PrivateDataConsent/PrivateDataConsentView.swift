@@ -66,6 +66,7 @@ public struct PrivateDataConsentView: View {
                     .padding(.horizontal, 8)
                     .padding(.bottom, 25)
 
+                    #if DEBUG
                     Button {
                         viewStore.send(.exportLogsRequested)
                     } label: {
@@ -80,6 +81,7 @@ public struct PrivateDataConsentView: View {
                     .disabled(!viewStore.isExportPossible)
                     .padding(.horizontal, 8)
                     .padding(.bottom, 50)
+                    #endif
                 }
                 .padding(.horizontal, 60)
             }
