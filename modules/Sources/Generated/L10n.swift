@@ -489,18 +489,16 @@ public enum L10n {
     public static let confirm = L10n.tr("Localizable", "securityWarning.confirm", fallback: "Confirm")
     /// Security warning:
     public static let title = L10n.tr("Localizable", "securityWarning.title", fallback: "Security warning:")
-    /// Zashi %@ (%@) is a Zcash-only shielded wallet, built by Zcashers for Zcashers. The purpose of this release is primarily to test functionality and collect feedback. While Zashi has been engineered for your privacy and safety (read the privacy policy 
-    public static func warningPart1a(_ p1: Any, _ p2: Any) -> String {
-      return L10n.tr("Localizable", "securityWarning.warningPart1a", String(describing: p1), String(describing: p2), fallback: "Zashi %@ (%@) is a Zcash-only shielded wallet, built by Zcashers for Zcashers. The purpose of this release is primarily to test functionality and collect feedback. While Zashi has been engineered for your privacy and safety (read the privacy policy ")
+    /// Zashi %@ (%@) is a Zcash-only, shielded wallet — built by Zcashers for Zcashers. Zashi has been engineered for your privacy and safety. By installing and using Zashi, you consent to share crash reports with Electric Coin Co. (the wallet developer), which will help us improve the Zashi user experience.*
+    public static func warningA(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "securityWarning.warningA", String(describing: p1), String(describing: p2), fallback: "Zashi %@ (%@) is a Zcash-only, shielded wallet — built by Zcashers for Zcashers. Zashi has been engineered for your privacy and safety. By installing and using Zashi, you consent to share crash reports with Electric Coin Co. (the wallet developer), which will help us improve the Zashi user experience.*")
     }
-    /// here
-    public static let warningPart1b = L10n.tr("Localizable", "securityWarning.warningPart1b", fallback: "here")
-    /// ), this release has not yet been security audited.
-    public static let warningPart1c = L10n.tr("Localizable", "securityWarning.warningPart1c", fallback: "), this release has not yet been security audited.")
-    ///  Users are cautioned to deposit, send, and receive only small amounts of ZEC.
-    public static let warningPart2 = L10n.tr("Localizable", "securityWarning.warningPart2", fallback: " Users are cautioned to deposit, send, and receive only small amounts of ZEC.")
-    ///  Please click below to proceed.
-    public static let warningPart3 = L10n.tr("Localizable", "securityWarning.warningPart3", fallback: " Please click below to proceed.")
+    /// Please acknowledge and confirm below to proceed.
+    public static let warningB = L10n.tr("Localizable", "securityWarning.warningB", fallback: "Please acknowledge and confirm below to proceed.")
+    /// *Note
+    public static let warningC = L10n.tr("Localizable", "securityWarning.warningC", fallback: "*Note")
+    /// : Crash reports might reveal the timing of the crash and what events occurred, but it would not reveal spending or viewing keys.
+    public static let warningD = L10n.tr("Localizable", "securityWarning.warningD", fallback: ": Crash reports might reveal the timing of the crash and what events occurred, but it would not reveal spending or viewing keys.")
   }
   public enum Send {
     ///  address: %@

@@ -18,43 +18,37 @@ import Generated
 import Utils
 import SwiftUI
 
-public typealias SecurityWarningStore = Store<SecurityWarningReducer.State, SecurityWarningReducer.Action>
-public typealias SecurityWarningViewStore = ViewStore<SecurityWarningReducer.State, SecurityWarningReducer.Action>
-
-public struct SecurityWarningReducer: Reducer {
+@Reducer
+public struct SecurityWarning {
+    @ObservableState
     public struct State: Equatable {
-        public enum Destination: Equatable, CaseIterable {
-            case createNewWallet
-        }
-
-        @PresentationState public var alert: AlertState<Action>?
+        @Presents public var alert: AlertState<Action>?
         public var appBuild = ""
         public var appVersion = ""
-        public var destination: Destination?
-        @BindingState public var isAcknowledged: Bool = false
+        public var isAcknowledged: Bool = false
+        public var recoveryPhraseDisplayBinding: Bool = false
         public var recoveryPhraseDisplayState: RecoveryPhraseDisplay.State
         
         public init(
             appBuild: String = "",
             appVersion: String = "",
-            destination: Destination? = nil,
+            recoveryPhraseDisplayBinding: Bool = false,
             recoveryPhraseDisplayState: RecoveryPhraseDisplay.State
         ) {
             self.appBuild = appBuild
             self.appVersion = appVersion
-            self.destination = destination
+            self.recoveryPhraseDisplayBinding = recoveryPhraseDisplayBinding
             self.recoveryPhraseDisplayState = recoveryPhraseDisplayState
         }
     }
     
-    public enum Action: BindableAction, Equatable {
+    public enum Action: BindableAction , Equatable {
         case alert(PresentationAction<Action>)
-        case binding(BindingAction<SecurityWarningReducer.State>)
+        case binding(BindingAction<SecurityWarning.State>)
         case confirmTapped
         case newWalletCreated
         case onAppear
         case recoveryPhraseDisplay(RecoveryPhraseDisplay.Action)
-        case updateDestination(SecurityWarningReducer.State.Destination?)
     }
 
     @Dependency(\.appVersion) var appVersion
@@ -84,6 +78,9 @@ public struct SecurityWarningReducer: Reducer {
             case .alert(.dismiss):
                 state.alert = nil
                 return .none
+                
+            case .binding:
+                return .none
 
             case .confirmTapped:
                 do {
@@ -94,10 +91,9 @@ public struct SecurityWarningReducer: Reducer {
                     // store the wallet to the keychain
                     try walletStorage.importWallet(newRandomPhrase, birthday, .english, false)
                     
-                    return .concatenate(
-                        Effect.send(.newWalletCreated),
-                        Effect.send(.updateDestination(.createNewWallet))
-                    )
+                    state.recoveryPhraseDisplayBinding = true
+                    
+                    return Effect.send(.newWalletCreated)
                 } catch {
                     state.alert = AlertState.cantCreateNewWallet(error.toZcashError())
                 }
@@ -106,53 +102,20 @@ public struct SecurityWarningReducer: Reducer {
             case .newWalletCreated:
                 return .none
                 
-            case .binding(\.$isAcknowledged):
-                return .none
-                
-            case .binding:
-                return .none
-            
             case .recoveryPhraseDisplay(.finishedPressed):
-                state.destination = nil
+                state.recoveryPhraseDisplayBinding = false
                 return .none
                 
             case .recoveryPhraseDisplay:
-                return .none
-                
-            case .updateDestination(let destination):
-                state.destination = destination
                 return .none
             }
         }
     }
 }
 
-// MARK: - Store
-
-extension SecurityWarningStore {
-    public static var demo = SecurityWarningStore(
-        initialState: .placeholder
-    ) {
-        SecurityWarningReducer()
-    }
-}
-
-// MARK: - ViewStore
-
-extension SecurityWarningViewStore {
-    func bindingForDestination(_ destination: SecurityWarningReducer.State.Destination) -> Binding<Bool> {
-        self.binding(
-            get: { $0.destination == destination },
-            send: { isActive in
-                return .updateDestination(isActive ? destination : nil)
-            }
-        )
-    }
-}
-
 // MARK: Alerts
 
-extension AlertState where Action == SecurityWarningReducer.Action {
+extension AlertState where Action == SecurityWarning.Action {
     public static func cantCreateNewWallet(_ error: ZcashError) -> AlertState {
         AlertState {
             TextState(L10n.Root.Initialization.Alert.Failed.title)
@@ -160,18 +123,4 @@ extension AlertState where Action == SecurityWarningReducer.Action {
             TextState(L10n.Root.Initialization.Alert.CantCreateNewWallet.message(error.message, error.code.rawValue))
         }
     }
-}
-
-// MARK: - Placeholders
-
-extension SecurityWarningReducer.State {
-    public static let placeholder = SecurityWarningReducer.State(
-        recoveryPhraseDisplayState: RecoveryPhraseDisplay.State(phrase: .placeholder)
-    )
-    
-    public static let initial = SecurityWarningReducer.State(
-        recoveryPhraseDisplayState: RecoveryPhraseDisplay.State(
-            phrase: .initial
-        )
-    )
 }
