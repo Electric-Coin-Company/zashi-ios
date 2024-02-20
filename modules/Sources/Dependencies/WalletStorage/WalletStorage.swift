@@ -166,11 +166,13 @@ public struct WalletStorage {
             kSecAttrService as String: (zcashStoredWalletPrefix + forKey) as AnyObject,
             kSecAttrAccount as String: account as AnyObject,
             kSecClass as String: kSecClassGenericPassword,
-            /// The data in the keychain item can be accessed only while the device is unlocked by the user.
-            /// This is recommended for items that need to be accessible only while the application is in the foreground.
+            /// The data in the keychain item can be accessed only after the device has been unlocked by the user
+            /// (aka won't be accessible after restart of the device until unlock).
             /// Items with this attribute do not migrate to a new device.
             /// Thus, after restoring from a backup of a different device, these items will not be present.
-            kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlockedThisDeviceOnly
+            // TODO: [#1071] ultimate solution to handle background sync and the keychain setup
+            // https://github.com/Electric-Coin-Company/zashi-ios/issues/1071
+            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
         ]
         
         return query
