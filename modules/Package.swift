@@ -493,6 +493,7 @@ let package = Package(
                 "Generated",
                 "LocalAuthenticationHandler",
                 "Models",
+                "Pasteboard",
                 "PrivateDataConsent",
                 "RecoveryPhraseDisplay",
                 "RestoreWalletStorage",

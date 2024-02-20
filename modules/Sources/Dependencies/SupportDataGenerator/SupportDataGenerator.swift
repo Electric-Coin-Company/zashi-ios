@@ -19,6 +19,11 @@ public struct SupportData: Equatable {
 }
 
 public enum SupportDataGenerator {
+    public enum Constants {
+        public static let email = "support@electriccoin.co"
+        public static let subject = "Zashi"
+    }
+    
     public static func generate() -> SupportData {
         let items: [SupportDataGeneratorItem] = [
             TimeItem(),
@@ -36,7 +41,7 @@ public enum SupportDataGenerator {
             .map { "\($0.0): \($0.1)" }
             .joined(separator: "\n")
 
-        return SupportData(toAddress: "support@electriccoin.co", subject: "Zashi", message: message)
+        return SupportData(toAddress: Constants.email, subject: Constants.subject, message: message)
     }
 }
 

@@ -636,10 +636,14 @@ public enum L10n {
         public static let title = L10n.tr("Localizable", "settings.alert.cantBackupWallet.title", fallback: "Can't backup wallet")
       }
       public enum CantSendEmail {
-        /// It looks like that you don't have any email account configured on your device. Therefore it's not possible to send a support email.
-        public static let message = L10n.tr("Localizable", "settings.alert.cantSendEmail.message", fallback: "It looks like that you don't have any email account configured on your device. Therefore it's not possible to send a support email.")
-        /// Can't send email
-        public static let title = L10n.tr("Localizable", "settings.alert.cantSendEmail.title", fallback: "Can't send email")
+        /// Copy %@
+        public static func copyEmail(_ p1: Any) -> String {
+          return L10n.tr("Localizable", "settings.alert.cantSendEmail.copyEmail", String(describing: p1), fallback: "Copy %@")
+        }
+        /// It looks like you don't have a default email app configured on your device. Copy the address below, and use your favorite email client to send us a message.
+        public static let message = L10n.tr("Localizable", "settings.alert.cantSendEmail.message", fallback: "It looks like you don't have a default email app configured on your device. Copy the address below, and use your favorite email client to send us a message.")
+        /// Oh, no!
+        public static let title = L10n.tr("Localizable", "settings.alert.cantSendEmail.title", fallback: "Oh, no!")
       }
     }
   }
