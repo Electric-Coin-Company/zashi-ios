@@ -21,11 +21,12 @@ import UIComponents
 class SendTests: XCTestCase {
     var storage = WalletStorage(secItem: .live)
     let usNumberFormatter = NumberFormatter()
+    let account = "test_account"
 
     override func setUp() {
         super.setUp()
         storage.zcashStoredWalletPrefix = "test_send_"
-        storage.deleteData(forKey: WalletStorage.Constants.zcashStoredWallet)
+        storage.deleteData(forKey: WalletStorage.Constants.zcashStoredWallet, account: account)
 
         usNumberFormatter.maximumFractionDigits = 8
         usNumberFormatter.maximumIntegerDigits = 8

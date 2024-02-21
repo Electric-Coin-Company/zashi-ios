@@ -24,6 +24,8 @@ extension WalletStorage.KeychainError {
 }
 
 class SecItemClientTests: XCTestCase {
+    let account = "test_account"
+    
     func test_secItemAdd_KeychainErrorDuplicate() throws {
         let secItemDuplicate = SecItemClient(
             copyMatching: { _, _ in errSecSuccess },
@@ -35,7 +37,7 @@ class SecItemClientTests: XCTestCase {
         let walletStorage = WalletStorage(secItem: secItemDuplicate)
         
         do {
-            try walletStorage.setData(Data(), forKey: "")
+            try walletStorage.setData(Data(), forKey: "", account: account)
 
             XCTFail("SecItemClient: test_secItemAdd_KeychainErrorDuplicate expected to fail but passed.")
         } catch {
@@ -64,7 +66,7 @@ class SecItemClientTests: XCTestCase {
         let walletStorage = WalletStorage(secItem: secItemDuplicate)
         
         do {
-            try walletStorage.setData(Data(), forKey: "")
+            try walletStorage.setData(Data(), forKey: "", account: account)
 
             XCTFail("SecItemClient: test_secItemAdd_KeychainErrorUnknown expected to fail but passed.")
         } catch {
@@ -93,7 +95,7 @@ class SecItemClientTests: XCTestCase {
         let walletStorage = WalletStorage(secItem: secItemDuplicate)
         
         do {
-            try walletStorage.updateData(Data(), forKey: "")
+            try walletStorage.updateData(Data(), forKey: "", account: account)
 
             XCTFail("SecItemClient: test_secItemUpdate_KeychainErrorNoDataFound expected to fail but passed.")
         } catch {
@@ -122,7 +124,7 @@ class SecItemClientTests: XCTestCase {
         let walletStorage = WalletStorage(secItem: secItemDuplicate)
         
         do {
-            try walletStorage.updateData(Data(), forKey: "")
+            try walletStorage.updateData(Data(), forKey: "", account: account)
 
             XCTFail("SecItemClient: test_secItemUpdate_KeychainErrorUnknown expected to fail but passed.")
         } catch {
@@ -150,7 +152,7 @@ class SecItemClientTests: XCTestCase {
         
         let walletStorage = WalletStorage(secItem: secItemDuplicate)
         
-        let result = walletStorage.deleteData(forKey: "")
+        let result = walletStorage.deleteData(forKey: "", account: account)
         
         XCTAssertTrue(result)
     }
@@ -165,7 +167,7 @@ class SecItemClientTests: XCTestCase {
         
         let walletStorage = WalletStorage(secItem: secItemDuplicate)
         
-        let result = walletStorage.deleteData(forKey: "")
+        let result = walletStorage.deleteData(forKey: "", account: account)
         
         XCTAssertFalse(result)
     }

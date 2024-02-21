@@ -17,6 +17,7 @@ import Models
 /// https://developer.apple.com/documentation/security/certificate_key_and_trust_services/working_with_concurrency?language=objc
 public struct WalletStorage {
     public enum Constants {
+        public static let account = "co.electriccoin.zashi"
         public static let zcashStoredWallet = "zcashStoredWallet"
         /// Versioning of the stored data
         public static let zcashKeychainVersion = 1
@@ -40,7 +41,8 @@ public struct WalletStorage {
 
     private let secItem: SecItemClient
     public var zcashStoredWalletPrefix = ""
-    
+    public var zcashStoredWalletAccount = Constants.account
+
     public init(secItem: SecItemClient) {
         self.secItem = secItem
     }
@@ -69,7 +71,11 @@ public struct WalletStorage {
                 throw KeychainError.encoding
             }
             
-            try setData(data, forKey: Constants.zcashStoredWallet)
+            try setData(
+                data,
+                forKey: Constants.zcashStoredWallet,
+                account: zcashStoredWalletAccount
+            )
         } catch KeychainError.duplicate {
             throw WalletStorageError.alreadyImported
         } catch {
@@ -78,7 +84,7 @@ public struct WalletStorage {
     }
     
     public func exportWallet() throws -> StoredWallet {
-        guard let data = data(forKey: Constants.zcashStoredWallet) else {
+        guard let data = data(forKey: Constants.zcashStoredWallet, account: zcashStoredWalletAccount) else {
             throw WalletStorageError.uninitializedWallet
         }
         
@@ -113,7 +119,11 @@ public struct WalletStorage {
                 throw KeychainError.encoding
             }
             
-            try updateData(data, forKey: Constants.zcashStoredWallet)
+            try updateData(
+                data,
+                forKey: Constants.zcashStoredWallet,
+                account: zcashStoredWalletAccount
+            )
         } catch {
             throw error
         }
@@ -128,14 +138,18 @@ public struct WalletStorage {
                 throw KeychainError.encoding
             }
             
-            try updateData(data, forKey: Constants.zcashStoredWallet)
+            try updateData(
+                data,
+                forKey: Constants.zcashStoredWallet,
+                account: zcashStoredWalletAccount
+            )
         } catch {
             throw error
         }
     }
     
     public func nukeWallet() {
-        deleteData(forKey: Constants.zcashStoredWallet)
+        deleteData(forKey: Constants.zcashStoredWallet, account: zcashStoredWalletAccount)
     }
     
     // MARK: - Wallet Storage Codable & Query helpers
@@ -160,25 +174,29 @@ public struct WalletStorage {
         }
     }
     
-    public func baseQuery(forAccount account: String = "", andKey forKey: String) -> [String: Any] {
+    public func baseQuery(
+        forAccount account: String,
+        andKey forKey: String
+    ) -> [String: Any] {
         let query: [String: AnyObject] = [
             /// Uniquely identify this keychain accessor
             kSecAttrService as String: (zcashStoredWalletPrefix + forKey) as AnyObject,
             kSecAttrAccount as String: account as AnyObject,
             kSecClass as String: kSecClassGenericPassword,
-            /// The data in the keychain item can be accessed only after the device has been unlocked by the user
-            /// (aka won't be accessible after restart of the device until unlock).
+            /// The data in the keychain item can be accessed only while the device is unlocked by the user.
+            /// This is recommended for items that need to be accessible only while the application is in the foreground.
             /// Items with this attribute do not migrate to a new device.
             /// Thus, after restoring from a backup of a different device, these items will not be present.
-            // TODO: [#1071] ultimate solution to handle background sync and the keychain setup
-            // https://github.com/Electric-Coin-Company/zashi-ios/issues/1071
-            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+            kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlockedThisDeviceOnly
         ]
         
         return query
     }
     
-    public func restoreQuery(forAccount account: String = "", andKey forKey: String) -> [String: Any] {
+    public func restoreQuery(
+        forAccount account: String,
+        andKey forKey: String
+    ) -> [String: Any] {
         var query = baseQuery(forAccount: account, andKey: forKey)
         query[kSecMatchLimit as String] = kSecMatchLimitOne
         query[kSecReturnData as String] = kCFBooleanTrue
@@ -192,7 +210,7 @@ public struct WalletStorage {
     /// Restore data for key
     public func data(
         forKey: String,
-        account: String = ""
+        account: String
     ) -> Data? {
         let query = restoreQuery(forAccount: account, andKey: forKey)
 
@@ -206,7 +224,7 @@ public struct WalletStorage {
     @discardableResult
     public func deleteData(
         forKey: String,
-        account: String = ""
+        account: String
     ) -> Bool {
         let query = baseQuery(forAccount: account, andKey: forKey)
 
@@ -219,7 +237,7 @@ public struct WalletStorage {
     public func setData(
         _ data: Data,
         forKey: String,
-        account: String = ""
+        account: String
     ) throws {
         var query = baseQuery(forAccount: account, andKey: forKey)
         query[kSecValueData as String] = data as AnyObject
@@ -240,7 +258,7 @@ public struct WalletStorage {
     public func updateData(
         _ data: Data,
         forKey: String,
-        account: String = ""
+        account: String
     ) throws {
         let query = baseQuery(forAccount: account, andKey: forKey)
         

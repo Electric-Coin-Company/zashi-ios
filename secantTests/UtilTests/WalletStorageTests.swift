@@ -34,6 +34,7 @@ class WalletStorageTests: XCTestCase {
     override func setUp() {
         super.setUp()
         storage.zcashStoredWalletPrefix = "test_walletStorage_"
+        storage.zcashStoredWalletAccount = "test_account"
         deleteData(forKey: WalletStorage.Constants.zcashStoredWallet)
     }
     
@@ -287,7 +288,7 @@ class WalletStorageTests: XCTestCase {
 /// The followings methods are here purposely to not rely on `WalletStorage` in order to test functionality of JUST ONE method at a time
 private extension WalletStorageTests {
     private func setData(
-        account: String = "",
+        account: String = "test_account",
         _ data: Data,
         forKey: String
     ) throws {
@@ -300,7 +301,7 @@ private extension WalletStorageTests {
     
     private func data(
         forKey: String,
-        account: String = ""
+        account: String = "test_account"
     ) -> Data? {
         let query = storage.restoreQuery(forAccount: account, andKey: forKey)
 
@@ -314,7 +315,7 @@ private extension WalletStorageTests {
     @discardableResult
     private func deleteData(
         forKey: String,
-        account: String = ""
+        account: String = "test_account"
     ) -> Bool {
         let query = storage.baseQuery(forAccount: account, andKey: forKey)
 
@@ -327,7 +328,7 @@ private extension WalletStorageTests {
     func updateData(
         _ data: Data,
         forKey: String,
-        account: String = ""
+        account: String = "test_account"
     ) throws {
         let query = storage.baseQuery(forAccount: account, andKey: forKey)
         
