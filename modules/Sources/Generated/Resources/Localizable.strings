@@ -12,7 +12,7 @@
 "securityWarning.warningA" = "Zashi %@ (%@) is a Zcash-only, shielded wallet — built by Zcashers for Zcashers. Zashi has been engineered for your privacy and safety. By installing and using Zashi, you consent to share crash reports with Electric Coin Co. (the wallet developer), which will help us improve the Zashi user experience.*";
 "securityWarning.warningB" = "Please acknowledge and confirm below to proceed.";
 "securityWarning.warningC" = "*Note";
-"securityWarning.warningD" = ": Crash reports might reveal the timing of the crash and what events occurred, but it would not reveal spending or viewing keys.";
+"securityWarning.warningD" = ": Crash reports might reveal the timing of the crash and what events occurred, but do not reveal spending or viewing keys.";
 "securityWarning.acknowledge" = "I acknowledge";
 "securityWarning.confirm" = "Confirm";
 

@@ -25,24 +25,26 @@ public struct SecurityWarning {
         @Presents public var alert: AlertState<Action>?
         public var appBuild = ""
         public var appVersion = ""
+        /// This flag holds information whether a user acknowledged the consent or not. `false` by default.
         public var isAcknowledged: Bool = false
-        public var recoveryPhraseDisplayBinding: Bool = false
+        /// This boolean is a TCA view binding, `false` by default = recovery phrase view is not presented, `true` = presented.
+        public var recoveryPhraseDisplayViewBinding: Bool = false
         public var recoveryPhraseDisplayState: RecoveryPhraseDisplay.State
         
         public init(
             appBuild: String = "",
             appVersion: String = "",
-            recoveryPhraseDisplayBinding: Bool = false,
+            recoveryPhraseDisplayViewBinding: Bool = false,
             recoveryPhraseDisplayState: RecoveryPhraseDisplay.State
         ) {
             self.appBuild = appBuild
             self.appVersion = appVersion
-            self.recoveryPhraseDisplayBinding = recoveryPhraseDisplayBinding
+            self.recoveryPhraseDisplayViewBinding = recoveryPhraseDisplayViewBinding
             self.recoveryPhraseDisplayState = recoveryPhraseDisplayState
         }
     }
     
-    public enum Action: BindableAction , Equatable {
+    public enum Action: BindableAction, Equatable {
         case alert(PresentationAction<Action>)
         case binding(BindingAction<SecurityWarning.State>)
         case confirmTapped
@@ -91,7 +93,7 @@ public struct SecurityWarning {
                     // store the wallet to the keychain
                     try walletStorage.importWallet(newRandomPhrase, birthday, .english, false)
                     
-                    state.recoveryPhraseDisplayBinding = true
+                    state.recoveryPhraseDisplayViewBinding = true
                     
                     return Effect.send(.newWalletCreated)
                 } catch {
@@ -103,7 +105,7 @@ public struct SecurityWarning {
                 return .none
                 
             case .recoveryPhraseDisplay(.finishedPressed):
-                state.recoveryPhraseDisplayBinding = false
+                state.recoveryPhraseDisplayViewBinding = false
                 return .none
                 
             case .recoveryPhraseDisplay:

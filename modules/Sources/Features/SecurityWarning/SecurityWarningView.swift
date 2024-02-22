@@ -69,7 +69,7 @@ public struct SecurityWarningView: View {
             .zashiBack()
             .alert($store.scope(state: \.alert, action: \.alert))
             .navigationLinkEmpty(
-                isActive: $store.recoveryPhraseDisplayBinding,
+                isActive: $store.recoveryPhraseDisplayViewBinding,
                 destination: {
                     RecoveryPhraseDisplayView(
                         store: store.scope(
