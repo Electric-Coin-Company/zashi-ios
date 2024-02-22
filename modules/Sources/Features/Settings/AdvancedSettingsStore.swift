@@ -24,14 +24,14 @@ public struct AdvancedSettingsReducer: Reducer {
 
         public var destination: Destination?
         public var isRestoringWallet = false
-        public var phraseDisplayState: RecoveryPhraseDisplayReducer.State
+        public var phraseDisplayState: RecoveryPhraseDisplay.State
         public var privateDataConsentState: PrivateDataConsentReducer.State
         public var serverSetupState: ServerSetup.State
         
         public init(
             destination: Destination? = nil,
             isRestoringWallet: Bool = false,
-            phraseDisplayState: RecoveryPhraseDisplayReducer.State,
+            phraseDisplayState: RecoveryPhraseDisplay.State,
             privateDataConsentState: PrivateDataConsentReducer.State,
             serverSetupState: ServerSetup.State
         ) {
@@ -45,7 +45,7 @@ public struct AdvancedSettingsReducer: Reducer {
 
     public enum Action: Equatable {
         case backupWalletAccessRequest
-        case phraseDisplay(RecoveryPhraseDisplayReducer.Action)
+        case phraseDisplay(RecoveryPhraseDisplay.Action)
         case privateDataConsent(PrivateDataConsentReducer.Action)
         case restoreWalletTask
         case restoreWalletValue(Bool)
@@ -75,6 +75,11 @@ public struct AdvancedSettingsReducer: Reducer {
             case .phraseDisplay:
                 return .none
 
+            case .updateDestination(.backupPhrase):
+                state.destination = .backupPhrase
+                state.phraseDisplayState.showBackButton = true
+                return .none
+                
             case .updateDestination(.privateDataConsent):
                 state.destination = .privateDataConsent
                 state.privateDataConsentState.isAcknowledged = false
@@ -107,7 +112,7 @@ public struct AdvancedSettingsReducer: Reducer {
         }
 
         Scope(state: \.phraseDisplayState, action: /Action.phraseDisplay) {
-            RecoveryPhraseDisplayReducer()
+            RecoveryPhraseDisplay()
         }
 
         Scope(state: \.privateDataConsentState, action: /Action.privateDataConsent) {
@@ -155,7 +160,7 @@ extension AdvancedSettingsViewStore {
 // MARK: - Store
 
 extension AdvancedSettingsStore {
-    func backupPhraseStore() -> RecoveryPhraseDisplayStore {
+    func backupPhraseStore() -> StoreOf<RecoveryPhraseDisplay> {
         self.scope(
             state: \.phraseDisplayState,
             action: AdvancedSettingsReducer.Action.phraseDisplay
@@ -181,8 +186,9 @@ extension AdvancedSettingsStore {
 
 extension AdvancedSettingsReducer.State {
     public static let initial = AdvancedSettingsReducer.State(
-        phraseDisplayState: RecoveryPhraseDisplayReducer.State(
+        phraseDisplayState: RecoveryPhraseDisplay.State(
             phrase: nil,
+            showBackButton: false,
             showCopyToBufferAlert: false,
             birthday: nil
         ),
@@ -200,7 +206,7 @@ extension AdvancedSettingsStore {
     
     public static let demo = AdvancedSettingsStore(
         initialState: .init(
-            phraseDisplayState: RecoveryPhraseDisplayReducer.State(
+            phraseDisplayState: RecoveryPhraseDisplay.State(
                 phrase: nil,
                 showCopyToBufferAlert: false,
                 birthday: nil

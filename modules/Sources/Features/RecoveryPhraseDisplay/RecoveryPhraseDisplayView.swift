@@ -13,19 +13,19 @@ import MnemonicSwift
 import Utils
 
 public struct RecoveryPhraseDisplayView: View {
-    let store: RecoveryPhraseDisplayStore
+    @Perception.Bindable var store: StoreOf<RecoveryPhraseDisplay>
     
-    public init(store: RecoveryPhraseDisplayStore) {
+    public init(store: StoreOf<RecoveryPhraseDisplay>) {
         self.store = store
     }
 
     public var body: some View {
         ScrollView {
-            WithViewStore(store, observe: { $0 }) { viewStore in
+            WithPerceptionTracking {
                 VStack(alignment: .center) {
                     ZashiIcon()
                     
-                    if let groups = viewStore.phrase?.toGroups() {
+                    if let groups = store.phrase?.toGroups() {
                         VStack {
                             Text(L10n.RecoveryPhraseDisplay.titlePart1)
                                 .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
@@ -69,7 +69,7 @@ public struct RecoveryPhraseDisplayView: View {
                         .padding(.horizontal, 15)
                         .padding(.bottom, 15)
 
-                        if let birthdayValue = viewStore.birthdayValue {
+                        if let birthdayValue = store.birthdayValue {
                             Text(L10n.RecoveryPhraseDisplay.birthdayHeight(birthdayValue))
                                 .font(.custom(FontFamily.Inter.regular.name, size: 14))
                                 .padding(.bottom, 15)
@@ -81,21 +81,21 @@ public struct RecoveryPhraseDisplayView: View {
                             .padding(.bottom, 35)
                     }
 
-                    Button(L10n.RecoveryPhraseDisplay.Button.wroteItDown.uppercased()) {
-                        viewStore.send(.finishedPressed)
+                    if !store.showBackButton {
+                        Button(L10n.RecoveryPhraseDisplay.Button.wroteItDown.uppercased()) {
+                            store.send(.finishedPressed)
+                        }
+                        .zcashStyle()
+                        .padding(.bottom, 50)
                     }
-                    .zcashStyle()
-                    .padding(.bottom, 50)
                 }
                 .padding(.horizontal, 60)
-                .onAppear { viewStore.send(.onAppear) }
-                .alert(store: store.scope(
-                    state: \.$alert,
-                    action: { .alert($0) }
-                ))
+                .onAppear { store.send(.onAppear) }
+                .alert($store.scope(state: \.alert, action: \.alert))
+                .zashiBack(false, hidden: !store.showBackButton)
                 .toolbarAction {
                     Button {
-                        viewStore.send(.copyToBufferPressed)
+                        store.send(.copyToBufferPressed)
                     } label: {
                         Text(L10n.General.tapToCopy)
                             .font(.custom(FontFamily.Inter.bold.name, size: 11))
@@ -116,15 +116,34 @@ public struct RecoveryPhraseDisplayView: View {
     NavigationView {
         RecoveryPhraseDisplayView(
             store:
-                RecoveryPhraseDisplayStore(
-                    initialState: RecoveryPhraseDisplayReducer.State(
+                StoreOf<RecoveryPhraseDisplay>(
+                    initialState: RecoveryPhraseDisplay.State(
                         phrase: .placeholder,
+                        showBackButton: true,
                         showCopyToBufferAlert: false,
                         birthdayValue: nil
                     )
                 ) {
-                    RecoveryPhraseDisplayReducer()
+                    RecoveryPhraseDisplay()
                 }
         )
+    }
+}
+
+// MARK: Placeholders
+
+extension RecoveryPhraseDisplay.State {
+    public static let initial = RecoveryPhraseDisplay.State(
+        phrase: nil,
+        showCopyToBufferAlert: false,
+        birthday: nil
+    )
+}
+
+extension RecoveryPhraseDisplay {
+    public static let placeholder = StoreOf<RecoveryPhraseDisplay>(
+        initialState: .initial
+    ) {
+        RecoveryPhraseDisplay()
     }
 }

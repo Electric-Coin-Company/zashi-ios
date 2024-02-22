@@ -32,13 +32,13 @@ public struct SecurityWarningReducer: Reducer {
         public var appVersion = ""
         public var destination: Destination?
         @BindingState public var isAcknowledged: Bool = false
-        public var recoveryPhraseDisplayState: RecoveryPhraseDisplayReducer.State
+        public var recoveryPhraseDisplayState: RecoveryPhraseDisplay.State
         
         public init(
             appBuild: String = "",
             appVersion: String = "",
             destination: Destination? = nil,
-            recoveryPhraseDisplayState: RecoveryPhraseDisplayReducer.State
+            recoveryPhraseDisplayState: RecoveryPhraseDisplay.State
         ) {
             self.appBuild = appBuild
             self.appVersion = appVersion
@@ -53,7 +53,7 @@ public struct SecurityWarningReducer: Reducer {
         case confirmTapped
         case newWalletCreated
         case onAppear
-        case recoveryPhraseDisplay(RecoveryPhraseDisplayReducer.Action)
+        case recoveryPhraseDisplay(RecoveryPhraseDisplay.Action)
         case updateDestination(SecurityWarningReducer.State.Destination?)
     }
 
@@ -68,7 +68,7 @@ public struct SecurityWarningReducer: Reducer {
         BindingReducer()
         
         Scope(state: \.recoveryPhraseDisplayState, action: /Action.recoveryPhraseDisplay) {
-            RecoveryPhraseDisplayReducer()
+            RecoveryPhraseDisplay()
         }
 
         Reduce { state, action in
@@ -166,11 +166,11 @@ extension AlertState where Action == SecurityWarningReducer.Action {
 
 extension SecurityWarningReducer.State {
     public static let placeholder = SecurityWarningReducer.State(
-        recoveryPhraseDisplayState: RecoveryPhraseDisplayReducer.State(phrase: .placeholder)
+        recoveryPhraseDisplayState: RecoveryPhraseDisplay.State(phrase: .placeholder)
     )
     
     public static let initial = SecurityWarningReducer.State(
-        recoveryPhraseDisplayState: RecoveryPhraseDisplayReducer.State(
+        recoveryPhraseDisplayState: RecoveryPhraseDisplay.State(
             phrase: .initial
         )
     )

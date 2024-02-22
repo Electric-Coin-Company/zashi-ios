@@ -15,24 +15,26 @@ import Utils
 import Generated
 import NumberFormatter
 
-public typealias RecoveryPhraseDisplayStore = Store<RecoveryPhraseDisplayReducer.State, RecoveryPhraseDisplayReducer.Action>
-public typealias RecoveryPhraseDisplayViewStore = ViewStore<RecoveryPhraseDisplayReducer.State, RecoveryPhraseDisplayReducer.Action>
-
-public struct RecoveryPhraseDisplayReducer: Reducer {
+@Reducer
+public struct RecoveryPhraseDisplay {
+    @ObservableState
     public struct State: Equatable {
-        @PresentationState public var alert: AlertState<Action>?
+        @Presents public var alert: AlertState<Action>?
         public var phrase: RecoveryPhrase?
+        public var showBackButton = false
         public var showCopyToBufferAlert = false
         public var birthday: Birthday?
         public var birthdayValue: String?
         
         public init(
             phrase: RecoveryPhrase? = nil,
+            showBackButton: Bool = false,
             showCopyToBufferAlert: Bool = false,
             birthday: Birthday? = nil,
             birthdayValue: String? = nil
         ) {
             self.phrase = phrase
+            self.showBackButton = showBackButton
             self.showCopyToBufferAlert = showCopyToBufferAlert
             self.birthday = birthday
             self.birthdayValue = birthdayValue
@@ -95,30 +97,12 @@ public struct RecoveryPhraseDisplayReducer: Reducer {
 
 // MARK: Alerts
 
-extension AlertState where Action == RecoveryPhraseDisplayReducer.Action {
+extension AlertState where Action == RecoveryPhraseDisplay.Action {
     public static func storedWalletFailure(_ error: ZcashError) -> AlertState {
         AlertState {
             TextState(L10n.RecoveryPhraseDisplay.Alert.Failed.title)
         } message: {
             TextState(L10n.RecoveryPhraseDisplay.Alert.Failed.message(error.message, error.code))
         }
-    }
-}
-
-// MARK: Placeholders
-
-extension RecoveryPhraseDisplayReducer.State {
-    public static let initial = RecoveryPhraseDisplayReducer.State(
-        phrase: nil,
-        showCopyToBufferAlert: false,
-        birthday: nil
-    )
-}
-
-extension RecoveryPhraseDisplayStore {
-    public static let placeholder = RecoveryPhraseDisplayStore(
-        initialState: .initial
-    ) {
-        RecoveryPhraseDisplayReducer()
     }
 }

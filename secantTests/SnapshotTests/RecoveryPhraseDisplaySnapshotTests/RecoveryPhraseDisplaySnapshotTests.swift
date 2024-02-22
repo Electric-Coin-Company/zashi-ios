@@ -12,10 +12,10 @@ import RecoveryPhraseDisplay
 
 class RecoveryPhraseDisplaySnapshotTests: XCTestCase {
     func testRecoveryPhraseDisplaySnapshot() throws {
-        let store = RecoveryPhraseDisplayStore(
+        let store = StoreOf<RecoveryPhraseDisplay>(
             initialState: .init(phrase: .placeholder)
         ) {
-            RecoveryPhraseDisplayReducer()
+            RecoveryPhraseDisplay()
                 .dependency(\.numberFormatter, .noOp)
                 .dependency(\.walletStorage, .noOp)
         }
