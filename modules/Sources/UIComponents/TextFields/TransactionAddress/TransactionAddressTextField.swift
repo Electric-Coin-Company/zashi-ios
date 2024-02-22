@@ -22,6 +22,7 @@ public struct TransactionAddressTextField: View {
                 SingleLineTextField(
                     placeholderText: L10n.Field.TransactionAddress.validZcashAddress,
                     title: L10n.Field.TransactionAddress.to,
+                    keyboardType: .default,
                     store: store.scope(
                         state: \.textFieldState,
                         action: TransactionAddressTextFieldReducer.Action.textField

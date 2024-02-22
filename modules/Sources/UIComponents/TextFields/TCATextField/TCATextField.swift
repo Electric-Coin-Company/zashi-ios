@@ -12,9 +12,11 @@ import Generated
 public struct TCATextField: View {
     let placeholder: String
     let store: TCATextFieldStore
+    let keyboardType: UIKeyboardType
 
-    public init(placeholder: String, store: TCATextFieldStore) {
+    public init(placeholder: String, keyboardType: UIKeyboardType, store: TCATextFieldStore) {
         self.placeholder = placeholder
+        self.keyboardType = keyboardType
         self.store = store
     }
 
@@ -28,6 +30,7 @@ public struct TCATextField: View {
                 )
             )
             .autocapitalization(.none)
+            .keyboardType(keyboardType)
             .font(.custom(FontFamily.Inter.regular.name, size: 13))
             .lineLimit(1)
             .truncationMode(.middle)
@@ -37,5 +40,5 @@ public struct TCATextField: View {
 }
 
 #Preview {
-    TCATextField(placeholder: "test", store: .address)
+    TCATextField(placeholder: "test", keyboardType: .default, store: .address)
 }

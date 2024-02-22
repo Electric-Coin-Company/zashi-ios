@@ -23,6 +23,7 @@ public struct TransactionAmountTextField: View {
             SingleLineTextField(
                 placeholderText: L10n.Field.TransactionAmount.zecAmount(tokenName),
                 title: L10n.Field.TransactionAmount.amount,
+                keyboardType: .decimalPad,
                 store: store.scope(
                     state: \.textFieldState,
                     action: TransactionAmountTextFieldReducer.Action.textField
@@ -59,6 +60,7 @@ struct TransactionAmountTextField_Previews: PreviewProvider {
         SingleLineTextField(
             placeholderText: "$0",
             title: "How much?",
+            keyboardType: .decimalPad,
             store: .transaction,
             titleAccessoryView: {
                 Button(
@@ -78,6 +80,7 @@ struct TransactionAmountTextField_Previews: PreviewProvider {
         SingleLineTextField(
             placeholderText: "",
             title: "Address",
+            keyboardType: .decimalPad,
             store: .address,
             titleAccessoryView: { EmptyView() },
             inputPrefixView: { EmptyView() },

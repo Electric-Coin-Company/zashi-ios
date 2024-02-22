@@ -13,6 +13,7 @@ public struct SingleLineTextField<TitleAccessoryContent, InputPrefixContent, Inp
     where TitleAccessoryContent: View, InputPrefixContent: View, InputAccessoryContent: View {
     let placeholderText: String
     let title: String
+    let keyboardType: UIKeyboardType
     let store: TCATextFieldStore
 
     @ViewBuilder let titleAccessoryView: TitleAccessoryContent
@@ -38,6 +39,7 @@ public struct SingleLineTextField<TitleAccessoryContent, InputPrefixContent, Inp
                 
                 TCATextField(
                     placeholder: placeholderText,
+                    keyboardType: keyboardType,
                     store: store
                 )
                 .padding(10)
@@ -66,6 +68,7 @@ struct SingleLineTextField_Previews: PreviewProvider {
                     SingleLineTextField(
                         placeholderText: "$0",
                         title: "How much?",
+                        keyboardType: .default,
                         store: store,
                         titleAccessoryView: {
                             Button(
@@ -92,6 +95,7 @@ struct SingleLineTextField_Previews: PreviewProvider {
                 SingleLineTextField(
                     placeholderText: "",
                     title: "Who would you like to deal with really long text today?",
+                    keyboardType: .default,
                     store: store,
                     titleAccessoryView: { EmptyView() },
                     inputPrefixView: { EmptyView() },

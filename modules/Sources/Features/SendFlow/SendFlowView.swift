@@ -40,7 +40,7 @@ public struct SendFlowView: View {
                                 .padding(.bottom, 5)
                             
                             AvailableBalanceView(
-                                balance: viewStore.shieldedBalance,
+                                balance: viewStore.spendableBalance,
                                 tokenName: tokenName
                             )
                             
