@@ -498,7 +498,7 @@ public enum L10n {
     /// *Note
     public static let warningC = L10n.tr("Localizable", "securityWarning.warningC", fallback: "*Note")
     /// : Crash reports might reveal the timing of the crash and what events occurred, but it would not reveal spending or viewing keys.
-    public static let warningD = L10n.tr("Localizable", "securityWarning.warningD", fallback: ": Crash reports might reveal the timing of the crash and what events occurred, but it would not reveal spending or viewing keys.")
+    public static let warningD = L10n.tr("Localizable", "securityWarning.warningD", fallback: ": Crash reports might reveal the timing of the crash and what events occurred, but do not reveal spending or viewing keys.")
   }
   public enum Send {
     ///  address: %@
