@@ -1,5 +1,5 @@
 //
-//  Scan.swift
+//  ScanStore.swift
 //  secant-testnet
 //
 //  Created by Lukáš Korba on 16.05.2022.
