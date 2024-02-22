@@ -477,20 +477,10 @@ public enum L10n {
     }
   }
   public enum Scan {
-    /// We will validate any Zcash URI and take you to the appropriate action.
-    public static let info = L10n.tr("Localizable", "scan.info", fallback: "We will validate any Zcash URI and take you to the appropriate action.")
-    /// Scanning...
-    public static let scanning = L10n.tr("Localizable", "scan.scanning", fallback: "Scanning...")
-    public enum Alert {
-      public enum CantInitializeCamera {
-        /// Error: %@ (code: %@)
-        public static func message(_ p1: Any, _ p2: Any) -> String {
-          return L10n.tr("Localizable", "scan.alert.cantInitializeCamera.message", String(describing: p1), String(describing: p2), fallback: "Error: %@ (code: %@)")
-        }
-        /// Can't initialize the camera
-        public static let title = L10n.tr("Localizable", "scan.alert.cantInitializeCamera.title", fallback: "Can't initialize the camera")
-      }
-    }
+    /// The camera is not authorized. Please go to the system settings of Zashi and turn it on.
+    public static let cameraSettings = L10n.tr("Localizable", "scan.cameraSettings", fallback: "The camera is not authorized. Please go to the system settings of Zashi and turn it on.")
+    /// This QR code doesn't hold a valid Zcash address.
+    public static let invalidQR = L10n.tr("Localizable", "scan.invalidQR", fallback: "This QR code doesn't hold a valid Zcash address.")
   }
   public enum SecurityWarning {
     /// I acknowledge

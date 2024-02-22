@@ -37,7 +37,7 @@ public struct SendFlowReducer: Reducer {
         public var destination: Destination?
         public var isSending = false
         public var memoState: MessageEditorReducer.State
-        public var scanState: ScanReducer.State
+        public var scanState: Scan.State
         public var shieldedBalance = Zatoshi.zero
         public var totalBalance = Zatoshi.zero
         public var transactionAddressInputState: TransactionAddressTextFieldReducer.State
@@ -106,7 +106,7 @@ public struct SendFlowReducer: Reducer {
             addMemoState: Bool,
             destination: Destination? = nil,
             memoState: MessageEditorReducer.State,
-            scanState: ScanReducer.State,
+            scanState: Scan.State,
             shieldedBalance: Zatoshi = .zero,
             totalBalance: Zatoshi = .zero,
             transactionAddressInputState: TransactionAddressTextFieldReducer.State,
@@ -130,7 +130,7 @@ public struct SendFlowReducer: Reducer {
         case onAppear
         case onDisappear
         case reviewPressed
-        case scan(ScanReducer.Action)
+        case scan(Scan.Action)
         case sendPressed
         case sendDone(TransactionState)
         case sendFailed(ZcashError)
@@ -164,7 +164,7 @@ public struct SendFlowReducer: Reducer {
         }
 
         Scope(state: \.scanState, action: /Action.scan) {
-            ScanReducer()
+            Scan()
         }
 
         Reduce { state, action in
@@ -283,6 +283,10 @@ public struct SendFlowReducer: Reducer {
                 audioServices.systemSoundVibrate()
                 return Effect.send(.updateDestination(nil))
 
+            case .scan(.cancelPressed):
+                state.destination = nil
+                return .none
+                
             case .scan:
                 return .none
             }
@@ -312,7 +316,7 @@ extension SendFlowStore {
         )
     }
     
-    func scanStore() -> ScanStore {
+    func scanStore() -> StoreOf<Scan> {
         self.scope(
             state: \.scanState,
             action: SendFlowReducer.Action.scan

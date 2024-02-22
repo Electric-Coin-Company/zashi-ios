@@ -130,10 +130,8 @@
 "balances.alert.shieldFunds.failure.message" = "Error: %@ (code: %@)";
 
 // MARK: - Scan
-"scan.info" = "We will validate any Zcash URI and take you to the appropriate action.";
-"scan.scanning" = "Scanning...";
-"scan.alert.cantInitializeCamera.title" = "Can't initialize the camera";
-"scan.alert.cantInitializeCamera.message" = "Error: %@ (code: %@)";
+"scan.invalidQR" = "This QR code doesn't hold a valid Zcash address.";
+"scan.cameraSettings" = "The camera is not authorized. Please go to the system settings of Zashi and turn it on.";
 
 // MARK: - Send
 "send.title" = "Send Zcash";

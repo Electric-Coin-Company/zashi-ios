@@ -28,7 +28,7 @@ public struct ZcashButtonStyle: ButtonStyle {
                     : isEnabled ? Asset.Colors.primary.color : Asset.Colors.shade72.color
                 )
                 .frame(height: height)
-                .border(isEnabled ? Asset.Colors.primary.color : Asset.Colors.shade72.color)
+                .border(appearance == .secondary && isEnabled ? Asset.Colors.secondary.color : Asset.Colors.primary.color)
                 .offset(CGSize(width: shadowOffset, height: shadowOffset))
 
             Rectangle()

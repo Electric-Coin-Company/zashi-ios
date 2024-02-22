@@ -9,6 +9,7 @@ import XCTest
 import ComposableArchitecture
 import ZcashLightClientKit
 import Scan
+import Generated
 @testable import secant_testnet
 
 @MainActor
@@ -16,13 +17,12 @@ class ScanTests: XCTestCase {
     func testOnAppearResetValues() async throws {
         let store = TestStore(
             initialState:
-                ScanReducer.State(
+                Scan.State(
                     isTorchAvailable: true,
-                    isTorchOn: true,
-                    scanStatus: .value("t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted)
+                    isTorchOn: true
                 )
         ) {
-            ScanReducer()
+            Scan()
         }
 
         store.dependencies.captureDevice = .noOp
@@ -30,7 +30,7 @@ class ScanTests: XCTestCase {
         await store.send(.onAppear) { state in
             state.isTorchAvailable = false
             state.isTorchOn = false
-            state.scanStatus = .unknown
+            state.info = L10n.Scan.cameraSettings
         }
         
         await store.finish()
@@ -38,9 +38,9 @@ class ScanTests: XCTestCase {
     
     func testTorchOn() async throws {
         let store = TestStore(
-            initialState: ScanReducer.State()
+            initialState: Scan.State()
         ) {
-            ScanReducer()
+            Scan()
         }
 
         store.dependencies.captureDevice = .noOp
@@ -54,11 +54,11 @@ class ScanTests: XCTestCase {
 
     func testTorchOff() async throws {
         let store = TestStore(
-            initialState: ScanReducer.State(
+            initialState: Scan.State(
                 isTorchOn: true
             )
         ) {
-            ScanReducer()
+            Scan()
         }
 
         store.dependencies.captureDevice = .noOp
@@ -72,27 +72,34 @@ class ScanTests: XCTestCase {
 
     func testScannedInvalidValue() async throws {
         let store = TestStore(
-            initialState: ScanReducer.State()
+            initialState: Scan.State()
         ) {
-            ScanReducer()
+            Scan()
         }
 
         store.dependencies.uriParser.isValidURI = { _, _ in false }
+        store.dependencies.mainQueue = .immediate
         
         let value = "test".redacted
         
-        await store.send(.scan(value)) { state in
-            state.scanStatus = .failed
+        await store.send(.scan(value))
+        
+        await store.receive(.scanFailed) { state in
+            state.info = L10n.Scan.invalidQR
         }
         
+        await store.receive(.clearInfo) { state in
+            state.info = ""
+        }
+
         await store.finish()
     }
 
-    @MainActor func testScannedValidAddress() async throws {
+    func testScannedValidAddress() async throws {
         let store = TestStore(
-            initialState: ScanReducer.State()
+            initialState: Scan.State()
         ) {
-            ScanReducer()
+            Scan()
         }
         
         store.dependencies.mainQueue = .immediate
@@ -100,9 +107,7 @@ class ScanTests: XCTestCase {
 
         let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
         
-        await store.send(.scan(address)) { state in
-            state.scanStatus = .value(address)
-        }
+        await store.send(.scan(address))
         
         await store.receive(.found(address))
         
@@ -111,13 +116,19 @@ class ScanTests: XCTestCase {
 
     func testScanFailed() async throws {
         let store = TestStore(
-            initialState: ScanReducer.State()
+            initialState: Scan.State()
         ) {
-            ScanReducer()
+            Scan()
         }
 
+        store.dependencies.mainQueue = .immediate
+
         await store.send(.scanFailed) { state in
-            state.scanStatus = .failed
+            state.info = L10n.Scan.invalidQR
+        }
+        
+        await store.receive(.clearInfo) { state in
+            state.info = ""
         }
         
         await store.finish()

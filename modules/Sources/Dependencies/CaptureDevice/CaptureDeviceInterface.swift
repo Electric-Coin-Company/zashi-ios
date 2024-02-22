@@ -16,11 +16,13 @@ extension DependencyValues {
 
 public struct CaptureDeviceClient {
     public enum CaptureDeviceClientError: Error {
-        case captureDeviceFailed
-        case lockForConfigurationFailed
+        case authorizationStatus
+        case captureDevice
+        case lockForConfiguration
         case torchUnavailable
     }
-    
-    public let isTorchAvailable: () throws -> Bool
+
+    public let isAuthorized: () -> Bool
+    public let isTorchAvailable: () -> Bool
     public let torch: (Bool) throws -> Void
 }

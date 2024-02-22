@@ -8,6 +8,7 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ### Changed
 - Settings screen options have been reduced and some were moved to the new Advanced Settings screen.
+- Scan of QR codes has been re-worked with new design and behaviours.
 
 ### Added
 - Pending values (changes) at the Balances tab.
