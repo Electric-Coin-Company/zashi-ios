@@ -29,18 +29,19 @@ public struct RootReducer: Reducer {
     enum CancelStateId { case timer }
     enum SynchronizerCancelId { case timer }
     enum WalletConfigCancelId { case timer }
+    enum DidFinishLaunchingId { case timer }
 
     public struct State: Equatable {
         @PresentationState public var alert: AlertState<Action>?
         public var appInitializationState: InitializationState = .uninitialized
+        public var appStartState: AppStartState = .unknown
         public var bgTask: BGProcessingTask?
         @PresentationState public var confirmationDialog: ConfirmationDialogState<Action.ConfirmationDialog>?
         public var debugState: DebugState
         public var destinationState: DestinationState
         public var exportLogsState: ExportLogsReducer.State
+        public var isLockedInKeychainUnavailableState = false
         public var isRestoringWallet = false
-        public var keychainReadRetries = 0
-        public var maxKeychainReadRetries = 3
         public var onboardingState: OnboardingFlowReducer.State
         public var phraseDisplayState: RecoveryPhraseDisplay.State
         public var sandboxState: SandboxReducer.State
@@ -52,12 +53,12 @@ public struct RootReducer: Reducer {
         
         public init(
             appInitializationState: InitializationState = .uninitialized,
+            appStartState: AppStartState = .unknown,
             debugState: DebugState,
             destinationState: DestinationState,
             exportLogsState: ExportLogsReducer.State,
+            isLockedInKeychainUnavailableState: Bool = false,
             isRestoringWallet: Bool = false,
-            keychainReadRetries: Int = 0,
-            maxKeychainReadRetries: Int = 3,
             onboardingState: OnboardingFlowReducer.State,
             phraseDisplayState: RecoveryPhraseDisplay.State,
             sandboxState: SandboxReducer.State,
@@ -67,12 +68,12 @@ public struct RootReducer: Reducer {
             welcomeState: WelcomeReducer.State
         ) {
             self.appInitializationState = appInitializationState
+            self.appStartState = appStartState
             self.debugState = debugState
             self.destinationState = destinationState
             self.exportLogsState = exportLogsState
+            self.isLockedInKeychainUnavailableState = isLockedInKeychainUnavailableState
             self.isRestoringWallet = isRestoringWallet
-            self.keychainReadRetries = keychainReadRetries
-            self.maxKeychainReadRetries = maxKeychainReadRetries
             self.onboardingState = onboardingState
             self.phraseDisplayState = phraseDisplayState
             self.sandboxState = sandboxState
@@ -295,6 +296,14 @@ extension AlertState where Action == RootReducer.Action {
             TextState(L10n.General.success)
         } message: {
             TextState(L10n.ImportWallet.Alert.Success.message)
+        }
+    }
+    
+    public static func tmpMigrationToBeDeveloped() -> AlertState {
+        AlertState {
+            TextState("Automatic migration to be developed soon")
+        } message: {
+            TextState("This copy of Zashi has been migrated from another device. Your funds are safe provided that you have the seed phrase. This issue will be addressed soon; until then, delete Zashi and reinstall it, providing the seed phrase to restore your wallet.")
         }
     }
 }

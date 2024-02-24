@@ -106,11 +106,11 @@ extension SecurityWarning {
 
 extension SecurityWarning.State {
     public static let placeholder = SecurityWarning.State(
-        recoveryPhraseDisplayState: RecoveryPhraseDisplayReducer.State(phrase: .placeholder)
+        recoveryPhraseDisplayState: RecoveryPhraseDisplay.State(phrase: .placeholder)
     )
     
     public static let initial = SecurityWarning.State(
-        recoveryPhraseDisplayState: RecoveryPhraseDisplayReducer.State(
+        recoveryPhraseDisplayState: RecoveryPhraseDisplay.State(
             phrase: .initial
         )
     )

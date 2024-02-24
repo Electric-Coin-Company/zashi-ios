@@ -37,8 +37,12 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         guard !_XCTIsTesting else { return true }
         walletLogger = OSLogger(logLevel: .debug, category: LoggerConstants.walletLogs)
 #endif
-        
         handleBackgroundTask()
+
+        // set the default behavior for the NSDecimalNumber
+        NSDecimalNumber.defaultBehavior = Zatoshi.decimalHandler
+        
+        rootStore.send(.initialization(.appDelegate(.didFinishLaunching)))
 
         return true
     }
@@ -66,10 +70,6 @@ extension AppDelegate {
             LoggerProxy.event("BGTask isConnectedToWifi \(path.status == .satisfied)")
         }
         monitor?.start(queue: workerQueue)
-        
-        // set the default behavior for the NSDecimalNumber
-        NSDecimalNumber.defaultBehavior = Zatoshi.decimalHandler
-        rootStore.send(.initialization(.appDelegate(.didFinishLaunching)))
         
         registerTasks()
     }

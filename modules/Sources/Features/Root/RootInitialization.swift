@@ -25,7 +25,6 @@ extension RootReducer {
         case initialSetups
         case initializationFailed(ZcashError)
         case initializationSuccessfullyDone(UnifiedAddress?)
-        case retryKeychainRead(InitializationState)
         case nukeWallet
         case nukeWalletRequest
         case respondToWalletInitializationState(InitializationState)
@@ -39,24 +38,52 @@ extension RootReducer {
     public func initializationReduce() -> Reduce<RootReducer.State, RootReducer.Action> {
         Reduce { state, action in
             switch action {
+            case .initialization(.appDelegate(.didFinishLaunching)):
+                state.appStartState = .didFinishLaunching
+                // TODO: [#704], trigger the review request logic when approved by the team,
+                // https://github.com/Electric-Coin-Company/zashi-ios/issues/704
+                return .run { send in
+                    try await mainQueue.sleep(for: .seconds(0.5))
+                    await send(.initialization(.initialSetups))
+                }
+                .cancellable(id: DidFinishLaunchingId.timer, cancelInFlight: true)
+
+            case .initialization(.appDelegate(.willEnterForeground)):
+                state.appStartState = .willEnterForeground
+                if state.isLockedInKeychainUnavailableState || !sdkSynchronizer.latestState().syncStatus.isPrepared {
+                    return .send(.initialization(.initialSetups))
+                } else {
+                    return .send(.initialization(.retryStart))
+                }
+
             case .initialization(.appDelegate(.didEnterBackground)):
                 sdkSynchronizer.stop()
                 state.bgTask?.setTaskCompleted(success: false)
                 state.bgTask = nil
+                state.appStartState = .didEnterBackground
+                state.isLockedInKeychainUnavailableState = false
                 return .cancel(id: CancelStateId.timer)
                 
             case .initialization(.appDelegate(.backgroundTask(let task))):
-                state.bgTask = task
-                return .run { send in
-                    await send(.initialization(.retryStart))
+                let keysPresent: Bool = (try? walletStorage.areKeysPresent()) ?? false
+                if state.appStartState == .didFinishLaunching {
+                    state.appStartState = .backgroundTask
+                    if keysPresent {
+                        state.bgTask = task
+                        return .none
+                    } else {
+                        state.isLockedInKeychainUnavailableState = true
+                        task.setTaskCompleted(success: false)
+                        return .cancel(id: DidFinishLaunchingId.timer)
+                    }
+                } else {
+                    state.bgTask = task
+                    state.appStartState = .backgroundTask
+                    return .run { send in
+                        await send(.initialization(.retryStart))
+                    }
                 }
-                
-            case .initialization(.appDelegate(.willEnterForeground)):
-                return .run { send in
-                    try await mainQueue.sleep(for: .seconds(1))
-                    await send(.initialization(.retryStart))
-                }
-                
+
             case .synchronizerStateChanged(let latestState):
                 let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.data.syncStatus)
 
@@ -77,8 +104,6 @@ extension RootReducer {
                 default: break
                 }
 
-                LoggerProxy.event("BGTask .synchronizerStateChanged(let latestState): \(snapshot.syncStatus)")
-                
                 if finishBGTask  {
                     LoggerProxy.event("BGTask setTaskCompleted(success: \(successOfBGTask)) from TCA")
                     state.bgTask?.setTaskCompleted(success: successOfBGTask)
@@ -130,14 +155,6 @@ extension RootReducer {
                 }
                 .cancellable(id: CancelStateId.timer, cancelInFlight: true)
 
-            case .initialization(.appDelegate(.didFinishLaunching)):
-                // TODO: [#704], trigger the review request logic when approved by the team,
-                // https://github.com/Electric-Coin-Company/zashi-ios/issues/704
-                return .run { send in
-                    try await mainQueue.sleep(for: .seconds(0.02))
-                    await send(.initialization(.initialSetups))
-                }
-
             case .initialization(.checkWalletConfig):
                 return .publisher {
                     walletConfigProvider.load()
@@ -165,10 +182,7 @@ extension RootReducer {
                 /// We need to fetch data from keychain, in order to be 100% sure the keychain can be read we delay the check a bit
                 return .concatenate(
                     Effect.send(.initialization(.configureCrashReporter)),
-                    .run { send in
-                        try await mainQueue.sleep(for: .seconds(0.02))
-                        await send(.initialization(.checkWalletInitialization))
-                    }
+                    Effect.send(.initialization(.checkWalletInitialization))
                 )
 
                 /// Evaluate the wallet's state based on keychain keys and database files presence
@@ -185,10 +199,15 @@ extension RootReducer {
                 switch walletState {
                 case .failed:
                     state.appInitializationState = .failed
-                    return .send(.initialization(.retryKeychainRead(walletState)))
+                    state.alert = AlertState.walletStateFailed(walletState)
+                    return .none
                 case .keysMissing:
                     state.appInitializationState = .keysMissing
-                    return .send(.initialization(.retryKeychainRead(walletState)))
+                    // TODO: [#1024] This is the case when this wallet migrated to another device
+                    // https://github.com/Electric-Coin-Company/zashi-ios/issues/1024
+                    // Temporary alert view until #1024 is implemented
+                    state.alert = AlertState.tmpMigrationToBeDeveloped()
+                    return .none
                 case .initialized, .filesMissing:
                     if walletState == .filesMissing {
                         state.appInitializationState = .filesMissing
@@ -211,24 +230,12 @@ extension RootReducer {
                 case .uninitialized:
                     state.appInitializationState = .uninitialized
                     return .run { send in
-                        try await mainQueue.sleep(for: .seconds(3))
+                        try await mainQueue.sleep(for: .seconds(2.5))
                         await send(.destination(.updateDestination(.onboarding)))
                     }
                     .cancellable(id: CancelId.timer, cancelInFlight: true)
                 }
 
-            case .initialization(.retryKeychainRead(let walletState)):
-                if state.keychainReadRetries < state.maxKeychainReadRetries {
-                    state.keychainReadRetries += 1
-                    return .run { [retries = state.keychainReadRetries] send in
-                        try await mainQueue.sleep(for: .seconds(0.1 * Double(retries)))
-                        await send(.initialization(.checkWalletInitialization))
-                    }
-                } else {
-                    state.alert = AlertState.walletStateFailed(walletState)
-                    return .send(.destination(.updateDestination(RootReducer.DestinationState.Destination.tabs)))
-                }
-                
                 /// Stored wallet is present, database files may or may not be present, trying to initialize app state variables and environments.
                 /// When initialization succeeds user is taken to the home screen.
             case .initialization(.initializeSDK(let walletMode)):
@@ -290,7 +297,7 @@ extension RootReducer {
                 state.appInitializationState = .initialized
 
                 return .run { [landingDestination] send in
-                    try await mainQueue.sleep(for: .seconds(3))
+                    try await mainQueue.sleep(for: .seconds(2.5))
                     await send(.destination(.updateDestination(landingDestination)))
                 }
                 .cancellable(id: CancelId.timer, cancelInFlight: true)
