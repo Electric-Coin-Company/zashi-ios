@@ -84,7 +84,8 @@ extension HomeView {
             } else {
                 AvailableBalanceView(
                     balance: viewStore.shieldedBalance,
-                    tokenName: tokenName
+                    tokenName: tokenName,
+                    showIndicator: viewStore.isProcessingZeroAvailableBalance
                 )
                 .accessDebugMenuWithHiddenGesture {
                     viewStore.send(.debugMenuStartup)

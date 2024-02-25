@@ -100,6 +100,10 @@ public struct SendFlowReducer: Reducer {
         public var spendableBalanceString: String {
             spendableBalance.decimalString(formatter: NumberFormatter.zashiBalanceFormatter)
         }
+
+        public var isProcessingZeroAvailableBalance: Bool {
+            totalBalance.amount != spendableBalance.amount && spendableBalance.amount == 0
+        }
         
         public init(
             addMemoState: Bool,

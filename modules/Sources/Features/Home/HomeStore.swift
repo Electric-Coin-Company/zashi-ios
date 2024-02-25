@@ -50,6 +50,10 @@ public struct HomeReducer: Reducer {
             shieldedBalance.amount == 0
         }
         
+        public var isProcessingZeroAvailableBalance: Bool {
+            totalBalance.amount != shieldedBalance.amount && shieldedBalance.amount == 0
+        }
+
         public init(
             destination: Destination? = nil,
             canRequestReview: Bool = false,

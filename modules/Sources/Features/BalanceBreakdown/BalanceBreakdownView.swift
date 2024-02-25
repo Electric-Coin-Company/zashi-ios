@@ -35,7 +35,8 @@ public struct BalanceBreakdownView: View {
 
                 AvailableBalanceView(
                     balance: viewStore.shieldedBalance,
-                    tokenName: tokenName
+                    tokenName: tokenName,
+                    showIndicator: viewStore.isProcessingZeroAvailableBalance
                 )
                 
                 Asset.Colors.primary.color

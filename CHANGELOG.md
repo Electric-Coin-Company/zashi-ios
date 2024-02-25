@@ -10,6 +10,7 @@ directly impact users rather than highlighting other crucial architectural updat
 - Settings screen options have been reduced and some were moved to the new Advanced Settings screen.
 - Scan of QR codes has been re-worked with new design and behaviours.
 - Security warning consent extended with crash reports.
+- Available balance component shows a spinner instead of zero value when processing spendable balance.
 
 ### Added
 - Pending values (changes) at the Balances tab.
