@@ -38,7 +38,7 @@ public struct SendFlowReducer: Reducer {
         public var isSending = false
         public var memoState: MessageEditorReducer.State
         public var scanState: Scan.State
-        public var shieldedBalance = Zatoshi.zero
+        public var spendableBalance = Zatoshi.zero
         public var totalBalance = Zatoshi.zero
         public var transactionAddressInputState: TransactionAddressTextFieldReducer.State
         public var transactionAmountInputState: TransactionAmountTextFieldReducer.State
@@ -67,39 +67,38 @@ public struct SendFlowReducer: Reducer {
         }
 
         public var isInvalidAddressFormat: Bool {
-            !transactionAddressInputState.isValidAddress
-            && !transactionAddressInputState.textFieldState.text.data.isEmpty
+            !transactionAddressInputState.textFieldState.text.data.isEmpty
+            && !transactionAddressInputState.isValidAddress
         }
 
         public var isInvalidAmountFormat: Bool {
-            !transactionAmountInputState.textFieldState.valid
-            && !transactionAmountInputState.textFieldState.text.data.isEmpty
+            !transactionAmountInputState.textFieldState.text.data.isEmpty
+            && !transactionAmountInputState.isValidInput
         }
         
         public var isValidForm: Bool {
-            @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
-
-            return transactionAmountInputState.amount.data > zcashSDKEnvironment.network.constants.defaultFee().amount
-            && transactionAddressInputState.isValidAddress
+            !isInvalidAddressFormat
             && !isInsufficientFunds
             && memoState.isValid
+            && !isInvalidAmountFormat
         }
-        
+
         public var isInsufficientFunds: Bool {
-            transactionAmountInputState.amount.data > transactionAmountInputState.maxValue.data
+            @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
+
+            return transactionAmountInputState.amount.data > spendableBalance.amount - zcashSDKEnvironment.network.constants.defaultFee().amount
         }
         
         public var isMemoInputEnabled: Bool {
-            transactionAddressInputState.textFieldState.text.data.isEmpty ||
             !transactionAddressInputState.isValidTransparentAddress
         }
         
         public var totalCurrencyBalance: Zatoshi {
-            Zatoshi.from(decimal: shieldedBalance.decimalValue.decimalValue * transactionAmountInputState.zecPrice)
+            Zatoshi.from(decimal: spendableBalance.decimalValue.decimalValue * transactionAmountInputState.zecPrice)
         }
         
         public var spendableBalanceString: String {
-            shieldedBalance.decimalString(formatter: NumberFormatter.zashiBalanceFormatter)
+            spendableBalance.decimalString(formatter: NumberFormatter.zashiBalanceFormatter)
         }
         
         public init(
@@ -107,7 +106,7 @@ public struct SendFlowReducer: Reducer {
             destination: Destination? = nil,
             memoState: MessageEditorReducer.State,
             scanState: Scan.State,
-            shieldedBalance: Zatoshi = .zero,
+            spendableBalance: Zatoshi = .zero,
             totalBalance: Zatoshi = .zero,
             transactionAddressInputState: TransactionAddressTextFieldReducer.State,
             transactionAmountInputState: TransactionAmountTextFieldReducer.State
@@ -116,7 +115,7 @@ public struct SendFlowReducer: Reducer {
             self.destination = destination
             self.memoState = memoState
             self.scanState = scanState
-            self.shieldedBalance = shieldedBalance
+            self.spendableBalance = spendableBalance
             self.totalBalance = totalBalance
             self.transactionAddressInputState = transactionAddressInputState
             self.transactionAmountInputState = transactionAmountInputState
@@ -256,6 +255,12 @@ public struct SendFlowReducer: Reducer {
             case .transactionAmountInput:
                 return .none
 
+            case .transactionAddressInput(.textField):
+                if !state.isMemoInputEnabled {
+                    state.memoState.text = "".redacted
+                }
+                return .none
+                
             case .transactionAddressInput(.scanQR):
                 return Effect.send(.updateDestination(.scanQR))
 
@@ -263,9 +268,9 @@ public struct SendFlowReducer: Reducer {
                 return .none
                 
             case .synchronizerStateChanged(let latestState):
-                state.shieldedBalance = latestState.data.accountBalance?.data?.saplingBalance.spendableValue ?? .zero
+                state.spendableBalance = latestState.data.accountBalance?.data?.saplingBalance.spendableValue ?? .zero
                 state.totalBalance = latestState.data.accountBalance?.data?.saplingBalance.total() ?? .zero
-                state.transactionAmountInputState.maxValue = state.shieldedBalance.amount.redacted
+                state.transactionAmountInputState.maxValue = state.spendableBalance.amount.redacted
                 return .none
 
             case .memo:

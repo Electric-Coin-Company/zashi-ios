@@ -21,6 +21,16 @@ public struct TransactionAmountTextFieldReducer: Reducer {
         public var textFieldState: TCATextFieldReducer.State
         // TODO: [#311] - Get the ZEC price from the SDK, https://github.com/Electric-Coin-Company/zashi-ios/issues/311
         public var zecPrice = Decimal(140.0)
+        
+        public var isValidInput: Bool {
+            if !_XCTIsTesting {
+                @Dependency(\.numberFormatter) var numberFormatter
+                
+                return numberFormatter.number(textFieldState.text.data) != nil
+            } else {
+                return true
+            }
+        }
 
         public var isMax: Bool {
             return amount == maxValue

@@ -78,10 +78,8 @@ extension MessageEditorStore {
 // MARK: - Placeholders
 
 extension MessageEditorReducer.State {
-    public static let initial: MessageEditorReducer.State = {
-        var state = MessageEditorReducer.State()
-        state.text = "".redacted
-        state.charLimit = 0
-        return state
-    }()
+    public static let initial = MessageEditorReducer.State(
+        charLimit: 0,
+        text: "".redacted
+    )
 }

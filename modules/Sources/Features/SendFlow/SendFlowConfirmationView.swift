@@ -151,7 +151,7 @@ public struct SendFlowConfirmationView: View {
                         text: "This is some message I want to see in the preview and long enough to have at least two lines".redacted
                     ),
                     scanState: .initial,
-                    shieldedBalance: Zatoshi(4412323012_345),
+                    spendableBalance: Zatoshi(4412323012_345),
                     transactionAddressInputState:
                         TransactionAddressTextFieldReducer.State(
                             textFieldState: 

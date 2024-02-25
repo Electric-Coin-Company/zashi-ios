@@ -266,17 +266,9 @@ class SendTests: XCTestCase {
             addMemoState: true,
             memoState: .initial,
             scanState: .initial,
+            spendableBalance: Zatoshi(100_000),
             transactionAddressInputState: .initial,
-            transactionAmountInputState:
-                TransactionAmountTextFieldReducer.State(
-                    currencySelectionState: CurrencySelectionReducer.State(),
-                    maxValue: Int64(501_300).redacted,
-                    textFieldState:
-                        TCATextFieldReducer.State(
-                            validationType: .customFloatingPoint(usNumberFormatter),
-                            text: "".redacted
-                        )
-                )
+            transactionAmountInputState: .initial
         )
 
         let store = TestStore(
@@ -285,22 +277,21 @@ class SendTests: XCTestCase {
             SendFlowReducer()
         }
 
-        store.dependencies.numberFormatter = .noOp
-        store.dependencies.numberFormatter.number = { _ in NSNumber(0.00501299) }
+        store.dependencies.numberFormatter = .live(numberFormatter: usNumberFormatter)
 
-        let address = "0.00501299".redacted
+        let amount = "0.0009".redacted
         
-        await store.send(.transactionAmountInput(.textField(.set(address)))) { state in
-            state.transactionAmountInputState.textFieldState.text = address
+        await store.send(.transactionAmountInput(.textField(.set(amount)))) { state in
+            state.transactionAmountInputState.textFieldState.text = amount
             state.transactionAmountInputState.textFieldState.valid = true
+        }
+
+        await store.receive(.transactionAmountInput(.updateAmount)) { state in
+            state.transactionAmountInputState.amount = Int64(90_000).redacted
             XCTAssertFalse(
                 state.isInsufficientFunds,
                 "Send Tests: `testFundsSufficiency` is expected to be false but it's \(state.isInsufficientFunds)"
             )
-        }
-
-        await store.receive(.transactionAmountInput(.updateAmount)) { state in
-            state.transactionAmountInputState.amount = Int64(501_299).redacted
         }
     }
 
@@ -309,17 +300,9 @@ class SendTests: XCTestCase {
             addMemoState: true,
             memoState: .initial,
             scanState: .initial,
+            spendableBalance: Zatoshi(100_000),
             transactionAddressInputState: .initial,
-            transactionAmountInputState:
-                TransactionAmountTextFieldReducer.State(
-                    currencySelectionState: CurrencySelectionReducer.State(),
-                    maxValue: Int64(501_300).redacted,
-                    textFieldState:
-                        TCATextFieldReducer.State(
-                            validationType: .customFloatingPoint(usNumberFormatter),
-                            text: "".redacted
-                        )
-                )
+            transactionAmountInputState: .initial
         )
 
         let store = TestStore(
@@ -328,13 +311,12 @@ class SendTests: XCTestCase {
             SendFlowReducer()
         }
 
-        store.dependencies.numberFormatter = .noOp
-        store.dependencies.numberFormatter.number = { _ in NSNumber(0.00501301) }
+        store.dependencies.numberFormatter = .live(numberFormatter: usNumberFormatter)
 
-        let value = "0.00501301".redacted
+        let amount = "0.00090001".redacted
         
-        await store.send(.transactionAmountInput(.textField(.set(value)))) { state in
-            state.transactionAmountInputState.textFieldState.text = value
+        await store.send(.transactionAmountInput(.textField(.set(amount)))) { state in
+            state.transactionAmountInputState.textFieldState.text = amount
             state.transactionAmountInputState.textFieldState.valid = true
             XCTAssertFalse(
                 state.isInsufficientFunds,
@@ -343,7 +325,7 @@ class SendTests: XCTestCase {
         }
 
         await store.receive(.transactionAmountInput(.updateAmount)) { state in
-            state.transactionAmountInputState.amount = Int64(501_301).redacted
+            state.transactionAmountInputState.amount = Int64(90_001).redacted
             XCTAssertTrue(
                 state.isInsufficientFunds,
                 "Send Tests: `testFundsSufficiency` is expected to be true but it's \(state.isInsufficientFunds)"
@@ -374,18 +356,9 @@ class SendTests: XCTestCase {
             addMemoState: true,
             memoState: .initial,
             scanState: .initial,
+            spendableBalance: Zatoshi(100_000),
             transactionAddressInputState: .initial,
-            transactionAmountInputState:
-                TransactionAmountTextFieldReducer.State(
-                    amount: Int64(501_301).redacted,
-                    currencySelectionState: CurrencySelectionReducer.State(),
-                    maxValue: Int64(501_302).redacted,
-                    textFieldState:
-                        TCATextFieldReducer.State(
-                            validationType: .customFloatingPoint(usNumberFormatter),
-                            text: "0.00501301".redacted
-                        )
-                )
+            transactionAmountInputState: .initial
         )
 
         let store = TestStore(
@@ -394,10 +367,25 @@ class SendTests: XCTestCase {
             SendFlowReducer()
         }
 
-        store.dependencies.derivationTool = .noOp
-        store.dependencies.derivationTool.isZcashAddress = { _, _ in true }
+        store.dependencies.numberFormatter = .live(numberFormatter: usNumberFormatter)
+        store.dependencies.derivationTool = .live()
 
-        let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
+        let amount = "0.0009".redacted
+        
+        await store.send(.transactionAmountInput(.textField(.set(amount)))) { state in
+            state.transactionAmountInputState.textFieldState.text = amount
+            state.transactionAmountInputState.textFieldState.valid = true
+        }
+
+        await store.receive(.transactionAmountInput(.updateAmount)) { state in
+            state.transactionAmountInputState.amount = Int64(90_000).redacted
+            XCTAssertFalse(
+                state.isInsufficientFunds,
+                "Send Tests: `testFundsSufficiency` is expected to be false but it's \(state.isInsufficientFunds)"
+            )
+        }
+        
+        let address = "tmViyFacKkncJ6zhEqs8rjqNPkGqXsMV4uq".redacted
         
         await store.send(.transactionAddressInput(.textField(.set(address)))) { state in
             state.transactionAddressInputState.textFieldState.text = address
@@ -405,9 +393,10 @@ class SendTests: XCTestCase {
             // isValid function returns true, `guard let validationType else { return true }`
             state.transactionAddressInputState.textFieldState.valid = true
             state.transactionAddressInputState.isValidAddress = true
+            state.transactionAddressInputState.isValidTransparentAddress = true
             XCTAssertTrue(
                 state.isValidForm,
-                "Send Tests: `testValidForm` is expected to be true but it's \(state.isValidForm)"
+                "Send Tests: `testValidForm` is expected to be false but it's \(state.isValidForm)"
             )
         }
     }
@@ -522,6 +511,7 @@ class SendTests: XCTestCase {
         }
 
         store.dependencies.derivationTool = .noOp
+        store.dependencies.zcashSDKEnvironment = .testValue
 
         let address = "3HRG769ii3HDSJV5vNknQPzXqtL2mTSGnr".redacted
         
@@ -587,7 +577,7 @@ class SendTests: XCTestCase {
             addMemoState: true,
             memoState: MessageEditorReducer.State(charLimit: 3),
             scanState: .initial,
-            shieldedBalance: Zatoshi(1),
+            spendableBalance: Zatoshi(1),
             transactionAddressInputState:
                 TransactionAddressTextFieldReducer.State(
                     isValidAddress: true,
