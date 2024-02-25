@@ -22,18 +22,22 @@ public struct SyncProgressView: View {
     public var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             VStack(spacing: 5) {
-                HStack {
-                    Text(viewStore.syncStatusMessage)
-                        .font(.custom(FontFamily.Inter.regular.name, size: 10))
-                    
-                    if viewStore.isSyncing {
+                if viewStore.isSyncing {
+                    HStack {
+                        Text(viewStore.syncStatusMessage)
+                            .font(.custom(FontFamily.Inter.regular.name, size: 10))
+
                         ProgressView()
                             .scaleEffect(0.7)
                             .frame(width: 11, height: 14)
                     }
+                    .frame(height: 16)
+                    .padding(.bottom, 5)
+                } else {
+                    Text(viewStore.syncStatusMessage)
+                        .multilineTextAlignment(.center)
+                        .font(.custom(FontFamily.Inter.regular.name, size: 10))
                 }
-                .frame(height: 16)
-                .padding(.bottom, 5)
                 
                 Text(String(format: "%0.1f%%", viewStore.syncingPercentage * 100))
                     .font(.custom(FontFamily.Inter.black.name, size: 10))

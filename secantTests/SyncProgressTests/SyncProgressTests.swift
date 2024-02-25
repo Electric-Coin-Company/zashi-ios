@@ -10,6 +10,7 @@ import ComposableArchitecture
 import ZcashLightClientKit
 import SyncProgress
 import Models
+import Generated
 @testable import secant_testnet
 
 @MainActor
@@ -72,7 +73,7 @@ final class SyncProgressTests: XCTestCase {
         
         await store.send(.synchronizerStateChanged(syncState.redacted)) { state in
             state.synchronizerStatusSnapshot = snapshot
-            state.syncStatusMessage = "Synced"
+            state.syncStatusMessage = L10n.Balances.synced
             state.lastKnownSyncPercentage = 1.0
         }
     }
@@ -93,7 +94,7 @@ final class SyncProgressTests: XCTestCase {
         
         await store.send(.synchronizerStateChanged(syncState.redacted)) { state in
             state.synchronizerStatusSnapshot = snapshot
-            state.syncStatusMessage = "Syncing"
+            state.syncStatusMessage = L10n.Balances.syncing
             state.lastKnownSyncPercentage = 0.545
         }
     }
