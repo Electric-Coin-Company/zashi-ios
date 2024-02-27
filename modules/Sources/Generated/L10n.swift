@@ -82,8 +82,8 @@ public enum L10n {
     public enum HintBox {
       /// I got it!
       public static let dismiss = L10n.tr("Localizable", "balances.hintBox.dismiss", fallback: "I got it!")
-      /// Zashi uses the latest network upgrade and does does not support sending transparent (unshielded) ZEC. Converting your funds will move them to your available balance so you can send or spend them.
-      public static let message = L10n.tr("Localizable", "balances.hintBox.message", fallback: "Zashi uses the latest network upgrade and does does not support sending transparent (unshielded) ZEC. Converting your funds will move them to your available balance so you can send or spend them.")
+      /// In order to better preserve your privacy, Zashi does not support directly spending transparent (unshielded) ZEC. Use the Shield and Consolidate button to shield your transparent funds. This will move the transparent value to your available balance and make it spendable.
+      public static let message = L10n.tr("Localizable", "balances.hintBox.message", fallback: "In order to better preserve your privacy, Zashi does not support directly spending transparent (unshielded) ZEC. Use the Shield and Consolidate button to shield your transparent funds. This will move the transparent value to your available balance and make it spendable.")
     }
   }
   public enum Error {
