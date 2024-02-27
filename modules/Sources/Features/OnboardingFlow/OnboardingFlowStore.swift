@@ -27,13 +27,13 @@ public struct OnboardingFlowReducer: Reducer {
         public var destination: Destination?
         public var walletConfig: WalletConfig
         public var importWalletState: ImportWalletReducer.State
-        public var securityWarningState: SecurityWarningReducer.State
+        public var securityWarningState: SecurityWarning.State
 
         public init(
             destination: Destination? = nil,
             walletConfig: WalletConfig,
             importWalletState: ImportWalletReducer.State,
-            securityWarningState: SecurityWarningReducer.State
+            securityWarningState: SecurityWarning.State
         ) {
             self.destination = destination
             self.walletConfig = walletConfig
@@ -47,7 +47,7 @@ public struct OnboardingFlowReducer: Reducer {
         case importExistingWallet
         case importWallet(ImportWalletReducer.Action)
         case onAppear
-        case securityWarning(SecurityWarningReducer.Action)
+        case securityWarning(SecurityWarning.Action)
         case updateDestination(OnboardingFlowReducer.State.Destination?)
     }
     
@@ -59,7 +59,7 @@ public struct OnboardingFlowReducer: Reducer {
         }
 
         Scope(state: \.securityWarningState, action: /Action.securityWarning) {
-            SecurityWarningReducer()
+            SecurityWarning()
         }
 
         Reduce { state, action in

@@ -16,13 +16,13 @@ class SecurityWarningSnapshotTests: XCTestCase {
         let store = Store(
             initialState: .initial
         ) {
-            SecurityWarningReducer()
+            SecurityWarning()
                 .dependency(\.appVersion, .mock)
         }
 
         addAttachments(SecurityWarningView(store: store))
         
-        ViewStore(store, observe: { $0 }).send(.binding(.set(\.$isAcknowledged, true)))
+        store.isAcknowledged = true
 
         addAttachments(SecurityWarningView(store: store))
     }
