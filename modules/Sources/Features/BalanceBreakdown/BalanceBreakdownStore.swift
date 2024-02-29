@@ -47,6 +47,10 @@ public struct BalanceBreakdownReducer: Reducer {
             isShieldingFunds || !isShieldableBalanceAvailable
         }
         
+        public var isProcessingZeroAvailableBalance: Bool {
+            totalBalance.amount != shieldedBalance.amount && shieldedBalance.amount == 0
+        }
+        
         public init(
             autoShieldingThreshold: Zatoshi,
             changePending: Zatoshi,

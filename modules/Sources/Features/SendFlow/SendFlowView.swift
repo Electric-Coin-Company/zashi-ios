@@ -41,7 +41,8 @@ public struct SendFlowView: View {
                             
                             AvailableBalanceView(
                                 balance: viewStore.spendableBalance,
-                                tokenName: tokenName
+                                tokenName: tokenName,
+                                showIndicator: viewStore.isProcessingZeroAvailableBalance
                             )
                             
                             VStack(alignment: .leading) {

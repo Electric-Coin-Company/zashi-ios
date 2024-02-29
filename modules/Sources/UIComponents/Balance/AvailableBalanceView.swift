@@ -12,10 +12,16 @@ import ZcashLightClientKit
 public struct AvailableBalanceView: View {
     let balance: Zatoshi
     let tokenName: String
+    let showIndicator: Bool
     
-    public init(balance: Zatoshi, tokenName: String) {
+    public init(
+        balance: Zatoshi,
+        tokenName: String,
+        showIndicator: Bool = false
+    ) {
         self.balance = balance
         self.tokenName = tokenName
+        self.showIndicator = showIndicator
     }
     
     public var body: some View {
@@ -24,13 +30,19 @@ public struct AvailableBalanceView: View {
                 .font(.custom(FontFamily.Inter.regular.name, size: 14))
                 .underline()
             
-            ZatoshiRepresentationView(
-                balance: balance,
-                fontName: FontFamily.Inter.bold.name,
-                mostSignificantFontSize: 14,
-                leastSignificantFontSize: 7,
-                format: .expanded
-            )
+            if showIndicator {
+                ProgressView()
+                    .scaleEffect(0.9)
+                    .padding(.horizontal, 3)
+            } else {
+                ZatoshiRepresentationView(
+                    balance: balance,
+                    fontName: FontFamily.Inter.bold.name,
+                    mostSignificantFontSize: 14,
+                    leastSignificantFontSize: 7,
+                    format: .expanded
+                )
+            }
             
             Text(tokenName)
                 .font(.custom(FontFamily.Inter.regular.name, size: 14))
@@ -39,5 +51,5 @@ public struct AvailableBalanceView: View {
 }
 
 #Preview {
-    AvailableBalanceView(balance: Zatoshi(25_793_456), tokenName: "TAZ")
+    AvailableBalanceView(balance: Zatoshi(25_793_456), tokenName: "TAZ", showIndicator: true)
 }
