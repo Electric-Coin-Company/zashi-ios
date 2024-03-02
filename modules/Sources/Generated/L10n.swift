@@ -65,6 +65,8 @@ public enum L10n {
     public static let synced = L10n.tr("Localizable", "balances.synced", fallback: "Synced")
     /// Syncing
     public static let syncing = L10n.tr("Localizable", "balances.syncing", fallback: "Syncing")
+    /// Zashi encountered an error while syncing, attempting to resolve...
+    public static let syncingError = L10n.tr("Localizable", "balances.syncingError", fallback: "Zashi encountered an error while syncing, attempting to resolve...")
     /// Transparent balance
     public static let transparentBalance = L10n.tr("Localizable", "balances.transparentBalance", fallback: "Transparent balance")
     public enum Alert {

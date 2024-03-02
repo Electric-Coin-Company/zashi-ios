@@ -83,17 +83,18 @@ public struct SyncProgressReducer: Reducer {
                         state.lastKnownSyncPercentage = progress
                     }
 
-                    // TODO: [#931] The statuses of the sync process
-                    // https://github.com/Electric-Coin-Company/zashi-ios/issues/931
-                    // until then, this is temporary quick solution
                     switch snapshot.syncStatus {
                     case .syncing:
                         state.syncStatusMessage = L10n.Balances.syncing
-                    case .upToDate:
+                    case .upToDate, .stopped:
                         state.lastKnownSyncPercentage = 1
                         state.syncStatusMessage = L10n.Balances.synced
-                    case .error, .stopped, .unprepared:
+                    case .error, .unprepared:
+                        #if DEBUG
                         state.syncStatusMessage = snapshot.message
+                        #else
+                        state.syncStatusMessage = L10n.Balances.syncingError
+                        #endif
                     }
                 }
 
