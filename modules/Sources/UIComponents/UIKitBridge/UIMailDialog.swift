@@ -14,11 +14,11 @@ import SupportDataGenerator
 public class UIMailDialog: UIView {
     public var completion: (() -> Void)?
 
-    required init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
     }
 }
@@ -59,6 +59,11 @@ public struct UIMailDialogView: UIViewRepresentable {
     public let supportData: SupportData
     public let completion: () -> Void
 
+    public init(supportData: SupportData, completion: @escaping () -> Void) {
+        self.supportData = supportData
+        self.completion = completion
+    }
+    
     public func makeUIView(context: UIViewRepresentableContext<UIMailDialogView>) -> UIMailDialog {
         let view = UIMailDialog()
         view.doInitialSetup(supportData: supportData, completion: completion)

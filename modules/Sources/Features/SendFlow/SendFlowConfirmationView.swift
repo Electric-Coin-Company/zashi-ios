@@ -56,7 +56,7 @@ public struct SendFlowConfirmationView: View {
                             Text(L10n.Send.feeSummary)
                                 .font(.custom(FontFamily.Inter.regular.name, size: 14))
                             ZatoshiRepresentationView(
-                                balance: Zatoshi(10_000),
+                                balance: viewStore.feeRequired,
                                 fontName: FontFamily.Archivo.semiBold.name,
                                 mostSignificantFontSize: 16,
                                 leastSignificantFontSize: 8,
@@ -151,6 +151,7 @@ public struct SendFlowConfirmationView: View {
                         charLimit: 512,
                         text: "This is some message I want to see in the preview and long enough to have at least two lines".redacted
                     ),
+                    partialProposalErrorState: .initial,
                     scanState: .initial,
                     spendableBalance: Zatoshi(4412323012_345),
                     transactionAddressInputState:

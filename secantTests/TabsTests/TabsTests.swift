@@ -156,13 +156,10 @@ class TabsTests: XCTestCase {
             TabsReducer()
         }
         
-        let transaction = TransactionState.placeholder(uuid: "3")
-        
-        await store.send(.send(.sendDone(transaction))) { state in
+        await store.send(.send(.sendDone)) { state in
             state.selectedTab = .account
             state.homeState.transactionListState.transactionList = IdentifiedArrayOf(
                 uniqueElements: [
-                    transaction,
                     TransactionState.placeholder(uuid: "1"),
                     TransactionState.placeholder(uuid: "2")
                 ]
@@ -170,7 +167,7 @@ class TabsTests: XCTestCase {
         }
     }
     
-    func testShieldFundsSucceedAndTransactionListUpdated() async throws {
+    func testShieldFundsSucceed() async throws {
         var placeholderState = TabsReducer.State.initial
         placeholderState.selectedTab = .send
         placeholderState.balanceBreakdownState.transparentBalance = Zatoshi(10_000)
@@ -182,6 +179,10 @@ class TabsTests: XCTestCase {
         }
         
         store.dependencies.sdkSynchronizer = .mock
+        let proposal = Proposal.testOnlyFakeProposal(totalFee: 10_000)
+        store.dependencies.sdkSynchronizer.proposeShielding = { _, _, _, _ in proposal }
+        let transactionSubmitResult = TransactionSubmitResult.success(txId: Data())
+        store.dependencies.sdkSynchronizer.createProposedTransactions = { _, _ in .success }
         store.dependencies.derivationTool = .liveValue
         store.dependencies.mnemonic = .mock
         store.dependencies.walletStorage.exportWallet = { .placeholder }
@@ -191,23 +192,9 @@ class TabsTests: XCTestCase {
             state.balanceBreakdownState.isShieldingFunds = true
         }
         
-        let shieldedTransaction = TransactionState(
-            expiryHeight: 40,
-            memos: [try Memo(string: "")],
-            minedHeight: 50,
-            shielded: true,
-            zAddress: "tteafadlamnelkqe",
-            fee: Zatoshi(10),
-            id: "id",
-            status: .paid,
-            timestamp: 1234567,
-            zecAmount: Zatoshi(10)
-        )
-        
-        await store.receive(.balanceBreakdown(.shieldFundsSuccess(shieldedTransaction))) { state in
-            state.balanceBreakdownState.isShieldingFunds = false
+        await store.receive(.balanceBreakdown(.shieldFundsSuccess)) { state in
             state.balanceBreakdownState.transparentBalance = .zero
-            state.homeState.transactionListState.transactionList = IdentifiedArrayOf(uniqueElements: [shieldedTransaction])
+            state.balanceBreakdownState.isShieldingFunds = false
         }
         
         await store.finish()

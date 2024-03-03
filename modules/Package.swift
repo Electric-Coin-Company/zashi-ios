@@ -33,6 +33,7 @@ let package = Package(
         .library(name: "Models", targets: ["Models"]),
         .library(name: "NumberFormatter", targets: ["NumberFormatter"]),
         .library(name: "OnboardingFlow", targets: ["OnboardingFlow"]),
+        .library(name: "PartialProposalError", targets: ["PartialProposalError"]),
         .library(name: "Pasteboard", targets: ["Pasteboard"]),
         .library(name: "PrivateDataConsent", targets: ["PrivateDataConsent"]),
         .library(name: "RecoveryPhraseDisplay", targets: ["RecoveryPhraseDisplay"]),
@@ -67,7 +68,7 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-case-paths", from: "1.1.0"),
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.6.0"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.4"),
-        .package(url: "https://github.com/zcash/ZcashLightClientKit", from: "2.0.10"),
+        .package(url: "https://github.com/zcash/ZcashLightClientKit", from: "2.0.11"),
         .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.17.0")
     ],
     targets: [
@@ -106,6 +107,7 @@ let package = Package(
                 "MnemonicClient",
                 "Models",
                 "NumberFormatter",
+                "PartialProposalError",
                 "RestoreWalletStorage",
                 "SDKSynchronizer",
                 "SyncProgress",
@@ -306,6 +308,17 @@ let package = Package(
             path: "Sources/Features/OnboardingFlow"
         ),
         .target(
+            name: "PartialProposalError",
+            dependencies: [
+                "Generated",
+                "SupportDataGenerator",
+                "UIComponents",
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Features/PartialProposalError"
+        ),
+        .target(
             name: "Pasteboard",
             dependencies: [
                 "Utils",
@@ -462,6 +475,7 @@ let package = Package(
                 "DerivationTool",
                 "MnemonicClient",
                 "Models",
+                "PartialProposalError",
                 "Scan",
                 "SDKSynchronizer",
                 "UIComponents",

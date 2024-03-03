@@ -119,8 +119,7 @@ public struct TabsReducer: Reducer {
             case .addressDetails:
                 return .none
             
-            case .balanceBreakdown(.shieldFundsSuccess(let transaction)):
-                state.homeState.transactionListState.transactionList.insert(transaction, at: 0)
+            case .balanceBreakdown(.shieldFundsSuccess):
                 return .none
             
             case .balanceBreakdown:
@@ -144,8 +143,7 @@ public struct TabsReducer: Reducer {
                 state.isRestoringWallet = value
                 return .none
 
-            case .send(.sendDone(let transaction)):
-                state.homeState.transactionListState.transactionList.insert(transaction, at: 0)
+            case .send(.sendDone):
                 state.selectedTab = .account
                 return .none
             

@@ -126,5 +126,6 @@ public struct ZcashSDKEnvironment {
     public let network: ZcashNetwork
     public let requiredTransactionConfirmations: Int
     public let sdkVersion: String
+    public let shieldingThreshold: Zatoshi
     public let tokenName: String
 }

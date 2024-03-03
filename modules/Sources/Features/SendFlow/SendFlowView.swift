@@ -11,6 +11,7 @@ import Generated
 import Scan
 import UIComponents
 import BalanceFormatter
+import PartialProposalError
 
 public struct SendFlowView: View {
     private enum InputID: Hashable {
@@ -151,6 +152,12 @@ public struct SendFlowView: View {
                         }
                     )
                     .navigationLinkEmpty(
+                        isActive: viewStore.bindingForPartialProposalError,
+                        destination: {
+                            PartialProposalErrorView(store: store.partialProposalErrorStore())
+                        }
+                    )
+                    .navigationLinkEmpty(
                         isActive: viewStore.bindingForSendConfirmation,
                         destination: {
                             SendFlowConfirmationView(store: store, tokenName: tokenName)
@@ -178,6 +185,7 @@ public struct SendFlowView: View {
                     addMemoState: true,
                     destination: nil,
                     memoState: .initial,
+                    partialProposalErrorState: .initial,
                     scanState: .initial,
                     transactionAddressInputState: .initial,
                     transactionAmountInputState: .initial

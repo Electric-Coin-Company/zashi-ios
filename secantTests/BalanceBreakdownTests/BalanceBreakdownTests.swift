@@ -28,7 +28,9 @@ class BalanceBreakdownTests: XCTestCase {
         store.dependencies.mainQueue = .immediate
         store.dependencies.numberFormatter = .noOp
         
-        await store.send(.onAppear)
+        await store.send(.onAppear) { state in
+            state.autoShieldingThreshold = Zatoshi(100_000)
+        }
         
         // expected side effects as a result of .onAppear registration
         await store.receive(.synchronizerStateChanged(SynchronizerState.zero.redacted))
@@ -56,9 +58,12 @@ class BalanceBreakdownTests: XCTestCase {
         await store.send(.shieldFunds) { state in
             state.isShieldingFunds = true
         }
-        await store.receive(.shieldFundsFailure(ZcashError.synchronizerNotPrepared)) { state in
+        
+        let zcashError = ZcashError.unknown("sdkSynchronizer.proposeShielding")
+        
+        await store.receive(.shieldFundsFailure(zcashError)) { state in
             state.isShieldingFunds = false
-            state.alert = AlertState.shieldFundsFailure(ZcashError.synchronizerNotPrepared)
+            state.alert = AlertState.shieldFundsFailure(zcashError)
         }
 
         // long-living (cancelable) effects need to be properly canceled.
@@ -74,6 +79,13 @@ class BalanceBreakdownTests: XCTestCase {
         ) {
             BalanceBreakdownReducer()
         }
+        
+        store.dependencies.mainQueue = .immediate
+        store.dependencies.sdkSynchronizer = .noOp
+        
+        await store.send(.onAppear) { state in
+            state.autoShieldingThreshold = Zatoshi(100_000)
+        }
 
         XCTAssertFalse(store.state.isShieldingFunds)
         XCTAssertFalse(store.state.isShieldableBalanceAvailable)
@@ -86,6 +98,7 @@ class BalanceBreakdownTests: XCTestCase {
                 autoShieldingThreshold: Zatoshi(1_000_000),
                 changePending: .zero,
                 isShieldingFunds: false,
+                partialProposalErrorState: .initial,
                 pendingTransactions: .zero,
                 shieldedBalance: .zero,
                 syncProgressState: .initial,
@@ -107,6 +120,7 @@ class BalanceBreakdownTests: XCTestCase {
                 autoShieldingThreshold: Zatoshi(1_000_000),
                 changePending: .zero,
                 isShieldingFunds: true,
+                partialProposalErrorState: .initial,
                 pendingTransactions: .zero,
                 shieldedBalance: .zero,
                 syncProgressState: .initial,

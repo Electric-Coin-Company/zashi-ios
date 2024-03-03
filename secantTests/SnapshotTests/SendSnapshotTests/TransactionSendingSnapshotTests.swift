@@ -55,6 +55,7 @@ class SendSnapshotTests: XCTestCase {
                     charLimit: 512,
                     text: "This is some message I want to see in the preview and long enough to have at least two lines".redacted
                 ),
+                partialProposalErrorState: .initial,
                 scanState: .initial,
                 spendableBalance: Zatoshi(4412323012_345),
                 transactionAddressInputState:
@@ -94,6 +95,7 @@ class SendSnapshotTests: XCTestCase {
                 addMemoState: true,
                 destination: nil,
                 memoState: MessageEditorReducer.State(),
+                partialProposalErrorState: .initial,
                 scanState: .initial,
                 spendableBalance: Zatoshi(4412323012_345),
                 transactionAddressInputState:

@@ -5,12 +5,13 @@
 //  Created by Lukáš Korba on 04.08.2022.
 //
 
-import Foundation
+import SwiftUI
 import ComposableArchitecture
 import ZcashLightClientKit
 import DerivationTool
 import MnemonicClient
 import NumberFormatter
+import PartialProposalError
 import Utils
 import Generated
 import WalletStorage
@@ -27,12 +28,18 @@ public struct BalanceBreakdownReducer: Reducer {
     private let CancelId = UUID()
     
     public struct State: Equatable {
+        public enum Destination: Equatable {
+            case partialProposalError
+        }
+
         @PresentationState public var alert: AlertState<Action>?
         public var autoShieldingThreshold: Zatoshi
         public var changePending: Zatoshi
+        public var destination: Destination?
         public var isRestoringWallet = false
         public var isShieldingFunds: Bool
         public var isHintBoxVisible = false
+        public var partialProposalErrorState: PartialProposalError.State
         public var pendingTransactions: Zatoshi
         public var shieldedBalance: Zatoshi
         public var totalBalance: Zatoshi
@@ -54,9 +61,11 @@ public struct BalanceBreakdownReducer: Reducer {
         public init(
             autoShieldingThreshold: Zatoshi,
             changePending: Zatoshi,
+            destination: Destination? = nil,
             isRestoringWallet: Bool = false,
             isShieldingFunds: Bool,
             isHintBoxVisible: Bool = false,
+            partialProposalErrorState: PartialProposalError.State,
             pendingTransactions: Zatoshi,
             shieldedBalance: Zatoshi,
             syncProgressState: SyncProgressReducer.State,
@@ -65,9 +74,11 @@ public struct BalanceBreakdownReducer: Reducer {
         ) {
             self.autoShieldingThreshold = autoShieldingThreshold
             self.changePending = changePending
+            self.destination = destination
             self.isRestoringWallet = isRestoringWallet
             self.isShieldingFunds = isShieldingFunds
             self.isHintBoxVisible = isHintBoxVisible
+            self.partialProposalErrorState = partialProposalErrorState
             self.pendingTransactions = pendingTransactions
             self.shieldedBalance = shieldedBalance
             self.totalBalance = totalBalance
@@ -80,13 +91,16 @@ public struct BalanceBreakdownReducer: Reducer {
         case alert(PresentationAction<Action>)
         case onAppear
         case onDisappear
+        case partialProposalError(PartialProposalError.Action)
         case restoreWalletTask
         case restoreWalletValue(Bool)
         case shieldFunds
-        case shieldFundsSuccess(TransactionState)
         case shieldFundsFailure(ZcashError)
+        case shieldFundsPartial([String], [String])
+        case shieldFundsSuccess
         case synchronizerStateChanged(RedactableSynchronizerState)
         case syncProgress(SyncProgressReducer.Action)
+        case updateDestination(BalanceBreakdownReducer.State.Destination?)
         case updateHintBoxVisibility(Bool)
     }
 
@@ -106,6 +120,10 @@ public struct BalanceBreakdownReducer: Reducer {
             SyncProgressReducer()
         }
         
+        Scope(state: \.partialProposalErrorState, action: /Action.partialProposalError) {
+            PartialProposalError()
+        }
+
         Reduce { state, action in
             switch action {
             case .alert(.presented(let action)):
@@ -119,6 +137,7 @@ public struct BalanceBreakdownReducer: Reducer {
                 return .none
 
             case .onAppear:
+                state.autoShieldingThreshold = zcashSDKEnvironment.shieldingThreshold
                 return .publisher {
                     sdkSynchronizer.stateStream()
                         .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
@@ -129,6 +148,9 @@ public struct BalanceBreakdownReducer: Reducer {
                 
             case .onDisappear:
                 return .cancel(id: CancelId)
+            
+            case .partialProposalError:
+                return .none
 
             case .restoreWalletTask:
                 return .run { send in
@@ -143,29 +165,48 @@ public struct BalanceBreakdownReducer: Reducer {
 
             case .shieldFunds:
                 state.isShieldingFunds = true
-                return .run { [state] send in
+                return .run { send in
                     do {
                         let storedWallet = try walletStorage.exportWallet()
                         let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
                         let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, zcashSDKEnvironment.network.networkType)
+                        
+                        guard let uAddress = try await sdkSynchronizer.getUnifiedAddress(0) else { throw "sdkSynchronizer.getUnifiedAddress" }
 
-                        let transaction = try await sdkSynchronizer.shieldFunds(spendingKey, Memo(string: ""), state.autoShieldingThreshold)
-
-                        await send(.shieldFundsSuccess(transaction))
+                        let address = try uAddress.transparentReceiver()
+                        let proposal = try await sdkSynchronizer.proposeShielding(0, zcashSDKEnvironment.shieldingThreshold, .empty, address)
+                        
+                        guard let proposal else { throw "sdkSynchronizer.proposeShielding" }
+                        
+                        let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
+                        
+                        switch result {
+                        case .failure:
+                            await send(.shieldFundsFailure("sdkSynchronizer.createProposedTransactions".toZcashError()))
+                        case let .partial(txIds: txIds, statuses: statuses):
+                            await send(.shieldFundsPartial(txIds, statuses))
+                        case .success:
+                            await send(.shieldFundsSuccess)
+                        }
                     } catch {
                         await send(.shieldFundsFailure(error.toZcashError()))
                     }
                 }
+
+            case .shieldFundsFailure(let error):
+                state.isShieldingFunds = false
+                state.alert = AlertState.shieldFundsFailure(error)
+                return .none
 
             case .shieldFundsSuccess:
                 state.isShieldingFunds = false
                 state.transparentBalance = .zero
                 return .none
 
-            case .shieldFundsFailure(let error):
-                state.isShieldingFunds = false
-                state.alert = AlertState.shieldFundsFailure(error)
-                return .none
+            case let .shieldFundsPartial(txIds, statuses):
+                state.partialProposalErrorState.txIds = txIds
+                state.partialProposalErrorState.statuses = statuses
+                return .send(.updateDestination(.partialProposalError))
 
             case .synchronizerStateChanged(let latestState):
                 let accountBalance = latestState.data.accountBalance?.data
@@ -178,7 +219,11 @@ public struct BalanceBreakdownReducer: Reducer {
                 
             case .syncProgress:
                 return .none
-                
+
+            case let .updateDestination(destination):
+                state.destination = destination
+                return .none
+
             case .updateHintBoxVisibility(let visibility):
                 state.isHintBoxVisible = visibility
                 return .none
@@ -199,13 +244,43 @@ extension AlertState where Action == BalanceBreakdownReducer.Action {
     }
 }
 
+// MARK: - Store
+
+extension BalanceBreakdownStore {
+    func partialProposalErrorStore() -> StoreOf<PartialProposalError> {
+        self.scope(
+            state: \.partialProposalErrorState,
+            action: BalanceBreakdownReducer.Action.partialProposalError
+        )
+    }
+}
+
+// MARK: - ViewStore
+
+extension BalanceBreakdownViewStore {
+    var destinationBinding: Binding<BalanceBreakdownReducer.State.Destination?> {
+        self.binding(
+            get: \.destination,
+            send: BalanceBreakdownReducer.Action.updateDestination
+        )
+    }
+    
+    var bindingForPartialProposalError: Binding<Bool> {
+        self.destinationBinding.map(
+            extract: { $0 == .partialProposalError },
+            embed: { $0 ? BalanceBreakdownReducer.State.Destination.partialProposalError : nil }
+        )
+    }
+}
+
 // MARK: - Placeholders
 
 extension BalanceBreakdownReducer.State {
     public static let placeholder = BalanceBreakdownReducer.State(
-        autoShieldingThreshold: Zatoshi(1_000_000),
+        autoShieldingThreshold: .zero,
         changePending: .zero,
         isShieldingFunds: false,
+        partialProposalErrorState: .initial,
         pendingTransactions: .zero,
         shieldedBalance: .zero,
         syncProgressState: .initial,
@@ -214,9 +289,10 @@ extension BalanceBreakdownReducer.State {
     )
     
     public static let initial = BalanceBreakdownReducer.State(
-        autoShieldingThreshold: Zatoshi(1_000_000),
+        autoShieldingThreshold: .zero,
         changePending: .zero,
         isShieldingFunds: false,
+        partialProposalErrorState: .initial,
         pendingTransactions: .zero,
         shieldedBalance: .zero,
         syncProgressState: .initial,

@@ -22,6 +22,7 @@ public enum SupportDataGenerator {
     public enum Constants {
         public static let email = "support@electriccoin.co"
         public static let subject = "Zashi"
+        public static let subjectPPE = L10n.ProposalPartial.mailSubject
     }
     
     public static func generate() -> SupportData {
@@ -42,6 +43,30 @@ public enum SupportDataGenerator {
             .joined(separator: "\n")
 
         return SupportData(toAddress: Constants.email, subject: Constants.subject, message: message)
+    }
+    
+    public static func generatePartialProposalError(txIds: [String], statuses: [String]) -> SupportData {
+        let data = SupportDataGenerator.generate()
+        
+        let statusStrings = statuses
+            .map { "- \($0)" }
+            .joined(separator: "\n")
+        
+        let message =
+        """
+        \(L10n.ProposalPartial.mailPart1)
+
+        \(L10n.ProposalPartial.mailPart2)
+
+        \(L10n.ProposalPartial.mailPart3)
+
+        \(data.message)
+        
+        Transaction statuses:
+        \(statusStrings)
+        """
+        
+        return SupportData(toAddress: Constants.email, subject: Constants.subjectPPE, message: message)
     }
 }
 
