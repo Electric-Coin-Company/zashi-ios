@@ -7,6 +7,14 @@
 
 import Foundation
 
+public enum AppStartState: Equatable {
+    case backgroundTask
+    case didEnterBackground
+    case didFinishLaunching
+    case unknown
+    case willEnterForeground
+}
+
 public enum InitializationState: Equatable {
     case failed
     case initialized
