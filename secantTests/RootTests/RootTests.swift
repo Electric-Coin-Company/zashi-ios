@@ -165,11 +165,9 @@ class RootTests: XCTestCase {
             state.alert = AlertState.initializationFailed(zcashError)
         }
 
-        await store.receive(.initialization(.checkBackupPhraseValidation)) { state in
-            // failed is expected because environment is throwing errors
-            state.appInitializationState = .failed
-            state.alert = AlertState.cantLoadSeedPhrase()
-        }
+        await store.receive(.initialization(.checkBackupPhraseValidation))
+        
+        await store.receive(.initialization(.initializationFailed(zcashError)))
         
         await store.finish()
     }
@@ -191,16 +189,15 @@ class RootTests: XCTestCase {
 
         await store.receive(.initialization(.initializeSDK(.existingWallet)))
 
-        await store.receive(.initialization(.checkBackupPhraseValidation)) { state in
-            // failed is expected because environment is throwing errors
-            state.appInitializationState = .failed
-            state.alert = AlertState.cantLoadSeedPhrase()
-        }
+        await store.receive(.initialization(.checkBackupPhraseValidation))
         
         await store.receive(.initialization(.initializationFailed(zcashError))) { state in
+            state.appInitializationState = .failed
             state.alert = AlertState.initializationFailed(zcashError)
         }
         
+        await store.receive(.initialization(.initializationFailed(zcashError)))
+
         await store.finish()
     }
     

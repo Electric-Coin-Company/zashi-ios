@@ -75,9 +75,7 @@ class AppInitializationTests: XCTestCase {
 
         await testQueue.advance(by: 3.00)
 
-        await store.receive(.initialization(.initializeSDK(.existingWallet))) { state in
-            state.storedWallet = storedWallet
-        }
+        await store.receive(.initialization(.initializeSDK(.existingWallet)))
 
         await store.receive(.initialization(.checkBackupPhraseValidation)) { state in
             state.appInitializationState = .initialized
@@ -151,9 +149,7 @@ class AppInitializationTests: XCTestCase {
 
         await testQueue.advance(by: 3.00)
 
-        await store.receive(.initialization(.initializeSDK(.existingWallet))) { state in
-            state.storedWallet = storedWallet
-        }
+        await store.receive(.initialization(.initializeSDK(.existingWallet)))
 
         let recoveryPhrase = RecoveryPhrase(words: try store.dependencies.mnemonic.randomMnemonicWords().map { $0.redacted })
 

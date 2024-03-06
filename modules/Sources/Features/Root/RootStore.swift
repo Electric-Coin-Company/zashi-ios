@@ -46,7 +46,6 @@ public struct RootReducer: Reducer {
         public var phraseDisplayState: RecoveryPhraseDisplay.State
         public var sandboxState: SandboxReducer.State
         public var splashAppeared = false
-        public var storedWallet: StoredWallet?
         public var tabsState: TabsReducer.State
         public var walletConfig: WalletConfig
         public var welcomeState: WelcomeReducer.State
@@ -62,7 +61,6 @@ public struct RootReducer: Reducer {
             onboardingState: OnboardingFlowReducer.State,
             phraseDisplayState: RecoveryPhraseDisplay.State,
             sandboxState: SandboxReducer.State,
-            storedWallet: StoredWallet? = nil,
             tabsState: TabsReducer.State,
             walletConfig: WalletConfig,
             welcomeState: WelcomeReducer.State
@@ -77,7 +75,6 @@ public struct RootReducer: Reducer {
             self.onboardingState = onboardingState
             self.phraseDisplayState = phraseDisplayState
             self.sandboxState = sandboxState
-            self.storedWallet = storedWallet
             self.tabsState = tabsState
             self.walletConfig = walletConfig
             self.welcomeState = welcomeState
