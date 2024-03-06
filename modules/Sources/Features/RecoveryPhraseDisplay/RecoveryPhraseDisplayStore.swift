@@ -8,7 +8,6 @@
 import Foundation
 import ComposableArchitecture
 import Models
-import Pasteboard
 import WalletStorage
 import ZcashLightClientKit
 import Utils
@@ -22,20 +21,17 @@ public struct RecoveryPhraseDisplay {
         @Presents public var alert: AlertState<Action>?
         public var phrase: RecoveryPhrase?
         public var showBackButton = false
-        public var showCopyToBufferAlert = false
         public var birthday: Birthday?
         public var birthdayValue: String?
         
         public init(
             phrase: RecoveryPhrase? = nil,
             showBackButton: Bool = false,
-            showCopyToBufferAlert: Bool = false,
             birthday: Birthday? = nil,
             birthdayValue: String? = nil
         ) {
             self.phrase = phrase
             self.showBackButton = showBackButton
-            self.showCopyToBufferAlert = showCopyToBufferAlert
             self.birthday = birthday
             self.birthdayValue = birthdayValue
         }
@@ -43,12 +39,10 @@ public struct RecoveryPhraseDisplay {
     
     public enum Action: Equatable {
         case alert(PresentationAction<Action>)
-        case copyToBufferPressed
         case finishedPressed
         case onAppear
     }
     
-    @Dependency(\.pasteboard) var pasteboard
     @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.numberFormatter) var numberFormatter
 
@@ -80,12 +74,6 @@ public struct RecoveryPhraseDisplay {
 
             case .alert(.dismiss):
                 state.alert = nil
-                return .none
-
-            case .copyToBufferPressed:
-                guard let phrase = state.phrase?.toString() else { return .none }
-                pasteboard.setString(phrase)
-                state.showCopyToBufferAlert = true
                 return .none
                 
             case .finishedPressed:

@@ -396,6 +396,8 @@ public enum L10n {
       public enum Option {
         /// Rate the App
         public static let appReview = L10n.tr("Localizable", "root.debug.option.appReview", fallback: "Rate the App")
+        /// Copy seed to pasteboard
+        public static let copySeed = L10n.tr("Localizable", "root.debug.option.copySeed", fallback: "Copy seed to pasteboard")
         /// Export Logs
         public static let exportLogs = L10n.tr("Localizable", "root.debug.option.exportLogs", fallback: "Export Logs")
         /// [Be careful] Nuke Wallet

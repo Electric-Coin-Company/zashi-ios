@@ -292,6 +292,7 @@ Sharing this private data is irrevocable — once you have shared this private d
 "root.debug.navigationTitle" = "Startup";
 "root.debug.option.restartApp" = "Restart the App";
 "root.debug.option.rescanBlockchain" = "Rescan Blockchain";
+"root.debug.option.copySeed" = "Copy seed to pasteboard";
 "root.debug.option.nukeWallet" = "[Be careful] Nuke Wallet";
 "root.debug.option.exportLogs" = "Export Logs";
 "root.debug.option.appReview" = "Rate the App";

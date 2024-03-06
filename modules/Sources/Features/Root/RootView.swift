@@ -180,10 +180,14 @@ private extension RootView {
                     }
 #endif
                     
+                    Button(L10n.Root.Debug.Option.copySeed) {
+                        viewStore.send(.debug(.copySeedToPasteboard))
+                    }
+
                     Button(L10n.Root.Debug.Option.rescanBlockchain) {
                         viewStore.send(.debug(.rescanBlockchain))
                     }
-                    
+
                     Button(L10n.Root.Debug.Option.nukeWallet) {
                         viewStore.send(.initialization(.nukeWalletRequest))
                     }

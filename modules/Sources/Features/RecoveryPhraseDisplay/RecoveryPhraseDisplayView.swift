@@ -93,16 +93,6 @@ public struct RecoveryPhraseDisplayView: View {
                 .onAppear { store.send(.onAppear) }
                 .alert($store.scope(state: \.alert, action: \.alert))
                 .zashiBack(false, hidden: !store.showBackButton)
-                .toolbarAction {
-                    Button {
-                        store.send(.copyToBufferPressed)
-                    } label: {
-                        Text(L10n.General.tapToCopy)
-                            .font(.custom(FontFamily.Inter.bold.name, size: 11))
-                            .underline()
-                            .foregroundColor(Asset.Colors.primary.color)
-                    }
-                }
             }
         }
         .navigationBarBackButtonHidden()
@@ -120,7 +110,6 @@ public struct RecoveryPhraseDisplayView: View {
                     initialState: RecoveryPhraseDisplay.State(
                         phrase: .placeholder,
                         showBackButton: true,
-                        showCopyToBufferAlert: false,
                         birthdayValue: nil
                     )
                 ) {
@@ -135,7 +124,6 @@ public struct RecoveryPhraseDisplayView: View {
 extension RecoveryPhraseDisplay.State {
     public static let initial = RecoveryPhraseDisplay.State(
         phrase: nil,
-        showCopyToBufferAlert: false,
         birthday: nil
     )
 }
