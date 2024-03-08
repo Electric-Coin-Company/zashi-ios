@@ -46,6 +46,7 @@ public struct RecoveryPhraseDisplayView: View {
                                         VStack(alignment: .trailing, spacing: 2) {
                                             ForEach(Array(group.words.enumerated()), id: \.offset) { seedWord in
                                                 Text("\(seedWord.offset + group.startIndex + 1).")
+                                                    .fixedSize()
                                                     .font(.custom(FontFamily.Inter.medium.name, size: 16))
                                             }
                                         }
@@ -53,8 +54,8 @@ public struct RecoveryPhraseDisplayView: View {
                                         VStack(alignment: .leading, spacing: 2) {
                                             ForEach(Array(group.words.enumerated()), id: \.offset) { seedWord in
                                                 Text("\(seedWord.element.data)")
+                                                    .fixedSize()
                                                     .font(.custom(FontFamily.Inter.medium.name, size: 16))
-                                                    .minimumScaleFactor(0.5)
                                             }
                                         }
                                         
