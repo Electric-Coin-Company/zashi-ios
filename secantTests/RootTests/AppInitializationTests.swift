@@ -203,7 +203,11 @@ class AppInitializationTests: XCTestCase {
 
         await store.receive(.initialization(.respondToWalletInitializationState(.keysMissing))) { state in
             state.appInitializationState = .keysMissing
-            state.alert = AlertState.tmpMigrationToBeDeveloped()
+        }
+        
+        await store.receive(.destination(.updateDestination(.onboarding))) { state in
+            state.destinationState.internalDestination = .onboarding
+            state.destinationState.previousDestination = .welcome
         }
         
         await store.finish()

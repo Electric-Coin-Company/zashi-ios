@@ -33,7 +33,8 @@ extension SDKSynchronizerClient: TestDependencyKey {
         switchToEndpoint: XCTUnimplemented("\(Self.self).switchToEndpoint"),
         proposeTransfer: XCTUnimplemented("\(Self.self).proposeTransfer", placeholder: .testOnlyFakeProposal(totalFee: 0)),
         createProposedTransactions: XCTUnimplemented("\(Self.self).createProposedTransactions", placeholder: .success),
-        proposeShielding: XCTUnimplemented("\(Self.self).proposeShielding", placeholder: nil)
+        proposeShielding: XCTUnimplemented("\(Self.self).proposeShielding", placeholder: nil),
+        isSeedRelevantToAnyDerivedAccount: XCTUnimplemented("\(Self.self).isSeedRelevantToAnyDerivedAccount")
     )
 }
 
@@ -58,7 +59,8 @@ extension SDKSynchronizerClient {
         switchToEndpoint: { _ in },
         proposeTransfer: { _, _, _, _ in .testOnlyFakeProposal(totalFee: 0) },
         createProposedTransactions: { _, _ in .success },
-        proposeShielding: { _, _, _, _ in nil }
+        proposeShielding: { _, _, _, _ in nil },
+        isSeedRelevantToAnyDerivedAccount: { _ in false }
     )
 
     public static let mock = Self.mocked()
@@ -179,12 +181,13 @@ extension SDKSynchronizerClient {
         },
         wipe: @escaping () -> AnyPublisher<Void, Error>? = { Fail(error: "Error").eraseToAnyPublisher() },
         switchToEndpoint: @escaping (LightWalletEndpoint) async throws -> Void = { _ in },
-        proposeTransfer: 
+        proposeTransfer:
         @escaping (Int, Recipient, Zatoshi, Memo?) async throws -> Proposal = { _, _, _, _ in .testOnlyFakeProposal(totalFee: 0) },
         createProposedTransactions:
         @escaping (Proposal, UnifiedSpendingKey) async throws -> CreateProposedTransactionsResult = { _, _ in .success },
         proposeShielding:
-        @escaping (Int, Zatoshi, Memo, TransparentAddress?) async throws -> Proposal? = { _, _, _, _ in nil }
+        @escaping (Int, Zatoshi, Memo, TransparentAddress?) async throws -> Proposal? = { _, _, _, _ in nil },
+        isSeedRelevantToAnyDerivedAccount: @escaping ([UInt8]) async throws -> Bool = { _ in false }
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
             stateStream: stateStream,
@@ -206,7 +209,8 @@ extension SDKSynchronizerClient {
             switchToEndpoint: switchToEndpoint,
             proposeTransfer: proposeTransfer,
             createProposedTransactions: createProposedTransactions,
-            proposeShielding: proposeShielding
+            proposeShielding: proposeShielding,
+            isSeedRelevantToAnyDerivedAccount: isSeedRelevantToAnyDerivedAccount
         )
     }
 }

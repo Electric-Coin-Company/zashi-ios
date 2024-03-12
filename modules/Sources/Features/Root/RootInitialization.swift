@@ -28,6 +28,8 @@ extension RootReducer {
         case nukeWallet
         case nukeWalletRequest
         case respondToWalletInitializationState(InitializationState)
+        case restoreExistingWallet
+        case seedValidationResult(Bool)
         case synchronizerStartFailed(ZcashError)
         case registerForSynchronizersUpdate
         case retryStart
@@ -39,6 +41,7 @@ extension RootReducer {
         Reduce { state, action in
             switch action {
             case .initialization(.appDelegate(.didFinishLaunching)):
+                //walletStorage.nukeWallet()
                 state.appStartState = .didFinishLaunching
                 // TODO: [#704], trigger the review request logic when approved by the team,
                 // https://github.com/Electric-Coin-Company/zashi-ios/issues/704
@@ -58,7 +61,7 @@ extension RootReducer {
                 } else {
                     return .send(.initialization(.retryStart))
                 }
-
+                
             case .initialization(.appDelegate(.didEnterBackground)):
                 sdkSynchronizer.stop()
                 state.bgTask?.setTaskCompleted(success: false)
@@ -86,14 +89,14 @@ extension RootReducer {
                         await send(.initialization(.retryStart))
                     }
                 }
-
+                
             case .synchronizerStateChanged(let latestState):
                 let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.data.syncStatus)
-
+                
                 guard state.bgTask != nil else {
                     return .send(.initialization(.checkRestoreWalletFlag(snapshot.syncStatus)))
                 }
-
+                
                 var finishBGTask = false
                 var successOfBGTask = false
                 
@@ -106,16 +109,16 @@ extension RootReducer {
                     finishBGTask = true
                 default: break
                 }
-
+                
                 if finishBGTask  {
                     LoggerProxy.event("BGTask setTaskCompleted(success: \(successOfBGTask)) from TCA")
                     state.bgTask?.setTaskCompleted(success: successOfBGTask)
                     state.bgTask = nil
                     return .cancel(id: CancelStateId)
                 }
-
+                
                 return .send(.initialization(.checkRestoreWalletFlag(snapshot.syncStatus)))
-            
+                
             case .initialization(.checkRestoreWalletFlag(let syncStatus)):
                 if state.isRestoringWallet && syncStatus == .upToDate {
                     state.isRestoringWallet = false
@@ -125,10 +128,10 @@ extension RootReducer {
                 } else {
                     return .none
                 }
-
+                
             case .initialization(.synchronizerStartFailed):
                 return .none
-
+                
             case .initialization(.retryStart):
                 // Try the start only if the synchronizer has been already prepared
                 guard sdkSynchronizer.latestState().syncStatus.isPrepared else {
@@ -172,7 +175,7 @@ extension RootReducer {
                 } else {
                     return Effect.send(.initialization(.walletConfigChanged(walletConfig)))
                 }
-            
+                
             case .initialization(.walletConfigChanged(let walletConfig)):
                 return .concatenate(
                     Effect.send(.updateStateAfterConfigUpdate(walletConfig)),
@@ -193,7 +196,7 @@ extension RootReducer {
                     zcashNetwork: zcashSDKEnvironment.network
                 )
                 return Effect.send(.initialization(.respondToWalletInitializationState(walletState)))
-
+                
                 /// Respond to all possible states of the wallet and initiate appropriate side effects including errors handling
             case .initialization(.respondToWalletInitializationState(let walletState)):
                 switch walletState {
@@ -203,11 +206,7 @@ extension RootReducer {
                     return .none
                 case .keysMissing:
                     state.appInitializationState = .keysMissing
-                    // TODO: [#1024] This is the case when this wallet migrated to another device
-                    // https://github.com/Electric-Coin-Company/zashi-ios/issues/1024
-                    // Temporary alert view until #1024 is implemented
-                    state.alert = AlertState.tmpMigrationToBeDeveloped()
-                    return .none
+                    return .send(.destination(.updateDestination(.onboarding)))
                 case .initialized, .filesMissing:
                     if walletState == .filesMissing {
                         state.appInitializationState = .filesMissing
@@ -235,14 +234,13 @@ extension RootReducer {
                     }
                     .cancellable(id: CancelId, cancelInFlight: true)
                 }
-
+                
                 /// Stored wallet is present, database files may or may not be present, trying to initialize app state variables and environments.
                 /// When initialization succeeds user is taken to the home screen.
             case .initialization(.initializeSDK(let walletMode)):
                 do {
                     let storedWallet = try walletStorage.exportWallet()
                     let birthday = storedWallet.birthday?.value() ?? zcashSDKEnvironment.latestCheckpoint
-
                     try mnemonic.isValid(storedWallet.seedPhrase.value())
                     let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
                     
@@ -250,7 +248,7 @@ extension RootReducer {
                         do {
                             try await sdkSynchronizer.prepareWith(seedBytes, birthday, walletMode)
                             try await sdkSynchronizer.start(false)
-
+                            
                             let uAddress = try? await sdkSynchronizer.getUnifiedAddress(0)
                             await send(.initialization(.initializationSuccessfullyDone(uAddress)))
                         } catch {
@@ -260,16 +258,16 @@ extension RootReducer {
                 } catch {
                     return Effect.send(.initialization(.initializationFailed(error.toZcashError())))
                 }
-
+                
             case .initialization(.initializationSuccessfullyDone(let uAddress)):
                 state.tabsState.addressDetailsState.uAddress = uAddress
                 return .send(.initialization(.registerForSynchronizersUpdate))
-
+                
             case .initialization(.checkBackupPhraseValidation):
                 do {
                     let storedWallet = try walletStorage.exportWallet()
                     var landingDestination = RootReducer.DestinationState.Destination.tabs
-                    
+
                     if !storedWallet.hasUserPassedPhraseBackupTest {
                         let phraseWords = mnemonic.asWords(storedWallet.seedPhrase.value())
                         
@@ -297,7 +295,7 @@ extension RootReducer {
             case .initialization(.nukeWalletRequest):
                 state.alert = AlertState.wipeRequest()
                 return .none
-            
+                
             case .initialization(.nukeWallet):
                 guard let wipePublisher = sdkSynchronizer.wipe() else {
                     return Effect.send(.nukeWalletFailed)
@@ -312,17 +310,40 @@ extension RootReducer {
                 .cancellable(id: SynchronizerCancelId, cancelInFlight: true)
 
             case .nukeWalletSucceeded:
-                state = .initial
+                if state.appInitializationState != .keysMissing {
+                    state = .initial
+                }
                 state.splashAppeared = true
                 walletStorage.nukeWallet()
                 try? readTransactionsStorage.nukeWallet()
-                return .concatenate(
-                    .cancel(id: SynchronizerCancelId),
-                    .run { send in
-                        await userStoredPreferences.removeAll()
-                    },
-                    Effect.send(.initialization(.checkWalletInitialization))
-                )
+
+                if state.appInitializationState == .keysMissing && state.onboardingState.destination == .importExistingWallet {
+                    state.appInitializationState = .uninitialized
+                    return .concatenate(
+                        .cancel(id: SynchronizerCancelId),
+                        .run { send in
+                            await userStoredPreferences.removeAll()
+                        },
+                        Effect.send(.onboarding(.importWallet(.updateDestination(.birthday))))
+                    )
+                } else if state.appInitializationState == .keysMissing && state.onboardingState.destination == .createNewWallet {
+                    state.appInitializationState = .uninitialized
+                    return .concatenate(
+                        .cancel(id: SynchronizerCancelId),
+                        .run { send in
+                            await userStoredPreferences.removeAll()
+                        },
+                        Effect.send(.onboarding(.securityWarning(.createNewWallet)))
+                    )
+                } else {
+                    return .concatenate(
+                        .cancel(id: SynchronizerCancelId),
+                        .run { send in
+                            await userStoredPreferences.removeAll()
+                        },
+                        Effect.send(.initialization(.checkWalletInitialization))
+                    )
+                }
 
             case .nukeWalletFailed:
                 let backDestination: Effect<RootReducer.Action>
@@ -332,10 +353,15 @@ extension RootReducer {
                     backDestination = Effect.send(.destination(.updateDestination(state.destinationState.destination)))
                 }
                 state.alert = AlertState.wipeFailed()
-                return .concatenate(
-                    .cancel(id: SynchronizerCancelId),
-                    backDestination
-                )
+
+                if state.appInitializationState == .keysMissing {
+                    return .cancel(id: SynchronizerCancelId)
+                } else {
+                    return .concatenate(
+                        .cancel(id: SynchronizerCancelId),
+                        backDestination
+                    )
+                }
 
             case .phraseDisplay(.finishedPressed):
                 do {
@@ -352,6 +378,38 @@ extension RootReducer {
                     Effect.send(.destination(.updateDestination(.startup)))
                 )
 
+            case .onboarding(.securityWarning(.confirmTapped)):
+                if state.appInitializationState == .keysMissing {
+                    state.alert = AlertState.existingWallet()
+                    return .none
+                } else {
+                    return .send(.onboarding(.securityWarning(.createNewWallet)))
+                }
+                
+            case .initialization(.restoreExistingWallet):
+                return .run { send in
+                    await send(.onboarding(.updateDestination(nil)))
+                    try await mainQueue.sleep(for: .seconds(1))
+                    await send(.onboarding(.importExistingWallet))
+                }
+                
+            case .onboarding(.importWallet(.nextPressed)):
+                if state.appInitializationState == .keysMissing {
+                    let seedPhrase = state.onboardingState.importWalletState.importedSeedPhrase.data
+                    return .run { send in
+                        do {
+                            let seedBytes = try mnemonic.toSeed(seedPhrase)
+                            let result = try await sdkSynchronizer.isSeedRelevantToAnyDerivedAccount(seedBytes)
+                            await send(.initialization(.seedValidationResult(result)))
+                        } catch {
+                            await send(.initialization(.seedValidationResult(false)))
+                        }
+                    }
+                } else {
+                    state.onboardingState.importWalletState.destination = .birthday
+                    return .none
+                }
+
             case .onboarding(.importWallet(.successfullyRecovered)):
                 state.alert = AlertState.successfullyRecovered()
                 return Effect.send(.destination(.updateDestination(.tabs)))
@@ -365,6 +423,14 @@ extension RootReducer {
                     }
                 )
 
+            case .initialization(.seedValidationResult(let validSeed)):
+                if validSeed {
+                    return .send(.onboarding(.importWallet(.restoreWallet)))
+                } else {
+                    state.alert = AlertState.differentSeed()
+                }
+                return .none
+                
             case .initialization(.configureCrashReporter):
                 crashReporter.configure(
                     !userStoredPreferences.isUserOptedOutOfCrashReporting()

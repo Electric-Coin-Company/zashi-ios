@@ -173,6 +173,9 @@ extension SDKSynchronizerClient: DependencyKey {
                     memo: memo,
                     transparentReceiver: transparentReceiver
                 )
+            },
+            isSeedRelevantToAnyDerivedAccount: { seed in
+                try await synchronizer.isSeedRelevantToAnyDerivedAccount(seed: seed)
             }
         )
     }

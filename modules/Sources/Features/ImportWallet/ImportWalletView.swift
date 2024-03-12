@@ -97,7 +97,7 @@ public struct ImportWalletView: View {
                             }
                         
                         Button(L10n.General.next.uppercased()) {
-                            viewStore.send(.updateDestination(.birthday))
+                            viewStore.send(.nextPressed)
                         }
                         .zcashStyle()
                         .frame(width: 236)

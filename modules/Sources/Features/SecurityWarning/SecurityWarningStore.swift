@@ -48,6 +48,7 @@ public struct SecurityWarning {
         case alert(PresentationAction<Action>)
         case binding(BindingAction<SecurityWarning.State>)
         case confirmTapped
+        case createNewWallet
         case newWalletCreated
         case onAppear
         case recoveryPhraseDisplay(RecoveryPhraseDisplay.Action)
@@ -85,6 +86,9 @@ public struct SecurityWarning {
                 return .none
 
             case .confirmTapped:
+                return .none
+                
+            case .createNewWallet:
                 do {
                     // get the random english mnemonic
                     let newRandomPhrase = try mnemonic.randomMnemonic()

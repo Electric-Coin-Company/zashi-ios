@@ -70,6 +70,7 @@ public struct BalanceBreakdownView: View {
                     )
                 )
                 .padding(.top, viewStore.isRestoringWallet ? 0 : 40)
+                .padding(.bottom, 25)
                 .navigationLinkEmpty(
                     isActive: viewStore.bindingForPartialProposalError,
                     destination: {

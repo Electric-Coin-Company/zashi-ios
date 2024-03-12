@@ -297,11 +297,33 @@ extension AlertState where Action == RootReducer.Action {
         }
     }
     
-    public static func tmpMigrationToBeDeveloped() -> AlertState {
+    public static func differentSeed() -> AlertState {
         AlertState {
-            TextState("Automatic migration to be developed soon")
+            TextState("Warning")
+        } actions: {
+            ButtonState(role: .cancel, action: .alert(.dismiss)) {
+                TextState("Try Again")
+            }
+            ButtonState(role: .destructive, action: .initialization(.nukeWallet)) {
+                TextState("Continue")
+            }
         } message: {
-            TextState("This copy of Zashi has been migrated from another device. Your funds are safe provided that you have the seed phrase. This issue will be addressed soon; until then, delete Zashi and reinstall it, providing the seed phrase to restore your wallet.")
+            TextState("This recovery phrase doesn't match the Zashi database backup saved on this device. If you proceed, you will lose access to this database backup and if you try to restore later, some information may be lost.")
+        }
+    }
+    
+    public static func existingWallet() -> AlertState {
+        AlertState {
+            TextState("Warning")
+        } actions: {
+            ButtonState(role: .cancel, action: .initialization(.restoreExistingWallet)) {
+                TextState("Restore")
+            }
+            ButtonState(role: .destructive, action: .initialization(.nukeWallet)) {
+                TextState("Continue")
+            }
+        } message: {
+            TextState("We identified a Zashi database backup on this device. If you create a new wallet, you will lose access to this database backup and if you try to restore later, some information may be lost.")
         }
     }
 }
