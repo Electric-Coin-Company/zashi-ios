@@ -87,9 +87,11 @@ extension HomeView {
                     tokenName: tokenName,
                     showIndicator: viewStore.isProcessingZeroAvailableBalance
                 )
+#if !SECANT_DISTRIB
                 .accessDebugMenuWithHiddenGesture {
                     viewStore.send(.debugMenuStartup)
                 }
+#endif
                 .padding(.top, 10)
                 .padding(.bottom, 30)
             }
