@@ -123,7 +123,7 @@
 "balances.synced" = "Synced";
 "balances.syncing" = "Syncing";
 "balances.syncingError" = "Zashi encountered an error while syncing, attempting to resolve...";
-"balances.hintBox.message" = "In order to better preserve your privacy, Zashi does not support directly spending transparent (unshielded) ZEC. Use the Shield and Consolidate button to shield your transparent funds. This will move the transparent value to your available balance and make it spendable.";
+"balances.hintBox.message" = "Zashi uses the latest network upgrade and does not support sending transparent (unshielded) ZEC. Use the Shield and Consolidate button to shield your funds, which will add to your available balance and make your ZEC spendable.";
 "balances.hintBox.dismiss" = "I got it!";
 "balances.restoringWalletWarning" = "The restore process can take several hours on lower-powered devices, and even on powerful devices is likely to take more than an hour.";
 "balances.alert.shieldFunds.failure.title" = "Failed to shield funds";
