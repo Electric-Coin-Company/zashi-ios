@@ -70,7 +70,6 @@ public struct TabsView: View {
                         )
                         .tag(TabsReducer.State.Tab.balances)
                     }
-                    .tabViewStyle(.page(indexDisplayMode: .never))
                     .padding(.bottom, 50)
 
                     VStack(spacing: 0) {
