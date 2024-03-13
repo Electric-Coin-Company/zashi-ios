@@ -6,6 +6,8 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.0 build 3 (2024-03-13)
+
 ### Changed
 - Settings screen options have been reduced and some were moved to the new Advanced Settings screen.
 - Scan of QR codes has been re-worked with new design and behaviours.
@@ -15,13 +17,19 @@ directly impact users rather than highlighting other crucial architectural updat
 ### Added
 - Pending values (changes) at the Balances tab.
 - Choose a Server feature: available at settings, pre-defined servers + custom server setup.
+- Account tab UI tweaks for no transactions available. 
 
 ### Fixed
 - Restore mode in the UI was missing when Zashi was deleted from an iPhone and reinstalled again.
 - Syncing bar in the restore mode bottom padding.
 - Missing exit button at backup phrase screen when no words are stored in the keychain.
 - Failed transactions are no longer at the top of the transaction history but mixed with the transactions around the time it failed.
-- Synchronization progress bar starts at the expected percentage as oposed to previous behaviour when it started with 0% and jumped to the expected one in a few seconds. 
+- Synchronization progress bar starts at the expected percentage as oposed to previous behaviour when it started with 0% and jumped to the expected one in a few seconds.
+- iPhone SE recovery phrase screen is not trailing words anymore.
+- Security audit issues has been resolved.
+
+### Removed
+- Pull to refresh the transaction history.
 
 ## 0.2.0 build 15 (2024-01-31)
 
