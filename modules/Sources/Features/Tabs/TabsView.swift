@@ -73,8 +73,15 @@ public struct TabsView: View {
                     .tabViewStyle(.page(indexDisplayMode: .never))
                     .padding(.bottom, 50)
 
-                    VStack {
+                    VStack(spacing: 0) {
                         Spacer()
+                        
+                        if tab.state != .account {
+                            Asset.Colors.shade30.color
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 1)
+                                .opacity(0.15)
+                        }
                         
                         HStack {
                             ForEach((TabsReducer.State.Tab.allCases), id: \.self) { item in
