@@ -36,9 +36,6 @@ public struct TransactionListView: View {
                 .listRowBackground(Asset.Colors.shade97.color)
                 .listRowSeparator(.hidden)
             }
-            .refreshable {
-                viewStore.send(.synchronizerStateChanged(.upToDate))
-            }
             .background(Asset.Colors.shade97.color)
             .listStyle(.plain)
             .onAppear { viewStore.send(.onAppear) }
