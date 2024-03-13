@@ -772,6 +772,8 @@ public enum L10n {
     public static let messageTitle = L10n.tr("Localizable", "transactionList.messageTitle", fallback: "Message")
     /// No message included in transaction
     public static let noMessageIncluded = L10n.tr("Localizable", "transactionList.noMessageIncluded", fallback: "No message included in transaction")
+    /// No transaction history
+    public static let noTransactions = L10n.tr("Localizable", "transactionList.noTransactions", fallback: "No transaction history")
     /// Transaction Fee
     public static let transactionFee = L10n.tr("Localizable", "transactionList.transactionFee", fallback: "Transaction Fee")
     /// Transaction ID

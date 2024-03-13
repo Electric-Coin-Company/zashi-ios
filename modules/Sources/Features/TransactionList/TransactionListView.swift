@@ -15,6 +15,15 @@ public struct TransactionListView: View {
     public var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             List {
+                if viewStore.transactionList.isEmpty {
+                    Text(L10n.TransactionList.noTransactions)
+                        .font(.custom(FontFamily.Inter.bold.name, size: 13))
+                        .frame(maxWidth: .infinity)
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Asset.Colors.shade97.color)
+                        .listRowSeparator(.hidden)
+                        .padding(.top, 30)
+                }
                 ForEach(viewStore.transactionList) { transaction in
                     TransactionRowView(
                         viewStore: viewStore,
