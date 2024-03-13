@@ -11,6 +11,7 @@ import Foundation
 import ZcashLightClientKit
 import Generated
 import Models
+import Pasteboard
 
 /// In this file is a collection of helpers that control all state and action related operations
 /// for the `RootReducer` with a connection to the UI navigation.
@@ -20,6 +21,7 @@ extension RootReducer {
     public indirect enum DebugAction: Equatable {
         case cancelRescan
         case cantStartSync(ZcashError)
+        case copySeedToPasteboard
         case flagUpdated
         case rateTheApp
         case rescanBlockchain
@@ -83,6 +85,12 @@ extension RootReducer {
                 }
                 .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
 
+            case .debug(.copySeedToPasteboard):
+                let storedWallet = try? walletStorage.exportWallet()
+                guard let phrase = storedWallet?.seedPhrase.value() else { return .none }
+                pasteboard.setString(phrase.redacted)
+                return .none
+                
             case let .debug(.walletConfigLoaded(walletConfig)):
                 return Effect.send(.updateStateAfterConfigUpdate(walletConfig))
 

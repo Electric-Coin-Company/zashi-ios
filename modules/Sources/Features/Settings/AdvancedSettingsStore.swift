@@ -189,7 +189,6 @@ extension AdvancedSettingsReducer.State {
         phraseDisplayState: RecoveryPhraseDisplay.State(
             phrase: nil,
             showBackButton: false,
-            showCopyToBufferAlert: false,
             birthday: nil
         ),
         privateDataConsentState: .initial,
@@ -208,7 +207,6 @@ extension AdvancedSettingsStore {
         initialState: .init(
             phraseDisplayState: RecoveryPhraseDisplay.State(
                 phrase: nil,
-                showCopyToBufferAlert: false,
                 birthday: nil
             ),
             privateDataConsentState: .initial,

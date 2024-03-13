@@ -31,7 +31,6 @@
 		9E34519529C4A4BF00177D16 /* AddressDetailsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E207C382966EF87003E2C9B /* AddressDetailsTests.swift */; };
 		9E34519629C4A4D800177D16 /* secantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A2526B364180058B01E /* secantUITests.swift */; };
 		9E34519729C4A51100177D16 /* RecoveryPhraseBackupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DFE93DE272C6D4B000FCCA5 /* RecoveryPhraseBackupTests.swift */; };
-		9E34519829C4A51100177D16 /* RecoveryPhraseDisplayReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1C1AA227611EFD0004AF6A /* RecoveryPhraseDisplayReducerTests.swift */; };
 		9E34519A29C4A52F00177D16 /* BalanceBreakdownTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E94C61F28AA7DEE008256E9 /* BalanceBreakdownTests.swift */; };
 		9E34519B29C4A90700177D16 /* DeeplinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAB4675285B5C7C002904A0 /* DeeplinkTests.swift */; };
 		9E34519C29C4A91A00177D16 /* HomeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3911382848AD500073DD9A /* HomeTests.swift */; };
@@ -107,7 +106,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0D1C1AA227611EFD0004AF6A /* RecoveryPhraseDisplayReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryPhraseDisplayReducerTests.swift; sourceTree = "<group>"; };
 		0D26AF94299E8196005260EE /* secant-mainnet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "secant-mainnet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D3B01EB298DAF89007EBCDA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0D4E7A0526B364170058B01E /* secant-testnet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "secant-testnet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -308,7 +306,6 @@
 		0DFE93DD272C6D4B000FCCA5 /* BackupFlowTests */ = {
 			isa = PBXGroup;
 			children = (
-				0D1C1AA227611EFD0004AF6A /* RecoveryPhraseDisplayReducerTests.swift */,
 				0DFE93DE272C6D4B000FCCA5 /* RecoveryPhraseBackupTests.swift */,
 			);
 			path = BackupFlowTests;
@@ -973,7 +970,6 @@
 				9E3451AA29C84ED500177D16 /* CurrencySelectionTests.swift in Sources */,
 				9E3451C529C857E400177D16 /* TransactionListSnapshotTests.swift in Sources */,
 				9EEB06C62B344F1E00EEE50F /* SyncProgressTests.swift in Sources */,
-				9E34519829C4A51100177D16 /* RecoveryPhraseDisplayReducerTests.swift in Sources */,
 				9E34519C29C4A91A00177D16 /* HomeTests.swift in Sources */,
 				9E1FAFB72AF2C6D40084CA3D /* PrivateDataConsentSnapshotTests.swift in Sources */,
 				9E3451BB29C857C800177D16 /* HomeSnapshotTests.swift in Sources */,
