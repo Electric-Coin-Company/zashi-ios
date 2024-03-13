@@ -51,7 +51,7 @@ public struct About: View {
                 // https://github.com/Electric-Coin-Company/zashi-ios/issues/940
                 Group {
                     Text(L10n.Settings.privacyPolicyPart1)
-                    + Text("[\(L10n.Settings.privacyPolicyPart2)](https://electriccoin.co/wp-content/uploads/2024/02/Feb-20-24-Zashi-Terms-and-Privacy-Policy.pdf)")
+                    + Text("[\(L10n.Settings.privacyPolicyPart2)](https://electriccoin.co/zashi-privacy-policy/)")
                         .underline()
                 }
                 .font(.custom(FontFamily.Inter.regular.name, size: 14))
