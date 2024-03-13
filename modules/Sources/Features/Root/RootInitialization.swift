@@ -42,11 +42,14 @@ extension RootReducer {
                 state.appStartState = .didFinishLaunching
                 // TODO: [#704], trigger the review request logic when approved by the team,
                 // https://github.com/Electric-Coin-Company/zashi-ios/issues/704
-                return .run { send in
-                    try await mainQueue.sleep(for: .seconds(0.5))
-                    await send(.initialization(.initialSetups))
-                }
-                .cancellable(id: DidFinishLaunchingId.timer, cancelInFlight: true)
+                return .concatenate(
+                    Effect.send(.initialization(.configureCrashReporter)),
+                    .run { send in
+                        try await mainQueue.sleep(for: .seconds(0.5))
+                        await send(.initialization(.initialSetups))
+                    }
+                    .cancellable(id: DidFinishLaunchingId.timer, cancelInFlight: true)
+                )
 
             case .initialization(.appDelegate(.willEnterForeground)):
                 state.appStartState = .willEnterForeground
@@ -180,10 +183,7 @@ extension RootReducer {
                 // TODO: [#524] finish all the wallet events according to definition, https://github.com/Electric-Coin-Company/zashi-ios/issues/524
                 LoggerProxy.event(".appDelegate(.didFinishLaunching)")
                 /// We need to fetch data from keychain, in order to be 100% sure the keychain can be read we delay the check a bit
-                return .concatenate(
-                    Effect.send(.initialization(.configureCrashReporter)),
-                    Effect.send(.initialization(.checkWalletInitialization))
-                )
+                return Effect.send(.initialization(.checkWalletInitialization))
 
                 /// Evaluate the wallet's state based on keychain keys and database files presence
             case .initialization(.checkWalletInitialization):
