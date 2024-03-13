@@ -240,15 +240,8 @@ extension RootReducer {
                 /// When initialization succeeds user is taken to the home screen.
             case .initialization(.initializeSDK(let walletMode)):
                 do {
-                    state.storedWallet = try walletStorage.exportWallet()
-
-                    guard let storedWallet = state.storedWallet else {
-                        state.appInitializationState = .failed
-                        state.alert = AlertState.cantLoadSeedPhrase()
-                        return .none
-                    }
-
-                    let birthday = state.storedWallet?.birthday?.value() ?? zcashSDKEnvironment.latestCheckpoint
+                    let storedWallet = try walletStorage.exportWallet()
+                    let birthday = storedWallet.birthday?.value() ?? zcashSDKEnvironment.latestCheckpoint
 
                     try mnemonic.isValid(storedWallet.seedPhrase.value())
                     let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
@@ -273,34 +266,33 @@ extension RootReducer {
                 return .send(.initialization(.registerForSynchronizersUpdate))
 
             case .initialization(.checkBackupPhraseValidation):
-                guard let storedWallet = state.storedWallet else {
-                    state.appInitializationState = .failed
-                    state.alert = AlertState.cantLoadSeedPhrase()
-                    return .none
-                }
-
-                var landingDestination = RootReducer.DestinationState.Destination.tabs
-                
-                if !storedWallet.hasUserPassedPhraseBackupTest {
-                    let phraseWords = mnemonic.asWords(storedWallet.seedPhrase.value())
+                do {
+                    let storedWallet = try walletStorage.exportWallet()
+                    var landingDestination = RootReducer.DestinationState.Destination.tabs
                     
-                    let recoveryPhrase = RecoveryPhrase(words: phraseWords.map { $0.redacted })
-                    state.phraseDisplayState.phrase = recoveryPhrase
-                    state.phraseDisplayState.birthday = storedWallet.birthday
-                    if let value = storedWallet.birthday?.value() {
-                        let latestBlock = numberFormatter.string(NSDecimalNumber(value: value))
-                        state.phraseDisplayState.birthdayValue = "\(String(describing: latestBlock ?? ""))"
+                    if !storedWallet.hasUserPassedPhraseBackupTest {
+                        let phraseWords = mnemonic.asWords(storedWallet.seedPhrase.value())
+                        
+                        let recoveryPhrase = RecoveryPhrase(words: phraseWords.map { $0.redacted })
+                        state.phraseDisplayState.phrase = recoveryPhrase
+                        state.phraseDisplayState.birthday = storedWallet.birthday
+                        if let value = storedWallet.birthday?.value() {
+                            let latestBlock = numberFormatter.string(NSDecimalNumber(value: value))
+                            state.phraseDisplayState.birthdayValue = "\(String(describing: latestBlock ?? ""))"
+                        }
+                        landingDestination = .phraseDisplay
                     }
-                    landingDestination = .phraseDisplay
+                    
+                    state.appInitializationState = .initialized
+                    
+                    return .run { [landingDestination] send in
+                        try await mainQueue.sleep(for: .seconds(2.5))
+                        await send(.destination(.updateDestination(landingDestination)))
+                    }
+                    .cancellable(id: CancelId.timer, cancelInFlight: true)
+                } catch {
+                    return Effect.send(.initialization(.initializationFailed(error.toZcashError())))
                 }
-
-                state.appInitializationState = .initialized
-
-                return .run { [landingDestination] send in
-                    try await mainQueue.sleep(for: .seconds(2.5))
-                    await send(.destination(.updateDestination(landingDestination)))
-                }
-                .cancellable(id: CancelId.timer, cancelInFlight: true)
 
             case .initialization(.nukeWalletRequest):
                 state.alert = AlertState.wipeRequest()

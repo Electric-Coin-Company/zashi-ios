@@ -35,9 +35,7 @@ final class RestoreWalletTests: XCTestCase {
             state.isRestoringWallet = true
         }
         
-        await store.receive(.initialization(.initializeSDK(.restoreWallet))) { state in
-            state.storedWallet = .placeholder
-        }
+        await store.receive(.initialization(.initializeSDK(.restoreWallet)))
         
         await store.receive(.initialization(.initializationSuccessfullyDone(nil)))
 
