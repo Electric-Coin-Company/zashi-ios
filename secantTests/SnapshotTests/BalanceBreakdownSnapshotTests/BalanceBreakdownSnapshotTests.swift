@@ -29,6 +29,7 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
             BalanceBreakdownReducer()
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.mainQueue, .immediate)
+                .dependency(\.restoreWalletStorage, .noOp)
         }
         
         addAttachments(BalanceBreakdownView(store: store, tokenName: "ZEC"))
@@ -51,6 +52,7 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
             BalanceBreakdownReducer()
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.mainQueue, .immediate)
+                .dependency(\.restoreWalletStorage, .noOp)
         }
         
         addAttachments(BalanceBreakdownView(store: store, tokenName: "ZEC"))

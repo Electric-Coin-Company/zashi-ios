@@ -21,6 +21,7 @@ class SettingsSnapshotTests: XCTestCase {
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.walletStorage, .noOp)
                 .dependency(\.appVersion, .mock)
+                .dependency(\.restoreWalletStorage, .noOp)
         }
         
         addAttachments(SettingsView(store: store))
@@ -35,6 +36,7 @@ class SettingsSnapshotTests: XCTestCase {
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.walletStorage, .noOp)
                 .dependency(\.appVersion, .liveValue)
+                .dependency(\.restoreWalletStorage, .noOp)
         }
         
         ViewStore(store, observe: { $0 }).send(.onAppear)

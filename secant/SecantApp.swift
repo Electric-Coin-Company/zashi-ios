@@ -25,25 +25,23 @@ struct SecantApp: App {
 
     var body: some Scene {
         WindowGroup {
-            if !_XCTIsTesting {
-                RootView(
-                    store: appDelegate.rootStore,
-                    tokenName: TargetConstants.tokenName,
-                    networkType: TargetConstants.zcashNetwork.networkType
-                )
-                .font(
-                    .custom(FontFamily.Inter.regular.name, size: 17)
-                )
-                .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-                    appDelegate.rootStore.send(.initialization(.appDelegate(.willEnterForeground)))
-                }
-                .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
-                    appDelegate.rootStore.send(.initialization(.appDelegate(.didEnterBackground)))
-                    appDelegate.scheduleBackgroundTask()
-                    appDelegate.scheduleSchedulerBackgroundTask()
-                }
-                .preferredColorScheme(.light)
+            RootView(
+                store: appDelegate.rootStore,
+                tokenName: TargetConstants.tokenName,
+                networkType: TargetConstants.zcashNetwork.networkType
+            )
+            .font(
+                .custom(FontFamily.Inter.regular.name, size: 17)
+            )
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+                appDelegate.rootStore.send(.initialization(.appDelegate(.willEnterForeground)))
             }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
+                appDelegate.rootStore.send(.initialization(.appDelegate(.didEnterBackground)))
+                appDelegate.scheduleBackgroundTask()
+                appDelegate.scheduleSchedulerBackgroundTask()
+            }
+            .preferredColorScheme(.light)
         }
     }
 }
