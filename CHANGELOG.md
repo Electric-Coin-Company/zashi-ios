@@ -9,6 +9,9 @@ directly impact users rather than highlighting other crucial architectural updat
 ### Added
 - Privacy info manifest.
 
+### Fixed
+- White area above the keyboard has been removed.
+
 ## 1.0 build 3 (2024-03-13)
 
 ### Changed

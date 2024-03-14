@@ -70,7 +70,6 @@ public struct TabsView: View {
                         )
                         .tag(TabsReducer.State.Tab.balances)
                     }
-                    .padding(.bottom, 50)
 
                     VStack(spacing: 0) {
                         Spacer()
@@ -88,7 +87,7 @@ public struct TabsView: View {
                                     store.send(.selectedTabChanged(item), animation: .easeInOut)
                                 } label: {
                                     VStack {
-                                        if tab.state == item {//viewStore.selectedTab == item {
+                                        if tab.state == item {
                                             Text("\(item.title)")
                                                 .font(.custom(FontFamily.Archivo.black.name, size: 12))
                                                 .foregroundColor(Asset.Colors.primary.color)
