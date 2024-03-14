@@ -20,4 +20,4 @@ jobs:
       
     - name: Run tests
       timeout-minutes: 5
-      run: xcodebuild test -scheme secant-testnet -project secant.xcodeproj -destination 'platform=iOS Simulator,name=iPhone 15 Pro,OS=17.2'
+      run: xcodebuild test -scheme secant-testnet -skipMacroValidation -project secant.xcodeproj -destination 'platform=iOS Simulator,name=iPhone 15 Pro,OS=17.2'
