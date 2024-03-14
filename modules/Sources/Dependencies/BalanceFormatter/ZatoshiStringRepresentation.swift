@@ -88,5 +88,5 @@ extension ZatoshiStringRepresentation {
 }
 
 extension ZatoshiStringRepresentation {
-    public static let feeFormat = L10n.General.fee(Zatoshi(100_000).decimalZashiFormatted())
+    public static var feeFormat: String { L10n.General.fee(Zatoshi(100_000).decimalZashiFormatted()) }
 }
