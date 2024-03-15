@@ -99,6 +99,9 @@
 		9EB35D632A31F1DD00A2149B /* Root in Frameworks */ = {isa = PBXBuildFile; productRef = 9EB35D622A31F1DD00A2149B /* Root */; };
 		9EB35D6A2A3A2D7B00A2149B /* Utils in Frameworks */ = {isa = PBXBuildFile; productRef = 9EB35D692A3A2D7B00A2149B /* Utils */; };
 		9EB35D6C2A3A2D9200A2149B /* Utils in Frameworks */ = {isa = PBXBuildFile; productRef = 9EB35D6B2A3A2D9200A2149B /* Utils */; };
+		9EDDAF6D2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */; };
+		9EDDAF6E2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */; };
+		9EDDAF6F2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */; };
 		9EEB06C62B344F1E00EEE50F /* SyncProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEB06C52B344F1E00EEE50F /* SyncProgressTests.swift */; };
 		9EEB06C82B405A0400EEE50F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEB06C72B405A0400EEE50F /* AppDelegate.swift */; };
 		9EEB06C92B405A0400EEE50F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEB06C72B405A0400EEE50F /* AppDelegate.swift */; };
@@ -186,6 +189,7 @@
 		9EAFEB812805793200199FC9 /* RootTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTests.swift; sourceTree = "<group>"; };
 		9EAFEB852805A23100199FC9 /* SecItemClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecItemClientTests.swift; sourceTree = "<group>"; };
 		9EB7D14A2A20C6BC00F35E03 /* modules */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = modules; sourceTree = "<group>"; };
+		9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		9EDDEA9F2829610D00B4100C /* CurrencySelectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencySelectionTests.swift; sourceTree = "<group>"; };
 		9EDDEAA02829610D00B4100C /* TransactionAmountInputTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAmountInputTests.swift; sourceTree = "<group>"; };
 		9EDDEAA12829610D00B4100C /* TransactionAddressInputTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAddressInputTests.swift; sourceTree = "<group>"; };
@@ -553,6 +557,7 @@
 				0D3B01EB298DAF89007EBCDA /* GoogleService-Info.plist */,
 				9E5AAEBF2A67CEC4003F283D /* Colors.xcassets */,
 				9E2706652AFF99F5000DA6EC /* ReadTransactionsStorageModel.xcdatamodeld */,
+				9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -829,6 +834,7 @@
 				0D26AF88299E8196005260EE /* LaunchScreen.storyboard in Resources */,
 				9E90751F2A269BE300269308 /* Assets.xcassets in Resources */,
 				0D26AF8C299E8196005260EE /* GoogleService-Info.plist in Resources */,
+				9EDDAF6E2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */,
 				9E5AAEC12A67CEC4003F283D /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -843,6 +849,7 @@
 				9E2F1C8C280ED6A7004E65FE /* LaunchScreen.storyboard in Resources */,
 				9E90751E2A269BE300269308 /* Assets.xcassets in Resources */,
 				0D3B01EC298DAF89007EBCDA /* GoogleService-Info.plist in Resources */,
+				9EDDAF6D2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */,
 				9E5AAEC02A67CEC4003F283D /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -871,6 +878,7 @@
 				9E4AB2B02BA1BEE900F5D6DB /* LaunchScreen.storyboard in Resources */,
 				9E4AB2B12BA1BEE900F5D6DB /* Assets.xcassets in Resources */,
 				9E4AB2B22BA1BEE900F5D6DB /* GoogleService-Info.plist in Resources */,
+				9EDDAF6F2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */,
 				9E4AB2B32BA1BEE900F5D6DB /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

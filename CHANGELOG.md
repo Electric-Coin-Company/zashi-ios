@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Added
+- Privacy info manifest.
+
 ## 1.0 build 3 (2024-03-13)
 
 ### Changed
