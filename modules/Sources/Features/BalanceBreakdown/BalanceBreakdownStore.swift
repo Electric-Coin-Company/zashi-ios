@@ -24,7 +24,7 @@ public typealias BalanceBreakdownStore = Store<BalanceBreakdownReducer.State, Ba
 public typealias BalanceBreakdownViewStore = ViewStore<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>
 
 public struct BalanceBreakdownReducer: Reducer {
-    private enum CancelId { case timer }
+    private let CancelId = UUID()
     
     public struct State: Equatable {
         @PresentationState public var alert: AlertState<Action>?
@@ -125,10 +125,10 @@ public struct BalanceBreakdownReducer: Reducer {
                         .map { $0.redacted }
                         .map(Action.synchronizerStateChanged)
                 }
-                .cancellable(id: CancelId.timer, cancelInFlight: true)
+                .cancellable(id: CancelId, cancelInFlight: true)
                 
             case .onDisappear:
-                return .cancel(id: CancelId.timer)
+                return .cancel(id: CancelId)
 
             case .restoreWalletTask:
                 return .run { send in

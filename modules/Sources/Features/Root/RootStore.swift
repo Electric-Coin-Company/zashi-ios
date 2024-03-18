@@ -25,11 +25,11 @@ public typealias RootStore = Store<RootReducer.State, RootReducer.Action>
 public typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
 
 public struct RootReducer: Reducer {
-    enum CancelId { case timer }
-    enum CancelStateId { case timer }
-    enum SynchronizerCancelId { case timer }
-    enum WalletConfigCancelId { case timer }
-    enum DidFinishLaunchingId { case timer }
+    let CancelId = UUID()
+    let CancelStateId = UUID()
+    let SynchronizerCancelId = UUID()
+    let WalletConfigCancelId = UUID()
+    let DidFinishLaunchingId = UUID()
 
     public struct State: Equatable {
         @PresentationState public var alert: AlertState<Action>?

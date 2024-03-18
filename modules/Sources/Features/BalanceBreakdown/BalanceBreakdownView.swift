@@ -27,7 +27,7 @@ public struct BalanceBreakdownView: View {
     public var body: some View {
         ScrollView {
             WithViewStore(store, observe: { $0 }) { viewStore in
-                BalanceWithIconView(balance: viewStore.shieldedBalance)
+                BalanceWithIconView(balance: viewStore.totalBalance)
                     .padding(.top, 40)
                     .padding(.bottom, 5)
                     .onAppear { viewStore.send(.onAppear) }
