@@ -63,11 +63,11 @@ class AppInitializationTests: XCTestCase {
 
         await testQueue.advance(by: 0.02)
 
+        await store.receive(.initialization(.configureCrashReporter))
+
         await store.receive(.initialization(.initialSetups))
 
         await testQueue.advance(by: 0.02)
-
-        await store.receive(.initialization(.configureCrashReporter))
 
         await store.receive(.initialization(.checkWalletInitialization))
 
@@ -137,11 +137,11 @@ class AppInitializationTests: XCTestCase {
 
         await testQueue.advance(by: 0.02)
 
+        await store.receive(.initialization(.configureCrashReporter))
+
         await store.receive(.initialization(.initialSetups))
 
         await testQueue.advance(by: 0.02)
-
-        await store.receive(.initialization(.configureCrashReporter))
 
         await store.receive(.initialization(.checkWalletInitialization))
 
@@ -195,9 +195,9 @@ class AppInitializationTests: XCTestCase {
             state.appStartState = .didFinishLaunching
         }
 
-        await store.receive(.initialization(.initialSetups))
-
         await store.receive(.initialization(.configureCrashReporter))
+
+        await store.receive(.initialization(.initialSetups))
 
         await store.receive(.initialization(.checkWalletInitialization))
 
@@ -229,9 +229,9 @@ class AppInitializationTests: XCTestCase {
             state.appStartState = .didFinishLaunching
         }
 
-        await store.receive(.initialization(.initialSetups))
-
         await store.receive(.initialization(.configureCrashReporter))
+
+        await store.receive(.initialization(.initialSetups))
 
         await store.receive(.initialization(.checkWalletInitialization))
 
