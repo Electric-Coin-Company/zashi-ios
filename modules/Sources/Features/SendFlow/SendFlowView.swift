@@ -130,7 +130,7 @@ public struct SendFlowView: View {
                             
                             Text(viewStore.feeFormat)
                                 .font(.custom(FontFamily.Inter.semiBold.name, size: 11))
-                                .padding(.top, 20)
+                                .padding(.vertical, 20)
                         }
                         .padding(.horizontal, 30)
                         .onChange(of: isMessageFocused) { update in
