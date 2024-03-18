@@ -18,8 +18,8 @@ public typealias HomeStore = Store<HomeReducer.State, HomeReducer.Action>
 public typealias HomeViewStore = ViewStore<HomeReducer.State, HomeReducer.Action>
 
 public struct HomeReducer: Reducer {
-    private enum CancelStateId { case timer }
-    private enum CancelEventId { case timer }
+    private let CancelStateId = UUID()
+    private let CancelEventId = UUID()
 
     public struct State: Equatable {
         public enum Destination: Equatable {
@@ -137,7 +137,7 @@ public struct HomeReducer: Reducer {
                                 .map { $0.redacted }
                                 .map(HomeReducer.Action.synchronizerStateChanged)
                         }
-                        .cancellable(id: CancelStateId.timer, cancelInFlight: true),
+                        .cancellable(id: CancelStateId, cancelInFlight: true),
                         .publisher {
                             sdkSynchronizer.eventStream()
                                 .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
@@ -148,7 +148,7 @@ public struct HomeReducer: Reducer {
                                     return nil
                                 }
                         }
-                        .cancellable(id: CancelEventId.timer, cancelInFlight: true)
+                        .cancellable(id: CancelEventId, cancelInFlight: true)
                     )
                 } else {
                     return Effect.send(.updateDestination(.notEnoughFreeDiskSpace))
@@ -156,8 +156,8 @@ public struct HomeReducer: Reducer {
                 
             case .onDisappear:
                 return .concatenate(
-                    .cancel(id: CancelStateId.timer),
-                    .cancel(id: CancelEventId.timer)
+                    .cancel(id: CancelStateId),
+                    .cancel(id: CancelEventId)
                 )
 
             case .resolveReviewRequest:

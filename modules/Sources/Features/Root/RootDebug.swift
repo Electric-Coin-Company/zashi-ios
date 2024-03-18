@@ -75,7 +75,7 @@ extension RootReducer {
                         .receive(on: mainQueue)
                         .map { _ in return Action.debug(.flagUpdated) }
                 }
-                .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
+                .cancellable(id: WalletConfigCancelId, cancelInFlight: true)
 
             case .debug(.flagUpdated):
                 return .publisher {
@@ -83,7 +83,7 @@ extension RootReducer {
                         .receive(on: mainQueue)
                         .map { Action.debug(.walletConfigLoaded($0)) }
                 }
-                .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
+                .cancellable(id: WalletConfigCancelId, cancelInFlight: true)
 
             case .debug(.copySeedToPasteboard):
                 let storedWallet = try? walletStorage.exportWallet()
@@ -121,7 +121,7 @@ extension RootReducer {
                 }
                 .receive(on: mainQueue)
         }
-        .cancellable(id: SynchronizerCancelId.timer, cancelInFlight: true)
+        .cancellable(id: SynchronizerCancelId, cancelInFlight: true)
     }
 }
 

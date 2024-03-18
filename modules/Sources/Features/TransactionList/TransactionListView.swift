@@ -36,6 +36,7 @@ public struct TransactionListView: View {
                 .listRowBackground(Asset.Colors.shade97.color)
                 .listRowSeparator(.hidden)
             }
+            .disabled(viewStore.transactionList.isEmpty)
             .background(Asset.Colors.shade97.color)
             .listStyle(.plain)
             .onAppear { viewStore.send(.onAppear) }

@@ -13,8 +13,8 @@ public typealias TransactionListStore = Store<TransactionListReducer.State, Tran
 public typealias TransactionListViewStore = ViewStore<TransactionListReducer.State, TransactionListReducer.Action>
 
 public struct TransactionListReducer: Reducer {
-    private enum CancelStateId { case timer }
-    private enum CancelEventId { case timer }
+    private let CancelStateId = UUID()
+    private let CancelEventId = UUID()
 
     public struct State: Equatable {
         public var latestMinedHeight: BlockHeight?
@@ -69,7 +69,7 @@ public struct TransactionListReducer: Reducer {
                         .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
                         .map { TransactionListReducer.Action.synchronizerStateChanged($0.syncStatus) }
                 }
-                .cancellable(id: CancelStateId.timer, cancelInFlight: true),
+                .cancellable(id: CancelStateId, cancelInFlight: true),
                 .publisher {
                     sdkSynchronizer.eventStream()
                         .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
@@ -80,7 +80,7 @@ public struct TransactionListReducer: Reducer {
                             return nil
                         }
                 }
-                .cancellable(id: CancelEventId.timer, cancelInFlight: true),
+                .cancellable(id: CancelEventId, cancelInFlight: true),
                 .run { send in
                     await send(.updateTransactionList(try await sdkSynchronizer.getAllTransactions()))
                 }
@@ -88,8 +88,8 @@ public struct TransactionListReducer: Reducer {
 
         case .onDisappear:
             return .concatenate(
-                .cancel(id: CancelStateId.timer),
-                .cancel(id: CancelEventId.timer)
+                .cancel(id: CancelStateId),
+                .cancel(id: CancelEventId)
             )
 
         case .synchronizerStateChanged(.upToDate):

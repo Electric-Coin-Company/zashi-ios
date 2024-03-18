@@ -48,7 +48,7 @@ extension RootReducer {
                         try await mainQueue.sleep(for: .seconds(0.5))
                         await send(.initialization(.initialSetups))
                     }
-                    .cancellable(id: DidFinishLaunchingId.timer, cancelInFlight: true)
+                    .cancellable(id: DidFinishLaunchingId, cancelInFlight: true)
                 )
 
             case .initialization(.appDelegate(.willEnterForeground)):
@@ -65,7 +65,7 @@ extension RootReducer {
                 state.bgTask = nil
                 state.appStartState = .didEnterBackground
                 state.isLockedInKeychainUnavailableState = false
-                return .cancel(id: CancelStateId.timer)
+                return .cancel(id: CancelStateId)
                 
             case .initialization(.appDelegate(.backgroundTask(let task))):
                 let keysPresent: Bool = (try? walletStorage.areKeysPresent()) ?? false
@@ -77,7 +77,7 @@ extension RootReducer {
                     } else {
                         state.isLockedInKeychainUnavailableState = true
                         task.setTaskCompleted(success: false)
-                        return .cancel(id: DidFinishLaunchingId.timer)
+                        return .cancel(id: DidFinishLaunchingId)
                     }
                 } else {
                     state.bgTask = task
@@ -111,7 +111,7 @@ extension RootReducer {
                     LoggerProxy.event("BGTask setTaskCompleted(success: \(successOfBGTask)) from TCA")
                     state.bgTask?.setTaskCompleted(success: successOfBGTask)
                     state.bgTask = nil
-                    return .cancel(id: CancelStateId.timer)
+                    return .cancel(id: CancelStateId)
                 }
 
                 return .send(.initialization(.checkRestoreWalletFlag(snapshot.syncStatus)))
@@ -156,7 +156,7 @@ extension RootReducer {
                         .map { $0.redacted }
                         .map(RootReducer.Action.synchronizerStateChanged)
                 }
-                .cancellable(id: CancelStateId.timer, cancelInFlight: true)
+                .cancellable(id: CancelStateId, cancelInFlight: true)
 
             case .initialization(.checkWalletConfig):
                 return .publisher {
@@ -164,7 +164,7 @@ extension RootReducer {
                         .receive(on: mainQueue)
                         .map(RootReducer.Action.walletConfigLoaded)
                 }
-                .cancellable(id: WalletConfigCancelId.timer, cancelInFlight: true)
+                .cancellable(id: WalletConfigCancelId, cancelInFlight: true)
 
             case .walletConfigLoaded(let walletConfig):
                 if walletConfig == WalletConfig.initial {
@@ -233,7 +233,7 @@ extension RootReducer {
                         try await mainQueue.sleep(for: .seconds(2.5))
                         await send(.destination(.updateDestination(.onboarding)))
                     }
-                    .cancellable(id: CancelId.timer, cancelInFlight: true)
+                    .cancellable(id: CancelId, cancelInFlight: true)
                 }
 
                 /// Stored wallet is present, database files may or may not be present, trying to initialize app state variables and environments.
@@ -289,7 +289,7 @@ extension RootReducer {
                         try await mainQueue.sleep(for: .seconds(2.5))
                         await send(.destination(.updateDestination(landingDestination)))
                     }
-                    .cancellable(id: CancelId.timer, cancelInFlight: true)
+                    .cancellable(id: CancelId, cancelInFlight: true)
                 } catch {
                     return Effect.send(.initialization(.initializationFailed(error.toZcashError())))
                 }
@@ -309,7 +309,7 @@ extension RootReducer {
                         .replaceError(with: RootReducer.Action.nukeWalletFailed)
                         .receive(on: mainQueue)
                 }
-                .cancellable(id: SynchronizerCancelId.timer, cancelInFlight: true)
+                .cancellable(id: SynchronizerCancelId, cancelInFlight: true)
 
             case .nukeWalletSucceeded:
                 state = .initial
@@ -317,7 +317,7 @@ extension RootReducer {
                 walletStorage.nukeWallet()
                 try? readTransactionsStorage.nukeWallet()
                 return .concatenate(
-                    .cancel(id: SynchronizerCancelId.timer),
+                    .cancel(id: SynchronizerCancelId),
                     .run { send in
                         await userStoredPreferences.removeAll()
                     },
@@ -333,7 +333,7 @@ extension RootReducer {
                 }
                 state.alert = AlertState.wipeFailed()
                 return .concatenate(
-                    .cancel(id: SynchronizerCancelId.timer),
+                    .cancel(id: SynchronizerCancelId),
                     backDestination
                 )
 
@@ -348,7 +348,7 @@ extension RootReducer {
                 
             case .welcome(.debugMenuStartup), .tabs(.home(.debugMenuStartup)):
                 return .concatenate(
-                    Effect.cancel(id: CancelId.timer),
+                    Effect.cancel(id: CancelId),
                     Effect.send(.destination(.updateDestination(.startup)))
                 )
 

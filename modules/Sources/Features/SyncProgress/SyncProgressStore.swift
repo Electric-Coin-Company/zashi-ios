@@ -17,7 +17,7 @@ import Utils
 public typealias SyncProgressStore = Store<SyncProgressReducer.State, SyncProgressReducer.Action>
 
 public struct SyncProgressReducer: Reducer {
-    private enum CancelId { case timer }
+    private let CancelId = UUID()
 
     public struct State: Equatable { 
         public var lastKnownSyncPercentage: Float = 0
@@ -69,10 +69,10 @@ public struct SyncProgressReducer: Reducer {
                         .map { $0.redacted }
                         .map(Action.synchronizerStateChanged)
                 }
-                .cancellable(id: CancelId.timer, cancelInFlight: true)
+                .cancellable(id: CancelId, cancelInFlight: true)
 
             case .onDisappear:
-                return .cancel(id: CancelId.timer)
+                return .cancel(id: CancelId)
 
             case .synchronizerStateChanged(let latestState):
                 let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.data.syncStatus)

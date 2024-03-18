@@ -24,7 +24,7 @@ public typealias SendFlowStore = Store<SendFlowReducer.State, SendFlowReducer.Ac
 public typealias SendFlowViewStore = ViewStore<SendFlowReducer.State, SendFlowReducer.Action>
 
 public struct SendFlowReducer: Reducer {
-    private enum SyncStatusUpdatesID { case timer }
+    private let SyncStatusUpdatesID = UUID()
 
     public struct State: Equatable {
         public enum Destination: Equatable {
@@ -192,10 +192,10 @@ public struct SendFlowReducer: Reducer {
                         .map{ $0.redacted }
                         .map(SendFlowReducer.Action.synchronizerStateChanged)
                 }
-                .cancellable(id: SyncStatusUpdatesID.timer, cancelInFlight: true)
+                .cancellable(id: SyncStatusUpdatesID, cancelInFlight: true)
 
             case .onDisappear:
-                return .cancel(id: SyncStatusUpdatesID.timer)
+                return .cancel(id: SyncStatusUpdatesID)
 
             case .goBackPressed:
                 state.destination = nil

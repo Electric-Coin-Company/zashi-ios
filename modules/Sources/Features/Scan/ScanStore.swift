@@ -16,7 +16,7 @@ import ZcashSDKEnvironment
 
 @Reducer
 public struct Scan {
-    private enum CancelId { case timer }
+    private let CancelId = UUID()
 
     @ObservableState
     public struct State: Equatable {
@@ -68,14 +68,14 @@ public struct Scan {
                 return .none
                 
             case .onDisappear:
-                return .cancel(id: CancelId.timer)
+                return .cancel(id: CancelId)
                 
             case .cancelPressed:
                 return .none
                 
             case .clearInfo:
                 state.info = ""
-                return .cancel(id: CancelId.timer)
+                return .cancel(id: CancelId)
 
             case .found:
                 return .none
@@ -83,12 +83,12 @@ public struct Scan {
             case .scanFailed:
                 state.info = L10n.Scan.invalidQR
                 return .concatenate(
-                    Effect.cancel(id: CancelId.timer),
+                    Effect.cancel(id: CancelId),
                     .run { send in
                         try await mainQueue.sleep(for: .seconds(3))
                         await send(.clearInfo)
                     }
-                    .cancellable(id: CancelId.timer, cancelInFlight: true)
+                    .cancellable(id: CancelId, cancelInFlight: true)
                 )
 
             case .scan(let code):
