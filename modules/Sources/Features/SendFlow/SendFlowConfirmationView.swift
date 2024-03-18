@@ -125,6 +125,7 @@ public struct SendFlowConfirmationView: View {
                             shadowOffset: 6
                         )
                     }
+                    .disabled(viewStore.isSending)
                     .padding(.horizontal, 35)
                 }
             }
