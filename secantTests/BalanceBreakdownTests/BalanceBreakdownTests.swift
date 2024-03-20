@@ -13,6 +13,7 @@ import Utils
 import Generated
 import BalanceBreakdown
 import Models
+import ZcashSDKEnvironment
 @testable import secant_testnet
 
 @MainActor
@@ -29,7 +30,7 @@ class BalanceBreakdownTests: XCTestCase {
         store.dependencies.numberFormatter = .noOp
         
         await store.send(.onAppear) { state in
-            state.autoShieldingThreshold = Zatoshi(100_000)
+            state.autoShieldingThreshold = ZcashSDKEnvironment.liveValue.shieldingThreshold
         }
         
         // expected side effects as a result of .onAppear registration
@@ -84,7 +85,7 @@ class BalanceBreakdownTests: XCTestCase {
         store.dependencies.sdkSynchronizer = .noOp
         
         await store.send(.onAppear) { state in
-            state.autoShieldingThreshold = Zatoshi(100_000)
+            state.autoShieldingThreshold = ZcashSDKEnvironment.liveValue.shieldingThreshold
         }
 
         XCTAssertFalse(store.state.isShieldingFunds)
