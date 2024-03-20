@@ -7,6 +7,7 @@ directly impact users rather than highlighting other crucial architectural updat
 ## [Unreleased]
 
 ### Added
+- Proposal API integrated with error handling for multi-transaction Proposals.
 - Privacy info manifest.
 
 ### Fixed

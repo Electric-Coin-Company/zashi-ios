@@ -19,6 +19,12 @@ extension DependencyValues {
 }
 
 public struct SDKSynchronizerClient {
+    public enum CreateProposedTransactionsResult: Equatable {
+        case failure
+        case partial(txIds: [String], statuses: [String])
+        case success
+    }
+    
     public let stateStream: () -> AnyPublisher<SynchronizerState, Never>
     public let eventStream: () -> AnyPublisher<SynchronizerEvent, Never>
     public let latestState: () -> SynchronizerState
@@ -43,4 +49,9 @@ public struct SDKSynchronizerClient {
     public var wipe: () -> AnyPublisher<Void, Error>?
     
     public var switchToEndpoint: (LightWalletEndpoint) async throws -> Void
+    
+    // Proposals
+    public var proposeTransfer: (Int, Recipient, Zatoshi, Memo?) async throws -> Proposal
+    public var createProposedTransactions: (Proposal, UnifiedSpendingKey) async throws -> CreateProposedTransactionsResult
+    public var proposeShielding: (Int, Zatoshi, Memo, TransparentAddress?) async throws -> Proposal?
 }

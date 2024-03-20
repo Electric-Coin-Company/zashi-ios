@@ -45,6 +45,7 @@ extension ZcashSDKEnvironment {
             network: network,
             requiredTransactionConfirmations: ZcashSDKConstants.requiredTransactionConfirmations,
             sdkVersion: "0.18.1-beta",
+            shieldingThreshold: Zatoshi(100_000),
             tokenName: network.networkType == .testnet ? "TAZ" : "ZEC"
         )
     }

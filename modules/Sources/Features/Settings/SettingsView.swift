@@ -42,18 +42,6 @@ public struct SettingsView: View {
                 }
                 .onChange(of: viewStore.isRestoringWallet) { isRestoringWalletBadgeOn = $0 }
 
-                if let supportData = viewStore.supportData {
-                    UIMailDialogView(
-                        supportData: supportData,
-                        completion: {
-                            viewStore.send(.sendSupportMailFinished)
-                        }
-                    )
-                    // UIMailDialogView only wraps MFMailComposeViewController presentation
-                    // so frame is set to 0 to not break SwiftUIs layout
-                    .frame(width: 0, height: 0)
-                }
-
                 Button(L10n.Settings.advanced.uppercased()) {
                     viewStore.send(.updateDestination(.advanced))
                 }
@@ -67,6 +55,18 @@ public struct SettingsView: View {
                 }
                 .zcashStyle()
                 .padding(.bottom, 40)
+                
+                if let supportData = viewStore.supportData {
+                    UIMailDialogView(
+                        supportData: supportData,
+                        completion: {
+                            viewStore.send(.sendSupportMailFinished)
+                        }
+                    )
+                    // UIMailDialogView only wraps MFMailComposeViewController presentation
+                    // so frame is set to 0 to not break SwiftUIs layout
+                    .frame(width: 0, height: 0)
+                }
             }
             .padding(.horizontal, 70)
         }

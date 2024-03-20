@@ -9,6 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import ZcashLightClientKit
 import Generated
+import PartialProposalError
 import UIComponents
 import Utils
 import Models
@@ -69,6 +70,12 @@ public struct BalanceBreakdownView: View {
                     )
                 )
                 .padding(.top, viewStore.isRestoringWallet ? 0 : 40)
+                .navigationLinkEmpty(
+                    isActive: viewStore.bindingForPartialProposalError,
+                    destination: {
+                        PartialProposalErrorView(store: store.partialProposalErrorStore())
+                    }
+                )
             }
         }
         .padding(.vertical, 1)
@@ -223,7 +230,7 @@ extension BalanceBreakdownView {
             .padding(.bottom, 15)
             .disabled(!viewStore.isShieldableBalanceAvailable || viewStore.isShieldingFunds)
             
-            Text(L10n.Balances.fee(ZatoshiStringRepresentation.feeFormat))
+            Text(ZatoshiStringRepresentation.feeFormat)
                 .font(.custom(FontFamily.Inter.semiBold.name, size: 11))
         }
     }
@@ -268,6 +275,7 @@ extension BalanceBreakdownView {
                     changePending: Zatoshi(25_234_000),
                     isShieldingFunds: true,
                     isHintBoxVisible: true,
+                    partialProposalErrorState: .initial,
                     pendingTransactions: Zatoshi(25_234_000),
                     shieldedBalance: Zatoshi(25_234_778),
                     syncProgressState: .init(

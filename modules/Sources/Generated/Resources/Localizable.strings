@@ -66,6 +66,17 @@
 "recoveryPhraseTestPreamble.paragraph3" = "So how do you recover funds that you've hidden on a completely decentralized and private block-chain?";
 "recoveryPhraseTestPreamble.button.goNext" = "By understanding and preparing";
 
+// MARK: - Proposal Partial Error
+"proposalPartial.title" = "Transaction Error";
+"proposalPartial.message1" = "Sending to this recipient required multiple transactions, but only some of them succeeded. Your funds are safe, but they need to be recovered with the help of Zashi team support.";
+"proposalPartial.message2" = "Please use the button below to contact us and recover your funds. Your message to us will be pre-populated with all the data we need to resolve this issue.";
+"proposalPartial.transactionIds" = "Transaction Ids";
+"proposalPartial.contactSupport" = "Contact Support";
+"proposalPartial.mailSubject" = "TEX Transaction Error";
+"proposalPartial.mailPart1" = "Hi Zashi Team,";
+"proposalPartial.mailPart2" = "While sending a transaction to a TEX address, I encountered an error state. I'm reaching out to get guidance on how to recover my funds.";
+"proposalPartial.mailPart3" = "Thank you.";
+
 // MARK: - Import Wallet Screen
 "importWallet.title" = "Wallet Import";
 "importWallet.description" = "Enter secret\nrecovery phrase";
@@ -119,7 +130,6 @@
 "balances.transparentBalance" = "Transparent balance";
 "balances.shieldButtonTitle" = "Shield and consolidate funds";
 "balances.shieldingInProgress" = "Shielding funds";
-"balances.fee" = "(Fee %@)";
 "balances.synced" = "Synced";
 "balances.syncing" = "Syncing";
 "balances.syncingError" = "Zashi encountered an error while syncing, attempting to resolve...";
@@ -150,7 +160,6 @@
 "send.error.insufficientFunds" = "Insufficient funds";
 "send.error.invalidAmount" = "Invalid amount";
 "send.error.invalidAddress" = "Invalid address";
-"send.fee" = "(Fee %@)";
 "send.amountSummary" = "Amount:";
 "send.toSummary" = "To:";
 "send.feeSummary" = "Fee:";
@@ -222,7 +231,7 @@ Sharing this private data is irrevocable — once you have shared this private d
 "qrCodeFor" = "QR Code for %@";
 "general.dateNotAvailable" = "date not available";
 "general.tapToCopy" = "Tap to copy";
-"general.fee" = "< %@";
+"general.fee" = "(Typical Fee < %@)";
 
 // MARK: - Transaction List
 "transactionList.collapse" = "Collapse transaction";

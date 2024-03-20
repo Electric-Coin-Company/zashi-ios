@@ -116,6 +116,63 @@ extension SDKSynchronizerClient: DependencyKey {
             wipe: { synchronizer.wipe() },
             switchToEndpoint: { endpoint in
                 try await synchronizer.switchTo(endpoint: endpoint)
+            },
+            proposeTransfer: { accountIndex, recipient, amount, memo in
+                try await synchronizer.proposeTransfer(
+                    accountIndex: accountIndex,
+                    recipient: recipient,
+                    amount: amount,
+                    memo: memo
+                )
+            },
+            createProposedTransactions: { proposal, spendingKey in
+                let stream = try await synchronizer.createProposedTransactions(
+                    proposal: proposal,
+                    spendingKey: spendingKey
+                )
+
+                let transactionCount = proposal.transactionCount()
+                var successCount = 0
+                var iterator = stream.makeAsyncIterator()
+                
+                var txIds: [String] = []
+                var statuses: [String] = []
+
+                for _ in 1...transactionCount {
+                    if let transactionSubmitResult = try await iterator.next() {
+                        switch transactionSubmitResult {
+                        case .success(txId: let id):
+                            successCount += 1
+                            txIds.append(id.toHexStringTxId())
+                            statuses.append("success")
+                        case let .grpcFailure(txId: id, error: error):
+                            txIds.append(id.toHexStringTxId())
+                            statuses.append(error.localizedDescription)
+                        case let .submitFailure(txId: id, code: code, description: description):
+                            txIds.append(id.toHexStringTxId())
+                            statuses.append("code: \(code) desc: \(description)")
+                        case .notAttempted(txId: let id):
+                            txIds.append(id.toHexStringTxId())
+                            statuses.append("notAttempted")
+                        }
+                    }
+                }
+                
+                if successCount == 0 {
+                    return .failure
+                } else if successCount == transactionCount {
+                    return .success
+                } else {
+                    return .partial(txIds: txIds, statuses: statuses)
+                }
+            },
+            proposeShielding: { accountIndex, shieldingThreshold, memo, transparentReceiver in
+                try await synchronizer.proposeShielding(
+                    accountIndex: accountIndex,
+                    shieldingThreshold: shieldingThreshold,
+                    memo: memo,
+                    transparentReceiver: transparentReceiver
+                )
             }
         )
     }

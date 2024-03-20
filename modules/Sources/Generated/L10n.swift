@@ -47,10 +47,6 @@ public enum L10n {
   public enum Balances {
     /// Change pending
     public static let changePending = L10n.tr("Localizable", "balances.changePending", fallback: "Change pending")
-    /// (Fee %@)
-    public static func fee(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "balances.fee", String(describing: p1), fallback: "(Fee %@)")
-    }
     /// Pending transactions
     public static let pendingTransactions = L10n.tr("Localizable", "balances.pendingTransactions", fallback: "Pending transactions")
     /// The restore process can take several hours on lower-powered devices, and even on powerful devices is likely to take more than an hour.
@@ -137,9 +133,9 @@ public enum L10n {
     public static let dateNotAvailable = L10n.tr("Localizable", "general.dateNotAvailable", fallback: "date not available")
     /// Done
     public static let done = L10n.tr("Localizable", "general.done", fallback: "Done")
-    /// < %@
+    /// (Typical Fee < %@)
     public static func fee(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "general.fee", String(describing: p1), fallback: "< %@")
+      return L10n.tr("Localizable", "general.fee", String(describing: p1), fallback: "(Typical Fee < %@)")
     }
     /// Max
     public static let max = L10n.tr("Localizable", "general.max", fallback: "Max")
@@ -288,6 +284,26 @@ public enum L10n {
     public static let note = L10n.tr("Localizable", "privateDataConsent.note", fallback: "*Note that this private data does not give them the ability to spend your funds, only the ability to see what you do with your funds.")
     /// Consent for Exporting Private Data
     public static let title = L10n.tr("Localizable", "privateDataConsent.title", fallback: "Consent for Exporting Private Data")
+  }
+  public enum ProposalPartial {
+    /// Contact Support
+    public static let contactSupport = L10n.tr("Localizable", "proposalPartial.contactSupport", fallback: "Contact Support")
+    /// Hi Zashi Team,
+    public static let mailPart1 = L10n.tr("Localizable", "proposalPartial.mailPart1", fallback: "Hi Zashi Team,")
+    /// While sending a transaction to a TEX address, I encountered an error state. I'm reaching out to get guidance on how to recover my funds.
+    public static let mailPart2 = L10n.tr("Localizable", "proposalPartial.mailPart2", fallback: "While sending a transaction to a TEX address, I encountered an error state. I'm reaching out to get guidance on how to recover my funds.")
+    /// Thank you.
+    public static let mailPart3 = L10n.tr("Localizable", "proposalPartial.mailPart3", fallback: "Thank you.")
+    /// TEX Transaction Error
+    public static let mailSubject = L10n.tr("Localizable", "proposalPartial.mailSubject", fallback: "TEX Transaction Error")
+    /// Sending to this recipient required multiple transactions, but only some of them succeeded. Your funds are safe, but they need to be recovered with the help of Zashi team support.
+    public static let message1 = L10n.tr("Localizable", "proposalPartial.message1", fallback: "Sending to this recipient required multiple transactions, but only some of them succeeded. Your funds are safe, but they need to be recovered with the help of Zashi team support.")
+    /// Please use the button below to contact us and recover your funds. Your message to us will be pre-populated with all the data we need to resolve this issue.
+    public static let message2 = L10n.tr("Localizable", "proposalPartial.message2", fallback: "Please use the button below to contact us and recover your funds. Your message to us will be pre-populated with all the data we need to resolve this issue.")
+    /// Transaction Error
+    public static let title = L10n.tr("Localizable", "proposalPartial.title", fallback: "Transaction Error")
+    /// Transaction Ids
+    public static let transactionIds = L10n.tr("Localizable", "proposalPartial.transactionIds", fallback: "Transaction Ids")
   }
   public enum ReceiveZec {
     /// Your Address
@@ -521,10 +537,6 @@ public enum L10n {
     public static let editMemo = L10n.tr("Localizable", "send.editMemo", fallback: "Memo included. Tap to edit.")
     /// Sending transaction failed
     public static let failed = L10n.tr("Localizable", "send.failed", fallback: "Sending transaction failed")
-    /// (Fee %@)
-    public static func fee(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "send.fee", String(describing: p1), fallback: "(Fee %@)")
-    }
     /// Fee:
     public static let feeSummary = L10n.tr("Localizable", "send.feeSummary", fallback: "Fee:")
     /// Aditional funds may be in transit

@@ -27,6 +27,7 @@ extension ZcashSDKEnvironment: TestDependencyKey {
         network: ZcashNetworkBuilder.network(for: .testnet),
         requiredTransactionConfirmations: ZcashSDKConstants.requiredTransactionConfirmations,
         sdkVersion: "0.18.1-beta",
+        shieldingThreshold: Zatoshi(100_000),
         tokenName: "TAZ"
     )
 }
