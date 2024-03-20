@@ -20,7 +20,15 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         let zashiNumberFormatter = NumberFormatter.zcashNumberFormatter8FractionDigits
         zashiNumberFormatter.locale = Locale(identifier: "cs_CZ")
     }
+
+    // MARK: - Fee Format
     
+    func testFeeFormat() throws {
+        let zatoshiStringRepresentation = ZatoshiStringRepresentation(Zatoshi(0))
+        
+        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
+    }
+
     // MARK: - Prefix None
     
     func testPrefixNone_Abbreviated_ZeroZatoshi() throws {
@@ -28,7 +36,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "0,000")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
 
     func testPrefixNone_Abbreviated_LessThan100kZatoshi() throws {
@@ -36,7 +43,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "0,000...")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
 
     func testPrefixNone_Abbreviated_100kZatoshi() throws {
@@ -44,7 +50,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "0,001")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
 
     func testPrefixNone_Abbreviated_MoreThan100kZatoshi() throws {
@@ -52,7 +57,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "0,258")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
     
     func testPrefixNone_Expanded_ZeroZatoshi() throws {
@@ -60,7 +64,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "0,000")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
 
     func testPrefixNone_Expanded_LessThan100kZatoshi() throws {
@@ -68,7 +71,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "0,000")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "99")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
 
     func testPrefixNone_Expanded_100kZatoshi() throws {
@@ -76,7 +78,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "0,001")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
 
     func testPrefixNone_Expanded_MoreThan100kZatoshi() throws {
@@ -84,7 +85,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "0,257")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "93456")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
     
     // MARK: - Prefix Plus
@@ -94,7 +94,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "+0,000")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
 
     func testPrefixPlus_Abbreviated_LessThan100kZatoshi() throws {
@@ -102,7 +101,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "+0,000...")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
 
     func testPrefixPlus_Abbreviated_100kZatoshi() throws {
@@ -110,7 +108,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "+0,001")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
 
     func testPrefixPlus_Abbreviated_MoreThan100kZatoshi() throws {
@@ -118,7 +115,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "+0,258")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
     
     func testPrefixPlus_Expanded_ZeroZatoshi() throws {
@@ -126,7 +122,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "+0,000")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
 
     func testPrefixPlus_Expanded_LessThan100kZatoshi() throws {
@@ -134,7 +129,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "+0,000")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "99")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
 
     func testPrefixPlus_Expanded_100kZatoshi() throws {
@@ -142,7 +136,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "+0,001")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
 
     func testPrefixPlus_Expanded_MoreThan100kZatoshi() throws {
@@ -150,7 +143,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "+0,257")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "93456")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
     
     // MARK: - Prefix Minus
@@ -160,7 +152,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "-0,000")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
 
     func testPrefixMinus_Abbreviated_LessThan100kZatoshi() throws {
@@ -168,7 +159,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "-0,000...")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
 
     func testPrefixMinus_Abbreviated_100kZatoshi() throws {
@@ -176,7 +166,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "-0,001")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
 
     func testPrefixMinus_Abbreviated_MoreThan100kZatoshi() throws {
@@ -184,7 +173,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "-0,258")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
     
     func testPrefixMinus_Expanded_ZeroZatoshi() throws {
@@ -192,7 +180,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "-0,000")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
 
     func testPrefixMinus_Expanded_LessThan100kZatoshi() throws {
@@ -200,7 +187,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "-0,000")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "99")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
 
     func testPrefixMinus_Expanded_100kZatoshi() throws {
@@ -208,7 +194,6 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "-0,001")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
 
     func testPrefixMinus_Expanded_MoreThan100kZatoshi() throws {
@@ -216,6 +201,5 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
         
         XCTAssertEqual(zatoshiStringRepresentation.mostSignificantDigits, "-0,257")
         XCTAssertEqual(zatoshiStringRepresentation.leastSignificantDigits, "93456")
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
     }
 }
