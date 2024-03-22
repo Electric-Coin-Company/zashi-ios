@@ -63,7 +63,7 @@ public struct TransactionRowView: View {
                 )
 
                 if transaction.isSpending {
-                    TransactionFeeView(fee: transaction.fee)
+                    TransactionFeeView(fee: transaction.fee ?? .zero)
                         .padding(.vertical, 10)
                 }
 

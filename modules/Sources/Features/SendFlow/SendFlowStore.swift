@@ -63,7 +63,7 @@ public struct SendFlowReducer: Reducer {
         }
 
         public var feeFormat: String {
-            ZatoshiStringRepresentation.feeFormat
+            "(\(ZatoshiStringRepresentation.feeFormat))"
         }
 
         public var feeRequired: Zatoshi {

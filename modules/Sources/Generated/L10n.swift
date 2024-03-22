@@ -133,9 +133,9 @@ public enum L10n {
     public static let dateNotAvailable = L10n.tr("Localizable", "general.dateNotAvailable", fallback: "date not available")
     /// Done
     public static let done = L10n.tr("Localizable", "general.done", fallback: "Done")
-    /// (Typical Fee < %@)
+    /// Typical Fee < %@
     public static func fee(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "general.fee", String(describing: p1), fallback: "(Typical Fee < %@)")
+      return L10n.tr("Localizable", "general.fee", String(describing: p1), fallback: "Typical Fee < %@")
     }
     /// Max
     public static let max = L10n.tr("Localizable", "general.max", fallback: "Max")

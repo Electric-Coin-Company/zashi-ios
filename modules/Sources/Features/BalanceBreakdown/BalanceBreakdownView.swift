@@ -230,7 +230,7 @@ extension BalanceBreakdownView {
             .padding(.bottom, 15)
             .disabled(!viewStore.isShieldableBalanceAvailable || viewStore.isShieldingFunds)
             
-            Text(ZatoshiStringRepresentation.feeFormat)
+            Text("(\(ZatoshiStringRepresentation.feeFormat))")
                 .font(.custom(FontFamily.Inter.semiBold.name, size: 11))
         }
     }
