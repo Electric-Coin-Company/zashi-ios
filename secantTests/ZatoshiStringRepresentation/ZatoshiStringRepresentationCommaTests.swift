@@ -26,7 +26,7 @@ final class ZatoshiStringRepresentationCommaTests: XCTestCase {
     func testFeeFormat() throws {
         let zatoshiStringRepresentation = ZatoshiStringRepresentation(Zatoshi(0))
         
-        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "(Typical Fee < 0,001)")
+        XCTAssertEqual(zatoshiStringRepresentation.feeFormat, "Typical Fee < 0,001")
     }
 
     // MARK: - Prefix None

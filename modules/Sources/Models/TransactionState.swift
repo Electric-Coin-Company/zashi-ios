@@ -28,7 +28,7 @@ public struct TransactionState: Equatable, Identifiable {
     public var zAddress: String?
     public var isSentTransaction: Bool
 
-    public var fee: Zatoshi
+    public var fee: Zatoshi?
     public var id: String
     public var status: Status
     public var timestamp: TimeInterval?
@@ -139,7 +139,7 @@ public struct TransactionState: Equatable, Identifiable {
 
     // Values
     public var totalAmount: Zatoshi {
-        Zatoshi(zecAmount.amount + fee.amount)
+        Zatoshi(zecAmount.amount + (fee?.amount ?? 0))
     }
 
     public var textMemo: Memo? {
@@ -165,7 +165,7 @@ public struct TransactionState: Equatable, Identifiable {
         minedHeight: BlockHeight? = nil,
         shielded: Bool = true,
         zAddress: String? = nil,
-        fee: Zatoshi,
+        fee: Zatoshi?,
         id: String,
         status: Status,
         timestamp: TimeInterval? = nil,
@@ -219,7 +219,7 @@ extension TransactionState {
     public init(transaction: ZcashTransaction.Overview, memos: [Memo]? = nil, latestBlockHeight: BlockHeight) {
         expiryHeight = transaction.expiryHeight
         minedHeight = transaction.minedHeight
-        fee = transaction.fee ?? .zero
+        fee = transaction.fee
         id = transaction.rawID.toHexStringTxId()
         timestamp = transaction.blockTime
         zecAmount = transaction.isSentTransaction ? Zatoshi(-transaction.value.amount) : transaction.value

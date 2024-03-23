@@ -28,7 +28,7 @@ public struct TransactionFeeView: View {
                     balance: fee,
                     fontName: FontFamily.Inter.bold.name,
                     mostSignificantFontSize: 13,
-                    isFee: false,
+                    isFee: fee.amount == 0,
                     leastSignificantFontSize: 7,
                     format: .expanded
                 )
