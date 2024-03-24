@@ -222,7 +222,7 @@ extension AlertState where Action == RootReducer.Action {
         AlertState {
             TextState(L10n.Root.Debug.Alert.Rewind.CantStartSync.title)
         } message: {
-            TextState(L10n.Root.Debug.Alert.Rewind.CantStartSync.message(error.message, error.code.rawValue))
+            TextState(L10n.Root.Debug.Alert.Rewind.CantStartSync.message(error.detailedMessage))
         }
     }
     
@@ -231,7 +231,7 @@ extension AlertState where Action == RootReducer.Action {
             TextState(L10n.Root.Initialization.Alert.Failed.title)
         } message: {
             TextState(
-                L10n.Root.Initialization.Alert.CantStoreThatUserPassedPhraseBackupTest.message(error.message, error.code.rawValue)
+                L10n.Root.Initialization.Alert.CantStoreThatUserPassedPhraseBackupTest.message(error.detailedMessage)
             )
         }
     }
@@ -248,7 +248,7 @@ extension AlertState where Action == RootReducer.Action {
         AlertState {
             TextState(L10n.Root.Initialization.Alert.SdkInitFailed.title)
         } message: {
-            TextState(L10n.Root.Initialization.Alert.Error.message(error.message, error.code.rawValue))
+            TextState(L10n.Root.Initialization.Alert.Error.message(error.detailedMessage))
         }
     }
     
@@ -256,7 +256,7 @@ extension AlertState where Action == RootReducer.Action {
         AlertState {
             TextState(L10n.Root.Debug.Alert.Rewind.Failed.title)
         } message: {
-            TextState(L10n.Root.Debug.Alert.Rewind.Failed.message(error.message, error.code.rawValue))
+            TextState(L10n.Root.Debug.Alert.Rewind.Failed.message(error.detailedMessage))
         }
     }
     

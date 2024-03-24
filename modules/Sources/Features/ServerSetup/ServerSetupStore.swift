@@ -139,7 +139,7 @@ extension AlertState where Action == ServerSetup.Action {
                 TextState(L10n.General.ok)
             }
         } message: {
-            TextState(L10n.ServerSetup.Alert.Failed.message(error.message, error.code.rawValue))
+            TextState(L10n.ServerSetup.Alert.Failed.message(error.detailedMessage))
         }
     }
 }

@@ -358,7 +358,7 @@ extension AlertState where Action == SendFlowReducer.Action {
         AlertState {
             TextState(L10n.Send.Alert.Failure.title)
         } message: {
-            TextState(L10n.Send.Alert.Failure.message(error.message, error.code.rawValue))
+            TextState(L10n.Send.Alert.Failure.message(error.detailedMessage))
         }
     }
 }

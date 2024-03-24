@@ -41,7 +41,7 @@
 "recoveryPhraseDisplay.noWords" = "The keys are missing. No backup phrase is stored in the keychain.";
 "recoveryPhraseDisplay.birthdayHeight" = "Wallet birthday height: %@";
 "recoveryPhraseDisplay.alert.failed.title" = "Failed to load stored wallet";
-"recoveryPhraseDisplay.alert.failed.message" = "Attempt to load the stored wallet from the keychain failed. Error: %@ (code: %@)";
+"recoveryPhraseDisplay.alert.failed.message" = "Attempt to load the stored wallet from the keychain failed. Error: %@";
 
 // MARK: - Recovery Phrase Backup Validation & Success/Failed
 "recoveryPhraseBackupValidation.title" = "Verify Your Backup";
@@ -87,7 +87,7 @@
 "importWallet.alert.success.title" = "Success";
 "importWallet.alert.success.message" = "Your wallet has been successfully restored! During the initial sync, your funds cannot be spent or sent. Depending on the age of your wallet, it may take a few hours to fully sync.";
 "importWallet.alert.failed.title" = "Failed to restore wallet";
-"importWallet.alert.failed.message" = "Error: %@ (code: %@)";
+"importWallet.alert.failed.message" = "Error: %@";
 "importWallet.optionalBirthday" = "(optional)";
 "importWallet.enterPlaceholder" = "Enter private seed here…";
 
@@ -121,7 +121,7 @@
 "serverSetup.title" = "Server";
 "serverSetup.placeholder" = "<hostname>:<port>";
 "serverSetup.alert.failed.title" = "Invalid endpoint";
-"serverSetup.alert.failed.message" = "Error: %@ (code: %@)";
+"serverSetup.alert.failed.message" = "Error: %@";
 
 // MARK: - Balances
 "balances.spendableBalance" = "Shielded zec (spendable)";
@@ -137,7 +137,7 @@
 "balances.hintBox.dismiss" = "I got it!";
 "balances.restoringWalletWarning" = "The restore process can take several hours on lower-powered devices, and even on powerful devices is likely to take more than an hour.";
 "balances.alert.shieldFunds.failure.title" = "Failed to shield funds";
-"balances.alert.shieldFunds.failure.message" = "Error: %@ (code: %@)";
+"balances.alert.shieldFunds.failure.message" = "Error: %@";
 
 // MARK: - Scan
 "scan.invalidQR" = "This QR code doesn't hold a valid Zcash address.";
@@ -167,7 +167,7 @@
 "send.goBack" = "Go back";
 "send.review" = "Review";
 "send.alert.failure.title" = "Failed to send funds";
-"send.alert.failure.message" = "Error: %@ (code: %@)";
+"send.alert.failure.message" = "Error: %@";
 
 // MARK: - Settings
 "settings.feedback" = "Send us feedback";
@@ -181,7 +181,7 @@
 Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.";
 "settings.version" = "Version %@ (%@)";
 "settings.alert.cantBackupWallet.title" = "Can't backup wallet";
-"settings.alert.cantBackupWallet.message" = "Error: %@ (code: %@)";
+"settings.alert.cantBackupWallet.message" = "Error: %@";
 "settings.alert.cantSendEmail.title" = "Oh, no!";
 "settings.alert.cantSendEmail.message" = "It looks like you don't have a default email app configured on your device. Copy the address below, and use your favorite email client to send us a message.";
 "settings.alert.cantSendEmail.copyEmail" = "Copy %@";
@@ -283,12 +283,12 @@ Sharing this private data is irrevocable — once you have shared this private d
 
 // MARK: - Root
 "root.initialization.alert.failed.title" = "Wallet initialisation failed.";
-"root.initialization.alert.error.message" = "Error: %@ (code: %@)";
+"root.initialization.alert.error.message" = "Error: %@";
 "root.initialization.alert.sdkInitFailed.title" = "Failed to initialize the SDK";
 "root.initialization.alert.walletStateFailed.message" = "App initialisation state: %@.";
 "root.initialization.alert.cantLoadSeedPhrase.message" = "Can't load seed phrase from local storage.";
-"root.initialization.alert.cantCreateNewWallet.message" = "Can't create new wallet. Error: %@ (code: %@)";
-"root.initialization.alert.cantStoreThatUserPassedPhraseBackupTest.message" = "Can't store information that user passed phrase backup test. Error: %@ (code: %@)";
+"root.initialization.alert.cantCreateNewWallet.message" = "Can't create new wallet. Error: %@";
+"root.initialization.alert.cantStoreThatUserPassedPhraseBackupTest.message" = "Can't store information that user passed phrase backup test. Error: %@";
 "root.initialization.alert.wipe.title" = "Wipe of the wallet";
 "root.initialization.alert.wipe.message" = "Are you sure?";
 "root.initialization.alert.wipeFailed.title" = "Nuke of the wallet failed";
@@ -313,13 +313,13 @@ Sharing this private data is irrevocable — once you have shared this private d
 "root.debug.dialog.rescan.option.quick" = "Quick rescan";
 "root.debug.dialog.rescan.option.full" = "Full rescan";
 "root.debug.alert.rewind.failed.title" = "Rewind failed";
-"root.debug.alert.rewind.failed.message" = "Error: %@ (code: %@)";
+"root.debug.alert.rewind.failed.message" = "Error: %@";
 "root.debug.alert.rewind.cantStartSync.title" = "Can't start sync process after rewind";
-"root.debug.alert.rewind.cantStartSync.message" = "Error: %@ (code: %@)";
+"root.debug.alert.rewind.cantStartSync.message" = "Error: %@";
 
 // MARK: - Export logs
 "exportLogs.alert.failed.title" = "Error when exporting logs";
-"exportLogs.alert.failed.message" = "Error: %@ (code: %@)";
+"exportLogs.alert.failed.message" = "Error: %@";
 
 // MARK: - Text Fields
 "field.multiline.charLimitExceeded" = "char limit exceeded";

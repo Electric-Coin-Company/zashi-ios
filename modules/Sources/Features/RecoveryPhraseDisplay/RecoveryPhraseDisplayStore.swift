@@ -90,7 +90,7 @@ extension AlertState where Action == RecoveryPhraseDisplay.Action {
         AlertState {
             TextState(L10n.RecoveryPhraseDisplay.Alert.Failed.title)
         } message: {
-            TextState(L10n.RecoveryPhraseDisplay.Alert.Failed.message(error.message, error.code))
+            TextState(L10n.RecoveryPhraseDisplay.Alert.Failed.message(error.detailedMessage))
         }
     }
 }

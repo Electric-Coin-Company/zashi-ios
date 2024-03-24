@@ -103,7 +103,7 @@ extension AlertState where Action == ExportLogsReducer.Action {
         AlertState {
             TextState(L10n.ExportLogs.Alert.Failed.title)
         } message: {
-            TextState(L10n.ExportLogs.Alert.Failed.message(error.message, error.code.rawValue))
+            TextState(L10n.ExportLogs.Alert.Failed.message(error.detailedMessage))
         }
     }
 }
