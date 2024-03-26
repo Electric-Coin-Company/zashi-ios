@@ -122,7 +122,7 @@ extension AlertState where Action == SecurityWarning.Action {
         AlertState {
             TextState(L10n.Root.Initialization.Alert.Failed.title)
         } message: {
-            TextState(L10n.Root.Initialization.Alert.CantCreateNewWallet.message(error.message, error.code.rawValue))
+            TextState(L10n.Root.Initialization.Alert.CantCreateNewWallet.message(error.detailedMessage))
         }
     }
 }

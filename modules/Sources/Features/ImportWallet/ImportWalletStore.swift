@@ -213,7 +213,7 @@ extension AlertState where Action == ImportWalletReducer.Action {
                 TextState(L10n.General.ok)
             }
         } message: {
-            TextState(L10n.ImportWallet.Alert.Failed.message(error.message, error.code.rawValue))
+            TextState(L10n.ImportWallet.Alert.Failed.message(error.detailedMessage))
         }
     }
 }

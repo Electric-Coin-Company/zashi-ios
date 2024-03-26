@@ -239,7 +239,7 @@ extension AlertState where Action == BalanceBreakdownReducer.Action {
         AlertState {
             TextState(L10n.Balances.Alert.ShieldFunds.Failure.title)
         } message: {
-            TextState(L10n.Balances.Alert.ShieldFunds.Failure.message(error.message, error.code.rawValue))
+            TextState(L10n.Balances.Alert.ShieldFunds.Failure.message(error.detailedMessage))
         }
     }
 }

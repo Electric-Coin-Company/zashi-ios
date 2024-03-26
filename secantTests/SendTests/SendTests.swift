@@ -89,6 +89,7 @@ class SendTests: XCTestCase {
                     text: "ztestsapling1psqa06alcfj9t6s246hht3n7kcw5h900r6z40qnuu7l58qs55kzeqa98879z9hzy596dca4hmsr".redacted
                 )
         )
+        initialState.proposal = Proposal.testOnlyFakeProposal(totalFee: 10_000)
 
         let store = TestStore(
             initialState: initialState
@@ -101,7 +102,7 @@ class SendTests: XCTestCase {
         store.dependencies.derivationTool = .liveValue
         store.dependencies.mainQueue = .immediate
         store.dependencies.mnemonic = .liveValue
-        store.dependencies.sdkSynchronizer = .mocked(sendTransaction: { _, _, _, _ in throw error })
+        store.dependencies.sdkSynchronizer = .mocked(createProposedTransactions: { _, _ in throw error })
         store.dependencies.walletStorage = .noOp
         
         // simulate the sending confirmation button to be pressed
@@ -131,6 +132,7 @@ class SendTests: XCTestCase {
                     text: "ztestsapling1psqa06alcfj9t6s246hht3n7kcw5h900r6z40qnuu7l58qs55kzeqa98879z9hzy596dca4hmsr".redacted
                 )
         )
+        initialState.proposal = Proposal.testOnlyFakeProposal(totalFee: 10_000)
 
         let store = TestStore(
             initialState: initialState
