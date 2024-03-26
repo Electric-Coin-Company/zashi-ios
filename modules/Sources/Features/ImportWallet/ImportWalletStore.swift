@@ -72,10 +72,11 @@ public struct ImportWalletReducer: Reducer {
     public enum Action: Equatable {
         case alert(PresentationAction<Action>)
         case birthdayInputChanged(RedactableString)
-        case restoreWallet
         case importPrivateOrViewingKey
         case initializeSDK
+        case nextPressed
         case onAppear
+        case restoreWallet
         case seedPhraseInputChanged(RedactableString)
         case successfullyRecovered
         case updateDestination(ImportWalletReducer.State.Destination?)
@@ -128,6 +129,9 @@ public struct ImportWalletReducer: Reducer {
                 return .none
 
             case .alert:
+                return .none
+                
+            case .nextPressed:
                 return .none
                 
             case .restoreWallet:

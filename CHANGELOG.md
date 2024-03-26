@@ -9,6 +9,8 @@ directly impact users rather than highlighting other crucial architectural updat
 ### Added
 - Proposal API integrated with error handling for multi-transaction Proposals.
 - Privacy info manifest.
+- Orchard support.
+- Seed validation for case when Zashi is migrated to another device.
 
 ### Fixed
 - White area above the keyboard has been removed.

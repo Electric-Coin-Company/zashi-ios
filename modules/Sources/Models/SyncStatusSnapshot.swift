@@ -8,6 +8,7 @@
 import Foundation
 import ZcashLightClientKit
 import Generated
+import Utils
 
 public struct SyncStatusSnapshot: Equatable {
     public let message: String
@@ -27,7 +28,7 @@ public struct SyncStatusSnapshot: Equatable {
             return SyncStatusSnapshot(state, L10n.Sync.Message.unprepared)
             
         case .error(let error):
-            return SyncStatusSnapshot(state, L10n.Sync.Message.error(error.toZcashError().message))
+            return SyncStatusSnapshot(state, L10n.Sync.Message.error(error.toZcashError().detailedMessage))
 
         case .stopped:
             return SyncStatusSnapshot(state, L10n.Sync.Message.stopped)

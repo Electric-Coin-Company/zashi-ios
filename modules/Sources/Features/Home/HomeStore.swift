@@ -196,8 +196,9 @@ public struct HomeReducer: Reducer {
 
                 state.synchronizerStatusSnapshot = snapshot
                 let accountBalance = latestState.data.accountBalance?.data
-                state.shieldedBalance = accountBalance?.saplingBalance.spendableValue ?? .zero
-                state.totalBalance = accountBalance?.saplingBalance.total() ?? .zero
+                
+                state.shieldedBalance = (accountBalance?.saplingBalance.spendableValue ?? .zero) + (accountBalance?.orchardBalance.spendableValue ?? .zero)
+                state.totalBalance = (accountBalance?.saplingBalance.total() ?? .zero) + (accountBalance?.orchardBalance.total() ?? .zero)
 
                 switch snapshot.syncStatus {
                 case .error(let error):

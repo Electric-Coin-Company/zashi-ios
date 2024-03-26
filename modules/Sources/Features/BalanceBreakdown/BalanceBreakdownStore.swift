@@ -210,11 +210,12 @@ public struct BalanceBreakdownReducer: Reducer {
 
             case .synchronizerStateChanged(let latestState):
                 let accountBalance = latestState.data.accountBalance?.data
-                state.shieldedBalance = accountBalance?.saplingBalance.spendableValue ?? .zero
-                state.totalBalance = accountBalance?.saplingBalance.total() ?? .zero
+                
+                state.shieldedBalance = (accountBalance?.saplingBalance.spendableValue ?? .zero) + (accountBalance?.orchardBalance.spendableValue ?? .zero)
+                state.totalBalance = (accountBalance?.saplingBalance.total() ?? .zero) + (accountBalance?.orchardBalance.total() ?? .zero)
                 state.transparentBalance = accountBalance?.unshielded ?? .zero
-                state.changePending = accountBalance?.saplingBalance.changePendingConfirmation ?? .zero
-                state.pendingTransactions = accountBalance?.saplingBalance.valuePendingSpendability ?? .zero
+                state.changePending = (accountBalance?.saplingBalance.changePendingConfirmation ?? .zero) + (accountBalance?.orchardBalance.changePendingConfirmation ?? .zero)
+                state.pendingTransactions = (accountBalance?.saplingBalance.valuePendingSpendability ?? .zero) + (accountBalance?.orchardBalance.valuePendingSpendability ?? .zero)
                 return .none
                 
             case .syncProgress:
