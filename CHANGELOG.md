@@ -6,6 +6,8 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.0.1 build 3 (2024-03-26)
+
 ### Added
 - Proposal API integrated with error handling for multi-transaction Proposals.
 - Privacy info manifest.

@@ -41,7 +41,6 @@ extension RootReducer {
         Reduce { state, action in
             switch action {
             case .initialization(.appDelegate(.didFinishLaunching)):
-                //walletStorage.nukeWallet()
                 state.appStartState = .didFinishLaunching
                 // TODO: [#704], trigger the review request logic when approved by the team,
                 // https://github.com/Electric-Coin-Company/zashi-ios/issues/704
