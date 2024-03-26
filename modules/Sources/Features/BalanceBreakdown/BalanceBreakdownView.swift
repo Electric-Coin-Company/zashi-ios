@@ -118,9 +118,6 @@ extension BalanceBreakdownView {
                 
                 Spacer()
                 
-                // TODO: [#932] pending balances
-                // https://github.com/Electric-Coin-Company/zashi-ios/issues/932
-                // zero for now until SDK support is implemented
                 ZatoshiRepresentationView(
                     balance: viewStore.changePending,
                     fontName: FontFamily.Archivo.semiBold.name,
@@ -143,9 +140,6 @@ extension BalanceBreakdownView {
                 
                 Spacer()
                 
-                // TODO: [#932] pending balances
-                // https://github.com/Electric-Coin-Company/zashi-ios/issues/932
-                // zero for now until SDK support is implemented
                 ZatoshiRepresentationView(
                     balance: viewStore.pendingTransactions,
                     fontName: FontFamily.Archivo.semiBold.name,

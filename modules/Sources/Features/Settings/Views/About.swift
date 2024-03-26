@@ -47,8 +47,6 @@ public struct About: View {
                     .foregroundColor(Asset.Colors.shade30.color)
                     .padding(.bottom, 20)
 
-                // TODO: [#940] final privacy policy link
-                // https://github.com/Electric-Coin-Company/zashi-ios/issues/940
                 Group {
                     Text(L10n.Settings.privacyPolicyPart1)
                     + Text("[\(L10n.Settings.privacyPolicyPart2)](https://electriccoin.co/zashi-privacy-policy/)")
