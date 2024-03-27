@@ -6,6 +6,11 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.0.3 build 1 (2024-03-27)
+
+### Fixed
+- Bug in note selection when sending to a transparent recipient.
+
 ## 1.0.2 build 1 (2024-03-27)
 
 ### Fixed
