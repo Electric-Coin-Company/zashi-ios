@@ -84,6 +84,18 @@ public enum L10n {
       public static let message = L10n.tr("Localizable", "balances.hintBox.message", fallback: "Zashi uses the latest network upgrade and does not support sending transparent (unshielded) ZEC. Use the Shield and Consolidate button to shield your funds, which will add to your available balance and make your ZEC spendable.")
     }
   }
+  public enum DeleteWallet {
+    /// Delete Zashi
+    public static let actionButtonTitle = L10n.tr("Localizable", "deleteWallet.actionButtonTitle", fallback: "Delete Zashi")
+    /// I understand
+    public static let iUnderstand = L10n.tr("Localizable", "deleteWallet.iUnderstand", fallback: "I understand")
+    /// Please don't delete this app unless you're sure you understand the effects.
+    public static let message1 = L10n.tr("Localizable", "deleteWallet.message1", fallback: "Please don't delete this app unless you're sure you understand the effects.")
+    /// Deleting the Zashi app will delete the database and cached data. Any funds you have in this wallet will be lost and can only be recovered by using your Zashi secret recovery phrase in Zashi or another Zcash wallet.
+    public static let message2 = L10n.tr("Localizable", "deleteWallet.message2", fallback: "Deleting the Zashi app will delete the database and cached data. Any funds you have in this wallet will be lost and can only be recovered by using your Zashi secret recovery phrase in Zashi or another Zcash wallet.")
+    /// Delete Zashi
+    public static let title = L10n.tr("Localizable", "deleteWallet.title", fallback: "Delete Zashi")
+  }
   public enum Error {
     /// possible roll back
     public static let rollBack = L10n.tr("Localizable", "error.rollBack", fallback: "possible roll back")
@@ -609,6 +621,10 @@ public enum L10n {
     public static let advanced = L10n.tr("Localizable", "settings.advanced", fallback: "Advanced")
     /// Choose a server
     public static let chooseServer = L10n.tr("Localizable", "settings.chooseServer", fallback: "Choose a server")
+    /// Delete Zashi
+    public static let deleteZashi = L10n.tr("Localizable", "settings.deleteZashi", fallback: "Delete Zashi")
+    /// (You will be asked to confirm on next screen)
+    public static let deleteZashiWarning = L10n.tr("Localizable", "settings.deleteZashiWarning", fallback: "(You will be asked to confirm on next screen)")
     /// Export logs only
     public static let exportLogsOnly = L10n.tr("Localizable", "settings.exportLogsOnly", fallback: "Export logs only")
     /// Export private data

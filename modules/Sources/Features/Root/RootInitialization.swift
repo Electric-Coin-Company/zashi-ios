@@ -295,7 +295,7 @@ extension RootReducer {
                 state.alert = AlertState.wipeRequest()
                 return .none
                 
-            case .initialization(.nukeWallet):
+            case .initialization(.nukeWallet), .tabs(.settings(.advancedSettings(.deleteWallet(.deleteTapped)))):
                 guard let wipePublisher = sdkSynchronizer.wipe() else {
                     return Effect.send(.nukeWalletFailed)
                 }

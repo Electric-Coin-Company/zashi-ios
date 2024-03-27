@@ -7,6 +7,8 @@
 
 import SwiftUI
 import ComposableArchitecture
+
+import DeleteWallet
 import Generated
 import RecoveryPhraseDisplay
 import UIComponents
@@ -49,26 +51,45 @@ public struct AdvancedSettingsView: View {
                         ServerSetupView(store: store.serverSetupStore())
                     }
                 )
+                .navigationLinkEmpty(
+                    isActive: viewStore.bindingDeleteWallet,
+                    destination: {
+                        DeleteWalletView(store: store.deleteWalletStore())
+                    }
+                )
                 .onAppear {
                     isRestoringWalletBadgeOn = viewStore.isRestoringWallet
                 }
                 .onChange(of: viewStore.isRestoringWallet) { isRestoringWalletBadgeOn = $0 }
+                .padding(.horizontal, 70)
 
                 Button(L10n.Settings.exportPrivateData.uppercased()) {
                     viewStore.send(.updateDestination(.privateDataConsent))
                 }
                 .zcashStyle()
                 .padding(.bottom, 25)
+                .padding(.horizontal, 70)
 
                 Button(L10n.Settings.chooseServer.uppercased()) {
                     viewStore.send(.updateDestination(.serverSetup))
                 }
                 .zcashStyle()
-                .padding(.bottom, 80)
+                .padding(.horizontal, 70)
 
                 Spacer()
+                
+                Button(L10n.Settings.deleteZashi.uppercased()) {
+                    viewStore.send(.updateDestination(.deleteWallet))
+                }
+                .zcashStyle()
+                .padding(.bottom, 20)
+                .padding(.horizontal, 70)
+
+                Text(L10n.Settings.deleteZashiWarning)
+                    .font(.custom(FontFamily.Inter.medium.name, size: 11))
+                    .padding(.bottom, 50)
+                    .padding(.horizontal, 20)
             }
-            .padding(.horizontal, 70)
         }
         .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground()
