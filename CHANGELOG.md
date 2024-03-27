@@ -6,6 +6,11 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.0.2 build 1 (2024-03-27)
+
+### Fixed
+- Bug in an SQL query that prevented shielding of transparent funds.
+
 ## 1.0.1 build 3 (2024-03-26)
 
 ### Added
