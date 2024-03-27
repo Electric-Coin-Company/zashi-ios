@@ -169,6 +169,13 @@
 "send.alert.failure.title" = "Failed to send funds";
 "send.alert.failure.message" = "Error: %@";
 
+// MARK: - Delete Wallet
+"deleteWallet.title" = "Delete Zashi";
+"deleteWallet.message1" = "Please don't delete this app unless you're sure you understand the effects.";
+"deleteWallet.message2" = "Deleting the Zashi app will delete the database and cached data. Any funds you have in this wallet will be lost and can only be recovered by using your Zashi secret recovery phrase in Zashi or another Zcash wallet.";
+"deleteWallet.iUnderstand" = "I understand";
+"deleteWallet.actionButtonTitle" = "Delete Zashi";
+
 // MARK: - Settings
 "settings.feedback" = "Send us feedback";
 "settings.advanced" = "Advanced";
@@ -177,6 +184,8 @@
 "settings.exportPrivateData" = "Export private data";
 "settings.chooseServer" = "Choose a server";
 "settings.exportLogsOnly" = "Export logs only";
+"settings.deleteZashi" = "Delete Zashi";
+"settings.deleteZashiWarning" = "(You will be asked to confirm on next screen)";
 "settings.about.info" = "Send and receive ZEC on Zashi!
 Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.";
 "settings.version" = "Version %@ (%@)";

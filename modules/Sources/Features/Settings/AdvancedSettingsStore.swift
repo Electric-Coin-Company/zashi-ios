@@ -2,6 +2,7 @@ import SwiftUI
 import ComposableArchitecture
 import MessageUI
 
+import DeleteWallet
 import Generated
 import LocalAuthenticationHandler
 import Models
@@ -18,10 +19,12 @@ public struct AdvancedSettingsReducer: Reducer {
     public struct State: Equatable {
         public enum Destination {
             case backupPhrase
+            case deleteWallet
             case privateDataConsent
             case serverSetup
         }
 
+        public var deleteWallet: DeleteWallet.State
         public var destination: Destination?
         public var isRestoringWallet = false
         public var phraseDisplayState: RecoveryPhraseDisplay.State
@@ -29,12 +32,14 @@ public struct AdvancedSettingsReducer: Reducer {
         public var serverSetupState: ServerSetup.State
         
         public init(
+            deleteWallet: DeleteWallet.State,
             destination: Destination? = nil,
             isRestoringWallet: Bool = false,
             phraseDisplayState: RecoveryPhraseDisplay.State,
             privateDataConsentState: PrivateDataConsentReducer.State,
             serverSetupState: ServerSetup.State
         ) {
+            self.deleteWallet = deleteWallet
             self.destination = destination
             self.isRestoringWallet = isRestoringWallet
             self.phraseDisplayState = phraseDisplayState
@@ -45,6 +50,7 @@ public struct AdvancedSettingsReducer: Reducer {
 
     public enum Action: Equatable {
         case backupWalletAccessRequest
+        case deleteWallet(DeleteWallet.Action)
         case phraseDisplay(RecoveryPhraseDisplay.Action)
         case privateDataConsent(PrivateDataConsentReducer.Action)
         case restoreWalletTask
@@ -67,7 +73,10 @@ public struct AdvancedSettingsReducer: Reducer {
                         await send(.updateDestination(.backupPhrase))
                     }
                 }
-                                
+                        
+            case .deleteWallet:
+                return .none
+                
             case .phraseDisplay(.finishedPressed):
                 state.destination = nil
                 return .none
@@ -122,6 +131,10 @@ public struct AdvancedSettingsReducer: Reducer {
         Scope(state: \.serverSetupState, action: /Action.serverSetup) {
             ServerSetup()
         }
+
+        Scope(state: \.deleteWallet, action: /Action.deleteWallet) {
+            DeleteWallet()
+        }
     }
 }
 
@@ -134,14 +147,14 @@ extension AdvancedSettingsViewStore {
             send: AdvancedSettingsReducer.Action.updateDestination
         )
     }
-
+    
     var bindingForBackupPhrase: Binding<Bool> {
         self.destinationBinding.map(
             extract: { $0 == .backupPhrase },
             embed: { $0 ? .backupPhrase : nil }
         )
     }
-
+    
     var bindingForPrivateDataConsent: Binding<Bool> {
         self.destinationBinding.map(
             extract: { $0 == .privateDataConsent },
@@ -153,6 +166,13 @@ extension AdvancedSettingsViewStore {
         self.destinationBinding.map(
             extract: { $0 == .serverSetup },
             embed: { $0 ? .serverSetup : nil }
+        )
+    }
+    
+    var bindingDeleteWallet: Binding<Bool> {
+        self.destinationBinding.map(
+            extract: { $0 == .deleteWallet },
+            embed: { $0 ? .deleteWallet : nil }
         )
     }
 }
@@ -180,12 +200,20 @@ extension AdvancedSettingsStore {
             action: AdvancedSettingsReducer.Action.serverSetup
         )
     }
+    
+    func deleteWalletStore() -> StoreOf<DeleteWallet> {
+        self.scope(
+            state: \.deleteWallet,
+            action: AdvancedSettingsReducer.Action.deleteWallet
+        )
+    }
 }
 
 // MARK: Placeholders
 
 extension AdvancedSettingsReducer.State {
     public static let initial = AdvancedSettingsReducer.State(
+        deleteWallet: .initial,
         phraseDisplayState: RecoveryPhraseDisplay.State(
             phrase: nil,
             showBackButton: false,
@@ -205,6 +233,7 @@ extension AdvancedSettingsStore {
     
     public static let demo = AdvancedSettingsStore(
         initialState: .init(
+            deleteWallet: .initial,
             phraseDisplayState: RecoveryPhraseDisplay.State(
                 phrase: nil,
                 birthday: nil

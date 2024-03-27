@@ -19,6 +19,7 @@ let package = Package(
         .library(name: "DatabaseFiles", targets: ["DatabaseFiles"]),
         .library(name: "Date", targets: ["Date"]),
         .library(name: "Deeplink", targets: ["Deeplink"]),
+        .library(name: "DeleteWallet", targets: ["DeleteWallet"]),
         .library(name: "DerivationTool", targets: ["DerivationTool"]),
         .library(name: "DiskSpaceChecker", targets: ["DiskSpaceChecker"]),
         .library(name: "ExportLogs", targets: ["ExportLogs"]),
@@ -171,6 +172,18 @@ let package = Package(
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
             path: "Sources/Dependencies/Deeplink"
+        ),
+        .target(
+            name: "DeleteWallet",
+            dependencies: [
+                "Generated",
+                "SDKSynchronizer",
+                "UIComponents",
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
+            ],
+            path: "Sources/Features/DeleteWallet"
         ),
         .target(
             name: "DerivationTool",
@@ -504,6 +517,7 @@ let package = Package(
             name: "Settings",
             dependencies: [
                 "AppVersion",
+                "DeleteWallet",
                 "Generated",
                 "LocalAuthenticationHandler",
                 "Models",
