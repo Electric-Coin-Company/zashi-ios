@@ -6,6 +6,11 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.0.4 build 1 (2024-03-28)
+
+### Fixed
+- Orchard subtree roots are now fetched alongside Sapling subtree roots.
+
 ## 1.0.3 build 1 (2024-03-27)
 
 ### Fixed
