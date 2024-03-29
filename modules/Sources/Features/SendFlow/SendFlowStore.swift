@@ -43,9 +43,11 @@ public struct SendFlowReducer: Reducer {
         public var proposal: Proposal?
         public var scanState: Scan.State
         public var spendableBalance = Zatoshi.zero
+        public var shieldedWithPendingBalance = Zatoshi.zero
         public var totalBalance = Zatoshi.zero
         public var transactionAddressInputState: TransactionAddressTextFieldReducer.State
         public var transactionAmountInputState: TransactionAmountTextFieldReducer.State
+        public var transparentBalance: Zatoshi
 
         public var address: String {
             get { transactionAddressInputState.textFieldState.text.data }
@@ -110,7 +112,11 @@ public struct SendFlowReducer: Reducer {
         }
 
         public var isProcessingZeroAvailableBalance: Bool {
-            totalBalance.amount != spendableBalance.amount && spendableBalance.amount == 0
+            if spendableBalance.amount == 0 && transparentBalance.amount > 0 {
+                return false
+            }
+            
+            return totalBalance.amount != spendableBalance.amount && spendableBalance.amount == 0
         }
         
         public init(
@@ -121,9 +127,11 @@ public struct SendFlowReducer: Reducer {
             partialProposalErrorState: PartialProposalError.State,
             scanState: Scan.State,
             spendableBalance: Zatoshi = .zero,
+            shieldedWithPendingBalance: Zatoshi = .zero,
             totalBalance: Zatoshi = .zero,
             transactionAddressInputState: TransactionAddressTextFieldReducer.State,
-            transactionAmountInputState: TransactionAmountTextFieldReducer.State
+            transactionAmountInputState: TransactionAmountTextFieldReducer.State,
+            transparentBalance: Zatoshi = .zero
         ) {
             self.addMemoState = addMemoState
             self.destination = destination
@@ -135,6 +143,7 @@ public struct SendFlowReducer: Reducer {
             self.totalBalance = totalBalance
             self.transactionAddressInputState = transactionAddressInputState
             self.transactionAmountInputState = transactionAmountInputState
+            self.transparentBalance = transparentBalance
         }
     }
 
@@ -323,7 +332,9 @@ public struct SendFlowReducer: Reducer {
                 let latestAccountBalance = latestState.data.accountBalance?.data
                 
                 state.spendableBalance = (latestAccountBalance?.saplingBalance.spendableValue ?? .zero) + (latestAccountBalance?.orchardBalance.spendableValue ?? .zero)
-                state.totalBalance = (latestAccountBalance?.saplingBalance.total() ?? .zero) + (latestAccountBalance?.orchardBalance.total() ?? .zero)
+                state.shieldedWithPendingBalance = (latestAccountBalance?.saplingBalance.total() ?? .zero) + (latestAccountBalance?.orchardBalance.total() ?? .zero)
+                state.transparentBalance = latestAccountBalance?.unshielded ?? .zero
+                state.totalBalance = state.shieldedWithPendingBalance + state.transparentBalance
                 state.transactionAmountInputState.maxValue = state.spendableBalance.amount.redacted
                 return .none
 

@@ -55,6 +55,7 @@ class SettingsTests: XCTestCase {
         
         let store = TestStore(
             initialState: AdvancedSettingsReducer.State(
+                deleteWallet: .initial,
                 phraseDisplayState: RecoveryPhraseDisplay.State(phrase: nil),
                 privateDataConsentState: .initial,
                 serverSetupState: .initial
