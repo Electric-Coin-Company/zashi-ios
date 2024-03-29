@@ -6,18 +6,24 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
+
 import Generated
 
 struct MessageView: View {
+    let viewStore: TransactionListViewStore
+
     let message: String?
     let isSpending: Bool
     let isFailed: Bool
 
     public init(
+        viewStore: TransactionListViewStore,
         message: String?,
         isSpending: Bool,
         isFailed: Bool = false
     ) {
+        self.viewStore = viewStore
         self.message = message
         self.isSpending = isSpending
         self.isFailed = isFailed
@@ -51,6 +57,9 @@ struct MessageView: View {
                     ? .right
                     : .left
                 )
+                .padding(.bottom, 20)
+
+                TapToCopyTransactionDataView(viewStore: viewStore, data: memoText.redacted)
             }
             .padding(.bottom, 7)
             .padding(.vertical, 10)
@@ -64,14 +73,14 @@ struct MessageView: View {
 
 #Preview {
     VStack(alignment: .leading) {
-        MessageView(message: "Test", isSpending: true)
+        MessageView(viewStore: ViewStore(.placeholder, observe: { $0 }), message: "Test", isSpending: true)
             .padding(.bottom, 50)
 
-        MessageView(message: "Test", isSpending: true, isFailed: true)
+        MessageView(viewStore: ViewStore(.placeholder, observe: { $0 }), message: "Test", isSpending: true, isFailed: true)
             .padding(.bottom, 50)
 
-        MessageView(message: "Test", isSpending: false)
+        MessageView(viewStore: ViewStore(.placeholder, observe: { $0 }), message: "Test", isSpending: false)
 
-        MessageView(message: nil, isSpending: false)
+        MessageView(viewStore: ViewStore(.placeholder, observe: { $0 }), message: nil, isSpending: false)
     }
 }

@@ -33,6 +33,7 @@ struct TapToCopyTransactionDataView: View {
                     .foregroundColor(Asset.Colors.shade47.color)
             }
         }
+        .buttonStyle(.borderless)
     }
 }
 

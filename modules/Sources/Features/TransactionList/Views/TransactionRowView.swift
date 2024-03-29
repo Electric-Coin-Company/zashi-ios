@@ -52,6 +52,7 @@ public struct TransactionRowView: View {
         if transaction.isExpanded {
             Group {
                 MessageView(
+                    viewStore: viewStore,
                     message: transaction.textMemo?.toString(),
                     isSpending: transaction.isSpending,
                     isFailed: transaction.status == .failed

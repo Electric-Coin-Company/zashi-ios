@@ -33,11 +33,13 @@ public struct HomeReducer: Reducer {
         public var requiredTransactionConfirmations = 0
         public var scanState: Scan.State
         public var shieldedBalance: Zatoshi
+        public var shieldedWithPendingBalance: Zatoshi
         public var synchronizerStatusSnapshot: SyncStatusSnapshot
         public var syncProgressState: SyncProgressReducer.State
         public var walletConfig: WalletConfig
         public var totalBalance: Zatoshi
         public var transactionListState: TransactionListReducer.State
+        public var transparentBalance: Zatoshi
         public var migratingDatabase = true
         // TODO: [#311] - Get the ZEC price from the SDK, https://github.com/Electric-Coin-Company/zashi-ios/issues/311
         public var zecPrice = Decimal(140.0)
@@ -51,7 +53,11 @@ public struct HomeReducer: Reducer {
         }
         
         public var isProcessingZeroAvailableBalance: Bool {
-            totalBalance.amount != shieldedBalance.amount && shieldedBalance.amount == 0
+            if shieldedBalance.amount == 0 && transparentBalance.amount > 0 {
+                return false
+            }
+            
+            return totalBalance.amount != shieldedBalance.amount && shieldedBalance.amount == 0
         }
 
         public init(
@@ -61,10 +67,12 @@ public struct HomeReducer: Reducer {
             requiredTransactionConfirmations: Int = 0,
             scanState: Scan.State,
             shieldedBalance: Zatoshi,
+            shieldedWithPendingBalance: Zatoshi = .zero,
             synchronizerStatusSnapshot: SyncStatusSnapshot,
             syncProgressState: SyncProgressReducer.State,
             totalBalance: Zatoshi = .zero,
             transactionListState: TransactionListReducer.State,
+            transparentBalance: Zatoshi = .zero,
             walletConfig: WalletConfig,
             zecPrice: Decimal = Decimal(140.0)
         ) {
@@ -74,10 +82,12 @@ public struct HomeReducer: Reducer {
             self.requiredTransactionConfirmations = requiredTransactionConfirmations
             self.scanState = scanState
             self.shieldedBalance = shieldedBalance
+            self.shieldedWithPendingBalance = shieldedWithPendingBalance
             self.synchronizerStatusSnapshot = synchronizerStatusSnapshot
             self.syncProgressState = syncProgressState
             self.totalBalance = totalBalance
             self.transactionListState = transactionListState
+            self.transparentBalance = transparentBalance
             self.walletConfig = walletConfig
             self.zecPrice = zecPrice
         }
@@ -198,7 +208,9 @@ public struct HomeReducer: Reducer {
                 let accountBalance = latestState.data.accountBalance?.data
                 
                 state.shieldedBalance = (accountBalance?.saplingBalance.spendableValue ?? .zero) + (accountBalance?.orchardBalance.spendableValue ?? .zero)
-                state.totalBalance = (accountBalance?.saplingBalance.total() ?? .zero) + (accountBalance?.orchardBalance.total() ?? .zero)
+                state.shieldedWithPendingBalance = (accountBalance?.saplingBalance.total() ?? .zero) + (accountBalance?.orchardBalance.total() ?? .zero)
+                state.transparentBalance = accountBalance?.unshielded ?? .zero
+                state.totalBalance = state.shieldedWithPendingBalance + state.transparentBalance
 
                 switch snapshot.syncStatus {
                 case .error(let error):

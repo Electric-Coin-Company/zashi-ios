@@ -42,8 +42,9 @@ public struct BalanceBreakdownReducer: Reducer {
         public var partialProposalErrorState: PartialProposalError.State
         public var pendingTransactions: Zatoshi
         public var shieldedBalance: Zatoshi
-        public var totalBalance: Zatoshi
+        public var shieldedWithPendingBalance: Zatoshi
         public var syncProgressState: SyncProgressReducer.State
+        public var totalBalance: Zatoshi
         public var transparentBalance: Zatoshi
 
         public var isShieldableBalanceAvailable: Bool {
@@ -55,7 +56,11 @@ public struct BalanceBreakdownReducer: Reducer {
         }
         
         public var isProcessingZeroAvailableBalance: Bool {
-            totalBalance.amount != shieldedBalance.amount && shieldedBalance.amount == 0
+            if shieldedBalance.amount == 0 && transparentBalance.amount > 0 {
+                return false
+            }
+            
+            return totalBalance.amount != shieldedBalance.amount && shieldedBalance.amount == 0
         }
         
         public init(
@@ -68,6 +73,7 @@ public struct BalanceBreakdownReducer: Reducer {
             partialProposalErrorState: PartialProposalError.State,
             pendingTransactions: Zatoshi,
             shieldedBalance: Zatoshi,
+            shieldedWithPendingBalance: Zatoshi = .zero,
             syncProgressState: SyncProgressReducer.State,
             totalBalance: Zatoshi,
             transparentBalance: Zatoshi
@@ -81,6 +87,7 @@ public struct BalanceBreakdownReducer: Reducer {
             self.partialProposalErrorState = partialProposalErrorState
             self.pendingTransactions = pendingTransactions
             self.shieldedBalance = shieldedBalance
+            self.shieldedWithPendingBalance = shieldedWithPendingBalance
             self.totalBalance = totalBalance
             self.syncProgressState = syncProgressState
             self.transparentBalance = transparentBalance
@@ -212,8 +219,9 @@ public struct BalanceBreakdownReducer: Reducer {
                 let accountBalance = latestState.data.accountBalance?.data
                 
                 state.shieldedBalance = (accountBalance?.saplingBalance.spendableValue ?? .zero) + (accountBalance?.orchardBalance.spendableValue ?? .zero)
-                state.totalBalance = (accountBalance?.saplingBalance.total() ?? .zero) + (accountBalance?.orchardBalance.total() ?? .zero)
+                state.shieldedWithPendingBalance = (accountBalance?.saplingBalance.total() ?? .zero) + (accountBalance?.orchardBalance.total() ?? .zero)
                 state.transparentBalance = accountBalance?.unshielded ?? .zero
+                state.totalBalance = state.shieldedWithPendingBalance + state.transparentBalance
                 state.changePending = (accountBalance?.saplingBalance.changePendingConfirmation ?? .zero) + (accountBalance?.orchardBalance.changePendingConfirmation ?? .zero)
                 state.pendingTransactions = (accountBalance?.saplingBalance.valuePendingSpendability ?? .zero) + (accountBalance?.orchardBalance.valuePendingSpendability ?? .zero)
                 return .none

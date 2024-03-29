@@ -6,6 +6,16 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.0.4 build 2 (2024-03-29)
+
+### Added
+- Tap to Copy memo.
+
+### Fixed
+- Tap to Copy transaction ID button animation.
+- Transparent balance added up to the total balance.
+- Tap to transparent funds hint box area.
+
 ## 1.0.4 build 1 (2024-03-28)
 
 ### Fixed

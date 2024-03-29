@@ -172,21 +172,21 @@ extension BalanceBreakdownView {
     @ViewBuilder private func transparentBlockShielding(_ viewStore: BalanceBreakdownViewStore) -> some View {
         VStack {
             HStack(spacing: 0) {
-                Text(L10n.Balances.transparentBalance.uppercased())
-                    .font(.custom(FontFamily.Inter.regular.name, size: 13))
-                    .fixedSize()
-                
                 Button {
                     viewStore.send(.updateHintBoxVisibility(true))
                 } label: {
-                    Image(systemName: "questionmark.circle.fill")
-                        .resizable()
-                        .frame(width: 11, height: 11)
-                        .foregroundColor(Asset.Colors.primary.color)
-                        .padding(.bottom, 10)
-                        .padding(.leading, -5)
+                    HStack(spacing: 3) {
+                        Text(L10n.Balances.transparentBalance.uppercased())
+                            .font(.custom(FontFamily.Inter.regular.name, size: 13))
+                            .fixedSize()
+
+                        Image(systemName: "questionmark.circle.fill")
+                            .resizable()
+                            .frame(width: 11, height: 11)
+                            .padding(.bottom, 10)
+                    }
+                    .foregroundColor(Asset.Colors.primary.color)
                 }
-                .frame(width: 20, height: 20)
                 
                 Spacer()
                 
