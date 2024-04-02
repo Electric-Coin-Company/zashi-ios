@@ -55,10 +55,6 @@ public struct HomeView: View {
                 state: \.$alert,
                 action: { .alert($0) }
             ))
-            .navigationLinkEmpty(
-                isActive: viewStore.bindingForDestination(.notEnoughFreeDiskSpace),
-                destination: { NotEnoughFreeSpaceView(viewStore: viewStore) }
-            )
         }
         .task { await store.send(.restoreWalletTask).finish() }
     }

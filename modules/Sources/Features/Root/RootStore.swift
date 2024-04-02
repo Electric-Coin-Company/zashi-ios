@@ -2,11 +2,13 @@ import ComposableArchitecture
 import ZcashLightClientKit
 import DatabaseFiles
 import Deeplink
+import DiskSpaceChecker
 import ZcashSDKEnvironment
 import WalletStorage
 import WalletConfigProvider
 import UserPreferencesStorage
 import Models
+import NotEnoughFreeSpace
 import Welcome
 import Generated
 import Foundation
@@ -42,6 +44,7 @@ public struct RootReducer: Reducer {
         public var exportLogsState: ExportLogsReducer.State
         public var isLockedInKeychainUnavailableState = false
         public var isRestoringWallet = false
+        public var notEnoughFreeSpaceState: NotEnoughFreeSpace.State
         public var onboardingState: OnboardingFlowReducer.State
         public var phraseDisplayState: RecoveryPhraseDisplay.State
         public var sandboxState: SandboxReducer.State
@@ -58,6 +61,7 @@ public struct RootReducer: Reducer {
             exportLogsState: ExportLogsReducer.State,
             isLockedInKeychainUnavailableState: Bool = false,
             isRestoringWallet: Bool = false,
+            notEnoughFreeSpaceState: NotEnoughFreeSpace.State = .initial,
             onboardingState: OnboardingFlowReducer.State,
             phraseDisplayState: RecoveryPhraseDisplay.State,
             sandboxState: SandboxReducer.State,
@@ -73,6 +77,7 @@ public struct RootReducer: Reducer {
             self.isLockedInKeychainUnavailableState = isLockedInKeychainUnavailableState
             self.isRestoringWallet = isRestoringWallet
             self.onboardingState = onboardingState
+            self.notEnoughFreeSpaceState = notEnoughFreeSpaceState
             self.phraseDisplayState = phraseDisplayState
             self.sandboxState = sandboxState
             self.tabsState = tabsState
@@ -95,6 +100,7 @@ public struct RootReducer: Reducer {
         case exportLogs(ExportLogsReducer.Action)
         case tabs(TabsReducer.Action)
         case initialization(InitializationAction)
+        case notEnoughFreeSpace(NotEnoughFreeSpace.Action)
         case nukeWalletFailed
         case nukeWalletSucceeded
         case onboarding(OnboardingFlowReducer.Action)
@@ -112,6 +118,7 @@ public struct RootReducer: Reducer {
     @Dependency(\.databaseFiles) var databaseFiles
     @Dependency(\.deeplink) var deeplink
     @Dependency(\.derivationTool) var derivationTool
+    @Dependency(\.diskSpaceChecker) var diskSpaceChecker
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.numberFormatter) var numberFormatter
@@ -134,6 +141,10 @@ public struct RootReducer: Reducer {
 
         Scope(state: \.exportLogsState, action: /Action.exportLogs) {
             ExportLogsReducer()
+        }
+
+        Scope(state: \.notEnoughFreeSpaceState, action: /Action.notEnoughFreeSpace) {
+            NotEnoughFreeSpace()
         }
 
         Scope(state: \.onboardingState, action: /Action.onboarding) {

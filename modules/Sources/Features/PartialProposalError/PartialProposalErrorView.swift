@@ -22,16 +22,7 @@ public struct PartialProposalErrorView: View {
         ScrollView {
             WithPerceptionTracking {
                 VStack(alignment: .center) {
-                    ZashiIcon()
-                        .padding(.top, 20)
-                        .scaleEffect(2)
-                        .padding(.vertical, 30)
-                        .overlay {
-                            Asset.Assets.alertIcon.image
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .offset(x: 25, y: 15)
-                        }
+                    ZashiErrorIcon()
 
                     Group {
                         Text(L10n.ProposalPartial.message1)

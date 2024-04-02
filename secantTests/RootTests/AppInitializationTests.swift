@@ -46,6 +46,7 @@ class AppInitializationTests: XCTestCase {
         store.dependencies.databaseFiles = .noOp
         store.dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
         store.dependencies.derivationTool = .liveValue
+        store.dependencies.diskSpaceChecker = .mockEmptyDisk
         store.dependencies.mainQueue = .immediate
         store.dependencies.mnemonic = .mock
         store.dependencies.walletStorage.exportWallet = { storedWallet }
@@ -120,6 +121,7 @@ class AppInitializationTests: XCTestCase {
         store.dependencies.databaseFiles = .noOp
         store.dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
         store.dependencies.derivationTool = .liveValue
+        store.dependencies.diskSpaceChecker = .mockEmptyDisk
         store.dependencies.mainQueue = .immediate
         store.dependencies.mnemonic = .mock
         store.dependencies.walletStorage.exportWallet = { storedWallet }
@@ -184,6 +186,7 @@ class AppInitializationTests: XCTestCase {
 
         store.dependencies.databaseFiles = .noOp
         store.dependencies.databaseFiles.areDbFilesPresentFor = { _ in true }
+        store.dependencies.diskSpaceChecker = .mockEmptyDisk
         store.dependencies.walletStorage = .noOp
         store.dependencies.mainQueue = .immediate
         store.dependencies.walletConfigProvider = .noOp
@@ -222,6 +225,7 @@ class AppInitializationTests: XCTestCase {
         }
         
         store.dependencies.databaseFiles = .noOp
+        store.dependencies.diskSpaceChecker = .mockEmptyDisk
         store.dependencies.mainQueue = .immediate
         store.dependencies.walletStorage = .noOp
         store.dependencies.walletConfigProvider = .noOp

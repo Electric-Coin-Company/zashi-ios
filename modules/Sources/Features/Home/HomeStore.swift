@@ -3,8 +3,6 @@ import SwiftUI
 import AVFoundation
 import ComposableArchitecture
 import ZcashLightClientKit
-import AudioServices
-import DiskSpaceChecker
 import Utils
 import Models
 import Generated
@@ -22,12 +20,7 @@ public struct HomeReducer: Reducer {
     private let CancelEventId = UUID()
 
     public struct State: Equatable {
-        public enum Destination: Equatable {
-            case notEnoughFreeDiskSpace
-        }
-
         @PresentationState public var alert: AlertState<Action>?
-        public var destination: Destination?
         public var canRequestReview = false
         public var isRestoringWallet = false
         public var requiredTransactionConfirmations = 0
@@ -61,7 +54,6 @@ public struct HomeReducer: Reducer {
         }
 
         public init(
-            destination: Destination? = nil,
             canRequestReview: Bool = false,
             isRestoringWallet: Bool = false,
             requiredTransactionConfirmations: Int = 0,
@@ -76,7 +68,6 @@ public struct HomeReducer: Reducer {
             walletConfig: WalletConfig,
             zecPrice: Decimal = Decimal(140.0)
         ) {
-            self.destination = destination
             self.canRequestReview = canRequestReview
             self.isRestoringWallet = isRestoringWallet
             self.requiredTransactionConfirmations = requiredTransactionConfirmations
@@ -109,13 +100,10 @@ public struct HomeReducer: Reducer {
         case synchronizerStateChanged(RedactableSynchronizerState)
         case syncFailed(ZcashError)
         case syncProgress(SyncProgressReducer.Action)
-        case updateDestination(HomeReducer.State.Destination?)
         case updateTransactionList([TransactionState])
         case transactionList(TransactionListReducer.Action)
     }
     
-    @Dependency(\.audioServices) var audioServices
-    @Dependency(\.diskSpaceChecker) var diskSpaceChecker
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.restoreWalletStorage) var restoreWalletStorage
     @Dependency(\.reviewRequest) var reviewRequest
@@ -137,32 +125,26 @@ public struct HomeReducer: Reducer {
             switch action {
             case .onAppear:
                 state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
-
-                if diskSpaceChecker.hasEnoughFreeSpaceForSync() {
-                    return .merge(
-                        Effect.send(.updateDestination(nil)),
-                        .publisher {
-                            sdkSynchronizer.stateStream()
-                                .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                                .map { $0.redacted }
-                                .map(HomeReducer.Action.synchronizerStateChanged)
-                        }
-                        .cancellable(id: CancelStateId, cancelInFlight: true),
-                        .publisher {
-                            sdkSynchronizer.eventStream()
-                                .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                                .compactMap {
-                                    if case SynchronizerEvent.foundTransactions = $0 {
-                                        return HomeReducer.Action.foundTransactions
-                                    }
-                                    return nil
+                return .merge(
+                    .publisher {
+                        sdkSynchronizer.stateStream()
+                            .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                            .map { $0.redacted }
+                            .map(HomeReducer.Action.synchronizerStateChanged)
+                    }
+                    .cancellable(id: CancelStateId, cancelInFlight: true),
+                    .publisher {
+                        sdkSynchronizer.eventStream()
+                            .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                            .compactMap {
+                                if case SynchronizerEvent.foundTransactions = $0 {
+                                    return HomeReducer.Action.foundTransactions
                                 }
-                        }
-                        .cancellable(id: CancelEventId, cancelInFlight: true)
-                    )
-                } else {
-                    return Effect.send(.updateDestination(.notEnoughFreeDiskSpace))
-                }
+                                return nil
+                            }
+                    }
+                    .cancellable(id: CancelEventId, cancelInFlight: true)
+                )
                 
             case .onDisappear:
                 return .concatenate(
@@ -233,10 +215,6 @@ public struct HomeReducer: Reducer {
                     reviewRequest.foundTransactions()
                 }
                 
-            case .updateDestination(let destination):
-                state.destination = destination
-                return .none
-                
             case .transactionList:
                 return .none
                 
@@ -282,19 +260,6 @@ extension HomeStore {
         self.scope(
             state: \.transactionListState,
             action: HomeReducer.Action.transactionList
-        )
-    }
-}
-
-// MARK: - ViewStore
-
-extension HomeViewStore {
-    func bindingForDestination(_ destination: HomeReducer.State.Destination) -> Binding<Bool> {
-        self.binding(
-            get: { $0.destination == destination },
-            send: { isActive in
-                return .updateDestination(isActive ? destination : nil)
-            }
         )
     }
 }

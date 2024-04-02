@@ -60,35 +60,8 @@ class HomeTests: XCTestCase {
         let snapshot = SyncStatusSnapshot.snapshotFor(state: syncState.syncStatus)
 
         // expected side effects as a result of .onAppear registration
-        await store.receive(.updateDestination(nil))
         await store.receive(.synchronizerStateChanged(SynchronizerState.zero.redacted)) { state in
             state.synchronizerStatusSnapshot = snapshot
-        }
-
-        // long-living (cancelable) effects need to be properly canceled.
-        // the .onDisappear action cancels the observer of the synchronizer status change.
-        await store.send(.onDisappear)
-        
-        await store.finish()
-    }
-
-    @MainActor func testOnAppear_notEnoughSpaceOnDisk() async throws {
-        let store = TestStore(
-            initialState: .initial
-        ) {
-            HomeReducer()
-        }
-
-        store.dependencies.diskSpaceChecker = .mockFullDisk
-        store.dependencies.reviewRequest = .noOp
-
-        await store.send(.onAppear) { state in
-            state.requiredTransactionConfirmations = 10
-        }
-
-        // expected side effects as a result of .onAppear registration
-        await store.receive(.updateDestination(.notEnoughFreeDiskSpace)) { state in
-            state.destination = .notEnoughFreeDiskSpace
         }
 
         // long-living (cancelable) effects need to be properly canceled.

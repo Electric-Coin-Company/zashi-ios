@@ -21,6 +21,27 @@ public struct ZashiIcon: View {
     }
 }
 
+public struct ZashiErrorIcon: View {
+    public init() { }
+    
+    public var body: some View {
+        ZashiIcon()
+            .padding(.top, 20)
+            .scaleEffect(2)
+            .padding(.vertical, 30)
+            .overlay {
+                Asset.Assets.alertIcon.image
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .offset(x: 25, y: 15)
+            }
+    }
+}
+
 #Preview {
-    ZashiIcon()
+    VStack(spacing: 40) {
+        ZashiIcon()
+
+        ZashiErrorIcon()
+    }
 }
