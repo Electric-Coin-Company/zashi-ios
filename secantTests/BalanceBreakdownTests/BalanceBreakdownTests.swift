@@ -14,35 +14,11 @@ import Generated
 import BalanceBreakdown
 import Models
 import ZcashSDKEnvironment
+import WalletBalances
 @testable import secant_testnet
 
 @MainActor
 class BalanceBreakdownTests: XCTestCase {
-    func testOnAppear() async throws {
-        let store = TestStore(
-            initialState: .placeholder
-        ) {
-            BalanceBreakdownReducer()
-        }
-        
-        store.dependencies.sdkSynchronizer = .mocked()
-        store.dependencies.mainQueue = .immediate
-        store.dependencies.numberFormatter = .noOp
-        
-        await store.send(.onAppear) { state in
-            state.autoShieldingThreshold = ZcashSDKEnvironment.liveValue.shieldingThreshold
-        }
-        
-        // expected side effects as a result of .onAppear registration
-        await store.receive(.synchronizerStateChanged(SynchronizerState.zero.redacted))
-
-        // long-living (cancelable) effects need to be properly canceled.
-        // the .onDisappear action cancels the observer of the synchronizer status change.
-        await store.send(.onDisappear)
-        
-        await store.finish()
-    }
-
     func testShieldFundsFails() async throws {
         let store = TestStore(
             initialState: .placeholder
@@ -101,10 +77,9 @@ class BalanceBreakdownTests: XCTestCase {
                 isShieldingFunds: false,
                 partialProposalErrorState: .initial,
                 pendingTransactions: .zero,
-                shieldedBalance: .zero,
                 syncProgressState: .initial,
-                totalBalance: .zero,
-                transparentBalance: Zatoshi(1_000_000)
+                transparentBalance: Zatoshi(1_000_000),
+                walletBalancesState: .initial
             )
         ) {
             BalanceBreakdownReducer()
@@ -123,10 +98,9 @@ class BalanceBreakdownTests: XCTestCase {
                 isShieldingFunds: true,
                 partialProposalErrorState: .initial,
                 pendingTransactions: .zero,
-                shieldedBalance: .zero,
                 syncProgressState: .initial,
-                totalBalance: .zero,
-                transparentBalance: Zatoshi(1_000_000)
+                transparentBalance: Zatoshi(1_000_000),
+                walletBalancesState: .initial
             )
         ) {
             BalanceBreakdownReducer()

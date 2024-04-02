@@ -60,6 +60,7 @@ let package = Package(
         .library(name: "UserDefaults", targets: ["UserDefaults"]),
         .library(name: "UserPreferencesStorage", targets: ["UserPreferencesStorage"]),
         .library(name: "Utils", targets: ["Utils"]),
+        .library(name: "WalletBalances", targets: ["WalletBalances"]),
         .library(name: "WalletConfigProvider", targets: ["WalletConfigProvider"]),
         .library(name: "WalletStorage", targets: ["WalletStorage"]),
         .library(name: "Welcome", targets: ["Welcome"]),
@@ -245,6 +246,7 @@ let package = Package(
                 "UIComponents",
                 "Utils",
                 "TransactionList",
+                "WalletBalances",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
@@ -506,6 +508,7 @@ let package = Package(
                 "SDKSynchronizer",
                 "UIComponents",
                 "Utils",
+                "WalletBalances",
                 "WalletStorage",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -652,6 +655,19 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Utils"
+        ),
+        .target(
+            name: "WalletBalances",
+            dependencies: [
+                "Generated",
+                "Models",
+                "SDKSynchronizer",
+                "UIComponents",
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
+            ],
+            path: "Sources/Features/WalletBalances"
         ),
         .target(
             name: "WalletConfigProvider",

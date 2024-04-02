@@ -24,7 +24,7 @@ class TabsTests: XCTestCase {
             TabsReducer()
         }
         
-        await store.send(.home(.balanceBreakdown)) { state in
+        await store.send(.home(.walletBalances(.availableBalanceTapped))) { state in
             state.selectedTab = .balances
         }
     }
@@ -170,7 +170,7 @@ class TabsTests: XCTestCase {
     func testShieldFundsSucceed() async throws {
         var placeholderState = TabsReducer.State.initial
         placeholderState.selectedTab = .send
-        placeholderState.balanceBreakdownState.transparentBalance = Zatoshi(10_000)
+        placeholderState.balanceBreakdownState.walletBalancesState.transparentBalance = Zatoshi(10_000)
         
         let store = TestStore(
             initialState: placeholderState
@@ -193,7 +193,7 @@ class TabsTests: XCTestCase {
         }
         
         await store.receive(.balanceBreakdown(.shieldFundsSuccess)) { state in
-            state.balanceBreakdownState.transparentBalance = .zero
+            state.balanceBreakdownState.walletBalancesState.transparentBalance = .zero
             state.balanceBreakdownState.isShieldingFunds = false
         }
         

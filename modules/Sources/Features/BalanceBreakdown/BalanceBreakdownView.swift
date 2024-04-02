@@ -15,6 +15,7 @@ import Utils
 import Models
 import BalanceFormatter
 import SyncProgress
+import WalletBalances
 
 public struct BalanceBreakdownView: View {
     let store: BalanceBreakdownStore
@@ -28,21 +29,18 @@ public struct BalanceBreakdownView: View {
     public var body: some View {
         ScrollView {
             WithViewStore(store, observe: { $0 }) { viewStore in
-                BalanceWithIconView(balance: viewStore.totalBalance)
-                    .padding(.top, 40)
-                    .padding(.bottom, 5)
-                    .onAppear { viewStore.send(.onAppear) }
-                    .onDisappear { viewStore.send(.onDisappear) }
-
-                AvailableBalanceView(
-                    balance: viewStore.shieldedBalance,
+                WalletBalancesView(
+                    store: store.scope(
+                        state: \.walletBalancesState,
+                        action: BalanceBreakdownReducer.Action.walletBalances
+                    ),
                     tokenName: tokenName,
-                    showIndicator: viewStore.isProcessingZeroAvailableBalance
+                    underlinedAvailableBalance: false
                 )
-                
+
                 Asset.Colors.primary.color
                     .frame(height: 1)
-                    .padding(EdgeInsets(top: 30, leading: 30, bottom: 10, trailing: 30))
+                    .padding(EdgeInsets(top: 0, leading: 30, bottom: 10, trailing: 30))
                 
                 balancesBlock(viewStore)
                 
@@ -81,10 +79,12 @@ public struct BalanceBreakdownView: View {
         }
         .padding(.vertical, 1)
         .applyScreenBackground()
-        .alert(store: store.scope(
-            state: \.$alert,
-            action: { .alert($0) }
-        ))
+        .alert(
+            store: store.scope(
+                state: \.$alert,
+                action: { .alert($0) }
+            )
+        )
         .task { await store.send(.restoreWalletTask).finish() }
     }
 }
@@ -272,14 +272,12 @@ extension BalanceBreakdownView {
                     isHintBoxVisible: true,
                     partialProposalErrorState: .initial,
                     pendingTransactions: Zatoshi(25_234_000),
-                    shieldedBalance: Zatoshi(25_234_778),
                     syncProgressState: .init(
                         lastKnownSyncPercentage: 0.43,
                         synchronizerStatusSnapshot: SyncStatusSnapshot(.syncing(0.41)),
                         syncStatusMessage: "Syncing"
                     ),
-                    totalBalance: Zatoshi(25_234_778),
-                    transparentBalance: Zatoshi(25_234_778)
+                    walletBalancesState: .initial
                 )
             ) {
                 BalanceBreakdownReducer()

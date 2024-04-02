@@ -12,6 +12,7 @@ import Scan
 import UIComponents
 import BalanceFormatter
 import PartialProposalError
+import WalletBalances
 
 public struct SendFlowView: View {
     private enum InputID: Hashable {
@@ -36,14 +37,12 @@ public struct SendFlowView: View {
                 ScrollView {
                     ScrollViewReader { value in
                         VStack(alignment: .center) {
-                            BalanceWithIconView(balance: viewStore.totalBalance)
-                                .padding(.top, 40)
-                                .padding(.bottom, 5)
-                            
-                            AvailableBalanceView(
-                                balance: viewStore.spendableBalance,
-                                tokenName: tokenName,
-                                showIndicator: viewStore.isProcessingZeroAvailableBalance
+                            WalletBalancesView(
+                                store: store.scope(
+                                    state: \.walletBalancesState,
+                                    action: SendFlowReducer.Action.walletBalances
+                                ),
+                                tokenName: tokenName
                             )
                             
                             VStack(alignment: .leading) {
@@ -98,7 +97,6 @@ public struct SendFlowView: View {
                                 }
                                 .padding(.bottom, 20)
                             }
-                            .padding(.top, 40)
                             
                             MessageEditor(store: store.memoStore())
                                 .frame(height: 175)
@@ -143,7 +141,6 @@ public struct SendFlowView: View {
                         }
                     }
                     .onAppear { viewStore.send(.onAppear) }
-                    .onDisappear { viewStore.send(.onDisappear) }
                     .applyScreenBackground()
                     .navigationLinkEmpty(
                         isActive: viewStore.bindingForScanQR,
@@ -188,7 +185,8 @@ public struct SendFlowView: View {
                     partialProposalErrorState: .initial,
                     scanState: .initial,
                     transactionAddressInputState: .initial,
-                    transactionAmountInputState: .initial
+                    transactionAmountInputState: .initial,
+                    walletBalancesState: .initial
                 )
             ) {
                 SendFlowReducer()

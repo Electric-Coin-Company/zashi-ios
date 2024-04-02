@@ -44,12 +44,8 @@ final class ReviewRequestTests: XCTestCase {
         
         var syncState: SynchronizerState = .zero
         syncState.syncStatus = .upToDate
-        let snapshot = SyncStatusSnapshot.snapshotFor(state: syncState.syncStatus)
         
-        await store.send(.synchronizerStateChanged(syncState.redacted)) { state in
-            state.synchronizerStatusSnapshot = snapshot
-            state.migratingDatabase = false
-        }
+        await store.send(.synchronizerStateChanged(syncState.redacted))
         
         let storedDate = userDefaultsClient.objectForKey(ReviewRequestClient.Constants.latestSyncKey) as? TimeInterval
         XCTAssertEqual(now.timeIntervalSince1970, storedDate, "Review Request: stored date doesn't match the input.")

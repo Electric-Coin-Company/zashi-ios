@@ -125,7 +125,8 @@ public struct TabsReducer: Reducer {
             case .balanceBreakdown:
                 return .none
                 
-            case .home(.balanceBreakdown):
+            case .home(.walletBalances(.availableBalanceTapped)),
+                .send(.walletBalances(.availableBalanceTapped)):
                 state.selectedTab = .balances
                 return .none
                 

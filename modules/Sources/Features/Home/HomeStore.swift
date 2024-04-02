@@ -11,6 +11,7 @@ import TransactionList
 import Scan
 import SyncProgress
 import RestoreWalletStorage
+import WalletBalances
 
 public typealias HomeStore = Store<HomeReducer.State, HomeReducer.Action>
 public typealias HomeViewStore = ViewStore<HomeReducer.State, HomeReducer.Action>
@@ -23,71 +24,36 @@ public struct HomeReducer: Reducer {
         @PresentationState public var alert: AlertState<Action>?
         public var canRequestReview = false
         public var isRestoringWallet = false
-        public var requiredTransactionConfirmations = 0
+        public var migratingDatabase = true
         public var scanState: Scan.State
-        public var shieldedBalance: Zatoshi
-        public var shieldedWithPendingBalance: Zatoshi
-        public var synchronizerStatusSnapshot: SyncStatusSnapshot
         public var syncProgressState: SyncProgressReducer.State
         public var walletConfig: WalletConfig
-        public var totalBalance: Zatoshi
         public var transactionListState: TransactionListReducer.State
-        public var transparentBalance: Zatoshi
-        public var migratingDatabase = true
-        // TODO: [#311] - Get the ZEC price from the SDK, https://github.com/Electric-Coin-Company/zashi-ios/issues/311
-        public var zecPrice = Decimal(140.0)
-
-        public var totalCurrencyBalance: Zatoshi {
-            Zatoshi.from(decimal: shieldedBalance.decimalValue.decimalValue * zecPrice)
-        }
-
-        public var isSendButtonDisabled: Bool {
-            shieldedBalance.amount == 0
-        }
-        
-        public var isProcessingZeroAvailableBalance: Bool {
-            if shieldedBalance.amount == 0 && transparentBalance.amount > 0 {
-                return false
-            }
-            
-            return totalBalance.amount != shieldedBalance.amount && shieldedBalance.amount == 0
-        }
+        public var walletBalancesState: WalletBalances.State
 
         public init(
             canRequestReview: Bool = false,
             isRestoringWallet: Bool = false,
-            requiredTransactionConfirmations: Int = 0,
+            migratingDatabase: Bool = true,
             scanState: Scan.State,
-            shieldedBalance: Zatoshi,
-            shieldedWithPendingBalance: Zatoshi = .zero,
-            synchronizerStatusSnapshot: SyncStatusSnapshot,
             syncProgressState: SyncProgressReducer.State,
-            totalBalance: Zatoshi = .zero,
             transactionListState: TransactionListReducer.State,
-            transparentBalance: Zatoshi = .zero,
-            walletConfig: WalletConfig,
-            zecPrice: Decimal = Decimal(140.0)
+            walletBalancesState: WalletBalances.State,
+            walletConfig: WalletConfig
         ) {
             self.canRequestReview = canRequestReview
             self.isRestoringWallet = isRestoringWallet
-            self.requiredTransactionConfirmations = requiredTransactionConfirmations
+            self.migratingDatabase = migratingDatabase
             self.scanState = scanState
-            self.shieldedBalance = shieldedBalance
-            self.shieldedWithPendingBalance = shieldedWithPendingBalance
-            self.synchronizerStatusSnapshot = synchronizerStatusSnapshot
             self.syncProgressState = syncProgressState
-            self.totalBalance = totalBalance
             self.transactionListState = transactionListState
-            self.transparentBalance = transparentBalance
             self.walletConfig = walletConfig
-            self.zecPrice = zecPrice
+            self.walletBalancesState = walletBalancesState
         }
     }
 
     public enum Action: Equatable {
         case alert(PresentationAction<Action>)
-        case balanceBreakdown
-        case debugMenuStartup
         case foundTransactions
         case onAppear
         case onDisappear
@@ -102,6 +68,7 @@ public struct HomeReducer: Reducer {
         case syncProgress(SyncProgressReducer.Action)
         case updateTransactionList([TransactionState])
         case transactionList(TransactionListReducer.Action)
+        case walletBalances(WalletBalances.Action)
     }
     
     @Dependency(\.mainQueue) var mainQueue
@@ -121,19 +88,16 @@ public struct HomeReducer: Reducer {
             SyncProgressReducer()
         }
 
+        Scope(state: \.walletBalancesState, action: /Action.walletBalances) {
+            WalletBalances()
+        }
+
         Reduce { state, action in
             switch action {
             case .onAppear:
-                state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
-                return .merge(
-                    .publisher {
-                        sdkSynchronizer.stateStream()
-                            .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                            .map { $0.redacted }
-                            .map(HomeReducer.Action.synchronizerStateChanged)
-                    }
-                    .cancellable(id: CancelStateId, cancelInFlight: true),
-                    .publisher {
+                state.walletBalancesState.migratingDatabase = state.migratingDatabase
+                state.migratingDatabase = false
+                return .publisher {
                         sdkSynchronizer.eventStream()
                             .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
                             .compactMap {
@@ -144,7 +108,6 @@ public struct HomeReducer: Reducer {
                             }
                     }
                     .cancellable(id: CancelEventId, cancelInFlight: true)
-                )
                 
             case .onDisappear:
                 return .concatenate(
@@ -181,19 +144,6 @@ public struct HomeReducer: Reducer {
                 
             case .synchronizerStateChanged(let latestState):
                 let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.data.syncStatus)
-
-                if snapshot.syncStatus != .unprepared {
-                    state.migratingDatabase = false
-                }
-
-                state.synchronizerStatusSnapshot = snapshot
-                let accountBalance = latestState.data.accountBalance?.data
-                
-                state.shieldedBalance = (accountBalance?.saplingBalance.spendableValue ?? .zero) + (accountBalance?.orchardBalance.spendableValue ?? .zero)
-                state.shieldedWithPendingBalance = (accountBalance?.saplingBalance.total() ?? .zero) + (accountBalance?.orchardBalance.total() ?? .zero)
-                state.transparentBalance = accountBalance?.unshielded ?? .zero
-                state.totalBalance = state.shieldedWithPendingBalance + state.transparentBalance
-
                 switch snapshot.syncStatus {
                 case .error(let error):
                     return Effect.send(.showSynchronizerErrorAlert(error.toZcashError()))
@@ -230,13 +180,10 @@ public struct HomeReducer: Reducer {
             case .showSynchronizerErrorAlert:
                 return .none
                 
-            case .debugMenuStartup:
-                return .none
-                
             case .syncFailed:
                 return .none
 
-            case .balanceBreakdown:
+            case .walletBalances:
                 return .none
                 
             case .alert(.presented(let action)):
@@ -270,10 +217,9 @@ extension HomeReducer.State {
     public static var initial: Self {
         .init(
             scanState: .initial,
-            shieldedBalance: .zero,
-            synchronizerStatusSnapshot: .initial,
             syncProgressState: .initial,
             transactionListState: .initial,
+            walletBalancesState: .initial,
             walletConfig: .initial
         )
     }
@@ -292,12 +238,9 @@ extension HomeStore {
         HomeStore(
             initialState: .init(
                 scanState: .initial,
-                shieldedBalance: .zero,
-                synchronizerStatusSnapshot: .snapshotFor(
-                    state: .error(ZcashError.synchronizerNotPrepared)
-                ),
                 syncProgressState: .initial,
                 transactionListState: .initial,
+                walletBalancesState: .initial,
                 walletConfig: .initial
             )
         ) {

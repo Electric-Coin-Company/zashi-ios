@@ -38,10 +38,9 @@ class HomeSnapshotTests: XCTestCase {
         let store = HomeStore(
             initialState: .init(
                 scanState: .initial,
-                shieldedBalance: Zatoshi(12_345_000),
-                synchronizerStatusSnapshot: .initial,
                 syncProgressState: .initial,
                 transactionListState: .init(transactionList: IdentifiedArrayOf(uniqueElements: transactionList)),
+                walletBalancesState: .initial,
                 walletConfig: .initial
             )
         ) {

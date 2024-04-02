@@ -22,16 +22,15 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
                 isShieldingFunds: false,
                 partialProposalErrorState: .initial,
                 pendingTransactions: .zero,
-                shieldedBalance: Zatoshi(123_000_000_000),
                 syncProgressState: .initial,
-                totalBalance: Zatoshi(123_000_000_000),
-                transparentBalance: Zatoshi(850_000_000)
+                walletBalancesState: .initial
             )
         ) {
             BalanceBreakdownReducer()
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.mainQueue, .immediate)
                 .dependency(\.restoreWalletStorage, .noOp)
+                .dependency(\.diskSpaceChecker, .mockEmptyDisk)
         }
         
         addAttachments(BalanceBreakdownView(store: store, tokenName: "ZEC"))
@@ -46,16 +45,15 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
                 isHintBoxVisible: true,
                 partialProposalErrorState: .initial,
                 pendingTransactions: .zero,
-                shieldedBalance: Zatoshi(123_000_000_000),
                 syncProgressState: .initial,
-                totalBalance: Zatoshi(123_000_000_000),
-                transparentBalance: Zatoshi(850_000_000)
+                walletBalancesState: .initial
             )
         ) {
             BalanceBreakdownReducer()
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.mainQueue, .immediate)
                 .dependency(\.restoreWalletStorage, .noOp)
+                .dependency(\.diskSpaceChecker, .mockEmptyDisk)
         }
         
         addAttachments(BalanceBreakdownView(store: store, tokenName: "ZEC"))

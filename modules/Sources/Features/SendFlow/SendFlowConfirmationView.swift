@@ -153,7 +153,6 @@ public struct SendFlowConfirmationView: View {
                     ),
                     partialProposalErrorState: .initial,
                     scanState: .initial,
-                    spendableBalance: Zatoshi(4412323012_345),
                     transactionAddressInputState:
                         TransactionAddressTextFieldReducer.State(
                             textFieldState: 
@@ -162,7 +161,8 @@ public struct SendFlowConfirmationView: View {
                                 text: "utest1zkkkjfxkamagznjr6ayemffj2d2gacdwpzcyw669pvg06xevzqslpmm27zjsctlkstl2vsw62xrjktmzqcu4yu9zdhdxqz3kafa4j2q85y6mv74rzjcgjg8c0ytrg7dwyzwtgnuc76h".redacted
                             )
                         ),
-                    transactionAmountInputState: .initial
+                    transactionAmountInputState: .initial,
+                    walletBalancesState: .initial
                 )
             ) {
                 SendFlowReducer()
