@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Added
+- Open settings button added to the scan screen for a case when the camera is disabled.
+
 ## 1.0.4 build 2 (2024-03-29)
 
 ### Added
