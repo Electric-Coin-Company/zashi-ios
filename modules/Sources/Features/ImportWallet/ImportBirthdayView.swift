@@ -12,6 +12,7 @@ import UIComponents
 
 public struct ImportBirthdayView: View {
     var store: ImportWalletStore
+    @FocusState public var isFocused: Bool
 
     public init(store: ImportWalletStore) {
         self.store = store
@@ -33,6 +34,7 @@ public struct ImportBirthdayView: View {
                 TextField("", text: viewStore.bindingForRedactableBirthday(viewStore.birthdayHeight))
                     .frame(height: 40)
                     .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
+                    .focused($isFocused)
                     .keyboardType(.numberPad)
                     .autocapitalization(.none)
                     .multilineTextAlignment(.center)
@@ -40,6 +42,9 @@ public struct ImportBirthdayView: View {
                         Color.black
                             .frame(height: 1)
                             .offset(x: 0, y: 20)
+                    }
+                    .onAppear {
+                        isFocused = true
                     }
                 
                 Spacer()
