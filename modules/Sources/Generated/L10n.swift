@@ -236,10 +236,15 @@ public enum L10n {
     public static let message = L10n.tr("Localizable", "nefs.message", fallback: "Not enough space on disk to do synchronisation!")
   }
   public enum NotEnoughFreeSpace {
-    /// Zashi requires at least %@ GB of space to operate but there is only %@ MB available. Go to your device settings and make more space available if you wish to use the Zashi app.
-    public static func message(_ p1: Any, _ p2: Any) -> String {
-      return L10n.tr("Localizable", "notEnoughFreeSpace.message", String(describing: p1), String(describing: p2), fallback: "Zashi requires at least %@ GB of space to operate but there is only %@ MB available. Go to your device settings and make more space available if you wish to use the Zashi app.")
+    /// Zashi requires at
+    /// least %@ GB of space to
+    /// operate but there is only
+    /// %@ MB available.
+    public static func message1(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "notEnoughFreeSpace.message1", String(describing: p1), String(describing: p2), fallback: "Zashi requires at\nleast %@ GB of space to\noperate but there is only\n%@ MB available.")
     }
+    /// Go to your device settings and make more space available if you wish to use the Zashi app.
+    public static let message2 = L10n.tr("Localizable", "notEnoughFreeSpace.message2", fallback: "Go to your device settings and make more space available if you wish to use the Zashi app.")
     /// Not enough free space
     public static let title = L10n.tr("Localizable", "notEnoughFreeSpace.title", fallback: "Not enough free space")
   }

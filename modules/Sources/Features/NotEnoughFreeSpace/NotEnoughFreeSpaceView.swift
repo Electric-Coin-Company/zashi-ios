@@ -25,13 +25,18 @@ public struct NotEnoughFreeSpaceView: View {
                 ZashiErrorIcon()
                     .padding(.vertical, 20)
                 
-                Text(L10n.NotEnoughFreeSpace.message(store.freeSpaceRequiredForSync, store.freeSpace))
-                    .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                Text(L10n.NotEnoughFreeSpace.message1(store.freeSpaceRequiredForSync, store.freeSpace))
+                    .font(.custom(FontFamily.Inter.bold.name, size: 22))
                     .multilineTextAlignment(.center)
-                
+                    .padding(.bottom, 20)
+
+                Text(L10n.NotEnoughFreeSpace.message2)
+                    .font(.custom(FontFamily.Inter.regular.name, size: 17))
+                    .multilineTextAlignment(.center)
+
                 Spacer()
             }
-            .padding(.horizontal, 60)
+            .padding(.horizontal, 53)
             .padding(.vertical, 1)
             .onAppear { store.send(.onAppear) }
             .navigationBarTitleDisplayMode(.inline)
