@@ -8,15 +8,17 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ### Added
 - Open settings button added to the scan screen for a case when the camera is disabled.
+- Content of Zashi is hidden in system's app switcher.
+- Birthday field is auto-focused in the restore flow.
+- Information about restore is persisted until fully synced wallet.
+
+### Changed
+- Zashi requires 1 GB of free space to operate. We have updated the user experience to display a message when this requirement is not met, indicating the actual amount of free space available. From this screen, you can access the settings to obtain the recovery phrase if needed.
 
 ## 1.0.4 build 2 (2024-03-29)
 
 ### Added
 - Tap to Copy memo.
-- Content of Zashi is hidden in system's app switcher.
-
-### Changed
-- Zashi requires 1 GB of free space to operate. We have updated the user experience to display a message when this requirement is not met, indicating the actual amount of free space available. From this screen, you can access the settings to obtain the recovery phrase if needed.
 
 ### Fixed
 - Tap to Copy transaction ID button animation.

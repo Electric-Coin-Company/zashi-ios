@@ -15,6 +15,10 @@ import Utils
 /// In this file is a collection of helpers that control all state and action related operations
 /// for the `RootReducer` with a connection to the app/wallet initialization and erasure of the wallet.
 extension RootReducer {
+    public enum Constants {
+        static let udIsRestoringWallet = "udIsRestoringWallet"
+    }
+    
     public enum InitializationAction: Equatable {
         case appDelegate(AppDelegateAction)
         case checkBackupPhraseValidation
@@ -122,6 +126,7 @@ extension RootReducer {
             case .initialization(.checkRestoreWalletFlag(let syncStatus)):
                 if state.isRestoringWallet && syncStatus == .upToDate {
                     state.isRestoringWallet = false
+                    userDefaults.remove(Constants.udIsRestoringWallet)
                     return .run { _ in
                         await restoreWalletStorage.updateValue(false)
                     }
@@ -221,9 +226,21 @@ extension RootReducer {
                 case .keysMissing:
                     state.appInitializationState = .keysMissing
                     return .send(.destination(.updateDestination(.onboarding)))
-                case .initialized, .filesMissing:
-                    if walletState == .filesMissing {
-                        state.appInitializationState = .filesMissing
+                case .filesMissing:
+                    state.appInitializationState = .filesMissing
+                    state.isRestoringWallet = true
+                    userDefaults.setValue(true, Constants.udIsRestoringWallet)
+                    return .concatenate(
+                        .merge(
+                            Effect.send(.initialization(.initializeSDK(.restoreWallet))),
+                            .run { _ in
+                                await restoreWalletStorage.updateValue(true)
+                            }
+                        ),
+                        Effect.send(.initialization(.checkBackupPhraseValidation))
+                    )
+                case .initialized:
+                    if let isRestoringWallet = userDefaults.objectForKey(Constants.udIsRestoringWallet) as? Bool, isRestoringWallet {
                         state.isRestoringWallet = true
                         return .concatenate(
                             .merge(
@@ -234,12 +251,11 @@ extension RootReducer {
                             ),
                             Effect.send(.initialization(.checkBackupPhraseValidation))
                         )
-                    } else {
-                        return .concatenate(
-                            Effect.send(.initialization(.initializeSDK(.existingWallet))),
-                            Effect.send(.initialization(.checkBackupPhraseValidation))
-                        )
                     }
+                    return .concatenate(
+                        Effect.send(.initialization(.initializeSDK(.existingWallet))),
+                        Effect.send(.initialization(.checkBackupPhraseValidation))
+                    )
                 case .uninitialized:
                     state.appInitializationState = .uninitialized
                     return .run { send in
@@ -430,6 +446,7 @@ extension RootReducer {
 
             case .onboarding(.importWallet(.initializeSDK)):
                 state.isRestoringWallet = true
+                userDefaults.setValue(true, Constants.udIsRestoringWallet)
                 return .merge(
                     Effect.send(.initialization(.initializeSDK(.restoreWallet))),
                     .run { _ in
