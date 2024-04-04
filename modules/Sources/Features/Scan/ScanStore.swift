@@ -24,6 +24,10 @@ public struct Scan {
         public var isTorchAvailable = false
         public var isTorchOn = false
 
+        public var isCameraEnabled: Bool {
+            info.isEmpty
+        }
+        
         public init(
             info: String = "",
             isTorchAvailable: Bool = false,

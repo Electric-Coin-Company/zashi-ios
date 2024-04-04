@@ -11,8 +11,9 @@ import Generated
 import UIComponents
 
 public struct ScanView: View {
-    let store: StoreOf<Scan>
+    @Environment(\.openURL) var openURL
 
+    let store: StoreOf<Scan>
     
     public init(store: StoreOf<Scan>) {
         self.store = store
@@ -44,21 +45,32 @@ public struct ScanView: View {
                         .multilineTextAlignment(.center)
                         .padding(.bottom, 20)
                     
-                    Button(L10n.General.cancel.uppercased()) {
-                        store.send(.cancelPressed)
+                    if !store.isCameraEnabled {
+                        Button(L10n.Scan.openSettings.uppercased()) {
+                            if let url = URL(string: UIApplication.openSettingsURLString) {
+                                openURL(url)
+                            }
+                        }
+                        .zcashStyle(.secondary)
+                        .padding(.horizontal, 50)
+                        .padding(.bottom, 70)
+                    } else {
+                        Button(L10n.General.cancel.uppercased()) {
+                            store.send(.cancelPressed)
+                        }
+                        .zcashStyle(.secondary)
+                        .padding(.horizontal, 50)
+                        .padding(.bottom, 70)
                     }
-                    .zcashStyle(.secondary)
-                    .padding(.horizontal, 50)
-                    .padding(.bottom, 70)
                 }
                 .padding(.horizontal, 30)
             }
             .edgesIgnoringSafeArea(.all)
             .ignoresSafeArea()
-            .navigationBarHidden(true)
             .applyScreenBackground()
             .onAppear { store.send(.onAppear) }
             .onDisappear { store.send(.onDisappear) }
+            .zashiBack(hidden: store.isCameraEnabled, invertedColors: true)
         }
     }
 }
