@@ -9,6 +9,7 @@ import ComposableArchitecture
 import Foundation
 import ZcashLightClientKit
 import Models
+import NotEnoughFreeSpace
 import Utils
 
 /// In this file is a collection of helpers that control all state and action related operations
@@ -132,6 +133,13 @@ extension RootReducer {
                 return .none
                 
             case .initialization(.retryStart):
+                if !diskSpaceChecker.hasEnoughFreeSpaceForSync() {
+                    state.destinationState.preNotEnoughFreeSpaceDestination = state.destinationState.internalDestination
+                    return .send(.destination(.updateDestination(.notEnoughFreeSpace)))
+                } else if let preNotEnoughFreeSpaceDestination = state.destinationState.preNotEnoughFreeSpaceDestination {
+                    state.destinationState.internalDestination = preNotEnoughFreeSpaceDestination
+                    state.destinationState.preNotEnoughFreeSpaceDestination = nil
+                }
                 // Try the start only if the synchronizer has been already prepared
                 guard sdkSynchronizer.latestState().syncStatus.isPrepared else {
                     return .none
@@ -182,6 +190,13 @@ extension RootReducer {
                 )
                 
             case .initialization(.initialSetups):
+                if !diskSpaceChecker.hasEnoughFreeSpaceForSync() {
+                    state.destinationState.preNotEnoughFreeSpaceDestination = state.destinationState.internalDestination
+                    return .send(.destination(.updateDestination(.notEnoughFreeSpace)))
+                } else if let preNotEnoughFreeSpaceDestination = state.destinationState.preNotEnoughFreeSpaceDestination {
+                    state.destinationState.internalDestination = preNotEnoughFreeSpaceDestination
+                    state.destinationState.preNotEnoughFreeSpaceDestination = nil
+                }
                 // TODO: [#524] finish all the wallet events according to definition, https://github.com/Electric-Coin-Company/zashi-ios/issues/524
                 LoggerProxy.event(".appDelegate(.didFinishLaunching)")
                 /// We need to fetch data from keychain, in order to be 100% sure the keychain can be read we delay the check a bit
@@ -453,7 +468,7 @@ extension RootReducer {
             case .onboarding(.securityWarning(.recoveryPhraseDisplay(.finishedPressed))):
                 return Effect.send(.destination(.updateDestination(.tabs)))
                 
-            case .tabs, .destination, .onboarding, .sandbox, .phraseDisplay,
+            case .tabs, .destination, .onboarding, .sandbox, .phraseDisplay, .notEnoughFreeSpace,
                     .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, .confirmationDialog:
                 return .none
             }

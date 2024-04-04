@@ -15,6 +15,9 @@ directly impact users rather than highlighting other crucial architectural updat
 - Tap to Copy memo.
 - Content of Zashi is hidden in system's app switcher.
 
+### Changed
+- Zashi requires 1 GB of free space to operate. We have updated the user experience to display a message when this requirement is not met, indicating the actual amount of free space available. From this screen, you can access the settings to obtain the recovery phrase if needed.
+
 ### Fixed
 - Tap to Copy transaction ID button animation.
 - Transparent balance added up to the total balance.

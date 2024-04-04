@@ -32,6 +32,7 @@ let package = Package(
         .library(name: "LogsHandler", targets: ["LogsHandler"]),
         .library(name: "MnemonicClient", targets: ["MnemonicClient"]),
         .library(name: "Models", targets: ["Models"]),
+        .library(name: "NotEnoughFreeSpace", targets: ["NotEnoughFreeSpace"]),
         .library(name: "NumberFormatter", targets: ["NumberFormatter"]),
         .library(name: "OnboardingFlow", targets: ["OnboardingFlow"]),
         .library(name: "PartialProposalError", targets: ["PartialProposalError"]),
@@ -233,8 +234,6 @@ let package = Package(
         .target(
             name: "Home",
             dependencies: [
-                "AudioServices",
-                "DiskSpaceChecker",
                 "Generated",
                 "Models",
                 "RestoreWalletStorage",
@@ -298,6 +297,18 @@ let package = Package(
                 .product(name: "MnemonicSwift", package: "MnemonicSwift")
             ],
             path: "Sources/Models"
+        ),
+        .target(
+            name: "NotEnoughFreeSpace",
+            dependencies: [
+                "DiskSpaceChecker",
+                "Generated",
+                "Settings",
+                "UIComponents",
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Features/NotEnoughFreeSpace"
         ),
         .target(
             name: "NumberFormatter",
@@ -393,10 +404,12 @@ let package = Package(
                 "DatabaseFiles",
                 "Deeplink",
                 "DerivationTool",
+                "DiskSpaceChecker",
                 "ExportLogs",
                 "Generated",
                 "MnemonicClient",
                 "Models",
+                "NotEnoughFreeSpace",
                 "NumberFormatter",
                 "OnboardingFlow",
                 "Pasteboard",

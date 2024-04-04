@@ -16,6 +16,7 @@ import DerivationTool
 extension RootReducer {
     public struct DestinationState: Equatable {
         public enum Destination: Equatable {
+            case notEnoughFreeSpace
             case onboarding
             case phraseDisplay
             case sandbox
@@ -25,6 +26,7 @@ extension RootReducer {
         }
         
         public var internalDestination: Destination = .welcome
+        public var preNotEnoughFreeSpaceDestination: Destination?
         public var previousDestination: Destination?
 
         public var destination: Destination {
@@ -106,7 +108,8 @@ extension RootReducer {
                 return .none
 
             case .tabs, .initialization, .onboarding, .sandbox, .updateStateAfterConfigUpdate, .alert, .phraseDisplay, .synchronizerStateChanged,
-                    .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .exportLogs, .confirmationDialog:
+                    .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .exportLogs, .confirmationDialog,
+                    .notEnoughFreeSpace:
                 return .none
             }
             

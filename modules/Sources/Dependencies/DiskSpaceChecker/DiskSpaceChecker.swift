@@ -10,11 +10,11 @@ import Foundation
 public struct DiskSpaceChecker {
     /// Free space on disk in bytes required to do sync
     public func freeSpaceRequiredForSync() -> Int64 {
-        return 1 * 1024 * 1024 * 1024 // 1GB converted to bytes
+        1 * 1024 * 1024 * 1024 // 1GB converted to bytes
     }
 
     public func hasEnoughFreeSpaceForSync() -> Bool {
-        return freeSpace() > freeSpaceRequiredForSync()
+        freeSpace() > freeSpaceRequiredForSync()
     }
 
     public func freeSpace() -> Int64 {

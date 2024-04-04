@@ -177,6 +177,10 @@
 "deleteWallet.iUnderstand" = "I understand";
 "deleteWallet.actionButtonTitle" = "Delete Zashi";
 
+// MARK: - Not Enogh Free Space
+"notEnoughFreeSpace.title" = "Not enough free space";
+"notEnoughFreeSpace.message" = "Zashi requires at least %@ GB of space to operate but there is only %@ MB available. Go to your device settings and make more space available if you wish to use the Zashi app.";
+
 // MARK: - Settings
 "settings.feedback" = "Send us feedback";
 "settings.advanced" = "Advanced";

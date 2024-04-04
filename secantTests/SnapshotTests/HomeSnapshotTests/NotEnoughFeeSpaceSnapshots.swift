@@ -5,16 +5,20 @@
 //  Created by Michal Fousek on 28.09.2022.
 //
 
-import Foundation
-
 import XCTest
 import ComposableArchitecture
-import ZcashLightClientKit
-import Home
+import NotEnoughFreeSpace
 @testable import secant_testnet
 
 class NotEnoughFeeSpaceSnapshots: XCTestCase {
     func testNotEnoughFreeSpaceSnapshot() throws {
-        addAttachments(NotEnoughFreeSpaceView(viewStore: ViewStore(HomeStore.placeholder, observe: { $0 })))
+        let store = StoreOf<NotEnoughFreeSpace>(
+            initialState: .initial
+        ) {
+            NotEnoughFreeSpace()
+                .dependency(\.diskSpaceChecker, .mockEmptyDisk)
+        }
+        
+        addAttachments(NotEnoughFreeSpaceView(store: store))
     }
 }

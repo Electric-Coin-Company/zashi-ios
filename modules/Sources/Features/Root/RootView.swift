@@ -3,6 +3,7 @@ import StoreKit
 import ComposableArchitecture
 import Generated
 import Models
+import NotEnoughFreeSpace
 import RecoveryPhraseDisplay
 import Welcome
 import ExportLogs
@@ -69,6 +70,20 @@ private extension RootView {
         WithViewStore(store, observe: { $0 }) { viewStore in
             Group {
                 switch viewStore.destinationState.destination {
+                case .notEnoughFreeSpace:
+                    NavigationView {
+                        NotEnoughFreeSpaceView(
+                            store: store.scope(
+                                state: \.notEnoughFreeSpaceState,
+                                action: RootReducer.Action.notEnoughFreeSpace
+                            )
+                        )
+                    }
+                    .navigationViewStyle(.stack)
+                    .overlayedWithSplash(viewStore.splashAppeared) {
+                        viewStore.send(.splashRemovalRequested)
+                    }
+
                 case .tabs:
                     NavigationView {
                         TabsView(
