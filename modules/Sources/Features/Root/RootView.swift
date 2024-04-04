@@ -13,6 +13,9 @@ import ZcashLightClientKit
 import UIComponents
 
 public struct RootView: View {
+    @Environment(\.scenePhase) var scenePhase
+    @State var covered = false
+    
     let store: RootStore
     let tokenName: String
     let networkType: NetworkType
@@ -24,7 +27,26 @@ public struct RootView: View {
     }
     
     public var body: some View {
-        switchOverDestination()
+        Group {
+            if covered {
+                VStack {
+                    ZashiIcon()
+                        .scaleEffect(2.0)
+                        .padding(.bottom, 180)
+                }
+                .applyScreenBackground()
+            } else {
+                switchOverDestination()
+            }
+        }
+        .onChange(of: scenePhase) { value in
+            switch value {
+            case .active:
+                withAnimation { covered = false }
+            default: 
+                withAnimation { covered = true }
+            }
+        }
     }
 }
 
