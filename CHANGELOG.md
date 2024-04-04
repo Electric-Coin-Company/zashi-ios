@@ -10,6 +10,7 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ### Added
 - Tap to Copy memo.
+- Content of Zashi is hidden in system's app switcher.
 
 ### Fixed
 - Tap to Copy transaction ID button animation.
