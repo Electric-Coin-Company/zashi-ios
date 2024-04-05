@@ -386,7 +386,7 @@ extension RootReducer {
                 }
                 return .none
                 
-            case .welcome(.debugMenuStartup), .tabs(.home(.debugMenuStartup)):
+            case .welcome(.debugMenuStartup), .tabs(.home(.walletBalances(.debugMenuStartup))):
                 return .concatenate(
                     Effect.cancel(id: CancelId),
                     Effect.send(.destination(.updateDestination(.startup)))

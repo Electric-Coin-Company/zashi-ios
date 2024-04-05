@@ -13,22 +13,30 @@ public struct AvailableBalanceView: View {
     let balance: Zatoshi
     let tokenName: String
     let showIndicator: Bool
+    let underlined: Bool
     
     public init(
         balance: Zatoshi,
         tokenName: String,
-        showIndicator: Bool = false
+        showIndicator: Bool = false,
+        underlined: Bool = true
     ) {
         self.balance = balance
         self.tokenName = tokenName
         self.showIndicator = showIndicator
+        self.underlined = underlined
     }
     
     public var body: some View {
         HStack(spacing: 3) {
-            Text(L10n.Balance.availableTitle)
-                .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                .underline()
+            if underlined {
+                Text(L10n.Balance.availableTitle)
+                    .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                    .underline()
+            } else {
+                Text(L10n.Balance.availableTitle)
+                    .font(.custom(FontFamily.Inter.regular.name, size: 14))
+            }
             
             if showIndicator {
                 ProgressView()

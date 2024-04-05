@@ -16,27 +16,6 @@ import Home
 @testable import ZcashLightClientKit
 
 class HomeTests: XCTestCase {
-    func testSendButtonIsDisabledWhenSyncing() {
-        let mockSnapshot = SyncStatusSnapshot.init(
-            .syncing(0.7)
-        )
-
-        let store = TestStore(
-            initialState: .init(
-                scanState: .initial,
-                shieldedBalance: .zero,
-                synchronizerStatusSnapshot: mockSnapshot,
-                syncProgressState: .initial,
-                transactionListState: .initial,
-                walletConfig: .initial
-            )
-        ) {
-            HomeReducer()
-        }
-
-        XCTAssertTrue(store.state.isSendButtonDisabled)
-    }
-    
     /// The .onAppear action is important to register for the synchronizer state updates.
     /// The integration tests make sure registrations and side effects are properly implemented.
     @MainActor func testOnAppear() async throws {
@@ -52,17 +31,12 @@ class HomeTests: XCTestCase {
         store.dependencies.reviewRequest = .noOp
 
         await store.send(.onAppear) { state in
-            state.requiredTransactionConfirmations = 10
+            state.migratingDatabase = false
+            state.walletBalancesState.migratingDatabase = true
         }
 
         var syncState: SynchronizerState = .zero
         syncState.syncStatus = .unprepared
-        let snapshot = SyncStatusSnapshot.snapshotFor(state: syncState.syncStatus)
-
-        // expected side effects as a result of .onAppear registration
-        await store.receive(.synchronizerStateChanged(SynchronizerState.zero.redacted)) { state in
-            state.synchronizerStatusSnapshot = snapshot
-        }
 
         // long-living (cancelable) effects need to be properly canceled.
         // the .onDisappear action cancels the observer of the synchronizer status change.
@@ -73,9 +47,6 @@ class HomeTests: XCTestCase {
 
     @MainActor func testSynchronizerErrorBringsUpAlert() async {
         let testError = ZcashError.synchronizerNotPrepared
-        let errorSnapshot = SyncStatusSnapshot.snapshotFor(
-            state: .error(testError)
-        )
 
         var state = SynchronizerState.zero
         state.syncStatus = .error(testError)
@@ -86,10 +57,7 @@ class HomeTests: XCTestCase {
             HomeReducer()
         }
 
-        await store.send(.synchronizerStateChanged(state.redacted)) { state in
-            state.synchronizerStatusSnapshot = errorSnapshot
-            state.migratingDatabase = false
-        }
+        await store.send(.synchronizerStateChanged(state.redacted))
 
         await store.receive(.showSynchronizerErrorAlert(testError))
         

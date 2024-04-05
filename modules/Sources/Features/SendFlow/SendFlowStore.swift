@@ -20,13 +20,12 @@ import UIComponents
 import Models
 import Generated
 import BalanceFormatter
+import WalletBalances
 
 public typealias SendFlowStore = Store<SendFlowReducer.State, SendFlowReducer.Action>
 public typealias SendFlowViewStore = ViewStore<SendFlowReducer.State, SendFlowReducer.Action>
 
 public struct SendFlowReducer: Reducer {
-    private let SyncStatusUpdatesID = UUID()
-
     public struct State: Equatable {
         public enum Destination: Equatable {
             case partialProposalError
@@ -42,12 +41,10 @@ public struct SendFlowReducer: Reducer {
         public var partialProposalErrorState: PartialProposalError.State
         public var proposal: Proposal?
         public var scanState: Scan.State
-        public var spendableBalance = Zatoshi.zero
-        public var shieldedWithPendingBalance = Zatoshi.zero
-        public var totalBalance = Zatoshi.zero
+        public var shieldedBalance: Zatoshi
         public var transactionAddressInputState: TransactionAddressTextFieldReducer.State
         public var transactionAmountInputState: TransactionAmountTextFieldReducer.State
-        public var transparentBalance: Zatoshi
+        public var walletBalancesState: WalletBalances.State
 
         public var address: String {
             get { transactionAddressInputState.textFieldState.text.data }
@@ -96,7 +93,7 @@ public struct SendFlowReducer: Reducer {
         public var isInsufficientFunds: Bool {
             guard transactionAmountInputState.isValidInput else { return false }
 
-            return transactionAmountInputState.amount.data > spendableBalance.amount
+            return transactionAmountInputState.amount.data > shieldedBalance.amount
         }
         
         public var isMemoInputEnabled: Bool {
@@ -104,19 +101,11 @@ public struct SendFlowReducer: Reducer {
         }
         
         public var totalCurrencyBalance: Zatoshi {
-            Zatoshi.from(decimal: spendableBalance.decimalValue.decimalValue * transactionAmountInputState.zecPrice)
+            Zatoshi.from(decimal: shieldedBalance.decimalValue.decimalValue * transactionAmountInputState.zecPrice)
         }
         
         public var spendableBalanceString: String {
-            spendableBalance.decimalString(formatter: NumberFormatter.zashiBalanceFormatter)
-        }
-
-        public var isProcessingZeroAvailableBalance: Bool {
-            if spendableBalance.amount == 0 && transparentBalance.amount > 0 {
-                return false
-            }
-            
-            return totalBalance.amount != spendableBalance.amount && spendableBalance.amount == 0
+            shieldedBalance.decimalString(formatter: NumberFormatter.zashiBalanceFormatter)
         }
         
         public init(
@@ -126,12 +115,10 @@ public struct SendFlowReducer: Reducer {
             memoState: MessageEditorReducer.State,
             partialProposalErrorState: PartialProposalError.State,
             scanState: Scan.State,
-            spendableBalance: Zatoshi = .zero,
-            shieldedWithPendingBalance: Zatoshi = .zero,
-            totalBalance: Zatoshi = .zero,
+            shieldedBalance: Zatoshi = .zero,
             transactionAddressInputState: TransactionAddressTextFieldReducer.State,
             transactionAmountInputState: TransactionAmountTextFieldReducer.State,
-            transparentBalance: Zatoshi = .zero
+            walletBalancesState: WalletBalances.State
         ) {
             self.addMemoState = addMemoState
             self.destination = destination
@@ -139,11 +126,10 @@ public struct SendFlowReducer: Reducer {
             self.memoState = memoState
             self.partialProposalErrorState = partialProposalErrorState
             self.scanState = scanState
-            self.spendableBalance = spendableBalance
-            self.totalBalance = totalBalance
+            self.shieldedBalance = shieldedBalance
             self.transactionAddressInputState = transactionAddressInputState
             self.transactionAmountInputState = transactionAmountInputState
-            self.transparentBalance = transparentBalance
+            self.walletBalancesState = walletBalancesState
         }
     }
 
@@ -152,7 +138,6 @@ public struct SendFlowReducer: Reducer {
         case goBackPressed
         case memo(MessageEditorReducer.Action)
         case onAppear
-        case onDisappear
         case partialProposalError(PartialProposalError.Action)
         case proposal(Proposal)
         case reviewPressed
@@ -161,10 +146,10 @@ public struct SendFlowReducer: Reducer {
         case sendDone
         case sendFailed(ZcashError)
         case sendPartial([String], [String])
-        case synchronizerStateChanged(RedactableSynchronizerState)
         case transactionAddressInput(TransactionAddressTextFieldReducer.Action)
         case transactionAmountInput(TransactionAmountTextFieldReducer.Action)
         case updateDestination(SendFlowReducer.State.Destination?)
+        case walletBalances(WalletBalances.Action)
     }
     
     @Dependency(\.audioServices) var audioServices
@@ -198,6 +183,10 @@ public struct SendFlowReducer: Reducer {
             PartialProposalError()
         }
 
+        Scope(state: \.walletBalancesState, action: /Action.walletBalances) {
+            WalletBalances()
+        }
+
         Reduce { state, action in
             switch action {
             case .alert(.presented(let action)):
@@ -212,16 +201,7 @@ public struct SendFlowReducer: Reducer {
 
             case .onAppear:
                 state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
-                return Effect.publisher {
-                    sdkSynchronizer.stateStream()
-                        .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                        .map{ $0.redacted }
-                        .map(SendFlowReducer.Action.synchronizerStateChanged)
-                }
-                .cancellable(id: SyncStatusUpdatesID, cancelInFlight: true)
-
-            case .onDisappear:
-                return .cancel(id: SyncStatusUpdatesID)
+                return .none
 
             case .goBackPressed:
                 state.destination = nil
@@ -328,16 +308,6 @@ public struct SendFlowReducer: Reducer {
             case .transactionAddressInput:
                 return .none
 
-            case .synchronizerStateChanged(let latestState):
-                let latestAccountBalance = latestState.data.accountBalance?.data
-                
-                state.spendableBalance = (latestAccountBalance?.saplingBalance.spendableValue ?? .zero) + (latestAccountBalance?.orchardBalance.spendableValue ?? .zero)
-                state.shieldedWithPendingBalance = (latestAccountBalance?.saplingBalance.total() ?? .zero) + (latestAccountBalance?.orchardBalance.total() ?? .zero)
-                state.transparentBalance = latestAccountBalance?.unshielded ?? .zero
-                state.totalBalance = state.shieldedWithPendingBalance + state.transparentBalance
-                state.transactionAmountInputState.maxValue = state.spendableBalance.amount.redacted
-                return .none
-
             case .memo:
                 return .none
                 
@@ -358,6 +328,13 @@ public struct SendFlowReducer: Reducer {
                 return .none
                 
             case .scan:
+                return .none
+                
+            case .walletBalances(.balancesUpdated):
+                state.shieldedBalance = state.walletBalancesState.shieldedBalance
+                return .none
+                
+            case .walletBalances:
                 return .none
             }
         }
@@ -448,7 +425,8 @@ extension SendFlowReducer.State {
             partialProposalErrorState: .initial,
             scanState: .initial,
             transactionAddressInputState: .initial,
-            transactionAmountInputState: .initial
+            transactionAmountInputState: .initial,
+            walletBalancesState: .initial
         )
     }
 }

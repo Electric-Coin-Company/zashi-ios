@@ -37,12 +37,8 @@ public enum L10n {
     }
   }
   public enum Balance {
-    /// Available balance %@ %@
-    public static func available(_ p1: Any, _ p2: Any) -> String {
-      return L10n.tr("Localizable", "balance.available", String(describing: p1), String(describing: p2), fallback: "Available balance %@ %@")
-    }
-    /// Available Balance
-    public static let availableTitle = L10n.tr("Localizable", "balance.availableTitle", fallback: "Available Balance")
+    /// Available Balance:
+    public static let availableTitle = L10n.tr("Localizable", "balance.availableTitle", fallback: "Available Balance:")
   }
   public enum Balances {
     /// Change pending

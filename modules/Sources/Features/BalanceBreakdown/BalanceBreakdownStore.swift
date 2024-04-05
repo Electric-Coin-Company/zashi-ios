@@ -19,6 +19,7 @@ import SDKSynchronizer
 import Models
 import SyncProgress
 import RestoreWalletStorage
+import WalletBalances
 import ZcashSDKEnvironment
 
 public typealias BalanceBreakdownStore = Store<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>
@@ -42,10 +43,9 @@ public struct BalanceBreakdownReducer: Reducer {
         public var partialProposalErrorState: PartialProposalError.State
         public var pendingTransactions: Zatoshi
         public var shieldedBalance: Zatoshi
-        public var shieldedWithPendingBalance: Zatoshi
         public var syncProgressState: SyncProgressReducer.State
-        public var totalBalance: Zatoshi
         public var transparentBalance: Zatoshi
+        public var walletBalancesState: WalletBalances.State
 
         public var isShieldableBalanceAvailable: Bool {
             transparentBalance.amount >= autoShieldingThreshold.amount
@@ -54,15 +54,7 @@ public struct BalanceBreakdownReducer: Reducer {
         public var isShieldingButtonDisabled: Bool {
             isShieldingFunds || !isShieldableBalanceAvailable
         }
-        
-        public var isProcessingZeroAvailableBalance: Bool {
-            if shieldedBalance.amount == 0 && transparentBalance.amount > 0 {
-                return false
-            }
-            
-            return totalBalance.amount != shieldedBalance.amount && shieldedBalance.amount == 0
-        }
-        
+                
         public init(
             autoShieldingThreshold: Zatoshi,
             changePending: Zatoshi,
@@ -72,11 +64,10 @@ public struct BalanceBreakdownReducer: Reducer {
             isHintBoxVisible: Bool = false,
             partialProposalErrorState: PartialProposalError.State,
             pendingTransactions: Zatoshi,
-            shieldedBalance: Zatoshi,
-            shieldedWithPendingBalance: Zatoshi = .zero,
+            shieldedBalance: Zatoshi = .zero,
             syncProgressState: SyncProgressReducer.State,
-            totalBalance: Zatoshi,
-            transparentBalance: Zatoshi
+            transparentBalance: Zatoshi = .zero,
+            walletBalancesState: WalletBalances.State
         ) {
             self.autoShieldingThreshold = autoShieldingThreshold
             self.changePending = changePending
@@ -87,10 +78,9 @@ public struct BalanceBreakdownReducer: Reducer {
             self.partialProposalErrorState = partialProposalErrorState
             self.pendingTransactions = pendingTransactions
             self.shieldedBalance = shieldedBalance
-            self.shieldedWithPendingBalance = shieldedWithPendingBalance
-            self.totalBalance = totalBalance
             self.syncProgressState = syncProgressState
             self.transparentBalance = transparentBalance
+            self.walletBalancesState = walletBalancesState
         }
     }
 
@@ -105,10 +95,10 @@ public struct BalanceBreakdownReducer: Reducer {
         case shieldFundsFailure(ZcashError)
         case shieldFundsPartial([String], [String])
         case shieldFundsSuccess
-        case synchronizerStateChanged(RedactableSynchronizerState)
         case syncProgress(SyncProgressReducer.Action)
         case updateDestination(BalanceBreakdownReducer.State.Destination?)
         case updateHintBoxVisibility(Bool)
+        case walletBalances(WalletBalances.Action)
     }
 
     @Dependency(\.derivationTool) var derivationTool
@@ -131,6 +121,10 @@ public struct BalanceBreakdownReducer: Reducer {
             PartialProposalError()
         }
 
+        Scope(state: \.walletBalancesState, action: /Action.walletBalances) {
+            WalletBalances()
+        }
+
         Reduce { state, action in
             switch action {
             case .alert(.presented(let action)):
@@ -145,13 +139,7 @@ public struct BalanceBreakdownReducer: Reducer {
 
             case .onAppear:
                 state.autoShieldingThreshold = zcashSDKEnvironment.shieldingThreshold
-                return .publisher {
-                    sdkSynchronizer.stateStream()
-                        .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                        .map { $0.redacted }
-                        .map(Action.synchronizerStateChanged)
-                }
-                .cancellable(id: CancelId, cancelInFlight: true)
+                return .none
                 
             case .onDisappear:
                 return .cancel(id: CancelId)
@@ -207,24 +195,13 @@ public struct BalanceBreakdownReducer: Reducer {
 
             case .shieldFundsSuccess:
                 state.isShieldingFunds = false
-                state.transparentBalance = .zero
+                state.walletBalancesState.transparentBalance = .zero
                 return .none
 
             case let .shieldFundsPartial(txIds, statuses):
                 state.partialProposalErrorState.txIds = txIds
                 state.partialProposalErrorState.statuses = statuses
                 return .send(.updateDestination(.partialProposalError))
-
-            case .synchronizerStateChanged(let latestState):
-                let accountBalance = latestState.data.accountBalance?.data
-                
-                state.shieldedBalance = (accountBalance?.saplingBalance.spendableValue ?? .zero) + (accountBalance?.orchardBalance.spendableValue ?? .zero)
-                state.shieldedWithPendingBalance = (accountBalance?.saplingBalance.total() ?? .zero) + (accountBalance?.orchardBalance.total() ?? .zero)
-                state.transparentBalance = accountBalance?.unshielded ?? .zero
-                state.totalBalance = state.shieldedWithPendingBalance + state.transparentBalance
-                state.changePending = (accountBalance?.saplingBalance.changePendingConfirmation ?? .zero) + (accountBalance?.orchardBalance.changePendingConfirmation ?? .zero)
-                state.pendingTransactions = (accountBalance?.saplingBalance.valuePendingSpendability ?? .zero) + (accountBalance?.orchardBalance.valuePendingSpendability ?? .zero)
-                return .none
                 
             case .syncProgress:
                 return .none
@@ -235,6 +212,14 @@ public struct BalanceBreakdownReducer: Reducer {
 
             case .updateHintBoxVisibility(let visibility):
                 state.isHintBoxVisible = visibility
+                return .none
+            
+            case .walletBalances(.balancesUpdated):
+                state.shieldedBalance = state.walletBalancesState.shieldedBalance
+                state.transparentBalance = state.walletBalancesState.transparentBalance
+                return .none
+                
+            case .walletBalances:
                 return .none
             }
         }
@@ -291,10 +276,8 @@ extension BalanceBreakdownReducer.State {
         isShieldingFunds: false,
         partialProposalErrorState: .initial,
         pendingTransactions: .zero,
-        shieldedBalance: .zero,
         syncProgressState: .initial,
-        totalBalance: .zero,
-        transparentBalance: .zero
+        walletBalancesState: .initial
     )
     
     public static let initial = BalanceBreakdownReducer.State(
@@ -303,10 +286,8 @@ extension BalanceBreakdownReducer.State {
         isShieldingFunds: false,
         partialProposalErrorState: .initial,
         pendingTransactions: .zero,
-        shieldedBalance: .zero,
         syncProgressState: .initial,
-        totalBalance: .zero,
-        transparentBalance: .zero
+        walletBalancesState: .initial
     )
 }
 

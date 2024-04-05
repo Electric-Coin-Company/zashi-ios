@@ -8,6 +8,7 @@ import UIComponents
 import SyncProgress
 import Utils
 import Models
+import WalletBalances
 
 public struct HomeView: View {
     let store: HomeStore
@@ -21,7 +22,14 @@ public struct HomeView: View {
     public var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             VStack(spacing: 0) {
-                balance(viewStore)
+                WalletBalancesView(
+                    store: store.scope(
+                        state: \.walletBalancesState,
+                        action: HomeReducer.Action.walletBalances
+                    ),
+                    tokenName: tokenName
+                )
+                .padding(.top, 1)
 
                 if viewStore.isRestoringWallet {
                     SyncProgressView(
@@ -60,42 +68,6 @@ public struct HomeView: View {
     }
 }
 
-// MARK: - Buttons
-
-extension HomeView {
-    func balance(_ viewStore: HomeViewStore) -> some View {
-        VStack(spacing: 0) {
-            Button {
-                viewStore.send(.balanceBreakdown)
-            } label: {
-                BalanceWithIconView(balance: viewStore.totalBalance)
-            }
-            .padding(.top, 40)
-
-            if viewStore.migratingDatabase {
-                Text(L10n.Home.migratingDatabases)
-                    .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                    .padding(.top, 10)
-                    .padding(.bottom, 30)
-            } else {
-                AvailableBalanceView(
-                    balance: viewStore.shieldedBalance,
-                    tokenName: tokenName,
-                    showIndicator: viewStore.isProcessingZeroAvailableBalance
-                )
-#if !SECANT_DISTRIB
-                .accessDebugMenuWithHiddenGesture {
-                    viewStore.send(.debugMenuStartup)
-                }
-#endif
-                .padding(.top, 10)
-                .padding(.bottom, 30)
-            }
-        }
-        .foregroundColor(Asset.Colors.primary.color)
-    }
-}
-
 // MARK: - Previews
 
 struct HomeView_Previews: PreviewProvider {
@@ -108,15 +80,13 @@ struct HomeView_Previews: PreviewProvider {
                                 .init(
                                     isRestoringWallet: true,
                                     scanState: .initial,
-                                    shieldedBalance: .zero,
-                                    synchronizerStatusSnapshot: .initial,
                                     syncProgressState: .init(
                                         lastKnownSyncPercentage: Float(0.43),
                                         synchronizerStatusSnapshot: SyncStatusSnapshot(.syncing(0.41)),
                                         syncStatusMessage: "Syncing"
                                     ),
-                                    totalBalance: .zero,
                                     transactionListState: .placeholder,
+                                    walletBalancesState: .initial,
                                     walletConfig: .initial
                                 )
                     ) {

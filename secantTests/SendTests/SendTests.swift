@@ -14,6 +14,7 @@ import Models
 import WalletStorage
 import SendFlow
 import UIComponents
+import WalletBalances
 @testable import secant_testnet
 
 // swiftlint:disable type_body_length
@@ -260,9 +261,10 @@ class SendTests: XCTestCase {
             memoState: .initial,
             partialProposalErrorState: .initial,
             scanState: .initial,
-            spendableBalance: Zatoshi(100_000),
+            shieldedBalance: Zatoshi(100_000),
             transactionAddressInputState: .initial,
-            transactionAmountInputState: .initial
+            transactionAmountInputState: .initial,
+            walletBalancesState: .initial
         )
 
         let store = TestStore(
@@ -295,9 +297,9 @@ class SendTests: XCTestCase {
             memoState: .initial,
             partialProposalErrorState: .initial,
             scanState: .initial,
-            spendableBalance: Zatoshi(90_000),
             transactionAddressInputState: .initial,
-            transactionAmountInputState: .initial
+            transactionAmountInputState: .initial,
+            walletBalancesState: .initial
         )
 
         let store = TestStore(
@@ -352,9 +354,10 @@ class SendTests: XCTestCase {
             memoState: .initial,
             partialProposalErrorState: .initial,
             scanState: .initial,
-            spendableBalance: Zatoshi(100_000),
+            shieldedBalance: Zatoshi(100_000),
             transactionAddressInputState: .initial,
-            transactionAmountInputState: .initial
+            transactionAmountInputState: .initial,
+            walletBalancesState: .initial
         )
 
         let store = TestStore(
@@ -414,7 +417,8 @@ class SendTests: XCTestCase {
                             validationType: .customFloatingPoint(usNumberFormatter),
                             text: "0.00501301".redacted
                         )
-                )
+                ),
+            walletBalancesState: .initial
         )
         
         let store = TestStore(
@@ -459,7 +463,8 @@ class SendTests: XCTestCase {
                             validationType: .floatingPoint,
                             text: "0.00501301".redacted
                         )
-                )
+                ),
+            walletBalancesState: .initial
         )
 
         let store = TestStore(
@@ -504,7 +509,8 @@ class SendTests: XCTestCase {
                             validationType: .floatingPoint,
                             text: "0.00501301".redacted
                         )
-                )
+                ),
+            walletBalancesState: .initial
         )
 
         let store = TestStore(
@@ -537,7 +543,6 @@ class SendTests: XCTestCase {
             memoState: MessageEditorReducer.State(charLimit: 3),
             partialProposalErrorState: .initial,
             scanState: .initial,
-            spendableBalance: Zatoshi(1),
             transactionAddressInputState:
                 TransactionAddressTextFieldReducer.State(
                     isValidAddress: true,
@@ -557,7 +562,8 @@ class SendTests: XCTestCase {
                             validationType: .floatingPoint,
                             text: "0.0.0501301".redacted
                         )
-                )
+                ),
+            walletBalancesState: .initial
         )
 
         let store = TestStore(
@@ -595,7 +601,8 @@ class SendTests: XCTestCase {
                             validationType: .floatingPoint,
                             text: "0.0.0501301".redacted
                         )
-                )
+                ),
+            walletBalancesState: .initial
         )
 
         let store = TestStore(
@@ -610,10 +617,6 @@ class SendTests: XCTestCase {
         await store.send(.onAppear) { state in
             state.memoState.charLimit = 512
         }
-
-        // .onAppear action starts long living cancelable action .synchronizerStateChanged
-        // .onDisappear cancels it, must have for the test to pass
-        await store.send(.onDisappear)
     }
 
     func testScannedAddress() async throws {
@@ -623,7 +626,8 @@ class SendTests: XCTestCase {
             partialProposalErrorState: .initial,
             scanState: .initial,
             transactionAddressInputState: .initial,
-            transactionAmountInputState: .initial
+            transactionAmountInputState: .initial,
+            walletBalancesState: .initial
         )
 
         let store = TestStore(
@@ -654,7 +658,8 @@ class SendTests: XCTestCase {
             partialProposalErrorState: .initial,
             scanState: .initial,
             transactionAddressInputState: .initial,
-            transactionAmountInputState: .initial
+            transactionAmountInputState: .initial,
+            walletBalancesState: .initial
         )
         sendState.address = "tmViyFacKkncJ6zhEqs8rjqNPkGqXsMV4uq"
 
@@ -690,7 +695,8 @@ class SendTests: XCTestCase {
             partialProposalErrorState: .initial,
             scanState: .initial,
             transactionAddressInputState: .initial,
-            transactionAmountInputState: .initial
+            transactionAmountInputState: .initial,
+            walletBalancesState: .initial
         )
 
         let store = TestStore(
@@ -714,7 +720,8 @@ class SendTests: XCTestCase {
             partialProposalErrorState: .initial,
             scanState: .initial,
             transactionAddressInputState: .initial,
-            transactionAmountInputState: .initial
+            transactionAmountInputState: .initial,
+            walletBalancesState: .initial
         )
 
         let store = TestStore(

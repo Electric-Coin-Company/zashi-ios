@@ -41,6 +41,7 @@ class SendSnapshotTests: XCTestCase {
                 .dependency(\.numberFormatter, .live())
                 .dependency(\.walletStorage, .live())
                 .dependency(\.sdkSynchronizer, .mock)
+                .dependency(\.diskSpaceChecker, .mockEmptyDisk)
         }
 
         addAttachments(SendFlowView(store: store, tokenName: "ZEC"))
@@ -57,7 +58,6 @@ class SendSnapshotTests: XCTestCase {
                 ),
                 partialProposalErrorState: .initial,
                 scanState: .initial,
-                spendableBalance: Zatoshi(4412323012_345),
                 transactionAddressInputState:
                     TransactionAddressTextFieldReducer.State(
                         textFieldState:
@@ -75,7 +75,8 @@ class SendSnapshotTests: XCTestCase {
                         validationType: nil,
                         text: "0.9153234".redacted
                     )
-                )
+                ),
+                walletBalancesState: .initial
             )
         ) {
             SendFlowReducer()
@@ -84,6 +85,7 @@ class SendSnapshotTests: XCTestCase {
                 .dependency(\.numberFormatter, .live())
                 .dependency(\.walletStorage, .live())
                 .dependency(\.sdkSynchronizer, .mock)
+                .dependency(\.diskSpaceChecker, .mockEmptyDisk)
         }
 
         addAttachments(SendFlowConfirmationView(store: store, tokenName: "ZEC"))
@@ -97,7 +99,6 @@ class SendSnapshotTests: XCTestCase {
                 memoState: MessageEditorReducer.State(),
                 partialProposalErrorState: .initial,
                 scanState: .initial,
-                spendableBalance: Zatoshi(4412323012_345),
                 transactionAddressInputState:
                     TransactionAddressTextFieldReducer.State(
                         textFieldState:
@@ -115,7 +116,8 @@ class SendSnapshotTests: XCTestCase {
                         validationType: nil,
                         text: "0.9153234".redacted
                     )
-                )
+                ),
+                walletBalancesState: .initial
             )
         ) {
             SendFlowReducer()
@@ -124,6 +126,7 @@ class SendSnapshotTests: XCTestCase {
                 .dependency(\.numberFormatter, .live())
                 .dependency(\.walletStorage, .live())
                 .dependency(\.sdkSynchronizer, .mock)
+                .dependency(\.diskSpaceChecker, .mockEmptyDisk)
         }
 
         addAttachments(SendFlowConfirmationView(store: store, tokenName: "ZEC"))

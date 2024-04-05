@@ -241,8 +241,7 @@ Sharing this private data is irrevocable — once you have shared this private d
 "general.done" = "Done";
 "general.save" = "Save";
 "general.restoringWallet" = "[RESTORING YOUR WALLET…]";
-"balance.available" = "Available balance %@ %@";
-"balance.availableTitle" = "Available Balance";
+"balance.availableTitle" = "Available Balance:";
 "qrCodeFor" = "QR Code for %@";
 "general.dateNotAvailable" = "date not available";
 "general.tapToCopy" = "Tap to copy";
