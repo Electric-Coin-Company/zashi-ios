@@ -23,18 +23,19 @@ public struct TransactionListView: View {
                         .listRowBackground(Asset.Colors.shade97.color)
                         .listRowSeparator(.hidden)
                         .padding(.top, 30)
+                } else {
+                    ForEach(viewStore.transactionList) { transaction in
+                        TransactionRowView(
+                            viewStore: viewStore,
+                            transaction: transaction,
+                            tokenName: tokenName,
+                            isLatestTransaction: viewStore.isLatestTransaction(id: transaction.id)
+                        )
+                        .listRowInsets(EdgeInsets())
+                    }
+                    .listRowBackground(Asset.Colors.shade97.color)
+                    .listRowSeparator(.hidden)
                 }
-                ForEach(viewStore.transactionList) { transaction in
-                    TransactionRowView(
-                        viewStore: viewStore,
-                        transaction: transaction,
-                        tokenName: tokenName,
-                        isLatestTransaction: viewStore.isLatestTransaction(id: transaction.id)
-                    )
-                    .listRowInsets(EdgeInsets())
-                }
-                .listRowBackground(Asset.Colors.shade97.color)
-                .listRowSeparator(.hidden)
             }
             .disabled(viewStore.transactionList.isEmpty)
             .background(Asset.Colors.shade97.color)
