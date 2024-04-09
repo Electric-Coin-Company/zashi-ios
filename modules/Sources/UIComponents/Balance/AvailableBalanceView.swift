@@ -53,7 +53,7 @@ public struct AvailableBalanceView: View {
             }
             
             Text(tokenName)
-                .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                .font(.custom(FontFamily.Inter.bold.name, size: 14))
         }
     }
 }
