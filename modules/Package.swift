@@ -422,6 +422,7 @@ let package = Package(
                 "SDKSynchronizer",
                 "Tabs",
                 "UIComponents",
+                "UserDefaults",
                 "UserPreferencesStorage",
                 "Utils",
                 "WalletConfigProvider",
