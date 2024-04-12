@@ -27,12 +27,12 @@ public struct SyncProgressView: View {
                         Text(viewStore.syncStatusMessage)
                             .font(.custom(FontFamily.Inter.regular.name, size: 10))
 
+                        // Frame height 0 is expected value because we want SwiftUI to ignore it
+                        // for the vertical placement computation.
                         ProgressView()
                             .scaleEffect(0.7)
-                            .frame(width: 11, height: 14)
+                            .frame(width: 11, height: 0)
                     }
-                    .frame(height: 16)
-                    .padding(.bottom, 5)
                 } else {
                     Text(viewStore.syncStatusMessage)
                         .multilineTextAlignment(.center)
