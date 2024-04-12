@@ -116,6 +116,7 @@ let package = Package(
                 "SyncProgress",
                 "UIComponents",
                 "Utils",
+                "WalletBalances",
                 "WalletStorage",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
