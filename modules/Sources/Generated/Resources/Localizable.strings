@@ -1,7 +1,3 @@
-// MARK: - Welcome Screen
-"welcomeScreen.title" = "Powered by Zcash";
-"welcomeScreen.subtitle" = "Just Loading, one sec";
-
 // MARK: - Plain Onboarding Flow
 "plainOnboarding.title" = "A no-frills wallet for sending and receiving Zcash (ZEC).";
 "plainOnboarding.button.createNewWallet" = "Create new Wallet";
@@ -16,55 +12,15 @@
 "securityWarning.acknowledge" = "I acknowledge";
 "securityWarning.confirm" = "Confirm";
 
-// MARK: - Onboarding Flow
-"onboarding.step1.title" = "Welcome!";
-"onboarding.step1.description" = "As a privacy focused wallet, we shield by default. Your wallet uses the shielded address for sending and moves transparent funds to that address automatically.\n\nIn other words, the 'privacy-please' sign is on the knob.";
-
-"onboarding.step2.title" = "Unified Addresses";
-"onboarding.step2.description" = "You now have a unified address that includes and up-to-date shielded address for legacy systems.\n\nThis makes your wallet friendlier, and gives you and address that you won't have to upgrade again.";
-
-"onboarding.step3.title" = "And so much more...";
-"onboarding.step3.description" = "Due to Zcash's increased popularity, we are optimizing our syncing schemes to be faster and more efficient!\n\nThe future is fast!";
-
-"onboarding.step4.title" = "Let's get started";
-"onboarding.step4.description" = "Choose between creating a new wallet and importing and existing Secret Recovery Phrase";
-
-"onboarding.button.newWallet" = "Create New Wallet";
-"onboarding.button.importWallet" = "Import an Existing Wallet";
-
 // MARK: - Secret Recovery Phrase Display
 "recoveryPhraseDisplay.titlePart1" = "Your Secret";
 "recoveryPhraseDisplay.titlePart2" = "Recovery Phrase";
 "recoveryPhraseDisplay.description" = "The following 24 words are the keys to your funds and are the only way to recover your funds if you get locked out or get a new device. Protect your ZEC by storing this phrase in a place you trust and never share it with anyone!";
 "recoveryPhraseDisplay.button.wroteItDown" = "I got it!";
-"recoveryPhraseDisplay.button.copyToBuffer" = "Copy To Buffer";
 "recoveryPhraseDisplay.noWords" = "The keys are missing. No backup phrase is stored in the keychain.";
 "recoveryPhraseDisplay.birthdayHeight" = "Wallet birthday height: %@";
 "recoveryPhraseDisplay.alert.failed.title" = "Failed to load stored wallet";
 "recoveryPhraseDisplay.alert.failed.message" = "Attempt to load the stored wallet from the keychain failed. Error: %@";
-
-// MARK: - Recovery Phrase Backup Validation & Success/Failed
-"recoveryPhraseBackupValidation.title" = "Verify Your Backup";
-"recoveryPhraseBackupValidation.description" = "Drag the words below to match your backed-up copy.";
-"recoveryPhraseBackupValidation.successResult" = "Congratulations! You validated your secret recovery phrase.";
-"recoveryPhraseBackupValidation.failedResult" = "Your placed words did not match your secret recovery phrase";
-
-"validationSuccess.title" = "Success!";
-"validationSuccess.description" = "Place that backup somewhere safe and venture forth in security.";
-"validationSuccess.button.goToWallet" = "Take me to my wallet!";
-"validationSuccess.button.phraseAgain" = "Show me my phrase again";
-
-"validationFailed.title" = "Ouch, sorry, no.";
-"validationFailed.description" = "Your placed words did not match your secret recovery phrase.";
-"validationFailed.incorrectBackupDescription" = "Remember, you can't recover your funds if you lose (or incorrectly save) these 24 words.";
-"validationFailed.button.tryAgain" = "Try again";
-
-// MARK: - Recovery Phrase Test Preamble
-"recoveryPhraseTestPreamble.title" = "First things first";
-"recoveryPhraseTestPreamble.paragraph1" = "It is important to understand that you are in charge here. Great, right? YOU get to be the bank!";
-"recoveryPhraseTestPreamble.paragraph2" = "But it also means that YOU are the customer, and you need to be self-reliant.";
-"recoveryPhraseTestPreamble.paragraph3" = "So how do you recover funds that you've hidden on a completely decentralized and private block-chain?";
-"recoveryPhraseTestPreamble.button.goNext" = "By understanding and preparing";
 
 // MARK: - Proposal Partial Error
 "proposalPartial.title" = "Transaction Error";
@@ -78,13 +34,11 @@
 "proposalPartial.mailPart3" = "Thank you.";
 
 // MARK: - Import Wallet Screen
-"importWallet.title" = "Wallet Import";
 "importWallet.description" = "Enter secret\nrecovery phrase";
 "importWallet.message" = "Enter your 24-word seed phrase to restore the associated wallet.";
 "importWallet.button.restoreWallet" = "Restore";
 "importWallet.birthday.title" = "Wallet birthday height";
 "importWallet.seed.valid" = "VALID SEED PHRASE";
-"importWallet.alert.success.title" = "Success";
 "importWallet.alert.success.message" = "Your wallet has been successfully restored! During the initial sync, your funds cannot be spent or sent. Depending on the age of your wallet, it may take a few hours to fully sync.";
 "importWallet.alert.failed.title" = "Failed to restore wallet";
 "importWallet.alert.failed.message" = "Error: %@";
@@ -98,19 +52,12 @@
 "tabs.balances" = "Balances";
 
 // MARK: - Home Screen
-"home.sendZec" = "Send %@";
-"home.receiveZec" = "Receive %@";
 "home.migratingDatabases" = "Upgrading databases…";
-
-// MARK: - Receive ZEC
-"receiveZec.yourAddress" = "Your Address";
-"receiveZec.error.cantExtractUnifiedAddress" = "could not extract UA";
 
 // MARK: - Address Details
 "addressDetails.ua" = "Unified Address";
 "addressDetails.sa" = "Sapling Address";
 "addressDetails.ta" = "Transparent Address";
-"addressDetails.receiveTitle" = "Receive";
 "addressDetails.copy" = "Copy";
 "addressDetails.share" = "Share";
 "addressDetails.error.cantExtractUnifiedAddress" = "could not extract UA";
@@ -145,19 +92,9 @@
 "scan.openSettings" = "Open settings";
 
 // MARK: - Send
-"send.title" = "Send Zcash";
 "send.sending" = "Sending";
-"send.fundsInfo" = "Aditional funds may be in transit";
 "send.message" = "Message";
 "send.memoPlaceholder" = "Write private message here...";
-"send.failed" = "Sending transaction failed";
-"send.succeeded" = "Sending transaction succeeded";
-"send.sendingTo" = "Sending %@ %@ to";
-"send.amount" = "amount: %@";
-"send.address" = " address: %@";
-"send.memo" = " memo: %@";
-"send.includeMemo" = "Want to include memo? Tap here.";
-"send.editMemo" = "Memo included. Tap to edit.";
 "send.error.insufficientFunds" = "Insufficient funds";
 "send.error.invalidAmount" = "Invalid amount";
 "send.error.invalidAddress" = "Invalid address";
@@ -195,8 +132,6 @@
 "settings.about.info" = "Send and receive ZEC on Zashi!
 Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.";
 "settings.version" = "Version %@ (%@)";
-"settings.alert.cantBackupWallet.title" = "Can't backup wallet";
-"settings.alert.cantBackupWallet.message" = "Error: %@";
 "settings.alert.cantSendEmail.title" = "Oh, no!";
 "settings.alert.cantSendEmail.message" = "It looks like you don't have a default email app configured on your device. Copy the address below, and use your favorite email client to send us a message.";
 "settings.alert.cantSendEmail.copyEmail" = "Copy %@";
@@ -218,18 +153,10 @@ Sharing this private data is irrevocable — once you have shared this private d
 "sync.message.stopped" = "Stopped";
 "sync.message.sync" = "%@%% Synced";
 
-// MARK: - Not Enough Free Space
-"nefs.message" = "Not enough space on disk to do synchronisation!";
-
-// MARK: - Errors
-"error.rollBack" = "possible roll back";
-
 // MARK: - Common & Shared
 "general.back" = "Back";
-"general.skip" = "Skip";
 "general.next" = "Next";
 "general.send" = "Send";
-"general.clear" = "Clear";
 "general.close" = "Close";
 "general.max" = "Max";
 "general.ok" = "Ok";
@@ -243,7 +170,6 @@ Sharing this private data is irrevocable — once you have shared this private d
 "general.restoringWallet" = "[RESTORING YOUR WALLET…]";
 "balance.availableTitle" = "Available Balance:";
 "qrCodeFor" = "QR Code for %@";
-"general.dateNotAvailable" = "date not available";
 "general.tapToCopy" = "Tap to copy";
 "general.fee" = "Typical Fee < %@";
 
@@ -256,26 +182,12 @@ Sharing this private data is irrevocable — once you have shared this private d
 "transactionList.noTransactions" = "No transaction history";
 
 // MARK: - Transactions
-"transactions.title" = "Transactions";
 "transaction.sent" = "Sent";
 "transaction.sending" = "Sending...";
 "transaction.receiving" = "Receiving...";
 "transaction.received" = "Received";
 "transaction.failedSend" = "Send failed";
 "transaction.failedReceive" = "Receive failed";
-"transaction.youSent" = "You sent %@ %@";
-"transaction.youAreSending" = "You are sending %@ %@";
-"transaction.youAreReceiving" = "You are receiving %@ %@";
-"transaction.youReceived" = "You received %@ %@";
-"transaction.youDidNotSent" = "You DID NOT send %@ %@";
-"transaction.confirmed" = "Confirmed";
-"transaction.confirmedTimes" = "%@ times";
-"transaction.confirming" = "Confirming ~%@mins";
-"transaction.withMemo" = "With memo:";
-"transaction.to" = "to";
-"transaction.unconfirmed" = "unconfirmed";
-"transactionDetail.title" = "Transaction detail";
-"transactionDetail.error" = "Error: %@";
 
 // MARK: - Local authentication
 "localAuthentication.reason" = "The Following content requires authentication.";
@@ -306,22 +218,18 @@ Sharing this private data is irrevocable — once you have shared this private d
 "root.initialization.alert.wipe.title" = "Wipe of the wallet";
 "root.initialization.alert.wipe.message" = "Are you sure?";
 "root.initialization.alert.wipeFailed.title" = "Nuke of the wallet failed";
-"root.initialization.alert.retryStartFailed.title" = "Synchronizer failed to start";
-"root.initialization.alert.retryStartFailed.message" = "The app was in background so re-start of the synchronizer is needed but this operation failed.";
 
 "root.destination.alert.failedToProcessDeeplink.title" = "Failed to process deeplink.";
 "root.destination.alert.failedToProcessDeeplink.message" = "Deeplink: \(%@))\nError: \(%@) (code: %@)";
 
 "root.debug.title" = "Support options";
 "root.debug.navigationTitle" = "Startup";
-"root.debug.option.restartApp" = "Restart the App";
 "root.debug.option.rescanBlockchain" = "Rescan Blockchain";
 "root.debug.option.copySeed" = "Copy seed to pasteboard";
 "root.debug.option.nukeWallet" = "[Be careful] Nuke Wallet";
 "root.debug.option.exportLogs" = "Export Logs";
 "root.debug.option.appReview" = "Rate the App";
 "root.debug.option.testCrashReporter" = "Test Crash Reporter";
-"root.debug.featureFlags" = "Feature flags";
 "root.debug.dialog.rescan.title" = "Rescan";
 "root.debug.dialog.rescan.message" = "Select the rescan you want";
 "root.debug.dialog.rescan.option.quick" = "Quick rescan";
@@ -336,8 +244,6 @@ Sharing this private data is irrevocable — once you have shared this private d
 "exportLogs.alert.failed.message" = "Error: %@";
 
 // MARK: - Text Fields
-"field.multiline.charLimitExceeded" = "char limit exceeded";
-
 "field.transactionAddress.validZcashAddress" = "Zcash Address";
 "field.transactionAddress.to" = "To:";
 

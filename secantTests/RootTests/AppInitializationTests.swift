@@ -56,6 +56,7 @@ class AppInitializationTests: XCTestCase {
         store.dependencies.crashReporter = .noOp
         store.dependencies.numberFormatter = .noOp
         store.dependencies.restoreWalletStorage = .noOp
+        store.dependencies.userDefaults = .noOp
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         await store.send(.initialization(.appDelegate(.didFinishLaunching))) { state in
@@ -131,6 +132,7 @@ class AppInitializationTests: XCTestCase {
         store.dependencies.crashReporter = .noOp
         store.dependencies.numberFormatter = .noOp
         store.dependencies.restoreWalletStorage = .noOp
+        store.dependencies.userDefaults = .noOp
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         await store.send(.initialization(.appDelegate(.didFinishLaunching))) { state in
