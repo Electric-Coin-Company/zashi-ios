@@ -30,6 +30,7 @@ final class RestoreWalletTests: XCTestCase {
         }
         store.dependencies.sdkSynchronizer = .noOp
         store.dependencies.walletStorage = .noOp
+        store.dependencies.userDefaults = .noOp
 
         await store.send(.onboarding(.importWallet(.initializeSDK))) { state in
             state.isRestoringWallet = true
@@ -62,6 +63,7 @@ final class RestoreWalletTests: XCTestCase {
         }
         store.dependencies.sdkSynchronizer = .noOp
         store.dependencies.walletStorage = .noOp
+        store.dependencies.userDefaults = .noOp
 
         var syncState: SynchronizerState = .zero
         syncState.syncStatus = .upToDate

@@ -17,8 +17,6 @@ public enum L10n {
   public enum AddressDetails {
     /// Copy
     public static let copy = L10n.tr("Localizable", "addressDetails.copy", fallback: "Copy")
-    /// Receive
-    public static let receiveTitle = L10n.tr("Localizable", "addressDetails.receiveTitle", fallback: "Receive")
     /// Sapling Address
     public static let sa = L10n.tr("Localizable", "addressDetails.sa", fallback: "Sapling Address")
     /// Share
@@ -92,10 +90,6 @@ public enum L10n {
     /// Delete Zashi
     public static let title = L10n.tr("Localizable", "deleteWallet.title", fallback: "Delete Zashi")
   }
-  public enum Error {
-    /// possible roll back
-    public static let rollBack = L10n.tr("Localizable", "error.rollBack", fallback: "possible roll back")
-  }
   public enum ExportLogs {
     public enum Alert {
       public enum Failed {
@@ -109,10 +103,6 @@ public enum L10n {
     }
   }
   public enum Field {
-    public enum Multiline {
-      /// char limit exceeded
-      public static let charLimitExceeded = L10n.tr("Localizable", "field.multiline.charLimitExceeded", fallback: "char limit exceeded")
-    }
     public enum TransactionAddress {
       /// To:
       public static let to = L10n.tr("Localizable", "field.transactionAddress.to", fallback: "To:")
@@ -133,12 +123,8 @@ public enum L10n {
     public static let back = L10n.tr("Localizable", "general.back", fallback: "Back")
     /// Cancel
     public static let cancel = L10n.tr("Localizable", "general.cancel", fallback: "Cancel")
-    /// Clear
-    public static let clear = L10n.tr("Localizable", "general.clear", fallback: "Clear")
     /// Close
     public static let close = L10n.tr("Localizable", "general.close", fallback: "Close")
-    /// date not available
-    public static let dateNotAvailable = L10n.tr("Localizable", "general.dateNotAvailable", fallback: "date not available")
     /// Done
     public static let done = L10n.tr("Localizable", "general.done", fallback: "Done")
     /// Typical Fee < %@
@@ -159,8 +145,6 @@ public enum L10n {
     public static let save = L10n.tr("Localizable", "general.save", fallback: "Save")
     /// Send
     public static let send = L10n.tr("Localizable", "general.send", fallback: "Send")
-    /// Skip
-    public static let skip = L10n.tr("Localizable", "general.skip", fallback: "Skip")
     /// Success
     public static let success = L10n.tr("Localizable", "general.success", fallback: "Success")
     /// Tap to copy
@@ -173,14 +157,6 @@ public enum L10n {
   public enum Home {
     /// Upgrading databases…
     public static let migratingDatabases = L10n.tr("Localizable", "home.migratingDatabases", fallback: "Upgrading databases…")
-    /// Receive %@
-    public static func receiveZec(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "home.receiveZec", String(describing: p1), fallback: "Receive %@")
-    }
-    /// Send %@
-    public static func sendZec(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "home.sendZec", String(describing: p1), fallback: "Send %@")
-    }
   }
   public enum ImportWallet {
     /// Enter secret
@@ -192,8 +168,6 @@ public enum L10n {
     public static let message = L10n.tr("Localizable", "importWallet.message", fallback: "Enter your 24-word seed phrase to restore the associated wallet.")
     /// (optional)
     public static let optionalBirthday = L10n.tr("Localizable", "importWallet.optionalBirthday", fallback: "(optional)")
-    /// Wallet Import
-    public static let title = L10n.tr("Localizable", "importWallet.title", fallback: "Wallet Import")
     public enum Alert {
       public enum Failed {
         /// Error: %@
@@ -206,8 +180,6 @@ public enum L10n {
       public enum Success {
         /// Your wallet has been successfully restored! During the initial sync, your funds cannot be spent or sent. Depending on the age of your wallet, it may take a few hours to fully sync.
         public static let message = L10n.tr("Localizable", "importWallet.alert.success.message", fallback: "Your wallet has been successfully restored! During the initial sync, your funds cannot be spent or sent. Depending on the age of your wallet, it may take a few hours to fully sync.")
-        /// Success
-        public static let title = L10n.tr("Localizable", "importWallet.alert.success.title", fallback: "Success")
       }
     }
     public enum Birthday {
@@ -227,10 +199,6 @@ public enum L10n {
     /// The Following content requires authentication.
     public static let reason = L10n.tr("Localizable", "localAuthentication.reason", fallback: "The Following content requires authentication.")
   }
-  public enum Nefs {
-    /// Not enough space on disk to do synchronisation!
-    public static let message = L10n.tr("Localizable", "nefs.message", fallback: "Not enough space on disk to do synchronisation!")
-  }
   public enum NotEnoughFreeSpace {
     /// Zashi requires at
     /// least %@ GB of space to
@@ -243,44 +211,6 @@ public enum L10n {
     public static let message2 = L10n.tr("Localizable", "notEnoughFreeSpace.message2", fallback: "Go to your device settings and make more space available if you wish to use the Zashi app.")
     /// Not enough free space
     public static let title = L10n.tr("Localizable", "notEnoughFreeSpace.title", fallback: "Not enough free space")
-  }
-  public enum Onboarding {
-    public enum Button {
-      /// Import an Existing Wallet
-      public static let importWallet = L10n.tr("Localizable", "onboarding.button.importWallet", fallback: "Import an Existing Wallet")
-      /// Create New Wallet
-      public static let newWallet = L10n.tr("Localizable", "onboarding.button.newWallet", fallback: "Create New Wallet")
-    }
-    public enum Step1 {
-      /// As a privacy focused wallet, we shield by default. Your wallet uses the shielded address for sending and moves transparent funds to that address automatically.
-      /// 
-      /// In other words, the 'privacy-please' sign is on the knob.
-      public static let description = L10n.tr("Localizable", "onboarding.step1.description", fallback: "As a privacy focused wallet, we shield by default. Your wallet uses the shielded address for sending and moves transparent funds to that address automatically.\n\nIn other words, the 'privacy-please' sign is on the knob.")
-      /// Welcome!
-      public static let title = L10n.tr("Localizable", "onboarding.step1.title", fallback: "Welcome!")
-    }
-    public enum Step2 {
-      /// You now have a unified address that includes and up-to-date shielded address for legacy systems.
-      /// 
-      /// This makes your wallet friendlier, and gives you and address that you won't have to upgrade again.
-      public static let description = L10n.tr("Localizable", "onboarding.step2.description", fallback: "You now have a unified address that includes and up-to-date shielded address for legacy systems.\n\nThis makes your wallet friendlier, and gives you and address that you won't have to upgrade again.")
-      /// Unified Addresses
-      public static let title = L10n.tr("Localizable", "onboarding.step2.title", fallback: "Unified Addresses")
-    }
-    public enum Step3 {
-      /// Due to Zcash's increased popularity, we are optimizing our syncing schemes to be faster and more efficient!
-      /// 
-      /// The future is fast!
-      public static let description = L10n.tr("Localizable", "onboarding.step3.description", fallback: "Due to Zcash's increased popularity, we are optimizing our syncing schemes to be faster and more efficient!\n\nThe future is fast!")
-      /// And so much more...
-      public static let title = L10n.tr("Localizable", "onboarding.step3.title", fallback: "And so much more...")
-    }
-    public enum Step4 {
-      /// Choose between creating a new wallet and importing and existing Secret Recovery Phrase
-      public static let description = L10n.tr("Localizable", "onboarding.step4.description", fallback: "Choose between creating a new wallet and importing and existing Secret Recovery Phrase")
-      /// Let's get started
-      public static let title = L10n.tr("Localizable", "onboarding.step4.title", fallback: "Let's get started")
-    }
   }
   public enum PlainOnboarding {
     /// A no-frills wallet for sending and receiving Zcash (ZEC).
@@ -326,24 +256,6 @@ public enum L10n {
     /// Transaction Ids
     public static let transactionIds = L10n.tr("Localizable", "proposalPartial.transactionIds", fallback: "Transaction Ids")
   }
-  public enum ReceiveZec {
-    /// Your Address
-    public static let yourAddress = L10n.tr("Localizable", "receiveZec.yourAddress", fallback: "Your Address")
-    public enum Error {
-      /// could not extract UA
-      public static let cantExtractUnifiedAddress = L10n.tr("Localizable", "receiveZec.error.cantExtractUnifiedAddress", fallback: "could not extract UA")
-    }
-  }
-  public enum RecoveryPhraseBackupValidation {
-    /// Drag the words below to match your backed-up copy.
-    public static let description = L10n.tr("Localizable", "recoveryPhraseBackupValidation.description", fallback: "Drag the words below to match your backed-up copy.")
-    /// Your placed words did not match your secret recovery phrase
-    public static let failedResult = L10n.tr("Localizable", "recoveryPhraseBackupValidation.failedResult", fallback: "Your placed words did not match your secret recovery phrase")
-    /// Congratulations! You validated your secret recovery phrase.
-    public static let successResult = L10n.tr("Localizable", "recoveryPhraseBackupValidation.successResult", fallback: "Congratulations! You validated your secret recovery phrase.")
-    /// Verify Your Backup
-    public static let title = L10n.tr("Localizable", "recoveryPhraseBackupValidation.title", fallback: "Verify Your Backup")
-  }
   public enum RecoveryPhraseDisplay {
     /// Wallet birthday height: %@
     public static func birthdayHeight(_ p1: Any) -> String {
@@ -368,30 +280,12 @@ public enum L10n {
       }
     }
     public enum Button {
-      /// Copy To Buffer
-      public static let copyToBuffer = L10n.tr("Localizable", "recoveryPhraseDisplay.button.copyToBuffer", fallback: "Copy To Buffer")
       /// I got it!
       public static let wroteItDown = L10n.tr("Localizable", "recoveryPhraseDisplay.button.wroteItDown", fallback: "I got it!")
     }
   }
-  public enum RecoveryPhraseTestPreamble {
-    /// It is important to understand that you are in charge here. Great, right? YOU get to be the bank!
-    public static let paragraph1 = L10n.tr("Localizable", "recoveryPhraseTestPreamble.paragraph1", fallback: "It is important to understand that you are in charge here. Great, right? YOU get to be the bank!")
-    /// But it also means that YOU are the customer, and you need to be self-reliant.
-    public static let paragraph2 = L10n.tr("Localizable", "recoveryPhraseTestPreamble.paragraph2", fallback: "But it also means that YOU are the customer, and you need to be self-reliant.")
-    /// So how do you recover funds that you've hidden on a completely decentralized and private block-chain?
-    public static let paragraph3 = L10n.tr("Localizable", "recoveryPhraseTestPreamble.paragraph3", fallback: "So how do you recover funds that you've hidden on a completely decentralized and private block-chain?")
-    /// First things first
-    public static let title = L10n.tr("Localizable", "recoveryPhraseTestPreamble.title", fallback: "First things first")
-    public enum Button {
-      /// By understanding and preparing
-      public static let goNext = L10n.tr("Localizable", "recoveryPhraseTestPreamble.button.goNext", fallback: "By understanding and preparing")
-    }
-  }
   public enum Root {
     public enum Debug {
-      /// Feature flags
-      public static let featureFlags = L10n.tr("Localizable", "root.debug.featureFlags", fallback: "Feature flags")
       /// Startup
       public static let navigationTitle = L10n.tr("Localizable", "root.debug.navigationTitle", fallback: "Startup")
       /// Support options
@@ -441,8 +335,6 @@ public enum L10n {
         public static let nukeWallet = L10n.tr("Localizable", "root.debug.option.nukeWallet", fallback: "[Be careful] Nuke Wallet")
         /// Rescan Blockchain
         public static let rescanBlockchain = L10n.tr("Localizable", "root.debug.option.rescanBlockchain", fallback: "Rescan Blockchain")
-        /// Restart the App
-        public static let restartApp = L10n.tr("Localizable", "root.debug.option.restartApp", fallback: "Restart the App")
         /// Test Crash Reporter
         public static let testCrashReporter = L10n.tr("Localizable", "root.debug.option.testCrashReporter", fallback: "Test Crash Reporter")
       }
@@ -487,12 +379,6 @@ public enum L10n {
         public enum Failed {
           /// Wallet initialisation failed.
           public static let title = L10n.tr("Localizable", "root.initialization.alert.failed.title", fallback: "Wallet initialisation failed.")
-        }
-        public enum RetryStartFailed {
-          /// The app was in background so re-start of the synchronizer is needed but this operation failed.
-          public static let message = L10n.tr("Localizable", "root.initialization.alert.retryStartFailed.message", fallback: "The app was in background so re-start of the synchronizer is needed but this operation failed.")
-          /// Synchronizer failed to start
-          public static let title = L10n.tr("Localizable", "root.initialization.alert.retryStartFailed.title", fallback: "Synchronizer failed to start")
         }
         public enum SdkInitFailed {
           /// Failed to initialize the SDK
@@ -544,34 +430,14 @@ public enum L10n {
     public static let warningD = L10n.tr("Localizable", "securityWarning.warningD", fallback: ": Crash reports might reveal the timing of the crash and what events occurred, but do not reveal spending or viewing keys.")
   }
   public enum Send {
-    ///  address: %@
-    public static func address(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "send.address", String(describing: p1), fallback: " address: %@")
-    }
-    /// amount: %@
-    public static func amount(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "send.amount", String(describing: p1), fallback: "amount: %@")
-    }
     /// Amount:
     public static let amountSummary = L10n.tr("Localizable", "send.amountSummary", fallback: "Amount:")
     /// Confirmation
     public static let confirmationTitle = L10n.tr("Localizable", "send.confirmationTitle", fallback: "Confirmation")
-    /// Memo included. Tap to edit.
-    public static let editMemo = L10n.tr("Localizable", "send.editMemo", fallback: "Memo included. Tap to edit.")
-    /// Sending transaction failed
-    public static let failed = L10n.tr("Localizable", "send.failed", fallback: "Sending transaction failed")
     /// Fee:
     public static let feeSummary = L10n.tr("Localizable", "send.feeSummary", fallback: "Fee:")
-    /// Aditional funds may be in transit
-    public static let fundsInfo = L10n.tr("Localizable", "send.fundsInfo", fallback: "Aditional funds may be in transit")
     /// Go back
     public static let goBack = L10n.tr("Localizable", "send.goBack", fallback: "Go back")
-    /// Want to include memo? Tap here.
-    public static let includeMemo = L10n.tr("Localizable", "send.includeMemo", fallback: "Want to include memo? Tap here.")
-    ///  memo: %@
-    public static func memo(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "send.memo", String(describing: p1), fallback: " memo: %@")
-    }
     /// Write private message here...
     public static let memoPlaceholder = L10n.tr("Localizable", "send.memoPlaceholder", fallback: "Write private message here...")
     /// Message
@@ -580,14 +446,6 @@ public enum L10n {
     public static let review = L10n.tr("Localizable", "send.review", fallback: "Review")
     /// Sending
     public static let sending = L10n.tr("Localizable", "send.sending", fallback: "Sending")
-    /// Sending %@ %@ to
-    public static func sendingTo(_ p1: Any, _ p2: Any) -> String {
-      return L10n.tr("Localizable", "send.sendingTo", String(describing: p1), String(describing: p2), fallback: "Sending %@ %@ to")
-    }
-    /// Sending transaction succeeded
-    public static let succeeded = L10n.tr("Localizable", "send.succeeded", fallback: "Sending transaction succeeded")
-    /// Send Zcash
-    public static let title = L10n.tr("Localizable", "send.title", fallback: "Send Zcash")
     /// To:
     public static let toSummary = L10n.tr("Localizable", "send.toSummary", fallback: "To:")
     public enum Alert {
@@ -658,14 +516,6 @@ public enum L10n {
       public static let info = L10n.tr("Localizable", "settings.about.info", fallback: "Send and receive ZEC on Zashi!\nZashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.")
     }
     public enum Alert {
-      public enum CantBackupWallet {
-        /// Error: %@
-        public static func message(_ p1: Any) -> String {
-          return L10n.tr("Localizable", "settings.alert.cantBackupWallet.message", String(describing: p1), fallback: "Error: %@")
-        }
-        /// Can't backup wallet
-        public static let title = L10n.tr("Localizable", "settings.alert.cantBackupWallet.title", fallback: "Can't backup wallet")
-      }
       public enum CantSendEmail {
         /// Copy %@
         public static func copyEmail(_ p1: Any) -> String {
@@ -749,16 +599,6 @@ public enum L10n {
     public static let send = L10n.tr("Localizable", "tabs.send", fallback: "Send")
   }
   public enum Transaction {
-    /// Confirmed
-    public static let confirmed = L10n.tr("Localizable", "transaction.confirmed", fallback: "Confirmed")
-    /// %@ times
-    public static func confirmedTimes(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "transaction.confirmedTimes", String(describing: p1), fallback: "%@ times")
-    }
-    /// Confirming ~%@mins
-    public static func confirming(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "transaction.confirming", String(describing: p1), fallback: "Confirming ~%@mins")
-    }
     /// Receive failed
     public static let failedReceive = L10n.tr("Localizable", "transaction.failedReceive", fallback: "Receive failed")
     /// Send failed
@@ -771,40 +611,6 @@ public enum L10n {
     public static let sending = L10n.tr("Localizable", "transaction.sending", fallback: "Sending...")
     /// Sent
     public static let sent = L10n.tr("Localizable", "transaction.sent", fallback: "Sent")
-    /// to
-    public static let to = L10n.tr("Localizable", "transaction.to", fallback: "to")
-    /// unconfirmed
-    public static let unconfirmed = L10n.tr("Localizable", "transaction.unconfirmed", fallback: "unconfirmed")
-    /// With memo:
-    public static let withMemo = L10n.tr("Localizable", "transaction.withMemo", fallback: "With memo:")
-    /// You are receiving %@ %@
-    public static func youAreReceiving(_ p1: Any, _ p2: Any) -> String {
-      return L10n.tr("Localizable", "transaction.youAreReceiving", String(describing: p1), String(describing: p2), fallback: "You are receiving %@ %@")
-    }
-    /// You are sending %@ %@
-    public static func youAreSending(_ p1: Any, _ p2: Any) -> String {
-      return L10n.tr("Localizable", "transaction.youAreSending", String(describing: p1), String(describing: p2), fallback: "You are sending %@ %@")
-    }
-    /// You DID NOT send %@ %@
-    public static func youDidNotSent(_ p1: Any, _ p2: Any) -> String {
-      return L10n.tr("Localizable", "transaction.youDidNotSent", String(describing: p1), String(describing: p2), fallback: "You DID NOT send %@ %@")
-    }
-    /// You received %@ %@
-    public static func youReceived(_ p1: Any, _ p2: Any) -> String {
-      return L10n.tr("Localizable", "transaction.youReceived", String(describing: p1), String(describing: p2), fallback: "You received %@ %@")
-    }
-    /// You sent %@ %@
-    public static func youSent(_ p1: Any, _ p2: Any) -> String {
-      return L10n.tr("Localizable", "transaction.youSent", String(describing: p1), String(describing: p2), fallback: "You sent %@ %@")
-    }
-  }
-  public enum TransactionDetail {
-    /// Error: %@
-    public static func error(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "transactionDetail.error", String(describing: p1), fallback: "Error: %@")
-    }
-    /// Transaction detail
-    public static let title = L10n.tr("Localizable", "transactionDetail.title", fallback: "Transaction detail")
   }
   public enum TransactionList {
     /// Collapse transaction
@@ -819,40 +625,6 @@ public enum L10n {
     public static let transactionFee = L10n.tr("Localizable", "transactionList.transactionFee", fallback: "Transaction Fee")
     /// Transaction ID
     public static let transactionId = L10n.tr("Localizable", "transactionList.transactionId", fallback: "Transaction ID")
-  }
-  public enum Transactions {
-    /// Transactions
-    public static let title = L10n.tr("Localizable", "transactions.title", fallback: "Transactions")
-  }
-  public enum ValidationFailed {
-    /// Your placed words did not match your secret recovery phrase.
-    public static let description = L10n.tr("Localizable", "validationFailed.description", fallback: "Your placed words did not match your secret recovery phrase.")
-    /// Remember, you can't recover your funds if you lose (or incorrectly save) these 24 words.
-    public static let incorrectBackupDescription = L10n.tr("Localizable", "validationFailed.incorrectBackupDescription", fallback: "Remember, you can't recover your funds if you lose (or incorrectly save) these 24 words.")
-    /// Ouch, sorry, no.
-    public static let title = L10n.tr("Localizable", "validationFailed.title", fallback: "Ouch, sorry, no.")
-    public enum Button {
-      /// Try again
-      public static let tryAgain = L10n.tr("Localizable", "validationFailed.button.tryAgain", fallback: "Try again")
-    }
-  }
-  public enum ValidationSuccess {
-    /// Place that backup somewhere safe and venture forth in security.
-    public static let description = L10n.tr("Localizable", "validationSuccess.description", fallback: "Place that backup somewhere safe and venture forth in security.")
-    /// Success!
-    public static let title = L10n.tr("Localizable", "validationSuccess.title", fallback: "Success!")
-    public enum Button {
-      /// Take me to my wallet!
-      public static let goToWallet = L10n.tr("Localizable", "validationSuccess.button.goToWallet", fallback: "Take me to my wallet!")
-      /// Show me my phrase again
-      public static let phraseAgain = L10n.tr("Localizable", "validationSuccess.button.phraseAgain", fallback: "Show me my phrase again")
-    }
-  }
-  public enum WelcomeScreen {
-    /// Just Loading, one sec
-    public static let subtitle = L10n.tr("Localizable", "welcomeScreen.subtitle", fallback: "Just Loading, one sec")
-    /// Powered by Zcash
-    public static let title = L10n.tr("Localizable", "welcomeScreen.title", fallback: "Powered by Zcash")
   }
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
