@@ -20,7 +20,7 @@ public struct SettingsReducer: Reducer {
             case advanced
         }
 
-        public var advancedSettingsState: AdvancedSettingsReducer.State
+        public var advancedSettingsState: AdvancedSettings.State
         @PresentationState public var alert: AlertState<Action>?
         public var appVersion = ""
         public var appBuild = ""
@@ -29,7 +29,7 @@ public struct SettingsReducer: Reducer {
         public var supportData: SupportData?
         
         public init(
-            advancedSettingsState: AdvancedSettingsReducer.State,
+            advancedSettingsState: AdvancedSettings.State,
             appVersion: String = "",
             appBuild: String = "",
             destination: Destination? = nil,
@@ -46,7 +46,7 @@ public struct SettingsReducer: Reducer {
     }
 
     public enum Action: Equatable {
-        case advancedSettings(AdvancedSettingsReducer.Action)
+        case advancedSettings(AdvancedSettings.Action)
         case alert(PresentationAction<Action>)
         case copyEmail
         case onAppear
@@ -119,7 +119,7 @@ public struct SettingsReducer: Reducer {
         .ifLet(\.$alert, action: /Action.alert)
 
         Scope(state: \.advancedSettingsState, action: /Action.advancedSettings) {
-            AdvancedSettingsReducer()
+            AdvancedSettings()
         }
     }
 }
@@ -152,7 +152,7 @@ extension SettingsViewStore {
 // MARK: - Store
 
 extension SettingsStore {
-    func advancedSettingsStore() -> StoreOf<AdvancedSettingsReducer> {
+    func advancedSettingsStore() -> StoreOf<AdvancedSettings> {
         self.scope(
             state: \.advancedSettingsState,
             action: SettingsReducer.Action.advancedSettings

@@ -54,14 +54,14 @@ class SettingsTests: XCTestCase {
         )
         
         let store = TestStore(
-            initialState: AdvancedSettingsReducer.State(
+            initialState: AdvancedSettings.State(
                 deleteWallet: .initial,
                 phraseDisplayState: RecoveryPhraseDisplay.State(phrase: nil),
                 privateDataConsentState: .initial,
                 serverSetupState: .initial
             )
         ) {
-            AdvancedSettingsReducer()
+            AdvancedSettings()
         }
 
         store.dependencies.localAuthentication = .mockAuthenticationSucceeded
@@ -81,7 +81,7 @@ class SettingsTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            AdvancedSettingsReducer()
+            AdvancedSettings()
         }
 
         store.dependencies.localAuthentication = .mockAuthenticationFailed
