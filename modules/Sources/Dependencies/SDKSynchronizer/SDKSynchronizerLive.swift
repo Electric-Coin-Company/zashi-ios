@@ -79,6 +79,9 @@ extension SDKSynchronizerClient: DependencyKey {
                     }
                     
                     transaction.zAddress = addresses.first?.stringEncoded
+                    if let someAddress = addresses.first, case .transparent = someAddress {
+                        transaction.isTransparentRecipient = true
+                    }
                     
                     clearedTxs.append(transaction)
                 }

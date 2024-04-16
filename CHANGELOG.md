@@ -16,6 +16,7 @@ directly impact users rather than highlighting other crucial architectural updat
 - Zashi requires 1 GB of free space to operate. We have updated the user experience to display a message when this requirement is not met, indicating the actual amount of free space available. From this screen, you can access the settings to obtain the recovery phrase if needed.
 - The height of syncing label has been unified to never change the overall component's' height based on different states.
 - The input field for the recovery phrase now shows the expected format in the placeholder.
+- "No message included in transaction" has been removed from expanded transparent transaction view.
 
 ## 1.0.4 build 2 (2024-03-29)
 

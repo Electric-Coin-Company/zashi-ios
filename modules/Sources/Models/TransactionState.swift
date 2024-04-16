@@ -27,6 +27,7 @@ public struct TransactionState: Equatable, Identifiable {
     public var shielded = true
     public var zAddress: String?
     public var isSentTransaction: Bool
+    public var isTransparentRecipient: Bool
 
     public var fee: Zatoshi?
     public var id: String
@@ -171,6 +172,7 @@ public struct TransactionState: Equatable, Identifiable {
         timestamp: TimeInterval? = nil,
         zecAmount: Zatoshi,
         isSentTransaction: Bool = false,
+        isTransparentRecipient: Bool = false,
         isAddressExpanded: Bool = false,
         isExpanded: Bool = false,
         isIdExpanded: Bool = false,
@@ -188,6 +190,7 @@ public struct TransactionState: Equatable, Identifiable {
         self.timestamp = timestamp
         self.zecAmount = zecAmount
         self.isSentTransaction = isSentTransaction
+        self.isTransparentRecipient = isTransparentRecipient
         self.isAddressExpanded = isAddressExpanded
         self.isExpanded = isExpanded
         self.isIdExpanded = isIdExpanded
@@ -224,6 +227,7 @@ extension TransactionState {
         timestamp = transaction.blockTime
         zecAmount = transaction.isSentTransaction ? Zatoshi(-transaction.value.amount) : transaction.value
         isSentTransaction = transaction.isSentTransaction
+        isTransparentRecipient = false
         isAddressExpanded = false
         isExpanded = false
         isIdExpanded = false
