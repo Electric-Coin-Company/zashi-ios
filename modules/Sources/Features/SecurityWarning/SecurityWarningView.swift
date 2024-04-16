@@ -46,11 +46,10 @@ public struct SecurityWarningView: View {
                     }
                     
                     HStack {
-                        Toggle(isOn: $store.isAcknowledged, label: {
-                            Text(L10n.SecurityWarning.acknowledge)
-                                .font(.custom(FontFamily.Inter.medium.name, size: 14))
-                        })
-                        .toggleStyle(CheckboxToggleStyle())
+                        ZashiToggle(
+                            isOn: $store.isAcknowledged,
+                            label: L10n.SecurityWarning.acknowledge
+                        )
                         
                         Spacer()
                     }

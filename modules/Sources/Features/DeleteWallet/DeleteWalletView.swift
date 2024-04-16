@@ -37,12 +37,11 @@ public struct DeleteWalletView: View {
                     }
                     
                     HStack {
-                        Toggle(isOn: $store.isAcknowledged, label: {
-                            Text(L10n.DeleteWallet.iUnderstand)
-                                .font(.custom(FontFamily.Inter.medium.name, size: 14))
-                        })
-                        .toggleStyle(CheckboxToggleStyle())
-                        
+                        ZashiToggle(
+                            isOn: $store.isAcknowledged,
+                            label: L10n.DeleteWallet.iUnderstand
+                        )
+
                         Spacer()
                     }
                     .padding(.top, 30)
