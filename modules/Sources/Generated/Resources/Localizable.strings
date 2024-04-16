@@ -43,7 +43,7 @@
 "importWallet.alert.failed.title" = "Failed to restore wallet";
 "importWallet.alert.failed.message" = "Error: %@";
 "importWallet.optionalBirthday" = "(optional)";
-"importWallet.enterPlaceholder" = "Enter private seed here…";
+"importWallet.enterPlaceholder" = "privacy dignity freedom ...";
 
 // MARK: - Tabs
 "tabs.account" = "Account";

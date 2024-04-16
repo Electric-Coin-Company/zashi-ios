@@ -162,8 +162,8 @@ public enum L10n {
     /// Enter secret
     /// recovery phrase
     public static let description = L10n.tr("Localizable", "importWallet.description", fallback: "Enter secret\nrecovery phrase")
-    /// Enter private seed here…
-    public static let enterPlaceholder = L10n.tr("Localizable", "importWallet.enterPlaceholder", fallback: "Enter private seed here…")
+    /// privacy dignity freedom ...
+    public static let enterPlaceholder = L10n.tr("Localizable", "importWallet.enterPlaceholder", fallback: "privacy dignity freedom ...")
     /// Enter your 24-word seed phrase to restore the associated wallet.
     public static let message = L10n.tr("Localizable", "importWallet.message", fallback: "Enter your 24-word seed phrase to restore the associated wallet.")
     /// (optional)
