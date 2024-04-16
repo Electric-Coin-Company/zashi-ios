@@ -40,11 +40,10 @@ public struct PrivateDataConsentView: View {
                         .lineSpacing(2)
 
                     HStack {
-                        Toggle(isOn: viewStore.$isAcknowledged, label: {
-                            Text(L10n.PrivateDataConsent.confirmation)
-                                .font(.custom(FontFamily.Inter.medium.name, size: 14))
-                        })
-                        .toggleStyle(CheckboxToggleStyle())
+                        ZashiToggle(
+                            isOn: viewStore.$isAcknowledged,
+                            label: L10n.PrivateDataConsent.confirmation
+                        )
                         
                         Spacer()
                     }
