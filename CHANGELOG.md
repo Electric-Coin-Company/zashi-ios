@@ -6,6 +6,8 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.0.5 build 2 (2024-04-17)
+
 ### Added
 - Open settings button added to the scan screen for a case when the camera is disabled.
 - Content of Zashi is hidden in system's app switcher.
@@ -17,6 +19,10 @@ directly impact users rather than highlighting other crucial architectural updat
 - The height of syncing label has been unified to never change the overall component's' height based on different states.
 - The input field for the recovery phrase now shows the expected format in the placeholder.
 - "No message included in transaction" has been removed from expanded transparent transaction view.
+
+### Fixed
+- General clean up and bugfix.
+- Delete Zashi resets local in memory values.
 
 ## 1.0.4 build 2 (2024-03-29)
 
