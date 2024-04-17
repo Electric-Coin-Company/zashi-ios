@@ -16,12 +16,16 @@ import Home
 import SendFlow
 import Settings
 import UIComponents
+import HideBalances
 
 public struct TabsView: View {
     let networkType: NetworkType
     var store: TabsStore
     let tokenName: String
     @Namespace var tabsID
+
+    @Dependency(\.hideBalances) var hideBalances
+    @State var areBalancesHidden = false
 
     public init(store: TabsStore, tokenName: String, networkType: NetworkType) {
         self.store = store
@@ -119,9 +123,13 @@ public struct TabsView: View {
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(trailing: settingsButton(store))
+                .navigationBarItems(leading: hideBalancesButton(store))
                 .zashiTitle { navBarView(tab.state) }
                 .restoringWalletBadge(isOn: isRestoringWallet.state)
                 .task { await store.send(.restoreWalletTask).finish() }
+                .onAppear {
+                    areBalancesHidden = hideBalances.value().value
+                }
             }
         }
     }
@@ -158,6 +166,23 @@ public struct TabsView: View {
                     }
                 )
                 .tint(Asset.Colors.primary.color)
+        }
+    }
+    
+    func hideBalancesButton(_ store: TabsStore) -> some View {
+        WithViewStore(store, observe: { $0 }) { viewStore in
+            Button {
+                var prevValue = hideBalances.value().value
+                prevValue.toggle()
+                areBalancesHidden = prevValue
+                hideBalances.updateValue(areBalancesHidden)
+            } label: {
+                Image(systemName: areBalancesHidden ? "eye.slash" : "eye")
+                    .resizable()
+                    .frame(width: 21, height: 15)
+                    .padding(15)
+                    .tint(Asset.Colors.primary.color)
+            }
         }
     }
 }

@@ -23,7 +23,8 @@ public struct BalanceWithIconView: View {
                 fontName: FontFamily.Archivo.semiBold.name,
                 mostSignificantFontSize: 42,
                 leastSignificantFontSize: 10,
-                format: .expanded
+                format: .expanded,
+                couldBeHidden: true
             )
             
             Circle()
