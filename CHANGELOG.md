@@ -9,6 +9,7 @@ directly impact users rather than highlighting other crucial architectural updat
 ### Added
 - Dark mode.
 - Scan QR code from an image stored in the library.
+- Hide the balances with an eye icon on the Account or Balances tabs. 
 
 ### Changed
 - The confirmation button at recovery phrase screen changed its name from "I got it" to "I've saved it".
