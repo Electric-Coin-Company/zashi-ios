@@ -28,26 +28,20 @@ public struct RootView: View {
     }
     
     public var body: some View {
-        Group {
-            if covered {
-                VStack {
-                    ZashiIcon()
-                        .scaleEffect(2.0)
-                        .padding(.bottom, 180)
+        switchOverDestination()
+            .overlay {
+                if covered {
+                    VStack {
+                        ZashiIcon()
+                            .scaleEffect(2.0)
+                            .padding(.bottom, 180)
+                    }
+                    .applyScreenBackground()
                 }
-                .applyScreenBackground()
-            } else {
-                switchOverDestination()
             }
-        }
-        .onChange(of: scenePhase) { value in
-            switch value {
-            case .active:
-                withAnimation { covered = false }
-            default: 
-                withAnimation { covered = true }
+            .onChange(of: scenePhase) { value in
+                covered = value == .background
             }
-        }
     }
 }
 
