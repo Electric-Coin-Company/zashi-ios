@@ -412,10 +412,14 @@ public enum L10n {
   public enum Scan {
     /// The camera is not authorized. Please go to the system settings of Zashi and turn it on.
     public static let cameraSettings = L10n.tr("Localizable", "scan.cameraSettings", fallback: "The camera is not authorized. Please go to the system settings of Zashi and turn it on.")
+    /// This image doesn't hold a valid Zcash address.
+    public static let invalidImage = L10n.tr("Localizable", "scan.invalidImage", fallback: "This image doesn't hold a valid Zcash address.")
     /// This QR code doesn't hold a valid Zcash address.
     public static let invalidQR = L10n.tr("Localizable", "scan.invalidQR", fallback: "This QR code doesn't hold a valid Zcash address.")
     /// Open settings
     public static let openSettings = L10n.tr("Localizable", "scan.openSettings", fallback: "Open settings")
+    /// This image holds several valid Zcash addresses.
+    public static let severalCodesFound = L10n.tr("Localizable", "scan.severalCodesFound", fallback: "This image holds several valid Zcash addresses.")
   }
   public enum SecurityWarning {
     /// I acknowledge

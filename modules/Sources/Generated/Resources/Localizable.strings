@@ -90,6 +90,8 @@
 
 // MARK: - Scan
 "scan.invalidQR" = "This QR code doesn't hold a valid Zcash address.";
+"scan.invalidImage" = "This image doesn't hold a valid Zcash address.";
+"scan.severalCodesFound" = "This image holds several valid Zcash addresses.";
 "scan.cameraSettings" = "The camera is not authorized. Please go to the system settings of Zashi and turn it on.";
 "scan.openSettings" = "Open settings";
 
