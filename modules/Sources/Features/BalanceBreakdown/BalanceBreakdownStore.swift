@@ -95,6 +95,7 @@ public struct BalanceBreakdownReducer: Reducer {
         case shieldFundsFailure(ZcashError)
         case shieldFundsPartial([String], [String])
         case shieldFundsSuccess
+        case synchronizerStateChanged(RedactableSynchronizerState)
         case syncProgress(SyncProgressReducer.Action)
         case updateDestination(BalanceBreakdownReducer.State.Destination?)
         case updateHintBoxVisibility(Bool)
@@ -139,7 +140,13 @@ public struct BalanceBreakdownReducer: Reducer {
 
             case .onAppear:
                 state.autoShieldingThreshold = zcashSDKEnvironment.shieldingThreshold
-                return .none
+                return .publisher {
+                    sdkSynchronizer.stateStream()
+                        .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
+                        .map { $0.redacted }
+                        .map(Action.synchronizerStateChanged)
+                }
+                .cancellable(id: CancelId, cancelInFlight: true)
                 
             case .onDisappear:
                 return .cancel(id: CancelId)
@@ -202,6 +209,15 @@ public struct BalanceBreakdownReducer: Reducer {
                 state.partialProposalErrorState.txIds = txIds
                 state.partialProposalErrorState.statuses = statuses
                 return .send(.updateDestination(.partialProposalError))
+                
+            case .synchronizerStateChanged(let latestState):
+                let accountBalance = latestState.data.accountBalance?.data
+                
+                state.changePending = (accountBalance?.saplingBalance.changePendingConfirmation ?? .zero) + 
+                    (accountBalance?.orchardBalance.changePendingConfirmation ?? .zero)
+                state.pendingTransactions = (accountBalance?.saplingBalance.valuePendingSpendability ?? .zero) +
+                    (accountBalance?.orchardBalance.valuePendingSpendability ?? .zero)
+                return .none
                 
             case .syncProgress:
                 return .none
