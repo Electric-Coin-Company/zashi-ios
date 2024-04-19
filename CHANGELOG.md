@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Fixed
+- Migration of DB ensures that the default Unified Address for existing wallets now contains an Orchard receiver.
+
 ## 1.0.5 build 2 (2024-04-17)
 
 ### Added
