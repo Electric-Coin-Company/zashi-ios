@@ -29,6 +29,10 @@ extension ZcashSDKEnvironment {
         case saNW
         case euNW
         case aiNW
+        case globalZR
+        case saZR
+        case euZR
+        case apZR
         case custom
         
         public func server() -> String {
@@ -38,6 +42,10 @@ extension ZcashSDKEnvironment {
             case .saNW: return "sa.lightwalletd.com:443"
             case .euNW: return "eu.lightwalletd.com:443"
             case .aiNW: return "ai.lightwalletd.com:443"
+            case .globalZR: return "zec.rocks:443"
+            case .saZR: return "sa.zec.rocks:443"
+            case .euZR: return "eu.zec.rocks:443"
+            case .apZR: return "ap.zec.rocks:443"
             case .custom: return "custom"
             }
         }
@@ -51,7 +59,7 @@ extension ZcashSDKEnvironment {
                     secure: true,
                     streamingCallTimeoutInMillis: ZcashSDKConstants.streamingCallTimeoutInMillis
                 )
-            case .naNW, .saNW, .euNW, .aiNW:
+            case .naNW, .saNW, .euNW, .aiNW, .globalZR, .saZR, .euZR, .apZR:
                 return LightWalletEndpoint(
                     address: String(self.server().dropLast(4)),
                     port: 443,
