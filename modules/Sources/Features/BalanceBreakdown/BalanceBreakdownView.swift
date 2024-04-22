@@ -86,6 +86,8 @@ public struct BalanceBreakdownView: View {
             )
         )
         .task { await store.send(.restoreWalletTask).finish() }
+        .onAppear { store.send(.onAppear) }
+        .onDisappear { store.send(.onDisappear) }
     }
 }
 

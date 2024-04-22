@@ -3,13 +3,13 @@
 This is the official home of the Zashi Zcash wallet for Wallet, a no-frills
 Zcash mobile wallet leveraging the [Zcash Swift SDK](https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk).
 
-# Beta Testing
+# Production
 
-The Zashi IOS wallet is currently in closed beta testing, and will be publicly
-available from the Apple Store when testing is complete.
+The Zashi IOS wallet is publicly available for download in the [AppStore](https://apps.apple.com/cz/app/zashi-zcash-wallet/id1672392439).
 
-If you'd like to be added to the waitlist to become a Zashi beta tester,
-please [sign up here](https://docs.google.com/forms/d/e/1FAIpQLSeQpykeMF8QcxnX5W8ya0pXIf5YPRRpUXD7H1gvbzv_WyASPw/viewform).
+# Zashi Discord
+
+Join the Zashi community on ECC Discord server, report bugs, share ideas, request new features, and help shape Zashi's journey!
 
 # Reporting an issue
 
@@ -24,7 +24,7 @@ If you wish to report a security issue, please follow our
 See the [Wallet App Threat Model](https://github.com/Electric-Coin-Company/zashi/blob/master/wallet_threat_model.md)
 for more information about the security and privacy limitations of the wallet.
 
-General Zcash questions and/or support requests and are best directed to either:
+General Zcash questions and/or support requests may also be directed to either:
  * [Zcash Forum](https://forum.zcashcommunity.com/)
  * [Discord Community](https://discord.io/zcash-community)
 
