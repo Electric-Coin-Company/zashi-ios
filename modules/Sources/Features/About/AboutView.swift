@@ -70,6 +70,7 @@ public struct AboutView: View {
 
                 Spacer()
             }
+            .padding(.top, 20)
             .onAppear { store.send(.onAppear) }
             .zashiBack()
             .zashiTitle {

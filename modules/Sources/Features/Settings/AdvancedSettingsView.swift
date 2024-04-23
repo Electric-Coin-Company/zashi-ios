@@ -25,14 +25,62 @@ public struct AdvancedSettingsView: View {
     
     public var body: some View {
         WithPerceptionTracking {
-            VStack {
-                Button(L10n.Settings.recoveryPhrase.uppercased()) {
-                    store.send(.protectedAccessRequest(.backupPhrase))
+            VStack(spacing: 0) {
+                List {
+                    Group {
+                        SettingsRow(
+                            icon: Asset.Assets.Icons.key.image,
+                            title: L10n.Settings.recoveryPhrase
+                        ) {
+                            store.send(.protectedAccessRequest(.backupPhrase))
+                        }
+                        
+                        SettingsRow(
+                            icon: Asset.Assets.Icons.downloadCloud.image,
+                            title: L10n.Settings.exportPrivateData
+                        ) {
+                            store.send(.protectedAccessRequest(.privateDataConsent))
+                        }
+                        
+                        SettingsRow(
+                            icon: Asset.Assets.Icons.server.image,
+                            title: L10n.Settings.chooseServer
+                        ) {
+                            store.send(.updateDestination(.serverSetup))
+                        }
+                        
+                        SettingsRow(
+                            icon: Asset.Assets.Icons.currencyDollar.image,
+                            title: L10n.CurrencyConversion.title
+                        ) {
+                            store.send(.updateDestination(.currencyConversionSetup))
+                        }
+                        
+                        if store.inAppBrowserURL != nil {
+                            SettingsRow(
+                                icon: Asset.Assets.Icons.coinbase.image,
+                                iconTint: Asset.Colors.Settings.coinbaseTint.color,
+                                iconBcg: Asset.Colors.Settings.coinbaseBcg.color,
+                                title: L10n.Settings.buyZecCB,
+                                divider: false
+                            ) {
+                                store.send(.buyZecTapped)
+                            }
+                        }
+                    }
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Asset.Colors.shade97.color)
+                    .listRowSeparator(.hidden)
                 }
-                .zcashStyle()
-                .padding(.vertical, 25)
-                .padding(.top, 40)
-                .padding(.horizontal, 70)
+                .padding(.top, 24)
+                .padding(.horizontal, 4)
+                .walletStatusPanel()
+                .sheet(isPresented: $store.isInAppBrowserOn) {
+                    if let urlStr = store.inAppBrowserURL, let url = URL(string: urlStr) {
+                        InAppBrowserView(url: url)
+                    }
+                }
+                .onAppear { store.send(.onAppear) }
                 .navigationLinkEmpty(
                     isActive: store.bindingForBackupPhrase,
                     destination: {
@@ -63,76 +111,51 @@ public struct AdvancedSettingsView: View {
                         CurrencyConversionSetupView(store: store.currencyConversionSetupStore())
                     }
                 )
-
-                Button(L10n.Settings.exportPrivateData.uppercased()) {
-                    store.send(.protectedAccessRequest(.privateDataConsent))
-                }
-                .zcashStyle()
-                .padding(.bottom, 25)
-                .padding(.horizontal, 70)
-
-                Button(L10n.Settings.chooseServer.uppercased()) {
-                    store.send(.updateDestination(.serverSetup))
-                }
-                .zcashStyle()
-                .padding(.bottom, 25)
-                .padding(.horizontal, 70)
                 
-                Button(L10n.CurrencyConversion.title.uppercased()) {
-                    store.send(.updateDestination(.currencyConversionSetup))
-                }
-                .zcashStyle()
-                .padding(.bottom, store.inAppBrowserURL == nil ? 0 : 25)
-                .padding(.horizontal, 70)
-
-                if store.inAppBrowserURL != nil {
-                    Button {
-                        store.send(.buyZecTapped)
-                    } label: {
-                        HStack(spacing: 5) {
-                            Text(L10n.Settings.buyZec.uppercased())
-                            Asset.Assets.Partners.cbLogo.image
-                                .renderingMode(.template)
-                                .resizable()
-                                .frame(width: 78, height: 14)
-                                .padding(.bottom, 2)
-                        }
-                    }
-                    .zcashStyle()
-                    .padding(.horizontal, 70)
-                }
-
                 Spacer()
-                
-                Button(L10n.Settings.deleteZashi.uppercased()) {
-                    store.send(.protectedAccessRequest(.deleteWallet))
-                }
-                .zcashStyle()
-                .padding(.bottom, 20)
-                .padding(.horizontal, 70)
 
-                Text(L10n.Settings.deleteZashiWarning)
-                    .font(.custom(FontFamily.Inter.medium.name, size: 11))
-                    .padding(.bottom, 50)
-                    .padding(.horizontal, 20)
-            }
-            .walletStatusPanel()
-            .sheet(isPresented: $store.isInAppBrowserOn) {
-                if let urlStr = store.inAppBrowserURL, let url = URL(string: urlStr) {
-                    InAppBrowserView(url: url)
+                HStack(spacing: 0) {
+                    Asset.Assets.infoOutline.image
+                        .renderingMode(.template)
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                        .padding(.trailing, 12)
+
+                    Text(L10n.Settings.deleteZashiWarning)
+                        .font(.custom(FontFamily.Inter.regular.name, size: 12))
                 }
+                .foregroundColor(Asset.Colors.V2.textTertiary.color)
+                .padding(.bottom, 20)
+
+                Button {
+                    store.send(.protectedAccessRequest(.deleteWallet))
+                } label: {
+                    Text(L10n.Settings.deleteZashi)
+                        .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
+                        .foregroundColor(Asset.Colors.V2.btnDestroyFg.color)
+                        .frame(height: 24)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .background {
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Asset.Colors.V2.btnDestroyBcg.color)
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(Asset.Colors.V2.btnDestroyBorder.color)
+                                }
+                        }
+                }
+                .padding(.horizontal, 24)
+                .padding(.bottom, 24)
             }
-            .onAppear { store.send(.onAppear) }
         }
-        .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground()
+        .listStyle(.plain)
+        .navigationBarTitleDisplayMode(.inline)
         .zashiBack()
         .zashiTitle {
-            Asset.Assets.zashiTitle.image
-                .renderingMode(.template)
-                .resizable()
-                .frame(width: 62, height: 17)
-                .foregroundColor(Asset.Colors.primary.color)
+            Text(L10n.Settings.advanced.uppercased())
+                .font(.custom(FontFamily.Archivo.bold.name, size: 14))
         }
     }
 }

@@ -60,7 +60,7 @@ public struct TransactionRowView: View {
                             isFailed: transaction.status == .failed
                         )
                     }
-                    
+
                     TransactionIdView(
                         store: store,
                         transaction: transaction
