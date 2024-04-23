@@ -51,6 +51,7 @@ public enum Asset {
     public static let share = ImageAsset(name: "share")
     public static let shield = ImageAsset(name: "shield")
     public static let shieldTick = ImageAsset(name: "shieldTick")
+    public static let shieldedFunds = ImageAsset(name: "shieldedFunds")
     public static let surroundedShield = ImageAsset(name: "surroundedShield")
     public static let tooltip = ImageAsset(name: "tooltip")
     public static let torchOff = ImageAsset(name: "torchOff")

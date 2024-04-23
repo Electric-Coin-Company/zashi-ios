@@ -41,11 +41,17 @@ struct TransactionHeaderView: View {
                             
                             titleText()
                             
-                            addressArea()
+                            if !transaction.isShieldingTransaction {
+                                addressArea()
                             
-                            Spacer(minLength: 60)
-                            
-                            balanceView()
+                                Spacer(minLength: 60)
+                                
+                                balanceView()
+                            } else {
+                                Spacer()
+                                
+                                balanceView()
+                            }
                         }
                         .padding(.trailing, 30)
                         
@@ -125,7 +131,7 @@ struct TransactionHeaderView: View {
             fontName: FontFamily.Inter.regular.name,
             mostSignificantFontSize: 12,
             leastSignificantFontSize: 8,
-            prefixSymbol: transaction.isSpending ? .minus : .plus,
+            prefixSymbol: (transaction.isSpending || transaction.isShieldingTransaction) ? .minus : .plus,
             format: transaction.isExpanded ? .expanded : .abbreviated,
             strikethrough: transaction.status == .failed,
             couldBeHidden: true
@@ -143,6 +149,13 @@ extension TransactionHeaderView {
                     .renderingMode(.template)
                     .resizable()
                     .frame(width: 20, height: 16)
+                    .foregroundColor(Asset.Colors.primary.color)
+
+            case .shielded, .shielding:
+                Asset.Assets.shieldedFunds.image
+                    .renderingMode(.template)
+                    .resizable()
+                    .frame(width: 20, height: 19)
                     .foregroundColor(Asset.Colors.primary.color)
 
             case .received, .receiving:
@@ -195,7 +208,13 @@ extension TransactionHeaderView {
             transaction: .mockedSending
         )
         .listRowSeparator(.hidden)
-        
+
+        TransactionHeaderView(
+            store: .placeholder,
+            transaction: .mockedShielded
+        )
+        .listRowSeparator(.hidden)
+
         TransactionHeaderView(
             store: .placeholder,
             transaction: .mockedReceiving
