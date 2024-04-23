@@ -75,7 +75,7 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
 
             if let error {
                 Text(error)
-                    .foregroundColor(Asset.Colors.error.color)
+                    .foregroundColor(Design.Utility.ErrorRed._600.color)
                     .font(.custom(FontFamily.Inter.medium.name, size: 12))
             }
         }

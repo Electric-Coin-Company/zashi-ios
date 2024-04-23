@@ -103,7 +103,7 @@ public struct MessageEditor: View {
                             .foregroundColor(
                                 viewStore.isValid
                                 ? Asset.Colors.shade72.color
-                                : Asset.Colors.error.color
+                                : Design.Utility.ErrorRed._600.color
                             )
                     }
                     .frame(height: 20)

@@ -36,11 +36,11 @@ struct ZashiBackV2Modifier: ViewModifier {
                                 .renderingMode(.template)
                                 .resizable()
                                 .frame(width: 24, height: 24)
-                                .foregroundColor(Asset.Colors.CurrencyConversion.closeButtonTint.color)
+                                .foregroundColor(Design.Btns.Tertiary.fg.color)
                                 .padding(8)
                                 .background {
                                     RoundedRectangle(cornerRadius: 12)
-                                        .fill(Asset.Colors.CurrencyConversion.closeButtonBcg.color)
+                                        .fill(Design.Btns.Tertiary.bg.color)
                                 }
                         }
                         .disabled(disabled)

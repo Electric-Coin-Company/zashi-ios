@@ -31,31 +31,32 @@ public struct Tooltip: View {
                 .resizable()
                 .frame(width: 16, height: 6)
                 .offset(x: 0, y: 2)
-                .foregroundColor(Asset.Colors.V2.Tooltips.bcg.color)
+                .foregroundColor(Design.HintTooltips.surfacePrimary.color)
             
             HStack(alignment: .top) {
                 VStack(alignment: .leading) {
                     Text(title)
                         .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                        .foregroundColor(Asset.Colors.V2.Tooltips.textTitle.color)
+                        .foregroundColor(Design.Text.light.color)
                         .padding(.bottom, 4)
                     
                     Text(desc)
                         .font(.custom(FontFamily.Inter.medium.name, size: 14))
-                        .foregroundColor(Asset.Colors.V2.Tooltips.textDesc.color)
+                        .foregroundColor(Design.Text.lightSupport.color)
                         .lineLimit(nil)
                 }
                 
                 Asset.Assets.buttonCloseX.image
                     .resizable()
                     .frame(width: 20, height: 20)
-                    .foregroundColor(Asset.Colors.V2.Tooltips.textDesc.color)
+                    .foregroundColor(Design.HintTooltips.defaultFg.color)
             }
             .padding(12)
-            .background(Asset.Colors.V2.Tooltips.bcg.color)
+            .background(Design.HintTooltips.surfacePrimary.color)
             .cornerRadius(8)
-            .shadow(color: Asset.Colors.V2.Tooltips.shadow.color.opacity(0.03), radius: 4, x: 0, y: 4)
-            .shadow(color: Asset.Colors.V2.Tooltips.shadow.color.opacity(0.08), radius: 8, x: 0, y: 12)
+            // TODO: Colors from Design once available
+            .shadow(color: Color(red: 0.137, green: 0.122, blue: 0.125).opacity(0.03), radius: 4, x: 0, y: 4)
+            .shadow(color: Color(red: 0.137, green: 0.122, blue: 0.125).opacity(0.08), radius: 8, x: 0, y: 12)
         }
         .onTapGesture { onTapGesture() }
     }

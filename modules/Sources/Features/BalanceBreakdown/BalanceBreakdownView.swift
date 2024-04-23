@@ -63,7 +63,7 @@ public struct BalanceBreakdownView: View {
                 if walletStatus == .restoring {
                     Text(L10n.Balances.restoringWalletWarning)
                         .font(.custom(FontFamily.Inter.medium.name, size: 10))
-                        .foregroundColor(Asset.Colors.error.color)
+                        .foregroundColor(Design.Utility.ErrorRed._600.color)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 60)
                         .padding(.vertical, 20)

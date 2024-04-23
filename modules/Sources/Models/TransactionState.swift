@@ -49,15 +49,15 @@ public struct TransactionState: Equatable, Identifiable {
     // UI Colors
     public var balanceColor: Color {
         status == .failed
-        ? Asset.Colors.error.color
+        ? Design.Utility.ErrorRed._600.color
         : (isSpending || isShieldingTransaction)
-        ? Asset.Colors.error.color
+        ? Design.Utility.ErrorRed._600.color
         : Asset.Colors.primary.color
     }
 
     public var titleColor: Color {
         status == .failed
-        ? Asset.Colors.error.color
+        ? Design.Utility.ErrorRed._600.color
         : isPending
         ? Asset.Colors.shade47.color
         : Asset.Colors.primary.color

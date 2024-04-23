@@ -124,7 +124,7 @@ public struct AdvancedSettingsView: View {
                     Text(L10n.Settings.deleteZashiWarning)
                         .font(.custom(FontFamily.Inter.regular.name, size: 12))
                 }
-                .foregroundColor(Asset.Colors.V2.textTertiary.color)
+                .foregroundColor(Design.Text.tertiary.color)
                 .padding(.bottom, 20)
 
                 Button {
@@ -132,16 +132,16 @@ public struct AdvancedSettingsView: View {
                 } label: {
                     Text(L10n.Settings.deleteZashi)
                         .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                        .foregroundColor(Asset.Colors.V2.btnDestroyFg.color)
+                        .foregroundColor(Design.Btns.Destructive1.fg.color)
                         .frame(height: 24)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
                         .background {
                             RoundedRectangle(cornerRadius: 12)
-                                .fill(Asset.Colors.V2.btnDestroyBcg.color)
+                                .fill(Design.Btns.Destructive1.bg.color)
                                 .overlay {
                                     RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Asset.Colors.V2.btnDestroyBorder.color)
+                                        .stroke(Design.Btns.Destructive1.border.color)
                                 }
                         }
                 }

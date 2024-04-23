@@ -192,7 +192,7 @@ final class TransactionStateTests: XCTestCase {
             isIdExpanded: false
         )
         
-        XCTAssertEqual(transaction.titleColor, Asset.Colors.error.color)
+        XCTAssertEqual(transaction.titleColor, Design.Utility.ErrorRed._600.color)
     }
     
     func testTitleFailedReceived() throws {
@@ -230,7 +230,7 @@ final class TransactionStateTests: XCTestCase {
             isIdExpanded: false
         )
         
-        XCTAssertEqual(transaction.titleColor, Asset.Colors.error.color)
+        XCTAssertEqual(transaction.titleColor, Design.Utility.ErrorRed._600.color)
     }
 
     // MARK: - Balance color
@@ -250,7 +250,7 @@ final class TransactionStateTests: XCTestCase {
             isIdExpanded: false
         )
         
-        XCTAssertEqual(transaction.balanceColor, Asset.Colors.error.color)
+        XCTAssertEqual(transaction.balanceColor, Design.Utility.ErrorRed._600.color)
     }
     
     func testBalanceReceivedColor() throws {
@@ -287,7 +287,7 @@ final class TransactionStateTests: XCTestCase {
             isIdExpanded: false
         )
         
-        XCTAssertEqual(transaction.balanceColor, Asset.Colors.error.color)
+        XCTAssertEqual(transaction.balanceColor, Design.Utility.ErrorRed._600.color)
     }
     
     func testBalanceFailedReceivedColor() throws {
@@ -306,7 +306,7 @@ final class TransactionStateTests: XCTestCase {
             isIdExpanded: false
         )
         
-        XCTAssertEqual(transaction.balanceColor, Asset.Colors.error.color)
+        XCTAssertEqual(transaction.balanceColor, Design.Utility.ErrorRed._600.color)
     }
     
     func testBalanceSendingColor() throws {
@@ -325,7 +325,7 @@ final class TransactionStateTests: XCTestCase {
             isIdExpanded: false
         )
         
-        XCTAssertEqual(transaction.balanceColor, Asset.Colors.error.color)
+        XCTAssertEqual(transaction.balanceColor, Design.Utility.ErrorRed._600.color)
     }
     
     func testBalanceReceivingColor() throws {

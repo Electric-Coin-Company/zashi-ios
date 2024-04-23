@@ -10,7 +10,6 @@ import ComposableArchitecture
 import Generated
 import UIComponents
 
-
 public struct CurrencyConversionSetupView: View {
     @Perception.Bindable var store: StoreOf<CurrencyConversionSetup>
     
@@ -64,20 +63,20 @@ public struct CurrencyConversionSetupView: View {
                         
                         if option == store.currentSettingsOption {
                             Circle()
-                                .fill(Asset.Colors.CurrencyConversion.optionBtnSetBcg.color)
+                                .fill(Design.Checkboxes.onBg.color)
                                 .frame(width: 20, height: 20)
                                 .overlay {
                                     Circle()
-                                        .fill(Asset.Colors.CurrencyConversion.optionBtnSet.color)
+                                        .fill(Design.Checkboxes.onFg.color)
                                         .frame(width: 10, height: 10)
                                 }
                         } else {
                             Circle()
-                                .fill(Asset.Colors.CurrencyConversion.optionBtnBcg.color)
+                                .fill(Design.Checkboxes.offBg.color)
                                 .frame(width: 20, height: 20)
                                 .overlay {
                                     Circle()
-                                        .stroke(Asset.Colors.CurrencyConversion.optionBtnOutline.color)
+                                        .stroke(Design.Checkboxes.offStroke.color)
                                         .frame(width: 20, height: 20)
                                 }
                         }
@@ -86,7 +85,7 @@ public struct CurrencyConversionSetupView: View {
                     .padding(20)
                     .background {
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(Asset.Colors.V2.strokeSecondary.color)
+                            .stroke(Design.Surfaces.strokeSecondary.color)
                     }
                 }
             }
@@ -155,8 +154,8 @@ extension CurrencyConversionSetupView {
                 .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
                 .foregroundColor(
                     disabled
-                    ? Asset.Colors.CurrencyConversion.btnPrimaryDisabledText.color
-                    : Asset.Colors.CurrencyConversion.btnPrimaryText.color
+                    ? Design.Btns.Bold.fgDisabled.color
+                    : Design.Btns.Bold.fg.color
                 )
                 .frame(height: 24)
                 .frame(maxWidth: .infinity)
@@ -165,8 +164,8 @@ extension CurrencyConversionSetupView {
                     RoundedRectangle(cornerRadius: 12)
                         .fill(
                             disabled
-                            ? Asset.Colors.CurrencyConversion.btnPrimaryDisabled.color
-                            : Asset.Colors.CurrencyConversion.btnPrimaryBcg.color
+                            ? Design.Btns.Bold.bgDisabled.color
+                            : Design.Btns.Bold.bg.color
                         )
                 }
         }
@@ -180,7 +179,7 @@ extension CurrencyConversionSetupView {
         } label: {
             Text(title)
                 .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                .foregroundColor(Asset.Colors.CurrencyConversion.primary.color)
+                .foregroundColor(Design.Btns.Ghost.fg.color)
                 .frame(height: 24)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 12)
@@ -198,7 +197,7 @@ extension CurrencyConversionSetupView {
     private func title() -> some View {
         Text(L10n.CurrencyConversion.title)
             .font(.custom(FontFamily.Inter.semiBold.name, size: 24))
-            .foregroundColor(Asset.Colors.CurrencyConversion.primary.color)
+            .foregroundColor(Design.Text.primary.color)
     }
     
     private func note() -> some View {
@@ -207,12 +206,12 @@ extension CurrencyConversionSetupView {
                 .renderingMode(.template)
                 .resizable()
                 .frame(width: 20, height: 20)
-                .foregroundColor(Asset.Colors.CurrencyConversion.primary.color)
+                .foregroundColor(Design.Text.primary.color)
                 .padding(.trailing, 12)
 
             Text(L10n.CurrencyConversion.note)
                 .font(.custom(FontFamily.Inter.regular.name, size: 12))
-                .foregroundColor(Asset.Colors.CurrencyConversion.tertiary.color)
+                .foregroundColor(Design.Text.tertiary.color)
         }
         .padding(.horizontal, 24)
     }
@@ -221,11 +220,11 @@ extension CurrencyConversionSetupView {
         VStack(alignment: .leading, spacing: 5) {
             Text(title)
                 .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
-                .foregroundColor(Asset.Colors.CurrencyConversion.primary.color)
+                .foregroundColor(Design.Text.primary.color)
 
             Text(subtitle)
                 .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                .foregroundColor(Asset.Colors.CurrencyConversion.tertiary.color)
+                .foregroundColor(Design.Text.tertiary.color)
                 .lineLimit(nil)
                 .multilineTextAlignment(.leading)
         }
@@ -237,11 +236,11 @@ extension CurrencyConversionSetupView {
             .renderingMode(.template)
             .resizable()
             .frame(width: 20, height: 20)
-            .foregroundColor(Asset.Colors.CurrencyConversion.optionTint.color)
+            .foregroundColor(Design.Text.primary.color)
             .padding(10)
             .background {
                 Circle()
-                    .fill(Asset.Colors.CurrencyConversion.optionBcg.color)
+                    .fill(Design.Surfaces.bgTertiary.color)
             }
             .padding(.trailing, 16)
     }
@@ -260,7 +259,7 @@ extension CurrencyConversionSetupView {
             
             Text(desc)
                 .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                .foregroundColor(Asset.Colors.CurrencyConversion.tertiary.color)
+                .foregroundColor(Design.Text.tertiary.color)
                 .padding(.bottom, 4)
         }
     }

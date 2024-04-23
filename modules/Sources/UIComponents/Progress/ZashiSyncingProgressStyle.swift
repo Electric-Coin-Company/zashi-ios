@@ -22,7 +22,7 @@ public struct ZashiSyncingProgressStyle: ProgressViewStyle {
                     Rectangle()
                         .frame(width: 232 * fractionCompleted, height: 14)
                         .offset(x: -116 + (116 * fractionCompleted), y: 0)
-                        .foregroundColor(Asset.Colors.primaryTint.color)
+                        .foregroundColor(Design.Surfaces.brandBg.color)
                 }
             }
     }
