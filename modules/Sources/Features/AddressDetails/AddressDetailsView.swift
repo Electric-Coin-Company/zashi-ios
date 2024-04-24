@@ -22,62 +22,64 @@ public struct AddressDetailsView: View {
 
     @Environment(\.colorScheme) var colorScheme
 
-    let store: AddressDetailsStore
+    @Perception.Bindable var store: StoreOf<AddressDetails>
     let networkType: NetworkType
     
-    public init(store: AddressDetailsStore, networkType: NetworkType) {
+    public init(store: StoreOf<AddressDetails>, networkType: NetworkType) {
         self.store = store
         self.networkType = networkType
     }
     
     public var body: some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
-            ScrollView {
-                addressBlock(type: .uaAddress, viewStore: viewStore, L10n.AddressDetails.ua, viewStore.unifiedAddress) {
-                    viewStore.send(.copyToPastboard(viewStore.unifiedAddress.redacted))
-                } shareAction: {
-                    viewStore.send(.shareQR(viewStore.unifiedAddress.redacted))
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.top, 20)
-                
-#if DEBUG
-                if networkType == .testnet {
-                    addressBlock(type: .saplingAddress, viewStore: viewStore, L10n.AddressDetails.sa, viewStore.saplingAddress) {
-                        viewStore.send(.copyToPastboard(viewStore.saplingAddress.redacted))
-                    } shareAction: {
-                        viewStore.send(.shareQR(viewStore.saplingAddress.redacted))
+        WithPerceptionTracking {
+            VStack {
+                zashiPicker()
+
+                ScrollView {
+                    Group {
+                        if store.selection == .ua {
+                            addressBlock(type: .uaAddress, L10n.AddressDetails.ua, store.unifiedAddress) {
+                                store.send(.copyToPastboard(store.unifiedAddress.redacted))
+                            } shareAction: {
+                                store.send(.shareQR(store.unifiedAddress.redacted))
+                            }
+                        } else {
+                            addressBlock(type: .tAddress, L10n.AddressDetails.ta, store.transparentAddress) {
+                                store.send(.copyToPastboard(store.transparentAddress.redacted))
+                            } shareAction: {
+                                store.send(.shareQR(store.transparentAddress.redacted))
+                            }
+                        }
                     }
-                }
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 20)
+                    
+#if DEBUG
+                    if networkType == .testnet {
+                        addressBlock(type: .saplingAddress, L10n.AddressDetails.sa, store.saplingAddress) {
+                            store.send(.copyToPastboard(store.saplingAddress.redacted))
+                        } shareAction: {
+                            store.send(.shareQR(store.saplingAddress.redacted))
+                        }
+                    }
 #endif
-                
-                addressBlock(type: .tAddress, viewStore: viewStore, L10n.AddressDetails.ta, viewStore.transparentAddress) {
-                    viewStore.send(.copyToPastboard(viewStore.transparentAddress.redacted))
-                } shareAction: {
-                    viewStore.send(.shareQR(viewStore.transparentAddress.redacted))
+                    
+                    shareView()
                 }
-                
-                shareLogsView(viewStore)
             }
-            .padding(.vertical, 1)
             .applyScreenBackground()
         }
     }
     
     @ViewBuilder private func addressBlock(
         type: AddressType,
-        viewStore: AddressDetailsViewStore,
         _ title: String,
         _ address: String,
         _ copyAction: @escaping () -> Void,
         shareAction: @escaping () -> Void
     ) -> some View {
         VStack {
-            Text(title)
-                .font(.custom(FontFamily.Archivo.semiBold.name, size: 16))
-                .padding(.bottom, 20)
-            
-            qrCode(address, type: type, viewStore: viewStore)
+            qrCode(address, type: type)
                 .frame(width: 270, height: 270)
                 .padding(.bottom, 20)
             
@@ -125,19 +127,58 @@ public struct AddressDetailsView: View {
         }
         .padding(.bottom, 40)
     }
+    
+    @ViewBuilder private func zashiPicker() -> some View {
+        ZashiPicker(
+            AddressDetails.State.Selection.allCases,
+            selection: store.selection,
+            itemBuilder: { item in
+                Text(item == .ua
+                     ? L10n.AddressDetails.ua
+                     :L10n.AddressDetails.ta
+                ).tag(item == .ua
+                      ? AddressDetails.State.Selection.ua
+                      : AddressDetails.State.Selection.transparent
+                )
+                .foregroundColor(
+                    store.selection == item
+                    ? Asset.Colors.pickerTitleSelected.color
+                    : Asset.Colors.pickerTitleUnselected.color
+                )
+                .padding(.vertical, 12)
+                .padding(.horizontal, 8)
+                .frame(maxWidth: .infinity)
+                .multilineTextAlignment(.center)
+                .font(.custom(FontFamily.Archivo.semiBold.name, size: 12))
+                .onTapGesture {
+                    withAnimation(.easeInOut(duration: 0.150)) {
+                        store.selection = item
+                    }
+                }
+                .background(
+                    store.selection == item
+                    ? Asset.Colors.pickerSelection.color
+                    : Asset.Colors.pickerBcg.color
+                )
+            }
+        )
+        .border(Asset.Colors.pickerBcg.color, width: 4)
+        .frame(width: 270)
+        .padding(.top, 50)
+    }
 }
 
 extension AddressDetailsView {
-    public func qrCode(_ qrText: String, type: AddressType, viewStore: AddressDetailsViewStore) -> some View {
+    public func qrCode(_ qrText: String, type: AddressType) -> some View {
         var storedImg: CGImage?
         
         switch type {
         case .saplingAddress:
             storedImg = nil
         case .tAddress:
-            storedImg = viewStore.taQR
+            storedImg = store.taQR
         case .uaAddress:
-            storedImg = viewStore.uaQR
+            storedImg = store.uaQR
         }
         
         if let storedImg {
@@ -156,14 +197,14 @@ extension AddressDetailsView {
         }
     }
     
-    @ViewBuilder func shareLogsView(_ viewStore: AddressDetailsViewStore) -> some View {
-        if let addressToShare = viewStore.addressToShare,
+    @ViewBuilder func shareView() -> some View {
+        if let addressToShare = store.addressToShare,
            let cgImg = QRCodeGenerator.generate(
             from: addressToShare.data,
             color: colorScheme == .dark ? Asset.Colors.shade85.systemColor : Asset.Colors.primary.systemColor
            ) {
             UIShareDialogView(activityItems: [UIImage(cgImage: cgImg)]) {
-                viewStore.send(.shareFinished)
+                store.send(.shareFinished)
             }
             // UIShareDialogView only wraps UIActivityViewController presentation
             // so frame is set to 0 to not break SwiftUIs layout
@@ -176,6 +217,26 @@ extension AddressDetailsView {
 
 #Preview {
     NavigationView {
-        AddressDetailsView(store: .placeholder, networkType: .testnet)
+        AddressDetailsView(store: AddressDetails.placeholder, networkType: .testnet)
+    }
+}
+
+// MARK: - Placeholders
+
+extension AddressDetails.State {
+    public static let initial = AddressDetails.State()
+    
+    public static let demo = AddressDetails.State(
+        uAddress: try! UnifiedAddress(
+            encoding: "utest1vergg5jkp4xy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzjanqtl8uqp5vln3zyy246ejtx86vqftp73j7jg9099jxafyjhfm6u956j3",
+            network: .testnet)
+    )
+}
+
+extension AddressDetails {
+    public static let placeholder = StoreOf<AddressDetails>(
+        initialState: .initial
+    ) {
+        AddressDetails()
     }
 }

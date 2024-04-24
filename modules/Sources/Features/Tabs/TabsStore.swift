@@ -47,7 +47,7 @@ public struct TabsReducer: Reducer {
             }
         }
         
-        public var addressDetailsState: AddressDetailsReducer.State
+        public var addressDetailsState: AddressDetails.State
         public var balanceBreakdownState: BalanceBreakdownReducer.State
         public var destination: Destination?
         public var homeState: HomeReducer.State
@@ -57,7 +57,7 @@ public struct TabsReducer: Reducer {
         public var settingsState: SettingsReducer.State
         
         public init(
-            addressDetailsState: AddressDetailsReducer.State,
+            addressDetailsState: AddressDetails.State,
             balanceBreakdownState: BalanceBreakdownReducer.State,
             destination: Destination? = nil,
             homeState: HomeReducer.State,
@@ -78,7 +78,7 @@ public struct TabsReducer: Reducer {
     }
     
     public enum Action: Equatable {
-        case addressDetails(AddressDetailsReducer.Action)
+        case addressDetails(AddressDetails.Action)
         case balanceBreakdown(BalanceBreakdownReducer.Action)
         case home(HomeReducer.Action)
         case restoreWalletTask
@@ -99,7 +99,7 @@ public struct TabsReducer: Reducer {
         }
         
         Scope(state: \.addressDetailsState, action: /Action.addressDetails) {
-            AddressDetailsReducer()
+            AddressDetails()
         }
         
         Scope(state: \.balanceBreakdownState, action: /Action.balanceBreakdown) {

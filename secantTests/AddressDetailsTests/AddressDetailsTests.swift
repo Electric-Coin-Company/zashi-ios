@@ -22,9 +22,9 @@ class AddressDetailsTests: XCTestCase {
         let uAddress = try UnifiedAddress(encoding: uAddressEncoding, network: .testnet)
 
         let store = TestStore(
-            initialState: AddressDetailsReducer.State(uAddress: uAddress)
+            initialState: AddressDetails.State(uAddress: uAddress)
         ) {
-            AddressDetailsReducer()
+            AddressDetails()
         }
         
         store.dependencies.pasteboard = testPasteboard
@@ -47,9 +47,9 @@ class AddressDetailsTests: XCTestCase {
         let uAddress = try UnifiedAddress(encoding: uAddressEncoding, network: .testnet)
 
         let store = TestStore(
-            initialState: AddressDetailsReducer.State(uAddress: uAddress)
+            initialState: AddressDetails.State(uAddress: uAddress)
         ) {
-            AddressDetailsReducer()
+            AddressDetails()
         }
         
         store.dependencies.pasteboard = testPasteboard
@@ -70,9 +70,9 @@ class AddressDetailsTests: XCTestCase {
         let uAddress = try UnifiedAddress(encoding: uAddressEncoding, network: .testnet)
         
         let store = TestStore(
-            initialState: AddressDetailsReducer.State(uAddress: uAddress)
+            initialState: AddressDetails.State(uAddress: uAddress)
         ) {
-            AddressDetailsReducer()
+            AddressDetails()
         }
         
         store.dependencies.pasteboard = testPasteboard
@@ -94,9 +94,9 @@ class AddressDetailsTests: XCTestCase {
         let uAddress = try UnifiedAddress(encoding: uAddressEncoding, network: .testnet)
 
         let store = TestStore(
-            initialState: AddressDetailsReducer.State(uAddress: uAddress)
+            initialState: AddressDetails.State(uAddress: uAddress)
         ) {
-            AddressDetailsReducer()
+            AddressDetails()
         }
 
         let expectedAddress = try uAddress.transparentReceiver().stringEncoded
@@ -112,9 +112,9 @@ class AddressDetailsTests: XCTestCase {
         let uAddress = try UnifiedAddress(encoding: uAddressEncoding, network: .testnet)
 
         let store = TestStore(
-            initialState: AddressDetailsReducer.State(uAddress: uAddress)
+            initialState: AddressDetails.State(uAddress: uAddress)
         ) {
-            AddressDetailsReducer()
+            AddressDetails()
         }
 
         await store.send(.shareQR(uAddress.stringEncoded.redacted)) { state in
@@ -128,9 +128,9 @@ class AddressDetailsTests: XCTestCase {
         let uAddress = try UnifiedAddress(encoding: uAddressEncoding, network: .testnet)
 
         let store = TestStore(
-            initialState: AddressDetailsReducer.State(uAddress: uAddress)
+            initialState: AddressDetails.State(uAddress: uAddress)
         ) {
-            AddressDetailsReducer()
+            AddressDetails()
         }
 
         let expectedAddress = try uAddress.saplingReceiver().stringEncoded

@@ -11,6 +11,7 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ### Changed
 - The confirmation button at recovery phrase screen changed its name from "I got it" to "I've saved it".
+- Receive tab shows 1 QR code at a time with ability to switch between them.
 
 ## 1.0.6 build 4 (2024-04-30)
 
