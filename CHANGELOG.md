@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Changed
+- The order of servers available to switch changed and few more servers were added to the list.
+
 ## 1.0.5 build 4 (2024-04-19)
 
 ### Fixed
