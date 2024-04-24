@@ -25,20 +25,36 @@ extension ZcashSDKEnvironment {
         }
         
         case mainnet
+        case custom
+        case lwd1
+        case lwd2
+        case lwd3
+        case lwd4
+        case lwd5
+        case lwd6
+        case lwd7
+        case lwd8
         case naNW
         case saNW
         case euNW
         case aiNW
-        case custom
         
         public func server() -> String {
             switch self {
             case .mainnet: return "mainnet.lightwalletd.com:9067"
+            case .custom: return "custom"
+            case .lwd1: return "lwd1.zcash-infra.com:9067"
+            case .lwd2: return "lwd1.zcash-infra.com:9067"
+            case .lwd3: return "lwd1.zcash-infra.com:9067"
+            case .lwd4: return "lwd1.zcash-infra.com:9067"
+            case .lwd5: return "lwd1.zcash-infra.com:9067"
+            case .lwd6: return "lwd1.zcash-infra.com:9067"
+            case .lwd7: return "lwd1.zcash-infra.com:9067"
+            case .lwd8: return "lwd1.zcash-infra.com:9067"
             case .naNW: return "na.lightwalletd.com:443"
             case .saNW: return "sa.lightwalletd.com:443"
             case .euNW: return "eu.lightwalletd.com:443"
             case .aiNW: return "ai.lightwalletd.com:443"
-            case .custom: return "custom"
             }
         }
         
@@ -55,6 +71,13 @@ extension ZcashSDKEnvironment {
                 return LightWalletEndpoint(
                     address: String(self.server().dropLast(4)),
                     port: 443,
+                    secure: true,
+                    streamingCallTimeoutInMillis: ZcashSDKConstants.streamingCallTimeoutInMillis
+                )
+            case .lwd1, .lwd2, .lwd3, .lwd4, .lwd5, .lwd6, .lwd7, .lwd8:
+                return LightWalletEndpoint(
+                    address: String(self.server().dropLast(5)),
+                    port: 9067,
                     secure: true,
                     streamingCallTimeoutInMillis: ZcashSDKConstants.streamingCallTimeoutInMillis
                 )
