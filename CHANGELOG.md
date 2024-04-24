@@ -6,6 +6,8 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.0.6 build 1 (2024-04-24)
+
 ### Changed
 - The order of servers available to switch changed and few more servers were added to the list.
 
