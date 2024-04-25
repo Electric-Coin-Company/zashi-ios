@@ -27,7 +27,7 @@ extension ZcashSDKEnvironment {
                         } else {
                             // Initalization of LightWalletEndpoint failed, fallback to hardcoded one,
                             // setting the mainnet key to the storage to reflect that
-                            userDefaults.setValue(ZcashSDKEnvironment.Servers.mainnet.rawValue, udKey)
+                            userDefaults.setValue(ZcashSDKEnvironment.Servers.globalZR.rawValue, udKey)
                         }
                     }
                 }
@@ -35,7 +35,7 @@ extension ZcashSDKEnvironment {
                 // Hardcoded endpoint
                 return LightWalletEndpoint(
                     address: Self.endpointString(for: network),
-                    port: ZcashSDKConstants.endpointPort,
+                    port: network.networkType == .testnet ? ZcashSDKConstants.endpointTestnetPort : ZcashSDKConstants.endpointMainnetPort,
                     secure: true,
                     streamingCallTimeoutInMillis: ZcashSDKConstants.streamingCallTimeoutInMillis
                 )
