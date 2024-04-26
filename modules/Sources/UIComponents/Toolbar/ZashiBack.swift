@@ -32,7 +32,7 @@ struct ZashiBackModifier: ViewModifier {
                                     .resizable()
                                     .renderingMode(.template)
                                     .frame(width: 10, height: 10)
-                                    .tint(invertedColors ? Asset.Colors.secondary.color : Asset.Colors.primary.color)
+                                    .foregroundColor(invertedColors ? Asset.Colors.secondary.color : Asset.Colors.primary.color)
                                 
                                 Text(L10n.General.back.uppercased())
                                     .foregroundColor(

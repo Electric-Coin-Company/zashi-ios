@@ -39,7 +39,7 @@ public struct ImportBirthdayView: View {
                     .autocapitalization(.none)
                     .multilineTextAlignment(.center)
                     .overlay {
-                        Color.black
+                        Asset.Colors.primary.color
                             .frame(height: 1)
                             .offset(x: 0, y: 20)
                     }

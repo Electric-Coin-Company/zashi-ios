@@ -113,7 +113,7 @@ public struct TabsView: View {
                             }
                         }
                         .padding(.horizontal, 40)
-                        .background(Asset.Colors.secondary.color)
+                        .background(Asset.Colors.background.color)
                     }
                     .ignoresSafeArea(.keyboard)
                 }
@@ -134,9 +134,11 @@ public struct TabsView: View {
 
         case .account:
             Asset.Assets.zashiTitle.image
+                .renderingMode(.template)
                 .resizable()
                 .frame(width: 62, height: 17)
-            
+                .foregroundColor(Asset.Colors.primary.color)
+
         case .balances:
             Text(L10n.Tabs.balances.uppercased())
                 .font(.custom(FontFamily.Archivo.bold.name, size: 14))

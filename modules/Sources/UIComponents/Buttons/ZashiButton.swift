@@ -9,6 +9,8 @@ import SwiftUI
 import Generated
 
 public struct ZcashButtonStyle: ButtonStyle {
+    @Environment(\.colorScheme) var colorScheme
+    
     public enum Appearance {
         case primary
         case secondary
@@ -22,37 +24,117 @@ public struct ZcashButtonStyle: ButtonStyle {
     
     public func makeBody(configuration: Self.Configuration) -> some View {
         ZStack {
+            // shadow
             Rectangle()
-                .fill(
-                    appearance == .primary ? .white
-                    : isEnabled ? Asset.Colors.primary.color : Asset.Colors.shade72.color
-                )
+                .fill(shadowFillColor())
                 .frame(height: height)
-                .border(appearance == .secondary && isEnabled ? Asset.Colors.secondary.color : Asset.Colors.primary.color)
+                .border(shadowBorderColor())
                 .offset(CGSize(width: shadowOffset, height: shadowOffset))
 
+            // button
             Rectangle()
+                .fill(buttonFillColor())
                 .frame(height: height)
-                .foregroundColor(
-                    appearance == .primary ?
-                    isEnabled ? Asset.Colors.primary.color : Asset.Colors.shade72.color
-                    : Asset.Colors.secondary.color
-                )
-                .border(Asset.Colors.primary.color)
+                .border(buttonBorderColor())
                 .overlay(content: {
                     configuration.label
                         .font(.custom(FontFamily.Inter.medium.name, size: 14))
-                        .foregroundColor(
-                            appearance == .primary ? Asset.Colors.secondary.color
-                            : isEnabled ? Asset.Colors.primary.color : Asset.Colors.shade72.color
-                        )
+                        .foregroundColor(fontColor())
                 })
                 .offset(CGSize(width: offset, height: offset))
         }
         .onChange(of: configuration.isPressed) { newValue in
             if newValue {
-                withAnimation(.easeInOut(duration: 0.05)) { offset = shadowOffset }
-                withAnimation(.easeInOut(duration: 0.05).delay(0.05)) { offset = 0.0 }
+                withAnimation(.easeInOut(duration: 0.05)) {
+                    offset = shadowOffset
+                }
+                withAnimation(.easeInOut(duration: 0.05).delay(0.05)) {
+                    offset = 0.0
+                }
+            }
+        }
+    }
+
+    private func fontColor() -> Color {
+        if colorScheme == .light {
+            if !isEnabled {
+                return Asset.Colors.btnLabelShade.color
+            } else {
+                return appearance == .primary
+                ? Asset.Colors.btnSecondary.color
+                : Asset.Colors.btnPrimary.color
+            }
+        } else {
+            if !isEnabled && appearance == .secondary {
+                return Asset.Colors.btnLightShade.color
+            } else {
+                return Asset.Colors.btnSecondary.color
+            }
+        }
+    }
+
+    private func buttonFillColor() -> Color {
+        if colorScheme == .light {
+            if appearance == .secondary {
+                return Asset.Colors.btnSecondary.color
+            } else {
+                return isEnabled
+                ? Asset.Colors.btnPrimary.color
+                : Asset.Colors.btnLightShade.color
+            }
+        } else {
+            if isEnabled {
+                return Asset.Colors.btnPrimary.color
+            } else {
+                return appearance == .primary
+                ? Asset.Colors.btnDarkShade.color
+                : Asset.Colors.btnSecondary.color
+            }
+        }
+    }
+    
+    private func buttonBorderColor() -> Color {
+        if colorScheme == .light {
+            return Asset.Colors.btnPrimary.color
+        } else {
+            if !isEnabled && appearance == .secondary {
+                return Asset.Colors.btnPrimary.color
+            } else {
+                return Asset.Colors.btnSecondary.color
+            }
+        }
+    }
+    
+    private func shadowFillColor() -> Color {
+        if colorScheme == .light {
+            if isEnabled && appearance == .secondary {
+                return Asset.Colors.btnPrimary.color
+            } else {
+                return Asset.Colors.btnSecondary.color
+            }
+        } else {
+            if appearance == .primary {
+                return Asset.Colors.btnPrimary.color
+            } else {
+                return isEnabled
+                ? Asset.Colors.btnDarkShade.color
+                : Asset.Colors.btnSecondary.color
+            }
+        }
+    }
+    
+    private func shadowBorderColor() -> Color {
+        if colorScheme == .light {
+            if isEnabled && appearance == .secondary {
+                return Asset.Colors.btnSecondary.color
+            } else {
+                return Asset.Colors.btnPrimary.color
+            }
+        } else {
+            if !isEnabled && appearance == .secondary {
+                return Asset.Colors.btnPrimary.color
+            } else {
+                return Asset.Colors.btnSecondary.color
             }
         }
     }
@@ -121,12 +203,43 @@ extension Button {
         .disabled(false)
 
         Button { } label: {
+            Text("SECONDARY".uppercased())
+        }
+        .zcashStyle(.secondary)
+        .padding(.horizontal, 40)
+        .padding(.bottom, 20)
+        .disabled(false)
+
+        Button { } label: {
             Text("PRIMARY DISABLED".uppercased())
         }
         .zcashStyle()
         .padding(.horizontal, 40)
         .padding(.bottom, 20)
         .disabled(true)
+
+        Button { } label: {
+            Text("SECONDARY DISABLED".uppercased())
+        }
+        .zcashStyle(.secondary)
+        .padding(.horizontal, 40)
+        .padding(.bottom, 20)
+        .disabled(true)
+    }
+    .padding()
+    .background(.blue)
+    .preferredColorScheme(.light)
+}
+
+#Preview {
+    VStack {
+        Button { } label: {
+            Text("PRIMARY".uppercased())
+        }
+        .zcashStyle()
+        .padding(.horizontal, 40)
+        .padding(.bottom, 20)
+        .disabled(false)
 
         Button { } label: {
             Text("SECONDARY".uppercased())
@@ -137,6 +250,14 @@ extension Button {
         .disabled(false)
 
         Button { } label: {
+            Text("PRIMARY DISABLED".uppercased())
+        }
+        .zcashStyle()
+        .padding(.horizontal, 40)
+        .padding(.bottom, 20)
+        .disabled(true)
+
+        Button { } label: {
             Text("SECONDARY DISABLED".uppercased())
         }
         .zcashStyle(.secondary)
@@ -144,4 +265,7 @@ extension Button {
         .padding(.bottom, 20)
         .disabled(true)
     }
+    .padding()
+    .background(.blue)
+    .preferredColorScheme(.dark)
 }

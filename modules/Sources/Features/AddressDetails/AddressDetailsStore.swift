@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 import ComposableArchitecture
 import ZcashLightClientKit
 import Pasteboard
@@ -19,6 +20,8 @@ public struct AddressDetailsReducer: Reducer {
     public struct State: Equatable {
         public var addressToShare: RedactableString?
         public var uAddress: UnifiedAddress?
+        public var uaQR: CGImage?
+        public var taQR: CGImage?
 
         public var unifiedAddress: String {
             uAddress?.stringEncoded ?? L10n.AddressDetails.Error.cantExtractUnifiedAddress
@@ -53,6 +56,7 @@ public struct AddressDetailsReducer: Reducer {
 
     public enum Action: Equatable {
         case copyToPastboard(RedactableString)
+        case rememberQR(CGImage?, Bool)
         case shareFinished
         case shareQR(RedactableString)
     }
@@ -67,6 +71,14 @@ public struct AddressDetailsReducer: Reducer {
             pasteboard.setString(text)
             return .none
         
+        case let .rememberQR(image, uaQR):
+            if uaQR {
+                state.uaQR = image
+            } else {
+                state.taQR = image
+            }
+            return .none
+            
         case .shareFinished:
             state.addressToShare = nil
             return .none

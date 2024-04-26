@@ -109,9 +109,11 @@ extension BalanceBreakdownView {
                 )
                 
                 Asset.Assets.shield.image
+                    .renderingMode(.template)
                     .resizable()
                     .frame(width: 11, height: 14)
                     .padding(.leading, 10)
+                    .foregroundColor(Asset.Colors.primary.color)
             }
             
             HStack(spacing: 0) {
@@ -127,7 +129,7 @@ extension BalanceBreakdownView {
                     leastSignificantFontSize: 8,
                     format: .expanded
                 )
-                .foregroundColor(Asset.Colors.shade47.color)
+                .foregroundColor(Asset.Colors.shade55.color)
                 .padding(.trailing, viewStore.changePending.amount > 0 ? 0 : 21)
 
                 if viewStore.changePending.amount > 0 {
@@ -149,7 +151,7 @@ extension BalanceBreakdownView {
                     leastSignificantFontSize: 8,
                     format: .expanded
                 )
-                .foregroundColor(Asset.Colors.shade47.color)
+                .foregroundColor(Asset.Colors.shade55.color)
                 .padding(.trailing, viewStore.pendingTransactions.amount > 0 ? 0 : 21)
 
                 if viewStore.pendingTransactions.amount > 0 {
@@ -199,7 +201,7 @@ extension BalanceBreakdownView {
                     leastSignificantFontSize: 8,
                     format: .expanded
                 )
-                .foregroundColor(Asset.Colors.shade47.color)
+                .foregroundColor(Asset.Colors.shade55.color)
             }
             .padding(.bottom, 10)
 

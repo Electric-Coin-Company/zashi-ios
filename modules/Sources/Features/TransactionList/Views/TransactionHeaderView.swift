@@ -99,8 +99,10 @@ struct TransactionHeaderView: View {
     @ViewBuilder private func addressArea() -> some View {
         if transaction.zAddress == nil {
             Asset.Assets.surroundedShield.image
+                .renderingMode(.template)
                 .resizable()
                 .frame(width: 17, height: 13)
+                .foregroundColor(Asset.Colors.primary.color)
         } else if !transaction.isAddressExpanded {
             Button {
                 viewStore.send(.transactionAddressExpandRequested(transaction.id))
@@ -135,18 +137,24 @@ extension TransactionHeaderView {
             switch transaction.status {
             case .paid, .failed, .sending:
                 Asset.Assets.fly.image
+                    .renderingMode(.template)
                     .resizable()
                     .frame(width: 20, height: 16)
+                    .foregroundColor(Asset.Colors.primary.color)
 
             case .received, .receiving:
                 if transaction.isUnread {
                     Asset.Assets.flyReceivedFilled.image
+                        .renderingMode(.template)
                         .resizable()
                         .frame(width: 17, height: 11)
+                        .foregroundColor(Asset.Colors.primary.color)
                 } else {
                     Asset.Assets.flyReceived.image
+                        .renderingMode(.template)
                         .resizable()
                         .frame(width: 17, height: 11)
+                        .foregroundColor(Asset.Colors.primary.color)
                 }
             }
         }

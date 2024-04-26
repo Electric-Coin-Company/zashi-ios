@@ -10,6 +10,17 @@ import ComposableArchitecture
 import Generated
 import Utils
 
+public extension View {
+    func colorBackground(_ content: Color) -> some View {
+        if #available(iOS 16.0, *) {
+            return self.scrollContentBackground(.hidden).background(content)
+        } else {
+            UITextView.appearance().backgroundColor = .clear
+            return self.background(content)
+        }
+    }
+}
+
 public struct MessageEditor: View {
     @Environment(\.isEnabled) private var isEnabled
 
@@ -28,8 +39,10 @@ public struct MessageEditor: View {
             VStack {
                 HStack {
                     Asset.Assets.fly.image
+                        .renderingMode(.template)
                         .resizable()
                         .frame(width: 20, height: 16)
+                        .foregroundColor(Asset.Colors.primary.color)
                     
                     Text(L10n.Send.message)
                         .font(.custom(FontFamily.Inter.regular.name, size: 14))
@@ -47,6 +60,7 @@ public struct MessageEditor: View {
                         .padding(2)
                         .font(.custom(FontFamily.Inter.regular.name, size: 14))
                         .messageShape(filled: nil)
+                        .colorBackground(Asset.Colors.background.color)
                         .overlay {
                             if message.isEmpty {
                                 HStack {
@@ -96,22 +110,35 @@ public struct MessageEditor: View {
     }
 }
 
-struct MessageEditor_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack {
-            MessageEditor(store: .placeholder)
-                .frame(height: 200)
-                .padding()
-                .applyScreenBackground()
-                .preferredColorScheme(.light)
-                .disabled(false)
-
-            MessageEditor(store: .placeholder)
-                .frame(height: 200)
-                .padding()
-                .applyScreenBackground()
-                .preferredColorScheme(.light)
-                .disabled(true)
-        }
+#Preview {
+    VStack {
+        MessageEditor(store: .placeholder)
+            .frame(height: 200)
+            .padding()
+            .disabled(false)
+        
+        MessageEditor(store: .placeholder)
+            .frame(height: 200)
+            .padding()
+            .disabled(true)
     }
+    .applyScreenBackground()
+    .preferredColorScheme(.light)
 }
+
+#Preview {
+    VStack {
+        MessageEditor(store: .placeholder)
+            .frame(height: 200)
+            .padding()
+            .disabled(false)
+        
+        MessageEditor(store: .placeholder)
+            .frame(height: 200)
+            .padding()
+            .disabled(true)
+    }
+    .applyScreenBackground()
+    .preferredColorScheme(.dark)
+}
+

@@ -12,6 +12,7 @@ public struct CollapseTransactionView: View {
     public var body: some View {
         HStack {
             Asset.Assets.upArrow.image
+                .renderingMode(.template)
                 .resizable()
                 .frame(width: 10, height: 7)
                 .scaleEffect(0.6)
@@ -21,7 +22,7 @@ public struct CollapseTransactionView: View {
                     Rectangle()
                         .stroke()
                         .frame(width: 10, height: 10)
-                        .foregroundColor(Asset.Colors.shade72.color)
+                        .foregroundColor(Asset.Colors.shade47.color)
                 }
             
             Text(L10n.TransactionList.collapse)

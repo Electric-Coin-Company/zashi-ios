@@ -40,7 +40,7 @@ public struct HomeView: View {
                     )
                     .frame(height: 94)
                     .frame(maxWidth: .infinity)
-                    .background(Asset.Colors.shade92.color)
+                    .background(Asset.Colors.syncProgresBcg.color)
                     .padding(.top, 7)
                 }
                 

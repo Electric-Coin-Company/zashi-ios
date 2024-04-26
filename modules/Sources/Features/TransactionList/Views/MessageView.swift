@@ -53,6 +53,9 @@ struct MessageView: View {
                     filled: !isSpending
                     ? Asset.Colors.messageBcgReceived.color
                     : nil,
+                    border: isSpending
+                    ? Asset.Colors.primary.color
+                    : nil,
                     orientation: !isSpending
                     ? .right
                     : .left

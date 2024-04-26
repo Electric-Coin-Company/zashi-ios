@@ -40,7 +40,7 @@ public struct RestoringWalletBadgeModifier: ViewModifier {
                         .background(
                             background == .transparent
                             ? .clear
-                            : Asset.Colors.secondary.color
+                            : Asset.Colors.background.color
                         )
                         .zIndex(1)
                 }
@@ -66,7 +66,7 @@ private struct RestoringWalletBadge: View {
     var body: some View {
         Text(L10n.General.restoringWallet)
             .font(.custom(FontFamily.Archivo.semiBold.name, size: 12))
-            .foregroundStyle(Asset.Colors.shade55.color)
+            .foregroundStyle(Asset.Colors.restoreUI.color)
     }
 }
 

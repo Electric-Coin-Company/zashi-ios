@@ -23,10 +23,12 @@ public struct PlainOnboardingView: View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             VStack {
                 Asset.Assets.welcomeScreenLogo.image
+                    .renderingMode(.template)
                     .resizable()
                     .frame(width: 169, height: 160)
                     .padding(.top, 10)
-                
+                    .foregroundColor(Asset.Colors.primary.color)
+
                 Text(L10n.PlainOnboarding.title)
                     .font(.custom(FontFamily.Inter.regular.name, size: 22))
                     .padding(.top, 15)
