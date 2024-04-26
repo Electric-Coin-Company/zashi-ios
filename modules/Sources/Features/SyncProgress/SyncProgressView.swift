@@ -37,6 +37,7 @@ public struct SyncProgressView: View {
                     Text(viewStore.syncStatusMessage)
                         .multilineTextAlignment(.center)
                         .font(.custom(FontFamily.Inter.regular.name, size: 10))
+                        .padding(.horizontal, 35)
                 }
                 
                 Text(String(format: "%0.1f%%", viewStore.syncingPercentage * 100))

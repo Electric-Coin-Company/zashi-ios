@@ -17,7 +17,7 @@ extension ZcashSDKEnvironment: TestDependencyKey {
         endpoint: {
             LightWalletEndpoint(
                 address: ZcashSDKConstants.endpointTestnetAddress,
-                port: ZcashSDKConstants.endpointPort,
+                port: ZcashSDKConstants.endpointTestnetPort,
                 secure: true,
                 streamingCallTimeoutInMillis: ZcashSDKConstants.streamingCallTimeoutInMillis
             )

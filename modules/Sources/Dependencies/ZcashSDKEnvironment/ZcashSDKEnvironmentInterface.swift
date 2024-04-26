@@ -24,8 +24,12 @@ extension ZcashSDKEnvironment {
             public static let udCustomServerKey = "zashi_udCustomServerKey"
         }
         
-        case mainnet
+        case globalZR
         case custom
+        case naZR
+        case saZR
+        case euZR
+        case apZR
         case lwd1
         case lwd2
         case lwd3
@@ -34,40 +38,29 @@ extension ZcashSDKEnvironment {
         case lwd6
         case lwd7
         case lwd8
-        case naNW
-        case saNW
-        case euNW
-        case aiNW
         
         public func server() -> String {
             switch self {
-            case .mainnet: return "mainnet.lightwalletd.com:9067"
+            case .globalZR: return "zec.rocks:443"
             case .custom: return "custom"
+            case .naZR: return "na.zec.rocks:443"
+            case .saZR: return "sa.zec.rocks:443"
+            case .euZR: return "eu.zec.rocks:443"
+            case .apZR: return "ap.zec.rocks:443"
             case .lwd1: return "lwd1.zcash-infra.com:9067"
-            case .lwd2: return "lwd1.zcash-infra.com:9067"
-            case .lwd3: return "lwd1.zcash-infra.com:9067"
-            case .lwd4: return "lwd1.zcash-infra.com:9067"
-            case .lwd5: return "lwd1.zcash-infra.com:9067"
-            case .lwd6: return "lwd1.zcash-infra.com:9067"
-            case .lwd7: return "lwd1.zcash-infra.com:9067"
-            case .lwd8: return "lwd1.zcash-infra.com:9067"
-            case .naNW: return "na.lightwalletd.com:443"
-            case .saNW: return "sa.lightwalletd.com:443"
-            case .euNW: return "eu.lightwalletd.com:443"
-            case .aiNW: return "ai.lightwalletd.com:443"
+            case .lwd2: return "lwd2.zcash-infra.com:9067"
+            case .lwd3: return "lwd3.zcash-infra.com:9067"
+            case .lwd4: return "lwd4.zcash-infra.com:9067"
+            case .lwd5: return "lwd5.zcash-infra.com:9067"
+            case .lwd6: return "lwd6.zcash-infra.com:9067"
+            case .lwd7: return "lwd7.zcash-infra.com:9067"
+            case .lwd8: return "lwd8.zcash-infra.com:9067"
             }
         }
         
         public func lightWalletEndpoint(_ userDefaults: UserDefaultsClient) -> LightWalletEndpoint? {
             switch self {
-            case .mainnet:
-                return LightWalletEndpoint(
-                    address: "mainnet.lightwalletd.com",
-                    port: 9067,
-                    secure: true,
-                    streamingCallTimeoutInMillis: ZcashSDKConstants.streamingCallTimeoutInMillis
-                )
-            case .naNW, .saNW, .euNW, .aiNW:
+            case .globalZR, .naZR, .saZR, .euZR, .apZR:
                 return LightWalletEndpoint(
                     address: String(self.server().dropLast(4)),
                     port: 443,
@@ -123,9 +116,10 @@ extension ZcashSDKEnvironment {
     }
 
     public enum ZcashSDKConstants {
-        static let endpointMainnetAddress = "mainnet.lightwalletd.com"
+        static let endpointMainnetAddress = "zec.rocks"
         static let endpointTestnetAddress = "lightwalletd.testnet.electriccoin.co"
-        static let endpointPort = 9067
+        static let endpointMainnetPort = 443
+        static let endpointTestnetPort = 9067
         static let mnemonicWordsMaxCount = 24
         static let requiredTransactionConfirmations = 10
         static let streamingCallTimeoutInMillis = Int64(10 * 60 * 60 * 1000) // ten hours

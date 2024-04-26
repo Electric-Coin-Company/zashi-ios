@@ -22,13 +22,13 @@ public struct ServerSetup {
     public struct State: Equatable {
         @Presents var alert: AlertState<Action>?
         var isUpdatingServer = false
-        var initialServer: ZcashSDKEnvironment.Servers = .mainnet
-        var server: ZcashSDKEnvironment.Servers = .mainnet
+        var initialServer: ZcashSDKEnvironment.Servers = .globalZR
+        var server: ZcashSDKEnvironment.Servers = .globalZR
         var customServer: String
         
         public init(
             isUpdatingServer: Bool = false,
-            server: ZcashSDKEnvironment.Servers = .mainnet,
+            server: ZcashSDKEnvironment.Servers = .globalZR,
             customServer: String = ""
         ) {
             self.isUpdatingServer = isUpdatingServer
