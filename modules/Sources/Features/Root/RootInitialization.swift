@@ -393,7 +393,7 @@ extension RootReducer {
                     )
                 }
 
-            case .phraseDisplay(.finishedPressed):
+            case .phraseDisplay(.finishedPressed), .onboarding(.securityWarning(.recoveryPhraseDisplay(.finishedPressed))):
                 do {
                     try walletStorage.markUserPassedPhraseBackupTest(true)
                     state.destinationState.destination = .tabs
