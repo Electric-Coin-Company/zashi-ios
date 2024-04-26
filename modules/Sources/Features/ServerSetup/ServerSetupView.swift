@@ -17,7 +17,7 @@ public struct ServerSetupView: View {
         // Time it takes to initiate the animated scroll after the screen is presented
         static let delayBeforeScroll = 500_000_000
     }
-    
+
     private enum InputID: Hashable {
         case selection
     }
