@@ -23,12 +23,7 @@ class UserPreferencesStorageTests: XCTestCase {
         }
         
         storage = UserPreferencesStorage(
-            appSessionFrom: 12345678.0,
-            convertedCurrency: "USD",
-            fiatConvertion: true,
-            recoveryPhraseTestCompleted: true,
-            sessionAutoshielded: false,
-            userOptedOutOfCrashReporting: true,
+            defaultServer: Data(),
             userDefaults: .live(userDefaults: userDefaults)
         )
         storage.removeAll()
@@ -42,158 +37,34 @@ class UserPreferencesStorageTests: XCTestCase {
     
     // MARK: - Default values in the live UserDefaults environment
     
-    func testAppSessionFrom_defaultValue() throws {
-        XCTAssertEqual(12345678.0, storage.activeAppSessionFrom, "User Preferences: `activeAppSessionFrom` default doesn't match.")
-    }
-
-    func testConvertedCurrency_defaultValue() throws {
-        XCTAssertEqual("USD", storage.currency, "User Preferences: `currency` default doesn't match.")
-    }
-
-    func testFiatConvertion_defaultValue() throws {
-        XCTAssertEqual(true, storage.isFiatConverted, "User Preferences: `isFiatConverted` default doesn't match.")
-    }
-
-    func testRecoveryPhraseTestCompleted_defaultValue() throws {
-        XCTAssertEqual(true, storage.isRecoveryPhraseTestCompleted, "User Preferences: `isRecoveryPhraseTestCompleted` default doesn't match.")
-    }
-
-    func testSessionAutoshielded_defaultValue() throws {
-        XCTAssertEqual(false, storage.isSessionAutoshielded, "User Preferences: `isSessionAutoshielded` default doesn't match.")
+    func testDefaultServer_defaultValue() throws {
+        XCTAssertEqual(nil, storage.server, "User Preferences: `defaultServer` default doesn't match.")
     }
 
     // MARK: - Set new values in the live UserDefaults environment
 
-    func testAppSessionFrom_setNewValue() async throws {
-        await storage.setActiveAppSessionFrom(87654321.0)
+    func testDefaultServer_setNewValue() throws {
+        let serverConfig = UserPreferencesStorage.ServerConfig(host: "host", port: 13, isCustom: true)
+        try storage.setServer(serverConfig)
 
-        XCTAssertEqual(87654321.0, storage.activeAppSessionFrom, "User Preferences: `activeAppSessionFrom` default doesn't match.")
-    }
-
-    func testConvertedCurrency_setNewValue() async throws {
-        await storage.setCurrency("CZK")
-
-        XCTAssertEqual("CZK", storage.currency, "User Preferences: `currency` default doesn't match.")
-    }
-
-    func testFiatConvertion_setNewValue() async throws {
-        await storage.setIsFiatConverted(false)
-
-        XCTAssertEqual(false, storage.isFiatConverted, "User Preferences: `isFiatConverted` default doesn't match.")
-    }
-
-    func testRecoveryPhraseTestCompleted_setNewValue() async throws {
-        await storage.setIsRecoveryPhraseTestCompleted(false)
-
-        XCTAssertEqual(false, storage.isRecoveryPhraseTestCompleted, "User Preferences: `isRecoveryPhraseTestCompleted` default doesn't match.")
-    }
-
-    func testSessionAutoshielded_setNewValue() async throws {
-        await storage.setIsSessionAutoshielded(true)
-
-        XCTAssertEqual(true, storage.isSessionAutoshielded, "User Preferences: `isSessionAutoshielded` default doesn't match.")
+        XCTAssertEqual(serverConfig, storage.server, "User Preferences: `server` default doesn't match.")
     }
 
     // MARK: - Mocked user defaults vs. default values
 
-    func testAppSessionFrom_mocked() throws {
+    func testDefaultServer_mocked() throws {
         let mockedUD = UserDefaultsClient(
-            objectForKey: { _ in 87654321.0 },
+            objectForKey: { _ in Data() },
             remove: { _ in },
             setValue: { _, _ in }
         )
         
         let mockedStorage = UserPreferencesStorage(
-            appSessionFrom: 12345678.0,
-            convertedCurrency: "USD",
-            fiatConvertion: true,
-            recoveryPhraseTestCompleted: true,
-            sessionAutoshielded: false,
-            userOptedOutOfCrashReporting: true,
+            defaultServer: Data(),
             userDefaults: mockedUD
         )
 
-        XCTAssertEqual(87654321.0, mockedStorage.activeAppSessionFrom, "User Preferences: `activeAppSessionFrom` default doesn't match.")
-    }
-
-    func testConvertedCurrency_mocked() throws {
-        let mockedUD = UserDefaultsClient(
-            objectForKey: { _ in "CZK" },
-            remove: { _ in },
-            setValue: { _, _ in }
-        )
-        
-        let mockedStorage = UserPreferencesStorage(
-            appSessionFrom: 12345678.0,
-            convertedCurrency: "USD",
-            fiatConvertion: true,
-            recoveryPhraseTestCompleted: true,
-            sessionAutoshielded: false,
-            userOptedOutOfCrashReporting: true,
-            userDefaults: mockedUD
-        )
-
-        XCTAssertEqual("CZK", mockedStorage.currency, "User Preferences: `currency` default doesn't match.")
-    }
-
-    func testFiatConvertion_mocked() throws {
-        let mockedUD = UserDefaultsClient(
-            objectForKey: { _ in false },
-            remove: { _ in },
-            setValue: { _, _ in }
-        )
-        
-        let mockedStorage = UserPreferencesStorage(
-            appSessionFrom: 12345678.0,
-            convertedCurrency: "USD",
-            fiatConvertion: true,
-            recoveryPhraseTestCompleted: true,
-            sessionAutoshielded: false,
-            userOptedOutOfCrashReporting: true,
-            userDefaults: mockedUD
-        )
-
-        XCTAssertEqual(false, mockedStorage.isFiatConverted, "User Preferences: `isFiatConverted` default doesn't match.")
-    }
-
-    func testRecoveryPhraseTestCompleted_mocked() throws {
-        let mockedUD = UserDefaultsClient(
-            objectForKey: { _ in false },
-            remove: { _ in },
-            setValue: { _, _ in }
-        )
-        
-        let mockedStorage = UserPreferencesStorage(
-            appSessionFrom: 12345678.0,
-            convertedCurrency: "USD",
-            fiatConvertion: true,
-            recoveryPhraseTestCompleted: true,
-            sessionAutoshielded: false,
-            userOptedOutOfCrashReporting: true,
-            userDefaults: mockedUD
-        )
-
-        XCTAssertEqual(false, mockedStorage.isRecoveryPhraseTestCompleted, "User Preferences: `isRecoveryPhraseTestCompleted` default doesn't match.")
-    }
-
-    func testSessionAutoshielded_mocked() throws {
-        let mockedUD = UserDefaultsClient(
-            objectForKey: { _ in true },
-            remove: { _ in },
-            setValue: { _, _ in }
-        )
-        
-        let mockedStorage = UserPreferencesStorage(
-            appSessionFrom: 12345678.0,
-            convertedCurrency: "USD",
-            fiatConvertion: true,
-            recoveryPhraseTestCompleted: true,
-            sessionAutoshielded: false,
-            userOptedOutOfCrashReporting: true,
-            userDefaults: mockedUD
-        )
-
-        XCTAssertEqual(true, mockedStorage.isSessionAutoshielded, "User Preferences: `isSessionAutoshielded` default doesn't match.")
+        XCTAssertEqual(nil, mockedStorage.server, "User Preferences: `server` default doesn't match.")
     }
 
     // MARK: - Remove all keys from the live UD environment

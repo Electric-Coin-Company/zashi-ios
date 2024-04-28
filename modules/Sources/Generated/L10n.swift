@@ -468,6 +468,12 @@ public enum L10n {
     }
   }
   public enum ServerSetup {
+    /// custom
+    public static let custom = L10n.tr("Localizable", "serverSetup.custom", fallback: "custom")
+    /// default: currently %@
+    public static func `default`(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "serverSetup.default", String(describing: p1), fallback: "default: currently %@")
+    }
     /// <hostname>:<port>
     public static let placeholder = L10n.tr("Localizable", "serverSetup.placeholder", fallback: "<hostname>:<port>")
     /// Server

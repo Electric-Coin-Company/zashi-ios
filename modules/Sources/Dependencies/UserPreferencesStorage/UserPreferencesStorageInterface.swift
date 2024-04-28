@@ -16,23 +16,8 @@ extension DependencyValues {
 }
 
 public struct UserPreferencesStorageClient {
-    public var activeAppSessionFrom: () -> TimeInterval
-    public var setActiveAppSessionFrom: (TimeInterval) async -> Void
-
-    public var currency: () -> String
-    public var setCurrency: (String) async -> Void
-
-    public var isFiatConverted: () -> Bool
-    public var setIsFiatConverted: (Bool) async -> Void
-
-    public var isRecoveryPhraseTestCompleted: () -> Bool
-    public var setIsRecoveryPhraseTestCompleted: (Bool) async -> Void
-
-    public var isSessionAutoshielded: () -> Bool
-    public var setIsSessionAutoshielded: (Bool) async -> Void
-
-    public var isUserOptedOutOfCrashReporting: () -> Bool
-    public var setIsUserOptedOutOfCrashReporting: (Bool) async -> Void
+    public var server: () -> UserPreferencesStorage.ServerConfig?
+    public var setServer: (UserPreferencesStorage.ServerConfig) throws -> Void
 
     public var removeAll: () async -> Void
 }

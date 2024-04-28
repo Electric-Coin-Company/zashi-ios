@@ -525,7 +525,7 @@ let package = Package(
                 "Generated",
                 "SDKSynchronizer",
                 "UIComponents",
-                "UserDefaults",
+                "UserPreferencesStorage",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
@@ -646,7 +646,8 @@ let package = Package(
             name: "UserPreferencesStorage",
             dependencies: [
                 "UserDefaults",
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
             path: "Sources/Dependencies/UserPreferencesStorage"
         ),
@@ -706,7 +707,9 @@ let package = Package(
         .target(
             name: "ZcashSDKEnvironment",
             dependencies: [
+                "Generated",
                 "UserDefaults",
+                "UserPreferencesStorage",
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
