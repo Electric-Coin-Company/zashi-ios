@@ -6,9 +6,14 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.0.6 build 4 (2024-04-30)
+
 ### Changed
 - We have added one more group of server options (zec.rocks) for increased coverage and reliability
 - zec.rocks:443 is now default wallet option
+
+### Fixed
+- We fixed a bug issue with displaying the recovery seed phrase twice after creating a new wallet.
 
 ## 1.0.5 build 4 (2024-04-19)
 
