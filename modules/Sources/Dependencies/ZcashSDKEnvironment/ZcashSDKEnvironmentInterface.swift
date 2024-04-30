@@ -8,7 +8,8 @@
 import ComposableArchitecture
 import ZcashLightClientKit
 
-import UserDefaults
+import Generated
+import UserPreferencesStorage
 
 extension DependencyValues {
     public var zcashSDKEnvironment: ZcashSDKEnvironment {
@@ -18,103 +19,6 @@ extension DependencyValues {
 }
 
 extension ZcashSDKEnvironment {
-    public enum Servers: String, CaseIterable, Equatable {
-        public enum Constants {
-            public static let udServerKey = "zashi_udServerKey"
-            public static let udCustomServerKey = "zashi_udCustomServerKey"
-        }
-        
-        case globalZR
-        case custom
-        case naZR
-        case saZR
-        case euZR
-        case apZR
-        case lwd1
-        case lwd2
-        case lwd3
-        case lwd4
-        case lwd5
-        case lwd6
-        case lwd7
-        case lwd8
-        
-        public func server() -> String {
-            switch self {
-            case .globalZR: return "zec.rocks:443"
-            case .custom: return "custom"
-            case .naZR: return "na.zec.rocks:443"
-            case .saZR: return "sa.zec.rocks:443"
-            case .euZR: return "eu.zec.rocks:443"
-            case .apZR: return "ap.zec.rocks:443"
-            case .lwd1: return "lwd1.zcash-infra.com:9067"
-            case .lwd2: return "lwd2.zcash-infra.com:9067"
-            case .lwd3: return "lwd3.zcash-infra.com:9067"
-            case .lwd4: return "lwd4.zcash-infra.com:9067"
-            case .lwd5: return "lwd5.zcash-infra.com:9067"
-            case .lwd6: return "lwd6.zcash-infra.com:9067"
-            case .lwd7: return "lwd7.zcash-infra.com:9067"
-            case .lwd8: return "lwd8.zcash-infra.com:9067"
-            }
-        }
-        
-        public func lightWalletEndpoint(_ userDefaults: UserDefaultsClient) -> LightWalletEndpoint? {
-            switch self {
-            case .globalZR, .naZR, .saZR, .euZR, .apZR:
-                return LightWalletEndpoint(
-                    address: String(self.server().dropLast(4)),
-                    port: 443,
-                    secure: true,
-                    streamingCallTimeoutInMillis: ZcashSDKConstants.streamingCallTimeoutInMillis
-                )
-            case .lwd1, .lwd2, .lwd3, .lwd4, .lwd5, .lwd6, .lwd7, .lwd8:
-                return LightWalletEndpoint(
-                    address: String(self.server().dropLast(5)),
-                    port: 9067,
-                    secure: true,
-                    streamingCallTimeoutInMillis: ZcashSDKConstants.streamingCallTimeoutInMillis
-                )
-            case .custom:
-                let udKey = ZcashSDKEnvironment.Servers.Constants.udCustomServerKey
-                if let storedCustomServer = userDefaults.objectForKey(udKey) as? String{
-                    // remove http:// or https:// from the input if present
-                    var input = storedCustomServer
-                    
-                    let http = "http://"
-                    let https = "https://"
-                    if input.contains(https) {
-                        input = String(input.dropFirst(https.count))
-                    } else if input.contains(http) {
-                        input = String(input.dropFirst(http.count))
-                    }
-
-                    let split = input.split(separator: ":")
-                    
-                    if let portString = split.last, let port = Int(portString) {
-                        var host = ""
-                        
-                        if split.count == 2, let first = split.first {
-                            host = String(first)
-                        } else if split.count == 3, let first = split.first {
-                            let second = split[1]
-                            
-                            host = "\(String(first))\(String(second))"
-                        }
-                        
-                        return LightWalletEndpoint(
-                            address: host,
-                            port: port,
-                            secure: true,
-                            streamingCallTimeoutInMillis: ZcashSDKConstants.streamingCallTimeoutInMillis
-                        )
-                    }
-                }
-
-                return nil
-            }
-        }
-    }
-
     public enum ZcashSDKConstants {
         static let endpointMainnetAddress = "zec.rocks"
         static let endpointTestnetAddress = "lightwalletd.testnet.electriccoin.co"
@@ -122,16 +26,72 @@ extension ZcashSDKEnvironment {
         static let endpointTestnetPort = 9067
         static let mnemonicWordsMaxCount = 24
         static let requiredTransactionConfirmations = 10
-        static let streamingCallTimeoutInMillis = Int64(10 * 60 * 60 * 1000) // ten hours
+        public static let streamingCallTimeoutInMillis = Int64(10 * 60 * 60 * 1000) // ten hours
+    }
+    
+    public enum Server: Equatable, Hashable {
+        case custom
+        case `default`
+        case hardcoded(String)
+        
+        public func name(for network: NetworkType) -> String {
+            var value = value(for: network)
+            
+            if case .default = self {
+                value = L10n.ServerSetup.default(value)
+            }
+            
+            return value
+        }
+        
+        public func value(for network: NetworkType) -> String {
+            switch self {
+            case .custom:
+                return L10n.ServerSetup.custom
+            case .default:
+                return defaultEndpoint(for: network).server()
+            case .hardcoded(let value):
+                return value
+            }
+        }
     }
 
-    public static func endpointString(for network: ZcashNetwork) -> String {
-        switch network.networkType {
-        case .testnet:
-            return ZcashSDKConstants.endpointTestnetAddress
-        case .mainnet:
-            return ZcashSDKConstants.endpointMainnetAddress
+    public static func servers(for network: NetworkType) -> [Server] {
+        var servers = [Server.default]
+
+        if network == .mainnet {
+            servers.append(
+                contentsOf: [
+                    Server.custom,
+                    Server.hardcoded("na.zec.rocks:443"),
+                    Server.hardcoded("sa.zec.rocks:443"),
+                    Server.hardcoded("eu.zec.rocks:443"),
+                    Server.hardcoded("ap.zec.rocks:443"),
+                    Server.hardcoded("lwd1.zcash-infra.com:9067"),
+                    Server.hardcoded("lwd2.zcash-infra.com:9067"),
+                    Server.hardcoded("lwd3.zcash-infra.com:9067"),
+                    Server.hardcoded("lwd4.zcash-infra.com:9067"),
+                    Server.hardcoded("lwd5.zcash-infra.com:9067"),
+                    Server.hardcoded("lwd6.zcash-infra.com:9067"),
+                    Server.hardcoded("lwd7.zcash-infra.com:9067"),
+                    Server.hardcoded("lwd8.zcash-infra.com:9067")
+                ]
+            )
         }
+        
+        return servers
+    }
+    
+    public static func defaultEndpoint(for network: NetworkType) -> LightWalletEndpoint {
+        let defaultHost = network == .mainnet ? ZcashSDKConstants.endpointMainnetAddress : ZcashSDKConstants.endpointTestnetAddress
+        let defaultPort = network == .mainnet ? ZcashSDKConstants.endpointMainnetPort : ZcashSDKConstants.endpointTestnetPort
+
+        return LightWalletEndpoint(
+            address: defaultHost,
+            port: defaultPort,
+            secure: true,
+            streamingCallTimeoutInMillis: ZcashSDKConstants.streamingCallTimeoutInMillis
+        )
     }
 }
 
@@ -143,6 +103,18 @@ public struct ZcashSDKEnvironment {
     public let network: ZcashNetwork
     public let requiredTransactionConfirmations: Int
     public let sdkVersion: String
+    public let serverConfig: () -> UserPreferencesStorage.ServerConfig
+    public let servers: [Server]
     public let shieldingThreshold: Zatoshi
     public let tokenName: String
+}
+
+extension LightWalletEndpoint {
+    public func server() -> String {
+        "\(self.host):\(self.port)"
+    }
+    
+    public func serverConfig(isCustom: Bool = false) -> UserPreferencesStorage.ServerConfig {
+        UserPreferencesStorage.ServerConfig(host: host, port: port, isCustom: isCustom)
+    }
 }

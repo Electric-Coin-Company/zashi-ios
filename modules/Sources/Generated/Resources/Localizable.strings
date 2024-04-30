@@ -66,6 +66,8 @@
 
 // MARK: - Address Details
 "serverSetup.title" = "Server";
+"serverSetup.custom" = "custom";
+"serverSetup.default" = "default: currently %@";
 "serverSetup.placeholder" = "<hostname>:<port>";
 "serverSetup.alert.failed.title" = "Invalid endpoint";
 "serverSetup.alert.failed.message" = "Error: %@";

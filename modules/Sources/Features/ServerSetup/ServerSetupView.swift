@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import ZcashLightClientKit
 
 import Generated
 import UIComponents
@@ -17,7 +18,7 @@ public struct ServerSetupView: View {
         // Time it takes to initiate the animated scroll after the screen is presented
         static let delayBeforeScroll = 500_000_000
     }
-    
+
     private enum InputID: Hashable {
         case selection
     }
@@ -37,7 +38,7 @@ public struct ServerSetupView: View {
                             .frame(height: 1)
                         
                         ScrollView {
-                            ForEach(ZcashSDKEnvironment.Servers.allCases, id: \.self) { server in
+                            ForEach(store.servers, id: \.self) { server in
                                 WithPerceptionTracking {
                                     VStack {
                                         HStack(spacing: 0) {
@@ -46,7 +47,7 @@ public struct ServerSetupView: View {
                                             } label: {
                                                 HStack(spacing: 10) {
                                                     WithPerceptionTracking {
-                                                        if server == store.server {
+                                                        if server.value(for: store.network) == store.selectedServer {
                                                             Circle()
                                                                 .fill(Asset.Colors.primary.color)
                                                                 .frame(width: 20, height: 20)
@@ -62,9 +63,10 @@ public struct ServerSetupView: View {
                                                         }
                                                     }
                                                     
-                                                    Text(server.server()).tag(server)
+                                                    Text(server.name(for: store.network)).tag(server)
                                                         .font(.custom(FontFamily.Inter.medium.name, size: 14))
                                                         .foregroundColor(Asset.Colors.shade30.color)
+                                                        .multilineTextAlignment(.leading)
                                                 }
                                             }
                                             .padding(.vertical, 6)
@@ -74,7 +76,7 @@ public struct ServerSetupView: View {
                                         .frame(maxWidth: .infinity)
                                         
                                         WithPerceptionTracking {
-                                            if store.server == .custom && server == .custom {
+                                            if store.selectedServer == L10n.ServerSetup.custom && server.value(for: store.network) == L10n.ServerSetup.custom {
                                                 TextField(L10n.ServerSetup.placeholder, text: $store.customServer)
                                                     .frame(height: 40)
                                                     .font(.custom(FontFamily.Inter.medium.name, size: 14))
@@ -91,7 +93,7 @@ public struct ServerSetupView: View {
                                         }
                                     }
                                     .padding(.horizontal, 35)
-                                    .id(server == store.server ? InputID.selection : nil)
+                                    .id(server.value(for: store.network) == store.selectedServer ? InputID.selection : nil)
                                 }
                             }
                             .padding(.vertical, 20)

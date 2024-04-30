@@ -7,100 +7,120 @@
 
 import Foundation
 import UserDefaults
+import ZcashLightClientKit
 
 /// Live implementation of the `UserPreferences` using User Defaults
 /// according to https://developer.apple.com/documentation/foundation/userdefaults
 /// the UserDefaults class is thread-safe.
 public struct UserPreferencesStorage {
+    public struct ServerConfig: Equatable, Codable {
+        public let host: String
+        public let port: Int
+        public let isCustom: Bool
+
+        public init(host: String, port: Int, isCustom: Bool) {
+            self.host = host
+            self.port = port
+            self.isCustom = isCustom
+        }
+        
+        public func serverString() -> String {
+            "\(host):\(port)"
+        }
+        
+        public func endpoint(streamingCallTimeoutInMillis: Int64) -> LightWalletEndpoint {
+            LightWalletEndpoint(
+                address: host,
+                port: port,
+                secure: true,
+                streamingCallTimeoutInMillis: streamingCallTimeoutInMillis
+            )
+        }
+        
+        public static func endpoint(for string: String, streamingCallTimeoutInMillis: Int64) -> LightWalletEndpoint? {
+            // remove http:// or https:// from the input if present
+            var input = string
+            
+            let http = "http://"
+            let https = "https://"
+            if input.contains(https) {
+                input = String(input.dropFirst(https.count))
+            } else if input.contains(http) {
+                input = String(input.dropFirst(http.count))
+            }
+            
+            let split = input.split(separator: ":")
+            
+            if let portString = split.last, let port = Int(portString) {
+                var host = ""
+                
+                if split.count == 2, let first = split.first {
+                    host = String(first)
+                } else if split.count == 3, let first = split.first {
+                    let second = split[1]
+                    
+                    host = "\(String(first))\(String(second))"
+                }
+                
+                return LightWalletEndpoint(
+                    address: host,
+                    port: port,
+                    secure: true,
+                    streamingCallTimeoutInMillis: streamingCallTimeoutInMillis
+                )
+            }
+            
+            return nil
+        }
+        
+        public static func config(for string: String, isCustom: Bool, streamingCallTimeoutInMillis: Int64) -> ServerConfig? {
+            guard let endpoint = ServerConfig.endpoint(for: string, streamingCallTimeoutInMillis: streamingCallTimeoutInMillis) else {
+                return nil
+            }
+            
+            return ServerConfig(host: endpoint.host, port: endpoint.port, isCustom: isCustom)
+        }
+    }
+
     public enum Constants: String, CaseIterable {
-        case zcashActiveAppSessionFrom
-        case zcashCurrency
-        case zcashFiatConverted
-        case zcashRecoveryPhraseTestCompleted
-        case zcashSessionAutoshielded
-        case zcashUserOptedOutOfCrashReporting
+        case ups_server
+    }
+    
+    public enum UserPreferencesStorageError: Error {
+        case serverConfigStore
     }
     
     /// Default values for all preferences in case there is no value stored (counterparts to `Constants`)
-    private let appSessionFrom: TimeInterval
-    private let convertedCurrency: String
-    private let fiatConvertion: Bool
-    private let recoveryPhraseTestCompleted: Bool
-    private let sessionAutoshielded: Bool
-    private let userOptedOutOfCrashReporting: Bool
+    private let defaultServer: Data
     
     private let userDefaults: UserDefaultsClient
     
     public init(
-        appSessionFrom: TimeInterval,
-        convertedCurrency: String,
-        fiatConvertion: Bool,
-        recoveryPhraseTestCompleted: Bool,
-        sessionAutoshielded: Bool,
-        userOptedOutOfCrashReporting: Bool,
+        defaultServer: Data,
         userDefaults: UserDefaultsClient
     ) {
-        self.appSessionFrom = appSessionFrom
-        self.convertedCurrency = convertedCurrency
-        self.fiatConvertion = fiatConvertion
-        self.recoveryPhraseTestCompleted = recoveryPhraseTestCompleted
-        self.sessionAutoshielded = sessionAutoshielded
-        self.userOptedOutOfCrashReporting = userOptedOutOfCrashReporting
+        self.defaultServer = defaultServer
         self.userDefaults = userDefaults
     }
     
     /// From when the app is on and uninterrupted
-    public var activeAppSessionFrom: TimeInterval {
-        getValue(forKey: Constants.zcashActiveAppSessionFrom.rawValue, default: appSessionFrom)
+    public var server: ServerConfig? {
+        let contentData = getValue(forKey: Constants.ups_server.rawValue, default: defaultServer)
+
+        if let content = try? JSONDecoder().decode(ServerConfig.self, from: contentData) {
+            return content
+        }
+        
+        return nil
     }
     
-    public func setActiveAppSessionFrom(_ timeInterval: TimeInterval) async {
-        await setValue(timeInterval, forKey: Constants.zcashActiveAppSessionFrom.rawValue)
-    }
-
-    /// What is the set up currency
-    public var currency: String {
-        getValue(forKey: Constants.zcashCurrency.rawValue, default: convertedCurrency)
-    }
-    
-    public func setCurrency(_ string: String) async {
-        await setValue(string, forKey: Constants.zcashCurrency.rawValue)
-    }
-
-    /// Whether the fiat conversion is on/off
-    public var isFiatConverted: Bool {
-        getValue(forKey: Constants.zcashFiatConverted.rawValue, default: fiatConvertion)
-    }
-
-    public func setIsFiatConverted(_ bool: Bool) async {
-        await setValue(bool, forKey: Constants.zcashFiatConverted.rawValue)
-    }
-
-    /// Whether user finished recovery phrase backup test
-    public var isRecoveryPhraseTestCompleted: Bool {
-        getValue(forKey: Constants.zcashRecoveryPhraseTestCompleted.rawValue, default: recoveryPhraseTestCompleted)
-    }
-
-    public func setIsRecoveryPhraseTestCompleted(_ bool: Bool) async {
-        await setValue(bool, forKey: Constants.zcashRecoveryPhraseTestCompleted.rawValue)
-    }
-
-    /// Whether the user has been autoshielded in the running session
-    public var isSessionAutoshielded: Bool {
-        getValue(forKey: Constants.zcashSessionAutoshielded.rawValue, default: sessionAutoshielded)
-    }
-
-    public func setIsSessionAutoshielded(_ bool: Bool) async {
-        await setValue(bool, forKey: Constants.zcashSessionAutoshielded.rawValue)
-    }
-
-    /// Whether the user has opted out of crash reporting
-    public var isUserOptedOutOfCrashReporting: Bool {
-        getValue(forKey: Constants.zcashUserOptedOutOfCrashReporting.rawValue, default: false)
-    }
-
-    public func setIsUserOptedOutOfCrashReporting(_ bool: Bool) async {
-        await setValue(bool, forKey: Constants.zcashUserOptedOutOfCrashReporting.rawValue)
+    public func setServer(_ server: ServerConfig) throws {
+        do {
+            let contentData = try JSONEncoder().encode(server)
+            setValue(contentData, forKey: Constants.ups_server.rawValue)
+        } catch {
+            throw UserPreferencesStorageError.serverConfigStore
+        }
     }
 
     /// Use carefully: Deletes all user preferences from the User Defaults
@@ -116,7 +136,7 @@ private extension UserPreferencesStorage {
         userDefaults.objectForKey(forKey) as? Value ?? defaultIfNil
     }
 
-    func setValue<Value>(_ value: Value, forKey: String) async {
+    func setValue<Value>(_ value: Value, forKey: String) {
         userDefaults.setValue(value, forKey)
     }
 }

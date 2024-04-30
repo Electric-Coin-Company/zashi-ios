@@ -11,28 +11,36 @@ import ZcashLightClientKit
 
 import Generated
 import SDKSynchronizer
+import UserPreferencesStorage
 import ZcashSDKEnvironment
 
 @Reducer
 public struct ServerSetup {
-    let udKey = ZcashSDKEnvironment.Servers.Constants.udServerKey
-    let udCustomServerKey = ZcashSDKEnvironment.Servers.Constants.udCustomServerKey
-
+    let streamingCallTimeoutInMillis = ZcashSDKEnvironment.ZcashSDKConstants.streamingCallTimeoutInMillis
+    
     @ObservableState
     public struct State: Equatable {
         @Presents var alert: AlertState<Action>?
         var isUpdatingServer = false
-        var initialServer: ZcashSDKEnvironment.Servers = .globalZR
-        var server: ZcashSDKEnvironment.Servers = .globalZR
+        var initialServer: String
+        var network: NetworkType = .mainnet
+        var selectedServer: String
+        var servers: [ZcashSDKEnvironment.Server]
         var customServer: String
         
         public init(
             isUpdatingServer: Bool = false,
-            server: ZcashSDKEnvironment.Servers = .globalZR,
+            initialServer: String = "",
+            network: NetworkType = .mainnet,
+            selectedServer: String = "",
+            servers: [ZcashSDKEnvironment.Server] = [],
             customServer: String = ""
         ) {
             self.isUpdatingServer = isUpdatingServer
-            self.server = server
+            self.initialServer = initialServer
+            self.network = network
+            self.selectedServer = selectedServer
+            self.servers = servers
             self.customServer = customServer
         }
     }
@@ -42,7 +50,7 @@ public struct ServerSetup {
         case binding(BindingAction<State>)
         case onAppear
         case setServerTapped
-        case someServerTapped(ZcashSDKEnvironment.Servers)
+        case someServerTapped(ZcashSDKEnvironment.Server)
         case switchFailed(ZcashError)
         case switchSucceeded
     }
@@ -51,7 +59,8 @@ public struct ServerSetup {
     
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
-    @Dependency(\.userDefaults) var userDefaults
+    @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
+    @Dependency(\.userStoredPreferences) var userStoredPreferences
 
     public var body: some ReducerOf<Self> {
         BindingReducer()
@@ -59,14 +68,18 @@ public struct ServerSetup {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                guard let storedServerRaw = userDefaults.objectForKey(udKey) as? String, let storedServer = ZcashSDKEnvironment.Servers(rawValue: storedServerRaw) else {
-                    return .none
+                state.network = zcashSDKEnvironment.network.networkType
+                state.servers = ZcashSDKEnvironment.servers(for: state.network)
+                
+                let serverConfig = zcashSDKEnvironment.serverConfig()
+                
+                if serverConfig.isCustom {
+                    state.initialServer = L10n.ServerSetup.custom
+                    state.customServer = serverConfig.serverString()
+                } else {
+                    state.initialServer = serverConfig.serverString()
                 }
-                if let storedCustomServerRaw = userDefaults.objectForKey(udCustomServerKey) as? String {
-                    state.customServer = storedCustomServerRaw
-                }
-                state.server = storedServer
-                state.initialServer = storedServer
+                state.selectedServer = state.initialServer
                 return .none
                 
             case .alert(.dismiss):
@@ -80,23 +93,28 @@ public struct ServerSetup {
                 return .none
             
             case .setServerTapped:
-                guard state.initialServer != state.server || state.server == .custom else {
+                guard state.initialServer != state.selectedServer || state.selectedServer == L10n.ServerSetup.custom else {
                     return .none
                 }
                 
                 state.isUpdatingServer = true
                 
                 // custom server needs to be stored first
-                if state.server == .custom {
-                    userDefaults.setValue(state.customServer, udCustomServerKey)
+                var input = state.selectedServer
+                if input == L10n.ServerSetup.custom {
+                    input = state.customServer
                 }
                 
-                return .run { [server = state.server] send in
+                return .run { [input] send in
                     do {
-                        guard let lightWalletEndpoint = server.lightWalletEndpoint(userDefaults) else {
+                        let endpoint = UserPreferencesStorage.ServerConfig.endpoint(
+                            for: input,
+                            streamingCallTimeoutInMillis: streamingCallTimeoutInMillis
+                        )
+                        guard let endpoint else {
                             throw ZcashError.synchronizerServerSwitch
                         }
-                        try await sdkSynchronizer.switchToEndpoint(lightWalletEndpoint)
+                        try await sdkSynchronizer.switchToEndpoint(endpoint)
                         try await mainQueue.sleep(for: .seconds(1))
                         await send(.switchSucceeded)
                     } catch {
@@ -105,24 +123,36 @@ public struct ServerSetup {
                 }
                 
             case .someServerTapped(let newChange):
-                state.server = newChange
+                state.selectedServer = newChange.value(for: state.network)
                 return .none
 
             case .switchFailed(let error):
                 state.isUpdatingServer = false
-                userDefaults.remove(udCustomServerKey)
                 state.alert = AlertState.endpoindSwitchFailed(error)
                 return .none
                 
             case .switchSucceeded:
-                userDefaults.setValue(state.server.rawValue, udKey)
                 state.isUpdatingServer = false
-                state.initialServer = state.server
-                if state.server != .custom {
-                    userDefaults.remove(udCustomServerKey)
-                    state.customServer = ""
+                state.initialServer = state.selectedServer
+                var input = state.selectedServer
+                var isCustom = false
+                if input == L10n.ServerSetup.custom {
+                    input = state.customServer
+                    isCustom = true
                 }
-                return .none
+                return .run { [input, isCustom] send in
+                    if let serverConfig = UserPreferencesStorage.ServerConfig.config(
+                        for: input,
+                        isCustom: isCustom,
+                        streamingCallTimeoutInMillis: streamingCallTimeoutInMillis
+                    ) {
+                        do {
+                            try await userStoredPreferences.setServer(serverConfig)
+                        } catch UserPreferencesStorage.UserPreferencesStorageError.serverConfigStore {
+                            await send(.switchFailed(ZcashError.unknown(UserPreferencesStorage.UserPreferencesStorageError.serverConfigStore)))
+                        }
+                    }
+                }
             }
         }
     }

@@ -463,9 +463,7 @@ extension RootReducer {
                 return .none
                 
             case .initialization(.configureCrashReporter):
-                crashReporter.configure(
-                    !userStoredPreferences.isUserOptedOutOfCrashReporting()
-                )
+                crashReporter.configure(true)
                 return .none
                 
             case .updateStateAfterConfigUpdate(let walletConfig):
