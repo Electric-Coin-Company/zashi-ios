@@ -70,7 +70,8 @@ public struct PartialProposalErrorView: View {
                     shareMessageView()
                 }
                 .padding(.horizontal, 60)
-                .zashiBack(hidden: store.isBackButtonHidden)
+                .zashiBack(hidden: store.isBackButtonHidden) { store.send(.dismiss) }
+                .onAppear { store.send(.onAppear) }
             }
         }
         .navigationBarBackButtonHidden()

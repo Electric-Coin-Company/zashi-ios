@@ -17,6 +17,7 @@ import SendFlow
 import Settings
 import ZcashLightClientKit
 import RestoreWalletStorage
+import SendConfirmation
 
 public typealias TabsStore = Store<TabsReducer.State, TabsReducer.Action>
 public typealias TabsViewStore = ViewStore<TabsReducer.State, TabsReducer.Action>
@@ -24,6 +25,7 @@ public typealias TabsViewStore = ViewStore<TabsReducer.State, TabsReducer.Action
 public struct TabsReducer: Reducer {
     public struct State: Equatable {
         public enum Destination: Equatable {
+            case sendConfirmation
             case settings
         }
 
@@ -53,6 +55,7 @@ public struct TabsReducer: Reducer {
         public var homeState: HomeReducer.State
         public var isRestoringWallet = false
         public var selectedTab: Tab = .account
+        public var sendConfirmationState: SendConfirmation.State
         public var sendState: SendFlowReducer.State
         public var settingsState: SettingsReducer.State
         
@@ -63,6 +66,7 @@ public struct TabsReducer: Reducer {
             homeState: HomeReducer.State,
             isRestoringWallet: Bool = false,
             selectedTab: Tab = .account,
+            sendConfirmationState: SendConfirmation.State,
             sendState: SendFlowReducer.State,
             settingsState: SettingsReducer.State
         ) {
@@ -72,6 +76,7 @@ public struct TabsReducer: Reducer {
             self.homeState = homeState
             self.isRestoringWallet = isRestoringWallet
             self.selectedTab = selectedTab
+            self.sendConfirmationState = sendConfirmationState
             self.sendState = sendState
             self.settingsState = settingsState
         }
@@ -85,11 +90,13 @@ public struct TabsReducer: Reducer {
         case restoreWalletValue(Bool)
         case selectedTabChanged(State.Tab)
         case send(SendFlowReducer.Action)
+        case sendConfirmation(SendConfirmation.Action)
         case settings(SettingsReducer.Action)
         case updateDestination(TabsReducer.State.Destination?)
     }
 
     @Dependency(\.restoreWalletStorage) var restoreWalletStorage
+    @Dependency(\.mainQueue) var mainQueue
 
     public init() { }
 
@@ -97,7 +104,11 @@ public struct TabsReducer: Reducer {
         Scope(state: \.sendState, action: /Action.send) {
             SendFlowReducer()
         }
-        
+
+        Scope(state: \.sendConfirmationState, action: /Action.sendConfirmation) {
+            SendConfirmation()
+        }
+
         Scope(state: \.addressDetailsState, action: /Action.addressDetails) {
             AddressDetails()
         }
@@ -144,11 +155,39 @@ public struct TabsReducer: Reducer {
                 state.isRestoringWallet = value
                 return .none
 
-            case .send(.sendDone):
-                state.selectedTab = .account
-                return .none
-            
+            case .send(.sendConfirmationRequired):
+                state.sendConfirmationState.amount = state.sendState.amount
+                state.sendConfirmationState.address = state.sendState.address
+                state.sendConfirmationState.proposal = state.sendState.proposal
+                state.sendConfirmationState.feeRequired = state.sendState.feeRequired
+                state.sendConfirmationState.message = state.sendState.message
+                return .send(.updateDestination(.sendConfirmation))
+                                
             case .send:
+                return .none
+
+            case .sendConfirmation(.sendPartial):
+                state.selectedTab = .send
+                return .none
+
+            case .sendConfirmation(.sendDone):
+                state.selectedTab = .account
+                return .merge(
+                    .send(.updateDestination(nil)),
+                    .send(.send(.resetForm))
+                    )
+                
+            case .sendConfirmation(.partialProposalError(.dismiss)):
+                return .run { send in
+                    await send(.updateDestination(nil))
+                    try? await mainQueue.sleep(for: .seconds(0.5))
+                    await send(.sendConfirmation(.partialProposalErrorDismiss))
+                }
+
+            case .sendConfirmation(.goBackPressed):
+                return .send(.updateDestination(nil))
+
+            case .sendConfirmation:
                 return .none
 
             case .settings:
@@ -183,6 +222,13 @@ extension TabsStore {
             action: TabsReducer.Action.settings
         )
     }
+    
+    func sendConfirmationStore() -> StoreOf<SendConfirmation> {
+        self.scope(
+            state: \.sendConfirmationState,
+            action: TabsReducer.Action.sendConfirmation
+        )
+    }
 }
 
 // MARK: - ViewStore
@@ -205,6 +251,7 @@ extension TabsReducer.State {
         destination: nil,
         homeState: .initial,
         selectedTab: .account,
+        sendConfirmationState: .initial,
         sendState: .initial,
         settingsState: .initial
     )
