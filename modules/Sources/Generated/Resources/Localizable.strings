@@ -16,7 +16,7 @@
 "recoveryPhraseDisplay.titlePart1" = "Your Secret";
 "recoveryPhraseDisplay.titlePart2" = "Recovery Phrase";
 "recoveryPhraseDisplay.description" = "The following 24 words are the keys to your funds and are the only way to recover your funds if you get locked out or get a new device. Protect your ZEC by storing this phrase in a place you trust and never share it with anyone!";
-"recoveryPhraseDisplay.button.wroteItDown" = "I got it!";
+"recoveryPhraseDisplay.button.wroteItDown" = "I've saved it";
 "recoveryPhraseDisplay.noWords" = "The keys are missing. No backup phrase is stored in the keychain.";
 "recoveryPhraseDisplay.birthdayHeight" = "Wallet birthday height: %@";
 "recoveryPhraseDisplay.alert.failed.title" = "Failed to load stored wallet";

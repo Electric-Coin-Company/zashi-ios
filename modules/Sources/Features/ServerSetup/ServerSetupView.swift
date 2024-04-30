@@ -16,7 +16,7 @@ import ZcashSDKEnvironment
 public struct ServerSetupView: View {
     private enum Constants {
         // Time it takes to initiate the animated scroll after the screen is presented
-        static let delayBeforeScroll = 500_000_000
+        static let delayBeforeScroll = UInt64(500_000_000)
     }
 
     private enum InputID: Hashable {

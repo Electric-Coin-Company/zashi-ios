@@ -280,8 +280,8 @@ public enum L10n {
       }
     }
     public enum Button {
-      /// I got it!
-      public static let wroteItDown = L10n.tr("Localizable", "recoveryPhraseDisplay.button.wroteItDown", fallback: "I got it!")
+      /// I've saved it
+      public static let wroteItDown = L10n.tr("Localizable", "recoveryPhraseDisplay.button.wroteItDown", fallback: "I've saved it")
     }
   }
   public enum Root {
