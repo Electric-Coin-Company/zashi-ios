@@ -84,6 +84,7 @@ public struct AdvancedSettingsView: View {
                     .padding(.bottom, 50)
                     .padding(.horizontal, 20)
             }
+            .restoringWalletBadge(isOn: store.isRestoringWallet)
         }
         .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground()
@@ -93,7 +94,6 @@ public struct AdvancedSettingsView: View {
                 .resizable()
                 .frame(width: 62, height: 17)
         }
-        .restoringWalletBadge(isOn: store.isRestoringWallet)
         .task { await store.send(.restoreWalletTask).finish() }
     }
 }
