@@ -177,9 +177,11 @@ public struct TabsView: View {
                 areBalancesHidden = prevValue
                 hideBalances.updateValue(areBalancesHidden)
             } label: {
-                Image(systemName: areBalancesHidden ? "eye.slash" : "eye")
+                let image = areBalancesHidden ? Asset.Assets.eyeOff.image : Asset.Assets.eyeOn.image
+                image
+                    .renderingMode(.template)
                     .resizable()
-                    .frame(width: 21, height: 15)
+                    .frame(width: 25, height: 25)
                     .padding(15)
                     .tint(Asset.Colors.primary.color)
             }
