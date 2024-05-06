@@ -176,6 +176,9 @@ Sharing this private data is irrevocable — once you have shared this private d
 "qrCodeFor" = "QR Code for %@";
 "general.tapToCopy" = "Tap to copy";
 "general.fee" = "Typical Fee < %@";
+"general.hideBalancesMost" = "---.----";
+"general.hideBalancesMostStandalone" = "-.---";
+"general.hideBalancesLeast" = "____";
 
 // MARK: - Transaction List
 "transactionList.collapse" = "Collapse transaction";

@@ -48,7 +48,8 @@ public struct AvailableBalanceView: View {
                     fontName: FontFamily.Inter.bold.name,
                     mostSignificantFontSize: 14,
                     leastSignificantFontSize: 7,
-                    format: .expanded
+                    format: .expanded,
+                    couldBeHidden: true
                 )
             }
             

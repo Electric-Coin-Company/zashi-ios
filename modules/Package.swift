@@ -26,6 +26,7 @@ let package = Package(
         .library(name: "FeedbackGenerator", targets: ["FeedbackGenerator"]),
         .library(name: "FileManager", targets: ["FileManager"]),
         .library(name: "Generated", targets: ["Generated"]),
+        .library(name: "HideBalances", targets: ["HideBalances"]),
         .library(name: "Home", targets: ["Home"]),
         .library(name: "ImportWallet", targets: ["ImportWallet"]),
         .library(name: "LocalAuthenticationHandler", targets: ["LocalAuthenticationHandler"]),
@@ -236,6 +237,14 @@ let package = Package(
             resources: [.process("Resources")]
         ),
         .target(
+            name: "HideBalances",
+            dependencies: [
+                "UserDefaults",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Dependencies/HideBalances"
+        ),
+        .target(
             name: "Home",
             dependencies: [
                 "Generated",
@@ -419,6 +428,7 @@ let package = Package(
                 "DiskSpaceChecker",
                 "ExportLogs",
                 "Generated",
+                "HideBalances",
                 "MnemonicClient",
                 "Models",
                 "NotEnoughFreeSpace",
@@ -596,6 +606,7 @@ let package = Package(
                 "AddressDetails",
                 "BalanceBreakdown",
                 "Generated",
+                "HideBalances",
                 "Home",
                 "RestoreWalletStorage",
                 "SendFlow",
@@ -628,6 +639,7 @@ let package = Package(
                 "BalanceFormatter",
                 "DerivationTool",
                 "Generated",
+                "HideBalances",
                 "NumberFormatter",
                 "SupportDataGenerator",
                 "Utils",

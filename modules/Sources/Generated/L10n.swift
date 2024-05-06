@@ -131,6 +131,12 @@ public enum L10n {
     public static func fee(_ p1: Any) -> String {
       return L10n.tr("Localizable", "general.fee", String(describing: p1), fallback: "Typical Fee < %@")
     }
+    /// ____
+    public static let hideBalancesLeast = L10n.tr("Localizable", "general.hideBalancesLeast", fallback: "____")
+    /// ---.----
+    public static let hideBalancesMost = L10n.tr("Localizable", "general.hideBalancesMost", fallback: "---.----")
+    /// -.---
+    public static let hideBalancesMostStandalone = L10n.tr("Localizable", "general.hideBalancesMostStandalone", fallback: "-.---")
     /// Max
     public static let max = L10n.tr("Localizable", "general.max", fallback: "Max")
     /// Next

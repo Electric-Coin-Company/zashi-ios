@@ -125,7 +125,8 @@ struct TransactionHeaderView: View {
             leastSignificantFontSize: 8,
             prefixSymbol: transaction.isSpending ? .minus : .plus,
             format: transaction.isExpanded ? .expanded : .abbreviated,
-            strikethrough: transaction.status == .failed
+            strikethrough: transaction.status == .failed,
+            couldBeHidden: true
         )
         .foregroundColor(transaction.balanceColor)
     }

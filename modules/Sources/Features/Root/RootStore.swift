@@ -23,6 +23,7 @@ import BackgroundTasks
 import RestoreWalletStorage
 import Utils
 import UserDefaults
+import HideBalances
 
 public typealias RootStore = Store<RootReducer.State, RootReducer.Action>
 public typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
@@ -120,6 +121,7 @@ public struct RootReducer: Reducer {
     @Dependency(\.deeplink) var deeplink
     @Dependency(\.derivationTool) var derivationTool
     @Dependency(\.diskSpaceChecker) var diskSpaceChecker
+    @Dependency(\.hideBalances) var hideBalances
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.numberFormatter) var numberFormatter
