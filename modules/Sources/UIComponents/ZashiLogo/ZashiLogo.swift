@@ -15,7 +15,7 @@ public struct ZashiIcon: View {
         Asset.Assets.zashiLogo.image
             .resizable()
             .renderingMode(.template)
-            .tint(Asset.Colors.primary.color)
+            .foregroundColor(Asset.Colors.primary.color)
             .frame(width: 33, height: 43)
             .padding(.bottom, 30)
     }
@@ -31,9 +31,11 @@ public struct ZashiErrorIcon: View {
             .padding(.vertical, 30)
             .overlay {
                 Asset.Assets.alertIcon.image
+                    .renderingMode(.template)
                     .resizable()
                     .frame(width: 24, height: 24)
                     .offset(x: 25, y: 15)
+                    .foregroundColor(Asset.Colors.primary.color)
             }
     }
 }

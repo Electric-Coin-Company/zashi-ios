@@ -142,6 +142,7 @@ public struct ServerSetupView: View {
                     .alert($store.scope(state: \.alert, action: \.alert))
                 }
             }
+            .applyScreenBackground()
         }
         .navigationBarTitleDisplayMode(.inline)
     }

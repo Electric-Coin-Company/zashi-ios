@@ -41,10 +41,17 @@ public enum Asset {
     public static let zashiTitle = ImageAsset(name: "zashiTitle")
   }
   public enum Colors {
+    public static let background = ColorAsset(name: "background")
+    public static let btnDarkShade = ColorAsset(name: "btnDarkShade")
+    public static let btnLabelShade = ColorAsset(name: "btnLabelShade")
+    public static let btnLightShade = ColorAsset(name: "btnLightShade")
+    public static let btnPrimary = ColorAsset(name: "btnPrimary")
+    public static let btnSecondary = ColorAsset(name: "btnSecondary")
     public static let error = ColorAsset(name: "error")
     public static let messageBcgReceived = ColorAsset(name: "messageBcgReceived")
     public static let primary = ColorAsset(name: "primary")
     public static let primaryTint = ColorAsset(name: "primaryTint")
+    public static let restoreUI = ColorAsset(name: "restoreUI")
     public static let secondary = ColorAsset(name: "secondary")
     public static let shade30 = ColorAsset(name: "shade30")
     public static let shade47 = ColorAsset(name: "shade47")
@@ -54,6 +61,7 @@ public enum Asset {
     public static let shade92 = ColorAsset(name: "shade92")
     public static let shade97 = ColorAsset(name: "shade97")
     public static let splash = ColorAsset(name: "splash")
+    public static let syncProgresBcg = ColorAsset(name: "syncProgresBcg")
   }
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name

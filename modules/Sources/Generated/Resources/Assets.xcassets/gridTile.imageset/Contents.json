@@ -3,6 +3,16 @@
     {
       "filename" : "gridTile.png",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "gridTileDark.png",
+      "idiom" : "universal"
     }
   ],
   "info" : {

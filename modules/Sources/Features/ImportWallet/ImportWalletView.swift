@@ -47,7 +47,8 @@ public struct ImportWalletView: View {
                         
                         TextEditor(text: $message)
                             .autocapitalization(.none)
-                            .recoveryPhraseShape()
+                            .messageShape(filled: nil)
+                            .colorBackground(Asset.Colors.background.color)
                             .frame(minWidth: 270)
                             .frame(height: 215)
                             .focused($isFocused)

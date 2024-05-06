@@ -40,6 +40,7 @@ public struct MessageShape: Shape {
 
 public struct MessageShapeModifier: ViewModifier {
     let filled: Color?
+    let border: Color?
     let orientation: MessageShape.Orientation
     
     public func body(content: Content) -> some View {
@@ -52,7 +53,7 @@ public struct MessageShapeModifier: ViewModifier {
             }
             .overlay {
                 MessageShape(orientation: orientation)
-                    .stroke()
+                    .stroke(border ?? .clear)
             }
     }
 }
@@ -60,11 +61,13 @@ public struct MessageShapeModifier: ViewModifier {
 extension View {
     public func messageShape(
         filled: Color? = nil,
+        border: Color? = Asset.Colors.primary.color,
         orientation: MessageShape.Orientation = .left
     ) -> some View {
         modifier(
             MessageShapeModifier(
                 filled: filled,
+                border: border,
                 orientation: orientation
             )
         )

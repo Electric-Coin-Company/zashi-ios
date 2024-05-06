@@ -14,6 +14,14 @@ import UIComponents
 import Utils
 
 public struct AddressDetailsView: View {
+    public enum AddressType: Equatable {
+        case saplingAddress
+        case tAddress
+        case uaAddress
+    }
+
+    @Environment(\.colorScheme) var colorScheme
+
     let store: AddressDetailsStore
     let networkType: NetworkType
     
@@ -25,7 +33,7 @@ public struct AddressDetailsView: View {
     public var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             ScrollView {
-                addressBlock(L10n.AddressDetails.ua, viewStore.unifiedAddress) {
+                addressBlock(type: .uaAddress, viewStore: viewStore, L10n.AddressDetails.ua, viewStore.unifiedAddress) {
                     viewStore.send(.copyToPastboard(viewStore.unifiedAddress.redacted))
                 } shareAction: {
                     viewStore.send(.shareQR(viewStore.unifiedAddress.redacted))
@@ -35,7 +43,7 @@ public struct AddressDetailsView: View {
                 
 #if DEBUG
                 if networkType == .testnet {
-                    addressBlock(L10n.AddressDetails.sa, viewStore.saplingAddress) {
+                    addressBlock(type: .saplingAddress, viewStore: viewStore, L10n.AddressDetails.sa, viewStore.saplingAddress) {
                         viewStore.send(.copyToPastboard(viewStore.saplingAddress.redacted))
                     } shareAction: {
                         viewStore.send(.shareQR(viewStore.saplingAddress.redacted))
@@ -43,7 +51,7 @@ public struct AddressDetailsView: View {
                 }
 #endif
                 
-                addressBlock(L10n.AddressDetails.ta, viewStore.transparentAddress) {
+                addressBlock(type: .tAddress, viewStore: viewStore, L10n.AddressDetails.ta, viewStore.transparentAddress) {
                     viewStore.send(.copyToPastboard(viewStore.transparentAddress.redacted))
                 } shareAction: {
                     viewStore.send(.shareQR(viewStore.transparentAddress.redacted))
@@ -57,6 +65,8 @@ public struct AddressDetailsView: View {
     }
     
     @ViewBuilder private func addressBlock(
+        type: AddressType,
+        viewStore: AddressDetailsViewStore,
         _ title: String,
         _ address: String,
         _ copyAction: @escaping () -> Void,
@@ -67,7 +77,7 @@ public struct AddressDetailsView: View {
                 .font(.custom(FontFamily.Archivo.semiBold.name, size: 16))
                 .padding(.bottom, 20)
             
-            qrCode(address)
+            qrCode(address, type: type, viewStore: viewStore)
                 .frame(width: 270, height: 270)
                 .padding(.bottom, 20)
             
@@ -83,8 +93,10 @@ public struct AddressDetailsView: View {
                 } label: {
                     HStack(spacing: 5) {
                         Asset.Assets.copy.image
+                            .renderingMode(.template)
                             .resizable()
                             .frame(width: 11, height: 11)
+                            .foregroundColor(Asset.Colors.primary.color)
                         
                         Text(L10n.AddressDetails.copy)
                             .font(.custom(FontFamily.Inter.bold.name, size: 12))
@@ -98,9 +110,11 @@ public struct AddressDetailsView: View {
                 } label: {
                     HStack(spacing: 5) {
                         Asset.Assets.share.image
+                            .renderingMode(.template)
                             .resizable()
                             .frame(width: 11, height: 11)
-                        
+                            .foregroundColor(Asset.Colors.primary.color)
+
                         Text(L10n.AddressDetails.share)
                             .font(.custom(FontFamily.Inter.bold.name, size: 12))
                             .underline()
@@ -114,21 +128,40 @@ public struct AddressDetailsView: View {
 }
 
 extension AddressDetailsView {
-    public func qrCode(_ qrText: String) -> some View {
-        Group {
-            if let img = QRCodeGenerator.generate(from: qrText) {
-                Image(img, scale: 1, label: Text(L10n.qrCodeFor(qrText)))
-                    .resizable()
-            } else {
-                Image(systemName: "qrcode")
-                    .resizable()
-            }
+    public func qrCode(_ qrText: String, type: AddressType, viewStore: AddressDetailsViewStore) -> some View {
+        var storedImg: CGImage?
+        
+        switch type {
+        case .saplingAddress:
+            storedImg = nil
+        case .tAddress:
+            storedImg = viewStore.taQR
+        case .uaAddress:
+            storedImg = viewStore.uaQR
+        }
+        
+        if let storedImg {
+            return Image(storedImg, scale: 1, label: Text(L10n.qrCodeFor(qrText)))
+                .resizable()
+        }
+        if let cgImg = QRCodeGenerator.generate(
+            from: qrText,
+            color: colorScheme == .dark ? Asset.Colors.shade85.systemColor : Asset.Colors.primary.systemColor
+        ) {
+            return Image(cgImg, scale: 1, label: Text(L10n.qrCodeFor(qrText)))
+                .resizable()
+        } else {
+            return Image(systemName: "qrcode")
+                .resizable()
         }
     }
     
     @ViewBuilder func shareLogsView(_ viewStore: AddressDetailsViewStore) -> some View {
         if let addressToShare = viewStore.addressToShare,
-           let cgImg = QRCodeGenerator.generate(from: addressToShare.data) {
+           let cgImg = QRCodeGenerator.generate(
+            from: addressToShare.data,
+            color: colorScheme == .dark ? Asset.Colors.shade85.systemColor : Asset.Colors.primary.systemColor
+           ) {
             UIShareDialogView(activityItems: [UIImage(cgImage: cgImg)]) {
                 viewStore.send(.shareFinished)
             }

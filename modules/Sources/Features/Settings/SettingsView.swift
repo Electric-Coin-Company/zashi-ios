@@ -79,8 +79,10 @@ public struct SettingsView: View {
         .zashiBack()
         .zashiTitle {
             Asset.Assets.zashiTitle.image
+                .renderingMode(.template)
                 .resizable()
                 .frame(width: 62, height: 17)
+                .foregroundColor(Asset.Colors.primary.color)
         }
         .restoringWalletBadge(isOn: isRestoringWalletBadgeOn)
         .task { await store.send(.restoreWalletTask).finish() }

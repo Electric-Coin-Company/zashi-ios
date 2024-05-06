@@ -11,6 +11,7 @@ import Generated
 import UIComponents
 
 public struct ScanView: View {
+    @Environment(\.colorScheme) var colorScheme
     @Environment(\.openURL) var openURL
 
     let store: StoreOf<Scan>
@@ -70,7 +71,7 @@ public struct ScanView: View {
             .applyScreenBackground()
             .onAppear { store.send(.onAppear) }
             .onDisappear { store.send(.onDisappear) }
-            .zashiBack(hidden: store.isCameraEnabled, invertedColors: true)
+            .zashiBack(hidden: store.isCameraEnabled, invertedColors: colorScheme == .light)
         }
     }
 }
@@ -88,13 +89,13 @@ extension ScanView {
                     .renderingMode(.template)
                     .resizable()
                     .frame(width: 20, height: 20)
-                    .tint(.white)
+                    .foregroundColor(.white)
             } else {
                 Asset.Assets.torchOn.image
                     .renderingMode(.template)
                     .resizable()
                     .frame(width: 20, height: 20)
-                    .tint(.white)
+                    .foregroundColor(.white)
             }
         }
         .position(

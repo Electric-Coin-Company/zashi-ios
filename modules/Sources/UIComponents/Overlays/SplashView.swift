@@ -130,6 +130,7 @@ struct SplashView: View {
         if splashManager.isOn && !isHidden {
             GeometryReader { proxy in
                 Asset.Assets.zashiLogo.image
+                    .renderingMode(.template)
                     .resizable()
                     .frame(width: 249, height: 321)
                     .scaleEffect(0.35)
@@ -137,8 +138,10 @@ struct SplashView: View {
                         x: proxy.frame(in: .local).midX,
                         y: proxy.frame(in: .local).midY * 0.5
                     )
-                
+                    .foregroundColor(.white)
+
                 Asset.Assets.splashHi.image
+                    .renderingMode(.template)
                     .resizable()
                     .frame(width: 246, height: 213)
                     .scaleEffect(0.35)
@@ -146,6 +149,7 @@ struct SplashView: View {
                         x: proxy.frame(in: .local).midX,
                         y: proxy.frame(in: .local).midY * 0.8
                     )
+                    .foregroundColor(.white)
             }
             .background(Asset.Colors.splash.color)
             .mask {

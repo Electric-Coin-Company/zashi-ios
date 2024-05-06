@@ -32,7 +32,7 @@ extension View {
     public func applyScreenBackground(withPattern: Bool = false) -> some View {
         self.modifier(
             ScreenBackgroundModifier(
-                color: Asset.Colors.secondary.color,
+                color: Asset.Colors.background.color,
                 isPatternOn: withPattern
             )
         )

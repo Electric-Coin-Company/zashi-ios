@@ -23,11 +23,12 @@ public struct TCATextField: View {
     public var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             TextField(
-                placeholder,
+                "",
                 text: Binding(
                     get: { viewStore.state.text.data },
                     set: { viewStore.send(.set($0.redacted)) }
-                )
+                ),
+                prompt: Text(placeholder).foregroundColor(Asset.Colors.shade72.color)
             )
             .autocapitalization(.none)
             .keyboardType(keyboardType)

@@ -6,14 +6,17 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Added
+- Dark mode.
+
 ### Changed
 - The confirmation button at recovery phrase screen changed its name from "I got it" to "I've saved it".
 
 ## 1.0.6 build 4 (2024-04-30)
 
 ### Changed
-- We have added one more group of server options (zec.rocks) for increased coverage and reliability
-- zec.rocks:443 is now default wallet option
+- We have added one more group of server options (zec.rocks) for increased coverage and reliability.
+- zec.rocks:443 is now default wallet option.
 
 ### Fixed
 - We fixed a bug issue with displaying the recovery seed phrase twice after creating a new wallet.
