@@ -14,17 +14,20 @@ public struct AvailableBalanceView: View {
     let tokenName: String
     let showIndicator: Bool
     let underlined: Bool
+    let couldBeHidden: Bool
     
     public init(
         balance: Zatoshi,
         tokenName: String,
         showIndicator: Bool = false,
-        underlined: Bool = true
+        underlined: Bool = true,
+        couldBeHidden: Bool = false
     ) {
         self.balance = balance
         self.tokenName = tokenName
         self.showIndicator = showIndicator
         self.underlined = underlined
+        self.couldBeHidden = couldBeHidden
     }
     
     public var body: some View {
@@ -49,7 +52,7 @@ public struct AvailableBalanceView: View {
                     mostSignificantFontSize: 14,
                     leastSignificantFontSize: 7,
                     format: .expanded,
-                    couldBeHidden: true
+                    couldBeHidden: couldBeHidden
                 )
             }
             

@@ -14,21 +14,24 @@ public struct WalletBalancesView: View {
     @Perception.Bindable var store: StoreOf<WalletBalances>
     let tokenName: String
     let underlinedAvailableBalance: Bool
+    let couldBeHidden: Bool
 
     public init(
         store: StoreOf<WalletBalances>,
         tokenName: String,
-        underlinedAvailableBalance: Bool = true
+        underlinedAvailableBalance: Bool = true,
+        couldBeHidden: Bool = false
     ) {
         self.store = store
         self.tokenName = tokenName
         self.underlinedAvailableBalance = underlinedAvailableBalance
+        self.couldBeHidden = couldBeHidden
     }
 
     public var body: some View {
         WithPerceptionTracking {
             VStack(spacing: 0) {
-                BalanceWithIconView(balance: store.totalBalance)
+                BalanceWithIconView(balance: store.totalBalance, couldBeHidden: couldBeHidden)
                     .padding(.top, 40)
 #if !SECANT_DISTRIB
                     .accessDebugMenuWithHiddenGesture {
@@ -50,7 +53,8 @@ public struct WalletBalancesView: View {
                                 balance: store.shieldedBalance,
                                 tokenName: tokenName,
                                 showIndicator: store.isProcessingZeroAvailableBalance,
-                                underlined: underlinedAvailableBalance
+                                underlined: underlinedAvailableBalance,
+                                couldBeHidden: couldBeHidden
                             )
                             .padding(.top, 10)
                             .padding(.bottom, 30)
@@ -60,7 +64,8 @@ public struct WalletBalancesView: View {
                             balance: store.shieldedBalance,
                             tokenName: tokenName,
                             showIndicator: store.isProcessingZeroAvailableBalance,
-                            underlined: underlinedAvailableBalance
+                            underlined: underlinedAvailableBalance,
+                            couldBeHidden: couldBeHidden
                         )
                         .padding(.top, 10)
                         .padding(.bottom, 30)

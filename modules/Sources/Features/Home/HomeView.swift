@@ -27,7 +27,8 @@ public struct HomeView: View {
                         state: \.walletBalancesState,
                         action: HomeReducer.Action.walletBalances
                     ),
-                    tokenName: tokenName
+                    tokenName: tokenName,
+                    couldBeHidden: true
                 )
                 .padding(.top, 1)
 

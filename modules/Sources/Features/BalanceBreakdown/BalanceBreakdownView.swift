@@ -35,7 +35,8 @@ public struct BalanceBreakdownView: View {
                         action: BalanceBreakdownReducer.Action.walletBalances
                     ),
                     tokenName: tokenName,
-                    underlinedAvailableBalance: false
+                    underlinedAvailableBalance: false,
+                    couldBeHidden: true
                 )
 
                 Asset.Colors.primary.color
