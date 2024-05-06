@@ -38,6 +38,7 @@ let package = Package(
         .library(name: "PartialProposalError", targets: ["PartialProposalError"]),
         .library(name: "Pasteboard", targets: ["Pasteboard"]),
         .library(name: "PrivateDataConsent", targets: ["PrivateDataConsent"]),
+        .library(name: "QRImageDetector", targets: ["QRImageDetector"]),
         .library(name: "RecoveryPhraseDisplay", targets: ["RecoveryPhraseDisplay"]),
         .library(name: "ReviewRequest", targets: ["ReviewRequest"]),
         .library(name: "Root", targets: ["Root"]),
@@ -370,6 +371,13 @@ let package = Package(
             path: "Sources/Features/PrivateDataConsent"
         ),
         .target(
+            name: "QRImageDetector",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Dependencies/QRImageDetector"
+        ),
+        .target(
             name: "RecoveryPhraseDisplay",
             dependencies: [
                 "Generated",
@@ -453,6 +461,7 @@ let package = Package(
             dependencies: [
                 "CaptureDevice",
                 "Generated",
+                "QRImageDetector",
                 "URIParser",
                 "UIComponents",
                 "Utils",

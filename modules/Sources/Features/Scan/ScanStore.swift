@@ -5,9 +5,13 @@
 //  Created by Lukáš Korba on 16.05.2022.
 //
 
+import SwiftUI
+import CoreImage
 import ComposableArchitecture
 import Foundation
+
 import CaptureDevice
+import QRImageDetector
 import Utils
 import URIParser
 import ZcashLightClientKit
@@ -18,15 +22,18 @@ import ZcashSDKEnvironment
 public struct Scan {
     private let CancelId = UUID()
 
+    public enum ScanImageResult: Equatable {
+        case invalidQRCode
+        case noQRCodeFound
+        case severalQRCodesFound
+    }
+    
     @ObservableState
     public struct State: Equatable {
         public var info = ""
         public var isTorchAvailable = false
         public var isTorchOn = false
-
-        public var isCameraEnabled: Bool {
-            info.isEmpty
-        }
+        public var isCameraEnabled = true
         
         public init(
             info: String = "",
@@ -41,16 +48,18 @@ public struct Scan {
 
     @Dependency(\.captureDevice) var captureDevice
     @Dependency(\.mainQueue) var mainQueue
+    @Dependency(\.qrImageDetector) var qrImageDetector
     @Dependency(\.uriParser) var uriParser
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public enum Action: Equatable {
         case cancelPressed
         case clearInfo
+        case libraryImage(UIImage?)
         case onAppear
         case onDisappear
         case found(RedactableString)
-        case scanFailed
+        case scanFailed(ScanImageResult)
         case scan(RedactableString)
         case torchPressed
     }
@@ -67,6 +76,7 @@ public struct Scan {
                 // check the torch availability
                 state.isTorchAvailable = captureDevice.isTorchAvailable()
                 if !captureDevice.isAuthorized() {
+                    state.isCameraEnabled = false
                     state.info = L10n.Scan.cameraSettings
                 }
                 return .none
@@ -84,8 +94,34 @@ public struct Scan {
             case .found:
                 return .none
 
-            case .scanFailed:
-                state.info = L10n.Scan.invalidQR
+            case .libraryImage(let image):
+                guard let codes = qrImageDetector.check(image) else {
+                    return .send(.scanFailed(.noQRCodeFound))
+                }
+                
+                guard codes.count == 1 else {
+                    return .send(.scanFailed(.severalQRCodesFound))
+                }
+                
+                guard let code = codes.first else {
+                    return .send(.scanFailed(.noQRCodeFound))
+                }
+                
+                if uriParser.isValidURI(code, zcashSDKEnvironment.network.networkType) {
+                    return .send(.found(code.redacted))
+                } else {
+                    return .send(.scanFailed(.noQRCodeFound))
+                }
+
+            case .scanFailed(let result):
+                switch result {
+                case .invalidQRCode:
+                    state.info = L10n.Scan.invalidQR
+                case .noQRCodeFound:
+                    state.info = L10n.Scan.invalidImage
+                case .severalQRCodesFound:
+                    state.info = L10n.Scan.severalCodesFound
+                }
                 return .concatenate(
                     Effect.cancel(id: CancelId),
                     .run { send in
@@ -99,7 +135,7 @@ public struct Scan {
                 if uriParser.isValidURI(code.data, zcashSDKEnvironment.network.networkType) {
                     return .send(.found(code))
                 } else {
-                    return .send(.scanFailed)
+                    return .send(.scanFailed(.invalidQRCode))
                 }
                 
             case .torchPressed:

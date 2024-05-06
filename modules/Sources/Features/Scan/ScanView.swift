@@ -7,13 +7,17 @@
 
 import SwiftUI
 import ComposableArchitecture
+
 import Generated
 import UIComponents
 
 public struct ScanView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.openURL) var openURL
-
+    
+    @State private var image: UIImage?
+    @State private var showSheet = false
+    
     let store: StoreOf<Scan>
     
     public init(store: StoreOf<Scan>) {
@@ -26,7 +30,7 @@ public struct ScanView: View {
                 GeometryReader { proxy in
                     QRCodeScanView(
                         rectOfInterest: normalizedRectOfInterest(proxy.size),
-                        onQRScanningDidFail: { store.send(.scanFailed) },
+                        onQRScanningDidFail: { store.send(.scanFailed(.invalidQRCode)) },
                         onQRScanningSucceededWithCode: { store.send(.scan($0.redacted)) }
                     )
                     
@@ -35,6 +39,7 @@ public struct ScanView: View {
                     if store.isTorchAvailable {
                         torchButton(store, size: proxy.size)
                     }
+                    libraryButton(store, size: proxy.size)
                 }
                 
                 VStack {
@@ -72,6 +77,17 @@ public struct ScanView: View {
             .onAppear { store.send(.onAppear) }
             .onDisappear { store.send(.onDisappear) }
             .zashiBack(hidden: store.isCameraEnabled, invertedColors: colorScheme == .light)
+            .onChange(of: image) { img in
+                if let img {
+                    store.send(.libraryImage(img))
+                }
+            }
+            .overlay {
+                if showSheet {
+                    ZashiImagePicker(selectedImage: $image, showSheet: $showSheet)
+                        .ignoresSafeArea()
+                }
+            }
         }
     }
 }
@@ -99,9 +115,30 @@ extension ScanView {
             }
         }
         .position(
-            x: center.x + frameHalfSize - 5,
-            y: center.y + frameHalfSize + 20
+            x: center.x + frameHalfSize - 15,
+            y: center.y + frameHalfSize + 10
         )
+        .padding(10)
+    }
+    
+    func libraryButton(_ store: StoreOf<Scan>, size: CGSize) -> some View {
+        let center = ScanView.rectOfInterest(size).origin
+        let frameHalfSize = ScanView.frameSize(size) * 0.5
+        
+        return Button {
+            showSheet = true
+        } label: {
+            Image(systemName: "photo")
+                .renderingMode(.template)
+                .resizable()
+                .frame(width: 25, height: 18)
+                .foregroundColor(.white)
+        }
+        .position(
+            x: center.x - frameHalfSize + 3,
+            y: center.y + frameHalfSize + 10
+        )
+        .padding(10)
     }
 
     func frameOfInterest(_ size: CGSize) -> some View {

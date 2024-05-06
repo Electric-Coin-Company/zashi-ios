@@ -8,6 +8,7 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ### Added
 - Dark mode.
+- Scan QR code from an image stored in the library.
 
 ### Changed
 - The confirmation button at recovery phrase screen changed its name from "I got it" to "I've saved it".
