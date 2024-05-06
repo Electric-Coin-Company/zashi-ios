@@ -11,9 +11,11 @@ import ZcashLightClientKit
 
 public struct BalanceWithIconView: View {
     let balance: Zatoshi
+    let couldBeHidden: Bool
     
-    public init(balance: Zatoshi) {
+    public init(balance: Zatoshi, couldBeHidden: Bool = false) {
         self.balance = balance
+        self.couldBeHidden = couldBeHidden
     }
     
     public var body: some View {
@@ -24,7 +26,7 @@ public struct BalanceWithIconView: View {
                 mostSignificantFontSize: 42,
                 leastSignificantFontSize: 10,
                 format: .expanded,
-                couldBeHidden: true
+                couldBeHidden: couldBeHidden
             )
             
             Circle()
