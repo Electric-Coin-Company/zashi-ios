@@ -52,8 +52,11 @@ public struct MessageEditor: View {
                 .padding(.bottom, 2)
 
                 if !isEnabled {
-                    Asset.Colors.shade72.color
-                        .messageShape(filled: Asset.Colors.shade72.color)
+                    Asset.Colors.messageBcgDisabled.color
+                        .messageShape(
+                            filled: Asset.Colors.messageBcgDisabled.color,
+                            border: Asset.Colors.messageBcgBorder.color
+                        )
                 } else {
                     TextEditor(text: $message)
                         .focused($isFocused)

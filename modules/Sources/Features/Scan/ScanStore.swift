@@ -38,7 +38,8 @@ public struct Scan {
         public init(
             info: String = "",
             isTorchAvailable: Bool = false,
-            isTorchOn: Bool = false
+            isTorchOn: Bool = false,
+            isCameraEnabled: Bool = true
         ) {
             self.info = info
             self.isTorchAvailable = isTorchAvailable

@@ -50,6 +50,8 @@ public enum Asset {
     public static let btnPrimary = ColorAsset(name: "btnPrimary")
     public static let btnSecondary = ColorAsset(name: "btnSecondary")
     public static let error = ColorAsset(name: "error")
+    public static let messageBcgBorder = ColorAsset(name: "messageBcgBorder")
+    public static let messageBcgDisabled = ColorAsset(name: "messageBcgDisabled")
     public static let messageBcgReceived = ColorAsset(name: "messageBcgReceived")
     public static let pickerBcg = ColorAsset(name: "pickerBcg")
     public static let pickerSelection = ColorAsset(name: "pickerSelection")

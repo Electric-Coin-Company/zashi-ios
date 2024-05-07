@@ -27,6 +27,7 @@ extension SDKSynchronizerClient: TestDependencyKey {
         getUnifiedAddress: XCTUnimplemented("\(Self.self).getUnifiedAddress", placeholder: nil),
         getTransparentAddress: XCTUnimplemented("\(Self.self).getTransparentAddress", placeholder: nil),
         getSaplingAddress: XCTUnimplemented("\(Self.self).getSaplingAddress", placeholder: nil),
+        getAccountBalance: XCTUnimplemented("\(Self.self).getAccountBalance", placeholder: nil),
         sendTransaction: XCTUnimplemented("\(Self.self).sendTransaction", placeholder: .placeholder()),
         shieldFunds: XCTUnimplemented("\(Self.self).shieldFunds", placeholder: .placeholder()),
         wipe: XCTUnimplemented("\(Self.self).wipe"),
@@ -48,13 +49,14 @@ extension SDKSynchronizerClient {
         stop: { },
         isSyncing: { false },
         isInitialized: { false },
-        rewind: { _ in return Empty<Void, Error>().eraseToAnyPublisher() },
+        rewind: { _ in Empty<Void, Error>().eraseToAnyPublisher() },
         getAllTransactions: { [] },
-        getUnifiedAddress: { _ in return nil },
-        getTransparentAddress: { _ in return nil },
-        getSaplingAddress: { _ in return nil },
-        sendTransaction: { _, _, _, _ in return .placeholder() },
-        shieldFunds: { _, _, _ in return .placeholder() },
+        getUnifiedAddress: { _ in nil },
+        getTransparentAddress: { _ in nil },
+        getSaplingAddress: { _ in nil },
+        getAccountBalance: { _ in nil },
+        sendTransaction: { _, _, _, _ in .placeholder() },
+        shieldFunds: { _, _, _ in .placeholder() },
         wipe: { Empty<Void, Error>().eraseToAnyPublisher() },
         switchToEndpoint: { _ in },
         proposeTransfer: { _, _, _, _ in .testOnlyFakeProposal(totalFee: 0) },
@@ -147,6 +149,7 @@ extension SDKSynchronizerClient {
                 network: .testnet
             )
         },
+        getAccountBalance: @escaping (_ accountIndex: Int) async -> AccountBalance? = { _ in nil },
         sendTransaction:
         @escaping (UnifiedSpendingKey, Zatoshi, Recipient, Memo?) async throws -> TransactionState = { _, _, _, memo in
             var memos: [Memo]? = []
@@ -203,6 +206,7 @@ extension SDKSynchronizerClient {
             getUnifiedAddress: getUnifiedAddress,
             getTransparentAddress: getTransparentAddress,
             getSaplingAddress: getSaplingAddress,
+            getAccountBalance: getAccountBalance,
             sendTransaction: sendTransaction,
             shieldFunds: shieldFunds,
             wipe: wipe,
