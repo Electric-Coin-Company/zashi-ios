@@ -15,6 +15,9 @@ directly impact users rather than highlighting other crucial architectural updat
 - The confirmation button at recovery phrase screen changed its name from "I got it" to "I've saved it".
 - Receive tab shows 1 QR code at a time with ability to switch between them.
 
+### Fixed
+- Balances are refreshed right after the send or shielding transaction are processed.
+
 ## 1.0.6 build 4 (2024-04-30)
 
 ### Changed

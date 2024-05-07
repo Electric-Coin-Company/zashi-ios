@@ -57,6 +57,7 @@ class AppInitializationTests: XCTestCase {
         store.dependencies.numberFormatter = .noOp
         store.dependencies.restoreWalletStorage = .noOp
         store.dependencies.userDefaults = .noOp
+        store.dependencies.hideBalances = .noOp
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         await store.send(.initialization(.appDelegate(.didFinishLaunching))) { state in
@@ -133,6 +134,7 @@ class AppInitializationTests: XCTestCase {
         store.dependencies.numberFormatter = .noOp
         store.dependencies.restoreWalletStorage = .noOp
         store.dependencies.userDefaults = .noOp
+        store.dependencies.hideBalances = .noOp
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         await store.send(.initialization(.appDelegate(.didFinishLaunching))) { state in
@@ -194,6 +196,7 @@ class AppInitializationTests: XCTestCase {
         store.dependencies.walletConfigProvider = .noOp
         store.dependencies.crashReporter = .noOp
         store.dependencies.restoreWalletStorage = .noOp
+        store.dependencies.hideBalances = .noOp
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         await store.send(.initialization(.appDelegate(.didFinishLaunching))) { state in
@@ -233,6 +236,7 @@ class AppInitializationTests: XCTestCase {
         store.dependencies.walletConfigProvider = .noOp
         store.dependencies.crashReporter = .noOp
         store.dependencies.restoreWalletStorage = .noOp
+        store.dependencies.hideBalances = .noOp
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         await store.send(.initialization(.appDelegate(.didFinishLaunching))) { state in

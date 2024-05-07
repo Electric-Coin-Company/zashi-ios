@@ -53,11 +53,12 @@ public struct WalletBalances {
     
     public enum Action: Equatable {
         case availableBalanceTapped
-        case balancesUpdated
+        case balancesUpdated(AccountBalance?)
         case debugMenuStartup
         case onAppear
         case onDisappear
         case synchronizerStateChanged(RedactableSynchronizerState)
+        case updateBalances
     }
 
     @Dependency(\.mainQueue) var mainQueue
@@ -69,15 +70,8 @@ public struct WalletBalances {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                let accountBalance = sdkSynchronizer.latestState().accountBalance
-                
-                state.shieldedBalance = (accountBalance?.saplingBalance.spendableValue ?? .zero) + (accountBalance?.orchardBalance.spendableValue ?? .zero)
-                state.shieldedWithPendingBalance = (accountBalance?.saplingBalance.total() ?? .zero) + (accountBalance?.orchardBalance.total() ?? .zero)
-                state.transparentBalance = accountBalance?.unshielded ?? .zero
-                state.totalBalance = state.shieldedWithPendingBalance + state.transparentBalance
-
                 return .merge(
-                    .send(.balancesUpdated),
+                    .send(.updateBalances),
                     .publisher {
                         sdkSynchronizer.stateStream()
                             .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
@@ -86,16 +80,29 @@ public struct WalletBalances {
                     }
                     .cancellable(id: CancelStateId, cancelInFlight: true)
                 )
-                
+
             case .onDisappear:
                 return .cancel(id: CancelStateId)
                 
             case .availableBalanceTapped:
                 return .none
+
+            case .updateBalances:
+                return .run { send in
+                    if let accountBalance = try? await sdkSynchronizer.getAccountBalance(0) {
+                        await send(.balancesUpdated(accountBalance))
+                    } else if let accountBalance = sdkSynchronizer.latestState().accountBalance {
+                        await send(.balancesUpdated(accountBalance))
+                    }
+                }
                 
-            case .balancesUpdated:
+            case .balancesUpdated(let accountBalance):
+                state.shieldedBalance = (accountBalance?.saplingBalance.spendableValue ?? .zero) + (accountBalance?.orchardBalance.spendableValue ?? .zero)
+                state.shieldedWithPendingBalance = (accountBalance?.saplingBalance.total() ?? .zero) + (accountBalance?.orchardBalance.total() ?? .zero)
+                state.transparentBalance = accountBalance?.unshielded ?? .zero
+                state.totalBalance = state.shieldedWithPendingBalance + state.transparentBalance
                 return .none
-                
+
             case .debugMenuStartup:
                 return .none
                 
@@ -106,13 +113,7 @@ public struct WalletBalances {
                     state.migratingDatabase = false
                 }
 
-                let accountBalance = latestState.data.accountBalance?.data
-                
-                state.shieldedBalance = (accountBalance?.saplingBalance.spendableValue ?? .zero) + (accountBalance?.orchardBalance.spendableValue ?? .zero)
-                state.shieldedWithPendingBalance = (accountBalance?.saplingBalance.total() ?? .zero) + (accountBalance?.orchardBalance.total() ?? .zero)
-                state.transparentBalance = accountBalance?.unshielded ?? .zero
-                state.totalBalance = state.shieldedWithPendingBalance + state.transparentBalance
-                return .send(.balancesUpdated)
+                return .send(.balancesUpdated(latestState.data.accountBalance?.data))
             }
         }
     }

@@ -91,6 +91,7 @@ extension SDKSynchronizerClient: DependencyKey {
             getUnifiedAddress: { try await synchronizer.getUnifiedAddress(accountIndex: $0) },
             getTransparentAddress: { try await synchronizer.getTransparentAddress(accountIndex: $0) },
             getSaplingAddress: { try await synchronizer.getSaplingAddress(accountIndex: $0) },
+            getAccountBalance: { try await synchronizer.getAccountBalance(accountIndex: $0) },
             sendTransaction: { spendingKey, amount, recipient, memo in
                 let pendingTransaction = try await synchronizer.sendToAddress(
                     spendingKey: spendingKey,

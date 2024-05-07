@@ -97,6 +97,7 @@ public struct BalanceBreakdownReducer: Reducer {
         case shieldFundsSuccess
         case synchronizerStateChanged(RedactableSynchronizerState)
         case syncProgress(SyncProgressReducer.Action)
+        case updateBalances(AccountBalance?)
         case updateDestination(BalanceBreakdownReducer.State.Destination?)
         case updateHintBoxVisibility(Bool)
         case walletBalances(WalletBalances.Action)
@@ -182,6 +183,8 @@ public struct BalanceBreakdownReducer: Reducer {
                         
                         let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
                         
+                        await send(.walletBalances(.updateBalances))
+                        
                         switch result {
                         case .failure:
                             await send(.shieldFundsFailure("sdkSynchronizer.createProposedTransactions".toZcashError()))
@@ -211,14 +214,20 @@ public struct BalanceBreakdownReducer: Reducer {
                 return .send(.updateDestination(.partialProposalError))
                 
             case .synchronizerStateChanged(let latestState):
-                let accountBalance = latestState.data.accountBalance?.data
-                
-                state.changePending = (accountBalance?.saplingBalance.changePendingConfirmation ?? .zero) + 
+                return .send(.updateBalances(latestState.data.accountBalance?.data))
+
+            case .walletBalances(.balancesUpdated(let accountBalance)):
+                state.shieldedBalance = state.walletBalancesState.shieldedBalance
+                state.transparentBalance = state.walletBalancesState.transparentBalance
+                return .send(.updateBalances(accountBalance))
+
+            case .updateBalances(let accountBalance):
+                state.changePending = (accountBalance?.saplingBalance.changePendingConfirmation ?? .zero) +
                     (accountBalance?.orchardBalance.changePendingConfirmation ?? .zero)
                 state.pendingTransactions = (accountBalance?.saplingBalance.valuePendingSpendability ?? .zero) +
                     (accountBalance?.orchardBalance.valuePendingSpendability ?? .zero)
                 return .none
-                
+
             case .syncProgress:
                 return .none
 
@@ -228,11 +237,6 @@ public struct BalanceBreakdownReducer: Reducer {
 
             case .updateHintBoxVisibility(let visibility):
                 state.isHintBoxVisible = visibility
-                return .none
-            
-            case .walletBalances(.balancesUpdated):
-                state.shieldedBalance = state.walletBalancesState.shieldedBalance
-                state.transparentBalance = state.walletBalancesState.transparentBalance
                 return .none
                 
             case .walletBalances:
