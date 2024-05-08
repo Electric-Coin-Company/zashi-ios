@@ -37,7 +37,7 @@ public enum QRCodeGenerator {
         filter.setValue(data, forKey: "inputMessage")
         let transform = CGAffineTransform(scaleX: scale, y: scale)
         
-        guard let output = filter.outputImage?.transformed(by: transform).tinted(using: color) else {
+        guard let output = filter.outputImage?.transformed(by: transform) else {
             return nil
         }
         
