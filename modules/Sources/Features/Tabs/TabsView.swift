@@ -172,7 +172,7 @@ public struct TabsView: View {
     @ViewBuilder
     func hideBalancesButton(_ store: TabsStore, tab: TabsReducer.State.Tab) -> some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
-            if tab == .account || tab == .balances {
+            if tab == .account || tab == .send || tab == .balances {
                 Button {
                     var prevValue = hideBalances.value().value
                     prevValue.toggle()

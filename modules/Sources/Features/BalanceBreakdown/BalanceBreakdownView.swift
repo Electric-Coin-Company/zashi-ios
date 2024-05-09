@@ -16,11 +16,16 @@ import Models
 import BalanceFormatter
 import SyncProgress
 import WalletBalances
+import Combine
 
 public struct BalanceBreakdownView: View {
     let store: BalanceBreakdownStore
     let tokenName: String
     
+    @Dependency(\.hideBalances) var hideBalances
+    @State var isHidden = false
+    @State private var cancellable: AnyCancellable?
+
     public init(store: BalanceBreakdownStore, tokenName: String) {
         self.store = store
         self.tokenName = tokenName
@@ -87,8 +92,16 @@ public struct BalanceBreakdownView: View {
             )
         )
         .task { await store.send(.restoreWalletTask).finish() }
-        .onAppear { store.send(.onAppear) }
-        .onDisappear { store.send(.onDisappear) }
+        .onAppear {
+            store.send(.onAppear)
+            cancellable = hideBalances.value().sink { val in
+                isHidden = val
+            }
+        }
+        .onDisappear {
+            store.send(.onDisappear)
+            cancellable?.cancel()
+        }
     }
 }
 
@@ -232,7 +245,7 @@ extension BalanceBreakdownView {
                 shadowOffset: 6
             )
             .padding(.bottom, 15)
-            .disabled(!viewStore.isShieldableBalanceAvailable || viewStore.isShieldingFunds)
+            .disabled(!viewStore.isShieldableBalanceAvailable || viewStore.isShieldingFunds || isHidden)
             
             Text("(\(ZatoshiStringRepresentation.feeFormat))")
                 .font(.custom(FontFamily.Inter.semiBold.name, size: 11))
