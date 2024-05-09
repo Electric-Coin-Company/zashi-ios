@@ -4,6 +4,13 @@ All notable changes to this application will be documented in this file.
 Please be aware that this changelog primarily focuses on user-related modifications, emphasizing changes that can 
 directly impact users rather than highlighting other crucial architectural updates. 
 
+## [Unreleased]
+
+## 1.1 build 6 (2024-05-09)
+
+### Changed
+- Hide balances logic has been tweaked for better security. Shileding is not possible when balances are hidden. Send tab balances are also hidden.
+
 ## 1.1 build 3 (2024-05-07)
 
 ### Added
