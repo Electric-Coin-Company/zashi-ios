@@ -42,7 +42,8 @@ public struct SendFlowView: View {
                                     state: \.walletBalancesState,
                                     action: SendFlowReducer.Action.walletBalances
                                 ),
-                                tokenName: tokenName
+                                tokenName: tokenName,
+                                couldBeHidden: true
                             )
                             
                             VStack(alignment: .leading) {
