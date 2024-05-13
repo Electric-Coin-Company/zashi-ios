@@ -11,10 +11,7 @@ import ZcashLightClientKit
 import AudioServices
 import Utils
 import Scan
-import PartialProposalError
-import MnemonicClient
 import SDKSynchronizer
-import WalletStorage
 import ZcashSDKEnvironment
 import UIComponents
 import Models
@@ -29,16 +26,13 @@ public struct SendFlowReducer: Reducer {
     public struct State: Equatable {
         public enum Destination: Equatable {
             case partialProposalError
-            case sendConfirmation
             case scanQR
         }
 
         @PresentationState public var alert: AlertState<Action>?
         public var addMemoState: Bool
         public var destination: Destination?
-        public var isSending = false
         public var memoState: MessageEditorReducer.State
-        public var partialProposalErrorState: PartialProposalError.State
         public var proposal: Proposal?
         public var scanState: Scan.State
         public var shieldedBalance: Zatoshi
@@ -111,9 +105,7 @@ public struct SendFlowReducer: Reducer {
         public init(
             addMemoState: Bool,
             destination: Destination? = nil,
-            isSending: Bool = false,
             memoState: MessageEditorReducer.State,
-            partialProposalErrorState: PartialProposalError.State,
             scanState: Scan.State,
             shieldedBalance: Zatoshi = .zero,
             transactionAddressInputState: TransactionAddressTextFieldReducer.State,
@@ -122,9 +114,7 @@ public struct SendFlowReducer: Reducer {
         ) {
             self.addMemoState = addMemoState
             self.destination = destination
-            self.isSending = isSending
             self.memoState = memoState
-            self.partialProposalErrorState = partialProposalErrorState
             self.scanState = scanState
             self.shieldedBalance = shieldedBalance
             self.transactionAddressInputState = transactionAddressInputState
@@ -135,17 +125,14 @@ public struct SendFlowReducer: Reducer {
 
     public enum Action: Equatable {
         case alert(PresentationAction<Action>)
-        case goBackPressed
         case memo(MessageEditorReducer.Action)
         case onAppear
-        case partialProposalError(PartialProposalError.Action)
         case proposal(Proposal)
+        case resetForm
         case reviewPressed
         case scan(Scan.Action)
-        case sendPressed
-        case sendDone
+        case sendConfirmationRequired
         case sendFailed(ZcashError)
-        case sendPartial([String], [String])
         case transactionAddressInput(TransactionAddressTextFieldReducer.Action)
         case transactionAmountInput(TransactionAmountTextFieldReducer.Action)
         case updateDestination(SendFlowReducer.State.Destination?)
@@ -154,10 +141,7 @@ public struct SendFlowReducer: Reducer {
     
     @Dependency(\.audioServices) var audioServices
     @Dependency(\.derivationTool) var derivationTool
-    @Dependency(\.mainQueue) var mainQueue
-    @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
-    @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public init() { }
@@ -177,10 +161,6 @@ public struct SendFlowReducer: Reducer {
 
         Scope(state: \.scanState, action: /Action.scan) {
             Scan()
-        }
-
-        Scope(state: \.partialProposalErrorState, action: /Action.partialProposalError) {
-            PartialProposalError()
         }
 
         Scope(state: \.walletBalancesState, action: /Action.walletBalances) {
@@ -203,14 +183,6 @@ public struct SendFlowReducer: Reducer {
                 state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
                 return .none
 
-            case .goBackPressed:
-                state.destination = nil
-                state.isSending = false
-                return .none
-
-            case .partialProposalError:
-                return .none
-                
             case let .proposal(proposal):
                 state.proposal = proposal
                 return .none
@@ -236,62 +208,26 @@ public struct SendFlowReducer: Reducer {
                         let proposal = try await sdkSynchronizer.proposeTransfer(0, recipient, state.amount, memo)
                         
                         await send(.proposal(proposal))
-                        await send(.updateDestination(.sendConfirmation))
+                        await send(.sendConfirmationRequired)
                     } catch {
                         await send(.sendFailed(error.toZcashError()))
                     }
                 }
-
-            case .sendPressed:
-                state.isSending = true
-
-                guard let proposal = state.proposal else {
-                    return .send(.sendFailed("missing proposal".toZcashError()))
-                }
                 
-                state.amount = Zatoshi(state.transactionAmountInputState.amount.data)
-                state.address = state.transactionAddressInputState.textFieldState.text.data
+            case .sendFailed(let error):
+                state.alert = AlertState.sendFailure(error)
+                return .none
                 
-                return .run { send in
-                    do {
-                        let storedWallet = try walletStorage.exportWallet()
-                        let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
-                        let network = zcashSDKEnvironment.network.networkType
-                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, network)
+            case .sendConfirmationRequired:
+                print("__LD sendConfirmationRequired")
+                return .none
 
-                        let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
-                        
-                        switch result {
-                        case .failure:
-                            await send(.sendFailed("sdkSynchronizer.createProposedTransactions".toZcashError()))
-                        case let .partial(txIds: txIds, statuses: statuses):
-                            await send(.sendPartial(txIds, statuses))
-                        case .success:
-                            await send(.sendDone)
-                        }
-                    } catch {
-                        await send(.sendFailed(error.toZcashError()))
-                    }
-                }
-
-            case .sendDone:
-                state.isSending = false
-                state.destination = nil
+            case .resetForm:
                 state.memoState.text = "".redacted
                 state.transactionAmountInputState.textFieldState.text = "".redacted
                 state.transactionAmountInputState.amount = Int64(0).redacted
                 state.transactionAddressInputState.textFieldState.text = "".redacted
                 return .none
-                
-            case .sendFailed(let error):
-                state.isSending = false
-                state.alert = AlertState.sendFailure(error)
-                return .none
-                
-            case let .sendPartial(txIds, statuses):
-                state.partialProposalErrorState.txIds = txIds
-                state.partialProposalErrorState.statuses = statuses
-                return .send(.updateDestination(.partialProposalError))
                 
             case .transactionAmountInput:
                 return .none
@@ -369,13 +305,6 @@ extension SendFlowStore {
             action: SendFlowReducer.Action.scan
         )
     }
-    
-    func partialProposalErrorStore() -> StoreOf<PartialProposalError> {
-        self.scope(
-            state: \.partialProposalErrorState,
-            action: SendFlowReducer.Action.partialProposalError
-        )
-    }
 }
 
 // MARK: - ViewStore
@@ -394,24 +323,6 @@ extension SendFlowViewStore {
             embed: { $0 ? SendFlowReducer.State.Destination.scanQR : nil }
         )
     }
-    
-    var bindingForSendConfirmation: Binding<Bool> {
-        self.destinationBinding.map(
-            extract: { $0 == .sendConfirmation },
-            embed: { 
-                $0 ? SendFlowReducer.State.Destination.sendConfirmation :
-                self.destination == .partialProposalError ? SendFlowReducer.State.Destination.partialProposalError :
-                nil
-            }
-        )
-    }
-    
-    var bindingForPartialProposalError: Binding<Bool> {
-        self.destinationBinding.map(
-            extract: { $0 == .partialProposalError },
-            embed: { $0 ? SendFlowReducer.State.Destination.partialProposalError : nil }
-        )
-    }
 }
 
 // MARK: Placeholders
@@ -422,7 +333,6 @@ extension SendFlowReducer.State {
             addMemoState: true,
             destination: nil,
             memoState: .initial,
-            partialProposalErrorState: .initial,
             scanState: .initial,
             transactionAddressInputState: .initial,
             transactionAmountInputState: .initial,

@@ -39,6 +39,8 @@ public struct PartialProposalError {
     }
     
     public enum Action: Equatable {
+        case dismiss
+        case onAppear
         case sendSupportMail
         case sendSupportMailFinished
         case shareFinished
@@ -49,6 +51,13 @@ public struct PartialProposalError {
     public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                state.isBackButtonHidden = true
+                return .none
+                
+            case .dismiss:
+                return .none
+                
             case .sendSupportMail:
                 let supportData = SupportDataGenerator.generatePartialProposalError(txIds: state.txIds, statuses: state.statuses)
                 if MFMailComposeViewController.canSendMail() {

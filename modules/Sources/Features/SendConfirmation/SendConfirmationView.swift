@@ -1,5 +1,5 @@
 //
-//  SendFlowConfirmationView.swift
+//  SendConfirmationView.swift
 //
 //
 //  Created by Lukáš Korba on 28.11.2023.
@@ -12,26 +12,27 @@ import ZcashLightClientKit
 import Generated
 import UIComponents
 import Utils
+import PartialProposalError
 
-public struct SendFlowConfirmationView: View {
-    let store: SendFlowStore
+public struct SendConfirmationView: View {
+    @Perception.Bindable var store: StoreOf<SendConfirmation>
     let tokenName: String
     
-    public init(store: SendFlowStore, tokenName: String) {
+    public init(store: StoreOf<SendConfirmation>, tokenName: String) {
         self.store = store
         self.tokenName = tokenName
     }
     
     public var body: some View {
         ZStack {
-            WithViewStore(self.store, observe: { $0 }) { viewStore in
+            WithPerceptionTracking {
                 ScrollView {
                     HStack {
                         VStack(alignment: .leading, spacing: 0) {
                             Text(L10n.Send.amountSummary)
                                 .font(.custom(FontFamily.Inter.regular.name, size: 14))
                             
-                            BalanceWithIconView(balance: viewStore.amount)
+                            BalanceWithIconView(balance: store.amount)
                         }
                         Spacer()
                     }
@@ -43,7 +44,7 @@ public struct SendFlowConfirmationView: View {
                         VStack(alignment: .leading, spacing: 6) {
                             Text(L10n.Send.toSummary)
                                 .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                            Text(viewStore.address)
+                            Text(store.address)
                                 .font(.custom(FontFamily.Inter.regular.name, size: 14))
                         }
                         Spacer()
@@ -56,7 +57,7 @@ public struct SendFlowConfirmationView: View {
                             Text(L10n.Send.feeSummary)
                                 .font(.custom(FontFamily.Inter.regular.name, size: 14))
                             ZatoshiRepresentationView(
-                                balance: viewStore.feeRequired,
+                                balance: store.feeRequired,
                                 fontName: FontFamily.Archivo.semiBold.name,
                                 mostSignificantFontSize: 16,
                                 leastSignificantFontSize: 8,
@@ -68,7 +69,7 @@ public struct SendFlowConfirmationView: View {
                     .padding(.horizontal, 35)
                     .padding(.bottom, 20)
 
-                    if !viewStore.message.isEmpty {
+                    if !store.message.isEmpty {
                         HStack {
                             VStack(alignment: .leading, spacing: 10) {
                                 Text(L10n.Send.message)
@@ -76,7 +77,7 @@ public struct SendFlowConfirmationView: View {
                                 VStack(alignment: .leading, spacing: 0) {
                                     Color.clear.frame(height: 0)
                                     
-                                    Text(viewStore.message)
+                                    Text(store.message)
                                         .font(.custom(FontFamily.Inter.regular.name, size: 13))
                                         .foregroundColor(Asset.Colors.primary.color)
                                         .padding()
@@ -91,9 +92,9 @@ public struct SendFlowConfirmationView: View {
 
                     HStack(spacing: 30) {
                         Button {
-                            viewStore.send(.sendPressed)
+                            store.send(.sendPressed)
                         } label: {
-                            if viewStore.isSending {
+                            if store.isSending {
                                 HStack(spacing: 10) {
                                     Text(L10n.Send.sending.uppercased())
                                     
@@ -115,7 +116,7 @@ public struct SendFlowConfirmationView: View {
                         )
 
                         Button {
-                            viewStore.send(.goBackPressed)
+                            store.send(.goBackPressed)
                         } label: {
                             Text(L10n.Send.goBack.uppercased())
                         }
@@ -125,14 +126,26 @@ public struct SendFlowConfirmationView: View {
                             shadowOffset: 6
                         )
                     }
-                    .disabled(viewStore.isSending)
+                    .disabled(store.isSending)
                     .padding(.horizontal, 35)
                 }
+                .navigationLinkEmpty(
+                    isActive: $store.partialProposalErrorViewBinding,
+                    destination: {
+                        PartialProposalErrorView(
+                            store: store.scope(
+                                state: \.partialProposalErrorState,
+                                action: \.partialProposalError
+                            )
+                        )
+                    }
+                )
             }
             .zashiTitle {
                 Text(L10n.Send.confirmationTitle.uppercased())
                     .font(.custom(FontFamily.Archivo.bold.name, size: 14))
             }
+            .alert($store.scope(state: \.alert, action: \.alert))
         }
         .navigationBarBackButtonHidden()
         .padding(.vertical, 1)
@@ -142,32 +155,32 @@ public struct SendFlowConfirmationView: View {
 
 #Preview {
     NavigationView {
-        SendFlowConfirmationView(
-            store: .init(
-                initialState: .init(
-                    addMemoState: true,
-                    destination: nil,
-                    memoState: MessageEditorReducer.State(
-                        charLimit: 512,
-                        text: "This is some message I want to see in the preview and long enough to have at least two lines".redacted
-                    ),
-                    partialProposalErrorState: .initial,
-                    scanState: .initial,
-                    transactionAddressInputState:
-                        TransactionAddressTextFieldReducer.State(
-                            textFieldState: 
-                                TCATextFieldReducer.State(
-                                validationType: nil,
-                                text: "utest1zkkkjfxkamagznjr6ayemffj2d2gacdwpzcyw669pvg06xevzqslpmm27zjsctlkstl2vsw62xrjktmzqcu4yu9zdhdxqz3kafa4j2q85y6mv74rzjcgjg8c0ytrg7dwyzwtgnuc76h".redacted
-                            )
-                        ),
-                    transactionAmountInputState: .initial,
-                    walletBalancesState: .initial
-                )
-            ) {
-                SendFlowReducer()
-            },
+        SendConfirmationView(
+            store: SendConfirmation.initial,
             tokenName: "ZEC"
         )
     }
+}
+
+// MARK: - Store
+
+extension SendConfirmation {
+    public static var initial = StoreOf<SendConfirmation>(
+        initialState: .initial
+    ) {
+        SendConfirmation()
+    }
+}
+
+// MARK: - Placeholders
+
+extension SendConfirmation.State {
+    public static let initial = SendConfirmation.State(
+        address: "",
+        amount: .zero,
+        feeRequired: .zero,
+        message: "",
+        partialProposalErrorState: .initial,
+        proposal: nil
+    )
 }

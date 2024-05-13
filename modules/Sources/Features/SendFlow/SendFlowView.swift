@@ -124,7 +124,7 @@ public struct SendFlowView: View {
                                 Text(L10n.Send.review.uppercased())
                             }
                             .zcashStyle()
-                            .disabled(!viewStore.isValidForm || viewStore.isSending)
+                            .disabled(!viewStore.isValidForm)
                             .padding(.top, 40)
                             .padding(.horizontal, 30)
                             
@@ -149,18 +149,6 @@ public struct SendFlowView: View {
                             ScanView(store: store.scanStore())
                         }
                     )
-                    .navigationLinkEmpty(
-                        isActive: viewStore.bindingForPartialProposalError,
-                        destination: {
-                            PartialProposalErrorView(store: store.partialProposalErrorStore())
-                        }
-                    )
-                    .navigationLinkEmpty(
-                        isActive: viewStore.bindingForSendConfirmation,
-                        destination: {
-                            SendFlowConfirmationView(store: store, tokenName: tokenName)
-                        }
-                    )
                 }
             }
         }
@@ -183,7 +171,6 @@ public struct SendFlowView: View {
                     addMemoState: true,
                     destination: nil,
                     memoState: .initial,
-                    partialProposalErrorState: .initial,
                     scanState: .initial,
                     transactionAddressInputState: .initial,
                     transactionAmountInputState: .initial,

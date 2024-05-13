@@ -48,6 +48,7 @@ let package = Package(
         .library(name: "SDKSynchronizer", targets: ["SDKSynchronizer"]),
         .library(name: "SecItem", targets: ["SecItem"]),
         .library(name: "SecurityWarning", targets: ["SecurityWarning"]),
+        .library(name: "SendConfirmation", targets: ["SendConfirmation"]),
         .library(name: "SendFlow", targets: ["SendFlow"]),
         .library(name: "ServerSetup", targets: ["ServerSetup"]),
         .library(name: "Settings", targets: ["Settings"]),
@@ -517,12 +518,13 @@ let package = Package(
             path: "Sources/Features/SecurityWarning"
         ),
         .target(
-            name: "SendFlow",
+            name: "SendConfirmation",
             dependencies: [
                 "AudioServices",
                 "BalanceFormatter",
-                "Generated",
                 "DerivationTool",
+                "Generated",
+                "LocalAuthenticationHandler",
                 "MnemonicClient",
                 "Models",
                 "PartialProposalError",
@@ -532,6 +534,25 @@ let package = Package(
                 "Utils",
                 "WalletBalances",
                 "WalletStorage",
+                "ZcashSDKEnvironment",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
+            ],
+            path: "Sources/Features/SendConfirmation"
+        ),
+        .target(
+            name: "SendFlow",
+            dependencies: [
+                "AudioServices",
+                "BalanceFormatter",
+                "DerivationTool",
+                "Generated",
+                "Models",
+                "Scan",
+                "SDKSynchronizer",
+                "UIComponents",
+                "Utils",
+                "WalletBalances",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
@@ -609,6 +630,7 @@ let package = Package(
                 "HideBalances",
                 "Home",
                 "RestoreWalletStorage",
+                "SendConfirmation",
                 "SendFlow",
                 "Settings",
                 "UIComponents",

@@ -14,6 +14,7 @@ struct ZashiBackModifier: ViewModifier {
     let disabled: Bool
     let hidden: Bool
     let invertedColors: Bool
+    let customDismiss: (() -> Void)?
     
     func body(content: Content) -> some View {
         if hidden {
@@ -25,7 +26,11 @@ struct ZashiBackModifier: ViewModifier {
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button {
-                            dismiss()
+                            if let customDismiss {
+                                customDismiss()
+                            } else {
+                                dismiss()
+                            }
                         } label: {
                             HStack {
                                 Image(systemName: "arrow.backward")
@@ -54,8 +59,16 @@ extension View {
     public func zashiBack(
         _ disabled: Bool = false,
         hidden: Bool = false,
-        invertedColors: Bool = false
+        invertedColors: Bool = false,
+        customDismiss: (() -> Void)? = nil
     ) -> some View {
-        modifier(ZashiBackModifier(disabled: disabled, hidden: hidden, invertedColors: invertedColors))
+        modifier(
+            ZashiBackModifier(
+                disabled: disabled,
+                hidden: hidden,
+                invertedColors: invertedColors,
+                customDismiss: customDismiss
+            )
+        )
     }
 }
