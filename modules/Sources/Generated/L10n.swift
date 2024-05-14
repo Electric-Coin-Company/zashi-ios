@@ -633,6 +633,8 @@ public enum L10n {
     public static let collapse = L10n.tr("Localizable", "transactionList.collapse", fallback: "Collapse transaction")
     /// Message
     public static let messageTitle = L10n.tr("Localizable", "transactionList.messageTitle", fallback: "Message")
+    /// Messages
+    public static let messageTitlePlural = L10n.tr("Localizable", "transactionList.messageTitlePlural", fallback: "Messages")
     /// No message included in transaction
     public static let noMessageIncluded = L10n.tr("Localizable", "transactionList.noMessageIncluded", fallback: "No message included in transaction")
     /// No transaction history

@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Added
+- Expanded transaction lists all text memos.
+
 ## 1.1 build 6 (2024-05-09)
 
 ### Changed

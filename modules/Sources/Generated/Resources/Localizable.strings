@@ -183,6 +183,7 @@ Sharing this private data is irrevocable — once you have shared this private d
 // MARK: - Transaction List
 "transactionList.collapse" = "Collapse transaction";
 "transactionList.messageTitle" = "Message";
+"transactionList.messageTitlePlural" = "Messages";
 "transactionList.noMessageIncluded" = "No message included in transaction";
 "transactionList.transactionFee" = "Transaction Fee";
 "transactionList.transactionId" = "Transaction ID";
