@@ -123,6 +123,16 @@
 "notEnoughFreeSpace.message1" = "Zashi requires at\nleast %@ GB of space to\noperate but there is only\n%@ MB available.";
 "notEnoughFreeSpace.message2" = "Go to your device settings and make more space available if you wish to use the Zashi app.";
 
+// MARK: - About
+"about.info" = "Send and receive ZEC on Zashi!
+Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.";
+"about.version" = "Zashi Version %@ (%@)";
+"about.whatsNew" = "What's new";
+"about.privacyPolicy" = "Privacy Policy";
+
+// MARK: - What's new
+"whatsNew.version" = "Zashi Version %@";
+
 // MARK: - Settings
 "settings.feedback" = "Send us feedback";
 "settings.advanced" = "Advanced";
@@ -133,14 +143,9 @@
 "settings.exportLogsOnly" = "Export logs only";
 "settings.deleteZashi" = "Delete Zashi";
 "settings.deleteZashiWarning" = "(You will be asked to confirm on next screen)";
-"settings.about.info" = "Send and receive ZEC on Zashi!
-Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.";
-"settings.version" = "Version %@ (%@)";
 "settings.alert.cantSendEmail.title" = "Oh, no!";
 "settings.alert.cantSendEmail.message" = "It looks like you don't have a default email app configured on your device. Copy the address below, and use your favorite email client to send us a message.";
 "settings.alert.cantSendEmail.copyEmail" = "Copy %@";
-"settings.privacyPolicyPart1" = "See our Privacy Policy ";
-"settings.privacyPolicyPart2" = "here.";
 
 // MARK: - Private Data Consent
 "privateDataConsent.title" = "Consent for Exporting Private Data";

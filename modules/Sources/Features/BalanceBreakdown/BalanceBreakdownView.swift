@@ -241,6 +241,7 @@ extension BalanceBreakdownView {
             }
             .zcashStyle(
                 minWidth: nil,
+                fontSize: 10,
                 height: 38,
                 shadowOffset: 6
             )

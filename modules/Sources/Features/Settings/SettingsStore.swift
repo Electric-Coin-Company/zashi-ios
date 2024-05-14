@@ -2,6 +2,7 @@ import SwiftUI
 import ComposableArchitecture
 import MessageUI
 
+import About
 import AppVersion
 import Generated
 import Models
@@ -20,6 +21,7 @@ public struct SettingsReducer: Reducer {
             case advanced
         }
 
+        public var aboutState: About.State
         public var advancedSettingsState: AdvancedSettings.State
         @PresentationState public var alert: AlertState<Action>?
         public var appVersion = ""
@@ -29,6 +31,7 @@ public struct SettingsReducer: Reducer {
         public var supportData: SupportData?
         
         public init(
+            aboutState: About.State,
             advancedSettingsState: AdvancedSettings.State,
             appVersion: String = "",
             appBuild: String = "",
@@ -36,6 +39,7 @@ public struct SettingsReducer: Reducer {
             isRestoringWallet: Bool = false,
             supportData: SupportData? = nil
         ) {
+            self.aboutState = aboutState
             self.advancedSettingsState = advancedSettingsState
             self.appVersion = appVersion
             self.appBuild = appBuild
@@ -46,6 +50,7 @@ public struct SettingsReducer: Reducer {
     }
 
     public enum Action: Equatable {
+        case about(About.Action)
         case advancedSettings(AdvancedSettings.Action)
         case alert(PresentationAction<Action>)
         case copyEmail
@@ -64,13 +69,24 @@ public struct SettingsReducer: Reducer {
     public init() { }
 
     public var body: some Reducer<State, Action> {
+        Scope(state: \.aboutState, action: /Action.about) {
+            About()
+        }
+
+        Scope(state: \.advancedSettingsState, action: /Action.advancedSettings) {
+            AdvancedSettings()
+        }
+
         Reduce { state, action in
             switch action {
             case .onAppear:
                 state.appVersion = appVersion.appVersion()
                 state.appBuild = appVersion.appBuild()
                 return .none
-                
+            
+            case .about:
+                return .none
+            
             case .copyEmail:
                 pasteboard.setString(SupportDataGenerator.Constants.email.redacted)
                 return .none
@@ -117,10 +133,6 @@ public struct SettingsReducer: Reducer {
             }
         }
         .ifLet(\.$alert, action: /Action.alert)
-
-        Scope(state: \.advancedSettingsState, action: /Action.advancedSettings) {
-            AdvancedSettings()
-        }
     }
 }
 
@@ -158,6 +170,13 @@ extension SettingsStore {
             action: SettingsReducer.Action.advancedSettings
         )
     }
+    
+    func aboutStore() -> StoreOf<About> {
+        self.scope(
+            state: \.aboutState,
+            action: SettingsReducer.Action.about
+        )
+    }
 }
 
 // MARK: Alerts
@@ -183,6 +202,7 @@ extension AlertState where Action == SettingsReducer.Action {
 
 extension SettingsReducer.State {
     public static let initial = SettingsReducer.State(
+        aboutState: .initial,
         advancedSettingsState: .initial
     )
 }
@@ -196,6 +216,7 @@ extension SettingsStore {
     
     public static let demo = SettingsStore(
         initialState: .init(
+            aboutState: .initial,
             advancedSettingsState: .initial,
             appVersion: "0.0.1",
             appBuild: "54"

@@ -18,6 +18,7 @@ public struct ZcashButtonStyle: ButtonStyle {
 
     let isEnabled: Bool
     let appearance: Appearance
+    let fontSize: CGFloat
     let height: CGFloat
     let shadowOffset: CGFloat
     @State private var offset = 0.0
@@ -38,7 +39,7 @@ public struct ZcashButtonStyle: ButtonStyle {
                 .border(buttonBorderColor())
                 .overlay(content: {
                     configuration.label
-                        .font(.custom(FontFamily.Inter.medium.name, size: 14))
+                        .font(.custom(FontFamily.Inter.medium.name, size: fontSize))
                         .foregroundColor(fontColor())
                 })
                 .offset(CGSize(width: offset, height: offset))
@@ -145,6 +146,7 @@ struct ZcashButtonModifier: ViewModifier {
 
     let appearance: ZcashButtonStyle.Appearance
     let minWidth: CGFloat?
+    let fontSize: CGFloat
     let height: CGFloat
     let shadowOffset: CGFloat
 
@@ -155,6 +157,7 @@ struct ZcashButtonModifier: ViewModifier {
                     ZcashButtonStyle(
                         isEnabled: isEnabled,
                         appearance: appearance,
+                        fontSize: fontSize,
                         height: height,
                         shadowOffset: shadowOffset
                     )
@@ -166,6 +169,7 @@ struct ZcashButtonModifier: ViewModifier {
                     ZcashButtonStyle(
                         isEnabled: isEnabled,
                         appearance: appearance,
+                        fontSize: fontSize,
                         height: height,
                         shadowOffset: shadowOffset
                     )
@@ -178,6 +182,7 @@ extension Button {
     public func zcashStyle(
         _ appearance: ZcashButtonStyle.Appearance = .primary,
         minWidth: CGFloat? = 236,
+        fontSize: CGFloat = 14,
         height: CGFloat = 60,
         shadowOffset: CGFloat = 10
     ) -> some View {
@@ -185,6 +190,7 @@ extension Button {
             ZcashButtonModifier(
                 appearance: appearance,
                 minWidth: minWidth,
+                fontSize: fontSize,
                 height: height,
                 shadowOffset: shadowOffset
             )

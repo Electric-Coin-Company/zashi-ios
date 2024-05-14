@@ -1,0 +1,183 @@
+{
+    "releases": [
+        {
+            "version": "1.1 (6)",
+            "date": "05-09-2024",
+            "timestamp": 1715255999,
+            "sections": [
+                {
+                    "title": "Added:",
+                    "bulletpoints": [
+                        "Highly requested ^[dark mode](style: 'bold') functionality added. Turn it on by switching into dark mode in your device settings. Enjoy!",
+                        "Scan QR code from an image stored in your photo library.",
+                        "Security feature added - ^[hide your balances](style: 'bold') and transaction history with an eye icon on the Account and Balances tabs."
+                    ]
+                },
+                {
+                    "title": "Changed:",
+                    "bulletpoints": [
+                        "The copy on the confirmation button of the secret recovery phrase screen has been modified.",
+                        "We also improved UI on the Receive screen - you can now switch between the unified and transparent address."
+                    ]
+                },
+                {
+                    "title": "Fixed:",
+                    "bulletpoints": [
+                        "Balances are refreshed right after the send or shielding transaction are processed."
+                    ]
+                }
+            ]
+        },
+        {
+            "version": "1.0.6 (4)",
+            "date": "04-30-2024",
+            "timestamp": 1714478399,
+            "sections": [
+                {
+                    "title": "Added:",
+                    "bulletpoints": [
+                        "We added autoscroll, so you can quickly realize which server is currently selected."
+                    ]
+                },
+                {
+                    "title": "Changed:",
+                    "bulletpoints": [
+                        "We have updated our server list with zec.rocks servers and Ywallet servers.",
+                        "Custom server option has been moved up to improve accessibility."
+                    ]
+                },
+                {
+                    "title": "Fixed:",
+                    "bulletpoints": [
+                        "We fixed a bug issue with displaying the recovery seed phrase twice after creating a new wallet."
+                    ]
+                },
+                {
+                    "title": "Removed:",
+                    "bulletpoints": [
+                        "Lighwalletd servers have been removed from the server options since they are scheduled to phase out at the end of May. If you face issues, go may to Advanced settings, and choose a different server."
+                    ]
+                }
+            ]
+        },
+        {
+            "version": "1.0.5 (4)",
+            "date": "04-19-2024",
+            "timestamp": 1713527999,
+            "sections": [
+                {
+                    "title": "Added:",
+                    "bulletpoints": [
+                        "We added a button to the scan QR UI which will lead a user to their device settings if their camera is disabled for Zashi.",
+                        "A new security tweak hides Zashi content once you send the app to the background, so you don't accidentally expose anything you don't want to.",
+                        "We auto-focused the wallet birthday height field to improve UX during Restore.",
+                        "We also made the Restore label persistent until the wallet is fully synced."
+                    ]
+                },
+                {
+                    "title": "Changed:",
+                    "bulletpoints": [
+                        "Migration of DB ensures that the default Unified Address for existing wallets now contains an Orchard receiver.",
+                        "We updated the experience to display a message when the user doesn't have enough free space (1GB) to operate Zashi. We show the amount of free space available and provide a link to Zashi Settings where the user can obtain their recovery phrase if needed.",
+                        "The syncing label UI has been unified.",
+                        "The input field for the secret recovery phrase now shows the expected format in the placeholder. We hope you love the example!",
+                        "We also removed a redundant copy from the expanded transparent transaction view."
+                    ]
+                },
+                {
+                    "title": "Fixed:",
+                    "bulletpoints": [
+                        "We did some general cleanup and fixed some bugs.",
+                        "The Delete Zashi function now resets local in-memory values."
+                    ]
+                }
+            ]
+        },
+        {
+            "version": "1.0.4 (2)",
+            "date": "03-31-2024",
+            "timestamp": 1711886399,
+            "sections": [
+                {
+                    "title": "Added:",
+                    "bulletpoints": [
+                        "Transparent balance got added up to the Total Balance, gone are those nasty zeros.",
+                        "You asked, and we did it! We added a Tap to Copy button for memo.",
+                        "We also added an animation to the Tap to Copy transaction ID button, so now you will know that it works."
+                    ]
+                },
+                {
+                    "title": "Fixed:",
+                    "bulletpoints": [
+                        "We fixed the issue causing errors during the syncing process. Orchard subtree roots are now fetched alongside Sapling subtree roots.",
+                        "We also improved behavior of the shielding box tooltip."
+                    ]
+                }
+            ]
+        },
+        {
+            "version": "1.0.3 (1)",
+            "date": "03-27-2024",
+            "timestamp": 1711540780,
+            "sections": [
+                {
+                    "title": "Added:",
+                    "bulletpoints": [
+                        "We added a Delete Wallet function but we hope you'll never use it."
+                    ]
+                },
+                {
+                    "title": "Fixed:",
+                    "bulletpoints": [
+                        "We fixed an error in the shielding functionality, feel free to test it out.",
+                        "We also fixed a bug in note selection when sending to a transparent recipient."
+                    ]
+                }
+            ]
+        },
+        {
+            "version": "1.0.1 (3)",
+            "date": "03-27-2024",
+            "timestamp": 1711540799,
+            "sections": [
+                {
+                    "title": "Changed:",
+                    "bulletpoints": [
+                        "Advanced Settings were added, for advanced users. You know who you are.",
+                        "The design and behavior for scanning QR codes was updated because it was pretty clunky before.",
+                        "Available balance now shows a spinner when processing spendable balance — to let you know it's working!"
+                    ]
+                },
+                {
+                    "title": "Added:",
+                    "bulletpoints": [
+                        "Orchard support was added. Orchard is the latest, most secure Zcash shielded pool.",
+                        "The Choose a Server feature is now available in Settings, and it includes pre-defined servers and custom server setup. You won't need to use this feature often, but just in case.",
+                        "Zashi's device-migration process was improved to retain full history, relieve user anxiety, and avoid the necessity of full rescan.",
+                        "The Proposal API was integrated with error handling for multi-transaction proposals.",
+                        "Account tab UI tweaks were implemented for user wallets with an empty state, no transaction history. This is nothing to be ashamed of — everyone starts here!"
+                    ]
+                },
+                {
+                    "title": "Fixed:",
+                    "bulletpoints": [
+                        "Extra padding was removed in the keyboard UI.",
+                        "The Restore mode label was missing when Zashi was deleted and reinstalled. Scary, but all good now.",
+                        "The padding in Zashi's syncing bar was tweaked in the Restore mode.",
+                        "The Exit button on the backup phrase screen when no words are stored in the keychain has been updated.",
+                        "Failed transactions no longer appear at the top of the transaction history. Now they are slated in with the other transactions at around the time they failed.",
+                        "The synchronization progress bar starts at the expected percentage now. We think Zashi users will like this much better than the previous, broken experience.",
+                        "The iPhone SE recovery phrase screen is not trailing words anymore.",
+                        "All security audit issues have been resolved."
+                    ]
+                },
+                {
+                    "title": "Removed:",
+                    "bulletpoints": [
+                        "Pull to refresh the transaction history."
+                    ]
+                }
+            ]
+        }
+    ]
+}

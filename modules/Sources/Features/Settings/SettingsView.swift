@@ -1,5 +1,7 @@
 import SwiftUI
 import ComposableArchitecture
+
+import About
 import Generated
 import RecoveryPhraseDisplay
 import UIComponents
@@ -27,7 +29,7 @@ public struct SettingsView: View {
                 .navigationLinkEmpty(
                     isActive: viewStore.bindingForAbout,
                     destination: {
-                        About(store: store)
+                        AboutView(store: store.aboutStore())
                     }
                 )
                 .navigationLinkEmpty(

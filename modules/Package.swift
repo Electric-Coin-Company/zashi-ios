@@ -9,6 +9,7 @@ let package = Package(
       .iOS(.v15)
     ],
     products: [
+        .library(name: "About", targets: ["About"]),
         .library(name: "AddressDetails", targets: ["AddressDetails"]),
         .library(name: "AppVersion", targets: ["AppVersion"]),
         .library(name: "AudioServices", targets: ["AudioServices"]),
@@ -67,6 +68,8 @@ let package = Package(
         .library(name: "WalletConfigProvider", targets: ["WalletConfigProvider"]),
         .library(name: "WalletStorage", targets: ["WalletStorage"]),
         .library(name: "Welcome", targets: ["Welcome"]),
+        .library(name: "WhatsNew", targets: ["WhatsNew"]),
+        .library(name: "WhatsNewProvider", targets: ["WhatsNewProvider"]),
         .library(name: "ZcashSDKEnvironment", targets: ["ZcashSDKEnvironment"])
     ],
     dependencies: [
@@ -79,6 +82,18 @@ let package = Package(
         .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.24.0")
     ],
     targets: [
+        .target(
+            name: "About",
+            dependencies: [
+                "AppVersion",
+                "Generated",
+                "RestoreWalletStorage",
+                "UIComponents",
+                "WhatsNew",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ],
+            path: "Sources/Features/About"
+        ),
         .target(
             name: "AddressDetails",
             dependencies: [
@@ -575,6 +590,7 @@ let package = Package(
         .target(
             name: "Settings",
             dependencies: [
+                "About",
                 "AppVersion",
                 "DeleteWallet",
                 "Generated",
@@ -746,6 +762,23 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Features/Welcome"
+        ),
+        .target(
+            name: "WhatsNew",
+            dependencies: [
+                "Generated",
+                "UIComponents",
+                "WhatsNewProvider",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Features/WhatsNew"
+        ),
+        .target(
+            name: "WhatsNewProvider",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Dependencies/WhatsNewProvider"
         ),
         .target(
             name: "ZcashSDKEnvironment",
