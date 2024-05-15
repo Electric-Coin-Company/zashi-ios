@@ -16,7 +16,7 @@ import ZcashLightClientKit
 public struct AdvancedSettings {
     @ObservableState
     public struct State: Equatable {
-        public enum Destination {
+        public enum Destination: Equatable {
             case backupPhrase
             case deleteWallet
             case privateDataConsent
@@ -48,7 +48,7 @@ public struct AdvancedSettings {
     }
 
     public enum Action: Equatable {
-        case backupWalletAccessRequest
+        case protectedAccessRequest(State.Destination)
         case deleteWallet(DeleteWallet.Action)
         case phraseDisplay(RecoveryPhraseDisplay.Action)
         case privateDataConsent(PrivateDataConsentReducer.Action)
@@ -66,10 +66,10 @@ public struct AdvancedSettings {
     public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
-            case .backupWalletAccessRequest:
+            case .protectedAccessRequest(let destination):
                 return .run { send in
                     if await localAuthentication.authenticate() {
-                        await send(.updateDestination(.backupPhrase))
+                        await send(.updateDestination(destination))
                     }
                 }
             
