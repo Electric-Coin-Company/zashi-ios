@@ -143,20 +143,22 @@ public struct TransactionState: Equatable, Identifiable {
         Zatoshi(zecAmount.amount + (fee?.amount ?? 0))
     }
 
-    public var textMemo: Memo? {
+    public var textMemos: [String]? {
         guard let memos else { return nil }
+        
+        var res: [String] = []
         
         for memo in memos {
             if case .text = memo {
                 guard let memoText = memo.toString(), !memoText.isEmpty else {
-                    return nil
+                    continue
                 }
                 
-                return memo
+                res.append(memoText)
             }
         }
         
-        return nil
+        return res.isEmpty ? nil : res
     }
     
     public init(

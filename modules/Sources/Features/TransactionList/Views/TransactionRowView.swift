@@ -54,7 +54,7 @@ public struct TransactionRowView: View {
                 if !transaction.isTransparentRecipient {
                     MessageView(
                         viewStore: viewStore,
-                        message: transaction.textMemo?.toString(),
+                        messages: transaction.textMemos,
                         isSpending: transaction.isSpending,
                         isFailed: transaction.status == .failed
                     )
