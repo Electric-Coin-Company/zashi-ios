@@ -9,6 +9,9 @@ directly impact users rather than highlighting other crucial architectural updat
 ### Added
 - Expanded transaction lists all text memos.
 
+### Fixed
+- Sometimes, Zashi crashed when the shield button was tapped. We fixed the crash, but shielding won't be possible due to funds being below the threshold.
+
 ## 1.1 build 6 (2024-05-09)
 
 ### Changed
