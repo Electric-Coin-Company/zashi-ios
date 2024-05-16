@@ -26,7 +26,7 @@ public struct AdvancedSettingsView: View {
         WithPerceptionTracking {
             VStack {
                 Button(L10n.Settings.recoveryPhrase.uppercased()) {
-                    store.send(.backupWalletAccessRequest)
+                    store.send(.protectedAccessRequest(.backupPhrase))
                 }
                 .zcashStyle()
                 .padding(.vertical, 25)
@@ -58,7 +58,7 @@ public struct AdvancedSettingsView: View {
                 )
 
                 Button(L10n.Settings.exportPrivateData.uppercased()) {
-                    store.send(.updateDestination(.privateDataConsent))
+                    store.send(.protectedAccessRequest(.privateDataConsent))
                 }
                 .zcashStyle()
                 .padding(.bottom, 25)
@@ -73,7 +73,7 @@ public struct AdvancedSettingsView: View {
                 Spacer()
                 
                 Button(L10n.Settings.deleteZashi.uppercased()) {
-                    store.send(.updateDestination(.deleteWallet))
+                    store.send(.protectedAccessRequest(.deleteWallet))
                 }
                 .zcashStyle()
                 .padding(.bottom, 20)
