@@ -17,12 +17,12 @@ import Generated
 final class SyncProgressTests: XCTestCase {
     func testSyncingData() async throws {
         let store = TestStore(
-            initialState: SyncProgressReducer.State(
+            initialState: SyncProgress.State(
                 lastKnownSyncPercentage: 0.0,
                 synchronizerStatusSnapshot: .snapshotFor(state: .syncing(0.513))
             )
         ) {
-            SyncProgressReducer()
+            SyncProgress()
         }
         
         XCTAssertTrue(store.state.isSyncing)
@@ -31,12 +31,12 @@ final class SyncProgressTests: XCTestCase {
     
     func testlastKnownSyncingPercentage_Zero() async throws {
         let store = TestStore(
-            initialState: SyncProgressReducer.State(
+            initialState: SyncProgress.State(
                 lastKnownSyncPercentage: 0.0,
                 synchronizerStatusSnapshot: .placeholder
             )
         ) {
-            SyncProgressReducer()
+            SyncProgress()
         }
 
         XCTAssertEqual(store.state.lastKnownSyncPercentage, 0)
@@ -45,12 +45,12 @@ final class SyncProgressTests: XCTestCase {
     
     func testlastKnownSyncingPercentage_MoreThanZero() async throws {
         let store = TestStore(
-            initialState: SyncProgressReducer.State(
+            initialState: SyncProgress.State(
                 lastKnownSyncPercentage: 0.15,
                 synchronizerStatusSnapshot: .placeholder
             )
         ) {
-            SyncProgressReducer()
+            SyncProgress()
         }
 
         XCTAssertEqual(store.state.lastKnownSyncPercentage, 0.15)
@@ -59,12 +59,12 @@ final class SyncProgressTests: XCTestCase {
     
     func testlastKnownSyncingPercentage_FromSyncedState() async throws {
         let store = TestStore(
-            initialState: SyncProgressReducer.State(
+            initialState: SyncProgress.State(
                 lastKnownSyncPercentage: 0.15,
                 synchronizerStatusSnapshot: .snapshotFor(state: .syncing(0.513))
             )
         ) {
-            SyncProgressReducer()
+            SyncProgress()
         }
 
         var syncState: SynchronizerState = .zero
@@ -80,12 +80,12 @@ final class SyncProgressTests: XCTestCase {
     
     func testlastKnownSyncingPercentage_FromSyncingState() async throws {
         let store = TestStore(
-            initialState: SyncProgressReducer.State(
+            initialState: SyncProgress.State(
                 lastKnownSyncPercentage: 0.15,
                 synchronizerStatusSnapshot: .snapshotFor(state: .syncing(0.513))
             )
         ) {
-            SyncProgressReducer()
+            SyncProgress()
         }
 
         var syncState: SynchronizerState = .zero

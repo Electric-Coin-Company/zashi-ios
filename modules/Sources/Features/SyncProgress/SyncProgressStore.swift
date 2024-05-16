@@ -14,12 +14,14 @@ import Models
 import SDKSynchronizer
 import Utils
 
-public typealias SyncProgressStore = Store<SyncProgressReducer.State, SyncProgressReducer.Action>
-
-public struct SyncProgressReducer: Reducer {
+@Reducer
+public struct SyncProgress {
     private let CancelId = UUID()
 
-    public struct State: Equatable { 
+    @ObservableState
+    public struct State: Equatable {
+        @Presents public var alert: AlertState<Action>?
+        public var lastKnownErrorMessage: String?
         public var lastKnownSyncPercentage: Float = 0
         public var synchronizerStatusSnapshot: SyncStatusSnapshot
         public var syncStatusMessage = ""
@@ -38,10 +40,12 @@ public struct SyncProgressReducer: Reducer {
         }
         
         public init(
+            lastKnownErrorMessage: String? = nil,
             lastKnownSyncPercentage: Float,
             synchronizerStatusSnapshot: SyncStatusSnapshot,
             syncStatusMessage: String = ""
         ) {
+            self.lastKnownErrorMessage = lastKnownErrorMessage
             self.lastKnownSyncPercentage = lastKnownSyncPercentage
             self.synchronizerStatusSnapshot = synchronizerStatusSnapshot
             self.syncStatusMessage = syncStatusMessage
@@ -49,6 +53,8 @@ public struct SyncProgressReducer: Reducer {
     }
     
     public enum Action: Equatable {
+        case alert(PresentationAction<Action>)
+        case errorMessageTapped
         case onAppear
         case onDisappear
         case synchronizerStateChanged(RedactableSynchronizerState)
@@ -74,6 +80,19 @@ public struct SyncProgressReducer: Reducer {
             case .onDisappear:
                 return .cancel(id: CancelId)
 
+            case .alert(.presented(let action)):
+                return Effect.send(action)
+
+            case .alert(.dismiss):
+                state.alert = nil
+                return .none
+                
+            case .errorMessageTapped:
+                if let errorMessage = state.lastKnownErrorMessage {
+                    state.alert = AlertState.errorMessage(errorMessage)
+                }
+                return .none
+                
             case .synchronizerStateChanged(let latestState):
                 let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.data.syncStatus)
                 if snapshot.syncStatus != state.synchronizerStatusSnapshot.syncStatus {
@@ -83,6 +102,8 @@ public struct SyncProgressReducer: Reducer {
                         state.lastKnownSyncPercentage = progress
                     }
 
+                    state.lastKnownErrorMessage = nil
+
                     switch snapshot.syncStatus {
                     case .syncing:
                         state.syncStatusMessage = L10n.Balances.syncing
@@ -90,6 +111,7 @@ public struct SyncProgressReducer: Reducer {
                         state.lastKnownSyncPercentage = 1
                         state.syncStatusMessage = L10n.Balances.synced
                     case .error, .unprepared:
+                        state.lastKnownErrorMessage = snapshot.message
                         #if DEBUG
                         state.syncStatusMessage = snapshot.message
                         #else
@@ -104,21 +126,14 @@ public struct SyncProgressReducer: Reducer {
     }
 }
 
-// MARK: - Store
+// MARK: Alerts
 
-extension SyncProgressStore {
-    public static var initial = SyncProgressStore(
-        initialState: .initial
-    ) {
-        SyncProgressReducer()
+extension AlertState where Action == SyncProgress.Action {
+    public static func errorMessage(_ message: String) -> AlertState {
+        AlertState {
+            TextState(L10n.Sync.Alert.title)
+        } message: {
+            TextState(message)
+        }
     }
-}
-
-// MARK: - Placeholders
-
-extension SyncProgressReducer.State {
-    public static let initial = SyncProgressReducer.State(
-        lastKnownSyncPercentage: 0,
-        synchronizerStatusSnapshot: .initial
-    )
 }

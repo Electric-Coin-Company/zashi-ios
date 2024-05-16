@@ -587,6 +587,10 @@ public enum L10n {
     }
   }
   public enum Sync {
+    public enum Alert {
+      /// Error
+      public static let title = L10n.tr("Localizable", "sync.alert.title", fallback: "Error")
+    }
     public enum Message {
       /// Error: %@
       public static func error(_ p1: Any) -> String {

@@ -9,6 +9,7 @@ directly impact users rather than highlighting other crucial architectural updat
 ### Added
 - Expanded transaction lists all text memos.
 - Biometric lock is used to protect Delete Zashi, Export Private Data and Send features.
+- Tapping on the error message label in the sync progress shows an alert view with the details of the error.
 
 ## 1.1 build 6 (2024-05-09)
 
