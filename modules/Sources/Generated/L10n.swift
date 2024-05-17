@@ -14,6 +14,19 @@ public enum L10n {
   public static func qrCodeFor(_ p1: Any) -> String {
     return L10n.tr("Localizable", "qrCodeFor", String(describing: p1), fallback: "QR Code for %@")
   }
+  public enum About {
+    /// Send and receive ZEC on Zashi!
+    /// Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.
+    public static let info = L10n.tr("Localizable", "about.info", fallback: "Send and receive ZEC on Zashi!\nZashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.")
+    /// Privacy Policy
+    public static let privacyPolicy = L10n.tr("Localizable", "about.privacyPolicy", fallback: "Privacy Policy")
+    /// Zashi Version %@ (%@)
+    public static func version(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "about.version", String(describing: p1), String(describing: p2), fallback: "Zashi Version %@ (%@)")
+    }
+    /// What's new
+    public static let whatsNew = L10n.tr("Localizable", "about.whatsNew", fallback: "What's new")
+  }
   public enum AddressDetails {
     /// Copy
     public static let copy = L10n.tr("Localizable", "addressDetails.copy", fallback: "Copy")
@@ -516,21 +529,8 @@ public enum L10n {
     public static let exportPrivateData = L10n.tr("Localizable", "settings.exportPrivateData", fallback: "Export private data")
     /// Send us feedback
     public static let feedback = L10n.tr("Localizable", "settings.feedback", fallback: "Send us feedback")
-    /// See our Privacy Policy 
-    public static let privacyPolicyPart1 = L10n.tr("Localizable", "settings.privacyPolicyPart1", fallback: "See our Privacy Policy ")
-    /// here.
-    public static let privacyPolicyPart2 = L10n.tr("Localizable", "settings.privacyPolicyPart2", fallback: "here.")
     /// Recovery Phrase
     public static let recoveryPhrase = L10n.tr("Localizable", "settings.recoveryPhrase", fallback: "Recovery Phrase")
-    /// Version %@ (%@)
-    public static func version(_ p1: Any, _ p2: Any) -> String {
-      return L10n.tr("Localizable", "settings.version", String(describing: p1), String(describing: p2), fallback: "Version %@ (%@)")
-    }
-    public enum About {
-      /// Send and receive ZEC on Zashi!
-      /// Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.
-      public static let info = L10n.tr("Localizable", "settings.about.info", fallback: "Send and receive ZEC on Zashi!\nZashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.")
-    }
     public enum Alert {
       public enum CantSendEmail {
         /// Copy %@
@@ -647,6 +647,12 @@ public enum L10n {
     public static let transactionFee = L10n.tr("Localizable", "transactionList.transactionFee", fallback: "Transaction Fee")
     /// Transaction ID
     public static let transactionId = L10n.tr("Localizable", "transactionList.transactionId", fallback: "Transaction ID")
+  }
+  public enum WhatsNew {
+    /// Zashi Version %@
+    public static func version(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "whatsNew.version", String(describing: p1), fallback: "Zashi Version %@")
+    }
   }
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
