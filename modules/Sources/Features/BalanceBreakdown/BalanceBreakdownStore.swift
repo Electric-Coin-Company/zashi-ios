@@ -43,7 +43,7 @@ public struct BalanceBreakdownReducer: Reducer {
         public var partialProposalErrorState: PartialProposalError.State
         public var pendingTransactions: Zatoshi
         public var shieldedBalance: Zatoshi
-        public var syncProgressState: SyncProgressReducer.State
+        public var syncProgressState: SyncProgress.State
         public var transparentBalance: Zatoshi
         public var walletBalancesState: WalletBalances.State
 
@@ -65,7 +65,7 @@ public struct BalanceBreakdownReducer: Reducer {
             partialProposalErrorState: PartialProposalError.State,
             pendingTransactions: Zatoshi,
             shieldedBalance: Zatoshi = .zero,
-            syncProgressState: SyncProgressReducer.State,
+            syncProgressState: SyncProgress.State,
             transparentBalance: Zatoshi = .zero,
             walletBalancesState: WalletBalances.State
         ) {
@@ -96,7 +96,7 @@ public struct BalanceBreakdownReducer: Reducer {
         case shieldFundsPartial([String], [String])
         case shieldFundsSuccess
         case synchronizerStateChanged(RedactableSynchronizerState)
-        case syncProgress(SyncProgressReducer.Action)
+        case syncProgress(SyncProgress.Action)
         case updateBalances(AccountBalance?)
         case updateDestination(BalanceBreakdownReducer.State.Destination?)
         case updateHintBoxVisibility(Bool)
@@ -116,7 +116,7 @@ public struct BalanceBreakdownReducer: Reducer {
     
     public var body: some Reducer<State, Action> {
         Scope(state: \.syncProgressState, action: /Action.syncProgress) {
-            SyncProgressReducer()
+            SyncProgress()
         }
         
         Scope(state: \.partialProposalErrorState, action: /Action.partialProposalError) {

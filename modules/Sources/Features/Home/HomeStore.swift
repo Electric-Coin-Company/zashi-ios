@@ -26,7 +26,7 @@ public struct HomeReducer: Reducer {
         public var isRestoringWallet = false
         public var migratingDatabase = true
         public var scanState: Scan.State
-        public var syncProgressState: SyncProgressReducer.State
+        public var syncProgressState: SyncProgress.State
         public var walletConfig: WalletConfig
         public var transactionListState: TransactionListReducer.State
         public var walletBalancesState: WalletBalances.State
@@ -36,7 +36,7 @@ public struct HomeReducer: Reducer {
             isRestoringWallet: Bool = false,
             migratingDatabase: Bool = true,
             scanState: Scan.State,
-            syncProgressState: SyncProgressReducer.State,
+            syncProgressState: SyncProgress.State,
             transactionListState: TransactionListReducer.State,
             walletBalancesState: WalletBalances.State,
             walletConfig: WalletConfig
@@ -65,7 +65,7 @@ public struct HomeReducer: Reducer {
         case showSynchronizerErrorAlert(ZcashError)
         case synchronizerStateChanged(RedactableSynchronizerState)
         case syncFailed(ZcashError)
-        case syncProgress(SyncProgressReducer.Action)
+        case syncProgress(SyncProgress.Action)
         case updateTransactionList([TransactionState])
         case transactionList(TransactionListReducer.Action)
         case walletBalances(WalletBalances.Action)
@@ -85,7 +85,7 @@ public struct HomeReducer: Reducer {
         }
 
         Scope(state: \.syncProgressState, action: /Action.syncProgress) {
-            SyncProgressReducer()
+            SyncProgress()
         }
 
         Scope(state: \.walletBalancesState, action: /Action.walletBalances) {

@@ -156,6 +156,7 @@ Sharing this private data is irrevocable — once you have shared this private d
 "sync.message.error" = "Error: %@";
 "sync.message.stopped" = "Stopped";
 "sync.message.sync" = "%@%% Synced";
+"sync.alert.title" = "Error";
 
 // MARK: - Common & Shared
 "general.back" = "Back";
