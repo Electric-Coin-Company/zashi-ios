@@ -219,15 +219,14 @@ public struct SendFlowReducer: Reducer {
                 return .none
                 
             case .sendConfirmationRequired:
-                print("__LD sendConfirmationRequired")
                 return .none
 
             case .resetForm:
                 state.memoState.text = "".redacted
-                state.transactionAmountInputState.textFieldState.text = "".redacted
-                state.transactionAmountInputState.amount = Int64(0).redacted
-                state.transactionAddressInputState.textFieldState.text = "".redacted
-                return .none
+                return .merge(
+                    .send(.transactionAmountInput(.textField(.set("".redacted)))),
+                    .send(.transactionAddressInput(.textField(.set("".redacted))))
+                )
                 
             case .transactionAmountInput:
                 return .none
