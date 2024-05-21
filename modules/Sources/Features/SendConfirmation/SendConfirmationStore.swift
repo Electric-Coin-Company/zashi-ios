@@ -65,7 +65,7 @@ public struct SendConfirmation {
         case partialProposalError(PartialProposalError.Action)
         case partialProposalErrorDismiss
         case sendDone
-        case sendFailed(ZcashError)
+        case sendFailed(ZcashError?)
         case sendPartial([String], [String])
         case sendPressed
     }
@@ -110,6 +110,7 @@ public struct SendConfirmation {
 
                 return .run { send in
                     if await !localAuthentication.authenticate() {
+                        await send(.sendFailed(nil))
                         return
                     }
 
@@ -140,7 +141,9 @@ public struct SendConfirmation {
                 
             case .sendFailed(let error):
                 state.isSending = false
-                state.alert = AlertState.sendFailure(error)
+                if let error {
+                    state.alert = AlertState.sendFailure(error)
+                }
                 return .none
                 
             case let .sendPartial(txIds, statuses):
