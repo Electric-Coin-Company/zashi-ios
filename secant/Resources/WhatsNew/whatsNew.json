@@ -8,6 +8,23 @@
                 {
                     "title": "Added:",
                     "bulletpoints": [
+                        "Expanded transaction now supports displaying multiple memos.",
+                        "We improved security - user authentication is now required for Deleting Zashi, Exporting Private Data, and for confirmation of Send.",
+                        "Tapping on the error message label in the sync progress widget shows an alert view with the details of the error to help troubleshooting."
+                        "What's New aka Changelog is now accessible from Settings -> About."
+                    ]
+                },
+                {
+                    "title": "Fixed:",
+                    "bulletpoints": [
+                        "Sometimes, Zashi crashed when the shield button was tapped because of an unhandled error. We fixed the crash and we now handle the error with insufficient funds."
+                    ]
+                }
+            ]
+        },
+                {
+                    "title": "Added:",
+                    "bulletpoints": [
                         "Highly requested ^[dark mode](style: 'bold') functionality added. Turn it on by switching into dark mode in your device settings. Enjoy!",
                         "Scan QR code from an image stored in your photo library.",
                         "Security feature added - ^[hide your balances](style: 'bold') and transaction history with an eye icon on the Account and Balances tabs."
