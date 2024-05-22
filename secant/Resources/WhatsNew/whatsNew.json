@@ -1,6 +1,28 @@
 {
     "releases": [
         {
+            "version": "1.1.1",
+            "date": "05-22-2024",
+            "timestamp": 1716379199,
+            "sections": [
+                {
+                    "title": "Added:",
+                    "bulletpoints": [
+                        "Expanded transaction now supports displaying multiple memos.",
+                        "We improved security - user authentication is now required for Deleting Zashi, Exporting Private Data, and for confirmation of Send.",
+                        "Tapping on the error message label in the sync progress widget shows an alert view with the details of the error to help troubleshooting."
+                        "What's New aka Changelog is now accessible from Settings -> About."
+                    ]
+                },
+                {
+                    "title": "Fixed:",
+                    "bulletpoints": [
+                        "Sometimes, Zashi crashed when the shield button was tapped because of an unhandled error. We fixed the crash and we now handle the error with insufficient funds."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "1.1 (6)",
             "date": "05-09-2024",
             "timestamp": 1715255999,
