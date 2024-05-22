@@ -139,6 +139,22 @@ public struct TabsView: View {
                 .onAppear {
                     areBalancesHidden = hideBalances.value().value
                 }
+                .overlayPreferenceValue(BoundsPreferenceKey.self) { preferences in
+                    if viewStore.isRateTooltipEnabled {
+                        GeometryReader { geometry in
+                            preferences.map {
+                                Tooltip(
+                                    title: L10n.Tooltip.ExchangeRate.title,
+                                    desc: L10n.Tooltip.ExchangeRate.desc,
+                                    offsetY: geometry[$0].minY + geometry[$0].height
+                                ) {
+                                    viewStore.send(.rateTooltipTapped)
+                                }
+                                .padding(.horizontal, 20)
+                            }
+                        }
+                    }
+                }
             }
         }
     }

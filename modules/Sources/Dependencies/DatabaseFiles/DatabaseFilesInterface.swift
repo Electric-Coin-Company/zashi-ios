@@ -24,5 +24,6 @@ public struct DatabaseFilesClient {
     public let outputParamsURLFor: (ZcashNetwork) -> URL
     public let pendingDbURLFor: (ZcashNetwork) -> URL
     public let spendParamsURLFor: (ZcashNetwork) -> URL
+    public var toDirURLFor: (ZcashNetwork) -> URL
     public var areDbFilesPresentFor: (ZcashNetwork) -> Bool
 }

@@ -32,15 +32,20 @@ public enum Asset {
     public static let welcomeScreenLogo = ImageAsset(name: "WelcomeScreenLogo")
     public static let zashiLogo = ImageAsset(name: "ZashiLogo")
     public static let alertIcon = ImageAsset(name: "alertIcon")
+    public static let buttonCloseX = ImageAsset(name: "buttonCloseX")
+    public static let convertIcon = ImageAsset(name: "convertIcon")
     public static let copy = ImageAsset(name: "copy")
     public static let eyeOff = ImageAsset(name: "eyeOff")
     public static let eyeOn = ImageAsset(name: "eyeOn")
     public static let flyReceivedFilled = ImageAsset(name: "flyReceivedFilled")
     public static let gridTile = ImageAsset(name: "gridTile")
+    public static let infoCircle = ImageAsset(name: "infoCircle")
+    public static let refreshCCW = ImageAsset(name: "refreshCCW")
     public static let restoreInfo = ImageAsset(name: "restoreInfo")
     public static let share = ImageAsset(name: "share")
     public static let shield = ImageAsset(name: "shield")
     public static let surroundedShield = ImageAsset(name: "surroundedShield")
+    public static let tooltip = ImageAsset(name: "tooltip")
     public static let torchOff = ImageAsset(name: "torchOff")
     public static let torchOn = ImageAsset(name: "torchOn")
     public static let upArrow = ImageAsset(name: "upArrow")
@@ -74,6 +79,16 @@ public enum Asset {
     public static let shade97 = ColorAsset(name: "shade97")
     public static let splash = ColorAsset(name: "splash")
     public static let syncProgresBcg = ColorAsset(name: "syncProgresBcg")
+    public enum V2 {
+      public static let exchangeRateBcg = ColorAsset(name: "exchangeRateBcg")
+      public static let exchangeRateBorder = ColorAsset(name: "exchangeRateBorder")
+      public enum Tooltips {
+        public static let bcg = ColorAsset(name: "bcg")
+        public static let shadow = ColorAsset(name: "shadow")
+        public static let textDesc = ColorAsset(name: "textDesc")
+        public static let textTitle = ColorAsset(name: "textTitle")
+      }
+    }
   }
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name

@@ -19,6 +19,20 @@ extension DerivationToolClient: DependencyKey {
             deriveUnifiedFullViewingKey: { spendingKey, networkType in
                 try DerivationTool(networkType: networkType).deriveUnifiedFullViewingKey(from: spendingKey)
             },
+            doesAddressSupportMemo: { address, networkType in
+                do {
+                    if case .transparent = try Recipient(address, network: networkType) {
+                        return false
+                    } else if case .tex = try Recipient(address, network: networkType) {
+                        return false
+                    }
+                    else {
+                        return true
+                    }
+                } catch {
+                    return false
+                }
+            },
             isUnifiedAddress: { address, networkType in
                 do {
                     if case .unified = try Recipient(address, network: networkType) {
@@ -44,6 +58,17 @@ extension DerivationToolClient: DependencyKey {
             isTransparentAddress: { address, networkType in
                 do {
                     if case .transparent = try Recipient(address, network: networkType) {
+                        return true
+                    } else {
+                        return false
+                    }
+                } catch {
+                    return false
+                }
+            },
+            isTexAddress: { address, networkType in
+                do {
+                    if case .tex = try Recipient(address, network: networkType) {
                         return true
                     } else {
                         return false

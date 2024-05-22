@@ -37,6 +37,9 @@ extension DatabaseFilesClient: DependencyKey {
             spendParamsURLFor: { network in
                 databaseFiles.spendParamsURL(for: network)
             },
+            toDirURLFor: { network in
+                databaseFiles.toDirURL(for: network)
+            },
             areDbFilesPresentFor: { network in
                 databaseFiles.areDbFilesPresent(for: network)
             }

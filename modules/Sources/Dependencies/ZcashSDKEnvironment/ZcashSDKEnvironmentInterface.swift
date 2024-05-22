@@ -5,6 +5,7 @@
 //  Created by Lukáš Korba on 13.11.2022.
 //
 
+import Foundation
 import ComposableArchitecture
 import ZcashLightClientKit
 
@@ -98,6 +99,8 @@ extension ZcashSDKEnvironment {
 public struct ZcashSDKEnvironment {
     public var latestCheckpoint: BlockHeight
     public let endpoint: () -> LightWalletEndpoint
+    public let exchangeRateIPRateLimit: TimeInterval
+    public let exchangeRateStaleLimit: TimeInterval
     public let memoCharLimit: Int
     public let mnemonicWordsMaxCount: Int
     public let network: ZcashNetwork

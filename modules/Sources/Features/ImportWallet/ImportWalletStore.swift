@@ -25,10 +25,10 @@ public struct ImportWalletReducer: Reducer {
         }
 
         @PresentationState public var alert: AlertState<Action>?
-        public var birthdayHeight = "".redacted
+        public var birthdayHeight = RedactableString.empty
         public var birthdayHeightValue: RedactableBlockHeight?
         public var destination: Destination?
-        public var importedSeedPhrase = "".redacted
+        public var importedSeedPhrase = RedactableString.empty
         public var isValidMnemonic = false
         public var isValidNumberOfWords = false
         public var maxWordsCount = 0
@@ -51,10 +51,10 @@ public struct ImportWalletReducer: Reducer {
         }
         
         public init(
-            birthdayHeight: RedactableString = "".redacted,
+            birthdayHeight: RedactableString = .empty,
             birthdayHeightValue: RedactableBlockHeight? = nil,
             destination: Destination? = nil,
-            importedSeedPhrase: RedactableString = "".redacted,
+            importedSeedPhrase: RedactableString = .empty,
             isValidMnemonic: Bool = false,
             isValidNumberOfWords: Bool = false,
             maxWordsCount: Int = 0,
@@ -167,8 +167,8 @@ public struct ImportWalletReducer: Reducer {
                     // update the backup phrase validation flag
                     try walletStorage.markUserPassedPhraseBackupTest(true)
 
-                    state.birthdayHeight = "".redacted
-                    state.importedSeedPhrase = "".redacted
+                    state.birthdayHeight = .empty
+                    state.importedSeedPhrase = .empty
                     state.destination = nil
                     
                     // notify user

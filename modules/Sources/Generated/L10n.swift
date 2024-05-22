@@ -125,6 +125,8 @@ public enum L10n {
     public enum TransactionAmount {
       /// Amount:
       public static let amount = L10n.tr("Localizable", "field.transactionAmount.amount", fallback: "Amount:")
+      /// 10000.00
+      public static let currencyAmount = L10n.tr("Localizable", "field.transactionAmount.currencyAmount", fallback: "10000.00")
       /// %@ Amount
       public static func zecAmount(_ p1: Any) -> String {
         return L10n.tr("Localizable", "field.transactionAmount.zecAmount", String(describing: p1), fallback: "%@ Amount")
@@ -673,6 +675,14 @@ public enum L10n {
     public static let receive = L10n.tr("Localizable", "tabs.receive", fallback: "Receive")
     /// Send
     public static let send = L10n.tr("Localizable", "tabs.send", fallback: "Send")
+  }
+  public enum Tooltip {
+    public enum ExchangeRate {
+      /// We tried but we couldn’t refresh the exchange rate for you. Check your connection, relaunch the app, and we’ll try again.
+      public static let desc = L10n.tr("Localizable", "tooltip.exchangeRate.desc", fallback: "We tried but we couldn’t refresh the exchange rate for you. Check your connection, relaunch the app, and we’ll try again.")
+      /// Exchange rate unavailable
+      public static let title = L10n.tr("Localizable", "tooltip.exchangeRate.title", fallback: "Exchange rate unavailable")
+    }
   }
   public enum Transaction {
     /// Receive failed

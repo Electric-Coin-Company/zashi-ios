@@ -82,7 +82,7 @@ extension RecoveryPhrase.Group {
 
         var wordsApplyingMissing = self.words
 
-        wordsApplyingMissing[missingIndex] = "".redacted
+        wordsApplyingMissing[missingIndex] = .empty
         
         return wordsApplyingMissing
     }

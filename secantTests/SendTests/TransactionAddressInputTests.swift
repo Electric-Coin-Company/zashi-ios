@@ -27,7 +27,7 @@ class TransactionAddressTextFieldTests: XCTestCase {
         }
 
         await store.send(.clearAddress) { state in
-            state.textFieldState.text = "".redacted
+            state.textFieldState.text = .empty
         }
     }
 }

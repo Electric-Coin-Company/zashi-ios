@@ -27,6 +27,7 @@ public struct SDKSynchronizerClient {
     
     public let stateStream: () -> AnyPublisher<SynchronizerState, Never>
     public let eventStream: () -> AnyPublisher<SynchronizerEvent, Never>
+    public let exchangeRateUSDStream: () -> AnyPublisher<FiatCurrencyResult?, Never>
     public let latestState: () -> SynchronizerState
     
     public let prepareWith: ([UInt8], BlockHeight, WalletInitMode) async throws -> Void
@@ -59,4 +60,6 @@ public struct SDKSynchronizerClient {
     public var proposeShielding: (Int, Zatoshi, Memo, TransparentAddress?) async throws -> Proposal?
 
     public var isSeedRelevantToAnyDerivedAccount: ([UInt8]) async throws -> Bool
+    
+    public var refreshExchangeRateUSD: () -> Void
 }
