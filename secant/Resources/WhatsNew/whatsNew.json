@@ -10,7 +10,7 @@
                     "bulletpoints": [
                         "Expanded transaction now supports displaying multiple memos.",
                         "We improved security - user authentication is now required for Deleting Zashi, Exporting Private Data, and for confirmation of Send.",
-                        "Tapping on the error message label in the sync progress widget shows an alert view with the details of the error to help troubleshooting."
+                        "Tapping on the error message label in the sync progress widget shows an alert view with the details of the error to help troubleshooting.",
                         "What's New aka Changelog is now accessible from Settings -> About."
                     ]
                 },
