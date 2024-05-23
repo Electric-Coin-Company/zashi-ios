@@ -6,10 +6,13 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.1.1 build 1 (2024-05-22)
+
 ### Added
 - Expanded transaction lists all text memos.
 - Biometric lock is used to protect Delete Zashi, Export Private Data and Send features.
 - Tapping on the error message label in the sync progress shows an alert view with the details of the error.
+- What's new screen accessible from Settings -> About.
 
 ### Fixed
 - Sometimes, Zashi crashed when the shield button was tapped. We fixed the crash, but shielding won't be possible due to funds being below the threshold.
