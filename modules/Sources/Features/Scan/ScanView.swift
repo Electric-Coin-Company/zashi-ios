@@ -36,9 +36,12 @@ public struct ScanView: View {
                     
                     frameOfInterest(proxy.size)
                     
-                    if store.isTorchAvailable {
-                        torchButton(store, size: proxy.size)
+                    WithPerceptionTracking {
+                        if store.isTorchAvailable {
+                            torchButton(store, size: proxy.size)
+                        }
                     }
+                    
                     libraryButton(store, size: proxy.size)
                 }
                 

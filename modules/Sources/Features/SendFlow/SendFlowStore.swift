@@ -23,6 +23,11 @@ public typealias SendFlowStore = Store<SendFlowReducer.State, SendFlowReducer.Ac
 public typealias SendFlowViewStore = ViewStore<SendFlowReducer.State, SendFlowReducer.Action>
 
 public struct SendFlowReducer: Reducer {
+    public enum Confirmation: Equatable {
+        case requestPayment
+        case send
+    }
+
     public struct State: Equatable {
         public enum Destination: Equatable {
             case partialProposalError
@@ -125,13 +130,14 @@ public struct SendFlowReducer: Reducer {
 
     public enum Action: Equatable {
         case alert(PresentationAction<Action>)
+        case confirmationRequired(Confirmation)
+        case getProposal(Confirmation)
         case memo(MessageEditorReducer.Action)
         case onAppear
         case proposal(Proposal)
         case resetForm
         case reviewPressed
         case scan(Scan.Action)
-        case sendConfirmationRequired
         case sendFailed(ZcashError)
         case transactionAddressInput(TransactionAddressTextFieldReducer.Action)
         case transactionAmountInput(TransactionAmountTextFieldReducer.Action)
@@ -192,7 +198,10 @@ public struct SendFlowReducer: Reducer {
                 return .none
 
             case .reviewPressed:
-                return .run { [state] send in
+                return .send(.getProposal(.send))
+            
+            case .getProposal(let confirmationType):
+                return .run { [state, confirmationType] send in
                     do {
                         let recipient = try Recipient(state.address, network: zcashSDKEnvironment.network.networkType)
                         
@@ -208,7 +217,7 @@ public struct SendFlowReducer: Reducer {
                         let proposal = try await sdkSynchronizer.proposeTransfer(0, recipient, state.amount, memo)
                         
                         await send(.proposal(proposal))
-                        await send(.sendConfirmationRequired)
+                        await send(.confirmationRequired(confirmationType))
                     } catch {
                         await send(.sendFailed(error.toZcashError()))
                     }
@@ -218,7 +227,7 @@ public struct SendFlowReducer: Reducer {
                 state.alert = AlertState.sendFailure(error)
                 return .none
                 
-            case .sendConfirmationRequired:
+            case .confirmationRequired:
                 return .none
 
             case .resetForm:
@@ -245,6 +254,14 @@ public struct SendFlowReducer: Reducer {
 
             case .memo:
                 return .none
+
+            case .scan(.foundRP(let requestPayment)):
+                state.memoState.text = requestPayment.memo.redacted
+                return .concatenate(
+                    .send(.transactionAmountInput(.textField(.set(requestPayment.ammount.redacted)))),
+                    .send(.transactionAddressInput(.textField(.set(requestPayment.address.redacted)))),
+                    .send(.getProposal(.requestPayment))
+                )
                 
             case .scan(.found(let address)):
                 state.transactionAddressInputState.textFieldState.text = address
