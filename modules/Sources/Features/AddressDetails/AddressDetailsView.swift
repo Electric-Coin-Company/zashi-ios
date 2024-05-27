@@ -12,6 +12,7 @@ import ZcashLightClientKit
 import Generated
 import UIComponents
 import Utils
+import RequestPayment
 
 public struct AddressDetailsView: View {
     public enum AddressType: Equatable {
@@ -33,7 +34,7 @@ public struct AddressDetailsView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack {
-                zashiPicker()
+                zashiPicker(store.selection)
 
                 ScrollView {
                     WithPerceptionTracking {
@@ -66,10 +67,28 @@ public struct AddressDetailsView: View {
                     }
 #endif
                     
+                    Button("ZASHI ME") {
+                        store.send(.requestPaymentTapped)
+                    }
+                    .zcashStyle()
+                    .padding(.horizontal, 65)
+                    .padding(.bottom, 30)
+                    
                     shareView()
                 }
             }
             .applyScreenBackground()
+            .navigationLinkEmpty(
+                isActive: $store.requestPaymentViewBinding,
+                destination: {
+                    RequestPaymentView(
+                        store: store.scope(
+                            state: \.requestPaymentState,
+                            action: \.requestPayment
+                        )
+                    )
+                }
+            )
         }
     }
     
@@ -228,9 +247,10 @@ extension AddressDetailsView {
 // MARK: - Placeholders
 
 extension AddressDetails.State {
-    public static let initial = AddressDetails.State()
+    public static let initial = AddressDetails.State(requestPaymentState: .initial)
     
     public static let demo = AddressDetails.State(
+        requestPaymentState: .initial,
         uAddress: try! UnifiedAddress(
             encoding: "utest1vergg5jkp4xy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzjanqtl8uqp5vln3zyy246ejtx86vqftp73j7jg9099jxafyjhfm6u956j3",
             network: .testnet)

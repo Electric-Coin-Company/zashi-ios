@@ -13,6 +13,7 @@ import Foundation
 import CaptureDevice
 import QRImageDetector
 import Utils
+import Models
 import URIParser
 import ZcashLightClientKit
 import Generated
@@ -60,6 +61,7 @@ public struct Scan {
         case onAppear
         case onDisappear
         case found(RedactableString)
+        case foundRP(RPData)
         case scanFailed(ScanImageResult)
         case scan(RedactableString)
         case torchPressed
@@ -93,6 +95,9 @@ public struct Scan {
                 return .cancel(id: CancelId)
 
             case .found:
+                return .none
+
+            case .foundRP:
                 return .none
 
             case .libraryImage(let image):
@@ -135,6 +140,8 @@ public struct Scan {
             case .scan(let code):
                 if uriParser.isValidURI(code.data, zcashSDKEnvironment.network.networkType) {
                     return .send(.found(code))
+                } else if let data = uriParser.checkRP(code.data) {
+                    return .send(.foundRP(data))
                 } else {
                     return .send(.scanFailed(.invalidQRCode))
                 }

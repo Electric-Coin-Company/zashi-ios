@@ -58,6 +58,7 @@ let package = Package(
         .library(name: "SupportDataGenerator", targets: ["SupportDataGenerator"]),
         .library(name: "SyncProgress", targets: ["SyncProgress"]),
         .library(name: "ReadTransactionsStorage", targets: ["ReadTransactionsStorage"]),
+        .library(name: "RequestPayment", targets: ["RequestPayment"]),
         .library(name: "Tabs", targets: ["Tabs"]),
         .library(name: "TransactionList", targets: ["TransactionList"]),
         .library(name: "UIComponents", targets: ["UIComponents"]),
@@ -103,6 +104,7 @@ let package = Package(
             dependencies: [
                 "Generated",
                 "Pasteboard",
+                "RequestPayment",
                 "UIComponents",
                 "Utils",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -433,6 +435,19 @@ let package = Package(
             path: "Sources/Features/RecoveryPhraseDisplay"
         ),
         .target(
+            name: "RequestPayment",
+            dependencies: [
+                "Generated",
+                "Models",
+                "Pasteboard",
+                "UIComponents",
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
+            ],
+            path: "Sources/Features/RequestPayment"
+        ),
+        .target(
             name: "RestoreInfo",
             dependencies: [
                 "Generated",
@@ -446,6 +461,7 @@ let package = Package(
             dependencies: [
                 "AppVersion",
                 "Date",
+                "NumberFormatter",
                 "UserDefaults",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
@@ -708,6 +724,7 @@ let package = Package(
             name: "URIParser",
             dependencies: [
                 "DerivationTool",
+                "Models",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],

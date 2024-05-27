@@ -28,9 +28,11 @@ public struct MessageEditor: View {
 
     @FocusState public var isFocused: Bool
     @State private var message = ""
+    var placeholder: String
     
-    public init(store: MessageEditorStore) {
+    public init(store: MessageEditorStore, placeholder: String = L10n.Send.memoPlaceholder) {
         self.store = store
+        self.placeholder = placeholder
         self.isFocused = false
     }
     
@@ -68,7 +70,7 @@ public struct MessageEditor: View {
                             if message.isEmpty {
                                 HStack {
                                     VStack {
-                                        Text(L10n.Send.memoPlaceholder)
+                                        Text(placeholder)
                                             .font(.custom(FontFamily.Inter.regular.name, size: 13))
                                             .foregroundColor(Asset.Colors.shade72.color)
                                             .onTapGesture {
