@@ -22,25 +22,35 @@ import Generated
 import BalanceFormatter
 import WalletBalances
 import LocalAuthenticationHandler
+import AddressBook
+import AddressBookClient
 
 @Reducer
 public struct SendConfirmation {
     @ObservableState
     public struct State: Equatable {
         public var address: String
+        public var addressBookViewBinding: Bool = false
+        public var addressBookName: String?
+        public var addressBookNameStorage: String?
+        public var addressBookState: AddressBook.State
         @Presents public var alert: AlertState<Action>?
         public var amount: Zatoshi
         public var feeRequired: Zatoshi
+        public var isInsufficientFunds: Bool
         public var isSending: Bool = false
         public var message: String
         public var partialProposalErrorState: PartialProposalError.State
         public var partialProposalErrorViewBinding: Bool = false
         public var proposal: Proposal?
-
+        
         public init(
             address: String,
+            addressBookName: String? = nil,
+            addressBookState: AddressBook.State,
             amount: Zatoshi,
             feeRequired: Zatoshi,
+            isInsufficientFunds: Bool = false,
             isSending: Bool = false,
             message: String,
             partialProposalErrorState: PartialProposalError.State,
@@ -48,8 +58,11 @@ public struct SendConfirmation {
             proposal: Proposal?
         ) {
             self.address = address
+            self.addressBookName = addressBookName
+            self.addressBookState = addressBookState
             self.amount = amount
             self.feeRequired = feeRequired
+            self.isInsufficientFunds = isInsufficientFunds
             self.isSending = isSending
             self.message = message
             self.partialProposalErrorState = partialProposalErrorState
@@ -59,6 +72,8 @@ public struct SendConfirmation {
     }
     
     public enum Action: BindableAction, Equatable {
+        case addressBookButtonTapped
+        case addressBook(AddressBook.Action)
         case alert(PresentationAction<Action>)
         case binding(BindingAction<SendConfirmation.State>)
         case goBackPressed
@@ -68,8 +83,11 @@ public struct SendConfirmation {
         case sendFailed(ZcashError?)
         case sendPartial([String], [String])
         case sendPressed
+        case swapTapped
+        case zashiMeOnAppear
     }
 
+    @Dependency(\.addressBook) var addressBook
     @Dependency(\.localAuthentication) var localAuthentication
     @Dependency(\.derivationTool) var derivationTool
     @Dependency(\.mnemonic) var mnemonic
@@ -86,8 +104,16 @@ public struct SendConfirmation {
             PartialProposalError()
         }
 
+        Scope(state: \.addressBookState, action: /Action.addressBook) {
+            AddressBook()
+        }
+
         Reduce { state, action in
             switch action {
+            case .zashiMeOnAppear:
+                state.addressBookName = addressBook.name(state.address)
+                return .none
+            
             case .alert(.presented(let action)):
                 return .send(action)
 
@@ -95,10 +121,21 @@ public struct SendConfirmation {
                 state.alert = nil
                 return .none
 
+            case .addressBook:
+                return .none
+
+            case .addressBookButtonTapped:
+                state.addressBookState.recordToBeAdded = ABRecord(address: state.address, name: "")
+                state.addressBookState.address = state.address
+                state.addressBookState.name = ""
+                state.addressBookViewBinding = true
+                return .none
+                
             case .binding:
                 return .none
                 
             case .goBackPressed:
+                state.proposal = nil
                 return .none
                 
             case .sendPressed:
@@ -137,6 +174,7 @@ public struct SendConfirmation {
 
             case .sendDone:
                 state.isSending = false
+                state.proposal = nil
                 return .none
                 
             case .sendFailed(let error):
@@ -152,7 +190,17 @@ public struct SendConfirmation {
                 state.partialProposalErrorState.txIds = txIds
                 state.partialProposalErrorState.statuses = statuses
                 return .none
-                
+            
+            case .swapTapped:
+                if state.addressBookNameStorage == nil {
+                    state.addressBookNameStorage = state.addressBookName
+                    state.addressBookName = nil
+                } else {
+                    state.addressBookName = state.addressBookNameStorage
+                    state.addressBookNameStorage = nil
+                }
+                return .none
+            
             case .partialProposalError:
                 return .none
                 

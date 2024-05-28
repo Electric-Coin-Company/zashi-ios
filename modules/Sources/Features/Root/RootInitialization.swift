@@ -64,6 +64,12 @@ extension Root {
                 if state.isLockedInKeychainUnavailableState || !sdkSynchronizer.latestState().syncStatus.isPrepared {
                     return .send(.initialization(.initialSetups))
                 } else {
+                    if state.destinationState.isDeeplinkWarningRequest {
+                        return .concatenate(
+                            .send(.destination(.updateDestination(.deeplinkWarning))),
+                            .send(.initialization(.retryStart))
+                        )
+                    }
                     return .send(.initialization(.retryStart))
                 }
                 
@@ -486,10 +492,9 @@ extension Root {
 
             case .onboarding(.securityWarning(.newWalletCreated)):
                 return Effect.send(.initialization(.initializeSDK(.newWallet)))
-                
+
             case .tabs, .destination, .onboarding, .sandbox, .phraseDisplay, .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated,
-                    .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, .deeplinkWarning,
-                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects:
+                    .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, .deeplinkWarning, .addressBookBinding, .addressBook, .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects:
                 return .none
             }
         }

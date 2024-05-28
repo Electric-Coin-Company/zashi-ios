@@ -14,6 +14,7 @@ import ZcashLightClientKit
 import UIComponents
 import ServerSetup
 import DeeplinkWarning
+import AddressBook
 
 public struct RootView: View {
     @Environment(\.scenePhase) var scenePhase
@@ -104,6 +105,22 @@ private extension RootView {
                             ),
                             tokenName: tokenName,
                             networkType: networkType
+                        )
+                        .navigationLinkEmpty(
+                            isActive: Binding<Bool>(
+                                get: 
+                                    { viewStore.addressBookBinding
+                            }, set: {
+                                viewStore.send(.addressBookBinding($0))
+                            }),
+                            destination: {
+                                AddressBookView(
+                                    store: store.scope(
+                                        state: \.addressBookState,
+                                        action: RootReducer.Action.addressBook
+                                    )
+                                )
+                            }
                         )
                     }
                     .navigationViewStyle(.stack)

@@ -8,10 +8,30 @@
 import SwiftUI
 import ComposableArchitecture
 import Generated
+import AVFoundation
+
+extension AnyTransition {
+    static func pulse() -> AnyTransition {
+        .modifier(active: PulseModifier(), identity: PulseModifier())
+    }
+}
+
+struct PulseModifier: ViewModifier {
+    @State private var scale = 1.0
+    
+    func body(content: Content) -> some View {
+        content
+            .scaleEffect(scale)
+            .animation(.easeIn(duration: 0.5).repeatForever(autoreverses: true), value: scale)
+            .onAppear {
+                scale = 1.35
+            }
+    }
+}
 
 public struct TransactionAddressTextField: View {
     let store: TransactionAddressTextFieldStore
-    
+
     public init(store: TransactionAddressTextFieldStore) {
         self.store = store
     }
@@ -25,24 +45,36 @@ public struct TransactionAddressTextField: View {
                     keyboardType: .default,
                     store: store.scope(
                         state: \.textFieldState,
-                        action: TransactionAddressTextFieldReducer.Action.textField
+                        action: \.textField
                     ),
                     titleAccessoryView: { },
                     inputPrefixView: { },
                     inputAccessoryView: {
-                        Button {
-                            viewStore.send(.scanQR)
-                        } label: {
-                            Image(systemName: "qrcode")
-                                .resizable()
-                                .frame(width: 25, height: 25)
-                                .tint(Asset.Colors.primary.color)
+                        if viewStore.doesButtonPulse {
+                            qrCode(viewStore)
+                            .onAppear { viewStore.send(.onAppear) }
+                            .onDisappear { viewStore.send(.onDisappear) }
+                            .transition(.pulse())
+                        } else {
+                            qrCode(viewStore)
                         }
-                        .padding(.trailing, 10)
                     }
                 )
             }
         }
+    }
+    
+    @ViewBuilder
+    private func qrCode(_ viewStore: TransactionAddressTextFieldViewStore) -> some View {
+        Button {
+            viewStore.send(.scanQR)
+        } label: {
+            Image(systemName: "qrcode")
+                .resizable()
+                .frame(width: 25, height: 25)
+                .tint(Asset.Colors.primary.color)
+        }
+        .padding(.trailing, 10)
     }
 }
 

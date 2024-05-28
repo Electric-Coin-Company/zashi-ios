@@ -139,12 +139,25 @@ public struct TabsReducer: Reducer {
                 return .none
                 
             case .send(.confirmationRequired(let type)):
+                state.isRPConnected = type == .requestPayment
                 state.sendConfirmationState.amount = state.sendState.amount
                 state.sendConfirmationState.address = state.sendState.address
-                state.sendConfirmationState.proposal = state.sendState.proposal
                 state.sendConfirmationState.feeRequired = state.sendState.feeRequired
                 state.sendConfirmationState.message = state.sendState.message
+                state.sendConfirmationState.isInsufficientFunds = state.sendState.isInsufficientFunds
                 return .send(.updateDestination(type == .send ? .sendConfirmation : .requestPaymentConfirmation))
+                
+            case .send(.proposal(let proposal)):
+                state.sendConfirmationState.proposal = proposal
+                return .none
+                
+            case .send(.walletBalances(.balancesUpdated)):
+                state.sendConfirmationState.isInsufficientFunds = state.sendState.isInsufficientFunds
+                if state.isRPConnected && !state.sendState.isInsufficientFunds && state.sendConfirmationState.proposal == nil {
+                    state.isRPConnected = false
+                    return .send(.send(.getProposal(.requestPayment)))
+                }
+                return .none
                                 
             case .send:
                 return .none

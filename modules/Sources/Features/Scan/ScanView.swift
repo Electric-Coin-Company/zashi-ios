@@ -49,8 +49,8 @@ public struct ScanView: View {
                     Spacer()
                     
                     Text(store.info)
-                        .font(Font.custom("Inter", size: 14))
-                        .foregroundColor(Asset.Colors.secondary.color)
+                        .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                        .foregroundColor(Asset.Colors.shade85.color)
                         .multilineTextAlignment(.center)
                         .padding(.bottom, 20)
                     
