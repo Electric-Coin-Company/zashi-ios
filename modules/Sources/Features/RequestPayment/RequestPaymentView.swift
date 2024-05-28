@@ -46,6 +46,7 @@ public struct RequestPaymentView: View {
                         title: L10n.Send.amountSummary
                     )
                     .focused($isAmountFocused)
+                    .keyboardType(.decimalPad)
                     .toolbar {
                         ToolbarItemGroup(placement: .keyboard) {
                             Spacer()

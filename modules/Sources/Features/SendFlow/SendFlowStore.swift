@@ -18,6 +18,7 @@ import Models
 import Generated
 import BalanceFormatter
 import WalletBalances
+import AddressBookClient
 
 public typealias SendFlowStore = Store<SendFlowReducer.State, SendFlowReducer.Action>
 public typealias SendFlowViewStore = ViewStore<SendFlowReducer.State, SendFlowReducer.Action>
@@ -145,6 +146,7 @@ public struct SendFlowReducer: Reducer {
         case walletBalances(WalletBalances.Action)
     }
     
+    @Dependency(\.addressBook) var addressBook
     @Dependency(\.audioServices) var audioServices
     @Dependency(\.derivationTool) var derivationTool
     @Dependency(\.numberFormatter) var numberFormatter
@@ -176,6 +178,10 @@ public struct SendFlowReducer: Reducer {
 
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
+                return .none
+
             case .alert(.presented(let action)):
                 return Effect.send(action)
 
@@ -184,10 +190,6 @@ public struct SendFlowReducer: Reducer {
                 return .none
 
             case .alert:
-                return .none
-
-            case .onAppear:
-                state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
                 return .none
 
             case let .proposal(proposal):
@@ -218,7 +220,9 @@ public struct SendFlowReducer: Reducer {
                         let proposal = try await sdkSynchronizer.proposeTransfer(0, recipient, state.amount, memo)
                         
                         await send(.proposal(proposal))
-                        await send(.confirmationRequired(confirmationType))
+                        if confirmationType != .requestPayment {
+                            await send(.confirmationRequired(confirmationType))
+                        }
                     } catch {
                         await send(.sendFailed(error.toZcashError()))
                     }
@@ -255,7 +259,7 @@ public struct SendFlowReducer: Reducer {
 
             case .memo:
                 return .none
-
+                
             case .scan(.foundRP(let requestPayment)):
                 if case .legacy(let address) = requestPayment {
                     return .send(.scan(.found(address.value.redacted)))
@@ -268,7 +272,7 @@ public struct SendFlowReducer: Reducer {
                         return .concatenate(
                             .send(.transactionAmountInput(.textField(.set(numberLocale.redacted)))),
                             .send(.transactionAddressInput(.textField(.set(payment.recipientAddress.value.redacted)))),
-                            .send(.getProposal(.requestPayment))
+                            .send(.confirmationRequired(.requestPayment))
                         )
                     }
                 }

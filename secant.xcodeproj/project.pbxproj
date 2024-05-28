@@ -18,6 +18,22 @@
 		0D4E7A1026B364180058B01E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0F26B364180058B01E /* Preview Assets.xcassets */; };
 		9E00319C2A272BB6003DFCEB /* SDKSynchronizer in Frameworks */ = {isa = PBXBuildFile; productRef = 9E00319B2A272BB6003DFCEB /* SDKSynchronizer */; };
 		9E0031A42A272BC7003DFCEB /* SDKSynchronizer in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0031A32A272BC7003DFCEB /* SDKSynchronizer */; };
+		9E064E6B2C2964BC00606B3C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEB06C72B405A0400EEE50F /* AppDelegate.swift */; };
+		9E064E6C2C2964BC00606B3C /* SecantApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0826B364170058B01E /* SecantApp.swift */; };
+		9E064E6D2C2964BC00606B3C /* ReadTransactionsStorageModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9E2706652AFF99F5000DA6EC /* ReadTransactionsStorageModel.xcdatamodeld */; };
+		9E064E6F2C2964BC00606B3C /* Utils in Frameworks */ = {isa = PBXBuildFile; productRef = 9E064E662C2964BC00606B3C /* Utils */; };
+		9E064E702C2964BC00606B3C /* Root in Frameworks */ = {isa = PBXBuildFile; productRef = 9E064E652C2964BC00606B3C /* Root */; };
+		9E064E712C2964BC00606B3C /* ZcashLightClientKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9E064E612C2964BC00606B3C /* ZcashLightClientKit */; };
+		9E064E722C2964BC00606B3C /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 9E064E5F2C2964BC00606B3C /* ComposableArchitecture */; };
+		9E064E732C2964BC00606B3C /* SDKSynchronizer in Frameworks */ = {isa = PBXBuildFile; productRef = 9E064E642C2964BC00606B3C /* SDKSynchronizer */; };
+		9E064E742C2964BC00606B3C /* Generated in Frameworks */ = {isa = PBXBuildFile; productRef = 9E064E632C2964BC00606B3C /* Generated */; };
+		9E064E762C2964BC00606B3C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D4E7A0F26B364180058B01E /* Preview Assets.xcassets */; };
+		9E064E772C2964BC00606B3C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9E2F1C8B280ED6A7004E65FE /* LaunchScreen.storyboard */; };
+		9E064E782C2964BC00606B3C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E90751D2A269BE300269308 /* Assets.xcassets */; };
+		9E064E792C2964BC00606B3C /* whatsNew.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E6C98472BF4C65F00EACDCB /* whatsNew.json */; };
+		9E064E7A2C2964BC00606B3C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D3B01EB298DAF89007EBCDA /* GoogleService-Info.plist */; };
+		9E064E7B2C2964BC00606B3C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */; };
+		9E064E7C2C2964BC00606B3C /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E5AAEBF2A67CEC4003F283D /* Colors.xcassets */; };
 		9E0C0D702AFB842B00D69A16 /* TransactionStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0C0D6F2AFB842B00D69A16 /* TransactionStateTests.swift */; };
 		9E139AAF2B07B3A600D104B8 /* ZatoshiStringRepresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E139AAE2B07B3A600D104B8 /* ZatoshiStringRepresentationTests.swift */; };
 		9E1FAFB72AF2C6D40084CA3D /* PrivateDataConsentSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1FAFB62AF2C6D40084CA3D /* PrivateDataConsentSnapshotTests.swift */; };
@@ -141,6 +157,8 @@
 		34F039B229ABCE8500CF0053 /* WalletConfigProviderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletConfigProviderTests.swift; sourceTree = "<group>"; };
 		9E01F8272833CDA0000EFC57 /* ScanTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanTests.swift; sourceTree = "<group>"; };
 		9E02B56B27FED475005B809B /* DatabaseFilesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseFilesTests.swift; sourceTree = "<group>"; };
+		9E064E822C2964BC00606B3C /* secant-distrib-summit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "secant-distrib-summit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E064E832C2964BC00606B3C /* secant-distrib copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "secant-distrib copy-Info.plist"; path = "/Users/lukaskorba/Dev/Xcode/GitHub/LukasKorba/secant-ios-wallet/secant-distrib copy-Info.plist"; sourceTree = "<absolute>"; };
 		9E0C0D6F2AFB842B00D69A16 /* TransactionStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionStateTests.swift; sourceTree = "<group>"; };
 		9E0F574A2980260D005304FA /* LoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerTests.swift; sourceTree = "<group>"; };
 		9E139AAE2B07B3A600D104B8 /* ZatoshiStringRepresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZatoshiStringRepresentationTests.swift; sourceTree = "<group>"; };
@@ -234,6 +252,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9E064E6E2C2964BC00606B3C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E064E6F2C2964BC00606B3C /* Utils in Frameworks */,
+				9E064E702C2964BC00606B3C /* Root in Frameworks */,
+				9E064E712C2964BC00606B3C /* ZcashLightClientKit in Frameworks */,
+				9E064E722C2964BC00606B3C /* ComposableArchitecture in Frameworks */,
+				9E064E732C2964BC00606B3C /* SDKSynchronizer in Frameworks */,
+				9E064E742C2964BC00606B3C /* Generated in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9E4AB2A52BA1BEE900F5D6DB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -260,6 +291,7 @@
 				0D4E7A2426B364180058B01E /* secantUITests */,
 				0D4E7A0626B364170058B01E /* Products */,
 				343CF3F429BB5A14009E44DF /* Frameworks */,
+				9E064E832C2964BC00606B3C /* secant-distrib copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -271,6 +303,7 @@
 				0D4E7A2126B364180058B01E /* secantUITests.xctest */,
 				0D26AF94299E8196005260EE /* secant-mainnet.app */,
 				9E4AB2B72BA1BEE900F5D6DB /* secant-distrib.app */,
+				9E064E822C2964BC00606B3C /* secant-distrib-summit.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -742,6 +775,35 @@
 			productReference = 0D4E7A2126B364180058B01E /* secantUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		9E064E5E2C2964BC00606B3C /* secant-distrib-summit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9E064E7E2C2964BC00606B3C /* Build configuration list for PBXNativeTarget "secant-distrib-summit" */;
+			buildPhases = (
+				9E064E672C2964BC00606B3C /* Generate GoogleService-Info.plist  */,
+				9E064E682C2964BC00606B3C /* Swiftgen */,
+				9E064E692C2964BC00606B3C /* SwiftLint */,
+				9E064E6A2C2964BC00606B3C /* Sources */,
+				9E064E6E2C2964BC00606B3C /* Frameworks */,
+				9E064E752C2964BC00606B3C /* Resources */,
+				9E064E7D2C2964BC00606B3C /* dSYM upload */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "secant-distrib-summit";
+			packageProductDependencies = (
+				9E064E5F2C2964BC00606B3C /* ComposableArchitecture */,
+				9E064E612C2964BC00606B3C /* ZcashLightClientKit */,
+				9E064E632C2964BC00606B3C /* Generated */,
+				9E064E642C2964BC00606B3C /* SDKSynchronizer */,
+				9E064E652C2964BC00606B3C /* Root */,
+				9E064E662C2964BC00606B3C /* Utils */,
+			);
+			productName = secant;
+			productReference = 9E064E822C2964BC00606B3C /* secant-distrib-summit.app */;
+			productType = "com.apple.product-type.application";
+		};
 		9E4AB2952BA1BEE900F5D6DB /* secant-distrib */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9E4AB2B42BA1BEE900F5D6DB /* Build configuration list for PBXNativeTarget "secant-distrib" */;
@@ -815,6 +877,7 @@
 				0D4E7A1526B364180058B01E /* secantTests */,
 				0D4E7A2026B364180058B01E /* secantUITests */,
 				9E4AB2952BA1BEE900F5D6DB /* secant-distrib */,
+				9E064E5E2C2964BC00606B3C /* secant-distrib-summit */,
 			);
 		};
 /* End PBXProject section */
@@ -859,6 +922,20 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E064E752C2964BC00606B3C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E064E762C2964BC00606B3C /* Preview Assets.xcassets in Resources */,
+				9E064E772C2964BC00606B3C /* LaunchScreen.storyboard in Resources */,
+				9E064E782C2964BC00606B3C /* Assets.xcassets in Resources */,
+				9E064E792C2964BC00606B3C /* whatsNew.json in Resources */,
+				9E064E7A2C2964BC00606B3C /* GoogleService-Info.plist in Resources */,
+				9E064E7B2C2964BC00606B3C /* PrivacyInfo.xcprivacy in Resources */,
+				9E064E7C2C2964BC00606B3C /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -996,6 +1073,88 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/zsh;
 			shellScript = "swiftlint_version=0.50.3\n\nif which swiftlint >/dev/null; then\n  if [[ $(swiftlint version) != $swiftlint_version ]]; then\n    echo \"warning: Compatible SwiftLint version not installed, download version $swiftlint_version from https://github.com/realm/SwiftLint. Currently installed version is $(swiftlint version)\"\n  fi\n   \n  echo \"Linting the Secant code\"\n  swiftlint lint --config .swiftlint.yml\n  echo \"Linting tests\"\n  swiftlint lint --config .swiftlint_tests.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+		9E064E672C2964BC00606B3C /* Generate GoogleService-Info.plist  */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Generate GoogleService-Info.plist ";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Resources/GoogleService-Info.plist",
+				"$(SRCROOT)/secant/Resources/GoogleService-Info.plist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "# this creates an empty file for the firebase SDK\n\necho \"Creating an empty file for the firebase SDK\"\n\nCRASH_REPORTER_FILE=\"./secant/Resources/GoogleService-Info.plist\"\nif [[ -f $CRASH_REPORTER_FILE ]]; then\n    echo \"$CRASH_REPORTER_FILE Exists. Not doing anything.\"\nelse \n    echo \"$CRASH_REPORTER_FILE does not exist. Will insert a DUMMY FILE\"\n\n    echo \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxLjAiPgo8ZGljdD4KICAgIDxrZXk+SVNfRFVNTVlfRklMRTwva2V5PgogICAgPHRydWU+PC90cnVlPgo8L2RpY3Q+CjwvcGxpc3Q+Cg==\" | base64 --decode > $CRASH_REPORTER_FILE\nfi\n";
+		};
+		9E064E682C2964BC00606B3C /* Swiftgen */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Swiftgen;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "swiftgen_version=\"SwiftGen v6.6.2 (Stencil v0.15.1, StencilSwiftKit v2.10.1, SwiftGenKit v6.6.2)\"\n\nif which swiftgen >/dev/null; then\n  if [[ $(swiftgen --version) != $swiftgen_version ]]; then\n    echo \"warning: Compatible SwiftGen version not installed, download version $swiftgen_version. Currently installed version is $(swiftgen --version)\"\n  fi\n  \n  echo \"Running swiftgen\" \n  swiftgen config run --config modules/swiftgen.yml\nelse\n  echo \"warning: swiftgen not installed\"\nfi\n";
+		};
+		9E064E692C2964BC00606B3C /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "swiftlint_version=0.50.3\n\nif which swiftlint >/dev/null; then\n  if [[ $(swiftlint version) != $swiftlint_version ]]; then\n    echo \"warning: Compatible SwiftLint version not installed, download version $swiftlint_version from https://github.com/realm/SwiftLint. Currently installed version is $(swiftlint version)\"\n  fi\n   \n  echo \"Linting the Secant code\"\n  swiftlint lint --config .swiftlint.yml\n  echo \"Linting tests\"\n  swiftlint lint --config .swiftlint_tests.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+		9E064E7D2C2964BC00606B3C /* dSYM upload */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
+			);
+			name = "dSYM upload";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
 		};
 		9E4AB29E2BA1BEE900F5D6DB /* Generate GoogleService-Info.plist  */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1162,6 +1321,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E34519629C4A4D800177D16 /* secantUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E064E6A2C2964BC00606B3C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E064E6B2C2964BC00606B3C /* AppDelegate.swift in Sources */,
+				9E064E6C2C2964BC00606B3C /* SecantApp.swift in Sources */,
+				9E064E6D2C2964BC00606B3C /* ReadTransactionsStorageModel.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1526,6 +1695,94 @@
 			};
 			name = "Release-Testflight";
 		};
+		9E064E7F2C2964BC00606B3C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-testnet";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
+				DEVELOPMENT_TEAM = RLPRR8CPQG;
+				ENABLE_BITCODE = NO;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				INFOPLIST_FILE = "secant-distrib copy-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.3.0;
+				OTHER_SWIFT_FLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "co.electriccoin.secant-testnet";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG UNREDACTED SECANT_MAINNET";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				UPLOAD_CRASHLYTICS_SYMBOLS = NO;
+			};
+			name = Debug;
+		};
+		9E064E802C2964BC00606B3C /* Release-Testflight */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-testnet";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
+				DEVELOPMENT_TEAM = RLPRR8CPQG;
+				ENABLE_BITCODE = NO;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				INFOPLIST_FILE = "secant-distrib copy-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.3.0;
+				OTHER_SWIFT_FLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "co.electriccoin.secant-testnet";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SECANT_MAINNET;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				UPLOAD_CRASHLYTICS_SYMBOLS = YES;
+			};
+			name = "Release-Testflight";
+		};
+		9E064E812C2964BC00606B3C /* Release-AppStore */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-testnet";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
+				DEVELOPMENT_TEAM = RLPRR8CPQG;
+				ENABLE_BITCODE = NO;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				INFOPLIST_FILE = "secant-distrib copy-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.3.0;
+				OTHER_SWIFT_FLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "co.electriccoin.secant-testnet";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "SECANT_MAINNET SECANT_DISTRIB";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				UPLOAD_CRASHLYTICS_SYMBOLS = YES;
+			};
+			name = "Release-AppStore";
+		};
 		9E4AB2B52BA1BEE900F5D6DB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1828,6 +2085,16 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = "Release-Testflight";
 		};
+		9E064E7E2C2964BC00606B3C /* Build configuration list for PBXNativeTarget "secant-distrib-summit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9E064E7F2C2964BC00606B3C /* Debug */,
+				9E064E802C2964BC00606B3C /* Release-Testflight */,
+				9E064E812C2964BC00606B3C /* Release-AppStore */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Release-Testflight";
+		};
 		9E4AB2B42BA1BEE900F5D6DB /* Build configuration list for PBXNativeTarget "secant-distrib" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1850,6 +2117,22 @@
 			};
 		};
 		0D26AE92299E8196005260EE /* XCRemoteSwiftPackageReference "ZcashLightClientKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/zcash/ZcashLightClientKit/";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		9E064E602C2964BC00606B3C /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
+			requirement = {
+				kind = exactVersion;
+				version = 0.50.2;
+			};
+		};
+		9E064E622C2964BC00606B3C /* XCRemoteSwiftPackageReference "ZcashLightClientKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/zcash/ZcashLightClientKit/";
 			requirement = {
@@ -1893,6 +2176,32 @@
 		9E0031A32A272BC7003DFCEB /* SDKSynchronizer */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SDKSynchronizer;
+		};
+		9E064E5F2C2964BC00606B3C /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9E064E602C2964BC00606B3C /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+		9E064E612C2964BC00606B3C /* ZcashLightClientKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9E064E622C2964BC00606B3C /* XCRemoteSwiftPackageReference "ZcashLightClientKit" */;
+			productName = ZcashLightClientKit;
+		};
+		9E064E632C2964BC00606B3C /* Generated */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Generated;
+		};
+		9E064E642C2964BC00606B3C /* SDKSynchronizer */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SDKSynchronizer;
+		};
+		9E064E652C2964BC00606B3C /* Root */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Root;
+		};
+		9E064E662C2964BC00606B3C /* Utils */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Utils;
 		};
 		9E4AB2962BA1BEE900F5D6DB /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;

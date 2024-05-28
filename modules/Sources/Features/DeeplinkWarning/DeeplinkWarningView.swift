@@ -19,35 +19,21 @@ public struct DeeplinkWarningView: View {
 
     public var body: some View {
         WithPerceptionTracking {
-            ScrollView {
+            //ScrollView {
                 VStack {
                     Text("Deeplink warning")
                         .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
                         .padding(.horizontal, 35)
-                        .padding(.vertical, 35)
+                        .padding(.vertical, 50)
 
-                    Text(
-                        """
-                        You have scanned or followed a zcash: link representing a payment request.
-                        
-                        On $OS there is no way to ensure that this way of using zcash: links will reach your intended wallet app.
-                        
-                        If a malicious app were installed on your device, it could:
-                        
-                        gain information about the payment, which could then be used in social engineering attacks or to link this use of Zcash with other transactions;
-                        modify the link and then pass it on to a real wallet app, which could result in you sending money to the wrong address.
-                        These attack possibilities apply when scanning a QR code, following a link, or copying and pasting a link from the clipboard.
-                        
-                        To maintain your privacy and security, please instead manually open the Zcash wallet app that you intend to pay with, and use its scanning feature to scan QR codes. If you do this in future then it will be faster as well as more secure: you won't need to go through this screen again, and you will be safer from any malicious apps.
-                        
-                        For Zashi the scanner is [brief description of how to get to it].
-                        
-                        We can't automatically open Zashi for you because this screen could also be faked by a malicious app. Thanks for reading, and sorry for the inconvenience.
-                        """
+                    Text("Looks like you used a third-party app to scan for payment. For better safety and security, rescan the QR code with Zashi."
                     )
-                    .font(.custom(FontFamily.Archivo.regular.name, size: 12))
+                    .font(.custom(FontFamily.Archivo.regular.name, size: 16))
                     .multilineTextAlignment(.center)
-                    .padding(.bottom, 15)
+                    .lineSpacing(2)
+                    .padding(.horizontal, 30)
+
+                    Spacer()
                     
                     Button("I got it".uppercased()) {
                         store.send(.gotItTapped)
@@ -57,8 +43,8 @@ public struct DeeplinkWarningView: View {
                     .padding(.vertical, 50)
                 }
                 .padding(.horizontal, 30)
-            }
-            .padding(.vertical, 1)
+//            }
+//            .padding(.vertical, 1)
         }
         .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground(withPattern: true)

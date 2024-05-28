@@ -9,6 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import ZcashLightClientKit
 
+import AddressBook
 import Generated
 import UIComponents
 import Utils
@@ -28,11 +29,53 @@ public struct RequestPaymentConfirmationView: View {
             WithPerceptionTracking {
                 ScrollView {
                     // who requested
-                    Text(store.address)
-                        .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                        .frame(maxWidth: .infinity)
-                        .padding(.horizontal, 35)
-                        .padding(.top, 20)
+                    HStack {
+                        VStack(alignment: .leading) {
+                            if store.addressBookName != nil || store.addressBookNameStorage != nil {
+                                Button {
+                                    store.send(.swapTapped)
+                                } label: {
+                                    Image(systemName: "rectangle.2.swap")
+                                        .renderingMode(.template)
+                                        .resizable()
+                                        .frame(width: 15, height: 15)
+                                        .foregroundColor(Asset.Colors.primary.color)
+                                }
+                                .padding(5)
+                            } else {
+                                Button {
+                                    store.send(.addressBookButtonTapped)
+                                } label: {
+                                    Image(systemName: "book")
+                                        .renderingMode(.template)
+                                        .resizable()
+                                        .frame(width: 18, height: 15)
+                                        .foregroundColor(Asset.Colors.primary.color)
+                                }
+                                .padding(5)
+                                .navigationLinkEmpty(
+                                    isActive: $store.addressBookViewBinding,
+                                    destination: {
+                                        AddressBookView(
+                                            store: store.scope(
+                                                state: \.addressBookState,
+                                                action: \.addressBook
+                                            )
+                                        )
+                                    }
+                                )
+                            }
+                            
+                            Text(store.addressBookName ?? store.address)
+                                .font(.custom(FontFamily.Inter.bold.name, size: 16))
+                        }
+                        
+                        Spacer()
+                    }
+                    .multilineTextAlignment(.leading)
+                    .padding(.horizontal, 35)
+                    .padding(.top, 20)
+                        
 
                     HStack {
                         Text("Requests:")
@@ -43,12 +86,21 @@ public struct RequestPaymentConfirmationView: View {
                     .padding(.vertical, 10)
 
                     // how much
-                    HStack {
-                        BalanceWithIconView(balance: store.amount)
-                        Spacer()
+                    VStack(alignment: .leading, spacing: 0) {
+                        HStack {
+                            BalanceWithIconView(balance: store.amount)
+                            Spacer()
+                        }
+                        .padding(.bottom, store.isInsufficientFunds ? 0 : 20)
+                        
+                        if store.isInsufficientFunds {
+                            Text(L10n.Send.Error.insufficientFunds)
+                                .foregroundColor(Asset.Colors.error.color)
+                                .font(.custom(FontFamily.Inter.regular.name, size: 12))
+                                .padding(.bottom, 20)
+                        }
                     }
                     .padding(.horizontal, 35)
-                    .padding(.bottom, 20)
 
                     // description
                     if !store.message.isEmpty {
@@ -114,6 +166,7 @@ public struct RequestPaymentConfirmationView: View {
                             height: 38,
                             shadowOffset: 6
                         )
+                        .disabled(store.proposal == nil || store.isInsufficientFunds)
 
                         Button {
                             store.send(.goBackPressed)
@@ -129,6 +182,7 @@ public struct RequestPaymentConfirmationView: View {
                     .disabled(store.isSending)
                     .padding(.horizontal, 35)
                 }
+                .onAppear { store.send(.zashiMeOnAppear) }
                 .navigationLinkEmpty(
                     isActive: $store.partialProposalErrorViewBinding,
                     destination: {

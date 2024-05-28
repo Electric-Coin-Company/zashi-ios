@@ -10,6 +10,8 @@ let package = Package(
     ],
     products: [
         .library(name: "About", targets: ["About"]),
+        .library(name: "AddressBook", targets: ["AddressBook"]),
+        .library(name: "AddressBookClient", targets: ["AddressBookClient"]),
         .library(name: "AddressDetails", targets: ["AddressDetails"]),
         .library(name: "AppVersion", targets: ["AppVersion"]),
         .library(name: "AudioServices", targets: ["AudioServices"]),
@@ -98,9 +100,35 @@ let package = Package(
                 "UIComponents",
                 "WalletStatusPanel",
                 "WhatsNew",
+                "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
             path: "Sources/Features/About"
+        ),
+        .target(
+            name: "AddressBook",
+            dependencies: [
+                "AddressBookClient",
+                "AudioServices",
+                "DerivationTool",
+                "Generated",
+                "Models",
+                "Scan",
+                "UIComponents",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ],
+            path: "Sources/Features/AddressBook"
+        ),
+        .target(
+            name: "AddressBookClient",
+            dependencies: [
+                "Models",
+                "UserDefaults",
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
+            ],
+            path: "Sources/Dependencies/AddressBookClient"
         ),
         .target(
             name: "AddressDetails",
@@ -483,6 +511,7 @@ let package = Package(
         .target(
             name: "Root",
             dependencies: [
+                "AddressBook",
                 "CrashReporter",
                 "DatabaseFiles",
                 "Deeplink",
@@ -585,6 +614,8 @@ let package = Package(
         .target(
             name: "SendConfirmation",
             dependencies: [
+                "AddressBook",
+                "AddressBookClient",
                 "AudioServices",
                 "BalanceFormatter",
                 "DerivationTool",
@@ -608,6 +639,7 @@ let package = Package(
         .target(
             name: "SendFlow",
             dependencies: [
+                "AddressBookClient",
                 "AudioServices",
                 "BalanceFormatter",
                 "DerivationTool",
@@ -727,6 +759,7 @@ let package = Package(
             dependencies: [
                 "BalanceFormatter",
                 "DerivationTool",
+                "FeedbackGenerator",
                 "Generated",
                 "HideBalances",
                 "NumberFormatter",

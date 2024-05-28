@@ -26,6 +26,7 @@ import Utils
 import UserDefaults
 import HideBalances
 import ServerSetup
+import AddressBook
 
 @Reducer
 public struct Root {
@@ -39,6 +40,8 @@ public struct Root {
     @ObservableState
     public struct State: Equatable {
         @Presents public var alert: AlertState<Action>?
+        public var addressBookBinding: Bool = false
+        public var addressBookState: AddressBook.State
         public var appInitializationState: InitializationState = .uninitialized
         public var appStartState: AppStartState = .unknown
         public var bgTask: BGProcessingTask?
@@ -62,6 +65,7 @@ public struct Root {
         public var welcomeState: WelcomeReducer.State
         
         public init(
+            addressBookState: AddressBook.State = .initial,
             appInitializationState: InitializationState = .uninitialized,
             appStartState: AppStartState = .unknown,
             debugState: DebugState,
@@ -79,6 +83,7 @@ public struct Root {
             walletConfig: WalletConfig,
             welcomeState: WelcomeReducer.State
         ) {
+            self.addressBookState = addressBookState
             self.appInitializationState = appInitializationState
             self.appStartState = appStartState
             self.debugState = debugState
@@ -104,6 +109,8 @@ public struct Root {
             case quickRescan
         }
 
+        case addressBook(AddressBook.Action)
+        case addressBookBinding(Bool)
         case alert(PresentationAction<Action>)
         case batteryStateChanged(Notification)
         case binding(BindingAction<Root.State>)
@@ -166,6 +173,10 @@ public struct Root {
             DeeplinkWarning()
         }
 
+        Scope(state: \.addressBookState, action: /Action.addressBook) {
+            AddressBook()
+        }
+        
         Scope(state: \.tabsState, action: /Action.tabs) {
             TabsReducer()
         }
@@ -208,7 +219,7 @@ public struct Root {
             case .alert(.dismiss):
                 state.alert = nil
                 return .none
-            
+
             case .serverSetup:
                 return .none
                 
@@ -229,7 +240,15 @@ public struct Root {
                     .cancel(id: WalletConfigCancelId),
                     .cancel(id: DidFinishLaunchingId)
                 )
+
+            case .addressBookBinding(let newValue):
+                state.addressBookBinding = newValue
+                return .none
                 
+            case .tabs(.settings(.addressBookButtonTapped)):
+                state.addressBookBinding = true
+                return .none
+
             default: return .none
             }
         }
