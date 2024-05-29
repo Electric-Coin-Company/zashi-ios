@@ -31,11 +31,13 @@ public struct RequestPaymentView: View {
                         Text(L10n.Send.toSummary)
                             .font(.custom(FontFamily.Inter.regular.name, size: 14))
                         Text(store.toAddress)
-                            .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                            .font(.custom(FontFamily.Inter.regular.name, size: 13))
+                            .foregroundColor(Asset.Colors.shade47.color)
+                            .lineSpacing(3)
                     }
                     Spacer()
                 }
-                .padding(.bottom, 15)
+                .padding(.vertical, 15)
 
                 VStack(alignment: .leading) {
                     ZashiTextField(

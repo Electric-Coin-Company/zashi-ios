@@ -35,22 +35,26 @@ public struct AddressDetailsView: View {
         WithPerceptionTracking {
             VStack {
                 zashiPicker(store.selection)
+                    .padding(.top, 30)
 
                 ScrollView {
                     WithPerceptionTracking {
                         Group {
-                            if store.selection == .ua {
-                                addressBlock(type: .uaAddress, L10n.AddressDetails.ua, store.unifiedAddress) {
-                                    store.send(.copyToPastboard(store.unifiedAddress.redacted))
-                                } shareAction: {
-                                    store.send(.shareQR(store.unifiedAddress.redacted))
-                                }
-                            } else {
-                                addressBlock(type: .tAddress, L10n.AddressDetails.ta, store.transparentAddress) {
-                                    store.send(.copyToPastboard(store.transparentAddress.redacted))
-                                } shareAction: {
-                                    store.send(.shareQR(store.transparentAddress.redacted))
-                                }
+                        if store.selection == .ua {
+                            addressBlock(type: .uaAddress, L10n.AddressDetails.ua, store.unifiedAddress) {
+                                store.send(.copyToPastboard(store.unifiedAddress.redacted))
+                            } shareAction: {
+                                store.send(.shareQR(store.unifiedAddress.redacted))
+                            } zashiMeAction: {
+                                store.send(.requestPaymentTapped)
+                            }
+                        } else {
+                            addressBlock(type: .tAddress, L10n.AddressDetails.ta, store.transparentAddress) {
+                                store.send(.copyToPastboard(store.transparentAddress.redacted))
+                            } shareAction: {
+                                store.send(.shareQR(store.transparentAddress.redacted))
+                            } zashiMeAction: {
+                                store.send(.requestPaymentTapped)
                             }
                         }
                         .frame(maxWidth: .infinity)
@@ -63,16 +67,11 @@ public struct AddressDetailsView: View {
                             store.send(.copyToPastboard(store.saplingAddress.redacted))
                         } shareAction: {
                             store.send(.shareQR(store.saplingAddress.redacted))
+                        } zashiMeAction: {
+                            store.send(.requestPaymentTapped)
                         }
                     }
 #endif
-                    
-                    Button("ZASHI ME") {
-                        store.send(.requestPaymentTapped)
-                    }
-                    .zcashStyle()
-                    .padding(.horizontal, 65)
-                    .padding(.bottom, 30)
                     
                     shareView()
                 }
@@ -97,52 +96,51 @@ public struct AddressDetailsView: View {
         _ title: String,
         _ address: String,
         _ copyAction: @escaping () -> Void,
-        shareAction: @escaping () -> Void
+        shareAction: @escaping () -> Void,
+        zashiMeAction: @escaping () -> Void
     ) -> some View {
         VStack {
             qrCode(address, type: type)
-                .frame(width: 270, height: 270)
-                .padding(.bottom, 20)
+                .frame(width: 192, height: 192)
+                .padding(.vertical, 30)
             
             Text(address)
-                .font(.custom(FontFamily.Inter.regular.name, size: 16))
+                .font(.custom(FontFamily.Inter.regular.name, size: 13))
                 .foregroundColor(Asset.Colors.shade47.color)
                 .frame(width: 270)
-                .padding(.bottom, 20)
+                .padding(.bottom, 25)
+                .multilineTextAlignment(.center)
+                .lineSpacing(3)
             
-            HStack(spacing: 25) {
-                Button {
+            HStack(spacing: 18) {
+                IconButton(title: L10n.AddressDetails.copy) {
                     copyAction()
-                } label: {
-                    HStack(spacing: 5) {
-                        Asset.Assets.copy.image
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 11, height: 11)
-                            .foregroundColor(Asset.Colors.primary.color)
-                        
-                        Text(L10n.AddressDetails.copy)
-                            .font(.custom(FontFamily.Inter.bold.name, size: 12))
-                            .underline()
-                            .foregroundColor(Asset.Colors.primary.color)
-                    }
+                } content: {
+                    Asset.Assets.copy.image
+                        .renderingMode(.template)
+                        .resizable()
+                        .frame(width: 17, height: 16)
+                        .foregroundColor(Asset.Colors.secondary.color)
                 }
                 
-                Button {
+                IconButton(title: L10n.AddressDetails.share) {
                     shareAction()
-                } label: {
-                    HStack(spacing: 5) {
-                        Asset.Assets.share.image
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 11, height: 11)
-                            .foregroundColor(Asset.Colors.primary.color)
-
-                        Text(L10n.AddressDetails.share)
-                            .font(.custom(FontFamily.Inter.bold.name, size: 12))
-                            .underline()
-                            .foregroundColor(Asset.Colors.primary.color)
-                    }
+                } content: {
+                    Asset.Assets.share.image
+                        .renderingMode(.template)
+                        .resizable()
+                        .frame(width: 18, height: 16)
+                        .foregroundColor(Asset.Colors.secondary.color)
+                }
+                
+                IconButton(title: L10n.AddressDetails.zashiMe) {
+                    zashiMeAction()
+                } content: {
+                    Asset.Assets.zashiLogoBolder.image
+                        .renderingMode(.template)
+                        .resizable()
+                        .frame(width: 17, height: 22)
+                        .foregroundColor(Asset.Colors.secondary.color)
                 }
             }
         }
@@ -187,7 +185,10 @@ public struct AddressDetailsView: View {
         )
         .border(Asset.Colors.pickerBcg.color, width: 4)
         .frame(width: 270)
-        .padding(.top, 50)
+        .overlay(
+            Rectangle()
+                .stroke(Asset.Colors.primary.color, lineWidth: 1)
+        )
     }
 }
 
