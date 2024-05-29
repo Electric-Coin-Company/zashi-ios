@@ -24,6 +24,7 @@ extension SDKSynchronizerClient: TestDependencyKey {
         isInitialized: XCTUnimplemented("\(Self.self).isInitialized", placeholder: false),
         rewind: XCTUnimplemented("\(Self.self).rewind", placeholder: Fail(error: "Error").eraseToAnyPublisher()),
         getAllTransactions: XCTUnimplemented("\(Self.self).getAllTransactions", placeholder: []),
+        getMemos: XCTUnimplemented("\(Self.self).getMemos", placeholder: []),
         getUnifiedAddress: XCTUnimplemented("\(Self.self).getUnifiedAddress", placeholder: nil),
         getTransparentAddress: XCTUnimplemented("\(Self.self).getTransparentAddress", placeholder: nil),
         getSaplingAddress: XCTUnimplemented("\(Self.self).getSaplingAddress", placeholder: nil),
@@ -51,6 +52,7 @@ extension SDKSynchronizerClient {
         isInitialized: { false },
         rewind: { _ in Empty<Void, Error>().eraseToAnyPublisher() },
         getAllTransactions: { [] },
+        getMemos: { _ in [] },
         getUnifiedAddress: { _ in nil },
         getTransparentAddress: { _ in nil },
         getSaplingAddress: { _ in nil },
@@ -131,6 +133,7 @@ extension SDKSynchronizerClient {
 
             return clearedTransactions
         },
+        getMemos: @escaping (_ rawID: Data) -> [Memo] = { _ in [] },
         getUnifiedAddress: @escaping (_ account: Int) -> UnifiedAddress? = { _ in
             // swiftlint:disable force_try
             try! UnifiedAddress(
@@ -203,6 +206,7 @@ extension SDKSynchronizerClient {
             isInitialized: isInitialized,
             rewind: rewind,
             getAllTransactions: getAllTransactions,
+            getMemos: getMemos,
             getUnifiedAddress: getUnifiedAddress,
             getTransparentAddress: getTransparentAddress,
             getSaplingAddress: getSaplingAddress,

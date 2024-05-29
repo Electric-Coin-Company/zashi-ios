@@ -40,6 +40,8 @@ public struct TransactionState: Equatable, Identifiable {
     public var isIdExpanded: Bool
     public var isMarkedAsRead = false
 
+    public var rawID: Data? = nil
+    
     // UI Colors
     public var balanceColor: Color {
         status == .failed

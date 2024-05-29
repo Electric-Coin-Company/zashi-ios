@@ -260,7 +260,7 @@ extension RootReducer {
                 case .uninitialized:
                     state.appInitializationState = .uninitialized
                     return .run { send in
-                        try await mainQueue.sleep(for: .seconds(2.5))
+                        try await mainQueue.sleep(for: .seconds(0.5))
                         await send(.destination(.updateDestination(.onboarding)))
                     }
                     .cancellable(id: CancelId, cancelInFlight: true)
@@ -315,7 +315,10 @@ extension RootReducer {
                     state.appInitializationState = .initialized
                     
                     return .run { [landingDestination] send in
-                        try await mainQueue.sleep(for: .seconds(2.5))
+                        if landingDestination == .tabs {
+                            await send(.tabs(.home(.transactionList(.onAppear))))
+                        }
+                        try await mainQueue.sleep(for: .seconds(0.5))
                         await send(.destination(.updateDestination(landingDestination)))
                     }
                     .cancellable(id: CancelId, cancelInFlight: true)
