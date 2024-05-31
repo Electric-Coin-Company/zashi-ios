@@ -16,7 +16,6 @@ import Home
 import SendFlow
 import Settings
 import ZcashLightClientKit
-import RestoreWalletStorage
 import SendConfirmation
 
 public typealias TabsStore = Store<TabsReducer.State, TabsReducer.Action>
@@ -53,7 +52,6 @@ public struct TabsReducer: Reducer {
         public var balanceBreakdownState: BalanceBreakdownReducer.State
         public var destination: Destination?
         public var homeState: HomeReducer.State
-        public var isRestoringWallet = false
         public var selectedTab: Tab = .account
         public var sendConfirmationState: SendConfirmation.State
         public var sendState: SendFlowReducer.State
@@ -64,7 +62,6 @@ public struct TabsReducer: Reducer {
             balanceBreakdownState: BalanceBreakdownReducer.State,
             destination: Destination? = nil,
             homeState: HomeReducer.State,
-            isRestoringWallet: Bool = false,
             selectedTab: Tab = .account,
             sendConfirmationState: SendConfirmation.State,
             sendState: SendFlowReducer.State,
@@ -74,7 +71,6 @@ public struct TabsReducer: Reducer {
             self.balanceBreakdownState = balanceBreakdownState
             self.destination = destination
             self.homeState = homeState
-            self.isRestoringWallet = isRestoringWallet
             self.selectedTab = selectedTab
             self.sendConfirmationState = sendConfirmationState
             self.sendState = sendState
@@ -86,8 +82,6 @@ public struct TabsReducer: Reducer {
         case addressDetails(AddressDetails.Action)
         case balanceBreakdown(BalanceBreakdownReducer.Action)
         case home(HomeReducer.Action)
-        case restoreWalletTask
-        case restoreWalletValue(Bool)
         case selectedTabChanged(State.Tab)
         case send(SendFlowReducer.Action)
         case sendConfirmation(SendConfirmation.Action)
@@ -95,7 +89,6 @@ public struct TabsReducer: Reducer {
         case updateDestination(TabsReducer.State.Destination?)
     }
 
-    @Dependency(\.restoreWalletStorage) var restoreWalletStorage
     @Dependency(\.mainQueue) var mainQueue
 
     public init() { }
@@ -144,17 +137,6 @@ public struct TabsReducer: Reducer {
             case .home:
                 return .none
                 
-            case .restoreWalletTask:
-                return .run { send in
-                    for await value in await restoreWalletStorage.value() {
-                        await send(.restoreWalletValue(value))
-                    }
-                }
-
-            case .restoreWalletValue(let value):
-                state.isRestoringWallet = value
-                return .none
-
             case .send(.sendConfirmationRequired):
                 state.sendConfirmationState.amount = state.sendState.amount
                 state.sendConfirmationState.address = state.sendState.address

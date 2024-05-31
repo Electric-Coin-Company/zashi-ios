@@ -10,10 +10,13 @@ import ComposableArchitecture
 import Generated
 import UIComponents
 import ExportLogs
+import WalletStatusPanel
 
 public struct PrivateDataConsentView: View {
     var store: PrivateDataConsentStore
     
+    @State var walletStatus = WalletStatus.none
+
     public init(store: PrivateDataConsentStore) {
         self.store = store
     }
@@ -23,7 +26,7 @@ public struct PrivateDataConsentView: View {
             ScrollView {
                 Group {
                     ZashiIcon()
-                        .padding(.top, viewStore.isRestoringWallet ? 30 : 0)
+                        .padding(.top, walletStatus != .none ? 30 : 0)
                     
                     Text(L10n.PrivateDataConsent.title)
                         .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
@@ -89,13 +92,12 @@ public struct PrivateDataConsentView: View {
             .onAppear {
                 viewStore.send(.onAppear)
             }
-            .restoringWalletBadge(isOn: viewStore.isRestoringWallet, background: .pattern)
+            .walletStatusPanel(background: .pattern, restoringStatus: $walletStatus)
 
             shareLogsView(viewStore)
         }
         .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground(withPattern: true)
-        .task { await store.send(.restoreWalletTask).finish() }
     }
 }
 

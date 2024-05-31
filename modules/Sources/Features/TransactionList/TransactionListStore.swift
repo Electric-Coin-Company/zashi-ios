@@ -83,7 +83,9 @@ public struct TransactionListReducer: Reducer {
                 }
                 .cancellable(id: CancelEventId, cancelInFlight: true),
                 .run { send in
-                    await send(.updateTransactionList(try await sdkSynchronizer.getAllTransactions()))
+                    if let transactions = try? await sdkSynchronizer.getAllTransactions() {
+                        await send(.updateTransactionList(transactions))
+                    }
                 }
             )
 
@@ -96,7 +98,9 @@ public struct TransactionListReducer: Reducer {
         case .synchronizerStateChanged(.upToDate):
             state.latestMinedHeight = sdkSynchronizer.latestState().latestBlockHeight
             return .run { send in
-                await send(.updateTransactionList(try await sdkSynchronizer.getAllTransactions()))
+                if let transactions = try? await sdkSynchronizer.getAllTransactions() {
+                    await send(.updateTransactionList(transactions))
+                }
             }
             
         case .synchronizerStateChanged:
@@ -104,7 +108,9 @@ public struct TransactionListReducer: Reducer {
         
         case .foundTransactions:
             return .run { send in
-                await send(.updateTransactionList(try await sdkSynchronizer.getAllTransactions()))
+                if let transactions = try? await sdkSynchronizer.getAllTransactions() {
+                    await send(.updateTransactionList(transactions))
+                }
             }
 
         case .updateTransactionList(let transactionList):

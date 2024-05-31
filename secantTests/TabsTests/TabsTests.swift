@@ -78,8 +78,8 @@ class TabsTests: XCTestCase {
             TabsReducer()
         }
 
-        store.dependencies.restoreWalletStorage = .noOp
-        store.dependencies.restoreWalletStorage.value = {
+        store.dependencies.walletStatusPanel = .noOp
+        store.dependencies.walletStatusPanel.value = {
             AsyncStream { continuation in
                 continuation.yield(true)
                 continuation.finish()

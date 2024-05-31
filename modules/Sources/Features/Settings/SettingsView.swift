@@ -9,8 +9,6 @@ import PrivateDataConsent
 import ServerSetup
 
 public struct SettingsView: View {
-    @State private var isRestoringWalletBadgeOn = false
-
     let store: SettingsStore
     
     public init(store: SettingsStore) {
@@ -40,9 +38,7 @@ public struct SettingsView: View {
                 )
                 .onAppear {
                     viewStore.send(.onAppear)
-                    isRestoringWalletBadgeOn = viewStore.isRestoringWallet
                 }
-                .onChange(of: viewStore.isRestoringWallet) { isRestoringWalletBadgeOn = $0 }
 
                 Button(L10n.Settings.advanced.uppercased()) {
                     viewStore.send(.updateDestination(.advanced))
@@ -86,8 +82,7 @@ public struct SettingsView: View {
                 .frame(width: 62, height: 17)
                 .foregroundColor(Asset.Colors.primary.color)
         }
-        .restoringWalletBadge(isOn: isRestoringWalletBadgeOn)
-        .task { await store.send(.restoreWalletTask).finish() }
+        .walletStatusPanel()
     }
 }
 

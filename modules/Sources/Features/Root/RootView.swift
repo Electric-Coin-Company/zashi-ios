@@ -12,6 +12,7 @@ import Sandbox
 import Tabs
 import ZcashLightClientKit
 import UIComponents
+import ServerSetup
 
 public struct RootView: View {
     @Environment(\.scenePhase) var scenePhase
@@ -158,6 +159,19 @@ private extension RootView {
                 state: \.exportLogsState.$alert,
                 action: { .exportLogs(.alert($0)) }
             ))
+            .fullScreenCover(
+                isPresented:
+                    Binding(
+                        get: { viewStore.serverSetupViewBinding },
+                        set: { viewStore.send(.serverSetupBindingUpdated($0)) }
+                    )
+            ) {
+                NavigationView {
+                    ServerSetupView(store: store.serverSetupStore()) {
+                        viewStore.send(.serverSetupBindingUpdated(false))
+                    }
+                }
+            }
 
             shareLogsView(viewStore)
         }

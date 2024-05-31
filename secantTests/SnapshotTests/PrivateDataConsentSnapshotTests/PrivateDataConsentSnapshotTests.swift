@@ -17,7 +17,7 @@ class PrivateDataConsentSnapshotTests: XCTestCase {
         ) {
             PrivateDataConsentReducer()
                 .dependency(\.databaseFiles, .noOp)
-                .dependency(\.restoreWalletStorage, .noOp)
+                .dependency(\.walletStatusPanel, .noOp)
         }
 
         addAttachments(PrivateDataConsentView(store: store))

@@ -14,6 +14,8 @@ import UIComponents
 import ZcashSDKEnvironment
 
 public struct ServerSetupView: View {
+    var customDismiss: (() -> Void)? = nil
+    
     private enum Constants {
         // Time it takes to initiate the animated scroll after the screen is presented
         static let delayBeforeScroll = UInt64(500_000_000)
@@ -25,8 +27,9 @@ public struct ServerSetupView: View {
     
     @Perception.Bindable var store: StoreOf<ServerSetup>
     
-    public init(store: StoreOf<ServerSetup>) {
+    public init(store: StoreOf<ServerSetup>, customDismiss: (() -> Void)? = nil) {
         self.store = store
+        self.customDismiss = customDismiss
     }
 
     public var body: some View {
@@ -131,7 +134,7 @@ public struct ServerSetupView: View {
                         }
                     }
                     .frame(maxWidth: .infinity)
-                    .zashiBack(store.isUpdatingServer)
+                    .zashiBack(store.isUpdatingServer, customDismiss: customDismiss)
                     .zashiTitle {
                         Text(L10n.ServerSetup.title.uppercased())
                             .font(.custom(FontFamily.Archivo.bold.name, size: 14))

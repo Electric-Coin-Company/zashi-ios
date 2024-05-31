@@ -97,7 +97,19 @@ extension RootReducer {
                 
             case .synchronizerStateChanged(let latestState):
                 let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.data.syncStatus)
-                
+
+                // handle possible service unavailability
+                if case .error(let error) = snapshot.syncStatus, checkUnavailableService(error) {
+                    if walletStatusPanel.value().value != .disconnected {
+                        state.alert = AlertState.serviceUnavailable()
+                    }
+                    state.wasRestoringWhenDisconnected = walletStatusPanel.value().value == .restoring
+                    walletStatusPanel.updateValue(.disconnected)
+                } else if case .syncing = snapshot.syncStatus, walletStatusPanel.value().value == .disconnected {
+                    walletStatusPanel.updateValue(state.wasRestoringWhenDisconnected ? .restoring : .none)
+                }
+
+                // handle BCGTask
                 guard state.bgTask != nil else {
                     return .send(.initialization(.checkRestoreWalletFlag(snapshot.syncStatus)))
                 }
@@ -128,13 +140,10 @@ extension RootReducer {
                 if state.isRestoringWallet && syncStatus == .upToDate {
                     state.isRestoringWallet = false
                     userDefaults.remove(Constants.udIsRestoringWallet)
-                    return .run { _ in
-                        await restoreWalletStorage.updateValue(false)
-                    }
-                } else {
-                    return .none
+                    walletStatusPanel.updateValue(.none)
                 }
-                
+                return .none
+
             case .initialization(.synchronizerStartFailed):
                 return .none
                 
@@ -231,25 +240,17 @@ extension RootReducer {
                     state.appInitializationState = .filesMissing
                     state.isRestoringWallet = true
                     userDefaults.setValue(true, Constants.udIsRestoringWallet)
+                    walletStatusPanel.updateValue(.restoring)
                     return .concatenate(
-                        .merge(
-                            Effect.send(.initialization(.initializeSDK(.restoreWallet))),
-                            .run { _ in
-                                await restoreWalletStorage.updateValue(true)
-                            }
-                        ),
+                        Effect.send(.initialization(.initializeSDK(.restoreWallet))),
                         Effect.send(.initialization(.checkBackupPhraseValidation))
                     )
                 case .initialized:
                     if let isRestoringWallet = userDefaults.objectForKey(Constants.udIsRestoringWallet) as? Bool, isRestoringWallet {
                         state.isRestoringWallet = true
+                        walletStatusPanel.updateValue(.restoring)
                         return .concatenate(
-                            .merge(
-                                Effect.send(.initialization(.initializeSDK(.restoreWallet))),
-                                .run { _ in
-                                    await restoreWalletStorage.updateValue(true)
-                                }
-                            ),
+                            Effect.send(.initialization(.initializeSDK(.restoreWallet))),
                             Effect.send(.initialization(.checkBackupPhraseValidation))
                         )
                     }
@@ -313,7 +314,7 @@ extension RootReducer {
                     }
                     
                     state.appInitializationState = .initialized
-                    
+
                     return .run { [landingDestination] send in
                         if landingDestination == .tabs {
                             await send(.tabs(.home(.transactionList(.onAppear))))
@@ -450,12 +451,8 @@ extension RootReducer {
             case .onboarding(.importWallet(.initializeSDK)):
                 state.isRestoringWallet = true
                 userDefaults.setValue(true, Constants.udIsRestoringWallet)
-                return .merge(
-                    Effect.send(.initialization(.initializeSDK(.restoreWallet))),
-                    .run { _ in
-                        await restoreWalletStorage.updateValue(true)
-                    }
-                )
+                walletStatusPanel.updateValue(.restoring)
+                return Effect.send(.initialization(.initializeSDK(.restoreWallet)))
 
             case .initialization(.seedValidationResult(let validSeed)):
                 if validSeed {
@@ -482,14 +479,27 @@ extension RootReducer {
 
             case .onboarding(.securityWarning(.newWalletCreated)):
                 return Effect.send(.initialization(.initializeSDK(.newWallet)))
-
-            case .onboarding(.securityWarning(.recoveryPhraseDisplay(.finishedPressed))):
-                return Effect.send(.destination(.updateDestination(.tabs)))
                 
-            case .tabs, .destination, .onboarding, .sandbox, .phraseDisplay, .notEnoughFreeSpace,
+            case .tabs, .destination, .onboarding, .sandbox, .phraseDisplay, .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated,
                     .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, .confirmationDialog:
                 return .none
             }
+        }
+    }
+    
+    private func checkUnavailableService(_ error: Error) -> Bool {
+        switch error {
+        case ZcashError.serviceGetInfoFailed(.timeOut),
+            ZcashError.serviceLatestBlockFailed(.timeOut),
+            ZcashError.serviceLatestBlockHeightFailed(.timeOut),
+            ZcashError.serviceBlockRangeFailed(.timeOut),
+            ZcashError.serviceSubmitFailed(.timeOut),
+            ZcashError.serviceFetchTransactionFailed(.timeOut),
+            ZcashError.serviceFetchUTXOsFailed(.timeOut),
+            ZcashError.serviceBlockStreamFailed(.timeOut),
+            ZcashError.serviceSubtreeRootsStreamFailed(.timeOut):
+            return true
+        default: return false
         }
     }
 }

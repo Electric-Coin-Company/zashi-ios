@@ -24,8 +24,8 @@ final class RestoreWalletTests: XCTestCase {
         
         store.dependencies.mainQueue = .immediate
         store.dependencies.mnemonic = .noOp
-        store.dependencies.restoreWalletStorage = .noOp
-        store.dependencies.restoreWalletStorage.updateValue = { value in
+        store.dependencies.walletStatusPanel = .noOp
+        store.dependencies.walletStatusPanel.updateValue = { value in
             XCTAssertTrue(value)
         }
         store.dependencies.sdkSynchronizer = .noOp
@@ -57,8 +57,8 @@ final class RestoreWalletTests: XCTestCase {
         
         store.dependencies.mainQueue = .immediate
         store.dependencies.mnemonic = .noOp
-        store.dependencies.restoreWalletStorage = .noOp
-        store.dependencies.restoreWalletStorage.updateValue = { value in
+        store.dependencies.walletStatusPanel = .noOp
+        store.dependencies.walletStatusPanel.updateValue = { value in
             XCTAssertFalse(value)
         }
         store.dependencies.sdkSynchronizer = .noOp

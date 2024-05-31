@@ -8,6 +8,7 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ### Added
 - Screen summarizing successful restoration with some syncing tips.
+- Server unavailability is now detected, providing information and an option to switch to an alternative server. When the server is down, it is reflected in the UI with a label right below the toolbar.
 
 ### Fixed
 - The application startup pipeline has been optimized, significantly improving performance. Consequently, Zashi now features faster cold and warm starts, and the transaction history is populated almost instantly.

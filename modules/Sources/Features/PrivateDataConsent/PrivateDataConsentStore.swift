@@ -15,7 +15,6 @@ import SwiftUI
 import ExportLogs
 import DatabaseFiles
 import ExportLogs
-import RestoreWalletStorage
 import ZcashSDKEnvironment
 
 public typealias PrivateDataConsentStore = Store<PrivateDataConsentReducer.State, PrivateDataConsentReducer.Action>
@@ -28,7 +27,6 @@ public struct PrivateDataConsentReducer: Reducer {
         @BindingState public var isAcknowledged: Bool = false
         public var isExportingData: Bool
         public var isExportingLogs: Bool
-        public var isRestoringWallet = false
         public var dataDbURL: [URL] = []
         public var exportLogsState: ExportLogsReducer.State
         
@@ -49,8 +47,7 @@ public struct PrivateDataConsentReducer: Reducer {
             exportOnlyLogs: Bool = true,
             isAcknowledged: Bool = false,
             isExportingData: Bool = false,
-            isExportingLogs: Bool = false,
-            isRestoringWallet: Bool = false
+            isExportingLogs: Bool = false
         ) {
             self.dataDbURL = dataDbURL
             self.exportBinding = exportBinding
@@ -59,7 +56,6 @@ public struct PrivateDataConsentReducer: Reducer {
             self.isAcknowledged = isAcknowledged
             self.isExportingData = isExportingData
             self.isExportingLogs = isExportingLogs
-            self.isRestoringWallet = isRestoringWallet
         }
     }
     
@@ -69,15 +65,13 @@ public struct PrivateDataConsentReducer: Reducer {
         case exportLogsRequested
         case exportRequested
         case onAppear
-        case restoreWalletTask
-        case restoreWalletValue(Bool)
         case shareFinished
     }
 
     public init() { }
 
     @Dependency(\.databaseFiles) var databaseFiles
-    @Dependency(\.restoreWalletStorage) var restoreWalletStorage
+    @Dependency(\.walletStatusPanel) var walletStatusPanel
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public var body: some Reducer<State, Action> {
@@ -109,17 +103,6 @@ public struct PrivateDataConsentReducer: Reducer {
                 state.isExportingData = true
                 state.exportOnlyLogs = false
                 return .send(.exportLogs(.start))
-
-            case .restoreWalletTask:
-                return .run { send in
-                    for await value in await restoreWalletStorage.value() {
-                        await send(.restoreWalletValue(value))
-                    }
-                }
-
-            case .restoreWalletValue(let value):
-                state.isRestoringWallet = value
-                return .none
                 
             case .shareFinished:
                 state.isExportingData = false

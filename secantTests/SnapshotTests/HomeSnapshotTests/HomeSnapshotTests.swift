@@ -49,7 +49,7 @@ class HomeSnapshotTests: XCTestCase {
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.mainQueue, .immediate)
                 .dependency(\.reviewRequest, .noOp)
-                .dependency(\.restoreWalletStorage, .noOp)
+                .dependency(\.walletStatusPanel, .noOp)
         }
 
         // landing home screen

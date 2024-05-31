@@ -18,7 +18,6 @@ import WalletStorage
 import SDKSynchronizer
 import Models
 import SyncProgress
-import RestoreWalletStorage
 import WalletBalances
 import ZcashSDKEnvironment
 
@@ -37,7 +36,6 @@ public struct BalanceBreakdownReducer: Reducer {
         public var autoShieldingThreshold: Zatoshi
         public var changePending: Zatoshi
         public var destination: Destination?
-        public var isRestoringWallet = false
         public var isShieldingFunds: Bool
         public var isHintBoxVisible = false
         public var partialProposalErrorState: PartialProposalError.State
@@ -59,7 +57,6 @@ public struct BalanceBreakdownReducer: Reducer {
             autoShieldingThreshold: Zatoshi,
             changePending: Zatoshi,
             destination: Destination? = nil,
-            isRestoringWallet: Bool = false,
             isShieldingFunds: Bool,
             isHintBoxVisible: Bool = false,
             partialProposalErrorState: PartialProposalError.State,
@@ -72,7 +69,6 @@ public struct BalanceBreakdownReducer: Reducer {
             self.autoShieldingThreshold = autoShieldingThreshold
             self.changePending = changePending
             self.destination = destination
-            self.isRestoringWallet = isRestoringWallet
             self.isShieldingFunds = isShieldingFunds
             self.isHintBoxVisible = isHintBoxVisible
             self.partialProposalErrorState = partialProposalErrorState
@@ -89,8 +85,6 @@ public struct BalanceBreakdownReducer: Reducer {
         case onAppear
         case onDisappear
         case partialProposalError(PartialProposalError.Action)
-        case restoreWalletTask
-        case restoreWalletValue(Bool)
         case shieldFunds
         case shieldFundsFailure(ZcashError)
         case shieldFundsPartial([String], [String])
@@ -107,7 +101,6 @@ public struct BalanceBreakdownReducer: Reducer {
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.numberFormatter) var numberFormatter
-    @Dependency(\.restoreWalletStorage) var restoreWalletStorage
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
@@ -153,17 +146,6 @@ public struct BalanceBreakdownReducer: Reducer {
                 return .cancel(id: CancelId)
             
             case .partialProposalError:
-                return .none
-
-            case .restoreWalletTask:
-                return .run { send in
-                    for await value in await restoreWalletStorage.value() {
-                        await send(.restoreWalletValue(value))
-                    }
-                }
-
-            case .restoreWalletValue(let value):
-                state.isRestoringWallet = value
                 return .none
 
             case .shieldFunds:
