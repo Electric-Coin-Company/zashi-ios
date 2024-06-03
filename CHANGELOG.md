@@ -6,6 +6,10 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## Fixed
+- The application startup pipeline has been optimized, significantly improving performance. Consequently, Zashi now features faster cold and warm starts, and the transaction history is populated almost instantly.
+- Transaction messages are now checked for duplicity and removed if duplicates are found.
+
 ## 1.1.1 build 1 (2024-05-22)
 
 ### Added

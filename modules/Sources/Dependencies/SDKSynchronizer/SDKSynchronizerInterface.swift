@@ -38,7 +38,8 @@ public struct SDKSynchronizerClient {
     public let rewind: (RewindPolicy) -> AnyPublisher<Void, Error>
     
     public var getAllTransactions: () async throws -> [TransactionState]
-    
+    public var getMemos: (Data) async throws -> [Memo]
+
     public let getUnifiedAddress: (_ account: Int) async throws -> UnifiedAddress?
     public let getTransparentAddress: (_ account: Int) async throws -> TransparentAddress?
     public let getSaplingAddress: (_ accountIndex: Int) async throws -> SaplingAddress?

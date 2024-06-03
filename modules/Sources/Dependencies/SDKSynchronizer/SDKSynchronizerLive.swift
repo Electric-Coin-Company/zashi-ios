@@ -62,11 +62,13 @@ extension SDKSynchronizerClient: DependencyKey {
 
                 var clearedTxs: [TransactionState] = []
                 
+                let latestBlockHeight = try await SDKSynchronizerClient.latestBlockHeight(synchronizer: synchronizer)
+                
                 for clearedTransaction in clearedTransactions {
                     var transaction = TransactionState.init(
                         transaction: clearedTransaction,
-                        memos: clearedTransaction.memoCount > 0 ? try await synchronizer.getMemos(for: clearedTransaction) : nil,
-                        latestBlockHeight: try await SDKSynchronizerClient.latestBlockHeight(synchronizer: synchronizer)
+                        memos: nil,
+                        latestBlockHeight: latestBlockHeight
                     )
 
                     let recipients = await synchronizer.getRecipients(for: clearedTransaction)
@@ -78,6 +80,7 @@ extension SDKSynchronizerClient: DependencyKey {
                         }
                     }
                     
+                    transaction.rawID = clearedTransaction.rawID
                     transaction.zAddress = addresses.first?.stringEncoded
                     if let someAddress = addresses.first, case .transparent = someAddress {
                         transaction.isTransparentRecipient = true
@@ -85,9 +88,10 @@ extension SDKSynchronizerClient: DependencyKey {
                     
                     clearedTxs.append(transaction)
                 }
-                
+
                 return clearedTxs
             },
+            getMemos: { try await synchronizer.getMemos(for: $0) },
             getUnifiedAddress: { try await synchronizer.getUnifiedAddress(accountIndex: $0) },
             getTransparentAddress: { try await synchronizer.getTransparentAddress(accountIndex: $0) },
             getSaplingAddress: { try await synchronizer.getSaplingAddress(accountIndex: $0) },

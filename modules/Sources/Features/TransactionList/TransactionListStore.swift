@@ -39,6 +39,7 @@ public struct TransactionListReducer: Reducer {
     public enum Action: Equatable {
         case copyToPastboard(RedactableString)
         case foundTransactions
+        case memosFor([Memo], String)
         case onAppear
         case onDisappear
         case synchronizerStateChanged(SyncStatus)
@@ -133,6 +134,7 @@ public struct TransactionListReducer: Reducer {
                         copiedTransaction.isAddressExpanded = state.transactionList[index].isAddressExpanded
                         copiedTransaction.isExpanded = state.transactionList[index].isExpanded
                         copiedTransaction.isIdExpanded = state.transactionList[index].isIdExpanded
+                        copiedTransaction.rawID = state.transactionList[index].rawID
                     }
                     
                     // update the read/unread state
@@ -178,6 +180,15 @@ public struct TransactionListReducer: Reducer {
             if let index = state.transactionList.index(id: id) {
                 state.transactionList[index].isExpanded = true
                 
+                // presence of the rawID is a sign that memos hasn't been loaded yet
+                if let rawID = state.transactionList[index].rawID {
+                    return .run { send in
+                        if let memos = try? await sdkSynchronizer.getMemos(rawID) {
+                            await send(.memosFor(memos, id))
+                        }
+                    }
+                }
+
                 // update of the unread state
                 if !state.transactionList[index].isSpending
                     && !state.transactionList[index].isMarkedAsRead
@@ -197,6 +208,34 @@ public struct TransactionListReducer: Reducer {
                 } else {
                     state.transactionList[index].isExpanded = true
                 }
+            }
+            return .none
+            
+        case let .memosFor(memos, id):
+            if let index = state.transactionList.index(id: id) {
+                // deduplicate memos
+                var finalMemos: [Memo] = []
+
+                for memo in memos {
+                    guard let textMemo = memo.toString() else {
+                        continue
+                    }
+
+                    var duplicate = false
+                    for checkMemo in finalMemos {
+                        if let checkMemoText = checkMemo.toString(), checkMemoText == textMemo {
+                            duplicate = true
+                            break
+                        }
+                    }
+                    
+                    if !duplicate {
+                        finalMemos.append(memo)
+                    }
+                }
+                
+                state.transactionList[index].rawID = nil
+                state.transactionList[index].memos = finalMemos
             }
             return .none
         }
