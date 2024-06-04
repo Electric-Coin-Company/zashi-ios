@@ -13,6 +13,7 @@ import Generated
 import WalletStorage
 import MnemonicClient
 import ZcashSDKEnvironment
+import RestoreInfo
 
 public typealias ImportWalletStore = Store<ImportWalletReducer.State, ImportWalletReducer.Action>
 public typealias ImportWalletViewStore = ViewStore<ImportWalletReducer.State, ImportWalletReducer.Action>
@@ -31,6 +32,8 @@ public struct ImportWalletReducer: Reducer {
         public var isValidMnemonic = false
         public var isValidNumberOfWords = false
         public var maxWordsCount = 0
+        public var restoreInfoState: RestoreInfo.State
+        public var restoreInfoViewBinding: Bool = false
         public var wordsCount = 0
         
         public var mnemonicStatus: String {
@@ -55,9 +58,10 @@ public struct ImportWalletReducer: Reducer {
             isValidMnemonic: Bool = false,
             isValidNumberOfWords: Bool = false,
             maxWordsCount: Int = 0,
+            restoreInfoState: RestoreInfo.State,
+            restoreInfoViewBinding: Bool = false,
             wordsCount: Int = 0
         ) {
-            self.alert = alert
             self.birthdayHeight = birthdayHeight
             self.birthdayHeightValue = birthdayHeightValue
             self.destination = destination
@@ -65,6 +69,8 @@ public struct ImportWalletReducer: Reducer {
             self.isValidMnemonic = isValidMnemonic
             self.isValidNumberOfWords = isValidNumberOfWords
             self.maxWordsCount = maxWordsCount
+            self.restoreInfoState = restoreInfoState
+            self.restoreInfoViewBinding = restoreInfoViewBinding
             self.wordsCount = wordsCount
         }
     }
@@ -76,6 +82,8 @@ public struct ImportWalletReducer: Reducer {
         case initializeSDK
         case nextPressed
         case onAppear
+        case restoreInfo(RestoreInfo.Action)
+        case restoreInfoRequested(Bool)
         case restoreWallet
         case seedPhraseInputChanged(RedactableString)
         case successfullyRecovered
@@ -89,6 +97,10 @@ public struct ImportWalletReducer: Reducer {
     public init() { }
     
     public var body: some Reducer<State, Action> {
+        Scope(state: \.restoreInfoState, action: /Action.restoreInfo) {
+            RestoreInfo()
+        }
+
         Reduce { state, action in
             switch action {
             case .onAppear:
@@ -134,6 +146,13 @@ public struct ImportWalletReducer: Reducer {
             case .nextPressed:
                 return .none
                 
+            case .restoreInfo:
+                return .none
+                
+            case .restoreInfoRequested(let newValue):
+                state.restoreInfoViewBinding = newValue
+                return .none
+                
             case .restoreWallet:
                 do {
                     // validate the seed
@@ -170,6 +189,7 @@ public struct ImportWalletReducer: Reducer {
                 return .none
                 
             case .successfullyRecovered:
+                state.restoreInfoViewBinding = true
                 return .none
                 
             case .initializeSDK:
@@ -225,7 +245,7 @@ extension AlertState where Action == ImportWalletReducer.Action {
 // MARK: - Placeholders
 
 extension ImportWalletReducer.State {
-    public static let initial = ImportWalletReducer.State()
+    public static let initial = ImportWalletReducer.State(restoreInfoState: .initial)
 }
 
 extension ImportWalletStore {

@@ -34,6 +34,7 @@ public enum Asset {
     public static let eyeOn = ImageAsset(name: "eyeOn")
     public static let flyReceivedFilled = ImageAsset(name: "flyReceivedFilled")
     public static let gridTile = ImageAsset(name: "gridTile")
+    public static let restoreInfo = ImageAsset(name: "restoreInfo")
     public static let share = ImageAsset(name: "share")
     public static let shield = ImageAsset(name: "shield")
     public static let surroundedShield = ImageAsset(name: "surroundedShield")

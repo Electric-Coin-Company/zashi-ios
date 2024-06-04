@@ -42,6 +42,7 @@ let package = Package(
         .library(name: "PrivateDataConsent", targets: ["PrivateDataConsent"]),
         .library(name: "QRImageDetector", targets: ["QRImageDetector"]),
         .library(name: "RecoveryPhraseDisplay", targets: ["RecoveryPhraseDisplay"]),
+        .library(name: "RestoreInfo", targets: ["RestoreInfo"]),
         .library(name: "ReviewRequest", targets: ["ReviewRequest"]),
         .library(name: "Root", targets: ["Root"]),
         .library(name: "Sandbox", targets: ["Sandbox"]),
@@ -286,6 +287,7 @@ let package = Package(
             dependencies: [
                 "Generated",
                 "MnemonicClient",
+                "RestoreInfo",
                 "UIComponents",
                 "Utils",
                 "WalletStorage",
@@ -423,6 +425,15 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Dependencies/RestoreWalletStorage"
+        ),
+        .target(
+            name: "RestoreInfo",
+            dependencies: [
+                "Generated",
+                "UIComponents",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Features/RestoreInfo"
         ),
         .target(
             name: "ReviewRequest",

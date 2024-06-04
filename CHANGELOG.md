@@ -6,7 +6,10 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
-## Fixed
+### Added
+- Screen summarizing successful restoration with some syncing tips.
+
+### Fixed
 - The application startup pipeline has been optimized, significantly improving performance. Consequently, Zashi now features faster cold and warm starts, and the transaction history is populated almost instantly.
 - Transaction messages are now checked for duplicity and removed if duplicates are found.
 
