@@ -10,6 +10,7 @@ import ComposableArchitecture
 import Generated
 import UIComponents
 import Utils
+import RestoreInfo
 
 public struct ImportWalletView: View {
     private enum InputID: Hashable {
@@ -110,6 +111,20 @@ public struct ImportWalletView: View {
                     .navigationLinkEmpty(
                         isActive: viewStore.bindingForDestination(.birthday),
                         destination: { ImportBirthdayView(store: store) }
+                    )
+                    .navigationLinkEmpty(
+                        isActive: Binding(
+                            get: { viewStore.state.restoreInfoViewBinding },
+                            set: { viewStore.send(.restoreInfoRequested($0)) }
+                        ),
+                        destination: {
+                            RestoreInfoView(
+                                store: store.scope(
+                                    state: \.restoreInfoState,
+                                    action: ImportWalletReducer.Action.restoreInfo
+                                )
+                            )
+                        }
                     )
                     .alert(store: store.scope(
                         state: \.$alert,

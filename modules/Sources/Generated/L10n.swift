@@ -303,6 +303,22 @@ public enum L10n {
       public static let wroteItDown = L10n.tr("Localizable", "recoveryPhraseDisplay.button.wroteItDown", fallback: "I've saved it")
     }
   }
+  public enum RestoreInfo {
+    /// Got it!
+    public static let gotIt = L10n.tr("Localizable", "restoreInfo.gotIt", fallback: "Got it!")
+    /// *Note: During the initial sync your funds cannot be sent or spent. Depending on the age of your wallet, it may take a few hours to fully sync.
+    public static let note = L10n.tr("Localizable", "restoreInfo.note", fallback: "*Note: During the initial sync your funds cannot be sent or spent. Depending on the age of your wallet, it may take a few hours to fully sync.")
+    /// Zashi needs to stay open in order to  continue syncing.
+    public static let tip1 = L10n.tr("Localizable", "restoreInfo.tip1", fallback: "Zashi needs to stay open in order to  continue syncing.")
+    /// To prevent interruption, plug your open phone into a power source.
+    public static let tip2 = L10n.tr("Localizable", "restoreInfo.tip2", fallback: "To prevent interruption, plug your open phone into a power source.")
+    /// Keep your open phone in a secure place.
+    public static let tip3 = L10n.tr("Localizable", "restoreInfo.tip3", fallback: "Keep your open phone in a secure place.")
+    /// Syncing Tips:
+    public static let tips = L10n.tr("Localizable", "restoreInfo.tips", fallback: "Syncing Tips:")
+    /// Your wallet has been successfully restored!*
+    public static let title = L10n.tr("Localizable", "restoreInfo.title", fallback: "Your wallet has been successfully restored!*")
+  }
   public enum Root {
     public enum Debug {
       /// Startup

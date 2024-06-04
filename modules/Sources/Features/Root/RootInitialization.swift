@@ -444,8 +444,7 @@ extension RootReducer {
                     return .none
                 }
 
-            case .onboarding(.importWallet(.successfullyRecovered)):
-                state.alert = AlertState.successfullyRecovered()
+            case .onboarding(.importWallet(.restoreInfo(.gotItTapped))):
                 return Effect.send(.destination(.updateDestination(.tabs)))
 
             case .onboarding(.importWallet(.initializeSDK)):
