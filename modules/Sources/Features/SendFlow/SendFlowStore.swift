@@ -147,6 +147,7 @@ public struct SendFlowReducer: Reducer {
     
     @Dependency(\.audioServices) var audioServices
     @Dependency(\.derivationTool) var derivationTool
+    @Dependency(\.numberFormatter) var numberFormatter
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
@@ -256,12 +257,22 @@ public struct SendFlowReducer: Reducer {
                 return .none
 
             case .scan(.foundRP(let requestPayment)):
-                state.memoState.text = requestPayment.memo.redacted
-                return .concatenate(
-                    .send(.transactionAmountInput(.textField(.set(requestPayment.ammount.redacted)))),
-                    .send(.transactionAddressInput(.textField(.set(requestPayment.address.redacted)))),
-                    .send(.getProposal(.requestPayment))
-                )
+                if case .legacy(let address) = requestPayment {
+                    return .send(.scan(.found(address.value.redacted)))
+                } else if case .request(let paymentRequest) = requestPayment {
+                    if let payment = paymentRequest.payments.first {
+                        if let memoBytes = payment.memo, let memo = try? Memo(bytes: [UInt8](memoBytes.memoData)) {
+                            state.memoState.text = memo.toString()?.redacted ?? "".redacted
+                        }
+                        let numberLocale = numberFormatter.convertUSToLocale(payment.amount.toString()) ?? ""
+                        return .concatenate(
+                            .send(.transactionAmountInput(.textField(.set(numberLocale.redacted)))),
+                            .send(.transactionAddressInput(.textField(.set(payment.recipientAddress.value.redacted)))),
+                            .send(.getProposal(.requestPayment))
+                        )
+                    }
+                }
+                return .none
                 
             case .scan(.found(let address)):
                 state.transactionAddressInputState.textFieldState.text = address

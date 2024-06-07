@@ -7,16 +7,12 @@
 
 import Foundation
 import Models
+import ZcashPaymentURI
 
 public struct RequestPaymentParser {
     public enum URIParserError: Error { }
     
-    public func checkRP(_ dataStr: String) -> RPData? {
-        let decoder = PropertyListDecoder()
-        if let data = Data(base64Encoded: dataStr, options: .ignoreUnknownCharacters) {
-            return try? decoder.decode(RPData.self, from: data)
-        }
-        
-        return nil
+    public func checkRP(_ dataStr: String) -> ParserResult? {
+        try? ZIP321.request(from: dataStr)
     }
 }

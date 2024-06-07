@@ -2,6 +2,7 @@ import ComposableArchitecture
 import ZcashLightClientKit
 import DatabaseFiles
 import Deeplink
+import DeeplinkWarning
 import DiskSpaceChecker
 import ZcashSDKEnvironment
 import WalletStorage
@@ -43,6 +44,7 @@ public struct Root {
         public var bgTask: BGProcessingTask?
         @Presents public var confirmationDialog: ConfirmationDialogState<Action.ConfirmationDialog>?
         public var debugState: DebugState
+        public var deeplinkWarningState: DeeplinkWarning.State
         public var destinationState: DestinationState
         public var exportLogsState: ExportLogs.State
         public var isLockedInKeychainUnavailableState = false
@@ -63,6 +65,7 @@ public struct Root {
             appInitializationState: InitializationState = .uninitialized,
             appStartState: AppStartState = .unknown,
             debugState: DebugState,
+            deeplinkWarningState: DeeplinkWarning.State = .initial,
             destinationState: DestinationState,
             exportLogsState: ExportLogs.State,
             isLockedInKeychainUnavailableState: Bool = false,
@@ -79,6 +82,7 @@ public struct Root {
             self.appInitializationState = appInitializationState
             self.appStartState = appStartState
             self.debugState = debugState
+            self.deeplinkWarningState = deeplinkWarningState
             self.destinationState = destinationState
             self.exportLogsState = exportLogsState
             self.isLockedInKeychainUnavailableState = isLockedInKeychainUnavailableState
@@ -106,6 +110,7 @@ public struct Root {
         case cancelAllRunningEffects
         case confirmationDialog(PresentationAction<ConfirmationDialog>)
         case debug(DebugAction)
+        case deeplinkWarning(DeeplinkWarning.Action)
         case destination(DestinationAction)
         case exportLogs(ExportLogs.Action)
         case tabs(TabsReducer.Action)
@@ -137,7 +142,10 @@ public struct Root {
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.numberFormatter) var numberFormatter
     @Dependency(\.pasteboard) var pasteboard
+    @Dependency(\.readTransactionsStorage) var readTransactionsStorage
+    @Dependency(\.restoreWalletStorage) var restoreWalletStorage
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.uriParser) var uriParser
     @Dependency(\.userDefaults) var userDefaults
     @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.walletConfigProvider) var walletConfigProvider
@@ -152,6 +160,10 @@ public struct Root {
     var core: some Reducer<State, Action> {
         Scope(state: \.serverSetupState, action: /Action.serverSetup) {
             ServerSetup()
+        }
+
+        Scope(state: \.deeplinkWarningState, action: /Action.deeplinkWarning) {
+            DeeplinkWarning()
         }
 
         Scope(state: \.tabsState, action: /Action.tabs) {

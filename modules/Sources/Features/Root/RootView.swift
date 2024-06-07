@@ -13,6 +13,7 @@ import Tabs
 import ZcashLightClientKit
 import UIComponents
 import ServerSetup
+import DeeplinkWarning
 
 public struct RootView: View {
     @Environment(\.scenePhase) var scenePhase
@@ -65,6 +66,21 @@ private extension RootView {
         WithPerceptionTracking {
             Group {
                 switch store.destinationState.destination {
+
+                case .deeplinkWarning:
+                    NavigationView {
+                        DeeplinkWarningView(
+                            store: store.scope(
+                                state: \.deeplinkWarningState,
+                                action: RootReducer.Action.deeplinkWarning
+                            )
+                        )
+                    }
+                    .navigationViewStyle(.stack)
+                    .overlayedWithSplash(viewStore.splashAppeared) {
+                        viewStore.send(.splashRemovalRequested)
+                    }
+
                 case .notEnoughFreeSpace:
                     NavigationView {
                         NotEnoughFreeSpaceView(

@@ -488,7 +488,7 @@ extension Root {
                 return Effect.send(.initialization(.initializeSDK(.newWallet)))
                 
             case .tabs, .destination, .onboarding, .sandbox, .phraseDisplay, .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated,
-                    .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, 
+                    .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, .deeplinkWarning,
                     .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects:
                 return .none
             }

@@ -14,8 +14,17 @@ extension NumberFormatterClient: DependencyKey {
 
     public static func live(numberFormatter: NumberFormatter = NumberFormatter.zcashNumberFormatter) -> Self {
         Self(
-            string: { numberFormatter.string(from: $0) },
-            number: { numberFormatter.number(from: $0) }
+            string: {
+                numberFormatter.string(from: $0)
+            },
+            number: { 
+                numberFormatter.number(from: $0)
+            },
+            convertUSToLocale: {
+                let number = NumberFormatter.zcashUSNumberFormatter.number(from: $0)
+                let decimalNumber = NSDecimalNumber(decimal: number?.decimalValue ?? 0)
+                return numberFormatter.string(from: decimalNumber)
+            }
         )
     }
 }

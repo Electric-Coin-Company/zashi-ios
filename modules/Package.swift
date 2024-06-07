@@ -21,6 +21,7 @@ let package = Package(
         .library(name: "DatabaseFiles", targets: ["DatabaseFiles"]),
         .library(name: "Date", targets: ["Date"]),
         .library(name: "Deeplink", targets: ["Deeplink"]),
+        .library(name: "DeeplinkWarning", targets: ["DeeplinkWarning"]),
         .library(name: "DeleteWallet", targets: ["DeleteWallet"]),
         .library(name: "DerivationTool", targets: ["DerivationTool"]),
         .library(name: "DiskSpaceChecker", targets: ["DiskSpaceChecker"]),
@@ -76,6 +77,8 @@ let package = Package(
         .library(name: "ZcashSDKEnvironment", targets: ["ZcashSDKEnvironment"])
     ],
     dependencies: [
+//        .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "0.1.0-beta.7"),
+        .package(url: "https://github.com/LukasKorba/zcash-swift-payment-uri", branch: "public-payments-fix"),
         .package(url: "https://github.com/pointfreeco/swift-custom-dump.git", from: "1.3.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.11.1"),
         .package(url: "https://github.com/pointfreeco/swift-case-paths", from: "1.4.2"),
@@ -208,6 +211,15 @@ let package = Package(
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
             path: "Sources/Dependencies/Deeplink"
+        ),
+        .target(
+            name: "DeeplinkWarning",
+            dependencies: [
+                "Generated",
+                "UIComponents",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Features/DeeplinkWarning"
         ),
         .target(
             name: "DeleteWallet",
@@ -442,6 +454,7 @@ let package = Package(
                 "Pasteboard",
                 "UIComponents",
                 "Utils",
+                .product(name: "ZcashPaymentURI", package: "zcash-swift-payment-uri"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
@@ -473,6 +486,7 @@ let package = Package(
                 "CrashReporter",
                 "DatabaseFiles",
                 "Deeplink",
+                "DeeplinkWarning",
                 "DerivationTool",
                 "DiskSpaceChecker",
                 "ExportLogs",
@@ -492,6 +506,7 @@ let package = Package(
                 "ServerSetup",
                 "Tabs",
                 "UIComponents",
+                "URIParser",
                 "UserDefaults",
                 "UserPreferencesStorage",
                 "Utils",
@@ -526,6 +541,7 @@ let package = Package(
                 "UIComponents",
                 "Utils",
                 "ZcashSDKEnvironment",
+                .product(name: "ZcashPaymentURI", package: "zcash-swift-payment-uri"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
@@ -597,6 +613,7 @@ let package = Package(
                 "DerivationTool",
                 "Generated",
                 "Models",
+                "NumberFormatter",
                 "Scan",
                 "SDKSynchronizer",
                 "UIComponents",
@@ -725,6 +742,7 @@ let package = Package(
             dependencies: [
                 "DerivationTool",
                 "Models",
+                .product(name: "ZcashPaymentURI", package: "zcash-swift-payment-uri"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
