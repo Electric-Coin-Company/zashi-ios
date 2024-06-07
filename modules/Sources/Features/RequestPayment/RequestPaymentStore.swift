@@ -14,6 +14,7 @@ import UIComponents
 import Utils
 import ZcashLightClientKit
 import NumberFormatter
+import ZcashPaymentURI
 
 @Reducer
 public struct RequestPayment {
@@ -80,11 +81,25 @@ public struct RequestPayment {
                 return .none
                 
             case .shareQRCodeTapped:
-                // encrypt the data
-                let encoder = PropertyListEncoder()
-                encoder.outputFormat = .binary
-                if let data = try? encoder.encode(RPData(address: state.toAddress, ammount: state.zecAmountText, memo: state.memoState.text.data)) {
-                    state.encryptedOutput = data.base64EncodedString()
+                if let recipient = RecipientAddress(value: state.toAddress) {
+                    do {
+                        guard let amount = numberFormatter.number(state.zecAmountText) else {
+                            return .none
+                        }
+                        
+                        let payment = Payment(
+                            recipientAddress: recipient,
+                            amount: try Amount(value: amount.doubleValue),
+                            memo: try MemoBytes(utf8String: state.memoState.text.data),
+                            label: nil,
+                            message: nil,
+                            otherParams: nil
+                        )
+                        
+                        state.encryptedOutput = ZIP321.request(payment, formattingOptions: .useEmptyParamIndex(omitAddressLabel: true))
+                    } catch {
+                        return .none
+                    }
                 }
                 return .none
             }

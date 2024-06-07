@@ -19,6 +19,24 @@
       }
     },
     {
+      "identity" : "bigdecimal",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mgriebling/BigDecimal.git",
+      "state" : {
+        "revision" : "c4e8348c7fbc90f29225d5f8681ce33a16ab33a2",
+        "version" : "2.2.3"
+      }
+    },
+    {
+      "identity" : "bigint",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mgriebling/BigInt.git",
+      "state" : {
+        "revision" : "498d4d290658d7c43a24b9e309c321592dc294f2",
+        "version" : "2.0.10"
+      }
+    },
+    {
       "identity" : "combine-schedulers",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/combine-schedulers",
@@ -361,6 +379,15 @@
       }
     },
     {
+      "identity" : "uint128",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mgriebling/UInt128.git",
+      "state" : {
+        "revision" : "59dac4f14d657fd60bacfdfb7398d38b450af74f",
+        "version" : "3.1.5"
+      }
+    },
+    {
       "identity" : "xctest-dynamic-overlay",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",
@@ -376,6 +403,15 @@
       "state" : {
         "revision" : "f16fbed56fb3ba4f2cc53ead344a2eca77fa5aae",
         "version" : "0.8.1"
+      }
+    },
+    {
+      "identity" : "zcash-swift-payment-uri",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/LukasKorba/zcash-swift-payment-uri",
+      "state" : {
+        "branch" : "public-payments-fix",
+        "revision" : "e5fc6e660dde1a021964cb68223c7d4954c4561d"
       }
     },
     {

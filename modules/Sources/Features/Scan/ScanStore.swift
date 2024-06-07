@@ -18,6 +18,7 @@ import URIParser
 import ZcashLightClientKit
 import Generated
 import ZcashSDKEnvironment
+import ZcashPaymentURI
 
 @Reducer
 public struct Scan {
@@ -61,7 +62,7 @@ public struct Scan {
         case onAppear
         case onDisappear
         case found(RedactableString)
-        case foundRP(RPData)
+        case foundRP(ParserResult)
         case scanFailed(ScanImageResult)
         case scan(RedactableString)
         case torchPressed
