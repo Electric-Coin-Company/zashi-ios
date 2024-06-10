@@ -8,7 +8,6 @@ import LocalAuthenticationHandler
 import Models
 import PrivateDataConsent
 import RecoveryPhraseDisplay
-import RestoreWalletStorage
 import ServerSetup
 import ZcashLightClientKit
 
@@ -25,7 +24,6 @@ public struct AdvancedSettings {
 
         public var deleteWallet: DeleteWallet.State
         public var destination: Destination?
-        public var isRestoringWallet = false
         public var phraseDisplayState: RecoveryPhraseDisplay.State
         public var privateDataConsentState: PrivateDataConsentReducer.State
         public var serverSetupState: ServerSetup.State
@@ -33,14 +31,12 @@ public struct AdvancedSettings {
         public init(
             deleteWallet: DeleteWallet.State,
             destination: Destination? = nil,
-            isRestoringWallet: Bool = false,
             phraseDisplayState: RecoveryPhraseDisplay.State,
             privateDataConsentState: PrivateDataConsentReducer.State,
             serverSetupState: ServerSetup.State
         ) {
             self.deleteWallet = deleteWallet
             self.destination = destination
-            self.isRestoringWallet = isRestoringWallet
             self.phraseDisplayState = phraseDisplayState
             self.privateDataConsentState = privateDataConsentState
             self.serverSetupState = serverSetupState
@@ -52,14 +48,11 @@ public struct AdvancedSettings {
         case deleteWallet(DeleteWallet.Action)
         case phraseDisplay(RecoveryPhraseDisplay.Action)
         case privateDataConsent(PrivateDataConsentReducer.Action)
-        case restoreWalletTask
-        case restoreWalletValue(Bool)
         case serverSetup(ServerSetup.Action)
         case updateDestination(AdvancedSettings.State.Destination?)
     }
 
     @Dependency(\.localAuthentication) var localAuthentication
-    @Dependency(\.restoreWalletStorage) var restoreWalletStorage
 
     public init() { }
 
@@ -95,17 +88,6 @@ public struct AdvancedSettings {
 
             case .updateDestination(let destination):
                 state.destination = destination
-                return .none
-
-            case .restoreWalletTask:
-                return .run { send in
-                    for await value in await restoreWalletStorage.value() {
-                            await send(.restoreWalletValue(value))
-                    }
-                }
-
-            case .restoreWalletValue(let value):
-                state.isRestoringWallet = value
                 return .none
 
             case .serverSetup:

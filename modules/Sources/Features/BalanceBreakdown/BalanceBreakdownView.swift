@@ -17,6 +17,7 @@ import BalanceFormatter
 import SyncProgress
 import WalletBalances
 import Combine
+import WalletStatusPanel
 
 public struct BalanceBreakdownView: View {
     let store: BalanceBreakdownStore
@@ -25,6 +26,7 @@ public struct BalanceBreakdownView: View {
     @Dependency(\.hideBalances) var hideBalances
     @State var isHidden = false
     @State private var cancellable: AnyCancellable?
+    @State var walletStatus = WalletStatus.none
 
     public init(store: BalanceBreakdownStore, tokenName: String) {
         self.store = store
@@ -58,7 +60,7 @@ public struct BalanceBreakdownView: View {
                     }
                     .padding(.horizontal, 30)
 
-                if viewStore.isRestoringWallet {
+                if walletStatus == .restoring {
                     Text(L10n.Balances.restoringWalletWarning)
                         .font(.custom(FontFamily.Inter.medium.name, size: 10))
                         .foregroundColor(Asset.Colors.error.color)
@@ -73,7 +75,7 @@ public struct BalanceBreakdownView: View {
                         action: BalanceBreakdownReducer.Action.syncProgress
                     )
                 )
-                .padding(.top, viewStore.isRestoringWallet ? 0 : 40)
+                .padding(.top, walletStatus == .restoring ? 0 : 40)
                 .padding(.bottom, 25)
                 .navigationLinkEmpty(
                     isActive: viewStore.bindingForPartialProposalError,
@@ -82,6 +84,7 @@ public struct BalanceBreakdownView: View {
                     }
                 )
             }
+            .walletStatusPanel(restoringStatus: $walletStatus)
         }
         .padding(.vertical, 1)
         .applyScreenBackground()
@@ -91,7 +94,6 @@ public struct BalanceBreakdownView: View {
                 action: { .alert($0) }
             )
         )
-        .task { await store.send(.restoreWalletTask).finish() }
         .onAppear {
             store.send(.onAppear)
             cancellable = hideBalances.value().sink { val in

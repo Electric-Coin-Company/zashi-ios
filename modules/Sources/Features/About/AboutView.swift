@@ -77,8 +77,7 @@ public struct AboutView: View {
                     .font(.custom(FontFamily.Archivo.bold.name, size: 14))
             }
             .padding(.horizontal, 70)
-            .restoringWalletBadge(isOn: store.isRestoringWallet, background: .transparent)
-            .task { await store.send(.restoreWalletTask).finish() }
+            .walletStatusPanel(background: .transparent)
             .navigationLinkEmpty(
                 isActive: $store.whatsNewViewBinding,
                 destination: {

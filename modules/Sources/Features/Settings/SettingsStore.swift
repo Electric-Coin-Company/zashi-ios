@@ -7,7 +7,6 @@ import AppVersion
 import Generated
 import Models
 import Pasteboard
-import RestoreWalletStorage
 import SupportDataGenerator
 import ZcashLightClientKit
 
@@ -27,7 +26,6 @@ public struct SettingsReducer: Reducer {
         public var appVersion = ""
         public var appBuild = ""
         public var destination: Destination?
-        public var isRestoringWallet = false
         public var supportData: SupportData?
         
         public init(
@@ -36,7 +34,6 @@ public struct SettingsReducer: Reducer {
             appVersion: String = "",
             appBuild: String = "",
             destination: Destination? = nil,
-            isRestoringWallet: Bool = false,
             supportData: SupportData? = nil
         ) {
             self.aboutState = aboutState
@@ -44,7 +41,6 @@ public struct SettingsReducer: Reducer {
             self.appVersion = appVersion
             self.appBuild = appBuild
             self.destination = destination
-            self.isRestoringWallet = isRestoringWallet
             self.supportData = supportData
         }
     }
@@ -55,8 +51,6 @@ public struct SettingsReducer: Reducer {
         case alert(PresentationAction<Action>)
         case copyEmail
         case onAppear
-        case restoreWalletTask
-        case restoreWalletValue(Bool)
         case sendSupportMail
         case sendSupportMailFinished
         case updateDestination(SettingsReducer.State.Destination?)
@@ -64,7 +58,6 @@ public struct SettingsReducer: Reducer {
 
     @Dependency(\.appVersion) var appVersion
     @Dependency(\.pasteboard) var pasteboard
-    @Dependency(\.restoreWalletStorage) var restoreWalletStorage
 
     public init() { }
 
@@ -93,17 +86,6 @@ public struct SettingsReducer: Reducer {
                 
             case .updateDestination(let destination):
                 state.destination = destination
-                return .none
-
-            case .restoreWalletTask:
-                return .run { send in
-                    for await value in await restoreWalletStorage.value() {
-                            await send(.restoreWalletValue(value))
-                    }
-                }
-
-            case .restoreWalletValue(let value):
-                state.isRestoringWallet = value
                 return .none
 
             case .sendSupportMail:

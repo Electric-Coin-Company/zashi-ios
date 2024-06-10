@@ -158,8 +158,6 @@ public enum L10n {
     public static let no = L10n.tr("Localizable", "general.no", fallback: "No")
     /// Ok
     public static let ok = L10n.tr("Localizable", "general.ok", fallback: "Ok")
-    /// [RESTORING YOUR WALLET…]
-    public static let restoringWallet = L10n.tr("Localizable", "general.restoringWallet", fallback: "[RESTORING YOUR WALLET…]")
     /// Save
     public static let save = L10n.tr("Localizable", "general.save", fallback: "Save")
     /// Send
@@ -172,6 +170,16 @@ public enum L10n {
     public static let unknown = L10n.tr("Localizable", "general.unknown", fallback: "Unknown")
     /// Yes
     public static let yes = L10n.tr("Localizable", "general.yes", fallback: "Yes")
+    public enum Alert {
+      /// Heads up
+      public static let caution = L10n.tr("Localizable", "general.alert.caution", fallback: "Heads up")
+      /// Continue
+      public static let `continue` = L10n.tr("Localizable", "general.alert.continue", fallback: "Continue")
+      /// Ignore
+      public static let ignore = L10n.tr("Localizable", "general.alert.ignore", fallback: "Ignore")
+      /// Warning
+      public static let warning = L10n.tr("Localizable", "general.alert.warning", fallback: "Warning")
+    }
   }
   public enum Home {
     /// Upgrading databases…
@@ -387,6 +395,12 @@ public enum L10n {
         }
       }
     }
+    public enum ExistingWallet {
+      /// We identified a Zashi database backup on this device. If you create a new wallet, you will lose access to this database backup and if you try to restore later, some information may be lost.
+      public static let message = L10n.tr("Localizable", "root.existingWallet.Message", fallback: "We identified a Zashi database backup on this device. If you create a new wallet, you will lose access to this database backup and if you try to restore later, some information may be lost.")
+      /// Restore
+      public static let restore = L10n.tr("Localizable", "root.existingWallet.restore", fallback: "Restore")
+    }
     public enum Initialization {
       public enum Alert {
         public enum CantCreateNewWallet {
@@ -436,6 +450,20 @@ public enum L10n {
           public static let title = L10n.tr("Localizable", "root.initialization.alert.wipeFailed.title", fallback: "Nuke of the wallet failed")
         }
       }
+    }
+    public enum SeedPhrase {
+      public enum DifferentSeed {
+        /// This recovery phrase doesn't match the Zashi database backup saved on this device. If you proceed, you will lose access to this database backup and if you try to restore later, some information may be lost.
+        public static let message = L10n.tr("Localizable", "root.seedPhrase.differentSeed.message", fallback: "This recovery phrase doesn't match the Zashi database backup saved on this device. If you proceed, you will lose access to this database backup and if you try to restore later, some information may be lost.")
+        /// Try Again
+        public static let tryAgain = L10n.tr("Localizable", "root.seedPhrase.differentSeed.tryAgain", fallback: "Try Again")
+      }
+    }
+    public enum ServiceUnavailable {
+      /// Your current server is experiencing difficulties. Check your device connection, and/or navigate to Advanced Settings to choose a different server.
+      public static let message = L10n.tr("Localizable", "root.serviceUnavailable.Message", fallback: "Your current server is experiencing difficulties. Check your device connection, and/or navigate to Advanced Settings to choose a different server.")
+      /// Switch server
+      public static let switchServer = L10n.tr("Localizable", "root.serviceUnavailable.switchServer", fallback: "Switch server")
     }
   }
   public enum Scan {
@@ -663,6 +691,12 @@ public enum L10n {
     public static let transactionFee = L10n.tr("Localizable", "transactionList.transactionFee", fallback: "Transaction Fee")
     /// Transaction ID
     public static let transactionId = L10n.tr("Localizable", "transactionList.transactionId", fallback: "Transaction ID")
+  }
+  public enum WalletStatus {
+    /// [DISCONNECTED…]
+    public static let disconnected = L10n.tr("Localizable", "walletStatus.disconnected", fallback: "[DISCONNECTED…]")
+    /// [RESTORING YOUR WALLET…]
+    public static let restoringWallet = L10n.tr("Localizable", "walletStatus.restoringWallet", fallback: "[RESTORING YOUR WALLET…]")
   }
   public enum WhatsNew {
     /// Zashi Version %@

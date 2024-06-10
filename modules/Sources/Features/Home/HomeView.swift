@@ -9,11 +9,14 @@ import SyncProgress
 import Utils
 import Models
 import WalletBalances
+import WalletStatusPanel
 
 public struct HomeView: View {
     let store: HomeStore
     let tokenName: String
     
+    @State var walletStatus = WalletStatus.none
+
     public init(store: HomeStore, tokenName: String) {
         self.store = store
         self.tokenName = tokenName
@@ -32,7 +35,7 @@ public struct HomeView: View {
                 )
                 .padding(.top, 1)
 
-                if viewStore.isRestoringWallet {
+                if walletStatus == .restoring {
                     SyncProgressView(
                         store: store.scope(
                             state: \.syncProgressState,
@@ -47,6 +50,7 @@ public struct HomeView: View {
                 
                 TransactionListView(store: store.historyStore(), tokenName: tokenName)
             }
+            .walletStatusPanel(restoringStatus: $walletStatus)
             .applyScreenBackground()
             .onAppear {
                 viewStore.send(.onAppear)
@@ -65,7 +69,6 @@ public struct HomeView: View {
                 action: { .alert($0) }
             ))
         }
-        .task { await store.send(.restoreWalletTask).finish() }
     }
 }
 
@@ -79,7 +82,6 @@ struct HomeView_Previews: PreviewProvider {
                     HomeStore(
                         initialState:
                                 .init(
-                                    isRestoringWallet: true,
                                     scanState: .initial,
                                     syncProgressState: .init(
                                         lastKnownSyncPercentage: Float(0.43),

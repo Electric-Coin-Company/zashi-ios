@@ -10,7 +10,6 @@ import ReviewRequest
 import TransactionList
 import Scan
 import SyncProgress
-import RestoreWalletStorage
 import WalletBalances
 
 public typealias HomeStore = Store<HomeReducer.State, HomeReducer.Action>
@@ -23,7 +22,6 @@ public struct HomeReducer: Reducer {
     public struct State: Equatable {
         @PresentationState public var alert: AlertState<Action>?
         public var canRequestReview = false
-        public var isRestoringWallet = false
         public var migratingDatabase = true
         public var scanState: Scan.State
         public var syncProgressState: SyncProgress.State
@@ -33,7 +31,6 @@ public struct HomeReducer: Reducer {
 
         public init(
             canRequestReview: Bool = false,
-            isRestoringWallet: Bool = false,
             migratingDatabase: Bool = true,
             scanState: Scan.State,
             syncProgressState: SyncProgress.State,
@@ -42,7 +39,6 @@ public struct HomeReducer: Reducer {
             walletConfig: WalletConfig
         ) {
             self.canRequestReview = canRequestReview
-            self.isRestoringWallet = isRestoringWallet
             self.migratingDatabase = migratingDatabase
             self.scanState = scanState
             self.syncProgressState = syncProgressState
@@ -58,8 +54,6 @@ public struct HomeReducer: Reducer {
         case onAppear
         case onDisappear
         case resolveReviewRequest
-        case restoreWalletTask
-        case restoreWalletValue(Bool)
         case retrySync
         case reviewRequestFinished
         case showSynchronizerErrorAlert(ZcashError)
@@ -72,7 +66,6 @@ public struct HomeReducer: Reducer {
     }
     
     @Dependency(\.mainQueue) var mainQueue
-    @Dependency(\.restoreWalletStorage) var restoreWalletStorage
     @Dependency(\.reviewRequest) var reviewRequest
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
@@ -124,17 +117,6 @@ public struct HomeReducer: Reducer {
                 }
                 return .none
                 
-            case .restoreWalletTask:
-                return .run { send in
-                    for await value in await restoreWalletStorage.value() {
-                        await send(.restoreWalletValue(value))
-                    }
-                }
-
-            case .restoreWalletValue(let value):
-                state.isRestoringWallet = value
-                return .none
-
             case .reviewRequestFinished:
                 state.canRequestReview = false
                 return .none

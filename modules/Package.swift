@@ -57,7 +57,6 @@ let package = Package(
         .library(name: "SupportDataGenerator", targets: ["SupportDataGenerator"]),
         .library(name: "SyncProgress", targets: ["SyncProgress"]),
         .library(name: "ReadTransactionsStorage", targets: ["ReadTransactionsStorage"]),
-        .library(name: "RestoreWalletStorage", targets: ["RestoreWalletStorage"]),
         .library(name: "Tabs", targets: ["Tabs"]),
         .library(name: "TransactionList", targets: ["TransactionList"]),
         .library(name: "UIComponents", targets: ["UIComponents"]),
@@ -67,6 +66,7 @@ let package = Package(
         .library(name: "Utils", targets: ["Utils"]),
         .library(name: "WalletBalances", targets: ["WalletBalances"]),
         .library(name: "WalletConfigProvider", targets: ["WalletConfigProvider"]),
+        .library(name: "WalletStatusPanel", targets: ["WalletStatusPanel"]),
         .library(name: "WalletStorage", targets: ["WalletStorage"]),
         .library(name: "Welcome", targets: ["Welcome"]),
         .library(name: "WhatsNew", targets: ["WhatsNew"]),
@@ -79,7 +79,7 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-case-paths", from: "1.3.2"),
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.6.0"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.4"),
-        .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.1.8"),
+        .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.1.9"),
         .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.24.0")
     ],
     targets: [
@@ -88,8 +88,10 @@ let package = Package(
             dependencies: [
                 "AppVersion",
                 "Generated",
-                "RestoreWalletStorage",
+                "Models",
+                "WalletStatusPanel",
                 "UIComponents",
+                "WalletStatusPanel",
                 "WhatsNew",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
@@ -131,12 +133,13 @@ let package = Package(
                 "Models",
                 "NumberFormatter",
                 "PartialProposalError",
-                "RestoreWalletStorage",
+                "WalletStatusPanel",
                 "SDKSynchronizer",
                 "SyncProgress",
                 "UIComponents",
                 "Utils",
                 "WalletBalances",
+                "WalletStatusPanel",
                 "WalletStorage",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -266,7 +269,7 @@ let package = Package(
             dependencies: [
                 "Generated",
                 "Models",
-                "RestoreWalletStorage",
+                "WalletStatusPanel",
                 "ReviewRequest",
                 "Scan",
                 "Settings",
@@ -276,6 +279,7 @@ let package = Package(
                 "Utils",
                 "TransactionList",
                 "WalletBalances",
+                "WalletStatusPanel",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
@@ -389,9 +393,10 @@ let package = Package(
                 "DatabaseFiles",
                 "Generated",
                 "Models",
-                "RestoreWalletStorage",
+                "WalletStatusPanel",
                 "UIComponents",
                 "Utils",
+                "WalletStatusPanel",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
@@ -418,13 +423,6 @@ let package = Package(
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
             path: "Sources/Features/RecoveryPhraseDisplay"
-        ),
-        .target(
-            name: "RestoreWalletStorage",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ],
-            path: "Sources/Dependencies/RestoreWalletStorage"
         ),
         .target(
             name: "RestoreInfo",
@@ -464,9 +462,10 @@ let package = Package(
                 "Pasteboard",
                 "ReadTransactionsStorage",
                 "RecoveryPhraseDisplay",
-                "RestoreWalletStorage",
+                "WalletStatusPanel",
                 "Sandbox",
                 "SDKSynchronizer",
+                "ServerSetup",
                 "Tabs",
                 "UIComponents",
                 "UserDefaults",
@@ -610,7 +609,7 @@ let package = Package(
                 "Pasteboard",
                 "PrivateDataConsent",
                 "RecoveryPhraseDisplay",
-                "RestoreWalletStorage",
+                "WalletStatusPanel",
                 "ServerSetup",
                 "SupportDataGenerator",
                 "UIComponents",
@@ -656,7 +655,7 @@ let package = Package(
                 "Generated",
                 "HideBalances",
                 "Home",
-                "RestoreWalletStorage",
+                "WalletStatusPanel",
                 "SendConfirmation",
                 "SendFlow",
                 "Settings",
@@ -690,6 +689,7 @@ let package = Package(
                 "Generated",
                 "HideBalances",
                 "NumberFormatter",
+                "WalletStatusPanel",
                 "SupportDataGenerator",
                 "Utils",
                 "ZcashSDKEnvironment"
@@ -751,6 +751,14 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Dependencies/WalletConfigProvider"
+        ),
+        .target(
+            name: "WalletStatusPanel",
+            dependencies: [
+                "Generated",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Dependencies/WalletStatusPanel"
         ),
         .target(
             name: "WalletStorage",

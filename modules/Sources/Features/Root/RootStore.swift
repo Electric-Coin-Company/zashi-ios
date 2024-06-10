@@ -20,10 +20,11 @@ import CrashReporter
 import ReadTransactionsStorage
 import RecoveryPhraseDisplay
 import BackgroundTasks
-import RestoreWalletStorage
+import WalletStatusPanel
 import Utils
 import UserDefaults
 import HideBalances
+import ServerSetup
 
 public typealias RootStore = Store<RootReducer.State, RootReducer.Action>
 public typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
@@ -50,9 +51,12 @@ public struct RootReducer: Reducer {
         public var onboardingState: OnboardingFlowReducer.State
         public var phraseDisplayState: RecoveryPhraseDisplay.State
         public var sandboxState: SandboxReducer.State
+        public var serverSetupState: ServerSetup.State
+        public var serverSetupViewBinding: Bool = false
         public var splashAppeared = false
         public var tabsState: TabsReducer.State
         public var walletConfig: WalletConfig
+        public var wasRestoringWhenDisconnected = false
         public var welcomeState: WelcomeReducer.State
         
         public init(
@@ -68,6 +72,7 @@ public struct RootReducer: Reducer {
             phraseDisplayState: RecoveryPhraseDisplay.State,
             sandboxState: SandboxReducer.State,
             tabsState: TabsReducer.State,
+            serverSetupState: ServerSetup.State = .initial,
             walletConfig: WalletConfig,
             welcomeState: WelcomeReducer.State
         ) {
@@ -82,6 +87,7 @@ public struct RootReducer: Reducer {
             self.notEnoughFreeSpaceState = notEnoughFreeSpaceState
             self.phraseDisplayState = phraseDisplayState
             self.sandboxState = sandboxState
+            self.serverSetupState = serverSetupState
             self.tabsState = tabsState
             self.walletConfig = walletConfig
             self.welcomeState = welcomeState
@@ -110,6 +116,8 @@ public struct RootReducer: Reducer {
         case splashFinished
         case splashRemovalRequested
         case sandbox(SandboxReducer.Action)
+        case serverSetup(ServerSetup.Action)
+        case serverSetupBindingUpdated(Bool)
         case synchronizerStateChanged(RedactableSynchronizerState)
         case updateStateAfterConfigUpdate(WalletConfig)
         case walletConfigLoaded(WalletConfig)
@@ -132,13 +140,17 @@ public struct RootReducer: Reducer {
     @Dependency(\.walletConfigProvider) var walletConfigProvider
     @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.readTransactionsStorage) var readTransactionsStorage
-    @Dependency(\.restoreWalletStorage) var restoreWalletStorage
+    @Dependency(\.walletStatusPanel) var walletStatusPanel
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public init() { }
     
     @ReducerBuilder<State, Action>
     var core: some Reducer<State, Action> {
+        Scope(state: \.serverSetupState, action: /Action.serverSetup) {
+            ServerSetup()
+        }
+
         Scope(state: \.tabsState, action: /Action.tabs) {
             TabsReducer()
         }
@@ -181,7 +193,14 @@ public struct RootReducer: Reducer {
             case .alert(.dismiss):
                 state.alert = nil
                 return .none
-
+            
+            case .serverSetup:
+                return .none
+                
+            case .serverSetupBindingUpdated(let newValue):
+                state.serverSetupViewBinding = newValue
+                return .none
+                
             default: return .none
             }
         }
@@ -314,31 +333,46 @@ extension AlertState where Action == RootReducer.Action {
     
     public static func differentSeed() -> AlertState {
         AlertState {
-            TextState("Warning")
+            TextState(L10n.General.Alert.warning)
         } actions: {
             ButtonState(role: .cancel, action: .alert(.dismiss)) {
-                TextState("Try Again")
+                TextState(L10n.Root.SeedPhrase.DifferentSeed.tryAgain)
             }
             ButtonState(role: .destructive, action: .initialization(.nukeWallet)) {
-                TextState("Continue")
+                TextState(L10n.General.Alert.continue)
             }
         } message: {
-            TextState("This recovery phrase doesn't match the Zashi database backup saved on this device. If you proceed, you will lose access to this database backup and if you try to restore later, some information may be lost.")
+            TextState(L10n.Root.SeedPhrase.DifferentSeed.message)
         }
     }
     
     public static func existingWallet() -> AlertState {
         AlertState {
-            TextState("Warning")
+            TextState(L10n.General.Alert.warning)
         } actions: {
             ButtonState(role: .cancel, action: .initialization(.restoreExistingWallet)) {
-                TextState("Restore")
+                TextState(L10n.Root.ExistingWallet.restore)
             }
             ButtonState(role: .destructive, action: .initialization(.nukeWallet)) {
-                TextState("Continue")
+                TextState(L10n.General.Alert.continue)
             }
         } message: {
-            TextState("We identified a Zashi database backup on this device. If you create a new wallet, you will lose access to this database backup and if you try to restore later, some information may be lost.")
+            TextState(L10n.Root.ExistingWallet.message)
+        }
+    }
+    
+    public static func serviceUnavailable() -> AlertState {
+        AlertState {
+            TextState(L10n.General.Alert.caution)
+        } actions: {
+            ButtonState(action: .alert(.dismiss)) {
+                TextState(L10n.General.Alert.ignore)
+            }
+            ButtonState(action: .destination(.serverSwitch)) {
+                TextState(L10n.Root.ServiceUnavailable.switchServer)
+            }
+        } message: {
+            TextState(L10n.Root.ServiceUnavailable.message)
         }
     }
 }
@@ -390,5 +424,12 @@ extension RootStore {
             RootReducer()
                 .logging()
         }
+    }
+    
+    func serverSetupStore() -> StoreOf<ServerSetup> {
+        self.scope(
+            state: \.serverSetupState,
+            action: RootReducer.Action.serverSetup
+        )
     }
 }

@@ -37,110 +37,107 @@ public struct TabsView: View {
     public var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
             WithViewStore(self.store, observe: \.selectedTab) { tab in
-                WithViewStore(self.store, observe: \.isRestoringWallet) { isRestoringWallet in
-                    ZStack {
-                        TabView(selection: tab.binding(send: TabsReducer.Action.selectedTabChanged)) {
-                            HomeView(
-                                store: self.store.scope(
-                                    state: \.homeState,
-                                    action: TabsReducer.Action.home
-                                ),
-                                tokenName: tokenName
-                            )
-                            .tag(TabsReducer.State.Tab.account)
-                            
-                            SendFlowView(
-                                store: self.store.scope(
-                                    state: \.sendState,
-                                    action: TabsReducer.Action.send
-                                ),
-                                tokenName: tokenName
-                            )
-                            .tag(TabsReducer.State.Tab.send)
-                            
-                            AddressDetailsView(
-                                store: self.store.scope(
-                                    state: \.addressDetailsState,
-                                    action: TabsReducer.Action.addressDetails
-                                ),
-                                networkType: networkType
-                            )
-                            .tag(TabsReducer.State.Tab.receive)
-                            
-                            BalanceBreakdownView(
-                                store: self.store.scope(
-                                    state: \.balanceBreakdownState,
-                                    action: TabsReducer.Action.balanceBreakdown
-                                ),
-                                tokenName: tokenName
-                            )
-                            .tag(TabsReducer.State.Tab.balances)
+                ZStack {
+                    TabView(selection: tab.binding(send: TabsReducer.Action.selectedTabChanged)) {
+                        HomeView(
+                            store: self.store.scope(
+                                state: \.homeState,
+                                action: TabsReducer.Action.home
+                            ),
+                            tokenName: tokenName
+                        )
+                        .tag(TabsReducer.State.Tab.account)
+                        
+                        SendFlowView(
+                            store: self.store.scope(
+                                state: \.sendState,
+                                action: TabsReducer.Action.send
+                            ),
+                            tokenName: tokenName
+                        )
+                        .tag(TabsReducer.State.Tab.send)
+                        
+                        AddressDetailsView(
+                            store: self.store.scope(
+                                state: \.addressDetailsState,
+                                action: TabsReducer.Action.addressDetails
+                            ),
+                            networkType: networkType
+                        )
+                        .tag(TabsReducer.State.Tab.receive)
+                        
+                        BalanceBreakdownView(
+                            store: self.store.scope(
+                                state: \.balanceBreakdownState,
+                                action: TabsReducer.Action.balanceBreakdown
+                            ),
+                            tokenName: tokenName
+                        )
+                        .tag(TabsReducer.State.Tab.balances)
+                    }
+                    
+                    VStack(spacing: 0) {
+                        Spacer()
+                        
+                        if tab.state != .account {
+                            Asset.Colors.shade30.color
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 1)
+                                .opacity(0.15)
                         }
                         
-                        VStack(spacing: 0) {
-                            Spacer()
-                            
-                            if tab.state != .account {
-                                Asset.Colors.shade30.color
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 1)
-                                    .opacity(0.15)
-                            }
-                            
-                            HStack {
-                                ForEach((TabsReducer.State.Tab.allCases), id: \.self) { item in
-                                    Button {
-                                        store.send(.selectedTabChanged(item), animation: .easeInOut)
-                                    } label: {
-                                        VStack {
-                                            if tab.state == item {
-                                                Text("\(item.title)")
-                                                    .font(.custom(FontFamily.Archivo.black.name, size: 12))
-                                                    .foregroundColor(Asset.Colors.primary.color)
-                                                Rectangle()
-                                                    .frame(height: 2)
-                                                    .foregroundColor(Asset.Colors.primaryTint.color)
-                                                    .matchedGeometryEffect(id: "Tabs", in: tabsID, properties: .frame)
-                                            } else {
-                                                Text("\(item.title)")
-                                                    .font(.custom(FontFamily.Archivo.regular.name, size: 12))
-                                                    .foregroundColor(Asset.Colors.primary.color)
-                                                Rectangle()
-                                                    .frame(height: 2)
-                                                    .foregroundColor(.clear)
-                                            }
+                        HStack {
+                            ForEach((TabsReducer.State.Tab.allCases), id: \.self) { item in
+                                Button {
+                                    store.send(.selectedTabChanged(item), animation: .easeInOut)
+                                } label: {
+                                    VStack {
+                                        if tab.state == item {
+                                            Text("\(item.title)")
+                                                .font(.custom(FontFamily.Archivo.black.name, size: 12))
+                                                .foregroundColor(Asset.Colors.primary.color)
+                                            Rectangle()
+                                                .frame(height: 2)
+                                                .foregroundColor(Asset.Colors.primaryTint.color)
+                                                .matchedGeometryEffect(id: "Tabs", in: tabsID, properties: .frame)
+                                        } else {
+                                            Text("\(item.title)")
+                                                .font(.custom(FontFamily.Archivo.regular.name, size: 12))
+                                                .foregroundColor(Asset.Colors.primary.color)
+                                            Rectangle()
+                                                .frame(height: 2)
+                                                .foregroundColor(.clear)
                                         }
-                                        .frame(minHeight: 50)
                                     }
-                                    
-                                    if item.rawValue < TabsReducer.State.Tab.allCases.count-1 {
-                                        Spacer()
-                                    }
+                                    .frame(minHeight: 50)
+                                }
+                                
+                                if item.rawValue < TabsReducer.State.Tab.allCases.count-1 {
+                                    Spacer()
                                 }
                             }
-                            .padding(.horizontal, 40)
-                            .background(Asset.Colors.background.color)
                         }
-                        .ignoresSafeArea(.keyboard)
-                        .navigationLinkEmpty(
-                            isActive: viewStore.bindingForDestination(.sendConfirmation),
-                            destination: {
-                                SendConfirmationView(
-                                    store: store.sendConfirmationStore(),
-                                    tokenName: tokenName
-                                )
-                            }
-                        )
+                        .padding(.horizontal, 40)
+                        .background(Asset.Colors.background.color)
                     }
-                    .navigationBarTitleDisplayMode(.inline)
-                    .navigationBarItems(trailing: settingsButton(store))
-                    .navigationBarItems(leading: hideBalancesButton(store, tab: tab.state))
-                    .zashiTitle { navBarView(tab.state) }
-                    .restoringWalletBadge(isOn: isRestoringWallet.state)
-                    .task { await store.send(.restoreWalletTask).finish() }
-                    .onAppear {
-                        areBalancesHidden = hideBalances.value().value
-                    }
+                    .ignoresSafeArea(.keyboard)
+                    .navigationLinkEmpty(
+                        isActive: viewStore.bindingForDestination(.sendConfirmation),
+                        destination: {
+                            SendConfirmationView(
+                                store: store.sendConfirmationStore(),
+                                tokenName: tokenName
+                            )
+                        }
+                    )
+                }
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarItems(trailing: settingsButton(store))
+                .navigationBarItems(leading: hideBalancesButton(store, tab: tab.state))
+                .zashiTitle { navBarView(tab.state) }
+                .walletStatusPanel()
+                .onAppear {
+                    areBalancesHidden = hideBalances.value().value
                 }
             }
         }

@@ -11,6 +11,8 @@ import ZcashLightClientKit
 import Deeplink
 import DerivationTool
 
+import SwiftUI
+
 /// In this file is a collection of helpers that control all state and action related operations
 /// for the `RootReducer` with a connection to the UI navigation.
 extension RootReducer {
@@ -44,6 +46,7 @@ extension RootReducer {
         case deeplinkSend(Zatoshi, String, String)
         case deeplinkFailed(URL, ZcashError)
         case updateDestination(RootReducer.DestinationState.Destination)
+        case serverSwitch
     }
 
     // swiftlint:disable:next cyclomatic_complexity
@@ -52,9 +55,12 @@ extension RootReducer {
             switch action {
             case let .destination(.updateDestination(destination)):
                 state.destinationState.destination = destination
+                
+                return .none
 
             case .sandbox(.reset):
                 state.destinationState.destination = .startup
+                return .none
 
             case .destination(.deeplink(let url)):
                 // get the latest synchronizer state
@@ -97,6 +103,10 @@ extension RootReducer {
                 state.alert = AlertState.failedToProcessDeeplink(url, error)
                 return .none
 
+            case .destination(.serverSwitch):
+                state.serverSetupViewBinding = true
+                return .none
+
             case .splashRemovalRequested:
                 return .run { send in
                     try await mainQueue.sleep(for: .seconds(0.01))
@@ -109,11 +119,9 @@ extension RootReducer {
 
             case .tabs, .initialization, .onboarding, .sandbox, .updateStateAfterConfigUpdate, .alert, .phraseDisplay, .synchronizerStateChanged,
                     .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .exportLogs, .confirmationDialog,
-                    .notEnoughFreeSpace:
+                    .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated:
                 return .none
             }
-            
-            return .none
         }
     }
 }

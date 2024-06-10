@@ -84,7 +84,7 @@ public struct AdvancedSettingsView: View {
                     .padding(.bottom, 50)
                     .padding(.horizontal, 20)
             }
-            .restoringWalletBadge(isOn: store.isRestoringWallet)
+            .walletStatusPanel()
         }
         .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground()
@@ -96,7 +96,6 @@ public struct AdvancedSettingsView: View {
                 .frame(width: 62, height: 17)
                 .foregroundColor(Asset.Colors.primary.color)
         }
-        .task { await store.send(.restoreWalletTask).finish() }
     }
 }
 
