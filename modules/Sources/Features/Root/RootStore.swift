@@ -32,6 +32,7 @@ public typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action
 public struct RootReducer: Reducer {
     let CancelId = UUID()
     let CancelStateId = UUID()
+    let CancelBatteryStateId = UUID()
     let SynchronizerCancelId = UUID()
     let WalletConfigCancelId = UUID()
     let DidFinishLaunchingId = UUID()
@@ -101,6 +102,7 @@ public struct RootReducer: Reducer {
         }
 
         case alert(PresentationAction<Action>)
+        case batteryStateChanged(Notification)
         case binding(BindingAction<RootReducer.State>)
         case confirmationDialog(PresentationAction<ConfirmationDialog>)
         case debug(DebugAction)
@@ -124,6 +126,7 @@ public struct RootReducer: Reducer {
         case welcome(WelcomeReducer.Action)
     }
 
+    @Dependency(\.autolockHandler) var autolockHandler
     @Dependency(\.crashReporter) var crashReporter
     @Dependency(\.databaseFiles) var databaseFiles
     @Dependency(\.deeplink) var deeplink
@@ -199,6 +202,10 @@ public struct RootReducer: Reducer {
                 
             case .serverSetupBindingUpdated(let newValue):
                 state.serverSetupViewBinding = newValue
+                return .none
+                
+            case .batteryStateChanged:
+                autolockHandler.value(walletStatusPanel.value().value == .restoring)
                 return .none
                 
             default: return .none

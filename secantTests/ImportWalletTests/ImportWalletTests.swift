@@ -51,7 +51,7 @@ class ImportWalletTests: XCTestCase {
 
     func testMaxWordsInvalidMnemonic() async throws {
         let store = TestStore(
-            initialState: ImportWalletReducer.State(maxWordsCount: 24)
+            initialState: ImportWalletReducer.State(maxWordsCount: 24, restoreInfoState: .initial)
         ) {
             ImportWalletReducer()
         }
@@ -73,7 +73,7 @@ class ImportWalletTests: XCTestCase {
 
     func testValidMnemonic() async throws {
         let store = TestStore(
-            initialState: ImportWalletReducer.State(maxWordsCount: 24)
+            initialState: ImportWalletReducer.State(maxWordsCount: 24, restoreInfoState: .initial)
         ) {
             ImportWalletReducer()
         }

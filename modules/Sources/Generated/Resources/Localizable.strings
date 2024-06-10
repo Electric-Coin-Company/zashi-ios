@@ -46,12 +46,14 @@
 "importWallet.enterPlaceholder" = "privacy dignity freedom ...";
 
 // MARK: - Restore Info
-"restoreInfo.title" = "Your wallet has been successfully restored!*";
+"restoreInfo.title" = "Keep Zashi open!";
+"restoreInfo.subTitle" = "Your wallet has been successfully restored and is now syncing";
 "restoreInfo.tips" = "Syncing Tips:";
-"restoreInfo.tip1" = "Zashi needs to stay open in order to  continue syncing.";
+"restoreInfo.tip1" = "Zashi needs to stay open in order to continue syncing.";
 "restoreInfo.tip2" = "To prevent interruption, plug your open phone into a power source.";
 "restoreInfo.tip3" = "Keep your open phone in a secure place.";
-"restoreInfo.note" = "*Note: During the initial sync your funds cannot be sent or spent. Depending on the age of your wallet, it may take a few hours to fully sync.";
+"restoreInfo.note" = "Note: ";
+"restoreInfo.noteInfo" = "During the initial sync your funds cannot be sent or spent. Depending on the age of your wallet, it may take a few hours to fully sync.";
 "restoreInfo.gotIt" = "Got it!";
 
 // MARK: - Tabs

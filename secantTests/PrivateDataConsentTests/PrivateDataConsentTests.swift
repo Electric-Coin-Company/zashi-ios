@@ -115,33 +115,6 @@ final class PrivateDataConsentTests: XCTestCase {
         await store.finish()
     }
     
-    func testRestoreWalletSubscription() async throws {
-        var initialState = PrivateDataConsentReducer.State.initial
-        initialState.isRestoringWallet = false
-
-        let store = TestStore(
-            initialState: initialState
-        ) {
-            PrivateDataConsentReducer()
-        }
-
-        store.dependencies.walletStatusPanel = .noOp
-        store.dependencies.walletStatusPanel.value = {
-            AsyncStream { continuation in
-                continuation.yield(true)
-                continuation.finish()
-            }
-        }
-        
-        await store.send(.restoreWalletTask)
-        
-        await store.receive(.restoreWalletValue(true)) { state in
-            state.isRestoringWallet = true
-        }
-        
-        await store.finish()
-    }
-    
     func testExportURLs_logsOnly() async throws {
         let URLdb = URL(string: "http://db.url")!
         let URLlogs = URL(string: "http://logs.url")!
