@@ -293,7 +293,14 @@ extension RootReducer {
                 
             case .initialization(.initializationSuccessfullyDone(let uAddress)):
                 state.tabsState.addressDetailsState.uAddress = uAddress
-                return .send(.initialization(.registerForSynchronizersUpdate))
+                return .merge(
+                    .send(.initialization(.registerForSynchronizersUpdate)),
+                    .publisher {
+                        autolockHandler.batteryStatePublisher()
+                            .map(RootReducer.Action.batteryStateChanged)
+                    }
+                    .cancellable(id: CancelBatteryStateId, cancelInFlight: true)
+                )
                 
             case .initialization(.checkBackupPhraseValidation):
                 do {
@@ -481,7 +488,7 @@ extension RootReducer {
                 return Effect.send(.initialization(.initializeSDK(.newWallet)))
                 
             case .tabs, .destination, .onboarding, .sandbox, .phraseDisplay, .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated,
-                    .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, .confirmationDialog:
+                    .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, .confirmationDialog, .batteryStateChanged:
                 return .none
             }
         }

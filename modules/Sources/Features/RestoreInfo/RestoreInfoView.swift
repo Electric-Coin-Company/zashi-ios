@@ -27,21 +27,28 @@ public struct RestoreInfoView: View {
                 Asset.Assets.restoreInfo.image
                     .renderingMode(.template)
                     .resizable()
-                    .frame(width: 106, height: 168)
+                    .frame(width: 90, height: 172)
                     .foregroundColor(Asset.Colors.primary.color)
-                    .padding(.bottom, 30)
-                
+
+                Text(L10n.RestoreInfo.subTitle)
+                    .font(.custom(FontFamily.Archivo.semiBold.name, size: 16))
+                    .multilineTextAlignment(.center)
+                    .padding(.vertical, 30)
+                    .padding(.horizontal, 50)
+
                 VStack(alignment: .leading) {
                     Text(L10n.RestoreInfo.tips)
-                        .font(.custom(FontFamily.Inter.bold.name, size: 14))
+                        .font(.custom(FontFamily.Inter.bold.name, size: 12))
                     
                     bulletpoint(L10n.RestoreInfo.tip1)
                     bulletpoint(L10n.RestoreInfo.tip2)
                     bulletpoint(L10n.RestoreInfo.tip3)
+                        .padding(.bottom, 20)
 
                     Text(L10n.RestoreInfo.note)
-                        .font(.custom(FontFamily.Inter.medium.name, size: 11))
-                        .padding(.top, 20)
+                        .font(.custom(FontFamily.Inter.bold.name, size: 11))
+                    + Text(L10n.RestoreInfo.noteInfo)
+                        .font(.custom(FontFamily.Inter.regular.name, size: 11))
                 }
                 .padding(.horizontal, 30)
                 
@@ -69,7 +76,7 @@ public struct RestoreInfoView: View {
                 .padding(.leading, 8)
 
             Text(text)
-                .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                .font(.custom(FontFamily.Inter.regular.name, size: 12))
         }
         .padding(.bottom, 5)
     }

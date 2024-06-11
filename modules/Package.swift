@@ -13,6 +13,7 @@ let package = Package(
         .library(name: "AddressDetails", targets: ["AddressDetails"]),
         .library(name: "AppVersion", targets: ["AppVersion"]),
         .library(name: "AudioServices", targets: ["AudioServices"]),
+        .library(name: "AutolockHandler", targets: ["AutolockHandler"]),
         .library(name: "BalanceBreakdown", targets: ["BalanceBreakdown"]),
         .library(name: "BalanceFormatter", targets: ["BalanceFormatter"]),
         .library(name: "CaptureDevice", targets: ["CaptureDevice"]),
@@ -122,6 +123,13 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Dependencies/AudioServices"
+        ),
+        .target(
+            name: "AutolockHandler",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Dependencies/AutolockHandler"
         ),
         .target(
             name: "BalanceBreakdown",
@@ -755,6 +763,7 @@ let package = Package(
         .target(
             name: "WalletStatusPanel",
             dependencies: [
+                "AutolockHandler",
                 "Generated",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],

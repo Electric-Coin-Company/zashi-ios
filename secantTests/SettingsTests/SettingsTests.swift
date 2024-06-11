@@ -69,7 +69,7 @@ class SettingsTests: XCTestCase {
         store.dependencies.mnemonic.asWords = { _ in mnemonic.components(separatedBy: " ") }
         store.dependencies.walletStorage = mockedWalletStorage
 
-        await store.send(.backupWalletAccessRequest)
+        await store.send(.protectedAccessRequest(.backupPhrase))
         
         await store.receive(.updateDestination(.backupPhrase)) { state in
             state.destination = .backupPhrase
@@ -86,34 +86,7 @@ class SettingsTests: XCTestCase {
 
         store.dependencies.localAuthentication = .mockAuthenticationFailed
 
-        await store.send(.backupWalletAccessRequest)
-        
-        await store.finish()
-    }
-    
-    func testRestoreWalletSubscription() async throws {
-        var initialState = SettingsReducer.State.initial
-        initialState.isRestoringWallet = false
-
-        let store = TestStore(
-            initialState: initialState
-        ) {
-            SettingsReducer()
-        }
-
-        store.dependencies.walletStatusPanel = .noOp
-        store.dependencies.walletStatusPanel.value = {
-            AsyncStream { continuation in
-                continuation.yield(true)
-                continuation.finish()
-            }
-        }
-        
-        await store.send(.restoreWalletTask)
-        
-        await store.receive(.restoreWalletValue(true)) { state in
-            state.isRestoringWallet = true
-        }
+        await store.send(.protectedAccessRequest(.backupPhrase))
         
         await store.finish()
     }
