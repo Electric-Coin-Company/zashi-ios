@@ -1,6 +1,29 @@
 {
     "releases": [
         {
+            "version": "1.1.2",
+            "date": "06-13-2024",
+            "timestamp": 1718279999,
+            "sections": [
+                {
+                    "title": "Added:",
+                    "bulletpoints": [
+                        "We added a screen with syncing tips for successful Restore.",
+                        "We added a logic which prevents iPhone from sleeping while restoring and plugged-in.", 
+                        "We made Zashi smarter. When it experiences connection issues or server performance issues, it displays a modal routing you to switch a server.",
+                        "We also added a Disconnected label for such situations, so you know what's happening."
+                    ]
+                },
+                {
+                    "title": "Fixed:",
+                    "bulletpoints": [
+                        "We optimized Zashi's startup pipeline and significantly improved performance. Zashi now features faster cold and warm starts, and the transaction history is populated almost instantly.",
+                        "Transaction messages are now checked for duplicity and removed if duplicates are found."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "1.1.1",
             "date": "05-22-2024",
             "timestamp": 1716379199,
