@@ -24,8 +24,8 @@ public struct SendConfirmationView: View {
     }
     
     public var body: some View {
-        ZStack {
-            WithPerceptionTracking {
+        WithPerceptionTracking {
+            ZStack {
                 ScrollView {
                     HStack {
                         VStack(alignment: .leading, spacing: 0) {

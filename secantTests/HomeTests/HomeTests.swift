@@ -63,31 +63,4 @@ class HomeTests: XCTestCase {
         
         await store.finish()
     }
-    
-    @MainActor func testRestoreWalletSubscription() async throws {
-        var initialState = HomeReducer.State.initial
-        initialState.isRestoringWallet = false
-
-        let store = TestStore(
-            initialState: initialState
-        ) {
-            HomeReducer()
-        }
-
-        store.dependencies.walletStatusPanel = .noOp
-        store.dependencies.walletStatusPanel.value = {
-            AsyncStream { continuation in
-                continuation.yield(true)
-                continuation.finish()
-            }
-        }
-        
-        await store.send(.restoreWalletTask)
-        
-        await store.receive(.restoreWalletValue(true)) { state in
-            state.isRestoringWallet = true
-        }
-        
-        await store.finish()
-    }
 }

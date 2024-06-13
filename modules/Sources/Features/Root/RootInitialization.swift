@@ -488,7 +488,8 @@ extension RootReducer {
                 return Effect.send(.initialization(.initializeSDK(.newWallet)))
                 
             case .tabs, .destination, .onboarding, .sandbox, .phraseDisplay, .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated,
-                    .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, .confirmationDialog, .batteryStateChanged:
+                    .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, 
+                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects:
                 return .none
             }
         }

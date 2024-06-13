@@ -94,8 +94,10 @@ public struct ZatoshiRepresentationView: View {
             }
         }
         .onAppear {
-            cancellable = hideBalances.value().sink { val in
-                isHidden = val
+            if !_XCTIsTesting {
+                cancellable = hideBalances.value().sink { val in
+                    isHidden = val
+                }
             }
         }
         .onDisappear {

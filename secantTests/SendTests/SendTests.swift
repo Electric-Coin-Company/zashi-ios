@@ -12,6 +12,7 @@ import AudioServices
 import NumberFormatter
 import Models
 import WalletStorage
+import SendConfirmation
 import SendFlow
 import UIComponents
 import WalletBalances
@@ -38,29 +39,25 @@ class SendTests: XCTestCase {
     @MainActor func testSendSucceeded() async throws {
         // the test needs to pass the exportWallet() so we simulate some in the keychain
         try storage.importWallet(bip39: "one two three", birthday: nil)
-
-        var initialState = SendFlowReducer.State.initial
-        initialState.transactionAddressInputState = TransactionAddressTextFieldReducer.State(
-            textFieldState:
-                TCATextFieldReducer.State(
-                    validationType: nil,
-                    text: "ztestsapling1psqa06alcfj9t6s246hht3n7kcw5h900r6z40qnuu7l58qs55kzeqa98879z9hzy596dca4hmsr".redacted
-                )
-        )
+        
+        var initialState = SendConfirmation.State.initial
         initialState.proposal = Proposal.testOnlyFakeProposal(totalFee: 10_000)
 
         let store = TestStore(
             initialState: initialState
         ) {
-            SendFlowReducer()
+            SendConfirmation()
         }
         
         store.dependencies.derivationTool = .liveValue
         store.dependencies.mainQueue = .immediate
-        store.dependencies.mnemonic = .liveValue
-        store.dependencies.sdkSynchronizer = .mocked()
-        store.dependencies.sdkSynchronizer.createProposedTransactions = { _, _ in .success }
+        store.dependencies.numberFormatter = .live()
         store.dependencies.walletStorage = .noOp
+        store.dependencies.mnemonic = .liveValue
+        store.dependencies.sdkSynchronizer = .mock
+        store.dependencies.sdkSynchronizer.createProposedTransactions = { _, _ in .success }
+        store.dependencies.localAuthentication = .mockAuthenticationSucceeded
+        store.dependencies.zcashSDKEnvironment = .testValue
         
         // simulate the sending confirmation button to be pressed
         await store.send(.sendPressed) { state in
@@ -68,43 +65,39 @@ class SendTests: XCTestCase {
             // needs to be eliminated, indicated by the flag `isSending`, need to be true
             state.isSending = true
         }
-                
+        
         await store.receive(.sendDone) { state in
-            state.transactionAddressInputState.textFieldState.text = "".redacted
-            state.transactionAmountInputState.textFieldState.text = "".redacted
             state.isSending = false
         }
 
         await store.finish()
     }
     
+    
     @MainActor func testSendFailed() async throws {
         // the test needs to pass the exportWallet() so we simulate some in the keychain
         try storage.importWallet(bip39: "one two three", birthday: nil)
-
-        var initialState = SendFlowReducer.State.initial
-        initialState.transactionAddressInputState = TransactionAddressTextFieldReducer.State(
-            textFieldState:
-                TCATextFieldReducer.State(
-                    validationType: nil,
-                    text: "ztestsapling1psqa06alcfj9t6s246hht3n7kcw5h900r6z40qnuu7l58qs55kzeqa98879z9hzy596dca4hmsr".redacted
-                )
-        )
+        
+        var initialState = SendConfirmation.State.initial
         initialState.proposal = Proposal.testOnlyFakeProposal(totalFee: 10_000)
 
         let store = TestStore(
             initialState: initialState
         ) {
-            SendFlowReducer()
+            SendConfirmation()
         }
         
         let error = "send failed".toZcashError()
         
         store.dependencies.derivationTool = .liveValue
         store.dependencies.mainQueue = .immediate
-        store.dependencies.mnemonic = .liveValue
-        store.dependencies.sdkSynchronizer = .mocked(createProposedTransactions: { _, _ in throw error })
+        store.dependencies.numberFormatter = .live()
         store.dependencies.walletStorage = .noOp
+        store.dependencies.mnemonic = .liveValue
+        store.dependencies.sdkSynchronizer = .mock
+        store.dependencies.sdkSynchronizer.createProposedTransactions = { _, _ in throw error }
+        store.dependencies.localAuthentication = .mockAuthenticationSucceeded
+        store.dependencies.zcashSDKEnvironment = .testValue
         
         // simulate the sending confirmation button to be pressed
         await store.send(.sendPressed) { state in
@@ -112,7 +105,7 @@ class SendTests: XCTestCase {
             // needs to be eliminated, indicated by the flag `isSending`, need to be true
             state.isSending = true
         }
-                
+        
         await store.receive(.sendFailed(error)) { state in
             state.isSending = false
             state.alert = AlertState.sendFailure(error)
@@ -121,31 +114,28 @@ class SendTests: XCTestCase {
         await store.finish()
     }
     
+    
     @MainActor func testSendFailedBeforeHitSynchronizer() async throws {
         // the test needs to pass the exportWallet() so we simulate some in the keychain
         try storage.importWallet(bip39: "one two three", birthday: nil)
-
-        var initialState = SendFlowReducer.State.initial
-        initialState.transactionAddressInputState = TransactionAddressTextFieldReducer.State(
-            textFieldState:
-                TCATextFieldReducer.State(
-                    validationType: nil,
-                    text: "ztestsapling1psqa06alcfj9t6s246hht3n7kcw5h900r6z40qnuu7l58qs55kzeqa98879z9hzy596dca4hmsr".redacted
-                )
-        )
+        
+        var initialState = SendConfirmation.State.initial
         initialState.proposal = Proposal.testOnlyFakeProposal(totalFee: 10_000)
 
         let store = TestStore(
             initialState: initialState
         ) {
-            SendFlowReducer()
+            SendConfirmation()
         }
         
         store.dependencies.derivationTool = .liveValue
         store.dependencies.mainQueue = .immediate
+        store.dependencies.numberFormatter = .live()
+        store.dependencies.walletStorage = .noOp
         store.dependencies.mnemonic = .liveValue
         store.dependencies.sdkSynchronizer = .noOp
-        store.dependencies.walletStorage = .noOp
+        store.dependencies.localAuthentication = .mockAuthenticationSucceeded
+        store.dependencies.zcashSDKEnvironment = .testValue
         
         let walletStorageError: ZcashError = "export failed".toZcashError()
         store.dependencies.walletStorage.exportWallet = { throw walletStorageError }
@@ -154,7 +144,7 @@ class SendTests: XCTestCase {
         await store.send(.sendPressed) { state in
             state.isSending = true
         }
-                
+        
         await store.receive(.sendFailed(walletStorageError)) { state in
             state.isSending = false
             state.alert = AlertState.sendFailure(walletStorageError)
@@ -197,9 +187,9 @@ class SendTests: XCTestCase {
 
         store.dependencies.derivationTool = .noOp
         store.dependencies.derivationTool.isZcashAddress = { _, _ in true }
-
-        let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
         
+        let address = "t1gXqfSSQt6WfpwyuCU3Wi7sSVZ66DYQ3Po".redacted
+
         await store.send(.transactionAddressInput(.textField(.set(address)))) { state in
             state.transactionAddressInputState.textFieldState.text = address
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
@@ -259,7 +249,6 @@ class SendTests: XCTestCase {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .initial,
-            partialProposalErrorState: .initial,
             scanState: .initial,
             shieldedBalance: Zatoshi(100_000),
             transactionAddressInputState: .initial,
@@ -295,7 +284,6 @@ class SendTests: XCTestCase {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .initial,
-            partialProposalErrorState: .initial,
             scanState: .initial,
             transactionAddressInputState: .initial,
             transactionAmountInputState: .initial,
@@ -352,7 +340,6 @@ class SendTests: XCTestCase {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .initial,
-            partialProposalErrorState: .initial,
             scanState: .initial,
             shieldedBalance: Zatoshi(100_000),
             transactionAddressInputState: .initial,
@@ -404,7 +391,6 @@ class SendTests: XCTestCase {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .initial,
-            partialProposalErrorState: .initial,
             scanState: .initial,
             transactionAddressInputState: .initial,
             transactionAmountInputState:
@@ -450,7 +436,6 @@ class SendTests: XCTestCase {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .initial,
-            partialProposalErrorState: .initial,
             scanState: .initial,
             transactionAddressInputState: .initial,
             transactionAmountInputState:
@@ -497,7 +482,6 @@ class SendTests: XCTestCase {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .initial,
-            partialProposalErrorState: .initial,
             scanState: .initial,
             transactionAddressInputState: .initial,
             transactionAmountInputState:
@@ -541,7 +525,6 @@ class SendTests: XCTestCase {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: MessageEditorReducer.State(charLimit: 3),
-            partialProposalErrorState: .initial,
             scanState: .initial,
             transactionAddressInputState:
                 TransactionAddressTextFieldReducer.State(
@@ -589,7 +572,6 @@ class SendTests: XCTestCase {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .initial,
-            partialProposalErrorState: .initial,
             scanState: .initial,
             transactionAddressInputState: .initial,
             transactionAmountInputState:
@@ -623,7 +605,6 @@ class SendTests: XCTestCase {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .initial,
-            partialProposalErrorState: .initial,
             scanState: .initial,
             transactionAddressInputState: .initial,
             transactionAmountInputState: .initial,
@@ -655,7 +636,6 @@ class SendTests: XCTestCase {
         var sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .initial,
-            partialProposalErrorState: .initial,
             scanState: .initial,
             transactionAddressInputState: .initial,
             transactionAmountInputState: .initial,
@@ -679,9 +659,7 @@ class SendTests: XCTestCase {
             state.proposal = proposal
         }
         
-        await store.receive(.updateDestination(.sendConfirmation)) { state in
-            state.destination = .sendConfirmation
-        }
+        await store.receive(.sendConfirmationRequired)
         
         await store.finish()
     }
@@ -692,7 +670,6 @@ class SendTests: XCTestCase {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: MessageEditorReducer.State(charLimit: 512, text: testMessage),
-            partialProposalErrorState: .initial,
             scanState: .initial,
             transactionAddressInputState: .initial,
             transactionAmountInputState: .initial,
@@ -717,7 +694,6 @@ class SendTests: XCTestCase {
         let sendState = SendFlowReducer.State(
             addMemoState: true,
             memoState: .initial,
-            partialProposalErrorState: .initial,
             scanState: .initial,
             transactionAddressInputState: .initial,
             transactionAmountInputState: .initial,

@@ -80,6 +80,7 @@ public struct BalanceBreakdownReducer: Reducer {
         }
     }
 
+    @CasePathable
     public enum Action: Equatable {
         case alert(PresentationAction<Action>)
         case onAppear

@@ -36,23 +36,25 @@ public struct AddressDetailsView: View {
                 zashiPicker()
 
                 ScrollView {
-                    Group {
-                        if store.selection == .ua {
-                            addressBlock(type: .uaAddress, L10n.AddressDetails.ua, store.unifiedAddress) {
-                                store.send(.copyToPastboard(store.unifiedAddress.redacted))
-                            } shareAction: {
-                                store.send(.shareQR(store.unifiedAddress.redacted))
-                            }
-                        } else {
-                            addressBlock(type: .tAddress, L10n.AddressDetails.ta, store.transparentAddress) {
-                                store.send(.copyToPastboard(store.transparentAddress.redacted))
-                            } shareAction: {
-                                store.send(.shareQR(store.transparentAddress.redacted))
+                    WithPerceptionTracking {
+                        Group {
+                            if store.selection == .ua {
+                                addressBlock(type: .uaAddress, L10n.AddressDetails.ua, store.unifiedAddress) {
+                                    store.send(.copyToPastboard(store.unifiedAddress.redacted))
+                                } shareAction: {
+                                    store.send(.shareQR(store.unifiedAddress.redacted))
+                                }
+                            } else {
+                                addressBlock(type: .tAddress, L10n.AddressDetails.ta, store.transparentAddress) {
+                                    store.send(.copyToPastboard(store.transparentAddress.redacted))
+                                } shareAction: {
+                                    store.send(.shareQR(store.transparentAddress.redacted))
+                                }
                             }
                         }
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, 20)
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding(.top, 20)
                     
 #if DEBUG
                     if networkType == .testnet {
@@ -128,38 +130,40 @@ public struct AddressDetailsView: View {
         .padding(.bottom, 40)
     }
     
-    @ViewBuilder private func zashiPicker() -> some View {
+    @MainActor @ViewBuilder private func zashiPicker() -> some View {
         ZashiPicker(
             AddressDetails.State.Selection.allCases,
             selection: store.selection,
             itemBuilder: { item in
-                Text(item == .ua
-                     ? L10n.AddressDetails.ua
-                     :L10n.AddressDetails.ta
-                ).tag(item == .ua
-                      ? AddressDetails.State.Selection.ua
-                      : AddressDetails.State.Selection.transparent
-                )
-                .foregroundColor(
-                    store.selection == item
-                    ? Asset.Colors.pickerTitleSelected.color
-                    : Asset.Colors.pickerTitleUnselected.color
-                )
-                .padding(.vertical, 12)
-                .padding(.horizontal, 8)
-                .frame(maxWidth: .infinity)
-                .multilineTextAlignment(.center)
-                .font(.custom(FontFamily.Archivo.semiBold.name, size: 12))
-                .onTapGesture {
-                    withAnimation(.easeInOut(duration: 0.150)) {
-                        store.selection = item
+                WithPerceptionTracking {
+                    Text(item == .ua
+                         ? L10n.AddressDetails.ua
+                         :L10n.AddressDetails.ta
+                    ).tag(item == .ua
+                          ? AddressDetails.State.Selection.ua
+                          : AddressDetails.State.Selection.transparent
+                    )
+                    .foregroundColor(
+                        store.selection == item
+                        ? Asset.Colors.pickerTitleSelected.color
+                        : Asset.Colors.pickerTitleUnselected.color
+                    )
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 8)
+                    .frame(maxWidth: .infinity)
+                    .multilineTextAlignment(.center)
+                    .font(.custom(FontFamily.Archivo.semiBold.name, size: 12))
+                    .onTapGesture {
+                        withAnimation(.easeInOut(duration: 0.150)) {
+                            store.selection = item
+                        }
                     }
+                    .background(
+                        store.selection == item
+                        ? Asset.Colors.pickerSelection.color
+                        : Asset.Colors.pickerBcg.color
+                    )
                 }
-                .background(
-                    store.selection == item
-                    ? Asset.Colors.pickerSelection.color
-                    : Asset.Colors.pickerBcg.color
-                )
             }
         )
         .border(Asset.Colors.pickerBcg.color, width: 4)

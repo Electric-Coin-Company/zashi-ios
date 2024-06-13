@@ -31,6 +31,7 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
                 .dependency(\.mainQueue, .immediate)
                 .dependency(\.walletStatusPanel, .noOp)
                 .dependency(\.diskSpaceChecker, .mockEmptyDisk)
+                .dependency(\.hideBalances, .noOp)
         }
         
         addAttachments(BalanceBreakdownView(store: store, tokenName: "ZEC"))
@@ -55,7 +56,7 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
                 .dependency(\.walletStatusPanel, .noOp)
                 .dependency(\.diskSpaceChecker, .mockEmptyDisk)
         }
-        
+
         addAttachments(BalanceBreakdownView(store: store, tokenName: "ZEC"))
     }
 }

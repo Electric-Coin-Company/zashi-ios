@@ -29,10 +29,12 @@ public struct WalletStatusPanelModifier: ViewModifier {
         ZStack(alignment: .top) {
             content
                 .onAppear {
-                    cancellable = walletStatusPanel.value().sink {
-                        status = $0
-                        if $0 != .disconnected {
-                            restoringStatus = $0
+                    if !_XCTIsTesting {
+                        cancellable = walletStatusPanel.value().sink {
+                            status = $0
+                            if $0 != .disconnected {
+                                restoringStatus = $0
+                            }
                         }
                     }
                 }

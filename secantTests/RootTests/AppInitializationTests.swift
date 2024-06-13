@@ -58,6 +58,7 @@ class AppInitializationTests: XCTestCase {
         store.dependencies.walletStatusPanel = .noOp
         store.dependencies.userDefaults = .noOp
         store.dependencies.hideBalances = .noOp
+        store.dependencies.autolockHandler = .noOp
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         await store.send(.initialization(.appDelegate(.didFinishLaunching))) { state in
@@ -88,10 +89,18 @@ class AppInitializationTests: XCTestCase {
 
         await store.receive(.initialization(.registerForSynchronizersUpdate))
 
+        await store.receive(.tabs(.home(.transactionList(.onAppear)))) { state in
+            state.tabsState.homeState.transactionListState.requiredTransactionConfirmations = 10
+        }
+
         await store.receive(.destination(.updateDestination(.tabs))) { state in
             state.destinationState.previousDestination = .welcome
             state.destinationState.internalDestination = .tabs
         }
+
+        await store.receive(.tabs(.home(.transactionList(.updateTransactionList([])))))
+
+        await store.send(.cancelAllRunningEffects)
 
         await store.finish()
     }
@@ -135,6 +144,7 @@ class AppInitializationTests: XCTestCase {
         store.dependencies.walletStatusPanel = .noOp
         store.dependencies.userDefaults = .noOp
         store.dependencies.hideBalances = .noOp
+        store.dependencies.autolockHandler = .noOp
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         await store.send(.initialization(.appDelegate(.didFinishLaunching))) { state in
@@ -174,6 +184,8 @@ class AppInitializationTests: XCTestCase {
             state.destinationState.previousDestination = .welcome
             state.destinationState.internalDestination = .phraseDisplay
         }
+
+        await store.send(.cancelAllRunningEffects)
 
         await store.finish()
     }

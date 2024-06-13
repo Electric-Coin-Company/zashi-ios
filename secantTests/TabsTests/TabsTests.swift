@@ -129,7 +129,10 @@ class TabsTests: XCTestCase {
             TabsReducer()
         }
         
-        await store.send(.send(.sendDone)) { state in
+        store.dependencies.derivationTool = .noOp
+        store.dependencies.numberFormatter = .noOp
+
+        await store.send(.sendConfirmation(.sendDone)) { state in
             state.selectedTab = .account
             state.homeState.transactionListState.transactionList = IdentifiedArrayOf(
                 uniqueElements: [
@@ -138,6 +141,20 @@ class TabsTests: XCTestCase {
                 ]
             )
         }
+        
+        await store.receive(.updateDestination(nil))
+
+        await store.receive(.send(.resetForm))
+        
+        await store.receive(.send(.transactionAmountInput(.textField(.set("".redacted))))) { state in
+            state.sendState.transactionAmountInputState.textFieldState.valid = true
+        }
+        
+        await store.receive(.send(.transactionAddressInput(.textField(.set("".redacted))))) { state in
+            state.sendState.transactionAddressInputState.textFieldState.valid = true
+        }
+        
+        await store.receive(.send(.transactionAmountInput(.updateAmount)))
     }
     
     func testShieldFundsSucceed() async throws {
@@ -154,7 +171,6 @@ class TabsTests: XCTestCase {
         store.dependencies.sdkSynchronizer = .mock
         let proposal = Proposal.testOnlyFakeProposal(totalFee: 10_000)
         store.dependencies.sdkSynchronizer.proposeShielding = { _, _, _, _ in proposal }
-        let transactionSubmitResult = TransactionSubmitResult.success(txId: Data())
         store.dependencies.sdkSynchronizer.createProposedTransactions = { _, _ in .success }
         store.dependencies.derivationTool = .liveValue
         store.dependencies.mnemonic = .mock
@@ -164,12 +180,19 @@ class TabsTests: XCTestCase {
         await store.send(.balanceBreakdown(.shieldFunds)) { state in
             state.balanceBreakdownState.isShieldingFunds = true
         }
+
+        await store.receive(.balanceBreakdown(.walletBalances(.updateBalances)))
         
         await store.receive(.balanceBreakdown(.shieldFundsSuccess)) { state in
             state.balanceBreakdownState.walletBalancesState.transparentBalance = .zero
             state.balanceBreakdownState.isShieldingFunds = false
         }
-        
+
+        let accountBalance = AccountBalance(saplingBalance: .zero, orchardBalance: .zero, unshielded: .zero)
+        await store.receive(.balanceBreakdown(.walletBalances(.balancesUpdated(accountBalance))))
+
+        await store.receive(.balanceBreakdown(.updateBalances(accountBalance)))
+
         await store.finish()
     }
 }

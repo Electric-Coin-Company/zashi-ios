@@ -104,6 +104,7 @@ public struct RootReducer: Reducer {
         case alert(PresentationAction<Action>)
         case batteryStateChanged(Notification)
         case binding(BindingAction<RootReducer.State>)
+        case cancelAllRunningEffects
         case confirmationDialog(PresentationAction<ConfirmationDialog>)
         case debug(DebugAction)
         case destination(DestinationAction)
@@ -207,6 +208,16 @@ public struct RootReducer: Reducer {
             case .batteryStateChanged:
                 autolockHandler.value(walletStatusPanel.value().value == .restoring)
                 return .none
+                
+            case .cancelAllRunningEffects:
+                return .concatenate(
+                    .cancel(id: CancelId),
+                    .cancel(id: CancelStateId),
+                    .cancel(id: CancelBatteryStateId),
+                    .cancel(id: SynchronizerCancelId),
+                    .cancel(id: WalletConfigCancelId),
+                    .cancel(id: DidFinishLaunchingId)
+                )
                 
             default: return .none
             }

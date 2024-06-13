@@ -149,7 +149,7 @@ class ImportWalletTests: XCTestCase {
         
     func testFormValidity_validBirthday_invalidMnemonic() async throws {
         let store = TestStore(
-            initialState: ImportWalletReducer.State(maxWordsCount: 24)
+            initialState: ImportWalletReducer.State(maxWordsCount: 24, restoreInfoState: .initial)
         ) {
             ImportWalletReducer()
         }
@@ -182,7 +182,7 @@ class ImportWalletTests: XCTestCase {
     
     func testFormValidity_invalidBirthday_invalidMnemonic() async throws {
         let store = TestStore(
-            initialState: ImportWalletReducer.State(maxWordsCount: 24)
+            initialState: ImportWalletReducer.State(maxWordsCount: 24, restoreInfoState: .initial)
         ) {
             ImportWalletReducer()
         }
@@ -214,7 +214,7 @@ class ImportWalletTests: XCTestCase {
     
     func testFormValidity_invalidBirthday_validMnemonic() async throws {
         let store = TestStore(
-            initialState: ImportWalletReducer.State(maxWordsCount: 24)
+            initialState: ImportWalletReducer.State(maxWordsCount: 24, restoreInfoState: .initial)
         ) {
             ImportWalletReducer()
         }
@@ -251,7 +251,7 @@ class ImportWalletTests: XCTestCase {
     
     func testFormValidity_validBirthday_validMnemonic() async throws {
         let store = TestStore(
-            initialState: ImportWalletReducer.State(maxWordsCount: 24)
+            initialState: ImportWalletReducer.State(maxWordsCount: 24, restoreInfoState: .initial)
         ) {
             ImportWalletReducer()
         }
@@ -289,7 +289,7 @@ class ImportWalletTests: XCTestCase {
     
     func testFormValidity_noBirthday_validMnemonic() async throws {
         let store = TestStore(
-            initialState: ImportWalletReducer.State(maxWordsCount: 24)
+            initialState: ImportWalletReducer.State(maxWordsCount: 24, restoreInfoState: .initial)
         ) {
             ImportWalletReducer()
         }
@@ -332,6 +332,7 @@ class ImportWalletTests: XCTestCase {
                 isValidMnemonic: true,
                 isValidNumberOfWords: true,
                 maxWordsCount: 24,
+                restoreInfoState: .initial,
                 wordsCount: 24
             )
         ) {
@@ -347,7 +348,9 @@ class ImportWalletTests: XCTestCase {
             state.destination = nil
         }
 
-        await store.receive(.successfullyRecovered)
+        await store.receive(.successfullyRecovered) { state in
+            state.restoreInfoViewBinding = true
+        }
         
         await store.receive(.initializeSDK)
         
