@@ -6,6 +6,8 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.1.2 build 1 (2024-06-14)
+
 ### Added
 - Screen summarizing successful restoration with some syncing tips.
 - Logic that prevents iPhone from sleeping while restoring and plugged-in.
