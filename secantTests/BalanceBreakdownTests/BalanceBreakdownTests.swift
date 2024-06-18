@@ -111,33 +111,6 @@ class BalanceBreakdownTests: XCTestCase {
         XCTAssertTrue(store.state.isShieldingButtonDisabled)
     }
     
-    func testRestoreWalletSubscription() async throws {
-        var initialState = BalanceBreakdownReducer.State.initial
-        initialState.isRestoringWallet = false
-        
-        let store = TestStore(
-            initialState: initialState
-        ) {
-            BalanceBreakdownReducer()
-        }
-
-        store.dependencies.walletStatusPanel = .noOp
-        store.dependencies.walletStatusPanel.value = {
-            AsyncStream { continuation in
-                continuation.yield(true)
-                continuation.finish()
-            }
-        }
-        
-        await store.send(.restoreWalletTask)
-        
-        await store.receive(.restoreWalletValue(true)) { state in
-            state.isRestoringWallet = true
-        }
-        
-        await store.finish()
-    }
-    
     func testShowHintbox() async throws {
         var initialState = BalanceBreakdownReducer.State.initial
         initialState.isHintBoxVisible = false

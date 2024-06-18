@@ -50,6 +50,7 @@ class HomeSnapshotTests: XCTestCase {
                 .dependency(\.mainQueue, .immediate)
                 .dependency(\.reviewRequest, .noOp)
                 .dependency(\.walletStatusPanel, .noOp)
+                .dependency(\.hideBalances, .noOp)
         }
 
         // landing home screen

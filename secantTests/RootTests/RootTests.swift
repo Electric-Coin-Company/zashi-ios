@@ -165,12 +165,12 @@ class RootTests: XCTestCase {
         
         await store.receive(.initialization(.initializeSDK(.restoreWallet)))
 
+        await store.receive(.initialization(.checkBackupPhraseValidation))
+
         await store.receive(.initialization(.initializationFailed(zcashError))) { state in
             state.appInitializationState = .failed
             state.alert = AlertState.initializationFailed(zcashError)
         }
-
-        await store.receive(.initialization(.checkBackupPhraseValidation))
         
         await store.receive(.initialization(.initializationFailed(zcashError)))
         
@@ -216,6 +216,7 @@ class RootTests: XCTestCase {
         
         store.dependencies.mainQueue = .immediate
         store.dependencies.sdkSynchronizer = .noOp
+        store.dependencies.autolockHandler = .noOp
         
         // swiftlint:disable line_length
         let uAddress = try UnifiedAddress(
@@ -228,6 +229,8 @@ class RootTests: XCTestCase {
 
         await store.receive(.initialization(.registerForSynchronizersUpdate))
 
+        await store.send(.cancelAllRunningEffects)
+        
         await store.finish()
     }
 }

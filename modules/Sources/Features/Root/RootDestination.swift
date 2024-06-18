@@ -119,7 +119,7 @@ extension RootReducer {
 
             case .tabs, .initialization, .onboarding, .sandbox, .updateStateAfterConfigUpdate, .alert, .phraseDisplay, .synchronizerStateChanged,
                     .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .exportLogs, .confirmationDialog,
-                    .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated, .batteryStateChanged:
+                    .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated, .batteryStateChanged, .cancelAllRunningEffects:
                 return .none
             }
         }

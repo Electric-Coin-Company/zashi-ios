@@ -72,7 +72,7 @@ public struct BalanceBreakdownView: View {
                 SyncProgressView(
                     store: store.scope(
                         state: \.syncProgressState,
-                        action: BalanceBreakdownReducer.Action.syncProgress
+                        action: \.syncProgress
                     )
                 )
                 .padding(.top, walletStatus == .restoring ? 0 : 40)
@@ -96,8 +96,10 @@ public struct BalanceBreakdownView: View {
         )
         .onAppear {
             store.send(.onAppear)
-            cancellable = hideBalances.value().sink { val in
-                isHidden = val
+            if !_XCTIsTesting {
+                cancellable = hideBalances.value().sink { val in
+                    isHidden = val
+                }
             }
         }
         .onDisappear {

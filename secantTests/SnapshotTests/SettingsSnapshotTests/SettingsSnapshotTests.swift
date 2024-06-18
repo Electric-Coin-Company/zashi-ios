@@ -9,6 +9,7 @@ import XCTest
 import ComposableArchitecture
 import SwiftUI
 import Settings
+import About
 @testable import secant_testnet
 
 class SettingsSnapshotTests: XCTestCase {
@@ -31,7 +32,7 @@ class SettingsSnapshotTests: XCTestCase {
         let store = Store(
             initialState: .initial
         ) {
-            SettingsReducer()
+            About()
                 .dependency(\.localAuthentication, .mockAuthenticationFailed)
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.walletStorage, .noOp)
@@ -41,6 +42,6 @@ class SettingsSnapshotTests: XCTestCase {
         
         ViewStore(store, observe: { $0 }).send(.onAppear)
         
-        addAttachments(About(store: store))
+        addAttachments(AboutView(store: store))
     }
 }

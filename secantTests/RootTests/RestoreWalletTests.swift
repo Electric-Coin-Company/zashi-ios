@@ -11,6 +11,7 @@ import ComposableArchitecture
 import Root
 import Utils
 import ZcashLightClientKit
+import WalletStatusPanel
 @testable import secant_testnet
 
 @MainActor
@@ -26,11 +27,12 @@ final class RestoreWalletTests: XCTestCase {
         store.dependencies.mnemonic = .noOp
         store.dependencies.walletStatusPanel = .noOp
         store.dependencies.walletStatusPanel.updateValue = { value in
-            XCTAssertTrue(value)
+            XCTAssertEqual(value, WalletStatus.restoring)
         }
         store.dependencies.sdkSynchronizer = .noOp
         store.dependencies.walletStorage = .noOp
         store.dependencies.userDefaults = .noOp
+        store.dependencies.autolockHandler = .noOp
 
         await store.send(.onboarding(.importWallet(.initializeSDK))) { state in
             state.isRestoringWallet = true
@@ -42,6 +44,8 @@ final class RestoreWalletTests: XCTestCase {
 
         await store.receive(.initialization(.registerForSynchronizersUpdate))
 
+        await store.send(.cancelAllRunningEffects)
+        
         await store.finish()
     }
     
@@ -59,7 +63,7 @@ final class RestoreWalletTests: XCTestCase {
         store.dependencies.mnemonic = .noOp
         store.dependencies.walletStatusPanel = .noOp
         store.dependencies.walletStatusPanel.updateValue = { value in
-            XCTAssertFalse(value)
+            XCTAssertNotEqual(value, WalletStatus.restoring)
         }
         store.dependencies.sdkSynchronizer = .noOp
         store.dependencies.walletStorage = .noOp
