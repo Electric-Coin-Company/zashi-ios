@@ -18,7 +18,7 @@ import Root
 @MainActor
 class RootTests: XCTestCase {
     func testWalletInitializationState_Uninitialized() throws {
-        let walletState = RootReducer.walletInitializationState(
+        let walletState = Root.walletInitializationState(
             databaseFiles: .noOp,
             walletStorage: .noOp,
             zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
@@ -34,7 +34,7 @@ class RootTests: XCTestCase {
             removeItem: { _ in }
         )
 
-        let walletState = RootReducer.walletInitializationState(
+        let walletState = Root.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
             walletStorage: .noOp,
             zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
@@ -50,7 +50,7 @@ class RootTests: XCTestCase {
             removeItem: { _ in }
         )
 
-        let walletState = RootReducer.walletInitializationState(
+        let walletState = Root.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
             walletStorage: .noOp,
             zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
@@ -69,7 +69,7 @@ class RootTests: XCTestCase {
         var walletStorage = WalletStorageClient.noOp
         walletStorage.areKeysPresent = { true }
         
-        let walletState = RootReducer.walletInitializationState(
+        let walletState = Root.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
             walletStorage: walletStorage,
             zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
@@ -88,7 +88,7 @@ class RootTests: XCTestCase {
         var walletStorage = WalletStorageClient.noOp
         walletStorage.areKeysPresent = { true }
         
-        let walletState = RootReducer.walletInitializationState(
+        let walletState = Root.walletInitializationState(
             databaseFiles: .live(databaseFiles: DatabaseFiles(fileManager: wfmMock)),
             walletStorage: walletStorage,
             zcashNetwork: ZcashNetworkBuilder.network(for: .testnet)
@@ -101,7 +101,7 @@ class RootTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer()
+            Root()
         }
 
         store.dependencies.mainQueue = .immediate
@@ -123,7 +123,7 @@ class RootTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer()
+            Root()
         }
 
         store.dependencies.mainQueue = .immediate
@@ -150,7 +150,7 @@ class RootTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer()
+            Root()
         }
         
         store.dependencies.walletStorage = .noOp
@@ -184,7 +184,7 @@ class RootTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer()
+            Root()
         }
         
         store.dependencies.walletStorage = .noOp
@@ -211,7 +211,7 @@ class RootTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer()
+            Root()
         }
         
         store.dependencies.mainQueue = .immediate

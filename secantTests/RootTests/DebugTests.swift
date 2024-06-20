@@ -17,7 +17,7 @@ class DebugTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer()
+            Root()
         }
         
         await store.send(.debug(.rescanBlockchain)) { state in
@@ -26,14 +26,14 @@ class DebugTests: XCTestCase {
     }
     
     func testRescanBlockchain_Cancelling() async throws {
-        var mockState = RootReducer.State.initial
+        var mockState = Root.State.initial
         
         mockState.confirmationDialog = ConfirmationDialogState.rescanRequest()
         
         let store = TestStore(
             initialState: mockState
         ) {
-            RootReducer()
+            Root()
         }
         
         await store.send(.debug(.cancelRescan)) { state in
@@ -42,14 +42,14 @@ class DebugTests: XCTestCase {
     }
     
     func testRescanBlockchain_QuickRescanClearance() async throws {
-        var mockState = RootReducer.State.initial
+        var mockState = Root.State.initial
         
         mockState.confirmationDialog = ConfirmationDialogState.rescanRequest()
         
         let store = TestStore(
             initialState: mockState
         ) {
-            RootReducer()
+            Root()
         }
 
         store.dependencies.mainQueue = .immediate
@@ -65,14 +65,14 @@ class DebugTests: XCTestCase {
     }
     
     func testRescanBlockchain_FullRescanClearance() async throws {
-        var mockState = RootReducer.State.initial
+        var mockState = Root.State.initial
         
         mockState.confirmationDialog = ConfirmationDialogState.rescanRequest()
         
         let store = TestStore(
             initialState: mockState
         ) {
-            RootReducer()
+            Root()
         }
 
         store.dependencies.mainQueue = .immediate

@@ -26,10 +26,8 @@ import UserDefaults
 import HideBalances
 import ServerSetup
 
-public typealias RootStore = Store<RootReducer.State, RootReducer.Action>
-public typealias RootViewStore = ViewStore<RootReducer.State, RootReducer.Action>
-
-public struct RootReducer: Reducer {
+@Reducer
+public struct Root {
     let CancelId = UUID()
     let CancelStateId = UUID()
     let CancelBatteryStateId = UUID()
@@ -37,12 +35,13 @@ public struct RootReducer: Reducer {
     let WalletConfigCancelId = UUID()
     let DidFinishLaunchingId = UUID()
 
+    @ObservableState
     public struct State: Equatable {
-        @PresentationState public var alert: AlertState<Action>?
+        @Presents public var alert: AlertState<Action>?
         public var appInitializationState: InitializationState = .uninitialized
         public var appStartState: AppStartState = .unknown
         public var bgTask: BGProcessingTask?
-        @PresentationState public var confirmationDialog: ConfirmationDialogState<Action.ConfirmationDialog>?
+        @Presents public var confirmationDialog: ConfirmationDialogState<Action.ConfirmationDialog>?
         public var debugState: DebugState
         public var destinationState: DestinationState
         public var exportLogsState: ExportLogsReducer.State
@@ -103,7 +102,7 @@ public struct RootReducer: Reducer {
 
         case alert(PresentationAction<Action>)
         case batteryStateChanged(Notification)
-        case binding(BindingAction<RootReducer.State>)
+        case binding(BindingAction<Root.State>)
         case cancelAllRunningEffects
         case confirmationDialog(PresentationAction<ConfirmationDialog>)
         case debug(DebugAction)
@@ -226,7 +225,7 @@ public struct RootReducer: Reducer {
     }
 }
 
-extension RootReducer {
+extension Root {
     public static func walletInitializationState(
         databaseFiles: DatabaseFilesClient,
         walletStorage: WalletStorageClient,
@@ -261,7 +260,7 @@ extension RootReducer {
 
 // MARK: Alerts
 
-extension AlertState where Action == RootReducer.Action {
+extension AlertState where Action == Root.Action {
     public static func cantLoadSeedPhrase() -> AlertState {
         AlertState {
             TextState(L10n.Root.Initialization.Alert.Failed.title)
@@ -395,7 +394,7 @@ extension AlertState where Action == RootReducer.Action {
     }
 }
      
-extension ConfirmationDialogState where Action == RootReducer.Action.ConfirmationDialog {
+extension ConfirmationDialogState where Action == Root.Action.ConfirmationDialog {
     public static func rescanRequest() -> ConfirmationDialogState {
         ConfirmationDialogState {
             TextState(L10n.Root.Debug.Dialog.Rescan.title)
@@ -414,40 +413,4 @@ extension ConfirmationDialogState where Action == RootReducer.Action.Confirmatio
         }
     }
 
-}
-
-// MARK: Placeholders
-
-extension RootReducer.State {
-    public static var initial: Self {
-        .init(
-            debugState: .initial,
-            destinationState: .initial,
-            exportLogsState: .initial,
-            onboardingState: .initial,
-            phraseDisplayState: .initial,
-            sandboxState: .initial,
-            tabsState: .initial,
-            walletConfig: .initial,
-            welcomeState: .initial
-        )
-    }
-}
-
-extension RootStore {
-    public static var placeholder: RootStore {
-        RootStore(
-            initialState: .initial
-        ) {
-            RootReducer()
-                .logging()
-        }
-    }
-    
-    func serverSetupStore() -> StoreOf<ServerSetup> {
-        self.scope(
-            state: \.serverSetupState,
-            action: RootReducer.Action.serverSetup
-        )
-    }
 }

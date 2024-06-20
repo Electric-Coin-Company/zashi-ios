@@ -21,10 +21,10 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     private let workerQueue = DispatchQueue(label: "Monitor")
     private var isConnectedToWifi = false
     
-    let rootStore = RootStore(
+    let rootStore = StoreOf<Root>(
         initialState: .initial
     ) {
-        RootReducer()
+        Root()
             .logging()
     }
 

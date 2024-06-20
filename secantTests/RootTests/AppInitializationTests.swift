@@ -24,13 +24,13 @@ class AppInitializationTests: XCTestCase {
         defaultRawFlags[.testBackupPhraseFlow] = true
         let walletConfig = WalletConfig(flags: defaultRawFlags)
 
-        var appState = RootReducer.State.initial
+        var appState = Root.State.initial
         appState.walletConfig = walletConfig
 
         let store = TestStore(
             initialState: appState
         ) {
-            RootReducer()
+            Root()
         }
         
         let testQueue = DispatchQueue.test
@@ -110,13 +110,13 @@ class AppInitializationTests: XCTestCase {
         defaultRawFlags[.testBackupPhraseFlow] = true
         let walletConfig = WalletConfig(flags: defaultRawFlags)
 
-        var appState = RootReducer.State.initial
+        var appState = Root.State.initial
         appState.walletConfig = walletConfig
 
         let store = TestStore(
             initialState: appState
         ) {
-            RootReducer()
+            Root()
         }
         
         let testQueue = DispatchQueue.test
@@ -192,12 +192,12 @@ class AppInitializationTests: XCTestCase {
     
     /// Integration test validating the side effects work together properly when no wallet is stored but database files are present.
     @MainActor func testDidFinishLaunching_to_KeysMissing() async throws {
-        let initialState = RootReducer.State.initial
+        let initialState = Root.State.initial
         
         let store = TestStore(
             initialState: initialState
         ) {
-            RootReducer()
+            Root()
         }
 
         store.dependencies.databaseFiles = .noOp
@@ -238,7 +238,7 @@ class AppInitializationTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer()
+            Root()
         }
         
         store.dependencies.databaseFiles = .noOp

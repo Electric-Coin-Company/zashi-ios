@@ -19,7 +19,7 @@ final class WalletNukeTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer()
+            Root()
         }
         
         await store.send(.initialization(.nukeWalletRequest)) { state in
@@ -33,7 +33,7 @@ final class WalletNukeTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer()
+            Root()
         }
         
         store.dependencies.sdkSynchronizer = .noOp
@@ -57,7 +57,7 @@ final class WalletNukeTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer()
+            Root()
         }
 
         var readIds: [RedactableString: Bool] = ["id1".redacted: true]
@@ -76,7 +76,7 @@ final class WalletNukeTests: XCTestCase {
         XCTAssertTrue(areKeysPresent)
 
         await store.send(.nukeWalletSucceeded) { state in
-            var stateAfterWipe = RootReducer.State.initial
+            var stateAfterWipe = Root.State.initial
             stateAfterWipe.splashAppeared = true
 
             state = stateAfterWipe

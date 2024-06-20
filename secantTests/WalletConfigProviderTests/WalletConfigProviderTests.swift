@@ -124,7 +124,7 @@ class WalletConfigProviderTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer()
+            Root()
         }
         
         // Change any of the flags from the default value

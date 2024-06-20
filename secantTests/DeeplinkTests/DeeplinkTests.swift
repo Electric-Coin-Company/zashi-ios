@@ -17,13 +17,13 @@ import Root
 @MainActor
 class DeeplinkTests: XCTestCase {
     func testActionDeeplinkHome_SameDestinationLevel() async throws {
-        var appState = RootReducer.State.initial
+        var appState = Root.State.initial
         appState.destinationState.destination = .welcome
         
         let store = TestStore(
             initialState: appState
         ) {
-            RootReducer()
+            Root()
         }
         
         await store.send(.destination(.deeplinkHome)) { state in
@@ -34,13 +34,13 @@ class DeeplinkTests: XCTestCase {
     }
 
     func testActionDeeplinkHome_GeetingBack() async throws {
-        var appState = RootReducer.State.initial
+        var appState = Root.State.initial
         appState.destinationState.destination = .tabs
         
         let store = TestStore(
             initialState: appState
         ) {
-            RootReducer()
+            Root()
         }
         
         await store.send(.destination(.deeplinkHome)) { state in
@@ -51,13 +51,13 @@ class DeeplinkTests: XCTestCase {
     }
     
     func testActionDeeplinkSend() async throws {
-        var appState = RootReducer.State.initial
+        var appState = Root.State.initial
         appState.destinationState.destination = .welcome
         
         let store = TestStore(
             initialState: appState
         ) {
-            RootReducer()
+            Root()
         }
         
         let amount = Zatoshi(123_000_000)
@@ -86,14 +86,14 @@ class DeeplinkTests: XCTestCase {
     }
 
     func testDeeplinkRequest_Received_Home() async throws {
-        var appState = RootReducer.State.initial
+        var appState = Root.State.initial
         appState.destinationState.destination = .welcome
         appState.appInitializationState = .initialized
         
         let store = TestStore(
             initialState: appState
         ) {
-            RootReducer()
+            Root()
         }
         
         store.dependencies.deeplink = DeeplinkClient(
@@ -132,14 +132,14 @@ class DeeplinkTests: XCTestCase {
     }
     
     func testDeeplinkRequest_Received_Send() async throws {
-        var appState = RootReducer.State.initial
+        var appState = Root.State.initial
         appState.destinationState.destination = .welcome
         appState.appInitializationState = .initialized
         
         let store = TestStore(
             initialState: appState
         ) {
-            RootReducer()
+            Root()
         }
         
         store.dependencies.deeplink = DeeplinkClient(

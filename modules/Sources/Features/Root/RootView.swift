@@ -18,11 +18,11 @@ public struct RootView: View {
     @Environment(\.scenePhase) var scenePhase
     @State var covered = false
     
-    let store: RootStore
+    let store: StoreOf<Root>
     let tokenName: String
     let networkType: NetworkType
 
-    public init(store: RootStore, tokenName: String, networkType: NetworkType) {
+    public init(store: StoreOf<Root>, tokenName: String, networkType: NetworkType) {
         self.store = store
         self.tokenName = tokenName
         self.networkType = networkType
@@ -62,21 +62,21 @@ private struct FeatureFlagWrapper: Identifiable, Equatable, Comparable {
 
 private extension RootView {
     @ViewBuilder func switchOverDestination() -> some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
+        WithPerceptionTracking {
             Group {
-                switch viewStore.destinationState.destination {
+                switch store.destinationState.destination {
                 case .notEnoughFreeSpace:
                     NavigationView {
                         NotEnoughFreeSpaceView(
                             store: store.scope(
                                 state: \.notEnoughFreeSpaceState,
-                                action: RootReducer.Action.notEnoughFreeSpace
+                                action: \.notEnoughFreeSpace
                             )
                         )
                     }
                     .navigationViewStyle(.stack)
-                    .overlayedWithSplash(viewStore.splashAppeared) {
-                        viewStore.send(.splashRemovalRequested)
+                    .overlayedWithSplash(store.splashAppeared) {
+                        store.send(.splashRemovalRequested)
                     }
 
                 case .tabs:
@@ -84,28 +84,28 @@ private extension RootView {
                         TabsView(
                             store: store.scope(
                                 state: \.tabsState,
-                                action: RootReducer.Action.tabs
+                                action: \.tabs
                             ),
                             tokenName: tokenName,
                             networkType: networkType
                         )
                     }
                     .navigationViewStyle(.stack)
-                    .overlayedWithSplash(viewStore.splashAppeared) {
-                        viewStore.send(.splashRemovalRequested)
+                    .overlayedWithSplash(store.splashAppeared) {
+                        store.send(.splashRemovalRequested)
                     }
-                    
+
                 case .phraseDisplay:
                     NavigationView {
                         RecoveryPhraseDisplayView(
                             store: store.scope(
                                 state: \.phraseDisplayState,
-                                action: RootReducer.Action.phraseDisplay
+                                action: \.phraseDisplay
                             )
                         )
                     }
-                    .overlayedWithSplash(viewStore.splashAppeared) {
-                        viewStore.send(.splashRemovalRequested)
+                    .overlayedWithSplash(store.splashAppeared) {
+                        store.send(.splashRemovalRequested)
                     }
 
                 case .sandbox:
@@ -113,7 +113,7 @@ private extension RootView {
                         SandboxView(
                             store: store.scope(
                                 state: \.sandboxState,
-                                action: RootReducer.Action.sandbox
+                                action: \.sandbox
                             ),
                             tokenName: tokenName,
                             networkType: networkType
@@ -126,35 +126,38 @@ private extension RootView {
                         PlainOnboardingView(
                             store: store.scope(
                                 state: \.onboardingState,
-                                action: RootReducer.Action.onboarding
+                                action: \.onboarding
                             )
                         )
                     }
                     .navigationViewStyle(.stack)
-                    .overlayedWithSplash(viewStore.splashAppeared) {
-                        viewStore.send(.splashRemovalRequested)
+                    .overlayedWithSplash(store.splashAppeared) {
+                        store.send(.splashRemovalRequested)
                     }
 
                 case .startup:
                     ZStack(alignment: .topTrailing) {
-                        debugView(viewStore)
+                        debugView(store)
                             .transition(.opacity)
                     }
-                      
+                    
                 case .welcome:
                     WelcomeView(
                         store: store.scope(
                             state: \.welcomeState,
-                            action: RootReducer.Action.welcome
+                            action: \.welcome
                         )
                     )
                 }
             }
-            .onOpenURL(perform: { viewStore.goToDeeplink($0) })
-            .alert(store: store.scope(
-                state: \.$alert,
-                action: { .alert($0) }
-            ))
+            .onOpenURL(perform: { store.goToDeeplink($0) })
+            .alert(
+                store:
+                    store.scope(
+                        state: \.$alert,
+                        action: \.alert
+                    )
+            )
             .alert(store: store.scope(
                 state: \.exportLogsState.$alert,
                 action: { .exportLogs(.alert($0)) }
@@ -162,29 +165,35 @@ private extension RootView {
             .fullScreenCover(
                 isPresented:
                     Binding(
-                        get: { viewStore.serverSetupViewBinding },
-                        set: { viewStore.send(.serverSetupBindingUpdated($0)) }
+                        get: { store.serverSetupViewBinding },
+                        set: { store.send(.serverSetupBindingUpdated($0)) }
                     )
             ) {
                 NavigationView {
-                    ServerSetupView(store: store.serverSetupStore()) {
-                        viewStore.send(.serverSetupBindingUpdated(false))
+                    ServerSetupView(
+                        store:
+                            store.scope(
+                                state: \.serverSetupState,
+                                action: \.serverSetup
+                            )
+                    ) {
+                        store.send(.serverSetupBindingUpdated(false))
                     }
                 }
             }
 
-            shareLogsView(viewStore)
+            shareLogsView(store)
         }
     }
 }
 
 private extension RootView {
-    @ViewBuilder func shareLogsView(_ viewStore: RootViewStore) -> some View {
-        if viewStore.exportLogsState.isSharingLogs {
+    @ViewBuilder func shareLogsView(_ store: StoreOf<Root>) -> some View {
+        if store.exportLogsState.isSharingLogs {
             UIShareDialogView(
-                activityItems: viewStore.exportLogsState.zippedLogsURLs
+                activityItems: store.exportLogsState.zippedLogsURLs
             ) {
-                viewStore.send(.exportLogs(.shareFinished))
+                store.send(.exportLogs(.shareFinished))
             }
             // UIShareDialogView only wraps UIActivityViewController presentation
             // so frame is set to 0 to not break SwiftUIs layout
@@ -194,11 +203,11 @@ private extension RootView {
         }
     }
 
-    @ViewBuilder func debugView(_ viewStore: RootViewStore) -> some View {
+    @ViewBuilder func debugView(_ store: StoreOf<Root>) -> some View {
         VStack(alignment: .leading) {
-            if viewStore.destinationState.previousDestination == .tabs {
+            if store.destinationState.previousDestination == .tabs {
                 Button(L10n.General.back.uppercased()) {
-                    viewStore.goToDestination(.tabs)
+                    store.goToDestination(.tabs)
                 }
                 .zcashStyle()
                 .frame(width: 150)
@@ -208,17 +217,17 @@ private extension RootView {
             List {
                 Section(header: Text(L10n.Root.Debug.title)) {
                     Button(L10n.Root.Debug.Option.exportLogs) {
-                        viewStore.send(.exportLogs(.start))
+                        store.send(.exportLogs(.start))
                     }
-                    .disabled(viewStore.exportLogsState.exportLogsDisabled)
+                    .disabled(store.exportLogsState.exportLogsDisabled)
 
                     Button(L10n.Root.Debug.Option.testCrashReporter) {
-                        viewStore.send(.debug(.testCrashReporter))
+                        store.send(.debug(.testCrashReporter))
                     }
 
 #if DEBUG
                     Button(L10n.Root.Debug.Option.appReview) {
-                        viewStore.send(.debug(.rateTheApp))
+                        store.send(.debug(.rateTheApp))
                         if let currentScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
                             SKStoreReviewController.requestReview(in: currentScene)
                         }
@@ -226,20 +235,23 @@ private extension RootView {
 #endif
                     
                     Button(L10n.Root.Debug.Option.copySeed) {
-                        viewStore.send(.debug(.copySeedToPasteboard))
+                        store.send(.debug(.copySeedToPasteboard))
                     }
 
                     Button(L10n.Root.Debug.Option.rescanBlockchain) {
-                        viewStore.send(.debug(.rescanBlockchain))
+                        store.send(.debug(.rescanBlockchain))
                     }
 
                     Button(L10n.Root.Debug.Option.nukeWallet) {
-                        viewStore.send(.initialization(.nukeWalletRequest))
+                        store.send(.initialization(.nukeWalletRequest))
                     }
                 }
             }
             .confirmationDialog(
-              store: self.store.scope(state: \.$confirmationDialog, action: { .confirmationDialog($0) })
+                store: store.scope(
+                    state: \.$confirmationDialog,
+                    action: \.confirmationDialog
+                )
             )
         }
         .navigationBarTitle(L10n.Root.Debug.navigationTitle)
@@ -248,18 +260,45 @@ private extension RootView {
 
 // MARK: - Previews
 
-struct RootView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            RootView(
-                store: RootStore(
-                    initialState: .initial
-                ) {
-                    RootReducer()
-                },
-                tokenName: "ZEC",
-                networkType: .testnet
-            )
+#Preview {
+    NavigationView {
+        RootView(
+            store: StoreOf<Root>(
+                initialState: .initial
+            ) {
+                Root()
+            },
+            tokenName: "ZEC",
+            networkType: .testnet
+        )
+    }
+}
+
+// MARK: Placeholders
+
+extension Root.State {
+    public static var initial: Self {
+        .init(
+            debugState: .initial,
+            destinationState: .initial,
+            exportLogsState: .initial,
+            onboardingState: .initial,
+            phraseDisplayState: .initial,
+            sandboxState: .initial,
+            tabsState: .initial,
+            walletConfig: .initial,
+            welcomeState: .initial
+        )
+    }
+}
+
+extension Root {
+    public static var placeholder: StoreOf<Root> {
+        StoreOf<Root>(
+            initialState: .initial
+        ) {
+            Root()
+                .logging()
         }
     }
 }
