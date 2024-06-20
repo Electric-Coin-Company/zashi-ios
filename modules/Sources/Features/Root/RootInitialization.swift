@@ -13,8 +13,8 @@ import NotEnoughFreeSpace
 import Utils
 
 /// In this file is a collection of helpers that control all state and action related operations
-/// for the `RootReducer` with a connection to the app/wallet initialization and erasure of the wallet.
-extension RootReducer {
+/// for the `Root` with a connection to the app/wallet initialization and erasure of the wallet.
+extension Root {
     public enum Constants {
         static let udIsRestoringWallet = "udIsRestoringWallet"
     }
@@ -42,7 +42,7 @@ extension RootReducer {
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    public func initializationReduce() -> Reduce<RootReducer.State, RootReducer.Action> {
+    public func initializationReduce() -> Reduce<Root.State, Root.Action> {
         Reduce { state, action in
             switch action {
             case .initialization(.appDelegate(.didFinishLaunching)):
@@ -179,7 +179,7 @@ extension RootReducer {
                     sdkSynchronizer.stateStream()
                         .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
                         .map { $0.redacted }
-                        .map(RootReducer.Action.synchronizerStateChanged)
+                        .map(Root.Action.synchronizerStateChanged)
                 }
                 .cancellable(id: CancelStateId, cancelInFlight: true)
 
@@ -187,7 +187,7 @@ extension RootReducer {
                 return .publisher {
                     walletConfigProvider.load()
                         .receive(on: mainQueue)
-                        .map(RootReducer.Action.walletConfigLoaded)
+                        .map(Root.Action.walletConfigLoaded)
                 }
                 .cancellable(id: WalletConfigCancelId, cancelInFlight: true)
 
@@ -219,7 +219,7 @@ extension RootReducer {
 
                 /// Evaluate the wallet's state based on keychain keys and database files presence
             case .initialization(.checkWalletInitialization):
-                let walletState = RootReducer.walletInitializationState(
+                let walletState = Root.walletInitializationState(
                     databaseFiles: databaseFiles,
                     walletStorage: walletStorage,
                     zcashNetwork: zcashSDKEnvironment.network
@@ -297,7 +297,7 @@ extension RootReducer {
                     .send(.initialization(.registerForSynchronizersUpdate)),
                     .publisher {
                         autolockHandler.batteryStatePublisher()
-                            .map(RootReducer.Action.batteryStateChanged)
+                            .map(Root.Action.batteryStateChanged)
                     }
                     .cancellable(id: CancelBatteryStateId, cancelInFlight: true)
                 )
@@ -305,7 +305,7 @@ extension RootReducer {
             case .initialization(.checkBackupPhraseValidation):
                 do {
                     let storedWallet = try walletStorage.exportWallet()
-                    var landingDestination = RootReducer.DestinationState.Destination.tabs
+                    var landingDestination = Root.DestinationState.Destination.tabs
 
                     if !storedWallet.hasUserPassedPhraseBackupTest {
                         let phraseWords = mnemonic.asWords(storedWallet.seedPhrase.value())
@@ -345,8 +345,8 @@ extension RootReducer {
                 return .publisher {
                     wipePublisher
                         .replaceEmpty(with: Void())
-                        .map { _ in return RootReducer.Action.nukeWalletSucceeded }
-                        .replaceError(with: RootReducer.Action.nukeWalletFailed)
+                        .map { _ in return Root.Action.nukeWalletSucceeded }
+                        .replaceError(with: Root.Action.nukeWalletFailed)
                         .receive(on: mainQueue)
                 }
                 .cancellable(id: SynchronizerCancelId, cancelInFlight: true)
@@ -388,7 +388,7 @@ extension RootReducer {
                 }
 
             case .nukeWalletFailed:
-                let backDestination: Effect<RootReducer.Action>
+                let backDestination: Effect<Root.Action>
                 if let previousDestination = state.destinationState.previousDestination {
                     backDestination = Effect.send(.destination(.updateDestination(previousDestination)))
                 } else {

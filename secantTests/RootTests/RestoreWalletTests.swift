@@ -20,7 +20,7 @@ final class RestoreWalletTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            RootReducer()
+            Root()
         }
         
         store.dependencies.mainQueue = .immediate
@@ -50,13 +50,13 @@ final class RestoreWalletTests: XCTestCase {
     }
     
     func testIsRestoringWalletFinished() async throws {
-        var state = RootReducer.State.initial
+        var state = Root.State.initial
         state.isRestoringWallet = true
         
         let store = TestStore(
             initialState: state
         ) {
-            RootReducer()
+            Root()
         }
         
         store.dependencies.mainQueue = .immediate

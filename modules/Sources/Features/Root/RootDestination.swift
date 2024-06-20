@@ -14,8 +14,8 @@ import DerivationTool
 import SwiftUI
 
 /// In this file is a collection of helpers that control all state and action related operations
-/// for the `RootReducer` with a connection to the UI navigation.
-extension RootReducer {
+/// for the `Root` with a connection to the UI navigation.
+extension Root {
     public struct DestinationState: Equatable {
         public enum Destination: Equatable {
             case notEnoughFreeSpace
@@ -45,12 +45,12 @@ extension RootReducer {
         case deeplinkHome
         case deeplinkSend(Zatoshi, String, String)
         case deeplinkFailed(URL, ZcashError)
-        case updateDestination(RootReducer.DestinationState.Destination)
+        case updateDestination(Root.DestinationState.Destination)
         case serverSwitch
     }
 
     // swiftlint:disable:next cyclomatic_complexity
-    public func destinationReduce() -> Reduce<RootReducer.State, RootReducer.Action> {
+    public func destinationReduce() -> Reduce<Root.State, Root.Action> {
         Reduce { state, action in
             switch action {
             case let .destination(.updateDestination(destination)):
@@ -126,12 +126,12 @@ extension RootReducer {
     }
 }
 
-private extension RootReducer {
+private extension Root {
     func process(
         url: URL,
         deeplink: DeeplinkClient,
         derivationTool: DerivationToolClient
-    ) async throws -> RootReducer.Action {
+    ) async throws -> Root.Action {
         @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
         let deeplink = try deeplink.resolveDeeplinkURL(url, zcashSDKEnvironment.network.networkType, derivationTool)
         
@@ -144,8 +144,8 @@ private extension RootReducer {
     }
 }
 
-extension RootViewStore {
-    public func goToDestination(_ destination: RootReducer.DestinationState.Destination) {
+extension StoreOf<Root> {
+    public func goToDestination(_ destination: Root.DestinationState.Destination) {
         send(.destination(.updateDestination(destination)))
     }
     
@@ -156,7 +156,7 @@ extension RootViewStore {
 
 // MARK: Placeholders
 
-extension RootReducer.DestinationState {
+extension Root.DestinationState {
     public static var initial: Self {
         .init()
     }
