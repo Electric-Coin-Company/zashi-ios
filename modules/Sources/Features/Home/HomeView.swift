@@ -12,23 +12,23 @@ import WalletBalances
 import WalletStatusPanel
 
 public struct HomeView: View {
-    let store: HomeStore
+    let store: StoreOf<Home>
     let tokenName: String
     
     @State var walletStatus = WalletStatus.none
 
-    public init(store: HomeStore, tokenName: String) {
+    public init(store: StoreOf<Home>, tokenName: String) {
         self.store = store
         self.tokenName = tokenName
     }
     
     public var body: some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
+        WithPerceptionTracking {
             VStack(spacing: 0) {
                 WalletBalancesView(
                     store: store.scope(
                         state: \.walletBalancesState,
-                        action: HomeReducer.Action.walletBalances
+                        action: \.walletBalances
                     ),
                     tokenName: tokenName,
                     couldBeHidden: true
@@ -39,7 +39,7 @@ public struct HomeView: View {
                     SyncProgressView(
                         store: store.scope(
                             state: \.syncProgressState,
-                            action: HomeReducer.Action.syncProgress
+                            action: \.syncProgress
                         )
                     )
                     .frame(height: 94)
@@ -48,26 +48,36 @@ public struct HomeView: View {
                     .padding(.top, 7)
                 }
                 
-                TransactionListView(store: store.historyStore(), tokenName: tokenName)
+                TransactionListView(
+                    store:
+                        store.scope(
+                            state: \.transactionListState,
+                            action: \.transactionList
+                        ),
+                    tokenName: tokenName
+                )
             }
             .walletStatusPanel(restoringStatus: $walletStatus)
             .applyScreenBackground()
             .onAppear {
-                viewStore.send(.onAppear)
+                store.send(.onAppear)
             }
-            .onChange(of: viewStore.canRequestReview) { canRequestReview in
+            .onChange(of: store.canRequestReview) { canRequestReview in
                 if canRequestReview {
                     if let currentScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
                         SKStoreReviewController.requestReview(in: currentScene)
                     }
-                    viewStore.send(.reviewRequestFinished)
+                    store.send(.reviewRequestFinished)
                 }
             }
-            .onDisappear { viewStore.send(.onDisappear) }
-            .alert(store: store.scope(
-                state: \.$alert,
-                action: { .alert($0) }
-            ))
+            .onDisappear { store.send(.onDisappear) }
+            .alert(
+                store:
+                    store.scope(
+                        state: \.$alert,
+                        action: \.alert
+                    )
+            )
         }
     }
 }
@@ -79,7 +89,7 @@ struct HomeView_Previews: PreviewProvider {
         NavigationView {
             HomeView(
                 store:
-                    HomeStore(
+                    StoreOf<Home>(
                         initialState:
                                 .init(
                                     scanState: .initial,
@@ -93,7 +103,7 @@ struct HomeView_Previews: PreviewProvider {
                                     walletConfig: .initial
                                 )
                     ) {
-                        HomeReducer()
+                        Home()
                     },
                 tokenName: "ZEC"
             )
@@ -104,6 +114,44 @@ struct HomeView_Previews: PreviewProvider {
             .zashiTitle {
                 Text("Title")
             }
+        }
+    }
+}
+
+// MARK: Placeholders
+
+extension Home.State {
+    public static var initial: Self {
+        .init(
+            scanState: .initial,
+            syncProgressState: .initial,
+            transactionListState: .initial,
+            walletBalancesState: .initial,
+            walletConfig: .initial
+        )
+    }
+}
+
+extension Home {
+    public static var placeholder: StoreOf<Home> {
+        StoreOf<Home>(
+            initialState: .initial
+        ) {
+            Home()
+        }
+    }
+
+    public static var error: StoreOf<Home> {
+        StoreOf<Home>(
+            initialState: .init(
+                scanState: .initial,
+                syncProgressState: .initial,
+                transactionListState: .initial,
+                walletBalancesState: .initial,
+                walletConfig: .initial
+            )
+        ) {
+            Home()
         }
     }
 }

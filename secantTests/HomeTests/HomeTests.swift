@@ -22,7 +22,7 @@ class HomeTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            HomeReducer()
+            Home()
         }
 
         store.dependencies.mainQueue = .immediate
@@ -54,7 +54,7 @@ class HomeTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            HomeReducer()
+            Home()
         }
 
         await store.send(.synchronizerStateChanged(state.redacted))

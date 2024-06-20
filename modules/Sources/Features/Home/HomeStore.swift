@@ -12,15 +12,14 @@ import Scan
 import SyncProgress
 import WalletBalances
 
-public typealias HomeStore = Store<HomeReducer.State, HomeReducer.Action>
-public typealias HomeViewStore = ViewStore<HomeReducer.State, HomeReducer.Action>
-
-public struct HomeReducer: Reducer {
+@Reducer
+public struct Home {
     private let CancelStateId = UUID()
     private let CancelEventId = UUID()
 
+    @ObservableState
     public struct State: Equatable {
-        @PresentationState public var alert: AlertState<Action>?
+        @Presents public var alert: AlertState<Action>?
         public var canRequestReview = false
         public var migratingDatabase = true
         public var scanState: Scan.State
@@ -95,7 +94,7 @@ public struct HomeReducer: Reducer {
                             .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
                             .compactMap {
                                 if case SynchronizerEvent.foundTransactions = $0 {
-                                    return HomeReducer.Action.foundTransactions
+                                    return Home.Action.foundTransactions
                                 }
                                 return nil
                             }
@@ -178,55 +177,6 @@ public struct HomeReducer: Reducer {
             case .alert:
                 return .none
             }
-        }
-    }
-}
-
-// MARK: - Store
-
-extension HomeStore {
-    func historyStore() -> TransactionListStore {
-        self.scope(
-            state: \.transactionListState,
-            action: HomeReducer.Action.transactionList
-        )
-    }
-}
-
-// MARK: Placeholders
-
-extension HomeReducer.State {
-    public static var initial: Self {
-        .init(
-            scanState: .initial,
-            syncProgressState: .initial,
-            transactionListState: .initial,
-            walletBalancesState: .initial,
-            walletConfig: .initial
-        )
-    }
-}
-
-extension HomeStore {
-    public static var placeholder: HomeStore {
-        HomeStore(
-            initialState: .initial
-        ) {
-            HomeReducer()
-        }
-    }
-
-    public static var error: HomeStore {
-        HomeStore(
-            initialState: .init(
-                scanState: .initial,
-                syncProgressState: .initial,
-                transactionListState: .initial,
-                walletBalancesState: .initial,
-                walletConfig: .initial
-            )
-        ) {
-            HomeReducer()
         }
     }
 }
