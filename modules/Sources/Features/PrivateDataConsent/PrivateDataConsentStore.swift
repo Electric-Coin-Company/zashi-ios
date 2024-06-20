@@ -28,7 +28,7 @@ public struct PrivateDataConsentReducer: Reducer {
         public var isExportingData: Bool
         public var isExportingLogs: Bool
         public var dataDbURL: [URL] = []
-        public var exportLogsState: ExportLogsReducer.State
+        public var exportLogsState: ExportLogs.State
         
         public var isExportPossible: Bool {
             !isExportingData && !isExportingLogs && isAcknowledged
@@ -43,7 +43,7 @@ public struct PrivateDataConsentReducer: Reducer {
         public init(
             dataDbURL: [URL],
             exportBinding: Bool,
-            exportLogsState: ExportLogsReducer.State,
+            exportLogsState: ExportLogs.State,
             exportOnlyLogs: Bool = true,
             isAcknowledged: Bool = false,
             isExportingData: Bool = false,
@@ -61,7 +61,7 @@ public struct PrivateDataConsentReducer: Reducer {
     
     public enum Action: BindableAction, Equatable {
         case binding(BindingAction<PrivateDataConsentReducer.State>)
-        case exportLogs(ExportLogsReducer.Action)
+        case exportLogs(ExportLogs.Action)
         case exportLogsRequested
         case exportRequested
         case onAppear
@@ -78,7 +78,7 @@ public struct PrivateDataConsentReducer: Reducer {
         BindingReducer()
 
         Scope(state: \.exportLogsState, action: /Action.exportLogs) {
-            ExportLogsReducer()
+            ExportLogs()
         }
         
         Reduce { state, action in

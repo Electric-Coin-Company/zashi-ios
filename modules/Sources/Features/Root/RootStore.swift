@@ -44,7 +44,7 @@ public struct Root {
         @Presents public var confirmationDialog: ConfirmationDialogState<Action.ConfirmationDialog>?
         public var debugState: DebugState
         public var destinationState: DestinationState
-        public var exportLogsState: ExportLogsReducer.State
+        public var exportLogsState: ExportLogs.State
         public var isLockedInKeychainUnavailableState = false
         public var isRestoringWallet = false
         public var notEnoughFreeSpaceState: NotEnoughFreeSpace.State
@@ -64,7 +64,7 @@ public struct Root {
             appStartState: AppStartState = .unknown,
             debugState: DebugState,
             destinationState: DestinationState,
-            exportLogsState: ExportLogsReducer.State,
+            exportLogsState: ExportLogs.State,
             isLockedInKeychainUnavailableState: Bool = false,
             isRestoringWallet: Bool = false,
             notEnoughFreeSpaceState: NotEnoughFreeSpace.State = .initial,
@@ -107,7 +107,7 @@ public struct Root {
         case confirmationDialog(PresentationAction<ConfirmationDialog>)
         case debug(DebugAction)
         case destination(DestinationAction)
-        case exportLogs(ExportLogsReducer.Action)
+        case exportLogs(ExportLogs.Action)
         case tabs(TabsReducer.Action)
         case initialization(InitializationAction)
         case notEnoughFreeSpace(NotEnoughFreeSpace.Action)
@@ -159,7 +159,7 @@ public struct Root {
         }
 
         Scope(state: \.exportLogsState, action: /Action.exportLogs) {
-            ExportLogsReducer()
+            ExportLogs()
         }
 
         Scope(state: \.notEnoughFreeSpaceState, action: /Action.notEnoughFreeSpace) {
