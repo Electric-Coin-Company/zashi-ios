@@ -35,7 +35,7 @@ class HomeSnapshotTests: XCTestCase {
             return transaction
         }
         
-        let store = HomeStore(
+        let store = StoreOf<Home>(
             initialState: .init(
                 scanState: .initial,
                 syncProgressState: .initial,
@@ -44,7 +44,7 @@ class HomeSnapshotTests: XCTestCase {
                 walletConfig: .initial
             )
         ) {
-            HomeReducer()
+            Home()
                 .dependency(\.diskSpaceChecker, .mockEmptyDisk)
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.mainQueue, .immediate)

@@ -27,7 +27,7 @@ final class ReviewRequestTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            HomeReducer()
+            Home()
         }
         
         let now = Date.now
@@ -60,7 +60,7 @@ final class ReviewRequestTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            HomeReducer()
+            Home()
         }
 
         let now = Date.now

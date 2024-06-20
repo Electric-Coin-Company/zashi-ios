@@ -51,7 +51,7 @@ public struct TabsReducer: Reducer {
         public var addressDetailsState: AddressDetails.State
         public var balanceBreakdownState: BalanceBreakdownReducer.State
         public var destination: Destination?
-        public var homeState: HomeReducer.State
+        public var homeState: Home.State
         public var selectedTab: Tab = .account
         public var sendConfirmationState: SendConfirmation.State
         public var sendState: SendFlowReducer.State
@@ -61,7 +61,7 @@ public struct TabsReducer: Reducer {
             addressDetailsState: AddressDetails.State,
             balanceBreakdownState: BalanceBreakdownReducer.State,
             destination: Destination? = nil,
-            homeState: HomeReducer.State,
+            homeState: Home.State,
             selectedTab: Tab = .account,
             sendConfirmationState: SendConfirmation.State,
             sendState: SendFlowReducer.State,
@@ -81,7 +81,7 @@ public struct TabsReducer: Reducer {
     public enum Action: Equatable {
         case addressDetails(AddressDetails.Action)
         case balanceBreakdown(BalanceBreakdownReducer.Action)
-        case home(HomeReducer.Action)
+        case home(Home.Action)
         case selectedTabChanged(State.Tab)
         case send(SendFlowReducer.Action)
         case sendConfirmation(SendConfirmation.Action)
@@ -111,7 +111,7 @@ public struct TabsReducer: Reducer {
         }
 
         Scope(state: \.homeState, action: /Action.home) {
-            HomeReducer()
+            Home()
         }
 
         Scope(state: \.settingsState, action: /Action.settings) {
