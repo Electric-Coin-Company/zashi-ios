@@ -12,66 +12,68 @@ import Models
 import UIComponents
 
 struct TransactionHeaderView: View {
-    let viewStore: TransactionListViewStore
+    let store: StoreOf<TransactionList>
     let transaction: TransactionState
     let isLatestTransaction: Bool
     
     init(
-        viewStore: TransactionListViewStore,
+        store: StoreOf<TransactionList>,
         transaction: TransactionState,
         isLatestTransaction: Bool = false
     ) {
-        self.viewStore = viewStore
+        self.store = store
         self.transaction = transaction
         self.isLatestTransaction = isLatestTransaction
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            Divider()
-                .padding(.horizontal, 30)
-                .padding(.bottom, 30)
-                .opacity(isLatestTransaction ? 0.0 : 1.0)
-            
-            HStack {
-                VStack(alignment: .leading, spacing: 5) {
-                    HStack(spacing: 0) {
-                        iconImage()
-
-                        titleText()
-                        
-                        addressArea()
-                        
-                        Spacer(minLength: 60)
-                        
-                        balanceView()
-                    }
-                    .padding(.trailing, 30)
-                    
-                    if transaction.zAddress != nil && transaction.isAddressExpanded {
-                        HStack {
-                            Text(transaction.address)
-                                .font(.custom(FontFamily.Inter.regular.name, size: 13))
-                                .foregroundColor(Asset.Colors.primary.color)
-
-                            Spacer(minLength: 100)
+        WithPerceptionTracking {
+            VStack(spacing: 0) {
+                Divider()
+                    .padding(.horizontal, 30)
+                    .padding(.bottom, 30)
+                    .opacity(isLatestTransaction ? 0.0 : 1.0)
+                
+                HStack {
+                    VStack(alignment: .leading, spacing: 5) {
+                        HStack(spacing: 0) {
+                            iconImage()
+                            
+                            titleText()
+                            
+                            addressArea()
+                            
+                            Spacer(minLength: 60)
+                            
+                            balanceView()
                         }
-                        .padding(.horizontal, 60)
-                        .padding(.bottom, 5)
+                        .padding(.trailing, 30)
                         
-                        TapToCopyTransactionDataView(viewStore: viewStore, data: transaction.address.redacted)
+                        if transaction.zAddress != nil && transaction.isAddressExpanded {
+                            HStack {
+                                Text(transaction.address)
+                                    .font(.custom(FontFamily.Inter.regular.name, size: 13))
+                                    .foregroundColor(Asset.Colors.primary.color)
+                                
+                                Spacer(minLength: 100)
+                            }
                             .padding(.horizontal, 60)
-                            .padding(.bottom, 20)
+                            .padding(.bottom, 5)
+                            
+                            TapToCopyTransactionDataView(store: store, data: transaction.address.redacted)
+                                .padding(.horizontal, 60)
+                                .padding(.bottom, 20)
+                        }
+                        
+                        Text("\(transaction.dateString ?? "")")
+                            .font(.custom(FontFamily.Inter.regular.name, size: 13))
+                            .foregroundColor(Asset.Colors.shade47.color)
+                            .padding(.horizontal, 60)
                     }
-
-                    Text("\(transaction.dateString ?? "")")
-                        .font(.custom(FontFamily.Inter.regular.name, size: 13))
-                        .foregroundColor(Asset.Colors.shade47.color)
-                        .padding(.horizontal, 60)
                 }
             }
+            .padding(.bottom, 30)
         }
-        .padding(.bottom, 30)
     }
 
     @ViewBuilder private func iconImage() -> some View {
@@ -105,7 +107,7 @@ struct TransactionHeaderView: View {
                 .foregroundColor(Asset.Colors.primary.color)
         } else if !transaction.isAddressExpanded {
             Button {
-                viewStore.send(.transactionAddressExpandRequested(transaction.id))
+                store.send(.transactionAddressExpandRequested(transaction.id))
             } label: {
                 Text(transaction.address)
                     .font(.custom(FontFamily.Inter.regular.name, size: 13))
@@ -165,37 +167,37 @@ extension TransactionHeaderView {
 #Preview {
     VStack(spacing: 0) {
         TransactionHeaderView(
-            viewStore: ViewStore(.placeholder, observe: { $0 }),
+            store: .placeholder,
             transaction: .mockedFailed
         )
         .listRowSeparator(.hidden)
 
         TransactionHeaderView(
-            viewStore: ViewStore(.placeholder, observe: { $0 }),
+            store: .placeholder,
             transaction: .mockedFailedReceive
         )
         .listRowSeparator(.hidden)
 
         TransactionHeaderView(
-            viewStore: ViewStore(.placeholder, observe: { $0 }),
+            store: .placeholder,
             transaction: .mockedSent
         )
         .listRowSeparator(.hidden)
 
         TransactionHeaderView(
-            viewStore: ViewStore(.placeholder, observe: { $0 }),
+            store: .placeholder,
             transaction: .mockedReceived
         )
         .listRowSeparator(.hidden)
         
         TransactionHeaderView(
-            viewStore: ViewStore(.placeholder, observe: { $0 }),
+            store: .placeholder,
             transaction: .mockedSending
         )
         .listRowSeparator(.hidden)
         
         TransactionHeaderView(
-            viewStore: ViewStore(.placeholder, observe: { $0 }),
+            store: .placeholder,
             transaction: .mockedReceiving
         )
         .listRowSeparator(.hidden)

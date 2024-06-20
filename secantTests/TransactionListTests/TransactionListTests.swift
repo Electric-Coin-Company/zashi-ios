@@ -17,11 +17,11 @@ import TransactionList
 class TransactionListTests: XCTestCase {
     func testSynchronizerSubscription() async throws {
         let store = TestStore(
-            initialState: TransactionListReducer.State(
+            initialState: TransactionList.State(
                 transactionList: []
             )
         ) {
-            TransactionListReducer()
+            TransactionList()
         }
 
         store.dependencies.sdkSynchronizer = .mocked()
@@ -76,11 +76,11 @@ class TransactionListTests: XCTestCase {
         let identifiedTransactionList = IdentifiedArrayOf(uniqueElements: transactionList)
 
         let store = TestStore(
-            initialState: TransactionListReducer.State(
+            initialState: TransactionList.State(
                 transactionList: identifiedTransactionList
             )
         ) {
-            TransactionListReducer()
+            TransactionList()
         }
 
         store.dependencies.mainQueue = .immediate
@@ -104,7 +104,7 @@ class TransactionListTests: XCTestCase {
 
             state.transactionList = receivedTransactionList
             state.latestTransactionList = transactionList
-            state.latestTranassctionId = "aa11"
+            state.latestTransactionId = "aa11"
         }
         
         await store.finish()
@@ -143,12 +143,12 @@ class TransactionListTests: XCTestCase {
         let identifiedTransactionList = IdentifiedArrayOf(uniqueElements: transactionList)
 
         let store = TestStore(
-            initialState: TransactionListReducer.State(
+            initialState: TransactionList.State(
                 latestTransactionList: transactionList,
                 transactionList: identifiedTransactionList
             )
         ) {
-            TransactionListReducer()
+            TransactionList()
         }
 
         store.dependencies.mainQueue = .immediate
@@ -168,11 +168,11 @@ class TransactionListTests: XCTestCase {
         let testPasteboard = PasteboardClient.testPasteboard
 
         let store = TestStore(
-            initialState: TransactionListReducer.State(
+            initialState: TransactionList.State(
                 transactionList: []
             )
         ) {
-            TransactionListReducer()
+            TransactionList()
         }
 
         store.dependencies.pasteboard = testPasteboard
@@ -210,11 +210,11 @@ class TransactionListTests: XCTestCase {
         )
 
         let store = TestStore(
-            initialState: TransactionListReducer.State(
+            initialState: TransactionList.State(
                 transactionList: [transaction]
             )
         ) {
-            TransactionListReducer()
+            TransactionList()
         }
 
         store.dependencies.readTransactionsStorage = .noOp
@@ -243,11 +243,11 @@ class TransactionListTests: XCTestCase {
         )
 
         let store = TestStore(
-            initialState: TransactionListReducer.State(
+            initialState: TransactionList.State(
                 transactionList: [transaction]
             )
         ) {
-            TransactionListReducer()
+            TransactionList()
         }
 
         store.dependencies.readTransactionsStorage = .noOp
@@ -277,11 +277,11 @@ class TransactionListTests: XCTestCase {
         )
 
         let store = TestStore(
-            initialState: TransactionListReducer.State(
+            initialState: TransactionList.State(
                 transactionList: [transaction]
             )
         ) {
-            TransactionListReducer()
+            TransactionList()
         }
 
         store.dependencies.readTransactionsStorage = .noOp
@@ -312,11 +312,11 @@ class TransactionListTests: XCTestCase {
         )
 
         let store = TestStore(
-            initialState: TransactionListReducer.State(
+            initialState: TransactionList.State(
                 transactionList: [transaction]
             )
         ) {
-            TransactionListReducer()
+            TransactionList()
         }
 
         store.dependencies.readTransactionsStorage = .noOp
@@ -346,11 +346,11 @@ class TransactionListTests: XCTestCase {
         )
 
         let store = TestStore(
-            initialState: TransactionListReducer.State(
+            initialState: TransactionList.State(
                 transactionList: [transaction]
             )
         ) {
-            TransactionListReducer()
+            TransactionList()
         }
 
         store.dependencies.readTransactionsStorage = .noOp
@@ -380,11 +380,11 @@ class TransactionListTests: XCTestCase {
         )
 
         let store = TestStore(
-            initialState: TransactionListReducer.State(
+            initialState: TransactionList.State(
                 transactionList: [transaction]
             )
         ) {
-            TransactionListReducer()
+            TransactionList()
         }
 
         store.dependencies.readTransactionsStorage = .noOp
@@ -414,11 +414,11 @@ class TransactionListTests: XCTestCase {
         )
 
         let store = TestStore(
-            initialState: TransactionListReducer.State(
+            initialState: TransactionList.State(
                 transactionList: [transaction]
             )
         ) {
-            TransactionListReducer()
+            TransactionList()
         }
 
         store.dependencies.readTransactionsStorage = .noOp
@@ -448,11 +448,11 @@ class TransactionListTests: XCTestCase {
         )
 
         let store = TestStore(
-            initialState: TransactionListReducer.State(
+            initialState: TransactionList.State(
                 transactionList: [transaction]
             )
         ) {
-            TransactionListReducer()
+            TransactionList()
         }
 
         store.dependencies.readTransactionsStorage = .noOp
@@ -488,11 +488,11 @@ class TransactionListTests: XCTestCase {
         let identifiedTransactionList = IdentifiedArrayOf(uniqueElements: transactionList)
 
         let store = TestStore(
-            initialState: TransactionListReducer.State(
+            initialState: TransactionList.State(
                 transactionList: identifiedTransactionList
             )
         ) {
-            TransactionListReducer()
+            TransactionList()
         }
 
         store.dependencies.mainQueue = .immediate
@@ -509,7 +509,7 @@ class TransactionListTests: XCTestCase {
         await store.receive(.updateTransactionList(transactionList)) { state in
             state.transactionList = IdentifiedArrayOf(uniqueElements: transactionList)
             state.latestTransactionList = transactionList
-            state.latestTranassctionId = id
+            state.latestTransactionId = id
             
             XCTAssertTrue(state.transactionList[0].isUnread)
         }
@@ -541,11 +541,11 @@ class TransactionListTests: XCTestCase {
         let identifiedTransactionList = IdentifiedArrayOf(uniqueElements: transactionList)
 
         let store = TestStore(
-            initialState: TransactionListReducer.State(
+            initialState: TransactionList.State(
                 transactionList: identifiedTransactionList
             )
         ) {
-            TransactionListReducer()
+            TransactionList()
         }
 
         store.dependencies.mainQueue = .immediate
@@ -563,7 +563,7 @@ class TransactionListTests: XCTestCase {
         await store.receive(.updateTransactionList(transactionList)) { state in
             state.transactionList = IdentifiedArrayOf(uniqueElements: transactionList)
             state.latestTransactionList = transactionList
-            state.latestTranassctionId = id
+            state.latestTransactionId = id
             state.transactionList[0].isMarkedAsRead = true
             
             XCTAssertFalse(state.transactionList[0].isUnread)
@@ -596,11 +596,11 @@ class TransactionListTests: XCTestCase {
         let identifiedTransactionList = IdentifiedArrayOf(uniqueElements: transactionList)
 
         let store = TestStore(
-            initialState: TransactionListReducer.State(
+            initialState: TransactionList.State(
                 transactionList: identifiedTransactionList
             )
         ) {
-            TransactionListReducer()
+            TransactionList()
         }
 
         store.dependencies.mainQueue = .immediate
@@ -618,7 +618,7 @@ class TransactionListTests: XCTestCase {
         await store.receive(.updateTransactionList(transactionList)) { state in
             state.transactionList = IdentifiedArrayOf(uniqueElements: transactionList)
             state.latestTransactionList = transactionList
-            state.latestTranassctionId = id
+            state.latestTransactionId = id
             state.transactionList[0].isMarkedAsRead = true
             
             XCTAssertFalse(state.transactionList[0].isUnread)

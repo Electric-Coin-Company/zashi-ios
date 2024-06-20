@@ -13,71 +13,73 @@ import Generated
 import UIComponents
 
 public struct TransactionRowView: View {
-    let viewStore: TransactionListViewStore
+    let store: StoreOf<TransactionList>
     let transaction: TransactionState
     let tokenName: String
     let isLatestTransaction: Bool
 
     public init(
-        viewStore: TransactionListViewStore,
+        store: StoreOf<TransactionList>,
         transaction: TransactionState,
         tokenName: String,
         isLatestTransaction: Bool = false
     ) {
-        self.viewStore = viewStore
+        self.store = store
         self.transaction = transaction
         self.tokenName = tokenName
         self.isLatestTransaction = isLatestTransaction
     }
 
     public var body: some View {
-        Button {
-            viewStore.send(.transactionExpandRequested(transaction.id), animation: .default)
-        } label: {
-            if transaction.isExpanded {
-                TransactionHeaderView(
-                    viewStore: viewStore,
-                    transaction: transaction,
-                    isLatestTransaction: isLatestTransaction
-                )
-            } else {
-                TransactionHeaderView(
-                    viewStore: viewStore,
-                    transaction: transaction,
-                    isLatestTransaction: isLatestTransaction
-                )
-            }
-        }
-
-        if transaction.isExpanded {
-            Group {
-                if !transaction.isTransparentRecipient {
-                    MessageView(
-                        viewStore: viewStore,
-                        messages: transaction.textMemos,
-                        isSpending: transaction.isSpending,
-                        isFailed: transaction.status == .failed
+        WithPerceptionTracking {
+            Button {
+                store.send(.transactionExpandRequested(transaction.id), animation: .default)
+            } label: {
+                if transaction.isExpanded {
+                    TransactionHeaderView(
+                        store: store,
+                        transaction: transaction,
+                        isLatestTransaction: isLatestTransaction
+                    )
+                } else {
+                    TransactionHeaderView(
+                        store: store,
+                        transaction: transaction,
+                        isLatestTransaction: isLatestTransaction
                     )
                 }
-
-                TransactionIdView(
-                    viewStore: viewStore,
-                    transaction: transaction
-                )
-
-                if transaction.isSpending {
-                    TransactionFeeView(fee: transaction.fee ?? .zero)
-                        .padding(.vertical, 10)
-                }
-
-                Button {
-                    viewStore.send(.transactionCollapseRequested(transaction.id), animation: .default)
-                } label: {
-                    CollapseTransactionView()
-                        .padding(.vertical, 20)
-                }
             }
-            .padding(.horizontal, 60)
+            
+            if transaction.isExpanded {
+                Group {
+                    if !transaction.isTransparentRecipient {
+                        MessageView(
+                            store: store,
+                            messages: transaction.textMemos,
+                            isSpending: transaction.isSpending,
+                            isFailed: transaction.status == .failed
+                        )
+                    }
+                    
+                    TransactionIdView(
+                        store: store,
+                        transaction: transaction
+                    )
+                    
+                    if transaction.isSpending {
+                        TransactionFeeView(fee: transaction.fee ?? .zero)
+                            .padding(.vertical, 10)
+                    }
+                    
+                    Button {
+                        store.send(.transactionCollapseRequested(transaction.id), animation: .default)
+                    } label: {
+                        CollapseTransactionView()
+                            .padding(.vertical, 20)
+                    }
+                }
+                .padding(.horizontal, 60)
+            }
         }
     }
 }
@@ -85,7 +87,7 @@ public struct TransactionRowView: View {
 #Preview {
     List {
         TransactionRowView(
-            viewStore: ViewStore(.placeholder, observe: { $0 }),
+            store: .placeholder,
             transaction: .mockedFailed,
             tokenName: "ZEC"
         )
@@ -93,7 +95,7 @@ public struct TransactionRowView: View {
         .listRowInsets(EdgeInsets())
 
         TransactionRowView(
-            viewStore: ViewStore(.placeholder, observe: { $0 }),
+            store: .placeholder,
             transaction: .mockedReceived,
             tokenName: "ZEC"
         )
@@ -101,7 +103,7 @@ public struct TransactionRowView: View {
         .listRowInsets(EdgeInsets())
         
         TransactionRowView(
-            viewStore: ViewStore(.placeholder, observe: { $0 }),
+            store: .placeholder,
             transaction: .mockedSent,
             tokenName: "ZEC"
         )
