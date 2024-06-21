@@ -9,19 +9,18 @@ import SDKSynchronizer
 import ReadTransactionsStorage
 import ZcashSDKEnvironment
 
-public typealias TransactionListStore = Store<TransactionListReducer.State, TransactionListReducer.Action>
-public typealias TransactionListViewStore = ViewStore<TransactionListReducer.State, TransactionListReducer.Action>
-
-public struct TransactionListReducer: Reducer {
+@Reducer
+public struct TransactionList {
     private let CancelStateId = UUID()
     private let CancelEventId = UUID()
 
+    @ObservableState
     public struct State: Equatable {
         public var latestMinedHeight: BlockHeight?
         public var requiredTransactionConfirmations = 0
         public var latestTransactionList: [TransactionState] = []
         public var transactionList: IdentifiedArrayOf<TransactionState>
-        public var latestTranassctionId = ""
+        public var latestTransactionId = ""
         
         public init(
             latestMinedHeight: BlockHeight? = nil,
@@ -68,7 +67,7 @@ public struct TransactionListReducer: Reducer {
                 .publisher {
                     sdkSynchronizer.stateStream()
                         .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                        .map { TransactionListReducer.Action.synchronizerStateChanged($0.syncStatus) }
+                        .map { TransactionList.Action.synchronizerStateChanged($0.syncStatus) }
                 }
                 .cancellable(id: CancelStateId, cancelInFlight: true),
                 .publisher {
@@ -76,7 +75,7 @@ public struct TransactionListReducer: Reducer {
                         .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
                         .compactMap {
                             if case SynchronizerEvent.foundTransactions = $0 {
-                                return TransactionListReducer.Action.foundTransactions
+                                return TransactionList.Action.foundTransactions
                             }
                             return nil
                         }
@@ -156,7 +155,7 @@ public struct TransactionListReducer: Reducer {
                 }
             
             state.transactionList = IdentifiedArrayOf(uniqueElements: sortedTransactionList)
-            state.latestTranassctionId = state.transactionList.first?.id ?? ""
+            state.latestTransactionId = state.transactionList.first?.id ?? ""
             
             return .none
             
@@ -245,61 +244,5 @@ public struct TransactionListReducer: Reducer {
             }
             return .none
         }
-    }
-}
-
-// MARK: ViewStore
-
-extension TransactionListViewStore {
-    func isLatestTransaction(id: String) -> Bool {
-        state.latestTranassctionId == id
-    }
-}
-
-// MARK: Placeholders
-
-extension TransactionListReducer.State {
-    public static var placeholder: Self {
-        .init(transactionList: .mocked)
-    }
-
-    public static var initial: Self {
-        .init(transactionList: [])
-    }
-}
-
-extension TransactionListStore {
-    public static var placeholder: Store<TransactionListReducer.State, TransactionListReducer.Action> {
-        Store(
-            initialState: .placeholder
-        ) {
-            TransactionListReducer()
-                .dependency(\.zcashSDKEnvironment, .testnet)
-        }
-    }
-}
-
-extension IdentifiedArrayOf where Element == TransactionState {
-    public static var placeholder: IdentifiedArrayOf<TransactionState> {
-        .init(
-            uniqueElements: (0..<30).map {
-                TransactionState(
-                    fee: Zatoshi(10),
-                    id: String($0),
-                    status: .paid,
-                    timestamp: 1234567,
-                    zecAmount: Zatoshi(25)
-                )
-            }
-        )
-    }
-    
-    public static var mocked: IdentifiedArrayOf<TransactionState> {
-        .init(
-            uniqueElements: [
-                TransactionState.mockedSent,
-                TransactionState.mockedReceived
-            ]
-        )
     }
 }

@@ -15,10 +15,10 @@ import Home
 
 class TransactionListSnapshotTests: XCTestCase {
     func testFullTransactionListSnapshot() throws {
-        let store = TransactionListStore(
+        let store = StoreOf<TransactionList>(
             initialState: .placeholder
         ) {
-            TransactionListReducer()
+            TransactionList()
                 .dependency(\.sdkSynchronizer, .mock)
                 .dependency(\.mainQueue, .immediate)
         }

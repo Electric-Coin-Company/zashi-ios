@@ -13,13 +13,13 @@ public struct SandboxReducer: Reducer {
             case recoveryPhraseDisplay
             case scan
         }
-        public var transactionListState: TransactionListReducer.State
+        public var transactionListState: TransactionList.State
         public var destination: Destination?
     }
 
     public enum Action: Equatable {
         case updateDestination(SandboxReducer.State.Destination?)
-        case transactionList(TransactionListReducer.Action)
+        case transactionList(TransactionList.Action)
         case reset
     }
     
@@ -32,7 +32,7 @@ public struct SandboxReducer: Reducer {
             return .none
             
         case let .transactionList(transactionListAction):
-            return TransactionListReducer()
+            return TransactionList()
                 .reduce(into: &state.transactionListState, action: transactionListAction)
                 .map(SandboxReducer.Action.transactionList)
             
@@ -45,7 +45,7 @@ public struct SandboxReducer: Reducer {
 // MARK: - Store
 
 extension SandboxStore {
-    func historyStore() -> TransactionListStore {
+    func historyStore() -> StoreOf<TransactionList> {
         self.scope(
             state: \.transactionListState,
             action: SandboxReducer.Action.transactionList
