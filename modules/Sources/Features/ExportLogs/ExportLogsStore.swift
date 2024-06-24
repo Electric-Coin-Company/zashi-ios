@@ -13,12 +13,11 @@ import LogsHandler
 import Utils
 import Generated
 
-public typealias ExportLogsStore = Store<ExportLogsReducer.State, ExportLogsReducer.Action>
-public typealias ExportLogsViewStore = ViewStore<ExportLogsReducer.State, ExportLogsReducer.Action>
-
-public struct ExportLogsReducer: Reducer {
+@Reducer
+public struct ExportLogs: Reducer {
+    @ObservableState
     public struct State: Equatable {
-        @PresentationState public var alert: AlertState<Action>?
+        @Presents public var alert: AlertState<Action>?
         public var exportLogsDisabled = false
         public var isSharingLogs = false
         public var zippedLogsURLs: [URL] = []
@@ -93,25 +92,5 @@ public struct ExportLogsReducer: Reducer {
                 return .none
             }
         }
-    }
-}
-
-// MARK: Alerts
-
-extension AlertState where Action == ExportLogsReducer.Action {
-    public static func failed(_ error: ZcashError) -> AlertState {
-        AlertState {
-            TextState(L10n.ExportLogs.Alert.Failed.title)
-        } message: {
-            TextState(L10n.ExportLogs.Alert.Failed.message(error.detailedMessage))
-        }
-    }
-}
-
-// MARK: Placeholders
-
-extension ExportLogsReducer.State {
-    public static var initial: Self {
-        .init()
     }
 }
