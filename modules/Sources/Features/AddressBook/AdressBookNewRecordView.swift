@@ -19,6 +19,8 @@ public struct AddressBookNewRecordView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack {
+                Spacer()
+                
                 ZashiTextField(
                     text: $store.address,
                     placeholder: "Zcash address",
@@ -39,8 +41,6 @@ public struct AddressBookNewRecordView: View {
                 .zcashStyle()
                 .padding(.bottom, 20)
                 .disabled(!store.isValidForm)
-                
-                Spacer()
             }
             .padding(.horizontal, 35)
         }

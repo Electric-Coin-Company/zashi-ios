@@ -95,6 +95,10 @@ public struct RequestPaymentView: View {
             .padding(.vertical, 1)
             .padding(.horizontal, 35)
             .zashiBack()
+            .zashiTitle {
+                Text("Zashi Me".uppercased())
+                    .font(.custom(FontFamily.Archivo.bold.name, size: 14))
+            }
         }
         .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground()
