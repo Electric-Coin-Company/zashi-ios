@@ -118,6 +118,10 @@
 		9EEB06C62B344F1E00EEE50F /* SyncProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEB06C52B344F1E00EEE50F /* SyncProgressTests.swift */; };
 		9EEB06C82B405A0400EEE50F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEB06C72B405A0400EEE50F /* AppDelegate.swift */; };
 		9EEB06C92B405A0400EEE50F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEB06C72B405A0400EEE50F /* AppDelegate.swift */; };
+		9EFEE8592C328CD900789343 /* PartnerKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9EFEE8582C328CD900789343 /* PartnerKeys.plist */; };
+		9EFEE85A2C328CD900789343 /* PartnerKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9EFEE8582C328CD900789343 /* PartnerKeys.plist */; };
+		9EFEE85B2C328CD900789343 /* PartnerKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9EFEE8582C328CD900789343 /* PartnerKeys.plist */; };
+		9EFEE85C2C328CD900789343 /* PartnerKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9EFEE8582C328CD900789343 /* PartnerKeys.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -211,6 +215,7 @@
 		9EEB06C72B405A0400EEE50F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9EF8135A27ECC25E0075AF48 /* WalletStorageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletStorageTests.swift; sourceTree = "<group>"; };
 		9EF8135B27ECC25E0075AF48 /* UserPreferencesStorageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserPreferencesStorageTests.swift; sourceTree = "<group>"; };
+		9EFEE8582C328CD900789343 /* PartnerKeys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PartnerKeys.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -586,6 +591,7 @@
 				9E5AAEBF2A67CEC4003F283D /* Colors.xcassets */,
 				9E2706652AFF99F5000DA6EC /* ReadTransactionsStorageModel.xcdatamodeld */,
 				9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */,
+				9EFEE8582C328CD900789343 /* PartnerKeys.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -779,6 +785,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9E064E7E2C2964BC00606B3C /* Build configuration list for PBXNativeTarget "secant-distrib-summit" */;
 			buildPhases = (
+				9ED0EC2D2C3291E30030E088 /* Generate PartnerKeys.plist */,
 				9E064E672C2964BC00606B3C /* Generate GoogleService-Info.plist  */,
 				9E064E682C2964BC00606B3C /* Swiftgen */,
 				9E064E692C2964BC00606B3C /* SwiftLint */,
@@ -808,6 +815,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9E4AB2B42BA1BEE900F5D6DB /* Build configuration list for PBXNativeTarget "secant-distrib" */;
 			buildPhases = (
+				9ED0EC2E2C32927B0030E088 /* Generate PartnerKeys.plist */,
 				9E4AB29E2BA1BEE900F5D6DB /* Generate GoogleService-Info.plist  */,
 				9E4AB29F2BA1BEE900F5D6DB /* Swiftgen */,
 				9E4AB2A02BA1BEE900F5D6DB /* SwiftLint */,
@@ -890,6 +898,7 @@
 				0D26AF84299E8196005260EE /* Preview Assets.xcassets in Resources */,
 				0D26AF88299E8196005260EE /* LaunchScreen.storyboard in Resources */,
 				9E90751F2A269BE300269308 /* Assets.xcassets in Resources */,
+				9EFEE85A2C328CD900789343 /* PartnerKeys.plist in Resources */,
 				9E6C984A2BF4C65F00EACDCB /* whatsNew.json in Resources */,
 				0D26AF8C299E8196005260EE /* GoogleService-Info.plist in Resources */,
 				9EDDAF6E2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */,
@@ -904,6 +913,7 @@
 				0D4E7A1026B364180058B01E /* Preview Assets.xcassets in Resources */,
 				9E2F1C8C280ED6A7004E65FE /* LaunchScreen.storyboard in Resources */,
 				9E90751E2A269BE300269308 /* Assets.xcassets in Resources */,
+				9EFEE8592C328CD900789343 /* PartnerKeys.plist in Resources */,
 				9E6C98492BF4C65F00EACDCB /* whatsNew.json in Resources */,
 				0D3B01EC298DAF89007EBCDA /* GoogleService-Info.plist in Resources */,
 				9EDDAF6D2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */,
@@ -932,6 +942,7 @@
 				9E064E762C2964BC00606B3C /* Preview Assets.xcassets in Resources */,
 				9E064E772C2964BC00606B3C /* LaunchScreen.storyboard in Resources */,
 				9E064E782C2964BC00606B3C /* Assets.xcassets in Resources */,
+				9EFEE85C2C328CD900789343 /* PartnerKeys.plist in Resources */,
 				9E064E792C2964BC00606B3C /* whatsNew.json in Resources */,
 				9E064E7A2C2964BC00606B3C /* GoogleService-Info.plist in Resources */,
 				9E064E7B2C2964BC00606B3C /* PrivacyInfo.xcprivacy in Resources */,
@@ -946,6 +957,7 @@
 				9E4AB2AF2BA1BEE900F5D6DB /* Preview Assets.xcassets in Resources */,
 				9E4AB2B02BA1BEE900F5D6DB /* LaunchScreen.storyboard in Resources */,
 				9E4AB2B12BA1BEE900F5D6DB /* Assets.xcassets in Resources */,
+				9EFEE85B2C328CD900789343 /* PartnerKeys.plist in Resources */,
 				9E6C984B2BF4C65F00EACDCB /* whatsNew.json in Resources */,
 				9E4AB2B22BA1BEE900F5D6DB /* GoogleService-Info.plist in Resources */,
 				9EDDAF6F2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */,
@@ -1237,6 +1249,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/zsh;
 			shellScript = "\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+		};
+		9ED0EC2D2C3291E30030E088 /* Generate PartnerKeys.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Generate PartnerKeys.plist";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Resources/PartnerKeys.plist",
+				"$(SRCROOT)/secant/Resources/PartnerKeys.plist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "echo \"Creating an empty file for PartnerKeys\"\n\nPK_FILE=\"./secant/Resources/PartnerKeys.plist\"\nif [[ -f $PK_FILE ]]; then\n    echo \"$PK_FILE Exists. Not doing anything.\"\nelse \n    echo \"$PK_FILE does not exist. Will insert a DUMMY FILE\"\n\n    echo \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxLjAiPgo8ZGljdC8+CjwvcGxpc3Q+\" | base64 --decode > $PK_FILE\nfi\n";
+		};
+		9ED0EC2E2C32927B0030E088 /* Generate PartnerKeys.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Generate PartnerKeys.plist";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Resources/PartnerKeys.plist",
+				"$(SRCROOT)/secant/Resources/PartnerKeys.plist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "echo \"Creating an empty file for PartnerKeys\"\n\nPK_FILE=\"./secant/Resources/PartnerKeys.plist\"\nif [[ -f $PK_FILE ]]; then\n    echo \"$PK_FILE Exists. Not doing anything.\"\nelse \n    echo \"$PK_FILE does not exist. Will insert a DUMMY FILE\"\n\n    echo \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxLjAiPgo8ZGljdC8+CjwvcGxpc3Q+\" | base64 --decode > $PK_FILE\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

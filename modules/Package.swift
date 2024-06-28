@@ -42,6 +42,7 @@ let package = Package(
         .library(name: "NumberFormatter", targets: ["NumberFormatter"]),
         .library(name: "OnboardingFlow", targets: ["OnboardingFlow"]),
         .library(name: "PartialProposalError", targets: ["PartialProposalError"]),
+        .library(name: "PartnerKeys", targets: ["PartnerKeys"]),
         .library(name: "Pasteboard", targets: ["Pasteboard"]),
         .library(name: "PrivateDataConsent", targets: ["PrivateDataConsent"]),
         .library(name: "QRImageDetector", targets: ["QRImageDetector"]),
@@ -429,6 +430,10 @@ let package = Package(
             path: "Sources/Features/PartialProposalError"
         ),
         .target(
+            name: "PartnerKeys",
+            path: "Sources/Dependencies/PartnerKeys"
+        ),
+        .target(
             name: "Pasteboard",
             dependencies: [
                 "Utils",
@@ -679,6 +684,7 @@ let package = Package(
                 "Generated",
                 "LocalAuthenticationHandler",
                 "Models",
+                "PartnerKeys",
                 "Pasteboard",
                 "PrivateDataConsent",
                 "RecoveryPhraseDisplay",
