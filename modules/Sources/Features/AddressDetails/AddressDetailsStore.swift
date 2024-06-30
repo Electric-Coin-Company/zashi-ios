@@ -12,7 +12,6 @@ import ZcashLightClientKit
 import Pasteboard
 import Generated
 import Utils
-import RequestPayment
 
 @Reducer
 public struct AddressDetails {
@@ -24,8 +23,6 @@ public struct AddressDetails {
         }
         
         public var addressToShare: RedactableString?
-        public var requestPaymentState: RequestPayment.State
-        public var requestPaymentViewBinding: Bool = false
         public var selection: Selection
         public var taQR: CGImage?
         public var uAddress: UnifiedAddress?
@@ -55,12 +52,10 @@ public struct AddressDetails {
 
         public init(
             addressToShare: RedactableString? = nil,
-            requestPaymentState: RequestPayment.State,
             selection: Selection = .ua,
             uAddress: UnifiedAddress? = nil
         ) {
             self.addressToShare = addressToShare
-            self.requestPaymentState = requestPaymentState
             self.selection = selection
             self.uAddress = uAddress
         }
@@ -70,7 +65,6 @@ public struct AddressDetails {
         case binding(BindingAction<AddressDetails.State>)
         case copyToPastboard(RedactableString)
         case rememberQR(CGImage?, Bool)
-        case requestPayment(RequestPayment.Action)
         case requestPaymentTapped
         case shareFinished
         case shareQR(RedactableString)
@@ -82,10 +76,6 @@ public struct AddressDetails {
 
     public var body: some Reducer<State, Action> {
         BindingReducer()
-
-        Scope(state: \.requestPaymentState, action: /Action.requestPayment) {
-            RequestPayment()
-        }
 
         Reduce { state, action in
             switch action {
@@ -104,18 +94,7 @@ public struct AddressDetails {
                 pasteboard.setString(text)
                 return .none
                 
-            case .requestPayment:
-                return .none
-                
             case .requestPaymentTapped:
-                if state.selection == .transparent {
-                    state.requestPaymentState.toAddress = state.transparentAddress
-                    state.requestPaymentState.isMemoPossible = false
-                } else {
-                    state.requestPaymentState.toAddress = state.unifiedAddress
-                    state.requestPaymentState.isMemoPossible = true
-                }
-                state.requestPaymentViewBinding = true
                 return .none
                 
             case .shareFinished:

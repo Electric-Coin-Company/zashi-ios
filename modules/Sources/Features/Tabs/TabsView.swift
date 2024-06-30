@@ -18,6 +18,7 @@ import Settings
 import UIComponents
 import HideBalances
 import SendConfirmation
+import RequestPayment
 
 public struct TabsView: View {
     let networkType: NetworkType
@@ -140,11 +141,10 @@ public struct TabsView: View {
                         }
                     )
                     .navigationLinkEmpty(
-                        isActive: viewStore.bindingForDestination(.sendConfirmation),
+                        isActive: viewStore.bindingForDestination(.requestPaymentForm),
                         destination: {
-                            SendConfirmationView(
-                                store: store.sendConfirmationStore(),
-                                tokenName: tokenName
+                            RequestPaymentView(
+                                store: store.requestPaymentStore()
                             )
                         }
                     )
