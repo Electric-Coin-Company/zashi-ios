@@ -23,7 +23,7 @@ public struct AddressBookNewRecordView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack {
-                Text("New Address Record".uppercased())
+                Text("New Address Book Item".uppercased())
                     .font(.custom(FontFamily.Archivo.bold.name, size: 14))
                     .padding(.top, 15)
                 

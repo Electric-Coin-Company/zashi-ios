@@ -99,6 +99,7 @@ public struct RequestPaymentView: View {
                 Text("Zashi Me".uppercased())
                     .font(.custom(FontFamily.Archivo.bold.name, size: 14))
             }
+            .alert($store.scope(state: \.alert, action: \.alert))
         }
         .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground()
