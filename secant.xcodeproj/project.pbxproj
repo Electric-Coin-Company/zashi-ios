@@ -158,7 +158,7 @@
 		9E01F8272833CDA0000EFC57 /* ScanTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanTests.swift; sourceTree = "<group>"; };
 		9E02B56B27FED475005B809B /* DatabaseFilesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseFilesTests.swift; sourceTree = "<group>"; };
 		9E064E822C2964BC00606B3C /* secant-distrib-summit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "secant-distrib-summit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9E064E832C2964BC00606B3C /* secant-distrib copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "secant-distrib copy-Info.plist"; path = "/Users/lukaskorba/Dev/Xcode/GitHub/LukasKorba/secant-ios-wallet/secant-distrib copy-Info.plist"; sourceTree = "<absolute>"; };
+		9E064E832C2964BC00606B3C /* secant-distrib-summit-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "secant-distrib-summit-Info.plist"; path = "/Users/lukaskorba/Dev/Xcode/GitHub/LukasKorba/secant-ios-wallet/secant-distrib-summit-Info.plist"; sourceTree = "<absolute>"; };
 		9E0C0D6F2AFB842B00D69A16 /* TransactionStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionStateTests.swift; sourceTree = "<group>"; };
 		9E0F574A2980260D005304FA /* LoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerTests.swift; sourceTree = "<group>"; };
 		9E139AAE2B07B3A600D104B8 /* ZatoshiStringRepresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZatoshiStringRepresentationTests.swift; sourceTree = "<group>"; };
@@ -291,7 +291,6 @@
 				0D4E7A2426B364180058B01E /* secantUITests */,
 				0D4E7A0626B364170058B01E /* Products */,
 				343CF3F429BB5A14009E44DF /* Frameworks */,
-				9E064E832C2964BC00606B3C /* secant-distrib copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -318,6 +317,7 @@
 				0DEF4766299EA5920032708B /* secant-mainnet-Info.plist */,
 				0D4E7A1126B364180058B01E /* secant-testnet-Info.plist */,
 				9E4AB2B82BA1BEE900F5D6DB /* secant-distrib-Info.plist */,
+				9E064E832C2964BC00606B3C /* secant-distrib-summit-Info.plist */,
 				0D4E7A0E26B364180058B01E /* Preview Content */,
 			);
 			path = secant;
@@ -1708,7 +1708,7 @@
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				INFOPLIST_FILE = "secant-distrib copy-Info.plist";
+				INFOPLIST_FILE = "secant-distrib-summit-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1737,7 +1737,7 @@
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				INFOPLIST_FILE = "secant-distrib copy-Info.plist";
+				INFOPLIST_FILE = "secant-distrib-summit-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1766,7 +1766,7 @@
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				INFOPLIST_FILE = "secant-distrib copy-Info.plist";
+				INFOPLIST_FILE = "secant-distrib-summit-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
