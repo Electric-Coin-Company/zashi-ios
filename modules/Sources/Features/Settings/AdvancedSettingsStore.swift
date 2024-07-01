@@ -10,6 +10,7 @@ import PrivateDataConsent
 import RecoveryPhraseDisplay
 import ServerSetup
 import ZcashLightClientKit
+import PartnerKeys
 
 @Reducer
 public struct AdvancedSettings {
@@ -62,6 +63,7 @@ public struct AdvancedSettings {
         case binding(BindingAction<AdvancedSettings.State>)
         case buyZecTapped
         case deleteWallet(DeleteWallet.Action)
+        case onAppear
         case phraseDisplay(RecoveryPhraseDisplay.Action)
         case privateDataConsent(PrivateDataConsentReducer.Action)
         case protectedAccessRequest(State.Destination)
@@ -78,6 +80,10 @@ public struct AdvancedSettings {
 
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                state.appId = PartnerKeys.cbProjectId
+                return .none
+                
             case .binding:
                 return .none
                 

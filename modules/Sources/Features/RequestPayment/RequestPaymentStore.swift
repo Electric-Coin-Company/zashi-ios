@@ -105,7 +105,7 @@ public struct RequestPayment {
                         let payment = Payment(
                             recipientAddress: recipient,
                             amount: try Amount(decimal: amount.decimalValue),
-                            memo: try MemoBytes(utf8String: state.memoState.text.data),
+                            memo: state.memoState.text.data.isEmpty ? nil : try MemoBytes(utf8String: state.memoState.text.data),
                             label: nil,
                             message: nil,
                             otherParams: nil
