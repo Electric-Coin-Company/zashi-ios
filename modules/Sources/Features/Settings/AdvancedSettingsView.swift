@@ -99,6 +99,7 @@ public struct AdvancedSettingsView: View {
                     InAppBrowserView(url: url)
                 }
             }
+            .onAppear { store.send(.onAppear) }
         }
         .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground()

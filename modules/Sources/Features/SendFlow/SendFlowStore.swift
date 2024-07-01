@@ -133,6 +133,7 @@ public struct SendFlowReducer: Reducer {
         case alert(PresentationAction<Action>)
         case confirmationRequired(Confirmation)
         case getProposal(Confirmation)
+        case insufficientFundsForRP
         case memo(MessageEditorReducer.Action)
         case onAppear
         case proposal(Proposal)
@@ -220,14 +221,18 @@ public struct SendFlowReducer: Reducer {
                         let proposal = try await sdkSynchronizer.proposeTransfer(0, recipient, state.amount, memo)
                         
                         await send(.proposal(proposal))
-                        if confirmationType != .requestPayment {
-                            await send(.confirmationRequired(confirmationType))
-                        }
+                        await send(.confirmationRequired(confirmationType))
                     } catch {
+                        if confirmationType == .requestPayment {
+                            await send(.insufficientFundsForRP)
+                        }
                         await send(.sendFailed(error.toZcashError()))
                     }
                 }
-                
+
+            case .insufficientFundsForRP:
+                return .none
+
             case .sendFailed(let error):
                 state.alert = AlertState.sendFailure(error)
                 return .none
@@ -267,12 +272,21 @@ public struct SendFlowReducer: Reducer {
                     if let payment = paymentRequest.payments.first {
                         if let memoBytes = payment.memo, let memo = try? Memo(bytes: [UInt8](memoBytes.memoData)) {
                             state.memoState.text = memo.toString()?.redacted ?? "".redacted
+                        } else {
+                            state.memoState.text = "".redacted
                         }
                         let numberLocale = numberFormatter.convertUSToLocale(payment.amount.toString()) ?? ""
+                        var isInsufficientFunds = false
+                        if let number = numberFormatter.number(numberLocale) {
+                            let zatoshi = NSDecimalNumber(decimal: number.decimalValue * Decimal(Zatoshi.Constants.oneZecInZatoshi))
+                            isInsufficientFunds = state.shieldedBalance.amount < zatoshi.int64Value
+                        }
                         return .concatenate(
                             .send(.transactionAmountInput(.textField(.set(numberLocale.redacted)))),
                             .send(.transactionAddressInput(.textField(.set(payment.recipientAddress.value.redacted)))),
-                            .send(.confirmationRequired(.requestPayment))
+                            isInsufficientFunds
+                            ? .send(.insufficientFundsForRP)
+                            : .send(.getProposal(.requestPayment))
                         )
                     }
                 }
