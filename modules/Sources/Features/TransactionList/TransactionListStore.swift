@@ -140,6 +140,7 @@ public struct TransactionList {
                         copiedTransaction.isExpanded = state.transactionList[index].isExpanded
                         copiedTransaction.isIdExpanded = state.transactionList[index].isIdExpanded
                         copiedTransaction.rawID = state.transactionList[index].rawID
+                        copiedTransaction.memos = state.transactionList[index].memos
                     }
                     
                     // update the read/unread state
@@ -185,15 +186,6 @@ public struct TransactionList {
             if let index = state.transactionList.index(id: id) {
                 state.transactionList[index].isExpanded = true
                 
-                // presence of the rawID is a sign that memos hasn't been loaded yet
-                if let rawID = state.transactionList[index].rawID {
-                    return .run { send in
-                        if let memos = try? await sdkSynchronizer.getMemos(rawID) {
-                            await send(.memosFor(memos, id))
-                        }
-                    }
-                }
-
                 // update of the unread state
                 if !state.transactionList[index].isSpending
                     && !state.transactionList[index].isMarkedAsRead
@@ -202,6 +194,15 @@ public struct TransactionList {
                         try readTransactionsStorage.markIdAsRead(state.transactionList[index].id.redacted)
                         state.transactionList[index].isMarkedAsRead = true
                     } catch { }
+                }
+
+                // presence of the rawID is a sign that memos hasn't been loaded yet
+                if let rawID = state.transactionList[index].rawID {
+                    return .run { send in
+                        if let memos = try? await sdkSynchronizer.getMemos(rawID) {
+                            await send(.memosFor(memos, id))
+                        }
+                    }
                 }
             }
             return .none
