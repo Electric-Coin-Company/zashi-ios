@@ -22,6 +22,7 @@ public struct TransactionState: Equatable, Identifiable {
 
     public var errorMessage: String?
     public var expiryHeight: BlockHeight?
+    public var memoCount: Int
     public var memos: [Memo]?
     public var minedHeight: BlockHeight?
     public var shielded = true
@@ -60,6 +61,12 @@ public struct TransactionState: Equatable, Identifiable {
     }
     
     public var isUnread: Bool {
+        // in case memos haven't been loaded yet
+        // non-nil rawID represents unloaded memos state
+        if rawID != nil && memoCount > 0 {
+            return true
+        }
+        
         // there must be memos
         guard let memos else { return false }
         
@@ -166,6 +173,7 @@ public struct TransactionState: Equatable, Identifiable {
     public init(
         errorMessage: String? = nil,
         expiryHeight: BlockHeight? = nil,
+        memoCount: Int = 0,
         memos: [Memo]? = nil,
         minedHeight: BlockHeight? = nil,
         shielded: Bool = true,
@@ -184,6 +192,7 @@ public struct TransactionState: Equatable, Identifiable {
     ) {
         self.errorMessage = errorMessage
         self.expiryHeight = expiryHeight
+        self.memoCount = memoCount
         self.memos = memos
         self.minedHeight = minedHeight
         self.shielded = shielded
@@ -235,6 +244,7 @@ extension TransactionState {
         isAddressExpanded = false
         isExpanded = false
         isIdExpanded = false
+        memoCount = transaction.memoCount
         self.memos = memos
 
         // failed check

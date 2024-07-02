@@ -6,6 +6,10 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Fixed
+- The unread transactions with memos are properly marked with a yellow icon again.
+- Sometimes, the memo was missing in the history, and sometimes it disappeared when the transaction state changed. Both cases have been fixed. 
+
 ## 1.1.2 build 1 (2024-06-14)
 
 ### Added
