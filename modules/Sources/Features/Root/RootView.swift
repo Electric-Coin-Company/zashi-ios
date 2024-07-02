@@ -13,6 +13,8 @@ import Tabs
 import ZcashLightClientKit
 import UIComponents
 import ServerSetup
+import DeeplinkWarning
+import AddressBook
 
 public struct RootView: View {
     @Environment(\.scenePhase) var scenePhase
@@ -65,6 +67,21 @@ private extension RootView {
         WithPerceptionTracking {
             Group {
                 switch store.destinationState.destination {
+
+                case .deeplinkWarning:
+                    NavigationView {
+                        DeeplinkWarningView(
+                            store: store.scope(
+                                state: \.deeplinkWarningState,
+                                action: RootReducer.Action.deeplinkWarning
+                            )
+                        )
+                    }
+                    .navigationViewStyle(.stack)
+                    .overlayedWithSplash(viewStore.splashAppeared) {
+                        viewStore.send(.splashRemovalRequested)
+                    }
+
                 case .notEnoughFreeSpace:
                     NavigationView {
                         NotEnoughFreeSpaceView(
@@ -88,6 +105,22 @@ private extension RootView {
                             ),
                             tokenName: tokenName,
                             networkType: networkType
+                        )
+                        .navigationLinkEmpty(
+                            isActive: Binding<Bool>(
+                                get: 
+                                    { viewStore.addressBookBinding
+                            }, set: {
+                                viewStore.send(.addressBookBinding($0))
+                            }),
+                            destination: {
+                                AddressBookView(
+                                    store: store.scope(
+                                        state: \.addressBookState,
+                                        action: RootReducer.Action.addressBook
+                                    )
+                                )
+                            }
                         )
                     }
                     .navigationViewStyle(.stack)

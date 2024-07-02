@@ -10,6 +10,8 @@ let package = Package(
     ],
     products: [
         .library(name: "About", targets: ["About"]),
+        .library(name: "AddressBook", targets: ["AddressBook"]),
+        .library(name: "AddressBookClient", targets: ["AddressBookClient"]),
         .library(name: "AddressDetails", targets: ["AddressDetails"]),
         .library(name: "AppVersion", targets: ["AppVersion"]),
         .library(name: "AudioServices", targets: ["AudioServices"]),
@@ -21,6 +23,7 @@ let package = Package(
         .library(name: "DatabaseFiles", targets: ["DatabaseFiles"]),
         .library(name: "Date", targets: ["Date"]),
         .library(name: "Deeplink", targets: ["Deeplink"]),
+        .library(name: "DeeplinkWarning", targets: ["DeeplinkWarning"]),
         .library(name: "DeleteWallet", targets: ["DeleteWallet"]),
         .library(name: "DerivationTool", targets: ["DerivationTool"]),
         .library(name: "DiskSpaceChecker", targets: ["DiskSpaceChecker"]),
@@ -39,6 +42,7 @@ let package = Package(
         .library(name: "NumberFormatter", targets: ["NumberFormatter"]),
         .library(name: "OnboardingFlow", targets: ["OnboardingFlow"]),
         .library(name: "PartialProposalError", targets: ["PartialProposalError"]),
+        .library(name: "PartnerKeys", targets: ["PartnerKeys"]),
         .library(name: "Pasteboard", targets: ["Pasteboard"]),
         .library(name: "PrivateDataConsent", targets: ["PrivateDataConsent"]),
         .library(name: "QRImageDetector", targets: ["QRImageDetector"]),
@@ -58,6 +62,7 @@ let package = Package(
         .library(name: "SupportDataGenerator", targets: ["SupportDataGenerator"]),
         .library(name: "SyncProgress", targets: ["SyncProgress"]),
         .library(name: "ReadTransactionsStorage", targets: ["ReadTransactionsStorage"]),
+        .library(name: "RequestPayment", targets: ["RequestPayment"]),
         .library(name: "Tabs", targets: ["Tabs"]),
         .library(name: "TransactionList", targets: ["TransactionList"]),
         .library(name: "UIComponents", targets: ["UIComponents"]),
@@ -75,6 +80,8 @@ let package = Package(
         .library(name: "ZcashSDKEnvironment", targets: ["ZcashSDKEnvironment"])
     ],
     dependencies: [
+//        .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "0.1.0-beta.7"),
+        .package(url: "https://github.com/LukasKorba/zcash-swift-payment-uri", branch: "public-payments-fix"),
         .package(url: "https://github.com/pointfreeco/swift-custom-dump.git", from: "1.3.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.11.1"),
         .package(url: "https://github.com/pointfreeco/swift-case-paths", from: "1.4.2"),
@@ -94,15 +101,42 @@ let package = Package(
                 "UIComponents",
                 "WalletStatusPanel",
                 "WhatsNew",
+                "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
             path: "Sources/Features/About"
+        ),
+        .target(
+            name: "AddressBook",
+            dependencies: [
+                "AddressBookClient",
+                "AudioServices",
+                "DerivationTool",
+                "Generated",
+                "Models",
+                "Scan",
+                "UIComponents",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ],
+            path: "Sources/Features/AddressBook"
+        ),
+        .target(
+            name: "AddressBookClient",
+            dependencies: [
+                "Models",
+                "UserDefaults",
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
+            ],
+            path: "Sources/Dependencies/AddressBookClient"
         ),
         .target(
             name: "AddressDetails",
             dependencies: [
                 "Generated",
                 "Pasteboard",
+                "RequestPayment",
                 "UIComponents",
                 "Utils",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -206,6 +240,15 @@ let package = Package(
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
             path: "Sources/Dependencies/Deeplink"
+        ),
+        .target(
+            name: "DeeplinkWarning",
+            dependencies: [
+                "Generated",
+                "UIComponents",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Features/DeeplinkWarning"
         ),
         .target(
             name: "DeleteWallet",
@@ -387,6 +430,10 @@ let package = Package(
             path: "Sources/Features/PartialProposalError"
         ),
         .target(
+            name: "PartnerKeys",
+            path: "Sources/Dependencies/PartnerKeys"
+        ),
+        .target(
             name: "Pasteboard",
             dependencies: [
                 "Utils",
@@ -433,6 +480,20 @@ let package = Package(
             path: "Sources/Features/RecoveryPhraseDisplay"
         ),
         .target(
+            name: "RequestPayment",
+            dependencies: [
+                "Generated",
+                "Models",
+                "Pasteboard",
+                "UIComponents",
+                "Utils",
+                .product(name: "ZcashPaymentURI", package: "zcash-swift-payment-uri"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
+            ],
+            path: "Sources/Features/RequestPayment"
+        ),
+        .target(
             name: "RestoreInfo",
             dependencies: [
                 "Generated",
@@ -446,6 +507,7 @@ let package = Package(
             dependencies: [
                 "AppVersion",
                 "Date",
+                "NumberFormatter",
                 "UserDefaults",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
@@ -454,9 +516,11 @@ let package = Package(
         .target(
             name: "Root",
             dependencies: [
+                "AddressBook",
                 "CrashReporter",
                 "DatabaseFiles",
                 "Deeplink",
+                "DeeplinkWarning",
                 "DerivationTool",
                 "DiskSpaceChecker",
                 "ExportLogs",
@@ -476,6 +540,7 @@ let package = Package(
                 "ServerSetup",
                 "Tabs",
                 "UIComponents",
+                "URIParser",
                 "UserDefaults",
                 "UserPreferencesStorage",
                 "Utils",
@@ -510,6 +575,7 @@ let package = Package(
                 "UIComponents",
                 "Utils",
                 "ZcashSDKEnvironment",
+                .product(name: "ZcashPaymentURI", package: "zcash-swift-payment-uri"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
@@ -553,6 +619,8 @@ let package = Package(
         .target(
             name: "SendConfirmation",
             dependencies: [
+                "AddressBook",
+                "AddressBookClient",
                 "AudioServices",
                 "BalanceFormatter",
                 "DerivationTool",
@@ -576,11 +644,13 @@ let package = Package(
         .target(
             name: "SendFlow",
             dependencies: [
+                "AddressBookClient",
                 "AudioServices",
                 "BalanceFormatter",
                 "DerivationTool",
                 "Generated",
                 "Models",
+                "NumberFormatter",
                 "Scan",
                 "SDKSynchronizer",
                 "UIComponents",
@@ -614,6 +684,7 @@ let package = Package(
                 "Generated",
                 "LocalAuthenticationHandler",
                 "Models",
+                "PartnerKeys",
                 "Pasteboard",
                 "PrivateDataConsent",
                 "RecoveryPhraseDisplay",
@@ -663,11 +734,13 @@ let package = Package(
                 "Generated",
                 "HideBalances",
                 "Home",
-                "WalletStatusPanel",
+                "RequestPayment",
+                "RestoreWalletStorage",
                 "SendConfirmation",
                 "SendFlow",
                 "Settings",
                 "UIComponents",
+                "WalletStatusPanel",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
@@ -694,6 +767,7 @@ let package = Package(
             dependencies: [
                 "BalanceFormatter",
                 "DerivationTool",
+                "FeedbackGenerator",
                 "Generated",
                 "HideBalances",
                 "NumberFormatter",
@@ -708,6 +782,8 @@ let package = Package(
             name: "URIParser",
             dependencies: [
                 "DerivationTool",
+                "Models",
+                .product(name: "ZcashPaymentURI", package: "zcash-swift-payment-uri"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
