@@ -19,32 +19,42 @@ public struct DeeplinkWarningView: View {
 
     public var body: some View {
         WithPerceptionTracking {
-            //ScrollView {
-                VStack {
-                    Text("Deeplink warning")
-                        .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
-                        .padding(.horizontal, 35)
-                        .padding(.vertical, 50)
-
-                    Text("Looks like you used a third-party app to scan for payment. For better safety and security, rescan the QR code with Zashi."
-                    )
-                    .font(.custom(FontFamily.Archivo.regular.name, size: 16))
+            VStack {
+                Text("Hello!")
+                    .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
+                    .padding(.horizontal, 35)
+                    .padding(.top, 50)
+                
+                Asset.Assets.deeplinkWarning.image
+                    .renderingMode(.template)
+                    .resizable()
+                    .frame(width: 109, height: 106)
+                    .foregroundColor(Asset.Colors.primary.color)
+                    .padding(.vertical, 50)
+                
+                Text("Looks like you used a third-party app to scan for payment.")
+                    .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
                     .multilineTextAlignment(.center)
                     .lineSpacing(2)
                     .padding(.horizontal, 30)
-
-                    Spacer()
-                    
-                    Button("I got it".uppercased()) {
-                        store.send(.gotItTapped)
-                    }
-                    .zcashStyle()
-                    .padding(.horizontal, 50)
-                    .padding(.vertical, 50)
+                    .padding(.bottom, 20)
+                
+                Text("For better safety and security, rescan the QR code with Zashi.")
+                    .font(.custom(FontFamily.Archivo.semiBold.name, size: 16))
+                    .multilineTextAlignment(.center)
+                    .lineSpacing(2)
+                    .padding(.horizontal, 45)
+                
+                Spacer()
+                
+                Button("Rescan in Zashi".uppercased()) {
+                    store.send(.gotItTapped)
                 }
-                .padding(.horizontal, 30)
-//            }
-//            .padding(.vertical, 1)
+                .zcashStyle()
+                .padding(.horizontal, 50)
+                .padding(.vertical, 50)
+            }
+            .padding(.horizontal, 30)
         }
         .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground(withPattern: true)
