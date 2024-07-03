@@ -6,6 +6,8 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.1.3 build 1 (2024-07-03)
+
 ### Added
 - The SDK checks for any unsent transactions and attempts to resubmit them every 5 minutes until they expire.
 
