@@ -98,9 +98,9 @@ public struct Home {
                             .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
                             .compactMap {
                                 if case SynchronizerEvent.foundTransactions = $0 {
-                                    return HomeReducer.Action.foundTransactions
+                                    return Home.Action.foundTransactions
                                 } else if case SynchronizerEvent.connectionStateChanged(let newState) = $0 {
-                                    return HomeReducer.Action.connectivityStatusChanged(newState)
+                                    return Home.Action.connectivityStatusChanged(newState)
                                 }
                                 return nil
                             }

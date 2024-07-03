@@ -73,13 +73,13 @@ private extension RootView {
                         DeeplinkWarningView(
                             store: store.scope(
                                 state: \.deeplinkWarningState,
-                                action: RootReducer.Action.deeplinkWarning
+                                action: Root.Action.deeplinkWarning
                             )
                         )
                     }
                     .navigationViewStyle(.stack)
-                    .overlayedWithSplash(viewStore.splashAppeared) {
-                        viewStore.send(.splashRemovalRequested)
+                    .overlayedWithSplash(store.splashAppeared) {
+                        store.send(.splashRemovalRequested)
                     }
 
                 case .notEnoughFreeSpace:
@@ -107,17 +107,16 @@ private extension RootView {
                             networkType: networkType
                         )
                         .navigationLinkEmpty(
-                            isActive: Binding<Bool>(
-                                get: 
-                                    { viewStore.addressBookBinding
-                            }, set: {
-                                viewStore.send(.addressBookBinding($0))
-                            }),
+                            isActive: 
+                                Binding<Bool>(
+                                    get: { store.addressBookBinding },
+                                    set: { store.send(.addressBookBinding($0)) }
+                                ),
                             destination: {
                                 AddressBookView(
                                     store: store.scope(
                                         state: \.addressBookState,
-                                        action: RootReducer.Action.addressBook
+                                        action: Root.Action.addressBook
                                     )
                                 )
                             }

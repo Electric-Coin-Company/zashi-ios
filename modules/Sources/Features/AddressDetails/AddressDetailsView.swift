@@ -12,7 +12,6 @@ import ZcashLightClientKit
 import Generated
 import UIComponents
 import Utils
-import RequestPayment
 
 public struct AddressDetailsView: View {
     public enum AddressType: Equatable {
@@ -25,36 +24,37 @@ public struct AddressDetailsView: View {
 
     @Perception.Bindable var store: StoreOf<AddressDetails>
     let networkType: NetworkType
-    
+
     public init(store: StoreOf<AddressDetails>, networkType: NetworkType) {
         self.store = store
         self.networkType = networkType
     }
-    
+
     public var body: some View {
         WithPerceptionTracking {
             VStack {
-                zashiPicker(store.selection)
+                zashiPicker()
                     .padding(.top, 30)
 
                 ScrollView {
                     WithPerceptionTracking {
                         Group {
-                        if store.selection == .ua {
-                            addressBlock(type: .uaAddress, L10n.AddressDetails.ua, store.unifiedAddress) {
-                                store.send(.copyToPastboard(store.unifiedAddress.redacted))
-                            } shareAction: {
-                                store.send(.shareQR(store.unifiedAddress.redacted))
-                            } zashiMeAction: {
-                                store.send(.requestPaymentTapped)
-                            }
-                        } else {
-                            addressBlock(type: .tAddress, L10n.AddressDetails.ta, store.transparentAddress) {
-                                store.send(.copyToPastboard(store.transparentAddress.redacted))
-                            } shareAction: {
-                                store.send(.shareQR(store.transparentAddress.redacted))
-                            } zashiMeAction: {
-                                store.send(.requestPaymentTapped)
+                            if store.selection == .ua {
+                                addressBlock(type: .uaAddress, L10n.AddressDetails.ua, store.unifiedAddress) {
+                                    store.send(.copyToPastboard(store.unifiedAddress.redacted))
+                                } shareAction: {
+                                    store.send(.shareQR(store.unifiedAddress.redacted))
+                                } zashiMeAction: {
+                                    store.send(.requestPaymentTapped)
+                                }
+                            } else {
+                                addressBlock(type: .tAddress, L10n.AddressDetails.ta, store.transparentAddress) {
+                                    store.send(.copyToPastboard(store.transparentAddress.redacted))
+                                } shareAction: {
+                                    store.send(.shareQR(store.transparentAddress.redacted))
+                                } zashiMeAction: {
+                                    store.send(.requestPaymentTapped)
+                                }
                             }
                         }
                         .frame(maxWidth: .infinity)

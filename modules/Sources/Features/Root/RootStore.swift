@@ -150,14 +150,12 @@ public struct Root {
     @Dependency(\.numberFormatter) var numberFormatter
     @Dependency(\.pasteboard) var pasteboard
     @Dependency(\.readTransactionsStorage) var readTransactionsStorage
-    @Dependency(\.restoreWalletStorage) var restoreWalletStorage
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.uriParser) var uriParser
     @Dependency(\.userDefaults) var userDefaults
     @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.walletConfigProvider) var walletConfigProvider
     @Dependency(\.walletStorage) var walletStorage
-    @Dependency(\.readTransactionsStorage) var readTransactionsStorage
     @Dependency(\.walletStatusPanel) var walletStatusPanel
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
