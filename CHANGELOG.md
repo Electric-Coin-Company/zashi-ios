@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Added
+- The SDK checks for any unsent transactions and attempts to resubmit them every 5 minutes until they expire.
+
 ### Fixed
 - The unread transactions with memos are properly marked with a yellow icon again.
 - Sometimes, the memo was missing in the history, and sometimes it disappeared when the transaction state changed. Both cases have been fixed. 
