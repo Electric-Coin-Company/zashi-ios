@@ -64,7 +64,7 @@ public struct TransactionState: Equatable, Identifiable {
         // in case memos haven't been loaded yet
         // non-nil rawID represents unloaded memos state
         if rawID != nil && memoCount > 0 {
-            return true
+            return !isMarkedAsRead
         }
         
         // there must be memos
