@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Fixed
+- Syncing has been broken in some specific cases.
+
 ## 1.1.3 build 1 (2024-07-03)
 
 ### Added
