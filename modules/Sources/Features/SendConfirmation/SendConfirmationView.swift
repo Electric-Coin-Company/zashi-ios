@@ -177,6 +177,7 @@ extension SendConfirmation {
 extension SendConfirmation.State {
     public static let initial = SendConfirmation.State(
         address: "",
+        addressBookState: .initial,
         amount: .zero,
         feeRequired: .zero,
         message: "",

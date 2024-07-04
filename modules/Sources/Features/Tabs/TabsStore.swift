@@ -17,6 +17,7 @@ import SendFlow
 import Settings
 import ZcashLightClientKit
 import SendConfirmation
+import RequestPayment
 
 public typealias TabsStore = Store<TabsReducer.State, TabsReducer.Action>
 public typealias TabsViewStore = ViewStore<TabsReducer.State, TabsReducer.Action>
@@ -24,6 +25,8 @@ public typealias TabsViewStore = ViewStore<TabsReducer.State, TabsReducer.Action
 public struct TabsReducer: Reducer {
     public struct State: Equatable {
         public enum Destination: Equatable {
+            case requestPaymentConfirmation
+            case requestPaymentForm
             case sendConfirmation
             case settings
         }
@@ -52,6 +55,7 @@ public struct TabsReducer: Reducer {
         public var balanceBreakdownState: BalanceBreakdownReducer.State
         public var destination: Destination?
         public var homeState: Home.State
+        public var requestPaymentState: RequestPayment.State
         public var selectedTab: Tab = .account
         public var sendConfirmationState: SendConfirmation.State
         public var sendState: SendFlowReducer.State
@@ -62,6 +66,7 @@ public struct TabsReducer: Reducer {
             balanceBreakdownState: BalanceBreakdownReducer.State,
             destination: Destination? = nil,
             homeState: Home.State,
+            requestPaymentState: RequestPayment.State,
             selectedTab: Tab = .account,
             sendConfirmationState: SendConfirmation.State,
             sendState: SendFlowReducer.State,
@@ -71,6 +76,7 @@ public struct TabsReducer: Reducer {
             self.balanceBreakdownState = balanceBreakdownState
             self.destination = destination
             self.homeState = homeState
+            self.requestPaymentState = requestPaymentState
             self.selectedTab = selectedTab
             self.sendConfirmationState = sendConfirmationState
             self.sendState = sendState
@@ -82,6 +88,7 @@ public struct TabsReducer: Reducer {
         case addressDetails(AddressDetails.Action)
         case balanceBreakdown(BalanceBreakdownReducer.Action)
         case home(Home.Action)
+        case requestPayment(RequestPayment.Action)
         case selectedTabChanged(State.Tab)
         case send(SendFlowReducer.Action)
         case sendConfirmation(SendConfirmation.Action)
@@ -114,15 +121,29 @@ public struct TabsReducer: Reducer {
             Home()
         }
 
+        Scope(state: \.requestPaymentState, action: /Action.requestPayment) {
+            RequestPayment()
+        }
+
         Scope(state: \.settingsState, action: /Action.settings) {
             SettingsReducer()
         }
 
         Reduce { state, action in
             switch action {
+            case .addressDetails(.requestPaymentTapped):
+                if state.addressDetailsState.selection == .transparent {
+                    state.requestPaymentState.toAddress = state.addressDetailsState.transparentAddress
+                    state.requestPaymentState.isMemoPossible = false
+                } else {
+                    state.requestPaymentState.toAddress = state.addressDetailsState.unifiedAddress
+                    state.requestPaymentState.isMemoPossible = true
+                }
+                return .send(.updateDestination(.requestPaymentForm))
+                
             case .addressDetails:
                 return .none
-            
+
             case .balanceBreakdown(.shieldFundsSuccess):
                 return .none
             
@@ -137,14 +158,27 @@ public struct TabsReducer: Reducer {
             case .home:
                 return .none
                 
-            case .send(.sendConfirmationRequired):
+            case .requestPayment:
+                return .none
+
+            case .send(.confirmationRequired(let type)):
                 state.sendConfirmationState.amount = state.sendState.amount
                 state.sendConfirmationState.address = state.sendState.address
-                state.sendConfirmationState.proposal = state.sendState.proposal
                 state.sendConfirmationState.feeRequired = state.sendState.feeRequired
                 state.sendConfirmationState.message = state.sendState.message
-                return .send(.updateDestination(.sendConfirmation))
-                                
+                state.sendConfirmationState.isInsufficientFunds = state.sendState.isInsufficientFunds
+                return .send(.updateDestination(type == .send ? .sendConfirmation : .requestPaymentConfirmation))
+                
+            case .send(.proposal(let proposal)):
+                state.sendConfirmationState.proposal = proposal
+                return .none
+                
+            case .send(.insufficientFundsForRP):
+                return .concatenate(
+                    .send(.send(.updateDestination(nil))),
+                    .send(.updateDestination(nil))
+                    )
+
             case .send:
                 return .none
 
@@ -211,6 +245,13 @@ extension TabsStore {
             action: TabsReducer.Action.sendConfirmation
         )
     }
+    
+    func requestPaymentStore() -> StoreOf<RequestPayment> {
+        self.scope(
+            state: \.requestPaymentState,
+            action: TabsReducer.Action.requestPayment
+        )
+    }
 }
 
 // MARK: - ViewStore
@@ -232,6 +273,7 @@ extension TabsReducer.State {
         balanceBreakdownState: .initial,
         destination: nil,
         homeState: .initial,
+        requestPaymentState: .initial,
         selectedTab: .account,
         sendConfirmationState: .initial,
         sendState: .initial,

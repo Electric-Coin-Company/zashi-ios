@@ -74,6 +74,9 @@ Pods
 # do not commit Google Firebase config PLIST file
 GoogleService-info.plist
 
+# do not commit PartnerKeys.plist
+PartnerKeys.plist
+
 # do not commit generated libraries to this repo
 lib
 *.a

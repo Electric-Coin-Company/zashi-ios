@@ -38,6 +38,8 @@ public enum L10n {
     public static let ta = L10n.tr("Localizable", "addressDetails.ta", fallback: "Transparent Address")
     /// Unified Address
     public static let ua = L10n.tr("Localizable", "addressDetails.ua", fallback: "Unified Address")
+    /// Zashi me
+    public static let zashiMe = L10n.tr("Localizable", "addressDetails.zashiMe", fallback: "Zashi me")
     public enum Error {
       /// could not extract sapling receiver from UA
       public static let cantExtractSaplingAddress = L10n.tr("Localizable", "addressDetails.error.cantExtractSaplingAddress", fallback: "could not extract sapling receiver from UA")

@@ -24,9 +24,9 @@ public struct AddressDetails {
         
         public var addressToShare: RedactableString?
         public var selection: Selection
+        public var taQR: CGImage?
         public var uAddress: UnifiedAddress?
         public var uaQR: CGImage?
-        public var taQR: CGImage?
 
         public var unifiedAddress: String {
             uAddress?.stringEncoded ?? L10n.AddressDetails.Error.cantExtractUnifiedAddress
@@ -65,6 +65,7 @@ public struct AddressDetails {
         case binding(BindingAction<AddressDetails.State>)
         case copyToPastboard(RedactableString)
         case rememberQR(CGImage?, Bool)
+        case requestPaymentTapped
         case shareFinished
         case shareQR(RedactableString)
     }
@@ -91,6 +92,9 @@ public struct AddressDetails {
                 
             case .copyToPastboard(let text):
                 pasteboard.setString(text)
+                return .none
+                
+            case .requestPaymentTapped:
                 return .none
                 
             case .shareFinished:

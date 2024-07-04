@@ -2,6 +2,7 @@ import ComposableArchitecture
 import ZcashLightClientKit
 import DatabaseFiles
 import Deeplink
+import DeeplinkWarning
 import DiskSpaceChecker
 import ZcashSDKEnvironment
 import WalletStorage
@@ -25,6 +26,7 @@ import Utils
 import UserDefaults
 import HideBalances
 import ServerSetup
+import AddressBook
 
 @Reducer
 public struct Root {
@@ -38,11 +40,14 @@ public struct Root {
     @ObservableState
     public struct State: Equatable {
         @Presents public var alert: AlertState<Action>?
+        public var addressBookBinding: Bool = false
+        public var addressBookState: AddressBook.State
         public var appInitializationState: InitializationState = .uninitialized
         public var appStartState: AppStartState = .unknown
         public var bgTask: BGProcessingTask?
         @Presents public var confirmationDialog: ConfirmationDialogState<Action.ConfirmationDialog>?
         public var debugState: DebugState
+        public var deeplinkWarningState: DeeplinkWarning.State
         public var destinationState: DestinationState
         public var exportLogsState: ExportLogs.State
         public var isLockedInKeychainUnavailableState = false
@@ -60,9 +65,11 @@ public struct Root {
         public var welcomeState: WelcomeReducer.State
         
         public init(
+            addressBookState: AddressBook.State = .initial,
             appInitializationState: InitializationState = .uninitialized,
             appStartState: AppStartState = .unknown,
             debugState: DebugState,
+            deeplinkWarningState: DeeplinkWarning.State = .initial,
             destinationState: DestinationState,
             exportLogsState: ExportLogs.State,
             isLockedInKeychainUnavailableState: Bool = false,
@@ -76,9 +83,11 @@ public struct Root {
             walletConfig: WalletConfig,
             welcomeState: WelcomeReducer.State
         ) {
+            self.addressBookState = addressBookState
             self.appInitializationState = appInitializationState
             self.appStartState = appStartState
             self.debugState = debugState
+            self.deeplinkWarningState = deeplinkWarningState
             self.destinationState = destinationState
             self.exportLogsState = exportLogsState
             self.isLockedInKeychainUnavailableState = isLockedInKeychainUnavailableState
@@ -100,12 +109,15 @@ public struct Root {
             case quickRescan
         }
 
+        case addressBook(AddressBook.Action)
+        case addressBookBinding(Bool)
         case alert(PresentationAction<Action>)
         case batteryStateChanged(Notification)
         case binding(BindingAction<Root.State>)
         case cancelAllRunningEffects
         case confirmationDialog(PresentationAction<ConfirmationDialog>)
         case debug(DebugAction)
+        case deeplinkWarning(DeeplinkWarning.Action)
         case destination(DestinationAction)
         case exportLogs(ExportLogs.Action)
         case tabs(TabsReducer.Action)
@@ -137,12 +149,13 @@ public struct Root {
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.numberFormatter) var numberFormatter
     @Dependency(\.pasteboard) var pasteboard
+    @Dependency(\.readTransactionsStorage) var readTransactionsStorage
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.uriParser) var uriParser
     @Dependency(\.userDefaults) var userDefaults
     @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.walletConfigProvider) var walletConfigProvider
     @Dependency(\.walletStorage) var walletStorage
-    @Dependency(\.readTransactionsStorage) var readTransactionsStorage
     @Dependency(\.walletStatusPanel) var walletStatusPanel
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
@@ -154,6 +167,14 @@ public struct Root {
             ServerSetup()
         }
 
+        Scope(state: \.deeplinkWarningState, action: /Action.deeplinkWarning) {
+            DeeplinkWarning()
+        }
+
+        Scope(state: \.addressBookState, action: /Action.addressBook) {
+            AddressBook()
+        }
+        
         Scope(state: \.tabsState, action: /Action.tabs) {
             TabsReducer()
         }
@@ -196,7 +217,7 @@ public struct Root {
             case .alert(.dismiss):
                 state.alert = nil
                 return .none
-            
+
             case .serverSetup:
                 return .none
                 
@@ -217,7 +238,15 @@ public struct Root {
                     .cancel(id: WalletConfigCancelId),
                     .cancel(id: DidFinishLaunchingId)
                 )
+
+            case .addressBookBinding(let newValue):
+                state.addressBookBinding = newValue
+                return .none
                 
+            case .tabs(.settings(.addressBookButtonTapped)):
+                state.addressBookBinding = true
+                return .none
+
             default: return .none
             }
         }

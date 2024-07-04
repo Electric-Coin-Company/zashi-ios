@@ -6,6 +6,19 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Fixed
+- Syncing has been broken in some specific cases.
+- Transactions marked as read are no longer rendered with a yellow icon.
+
+## 1.1.3 build 1 (2024-07-03)
+
+### Added
+- The SDK checks for any unsent transactions and attempts to resubmit them every 5 minutes until they expire.
+
+### Fixed
+- The unread transactions with memos are properly marked with a yellow icon again.
+- Sometimes, the memo was missing in the history, and sometimes it disappeared when the transaction state changed. Both cases have been fixed. 
+
 ## 1.1.2 build 1 (2024-06-14)
 
 ### Added
