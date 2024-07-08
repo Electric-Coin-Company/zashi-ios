@@ -62,4 +62,6 @@ public struct SDKSynchronizerClient {
     public var isSeedRelevantToAnyDerivedAccount: ([UInt8]) async throws -> Bool
     
     public var refreshExchangeRateUSD: () -> Void
+
+    public var evaluateBestOf: ([LightWalletEndpoint], Double, Double, UInt64, Int, NetworkType) async -> [LightWalletEndpoint]
 }

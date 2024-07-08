@@ -189,6 +189,16 @@ extension SDKSynchronizerClient: DependencyKey {
             },
             refreshExchangeRateUSD: {
                 synchronizer.refreshExchangeRateUSD()
+            },
+            evaluateBestOf: { endpoints, latencyThreshold, fetchThreshold, nBlocks, kServers, network in
+                await synchronizer.evaluateBestOf(
+                    endpoints: endpoints,
+                    latencyThresholdMillis: latencyThreshold,
+                    fetchThresholdSeconds: fetchThreshold,
+                    nBlocksToFetch: nBlocks,
+                    kServers: kServers,
+                    network: network
+                )
             }
         )
     }

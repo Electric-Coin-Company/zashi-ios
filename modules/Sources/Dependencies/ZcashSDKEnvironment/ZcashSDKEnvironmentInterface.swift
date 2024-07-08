@@ -35,11 +35,11 @@ extension ZcashSDKEnvironment {
         case `default`
         case hardcoded(String)
         
-        public func name(for network: NetworkType) -> String {
-            var value = value(for: network)
+        public func desc(for network: NetworkType) -> String? {
+            var value: String?
             
             if case .default = self {
-                value = L10n.ServerSetup.default(value)
+                value = L10n.ServerSetup.default
             }
             
             return value
@@ -61,23 +61,13 @@ extension ZcashSDKEnvironment {
         var servers = [Server.default]
 
         if network == .mainnet {
-            servers.append(
-                contentsOf: [
-                    Server.custom,
-                    Server.hardcoded("na.zec.rocks:443"),
-                    Server.hardcoded("sa.zec.rocks:443"),
-                    Server.hardcoded("eu.zec.rocks:443"),
-                    Server.hardcoded("ap.zec.rocks:443"),
-                    Server.hardcoded("lwd1.zcash-infra.com:9067"),
-                    Server.hardcoded("lwd2.zcash-infra.com:9067"),
-                    Server.hardcoded("lwd3.zcash-infra.com:9067"),
-                    Server.hardcoded("lwd4.zcash-infra.com:9067"),
-                    Server.hardcoded("lwd5.zcash-infra.com:9067"),
-                    Server.hardcoded("lwd6.zcash-infra.com:9067"),
-                    Server.hardcoded("lwd7.zcash-infra.com:9067"),
-                    Server.hardcoded("lwd8.zcash-infra.com:9067")
-                ]
-            )
+            servers.append(.custom)
+            
+            let mainnetServers = ZcashSDKEnvironment.endpoints(skipDefault: true).map {
+                Server.hardcoded("\($0.host):\($0.port)")
+            }
+            
+            servers.append(contentsOf: mainnetServers)
         }
         
         return servers
@@ -93,6 +83,33 @@ extension ZcashSDKEnvironment {
             secure: true,
             streamingCallTimeoutInMillis: ZcashSDKConstants.streamingCallTimeoutInMillis
         )
+    }
+    
+    public static func endpoints(skipDefault: Bool = false) -> [LightWalletEndpoint] {
+        var result: [LightWalletEndpoint] = []
+        
+        if !skipDefault {
+            result.append(LightWalletEndpoint(address: "zec.rocks", port: 443))
+        }
+        
+        result.append(
+            contentsOf: [
+                LightWalletEndpoint(address: "na.zec.rocks", port: 443),
+                LightWalletEndpoint(address: "sa.zec.rocks", port: 443),
+                LightWalletEndpoint(address: "eu.zec.rocks", port: 443),
+                LightWalletEndpoint(address: "ap.zec.rocks", port: 443),
+                LightWalletEndpoint(address: "lwd1.zcash-infra.com", port: 9067),
+                LightWalletEndpoint(address: "lwd2.zcash-infra.com", port: 9067),
+                LightWalletEndpoint(address: "lwd3.zcash-infra.com", port: 9067),
+                LightWalletEndpoint(address: "lwd4.zcash-infra.com", port: 9067),
+                LightWalletEndpoint(address: "lwd5.zcash-infra.com", port: 9067),
+                LightWalletEndpoint(address: "lwd6.zcash-infra.com", port: 9067),
+                LightWalletEndpoint(address: "lwd7.zcash-infra.com", port: 9067),
+                LightWalletEndpoint(address: "lwd8.zcash-infra.com", port: 9067)
+            ]
+        )
+        
+        return result
     }
 }
 

@@ -38,7 +38,8 @@ extension SDKSynchronizerClient: TestDependencyKey {
         createProposedTransactions: XCTUnimplemented("\(Self.self).createProposedTransactions", placeholder: .success),
         proposeShielding: XCTUnimplemented("\(Self.self).proposeShielding", placeholder: nil),
         isSeedRelevantToAnyDerivedAccount: XCTUnimplemented("\(Self.self).isSeedRelevantToAnyDerivedAccount"),
-        refreshExchangeRateUSD: XCTUnimplemented("\(Self.self).refreshExchangeRateUSD")
+        refreshExchangeRateUSD: XCTUnimplemented("\(Self.self).refreshExchangeRateUSD"),
+        evaluateBestOf: { _, _, _, _, _, _ in fatalError("evaluateBestOf not implemented") }
     )
 }
 
@@ -68,7 +69,8 @@ extension SDKSynchronizerClient {
         createProposedTransactions: { _, _ in .success },
         proposeShielding: { _, _, _, _ in nil },
         isSeedRelevantToAnyDerivedAccount: { _ in false },
-        refreshExchangeRateUSD: { }
+        refreshExchangeRateUSD: { },
+        evaluateBestOf: { _, _, _, _, _, _ in [] }
     )
 
     public static let mock = Self.mocked()
@@ -199,7 +201,8 @@ extension SDKSynchronizerClient {
         proposeShielding:
         @escaping (Int, Zatoshi, Memo, TransparentAddress?) async throws -> Proposal? = { _, _, _, _ in nil },
         isSeedRelevantToAnyDerivedAccount: @escaping ([UInt8]) async throws -> Bool = { _ in false },
-        refreshExchangeRateUSD: @escaping () -> Void = { }
+        refreshExchangeRateUSD: @escaping () -> Void = { },
+        evaluateBestOf: @escaping ([LightWalletEndpoint], Double, Double, UInt64, Int, NetworkType) async -> [LightWalletEndpoint] = { _, _, _, _, _, _ in [] }
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
             stateStream: stateStream,
@@ -226,7 +229,8 @@ extension SDKSynchronizerClient {
             createProposedTransactions: createProposedTransactions,
             proposeShielding: proposeShielding,
             isSeedRelevantToAnyDerivedAccount: isSeedRelevantToAnyDerivedAccount,
-            refreshExchangeRateUSD: refreshExchangeRateUSD
+            refreshExchangeRateUSD: refreshExchangeRateUSD,
+            evaluateBestOf: evaluateBestOf
         )
     }
 }

@@ -34,6 +34,7 @@ public enum Asset {
     public static let alertIcon = ImageAsset(name: "alertIcon")
     public static let buttonCloseX = ImageAsset(name: "buttonCloseX")
     public static let check = ImageAsset(name: "check")
+    public static let chevronDown = ImageAsset(name: "chevronDown")
     public static let coinsSwap = ImageAsset(name: "coinsSwap")
     public static let convertIcon = ImageAsset(name: "convertIcon")
     public static let copy = ImageAsset(name: "copy")
@@ -45,6 +46,7 @@ public enum Asset {
     public static let infoOutline = ImageAsset(name: "infoOutline")
     public static let rateIcons = ImageAsset(name: "rateIcons")
     public static let refreshCCW = ImageAsset(name: "refreshCCW")
+    public static let refreshCCW2 = ImageAsset(name: "refreshCCW2")
     public static let restoreInfo = ImageAsset(name: "restoreInfo")
     public static let share = ImageAsset(name: "share")
     public static let shield = ImageAsset(name: "shield")
@@ -57,6 +59,11 @@ public enum Asset {
     public static let zashiTitle = ImageAsset(name: "zashiTitle")
   }
   public enum Colors {
+    public enum ActiveBadge {
+      public static let bcg = ColorAsset(name: "bcg")
+      public static let outline = ColorAsset(name: "outline")
+      public static let text = ColorAsset(name: "text")
+    }
     public enum CurrencyConversion {
       public enum Card {
         public static let bcg = ColorAsset(name: "bcg")
@@ -78,6 +85,19 @@ public enum Asset {
       public static let outline = ColorAsset(name: "outline")
       public static let primary = ColorAsset(name: "primary")
       public static let tertiary = ColorAsset(name: "tertiary")
+    }
+    public enum ServerSwitch {
+      public static let checkOutline = ColorAsset(name: "checkOutline")
+      public static let desc = ColorAsset(name: "desc")
+      public static let divider = ColorAsset(name: "divider")
+      public static let fieldBcg = ColorAsset(name: "fieldBcg")
+      public static let fieldOutline = ColorAsset(name: "fieldOutline")
+      public static let highlight = ColorAsset(name: "highlight")
+      public static let saveButtonActive = ColorAsset(name: "saveButtonActive")
+      public static let saveButtonActiveText = ColorAsset(name: "saveButtonActiveText")
+      public static let saveButtonDisabled = ColorAsset(name: "saveButtonDisabled")
+      public static let saveButtonDisabledText = ColorAsset(name: "saveButtonDisabledText")
+      public static let subtitle = ColorAsset(name: "subtitle")
     }
     public static let background = ColorAsset(name: "background")
     public static let btnDarkShade = ColorAsset(name: "btnDarkShade")
