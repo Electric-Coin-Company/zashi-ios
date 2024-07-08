@@ -15,7 +15,7 @@ class WelcomeSnapshotTests: XCTestCase {
         let store = Store(
             initialState: .initial
         ) {
-            WelcomeReducer()
+            Welcome()
         }
 
         addAttachments(WelcomeView(store: store))

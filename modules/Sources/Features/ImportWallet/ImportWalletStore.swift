@@ -15,16 +15,16 @@ import MnemonicClient
 import ZcashSDKEnvironment
 import RestoreInfo
 
-public typealias ImportWalletStore = Store<ImportWalletReducer.State, ImportWalletReducer.Action>
-public typealias ImportWalletViewStore = ViewStore<ImportWalletReducer.State, ImportWalletReducer.Action>
-
-public struct ImportWalletReducer: Reducer {
+@Reducer
+public struct ImportWallet {
+    @ObservableState
     public struct State: Equatable {
         public enum Destination: Equatable {
             case birthday
+            case restoreInfo
         }
 
-        @PresentationState public var alert: AlertState<Action>?
+        @Presents public var alert: AlertState<Action>?
         public var birthdayHeight = RedactableString.empty
         public var birthdayHeightValue: RedactableBlockHeight?
         public var destination: Destination?
@@ -33,7 +33,6 @@ public struct ImportWalletReducer: Reducer {
         public var isValidNumberOfWords = false
         public var maxWordsCount = 0
         public var restoreInfoState: RestoreInfo.State
-        public var restoreInfoViewBinding: Bool = false
         public var wordsCount = 0
         
         public var mnemonicStatus: String {
@@ -59,7 +58,6 @@ public struct ImportWalletReducer: Reducer {
             isValidNumberOfWords: Bool = false,
             maxWordsCount: Int = 0,
             restoreInfoState: RestoreInfo.State,
-            restoreInfoViewBinding: Bool = false,
             wordsCount: Int = 0
         ) {
             self.birthdayHeight = birthdayHeight
@@ -70,13 +68,13 @@ public struct ImportWalletReducer: Reducer {
             self.isValidNumberOfWords = isValidNumberOfWords
             self.maxWordsCount = maxWordsCount
             self.restoreInfoState = restoreInfoState
-            self.restoreInfoViewBinding = restoreInfoViewBinding
             self.wordsCount = wordsCount
         }
     }
     
-    public enum Action: Equatable {
+    public enum Action: BindableAction, Equatable {
         case alert(PresentationAction<Action>)
+        case binding(BindingAction<ImportWallet.State>)
         case birthdayInputChanged(RedactableString)
         case importPrivateOrViewingKey
         case initializeSDK
@@ -87,7 +85,7 @@ public struct ImportWalletReducer: Reducer {
         case restoreWallet
         case seedPhraseInputChanged(RedactableString)
         case successfullyRecovered
-        case updateDestination(ImportWalletReducer.State.Destination?)
+        case updateDestination(ImportWallet.State.Destination?)
     }
 
     @Dependency(\.mnemonic) var mnemonic
@@ -97,7 +95,9 @@ public struct ImportWalletReducer: Reducer {
     public init() { }
     
     public var body: some Reducer<State, Action> {
-        Scope(state: \.restoreInfoState, action: /Action.restoreInfo) {
+        BindingReducer()
+        
+        Scope(state: \.restoreInfoState, action: \.restoreInfo) {
             RestoreInfo()
         }
 
@@ -106,7 +106,10 @@ public struct ImportWalletReducer: Reducer {
             case .onAppear:
                 state.maxWordsCount = zcashSDKEnvironment.mnemonicWordsMaxCount
                 return .none
-
+                
+            case .binding:
+                return .none
+                
             case .seedPhraseInputChanged(let redactedSeedPhrase):
                 state.importedSeedPhrase = redactedSeedPhrase
                 state.wordsCount = state.importedSeedPhrase.data.split(separator: " ").count
@@ -150,8 +153,7 @@ public struct ImportWalletReducer: Reducer {
                 return .none
                 
             case .restoreInfoRequested(let newValue):
-                state.restoreInfoViewBinding = newValue
-                return .none
+                return .send(.updateDestination(.restoreInfo))
                 
             case .restoreWallet:
                 do {
@@ -189,8 +191,7 @@ public struct ImportWalletReducer: Reducer {
                 return .none
                 
             case .successfullyRecovered:
-                state.restoreInfoViewBinding = true
-                return .none
+                return .send(.updateDestination(nil))
                 
             case .initializeSDK:
                 return .none
@@ -199,36 +200,9 @@ public struct ImportWalletReducer: Reducer {
     }
 }
 
-// MARK: - ViewStore
-
-extension ImportWalletViewStore {
-    func bindingForDestination(_ destination: ImportWalletReducer.State.Destination) -> Binding<Bool> {
-        self.binding(
-            get: { $0.destination == destination },
-            send: { isActive in
-                return .updateDestination(isActive ? destination : nil)
-            }
-        )
-    }
-
-    func bindingForRedactableSeedPhrase(_ importedSeedPhrase: RedactableString) -> Binding<String> {
-        self.binding(
-            get: { _ in importedSeedPhrase.data },
-            send: { .seedPhraseInputChanged($0.redacted) }
-        )
-    }
-    
-    func bindingForRedactableBirthday(_ birthdayHeight: RedactableString) -> Binding<String> {
-        self.binding(
-            get: { _ in birthdayHeight.data },
-            send: { .birthdayInputChanged($0.redacted) }
-        )
-    }
-}
-
 // MARK: Alerts
 
-extension AlertState where Action == ImportWalletReducer.Action {
+extension AlertState where Action == ImportWallet.Action {
     public static func failed(_ error: ZcashError) -> AlertState {
         AlertState {
             TextState(L10n.ImportWallet.Alert.Failed.title)
@@ -239,19 +213,5 @@ extension AlertState where Action == ImportWalletReducer.Action {
         } message: {
             TextState(L10n.ImportWallet.Alert.Failed.message(error.detailedMessage))
         }
-    }
-}
-
-// MARK: - Placeholders
-
-extension ImportWalletReducer.State {
-    public static let initial = ImportWalletReducer.State(restoreInfoState: .initial)
-}
-
-extension ImportWalletStore {
-    public static let demo = Store(
-        initialState: .initial
-    ) {
-        ImportWalletReducer()
     }
 }

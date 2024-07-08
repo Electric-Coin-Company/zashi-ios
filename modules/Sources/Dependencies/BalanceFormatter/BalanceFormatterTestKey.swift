@@ -10,7 +10,7 @@ import XCTestDynamicOverlay
 
 extension BalanceFormatterClient: TestDependencyKey {
     public static let testValue = Self(
-        convert: XCTUnimplemented("\(Self.self).convert", placeholder: .placeholer)
+        convert: unimplemented("\(Self.self).convert", placeholder: .placeholer)
     )
 }
 

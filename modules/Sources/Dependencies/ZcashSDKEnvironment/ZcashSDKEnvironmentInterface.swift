@@ -113,6 +113,7 @@ extension ZcashSDKEnvironment {
     }
 }
 
+@DependencyClient
 public struct ZcashSDKEnvironment {
     public var latestCheckpoint: BlockHeight
     public let endpoint: () -> LightWalletEndpoint

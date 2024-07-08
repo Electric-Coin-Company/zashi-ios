@@ -10,6 +10,6 @@ import XCTestDynamicOverlay
 
 extension AudioServicesClient: TestDependencyKey {
     public static let testValue = Self(
-        systemSoundVibrate: XCTUnimplemented("\(Self.self).systemSoundVibrate")
+        systemSoundVibrate: unimplemented("\(Self.self).systemSoundVibrate", placeholder: {}())
     )
 }

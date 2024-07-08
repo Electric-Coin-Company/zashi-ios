@@ -17,11 +17,11 @@ public struct NotEnoughFreeSpace {
         public var freeSpaceRequiredForSync = ""
         public var freeSpace = ""
         public var isSettingsOpen = false
-        public var settingsState: SettingsReducer.State
+        public var settingsState: Settings.State
 
         public init(
             isSettingsOpen: Bool = false,
-            settingsState: SettingsReducer.State
+            settingsState: Settings.State
         ) {
             self.isSettingsOpen = isSettingsOpen
             self.settingsState = settingsState
@@ -31,7 +31,7 @@ public struct NotEnoughFreeSpace {
     public enum Action: BindableAction, Equatable {
         case binding(BindingAction<NotEnoughFreeSpace.State>)
         case onAppear
-        case settings(SettingsReducer.Action)
+        case settings(Settings.Action)
     }
     
     @Dependency(\.diskSpaceChecker) var diskSpaceChecker
@@ -41,8 +41,8 @@ public struct NotEnoughFreeSpace {
     public var body: some Reducer<State, Action> {
         BindingReducer()
 
-        Scope(state: \.settingsState, action: /Action.settings) {
-            SettingsReducer()
+        Scope(state: \.settingsState, action: \.settings) {
+            Settings()
         }
 
         Reduce { state, action in

@@ -10,11 +10,11 @@ import XCTestDynamicOverlay
 
 extension MnemonicClient: TestDependencyKey {
     public static let testValue = Self(
-        randomMnemonic: XCTUnimplemented("\(Self.self).randomMnemonic", placeholder: ""),
-        randomMnemonicWords: XCTUnimplemented("\(Self.self).randomMnemonicWords", placeholder: []),
-        toSeed: XCTUnimplemented("\(Self.self).toSeed", placeholder: []),
-        asWords: XCTUnimplemented("\(Self.self).asWords", placeholder: []),
-        isValid: XCTUnimplemented("\(Self.self).isValid")
+        randomMnemonic: unimplemented("\(Self.self).randomMnemonic", placeholder: ""),
+        randomMnemonicWords: unimplemented("\(Self.self).randomMnemonicWords", placeholder: []),
+        toSeed: unimplemented("\(Self.self).toSeed", placeholder: []),
+        asWords: unimplemented("\(Self.self).asWords", placeholder: []),
+        isValid: unimplemented("\(Self.self).isValid", placeholder: {}())
     )
 }
 

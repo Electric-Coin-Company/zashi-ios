@@ -31,7 +31,8 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct WalletStatusPanelClient {
-    public var value: @Sendable () -> CurrentValueSubject<WalletStatus, Never>
+    public var value: @Sendable () -> CurrentValueSubject<WalletStatus, Never> = { CurrentValueSubject(.none) }
     public var updateValue: @Sendable (WalletStatus) -> Void
 }

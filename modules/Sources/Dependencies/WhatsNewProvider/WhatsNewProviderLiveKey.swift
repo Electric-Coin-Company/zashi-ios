@@ -25,7 +25,7 @@ extension WhatsNewProviderClient: DependencyKey {
 
         // check the file if this localization exists
         if let preferredLanguageCode = Locale.preferredLanguages.first?.split(separator: "-").first {
-            var localizedWhatsNewFileName = "\(fileName)_\(preferredLanguageCode)"
+            let localizedWhatsNewFileName = "\(fileName)_\(preferredLanguageCode)"
             if let whatsNewFile = Bundle.main.url(forResource: localizedWhatsNewFileName, withExtension: ".json"), FileManager.default.fileExists(atPath: whatsNewFile.path) {
                 fileName = localizedWhatsNewFileName
             }

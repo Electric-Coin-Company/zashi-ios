@@ -17,32 +17,20 @@ import SendConfirmation
 
 class SendSnapshotTests: XCTestCase {
     func testTransactionSendSnapshot() throws {
-        var state = SendFlowReducer.State.initial
+        var state = SendFlow.State.initial
         state.addMemoState = true
-        state.transactionAddressInputState = TransactionAddressTextFieldReducer.State(
-            textFieldState: TCATextFieldReducer.State(
-                validationType: nil,
-                text: "ztestmockeddestinationaddress".redacted
-            )
-        )
-        state.transactionAmountInputState = TransactionAmountTextFieldReducer.State(
-            currencySelectionState: CurrencySelectionReducer.State(),
-            textFieldState: TCATextFieldReducer.State(
-                validationType: nil,
-                text: "2.91".redacted
-            )
-        )
 
         let store = Store(
             initialState: state
         ) {
-            SendFlowReducer()
+            SendFlow()
                 .dependency(\.derivationTool, .live())
                 .dependency(\.mainQueue, DispatchQueue.main.eraseToAnyScheduler())
                 .dependency(\.numberFormatter, .live())
                 .dependency(\.walletStorage, .live())
                 .dependency(\.sdkSynchronizer, .mock)
                 .dependency(\.diskSpaceChecker, .mockEmptyDisk)
+                .dependency(\.exchangeRate, .noOp)
         }
 
         addAttachments(SendFlowView(store: store, tokenName: "ZEC"))

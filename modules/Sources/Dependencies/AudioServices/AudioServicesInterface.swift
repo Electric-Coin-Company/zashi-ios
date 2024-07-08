@@ -15,6 +15,7 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct AudioServicesClient {
     public let systemSoundVibrate: () -> Void
     

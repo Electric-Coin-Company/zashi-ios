@@ -85,7 +85,7 @@ public struct SendConfirmation {
     public var body: some Reducer<State, Action> {
         BindingReducer()
         
-        Scope(state: \.partialProposalErrorState, action: /Action.partialProposalError) {
+        Scope(state: \.partialProposalErrorState, action: \.partialProposalError) {
             PartialProposalError()
         }
 

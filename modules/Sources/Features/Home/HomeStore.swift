@@ -72,15 +72,15 @@ public struct Home {
     public init() { }
     
     public var body: some Reducer<State, Action> {
-        Scope(state: \.transactionListState, action: /Action.transactionList) {
+        Scope(state: \.transactionListState, action: \.transactionList) {
             TransactionList()
         }
 
-        Scope(state: \.syncProgressState, action: /Action.syncProgress) {
+        Scope(state: \.syncProgressState, action: \.syncProgress) {
             SyncProgress()
         }
 
-        Scope(state: \.walletBalancesState, action: /Action.walletBalances) {
+        Scope(state: \.walletBalancesState, action: \.walletBalances) {
             WalletBalances()
         }
 

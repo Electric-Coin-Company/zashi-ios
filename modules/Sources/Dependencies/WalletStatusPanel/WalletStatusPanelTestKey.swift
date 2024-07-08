@@ -11,8 +11,8 @@ import Combine
 
 extension WalletStatusPanelClient: TestDependencyKey {
     public static let testValue = Self(
-        value: XCTUnimplemented("\(Self.self).value", placeholder: .init(.none)),
-        updateValue: XCTUnimplemented("\(Self.self).updateValue")
+        value: unimplemented("\(Self.self).value", placeholder: .init(.none)),
+        updateValue: unimplemented("\(Self.self).updateValue", placeholder: {}())
     )
 }
 

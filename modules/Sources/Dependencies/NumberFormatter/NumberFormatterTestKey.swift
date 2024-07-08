@@ -10,8 +10,8 @@ import XCTestDynamicOverlay
 
 extension NumberFormatterClient: TestDependencyKey {
     public static let testValue = Self(
-        string: XCTUnimplemented("\(Self.self).string", placeholder: nil),
-        number: XCTUnimplemented("\(Self.self).number", placeholder: nil)
+        string: unimplemented("\(Self.self).string", placeholder: nil),
+        number: unimplemented("\(Self.self).number", placeholder: nil)
     )
 }
 

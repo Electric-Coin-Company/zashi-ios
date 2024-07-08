@@ -16,6 +16,7 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct ReadTransactionsStorageClient {
     public enum Constants {
         static let entityName = "ReadTransactionsStorageEntity"

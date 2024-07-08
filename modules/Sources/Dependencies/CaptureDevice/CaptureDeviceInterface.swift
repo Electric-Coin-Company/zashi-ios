@@ -14,6 +14,7 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct CaptureDeviceClient {
     public enum CaptureDeviceClientError: Error {
         case authorizationStatus

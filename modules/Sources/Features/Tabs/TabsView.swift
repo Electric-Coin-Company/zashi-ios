@@ -22,79 +22,79 @@ import CurrencyConversionSetup
 
 public struct TabsView: View {
     let networkType: NetworkType
-    var store: TabsStore
+    @Perception.Bindable var store: StoreOf<Tabs>
     let tokenName: String
     @Namespace var tabsID
 
     @Dependency(\.hideBalances) var hideBalances
     @State var areBalancesHidden = false
 
-    public init(store: TabsStore, tokenName: String, networkType: NetworkType) {
+    public init(store: StoreOf<Tabs>, tokenName: String, networkType: NetworkType) {
         self.store = store
         self.tokenName = tokenName
         self.networkType = networkType
     }
 
     public var body: some View {
-        WithViewStore(self.store, observe: { $0 }) { viewStore in
-            WithViewStore(self.store, observe: \.selectedTab) { tab in
-                ZStack {
-                    TabView(selection: tab.binding(send: TabsReducer.Action.selectedTabChanged)) {
-                        HomeView(
-                            store: self.store.scope(
-                                state: \.homeState,
-                                action: TabsReducer.Action.home
-                            ),
-                            tokenName: tokenName
-                        )
-                        .tag(TabsReducer.State.Tab.account)
-                        
-                        SendFlowView(
-                            store: self.store.scope(
-                                state: \.sendState,
-                                action: TabsReducer.Action.send
-                            ),
-                            tokenName: tokenName
-                        )
-                        .tag(TabsReducer.State.Tab.send)
-                        
-                        AddressDetailsView(
-                            store: self.store.scope(
-                                state: \.addressDetailsState,
-                                action: TabsReducer.Action.addressDetails
-                            ),
-                            networkType: networkType
-                        )
-                        .tag(TabsReducer.State.Tab.receive)
-                        
-                        BalanceBreakdownView(
-                            store: self.store.scope(
-                                state: \.balanceBreakdownState,
-                                action: TabsReducer.Action.balanceBreakdown
-                            ),
-                            tokenName: tokenName
-                        )
-                        .tag(TabsReducer.State.Tab.balances)
-                    }
-                    .onAppear { viewStore.send(.onAppear) }
+        WithPerceptionTracking {
+            ZStack {
+                TabView(selection: $store.selectedTab) {
+                    HomeView(
+                        store: self.store.scope(
+                            state: \.homeState,
+                            action: \.home
+                        ),
+                        tokenName: tokenName
+                    )
+                    .tag(Tabs.State.Tab.account)
                     
-                    VStack(spacing: 0) {
-                        Spacer()
-                        
-                        if tab.state != .account {
-                            Asset.Colors.shade30.color
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 1)
-                                .opacity(0.15)
-                        }
-                        
-                        HStack {
-                            ForEach((TabsReducer.State.Tab.allCases), id: \.self) { item in
-                                Button {
-                                    store.send(.selectedTabChanged(item), animation: .easeInOut)
-                                } label: {
-                                    VStack {
-                                        if tab.state == item {
+                    SendFlowView(
+                        store: self.store.scope(
+                            state: \.sendState,
+                            action: \.send
+                        ),
+                        tokenName: tokenName
+                    )
+                    .tag(Tabs.State.Tab.send)
+                    
+                    AddressDetailsView(
+                        store: self.store.scope(
+                            state: \.addressDetailsState,
+                            action: \.addressDetails
+                        ),
+                        networkType: networkType
+                    )
+                    .tag(Tabs.State.Tab.receive)
+                    
+                    BalancesView(
+                        store: self.store.scope(
+                            state: \.balanceBreakdownState,
+                            action: \.balanceBreakdown
+                        ),
+                        tokenName: tokenName
+                    )
+                    .tag(Tabs.State.Tab.balances)
+                }
+                .onAppear { store.send(.onAppear) }
+                
+                VStack(spacing: 0) {
+                    Spacer()
+                    
+                    if store.selectedTab != .account {
+                        Asset.Colors.shade30.color
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 1)
+                            .opacity(0.15)
+                    }
+                    
+                    HStack {
+                        ForEach((Tabs.State.Tab.allCases), id: \.self) { item in
+                            Button {
+                                store.send(.selectedTabChanged(item), animation: .easeInOut)
+                            } label: {
+                                VStack {
+                                    WithPerceptionTracking {
+                                        if store.selectedTab == item {
                                             Text("\(item.title)")
                                                 .font(.custom(FontFamily.Archivo.black.name, size: 12))
                                                 .foregroundColor(Asset.Colors.primary.color)
@@ -111,132 +111,132 @@ public struct TabsView: View {
                                                 .foregroundColor(.clear)
                                         }
                                     }
-                                    .frame(minHeight: 50)
                                 }
-                                
-                                if item.rawValue < TabsReducer.State.Tab.allCases.count-1 {
+                                .frame(minHeight: 50)
+                            }
+                            
+                            if item.rawValue < Tabs.State.Tab.allCases.count-1 {
+                                Spacer()
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 40)
+                    .background(Asset.Colors.background.color)
+                }
+                .ignoresSafeArea(.keyboard)
+                .navigationLinkEmpty(
+                    isActive: store.bindingFor(.sendConfirmation),
+                    destination: {
+                        SendConfirmationView(
+                            store: store.sendConfirmationStore(),
+                            tokenName: tokenName
+                        )
+                    }
+                )
+                .navigationLinkEmpty(
+                    isActive: store.bindingFor(.currencyConversionSetup),
+                    destination: {
+                        CurrencyConversionSetupView(
+                            store: store.currencyConversionSetupStore()
+                        )
+                    }
+                )
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(trailing: settingsButton())
+            .navigationBarItems(leading: hideBalancesButton(tab: store.selectedTab))
+            .zashiTitle { navBarView(store.selectedTab) }
+            .walletStatusPanel()
+            .onAppear {
+                areBalancesHidden = hideBalances.value().value
+            }
+            .overlayPreferenceValue(BoundsPreferenceKey.self) { preferences in
+                if store.isRateTooltipEnabled {
+                    GeometryReader { geometry in
+                        preferences.map {
+                            Tooltip(
+                                title: L10n.Tooltip.ExchangeRate.title,
+                                desc: L10n.Tooltip.ExchangeRate.desc
+                            ) {
+                                store.send(.rateTooltipTapped)
+                            }
+                            .frame(width: geometry.size.width - 40)
+                            .offset(x: 20, y: geometry[$0].minY + geometry[$0].height)
+                        }
+                    }
+                }
+            }
+            .overlayPreferenceValue(ExchangeRateFeaturePreferenceKey.self) { preferences in
+                if store.isRateEducationEnabled {
+                    GeometryReader { geometry in
+                        preferences.map {
+                            VStack(alignment: .leading, spacing: 0) {
+                                HStack(alignment: .top, spacing: 0) {
+                                    Asset.Assets.coinsSwap.image
+                                        .renderingMode(.template)
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                        .foregroundColor(Design.Text.primary.color)
+                                        .padding(10)
+                                        .background {
+                                            Circle()
+                                                .fill(Design.Surfaces.bgTertiary.color)
+                                        }
+                                        .padding(.trailing, 16)
+                                    
+                                    VStack(alignment: .leading, spacing: 5) {
+                                        Text(L10n.CurrencyConversion.cardTitle)
+                                            .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                                            .foregroundColor(Design.Text.tertiary.color)
+                                        
+                                        Text(L10n.CurrencyConversion.title)
+                                            .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
+                                            .foregroundColor(Design.Text.primary.color)
+                                            .lineLimit(nil)
+                                    }
+                                    .padding(.trailing, 16)
+                                    
                                     Spacer()
-                                }
-                            }
-                        }
-                        .padding(.horizontal, 40)
-                        .background(Asset.Colors.background.color)
-                    }
-                    .ignoresSafeArea(.keyboard)
-                    .navigationLinkEmpty(
-                        isActive: viewStore.bindingForDestination(.sendConfirmation),
-                        destination: {
-                            SendConfirmationView(
-                                store: store.sendConfirmationStore(),
-                                tokenName: tokenName
-                            )
-                        }
-                    )
-                    .navigationLinkEmpty(
-                        isActive: viewStore.bindingForDestination(.currencyConversionSetup),
-                        destination: {
-                            CurrencyConversionSetupView(
-                                store: store.currencyConversionSetupStore()
-                            )
-                        }
-                    )
-                }
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationBarItems(trailing: settingsButton(store))
-                .navigationBarItems(leading: hideBalancesButton(store, tab: tab.state))
-                .zashiTitle { navBarView(tab.state) }
-                .walletStatusPanel()
-                .onAppear {
-                    areBalancesHidden = hideBalances.value().value
-                }
-                .overlayPreferenceValue(BoundsPreferenceKey.self) { preferences in
-                    if viewStore.isRateTooltipEnabled {
-                        GeometryReader { geometry in
-                            preferences.map {
-                                Tooltip(
-                                    title: L10n.Tooltip.ExchangeRate.title,
-                                    desc: L10n.Tooltip.ExchangeRate.desc
-                                ) {
-                                    viewStore.send(.rateTooltipTapped)
-                                }
-                                .frame(width: geometry.size.width - 40)
-                                .offset(x: 20, y: geometry[$0].minY + geometry[$0].height)
-                            }
-                        }
-                    }
-                }
-                .overlayPreferenceValue(ExchangeRateFeaturePreferenceKey.self) { preferences in
-                    if viewStore.isRateEducationEnabled {
-                        GeometryReader { geometry in
-                            preferences.map {
-                                VStack(alignment: .leading, spacing: 0) {
-                                    HStack(alignment: .top, spacing: 0) {
-                                        Asset.Assets.coinsSwap.image
+                                    
+                                    Button {
+                                        store.send(.currencyConversionCloseTapped)
+                                    } label: {
+                                        Asset.Assets.buttonCloseX.image
                                             .renderingMode(.template)
                                             .resizable()
                                             .frame(width: 20, height: 20)
-                                            .foregroundColor(Design.Text.primary.color)
-                                            .padding(10)
-                                            .background {
-                                                Circle()
-                                                    .fill(Design.Surfaces.bgTertiary.color)
-                                            }
-                                            .padding(.trailing, 16)
-                                        
-                                        VStack(alignment: .leading, spacing: 5) {
-                                            Text(L10n.CurrencyConversion.cardTitle)
-                                                .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                                                .foregroundColor(Design.Text.tertiary.color)
-
-                                            Text(L10n.CurrencyConversion.title)
-                                                .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                                                .foregroundColor(Design.Text.primary.color)
-                                                .lineLimit(1)
-                                                .minimumScaleFactor(0.5)
-                                        }
-
-                                        Spacer(minLength: 0)
-
-                                        Button {
-                                            viewStore.send(.currencyConversionCloseTapped)
-                                        } label: {
-                                            Asset.Assets.buttonCloseX.image
-                                                .renderingMode(.template)
-                                                .resizable()
-                                                .frame(width: 20, height: 20)
-                                                .foregroundColor(Design.HintTooltips.defaultFg.color)
-                                        }
-                                        .padding(20)
-                                        .offset(x: 20, y: -20)
+                                            .foregroundColor(Design.HintTooltips.defaultFg.color)
                                     }
-
-                                    Button {
-                                        viewStore.send(.updateDestination(.currencyConversionSetup))
-                                    } label: {
-                                        Text(L10n.CurrencyConversion.cardButton)
-                                            .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                                            .foregroundColor(Design.Btns.Tertiary.fg.color)
-                                            .frame(height: 24)
-                                            .frame(maxWidth: .infinity)
-                                            .padding(.vertical, 12)
-                                            .background {
-                                                RoundedRectangle(cornerRadius: 12)
-                                                    .fill(Design.Btns.Tertiary.bg.color)
-                                            }
-                                    }
+                                    .padding(20)
+                                    .offset(x: 20, y: -20)
                                 }
-                                .padding(24)
-                                .background {
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .fill(Design.Surfaces.bgPrimary.color)
+                                
+                                Button {
+                                    store.send(.updateDestination(.currencyConversionSetup))
+                                } label: {
+                                    Text(L10n.CurrencyConversion.cardButton)
+                                        .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
+                                        .foregroundColor(Design.Btns.Tertiary.fg.color)
+                                        .frame(height: 24)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 12)
                                         .background {
                                             RoundedRectangle(cornerRadius: 12)
-                                                .stroke(Design.Surfaces.strokeSecondary.color)
+                                                .fill(Design.Btns.Tertiary.bg.color)
                                         }
                                 }
-                                .frame(width: geometry.size.width - 40)
-                                .offset(x: 20, y: geometry[$0].minY + geometry[$0].height)
                             }
+                            .padding(24)
+                            .background {
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Design.Surfaces.bgPrimary.color)
+                                    .background {
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .stroke(Design.Surfaces.strokeSecondary.color)
+                                    }
+                            }
+                            .frame(width: geometry.size.width - 40)
+                            .offset(x: 20, y: geometry[$0].minY + geometry[$0].height)
                         }
                     }
                 }
@@ -244,7 +244,7 @@ public struct TabsView: View {
         }
     }
     
-    @ViewBuilder private func navBarView(_ tab: TabsReducer.State.Tab) -> some View {
+    @ViewBuilder private func navBarView(_ tab: Tabs.State.Tab) -> some View {
         switch tab {
         case .receive, .send:
             Text(tab.title.uppercased())
@@ -263,40 +263,36 @@ public struct TabsView: View {
         }
     }
     
-    func settingsButton(_ store: TabsStore) -> some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
-            Image(systemName: "line.3.horizontal")
-                .resizable()
-                .frame(width: 21, height: 15)
-                .padding(15)
-                .navigationLink(
-                    isActive: viewStore.bindingForDestination(.settings),
-                    destination: {
-                        SettingsView(store: store.settingsStore())
-                    }
-                )
-                .tint(Asset.Colors.primary.color)
-        }
+    func settingsButton() -> some View {
+        Image(systemName: "line.3.horizontal")
+            .resizable()
+            .frame(width: 21, height: 15)
+            .padding(15)
+            .navigationLink(
+                isActive: store.bindingFor(.settings),
+                destination: {
+                    SettingsView(store: store.settingsStore())
+                }
+            )
+            .tint(Asset.Colors.primary.color)
     }
     
     @ViewBuilder
-    func hideBalancesButton(_ store: TabsStore, tab: TabsReducer.State.Tab) -> some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
-            if tab == .account || tab == .send || tab == .balances {
-                Button {
-                    var prevValue = hideBalances.value().value
-                    prevValue.toggle()
-                    areBalancesHidden = prevValue
-                    hideBalances.updateValue(areBalancesHidden)
-                } label: {
-                    let image = areBalancesHidden ? Asset.Assets.eyeOff.image : Asset.Assets.eyeOn.image
-                    image
-                        .renderingMode(.template)
-                        .resizable()
-                        .frame(width: 25, height: 25)
-                        .padding(15)
-                        .tint(Asset.Colors.primary.color)
-                }
+    func hideBalancesButton(tab: Tabs.State.Tab) -> some View {
+        if tab == .account || tab == .send || tab == .balances {
+            Button {
+                var prevValue = hideBalances.value().value
+                prevValue.toggle()
+                areBalancesHidden = prevValue
+                hideBalances.updateValue(areBalancesHidden)
+            } label: {
+                let image = areBalancesHidden ? Asset.Assets.eyeOff.image : Asset.Assets.eyeOn.image
+                image
+                    .renderingMode(.template)
+                    .resizable()
+                    .frame(width: 25, height: 25)
+                    .padding(15)
+                    .tint(Asset.Colors.primary.color)
             }
         }
     }
@@ -306,4 +302,64 @@ public struct TabsView: View {
     NavigationView {
         TabsView(store: .demo, tokenName: "TAZ", networkType: .testnet)
     }
+}
+
+// MARK: - Store
+
+extension StoreOf<Tabs> {
+    public static var demo = StoreOf<Tabs>(
+        initialState: .initial
+    ) {
+        Tabs()
+    }
+}
+
+extension StoreOf<Tabs> {
+    func settingsStore() -> StoreOf<Settings> {
+        self.scope(
+            state: \.settingsState,
+            action: \.settings
+        )
+    }
+    
+    func sendConfirmationStore() -> StoreOf<SendConfirmation> {
+        self.scope(
+            state: \.sendConfirmationState,
+            action: \.sendConfirmation
+        )
+    }
+    
+    func currencyConversionSetupStore() -> StoreOf<CurrencyConversionSetup> {
+        self.scope(
+            state: \.currencyConversionSetupState,
+            action: \.currencyConversionSetup
+        )
+    }
+}
+
+// MARK: - ViewStore
+
+extension StoreOf<Tabs> {
+    func bindingFor(_ destination: Tabs.State.Destination) -> Binding<Bool> {
+        Binding<Bool>(
+            get: { self.destination == destination },
+            set: { self.send(.updateDestination($0 ? destination : nil)) }
+        )
+    }
+}
+
+// MARK: - Placeholders
+
+extension Tabs.State {
+    public static let initial = Tabs.State(
+        addressDetailsState: .initial,
+        balanceBreakdownState: .initial,
+        currencyConversionSetupState: .initial,
+        destination: nil,
+        homeState: .initial,
+        selectedTab: .account,
+        sendConfirmationState: .initial,
+        sendState: .initial,
+        settingsState: .initial
+    )
 }

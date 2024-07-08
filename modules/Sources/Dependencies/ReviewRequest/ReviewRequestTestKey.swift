@@ -10,10 +10,10 @@ import XCTestDynamicOverlay
 
 extension ReviewRequestClient: TestDependencyKey {
     public static let testValue = Self(
-        canRequestReview: XCTUnimplemented("\(Self.self).canRequestReview", placeholder: false),
-        foundTransactions: XCTUnimplemented("\(Self.self).foundTransactions"),
-        reviewRequested: XCTUnimplemented("\(Self.self).reviewRequested"),
-        syncFinished: XCTUnimplemented("\(Self.self).syncFinished")
+        canRequestReview: unimplemented("\(Self.self).canRequestReview", placeholder: false),
+        foundTransactions: unimplemented("\(Self.self).foundTransactions", placeholder: {}()),
+        reviewRequested: unimplemented("\(Self.self).reviewRequested", placeholder: {}()),
+        syncFinished: unimplemented("\(Self.self).syncFinished", placeholder: {}())
     )
 }
 

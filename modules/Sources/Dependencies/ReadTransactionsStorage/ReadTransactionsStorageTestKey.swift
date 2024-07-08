@@ -10,10 +10,10 @@ import XCTestDynamicOverlay
 
 extension ReadTransactionsStorageClient: TestDependencyKey {
     public static let testValue = Self(
-        markIdAsRead: XCTUnimplemented("\(Self.self).markIdAsRead"),
-        readIds: XCTUnimplemented("\(Self.self).readIds", placeholder: [:]),
-        availabilityTimestamp: XCTUnimplemented("\(Self.self).availabilityTimestamp", placeholder: 0),
-        nukeWallet: XCTUnimplemented("\(Self.self).nukeWallet")
+        markIdAsRead: unimplemented("\(Self.self).markIdAsRead", placeholder: {}()),
+        readIds: unimplemented("\(Self.self).readIds", placeholder: [:]),
+        availabilityTimestamp: unimplemented("\(Self.self).availabilityTimestamp", placeholder: 0),
+        nukeWallet: unimplemented("\(Self.self).nukeWallet", placeholder: {}())
     )
 }
 

@@ -12,15 +12,15 @@ import UIComponents
 import NumberFormatter
 
 public struct WelcomeView: View {
-    var store: WelcomeStore
+    @Perception.Bindable var store: StoreOf<Welcome>
     
-    public init(store: WelcomeStore) {
+    public init(store: StoreOf<Welcome>) {
         self.store = store
     }
 
     public var body: some View {
         GeometryReader { proxy in
-            WithViewStore(store, observe: { $0 }) { viewStore in
+            WithPerceptionTracking {
                 Asset.Assets.zashiLogo.image
                     .renderingMode(.template)
                     .resizable()
@@ -44,7 +44,7 @@ public struct WelcomeView: View {
                     )
 #if !SECANT_DISTRIB
                     .accessDebugMenuWithHiddenGesture {
-                        viewStore.send(.debugMenuStartup)
+                        store.send(.debugMenuStartup)
                     }
 #endif
             }
@@ -91,4 +91,20 @@ struct WelcomeView_Previews: PreviewProvider {
                 .previewDevice("iPhone SE (2nd generation)")
         }
     }
+}
+
+// MARK: - Store
+
+extension StoreOf<Welcome> {
+    public static var demo = StoreOf<Welcome>(
+        initialState: .initial
+    ) {
+        Welcome()
+    }
+}
+
+// MARK: - Placeholders
+
+extension Welcome.State {
+    public static let initial = Welcome.State()
 }

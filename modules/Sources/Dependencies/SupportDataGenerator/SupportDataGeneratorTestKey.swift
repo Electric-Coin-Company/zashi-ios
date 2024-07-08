@@ -10,7 +10,7 @@ import XCTestDynamicOverlay
 
 extension SupportDataGeneratorClient: TestDependencyKey {
     public static let testValue = Self(
-        generate: XCTUnimplemented("\(Self.self).generate")
+        generate: unimplemented("\(Self.self).generate", placeholder: SupportData(toAddress: "", subject: "", message: ""))
     )
 }
 

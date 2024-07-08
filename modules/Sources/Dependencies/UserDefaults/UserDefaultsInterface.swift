@@ -20,6 +20,7 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct UserDefaultsClient {
     public let objectForKey: (String) -> Any?
     public let remove: (String) -> Void

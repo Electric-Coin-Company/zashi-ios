@@ -2,10 +2,9 @@ import ComposableArchitecture
 import SwiftUI
 import TransactionList
 
-public typealias SandboxStore = Store<SandboxReducer.State, SandboxReducer.Action>
-public typealias SandboxViewStore = ViewStore<SandboxReducer.State, SandboxReducer.Action>
-
-public struct SandboxReducer: Reducer {
+@Reducer
+public struct Sandbox {
+    @ObservableState
     public struct State: Equatable {
         public enum Destination: Equatable, CaseIterable {
             case history
@@ -18,7 +17,7 @@ public struct SandboxReducer: Reducer {
     }
 
     public enum Action: Equatable {
-        case updateDestination(SandboxReducer.State.Destination?)
+        case updateDestination(Sandbox.State.Destination?)
         case transactionList(TransactionList.Action)
         case reset
     }
@@ -34,65 +33,10 @@ public struct SandboxReducer: Reducer {
         case let .transactionList(transactionListAction):
             return TransactionList()
                 .reduce(into: &state.transactionListState, action: transactionListAction)
-                .map(SandboxReducer.Action.transactionList)
+                .map(Sandbox.Action.transactionList)
             
         case .reset:
             return .none
-        }
-    }
-}
-
-// MARK: - Store
-
-extension SandboxStore {
-    func historyStore() -> StoreOf<TransactionList> {
-        self.scope(
-            state: \.transactionListState,
-            action: SandboxReducer.Action.transactionList
-        )
-    }
-}
-
-// MARK: - ViewStore
-
-extension SandboxViewStore {
-    func bindingForDestination(_ destination: SandboxReducer.State.Destination) -> Binding<Bool> {
-        self.binding(
-            get: { $0.destination == destination },
-            send: { isActive in
-                return .updateDestination(isActive ? destination : nil)
-            }
-        )
-    }
-}
-
-// MARK: - PlaceHolders
-
-extension SandboxReducer.State {
-    public static var placeholder: Self {
-        .init(
-            transactionListState: .placeholder,
-            destination: nil
-        )
-    }
-    
-    public static var initial: Self {
-        .init(
-            transactionListState: .initial,
-            destination: nil
-        )
-    }
-}
-
-extension SandboxStore {
-    public static var placeholder: SandboxStore {
-        SandboxStore(
-            initialState: SandboxReducer.State(
-                transactionListState: .placeholder,
-                destination: nil
-            )
-        ) {
-            SandboxReducer()
         }
     }
 }

@@ -15,6 +15,7 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct LogsHandlerClient {
     public let exportAndStoreLogs: (String, String, String) async throws -> URL?
     

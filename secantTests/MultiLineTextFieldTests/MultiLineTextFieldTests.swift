@@ -14,13 +14,13 @@ import UIComponents
 class MessageEditorTests: XCTestCase {
     func testIsCharLimited() async throws {
         let store = TestStore(
-            initialState: MessageEditorReducer.State(charLimit: 1)
+            initialState: MessageEditor.State(charLimit: 1)
         ) {
-            MessageEditorReducer()
+            MessageEditor()
         }
         
         let value = "test".redacted
-        await store.send(.memoInputChanged(value)) { state in
+        await store.send(.inputChanged(value)) { state in
             state.text = value
             XCTAssertTrue(
                 state.isCharLimited,
@@ -31,13 +31,13 @@ class MessageEditorTests: XCTestCase {
 
     func testIsNotCharLimited() async throws {
         let store = TestStore(
-            initialState: MessageEditorReducer.State()
+            initialState: MessageEditor.State()
         ) {
-            MessageEditorReducer()
+            MessageEditor()
         }
 
         let value = "test".redacted
-        await store.send(.memoInputChanged(value)) { state in
+        await store.send(.inputChanged(value)) { state in
             state.text = value
             XCTAssertFalse(
                 state.isCharLimited,
@@ -48,13 +48,13 @@ class MessageEditorTests: XCTestCase {
 
     func testByteLength() async throws {
         let store = TestStore(
-            initialState: MessageEditorReducer.State()
+            initialState: MessageEditor.State()
         ) {
-            MessageEditorReducer()
+            MessageEditor()
         }
 
         let value = "test".redacted
-        await store.send(.memoInputChanged(value)) { state in
+        await store.send(.inputChanged(value)) { state in
             state.text = value
             XCTAssertEqual(
                 4,
@@ -66,14 +66,14 @@ class MessageEditorTests: XCTestCase {
     
     func testByteLengthUnicode() async throws {
         let store = TestStore(
-            initialState: MessageEditorReducer.State()
+            initialState: MessageEditor.State()
         ) {
-            MessageEditorReducer()
+            MessageEditor()
         }
 
         // unicode char 😊 takes 4 bytes
         let value = "😊😊😊😊😊".redacted
-        await store.send(.memoInputChanged(value)) { state in
+        await store.send(.inputChanged(value)) { state in
             state.text = value
             XCTAssertEqual(
                 20,
@@ -85,13 +85,13 @@ class MessageEditorTests: XCTestCase {
     
     func testIsValid_CharLimit() async throws {
         let store = TestStore(
-            initialState: MessageEditorReducer.State(charLimit: 4)
+            initialState: MessageEditor.State(charLimit: 4)
         ) {
-            MessageEditorReducer()
+            MessageEditor()
         }
 
         let value = "test".redacted
-        await store.send(.memoInputChanged(value)) { state in
+        await store.send(.inputChanged(value)) { state in
             state.text = value
             XCTAssertTrue(
                 state.isValid,
@@ -102,13 +102,13 @@ class MessageEditorTests: XCTestCase {
 
     func testIsValid_NoCharLimit() async throws {
         let store = TestStore(
-            initialState: MessageEditorReducer.State()
+            initialState: MessageEditor.State()
         ) {
-            MessageEditorReducer()
+            MessageEditor()
         }
 
         let value = "test".redacted
-        await store.send(.memoInputChanged(value)) { state in
+        await store.send(.inputChanged(value)) { state in
             state.text = value
             XCTAssertTrue(
                 state.isValid,
@@ -119,13 +119,13 @@ class MessageEditorTests: XCTestCase {
     
     func testIsInvalid() async throws {
         let store = TestStore(
-            initialState: MessageEditorReducer.State(charLimit: 3)
+            initialState: MessageEditor.State(charLimit: 3)
         ) {
-            MessageEditorReducer()
+            MessageEditor()
         }
 
         let value = "test".redacted
-        await store.send(.memoInputChanged(value)) { state in
+        await store.send(.inputChanged(value)) { state in
             state.text = value
             XCTAssertFalse(
                 state.isValid,
@@ -136,13 +136,13 @@ class MessageEditorTests: XCTestCase {
     
     func testCharLimitText_NoCharLimit() async throws {
         let store = TestStore(
-            initialState: MessageEditorReducer.State()
+            initialState: MessageEditor.State()
         ) {
-            MessageEditorReducer()
+            MessageEditor()
         }
 
         let value = "test".redacted
-        await store.send(.memoInputChanged(value)) { state in
+        await store.send(.inputChanged(value)) { state in
             state.text = value
             XCTAssertEqual(
                 "",
@@ -154,13 +154,13 @@ class MessageEditorTests: XCTestCase {
     
     func testCharLimitText_CharLimit_LessCharacters() async throws {
         let store = TestStore(
-            initialState: MessageEditorReducer.State(charLimit: 5)
+            initialState: MessageEditor.State(charLimit: 5)
         ) {
-            MessageEditorReducer()
+            MessageEditor()
         }
 
         let value = "test".redacted
-        await store.send(.memoInputChanged(value)) { state in
+        await store.send(.inputChanged(value)) { state in
             state.text = value
             XCTAssertEqual(
                 "1/5",
@@ -172,13 +172,13 @@ class MessageEditorTests: XCTestCase {
     
     func testCharLimitText_CharLimit_Exceeded() async throws {
         let store = TestStore(
-            initialState: MessageEditorReducer.State(charLimit: 3)
+            initialState: MessageEditor.State(charLimit: 3)
         ) {
-            MessageEditorReducer()
+            MessageEditor()
         }
 
         let value = "test".redacted
-        await store.send(.memoInputChanged(value)) { state in
+        await store.send(.inputChanged(value)) { state in
             state.text = value
             XCTAssertEqual(
                 "-1/3",

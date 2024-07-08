@@ -14,7 +14,7 @@ import Utils
 import Generated
 
 @Reducer
-public struct ExportLogs: Reducer {
+public struct ExportLogs {
     @ObservableState
     public struct State: Equatable {
         @Presents public var alert: AlertState<Action>?

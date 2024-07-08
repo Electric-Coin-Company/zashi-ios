@@ -49,16 +49,16 @@ public struct Root {
         public var isLockedInKeychainUnavailableState = false
         public var isRestoringWallet = false
         public var notEnoughFreeSpaceState: NotEnoughFreeSpace.State
-        public var onboardingState: OnboardingFlowReducer.State
+        public var onboardingState: OnboardingFlow.State
         public var phraseDisplayState: RecoveryPhraseDisplay.State
-        public var sandboxState: SandboxReducer.State
+        public var sandboxState: Sandbox.State
         public var serverSetupState: ServerSetup.State
         public var serverSetupViewBinding: Bool = false
         public var splashAppeared = false
-        public var tabsState: TabsReducer.State
+        public var tabsState: Tabs.State
         public var walletConfig: WalletConfig
         public var wasRestoringWhenDisconnected = false
-        public var welcomeState: WelcomeReducer.State
+        public var welcomeState: Welcome.State
         
         public init(
             appInitializationState: InitializationState = .uninitialized,
@@ -69,13 +69,13 @@ public struct Root {
             isLockedInKeychainUnavailableState: Bool = false,
             isRestoringWallet: Bool = false,
             notEnoughFreeSpaceState: NotEnoughFreeSpace.State = .initial,
-            onboardingState: OnboardingFlowReducer.State,
+            onboardingState: OnboardingFlow.State,
             phraseDisplayState: RecoveryPhraseDisplay.State,
-            sandboxState: SandboxReducer.State,
-            tabsState: TabsReducer.State,
+            sandboxState: Sandbox.State,
+            tabsState: Tabs.State,
             serverSetupState: ServerSetup.State = .initial,
             walletConfig: WalletConfig,
-            welcomeState: WelcomeReducer.State
+            welcomeState: Welcome.State
         ) {
             self.appInitializationState = appInitializationState
             self.appStartState = appStartState
@@ -109,22 +109,22 @@ public struct Root {
         case debug(DebugAction)
         case destination(DestinationAction)
         case exportLogs(ExportLogs.Action)
-        case tabs(TabsReducer.Action)
+        case tabs(Tabs.Action)
         case initialization(InitializationAction)
         case notEnoughFreeSpace(NotEnoughFreeSpace.Action)
         case nukeWalletFailed
         case nukeWalletSucceeded
-        case onboarding(OnboardingFlowReducer.Action)
+        case onboarding(OnboardingFlow.Action)
         case phraseDisplay(RecoveryPhraseDisplay.Action)
         case splashFinished
         case splashRemovalRequested
-        case sandbox(SandboxReducer.Action)
+        case sandbox(Sandbox.Action)
         case serverSetup(ServerSetup.Action)
         case serverSetupBindingUpdated(Bool)
         case synchronizerStateChanged(RedactableSynchronizerState)
         case updateStateAfterConfigUpdate(WalletConfig)
         case walletConfigLoaded(WalletConfig)
-        case welcome(WelcomeReducer.Action)
+        case welcome(Welcome.Action)
     }
 
     @Dependency(\.autolockHandler) var autolockHandler
@@ -152,32 +152,32 @@ public struct Root {
     
     @ReducerBuilder<State, Action>
     var core: some Reducer<State, Action> {
-        Scope(state: \.serverSetupState, action: /Action.serverSetup) {
+        Scope(state: \.serverSetupState, action: \.serverSetup) {
             ServerSetup()
         }
 
-        Scope(state: \.tabsState, action: /Action.tabs) {
-            TabsReducer()
+        Scope(state: \.tabsState, action: \.tabs) {
+            Tabs()
         }
 
-        Scope(state: \.exportLogsState, action: /Action.exportLogs) {
+        Scope(state: \.exportLogsState, action: \.exportLogs) {
             ExportLogs()
         }
 
-        Scope(state: \.notEnoughFreeSpaceState, action: /Action.notEnoughFreeSpace) {
+        Scope(state: \.notEnoughFreeSpaceState, action: \.notEnoughFreeSpace) {
             NotEnoughFreeSpace()
         }
 
-        Scope(state: \.onboardingState, action: /Action.onboarding) {
-            OnboardingFlowReducer()
+        Scope(state: \.onboardingState, action: \.onboarding) {
+            OnboardingFlow()
         }
 
-        Scope(state: \.sandboxState, action: /Action.sandbox) {
-            SandboxReducer()
+        Scope(state: \.sandboxState, action: \.sandbox) {
+            Sandbox()
         }
 
-        Scope(state: \.welcomeState, action: /Action.welcome) {
-            WelcomeReducer()
+        Scope(state: \.welcomeState, action: \.welcome) {
+            Welcome()
         }
 
         initializationReduce()
@@ -223,7 +223,7 @@ public struct Root {
             default: return .none
             }
         }
-        .ifLet(\.$confirmationDialog, action: /Action.confirmationDialog)
+        .ifLet(\.$confirmationDialog, action: \.confirmationDialog)
     }
 }
 

@@ -12,20 +12,20 @@ import ImportWallet
 
 class ImportWalletSnapshotTests: XCTestCase {
     func testImportWalletSnapshot() throws {
-        let store = ImportWalletStore(
+        let store = StoreOf<ImportWallet>(
             initialState: .initial
         ) {
-            ImportWalletReducer()
+            ImportWallet()
         }
         
         addAttachments(ImportWalletView(store: store))
     }
     
     func testImportBirthdaySnapshot() throws {
-        let store = ImportWalletStore(
+        let store = StoreOf<ImportWallet>(
             initialState: .initial
         ) {
-            ImportWalletReducer()
+            ImportWallet()
         }
         
         addAttachments(ImportBirthdayView(store: store))

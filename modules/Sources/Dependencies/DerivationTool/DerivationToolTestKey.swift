@@ -12,14 +12,14 @@ import Utils
 
 extension DerivationToolClient: TestDependencyKey {
     public static let testValue = Self(
-        deriveSpendingKey: XCTUnimplemented("\(Self.self).deriveSpendingKey"),
-        deriveUnifiedFullViewingKey: XCTUnimplemented("\(Self.self).deriveUnifiedFullViewingKey"),
-        doesAddressSupportMemo: XCTUnimplemented("\(Self.self).doesAddressSupportMemo"),
-        isUnifiedAddress: XCTUnimplemented("\(Self.self).isUnifiedAddress", placeholder: false),
-        isSaplingAddress: XCTUnimplemented("\(Self.self).isSaplingAddress", placeholder: false),
-        isTransparentAddress: XCTUnimplemented("\(Self.self).isTransparentAddress", placeholder: false),
-        isTexAddress: XCTUnimplemented("\(Self.self).isTexAddress", placeholder: false),
-        isZcashAddress: XCTUnimplemented("\(Self.self).isZcashAddress", placeholder: false)
+        deriveSpendingKey: unimplemented("\(Self.self).deriveSpendingKey"),
+        deriveUnifiedFullViewingKey: unimplemented("\(Self.self).deriveUnifiedFullViewingKey"),
+        doesAddressSupportMemo: unimplemented("\(Self.self).doesAddressSupportMemo", placeholder: false),
+        isUnifiedAddress: unimplemented("\(Self.self).isUnifiedAddress", placeholder: false),
+        isSaplingAddress: unimplemented("\(Self.self).isSaplingAddress", placeholder: false),
+        isTransparentAddress: unimplemented("\(Self.self).isTransparentAddress", placeholder: false),
+        isTexAddress: unimplemented("\(Self.self).isTexAddress", placeholder: false),
+        isZcashAddress: unimplemented("\(Self.self).isZcashAddress", placeholder: false)
     )
 }
 

@@ -10,8 +10,8 @@ import XCTestDynamicOverlay
 
 extension DiskSpaceCheckerClient: TestDependencyKey {
     public static let testValue = Self(
-        freeSpaceRequiredForSync: XCTUnimplemented("\(Self.self).freeSpaceRequiredForSync", placeholder: 0),
-        hasEnoughFreeSpaceForSync: XCTUnimplemented("\(Self.self).hasEnoughFreeSpaceForSync", placeholder: false),
-        freeSpace: XCTUnimplemented("\(Self.self).freeSpace", placeholder: 0)
+        freeSpaceRequiredForSync: unimplemented("\(Self.self).freeSpaceRequiredForSync", placeholder: 0),
+        hasEnoughFreeSpaceForSync: unimplemented("\(Self.self).hasEnoughFreeSpaceForSync", placeholder: false),
+        freeSpace: unimplemented("\(Self.self).freeSpace", placeholder: 0)
     )
 }

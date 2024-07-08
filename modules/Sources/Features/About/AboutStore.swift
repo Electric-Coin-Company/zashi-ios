@@ -42,7 +42,7 @@ public struct About {
     public var body: some Reducer<State, Action> {
         BindingReducer()
         
-        Scope(state: \.whatsNewState, action: /Action.whatsNew) {
+        Scope(state: \.whatsNewState, action: \.whatsNew) {
             WhatsNew()
         }
 

@@ -11,15 +11,15 @@ import Generated
 import UIComponents
 
 public struct ImportBirthdayView: View {
-    var store: ImportWalletStore
+    @Perception.Bindable var store: StoreOf<ImportWallet>
     @FocusState public var isFocused: Bool
 
-    public init(store: ImportWalletStore) {
+    public init(store: StoreOf<ImportWallet>) {
         self.store = store
     }
     
     public var body: some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
+        WithPerceptionTracking {
             VStack(alignment: .center) {
                 ZashiIcon()
 
@@ -31,7 +31,7 @@ public struct ImportBirthdayView: View {
 
                 Text(L10n.ImportWallet.optionalBirthday)
 
-                TextField("", text: viewStore.bindingForRedactableBirthday(viewStore.birthdayHeight))
+                TextField("", text: store.bindingForRedactableBirthday(store.birthdayHeight))
                     .frame(height: 40)
                     .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
                     .focused($isFocused)
@@ -50,16 +50,16 @@ public struct ImportBirthdayView: View {
                 Spacer()
 
                 Button(L10n.ImportWallet.Button.restoreWallet.uppercased()) {
-                    viewStore.send(.restoreWallet)
+                    store.send(.restoreWallet)
                 }
                 .zcashStyle()
-                .disabled(!viewStore.isValidForm)
+                .disabled(!store.isValidForm)
                 .frame(width: 236)
                 .padding(.bottom, 50)
             }
             .padding(.horizontal, 70)
             .scrollableWhenScaledUp()
-            .onAppear(perform: { viewStore.send(.onAppear) })
+            .onAppear(perform: { store.send(.onAppear) })
             .zashiBack()
         }
         .navigationBarTitleDisplayMode(.inline)

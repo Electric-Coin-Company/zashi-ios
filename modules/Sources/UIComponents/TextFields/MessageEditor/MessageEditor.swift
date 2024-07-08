@@ -21,21 +21,20 @@ public extension View {
     }
 }
 
-public struct MessageEditor: View {
+public struct MessageEditorView: View {
     @Environment(\.isEnabled) private var isEnabled
 
-    let store: MessageEditorStore
+    @Perception.Bindable var store: StoreOf<MessageEditor>
 
     @FocusState public var isFocused: Bool
-    @State private var message = ""
     
-    public init(store: MessageEditorStore) {
+    public init(store: StoreOf<MessageEditor>) {
         self.store = store
         self.isFocused = false
     }
     
     public var body: some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
+        WithPerceptionTracking {
             VStack {
                 HStack {
                     Asset.Assets.fly.image
@@ -58,14 +57,14 @@ public struct MessageEditor: View {
                             border: Asset.Colors.messageBcgBorder.color
                         )
                 } else {
-                    TextEditor(text: $message)
+                    TextEditor(text: store.bindingForRedactableInput(store.text))
                         .focused($isFocused)
                         .padding(2)
                         .font(.custom(FontFamily.Inter.regular.name, size: 14))
                         .messageShape(filled: nil)
                         .colorBackground(Asset.Colors.background.color)
                         .overlay {
-                            if message.isEmpty {
+                            if store.text.data.isEmpty {
                                 HStack {
                                     VStack {
                                         Text(L10n.Send.memoPlaceholder)
@@ -86,22 +85,16 @@ public struct MessageEditor: View {
                                 EmptyView()
                             }
                         }
-                        .onChange(of: message) { value in
-                            viewStore.send(.memoInputChanged(RedactableString(message)))
-                        }
-                        .onAppear {
-                            message = viewStore.text.data
-                        }
                 }
                 
-                if viewStore.isCharLimited {
+                if store.isCharLimited {
                     HStack {
                         Spacer()
                         
-                        Text(isEnabled ? viewStore.charLimitText : "")
+                        Text(isEnabled ? store.charLimitText : "")
                             .font(.custom(FontFamily.Inter.bold.name, size: 13))
                             .foregroundColor(
-                                viewStore.isValid
+                                store.isValid
                                 ? Asset.Colors.shade72.color
                                 : Design.Utility.ErrorRed._600.color
                             )
@@ -115,12 +108,12 @@ public struct MessageEditor: View {
 
 #Preview {
     VStack {
-        MessageEditor(store: .placeholder)
+        MessageEditorView(store: .placeholder)
             .frame(height: 200)
             .padding()
             .disabled(false)
         
-        MessageEditor(store: .placeholder)
+        MessageEditorView(store: .placeholder)
             .frame(height: 200)
             .padding()
             .disabled(true)
@@ -131,12 +124,12 @@ public struct MessageEditor: View {
 
 #Preview {
     VStack {
-        MessageEditor(store: .placeholder)
+        MessageEditorView(store: .placeholder)
             .frame(height: 200)
             .padding()
             .disabled(false)
         
-        MessageEditor(store: .placeholder)
+        MessageEditorView(store: .placeholder)
             .frame(height: 200)
             .padding()
             .disabled(true)
@@ -145,3 +138,32 @@ public struct MessageEditor: View {
     .preferredColorScheme(.dark)
 }
 
+// MARK: - Store
+
+extension StoreOf<MessageEditor> {
+    public static let placeholder = StoreOf<MessageEditor>(
+        initialState: .initial
+    ) {
+        MessageEditor()
+    }
+}
+
+// MARK: - Placeholders
+
+extension MessageEditor.State {
+    public static let initial = MessageEditor.State(
+        charLimit: 0,
+        text: .empty
+    )
+}
+
+// MARK: - Bindings
+
+extension StoreOf<MessageEditor> {
+    func bindingForRedactableInput(_ input: RedactableString) -> Binding<String> {
+        Binding<String>(
+            get: { input.data },
+            set: { self.send(.inputChanged($0.redacted)) }
+        )
+    }
+}

@@ -14,6 +14,7 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct ReviewRequestClient {
     public let canRequestReview: () -> Bool
     public let foundTransactions: () -> Void

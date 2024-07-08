@@ -14,6 +14,7 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct AppVersionClient {
     public let appVersion: () -> String
     public let appBuild: () -> String

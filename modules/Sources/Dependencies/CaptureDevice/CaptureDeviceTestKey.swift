@@ -10,9 +10,9 @@ import XCTestDynamicOverlay
 
 extension CaptureDeviceClient: TestDependencyKey {
     public static let testValue = Self(
-        isAuthorized: XCTUnimplemented("\(Self.self).isAuthorized", placeholder: false),
-        isTorchAvailable: XCTUnimplemented("\(Self.self).isTorchAvailable", placeholder: false),
-        torch: XCTUnimplemented("\(Self.self).torch")
+        isAuthorized: unimplemented("\(Self.self).isAuthorized", placeholder: false),
+        isTorchAvailable: unimplemented("\(Self.self).isTorchAvailable", placeholder: false),
+        torch: unimplemented("\(Self.self).torch", placeholder: {}())
     )
 }
 

@@ -11,6 +11,6 @@ import XCTestDynamicOverlay
 
 extension DateClient: TestDependencyKey {
     public static let testValue = Self(
-        now: XCTUnimplemented("\(Self.self).now", placeholder: Date.now)
+        now: unimplemented("\(Self.self).now", placeholder: Date.now)
     )
 }

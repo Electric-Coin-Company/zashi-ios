@@ -1,5 +1,5 @@
 //
-//  BalanceBreakdownStore.swift
+//  BalancesStore.swift
 //  secant-testnet
 //
 //  Created by Lukáš Korba on 04.08.2022.
@@ -21,18 +21,17 @@ import SyncProgress
 import WalletBalances
 import ZcashSDKEnvironment
 
-public typealias BalanceBreakdownStore = Store<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>
-public typealias BalanceBreakdownViewStore = ViewStore<BalanceBreakdownReducer.State, BalanceBreakdownReducer.Action>
-
-public struct BalanceBreakdownReducer: Reducer {
+@Reducer
+public struct Balances {
     private let CancelId = UUID()
     
+    @ObservableState
     public struct State: Equatable {
         public enum Destination: Equatable {
             case partialProposalError
         }
 
-        @PresentationState public var alert: AlertState<Action>?
+        @Presents public var alert: AlertState<Action>?
         public var autoShieldingThreshold: Zatoshi
         public var changePending: Zatoshi
         public var destination: Destination?
@@ -93,7 +92,7 @@ public struct BalanceBreakdownReducer: Reducer {
         case synchronizerStateChanged(RedactableSynchronizerState)
         case syncProgress(SyncProgress.Action)
         case updateBalances(AccountBalance?)
-        case updateDestination(BalanceBreakdownReducer.State.Destination?)
+        case updateDestination(Balances.State.Destination?)
         case updateHintBoxVisibility(Bool)
         case walletBalances(WalletBalances.Action)
     }
@@ -109,15 +108,15 @@ public struct BalanceBreakdownReducer: Reducer {
     public init() { }
     
     public var body: some Reducer<State, Action> {
-        Scope(state: \.syncProgressState, action: /Action.syncProgress) {
+        Scope(state: \.syncProgressState, action: \.syncProgress) {
             SyncProgress()
         }
         
-        Scope(state: \.partialProposalErrorState, action: /Action.partialProposalError) {
+        Scope(state: \.partialProposalErrorState, action: \.partialProposalError) {
             PartialProposalError()
         }
 
-        Scope(state: \.walletBalancesState, action: /Action.walletBalances) {
+        Scope(state: \.walletBalancesState, action: \.walletBalances) {
             WalletBalances()
         }
 
@@ -231,73 +230,12 @@ public struct BalanceBreakdownReducer: Reducer {
 
 // MARK: Alerts
 
-extension AlertState where Action == BalanceBreakdownReducer.Action {
+extension AlertState where Action == Balances.Action {
     public static func shieldFundsFailure(_ error: ZcashError) -> AlertState {
         AlertState {
             TextState(L10n.Balances.Alert.ShieldFunds.Failure.title)
         } message: {
             TextState(L10n.Balances.Alert.ShieldFunds.Failure.message(error.detailedMessage))
         }
-    }
-}
-
-// MARK: - Store
-
-extension BalanceBreakdownStore {
-    func partialProposalErrorStore() -> StoreOf<PartialProposalError> {
-        self.scope(
-            state: \.partialProposalErrorState,
-            action: BalanceBreakdownReducer.Action.partialProposalError
-        )
-    }
-}
-
-// MARK: - ViewStore
-
-extension BalanceBreakdownViewStore {
-    var destinationBinding: Binding<BalanceBreakdownReducer.State.Destination?> {
-        self.binding(
-            get: \.destination,
-            send: BalanceBreakdownReducer.Action.updateDestination
-        )
-    }
-    
-    var bindingForPartialProposalError: Binding<Bool> {
-        self.destinationBinding.map(
-            extract: { $0 == .partialProposalError },
-            embed: { $0 ? BalanceBreakdownReducer.State.Destination.partialProposalError : nil }
-        )
-    }
-}
-
-// MARK: - Placeholders
-
-extension BalanceBreakdownReducer.State {
-    public static let placeholder = BalanceBreakdownReducer.State(
-        autoShieldingThreshold: .zero,
-        changePending: .zero,
-        isShieldingFunds: false,
-        partialProposalErrorState: .initial,
-        pendingTransactions: .zero,
-        syncProgressState: .initial,
-        walletBalancesState: .initial
-    )
-    
-    public static let initial = BalanceBreakdownReducer.State(
-        autoShieldingThreshold: .zero,
-        changePending: .zero,
-        isShieldingFunds: false,
-        partialProposalErrorState: .initial,
-        pendingTransactions: .zero,
-        syncProgressState: .initial,
-        walletBalancesState: .initial
-    )
-}
-
-extension BalanceBreakdownStore {
-    public static let placeholder = BalanceBreakdownStore(
-        initialState: .placeholder
-    ) {
-        BalanceBreakdownReducer()
     }
 }

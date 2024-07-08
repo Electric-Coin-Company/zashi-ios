@@ -10,12 +10,12 @@ import XCTestDynamicOverlay
 
 extension WalletStorageClient: TestDependencyKey {
     public static let testValue = Self(
-        importWallet: XCTUnimplemented("\(Self.self).importWallet"),
-        exportWallet: XCTUnimplemented("\(Self.self).exportWallet", placeholder: .placeholder),
-        areKeysPresent: XCTUnimplemented("\(Self.self).areKeysPresent", placeholder: false),
-        updateBirthday: XCTUnimplemented("\(Self.self).updateBirthday"),
-        markUserPassedPhraseBackupTest: XCTUnimplemented("\(Self.self).markUserPassedPhraseBackupTest"),
-        nukeWallet: XCTUnimplemented("\(Self.self).nukeWallet")
+        importWallet: unimplemented("\(Self.self).importWallet", placeholder: {}()),
+        exportWallet: unimplemented("\(Self.self).exportWallet", placeholder: .placeholder),
+        areKeysPresent: unimplemented("\(Self.self).areKeysPresent", placeholder: false),
+        updateBirthday: unimplemented("\(Self.self).updateBirthday", placeholder: {}()),
+        markUserPassedPhraseBackupTest: unimplemented("\(Self.self).markUserPassedPhraseBackupTest", placeholder: {}()),
+        nukeWallet: unimplemented("\(Self.self).nukeWallet", placeholder: {}())
     )
 }
 

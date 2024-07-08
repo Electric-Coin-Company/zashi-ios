@@ -16,12 +16,13 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct HideBalancesClient {
     public enum Constants {
         static let udHideBalances = "udHideBalances"
     }
 
     public var prepare: @Sendable () -> Void
-    public var value: @Sendable () -> CurrentValueSubject<Bool, Never>
+    public var value: @Sendable () -> CurrentValueSubject<Bool, Never> = { CurrentValueSubject(false) }
     public var updateValue: @Sendable (Bool) -> Void
 }

@@ -9,14 +9,14 @@ import PrivateDataConsent
 import ServerSetup
 
 public struct SettingsView: View {
-    let store: SettingsStore
+    @Perception.Bindable var store: StoreOf<Settings>
     
-    public init(store: SettingsStore) {
+    public init(store: StoreOf<Settings>) {
         self.store = store
     }
     
     public var body: some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
+        WithPerceptionTracking {
             VStack {
                 List {
                     Group {
@@ -24,14 +24,14 @@ public struct SettingsView: View {
                             icon: Asset.Assets.Icons.settings.image,
                             title: L10n.Settings.advanced
                         ) {
-                            viewStore.send(.updateDestination(.advanced))
+                            store.send(.updateDestination(.advanced))
                         }
                         
                         SettingsRow(
                             icon: Asset.Assets.infoOutline.image,
                             title: L10n.Settings.about
                         ) {
-                            viewStore.send(.updateDestination(.about))
+                            store.send(.updateDestination(.about))
                         }
                         
                         SettingsRow(
@@ -39,7 +39,7 @@ public struct SettingsView: View {
                             title: L10n.Settings.feedback,
                             divider: false
                         ) {
-                            viewStore.send(.sendSupportMail)
+                            store.send(.sendSupportMail)
                         }
                     }
                     .listRowInsets(EdgeInsets())
@@ -49,26 +49,26 @@ public struct SettingsView: View {
                 .padding(.top, 24)
                 .padding(.horizontal, 4)
                 .navigationLinkEmpty(
-                    isActive: viewStore.bindingForAbout,
+                    isActive: store.bindingFor(.about),
                     destination: {
                         AboutView(store: store.aboutStore())
                     }
                 )
                 .navigationLinkEmpty(
-                    isActive: viewStore.bindingForAdvanced,
+                    isActive: store.bindingFor(.advanced),
                     destination: {
                         AdvancedSettingsView(store: store.advancedSettingsStore())
                     }
                 )
                 .onAppear {
-                    viewStore.send(.onAppear)
+                    store.send(.onAppear)
                 }
                 
-                if let supportData = viewStore.supportData {
+                if let supportData = store.supportData {
                     UIMailDialogView(
                         supportData: supportData,
                         completion: {
-                            viewStore.send(.sendSupportMailFinished)
+                            store.send(.sendSupportMailFinished)
                         }
                     )
                     // UIMailDialogView only wraps MFMailComposeViewController presentation
@@ -85,7 +85,7 @@ public struct SettingsView: View {
                     .foregroundColor(Asset.Colors.primary.color)
                     .padding(.bottom, 16)
                 
-                Text(L10n.Settings.version(viewStore.appVersion, viewStore.appBuild))
+                Text(L10n.Settings.version(store.appVersion, store.appBuild))
                     .font(.custom(FontFamily.Archivo.regular.name, size: 16))
                     .foregroundColor(Design.Text.tertiary.color)
                     .padding(.bottom, 24)
@@ -96,7 +96,7 @@ public struct SettingsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .alert(store: store.scope(
             state: \.$alert,
-            action: { .alert($0) }
+            action: \.alert
         ))
         .zashiBack()
         .zashiTitle {
@@ -112,5 +112,62 @@ public struct SettingsView: View {
 #Preview {
     NavigationView {
         SettingsView(store: .placeholder)
+    }
+}
+
+// MARK: Placeholders
+
+extension Settings.State {
+    public static let initial = Settings.State(
+        aboutState: .initial,
+        advancedSettingsState: .initial
+    )
+}
+
+extension StoreOf<Settings> {
+    public static let placeholder = StoreOf<Settings>(
+        initialState: .initial
+    ) {
+        Settings()
+    }
+    
+    public static let demo = StoreOf<Settings>(
+        initialState: .init(
+            aboutState: .initial,
+            advancedSettingsState: .initial,
+            appVersion: "0.0.1",
+            appBuild: "54"
+        )
+    ) {
+        Settings()
+    }
+}
+
+// MARK: - Store
+
+extension StoreOf<Settings> {
+    func advancedSettingsStore() -> StoreOf<AdvancedSettings> {
+        self.scope(
+            state: \.advancedSettingsState,
+            action: \.advancedSettings
+        )
+    }
+    
+    func aboutStore() -> StoreOf<About> {
+        self.scope(
+            state: \.aboutState,
+            action: \.about
+        )
+    }
+}
+
+// MARK: - Bindings
+
+extension StoreOf<Settings> {
+    func bindingFor(_ destination: Settings.State.Destination) -> Binding<Bool> {
+        Binding<Bool>(
+            get: { self.destination == destination },
+            set: { self.send(.updateDestination($0 ? destination : nil)) }
+        )
     }
 }

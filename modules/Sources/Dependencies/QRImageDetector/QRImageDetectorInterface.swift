@@ -15,6 +15,7 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct QRImageDetectorClient {
     public var check: @Sendable (UIImage?) -> [String]?
 }

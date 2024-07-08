@@ -17,19 +17,18 @@ public struct ImportWalletView: View {
         case seed
     }
     
-    var store: ImportWalletStore
+    @Perception.Bindable var store: StoreOf<ImportWallet>
 
     @FocusState public var isFocused: Bool
-    @State private var message = ""
     
-    public init(store: ImportWalletStore) {
+    public init(store: StoreOf<ImportWallet>) {
         self.store = store
     }
     
     public var body: some View {
         ScrollView {
             ScrollViewReader { value in
-                WithViewStore(store, observe: { $0 }) { viewStore in
+                WithPerceptionTracking {
                     VStack(alignment: .center) {
                         ZashiIcon()
                         
@@ -46,27 +45,30 @@ public struct ImportWalletView: View {
                             .padding(.bottom, 20)
                             .padding(.horizontal, 10)
                         
-                        TextEditor(text: $message)
-                            .autocapitalization(.none)
-                            .messageShape(filled: nil)
-                            .colorBackground(Asset.Colors.background.color)
-                            .frame(minWidth: 270)
-                            .frame(height: 215)
-                            .focused($isFocused)
-                            .id(InputID.seed)
-                            .toolbar {
-                                ToolbarItemGroup(placement: .keyboard) {
-                                    Spacer()
-                                    
-                                    Button(L10n.General.done.uppercased()) {
-                                        isFocused = false
+                        WithPerceptionTracking {
+                            TextEditor(text: store.bindingForRedactableSeedPhrase(store.importedSeedPhrase))
+                                .autocapitalization(.none)
+                                .messageShape(filled: nil)
+                                .colorBackground(Asset.Colors.background.color)
+                                .frame(minWidth: 270)
+                                .frame(height: 215)
+                                .focused($isFocused)
+                                .id(InputID.seed)
+                                .toolbar {
+                                    ToolbarItemGroup(placement: .keyboard) {
+                                        Spacer()
+                                        
+                                        Button(L10n.General.done.uppercased()) {
+                                            isFocused = false
+                                        }
+                                        .foregroundColor(Asset.Colors.primary.color)
+                                        .font(.custom(FontFamily.Inter.regular.name, size: 14))
                                     }
-                                    .foregroundColor(Asset.Colors.primary.color)
-                                    .font(.custom(FontFamily.Inter.regular.name, size: 14))
                                 }
-                            }
-                            .overlay {
-                                if message.isEmpty {
+                        }
+                        .overlay {
+                            WithPerceptionTracking {
+                                if store.importedSeedPhrase.data.isEmpty {
                                     HStack {
                                         VStack {
                                             Text(L10n.ImportWallet.enterPlaceholder)
@@ -87,48 +89,43 @@ public struct ImportWalletView: View {
                                     EmptyView()
                                 }
                             }
-                            .onChange(of: message) { value in
-                                viewStore.send(.seedPhraseInputChanged(RedactableString(message)))
-                            }
-                            .onChange(of: isFocused) { update in
-                                withAnimation {
-                                    if update {
-                                        value.scrollTo(InputID.seed, anchor: .center)
-                                    }
+                        }
+                        .onChange(of: isFocused) { update in
+                            withAnimation {
+                                if update {
+                                    value.scrollTo(InputID.seed, anchor: .center)
                                 }
                             }
+                        }
                         
                         Button(L10n.General.next.uppercased()) {
-                            viewStore.send(.nextPressed)
+                            store.send(.nextPressed)
                         }
                         .zcashStyle()
                         .frame(width: 236)
-                        .disabled(!viewStore.isValidForm)
+                        .disabled(!store.isValidForm)
                         .padding(.top, 50)
                     }
                     .padding(.horizontal, 70)
-                    .onAppear(perform: { viewStore.send(.onAppear) })
+                    .onAppear(perform: { store.send(.onAppear) })
                     .navigationLinkEmpty(
-                        isActive: viewStore.bindingForDestination(.birthday),
+                        isActive: store.bindingFor(.birthday),
                         destination: { ImportBirthdayView(store: store) }
                     )
                     .navigationLinkEmpty(
-                        isActive: Binding(
-                            get: { viewStore.state.restoreInfoViewBinding },
-                            set: { viewStore.send(.restoreInfoRequested($0)) }
-                        ),
+                        isActive: store.bindingFor(.restoreInfo),
                         destination: {
                             RestoreInfoView(
                                 store: store.scope(
                                     state: \.restoreInfoState,
-                                    action: ImportWalletReducer.Action.restoreInfo
+                                    action: \.restoreInfo
                                 )
                             )
                         }
                     )
                     .alert(store: store.scope(
                         state: \.$alert,
-                        action: { .alert($0) }
+                        action: \.alert
                     ))
                     .zashiBack()
                 }
@@ -141,23 +138,25 @@ public struct ImportWalletView: View {
 }
 
 extension ImportWalletView {
-    func mnemonicStatus(_ viewStore: ImportWalletViewStore) -> some View {
-        VStack {
-            Spacer()
-            HStack {
+    func mnemonicStatus() -> some View {
+        WithPerceptionTracking {
+            VStack {
                 Spacer()
-                Text(viewStore.mnemonicStatus)
-                    .font(
-                        .custom(FontFamily.Inter.regular.name, size: 14)
-                    )
-                    .foregroundColor(
-                        viewStore.isValidNumberOfWords ?
-                        Asset.Colors.primary.color :
-                        Asset.Colors.primary.color
-                    )
-                    .padding(.trailing, 35)
-                    .padding(.bottom, 15)
-                    .zIndex(1)
+                HStack {
+                    Spacer()
+                    Text(store.mnemonicStatus)
+                        .font(
+                            .custom(FontFamily.Inter.regular.name, size: 14)
+                        )
+                        .foregroundColor(
+                            store.isValidNumberOfWords 
+                            ? Asset.Colors.primary.color 
+                            : Asset.Colors.primary.color
+                        )
+                        .padding(.trailing, 35)
+                        .padding(.bottom, 15)
+                        .zIndex(1)
+                }
             }
         }
     }
@@ -191,5 +190,44 @@ extension View {
 #Preview {
     NavigationView {
         ImportWalletView(store: .demo)
+    }
+}
+
+// MARK: - Bindings
+
+extension StoreOf<ImportWallet> {
+    func bindingFor(_ destination: ImportWallet.State.Destination) -> Binding<Bool> {
+        Binding<Bool>(
+            get: { self.destination == destination },
+            set: { self.send(.updateDestination($0 ? destination : nil)) }
+        )
+    }
+    
+    func bindingForRedactableSeedPhrase(_ importedSeedPhrase: RedactableString) -> Binding<String> {
+        Binding<String>(
+            get: { importedSeedPhrase.data },
+            set: { self.send(.seedPhraseInputChanged($0.redacted)) }
+        )
+    }
+    
+    func bindingForRedactableBirthday(_ birthdayHeight: RedactableString) -> Binding<String> {
+        Binding<String>(
+            get: { birthdayHeight.data },
+            set: { self.send(.birthdayInputChanged($0.redacted)) }
+        )
+    }
+}
+
+// MARK: - Placeholders
+
+extension ImportWallet.State {
+    public static let initial = ImportWallet.State(restoreInfoState: .initial)
+}
+
+extension StoreOf<ImportWallet> {
+    public static let demo = Store(
+        initialState: .initial
+    ) {
+        ImportWallet()
     }
 }

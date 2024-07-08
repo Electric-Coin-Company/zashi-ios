@@ -23,6 +23,7 @@ extension DependencyValues {
 /// properties that live on the `WalletStorageClient` type.  Because of this, you can instantiate
 /// the `WalletStorageClient` with your own implementation of these functions for testing purposes,
 /// or you can use one of the built in static versions of the `WalletStorageClient`.
+@DependencyClient
 public struct WalletStorageClient {
     /// Store recovery phrase and optionally even birthday to the secured and persistent storage.
     /// This function creates an instance of `StoredWallet` and automatically handles versioning of the stored data.
@@ -73,20 +74,4 @@ public struct WalletStorageClient {
     /// Use carefully: deletes the stored wallet.
     /// There's no fate but what we make for ourselves - Sarah Connor.
     public var nukeWallet: () -> Void
-    
-    public init(
-        importWallet: @escaping (String, BlockHeight?, MnemonicLanguageType, Bool) throws -> Void,
-        exportWallet: @escaping () throws -> StoredWallet,
-        areKeysPresent: @escaping () throws -> Bool,
-        updateBirthday: @escaping (BlockHeight) throws -> Void,
-        markUserPassedPhraseBackupTest: @escaping (Bool) throws -> Void,
-        nukeWallet: @escaping () -> Void
-    ) {
-        self.importWallet = importWallet
-        self.exportWallet = exportWallet
-        self.areKeysPresent = areKeysPresent
-        self.updateBirthday = updateBirthday
-        self.markUserPassedPhraseBackupTest = markUserPassedPhraseBackupTest
-        self.nukeWallet = nukeWallet
-    }
 }

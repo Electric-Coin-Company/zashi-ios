@@ -18,6 +18,7 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct SDKSynchronizerClient {
     public enum CreateProposedTransactionsResult: Equatable {
         case failure

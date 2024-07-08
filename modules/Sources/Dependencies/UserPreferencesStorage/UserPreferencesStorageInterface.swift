@@ -15,6 +15,7 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct UserPreferencesStorageClient {
     public var server: () -> UserPreferencesStorage.ServerConfig?
     public var setServer: (UserPreferencesStorage.ServerConfig) throws -> Void

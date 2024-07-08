@@ -12,15 +12,15 @@ import Utils
 
 extension DatabaseFilesClient: TestDependencyKey {
     public static let testValue = Self(
-        documentsDirectory: XCTUnimplemented("\(Self.self).documentsDirectory", placeholder: .emptyURL),
-        fsBlockDbRootFor: XCTUnimplemented("\(Self.self).fsBlockDbRootFor", placeholder: .emptyURL),
-        cacheDbURLFor: XCTUnimplemented("\(Self.self).cacheDbURLFor", placeholder: .emptyURL),
-        dataDbURLFor: XCTUnimplemented("\(Self.self).dataDbURLFor", placeholder: .emptyURL),
-        outputParamsURLFor: XCTUnimplemented("\(Self.self).outputParamsURLFor", placeholder: .emptyURL),
-        pendingDbURLFor: XCTUnimplemented("\(Self.self).pendingDbURLFor", placeholder: .emptyURL),
-        spendParamsURLFor: XCTUnimplemented("\(Self.self).spendParamsURLFor", placeholder: .emptyURL),
-        toDirURLFor: XCTUnimplemented("\(Self.self).toDirURLFor", placeholder: .emptyURL),
-        areDbFilesPresentFor: XCTUnimplemented("\(Self.self).areDbFilesPresentFor", placeholder: false)
+        documentsDirectory: unimplemented("\(Self.self).documentsDirectory", placeholder: .emptyURL),
+        fsBlockDbRootFor: unimplemented("\(Self.self).fsBlockDbRootFor", placeholder: .emptyURL),
+        cacheDbURLFor: unimplemented("\(Self.self).cacheDbURLFor", placeholder: .emptyURL),
+        dataDbURLFor: unimplemented("\(Self.self).dataDbURLFor", placeholder: .emptyURL),
+        outputParamsURLFor: unimplemented("\(Self.self).outputParamsURLFor", placeholder: .emptyURL),
+        pendingDbURLFor: unimplemented("\(Self.self).pendingDbURLFor", placeholder: .emptyURL),
+        spendParamsURLFor: unimplemented("\(Self.self).spendParamsURLFor", placeholder: .emptyURL),
+        toDirURLFor: unimplemented("\(Self.self).toDirURLFor", placeholder: .emptyURL),
+        areDbFilesPresentFor: unimplemented("\(Self.self).areDbFilesPresentFor", placeholder: false)
     )
 }
 

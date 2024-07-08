@@ -93,7 +93,6 @@ let package = Package(
                 "AppVersion",
                 "Generated",
                 "Models",
-                "WalletStatusPanel",
                 "UIComponents",
                 "WalletStatusPanel",
                 "WhatsNew",
@@ -144,7 +143,6 @@ let package = Package(
                 "Models",
                 "NumberFormatter",
                 "PartialProposalError",
-                "WalletStatusPanel",
                 "SDKSynchronizer",
                 "SyncProgress",
                 "UIComponents",
@@ -282,6 +280,7 @@ let package = Package(
         .target(
             name: "FileManager",
             dependencies: [
+                "Utils",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Dependencies/FileManager"
@@ -303,7 +302,6 @@ let package = Package(
             dependencies: [
                 "Generated",
                 "Models",
-                "WalletStatusPanel",
                 "ReviewRequest",
                 "Scan",
                 "Settings",
@@ -431,7 +429,6 @@ let package = Package(
                 "DatabaseFiles",
                 "Generated",
                 "Models",
-                "WalletStatusPanel",
                 "UIComponents",
                 "Utils",
                 "WalletStatusPanel",

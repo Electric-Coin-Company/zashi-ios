@@ -55,7 +55,8 @@ class SettingsTests: XCTestCase {
         
         let store = TestStore(
             initialState: AdvancedSettings.State(
-                deleteWallet: .initial,
+                currencyConversionSetupState: .initial,
+                deleteWalletState: .initial,
                 phraseDisplayState: RecoveryPhraseDisplay.State(phrase: nil),
                 privateDataConsentState: .initial,
                 serverSetupState: .initial
@@ -95,7 +96,7 @@ class SettingsTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            SettingsReducer()
+            Settings()
         }
 
         let testPasteboard = PasteboardClient.testPasteboard

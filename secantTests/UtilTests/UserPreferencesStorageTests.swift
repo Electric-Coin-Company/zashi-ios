@@ -23,6 +23,7 @@ class UserPreferencesStorageTests: XCTestCase {
         }
         
         storage = UserPreferencesStorage(
+            defaultExchangeRate: Data(),
             defaultServer: Data(),
             userDefaults: .live(userDefaults: userDefaults)
         )
@@ -60,6 +61,7 @@ class UserPreferencesStorageTests: XCTestCase {
         )
         
         let mockedStorage = UserPreferencesStorage(
+            defaultExchangeRate: Data(),
             defaultServer: Data(),
             userDefaults: mockedUD
         )

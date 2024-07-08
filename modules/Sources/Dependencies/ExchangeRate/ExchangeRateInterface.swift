@@ -17,6 +17,7 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct ExchangeRateClient {
     public enum EchangeRateEvent: Equatable {
         case value(FiatCurrencyResult?)

@@ -10,10 +10,9 @@ import Pasteboard
 import SupportDataGenerator
 import ZcashLightClientKit
 
-public typealias SettingsStore = Store<SettingsReducer.State, SettingsReducer.Action>
-public typealias SettingsViewStore = ViewStore<SettingsReducer.State, SettingsReducer.Action>
-
-public struct SettingsReducer: Reducer {
+@Reducer
+public struct Settings {
+    @ObservableState
     public struct State: Equatable {
         public enum Destination {
             case about
@@ -22,7 +21,7 @@ public struct SettingsReducer: Reducer {
 
         public var aboutState: About.State
         public var advancedSettingsState: AdvancedSettings.State
-        @PresentationState public var alert: AlertState<Action>?
+        @Presents public var alert: AlertState<Action>?
         public var appVersion = ""
         public var appBuild = ""
         public var destination: Destination?
@@ -53,7 +52,7 @@ public struct SettingsReducer: Reducer {
         case onAppear
         case sendSupportMail
         case sendSupportMailFinished
-        case updateDestination(SettingsReducer.State.Destination?)
+        case updateDestination(Settings.State.Destination?)
     }
 
     @Dependency(\.appVersion) var appVersion
@@ -62,11 +61,11 @@ public struct SettingsReducer: Reducer {
     public init() { }
 
     public var body: some Reducer<State, Action> {
-        Scope(state: \.aboutState, action: /Action.about) {
+        Scope(state: \.aboutState, action: \.about) {
             About()
         }
 
-        Scope(state: \.advancedSettingsState, action: /Action.advancedSettings) {
+        Scope(state: \.advancedSettingsState, action: \.advancedSettings) {
             AdvancedSettings()
         }
 
@@ -114,56 +113,13 @@ public struct SettingsReducer: Reducer {
                 return .none
             }
         }
-        .ifLet(\.$alert, action: /Action.alert)
-    }
-}
-
-// MARK: - ViewStore
-
-extension SettingsViewStore {
-    var destinationBinding: Binding<SettingsReducer.State.Destination?> {
-        self.binding(
-            get: \.destination,
-            send: SettingsReducer.Action.updateDestination
-        )
-    }
-    
-    var bindingForAdvanced: Binding<Bool> {
-        self.destinationBinding.map(
-            extract: { $0 == .advanced },
-            embed: { $0 ? .advanced : nil }
-        )
-    }
-
-    var bindingForAbout: Binding<Bool> {
-        self.destinationBinding.map(
-            extract: { $0 == .about },
-            embed: { $0 ? .about : nil }
-        )
-    }
-}
-
-// MARK: - Store
-
-extension SettingsStore {
-    func advancedSettingsStore() -> StoreOf<AdvancedSettings> {
-        self.scope(
-            state: \.advancedSettingsState,
-            action: SettingsReducer.Action.advancedSettings
-        )
-    }
-    
-    func aboutStore() -> StoreOf<About> {
-        self.scope(
-            state: \.aboutState,
-            action: SettingsReducer.Action.about
-        )
+        .ifLet(\.$alert, action: \.alert)
     }
 }
 
 // MARK: Alerts
 
-extension AlertState where Action == SettingsReducer.Action {
+extension AlertState where Action == Settings.Action {
     public static func sendSupportMail() -> AlertState {
         AlertState {
             TextState(L10n.Settings.Alert.CantSendEmail.title)
@@ -177,33 +133,5 @@ extension AlertState where Action == SettingsReducer.Action {
         } message: {
             TextState(L10n.Settings.Alert.CantSendEmail.message)
         }
-    }
-}
-
-// MARK: Placeholders
-
-extension SettingsReducer.State {
-    public static let initial = SettingsReducer.State(
-        aboutState: .initial,
-        advancedSettingsState: .initial
-    )
-}
-
-extension SettingsStore {
-    public static let placeholder = SettingsStore(
-        initialState: .initial
-    ) {
-        SettingsReducer()
-    }
-    
-    public static let demo = SettingsStore(
-        initialState: .init(
-            aboutState: .initial,
-            advancedSettingsState: .initial,
-            appVersion: "0.0.1",
-            appBuild: "54"
-        )
-    ) {
-        SettingsReducer()
     }
 }
