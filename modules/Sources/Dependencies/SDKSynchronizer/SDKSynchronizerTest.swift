@@ -36,7 +36,8 @@ extension SDKSynchronizerClient: TestDependencyKey {
         proposeTransfer: XCTUnimplemented("\(Self.self).proposeTransfer", placeholder: .testOnlyFakeProposal(totalFee: 0)),
         createProposedTransactions: XCTUnimplemented("\(Self.self).createProposedTransactions", placeholder: .success),
         proposeShielding: XCTUnimplemented("\(Self.self).proposeShielding", placeholder: nil),
-        isSeedRelevantToAnyDerivedAccount: XCTUnimplemented("\(Self.self).isSeedRelevantToAnyDerivedAccount")
+        isSeedRelevantToAnyDerivedAccount: XCTUnimplemented("\(Self.self).isSeedRelevantToAnyDerivedAccount"),
+        evaluateBestOf: { _, _, _, _, _, _ in fatalError("evaluateBestOf not implemented") }
     )
 }
 
@@ -64,7 +65,8 @@ extension SDKSynchronizerClient {
         proposeTransfer: { _, _, _, _ in .testOnlyFakeProposal(totalFee: 0) },
         createProposedTransactions: { _, _ in .success },
         proposeShielding: { _, _, _, _ in nil },
-        isSeedRelevantToAnyDerivedAccount: { _ in false }
+        isSeedRelevantToAnyDerivedAccount: { _ in false },
+        evaluateBestOf: { _, _, _, _, _, _ in [] }
     )
 
     public static let mock = Self.mocked()
@@ -193,7 +195,8 @@ extension SDKSynchronizerClient {
         @escaping (Proposal, UnifiedSpendingKey) async throws -> CreateProposedTransactionsResult = { _, _ in .success },
         proposeShielding:
         @escaping (Int, Zatoshi, Memo, TransparentAddress?) async throws -> Proposal? = { _, _, _, _ in nil },
-        isSeedRelevantToAnyDerivedAccount: @escaping ([UInt8]) async throws -> Bool = { _ in false }
+        isSeedRelevantToAnyDerivedAccount: @escaping ([UInt8]) async throws -> Bool = { _ in false },
+        evaluateBestOf: @escaping ([LightWalletEndpoint], Double, Double, Int, Int, NetworkType) async -> [LightWalletEndpoint] = { _, _, _, _, _, _ in [] }
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
             stateStream: stateStream,
@@ -218,7 +221,8 @@ extension SDKSynchronizerClient {
             proposeTransfer: proposeTransfer,
             createProposedTransactions: createProposedTransactions,
             proposeShielding: proposeShielding,
-            isSeedRelevantToAnyDerivedAccount: isSeedRelevantToAnyDerivedAccount
+            isSeedRelevantToAnyDerivedAccount: isSeedRelevantToAnyDerivedAccount,
+            evaluateBestOf: evaluateBestOf
         )
     }
 }
