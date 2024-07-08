@@ -17,14 +17,13 @@ import BalanceFormatter
 import SyncProgress
 import WalletBalances
 import Combine
-import WalletStatusPanel
 
 public struct BalancesView: View {
     @Perception.Bindable var store: StoreOf<Balances>
     let tokenName: String
     
     @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
-    @State var walletStatus = WalletStatus.none
+    @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
 
     public init(store: StoreOf<Balances>, tokenName: String) {
         self.store = store
@@ -82,7 +81,7 @@ public struct BalancesView: View {
                     }
                 )
             }
-            .walletStatusPanel(restoringStatus: $walletStatus)
+            .walletStatusPanel()
         }
         .padding(.vertical, 1)
         .applyScreenBackground()

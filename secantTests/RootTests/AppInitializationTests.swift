@@ -55,7 +55,6 @@ class AppInitializationTests: XCTestCase {
         store.dependencies.sdkSynchronizer = .noOp
         store.dependencies.crashReporter = .noOp
         store.dependencies.numberFormatter = .noOp
-        store.dependencies.walletStatusPanel = .noOp
         store.dependencies.userDefaults = .noOp
         store.dependencies.autolockHandler = .noOp
         store.dependencies.exchangeRate = .noOp
@@ -141,7 +140,6 @@ class AppInitializationTests: XCTestCase {
         store.dependencies.sdkSynchronizer = .noOp
         store.dependencies.crashReporter = .noOp
         store.dependencies.numberFormatter = .noOp
-        store.dependencies.walletStatusPanel = .noOp
         store.dependencies.userDefaults = .noOp
         store.dependencies.autolockHandler = .noOp
         store.dependencies.exchangeRate = .noOp
@@ -207,7 +205,6 @@ class AppInitializationTests: XCTestCase {
         store.dependencies.mainQueue = .immediate
         store.dependencies.walletConfigProvider = .noOp
         store.dependencies.crashReporter = .noOp
-        store.dependencies.walletStatusPanel = .noOp
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         await store.send(.initialization(.appDelegate(.didFinishLaunching))) { state in
@@ -246,7 +243,6 @@ class AppInitializationTests: XCTestCase {
         store.dependencies.walletStorage = .noOp
         store.dependencies.walletConfigProvider = .noOp
         store.dependencies.crashReporter = .noOp
-        store.dependencies.walletStatusPanel = .noOp
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         await store.send(.initialization(.appDelegate(.didFinishLaunching))) { state in

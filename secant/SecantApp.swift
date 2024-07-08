@@ -13,6 +13,8 @@ import SDKSynchronizer
 import Utils
 import Root
 import ZcashSDKEnvironment
+import FlexaHandler
+import Flexa
 
 @main
 struct SecantApp: App {
@@ -21,6 +23,9 @@ struct SecantApp: App {
     
     init() {
         FontFamily.registerAllCustomFonts()
+        
+        @Dependency(\.flexaHandler) var flexaHandler
+        flexaHandler.prepare()
     }
 
     var body: some Scene {
@@ -40,6 +45,9 @@ struct SecantApp: App {
                 appDelegate.rootStore.send(.initialization(.appDelegate(.didEnterBackground)))
                 appDelegate.scheduleBackgroundTask()
                 appDelegate.scheduleSchedulerBackgroundTask()
+            }
+            .onOpenURL { url in
+                Flexa.processUniversalLink(url: url)
             }
         }
     }

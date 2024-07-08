@@ -97,15 +97,25 @@ extension Root {
             case .synchronizerStateChanged(let latestState):
                 let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.data.syncStatus)
 
+                // update flexa balance
+                if let accountBalance = latestState.data.accountBalance?.data {
+                    let shieldedBalance = accountBalance.saplingBalance.spendableValue + accountBalance.orchardBalance.spendableValue
+//                    let shieldedWithPendingBalance = accountBalance.saplingBalance.total() + accountBalance.orchardBalance.total()
+//                    let transparentBalance = accountBalance.unshielded
+//                    let totalBalance = shieldedWithPendingBalance + transparentBalance
+
+                    flexaHandler.updateBalance(shieldedBalance)
+                }
+                
                 // handle possible service unavailability
                 if case .error(let error) = snapshot.syncStatus, checkUnavailableService(error) {
-                    if walletStatusPanel.value().value != .disconnected {
+                    if state.walletStatus != .disconnected {
                         state.alert = AlertState.serviceUnavailable()
                     }
-                    state.wasRestoringWhenDisconnected = walletStatusPanel.value().value == .restoring
-                    walletStatusPanel.updateValue(.disconnected)
-                } else if case .syncing = snapshot.syncStatus, walletStatusPanel.value().value == .disconnected {
-                    walletStatusPanel.updateValue(state.wasRestoringWhenDisconnected ? .restoring : .none)
+                    state.wasRestoringWhenDisconnected = state.walletStatus == .restoring
+                    state.walletStatus = .disconnected
+                } else if case .syncing = snapshot.syncStatus, state.walletStatus == .disconnected {
+                    state.walletStatus = state.wasRestoringWhenDisconnected ? .restoring : .none
                 }
 
                 // handle BCGTask
@@ -139,7 +149,7 @@ extension Root {
                 if state.isRestoringWallet && syncStatus == .upToDate {
                     state.isRestoringWallet = false
                     userDefaults.remove(Constants.udIsRestoringWallet)
-                    walletStatusPanel.updateValue(.none)
+                    state.walletStatus = .none
                 }
                 return .none
 
@@ -239,7 +249,7 @@ extension Root {
                     state.appInitializationState = .filesMissing
                     state.isRestoringWallet = true
                     userDefaults.setValue(true, Constants.udIsRestoringWallet)
-                    walletStatusPanel.updateValue(.restoring)
+                    state.walletStatus = .restoring
                     return .concatenate(
                         Effect.send(.initialization(.initializeSDK(.restoreWallet))),
                         Effect.send(.initialization(.checkBackupPhraseValidation))
@@ -247,7 +257,7 @@ extension Root {
                 case .initialized:
                     if let isRestoringWallet = userDefaults.objectForKey(Constants.udIsRestoringWallet) as? Bool, isRestoringWallet {
                         state.isRestoringWallet = true
-                        walletStatusPanel.updateValue(.restoring)
+                        state.walletStatus = .restoring
                         return .concatenate(
                             Effect.send(.initialization(.initializeSDK(.restoreWallet))),
                             Effect.send(.initialization(.checkBackupPhraseValidation))
@@ -292,7 +302,8 @@ extension Root {
                 
             case .initialization(.initializationSuccessfullyDone(let uAddress)):
                 state.tabsState.addressDetailsState.uAddress = uAddress
-                state.tabsState.settingsState.advancedSettingsState.uAddress = uAddress
+                state.tabsState.settingsState.integrationsState.uAddress = uAddress
+                exchangeRate.refreshExchangeRateUSD()
                 return .merge(
                     .send(.initialization(.registerForSynchronizersUpdate)),
                     .publisher {
@@ -358,7 +369,7 @@ extension Root {
                 state.splashAppeared = true
                 state.isRestoringWallet = false
                 userDefaults.remove(Constants.udIsRestoringWallet)
-                walletStatusPanel.updateValue(.none)
+                state.walletStatus = .none
                 walletStorage.nukeWallet()
                 try? readTransactionsStorage.nukeWallet()
 
@@ -455,7 +466,7 @@ extension Root {
             case .onboarding(.importWallet(.initializeSDK)):
                 state.isRestoringWallet = true
                 userDefaults.setValue(true, Constants.udIsRestoringWallet)
-                walletStatusPanel.updateValue(.restoring)
+                state.walletStatus = .restoring
                 return Effect.send(.initialization(.initializeSDK(.restoreWallet)))
 
             case .initialization(.seedValidationResult(let validSeed)):
@@ -486,7 +497,7 @@ extension Root {
                 
             case .tabs, .destination, .onboarding, .sandbox, .phraseDisplay, .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated,
                     .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, 
-                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects:
+                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects, .flexaOnTransactionRequest:
                 return .none
             }
         }

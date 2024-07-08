@@ -29,6 +29,7 @@ let package = Package(
         .library(name: "ExportLogs", targets: ["ExportLogs"]),
         .library(name: "FeedbackGenerator", targets: ["FeedbackGenerator"]),
         .library(name: "FileManager", targets: ["FileManager"]),
+        .library(name: "FlexaHandler", targets: ["FlexaHandler"]),
         .library(name: "Generated", targets: ["Generated"]),
         .library(name: "Home", targets: ["Home"]),
         .library(name: "ImportWallet", targets: ["ImportWallet"]),
@@ -69,7 +70,6 @@ let package = Package(
         .library(name: "Utils", targets: ["Utils"]),
         .library(name: "WalletBalances", targets: ["WalletBalances"]),
         .library(name: "WalletConfigProvider", targets: ["WalletConfigProvider"]),
-        .library(name: "WalletStatusPanel", targets: ["WalletStatusPanel"]),
         .library(name: "WalletStorage", targets: ["WalletStorage"]),
         .library(name: "Welcome", targets: ["Welcome"]),
         .library(name: "WhatsNew", targets: ["WhatsNew"]),
@@ -83,7 +83,8 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.6.2"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.4"),
         .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.2.3"),
-        .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.27.0")
+        .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.27.0"),
+        .package(url: "https://github.com/flexa/flexa-ios.git", from: "1.0.2")
     ],
     targets: [
         .target(
@@ -93,7 +94,6 @@ let package = Package(
                 "Generated",
                 "Models",
                 "UIComponents",
-                "WalletStatusPanel",
                 "WhatsNew",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
@@ -147,7 +147,6 @@ let package = Package(
                 "UIComponents",
                 "Utils",
                 "WalletBalances",
-                "WalletStatusPanel",
                 "WalletStorage",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -285,6 +284,16 @@ let package = Package(
             path: "Sources/Dependencies/FileManager"
         ),
         .target(
+            name: "FlexaHandler",
+            dependencies: [
+                "PartnerKeys",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk"),
+                .product(name: "Flexa", package: "flexa-ios")
+            ],
+            path: "Sources/Dependencies/FlexaHandler"
+        ),
+        .target(
             name: "Generated",
             resources: [.process("Resources")]
         ),
@@ -302,7 +311,6 @@ let package = Package(
                 "Utils",
                 "TransactionList",
                 "WalletBalances",
-                "WalletStatusPanel",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
@@ -422,7 +430,6 @@ let package = Package(
                 "Models",
                 "UIComponents",
                 "Utils",
-                "WalletStatusPanel",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
@@ -472,6 +479,7 @@ let package = Package(
         .target(
             name: "Root",
             dependencies: [
+                "AutolockHandler",
                 "CrashReporter",
                 "DatabaseFiles",
                 "Deeplink",
@@ -479,6 +487,7 @@ let package = Package(
                 "DiskSpaceChecker",
                 "ExchangeRate",
                 "ExportLogs",
+                "FlexaHandler",
                 "Generated",
                 "MnemonicClient",
                 "Models",
@@ -488,7 +497,6 @@ let package = Package(
                 "Pasteboard",
                 "ReadTransactionsStorage",
                 "RecoveryPhraseDisplay",
-                "WalletStatusPanel",
                 "Sandbox",
                 "SDKSynchronizer",
                 "ServerSetup",
@@ -639,12 +647,12 @@ let package = Package(
                 "Pasteboard",
                 "PrivateDataConsent",
                 "RecoveryPhraseDisplay",
-                "WalletStatusPanel",
                 "ServerSetup",
                 "SupportDataGenerator",
                 "UIComponents",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
+                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk"),
+                .product(name: "Flexa", package: "flexa-ios")
             ],
             path: "Sources/Features/Settings"
         ),
@@ -686,7 +694,6 @@ let package = Package(
                 "ExchangeRate",
                 "Generated",
                 "Home",
-                "WalletStatusPanel",
                 "SendConfirmation",
                 "SendFlow",
                 "Settings",
@@ -720,7 +727,6 @@ let package = Package(
                 "DerivationTool",
                 "Generated",
                 "NumberFormatter",
-                "WalletStatusPanel",
                 "SupportDataGenerator",
                 "Utils",
                 "ZcashSDKEnvironment"
@@ -785,15 +791,6 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Dependencies/WalletConfigProvider"
-        ),
-        .target(
-            name: "WalletStatusPanel",
-            dependencies: [
-                "AutolockHandler",
-                "Generated",
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-            ],
-            path: "Sources/Dependencies/WalletStatusPanel"
         ),
         .target(
             name: "WalletStorage",

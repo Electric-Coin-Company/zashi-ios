@@ -35,7 +35,7 @@ extension SDKSynchronizerClient: TestDependencyKey {
         wipe: unimplemented("\(Self.self).wipe", placeholder: nil),
         switchToEndpoint: unimplemented("\(Self.self).switchToEndpoint"),
         proposeTransfer: unimplemented("\(Self.self).proposeTransfer", placeholder: .testOnlyFakeProposal(totalFee: 0)),
-        createProposedTransactions: unimplemented("\(Self.self).createProposedTransactions", placeholder: .success),
+        createProposedTransactions: unimplemented("\(Self.self).createProposedTransactions", placeholder: .success(txIds: [])),
         proposeShielding: unimplemented("\(Self.self).proposeShielding", placeholder: nil),
         isSeedRelevantToAnyDerivedAccount: unimplemented("\(Self.self).isSeedRelevantToAnyDerivedAccount"),
         refreshExchangeRateUSD: unimplemented("\(Self.self).refreshExchangeRateUSD", placeholder: {}()),
@@ -66,7 +66,7 @@ extension SDKSynchronizerClient {
         wipe: { Empty<Void, Error>().eraseToAnyPublisher() },
         switchToEndpoint: { _ in },
         proposeTransfer: { _, _, _, _ in .testOnlyFakeProposal(totalFee: 0) },
-        createProposedTransactions: { _, _ in .success },
+        createProposedTransactions: { _, _ in .success(txIds: []) },
         proposeShielding: { _, _, _, _ in nil },
         isSeedRelevantToAnyDerivedAccount: { _ in false },
         refreshExchangeRateUSD: { },
@@ -197,7 +197,7 @@ extension SDKSynchronizerClient {
         proposeTransfer:
         @escaping (Int, Recipient, Zatoshi, Memo?) async throws -> Proposal = { _, _, _, _ in .testOnlyFakeProposal(totalFee: 0) },
         createProposedTransactions:
-        @escaping (Proposal, UnifiedSpendingKey) async throws -> CreateProposedTransactionsResult = { _, _ in .success },
+        @escaping (Proposal, UnifiedSpendingKey) async throws -> CreateProposedTransactionsResult = { _, _ in .success(txIds: []) },
         proposeShielding:
         @escaping (Int, Zatoshi, Memo, TransparentAddress?) async throws -> Proposal? = { _, _, _, _ in nil },
         isSeedRelevantToAnyDerivedAccount: @escaping ([UInt8]) async throws -> Bool = { _ in false },

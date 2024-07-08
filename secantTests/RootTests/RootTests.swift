@@ -155,8 +155,6 @@ class RootTests: XCTestCase {
         
         store.dependencies.walletStorage = .noOp
         store.dependencies.walletStorage.exportWallet = { throw zcashError }
-        store.dependencies.walletStatusPanel = .noOp
-        store.dependencies.userDefaults = .noOp
 
         await store.send(.initialization(.respondToWalletInitializationState(.filesMissing))) { state in
             state.appInitializationState = .filesMissing

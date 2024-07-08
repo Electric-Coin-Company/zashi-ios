@@ -17,6 +17,7 @@ public struct Settings {
         public enum Destination {
             case about
             case advanced
+            case integrations
         }
 
         public var aboutState: About.State
@@ -25,6 +26,7 @@ public struct Settings {
         public var appVersion = ""
         public var appBuild = ""
         public var destination: Destination?
+        public var integrationsState: Integrations.State
         public var supportData: SupportData?
         
         public init(
@@ -33,6 +35,7 @@ public struct Settings {
             appVersion: String = "",
             appBuild: String = "",
             destination: Destination? = nil,
+            integrationsState: Integrations.State,
             supportData: SupportData? = nil
         ) {
             self.aboutState = aboutState
@@ -40,6 +43,7 @@ public struct Settings {
             self.appVersion = appVersion
             self.appBuild = appBuild
             self.destination = destination
+            self.integrationsState = integrationsState
             self.supportData = supportData
         }
     }
@@ -49,6 +53,7 @@ public struct Settings {
         case advancedSettings(AdvancedSettings.Action)
         case alert(PresentationAction<Action>)
         case copyEmail
+        case integrations(Integrations.Action)
         case onAppear
         case sendSupportMail
         case sendSupportMailFinished
@@ -69,6 +74,10 @@ public struct Settings {
             AdvancedSettings()
         }
 
+        Scope(state: \.integrationsState, action: \.integrations) {
+            Integrations()
+        }
+
         Reduce { state, action in
             switch action {
             case .onAppear:
@@ -81,6 +90,9 @@ public struct Settings {
             
             case .copyEmail:
                 pasteboard.setString(SupportDataGenerator.Constants.email.redacted)
+                return .none
+            
+            case .integrations:
                 return .none
                 
             case .updateDestination(let destination):

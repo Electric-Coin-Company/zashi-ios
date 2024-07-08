@@ -26,7 +26,9 @@ public enum Asset {
     public static let fly = ImageAsset(name: "Fly")
     public static let flyReceived = ImageAsset(name: "FlyReceived")
     public enum Partners {
-      public static let cbLogo = ImageAsset(name: "cbLogo")
+      public static let coinbase = ImageAsset(name: "coinbase")
+      public static let flexa = ImageAsset(name: "flexa")
+      public static let flexaDisabled = ImageAsset(name: "flexaDisabled")
     }
     public static let splashHi = ImageAsset(name: "SplashHi")
     public static let welcomeScreenLogo = ImageAsset(name: "WelcomeScreenLogo")
@@ -45,9 +47,9 @@ public enum Asset {
     public static let flyReceivedFilled = ImageAsset(name: "flyReceivedFilled")
     public static let gridTile = ImageAsset(name: "gridTile")
     public enum Icons {
-      public static let coinbase = ImageAsset(name: "coinbase")
       public static let currencyDollar = ImageAsset(name: "currencyDollar")
       public static let downloadCloud = ImageAsset(name: "downloadCloud")
+      public static let integrations = ImageAsset(name: "integrations")
       public static let key = ImageAsset(name: "key")
       public static let messageSmile = ImageAsset(name: "messageSmile")
       public static let server = ImageAsset(name: "server")
@@ -71,10 +73,6 @@ public enum Asset {
     public static let zashiTitle = ImageAsset(name: "zashiTitle")
   }
   public enum Colors {
-    public enum Settings {
-      public static let coinbaseBcg = ColorAsset(name: "coinbaseBcg")
-      public static let coinbaseTint = ColorAsset(name: "coinbaseTint")
-    }
     public enum ZDesign {
       public enum Base {
         public static let bone = ColorAsset(name: "Bone")
