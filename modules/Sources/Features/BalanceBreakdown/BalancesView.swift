@@ -23,9 +23,7 @@ public struct BalancesView: View {
     @Perception.Bindable var store: StoreOf<Balances>
     let tokenName: String
     
-    @Dependency(\.hideBalances) var hideBalances
-    @State var isHidden = false
-    @State private var cancellable: AnyCancellable?
+    @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
     @State var walletStatus = WalletStatus.none
 
     public init(store: StoreOf<Balances>, tokenName: String) {
@@ -94,18 +92,8 @@ public struct BalancesView: View {
                 action: \.alert
             )
         )
-        .onAppear {
-            store.send(.onAppear)
-            if !_XCTIsTesting {
-                cancellable = hideBalances.value().sink { val in
-                    isHidden = val
-                }
-            }
-        }
-        .onDisappear {
-            store.send(.onDisappear)
-            cancellable?.cancel()
-        }
+        .onAppear { store.send(.onAppear) }
+        .onDisappear { store.send(.onDisappear) }
     }
 }
 
@@ -250,7 +238,7 @@ extension BalancesView {
                 shadowOffset: 6
             )
             .padding(.bottom, 15)
-            .disabled(!store.isShieldableBalanceAvailable || store.isShieldingFunds || isHidden)
+            .disabled(!store.isShieldableBalanceAvailable || store.isShieldingFunds || isSensitiveContentHidden)
             
             Text("(\(ZatoshiStringRepresentation.feeFormat))")
                 .font(.custom(FontFamily.Inter.semiBold.name, size: 11))

@@ -50,7 +50,6 @@ class HomeSnapshotTests: XCTestCase {
                 .dependency(\.mainQueue, .immediate)
                 .dependency(\.reviewRequest, .noOp)
                 .dependency(\.walletStatusPanel, .noOp)
-                .dependency(\.hideBalances, .noOp)
                 .dependency(\.exchangeRate, .noOp)
         }
 

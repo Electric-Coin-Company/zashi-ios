@@ -47,7 +47,6 @@ extension Root {
             switch action {
             case .initialization(.appDelegate(.didFinishLaunching)):
                 state.appStartState = .didFinishLaunching
-                hideBalances.prepare()
                 // TODO: [#704], trigger the review request logic when approved by the team,
                 // https://github.com/Electric-Coin-Company/zashi-ios/issues/704
                 return .concatenate(

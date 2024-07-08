@@ -51,7 +51,7 @@ public struct Tabs {
                 }
             }
         }
-        
+
         public var addressDetailsState: AddressDetails.State
         public var balanceBreakdownState: Balances.State
         public var currencyConversionSetupState: CurrencyConversionSetup.State

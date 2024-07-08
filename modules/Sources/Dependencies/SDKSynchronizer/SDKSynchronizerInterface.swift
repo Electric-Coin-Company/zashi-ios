@@ -64,5 +64,5 @@ public struct SDKSynchronizerClient {
     
     public var refreshExchangeRateUSD: () -> Void
 
-    public var evaluateBestOf: ([LightWalletEndpoint], Double, Double, UInt64, Int, NetworkType) async -> [LightWalletEndpoint]
+    public var evaluateBestOf: ([LightWalletEndpoint], Double, Double, UInt64, Int, NetworkType) async -> [LightWalletEndpoint] = { _,_,_,_,_,_ in [] }
 }
