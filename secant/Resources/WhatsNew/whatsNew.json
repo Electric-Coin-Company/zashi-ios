@@ -8,7 +8,8 @@
                 {
                     "title": "Added:",
                     "bulletpoints": [
-                        "We improved UX for unsent transactions. The SDK now checks whether there are any unsent transactions, and it attempts to resubmit such transactions every 5 minutes."
+                        "We improved UX for unsent transactions. The SDK now checks whether there are any unsent transactions, and it attempts to resubmit such transactions every 5 minutes.",
+                        "We added an experimental feature which allows you to buy ZEC with Coinbase Pay integration. Find it in Advanced Settings."
                     ]
                 },
                 {
