@@ -239,6 +239,12 @@ public enum L10n {
     /// Not enough free space
     public static let title = L10n.tr("Localizable", "notEnoughFreeSpace.title", fallback: "Not enough free space")
   }
+  public enum Partners {
+    /// https://pay.coinbase.com/buy/select-asset?appId=%@&addresses={"%@":["zcash"]}
+    public static func coinbaseOnrampUrl(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "partners.coinbaseOnrampUrl", String(describing: p1), String(describing: p2), fallback: "https://pay.coinbase.com/buy/select-asset?appId=%@&addresses={\"%@\":[\"zcash\"]}")
+    }
+  }
   public enum PlainOnboarding {
     /// A no-frills wallet for sending and receiving Zcash (ZEC).
     public static let title = L10n.tr("Localizable", "plainOnboarding.title", fallback: "A no-frills wallet for sending and receiving Zcash (ZEC).")
@@ -565,6 +571,8 @@ public enum L10n {
     public static let about = L10n.tr("Localizable", "settings.about", fallback: "About")
     /// Advanced
     public static let advanced = L10n.tr("Localizable", "settings.advanced", fallback: "Advanced")
+    /// Buy ZEC with
+    public static let buyZec = L10n.tr("Localizable", "settings.buyZec", fallback: "Buy ZEC with")
     /// Choose a server
     public static let chooseServer = L10n.tr("Localizable", "settings.chooseServer", fallback: "Choose a server")
     /// Delete Zashi

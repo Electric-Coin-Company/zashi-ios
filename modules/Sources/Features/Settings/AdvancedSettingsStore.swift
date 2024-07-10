@@ -10,6 +10,7 @@ import PrivateDataConsent
 import RecoveryPhraseDisplay
 import ServerSetup
 import ZcashLightClientKit
+import PartnerKeys
 
 @Reducer
 public struct AdvancedSettings {
@@ -22,32 +23,50 @@ public struct AdvancedSettings {
             case serverSetup
         }
 
+        public var appId: String?
         public var deleteWallet: DeleteWallet.State
         public var destination: Destination?
+        public var isInAppBrowserOn = false
         public var phraseDisplayState: RecoveryPhraseDisplay.State
         public var privateDataConsentState: PrivateDataConsentReducer.State
         public var serverSetupState: ServerSetup.State
+        public var uAddress: UnifiedAddress? = nil
+        
+        public var inAppBrowserURL: String? {
+            if let address = try? uAddress?.transparentReceiver().stringEncoded, let appId {
+                return L10n.Partners.coinbaseOnrampUrl(appId, address)
+            }
+            
+            return nil
+        }
         
         public init(
             deleteWallet: DeleteWallet.State,
             destination: Destination? = nil,
+            isInAppBrowserOn: Bool = false,
             phraseDisplayState: RecoveryPhraseDisplay.State,
             privateDataConsentState: PrivateDataConsentReducer.State,
-            serverSetupState: ServerSetup.State
+            serverSetupState: ServerSetup.State,
+            uAddress: UnifiedAddress? = nil
         ) {
             self.deleteWallet = deleteWallet
             self.destination = destination
+            self.isInAppBrowserOn = isInAppBrowserOn
             self.phraseDisplayState = phraseDisplayState
             self.privateDataConsentState = privateDataConsentState
             self.serverSetupState = serverSetupState
+            self.uAddress = uAddress
         }
     }
 
-    public enum Action: Equatable {
-        case protectedAccessRequest(State.Destination)
+    public enum Action: BindableAction, Equatable {
+        case binding(BindingAction<AdvancedSettings.State>)
+        case buyZecTapped
         case deleteWallet(DeleteWallet.Action)
+        case onAppear
         case phraseDisplay(RecoveryPhraseDisplay.Action)
         case privateDataConsent(PrivateDataConsentReducer.Action)
+        case protectedAccessRequest(State.Destination)
         case serverSetup(ServerSetup.Action)
         case updateDestination(AdvancedSettings.State.Destination?)
     }
@@ -57,8 +76,21 @@ public struct AdvancedSettings {
     public init() { }
 
     public var body: some Reducer<State, Action> {
+        BindingReducer()
+        
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                state.appId = PartnerKeys.cbProjectId
+                return .none
+                
+            case .binding:
+                return .none
+                
+            case .buyZecTapped:
+                state.isInAppBrowserOn = true
+                return .none
+                
             case .protectedAccessRequest(let destination):
                 return .run { send in
                     if await localAuthentication.authenticate() {

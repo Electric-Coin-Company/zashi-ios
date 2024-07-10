@@ -25,6 +25,9 @@ public enum Asset {
   public enum Assets {
     public static let fly = ImageAsset(name: "Fly")
     public static let flyReceived = ImageAsset(name: "FlyReceived")
+    public enum Partners {
+      public static let cbLogo = ImageAsset(name: "cbLogo")
+    }
     public static let splashHi = ImageAsset(name: "SplashHi")
     public static let welcomeScreenLogo = ImageAsset(name: "WelcomeScreenLogo")
     public static let zashiLogo = ImageAsset(name: "ZashiLogo")

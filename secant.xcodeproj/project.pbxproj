@@ -79,6 +79,9 @@
 		9E4AB2B12BA1BEE900F5D6DB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E90751D2A269BE300269308 /* Assets.xcassets */; };
 		9E4AB2B22BA1BEE900F5D6DB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D3B01EB298DAF89007EBCDA /* GoogleService-Info.plist */; };
 		9E4AB2B32BA1BEE900F5D6DB /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E5AAEBF2A67CEC4003F283D /* Colors.xcassets */; };
+		9E599F322C3EEEF3000E4997 /* PartnerKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E599F312C3EEEF3000E4997 /* PartnerKeys.plist */; };
+		9E599F332C3EEEF3000E4997 /* PartnerKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E599F312C3EEEF3000E4997 /* PartnerKeys.plist */; };
+		9E599F342C3EEEF3000E4997 /* PartnerKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E599F312C3EEEF3000E4997 /* PartnerKeys.plist */; };
 		9E5AAEC02A67CEC4003F283D /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E5AAEBF2A67CEC4003F283D /* Colors.xcassets */; };
 		9E5AAEC12A67CEC4003F283D /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E5AAEBF2A67CEC4003F283D /* Colors.xcassets */; };
 		9E5B8E742B46E04E00CA3616 /* RestoreWalletTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5B8E732B46E04E00CA3616 /* RestoreWalletTests.swift */; };
@@ -159,6 +162,7 @@
 		9E4A01762B0C9ABD005AFC7E /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		9E4AB2B72BA1BEE900F5D6DB /* secant-distrib.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "secant-distrib.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E4AB2B82BA1BEE900F5D6DB /* secant-distrib-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "secant-distrib-Info.plist"; path = "/Users/lukaskorba/Dev/Xcode/GitHub/LukasKorba/secant-ios-wallet/secant-distrib-Info.plist"; sourceTree = "<absolute>"; };
+		9E599F312C3EEEF3000E4997 /* PartnerKeys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = PartnerKeys.plist; sourceTree = "<group>"; };
 		9E5AAEBF2A67CEC4003F283D /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		9E5B8E732B46E04E00CA3616 /* RestoreWalletTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreWalletTests.swift; sourceTree = "<group>"; };
 		9E5BF63E2819542C00BA3F17 /* TransactionListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListTests.swift; sourceTree = "<group>"; };
@@ -553,6 +557,7 @@
 				9E5AAEBF2A67CEC4003F283D /* Colors.xcassets */,
 				9E2706652AFF99F5000DA6EC /* ReadTransactionsStorageModel.xcdatamodeld */,
 				9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */,
+				9E599F312C3EEEF3000E4997 /* PartnerKeys.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -654,6 +659,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0D26AF91299E8196005260EE /* Build configuration list for PBXNativeTarget "secant-mainnet" */;
 			buildPhases = (
+				9E599F2F2C3EEE5A000E4997 /* Generate PartnerKeys.plist */,
 				0D26AE97299E8196005260EE /* Generate GoogleService-Info.plist  */,
 				34968BEE2ABDC6FA0027F495 /* Swiftgen */,
 				0D26AE99299E8196005260EE /* SwiftLint */,
@@ -682,6 +688,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0D4E7A2A26B364180058B01E /* Build configuration list for PBXNativeTarget "secant-testnet" */;
 			buildPhases = (
+				9E599F2E2C3EEE25000E4997 /* Generate PartnerKeys.plist */,
 				0D3B01ED298DB0FE007EBCDA /* Generate GoogleService-Info.plist  */,
 				34968BED2ABDC6310027F495 /* Swiftgen */,
 				6696BA8726F0B1D200D5C875 /* SwiftLint */,
@@ -746,6 +753,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9E4AB2B42BA1BEE900F5D6DB /* Build configuration list for PBXNativeTarget "secant-distrib" */;
 			buildPhases = (
+				9E599F302C3EEE83000E4997 /* Generate PartnerKeys.plist */,
 				9E4AB29E2BA1BEE900F5D6DB /* Generate GoogleService-Info.plist  */,
 				9E4AB29F2BA1BEE900F5D6DB /* Swiftgen */,
 				9E4AB2A02BA1BEE900F5D6DB /* SwiftLint */,
@@ -827,6 +835,7 @@
 				0D26AF84299E8196005260EE /* Preview Assets.xcassets in Resources */,
 				0D26AF88299E8196005260EE /* LaunchScreen.storyboard in Resources */,
 				9E90751F2A269BE300269308 /* Assets.xcassets in Resources */,
+				9E599F332C3EEEF3000E4997 /* PartnerKeys.plist in Resources */,
 				9E6C984A2BF4C65F00EACDCB /* whatsNew.json in Resources */,
 				0D26AF8C299E8196005260EE /* GoogleService-Info.plist in Resources */,
 				9EDDAF6E2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */,
@@ -841,6 +850,7 @@
 				0D4E7A1026B364180058B01E /* Preview Assets.xcassets in Resources */,
 				9E2F1C8C280ED6A7004E65FE /* LaunchScreen.storyboard in Resources */,
 				9E90751E2A269BE300269308 /* Assets.xcassets in Resources */,
+				9E599F322C3EEEF3000E4997 /* PartnerKeys.plist in Resources */,
 				9E6C98492BF4C65F00EACDCB /* whatsNew.json in Resources */,
 				0D3B01EC298DAF89007EBCDA /* GoogleService-Info.plist in Resources */,
 				9EDDAF6D2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */,
@@ -869,6 +879,7 @@
 				9E4AB2AF2BA1BEE900F5D6DB /* Preview Assets.xcassets in Resources */,
 				9E4AB2B02BA1BEE900F5D6DB /* LaunchScreen.storyboard in Resources */,
 				9E4AB2B12BA1BEE900F5D6DB /* Assets.xcassets in Resources */,
+				9E599F342C3EEEF3000E4997 /* PartnerKeys.plist in Resources */,
 				9E6C984B2BF4C65F00EACDCB /* whatsNew.json in Resources */,
 				9E4AB2B22BA1BEE900F5D6DB /* GoogleService-Info.plist in Resources */,
 				9EDDAF6F2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */,
@@ -1078,6 +1089,69 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/zsh;
 			shellScript = "\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+		};
+		9E599F2E2C3EEE25000E4997 /* Generate PartnerKeys.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Generate PartnerKeys.plist";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Resources/PartnerKeys.plist",
+				"$(SRCROOT)/secant/Resources/PartnerKeys.plist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "echo \"Creating an empty file for PartnerKeys\"\n\nPK_FILE=\"./secant/Resources/PartnerKeys.plist\"\nif [[ -f $PK_FILE ]]; then\n    echo \"$PK_FILE Exists. Not doing anything.\"\nelse \n    echo \"$PK_FILE does not exist. Will insert a DUMMY FILE\"\n\n    echo \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxLjAiPgo8ZGljdC8+CjwvcGxpc3Q+\" | base64 --decode > $PK_FILE\nfi\n";
+		};
+		9E599F2F2C3EEE5A000E4997 /* Generate PartnerKeys.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Generate PartnerKeys.plist";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Resources/PartnerKeys.plist",
+				"$(SRCROOT)/secant/Resources/PartnerKeys.plist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "echo \"Creating an empty file for PartnerKeys\"\n\nPK_FILE=\"./secant/Resources/PartnerKeys.plist\"\nif [[ -f $PK_FILE ]]; then\n    echo \"$PK_FILE Exists. Not doing anything.\"\nelse \n    echo \"$PK_FILE does not exist. Will insert a DUMMY FILE\"\n\n    echo \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxLjAiPgo8ZGljdC8+CjwvcGxpc3Q+\" | base64 --decode > $PK_FILE\nfi\n";
+		};
+		9E599F302C3EEE83000E4997 /* Generate PartnerKeys.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Generate PartnerKeys.plist";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Resources/PartnerKeys.plist",
+				"$(SRCROOT)/secant/Resources/PartnerKeys.plist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "echo \"Creating an empty file for PartnerKeys\"\n\nPK_FILE=\"./secant/Resources/PartnerKeys.plist\"\nif [[ -f $PK_FILE ]]; then\n    echo \"$PK_FILE Exists. Not doing anything.\"\nelse \n    echo \"$PK_FILE does not exist. Will insert a DUMMY FILE\"\n\n    echo \"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxLjAiPgo8ZGljdC8+CjwvcGxpc3Q+\" | base64 --decode > $PK_FILE\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1532,7 +1606,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
 				DEVELOPMENT_TEAM = RLPRR8CPQG;
@@ -1562,7 +1636,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
 				DEVELOPMENT_TEAM = RLPRR8CPQG;
 				ENABLE_BITCODE = NO;
@@ -1752,7 +1826,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
 				DEVELOPMENT_TEAM = RLPRR8CPQG;
 				ENABLE_BITCODE = NO;
