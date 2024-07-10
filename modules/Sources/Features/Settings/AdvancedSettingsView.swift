@@ -68,7 +68,25 @@ public struct AdvancedSettingsView: View {
                     store.send(.updateDestination(.serverSetup))
                 }
                 .zcashStyle()
+                .padding(.bottom, store.inAppBrowserURL == nil ? 0 : 25)
                 .padding(.horizontal, 70)
+
+                if store.inAppBrowserURL != nil {
+                    Button {
+                        store.send(.buyZecTapped)
+                    } label: {
+                        HStack(spacing: 5) {
+                            Text(L10n.Settings.buyZec.uppercased())
+                            Asset.Assets.Partners.cbLogo.image
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 78, height: 14)
+                                .padding(.bottom, 2)
+                        }
+                    }
+                    .zcashStyle()
+                    .padding(.horizontal, 70)
+                }
 
                 Spacer()
                 
@@ -85,6 +103,12 @@ public struct AdvancedSettingsView: View {
                     .padding(.horizontal, 20)
             }
             .walletStatusPanel()
+            .sheet(isPresented: $store.isInAppBrowserOn) {
+                if let urlStr = store.inAppBrowserURL, let url = URL(string: urlStr) {
+                    InAppBrowserView(url: url)
+                }
+            }
+            .onAppear { store.send(.onAppear) }
         }
         .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground()

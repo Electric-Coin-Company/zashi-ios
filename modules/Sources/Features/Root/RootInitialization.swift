@@ -293,6 +293,7 @@ extension Root {
                 
             case .initialization(.initializationSuccessfullyDone(let uAddress)):
                 state.tabsState.addressDetailsState.uAddress = uAddress
+                state.tabsState.settingsState.advancedSettingsState.uAddress = uAddress
                 return .merge(
                     .send(.initialization(.registerForSynchronizersUpdate)),
                     .publisher {

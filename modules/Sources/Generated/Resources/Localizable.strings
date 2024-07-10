@@ -157,6 +157,7 @@ Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps you
 "settings.alert.cantSendEmail.title" = "Oh, no!";
 "settings.alert.cantSendEmail.message" = "It looks like you don't have a default email app configured on your device. Copy the address below, and use your favorite email client to send us a message.";
 "settings.alert.cantSendEmail.copyEmail" = "Copy %@";
+"settings.buyZec" = "Buy ZEC with";
 
 // MARK: - Private Data Consent
 "privateDataConsent.title" = "Consent for Exporting Private Data";
@@ -290,3 +291,6 @@ Sharing this private data is irrevocable — once you have shared this private d
 
 "field.transactionAmount.zecAmount" = "%@ Amount";
 "field.transactionAmount.amount" = "Amount:";
+
+// MARK: - Partners
+"partners.coinbaseOnrampUrl" = "https://pay.coinbase.com/buy/select-asset?appId=%@&addresses={\"%@\":[\"zcash\"]}";

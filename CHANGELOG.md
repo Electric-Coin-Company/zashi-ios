@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Added
+- Coinbase Onramp integration allows users to buy ZEC, which is then automatically sent to Zashi’s transparent address.
+
 ### Fixed
 - Syncing has been broken in some specific cases.
 - Transactions marked as read are no longer rendered with a yellow icon.
