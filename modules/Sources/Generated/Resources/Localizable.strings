@@ -292,5 +292,11 @@ Sharing this private data is irrevocable — once you have shared this private d
 "field.transactionAmount.zecAmount" = "%@ Amount";
 "field.transactionAmount.amount" = "Amount:";
 
+"field.transactionAmount.currencyAmount" = "10000.00";
+
+// MARK: - Tooltips
+"tooltip.exchangeRate.title" = "Exchange rate unavailable";
+"tooltip.exchangeRate.desc" = "We tried but we couldn’t refresh the exchange rate for you. Check your connection, relaunch the app, and we’ll try again.";
+
 // MARK: - Partners
 "partners.coinbaseOnrampUrl" = "https://pay.coinbase.com/buy/select-asset?appId=%@&addresses={\"%@\":[\"zcash\"]}";

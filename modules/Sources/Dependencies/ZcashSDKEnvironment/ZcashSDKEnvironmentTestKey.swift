@@ -16,6 +16,8 @@ extension ZcashSDKEnvironment: TestDependencyKey {
     public static let testValue = Self(
         latestCheckpoint: 0,
         endpoint: { defaultEndpoint(for: .testnet) },
+        exchangeRateIPRateLimit: 120,
+        exchangeRateStaleLimit: 15 * 60,
         memoCharLimit: MemoBytes.capacity,
         mnemonicWordsMaxCount: ZcashSDKConstants.mnemonicWordsMaxCount,
         network: ZcashNetworkBuilder.network(for: .testnet),

@@ -19,6 +19,7 @@ extension DatabaseFilesClient: TestDependencyKey {
         outputParamsURLFor: XCTUnimplemented("\(Self.self).outputParamsURLFor", placeholder: .emptyURL),
         pendingDbURLFor: XCTUnimplemented("\(Self.self).pendingDbURLFor", placeholder: .emptyURL),
         spendParamsURLFor: XCTUnimplemented("\(Self.self).spendParamsURLFor", placeholder: .emptyURL),
+        toDirURLFor: XCTUnimplemented("\(Self.self).toDirURLFor", placeholder: .emptyURL),
         areDbFilesPresentFor: XCTUnimplemented("\(Self.self).areDbFilesPresentFor", placeholder: false)
     )
 }
@@ -32,6 +33,7 @@ extension DatabaseFilesClient {
         outputParamsURLFor: { _ in .emptyURL },
         pendingDbURLFor: { _ in .emptyURL },
         spendParamsURLFor: { _ in .emptyURL },
+        toDirURLFor: { _ in .emptyURL },
         areDbFilesPresentFor: { _ in false }
     )
 }

@@ -17,6 +17,8 @@ import SendFlow
 import Settings
 import ZcashLightClientKit
 import SendConfirmation
+import Utils
+import ExchangeRate
 
 public typealias TabsStore = Store<TabsReducer.State, TabsReducer.Action>
 public typealias TabsViewStore = ViewStore<TabsReducer.State, TabsReducer.Action>
@@ -51,6 +53,7 @@ public struct TabsReducer: Reducer {
         public var addressDetailsState: AddressDetails.State
         public var balanceBreakdownState: BalanceBreakdownReducer.State
         public var destination: Destination?
+        public var isRateTooltipEnabled = false
         public var homeState: Home.State
         public var selectedTab: Tab = .account
         public var sendConfirmationState: SendConfirmation.State
@@ -61,6 +64,7 @@ public struct TabsReducer: Reducer {
             addressDetailsState: AddressDetails.State,
             balanceBreakdownState: BalanceBreakdownReducer.State,
             destination: Destination? = nil,
+            isRateTooltipEnabled: Bool = false,
             homeState: Home.State,
             selectedTab: Tab = .account,
             sendConfirmationState: SendConfirmation.State,
@@ -70,6 +74,7 @@ public struct TabsReducer: Reducer {
             self.addressDetailsState = addressDetailsState
             self.balanceBreakdownState = balanceBreakdownState
             self.destination = destination
+            self.isRateTooltipEnabled = isRateTooltipEnabled
             self.homeState = homeState
             self.selectedTab = selectedTab
             self.sendConfirmationState = sendConfirmationState
@@ -82,6 +87,7 @@ public struct TabsReducer: Reducer {
         case addressDetails(AddressDetails.Action)
         case balanceBreakdown(BalanceBreakdownReducer.Action)
         case home(Home.Action)
+        case rateTooltipTapped
         case selectedTabChanged(State.Tab)
         case send(SendFlowReducer.Action)
         case sendConfirmation(SendConfirmation.Action)
@@ -89,6 +95,7 @@ public struct TabsReducer: Reducer {
         case updateDestination(TabsReducer.State.Destination?)
     }
 
+    @Dependency(\.exchangeRate) var exchangeRate
     @Dependency(\.mainQueue) var mainQueue
 
     public init() { }
@@ -134,15 +141,24 @@ public struct TabsReducer: Reducer {
                 state.selectedTab = .balances
                 return .none
                 
+            case .home(.walletBalances(.exchangeRateRefreshTapped)):
+                if state.isRateTooltipEnabled {
+                    state.isRateTooltipEnabled = false
+                    return .none
+                }
+                state.isRateTooltipEnabled = state.homeState.walletBalancesState.isExchangeRateStale
+                return .none
+                
             case .home:
                 return .none
                 
             case .send(.sendConfirmationRequired):
                 state.sendConfirmationState.amount = state.sendState.amount
-                state.sendConfirmationState.address = state.sendState.address
+                state.sendConfirmationState.address = state.sendState.address.data
                 state.sendConfirmationState.proposal = state.sendState.proposal
                 state.sendConfirmationState.feeRequired = state.sendState.feeRequired
                 state.sendConfirmationState.message = state.sendState.message
+                state.sendConfirmationState.currencyAmount = state.sendState.currencyConversion?.convert(state.sendState.amount).redacted ?? .empty
                 return .send(.updateDestination(.sendConfirmation))
                                 
             case .send:
@@ -177,10 +193,17 @@ public struct TabsReducer: Reducer {
 
             case .selectedTabChanged(let tab):
                 state.selectedTab = tab
+                if tab == .send {
+                    exchangeRate.refreshExchangeRateUSD()
+                }
                 return .none
                 
             case .updateDestination(let destination):
                 state.destination = destination
+                return .none
+                
+            case .rateTooltipTapped:
+                state.isRateTooltipEnabled = false
                 return .none
             }
         }

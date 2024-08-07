@@ -68,7 +68,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
         }
 
         await store.send(.clearValue) { state in
-            state.textFieldState.text = "".redacted
+            state.textFieldState.text = .empty
             XCTAssertEqual(0, state.amount.data, "AmountInput Tests: `testClearValue` expected \(0) but received \(state.amount.data)")
         }
     }
@@ -85,8 +85,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
                             text: "1.0".redacted
-                        ),
-                    zecPrice: 1000.0
+                        )
                 )
         ) {
             TransactionAmountTextFieldReducer()
@@ -117,8 +116,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
                             text: "25000".redacted
-                        ),
-                    zecPrice: 1000.0
+                        )
                 )
         ) {
             TransactionAmountTextFieldReducer()
@@ -149,8 +147,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
                             text: "1 000".redacted
-                        ),
-                    zecPrice: 1000.0
+                        )
                 )
         ) {
             TransactionAmountTextFieldReducer()
@@ -182,8 +179,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
                             text: "5".redacted
-                        ),
-                    zecPrice: 1000.0
+                        )
                 )
         ) {
             TransactionAmountTextFieldReducer()
@@ -226,8 +222,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
                             text: "5".redacted
-                        ),
-                    zecPrice: 1000.0
+                        )
                 )
         ) {
             TransactionAmountTextFieldReducer()
@@ -258,8 +253,7 @@ class TransactionAmountTextFieldTests: XCTestCase {
                         TCATextFieldReducer.State(
                             validationType: .customFloatingPoint(usNumberFormatter),
                             text: "5".redacted
-                        ),
-                    zecPrice: 1000.0
+                        )
                 )
         ) {
             TransactionAmountTextFieldReducer()

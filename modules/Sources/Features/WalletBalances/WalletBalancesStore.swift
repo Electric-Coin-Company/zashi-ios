@@ -8,24 +8,35 @@
 import Foundation
 import ComposableArchitecture
 
+import ExchangeRate
 import Models
 import SDKSynchronizer
 import Utils
 import ZcashLightClientKit
+import ZcashSDKEnvironment
 
 @Reducer
 public struct WalletBalances {
     private let CancelStateId = UUID()
+    private let CancelRateId = UUID()
 
     @ObservableState
     public struct State: Equatable {
+        public var currencyConversion: CurrencyConversion?
+        public var fiatCurrencyResult: FiatCurrencyResult?
         public var isAvailableBalanceTappable = true
+        public var isExchangeRateRefreshEnabled = false
+        public var isExchangeRateStale = false
         public var migratingDatabase = false
         public var shieldedBalance: Zatoshi
         public var shieldedWithPendingBalance: Zatoshi
         public var totalBalance: Zatoshi
         public var transparentBalance: Zatoshi
 
+        public var isExchangeRateUSDInFlight: Bool {
+            fiatCurrencyResult?.state == .fetching
+        }
+        
         public var isProcessingZeroAvailableBalance: Bool {
             if shieldedBalance.amount == 0 && transparentBalance.amount > 0 {
                 return false
@@ -34,15 +45,27 @@ public struct WalletBalances {
             return totalBalance.amount != shieldedBalance.amount && shieldedBalance.amount == 0
         }
 
+        public var currencyValue: String {
+            currencyConversion?.convert(totalBalance) ?? ""
+        }
+        
         public init(
+            currencyConversion: CurrencyConversion? = nil,
+            fiatCurrencyResult: FiatCurrencyResult? = nil,
             isAvailableBalanceTappable: Bool = true,
+            isExchangeRateRefreshEnabled: Bool = false,
+            isExchangeRateStale: Bool = false,
             migratingDatabase: Bool = false,
             shieldedBalance: Zatoshi = .zero,
             shieldedWithPendingBalance: Zatoshi = .zero,
             totalBalance: Zatoshi = .zero,
             transparentBalance: Zatoshi = .zero
         ) {
+            self.currencyConversion = currencyConversion
+            self.fiatCurrencyResult = fiatCurrencyResult
             self.isAvailableBalanceTappable = isAvailableBalanceTappable
+            self.isExchangeRateRefreshEnabled = isExchangeRateRefreshEnabled
+            self.isExchangeRateStale = isExchangeRateStale
             self.migratingDatabase = migratingDatabase
             self.shieldedBalance = shieldedBalance
             self.shieldedWithPendingBalance = shieldedWithPendingBalance
@@ -55,14 +78,18 @@ public struct WalletBalances {
         case availableBalanceTapped
         case balancesUpdated(AccountBalance?)
         case debugMenuStartup
+        case exchangeRateRefreshTapped
+        case exchangeRateEvent(ExchangeRateClient.EchangeRateEvent)
         case onAppear
         case onDisappear
         case synchronizerStateChanged(RedactableSynchronizerState)
         case updateBalances
     }
 
+    @Dependency(\.exchangeRate) var exchangeRate
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public init() { }
 
@@ -78,13 +105,54 @@ public struct WalletBalances {
                             .map { $0.redacted }
                             .map(WalletBalances.Action.synchronizerStateChanged)
                     }
-                    .cancellable(id: CancelStateId, cancelInFlight: true)
+                    .cancellable(id: CancelStateId, cancelInFlight: true),
+                    .publisher {
+                        exchangeRate.exchangeRateEventStream()
+                            .map(WalletBalances.Action.exchangeRateEvent)
+                            .receive(on: mainQueue)
+                    }
+                    .cancellable(id: CancelRateId, cancelInFlight: true)
                 )
 
             case .onDisappear:
-                return .cancel(id: CancelStateId)
+                return .merge(
+                    .cancel(id: CancelStateId),
+                    .cancel(id: CancelRateId)
+                )
                 
             case .availableBalanceTapped:
+                return .none
+
+            case .exchangeRateRefreshTapped:
+                exchangeRate.refreshExchangeRateUSD()
+                return .none
+                
+            case .exchangeRateEvent(let result):
+                switch result {
+                case .value(let rate):
+                    guard let rate else {
+                        return .none
+                    }
+                    
+                    state.fiatCurrencyResult = rate
+                    state.currencyConversion = CurrencyConversion(.usd, ratio: rate.rate.doubleValue, timestamp: rate.date.timeIntervalSince1970)
+                    state.isExchangeRateRefreshEnabled = false
+                    state.isExchangeRateStale = false
+                case .refreshEnable(let rate):
+                    guard let rate else {
+                        return .none
+                    }
+                    
+                    state.fiatCurrencyResult = rate
+                    state.currencyConversion = CurrencyConversion(.usd, ratio: rate.rate.doubleValue, timestamp: rate.date.timeIntervalSince1970)
+                    state.isExchangeRateRefreshEnabled = true
+                    state.isExchangeRateStale = false
+                case .stale:
+                    state.currencyConversion = nil
+                    state.isExchangeRateStale = true
+                    break
+                }
+                
                 return .none
 
             case .updateBalances:
@@ -105,7 +173,7 @@ public struct WalletBalances {
 
             case .debugMenuStartup:
                 return .none
-                
+
             case .synchronizerStateChanged(let latestState):
                 let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.data.syncStatus)
 

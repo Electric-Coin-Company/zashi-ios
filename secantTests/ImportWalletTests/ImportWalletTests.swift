@@ -86,7 +86,7 @@ class ImportWalletTests: XCTestCase {
             survey between bitter process artefact blind \
             carbon truly provide dizzy crush flush \
             breeze blouse charge solid fish spread
-            """.redacted
+            ".empty
         
         await store.send(.seedPhraseInputChanged(seedPhrase)) { state in
             state.importedSeedPhrase = seedPhrase
@@ -233,7 +233,7 @@ class ImportWalletTests: XCTestCase {
             survey between bitter process artefact blind \
             carbon truly provide dizzy crush flush \
             breeze blouse charge solid fish spread
-            """.redacted
+            ".empty
         
         await store.send(.seedPhraseInputChanged(seedPhrase)) { state in
             state.importedSeedPhrase = seedPhrase
@@ -271,7 +271,7 @@ class ImportWalletTests: XCTestCase {
             survey between bitter process artefact blind \
             carbon truly provide dizzy crush flush \
             breeze blouse charge solid fish spread
-            """.redacted
+            ".empty
         
         await store.send(.seedPhraseInputChanged(seedPhrase)) { state in
             state.importedSeedPhrase = seedPhrase
@@ -302,7 +302,7 @@ class ImportWalletTests: XCTestCase {
             survey between bitter process artefact blind \
             carbon truly provide dizzy crush flush \
             breeze blouse charge solid fish spread
-            """.redacted
+            ".empty
         
         await store.send(.seedPhraseInputChanged(seedPhrase)) { state in
             state.importedSeedPhrase = seedPhrase
@@ -328,7 +328,7 @@ class ImportWalletTests: XCTestCase {
                 survey between bitter process artefact blind \
                 carbon truly provide dizzy crush flush \
                 breeze blouse charge solid fish spread
-                """.redacted,
+                ".empty,
                 isValidMnemonic: true,
                 isValidNumberOfWords: true,
                 maxWordsCount: 24,
@@ -343,8 +343,8 @@ class ImportWalletTests: XCTestCase {
         store.dependencies.walletStorage = .noOp
         
         await store.send(.restoreWallet) { state in
-            state.importedSeedPhrase = "".redacted
-            state.birthdayHeight = "".redacted
+            state.importedSeedPhrase = .empty
+            state.birthdayHeight = .empty
             state.destination = nil
         }
 

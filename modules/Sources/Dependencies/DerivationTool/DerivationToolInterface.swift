@@ -25,7 +25,10 @@ public struct DerivationToolClient {
 
     /// Given a unified spending key, returns the associated unified viewwing key.
     public var deriveUnifiedFullViewingKey: (UnifiedSpendingKey, NetworkType) throws -> UnifiedFullViewingKey
-    
+
+    /// Checks if given address supports memo
+    public var doesAddressSupportMemo: (String, NetworkType) -> Bool
+
     /// Checks validity of the unified address.
     public var isUnifiedAddress: (String, NetworkType) -> Bool
 
@@ -34,6 +37,9 @@ public struct DerivationToolClient {
 
     /// Checks validity of the transparent address.
     public var isTransparentAddress: (String, NetworkType) -> Bool
+
+    /// Checks validity of the tex address.
+    public var isTexAddress: (String, NetworkType) -> Bool
 
     /// Checks if given address is a valid zcash address.
     public var isZcashAddress: (String, NetworkType) -> Bool

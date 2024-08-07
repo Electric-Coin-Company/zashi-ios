@@ -24,7 +24,6 @@ public struct SendFlowView: View {
     
     @FocusState private var isAddressFocused
     @FocusState private var isAmountFocused
-    @FocusState private var isMessageFocused
 
     public init(store: SendFlowStore, tokenName: String) {
         self.store = store
@@ -47,69 +46,90 @@ public struct SendFlowView: View {
                             )
                             
                             VStack(alignment: .leading) {
-                                VStack(alignment: .leading) {
-                                    TransactionAddressTextField(
-                                        store: store.scope(
-                                            state: \.transactionAddressInputState,
-                                            action: SendFlowReducer.Action.transactionAddressInput
-                                        )
-                                    )
-                                    .frame(height: 63)
-                                    .focused($isAddressFocused)
-                                    .submitLabel(.next)
-                                    .onSubmit {
-                                        isAmountFocused = true
-                                    }
-                                    
-                                    if viewStore.isInvalidAddressFormat {
-                                        Text(L10n.Send.Error.invalidAddress)
-                                            .foregroundColor(Asset.Colors.error.color)
-                                            .font(.custom(FontFamily.Inter.regular.name, size: 12))
-                                    }
+                                ZashiTextField(
+                                    text: viewStore.bindingForAddress,
+                                    placeholder: L10n.Field.TransactionAddress.validZcashAddress,
+                                    title: L10n.Field.TransactionAddress.to,
+                                    error: viewStore.isInvalidAddressFormat
+                                    ? L10n.Send.Error.invalidAddress
+                                    : nil,
+                                    accessoryView:
+                                        Button {
+                                            viewStore.send(.updateDestination(.scanQR))
+                                        } label: {
+                                            Image(systemName: "qrcode")
+                                                .resizable()
+                                                .frame(width: 25, height: 25)
+                                                .tint(Asset.Colors.primary.color)
+                                        }
+                                        .padding(.trailing, 8)
+                                )
+                                .keyboardType(.alphabet)
+                                .focused($isAddressFocused)
+                                .submitLabel(.next)
+                                .onSubmit {
+                                    isAmountFocused = true
                                 }
                                 .padding(.bottom, 20)
                                 
                                 VStack(alignment: .leading) {
-                                    TransactionAmountTextField(
-                                        store: store.scope(
-                                            state: \.transactionAmountInputState,
-                                            action: SendFlowReducer.Action.transactionAmountInput
-                                        ),
-                                        tokenName: tokenName
-                                    )
-                                    .frame(height: 63)
-                                    .focused($isAmountFocused)
-                                    .submitLabel(viewStore.isMemoInputEnabled ? .next : .return)
-                                    .onSubmit {
-                                        if viewStore.isMemoInputEnabled {
-                                            isMessageFocused = true
-                                        }
+                                    HStack(spacing: 4) {
+                                        ZashiTextField(
+                                            text: viewStore.bindingForZecAmount,
+                                            placeholder: L10n.Field.TransactionAmount.zecAmount(tokenName),
+                                            title: L10n.Field.TransactionAmount.amount,
+                                            prefixView:
+                                                ZcashSymbol()
+                                                    .frame(width: 7, height: 12)
+                                                    .padding(.leading, 10)
+                                        )
+                                        .keyboardType(.decimalPad)
+                                        .focused($isAmountFocused)
+
+                                        Asset.Assets.convertIcon.image
+                                            .renderingMode(.template)
+                                            .resizable()
+                                            .frame(width: 10, height: 8)
+                                            .foregroundColor(Asset.Colors.primary.color)
+                                            .padding(.horizontal, 3)
+                                            .padding(.top, 24)
+                                        
+                                        ZashiTextField(
+                                            text: viewStore.bindingForCurrency,
+                                            placeholder: L10n.Field.TransactionAmount.currencyAmount,
+                                            prefixView:
+                                                Text(viewStore.currencySymbol)
+                                                    .font(.custom(FontFamily.Archivo.bold.name, size: 14))
+                                                    .padding(.leading, 10)
+                                        )
+                                        .keyboardType(.decimalPad)
+                                        .padding(.top, 26)
+                                        .disabled(viewStore.currencyConversion == nil)
+                                        .opacity(viewStore.currencyConversion == nil ? 0.5 : 1.0)
                                     }
                                     
                                     if viewStore.isInvalidAmountFormat {
                                         Text(L10n.Send.Error.invalidAmount)
                                             .foregroundColor(Asset.Colors.error.color)
-                                            .font(.custom(FontFamily.Inter.regular.name, size: 12))
+                                            .font(.custom(FontFamily.Inter.medium.name, size: 12))
                                     } else if viewStore.isInsufficientFunds {
                                         Text(L10n.Send.Error.insufficientFunds)
                                             .foregroundColor(Asset.Colors.error.color)
-                                            .font(.custom(FontFamily.Inter.regular.name, size: 12))
+                                            .font(.custom(FontFamily.Inter.medium.name, size: 12))
                                     }
                                 }
                                 .padding(.bottom, 20)
                             }
                             
                             MessageEditor(store: store.memoStore())
-                                .frame(height: 175)
+                                .frame(height: 190)
                                 .disabled(!viewStore.isMemoInputEnabled)
-                                .focused($isMessageFocused)
                                 .toolbar {
                                     ToolbarItemGroup(placement: .keyboard) {
                                         Spacer()
                                         
                                         Button(L10n.General.done.uppercased()) {
                                             isAmountFocused = false
-                                            isMessageFocused = false
                                             isAddressFocused = false
                                         }
                                         .foregroundColor(Asset.Colors.primary.color)
@@ -133,13 +153,6 @@ public struct SendFlowView: View {
                                 .padding(.vertical, 20)
                         }
                         .padding(.horizontal, 30)
-                        .onChange(of: isMessageFocused) { update in
-                            withAnimation {
-                                if update {
-                                    value.scrollTo(InputID.message, anchor: .center)
-                                }
-                            }
-                        }
                     }
                     .onAppear { viewStore.send(.onAppear) }
                     .applyScreenBackground()
@@ -172,8 +185,6 @@ public struct SendFlowView: View {
                     destination: nil,
                     memoState: .initial,
                     scanState: .initial,
-                    transactionAddressInputState: .initial,
-                    transactionAmountInputState: .initial,
                     walletBalancesState: .initial
                 )
             ) {

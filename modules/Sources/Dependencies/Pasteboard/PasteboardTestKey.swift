@@ -12,7 +12,7 @@ import Utils
 extension PasteboardClient: TestDependencyKey {
     public static let testValue = Self(
         setString: XCTUnimplemented("\(Self.self).setString"),
-        getString: XCTUnimplemented("\(Self.self).getString", placeholder: "".redacted)
+        getString: XCTUnimplemented("\(Self.self).getString", placeholder: .empty)
     )
     
     private struct TestPasteboard {

@@ -217,7 +217,7 @@ class SendTests: XCTestCase {
 
         // Checks the computed property `isInvalidAmountFormat` which controls the error message to be shown on the screen
         // With empty input it must be false
-        await store.send(.transactionAmountInput(.textField(.set("".redacted))))
+        await store.send(.transactionAmountInput(.textField(.set(.empty))))
 
         await store.receive(.transactionAmountInput(.updateAmount))
     }
@@ -233,8 +233,8 @@ class SendTests: XCTestCase {
 
         // Checks the computed property `isInvalidAddressFormat` which controls the error message to be shown on the screen
         // With empty input it must be false
-        await store.send(.transactionAddressInput(.textField(.set("".redacted)))) { state in
-            state.transactionAddressInputState.textFieldState.text = "".redacted
+        await store.send(.transactionAddressInput(.textField(.set(.empty)))) { state in
+            state.transactionAddressInputState.textFieldState.text = .empty
             // true is expected here because textField doesn't have any `validationType: String.ValidationType?`
             // isValid function returns true, `guard let validationType else { return true }`
             state.transactionAddressInputState.textFieldState.valid = true

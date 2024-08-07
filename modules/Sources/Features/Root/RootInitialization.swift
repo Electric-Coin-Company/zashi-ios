@@ -159,6 +159,7 @@ extension Root {
                 guard sdkSynchronizer.latestState().syncStatus.isPrepared else {
                     return .none
                 }
+                exchangeRate.refreshExchangeRateUSD()
                 return .run { [state] send in
                     do {
                         try await sdkSynchronizer.start(true)
@@ -294,6 +295,7 @@ extension Root {
             case .initialization(.initializationSuccessfullyDone(let uAddress)):
                 state.tabsState.addressDetailsState.uAddress = uAddress
                 state.tabsState.settingsState.advancedSettingsState.uAddress = uAddress
+                exchangeRate.refreshExchangeRateUSD()
                 return .merge(
                     .send(.initialization(.registerForSynchronizersUpdate)),
                     .publisher {

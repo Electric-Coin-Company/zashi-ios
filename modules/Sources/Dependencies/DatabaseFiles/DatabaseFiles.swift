@@ -76,6 +76,14 @@ public struct DatabaseFiles {
                 isDirectory: false
             )
     }
+    
+    func toDirURL(for network: ZcashNetwork) -> URL {
+        return documentsDirectory()
+            .appendingPathComponent(
+                "\(network.constants.defaultDbNamePrefix)to-dir",
+                isDirectory: false
+            )
+    }
 
     func areDbFilesPresent(for network: ZcashNetwork) -> Bool {
         let dataDbURL = dataDbURL(for: network)

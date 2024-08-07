@@ -34,6 +34,7 @@ extension SDKSynchronizerClient: DependencyKey {
             fsBlockDbRoot: databaseFiles.fsBlockDbRootFor(network),
             generalStorageURL: databaseFiles.documentsDirectory(),
             dataDbURL: databaseFiles.dataDbURLFor(network),
+            torDirURL: databaseFiles.toDirURLFor(network),
             endpoint: zcashSDKEnvironment.endpoint(),
             network: network,
             spendParamsURL: databaseFiles.spendParamsURLFor(network),
@@ -47,6 +48,7 @@ extension SDKSynchronizerClient: DependencyKey {
         return SDKSynchronizerClient(
             stateStream: { synchronizer.stateStream },
             eventStream: { synchronizer.eventStream },
+            exchangeRateUSDStream: { synchronizer.exchangeRateUSDStream },
             latestState: { synchronizer.latestState },
             prepareWith: { seedBytes, walletBirtday, walletMode in
                 let result = try await synchronizer.prepare(with: seedBytes, walletBirthday: walletBirtday, for: walletMode)
@@ -184,6 +186,9 @@ extension SDKSynchronizerClient: DependencyKey {
             },
             isSeedRelevantToAnyDerivedAccount: { seed in
                 try await synchronizer.isSeedRelevantToAnyDerivedAccount(seed: seed)
+            },
+            refreshExchangeRateUSD: {
+                synchronizer.refreshExchangeRateUSD()
             }
         )
     }
