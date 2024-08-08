@@ -59,4 +59,6 @@ public struct SDKSynchronizerClient {
     public var proposeShielding: (Int, Zatoshi, Memo, TransparentAddress?) async throws -> Proposal?
 
     public var isSeedRelevantToAnyDerivedAccount: ([UInt8]) async throws -> Bool
+    
+    public var evaluateBestOf: ([LightWalletEndpoint], Double, Double, Int, Int, NetworkType) async -> [LightWalletEndpoint]
 }

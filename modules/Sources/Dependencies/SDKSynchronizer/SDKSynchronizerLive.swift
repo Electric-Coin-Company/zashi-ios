@@ -184,6 +184,16 @@ extension SDKSynchronizerClient: DependencyKey {
             },
             isSeedRelevantToAnyDerivedAccount: { seed in
                 try await synchronizer.isSeedRelevantToAnyDerivedAccount(seed: seed)
+            },
+            evaluateBestOf: { endpoints, latencyThreshold, fetchThreshold, nBlocks, kServers, network in
+                await synchronizer.evaluateBestOf(
+                    endpoints: endpoints,
+                    latencyThreshold: latencyThreshold,
+                    fetchThreshold: fetchThreshold,
+                    nBlocks: nBlocks,
+                    kServers: kServers,
+                    network: network
+                )
             }
         )
     }
