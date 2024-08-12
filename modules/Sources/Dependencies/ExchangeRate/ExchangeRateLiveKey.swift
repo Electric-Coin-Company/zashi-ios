@@ -12,6 +12,7 @@ import ComposableArchitecture
 import ZcashLightClientKit
 
 import SDKSynchronizer
+import UserPreferencesStorage
 import ZcashSDKEnvironment
 
 class ExchangeRateProvider {
@@ -32,6 +33,13 @@ class ExchangeRateProvider {
     }
     
     func refreshExchangeRateUSD() {
+        // guard the feature is opted-in by a user
+        @Dependency (\.userStoredPreferences) var userStoredPreferences
+
+        guard let exchangeRate = userStoredPreferences.exchangeRate(), exchangeRate.automatic else {
+            return
+        }
+        
         guard refreshTimer == nil else {
             return
         }

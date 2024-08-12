@@ -10,8 +10,6 @@ import SwiftUI
 import Generated
 
 public struct Tooltip: View {
-    public var offsetX: CGFloat = 0
-    public var offsetY: CGFloat = 0
     public var onTapGesture: () -> Void
     public var title: String
     public var desc: String
@@ -19,14 +17,10 @@ public struct Tooltip: View {
     public init(
         title: String,
         desc: String,
-        offsetX: CGFloat = 0,
-        offsetY: CGFloat = 0,
         onTapGesture: @escaping () -> Void
     ) {
         self.title = title
         self.desc = desc
-        self.offsetX = offsetX
-        self.offsetY = offsetY
         self.onTapGesture = onTapGesture
     }
     
@@ -63,7 +57,6 @@ public struct Tooltip: View {
             .shadow(color: Asset.Colors.V2.Tooltips.shadow.color.opacity(0.03), radius: 4, x: 0, y: 4)
             .shadow(color: Asset.Colors.V2.Tooltips.shadow.color.opacity(0.08), radius: 8, x: 0, y: 12)
         }
-        .offset(x: offsetX, y: offsetY)
         .onTapGesture { onTapGesture() }
     }
 }

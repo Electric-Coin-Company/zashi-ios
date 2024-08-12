@@ -14,6 +14,7 @@ import RecoveryPhraseDisplay
 import UIComponents
 import PrivateDataConsent
 import ServerSetup
+import CurrencyConversionSetup
 
 public struct AdvancedSettingsView: View {
     @Perception.Bindable var store: StoreOf<AdvancedSettings>
@@ -56,6 +57,12 @@ public struct AdvancedSettingsView: View {
                         DeleteWalletView(store: store.deleteWalletStore())
                     }
                 )
+                .navigationLinkEmpty(
+                    isActive: store.bindingCurrencyConversionSetup,
+                    destination: {
+                        CurrencyConversionSetupView(store: store.currencyConversionSetupStore())
+                    }
+                )
 
                 Button(L10n.Settings.exportPrivateData.uppercased()) {
                     store.send(.protectedAccessRequest(.privateDataConsent))
@@ -66,6 +73,13 @@ public struct AdvancedSettingsView: View {
 
                 Button(L10n.Settings.chooseServer.uppercased()) {
                     store.send(.updateDestination(.serverSetup))
+                }
+                .zcashStyle()
+                .padding(.bottom, 25)
+                .padding(.horizontal, 70)
+                
+                Button(L10n.CurrencyConversion.title.uppercased()) {
+                    store.send(.updateDestination(.currencyConversionSetup))
                 }
                 .zcashStyle()
                 .padding(.bottom, store.inAppBrowserURL == nil ? 0 : 25)
@@ -140,35 +154,42 @@ extension StoreOf<AdvancedSettings> {
             self.send(.updateDestination($0))
         }
     }
-
+    
     var bindingForBackupPhrase: Binding<Bool> {
         self.destinationBinding.map(
             extract: { $0 == .backupPhrase },
             embed: { $0 ? .backupPhrase : nil }
         )
     }
-
+    
     var bindingForPrivateDataConsent: Binding<Bool> {
         self.destinationBinding.map(
             extract: { $0 == .privateDataConsent },
             embed: { $0 ? .privateDataConsent : nil }
         )
     }
-
+    
     var bindingForServerSetup: Binding<Bool> {
         self.destinationBinding.map(
             extract: { $0 == .serverSetup },
             embed: { $0 ? .serverSetup : nil }
         )
     }
-
+    
     var bindingDeleteWallet: Binding<Bool> {
         self.destinationBinding.map(
             extract: { $0 == .deleteWallet },
             embed: { $0 ? .deleteWallet : nil }
         )
     }
-    
+
+    var bindingCurrencyConversionSetup: Binding<Bool> {
+        self.destinationBinding.map(
+            extract: { $0 == .currencyConversionSetup },
+            embed: { $0 ? .currencyConversionSetup : nil }
+        )
+    }
+
     func backupPhraseStore() -> StoreOf<RecoveryPhraseDisplay> {
         self.scope(
             state: \.phraseDisplayState,
@@ -189,11 +210,18 @@ extension StoreOf<AdvancedSettings> {
             action: \.serverSetup
         )
     }
-        
+    
     func deleteWalletStore() -> StoreOf<DeleteWallet> {
         self.scope(
-            state: \.deleteWallet,
+            state: \.deleteWalletState,
             action: \.deleteWallet
+        )
+    }
+    
+    func currencyConversionSetupStore() -> StoreOf<CurrencyConversionSetup> {
+        self.scope(
+            state: \.currencyConversionSetupState,
+            action: \.currencyConversionSetup
         )
     }
 }
@@ -202,7 +230,8 @@ extension StoreOf<AdvancedSettings> {
 
 extension AdvancedSettings.State {
     public static let initial = AdvancedSettings.State(
-        deleteWallet: .initial,
+        currencyConversionSetupState: .init(isSettingsView: true),
+        deleteWalletState: .initial,
         phraseDisplayState: RecoveryPhraseDisplay.State(
             phrase: nil,
             showBackButton: false,
@@ -222,7 +251,8 @@ extension StoreOf<AdvancedSettings> {
 
     public static let demo = StoreOf<AdvancedSettings>(
         initialState: .init(
-            deleteWallet: .initial,
+            currencyConversionSetupState: .initial,
+            deleteWalletState: .initial,
             phraseDisplayState: RecoveryPhraseDisplay.State(
                 phrase: nil,
                 birthday: nil

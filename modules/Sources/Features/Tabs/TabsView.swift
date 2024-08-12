@@ -18,6 +18,7 @@ import Settings
 import UIComponents
 import HideBalances
 import SendConfirmation
+import CurrencyConversionSetup
 
 public struct TabsView: View {
     let networkType: NetworkType
@@ -75,6 +76,7 @@ public struct TabsView: View {
                         )
                         .tag(TabsReducer.State.Tab.balances)
                     }
+                    .onAppear { viewStore.send(.onAppear) }
                     
                     VStack(spacing: 0) {
                         Spacer()
@@ -130,6 +132,14 @@ public struct TabsView: View {
                             )
                         }
                     )
+                    .navigationLinkEmpty(
+                        isActive: viewStore.bindingForDestination(.currencyConversionSetup),
+                        destination: {
+                            CurrencyConversionSetupView(
+                                store: store.currencyConversionSetupStore()
+                            )
+                        }
+                    )
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(trailing: settingsButton(store))
@@ -145,12 +155,86 @@ public struct TabsView: View {
                             preferences.map {
                                 Tooltip(
                                     title: L10n.Tooltip.ExchangeRate.title,
-                                    desc: L10n.Tooltip.ExchangeRate.desc,
-                                    offsetY: geometry[$0].minY + geometry[$0].height
+                                    desc: L10n.Tooltip.ExchangeRate.desc
                                 ) {
                                     viewStore.send(.rateTooltipTapped)
                                 }
-                                .padding(.horizontal, 20)
+                                .frame(width: geometry.size.width - 40)
+                                .offset(x: 20, y: geometry[$0].minY + geometry[$0].height)
+                            }
+                        }
+                    }
+                }
+                .overlayPreferenceValue(ExchangeRateFeaturePreferenceKey.self) { preferences in
+                    if viewStore.isRateEducationEnabled {
+                        GeometryReader { geometry in
+                            preferences.map {
+                                VStack(alignment: .leading, spacing: 0) {
+                                    HStack(alignment: .top, spacing: 0) {
+                                        Asset.Assets.coinsSwap.image
+                                            .renderingMode(.template)
+                                            .resizable()
+                                            .frame(width: 20, height: 20)
+                                            .foregroundColor(Asset.Colors.CurrencyConversion.optionTint.color)
+                                            .padding(10)
+                                            .background {
+                                                Circle()
+                                                    .fill(Asset.Colors.CurrencyConversion.optionBcg.color)
+                                            }
+                                            .padding(.trailing, 16)
+                                        
+                                        VStack(alignment: .leading, spacing: 5) {
+                                            Text(L10n.CurrencyConversion.cardTitle)
+                                                .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                                                .foregroundColor(Asset.Colors.CurrencyConversion.tertiary.color)
+
+                                            Text(L10n.CurrencyConversion.title)
+                                                .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
+                                                .foregroundColor(Asset.Colors.CurrencyConversion.primary.color)
+                                        }
+                                        .padding(.trailing, 16)
+                                        
+                                        Spacer()
+                                        
+                                        Button {
+                                            viewStore.send(.currencyConversionCloseTapped)
+                                        } label: {
+                                            Asset.Assets.buttonCloseX.image
+                                                .renderingMode(.template)
+                                                .resizable()
+                                                .frame(width: 20, height: 20)
+                                                .foregroundColor(Asset.Colors.CurrencyConversion.Card.close.color)
+                                        }
+                                        .padding(20)
+                                        .offset(x: 20, y: -20)
+                                    }
+
+                                    Button {
+                                        viewStore.send(.updateDestination(.currencyConversionSetup))
+                                    } label: {
+                                        Text(L10n.CurrencyConversion.cardButton)
+                                            .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
+                                            .foregroundColor(Asset.Colors.CurrencyConversion.primary.color)
+                                            .frame(height: 24)
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, 12)
+                                            .background {
+                                                RoundedRectangle(cornerRadius: 12)
+                                                    .fill(Asset.Colors.CurrencyConversion.btnPrimaryDisabled.color)
+                                            }
+                                    }
+                                }
+                                .padding(24)
+                                .background {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Asset.Colors.CurrencyConversion.Card.bcg.color)
+                                        .background {
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .stroke(Asset.Colors.CurrencyConversion.Card.outline.color)
+                                        }
+                                }
+                                .frame(width: geometry.size.width - 40)
+                                .offset(x: 20, y: geometry[$0].minY + geometry[$0].height)
                             }
                         }
                     }

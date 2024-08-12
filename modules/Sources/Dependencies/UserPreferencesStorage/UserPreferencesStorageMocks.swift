@@ -15,6 +15,8 @@ extension UserPreferencesStorageClient: TestDependencyKey {
         return UserPreferencesStorageClient(
             server: { mock.server },
             setServer: mock.setServer(_:),
+            exchangeRate: { mock.exchangeRate },
+            setExchangeRate: mock.setExchangeRate(_:),
             removeAll: mock.removeAll
         )
     }()
@@ -22,6 +24,7 @@ extension UserPreferencesStorageClient: TestDependencyKey {
 
 extension UserPreferencesStorage {
     public static let mock = UserPreferencesStorage(
+        defaultExchangeRate: Data(),
         defaultServer: Data(),
         userDefaults: .noOp
     )

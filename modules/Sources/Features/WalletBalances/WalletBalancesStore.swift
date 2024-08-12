@@ -14,6 +14,7 @@ import SDKSynchronizer
 import Utils
 import ZcashLightClientKit
 import ZcashSDKEnvironment
+import UserPreferencesStorage
 
 @Reducer
 public struct WalletBalances {
@@ -25,6 +26,7 @@ public struct WalletBalances {
         public var currencyConversion: CurrencyConversion?
         public var fiatCurrencyResult: FiatCurrencyResult?
         public var isAvailableBalanceTappable = true
+        public var isExchangeRateFeatureOn = false
         public var isExchangeRateRefreshEnabled = false
         public var isExchangeRateStale = false
         public var migratingDatabase = false
@@ -53,6 +55,7 @@ public struct WalletBalances {
             currencyConversion: CurrencyConversion? = nil,
             fiatCurrencyResult: FiatCurrencyResult? = nil,
             isAvailableBalanceTappable: Bool = true,
+            isExchangeRateFeatureOn: Bool = false,
             isExchangeRateRefreshEnabled: Bool = false,
             isExchangeRateStale: Bool = false,
             migratingDatabase: Bool = false,
@@ -64,6 +67,7 @@ public struct WalletBalances {
             self.currencyConversion = currencyConversion
             self.fiatCurrencyResult = fiatCurrencyResult
             self.isAvailableBalanceTappable = isAvailableBalanceTappable
+            self.isExchangeRateFeatureOn = isExchangeRateFeatureOn
             self.isExchangeRateRefreshEnabled = isExchangeRateRefreshEnabled
             self.isExchangeRateStale = isExchangeRateStale
             self.migratingDatabase = migratingDatabase
@@ -89,6 +93,7 @@ public struct WalletBalances {
     @Dependency(\.exchangeRate) var exchangeRate
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public init() { }
@@ -97,6 +102,11 @@ public struct WalletBalances {
         Reduce { state, action in
             switch action {
             case .onAppear:
+                if let exchangeRate = userStoredPreferences.exchangeRate(), exchangeRate.automatic {
+                    state.isExchangeRateFeatureOn = true
+                } else {
+                    state.isExchangeRateFeatureOn = false
+                }
                 return .merge(
                     .send(.updateBalances),
                     .publisher {
@@ -124,7 +134,9 @@ public struct WalletBalances {
                 return .none
 
             case .exchangeRateRefreshTapped:
-                exchangeRate.refreshExchangeRateUSD()
+                if !state.isExchangeRateStale {
+                    exchangeRate.refreshExchangeRateUSD()
+                }
                 return .none
                 
             case .exchangeRateEvent(let result):

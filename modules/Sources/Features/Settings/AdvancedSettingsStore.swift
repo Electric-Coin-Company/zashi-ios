@@ -11,6 +11,7 @@ import RecoveryPhraseDisplay
 import ServerSetup
 import ZcashLightClientKit
 import PartnerKeys
+import CurrencyConversionSetup
 
 @Reducer
 public struct AdvancedSettings {
@@ -18,13 +19,15 @@ public struct AdvancedSettings {
     public struct State: Equatable {
         public enum Destination: Equatable {
             case backupPhrase
+            case currencyConversionSetup
             case deleteWallet
             case privateDataConsent
             case serverSetup
         }
 
         public var appId: String?
-        public var deleteWallet: DeleteWallet.State
+        public var currencyConversionSetupState: CurrencyConversionSetup.State
+        public var deleteWalletState: DeleteWallet.State
         public var destination: Destination?
         public var isInAppBrowserOn = false
         public var phraseDisplayState: RecoveryPhraseDisplay.State
@@ -41,7 +44,8 @@ public struct AdvancedSettings {
         }
         
         public init(
-            deleteWallet: DeleteWallet.State,
+            currencyConversionSetupState: CurrencyConversionSetup.State,
+            deleteWalletState: DeleteWallet.State,
             destination: Destination? = nil,
             isInAppBrowserOn: Bool = false,
             phraseDisplayState: RecoveryPhraseDisplay.State,
@@ -49,7 +53,8 @@ public struct AdvancedSettings {
             serverSetupState: ServerSetup.State,
             uAddress: UnifiedAddress? = nil
         ) {
-            self.deleteWallet = deleteWallet
+            self.currencyConversionSetupState = currencyConversionSetupState
+            self.deleteWalletState = deleteWalletState
             self.destination = destination
             self.isInAppBrowserOn = isInAppBrowserOn
             self.phraseDisplayState = phraseDisplayState
@@ -62,6 +67,7 @@ public struct AdvancedSettings {
     public enum Action: BindableAction, Equatable {
         case binding(BindingAction<AdvancedSettings.State>)
         case buyZecTapped
+        case currencyConversionSetup(CurrencyConversionSetup.Action)
         case deleteWallet(DeleteWallet.Action)
         case onAppear
         case phraseDisplay(RecoveryPhraseDisplay.Action)
@@ -90,7 +96,10 @@ public struct AdvancedSettings {
             case .buyZecTapped:
                 state.isInAppBrowserOn = true
                 return .none
-                
+
+            case .currencyConversionSetup:
+                return .none
+
             case .protectedAccessRequest(let destination):
                 return .run { send in
                     if await localAuthentication.authenticate() {
@@ -133,6 +142,10 @@ public struct AdvancedSettings {
             }
         }
 
+        Scope(state: \.currencyConversionSetupState, action: /Action.currencyConversionSetup) {
+            CurrencyConversionSetup()
+        }
+
         Scope(state: \.phraseDisplayState, action: /Action.phraseDisplay) {
             RecoveryPhraseDisplay()
         }
@@ -145,7 +158,7 @@ public struct AdvancedSettings {
             ServerSetup()
         }
 
-        Scope(state: \.deleteWallet, action: /Action.deleteWallet) {
+        Scope(state: \.deleteWalletState, action: /Action.deleteWallet) {
             DeleteWallet()
         }
     }

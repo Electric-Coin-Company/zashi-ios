@@ -19,5 +19,8 @@ public struct UserPreferencesStorageClient {
     public var server: () -> UserPreferencesStorage.ServerConfig?
     public var setServer: (UserPreferencesStorage.ServerConfig) throws -> Void
 
-    public var removeAll: () async -> Void
+    public var exchangeRate: () -> UserPreferencesStorage.ExchangeRate?
+    public var setExchangeRate: (UserPreferencesStorage.ExchangeRate) throws -> Void
+
+    public var removeAll: () -> Void
 }

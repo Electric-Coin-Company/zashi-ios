@@ -86,26 +86,28 @@ public struct SendFlowView: View {
                                         .keyboardType(.decimalPad)
                                         .focused($isAmountFocused)
 
-                                        Asset.Assets.convertIcon.image
-                                            .renderingMode(.template)
-                                            .resizable()
-                                            .frame(width: 10, height: 8)
-                                            .foregroundColor(Asset.Colors.primary.color)
-                                            .padding(.horizontal, 3)
-                                            .padding(.top, 24)
-                                        
-                                        ZashiTextField(
-                                            text: viewStore.bindingForCurrency,
-                                            placeholder: L10n.Field.TransactionAmount.currencyAmount,
-                                            prefixView:
-                                                Text(viewStore.currencySymbol)
+                                        if viewStore.isCurrencyConversionEnabled {
+                                            Asset.Assets.convertIcon.image
+                                                .renderingMode(.template)
+                                                .resizable()
+                                                .frame(width: 10, height: 8)
+                                                .foregroundColor(Asset.Colors.primary.color)
+                                                .padding(.horizontal, 3)
+                                                .padding(.top, 24)
+                                            
+                                            ZashiTextField(
+                                                text: viewStore.bindingForCurrency,
+                                                placeholder: L10n.Field.TransactionAmount.currencyAmount,
+                                                prefixView:
+                                                    Text(viewStore.currencySymbol)
                                                     .font(.custom(FontFamily.Archivo.bold.name, size: 14))
                                                     .padding(.leading, 10)
-                                        )
-                                        .keyboardType(.decimalPad)
-                                        .padding(.top, 26)
-                                        .disabled(viewStore.currencyConversion == nil)
-                                        .opacity(viewStore.currencyConversion == nil ? 0.5 : 1.0)
+                                            )
+                                            .keyboardType(.decimalPad)
+                                            .padding(.top, 26)
+                                            .disabled(viewStore.currencyConversion == nil)
+                                            .opacity(viewStore.currencyConversion == nil ? 0.5 : 1.0)
+                                        }
                                     }
                                     
                                     if viewStore.isInvalidAmountFormat {

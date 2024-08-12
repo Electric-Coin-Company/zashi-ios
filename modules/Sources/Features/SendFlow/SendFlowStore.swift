@@ -19,6 +19,7 @@ import Generated
 import BalanceFormatter
 import WalletBalances
 import NumberFormatter
+import UserPreferencesStorage
 
 public typealias SendFlowStore = Store<SendFlowReducer.State, SendFlowReducer.Action>
 public typealias SendFlowViewStore = ViewStore<SendFlowReducer.State, SendFlowReducer.Action>
@@ -34,6 +35,7 @@ public struct SendFlowReducer: Reducer {
         public var addMemoState: Bool
         public var currencyConversion: CurrencyConversion?
         public var destination: Destination?
+        public var isCurrencyConversionEnabled = false
         public var memoState: MessageEditorReducer.State
         public var proposal: Proposal?
         public var scanState: Scan.State
@@ -157,7 +159,10 @@ public struct SendFlowReducer: Reducer {
     }
 
     public enum Action: Equatable {
+        case addressUpdated(RedactableString)
         case alert(PresentationAction<Action>)
+        case currencyUpdated(RedactableString)
+        case exchangeRateSetupChanged
         case memo(MessageEditorReducer.Action)
         case onAppear
         case proposal(Proposal)
@@ -169,17 +174,15 @@ public struct SendFlowReducer: Reducer {
         case syncAmounts(Bool)
         case updateDestination(SendFlowReducer.State.Destination?)
         case walletBalances(WalletBalances.Action)
-        
-        case addressUpdated(RedactableString)
-        case currencyUpdated(RedactableString)
         case zecAmountUpdated(RedactableString)
     }
     
     @Dependency(\.audioServices) var audioServices
     @Dependency(\.derivationTool) var derivationTool
-    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
-    @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
     @Dependency(\.numberFormatter) var numberFormatter
+    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.userStoredPreferences) var userStoredPreferences
+    @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public init() { }
     
@@ -210,6 +213,14 @@ public struct SendFlowReducer: Reducer {
 
             case .onAppear:
                 state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
+                return .send(.exchangeRateSetupChanged)
+                
+            case .exchangeRateSetupChanged:
+                if let automatic = userStoredPreferences.exchangeRate()?.automatic, automatic {
+                    state.isCurrencyConversionEnabled = true
+                } else {
+                    state.isCurrencyConversionEnabled = false
+                }
                 return .none
 
             case let .proposal(proposal):
@@ -267,6 +278,10 @@ public struct SendFlowReducer: Reducer {
                 state.memoState.text = .empty
                 state.address = .empty
                 state.zecAmountText = .empty
+                state.currencyText = .empty
+                state.isValidAddress = false
+                state.isValidTransparentAddress = false
+                state.isValidTexAddress = false
                 return .none
                 
             case .syncAmounts(let zecToCurrency):
