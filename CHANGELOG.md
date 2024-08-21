@@ -6,8 +6,14 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.1.4 build 3 (2024-08-22)
+
 ### Added
-- Coinbase Onramp integration allows users to buy ZEC, which is then automatically sent to Zashi’s transparent address.
+- We added ZEC/USD currency conversion to Zashi which doesn't compromise your IP address. 
+- You can now view your balances, and type in the transaction amount in both USD and ZEC. 
+
+### Changed
+- We adopted the latest Zcash SDK version 2.2.0, which brings ZIP 320 TEX address support and ZEC/USD currency conversion functionality.
 
 ### Fixed
 - Syncing has been broken in some specific cases.
