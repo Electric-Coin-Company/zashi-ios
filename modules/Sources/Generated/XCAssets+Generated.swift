@@ -32,21 +32,53 @@ public enum Asset {
     public static let welcomeScreenLogo = ImageAsset(name: "WelcomeScreenLogo")
     public static let zashiLogo = ImageAsset(name: "ZashiLogo")
     public static let alertIcon = ImageAsset(name: "alertIcon")
+    public static let buttonCloseX = ImageAsset(name: "buttonCloseX")
+    public static let check = ImageAsset(name: "check")
+    public static let coinsSwap = ImageAsset(name: "coinsSwap")
+    public static let convertIcon = ImageAsset(name: "convertIcon")
     public static let copy = ImageAsset(name: "copy")
     public static let eyeOff = ImageAsset(name: "eyeOff")
     public static let eyeOn = ImageAsset(name: "eyeOn")
     public static let flyReceivedFilled = ImageAsset(name: "flyReceivedFilled")
     public static let gridTile = ImageAsset(name: "gridTile")
+    public static let infoCircle = ImageAsset(name: "infoCircle")
+    public static let infoOutline = ImageAsset(name: "infoOutline")
+    public static let rateIcons = ImageAsset(name: "rateIcons")
+    public static let refreshCCW = ImageAsset(name: "refreshCCW")
     public static let restoreInfo = ImageAsset(name: "restoreInfo")
     public static let share = ImageAsset(name: "share")
     public static let shield = ImageAsset(name: "shield")
+    public static let shieldTick = ImageAsset(name: "shieldTick")
     public static let surroundedShield = ImageAsset(name: "surroundedShield")
+    public static let tooltip = ImageAsset(name: "tooltip")
     public static let torchOff = ImageAsset(name: "torchOff")
     public static let torchOn = ImageAsset(name: "torchOn")
     public static let upArrow = ImageAsset(name: "upArrow")
     public static let zashiTitle = ImageAsset(name: "zashiTitle")
   }
   public enum Colors {
+    public enum CurrencyConversion {
+      public enum Card {
+        public static let bcg = ColorAsset(name: "bcg")
+        public static let close = ColorAsset(name: "close")
+        public static let outline = ColorAsset(name: "outline")
+      }
+      public static let btnPrimaryBcg = ColorAsset(name: "btnPrimaryBcg")
+      public static let btnPrimaryDisabled = ColorAsset(name: "btnPrimaryDisabled")
+      public static let btnPrimaryDisabledText = ColorAsset(name: "btnPrimaryDisabledText")
+      public static let btnPrimaryText = ColorAsset(name: "btnPrimaryText")
+      public static let closeButtonBcg = ColorAsset(name: "closeButtonBcg")
+      public static let closeButtonTint = ColorAsset(name: "closeButtonTint")
+      public static let optionBcg = ColorAsset(name: "optionBcg")
+      public static let optionBtnBcg = ColorAsset(name: "optionBtnBcg")
+      public static let optionBtnOutline = ColorAsset(name: "optionBtnOutline")
+      public static let optionBtnSet = ColorAsset(name: "optionBtnSet")
+      public static let optionBtnSetBcg = ColorAsset(name: "optionBtnSetBcg")
+      public static let optionTint = ColorAsset(name: "optionTint")
+      public static let outline = ColorAsset(name: "outline")
+      public static let primary = ColorAsset(name: "primary")
+      public static let tertiary = ColorAsset(name: "tertiary")
+    }
     public static let background = ColorAsset(name: "background")
     public static let btnDarkShade = ColorAsset(name: "btnDarkShade")
     public static let btnLabelShade = ColorAsset(name: "btnLabelShade")
@@ -74,6 +106,16 @@ public enum Asset {
     public static let shade97 = ColorAsset(name: "shade97")
     public static let splash = ColorAsset(name: "splash")
     public static let syncProgresBcg = ColorAsset(name: "syncProgresBcg")
+    public enum V2 {
+      public static let exchangeRateBcg = ColorAsset(name: "exchangeRateBcg")
+      public static let exchangeRateBorder = ColorAsset(name: "exchangeRateBorder")
+      public enum Tooltips {
+        public static let bcg = ColorAsset(name: "bcg")
+        public static let shadow = ColorAsset(name: "shadow")
+        public static let textDesc = ColorAsset(name: "textDesc")
+        public static let textTitle = ColorAsset(name: "textTitle")
+      }
+    }
   }
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name

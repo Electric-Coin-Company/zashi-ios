@@ -15,6 +15,8 @@ extension UserPreferencesStorageClient: DependencyKey {
         return UserPreferencesStorageClient(
             server: { live.server },
             setServer: live.setServer(_:),
+            exchangeRate: { live.exchangeRate },
+            setExchangeRate: live.setExchangeRate(_:),
             removeAll: live.removeAll
         )
     }()
@@ -22,6 +24,7 @@ extension UserPreferencesStorageClient: DependencyKey {
 
 extension UserPreferencesStorage {
     public static let live = UserPreferencesStorage(
+        defaultExchangeRate: Data(),
         defaultServer: Data(),
         userDefaults: .live()
     )

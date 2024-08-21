@@ -148,8 +148,8 @@ public struct ServerSetup {
                     ) {
                         do {
                             try await userStoredPreferences.setServer(serverConfig)
-                        } catch UserPreferencesStorage.UserPreferencesStorageError.serverConfigStore {
-                            await send(.switchFailed(ZcashError.unknown(UserPreferencesStorage.UserPreferencesStorageError.serverConfigStore)))
+                        } catch UserPreferencesStorage.UserPreferencesStorageError.serverConfig {
+                            await send(.switchFailed(ZcashError.unknown(UserPreferencesStorage.UserPreferencesStorageError.serverConfig)))
                         }
                     }
                 }

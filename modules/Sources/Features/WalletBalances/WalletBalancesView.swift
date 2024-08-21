@@ -33,15 +33,23 @@ public struct WalletBalancesView: View {
             VStack(spacing: 0) {
                 BalanceWithIconView(balance: store.totalBalance, couldBeHidden: couldBeHidden)
                     .padding(.top, 40)
+                    .anchorPreference(
+                        key: ExchangeRateFeaturePreferenceKey.self,
+                        value: .bounds
+                    ) { $0 }
+
 #if !SECANT_DISTRIB
                     .accessDebugMenuWithHiddenGesture {
                         store.send(.debugMenuStartup)
                     }
 #endif
 
+                exchangeRate()
+
                 if store.migratingDatabase {
                     Text(L10n.Home.migratingDatabases)
                         .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                        .foregroundColor(Asset.Colors.primary.color)
                         .padding(.top, 10)
                         .padding(.bottom, 30)
                 } else {
@@ -75,6 +83,103 @@ public struct WalletBalancesView: View {
             .foregroundColor(Asset.Colors.primary.color)
             .onAppear { store.send(.onAppear) }
             .onDisappear { store.send(.onDisappear) }
+        }
+    }
+    
+    private func exchangeRate() -> some View {
+        Group {
+            if store.isExchangeRateFeatureOn {
+                if store.currencyConversion == nil && !store.isExchangeRateStale {
+                    HStack(spacing: 8) {
+                        Text("Loading")
+                            .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
+                            .foregroundColor(Asset.Colors.primary.color)
+
+                        ProgressView()
+                    }
+                    .frame(height: 36)
+                    .padding(.top, 10)
+                    .padding(.vertical, 5)
+                }
+                
+                if store.currencyConversion != nil || store.isExchangeRateStale {
+                    Button {
+                        store.send(.exchangeRateRefreshTapped)
+                    } label: {
+                        if store.isExchangeRateStale {
+                            HStack {
+                                Text(L10n.Tooltip.ExchangeRate.title)
+                                    .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
+                                    .foregroundColor(Asset.Colors.primary.color)
+
+                                Asset.Assets.infoCircle.image
+                                    .renderingMode(.template)
+                                    .resizable()
+                                    .frame(width: 20, height: 20)
+                                    .foregroundColor(Asset.Colors.primary.color)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .anchorPreference(
+                                key: BoundsPreferenceKey.self,
+                                value: .bounds
+                            ) { $0 }
+                        } else if store.isExchangeRateRefreshEnabled {
+                            HStack {
+                                Text(store.currencyValue)
+                                    .hiddenIfSet()
+                                    .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
+                                    .foregroundColor(Asset.Colors.primary.color)
+
+                                if store.isExchangeRateUSDInFlight {
+                                    ProgressView()
+                                        .scaleEffect(0.7)
+                                        .frame(width: 20, height: 20)
+                                } else {
+                                    Asset.Assets.refreshCCW.image
+                                        .renderingMode(.template)
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                        .foregroundColor(Asset.Colors.primary.color)
+                                }
+                            }
+                            .padding(8)
+                            .padding(.horizontal, 6)
+                            .background {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Asset.Colors.V2.exchangeRateBorder.color)
+                                    .background {
+                                        Asset.Colors.V2.exchangeRateBcg.color
+                                            .cornerRadius(10)
+                                    }
+                            }
+                        } else {
+                            HStack {
+                                Text(store.currencyValue)
+                                    .hiddenIfSet()
+                                    .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
+                                    .foregroundColor(Asset.Colors.primary.color)
+
+                                if store.isExchangeRateUSDInFlight {
+                                    ProgressView()
+                                        .scaleEffect(0.7)
+                                        .frame(width: 11, height: 14)
+                                } else {
+                                    Asset.Assets.refreshCCW.image
+                                        .renderingMode(.template)
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                        .foregroundColor(Asset.Colors.shade72.color)
+                                }
+                            }
+                            .padding(8)
+                            .padding(.horizontal, 6)
+                        }
+                    }
+                    .frame(height: 36)
+                    .padding(.top, 10)
+                    .padding(.vertical, 5)
+                }
+            }
         }
     }
 }

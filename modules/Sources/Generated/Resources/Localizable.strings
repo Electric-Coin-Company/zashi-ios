@@ -292,5 +292,29 @@ Sharing this private data is irrevocable — once you have shared this private d
 "field.transactionAmount.zecAmount" = "%@ Amount";
 "field.transactionAmount.amount" = "Amount:";
 
+"field.transactionAmount.currencyAmount" = "10000.00";
+
+// MARK: Currency Conversion
+"currencyConversion.title" = "Currency Conversion";
+"currencyConversion.cardTitle" = "New Feature";
+"currencyConversion.cardButton" = "Review";
+"currencyConversion.learnMoreDesc" = "Display your balance and payment amounts in USD. You can manage this feature in Advanced Settings.";
+"currencyConversion.settingsDesc" = "Display your balance and payment amounts in USD. Zashi’s currency conversion feature protects your IP address at all times.";
+"currencyConversion.enable" = "Enable";
+"currencyConversion.learnMoreOptionEnableDesc" = "Show me the currency conversion.";
+"currencyConversion.learnMoreOptionDisable" = "Disable";
+"currencyConversion.learnMoreOptionDisableDesc" = "Don’t show the currency conversion.";
+"currencyConversion.note" = "Note for the super privacy-conscious: Because we pull the conversion rate from exchanges, an exchange might be able to see that the exchange rate was queried before a transaction occurred.";
+"currencyConversion.saveBtn" = "Save changes";
+"currencyConversion.ipTitle" = "IP Address Protection";
+"currencyConversion.ipDesc" = "Zashi’s currency conversion feature doesn’t compromise your IP address.";
+"currencyConversion.refresh" = "Rate Refresh";
+"currencyConversion.refreshDesc" = "The rate is refreshed automatically and can also be refreshed manually.";
+"currencyConversion.skipBtn" = "Skip for now";
+
+// MARK: - Tooltips
+"tooltip.exchangeRate.title" = "Exchange rate unavailable";
+"tooltip.exchangeRate.desc" = "We tried but we couldn’t refresh the exchange rate for you. Check your connection, relaunch the app, and we’ll try again.";
+
 // MARK: - Partners
 "partners.coinbaseOnrampUrl" = "https://pay.coinbase.com/buy/select-asset?appId=%@&addresses={\"%@\":[\"zcash\"]}";

@@ -20,6 +20,8 @@ extension ZcashSDKEnvironment {
                     for: network.networkType
                 ).endpoint(streamingCallTimeoutInMillis: ZcashSDKConstants.streamingCallTimeoutInMillis)
             },
+            exchangeRateIPRateLimit: 120,
+            exchangeRateStaleLimit: 15 * 60,
             memoCharLimit: MemoBytes.capacity,
             mnemonicWordsMaxCount: ZcashSDKConstants.mnemonicWordsMaxCount,
             network: network,

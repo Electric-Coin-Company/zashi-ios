@@ -18,7 +18,7 @@ public struct MessageEditorReducer: Reducer {
     public struct State: Equatable {
         /// default 0, no char limit
         public var charLimit = 0
-        public var text = "".redacted
+        public var text = RedactableString.empty
         
         public var isCharLimited: Bool {
             charLimit > 0
@@ -42,7 +42,7 @@ public struct MessageEditorReducer: Reducer {
             : ""
         }
 
-        public init(charLimit: Int = 0, text: RedactableString = "".redacted) {
+        public init(charLimit: Int = 0, text: RedactableString = .empty) {
             self.charLimit = charLimit
             self.text = text
         }
@@ -80,6 +80,6 @@ extension MessageEditorStore {
 extension MessageEditorReducer.State {
     public static let initial = MessageEditorReducer.State(
         charLimit: 0,
-        text: "".redacted
+        text: .empty
     )
 }

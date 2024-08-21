@@ -14,9 +14,11 @@ extension DerivationToolClient: TestDependencyKey {
     public static let testValue = Self(
         deriveSpendingKey: XCTUnimplemented("\(Self.self).deriveSpendingKey"),
         deriveUnifiedFullViewingKey: XCTUnimplemented("\(Self.self).deriveUnifiedFullViewingKey"),
+        doesAddressSupportMemo: XCTUnimplemented("\(Self.self).doesAddressSupportMemo"),
         isUnifiedAddress: XCTUnimplemented("\(Self.self).isUnifiedAddress", placeholder: false),
         isSaplingAddress: XCTUnimplemented("\(Self.self).isSaplingAddress", placeholder: false),
         isTransparentAddress: XCTUnimplemented("\(Self.self).isTransparentAddress", placeholder: false),
+        isTexAddress: XCTUnimplemented("\(Self.self).isTexAddress", placeholder: false),
         isZcashAddress: XCTUnimplemented("\(Self.self).isZcashAddress", placeholder: false)
     )
 }
@@ -25,9 +27,11 @@ extension DerivationToolClient {
     public static let noOp = Self(
         deriveSpendingKey: { _, _, _ in throw "NotImplemented" },
         deriveUnifiedFullViewingKey: { _, _ in throw "NotImplemented" },
+        doesAddressSupportMemo: { _, _ in return false },
         isUnifiedAddress: { _, _ in return false },
         isSaplingAddress: { _, _ in return false },
         isTransparentAddress: { _, _ in return false },
+        isTexAddress: { _, _ in return false },
         isZcashAddress: { _, _ in return false }
     )
 }

@@ -91,6 +91,40 @@ public enum L10n {
       public static let message = L10n.tr("Localizable", "balances.hintBox.message", fallback: "Zashi uses the latest network upgrade and does not support sending transparent (unshielded) ZEC. Use the Shield and Consolidate button to shield your funds, which will add to your available balance and make your ZEC spendable.")
     }
   }
+  public enum CurrencyConversion {
+    /// Review
+    public static let cardButton = L10n.tr("Localizable", "currencyConversion.cardButton", fallback: "Review")
+    /// New Feature
+    public static let cardTitle = L10n.tr("Localizable", "currencyConversion.cardTitle", fallback: "New Feature")
+    /// Enable
+    public static let enable = L10n.tr("Localizable", "currencyConversion.enable", fallback: "Enable")
+    /// Zashi’s currency conversion feature doesn’t compromise your IP address.
+    public static let ipDesc = L10n.tr("Localizable", "currencyConversion.ipDesc", fallback: "Zashi’s currency conversion feature doesn’t compromise your IP address.")
+    /// IP Address Protection
+    public static let ipTitle = L10n.tr("Localizable", "currencyConversion.ipTitle", fallback: "IP Address Protection")
+    /// Display your balance and payment amounts in USD. You can manage this feature in Advanced Settings.
+    public static let learnMoreDesc = L10n.tr("Localizable", "currencyConversion.learnMoreDesc", fallback: "Display your balance and payment amounts in USD. You can manage this feature in Advanced Settings.")
+    /// Disable
+    public static let learnMoreOptionDisable = L10n.tr("Localizable", "currencyConversion.learnMoreOptionDisable", fallback: "Disable")
+    /// Don’t show the currency conversion.
+    public static let learnMoreOptionDisableDesc = L10n.tr("Localizable", "currencyConversion.learnMoreOptionDisableDesc", fallback: "Don’t show the currency conversion.")
+    /// Show me the currency conversion.
+    public static let learnMoreOptionEnableDesc = L10n.tr("Localizable", "currencyConversion.learnMoreOptionEnableDesc", fallback: "Show me the currency conversion.")
+    /// Note for the super privacy-conscious: Because we pull the conversion rate from exchanges, an exchange might be able to see that the exchange rate was queried before a transaction occurred.
+    public static let note = L10n.tr("Localizable", "currencyConversion.note", fallback: "Note for the super privacy-conscious: Because we pull the conversion rate from exchanges, an exchange might be able to see that the exchange rate was queried before a transaction occurred.")
+    /// Rate Refresh
+    public static let refresh = L10n.tr("Localizable", "currencyConversion.refresh", fallback: "Rate Refresh")
+    /// The rate is refreshed automatically and can also be refreshed manually.
+    public static let refreshDesc = L10n.tr("Localizable", "currencyConversion.refreshDesc", fallback: "The rate is refreshed automatically and can also be refreshed manually.")
+    /// Save changes
+    public static let saveBtn = L10n.tr("Localizable", "currencyConversion.saveBtn", fallback: "Save changes")
+    /// Display your balance and payment amounts in USD. Zashi’s currency conversion feature protects your IP address at all times.
+    public static let settingsDesc = L10n.tr("Localizable", "currencyConversion.settingsDesc", fallback: "Display your balance and payment amounts in USD. Zashi’s currency conversion feature protects your IP address at all times.")
+    /// Skip for now
+    public static let skipBtn = L10n.tr("Localizable", "currencyConversion.skipBtn", fallback: "Skip for now")
+    /// Currency Conversion
+    public static let title = L10n.tr("Localizable", "currencyConversion.title", fallback: "Currency Conversion")
+  }
   public enum DeleteWallet {
     /// Delete Zashi
     public static let actionButtonTitle = L10n.tr("Localizable", "deleteWallet.actionButtonTitle", fallback: "Delete Zashi")
@@ -125,6 +159,8 @@ public enum L10n {
     public enum TransactionAmount {
       /// Amount:
       public static let amount = L10n.tr("Localizable", "field.transactionAmount.amount", fallback: "Amount:")
+      /// 10000.00
+      public static let currencyAmount = L10n.tr("Localizable", "field.transactionAmount.currencyAmount", fallback: "10000.00")
       /// %@ Amount
       public static func zecAmount(_ p1: Any) -> String {
         return L10n.tr("Localizable", "field.transactionAmount.zecAmount", String(describing: p1), fallback: "%@ Amount")
@@ -673,6 +709,14 @@ public enum L10n {
     public static let receive = L10n.tr("Localizable", "tabs.receive", fallback: "Receive")
     /// Send
     public static let send = L10n.tr("Localizable", "tabs.send", fallback: "Send")
+  }
+  public enum Tooltip {
+    public enum ExchangeRate {
+      /// We tried but we couldn’t refresh the exchange rate for you. Check your connection, relaunch the app, and we’ll try again.
+      public static let desc = L10n.tr("Localizable", "tooltip.exchangeRate.desc", fallback: "We tried but we couldn’t refresh the exchange rate for you. Check your connection, relaunch the app, and we’ll try again.")
+      /// Exchange rate unavailable
+      public static let title = L10n.tr("Localizable", "tooltip.exchangeRate.title", fallback: "Exchange rate unavailable")
+    }
   }
   public enum Transaction {
     /// Receive failed

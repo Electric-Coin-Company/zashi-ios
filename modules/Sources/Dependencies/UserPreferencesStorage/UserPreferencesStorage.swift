@@ -13,11 +13,112 @@ import ZcashLightClientKit
 /// according to https://developer.apple.com/documentation/foundation/userdefaults
 /// the UserDefaults class is thread-safe.
 public struct UserPreferencesStorage {
-    public struct ServerConfig: Equatable, Codable {
+    public enum Constants: String, CaseIterable {
+        case ups_exchangeRate
+        case ups_server
+    }
+    
+    public enum UserPreferencesStorageError: Error {
+        case exchangeRate
+        case serverConfig
+    }
+    
+    /// Default values for all preferences in case there is no value stored (counterparts to `Constants`)
+    private let defaultExchangeRate: Data
+    private let defaultServer: Data
+
+    private let userDefaults: UserDefaultsClient
+    
+    public init(
+        defaultExchangeRate: Data,
+        defaultServer: Data,
+        userDefaults: UserDefaultsClient
+    ) {
+        self.defaultExchangeRate = defaultExchangeRate
+        self.defaultServer = defaultServer
+        self.userDefaults = userDefaults
+    }
+    
+    /// From when the app is on and uninterrupted
+    public var server: ServerConfig? {
+        let contentData = getValue(forKey: Constants.ups_server.rawValue, default: defaultServer)
+
+        if let content = try? JSONDecoder().decode(ServerConfig.self, from: contentData) {
+            return content
+        }
+        
+        return nil
+    }
+    
+    public func setServer(_ server: ServerConfig) throws {
+        do {
+            let contentData = try JSONEncoder().encode(server)
+            setValue(contentData, forKey: Constants.ups_server.rawValue)
+        } catch {
+            throw UserPreferencesStorageError.serverConfig
+        }
+    }
+
+    /// Exchange rate API in the SDK uses TOR and eventually fetches the data from rate providers. This has to be opted in by a user, by default it's off.
+    public var exchangeRate: ExchangeRate? {
+        let contentData = getValue(forKey: Constants.ups_exchangeRate.rawValue, default: defaultExchangeRate)
+
+        if let content = try? JSONDecoder().decode(ExchangeRate.self, from: contentData) {
+            return content
+        }
+        
+        return nil
+    }
+    
+    public func setExchangeRate(_ newValue: ExchangeRate?) throws -> Void {
+        do {
+            let contentData = try JSONEncoder().encode(newValue)
+            setValue(contentData, forKey: Constants.ups_exchangeRate.rawValue)
+        } catch {
+            throw UserPreferencesStorageError.exchangeRate
+        }
+    }
+
+    /// Use carefully: Deletes all user preferences from the User Defaults
+    public func removeAll() {
+        for key in Constants.allCases {
+            userDefaults.remove(key.rawValue)
+        }
+    }
+}
+
+private extension UserPreferencesStorage {
+    func getValue<Value>(forKey: String, default defaultIfNil: Value) -> Value {
+        userDefaults.objectForKey(forKey) as? Value ?? defaultIfNil
+    }
+
+    func setValue<Value>(_ value: Value, forKey: String) {
+        userDefaults.setValue(value, forKey)
+    }
+}
+
+// MARK: Exchange Rate
+
+public extension UserPreferencesStorage {
+    struct ExchangeRate: Equatable, Codable {
+        public let manual: Bool
+        public let automatic: Bool
+
+        public init(manual: Bool, automatic: Bool) {
+            self.manual = manual
+            self.automatic = automatic
+        }
+    }
+}
+
+// MARK: Server Config
+
+public extension UserPreferencesStorage {
+    struct ServerConfig: Equatable, Codable {
         public let host: String
         public let port: Int
         public let isCustom: Bool
-
+        
         public init(host: String, port: Int, isCustom: Bool) {
             self.host = host
             self.port = port
@@ -80,63 +181,5 @@ public struct UserPreferencesStorage {
             
             return ServerConfig(host: endpoint.host, port: endpoint.port, isCustom: isCustom)
         }
-    }
-
-    public enum Constants: String, CaseIterable {
-        case ups_server
-    }
-    
-    public enum UserPreferencesStorageError: Error {
-        case serverConfigStore
-    }
-    
-    /// Default values for all preferences in case there is no value stored (counterparts to `Constants`)
-    private let defaultServer: Data
-    
-    private let userDefaults: UserDefaultsClient
-    
-    public init(
-        defaultServer: Data,
-        userDefaults: UserDefaultsClient
-    ) {
-        self.defaultServer = defaultServer
-        self.userDefaults = userDefaults
-    }
-    
-    /// From when the app is on and uninterrupted
-    public var server: ServerConfig? {
-        let contentData = getValue(forKey: Constants.ups_server.rawValue, default: defaultServer)
-
-        if let content = try? JSONDecoder().decode(ServerConfig.self, from: contentData) {
-            return content
-        }
-        
-        return nil
-    }
-    
-    public func setServer(_ server: ServerConfig) throws {
-        do {
-            let contentData = try JSONEncoder().encode(server)
-            setValue(contentData, forKey: Constants.ups_server.rawValue)
-        } catch {
-            throw UserPreferencesStorageError.serverConfigStore
-        }
-    }
-
-    /// Use carefully: Deletes all user preferences from the User Defaults
-    public func removeAll() {
-        for key in Constants.allCases {
-            userDefaults.remove(key.rawValue)
-        }
-    }
-}
-
-private extension UserPreferencesStorage {
-    func getValue<Value>(forKey: String, default defaultIfNil: Value) -> Value {
-        userDefaults.objectForKey(forKey) as? Value ?? defaultIfNil
-    }
-
-    func setValue<Value>(_ value: Value, forKey: String) {
-        userDefaults.setValue(value, forKey)
     }
 }

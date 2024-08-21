@@ -16,6 +16,7 @@ extension SDKSynchronizerClient: TestDependencyKey {
     public static let testValue = Self(
         stateStream: XCTUnimplemented("\(Self.self).stateStream", placeholder: Empty().eraseToAnyPublisher()),
         eventStream: XCTUnimplemented("\(Self.self).eventStream", placeholder: Empty().eraseToAnyPublisher()),
+        exchangeRateUSDStream: XCTUnimplemented("\(Self.self).exchangeRateUSDStream", placeholder: Empty().eraseToAnyPublisher()),
         latestState: XCTUnimplemented("\(Self.self).latestState", placeholder: .zero),
         prepareWith: XCTUnimplemented("\(Self.self).prepareWith"),
         start: XCTUnimplemented("\(Self.self).start"),
@@ -36,7 +37,8 @@ extension SDKSynchronizerClient: TestDependencyKey {
         proposeTransfer: XCTUnimplemented("\(Self.self).proposeTransfer", placeholder: .testOnlyFakeProposal(totalFee: 0)),
         createProposedTransactions: XCTUnimplemented("\(Self.self).createProposedTransactions", placeholder: .success),
         proposeShielding: XCTUnimplemented("\(Self.self).proposeShielding", placeholder: nil),
-        isSeedRelevantToAnyDerivedAccount: XCTUnimplemented("\(Self.self).isSeedRelevantToAnyDerivedAccount")
+        isSeedRelevantToAnyDerivedAccount: XCTUnimplemented("\(Self.self).isSeedRelevantToAnyDerivedAccount"),
+        refreshExchangeRateUSD: XCTUnimplemented("\(Self.self).refreshExchangeRateUSD")
     )
 }
 
@@ -44,6 +46,7 @@ extension SDKSynchronizerClient {
     public static let noOp = Self(
         stateStream: { Empty().eraseToAnyPublisher() },
         eventStream: { Empty().eraseToAnyPublisher() },
+        exchangeRateUSDStream: { Empty().eraseToAnyPublisher() },
         latestState: { .zero },
         prepareWith: { _, _, _ in },
         start: { _ in },
@@ -64,7 +67,8 @@ extension SDKSynchronizerClient {
         proposeTransfer: { _, _, _, _ in .testOnlyFakeProposal(totalFee: 0) },
         createProposedTransactions: { _, _ in .success },
         proposeShielding: { _, _, _, _ in nil },
-        isSeedRelevantToAnyDerivedAccount: { _ in false }
+        isSeedRelevantToAnyDerivedAccount: { _ in false },
+        refreshExchangeRateUSD: { }
     )
 
     public static let mock = Self.mocked()
@@ -74,6 +78,7 @@ extension SDKSynchronizerClient {
     public static func mocked(
         stateStream: @escaping () -> AnyPublisher<SynchronizerState, Never> = { Just(.zero).eraseToAnyPublisher() },
         eventStream: @escaping () -> AnyPublisher<SynchronizerEvent, Never> = { Empty().eraseToAnyPublisher() },
+        exchangeRateUSDStream: @escaping () -> AnyPublisher<FiatCurrencyResult?, Never> = { Empty().eraseToAnyPublisher() },
         latestState: @escaping () -> SynchronizerState = { .zero },
         latestScannedHeight: @escaping () -> BlockHeight = { 0 },
         prepareWith: @escaping ([UInt8], BlockHeight, WalletInitMode) throws -> Void = { _, _, _ in },
@@ -193,11 +198,13 @@ extension SDKSynchronizerClient {
         @escaping (Proposal, UnifiedSpendingKey) async throws -> CreateProposedTransactionsResult = { _, _ in .success },
         proposeShielding:
         @escaping (Int, Zatoshi, Memo, TransparentAddress?) async throws -> Proposal? = { _, _, _, _ in nil },
-        isSeedRelevantToAnyDerivedAccount: @escaping ([UInt8]) async throws -> Bool = { _ in false }
+        isSeedRelevantToAnyDerivedAccount: @escaping ([UInt8]) async throws -> Bool = { _ in false },
+        refreshExchangeRateUSD: @escaping () -> Void = { }
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
             stateStream: stateStream,
             eventStream: eventStream,
+            exchangeRateUSDStream: exchangeRateUSDStream,
             latestState: latestState,
             prepareWith: prepareWith,
             start: start,
@@ -218,7 +225,8 @@ extension SDKSynchronizerClient {
             proposeTransfer: proposeTransfer,
             createProposedTransactions: createProposedTransactions,
             proposeShielding: proposeShielding,
-            isSeedRelevantToAnyDerivedAccount: isSeedRelevantToAnyDerivedAccount
+            isSeedRelevantToAnyDerivedAccount: isSeedRelevantToAnyDerivedAccount,
+            refreshExchangeRateUSD: refreshExchangeRateUSD
         )
     }
 }

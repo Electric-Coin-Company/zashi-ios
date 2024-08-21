@@ -30,6 +30,7 @@ public struct SendConfirmation {
         public var address: String
         @Presents public var alert: AlertState<Action>?
         public var amount: Zatoshi
+        public var currencyAmount: RedactableString
         public var feeRequired: Zatoshi
         public var isSending: Bool = false
         public var message: String
@@ -40,6 +41,7 @@ public struct SendConfirmation {
         public init(
             address: String,
             amount: Zatoshi,
+            currencyAmount: RedactableString = .empty,
             feeRequired: Zatoshi,
             isSending: Bool = false,
             message: String,
@@ -49,6 +51,7 @@ public struct SendConfirmation {
         ) {
             self.address = address
             self.amount = amount
+            self.currencyAmount = currencyAmount
             self.feeRequired = feeRequired
             self.isSending = isSending
             self.message = message

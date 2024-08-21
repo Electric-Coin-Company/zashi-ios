@@ -33,6 +33,11 @@ public struct SendConfirmationView: View {
                                 .font(.custom(FontFamily.Inter.regular.name, size: 14))
                             
                             BalanceWithIconView(balance: store.amount)
+                            
+                            Text(store.currencyAmount.data)
+                                .font(.custom(FontFamily.Archivo.bold.name, size: 16))
+                                .foregroundColor(Asset.Colors.shade72.color)
+                                .padding(.top, 10)
                         }
                         Spacer()
                     }
@@ -56,13 +61,17 @@ public struct SendConfirmationView: View {
                         VStack(alignment: .leading, spacing: 6) {
                             Text(L10n.Send.feeSummary)
                                 .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                            ZatoshiRepresentationView(
-                                balance: store.feeRequired,
-                                fontName: FontFamily.Archivo.semiBold.name,
-                                mostSignificantFontSize: 16,
-                                leastSignificantFontSize: 8,
-                                format: .expanded
-                            )
+                            HStack(spacing: 4) {
+                                ZatoshiRepresentationView(
+                                    balance: store.feeRequired,
+                                    fontName: FontFamily.Archivo.semiBold.name,
+                                    mostSignificantFontSize: 16,
+                                    leastSignificantFontSize: 8,
+                                    format: .expanded
+                                )
+                                Text(tokenName)
+                                    .font(.custom(FontFamily.Archivo.semiBold.name, size: 16))
+                            }
                         }
                         Spacer()
                     }
@@ -140,12 +149,12 @@ public struct SendConfirmationView: View {
                         )
                     }
                 )
+                .alert($store.scope(state: \.alert, action: \.alert))
             }
             .zashiTitle {
                 Text(L10n.Send.confirmationTitle.uppercased())
                     .font(.custom(FontFamily.Archivo.bold.name, size: 14))
             }
-            .alert($store.scope(state: \.alert, action: \.alert))
         }
         .navigationBarBackButtonHidden()
         .padding(.vertical, 1)
