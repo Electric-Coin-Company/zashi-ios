@@ -6,6 +6,13 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.1.4 build 5 (2024-08-22)
+
+### Fixed
+- Dismissal of the keyboard via 'Done' button.
+- Currency Conversion title layout.
+- Migration of the database (adopted SDK 2.2.1).
+
 ## 1.1.4 build 3 (2024-08-22)
 
 ### Added

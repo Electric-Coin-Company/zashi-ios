@@ -191,11 +191,12 @@ public struct TabsView: View {
                                             Text(L10n.CurrencyConversion.title)
                                                 .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
                                                 .foregroundColor(Asset.Colors.CurrencyConversion.primary.color)
+                                                .lineLimit(1)
+                                                .minimumScaleFactor(0.5)
                                         }
-                                        .padding(.trailing, 16)
-                                        
-                                        Spacer()
-                                        
+
+                                        Spacer(minLength: 0)
+
                                         Button {
                                             viewStore.send(.currencyConversionCloseTapped)
                                         } label: {

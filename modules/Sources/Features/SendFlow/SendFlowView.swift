@@ -24,6 +24,8 @@ public struct SendFlowView: View {
     
     @FocusState private var isAddressFocused
     @FocusState private var isAmountFocused
+    @FocusState private var isCurrencyFocused
+    @FocusState private var isMemoFocused
 
     public init(store: SendFlowStore, tokenName: String) {
         self.store = store
@@ -104,6 +106,7 @@ public struct SendFlowView: View {
                                                     .padding(.leading, 10)
                                             )
                                             .keyboardType(.decimalPad)
+                                            .focused($isCurrencyFocused)
                                             .padding(.top, 26)
                                             .disabled(viewStore.currencyConversion == nil)
                                             .opacity(viewStore.currencyConversion == nil ? 0.5 : 1.0)
@@ -133,12 +136,15 @@ public struct SendFlowView: View {
                                         Button(L10n.General.done.uppercased()) {
                                             isAmountFocused = false
                                             isAddressFocused = false
+                                            isCurrencyFocused = false
+                                            isMemoFocused = false
                                         }
                                         .foregroundColor(Asset.Colors.primary.color)
                                         .font(.custom(FontFamily.Inter.regular.name, size: 14))
                                     }
                                 }
                                 .id(InputID.message)
+                                .focused($isMemoFocused)
                             
                             Button {
                                 viewStore.send(.reviewPressed)
