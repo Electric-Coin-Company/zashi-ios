@@ -210,7 +210,7 @@
     {
       "identity" : "swift-custom-dump",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/swift-custom-dump.git",
+      "location" : "https://github.com/pointfreeco/swift-custom-dump",
       "state" : {
         "revision" : "82645ec760917961cfa08c9c0c7104a57a0fa4b1",
         "version" : "1.3.3"
@@ -374,8 +374,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/zcash-hackworks/zcash-light-client-ffi",
       "state" : {
-        "revision" : "6521af353b63299d32d010195302dac50074f918",
-        "version" : "0.9.0"
+        "revision" : "8ed5b08d59ff5e7e11240be29b084dedbdf2f268",
+        "version" : "0.9.1"
       }
     },
     {
@@ -383,8 +383,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk",
       "state" : {
-        "revision" : "5d72de25cd5cbc62ad01accd78f94deb848c211f",
-        "version" : "2.2.0"
+        "revision" : "ff70d8924c241ce11cf0c458af96e1967f56e19d",
+        "version" : "2.2.1"
       }
     }
   ],
