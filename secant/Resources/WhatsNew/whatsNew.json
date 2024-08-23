@@ -1,6 +1,19 @@
 {
     "releases": [
         {
+            "version": "1.1.5",
+            "date": "08-22-2024",
+            "timestamp": 1724347857,
+            "sections": [
+                {
+                    "title": "Fixed:",
+                    "bulletpoints": [
+                        "We adopted the latest Zcash SDK version 2.2.1 with migration fixes."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "1.1.4",
             "date": "08-22-2024",
             "timestamp": 1724327999,
