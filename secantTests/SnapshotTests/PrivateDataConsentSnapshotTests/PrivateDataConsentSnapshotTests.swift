@@ -22,7 +22,7 @@ class PrivateDataConsentSnapshotTests: XCTestCase {
 
         addAttachments(PrivateDataConsentView(store: store))
         
-        // TODO: FIXME
+        // TODO: [#1349] fix the tests https://github.com/Electric-Coin-Company/zashi-ios/issues/1349
 //        ViewStore(store, observe: { $0 }).send(.binding(.set(\.$isAcknowledged, true)))
 //
 //        addAttachments(PrivateDataConsentView(store: store))

@@ -148,7 +148,7 @@ class TabsTests: XCTestCase {
 
         await store.receive(.send(.resetForm))
 
-        // TODO: FIXME
+        // TODO: [#1349] fix the tests https://github.com/Electric-Coin-Company/zashi-ios/issues/1349
 //        await store.receive(.send(.transactionAmountInput(.textField(.set("".redacted))))) { state in
 //            state.sendState.transactionAmountInputState.textFieldState.valid = true
 //        }

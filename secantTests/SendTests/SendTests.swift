@@ -36,7 +36,7 @@ class SendTests: XCTestCase {
         usNumberFormatter.locale = Locale(identifier: "en_US")
     }
 
-    // TODO: FIXME
+    // TODO: [#1349] fix the tests https://github.com/Electric-Coin-Company/zashi-ios/issues/1349
 //    @MainActor func testSendSucceeded() async throws {
 //        // the test needs to pass the exportWallet() so we simulate some in the keychain
 //        try storage.importWallet(bip39: "one two three", birthday: nil)
