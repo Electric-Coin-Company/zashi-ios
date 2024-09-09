@@ -48,10 +48,7 @@ public struct SettingsRow: View {
                             .padding(.trailing, 16)
                     } else {
                         icon
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(Design.Text.primary.color)
+                            .zImage(size: 20, style: Design.Text.primary)
                             .padding(10)
                             .background {
                                 Circle()
@@ -78,10 +75,7 @@ public struct SettingsRow: View {
                     
                     if isEnabled {
                         Asset.Assets.chevronRight.image
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(Design.Text.quaternary.color)
+                            .zImage(size: 20, style: Design.Text.quaternary)
                     }
                 }
                 .padding(.horizontal, 20)

@@ -54,17 +54,14 @@ public struct IntegrationsView: View {
                         if walletStatus == .restoring {
                             HStack(spacing: 0) {
                                 Asset.Assets.infoOutline.image
-                                    .renderingMode(.template)
-                                    .resizable()
-                                    .frame(width: 20, height: 20)
+                                    .zImage(size: 20, style: Design.Utility.WarningYellow._700)
                                     .padding(.trailing, 12)
 
                                 Text(L10n.Settings.restoreWarning)
-                                    .font(.custom(FontFamily.Inter.regular.name, size: 12))
                             }
-                            .foregroundColor(Design.Utility.WarningYellow._700.color)
+                            .zFont(size: 12, style: Design.Utility.WarningYellow._700)
                             .padding(.vertical, 12)
-                            .padding(.horizontal, 24)
+                            .screenHorizontalPadding()
                         }
                     }
                     .listRowInsets(EdgeInsets())
@@ -84,15 +81,11 @@ public struct IntegrationsView: View {
                 Spacer()
                 
                 Asset.Assets.zashiTitle.image
-                    .renderingMode(.template)
-                    .resizable()
-                    .frame(width: 73, height: 20)
-                    .foregroundColor(Asset.Colors.primary.color)
+                    .zImage(width: 73, height: 20, color: Asset.Colors.primary.color)
                     .padding(.bottom, 16)
                 
                 Text(L10n.Settings.version(store.appVersion, store.appBuild))
-                    .font(.custom(FontFamily.Archivo.regular.name, size: 16))
-                    .foregroundColor(Design.Text.tertiary.color)
+                    .zFont(size: 16, style: Design.Text.tertiary)
                     .padding(.bottom, 24)
             }
         }
@@ -100,10 +93,7 @@ public struct IntegrationsView: View {
         .listStyle(.plain)
         .navigationBarTitleDisplayMode(.inline)
         .zashiBack()
-        .zashiTitle {
-            Text(L10n.Settings.integrations.uppercased())
-                .font(.custom(FontFamily.Archivo.bold.name, size: 14))
-        }
+        .screenTitle(L10n.Settings.integrations)
     }
 }
 

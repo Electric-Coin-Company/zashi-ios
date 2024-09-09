@@ -12,12 +12,9 @@ public struct CollapseTransactionView: View {
     public var body: some View {
         HStack {
             Asset.Assets.upArrow.image
-                .renderingMode(.template)
-                .resizable()
-                .frame(width: 10, height: 7)
+                .zImage(width: 10, height: 7, style: Design.Surfaces.brandBg)
                 .scaleEffect(0.6)
-                .font(.custom(FontFamily.Inter.black.name, size: 10))
-                .foregroundColor(Design.Surfaces.brandBg.color)
+                .zFont(.black, size: 10, style: Design.Surfaces.brandBg)
                 .overlay {
                     Rectangle()
                         .stroke()

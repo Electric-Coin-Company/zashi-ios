@@ -157,3 +157,6 @@ fileprivate extension Font {
 {% else %}
 // No fonts found
 {% endif %}
+
+extension FontConvertible: @unchecked Sendable { }
+// swiftlint:enable all

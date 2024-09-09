@@ -28,9 +28,9 @@ public struct RecoveryPhraseDisplayView: View {
                     if let groups = store.phrase?.toGroups() {
                         VStack {
                             Text(L10n.RecoveryPhraseDisplay.titlePart1)
-                                .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
+                                .font(.custom(FontFamily.Inter.semiBold.name, size: 25))
                             Text(L10n.RecoveryPhraseDisplay.titlePart2)
-                                .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
+                                .font(.custom(FontFamily.Inter.semiBold.name, size: 25))
                         }
                         .padding(.bottom, 15)
                         

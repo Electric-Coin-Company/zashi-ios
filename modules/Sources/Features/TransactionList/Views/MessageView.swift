@@ -55,12 +55,8 @@ struct MessageView: View {
                                 .padding()
                         }
                         .messageShape(
-                            filled: !isSpending
-                            ? Asset.Colors.messageBcgReceived.color
-                            : nil,
-                            border: isSpending
-                            ? Asset.Colors.primary.color
-                            : nil,
+                            filled: nil,
+                            border: Asset.Colors.primary.color,
                             orientation: !isSpending
                             ? .right
                             : .left
@@ -73,9 +69,7 @@ struct MessageView: View {
                 .padding(.bottom, 7)
                 .padding(.vertical, 10)
             } else {
-                Text(L10n.TransactionList.noMessageIncluded)
-                    .font(.custom(FontFamily.Inter.regular.name, size: 13))
-                    .foregroundColor(Asset.Colors.primary.color)
+                EmptyView()
             }
         }
     }

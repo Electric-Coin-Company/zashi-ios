@@ -22,21 +22,15 @@ public struct WelcomeView: View {
         GeometryReader { proxy in
             WithPerceptionTracking {
                 Asset.Assets.zashiLogo.image
-                    .renderingMode(.template)
-                    .resizable()
-                    .frame(width: 249, height: 321)
+                    .zImage(width: 249, height: 321, color: .white)
                     .scaleEffect(0.35)
-                    .foregroundColor(.white)
                     .position(
                         x: proxy.frame(in: .local).midX,
                         y: proxy.frame(in: .local).midY * 0.5
                     )
                 
                 Asset.Assets.splashHi.image
-                    .renderingMode(.template)
-                    .resizable()
-                    .foregroundColor(.white)
-                    .frame(width: 246, height: 213)
+                    .zImage(width: 246, height: 213, color: .white)
                     .scaleEffect(0.35)
                     .position(
                         x: proxy.frame(in: .local).midX,

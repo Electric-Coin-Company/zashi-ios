@@ -28,17 +28,17 @@ public struct PrivateDataConsentView: View {
                         .padding(.top, walletStatus != .none ? 30 : 0)
                     
                     Text(L10n.PrivateDataConsent.title)
-                        .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
+                        .font(.custom(FontFamily.Inter.semiBold.name, size: 25))
                         .multilineTextAlignment(.center)
                         .padding(.bottom, 35)
                     
                     Text(L10n.PrivateDataConsent.message)
-                        .font(.custom(FontFamily.Archivo.regular.name, size: 14))
+                        .font(.custom(FontFamily.Inter.regular.name, size: 14))
                         .padding(.bottom, 10)
                         .lineSpacing(3)
 
                     Text(L10n.PrivateDataConsent.note)
-                        .font(.custom(FontFamily.Archivo.regular.name, size: 12))
+                        .font(.custom(FontFamily.Inter.regular.name, size: 12))
                         .lineSpacing(2)
 
                     HStack {

@@ -36,19 +36,16 @@ public struct ServerSetupView: View {
                                     progressView()
                                     
                                     Text(L10n.ServerSetup.performingTest)
-                                        .font(.custom(FontFamily.Inter.semiBold.name, size: 20))
-                                        .foregroundColor(Design.Text.primary.color)
+                                        .zFont(.semiBold, size: 20, style: Design.Text.primary)
 
                                     Text(L10n.ServerSetup.couldTakeTime)
-                                        .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                                        .foregroundColor(Design.Text.tertiary.color)
+                                        .zFont(size: 14, style: Design.Text.tertiary)
                                 }
                                 .frame(height: 136)
                             } else {
                                 HStack {
                                     Text(L10n.ServerSetup.fastestServers)
-                                        .font(.custom(FontFamily.Inter.semiBold.name, size: 18))
-                                        .foregroundColor(Design.Text.primary.color)
+                                        .zFont(.semiBold, size: 18, style: Design.Text.primary)
 
                                     Spacer()
                                     
@@ -57,24 +54,20 @@ public struct ServerSetupView: View {
                                     } label: {
                                         HStack(spacing: 4) {
                                             Text(L10n.ServerSetup.refresh)
-                                                .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
-                                                .foregroundColor(Design.Text.primary.color)
+                                                .zFont(.semiBold, size: 14, style: Design.Text.primary)
 
                                             if store.isEvaluatingServers {
                                                 progressView()
                                                     .scaleEffect(0.7)
                                             } else {
                                                 Asset.Assets.refreshCCW2.image
-                                                    .renderingMode(.template)
-                                                    .resizable()
-                                                    .frame(width: 20, height: 20)
-                                                    .foregroundColor(Design.Text.primary.color)
+                                                    .zImage(size: 20, style: Design.Text.primary)
                                             }
                                         }
                                         .padding(5)
                                     }
                                 }
-                                .padding(.horizontal, 24)
+                                .screenHorizontalPadding()
                                 .padding(.top, 20)
 
                                 listOfServers(store.topKServers)
@@ -86,12 +79,11 @@ public struct ServerSetupView: View {
                                     ? L10n.ServerSetup.allServers
                                     : L10n.ServerSetup.otherServers
                                 )
-                                .font(.custom(FontFamily.Inter.semiBold.name, size: 18))
-                                .foregroundColor(Design.Text.primary.color)
+                                .zFont(.semiBold, size: 18, style: Design.Text.primary)
 
                                 Spacer()
                             }
-                            .padding(.horizontal, 24)
+                            .screenHorizontalPadding()
                             .padding(.top, store.topKServers.isEmpty ? 0 : 15)
 
                             listOfServers(store.servers)
@@ -111,11 +103,10 @@ public struct ServerSetupView: View {
                                     if store.isUpdatingServer {
                                         HStack(spacing: 8) {
                                             Text(L10n.ServerSetup.save)
-                                                .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                                                .foregroundColor(
-                                                    store.selectedServer == nil
-                                                    ? Design.Btns.Bold.fgDisabled.color
-                                                    : Design.Btns.Bold.fg.color
+                                                .zFont(.semiBold, size: 16,
+                                                       style: store.selectedServer == nil
+                                                       ? Design.Btns.Primary.fgDisabled
+                                                       : Design.Btns.Primary.fg
                                                 )
 
                                             progressView(invertTint: true)
@@ -124,28 +115,27 @@ public struct ServerSetupView: View {
                                         .frame(maxWidth: .infinity)
                                         .background(
                                             store.selectedServer == nil
-                                            ? Design.Btns.Bold.bgDisabled.color
-                                            : Design.Btns.Bold.bg.color
+                                            ? Design.Btns.Primary.bgDisabled.color
+                                            : Design.Btns.Primary.bg.color
                                         )
                                         .cornerRadius(10)
-                                        .padding(.horizontal, 24)
+                                        .screenHorizontalPadding()
                                     } else {
                                         Text(L10n.ServerSetup.save)
-                                            .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
+                                            .zFont(.semiBold, size: 16, 
+                                                   style: store.selectedServer == nil
+                                                   ? Design.Btns.Primary.fgDisabled
+                                                   : Design.Btns.Primary.fg
+                                            )
                                             .frame(height: 48)
                                             .frame(maxWidth: .infinity)
-                                            .foregroundColor(
-                                                store.selectedServer == nil
-                                                ? Design.Btns.Bold.fgDisabled.color
-                                                : Design.Btns.Bold.fg.color
-                                            )
                                             .background(
                                                 store.selectedServer == nil
-                                                ? Design.Btns.Bold.bgDisabled.color
-                                                : Design.Btns.Bold.bg.color
+                                                ? Design.Btns.Primary.bgDisabled.color
+                                                : Design.Btns.Primary.bg.color
                                             )
                                             .cornerRadius(10)
-                                            .padding(.horizontal, 24)
+                                            .screenHorizontalPadding()
                                     }
                                 }
                                 .disabled(store.isUpdatingServer)
@@ -154,10 +144,7 @@ public struct ServerSetupView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .zashiBack(store.isUpdatingServer, customDismiss: customDismiss)
-                    .zashiTitle {
-                        Text(L10n.ServerSetup.title.uppercased())
-                            .font(.custom(FontFamily.Archivo.bold.name, size: 14))
-                    }
+                    .screenTitle(L10n.ServerSetup.title)
                     .onAppear { store.send(.onAppear) }
                     .onDisappear { store.send(.onDisappear) }
                     .alert($store.scope(state: \.alert, action: \.alert))
@@ -188,10 +175,7 @@ public struct ServerSetupView: View {
                                             .frame(width: 20, height: 20)
                                             .overlay {
                                                 Asset.Assets.check.image
-                                                    .renderingMode(.template)
-                                                    .resizable()
-                                                    .frame(width: 14, height: 14)
-                                                    .foregroundColor(Design.Surfaces.brandFg.color)
+                                                    .zImage(size: 14, style: Design.Surfaces.brandFg)
                                             }
                                     } else if server.value(for: store.network) == store.selectedServer {
                                         Circle()
@@ -199,10 +183,7 @@ public struct ServerSetupView: View {
                                             .frame(width: 20, height: 20)
                                             .overlay {
                                                 Asset.Assets.check.image
-                                                    .renderingMode(.template)
-                                                    .resizable()
-                                                    .frame(width: 14, height: 14)
-                                                    .foregroundColor(Design.Checkboxes.onFg.color)
+                                                    .zImage(size: 14, style: Design.Checkboxes.onFg)
                                             }
                                     } else {
                                         Circle()
@@ -221,8 +202,7 @@ public struct ServerSetupView: View {
                                     VStack(alignment: .leading) {
                                         HStack {
                                             Text(server.value(for: store.network))
-                                                .font(.custom(FontFamily.Inter.medium.name, size: 14))
-                                                .foregroundColor(Design.Text.primary.color)
+                                                .zFont(.medium, size: 14, style: Design.Text.primary)
                                                 .multilineTextAlignment(.leading)
 
                                             Spacer()
@@ -236,9 +216,8 @@ public struct ServerSetupView: View {
                                         
                                         WithPerceptionTracking {
                                             TextField(L10n.ServerSetup.placeholder, text: $store.customServer)
+                                                .zFont(.medium, size: 14, style: Design.Text.primary)
                                                 .frame(height: 40)
-                                                .font(.custom(FontFamily.Inter.medium.name, size: 14))
-                                                .foregroundColor(Design.Text.primary.color)
                                                 .autocapitalization(.none)
                                                 .multilineTextAlignment(.leading)
                                                 .padding(.leading, 10)
@@ -261,14 +240,12 @@ public struct ServerSetupView: View {
                                             ? store.customServer
                                             : server.value(for: store.network)
                                         )
-                                        .font(.custom(FontFamily.Inter.medium.name, size: 14))
-                                        .foregroundColor(Design.Text.primary.color)
+                                        .zFont(.medium, size: 14, style: Design.Text.primary)
                                         .multilineTextAlignment(.leading)
                                         
                                         if let desc = server.desc(for: store.network) {
                                             Text(desc)
-                                                .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                                                .foregroundColor(Design.Text.tertiary.color)
+                                                .zFont(size: 14, style: Design.Text.tertiary)
                                         }
                                     }
                                 }
@@ -320,16 +297,12 @@ public struct ServerSetupView: View {
 
     private func chevronDown() -> some View {
         Asset.Assets.chevronDown.image
-            .renderingMode(.template)
-            .resizable()
-            .frame(width: 20, height: 20)
-            .foregroundColor(Design.Text.primary.color)
+            .zImage(size: 20, style: Design.Text.primary)
     }
 
     private func activeBadge() -> some View {
         Text(L10n.ServerSetup.active)
-            .font(.custom(FontFamily.Inter.medium.name, size: 14))
-            .foregroundColor(Design.Utility.SuccessGreen._700.color)
+            .zFont(.medium, size: 14, style: Design.Utility.SuccessGreen._700)
             .frame(height: 20)
             .padding(.horizontal, 10)
             .padding(.vertical, 2)

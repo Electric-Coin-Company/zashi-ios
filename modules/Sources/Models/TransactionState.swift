@@ -43,6 +43,7 @@ public struct TransactionState: Equatable, Identifiable {
     public var isExpanded: Bool
     public var isIdExpanded: Bool
     public var isMarkedAsRead = false
+    public var isInAddressBook = false
 
     public var rawID: Data? = nil
     
@@ -264,10 +265,6 @@ extension TransactionState {
         memoCount = transaction.memoCount
         self.memos = memos
 
-        if transaction.isShielding {
-            print("aa")
-        }
-        
         // TODO: [#1313] SDK improvements so a client doesn't need to determing if the transaction isPending
         // https://github.com/zcash/ZcashLightClientKit/issues/1313
         // The only reason why `latestBlockHeight` is provided here is to determine pending

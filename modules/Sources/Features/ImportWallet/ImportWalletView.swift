@@ -33,7 +33,7 @@ public struct ImportWalletView: View {
                         ZashiIcon()
                         
                         Text(L10n.ImportWallet.description)
-                            .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
+                            .font(.custom(FontFamily.Inter.semiBold.name, size: 25))
                             .foregroundColor(Asset.Colors.primary.color)
                             .multilineTextAlignment(.center)
                             .padding(.bottom, 10)

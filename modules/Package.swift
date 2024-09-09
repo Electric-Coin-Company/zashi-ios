@@ -10,6 +10,8 @@ let package = Package(
     ],
     products: [
         .library(name: "About", targets: ["About"]),
+        .library(name: "AddressBook", targets: ["AddressBook"]),
+        .library(name: "AddressBookClient", targets: ["AddressBookClient"]),
         .library(name: "AddressDetails", targets: ["AddressDetails"]),
         .library(name: "AppVersion", targets: ["AppVersion"]),
         .library(name: "AudioServices", targets: ["AudioServices"]),
@@ -98,6 +100,31 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
             path: "Sources/Features/About"
+        ),
+        .target(
+            name: "AddressBook",
+            dependencies: [
+                "AddressBookClient",
+                "AudioServices",
+                "DerivationTool",
+                "Generated",
+                "Models",
+                "Scan",
+                "UIComponents",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ],
+            path: "Sources/Features/AddressBook"
+        ),
+        .target(
+            name: "AddressBookClient",
+            dependencies: [
+                "Models",
+                "UserDefaults",
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
+            ],
+            path: "Sources/Dependencies/AddressBookClient"
         ),
         .target(
             name: "AddressDetails",
@@ -287,6 +314,7 @@ let package = Package(
             name: "FlexaHandler",
             dependencies: [
                 "PartnerKeys",
+                "UserDefaults",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk"),
                 .product(name: "Flexa", package: "flexa-ios")
@@ -479,6 +507,7 @@ let package = Package(
         .target(
             name: "Root",
             dependencies: [
+                "AddressBook",
                 "AutolockHandler",
                 "CrashReporter",
                 "DatabaseFiles",
@@ -489,6 +518,7 @@ let package = Package(
                 "ExportLogs",
                 "FlexaHandler",
                 "Generated",
+                "LocalAuthenticationHandler",
                 "MnemonicClient",
                 "Models",
                 "NotEnoughFreeSpace",
@@ -579,6 +609,7 @@ let package = Package(
         .target(
             name: "SendConfirmation",
             dependencies: [
+                "AddressBookClient",
                 "AudioServices",
                 "BalanceFormatter",
                 "DerivationTool",
@@ -603,6 +634,7 @@ let package = Package(
         .target(
             name: "SendFlow",
             dependencies: [
+                "AddressBookClient",
                 "AudioServices",
                 "BalanceFormatter",
                 "DerivationTool",
@@ -637,6 +669,7 @@ let package = Package(
             name: "Settings",
             dependencies: [
                 "About",
+                "AddressBook",
                 "AppVersion",
                 "CurrencyConversionSetup",
                 "DeleteWallet",
@@ -707,6 +740,7 @@ let package = Package(
         .target(
             name: "TransactionList",
             dependencies: [
+                "AddressBookClient",
                 "Generated",
                 "Models",
                 "Pasteboard",

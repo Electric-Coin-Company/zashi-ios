@@ -107,7 +107,7 @@ extension BalancesView {
                 
                 ZatoshiRepresentationView(
                     balance: store.shieldedBalance,
-                    fontName: FontFamily.Archivo.semiBold.name,
+                    fontName: FontFamily.Inter.semiBold.name,
                     mostSignificantFontSize: 16,
                     leastSignificantFontSize: 8,
                     format: .expanded,
@@ -115,11 +115,8 @@ extension BalancesView {
                 )
                 
                 Asset.Assets.shield.image
-                    .renderingMode(.template)
-                    .resizable()
-                    .frame(width: 11, height: 14)
+                    .zImage(width: 11, height: 14, color: Asset.Colors.primary.color)
                     .padding(.leading, 10)
-                    .foregroundColor(Asset.Colors.primary.color)
             }
             
             HStack(spacing: 0) {
@@ -130,7 +127,7 @@ extension BalancesView {
                 
                 ZatoshiRepresentationView(
                     balance: store.changePending,
-                    fontName: FontFamily.Archivo.semiBold.name,
+                    fontName: FontFamily.Inter.semiBold.name,
                     mostSignificantFontSize: 16,
                     leastSignificantFontSize: 8,
                     format: .expanded,
@@ -153,7 +150,7 @@ extension BalancesView {
                 
                 ZatoshiRepresentationView(
                     balance: store.pendingTransactions,
-                    fontName: FontFamily.Archivo.semiBold.name,
+                    fontName: FontFamily.Inter.semiBold.name,
                     mostSignificantFontSize: 16,
                     leastSignificantFontSize: 8,
                     format: .expanded,
@@ -204,7 +201,7 @@ extension BalancesView {
                 
                 ZatoshiRepresentationView(
                     balance: store.transparentBalance,
-                    fontName: FontFamily.Archivo.semiBold.name,
+                    fontName: FontFamily.Inter.semiBold.name,
                     mostSignificantFontSize: 16,
                     leastSignificantFontSize: 8,
                     format: .expanded,

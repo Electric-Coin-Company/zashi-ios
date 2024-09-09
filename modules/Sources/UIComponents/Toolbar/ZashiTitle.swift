@@ -9,7 +9,6 @@ import SwiftUI
 import Generated
 
 struct ZashiTitleModifier<ZashiTitleContent>: ViewModifier where ZashiTitleContent: View {
-    @Environment(\.dismiss) private var dismiss
     @ViewBuilder let zashiTitleContent: ZashiTitleContent
     
     func body(content: Content) -> some View {
@@ -22,8 +21,27 @@ struct ZashiTitleModifier<ZashiTitleContent>: ViewModifier where ZashiTitleConte
     }
 }
 
+struct ScreenTitleModifier: ViewModifier {
+    let text: String
+    
+    func body(content: Content) -> some View {
+        content
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(text.uppercased())
+                        .zFont(.semiBold, size: 16, style: Design.Text.primary)
+                        .fixedSize()
+                }
+            }
+    }
+}
+
 extension View {
     public func zashiTitle(_ content: () -> some View) -> some View {
         modifier(ZashiTitleModifier(zashiTitleContent: content))
+    }
+    
+    public func screenTitle(_ text: String) -> some View {
+        modifier(ScreenTitleModifier(text: text))
     }
 }

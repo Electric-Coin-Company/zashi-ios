@@ -22,20 +22,23 @@ import Generated
 import BalanceFormatter
 import WalletBalances
 import LocalAuthenticationHandler
+import AddressBookClient
 
 @Reducer
 public struct SendConfirmation {
     @ObservableState
     public struct State: Equatable {
         public var address: String
+        @Shared(.inMemory(.addressBookRecords)) public var addressBookRecords: IdentifiedArrayOf<ABRecord> = []
+        public var alias: String?
         @Presents public var alert: AlertState<Action>?
         public var amount: Zatoshi
         public var currencyAmount: RedactableString
         public var feeRequired: Zatoshi
-        public var isSending: Bool = false
+        public var isSending = false
         public var message: String
         public var partialProposalErrorState: PartialProposalError.State
-        public var partialProposalErrorViewBinding: Bool = false
+        public var partialProposalErrorViewBinding = false
         public var proposal: Proposal?
 
         public init(
@@ -65,6 +68,7 @@ public struct SendConfirmation {
         case alert(PresentationAction<Action>)
         case binding(BindingAction<SendConfirmation.State>)
         case goBackPressed
+        case onAppear
         case partialProposalError(PartialProposalError.Action)
         case partialProposalErrorDismiss
         case sendDone
@@ -73,6 +77,7 @@ public struct SendConfirmation {
         case sendPressed
     }
 
+    @Dependency(\.addressBook) var addressBook
     @Dependency(\.localAuthentication) var localAuthentication
     @Dependency(\.derivationTool) var derivationTool
     @Dependency(\.mnemonic) var mnemonic
@@ -91,6 +96,16 @@ public struct SendConfirmation {
 
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                state.addressBookRecords = addressBook.all()
+                for record in state.addressBookRecords {
+                    if record.id == state.address {
+                        state.alias = record.name
+                        break
+                    }
+                }
+                return .none
+                
             case .alert(.presented(let action)):
                 return .send(action)
 

@@ -8,8 +8,9 @@
 import Foundation
 
 public extension String {
-    static var exchangeRate = "sharedStateKey_exchangeRate"
-    static var sensitiveContent = "udHideBalances"
-    static var walletStatus = "sharedStateKey_walletStatus"
-    static var flexaAccountId = "sharedStateKey_flexaAccountId"
+    static let exchangeRate = "sharedStateKey_exchangeRate"
+    static let sensitiveContent = "udHideBalances"
+    static let walletStatus = "sharedStateKey_walletStatus"
+    static let flexaAccountId = "sharedStateKey_flexaAccountId"
+    static let addressBookRecords = "sharedStateKey_addressBookRecords"
 }

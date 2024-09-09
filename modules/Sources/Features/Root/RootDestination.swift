@@ -88,7 +88,7 @@ extension Root {
 
             case .destination(.deeplinkHome):
                 state.destinationState.destination = .tabs
-                //state.tabsState.destination = nil
+                state.tabsState.destination = nil
                 return .none
 
             case let .destination(.deeplinkSend(amount, address, memo)):
@@ -96,7 +96,7 @@ extension Root {
                 state.tabsState.selectedTab = .send
                 state.tabsState.sendState.amount = amount
                 state.tabsState.sendState.address = address.redacted
-                state.tabsState.sendState.memoState.text = memo.redacted
+                state.tabsState.sendState.memoState.text = memo
                 return .none
 
             case let .destination(.deeplinkFailed(url, error)):
@@ -174,7 +174,7 @@ extension Root {
                 
             case .tabs, .initialization, .onboarding, .sandbox, .updateStateAfterConfigUpdate, .alert, .phraseDisplay, .synchronizerStateChanged,
                     .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .exportLogs, .confirmationDialog,
-                    .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated, .batteryStateChanged, .cancelAllRunningEffects:
+                    .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated, .batteryStateChanged, .cancelAllRunningEffects, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted:
                 return .none
             }
         }

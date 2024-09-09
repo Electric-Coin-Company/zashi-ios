@@ -23,11 +23,8 @@ public struct PlainOnboardingView: View {
         WithPerceptionTracking {
             VStack {
                 Asset.Assets.welcomeScreenLogo.image
-                    .renderingMode(.template)
-                    .resizable()
-                    .frame(width: 169, height: 160)
+                    .zImage(width: 169, height: 160, color: Asset.Colors.primary.color)
                     .padding(.top, 10)
-                    .foregroundColor(Asset.Colors.primary.color)
 
                 Text(L10n.PlainOnboarding.title)
                     .font(.custom(FontFamily.Inter.regular.name, size: 22))

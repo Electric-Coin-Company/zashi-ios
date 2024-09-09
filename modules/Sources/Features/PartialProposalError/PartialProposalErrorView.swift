@@ -78,10 +78,7 @@ public struct PartialProposalErrorView: View {
         .navigationBarTitleDisplayMode(.inline)
         .padding(.vertical, 1)
         .applyScreenBackground(withPattern: true)
-        .zashiTitle {
-            Text(L10n.ProposalPartial.title.uppercased())
-                .font(.custom(FontFamily.Archivo.bold.name, size: 14))
-        }
+        .screenTitle(L10n.ProposalPartial.title)
     }
 }
 

@@ -48,12 +48,23 @@ public enum Asset {
     public static let gridTile = ImageAsset(name: "gridTile")
     public enum Icons {
       public static let currencyDollar = ImageAsset(name: "currencyDollar")
+      public static let currencyZec = ImageAsset(name: "currencyZec")
       public static let downloadCloud = ImageAsset(name: "downloadCloud")
+      public static let flashOff = ImageAsset(name: "flashOff")
+      public static let flashOn = ImageAsset(name: "flashOn")
+      public static let imageLibrary = ImageAsset(name: "imageLibrary")
       public static let integrations = ImageAsset(name: "integrations")
       public static let key = ImageAsset(name: "key")
       public static let messageSmile = ImageAsset(name: "messageSmile")
+      public static let pencil = ImageAsset(name: "pencil")
+      public static let plus = ImageAsset(name: "plus")
+      public static let qr = ImageAsset(name: "qr")
+      public static let save = ImageAsset(name: "save")
       public static let server = ImageAsset(name: "server")
       public static let settings = ImageAsset(name: "settings")
+      public static let switchHorizontal = ImageAsset(name: "switchHorizontal")
+      public static let user = ImageAsset(name: "user")
+      public static let userPlus = ImageAsset(name: "userPlus")
     }
     public static let infoCircle = ImageAsset(name: "infoCircle")
     public static let infoOutline = ImageAsset(name: "infoOutline")
@@ -61,14 +72,14 @@ public enum Asset {
     public static let refreshCCW = ImageAsset(name: "refreshCCW")
     public static let refreshCCW2 = ImageAsset(name: "refreshCCW2")
     public static let restoreInfo = ImageAsset(name: "restoreInfo")
+    public static let scanMark = ImageAsset(name: "scanMark")
+    public static let send = ImageAsset(name: "send")
     public static let share = ImageAsset(name: "share")
     public static let shield = ImageAsset(name: "shield")
     public static let shieldTick = ImageAsset(name: "shieldTick")
     public static let shieldedFunds = ImageAsset(name: "shieldedFunds")
     public static let surroundedShield = ImageAsset(name: "surroundedShield")
     public static let tooltip = ImageAsset(name: "tooltip")
-    public static let torchOff = ImageAsset(name: "torchOff")
-    public static let torchOn = ImageAsset(name: "torchOn")
     public static let upArrow = ImageAsset(name: "upArrow")
     public static let zashiTitle = ImageAsset(name: "zashiTitle")
   }
@@ -341,3 +352,7 @@ private final class BundleToken {
 }
 
 // swiftlint:enable convenience_type
+
+extension ColorAsset: @unchecked Sendable { }
+extension ImageAsset: @unchecked Sendable { }
+// swiftlint:enable all

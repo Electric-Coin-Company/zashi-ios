@@ -32,16 +32,23 @@ struct ZashiBackV2Modifier: ViewModifier {
                                 dismiss()
                             }
                         } label: {
-                            Asset.Assets.buttonCloseX.image
-                                .renderingMode(.template)
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .foregroundColor(Design.Btns.Tertiary.fg.color)
-                                .padding(8)
-                                .background {
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .fill(Design.Btns.Tertiary.bg.color)
-                                }
+                            if invertedColors {
+                                Asset.Assets.buttonCloseX.image
+                                    .zImage(size: 24, color: Asset.Colors.ZDesign.shark100.color)
+                                    .padding(8)
+                                    .background {
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Asset.Colors.ZDesign.shark900.color)
+                                    }
+                            } else {
+                                Asset.Assets.buttonCloseX.image
+                                    .zImage(size: 24, style: Design.Btns.Tertiary.fg)
+                                    .padding(8)
+                                    .background {
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Design.Btns.Tertiary.bg.color)
+                                    }
+                            }
                         }
                         .disabled(disabled)
                     }

@@ -101,23 +101,19 @@ public struct AdvancedSettingsView: View {
 
                 HStack(spacing: 0) {
                     Asset.Assets.infoOutline.image
-                        .renderingMode(.template)
-                        .resizable()
-                        .frame(width: 20, height: 20)
+                        .zImage(size: 20, style: Design.Text.tertiary)
                         .padding(.trailing, 12)
 
                     Text(L10n.Settings.deleteZashiWarning)
-                        .font(.custom(FontFamily.Inter.regular.name, size: 12))
                 }
-                .foregroundColor(Design.Text.tertiary.color)
+                .zFont(size: 12, style: Design.Text.tertiary)
                 .padding(.bottom, 20)
 
                 Button {
                     store.send(.protectedAccessRequest(.deleteWallet))
                 } label: {
                     Text(L10n.Settings.deleteZashi)
-                        .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                        .foregroundColor(Design.Btns.Destructive1.fg.color)
+                        .zFont(.semiBold, size: 16, style: Design.Btns.Destructive1.fg)
                         .frame(height: 24)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
@@ -130,7 +126,7 @@ public struct AdvancedSettingsView: View {
                                 }
                         }
                 }
-                .padding(.horizontal, 24)
+                .screenHorizontalPadding()
                 .padding(.bottom, 24)
             }
         }
@@ -138,10 +134,7 @@ public struct AdvancedSettingsView: View {
         .listStyle(.plain)
         .navigationBarTitleDisplayMode(.inline)
         .zashiBack()
-        .zashiTitle {
-            Text(L10n.Settings.advanced.uppercased())
-                .font(.custom(FontFamily.Archivo.bold.name, size: 14))
-        }
+        .screenTitle(L10n.Settings.advanced)
     }
 }
 

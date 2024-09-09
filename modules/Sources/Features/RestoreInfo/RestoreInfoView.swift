@@ -21,17 +21,14 @@ public struct RestoreInfoView: View {
         WithPerceptionTracking {
             ScrollView {
                 Text(L10n.RestoreInfo.title)
-                    .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
+                    .font(.custom(FontFamily.Inter.semiBold.name, size: 25))
                     .padding(.vertical, 30)
                 
                 Asset.Assets.restoreInfo.image
-                    .renderingMode(.template)
-                    .resizable()
-                    .frame(width: 90, height: 172)
-                    .foregroundColor(Asset.Colors.primary.color)
+                    .zImage(width: 90, height: 172, color: Asset.Colors.primary.color)
 
                 Text(L10n.RestoreInfo.subTitle)
-                    .font(.custom(FontFamily.Archivo.semiBold.name, size: 16))
+                    .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
                     .multilineTextAlignment(.center)
                     .padding(.vertical, 30)
                     .padding(.horizontal, 50)

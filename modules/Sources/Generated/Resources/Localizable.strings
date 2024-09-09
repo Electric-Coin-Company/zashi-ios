@@ -117,25 +117,31 @@
 // MARK: - Send
 "send.sending" = "Sending";
 "send.message" = "Message";
-"send.memoPlaceholder" = "Write private message here...";
+"send.memoPlaceholder" = "Write encrypted message here...";
 "send.error.insufficientFunds" = "Insufficient funds";
 "send.error.invalidAmount" = "Invalid amount";
 "send.error.invalidAddress" = "Invalid address";
-"send.amountSummary" = "Amount:";
-"send.toSummary" = "To:";
-"send.feeSummary" = "Fee:";
+"send.info.memo" = "Transparent transactions can’t have memos";
+"send.addressNotInBook" = "Address not in Address Book";
+"send.amountSummary" = "Total Amount";
+"send.amount" = "Amount";
+"send.toSummary" = "Sending to";
+"send.to" = "Send to";
+"send.feeSummary" = "Fee";
 "send.confirmationTitle" = "Confirmation";
-"send.goBack" = "Go back";
+"send.goBack" = "Cancel";
 "send.review" = "Review";
 "send.alert.failure.title" = "Failed to send funds";
 "send.alert.failure.message" = "Error: %@";
+"send.addressPlaceholder" = "Zcash Address";
+"send.currencyPlaceholder" = "USD";
 
 // MARK: - Delete Wallet
 "deleteWallet.title" = "Delete Zashi";
 "deleteWallet.message1" = "Please don't delete this app unless you're sure you understand the effects.";
 "deleteWallet.message2" = "Deleting the Zashi app will delete the database and cached data. Any funds you have in this wallet will be lost and can only be recovered by using your Zashi secret recovery phrase in Zashi or another Zcash wallet.";
 "deleteWallet.iUnderstand" = "I understand";
-"deleteWallet.actionButtonTitle" = "Delete Zashi";
+"deleteWallet.actionButtonTitle" = "Delete";
 
 // MARK: - Not Enogh Free Space
 "notEnoughFreeSpace.title" = "Not enough free space";
@@ -154,6 +160,7 @@ Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps you
 
 // MARK: - Settings
 "settings.title" = "Settings";
+"settings.addressBook" = "Address Book";
 "settings.advanced" = "Advanced Settings";
 "settings.about" = "About Us";
 "settings.feedback" = "Send Us Feedback";
@@ -204,6 +211,8 @@ Sharing this private data is irrevocable — once you have shared this private d
 "general.success" = "Success";
 "general.unknown" = "Unknown";
 "general.loading" = "Loading";
+"general.delete" = "Delete";
+"general.confirm" = "Confirm";
 "general.done" = "Done";
 "general.save" = "Save";
 "balance.availableTitle" = "Available Balance:";
@@ -219,8 +228,8 @@ Sharing this private data is irrevocable — once you have shared this private d
 "general.alert.ignore" = "Ignore";
 
 // MARK: - Wallet Status
-"walletStatus.restoringWallet" = "[RESTORING YOUR WALLET…]";
-"walletStatus.disconnected" = "[DISCONNECTED…]";
+"walletStatus.restoringWallet" = "RESTORING YOUR WALLET…";
+"walletStatus.disconnected" = "DISCONNECTED…";
 
 // MARK: - Transaction List
 "transactionList.collapse" = "Collapse transaction";
@@ -241,6 +250,7 @@ Sharing this private data is irrevocable — once you have shared this private d
 "transaction.shieldingFunds" = "Shielding Funds";
 "transaction.shieldedFunds" = "Shielded Funds";
 "transaction.failedShieldedFunds" = "Shielded Funds Failed";
+"transaction.saveAddress" = "Save address";
 
 // MARK: - Local authentication
 "localAuthentication.reason" = "The Following content requires authentication.";
@@ -305,14 +315,25 @@ Sharing this private data is irrevocable — once you have shared this private d
 "exportLogs.alert.failed.title" = "Error when exporting logs";
 "exportLogs.alert.failed.message" = "Error: %@";
 
-// MARK: - Text Fields
-"field.transactionAddress.validZcashAddress" = "Zcash Address";
-"field.transactionAddress.to" = "To:";
-
-"field.transactionAmount.zecAmount" = "%@ Amount";
-"field.transactionAmount.amount" = "Amount:";
-
-"field.transactionAmount.currencyAmount" = "10000.00";
+// MARK: - Address Book
+"addressBook.title" = "Address Book";
+"addressBook.newContact.title" = "Add New Address";
+"addressBook.newContact.address" = "Wallet Address";
+"addressBook.newContact.addressPlaceholder" = "Enter wallet address...";
+"addressBook.newContact.name" = "Contact Name";
+"addressBook.newContact.namePlaceholder" = "Enter contact name...";
+"addressBook.error.nameExists" = "This contact name is already in use. Please choose a different name.";
+"addressBook.error.nameLength" = "This contact name exceeds the 32-character limit. Please shorten the name.";
+"addressBook.error.addressExists" = "This wallet address is already in your Address Book.";
+"addressBook.error.invalidAddress" = "Invalid address.";
+"addressBook.alert.title" = "Are you sure?";
+"addressBook.alert.message" = "You are about to delete this contact. This cannot be undone.";
+"addressBook.empty" = "Your address book is empty";
+"addressBook.selectRecipient" = "Select recipient";
+"addressBook.scanAddress" = "Scan QR code";
+"addressBook.manualEntry" = "Manual Entry";
+"addressBook.addNewContact" = "Add New Contact";
+"addressBook.savedAddress" = "Saved Address";
 
 // MARK: Currency Conversion
 "currencyConversion.title" = "Currency Conversion";

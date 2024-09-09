@@ -36,30 +36,32 @@ public struct WalletStatusPanelModifier: ViewModifier {
     @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
 
     public func body(content: Content) -> some View {
-        ZStack(alignment: .top) {
-            content
-                .zIndex(0)
-            
-            if walletStatus != .none && !hidden {
-                if background == .pattern {
-                    WalletStatusPanel(text: walletStatus.text())
-                        .frame(maxWidth: .infinity)
-                        .padding(.bottom, 6)
-                        .background(
-                            Asset.Assets.gridTile.image
-                                .resizable(resizingMode: .tile)
-                        )
-                        .zIndex(1)
-                } else {
-                    WalletStatusPanel(text: walletStatus.text())
-                        .frame(maxWidth: .infinity)
-                        .padding(.bottom, 6)
-                        .background(
-                            background == .transparent
-                            ? .clear
-                            : Asset.Colors.background.color
-                        )
-                        .zIndex(1)
+        WithPerceptionTracking {
+            ZStack(alignment: .top) {
+                content
+                    .zIndex(0)
+                
+                if walletStatus != .none && !hidden {
+                    if background == .pattern {
+                        WalletStatusPanel(text: walletStatus.text())
+                            .frame(maxWidth: .infinity)
+                            .padding(.bottom, 6)
+                            .background(
+                                Asset.Assets.gridTile.image
+                                    .resizable(resizingMode: .tile)
+                            )
+                            .zIndex(1)
+                    } else {
+                        WalletStatusPanel(text: walletStatus.text())
+                            .frame(maxWidth: .infinity)
+                            .padding(.bottom, 6)
+                            .background(
+                                background == .transparent
+                                ? .clear
+                                : Asset.Colors.background.color
+                            )
+                            .zIndex(1)
+                    }
                 }
             }
         }
@@ -81,9 +83,8 @@ private struct WalletStatusPanel: View {
     let text: String
     
     var body: some View {
-        Text(text)
-            .font(.custom(FontFamily.Archivo.semiBold.name, size: 12))
-            .foregroundStyle(Asset.Colors.restoreUI.color)
+        Text(text.uppercased())
+            .zFont(size: 12, style: Design.Text.tertiary)
     }
 }
 
@@ -98,8 +99,6 @@ private struct WalletStatusPanel: View {
         .navigationBarItems(
             trailing: Text("M")
         )
-        .zashiTitle {
-            Text("Title")
-        }
+        .screenTitle("Title")
     }
 }

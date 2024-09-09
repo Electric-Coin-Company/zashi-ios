@@ -24,7 +24,7 @@ public struct ImportBirthdayView: View {
                 ZashiIcon()
 
                 Text(L10n.ImportWallet.Birthday.title)
-                    .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
+                    .font(.custom(FontFamily.Inter.semiBold.name, size: 25))
                     .foregroundColor(Asset.Colors.primary.color)
                     .minimumScaleFactor(0.3)
                     .multilineTextAlignment(.center)
@@ -33,7 +33,7 @@ public struct ImportBirthdayView: View {
 
                 TextField("", text: store.bindingForRedactableBirthday(store.birthdayHeight))
                     .frame(height: 40)
-                    .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
+                    .font(.custom(FontFamily.Inter.semiBold.name, size: 25))
                     .focused($isFocused)
                     .keyboardType(.numberPad)
                     .autocapitalization(.none)

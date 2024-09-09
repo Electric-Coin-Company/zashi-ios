@@ -22,8 +22,6 @@ public extension View {
 }
 
 public struct MessageEditorView: View {
-    @Environment(\.isEnabled) private var isEnabled
-
     @Perception.Bindable var store: StoreOf<MessageEditor>
 
     @FocusState public var isFocused: Bool
@@ -35,71 +33,58 @@ public struct MessageEditorView: View {
     
     public var body: some View {
         WithPerceptionTracking {
-            VStack {
-                HStack {
-                    Asset.Assets.fly.image
-                        .renderingMode(.template)
-                        .resizable()
-                        .frame(width: 20, height: 16)
-                        .foregroundColor(Asset.Colors.primary.color)
-                    
-                    Text(L10n.Send.message)
-                        .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                    
-                    Spacer()
-                }
-                .padding(.bottom, 2)
-
-                if !isEnabled {
-                    Asset.Colors.messageBcgDisabled.color
-                        .messageShape(
-                            filled: Asset.Colors.messageBcgDisabled.color,
-                            border: Asset.Colors.messageBcgBorder.color
-                        )
-                } else {
-                    TextEditor(text: store.bindingForRedactableInput(store.text))
-                        .focused($isFocused)
-                        .padding(2)
-                        .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                        .messageShape(filled: nil)
-                        .colorBackground(Asset.Colors.background.color)
-                        .overlay {
-                            if store.text.data.isEmpty {
-                                HStack {
-                                    VStack {
-                                        Text(L10n.Send.memoPlaceholder)
-                                            .font(.custom(FontFamily.Inter.regular.name, size: 13))
-                                            .foregroundColor(Asset.Colors.shade72.color)
-                                            .onTapGesture {
-                                                isFocused = true
-                                            }
-                                        
-                                        Spacer()
-                                    }
-                                    .padding(.top, 10)
+            VStack(alignment: .leading, spacing: 0) {
+                Text(L10n.Send.message)
+                    .font(.custom(FontFamily.Inter.medium.name, size: 14))
+                    .foregroundColor(Design.Inputs.Filled.label.color)
+                    .padding(.bottom, 6)
+                
+                TextEditor(text: $store.text)
+                    .focused($isFocused)
+                    .font(.custom(FontFamily.Inter.regular.name, size: 16))
+                    .padding(.horizontal, 10)
+                    .padding(.top, 2)
+                    .padding(.bottom, 10)
+                    .colorBackground(Design.Inputs.Default.bg.color)
+                    .background(Design.Inputs.Default.bg.color)
+                    .cornerRadius(10)
+                    .overlay {
+                        if store.text.isEmpty {
+                            HStack {
+                                VStack {
+                                    Text(L10n.Send.memoPlaceholder)
+                                        .font(.custom(FontFamily.Inter.regular.name, size: 16))
+                                        .foregroundColor(Design.Inputs.Default.text.color)
+                                        .onTapGesture {
+                                            isFocused = true
+                                        }
                                     
                                     Spacer()
                                 }
-                                .padding(.leading, 10)
-                            } else {
-                                EmptyView()
+                                .padding(.top, 10)
+                                
+                                Spacer()
                             }
+                            .padding(.leading, 14)
+                        } else {
+                            EmptyView()
                         }
-                }
+                    }
                 
                 if store.isCharLimited {
                     HStack {
                         Spacer()
                         
-                        Text(isEnabled ? store.charLimitText : "")
-                            .font(.custom(FontFamily.Inter.bold.name, size: 13))
+                        Text(store.charLimitText)
+                            .font(.custom(FontFamily.Inter.regular.name, size: 14))
                             .foregroundColor(
                                 store.isValid
-                                ? Asset.Colors.shade72.color
-                                : Design.Utility.ErrorRed._600.color
+                                ? Design.Inputs.Default.hint.color
+                                : Design.Inputs.Filled.required.color
                             )
                     }
                     .frame(height: 20)
+                    .padding(.top, 4)
                 }
             }
         }
@@ -153,17 +138,6 @@ extension StoreOf<MessageEditor> {
 extension MessageEditor.State {
     public static let initial = MessageEditor.State(
         charLimit: 0,
-        text: .empty
+        text: ""
     )
-}
-
-// MARK: - Bindings
-
-extension StoreOf<MessageEditor> {
-    func bindingForRedactableInput(_ input: RedactableString) -> Binding<String> {
-        Binding<String>(
-            get: { input.data },
-            set: { self.send(.inputChanged($0.redacted)) }
-        )
-    }
 }

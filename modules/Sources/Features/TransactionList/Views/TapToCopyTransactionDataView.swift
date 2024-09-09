@@ -26,14 +26,10 @@ struct TapToCopyTransactionDataView: View {
             } label: {
                 HStack {
                     Asset.Assets.copy.image
-                        .renderingMode(.template)
-                        .resizable()
-                        .frame(width: 11, height: 11)
-                        .foregroundColor(Asset.Colors.primary.color)
+                        .zImage(size: 11, style: Design.Btns.Tertiary.fg)
                     
                     Text(L10n.General.tapToCopy)
-                        .font(.custom(FontFamily.Inter.regular.name, size: 13))
-                        .foregroundColor(Asset.Colors.shade47.color)
+                        .zFont(.semiBold, size: 14, style: Design.Btns.Tertiary.fg)
                 }
             }
             .buttonStyle(.borderless)

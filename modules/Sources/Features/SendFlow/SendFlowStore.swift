@@ -20,6 +20,7 @@ import BalanceFormatter
 import WalletBalances
 import NumberFormatter
 import UserPreferencesStorage
+import AddressBookClient
 
 @Reducer
 public struct SendFlow {
@@ -30,8 +31,11 @@ public struct SendFlow {
             case scanQR
         }
 
-        @Presents public var alert: AlertState<Action>?
+        public var cancelId = UUID()
+        
         public var addMemoState: Bool
+        @Shared(.inMemory(.addressBookRecords)) public var addressBookRecords: IdentifiedArrayOf<ABRecord> = []
+        @Presents public var alert: AlertState<Action>?
         @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
         public var destination: Destination?
         public var isCurrencyConversionEnabled = false
@@ -44,6 +48,9 @@ public struct SendFlow {
         public var isValidAddress = false
         public var isValidTransparentAddress = false
         public var isValidTexAddress = false
+        public var isNotAddressInAddressBook = false
+        public var isAddressBookHintVisible = false
+        public var requestsAddressFocus = false
 
         public var address: RedactableString = .empty
         public var zecAmountText: RedactableString = .empty
@@ -87,7 +94,7 @@ public struct SendFlow {
         }
 
         public var message: String {
-            memoState.text.data
+            memoState.text
         }
 
         public var isValidAmount: Bool {
@@ -138,6 +145,32 @@ public struct SendFlow {
             shieldedBalance.decimalString(formatter: NumberFormatter.zashiBalanceFormatter)
         }
         
+        public var invalidAddressErrorText: String? {
+            isInvalidAddressFormat
+            ? L10n.Send.Error.invalidAddress
+            : nil
+        }
+        
+        public var invalidZecAmountErrorText: String? {
+            zecAmountText.data.isEmpty
+            ? nil
+            : isInvalidAmountFormat
+            ? L10n.Send.Error.invalidAmount
+            : isInsufficientFunds
+            ? L10n.Send.Error.insufficientFunds
+            : nil
+        }
+        
+        public var invalidCurrencyAmountErrorText: String? {
+            currencyText.data.isEmpty
+            ? nil
+            : isInvalidAmountFormat
+            ? L10n.Send.Error.invalidAmount
+            : isInsufficientFunds
+            ? L10n.Send.Error.insufficientFunds
+            : nil
+        }
+        
         public init(
             addMemoState: Bool,
             destination: Destination? = nil,
@@ -156,13 +189,18 @@ public struct SendFlow {
     }
 
     public enum Action: Equatable {
+        case addNewContactTapped(RedactableString)
+        case addressBookTapped
         case addressUpdated(RedactableString)
         case alert(PresentationAction<Action>)
         case currencyUpdated(RedactableString)
+        case dismissAddressBookHint
         case exchangeRateSetupChanged
         case memo(MessageEditor.Action)
         case onAppear
+        case onDisapear
         case proposal(Proposal)
+        case requestsAddressFocusResolved
         case resetForm
         case reviewPressed
         case scan(Scan.Action)
@@ -174,6 +212,7 @@ public struct SendFlow {
         case zecAmountUpdated(RedactableString)
     }
     
+    @Dependency(\.addressBook) var addressBook
     @Dependency(\.audioServices) var audioServices
     @Dependency(\.derivationTool) var derivationTool
     @Dependency(\.numberFormatter) var numberFormatter
@@ -198,6 +237,14 @@ public struct SendFlow {
 
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
+                state.addressBookRecords = addressBook.all()
+                return .send(.exchangeRateSetupChanged)
+
+            case .onDisapear:
+                return .cancel(id: state.cancelId)
+                
             case .alert(.presented(let action)):
                 return Effect.send(action)
 
@@ -207,10 +254,17 @@ public struct SendFlow {
 
             case .alert:
                 return .none
+                
+            case .addressBookTapped:
+                return .none
 
-            case .onAppear:
-                state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
-                return .send(.exchangeRateSetupChanged)
+            case .addNewContactTapped:
+                state.requestsAddressFocus = true
+                return .none
+                
+            case .requestsAddressFocusResolved:
+                state.requestsAddressFocus = false
+                return .none
                 
             case .exchangeRateSetupChanged:
                 if let automatic = userStoredPreferences.exchangeRate()?.automatic, automatic {
@@ -250,7 +304,7 @@ public struct SendFlow {
                         if state.isValidTransparentAddress || state.isValidTexAddress {
                             memo = nil
                         } else if let memoText = state.addMemoState ? state.memoState.text : nil {
-                            memo = memoText.data.isEmpty ? nil : try Memo(string: memoText.data)
+                            memo = memoText.isEmpty ? nil : try Memo(string: memoText)
                         } else {
                             memo = nil
                         }
@@ -272,7 +326,7 @@ public struct SendFlow {
                 return .none
 
             case .resetForm:
-                state.memoState.text = .empty
+                state.memoState.text = ""
                 state.address = .empty
                 state.zecAmountText = .empty
                 state.currencyText = .empty
@@ -344,8 +398,33 @@ public struct SendFlow {
                 state.isValidTransparentAddress = derivationTool.isTransparentAddress(state.address.data, network)
                 state.isValidTexAddress = derivationTool.isTexAddress(state.address.data, network)
                 if !state.isMemoInputEnabled {
-                    state.memoState.text = .empty
+                    state.memoState.text = ""
                 }
+                state.isNotAddressInAddressBook = state.isValidAddress
+                var isNotAddressInAddressBook = state.isNotAddressInAddressBook
+                if state.isValidAddress {
+                    for record in state.addressBookRecords {
+                        if record.id == state.address.data {
+                            state.isNotAddressInAddressBook = false
+                            isNotAddressInAddressBook = false
+                            break
+                        }
+                    }
+                }
+                if isNotAddressInAddressBook {
+                    state.isAddressBookHintVisible = true
+                    return .run { send in
+                        try await Task.sleep(nanoseconds: 3_000_000_000)
+                        await send(.dismissAddressBookHint)
+                    }
+                    .cancellable(id: state.cancelId)
+                } else {
+                    state.isAddressBookHintVisible = false
+                    return .cancel(id: state.cancelId)
+                }
+                
+            case .dismissAddressBookHint:
+                state.isAddressBookHintVisible = false
                 return .none
                 
             case .currencyUpdated(let newValue):

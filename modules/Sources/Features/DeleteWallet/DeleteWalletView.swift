@@ -24,7 +24,7 @@ public struct DeleteWalletView: View {
                     ZashiIcon()
                     
                     Text(L10n.DeleteWallet.title)
-                        .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
+                        .font(.custom(FontFamily.Inter.semiBold.name, size: 25))
                         .padding(.bottom, 15)
                     
                     VStack(alignment: .leading) {

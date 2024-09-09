@@ -467,7 +467,10 @@ extension Root {
                 state.isRestoringWallet = true
                 userDefaults.setValue(true, Constants.udIsRestoringWallet)
                 state.walletStatus = .restoring
-                return Effect.send(.initialization(.initializeSDK(.restoreWallet)))
+                return .concatenate(
+                    Effect.send(.initialization(.initializeSDK(.restoreWallet))),
+                    .send(.initialization(.checkBackupPhraseValidation))
+                )
 
             case .initialization(.seedValidationResult(let validSeed)):
                 if validSeed {
@@ -497,7 +500,7 @@ extension Root {
                 
             case .tabs, .destination, .onboarding, .sandbox, .phraseDisplay, .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated,
                     .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, 
-                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects, .flexaOnTransactionRequest:
+                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects, .flexaOnTransactionRequest, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted:
                 return .none
             }
         }

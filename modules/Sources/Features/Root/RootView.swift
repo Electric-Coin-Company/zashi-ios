@@ -13,6 +13,7 @@ import Tabs
 import ZcashLightClientKit
 import UIComponents
 import ServerSetup
+import AddressBook
 
 public struct RootView: View {
     @Environment(\.scenePhase) var scenePhase
@@ -88,6 +89,40 @@ private extension RootView {
                             ),
                             tokenName: tokenName,
                             networkType: networkType
+                        )
+                        .navigationLinkEmpty(
+                            isActive: Binding<Bool>(
+                                get: {
+                                    store.addressBookBinding
+                                }, set: {
+                                    store.send(.addressBookBinding($0))
+                                }
+                            ),
+                            destination: {
+                                AddressBookView(
+                                    store: store.scope(
+                                        state: \.addressBookState,
+                                        action: \.addressBook
+                                    )
+                                )
+                            }
+                        )
+                        .navigationLinkEmpty(
+                            isActive: Binding<Bool>(
+                                get: {
+                                    store.addressBookContactBinding
+                                }, set: {
+                                    store.send(.addressBookContactBinding($0))
+                                }
+                            ),
+                            destination: {
+                                AddressBookContactView(
+                                    store: store.scope(
+                                        state: \.addressBookState,
+                                        action: \.addressBook
+                                    )
+                                )
+                            }
                         )
                     }
                     .navigationViewStyle(.stack)

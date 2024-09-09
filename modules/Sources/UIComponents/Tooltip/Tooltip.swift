@@ -27,11 +27,8 @@ public struct Tooltip: View {
     public var body: some View {
         VStack(alignment: .center, spacing: 0) {
             Asset.Assets.tooltip.image
-                .renderingMode(.template)
-                .resizable()
-                .frame(width: 16, height: 6)
+                .zImage(width: 16, height: 6, style: Design.HintTooltips.surfacePrimary)
                 .offset(x: 0, y: 2)
-                .foregroundColor(Design.HintTooltips.surfacePrimary.color)
             
             HStack(alignment: .top) {
                 VStack(alignment: .leading) {

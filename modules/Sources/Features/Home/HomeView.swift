@@ -110,9 +110,7 @@ struct HomeView_Previews: PreviewProvider {
             .navigationBarItems(
                 trailing: Text("M")
             )
-            .zashiTitle {
-                Text("Title")
-            }
+            .screenTitle("Title")
         }
     }
 }

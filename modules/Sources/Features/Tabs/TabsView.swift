@@ -1,6 +1,6 @@
 //
-//  WelcomeView.swift
-//  secant-testnet
+//  TabsView.swift
+//  Zashi
 //
 //  Created by Lukáš Korba on 09.10.2023.
 //
@@ -94,7 +94,7 @@ public struct TabsView: View {
                                     WithPerceptionTracking {
                                         if store.selectedTab == item {
                                             Text("\(item.title)")
-                                                .font(.custom(FontFamily.Archivo.black.name, size: 12))
+                                                .font(.custom(FontFamily.Inter.black.name, size: 12))
                                                 .foregroundColor(Asset.Colors.primary.color)
                                             Rectangle()
                                                 .frame(height: 2)
@@ -102,7 +102,7 @@ public struct TabsView: View {
                                                 .matchedGeometryEffect(id: "Tabs", in: tabsID, properties: .frame)
                                         } else {
                                             Text("\(item.title)")
-                                                .font(.custom(FontFamily.Archivo.regular.name, size: 12))
+                                                .font(.custom(FontFamily.Inter.regular.name, size: 12))
                                                 .foregroundColor(Asset.Colors.primary.color)
                                             Rectangle()
                                                 .frame(height: 2)
@@ -171,10 +171,7 @@ public struct TabsView: View {
                                 VStack(alignment: .leading, spacing: 0) {
                                     HStack(alignment: .top, spacing: 0) {
                                         Asset.Assets.coinsSwap.image
-                                            .renderingMode(.template)
-                                            .resizable()
-                                            .frame(width: 20, height: 20)
-                                            .foregroundColor(Design.Text.primary.color)
+                                            .zImage(size: 20, style: Design.Text.primary)
                                             .padding(10)
                                             .background {
                                                 Circle()
@@ -184,12 +181,10 @@ public struct TabsView: View {
                                         
                                         VStack(alignment: .leading, spacing: 5) {
                                             Text(L10n.CurrencyConversion.cardTitle)
-                                                .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                                                .foregroundColor(Design.Text.tertiary.color)
+                                                .zFont(size: 14, style: Design.Text.tertiary)
                                             
                                             Text(L10n.CurrencyConversion.title)
-                                                .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                                                .foregroundColor(Design.Text.primary.color)
+                                                .zFont(.semiBold, size: 16, style: Design.Text.primary)
                                                 .lineLimit(1)
                                                 .minimumScaleFactor(0.5)
                                         }
@@ -201,10 +196,7 @@ public struct TabsView: View {
                                             store.send(.currencyConversionCloseTapped)
                                         } label: {
                                             Asset.Assets.buttonCloseX.image
-                                                .renderingMode(.template)
-                                                .resizable()
-                                                .frame(width: 20, height: 20)
-                                                .foregroundColor(Design.HintTooltips.defaultFg.color)
+                                                .zImage(size: 20, style: Design.HintTooltips.defaultFg)
                                         }
                                         .padding(20)
                                         .offset(x: 20, y: -20)
@@ -214,8 +206,7 @@ public struct TabsView: View {
                                         store.send(.updateDestination(.currencyConversionSetup))
                                     } label: {
                                         Text(L10n.CurrencyConversion.cardButton)
-                                            .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                                            .foregroundColor(Design.Btns.Tertiary.fg.color)
+                                            .zFont(.semiBold, size: 16, style: Design.Btns.Tertiary.fg)
                                             .frame(height: 24)
                                             .frame(maxWidth: .infinity)
                                             .padding(.vertical, 12)
@@ -246,20 +237,13 @@ public struct TabsView: View {
     
     @ViewBuilder private func navBarView(_ tab: Tabs.State.Tab) -> some View {
         switch tab {
-        case .receive, .send:
+        case .receive, .send, .balances:
             Text(tab.title.uppercased())
-                .font(.custom(FontFamily.Archivo.bold.name, size: 14))
+                .zFont(.semiBold, size: 16, style: Design.Text.primary)
 
         case .account:
             Asset.Assets.zashiTitle.image
-                .renderingMode(.template)
-                .resizable()
-                .frame(width: 62, height: 17)
-                .foregroundColor(Asset.Colors.primary.color)
-
-        case .balances:
-            Text(L10n.Tabs.balances.uppercased())
-                .font(.custom(FontFamily.Archivo.bold.name, size: 14))
+                .zImage(width: 62, height: 17, color: Asset.Colors.primary.color)
         }
     }
     
@@ -285,11 +269,8 @@ public struct TabsView: View {
             } label: {
                 let image = isSensitiveContentHidden ? Asset.Assets.eyeOff.image : Asset.Assets.eyeOn.image
                 image
-                    .renderingMode(.template)
-                    .resizable()
-                    .frame(width: 25, height: 25)
+                    .zImage(size: 25, color: Asset.Colors.primary.color)
                     .padding(15)
-                    .tint(Asset.Colors.primary.color)
             }
         }
     }

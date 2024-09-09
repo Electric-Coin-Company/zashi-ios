@@ -97,10 +97,7 @@ public struct AddressDetailsView: View {
                 } label: {
                     HStack(spacing: 5) {
                         Asset.Assets.copy.image
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 11, height: 11)
-                            .foregroundColor(Asset.Colors.primary.color)
+                            .zImage(size: 11, color: Asset.Colors.primary.color)
                         
                         Text(L10n.AddressDetails.copy)
                             .font(.custom(FontFamily.Inter.bold.name, size: 12))
@@ -114,10 +111,7 @@ public struct AddressDetailsView: View {
                 } label: {
                     HStack(spacing: 5) {
                         Asset.Assets.share.image
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 11, height: 11)
-                            .foregroundColor(Asset.Colors.primary.color)
+                            .zImage(size: 11, color: Asset.Colors.primary.color)
 
                         Text(L10n.AddressDetails.share)
                             .font(.custom(FontFamily.Inter.bold.name, size: 12))
@@ -138,7 +132,7 @@ public struct AddressDetailsView: View {
                 WithPerceptionTracking {
                     Text(item == .ua
                          ? L10n.AddressDetails.ua
-                         :L10n.AddressDetails.ta
+                         : L10n.AddressDetails.ta
                     ).tag(item == .ua
                           ? AddressDetails.State.Selection.ua
                           : AddressDetails.State.Selection.transparent
@@ -152,7 +146,8 @@ public struct AddressDetailsView: View {
                     .padding(.horizontal, 8)
                     .frame(maxWidth: .infinity)
                     .multilineTextAlignment(.center)
-                    .font(.custom(FontFamily.Archivo.semiBold.name, size: 12))
+                    .font(.custom(FontFamily.Inter.semiBold.name, size: 12))
+                    .lineLimit(1)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.150)) {
                             store.selection = item
@@ -167,7 +162,7 @@ public struct AddressDetailsView: View {
             }
         )
         .border(Asset.Colors.pickerBcg.color, width: 4)
-        .frame(width: 270)
+        .frame(width: 290)
         .padding(.top, 50)
     }
 }

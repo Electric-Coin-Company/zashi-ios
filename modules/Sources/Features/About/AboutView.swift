@@ -25,10 +25,7 @@ public struct AboutView: View {
             VStack(alignment: .leading) {
                 VStack(alignment: .center) {
                     Asset.Assets.zashiTitle.image
-                        .resizable()
-                        .renderingMode(.template)
-                        .frame(width: 63, height: 17)
-                        .foregroundColor(Asset.Colors.primary.color)
+                        .zImage(width: 63, height: 17, color: Asset.Colors.primary.color)
                         .padding(.top, 15)
                         .padding(.bottom, 8)
                     
@@ -73,10 +70,7 @@ public struct AboutView: View {
             .padding(.top, 20)
             .onAppear { store.send(.onAppear) }
             .zashiBack()
-            .zashiTitle {
-                Text(L10n.Settings.about.uppercased())
-                    .font(.custom(FontFamily.Archivo.bold.name, size: 14))
-            }
+            .screenTitle(L10n.Settings.about)
             .padding(.horizontal, 70)
             .walletStatusPanel(background: .transparent)
             .navigationLinkEmpty(

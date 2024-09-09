@@ -20,8 +20,6 @@ import ZcashSDKEnvironment
 
 @Reducer
 public struct Scan {
-    private let CancelId = UUID()
-
     public enum ScanImageResult: Equatable {
         case invalidQRCode
         case noQRCodeFound
@@ -30,6 +28,8 @@ public struct Scan {
     
     @ObservableState
     public struct State: Equatable {
+        public var cancelId = UUID()
+        
         public var info = ""
         public var isTorchAvailable = false
         public var isTorchOn = false
@@ -83,14 +83,14 @@ public struct Scan {
                 return .none
                 
             case .onDisappear:
-                return .cancel(id: CancelId)
+                return .cancel(id: state.cancelId)
                 
             case .cancelPressed:
                 return .none
                 
             case .clearInfo:
                 state.info = ""
-                return .cancel(id: CancelId)
+                return .cancel(id: state.cancelId)
 
             case .found:
                 return .none
@@ -124,12 +124,12 @@ public struct Scan {
                     state.info = L10n.Scan.severalCodesFound
                 }
                 return .concatenate(
-                    Effect.cancel(id: CancelId),
+                    Effect.cancel(id: state.cancelId),
                     .run { send in
-                        try await mainQueue.sleep(for: .seconds(3))
+                        try await mainQueue.sleep(for: .seconds(1))
                         await send(.clearInfo)
                     }
-                    .cancellable(id: CancelId, cancelInFlight: true)
+                    .cancellable(id: state.cancelId, cancelInFlight: true)
                 )
 
             case .scan(let code):
