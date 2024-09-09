@@ -16,14 +16,38 @@ public struct SettingsView: View {
     }
     
     public var body: some View {
-        VStack {
-            WithViewStore(store, observe: { $0 }) { viewStore in
-                Button(L10n.Settings.feedback.uppercased()) {
-                    viewStore.send(.sendSupportMail)
+        WithViewStore(store, observe: { $0 }) { viewStore in
+            VStack {
+                List {
+                    Group {
+                        SettingsRow(
+                            icon: Asset.Assets.Icons.settings.image,
+                            title: L10n.Settings.advanced
+                        ) {
+                            viewStore.send(.updateDestination(.advanced))
+                        }
+                        
+                        SettingsRow(
+                            icon: Asset.Assets.infoOutline.image,
+                            title: L10n.Settings.about
+                        ) {
+                            viewStore.send(.updateDestination(.about))
+                        }
+                        
+                        SettingsRow(
+                            icon: Asset.Assets.Icons.messageSmile.image,
+                            title: L10n.Settings.feedback,
+                            divider: false
+                        ) {
+                            viewStore.send(.sendSupportMail)
+                        }
+                    }
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Asset.Colors.shade97.color)
+                    .listRowSeparator(.hidden)
                 }
-                .zcashStyle()
-                .padding(.vertical, 25)
-                .padding(.top, 40)
+                .padding(.top, 24)
+                .padding(.horizontal, 4)
                 .navigationLinkEmpty(
                     isActive: viewStore.bindingForAbout,
                     destination: {
@@ -39,20 +63,6 @@ public struct SettingsView: View {
                 .onAppear {
                     viewStore.send(.onAppear)
                 }
-
-                Button(L10n.Settings.advanced.uppercased()) {
-                    viewStore.send(.updateDestination(.advanced))
-                }
-                .zcashStyle()
-                .padding(.bottom, 25)
-
-                Spacer()
-                
-                Button(L10n.Settings.about.uppercased()) {
-                    viewStore.send(.updateDestination(.about))
-                }
-                .zcashStyle()
-                .padding(.bottom, 40)
                 
                 if let supportData = viewStore.supportData {
                     UIMailDialogView(
@@ -65,22 +75,33 @@ public struct SettingsView: View {
                     // so frame is set to 0 to not break SwiftUIs layout
                     .frame(width: 0, height: 0)
                 }
+                
+                Spacer()
+                
+                Asset.Assets.zashiTitle.image
+                    .renderingMode(.template)
+                    .resizable()
+                    .frame(width: 73, height: 20)
+                    .foregroundColor(Asset.Colors.primary.color)
+                    .padding(.bottom, 16)
+                
+                Text(L10n.Settings.version(viewStore.appVersion, viewStore.appBuild))
+                    .font(.custom(FontFamily.Archivo.regular.name, size: 16))
+                    .foregroundColor(Asset.Colors.V2.textPrimary.color)
+                    .padding(.bottom, 24)
             }
-            .padding(.horizontal, 70)
         }
-        .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground()
+        .listStyle(.plain)
+        .navigationBarTitleDisplayMode(.inline)
         .alert(store: store.scope(
             state: \.$alert,
             action: { .alert($0) }
         ))
         .zashiBack()
         .zashiTitle {
-            Asset.Assets.zashiTitle.image
-                .renderingMode(.template)
-                .resizable()
-                .frame(width: 62, height: 17)
-                .foregroundColor(Asset.Colors.primary.color)
+            Text(L10n.Settings.title.uppercased())
+                .font(.custom(FontFamily.Archivo.bold.name, size: 14))
         }
         .walletStatusPanel()
     }

@@ -86,7 +86,7 @@ public struct CurrencyConversionSetupView: View {
                     .padding(20)
                     .background {
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(Asset.Colors.CurrencyConversion.outline.color)
+                            .stroke(Asset.Colors.V2.strokeSecondary.color)
                     }
                 }
             }

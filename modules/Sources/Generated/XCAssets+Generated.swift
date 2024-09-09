@@ -32,9 +32,11 @@ public enum Asset {
     public static let welcomeScreenLogo = ImageAsset(name: "WelcomeScreenLogo")
     public static let zashiLogo = ImageAsset(name: "ZashiLogo")
     public static let alertIcon = ImageAsset(name: "alertIcon")
+    public static let arrowLeftLong = ImageAsset(name: "arrowLeftLong")
     public static let buttonCloseX = ImageAsset(name: "buttonCloseX")
     public static let check = ImageAsset(name: "check")
     public static let chevronDown = ImageAsset(name: "chevronDown")
+    public static let chevronRight = ImageAsset(name: "chevronRight")
     public static let coinsSwap = ImageAsset(name: "coinsSwap")
     public static let convertIcon = ImageAsset(name: "convertIcon")
     public static let copy = ImageAsset(name: "copy")
@@ -42,6 +44,15 @@ public enum Asset {
     public static let eyeOn = ImageAsset(name: "eyeOn")
     public static let flyReceivedFilled = ImageAsset(name: "flyReceivedFilled")
     public static let gridTile = ImageAsset(name: "gridTile")
+    public enum Icons {
+      public static let coinbase = ImageAsset(name: "coinbase")
+      public static let currencyDollar = ImageAsset(name: "currencyDollar")
+      public static let downloadCloud = ImageAsset(name: "downloadCloud")
+      public static let key = ImageAsset(name: "key")
+      public static let messageSmile = ImageAsset(name: "messageSmile")
+      public static let server = ImageAsset(name: "server")
+      public static let settings = ImageAsset(name: "settings")
+    }
     public static let infoCircle = ImageAsset(name: "infoCircle")
     public static let infoOutline = ImageAsset(name: "infoOutline")
     public static let rateIcons = ImageAsset(name: "rateIcons")
@@ -100,6 +111,10 @@ public enum Asset {
       public static let saveButtonDisabledText = ColorAsset(name: "saveButtonDisabledText")
       public static let subtitle = ColorAsset(name: "subtitle")
     }
+    public enum Settings {
+      public static let coinbaseBcg = ColorAsset(name: "coinbaseBcg")
+      public static let coinbaseTint = ColorAsset(name: "coinbaseTint")
+    }
     public static let background = ColorAsset(name: "background")
     public static let btnDarkShade = ColorAsset(name: "btnDarkShade")
     public static let btnLabelShade = ColorAsset(name: "btnLabelShade")
@@ -128,8 +143,18 @@ public enum Asset {
     public static let splash = ColorAsset(name: "splash")
     public static let syncProgresBcg = ColorAsset(name: "syncProgresBcg")
     public enum V2 {
+      public static let bgPrimary = ColorAsset(name: "bgPrimary")
+      public static let bgTertiary = ColorAsset(name: "bgTertiary")
+      public static let btnDestroyBcg = ColorAsset(name: "btnDestroyBcg")
+      public static let btnDestroyBorder = ColorAsset(name: "btnDestroyBorder")
+      public static let btnDestroyFg = ColorAsset(name: "btnDestroyFg")
+      public static let divider = ColorAsset(name: "divider")
       public static let exchangeRateBcg = ColorAsset(name: "exchangeRateBcg")
       public static let exchangeRateBorder = ColorAsset(name: "exchangeRateBorder")
+      public static let strokeSecondary = ColorAsset(name: "strokeSecondary")
+      public static let textPrimary = ColorAsset(name: "textPrimary")
+      public static let textQuaternary = ColorAsset(name: "textQuaternary")
+      public static let textTertiary = ColorAsset(name: "textTertiary")
       public enum Tooltips {
         public static let bcg = ColorAsset(name: "bcg")
         public static let shadow = ColorAsset(name: "shadow")

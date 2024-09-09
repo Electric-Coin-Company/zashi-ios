@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Changed
+- Design of the Settings and Advanced Settings screens.
+
 ## 1.1.5 build 1 (2024-08-22)
 
 ### Fixed

@@ -186,6 +186,8 @@ public enum L10n {
     public static let hideBalancesMost = L10n.tr("Localizable", "general.hideBalancesMost", fallback: "-----")
     /// -----
     public static let hideBalancesMostStandalone = L10n.tr("Localizable", "general.hideBalancesMostStandalone", fallback: "-----")
+    /// Loading
+    public static let loading = L10n.tr("Localizable", "general.loading", fallback: "Loading")
     /// Max
     public static let max = L10n.tr("Localizable", "general.max", fallback: "Max")
     /// Next
@@ -617,26 +619,34 @@ public enum L10n {
     }
   }
   public enum Settings {
-    /// About
-    public static let about = L10n.tr("Localizable", "settings.about", fallback: "About")
-    /// Advanced
-    public static let advanced = L10n.tr("Localizable", "settings.advanced", fallback: "Advanced")
-    /// Buy ZEC with
-    public static let buyZec = L10n.tr("Localizable", "settings.buyZec", fallback: "Buy ZEC with")
-    /// Choose a server
-    public static let chooseServer = L10n.tr("Localizable", "settings.chooseServer", fallback: "Choose a server")
+    /// About Us
+    public static let about = L10n.tr("Localizable", "settings.about", fallback: "About Us")
+    /// Advanced Settings
+    public static let advanced = L10n.tr("Localizable", "settings.advanced", fallback: "Advanced Settings")
+    /// Buy ZEC with Coinbase
+    public static let buyZecCB = L10n.tr("Localizable", "settings.buyZecCB", fallback: "Buy ZEC with Coinbase")
+    /// Choose a Server
+    public static let chooseServer = L10n.tr("Localizable", "settings.chooseServer", fallback: "Choose a Server")
+    /// Currency Conversion
+    public static let currencyConversion = L10n.tr("Localizable", "settings.currencyConversion", fallback: "Currency Conversion")
     /// Delete Zashi
     public static let deleteZashi = L10n.tr("Localizable", "settings.deleteZashi", fallback: "Delete Zashi")
-    /// (You will be asked to confirm on next screen)
-    public static let deleteZashiWarning = L10n.tr("Localizable", "settings.deleteZashiWarning", fallback: "(You will be asked to confirm on next screen)")
+    /// You will be asked to confirm on the next screen
+    public static let deleteZashiWarning = L10n.tr("Localizable", "settings.deleteZashiWarning", fallback: "You will be asked to confirm on the next screen")
     /// Export logs only
     public static let exportLogsOnly = L10n.tr("Localizable", "settings.exportLogsOnly", fallback: "Export logs only")
-    /// Export private data
-    public static let exportPrivateData = L10n.tr("Localizable", "settings.exportPrivateData", fallback: "Export private data")
-    /// Send us feedback
-    public static let feedback = L10n.tr("Localizable", "settings.feedback", fallback: "Send us feedback")
+    /// Export Private Data
+    public static let exportPrivateData = L10n.tr("Localizable", "settings.exportPrivateData", fallback: "Export Private Data")
+    /// Send Us Feedback
+    public static let feedback = L10n.tr("Localizable", "settings.feedback", fallback: "Send Us Feedback")
     /// Recovery Phrase
     public static let recoveryPhrase = L10n.tr("Localizable", "settings.recoveryPhrase", fallback: "Recovery Phrase")
+    /// Settings
+    public static let title = L10n.tr("Localizable", "settings.title", fallback: "Settings")
+    /// Version %@ (%@)
+    public static func version(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "settings.version", String(describing: p1), String(describing: p2), fallback: "Version %@ (%@)")
+    }
     public enum Alert {
       public enum CantSendEmail {
         /// Copy %@

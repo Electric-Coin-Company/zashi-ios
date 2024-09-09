@@ -33,20 +33,14 @@ struct ZashiBackModifier: ViewModifier {
                             }
                         } label: {
                             HStack {
-                                Image(systemName: "arrow.backward")
+                                Asset.Assets.arrowLeftLong.image
                                     .resizable()
                                     .renderingMode(.template)
-                                    .frame(width: 10, height: 10)
+                                    .frame(width: 24, height: 24)
                                     .foregroundColor(invertedColors ? Asset.Colors.secondary.color : Asset.Colors.primary.color)
-                                
-                                Text(L10n.General.back.uppercased())
-                                    .foregroundColor(
-                                        disabled
-                                        ? Asset.Colors.shade72.color
-                                        : invertedColors ? Asset.Colors.secondary.color : Asset.Colors.primary.color
-                                    )
-                                    .font(.custom(FontFamily.Inter.regular.name, size: 14))
                             }
+                            .padding(.trailing, 24)
+                            .padding(8)
                         }
                         .disabled(disabled)
                     }

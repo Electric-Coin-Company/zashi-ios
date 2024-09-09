@@ -153,19 +153,22 @@ Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps you
 "whatsNew.version" = "Zashi Version %@";
 
 // MARK: - Settings
-"settings.feedback" = "Send us feedback";
-"settings.advanced" = "Advanced";
-"settings.about" = "About";
+"settings.title" = "Settings";
+"settings.advanced" = "Advanced Settings";
+"settings.about" = "About Us";
+"settings.feedback" = "Send Us Feedback";
 "settings.recoveryPhrase" = "Recovery Phrase";
-"settings.exportPrivateData" = "Export private data";
-"settings.chooseServer" = "Choose a server";
+"settings.exportPrivateData" = "Export Private Data";
 "settings.exportLogsOnly" = "Export logs only";
+"settings.chooseServer" = "Choose a Server";
+"settings.currencyConversion" = "Currency Conversion";
+"settings.buyZecCB" = "Buy ZEC with Coinbase";
 "settings.deleteZashi" = "Delete Zashi";
-"settings.deleteZashiWarning" = "(You will be asked to confirm on next screen)";
+"settings.deleteZashiWarning" = "You will be asked to confirm on the next screen";
+"settings.version" = "Version %@ (%@)";
 "settings.alert.cantSendEmail.title" = "Oh, no!";
 "settings.alert.cantSendEmail.message" = "It looks like you don't have a default email app configured on your device. Copy the address below, and use your favorite email client to send us a message.";
 "settings.alert.cantSendEmail.copyEmail" = "Copy %@";
-"settings.buyZec" = "Buy ZEC with";
 
 // MARK: - Private Data Consent
 "privateDataConsent.title" = "Consent for Exporting Private Data";
@@ -195,6 +198,7 @@ Sharing this private data is irrevocable — once you have shared this private d
 "general.cancel" = "Cancel";
 "general.success" = "Success";
 "general.unknown" = "Unknown";
+"general.loading" = "Loading";
 "general.done" = "Done";
 "general.save" = "Save";
 "balance.availableTitle" = "Available Balance:";

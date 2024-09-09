@@ -91,7 +91,7 @@ public struct WalletBalancesView: View {
             if store.isExchangeRateFeatureOn {
                 if store.currencyConversion == nil && !store.isExchangeRateStale {
                     HStack(spacing: 8) {
-                        Text("Loading")
+                        Text(L10n.General.loading)
                             .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
                             .foregroundColor(Asset.Colors.primary.color)
 
