@@ -737,6 +737,8 @@ public enum L10n {
     public static let failedReceive = L10n.tr("Localizable", "transaction.failedReceive", fallback: "Receive failed")
     /// Send failed
     public static let failedSend = L10n.tr("Localizable", "transaction.failedSend", fallback: "Send failed")
+    /// Shielded Funds Failed
+    public static let failedShieldedFunds = L10n.tr("Localizable", "transaction.failedShieldedFunds", fallback: "Shielded Funds Failed")
     /// Received
     public static let received = L10n.tr("Localizable", "transaction.received", fallback: "Received")
     /// Receiving...
@@ -745,6 +747,10 @@ public enum L10n {
     public static let sending = L10n.tr("Localizable", "transaction.sending", fallback: "Sending...")
     /// Sent
     public static let sent = L10n.tr("Localizable", "transaction.sent", fallback: "Sent")
+    /// Shielded Funds
+    public static let shieldedFunds = L10n.tr("Localizable", "transaction.shieldedFunds", fallback: "Shielded Funds")
+    /// Shielding Funds
+    public static let shieldingFunds = L10n.tr("Localizable", "transaction.shieldingFunds", fallback: "Shielding Funds")
   }
   public enum TransactionList {
     /// Collapse transaction

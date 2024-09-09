@@ -229,6 +229,9 @@ Sharing this private data is irrevocable — once you have shared this private d
 "transaction.received" = "Received";
 "transaction.failedSend" = "Send failed";
 "transaction.failedReceive" = "Receive failed";
+"transaction.shieldingFunds" = "Shielding Funds";
+"transaction.shieldedFunds" = "Shielded Funds";
+"transaction.failedShieldedFunds" = "Shielded Funds Failed";
 
 // MARK: - Local authentication
 "localAuthentication.reason" = "The Following content requires authentication.";
