@@ -15,6 +15,7 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct DerivationToolClient {
     /// Given a seed and a number of accounts, return the associated spending keys.
     /// - Parameter seed: the seed from which to derive spending keys.
@@ -27,20 +28,20 @@ public struct DerivationToolClient {
     public var deriveUnifiedFullViewingKey: (UnifiedSpendingKey, NetworkType) throws -> UnifiedFullViewingKey
 
     /// Checks if given address supports memo
-    public var doesAddressSupportMemo: (String, NetworkType) -> Bool
+    public var doesAddressSupportMemo: (String, NetworkType) -> Bool = { _, _ in false }
 
     /// Checks validity of the unified address.
-    public var isUnifiedAddress: (String, NetworkType) -> Bool
+    public var isUnifiedAddress: (String, NetworkType) -> Bool = { _, _ in false }
 
     /// Checks validity of the shielded address.
-    public var isSaplingAddress: (String, NetworkType) -> Bool
+    public var isSaplingAddress: (String, NetworkType) -> Bool = { _, _ in false }
 
     /// Checks validity of the transparent address.
-    public var isTransparentAddress: (String, NetworkType) -> Bool
+    public var isTransparentAddress: (String, NetworkType) -> Bool = { _, _ in false }
 
     /// Checks validity of the tex address.
-    public var isTexAddress: (String, NetworkType) -> Bool
+    public var isTexAddress: (String, NetworkType) -> Bool = { _, _ in false }
 
     /// Checks if given address is a valid zcash address.
-    public var isZcashAddress: (String, NetworkType) -> Bool
+    public var isZcashAddress: (String, NetworkType) -> Bool = { _, _ in false }
 }

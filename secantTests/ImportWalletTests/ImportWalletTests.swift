@@ -18,7 +18,7 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            ImportWalletReducer()
+            ImportWallet()
         }
         
         await store.send(.onAppear) { state in
@@ -32,7 +32,7 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            ImportWalletReducer()
+            ImportWallet()
         }
         
         store.dependencies.mnemonic = .noOp
@@ -51,9 +51,9 @@ class ImportWalletTests: XCTestCase {
 
     func testMaxWordsInvalidMnemonic() async throws {
         let store = TestStore(
-            initialState: ImportWalletReducer.State(maxWordsCount: 24, restoreInfoState: .initial)
+            initialState: ImportWallet.State(maxWordsCount: 24, restoreInfoState: .initial)
         ) {
-            ImportWalletReducer()
+            ImportWallet()
         }
         
         store.dependencies.mnemonic = .noOp
@@ -73,9 +73,9 @@ class ImportWalletTests: XCTestCase {
 
     func testValidMnemonic() async throws {
         let store = TestStore(
-            initialState: ImportWalletReducer.State(maxWordsCount: 24, restoreInfoState: .initial)
+            initialState: ImportWallet.State(maxWordsCount: 24, restoreInfoState: .initial)
         ) {
-            ImportWalletReducer()
+            ImportWallet()
         }
         
         store.dependencies.mnemonic = .noOp
@@ -86,7 +86,7 @@ class ImportWalletTests: XCTestCase {
             survey between bitter process artefact blind \
             carbon truly provide dizzy crush flush \
             breeze blouse charge solid fish spread
-            ".empty
+            """.redacted
         
         await store.send(.seedPhraseInputChanged(seedPhrase)) { state in
             state.importedSeedPhrase = seedPhrase
@@ -102,7 +102,7 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            ImportWalletReducer()
+            ImportWallet()
         }
         
         let birthday = "200000".redacted
@@ -118,7 +118,7 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            ImportWalletReducer()
+            ImportWallet()
         }
         
         let birthday = "abc".redacted
@@ -134,7 +134,7 @@ class ImportWalletTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            ImportWalletReducer()
+            ImportWallet()
         }
         
         let birthday = "1700000".redacted
@@ -149,9 +149,9 @@ class ImportWalletTests: XCTestCase {
         
     func testFormValidity_validBirthday_invalidMnemonic() async throws {
         let store = TestStore(
-            initialState: ImportWalletReducer.State(maxWordsCount: 24, restoreInfoState: .initial)
+            initialState: ImportWallet.State(maxWordsCount: 24, restoreInfoState: .initial)
         ) {
-            ImportWalletReducer()
+            ImportWallet()
         }
 
         store.dependencies.mnemonic = .noOp
@@ -182,9 +182,9 @@ class ImportWalletTests: XCTestCase {
     
     func testFormValidity_invalidBirthday_invalidMnemonic() async throws {
         let store = TestStore(
-            initialState: ImportWalletReducer.State(maxWordsCount: 24, restoreInfoState: .initial)
+            initialState: ImportWallet.State(maxWordsCount: 24, restoreInfoState: .initial)
         ) {
-            ImportWalletReducer()
+            ImportWallet()
         }
         
         store.dependencies.mnemonic = .noOp
@@ -214,9 +214,9 @@ class ImportWalletTests: XCTestCase {
     
     func testFormValidity_invalidBirthday_validMnemonic() async throws {
         let store = TestStore(
-            initialState: ImportWalletReducer.State(maxWordsCount: 24, restoreInfoState: .initial)
+            initialState: ImportWallet.State(maxWordsCount: 24, restoreInfoState: .initial)
         ) {
-            ImportWalletReducer()
+            ImportWallet()
         }
         
         store.dependencies.mnemonic = .noOp
@@ -233,7 +233,7 @@ class ImportWalletTests: XCTestCase {
             survey between bitter process artefact blind \
             carbon truly provide dizzy crush flush \
             breeze blouse charge solid fish spread
-            ".empty
+            """.redacted
         
         await store.send(.seedPhraseInputChanged(seedPhrase)) { state in
             state.importedSeedPhrase = seedPhrase
@@ -251,9 +251,9 @@ class ImportWalletTests: XCTestCase {
     
     func testFormValidity_validBirthday_validMnemonic() async throws {
         let store = TestStore(
-            initialState: ImportWalletReducer.State(maxWordsCount: 24, restoreInfoState: .initial)
+            initialState: ImportWallet.State(maxWordsCount: 24, restoreInfoState: .initial)
         ) {
-            ImportWalletReducer()
+            ImportWallet()
         }
             
         store.dependencies.mnemonic = .noOp
@@ -271,7 +271,7 @@ class ImportWalletTests: XCTestCase {
             survey between bitter process artefact blind \
             carbon truly provide dizzy crush flush \
             breeze blouse charge solid fish spread
-            ".empty
+            """.redacted
         
         await store.send(.seedPhraseInputChanged(seedPhrase)) { state in
             state.importedSeedPhrase = seedPhrase
@@ -289,9 +289,9 @@ class ImportWalletTests: XCTestCase {
     
     func testFormValidity_noBirthday_validMnemonic() async throws {
         let store = TestStore(
-            initialState: ImportWalletReducer.State(maxWordsCount: 24, restoreInfoState: .initial)
+            initialState: ImportWallet.State(maxWordsCount: 24, restoreInfoState: .initial)
         ) {
-            ImportWalletReducer()
+            ImportWallet()
         }
         
         store.dependencies.mnemonic = .noOp
@@ -302,7 +302,7 @@ class ImportWalletTests: XCTestCase {
             survey between bitter process artefact blind \
             carbon truly provide dizzy crush flush \
             breeze blouse charge solid fish spread
-            ".empty
+            """.redacted
         
         await store.send(.seedPhraseInputChanged(seedPhrase)) { state in
             state.importedSeedPhrase = seedPhrase
@@ -320,7 +320,7 @@ class ImportWalletTests: XCTestCase {
 
     func testRestoreWallet() async throws {
         let store = TestStore(
-            initialState: ImportWalletReducer.State(
+            initialState: ImportWallet.State(
                 birthdayHeight: "1700000".redacted,
                 birthdayHeightValue: RedactableBlockHeight(1_700_000),
                 importedSeedPhrase: """
@@ -328,7 +328,7 @@ class ImportWalletTests: XCTestCase {
                 survey between bitter process artefact blind \
                 carbon truly provide dizzy crush flush \
                 breeze blouse charge solid fish spread
-                ".empty,
+                """.redacted,
                 isValidMnemonic: true,
                 isValidNumberOfWords: true,
                 maxWordsCount: 24,
@@ -336,7 +336,7 @@ class ImportWalletTests: XCTestCase {
                 wordsCount: 24
             )
         ) {
-            ImportWalletReducer()
+            ImportWallet()
         }
         
         store.dependencies.mnemonic = .noOp
@@ -348,12 +348,12 @@ class ImportWalletTests: XCTestCase {
             state.destination = nil
         }
 
-        await store.receive(.successfullyRecovered) { state in
-            state.restoreInfoViewBinding = true
-        }
-        
+        await store.receive(.successfullyRecovered)
+
         await store.receive(.initializeSDK)
-        
+
+        await store.receive(.updateDestination(nil))
+
         await store.finish()
     }
 }

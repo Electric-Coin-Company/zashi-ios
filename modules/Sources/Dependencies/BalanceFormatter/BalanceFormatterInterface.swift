@@ -16,10 +16,11 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct BalanceFormatterClient {
     public var convert: (
         Zatoshi,
         ZatoshiStringRepresentation.PrefixSymbol,
         ZatoshiStringRepresentation.Format
-    ) -> ZatoshiStringRepresentation
+    ) -> ZatoshiStringRepresentation = { _, _, _ in ZatoshiStringRepresentation(Zatoshi(0)) }
 }

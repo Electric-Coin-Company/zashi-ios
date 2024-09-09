@@ -15,6 +15,7 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct PasteboardClient {
     public let setString: (RedactableString) -> Void
     public let getString: () -> RedactableString?

@@ -14,10 +14,9 @@ import ImportWallet
 import SecurityWarning
 import ZcashLightClientKit
 
-public typealias OnboardingFlowStore = Store<OnboardingFlowReducer.State, OnboardingFlowReducer.Action>
-public typealias OnboardingFlowViewStore = ViewStore<OnboardingFlowReducer.State, OnboardingFlowReducer.Action>
-
-public struct OnboardingFlowReducer: Reducer {
+@Reducer
+public struct OnboardingFlow {
+    @ObservableState
     public struct State: Equatable {
         public enum Destination: Equatable, CaseIterable {
             case createNewWallet
@@ -26,13 +25,13 @@ public struct OnboardingFlowReducer: Reducer {
 
         public var destination: Destination?
         public var walletConfig: WalletConfig
-        public var importWalletState: ImportWalletReducer.State
+        public var importWalletState: ImportWallet.State
         public var securityWarningState: SecurityWarning.State
 
         public init(
             destination: Destination? = nil,
             walletConfig: WalletConfig,
-            importWalletState: ImportWalletReducer.State,
+            importWalletState: ImportWallet.State,
             securityWarningState: SecurityWarning.State
         ) {
             self.destination = destination
@@ -45,20 +44,20 @@ public struct OnboardingFlowReducer: Reducer {
     public enum Action: Equatable {
         case createNewWallet
         case importExistingWallet
-        case importWallet(ImportWalletReducer.Action)
+        case importWallet(ImportWallet.Action)
         case onAppear
         case securityWarning(SecurityWarning.Action)
-        case updateDestination(OnboardingFlowReducer.State.Destination?)
+        case updateDestination(OnboardingFlow.State.Destination?)
     }
     
     public init() { }
     
     public var body: some Reducer<State, Action> {
-        Scope(state: \.importWalletState, action: /Action.importWallet) {
-            ImportWalletReducer()
+        Scope(state: \.importWalletState, action: \.importWallet) {
+            ImportWallet()
         }
 
-        Scope(state: \.securityWarningState, action: /Action.securityWarning) {
+        Scope(state: \.securityWarningState, action: \.securityWarning) {
             SecurityWarning()
         }
 
@@ -86,30 +85,5 @@ public struct OnboardingFlowReducer: Reducer {
                 return .none
             }
         }
-    }
-}
-
-// MARK: - ViewStore
-
-extension OnboardingFlowViewStore {
-    func bindingForDestination(_ destination: OnboardingFlowReducer.State.Destination) -> Binding<Bool> {
-        self.binding(
-            get: { $0.destination == destination },
-            send: { isActive in
-                return .updateDestination(isActive ? destination : nil)
-            }
-        )
-    }
-}
-
-// MARK: Placeholders
-
-extension OnboardingFlowReducer.State {
-    public static var initial: Self {
-        .init(
-            walletConfig: .initial,
-            importWalletState: .initial,
-            securityWarningState: .initial
-        )
     }
 }

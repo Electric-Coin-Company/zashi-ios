@@ -160,7 +160,7 @@ private extension RootView {
             )
             .alert(store: store.scope(
                 state: \.exportLogsState.$alert,
-                action: { .exportLogs(.alert($0)) }
+                action: \.exportLogs.alert
             ))
             .fullScreenCover(
                 isPresented:

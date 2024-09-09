@@ -13,16 +13,16 @@ import ExportLogs
 import WalletStatusPanel
 
 public struct PrivateDataConsentView: View {
-    var store: PrivateDataConsentStore
+    @Perception.Bindable var store: StoreOf<PrivateDataConsent>
     
     @State var walletStatus = WalletStatus.none
 
-    public init(store: PrivateDataConsentStore) {
+    public init(store: StoreOf<PrivateDataConsent>) {
         self.store = store
     }
 
     public var body: some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
+        WithPerceptionTracking {
             ScrollView {
                 Group {
                     ZashiIcon()
@@ -44,7 +44,7 @@ public struct PrivateDataConsentView: View {
 
                     HStack {
                         ZashiToggle(
-                            isOn: viewStore.$isAcknowledged,
+                            isOn: $store.isAcknowledged,
                             label: L10n.PrivateDataConsent.confirmation
                         )
                         
@@ -54,33 +54,33 @@ public struct PrivateDataConsentView: View {
                     .padding(.bottom, 40)
 
                     Button {
-                        viewStore.send(.exportRequested)
+                        store.send(.exportRequested)
                     } label: {
                         HStack(spacing: 10) {
                             Text(L10n.Settings.exportPrivateData.uppercased())
-                            if viewStore.isExportingData {
+                            if store.isExportingData {
                                 ProgressView()
                             }
                         }
                     }
                     .zcashStyle(.secondary)
-                    .disabled(!viewStore.isExportPossible)
+                    .disabled(!store.isExportPossible)
                     .padding(.horizontal, 8)
                     .padding(.bottom, 25)
 
                     #if DEBUG
                     Button {
-                        viewStore.send(.exportLogsRequested)
+                        store.send(.exportLogsRequested)
                     } label: {
                         HStack(spacing: 10) {
                             Text(L10n.Settings.exportLogsOnly.uppercased())
-                            if viewStore.isExportingLogs {
+                            if store.isExportingLogs {
                                 ProgressView()
                             }
                         }
                     }
                     .zcashStyle()
-                    .disabled(!viewStore.isExportPossible)
+                    .disabled(!store.isExportPossible)
                     .padding(.horizontal, 8)
                     .padding(.bottom, 50)
                     #endif
@@ -90,11 +90,11 @@ public struct PrivateDataConsentView: View {
             .padding(.vertical, 1)
             .zashiBack()
             .onAppear {
-                viewStore.send(.onAppear)
+                store.send(.onAppear)
             }
             .walletStatusPanel(background: .pattern, restoringStatus: $walletStatus)
 
-            shareLogsView(viewStore)
+            shareLogsView()
         }
         .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground(withPattern: true)
@@ -102,10 +102,10 @@ public struct PrivateDataConsentView: View {
 }
 
 private extension PrivateDataConsentView {
-    @ViewBuilder func shareLogsView(_ viewStore: PrivateDataConsentViewStore) -> some View {
-        if viewStore.exportBinding {
-            UIShareDialogView(activityItems: viewStore.exportURLs) {
-                viewStore.send(.shareFinished)
+    @ViewBuilder func shareLogsView() -> some View {
+        if store.exportBinding {
+            UIShareDialogView(activityItems: store.exportURLs) {
+                store.send(.shareFinished)
             }
             // UIShareDialogView only wraps UIActivityViewController presentation
             // so frame is set to 0 to not break SwiftUIs layout
@@ -120,4 +120,24 @@ private extension PrivateDataConsentView {
 
 #Preview {
     PrivateDataConsentView(store: .demo)
+}
+
+// MARK: - Store
+
+extension StoreOf<PrivateDataConsent> {
+    public static var demo = StoreOf<PrivateDataConsent>(
+        initialState: .initial
+    ) {
+        PrivateDataConsent()
+    }
+}
+
+// MARK: - Placeholders
+
+extension PrivateDataConsent.State {
+    public static let initial = PrivateDataConsent.State(
+        dataDbURL: [],
+        exportBinding: false,
+        exportLogsState: .initial
+    )
 }

@@ -23,7 +23,7 @@ class BalanceBreakdownTests: XCTestCase {
         let store = TestStore(
             initialState: .placeholder
         ) {
-            BalanceBreakdownReducer()
+            Balances()
         }
 
         store.dependencies.sdkSynchronizer = .mocked(shieldFunds: { _, _, _ in throw ZcashError.synchronizerNotPrepared })
@@ -54,7 +54,7 @@ class BalanceBreakdownTests: XCTestCase {
         let store = TestStore(
             initialState: .initial
         ) {
-            BalanceBreakdownReducer()
+            Balances()
         }
         
         store.dependencies.mainQueue = .immediate
@@ -71,7 +71,7 @@ class BalanceBreakdownTests: XCTestCase {
 
     func testShieldFundsButtonEnabledWhenShieldableFundsAvailable() async throws {
         let store = TestStore(
-            initialState: BalanceBreakdownReducer.State(
+            initialState: Balances.State(
                 autoShieldingThreshold: Zatoshi(1_000_000),
                 changePending: .zero,
                 isShieldingFunds: false,
@@ -82,7 +82,7 @@ class BalanceBreakdownTests: XCTestCase {
                 walletBalancesState: .initial
             )
         ) {
-            BalanceBreakdownReducer()
+            Balances()
         }
 
         XCTAssertFalse(store.state.isShieldingFunds)
@@ -92,7 +92,7 @@ class BalanceBreakdownTests: XCTestCase {
 
     func testShieldFundsButtonDisabledWhenShieldableFundsAvailableAndShielding() async throws {
         let store = TestStore(
-            initialState: BalanceBreakdownReducer.State(
+            initialState: Balances.State(
                 autoShieldingThreshold: Zatoshi(1_000_000),
                 changePending: .zero,
                 isShieldingFunds: true,
@@ -103,7 +103,7 @@ class BalanceBreakdownTests: XCTestCase {
                 walletBalancesState: .initial
             )
         ) {
-            BalanceBreakdownReducer()
+            Balances()
         }
 
         XCTAssertTrue(store.state.isShieldingFunds)
@@ -112,13 +112,13 @@ class BalanceBreakdownTests: XCTestCase {
     }
     
     func testShowHintbox() async throws {
-        var initialState = BalanceBreakdownReducer.State.initial
+        var initialState = Balances.State.initial
         initialState.isHintBoxVisible = false
 
         let store = TestStore(
             initialState: initialState
         ) {
-            BalanceBreakdownReducer()
+            Balances()
         }
         
         await store.send(.updateHintBoxVisibility(true)) { state in
@@ -129,13 +129,13 @@ class BalanceBreakdownTests: XCTestCase {
     }
     
     func testHideHintbox() async throws {
-        var initialState = BalanceBreakdownReducer.State.initial
+        var initialState = Balances.State.initial
         initialState.isHintBoxVisible = true
         
         let store = TestStore(
             initialState: initialState
         ) {
-            BalanceBreakdownReducer()
+            Balances()
         }
         
         await store.send(.updateHintBoxVisibility(false)) { state in

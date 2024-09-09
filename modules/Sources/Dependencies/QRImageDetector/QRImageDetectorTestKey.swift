@@ -10,7 +10,7 @@ import XCTestDynamicOverlay
 
 extension QRImageDetectorClient: TestDependencyKey {
     public static let testValue = Self(
-        check: XCTUnimplemented("\(Self.self).check", placeholder: nil)
+        check: unimplemented("\(Self.self).check", placeholder: nil)
     )
 }
 

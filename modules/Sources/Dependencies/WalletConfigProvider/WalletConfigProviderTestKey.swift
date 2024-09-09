@@ -12,8 +12,8 @@ import Models
 
 extension WalletConfigProviderClient: TestDependencyKey {
     public static let testValue = Self(
-        load: XCTUnimplemented("\(Self.self).load", placeholder: Just(WalletConfig.initial).eraseToAnyPublisher()),
-        update: XCTUnimplemented("\(Self.self).update")
+        load: unimplemented("\(Self.self).load", placeholder: Just(WalletConfig.initial).eraseToAnyPublisher()),
+        update: unimplemented("\(Self.self).update", placeholder: Just({}()).eraseToAnyPublisher())
     )
 }
 

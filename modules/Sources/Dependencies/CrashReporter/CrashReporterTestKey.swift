@@ -10,10 +10,10 @@ import XCTestDynamicOverlay
 
 extension CrashReporterClient: TestDependencyKey {
     public static let testValue = Self(
-        configure: XCTUnimplemented("\(Self.self).configure"),
-        testCrash: XCTUnimplemented("\(Self.self).testCrash"),
-        optIn: XCTUnimplemented("\(Self.self).optIn"),
-        optOut: XCTUnimplemented("\(Self.self).optOut")
+        configure: unimplemented("\(Self.self).configure", placeholder: {}()),
+        testCrash: unimplemented("\(Self.self).testCrash", placeholder: {}()),
+        optIn: unimplemented("\(Self.self).optIn", placeholder: {}()),
+        optOut: unimplemented("\(Self.self).optOut", placeholder: {}())
     )
 }
 

@@ -11,9 +11,9 @@ import Combine
 
 extension HideBalancesClient: TestDependencyKey {
     public static let testValue = Self(
-        prepare: XCTUnimplemented("\(Self.self).prepare"),
-        value: XCTUnimplemented("\(Self.self).value", placeholder: .init(false)),
-        updateValue: XCTUnimplemented("\(Self.self).updateValue")
+        prepare: unimplemented("\(Self.self).prepare", placeholder: {}()),
+        value: unimplemented("\(Self.self).value", placeholder: .init(false)),
+        updateValue: unimplemented("\(Self.self).updateValue", placeholder: {}())
     )
 }
 

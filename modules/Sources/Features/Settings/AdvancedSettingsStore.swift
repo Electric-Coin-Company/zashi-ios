@@ -31,7 +31,7 @@ public struct AdvancedSettings {
         public var destination: Destination?
         public var isInAppBrowserOn = false
         public var phraseDisplayState: RecoveryPhraseDisplay.State
-        public var privateDataConsentState: PrivateDataConsentReducer.State
+        public var privateDataConsentState: PrivateDataConsent.State
         public var serverSetupState: ServerSetup.State
         public var uAddress: UnifiedAddress? = nil
         
@@ -49,7 +49,7 @@ public struct AdvancedSettings {
             destination: Destination? = nil,
             isInAppBrowserOn: Bool = false,
             phraseDisplayState: RecoveryPhraseDisplay.State,
-            privateDataConsentState: PrivateDataConsentReducer.State,
+            privateDataConsentState: PrivateDataConsent.State,
             serverSetupState: ServerSetup.State,
             uAddress: UnifiedAddress? = nil
         ) {
@@ -71,7 +71,7 @@ public struct AdvancedSettings {
         case deleteWallet(DeleteWallet.Action)
         case onAppear
         case phraseDisplay(RecoveryPhraseDisplay.Action)
-        case privateDataConsent(PrivateDataConsentReducer.Action)
+        case privateDataConsent(PrivateDataConsent.Action)
         case protectedAccessRequest(State.Destination)
         case serverSetup(ServerSetup.Action)
         case updateDestination(AdvancedSettings.State.Destination?)
@@ -142,23 +142,23 @@ public struct AdvancedSettings {
             }
         }
 
-        Scope(state: \.currencyConversionSetupState, action: /Action.currencyConversionSetup) {
+        Scope(state: \.currencyConversionSetupState, action: \.currencyConversionSetup) {
             CurrencyConversionSetup()
         }
 
-        Scope(state: \.phraseDisplayState, action: /Action.phraseDisplay) {
+        Scope(state: \.phraseDisplayState, action: \.phraseDisplay) {
             RecoveryPhraseDisplay()
         }
 
-        Scope(state: \.privateDataConsentState, action: /Action.privateDataConsent) {
-            PrivateDataConsentReducer()
+        Scope(state: \.privateDataConsentState, action: \.privateDataConsent) {
+            PrivateDataConsent()
         }
 
-        Scope(state: \.serverSetupState, action: /Action.serverSetup) {
+        Scope(state: \.serverSetupState, action: \.serverSetup) {
             ServerSetup()
         }
 
-        Scope(state: \.deleteWalletState, action: /Action.deleteWallet) {
+        Scope(state: \.deleteWalletState, action: \.deleteWallet) {
             DeleteWallet()
         }
     }

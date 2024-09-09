@@ -11,8 +11,8 @@ import XCTestDynamicOverlay
 
 extension AutolockHandlerClient: TestDependencyKey {
     public static let testValue = Self(
-        value: XCTUnimplemented("\(Self.self).value"),
-        batteryStatePublisher: XCTUnimplemented(
+        value: unimplemented("\(Self.self).value", placeholder: {}()),
+        batteryStatePublisher: unimplemented(
             "\(Self.self).batteryStatePublisher",
             placeholder: NotificationCenter.Publisher(center: .default, name: Notification.Name(rawValue: "placeholder"))
         )

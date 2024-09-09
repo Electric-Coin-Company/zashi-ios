@@ -10,6 +10,6 @@ import XCTestDynamicOverlay
 
 extension LocalAuthenticationClient: TestDependencyKey {
     public static let testValue = Self(
-        authenticate: XCTUnimplemented("\(Self.self).authenticate", placeholder: false)
+        authenticate: unimplemented("\(Self.self).authenticate", placeholder: false)
     )
 }

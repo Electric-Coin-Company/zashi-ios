@@ -14,6 +14,7 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct SupportDataGeneratorClient {
     public let generate: () -> SupportData
 }

@@ -14,6 +14,7 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct MnemonicClient {
     /// Random 24 words mnemonic phrase
     public var randomMnemonic: () throws -> String
@@ -22,7 +23,7 @@ public struct MnemonicClient {
     /// Generate deterministic seed from mnemonic phrase
     public var toSeed: (String) throws -> [UInt8]
     /// Get this mnemonic phrase as array of words
-    public var asWords: (String) -> [String]
+    public var asWords: (String) -> [String] = { _ in [] }
     /// Validates whether the given mnemonic is correct
     public var isValid: (String) throws -> Void
 }

@@ -16,7 +16,7 @@ import PartialProposalError
 class BalanceBreakdownSnapshotTests: XCTestCase {
     func testBalanceBreakdownSnapshot() throws {
         let store = Store(
-            initialState: BalanceBreakdownReducer.State(
+            initialState: Balances.State(
                 autoShieldingThreshold: Zatoshi(1_000_000),
                 changePending: .zero,
                 isShieldingFunds: false,
@@ -26,20 +26,21 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
                 walletBalancesState: .initial
             )
         ) {
-            BalanceBreakdownReducer()
+            Balances()
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.mainQueue, .immediate)
                 .dependency(\.walletStatusPanel, .noOp)
                 .dependency(\.diskSpaceChecker, .mockEmptyDisk)
                 .dependency(\.hideBalances, .noOp)
+                .dependency(\.exchangeRate, .noOp)
         }
         
-        addAttachments(BalanceBreakdownView(store: store, tokenName: "ZEC"))
+        addAttachments(BalancesView(store: store, tokenName: "ZEC"))
     }
     
     func testBalanceBreakdownSnapshot_HintBox() throws {
         let store = Store(
-            initialState: BalanceBreakdownReducer.State(
+            initialState: Balances.State(
                 autoShieldingThreshold: Zatoshi(1_000_000),
                 changePending: .zero,
                 isShieldingFunds: false,
@@ -50,13 +51,14 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
                 walletBalancesState: .initial
             )
         ) {
-            BalanceBreakdownReducer()
+            Balances()
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.mainQueue, .immediate)
                 .dependency(\.walletStatusPanel, .noOp)
                 .dependency(\.diskSpaceChecker, .mockEmptyDisk)
+                .dependency(\.exchangeRate, .noOp)
         }
 
-        addAttachments(BalanceBreakdownView(store: store, tokenName: "ZEC"))
+        addAttachments(BalancesView(store: store, tokenName: "ZEC"))
     }
 }

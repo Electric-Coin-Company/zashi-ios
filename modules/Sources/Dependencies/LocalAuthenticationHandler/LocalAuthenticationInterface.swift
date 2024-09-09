@@ -14,6 +14,7 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct LocalAuthenticationClient {
     public let authenticate: @Sendable () async -> Bool
 }

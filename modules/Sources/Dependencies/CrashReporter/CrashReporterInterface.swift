@@ -15,6 +15,7 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct CrashReporterClient {
     /// Configures the crash reporter if possible.
     /// if it can't be configured this will fail silently

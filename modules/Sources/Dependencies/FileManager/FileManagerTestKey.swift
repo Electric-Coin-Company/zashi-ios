@@ -7,11 +7,12 @@
 
 import ComposableArchitecture
 import XCTestDynamicOverlay
+import Utils
 
 extension FileManagerClient: TestDependencyKey {
     public static let testValue = Self(
-        url: XCTUnimplemented("\(Self.self).url"),
-        fileExists: XCTUnimplemented("\(Self.self).fileExists", placeholder: false),
-        removeItem: XCTUnimplemented("\(Self.self).removeItem")
+        url: unimplemented("\(Self.self).url", placeholder: .emptyURL),
+        fileExists: unimplemented("\(Self.self).fileExists", placeholder: false),
+        removeItem: unimplemented("\(Self.self).removeItem", placeholder: {}())
     )
 }

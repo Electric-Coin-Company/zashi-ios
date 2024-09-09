@@ -22,10 +22,9 @@ import ExchangeRate
 import CurrencyConversionSetup
 import UserPreferencesStorage
 
-public typealias TabsStore = Store<TabsReducer.State, TabsReducer.Action>
-public typealias TabsViewStore = ViewStore<TabsReducer.State, TabsReducer.Action>
-
-public struct TabsReducer: Reducer {
+@Reducer
+public struct Tabs {
+    @ObservableState
     public struct State: Equatable {
         public enum Destination: Equatable {
             case currencyConversionSetup
@@ -33,7 +32,7 @@ public struct TabsReducer: Reducer {
             case settings
         }
 
-        public enum Tab: Int, CaseIterable {
+        public enum Tab: Int, Equatable, CaseIterable {
             case account = 0
             case send
             case receive
@@ -54,7 +53,7 @@ public struct TabsReducer: Reducer {
         }
         
         public var addressDetailsState: AddressDetails.State
-        public var balanceBreakdownState: BalanceBreakdownReducer.State
+        public var balanceBreakdownState: Balances.State
         public var currencyConversionSetupState: CurrencyConversionSetup.State
         public var destination: Destination?
         public var isRateEducationEnabled = false
@@ -62,12 +61,12 @@ public struct TabsReducer: Reducer {
         public var homeState: Home.State
         public var selectedTab: Tab = .account
         public var sendConfirmationState: SendConfirmation.State
-        public var sendState: SendFlowReducer.State
-        public var settingsState: SettingsReducer.State
+        public var sendState: SendFlow.State
+        public var settingsState: Settings.State
         
         public init(
             addressDetailsState: AddressDetails.State,
-            balanceBreakdownState: BalanceBreakdownReducer.State,
+            balanceBreakdownState: Balances.State,
             currencyConversionSetupState: CurrencyConversionSetup.State,
             destination: Destination? = nil,
             isRateEducationEnabled: Bool = false,
@@ -75,8 +74,8 @@ public struct TabsReducer: Reducer {
             homeState: Home.State,
             selectedTab: Tab = .account,
             sendConfirmationState: SendConfirmation.State,
-            sendState: SendFlowReducer.State,
-            settingsState: SettingsReducer.State
+            sendState: SendFlow.State,
+            settingsState: Settings.State
         ) {
             self.addressDetailsState = addressDetailsState
             self.balanceBreakdownState = balanceBreakdownState
@@ -92,19 +91,20 @@ public struct TabsReducer: Reducer {
         }
     }
     
-    public enum Action: Equatable {
+    public enum Action: BindableAction, Equatable {
         case addressDetails(AddressDetails.Action)
-        case balanceBreakdown(BalanceBreakdownReducer.Action)
+        case balanceBreakdown(Balances.Action)
+        case binding(BindingAction<Tabs.State>)
         case currencyConversionCloseTapped
         case currencyConversionSetup(CurrencyConversionSetup.Action)
         case home(Home.Action)
         case onAppear
         case rateTooltipTapped
         case selectedTabChanged(State.Tab)
-        case send(SendFlowReducer.Action)
+        case send(SendFlow.Action)
         case sendConfirmation(SendConfirmation.Action)
-        case settings(SettingsReducer.Action)
-        case updateDestination(TabsReducer.State.Destination?)
+        case settings(Settings.Action)
+        case updateDestination(Tabs.State.Destination?)
     }
 
     @Dependency(\.exchangeRate) var exchangeRate
@@ -114,38 +114,43 @@ public struct TabsReducer: Reducer {
     public init() { }
 
     public var body: some Reducer<State, Action> {
-        Scope(state: \.sendState, action: /Action.send) {
-            SendFlowReducer()
+        BindingReducer()
+        
+        Scope(state: \.sendState, action: \.send) {
+            SendFlow()
         }
 
-        Scope(state: \.sendConfirmationState, action: /Action.sendConfirmation) {
+        Scope(state: \.sendConfirmationState, action: \.sendConfirmation) {
             SendConfirmation()
         }
 
-        Scope(state: \.addressDetailsState, action: /Action.addressDetails) {
+        Scope(state: \.addressDetailsState, action: \.addressDetails) {
             AddressDetails()
         }
         
-        Scope(state: \.currencyConversionSetupState, action: /Action.currencyConversionSetup) {
+        Scope(state: \.currencyConversionSetupState, action: \.currencyConversionSetup) {
             CurrencyConversionSetup()
         }
 
-        Scope(state: \.balanceBreakdownState, action: /Action.balanceBreakdown) {
-            BalanceBreakdownReducer()
+        Scope(state: \.balanceBreakdownState, action: \.balanceBreakdown) {
+            Balances()
         }
 
-        Scope(state: \.homeState, action: /Action.home) {
+        Scope(state: \.homeState, action: \.home) {
             Home()
         }
 
-        Scope(state: \.settingsState, action: /Action.settings) {
-            SettingsReducer()
+        Scope(state: \.settingsState, action: \.settings) {
+            Settings()
         }
 
         Reduce { state, action in
             switch action {
             case .onAppear:
                 state.isRateEducationEnabled = userStoredPreferences.exchangeRate() == nil
+                return .none
+                
+            case .binding:
                 return .none
                 
             case .addressDetails:
@@ -248,64 +253,4 @@ public struct TabsReducer: Reducer {
             }
         }
     }
-}
-
-// MARK: - Store
-
-extension TabsStore {
-    public static var demo = TabsStore(
-        initialState: .initial
-    ) {
-        TabsReducer()
-    }
-}
-
-extension TabsStore {
-    func settingsStore() -> SettingsStore {
-        self.scope(
-            state: \.settingsState,
-            action: TabsReducer.Action.settings
-        )
-    }
-    
-    func sendConfirmationStore() -> StoreOf<SendConfirmation> {
-        self.scope(
-            state: \.sendConfirmationState,
-            action: TabsReducer.Action.sendConfirmation
-        )
-    }
-    
-    func currencyConversionSetupStore() -> StoreOf<CurrencyConversionSetup> {
-        self.scope(
-            state: \.currencyConversionSetupState,
-            action: TabsReducer.Action.currencyConversionSetup
-        )
-    }
-}
-
-// MARK: - ViewStore
-
-extension TabsViewStore {
-    func bindingForDestination(_ destination: TabsReducer.State.Destination) -> Binding<Bool> {
-        self.binding(
-            get: { $0.destination == destination },
-            send: { isActive in .updateDestination(isActive ? destination : nil) }
-        )
-    }
-}
-
-// MARK: - Placeholders
-
-extension TabsReducer.State {
-    public static let initial = TabsReducer.State(
-        addressDetailsState: .initial,
-        balanceBreakdownState: .initial,
-        currencyConversionSetupState: .initial,
-        destination: nil,
-        homeState: .initial,
-        selectedTab: .account,
-        sendConfirmationState: .initial,
-        sendState: .initial,
-        settingsState: .initial
-    )
 }

@@ -64,7 +64,7 @@ public struct SecurityWarning {
     public var body: some Reducer<State, Action> {
         BindingReducer()
         
-        Scope(state: \.recoveryPhraseDisplayState, action: /Action.recoveryPhraseDisplay) {
+        Scope(state: \.recoveryPhraseDisplayState, action: \.recoveryPhraseDisplay) {
             RecoveryPhraseDisplay()
         }
 

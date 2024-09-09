@@ -324,7 +324,6 @@ public struct ServerSetupView: View {
             .resizable()
             .frame(width: 20, height: 20)
             .foregroundColor(Design.Text.primary.color)
-
     }
 
     private func activeBadge() -> some View {

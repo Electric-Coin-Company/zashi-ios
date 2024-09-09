@@ -13,14 +13,14 @@ import SecurityWarning
 import ZcashLightClientKit
 
 public struct PlainOnboardingView: View {
-    let store: OnboardingFlowStore
+    @Perception.Bindable var store: StoreOf<OnboardingFlow>
 
-    public init(store: OnboardingFlowStore) {
+    public init(store: StoreOf<OnboardingFlow>) {
         self.store = store
     }
 
     public var body: some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
+        WithPerceptionTracking {
             VStack {
                 Asset.Assets.welcomeScreenLogo.image
                     .renderingMode(.template)
@@ -37,36 +37,36 @@ public struct PlainOnboardingView: View {
                 Spacer()
                 
                 Button(L10n.PlainOnboarding.Button.createNewWallet.uppercased()) {
-                    viewStore.send(.createNewWallet)
+                    store.send(.createNewWallet)
                 }
                 .zcashStyle()
                 .padding(.bottom, 30)
 
                 Button(L10n.PlainOnboarding.Button.restoreWallet.uppercased()) {
-                    viewStore.send(.importExistingWallet)
+                    store.send(.importExistingWallet)
                 }
                 .zcashStyle(.secondary)
                 .padding(.bottom, 50)
             }
             .padding(.horizontal, 70)
             .navigationLinkEmpty(
-                isActive: viewStore.bindingForDestination(.importExistingWallet),
+                isActive: store.bindingFor(.importExistingWallet),
                 destination: {
                     ImportWalletView(
                         store: store.scope(
                             state: \.importWalletState,
-                            action: OnboardingFlowReducer.Action.importWallet
+                            action: \.importWallet
                         )
                     )
                 }
             )
             .navigationLinkEmpty(
-                isActive: viewStore.bindingForDestination(.createNewWallet),
+                isActive: store.bindingFor(.createNewWallet),
                 destination: {
                     SecurityWarningView(
                         store: store.scope(
                             state: \.securityWarningState,
-                            action: OnboardingFlowReducer.Action.securityWarning
+                            action: \.securityWarning
                         )
                     )
                 }
@@ -81,13 +81,36 @@ public struct PlainOnboardingView: View {
     PlainOnboardingView(
         store:
             Store(
-                initialState: OnboardingFlowReducer.State(
+                initialState: OnboardingFlow.State(
                     walletConfig: .initial,
                     importWalletState: .initial,
                     securityWarningState: .initial
                 )
             ) {
-                OnboardingFlowReducer()
+                OnboardingFlow()
             }
     )
+}
+
+// MARK: - ViewStore
+
+extension StoreOf<OnboardingFlow> {
+    func bindingFor(_ destination: OnboardingFlow.State.Destination) -> Binding<Bool> {
+        Binding<Bool>(
+            get: { self.destination == destination },
+            set: { self.send(.updateDestination($0 ? destination : nil)) }
+        )
+    }
+}
+
+// MARK: Placeholders
+
+extension OnboardingFlow.State {
+    public static var initial: Self {
+        .init(
+            walletConfig: .initial,
+            importWalletState: .initial,
+            securityWarningState: .initial
+        )
+    }
 }

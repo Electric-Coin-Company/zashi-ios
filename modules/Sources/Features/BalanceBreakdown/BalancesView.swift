@@ -1,5 +1,5 @@
 //
-//  BalanceBreakdownView.swift
+//  BalancesView.swift
 //  secant-testnet
 //
 //  Created by Lukáš Korba on 04.08.2022.
@@ -19,8 +19,8 @@ import WalletBalances
 import Combine
 import WalletStatusPanel
 
-public struct BalanceBreakdownView: View {
-    let store: BalanceBreakdownStore
+public struct BalancesView: View {
+    @Perception.Bindable var store: StoreOf<Balances>
     let tokenName: String
     
     @Dependency(\.hideBalances) var hideBalances
@@ -28,18 +28,18 @@ public struct BalanceBreakdownView: View {
     @State private var cancellable: AnyCancellable?
     @State var walletStatus = WalletStatus.none
 
-    public init(store: BalanceBreakdownStore, tokenName: String) {
+    public init(store: StoreOf<Balances>, tokenName: String) {
         self.store = store
         self.tokenName = tokenName
     }
     
     public var body: some View {
         ScrollView {
-            WithViewStore(store, observe: { $0 }) { viewStore in
+            WithPerceptionTracking {
                 WalletBalancesView(
                     store: store.scope(
                         state: \.walletBalancesState,
-                        action: BalanceBreakdownReducer.Action.walletBalances
+                        action: \.walletBalances
                     ),
                     tokenName: tokenName,
                     underlinedAvailableBalance: false,
@@ -50,11 +50,11 @@ public struct BalanceBreakdownView: View {
                     .frame(height: 1)
                     .padding(EdgeInsets(top: 0, leading: 30, bottom: 10, trailing: 30))
                 
-                balancesBlock(viewStore)
+                balancesBlock()
                 
-                transparentBlock(viewStore)
+                transparentBlock()
                     .frame(minHeight: 166)
-                    .padding(.horizontal, viewStore.isHintBoxVisible ? 15 : 30)
+                    .padding(.horizontal, store.isHintBoxVisible ? 15 : 30)
                     .background {
                         Asset.Colors.shade92.color
                     }
@@ -78,7 +78,7 @@ public struct BalanceBreakdownView: View {
                 .padding(.top, walletStatus == .restoring ? 0 : 40)
                 .padding(.bottom, 25)
                 .navigationLinkEmpty(
-                    isActive: viewStore.bindingForPartialProposalError,
+                    isActive: store.bindingFor(.partialProposalError),
                     destination: {
                         PartialProposalErrorView(store: store.partialProposalErrorStore())
                     }
@@ -91,7 +91,7 @@ public struct BalanceBreakdownView: View {
         .alert(
             store: store.scope(
                 state: \.$alert,
-                action: { .alert($0) }
+                action: \.alert
             )
         )
         .onAppear {
@@ -109,8 +109,8 @@ public struct BalanceBreakdownView: View {
     }
 }
 
-extension BalanceBreakdownView {
-    @ViewBuilder func balancesBlock(_ viewStore: BalanceBreakdownViewStore) -> some View {
+extension BalancesView {
+    @ViewBuilder func balancesBlock() -> some View {
         VStack(spacing: 20) {
             HStack(spacing: 0) {
                 Text(L10n.Balances.spendableBalance.uppercased())
@@ -119,7 +119,7 @@ extension BalanceBreakdownView {
                 Spacer()
                 
                 ZatoshiRepresentationView(
-                    balance: viewStore.shieldedBalance,
+                    balance: store.shieldedBalance,
                     fontName: FontFamily.Archivo.semiBold.name,
                     mostSignificantFontSize: 16,
                     leastSignificantFontSize: 8,
@@ -142,7 +142,7 @@ extension BalanceBreakdownView {
                 Spacer()
                 
                 ZatoshiRepresentationView(
-                    balance: viewStore.changePending,
+                    balance: store.changePending,
                     fontName: FontFamily.Archivo.semiBold.name,
                     mostSignificantFontSize: 16,
                     leastSignificantFontSize: 8,
@@ -150,9 +150,9 @@ extension BalanceBreakdownView {
                     couldBeHidden: true
                 )
                 .foregroundColor(Asset.Colors.shade55.color)
-                .padding(.trailing, viewStore.changePending.amount > 0 ? 0 : 21)
+                .padding(.trailing, store.changePending.amount > 0 ? 0 : 21)
 
-                if viewStore.changePending.amount > 0 {
+                if store.changePending.amount > 0 {
                     progressViewLooping()
                         .padding(.leading, 10)
                 }
@@ -165,7 +165,7 @@ extension BalanceBreakdownView {
                 Spacer()
                 
                 ZatoshiRepresentationView(
-                    balance: viewStore.pendingTransactions,
+                    balance: store.pendingTransactions,
                     fontName: FontFamily.Archivo.semiBold.name,
                     mostSignificantFontSize: 16,
                     leastSignificantFontSize: 8,
@@ -173,9 +173,9 @@ extension BalanceBreakdownView {
                     couldBeHidden: true
                 )
                 .foregroundColor(Asset.Colors.shade55.color)
-                .padding(.trailing, viewStore.pendingTransactions.amount > 0 ? 0 : 21)
+                .padding(.trailing, store.pendingTransactions.amount > 0 ? 0 : 21)
 
-                if viewStore.pendingTransactions.amount > 0 {
+                if store.pendingTransactions.amount > 0 {
                     progressViewLooping()
                         .padding(.leading, 10)
                 }
@@ -185,20 +185,20 @@ extension BalanceBreakdownView {
         .padding(.vertical, 15)
     }
     
-    @ViewBuilder func transparentBlock(_ viewStore: BalanceBreakdownViewStore) -> some View {
-        if viewStore.isHintBoxVisible {
-            transparentBlockHintBox(viewStore)
+    @ViewBuilder func transparentBlock() -> some View {
+        if store.isHintBoxVisible {
+            transparentBlockHintBox()
                 .frame(maxWidth: .infinity)
         } else {
-            transparentBlockShielding(viewStore)
+            transparentBlockShielding()
         }
     }
 
-    @ViewBuilder private func transparentBlockShielding(_ viewStore: BalanceBreakdownViewStore) -> some View {
+    @ViewBuilder private func transparentBlockShielding() -> some View {
         VStack {
             HStack(spacing: 0) {
                 Button {
-                    viewStore.send(.updateHintBoxVisibility(true))
+                    store.send(.updateHintBoxVisibility(true))
                 } label: {
                     HStack(spacing: 3) {
                         Text(L10n.Balances.transparentBalance.uppercased())
@@ -216,7 +216,7 @@ extension BalanceBreakdownView {
                 Spacer()
                 
                 ZatoshiRepresentationView(
-                    balance: viewStore.transparentBalance,
+                    balance: store.transparentBalance,
                     fontName: FontFamily.Archivo.semiBold.name,
                     mostSignificantFontSize: 16,
                     leastSignificantFontSize: 8,
@@ -228,9 +228,9 @@ extension BalanceBreakdownView {
             .padding(.bottom, 10)
 
             Button {
-                viewStore.send(.shieldFunds)
+                store.send(.shieldFunds)
             } label: {
-                if viewStore.isShieldingFunds {
+                if store.isShieldingFunds {
                     HStack(spacing: 10) {
                         Text(L10n.Balances.shieldingInProgress.uppercased())
                             .font(.custom(FontFamily.Inter.medium.name, size: 10))
@@ -250,14 +250,14 @@ extension BalanceBreakdownView {
                 shadowOffset: 6
             )
             .padding(.bottom, 15)
-            .disabled(!viewStore.isShieldableBalanceAvailable || viewStore.isShieldingFunds || isHidden)
+            .disabled(!store.isShieldableBalanceAvailable || store.isShieldingFunds || isHidden)
             
             Text("(\(ZatoshiStringRepresentation.feeFormat))")
                 .font(.custom(FontFamily.Inter.semiBold.name, size: 11))
         }
     }
 
-    @ViewBuilder private func transparentBlockHintBox(_ viewStore: BalanceBreakdownViewStore) -> some View {
+    @ViewBuilder private func transparentBlockHintBox() -> some View {
         VStack {
             Text(L10n.Balances.HintBox.message)
                 .font(.custom(FontFamily.Inter.regular.name, size: 11))
@@ -267,7 +267,7 @@ extension BalanceBreakdownView {
             Spacer()
             
             Button {
-                viewStore.send(.updateHintBoxVisibility(false))
+                store.send(.updateHintBoxVisibility(false))
             } label: {
                 Text(L10n.Balances.HintBox.dismiss.uppercased())
                     .font(.custom(FontFamily.Inter.semiBold.name, size: 10))
@@ -290,9 +290,9 @@ extension BalanceBreakdownView {
 
 #Preview {
     NavigationView {
-        BalanceBreakdownView(
-            store: BalanceBreakdownStore(
-                initialState: BalanceBreakdownReducer.State(
+        BalancesView(
+            store: StoreOf<Balances>(
+                initialState: Balances.State(
                     autoShieldingThreshold: Zatoshi(1_000_000),
                     changePending: Zatoshi(25_234_000),
                     isShieldingFunds: true,
@@ -307,10 +307,64 @@ extension BalanceBreakdownView {
                     walletBalancesState: .initial
                 )
             ) {
-                BalanceBreakdownReducer()
+                Balances()
             },
             tokenName: "ZEC"
         )
     }
     .navigationViewStyle(.stack)
+}
+
+// MARK: - Store
+
+extension StoreOf<Balances> {
+    func partialProposalErrorStore() -> StoreOf<PartialProposalError> {
+        self.scope(
+            state: \.partialProposalErrorState,
+            action: \.partialProposalError
+        )
+    }
+}
+
+// MARK: - Placeholders
+
+extension Balances.State {
+    public static let placeholder = Balances.State(
+        autoShieldingThreshold: .zero,
+        changePending: .zero,
+        isShieldingFunds: false,
+        partialProposalErrorState: .initial,
+        pendingTransactions: .zero,
+        syncProgressState: .initial,
+        walletBalancesState: .initial
+    )
+    
+    public static let initial = Balances.State(
+        autoShieldingThreshold: .zero,
+        changePending: .zero,
+        isShieldingFunds: false,
+        partialProposalErrorState: .initial,
+        pendingTransactions: .zero,
+        syncProgressState: .initial,
+        walletBalancesState: .initial
+    )
+}
+
+extension StoreOf<Balances> {
+    public static let placeholder = StoreOf<Balances>(
+        initialState: .placeholder
+    ) {
+        Balances()
+    }
+}
+
+// MARK: - Bondings
+
+extension StoreOf<Balances> {
+    func bindingFor(_ destination: Balances.State.Destination) -> Binding<Bool> {
+        Binding<Bool>(
+            get: { self.destination == destination },
+            set: { self.send(.updateDestination($0 ? destination : nil)) }
+        )
+    }
 }

@@ -17,14 +17,13 @@ import DatabaseFiles
 import ExportLogs
 import ZcashSDKEnvironment
 
-public typealias PrivateDataConsentStore = Store<PrivateDataConsentReducer.State, PrivateDataConsentReducer.Action>
-public typealias PrivateDataConsentViewStore = ViewStore<PrivateDataConsentReducer.State, PrivateDataConsentReducer.Action>
-
-public struct PrivateDataConsentReducer: Reducer {
+@Reducer
+public struct PrivateDataConsent {
+    @ObservableState
     public struct State: Equatable {
         public var exportBinding: Bool
         public var exportOnlyLogs = true
-        @BindingState public var isAcknowledged: Bool = false
+        public var isAcknowledged: Bool = false
         public var isExportingData: Bool
         public var isExportingLogs: Bool
         public var dataDbURL: [URL] = []
@@ -60,7 +59,7 @@ public struct PrivateDataConsentReducer: Reducer {
     }
     
     public enum Action: BindableAction, Equatable {
-        case binding(BindingAction<PrivateDataConsentReducer.State>)
+        case binding(BindingAction<PrivateDataConsent.State>)
         case exportLogs(ExportLogs.Action)
         case exportLogsRequested
         case exportRequested
@@ -77,7 +76,7 @@ public struct PrivateDataConsentReducer: Reducer {
     public var body: some Reducer<State, Action> {
         BindingReducer()
 
-        Scope(state: \.exportLogsState, action: /Action.exportLogs) {
+        Scope(state: \.exportLogsState, action: \.exportLogs) {
             ExportLogs()
         }
         
@@ -110,32 +109,9 @@ public struct PrivateDataConsentReducer: Reducer {
                 state.exportBinding = false
                 return .none
                 
-            case .binding(\.$isAcknowledged):
-                return .none
-                
             case .binding:
                 return .none
             }
         }
     }
-}
-
-// MARK: - Store
-
-extension PrivateDataConsentStore {
-    public static var demo = PrivateDataConsentStore(
-        initialState: .initial
-    ) {
-        PrivateDataConsentReducer()
-    }
-}
-
-// MARK: - Placeholders
-
-extension PrivateDataConsentReducer.State {
-    public static let initial = PrivateDataConsentReducer.State(
-        dataDbURL: [],
-        exportBinding: false,
-        exportLogsState: .initial
-    )
 }

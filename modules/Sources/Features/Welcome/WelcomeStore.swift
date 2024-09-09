@@ -8,9 +8,9 @@
 import Foundation
 import ComposableArchitecture
 
-public typealias WelcomeStore = Store<WelcomeReducer.State, WelcomeReducer.Action>
-
-public struct WelcomeReducer: Reducer {
+@Reducer
+public struct Welcome {
+    @ObservableState
     public struct State: Equatable { }
     
     public enum Action: Equatable {
@@ -19,23 +19,7 @@ public struct WelcomeReducer: Reducer {
     
     public init() {}
     
-    public func reduce(into state: inout State, action: Action) -> ComposableArchitecture.Effect<Action> {
-        return .none
+    public var body: some Reducer<State, Action> {
+        Reduce { _, _ in return .none }
     }
-}
-
-// MARK: - Store
-
-extension WelcomeStore {
-    public static var demo = WelcomeStore(
-        initialState: .initial
-    ) {
-        WelcomeReducer()
-    }
-}
-
-// MARK: - Placeholders
-
-extension WelcomeReducer.State {
-    public static let initial = WelcomeReducer.State()
 }

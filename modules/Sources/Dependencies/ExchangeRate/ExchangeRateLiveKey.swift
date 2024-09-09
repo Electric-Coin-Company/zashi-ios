@@ -25,28 +25,32 @@ class ExchangeRateProvider {
     var nilValuesCounter = 0
 
     init() {
-        @Dependency (\.sdkSynchronizer) var sdkSynchronizer
-
-        cancellable = sdkSynchronizer.exchangeRateUSDStream().sink { [weak self] result in
-            self?.resolveResult(result)
+        if !_XCTIsTesting {
+            @Dependency (\.sdkSynchronizer) var sdkSynchronizer
+            
+            cancellable = sdkSynchronizer.exchangeRateUSDStream().sink { [weak self] result in
+                self?.resolveResult(result)
+            }
         }
     }
     
     func refreshExchangeRateUSD() {
-        // guard the feature is opted-in by a user
-        @Dependency (\.userStoredPreferences) var userStoredPreferences
-
-        guard let exchangeRate = userStoredPreferences.exchangeRate(), exchangeRate.automatic else {
-            return
+        if !_XCTIsTesting {
+            // guard the feature is opted-in by a user
+            @Dependency (\.userStoredPreferences) var userStoredPreferences
+            
+            guard let exchangeRate = userStoredPreferences.exchangeRate(), exchangeRate.automatic else {
+                return
+            }
+            
+            guard refreshTimer == nil else {
+                return
+            }
+            
+            @Dependency (\.sdkSynchronizer) var sdkSynchronizer
+            
+            sdkSynchronizer.refreshExchangeRateUSD()
         }
-        
-        guard refreshTimer == nil else {
-            return
-        }
-        
-        @Dependency (\.sdkSynchronizer) var sdkSynchronizer
-
-        sdkSynchronizer.refreshExchangeRateUSD()
     }
     
     func resolveResult(_ result: FiatCurrencyResult?) {

@@ -10,9 +10,9 @@ import XCTestDynamicOverlay
 
 extension FeedbackGeneratorClient: TestDependencyKey {
     public static let testValue = Self(
-        generateSuccessFeedback: XCTUnimplemented("\(Self.self).generateSuccessFeedback"),
-        generateWarningFeedback: XCTUnimplemented("\(Self.self).generateWarningFeedback"),
-        generateErrorFeedback: XCTUnimplemented("\(Self.self).generateErrorFeedback")
+        generateSuccessFeedback: unimplemented("\(Self.self).generateSuccessFeedback"),
+        generateWarningFeedback: unimplemented("\(Self.self).generateWarningFeedback"),
+        generateErrorFeedback: unimplemented("\(Self.self).generateErrorFeedback")
     )
 }
 

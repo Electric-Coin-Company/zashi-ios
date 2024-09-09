@@ -19,7 +19,7 @@ public struct SendFlowView: View {
         case message
     }
     
-    let store: SendFlowStore
+    @Perception.Bindable var store: StoreOf<SendFlow>
     let tokenName: String
     
     @FocusState private var isAddressFocused
@@ -27,21 +27,21 @@ public struct SendFlowView: View {
     @FocusState private var isCurrencyFocused
     @FocusState private var isMemoFocused
 
-    public init(store: SendFlowStore, tokenName: String) {
+    public init(store: StoreOf<SendFlow>, tokenName: String) {
         self.store = store
         self.tokenName = tokenName
     }
     
     public var body: some View {
         ZStack {
-            WithViewStore(store, observe: { $0 }) { viewStore in
+            WithPerceptionTracking {
                 ScrollView {
                     ScrollViewReader { value in
                         VStack(alignment: .center) {
                             WalletBalancesView(
                                 store: store.scope(
                                     state: \.walletBalancesState,
-                                    action: SendFlowReducer.Action.walletBalances
+                                    action: \.walletBalances
                                 ),
                                 tokenName: tokenName,
                                 couldBeHidden: true
@@ -49,15 +49,15 @@ public struct SendFlowView: View {
                             
                             VStack(alignment: .leading) {
                                 ZashiTextField(
-                                    text: viewStore.bindingForAddress,
+                                    text: store.bindingForAddress,
                                     placeholder: L10n.Field.TransactionAddress.validZcashAddress,
                                     title: L10n.Field.TransactionAddress.to,
-                                    error: viewStore.isInvalidAddressFormat
+                                    error: store.isInvalidAddressFormat
                                     ? L10n.Send.Error.invalidAddress
                                     : nil,
                                     accessoryView:
                                         Button {
-                                            viewStore.send(.updateDestination(.scanQR))
+                                            store.send(.updateDestination(.scanQR))
                                         } label: {
                                             Image(systemName: "qrcode")
                                                 .resizable()
@@ -77,7 +77,7 @@ public struct SendFlowView: View {
                                 VStack(alignment: .leading) {
                                     HStack(spacing: 4) {
                                         ZashiTextField(
-                                            text: viewStore.bindingForZecAmount,
+                                            text: store.bindingForZecAmount,
                                             placeholder: L10n.Field.TransactionAmount.zecAmount(tokenName),
                                             title: L10n.Field.TransactionAmount.amount,
                                             prefixView:
@@ -88,7 +88,7 @@ public struct SendFlowView: View {
                                         .keyboardType(.decimalPad)
                                         .focused($isAmountFocused)
 
-                                        if viewStore.isCurrencyConversionEnabled {
+                                        if store.isCurrencyConversionEnabled {
                                             Asset.Assets.convertIcon.image
                                                 .renderingMode(.template)
                                                 .resizable()
@@ -98,26 +98,26 @@ public struct SendFlowView: View {
                                                 .padding(.top, 24)
                                             
                                             ZashiTextField(
-                                                text: viewStore.bindingForCurrency,
+                                                text: store.bindingForCurrency,
                                                 placeholder: L10n.Field.TransactionAmount.currencyAmount,
                                                 prefixView:
-                                                    Text(viewStore.currencySymbol)
+                                                    Text(store.currencySymbol)
                                                     .font(.custom(FontFamily.Archivo.bold.name, size: 14))
                                                     .padding(.leading, 10)
                                             )
                                             .keyboardType(.decimalPad)
                                             .focused($isCurrencyFocused)
                                             .padding(.top, 26)
-                                            .disabled(viewStore.currencyConversion == nil)
-                                            .opacity(viewStore.currencyConversion == nil ? 0.5 : 1.0)
+                                            .disabled(store.currencyConversion == nil)
+                                            .opacity(store.currencyConversion == nil ? 0.5 : 1.0)
                                         }
                                     }
                                     
-                                    if viewStore.isInvalidAmountFormat {
+                                    if store.isInvalidAmountFormat {
                                         Text(L10n.Send.Error.invalidAmount)
                                             .foregroundColor(Design.Utility.ErrorRed._600.color)
                                             .font(.custom(FontFamily.Inter.medium.name, size: 12))
-                                    } else if viewStore.isInsufficientFunds {
+                                    } else if store.isInsufficientFunds {
                                         Text(L10n.Send.Error.insufficientFunds)
                                             .foregroundColor(Design.Utility.ErrorRed._600.color)
                                             .font(.custom(FontFamily.Inter.medium.name, size: 12))
@@ -126,9 +126,9 @@ public struct SendFlowView: View {
                                 .padding(.bottom, 20)
                             }
                             
-                            MessageEditor(store: store.memoStore())
+                            MessageEditorView(store: store.memoStore())
                                 .frame(height: 190)
-                                .disabled(!viewStore.isMemoInputEnabled)
+                                .disabled(!store.isMemoInputEnabled)
                                 .toolbar {
                                     ToolbarItemGroup(placement: .keyboard) {
                                         Spacer()
@@ -147,25 +147,25 @@ public struct SendFlowView: View {
                                 .focused($isMemoFocused)
                             
                             Button {
-                                viewStore.send(.reviewPressed)
+                                store.send(.reviewPressed)
                             } label: {
                                 Text(L10n.Send.review.uppercased())
                             }
                             .zcashStyle()
-                            .disabled(!viewStore.isValidForm)
+                            .disabled(!store.isValidForm)
                             .padding(.top, 40)
                             .padding(.horizontal, 30)
                             
-                            Text(viewStore.feeFormat)
+                            Text(store.feeFormat)
                                 .font(.custom(FontFamily.Inter.semiBold.name, size: 11))
                                 .padding(.vertical, 20)
                         }
                         .padding(.horizontal, 30)
                     }
-                    .onAppear { viewStore.send(.onAppear) }
+                    .onAppear { store.send(.onAppear) }
                     .applyScreenBackground()
                     .navigationLinkEmpty(
-                        isActive: viewStore.bindingForScanQR,
+                        isActive: store.bindingFor(.scanQR),
                         destination: {
                             ScanView(store: store.scanStore())
                         }
@@ -177,7 +177,7 @@ public struct SendFlowView: View {
         .applyScreenBackground()
         .alert(store: store.scope(
             state: \.$alert,
-            action: { .alert($0) }
+            action: \.alert
         ))
     }
 }
@@ -196,10 +196,86 @@ public struct SendFlowView: View {
                     walletBalancesState: .initial
                 )
             ) {
-                SendFlowReducer()
+                SendFlow()
             },
             tokenName: "ZEC"
         )
     }
     .navigationViewStyle(.stack)
 }
+
+// MARK: - Store
+
+extension StoreOf<SendFlow> {
+    func memoStore() -> StoreOf<MessageEditor> {
+        self.scope(
+            state: \.memoState,
+            action: \.memo
+        )
+    }
+    
+    func scanStore() -> StoreOf<Scan> {
+        self.scope(
+            state: \.scanState,
+            action: \.scan
+        )
+    }
+}
+
+// MARK: - ViewStore
+
+extension StoreOf<SendFlow> {
+    func bindingFor(_ destination: SendFlow.State.Destination) -> Binding<Bool> {
+        Binding<Bool>(
+            get: { self.destination == destination },
+            set: { self.send(.updateDestination($0 ? destination : nil)) }
+        )
+    }
+
+    var bindingForAddress: Binding<String> {
+        Binding(
+            get: { self.address.data },
+            set: { self.send(.addressUpdated($0.redacted)) }
+        )
+    }
+
+    var bindingForCurrency: Binding<String> {
+        Binding(
+            get: { self.currencyText.data },
+            set: { self.send(.currencyUpdated($0.redacted)) }
+        )
+    }
+    
+    var bindingForZecAmount: Binding<String> {
+        Binding(
+            get: { self.zecAmountText.data },
+            set: { self.send(.zecAmountUpdated($0.redacted)) }
+        )
+    }
+}
+
+// MARK: Placeholders
+
+extension SendFlow.State {
+    public static var initial: Self {
+        .init(
+            addMemoState: true,
+            destination: nil,
+            memoState: .initial,
+            scanState: .initial,
+            walletBalancesState: .initial
+        )
+    }
+}
+
+// #if DEBUG // FIX: Issue #306 - Release build is broken
+extension StoreOf<SendFlow> {
+    public static var placeholder: StoreOf<SendFlow> {
+        StoreOf<SendFlow>(
+            initialState: .initial
+        ) {
+            SendFlow()
+        }
+    }
+}
+// #endif

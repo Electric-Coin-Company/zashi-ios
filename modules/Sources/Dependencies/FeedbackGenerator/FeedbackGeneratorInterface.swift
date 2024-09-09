@@ -14,6 +14,7 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct FeedbackGeneratorClient {
     public let generateSuccessFeedback: () -> Void
     public let generateWarningFeedback: () -> Void

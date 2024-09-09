@@ -35,7 +35,7 @@ public struct SyncProgressView: View {
                             .frame(width: 11, height: 0)
                     }
                 } else {
-                    if let errorMessage = store.lastKnownErrorMessage {
+                    if store.lastKnownErrorMessage != nil {
                         Button {
                             store.send(.errorMessageTapped)
                         } label: {

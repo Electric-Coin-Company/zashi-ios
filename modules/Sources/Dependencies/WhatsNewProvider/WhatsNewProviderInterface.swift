@@ -52,7 +52,8 @@ public struct WhatNewReleases: Codable, Equatable {
     }
 }
 
+@DependencyClient
 public struct WhatsNewProviderClient {
-    public var latest: () -> WhatNewRelease
-    public var all: () -> WhatNewReleases
+    public var latest: () -> WhatNewRelease = { WhatNewRelease(version: "", date: "", timestamp: 0, sections: []) }
+    public var all: () -> WhatNewReleases = { WhatNewReleases(releases: [WhatNewRelease(version: "", date: "", timestamp: 0, sections: [])]) }
 }

@@ -16,7 +16,8 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct URIParserClient {
-    public var isValidURI: (String, NetworkType) -> Bool
+    public var isValidURI: (String, NetworkType) -> Bool = { _, _ in false }
 }
         

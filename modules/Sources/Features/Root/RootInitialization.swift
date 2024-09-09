@@ -364,28 +364,22 @@ extension Root {
 
                 if state.appInitializationState == .keysMissing && state.onboardingState.destination == .importExistingWallet {
                     state.appInitializationState = .uninitialized
+                    userStoredPreferences.removeAll()
                     return .concatenate(
                         .cancel(id: SynchronizerCancelId),
-                        .run { send in
-                            await userStoredPreferences.removeAll()
-                        },
                         Effect.send(.onboarding(.importWallet(.updateDestination(.birthday))))
                     )
                 } else if state.appInitializationState == .keysMissing && state.onboardingState.destination == .createNewWallet {
                     state.appInitializationState = .uninitialized
+                    userStoredPreferences.removeAll()
                     return .concatenate(
                         .cancel(id: SynchronizerCancelId),
-                        .run { send in
-                            await userStoredPreferences.removeAll()
-                        },
                         Effect.send(.onboarding(.securityWarning(.createNewWallet)))
                     )
                 } else {
+                    userStoredPreferences.removeAll()
                     return .concatenate(
                         .cancel(id: SynchronizerCancelId),
-                        .run { send in
-                            await userStoredPreferences.removeAll()
-                        },
                         Effect.send(.initialization(.checkWalletInitialization))
                     )
                 }

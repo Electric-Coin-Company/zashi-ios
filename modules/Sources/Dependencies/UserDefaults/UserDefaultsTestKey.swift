@@ -10,9 +10,9 @@ import XCTestDynamicOverlay
 
 extension UserDefaultsClient: TestDependencyKey {
     public static let testValue = Self(
-        objectForKey: XCTUnimplemented("\(Self.self).objectForKey", placeholder: nil),
-        remove: XCTUnimplemented("\(Self.self).remove"),
-        setValue: XCTUnimplemented("\(Self.self).setValue")
+        objectForKey: unimplemented("\(Self.self).objectForKey", placeholder: nil),
+        remove: unimplemented("\(Self.self).remove", placeholder: {}()),
+        setValue: unimplemented("\(Self.self).setValue", placeholder: {}())
     )
 }
 

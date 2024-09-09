@@ -33,6 +33,7 @@ final class RestoreWalletTests: XCTestCase {
         store.dependencies.walletStorage = .noOp
         store.dependencies.userDefaults = .noOp
         store.dependencies.autolockHandler = .noOp
+        store.dependencies.exchangeRate = .noOp
 
         await store.send(.onboarding(.importWallet(.initializeSDK))) { state in
             state.isRestoringWallet = true

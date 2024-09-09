@@ -11,10 +11,9 @@ import SwiftUI
 import Utils
 import Generated
 
-public typealias MessageEditorStore = Store<MessageEditorReducer.State, MessageEditorReducer.Action>
-public typealias MessageEditorViewStore = ViewStore<MessageEditorReducer.State, MessageEditorReducer.Action>
-
-public struct MessageEditorReducer: Reducer {
+@Reducer
+public struct MessageEditor {
+    @ObservableState
     public struct State: Equatable {
         /// default 0, no char limit
         public var charLimit = 0
@@ -49,7 +48,7 @@ public struct MessageEditorReducer: Reducer {
     }
 
     public enum Action: Equatable {
-        case memoInputChanged(RedactableString)
+        case inputChanged(RedactableString)
     }
     
     public init() {}
@@ -57,29 +56,10 @@ public struct MessageEditorReducer: Reducer {
     public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
-            case .memoInputChanged(let text):
+            case .inputChanged(let text):
                 state.text = text
                 return .none
             }
         }
     }
-}
-
-// MARK: - Store
-
-extension MessageEditorStore {
-    public static let placeholder = MessageEditorStore(
-        initialState: .initial
-    ) {
-        MessageEditorReducer()
-    }
-}
-
-// MARK: - Placeholders
-
-extension MessageEditorReducer.State {
-    public static let initial = MessageEditorReducer.State(
-        charLimit: 0,
-        text: .empty
-    )
 }

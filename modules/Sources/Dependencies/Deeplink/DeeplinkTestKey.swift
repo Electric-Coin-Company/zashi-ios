@@ -10,6 +10,6 @@ import XCTestDynamicOverlay
 
 extension DeeplinkClient: TestDependencyKey {
     public static let testValue = Self(
-        resolveDeeplinkURL: XCTUnimplemented("\(Self.self).resolveDeeplinkURL")
+        resolveDeeplinkURL: unimplemented("\(Self.self).resolveDeeplinkURL", placeholder: .home)
     )
 }

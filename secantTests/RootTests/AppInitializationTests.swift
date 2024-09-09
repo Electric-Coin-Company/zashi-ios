@@ -59,6 +59,7 @@ class AppInitializationTests: XCTestCase {
         store.dependencies.userDefaults = .noOp
         store.dependencies.hideBalances = .noOp
         store.dependencies.autolockHandler = .noOp
+        store.dependencies.exchangeRate = .noOp
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         await store.send(.initialization(.appDelegate(.didFinishLaunching))) { state in
@@ -145,6 +146,7 @@ class AppInitializationTests: XCTestCase {
         store.dependencies.userDefaults = .noOp
         store.dependencies.hideBalances = .noOp
         store.dependencies.autolockHandler = .noOp
+        store.dependencies.exchangeRate = .noOp
 
         // Root of the test, the app finished the launch process and triggers the checks and initializations.
         await store.send(.initialization(.appDelegate(.didFinishLaunching))) { state in

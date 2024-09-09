@@ -220,7 +220,7 @@ extension StoreOf<AdvancedSettings> {
         )
     }
     
-    func privateDataConsentStore() -> PrivateDataConsentStore {
+    func privateDataConsentStore() -> StoreOf<PrivateDataConsent> {
         self.scope(
             state: \.privateDataConsentState,
             action: \.privateDataConsent

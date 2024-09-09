@@ -39,9 +39,6 @@
 		9E3451A729C84E9900177D16 /* AppInitializationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E391131284644580073DD9A /* AppInitializationTests.swift */; };
 		9E3451A829C84EAF00177D16 /* DebugTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E852D6429B0A86300CF4AC1 /* DebugTests.swift */; };
 		9E3451A929C84EC000177D16 /* ScanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E01F8272833CDA0000EFC57 /* ScanTests.swift */; };
-		9E3451AA29C84ED500177D16 /* CurrencySelectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDDEA9F2829610D00B4100C /* CurrencySelectionTests.swift */; };
-		9E3451AC29C84F0000177D16 /* TransactionAddressInputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDDEAA12829610D00B4100C /* TransactionAddressInputTests.swift */; };
-		9E3451AD29C84F0E00177D16 /* TransactionAmountInputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDDEAA02829610D00B4100C /* TransactionAmountInputTests.swift */; };
 		9E3451AE29C84F2800177D16 /* SendTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF643281FEC9900BA3F17 /* SendTests.swift */; };
 		9E3451AF29C855B200177D16 /* SensitiveDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E612C7829913F3600D09B09 /* SensitiveDataTests.swift */; };
 		9E3451B029C855E600177D16 /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E66129D288938A300C75B70 /* SettingsTests.swift */; };
@@ -190,9 +187,6 @@
 		9EAFEB852805A23100199FC9 /* SecItemClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecItemClientTests.swift; sourceTree = "<group>"; };
 		9EB7D14A2A20C6BC00F35E03 /* modules */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = modules; sourceTree = "<group>"; };
 		9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		9EDDEA9F2829610D00B4100C /* CurrencySelectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencySelectionTests.swift; sourceTree = "<group>"; };
-		9EDDEAA02829610D00B4100C /* TransactionAmountInputTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAmountInputTests.swift; sourceTree = "<group>"; };
-		9EDDEAA12829610D00B4100C /* TransactionAddressInputTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionAddressInputTests.swift; sourceTree = "<group>"; };
 		9EEB06C52B344F1E00EEE50F /* SyncProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncProgressTests.swift; sourceTree = "<group>"; };
 		9EEB06C72B405A0400EEE50F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9EF8135A27ECC25E0075AF48 /* WalletStorageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletStorageTests.swift; sourceTree = "<group>"; };
@@ -484,10 +478,7 @@
 		9E5BF642281FEC8700BA3F17 /* SendTests */ = {
 			isa = PBXGroup;
 			children = (
-				9EDDEA9F2829610D00B4100C /* CurrencySelectionTests.swift */,
 				9E5BF643281FEC9900BA3F17 /* SendTests.swift */,
-				9EDDEAA12829610D00B4100C /* TransactionAddressInputTests.swift */,
-				9EDDEAA02829610D00B4100C /* TransactionAmountInputTests.swift */,
 			);
 			path = SendTests;
 			sourceTree = "<group>";
@@ -1201,7 +1192,6 @@
 				9E3451BC29C857C800177D16 /* NotEnoughFeeSpaceSnapshots.swift in Sources */,
 				9E3451B229C8565500177D16 /* SecItemClientTests.swift in Sources */,
 				9E3451C629C857E700177D16 /* WelcomeSnapshotTests.swift in Sources */,
-				9E3451AA29C84ED500177D16 /* CurrencySelectionTests.swift in Sources */,
 				9E3451C529C857E400177D16 /* TransactionListSnapshotTests.swift in Sources */,
 				9EEB06C62B344F1E00EEE50F /* SyncProgressTests.swift in Sources */,
 				9E34519C29C4A91A00177D16 /* HomeTests.swift in Sources */,
@@ -1221,11 +1211,9 @@
 				9EA7ED062B7A591C005979F4 /* ZatoshiStringRepresentationCommaTests.swift in Sources */,
 				9E34519A29C4A52F00177D16 /* BalanceBreakdownTests.swift in Sources */,
 				9E46919A2AD5735E0082D7DF /* TabsTests.swift in Sources */,
-				9E3451AD29C84F0E00177D16 /* TransactionAmountInputTests.swift in Sources */,
 				9E1FAFBA2AF2C7F20084CA3D /* PrivateDataConsentTests.swift in Sources */,
 				9E3451C329C857DD00177D16 /* SettingsSnapshotTests.swift in Sources */,
 				9E34519D29C8484D00177D16 /* HomeFeatureFlagTests.swift in Sources */,
-				9E3451AC29C84F0000177D16 /* TransactionAddressInputTests.swift in Sources */,
 				9E3451A929C84EC000177D16 /* ScanTests.swift in Sources */,
 				9E3451A829C84EAF00177D16 /* DebugTests.swift in Sources */,
 			);

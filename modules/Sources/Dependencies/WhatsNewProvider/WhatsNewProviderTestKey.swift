@@ -10,8 +10,8 @@ import XCTestDynamicOverlay
 
 extension WhatsNewProviderClient: TestDependencyKey {
     public static let testValue = Self(
-        latest: XCTUnimplemented("\(Self.self).latest", placeholder: .zero),
-        all: XCTUnimplemented("\(Self.self).all", placeholder: .zero)
+        latest: unimplemented("\(Self.self).latest", placeholder: .zero),
+        all: unimplemented("\(Self.self).all", placeholder: .zero)
     )
 }
 

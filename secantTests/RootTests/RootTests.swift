@@ -206,31 +206,4 @@ class RootTests: XCTestCase {
 
         await store.finish()
     }
-    
-    func testInitializationSuccessfullyDone() async throws {
-        let store = TestStore(
-            initialState: .initial
-        ) {
-            Root()
-        }
-        
-        store.dependencies.mainQueue = .immediate
-        store.dependencies.sdkSynchronizer = .noOp
-        store.dependencies.autolockHandler = .noOp
-        
-        // swiftlint:disable line_length
-        let uAddress = try UnifiedAddress(
-            encoding: "utest1zkkkjfxkamagznjr6ayemffj2d2gacdwpzcyw669pvg06xevzqslpmm27zjsctlkstl2vsw62xrjktmzqcu4yu9zdhdxqz3kafa4j2q85y6mv74rzjcgjg8c0ytrg7dwyzwtgnuc76h", network: .testnet
-        )
-
-        await store.send(.initialization(.initializationSuccessfullyDone(uAddress))) { state in
-            state.tabsState.addressDetailsState.uAddress = uAddress
-        }
-
-        await store.receive(.initialization(.registerForSynchronizersUpdate))
-
-        await store.send(.cancelAllRunningEffects)
-        
-        await store.finish()
-    }
 }

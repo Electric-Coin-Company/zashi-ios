@@ -17,6 +17,7 @@ extension DependencyValues {
     }
 }
 
+@DependencyClient
 public struct WalletConfigProviderClient {
     public let load: () -> AnyPublisher<WalletConfig, Never>
     public let update: (FeatureFlag, Bool) -> AnyPublisher<Void, Never>

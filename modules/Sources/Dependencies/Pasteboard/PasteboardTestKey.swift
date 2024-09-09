@@ -11,8 +11,8 @@ import Utils
 
 extension PasteboardClient: TestDependencyKey {
     public static let testValue = Self(
-        setString: XCTUnimplemented("\(Self.self).setString"),
-        getString: XCTUnimplemented("\(Self.self).getString", placeholder: .empty)
+        setString: unimplemented("\(Self.self).setString", placeholder: {}()),
+        getString: unimplemented("\(Self.self).getString", placeholder: .empty)
     )
     
     private struct TestPasteboard {

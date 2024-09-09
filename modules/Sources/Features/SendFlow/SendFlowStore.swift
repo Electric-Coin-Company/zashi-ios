@@ -21,22 +21,21 @@ import WalletBalances
 import NumberFormatter
 import UserPreferencesStorage
 
-public typealias SendFlowStore = Store<SendFlowReducer.State, SendFlowReducer.Action>
-public typealias SendFlowViewStore = ViewStore<SendFlowReducer.State, SendFlowReducer.Action>
-
-public struct SendFlowReducer: Reducer {
+@Reducer
+public struct SendFlow {
+    @ObservableState
     public struct State: Equatable {
         public enum Destination: Equatable {
             case partialProposalError
             case scanQR
         }
 
-        @PresentationState public var alert: AlertState<Action>?
+        @Presents public var alert: AlertState<Action>?
         public var addMemoState: Bool
         public var currencyConversion: CurrencyConversion?
         public var destination: Destination?
         public var isCurrencyConversionEnabled = false
-        public var memoState: MessageEditorReducer.State
+        public var memoState: MessageEditor.State
         public var proposal: Proposal?
         public var scanState: Scan.State
         public var shieldedBalance: Zatoshi
@@ -143,7 +142,7 @@ public struct SendFlowReducer: Reducer {
             addMemoState: Bool,
             currencyConversion: CurrencyConversion? = nil,
             destination: Destination? = nil,
-            memoState: MessageEditorReducer.State,
+            memoState: MessageEditor.State,
             scanState: Scan.State,
             shieldedBalance: Zatoshi = .zero,
             walletBalancesState: WalletBalances.State
@@ -163,7 +162,7 @@ public struct SendFlowReducer: Reducer {
         case alert(PresentationAction<Action>)
         case currencyUpdated(RedactableString)
         case exchangeRateSetupChanged
-        case memo(MessageEditorReducer.Action)
+        case memo(MessageEditor.Action)
         case onAppear
         case proposal(Proposal)
         case resetForm
@@ -172,7 +171,7 @@ public struct SendFlowReducer: Reducer {
         case sendConfirmationRequired
         case sendFailed(ZcashError)
         case syncAmounts(Bool)
-        case updateDestination(SendFlowReducer.State.Destination?)
+        case updateDestination(SendFlow.State.Destination?)
         case walletBalances(WalletBalances.Action)
         case zecAmountUpdated(RedactableString)
     }
@@ -187,15 +186,15 @@ public struct SendFlowReducer: Reducer {
     public init() { }
     
     public var body: some Reducer<State, Action> {
-        Scope(state: \.memoState, action: /Action.memo) {
-            MessageEditorReducer()
+        Scope(state: \.memoState, action: \.memo) {
+            MessageEditor()
         }
 
-        Scope(state: \.scanState, action: /Action.scan) {
+        Scope(state: \.scanState, action: \.scan) {
             Scan()
         }
 
-        Scope(state: \.walletBalancesState, action: /Action.walletBalances) {
+        Scope(state: \.walletBalancesState, action: \.walletBalances) {
             WalletBalances()
         }
 
@@ -365,7 +364,7 @@ public struct SendFlowReducer: Reducer {
 
 // MARK: Alerts
 
-extension AlertState where Action == SendFlowReducer.Action {
+extension AlertState where Action == SendFlow.Action {
     public static func sendFailure(_ error: ZcashError) -> AlertState {
         AlertState {
             TextState(L10n.Send.Alert.Failure.title)
@@ -374,86 +373,3 @@ extension AlertState where Action == SendFlowReducer.Action {
         }
     }
 }
-
-// MARK: - Store
-
-extension SendFlowStore {
-    func memoStore() -> MessageEditorStore {
-        self.scope(
-            state: \.memoState,
-            action: SendFlowReducer.Action.memo
-        )
-    }
-    
-    func scanStore() -> StoreOf<Scan> {
-        self.scope(
-            state: \.scanState,
-            action: SendFlowReducer.Action.scan
-        )
-    }
-}
-
-// MARK: - ViewStore
-
-extension SendFlowViewStore {
-    var destinationBinding: Binding<SendFlowReducer.State.Destination?> {
-        self.binding(
-            get: \.destination,
-            send: SendFlowReducer.Action.updateDestination
-        )
-    }
-    
-    var bindingForScanQR: Binding<Bool> {
-        self.destinationBinding.map(
-            extract: { $0 == .scanQR },
-            embed: { $0 ? SendFlowReducer.State.Destination.scanQR : nil }
-        )
-    }
-
-    var bindingForAddress: Binding<String> {
-        Binding(
-            get: { self.address.data },
-            set: { self.send(.addressUpdated($0.redacted)) }
-        )
-    }
-
-    var bindingForCurrency: Binding<String> {
-        Binding(
-            get: { self.currencyText.data },
-            set: { self.send(.currencyUpdated($0.redacted)) }
-        )
-    }
-    
-    var bindingForZecAmount: Binding<String> {
-        Binding(
-            get: { self.zecAmountText.data },
-            set: { self.send(.zecAmountUpdated($0.redacted)) }
-        )
-    }
-}
-
-// MARK: Placeholders
-
-extension SendFlowReducer.State {
-    public static var initial: Self {
-        .init(
-            addMemoState: true,
-            destination: nil,
-            memoState: .initial,
-            scanState: .initial,
-            walletBalancesState: .initial
-        )
-    }
-}
-
-// #if DEBUG // FIX: Issue #306 - Release build is broken
-extension SendFlowStore {
-    public static var placeholder: SendFlowStore {
-        SendFlowStore(
-            initialState: .initial
-        ) {
-            SendFlowReducer()
-        }
-    }
-}
-// #endif
