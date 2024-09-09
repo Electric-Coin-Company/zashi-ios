@@ -16,7 +16,6 @@ import Home
 import SendFlow
 import Settings
 import UIComponents
-import HideBalances
 import SendConfirmation
 import CurrencyConversionSetup
 
@@ -26,9 +25,8 @@ public struct TabsView: View {
     let tokenName: String
     @Namespace var tabsID
 
-    @Dependency(\.hideBalances) var hideBalances
-    @State var areBalancesHidden = false
-
+    @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
+    
     public init(store: StoreOf<Tabs>, tokenName: String, networkType: NetworkType) {
         self.store = store
         self.tokenName = tokenName
@@ -147,9 +145,6 @@ public struct TabsView: View {
             .navigationBarItems(leading: hideBalancesButton(tab: store.selectedTab))
             .zashiTitle { navBarView(store.selectedTab) }
             .walletStatusPanel()
-            .onAppear {
-                areBalancesHidden = hideBalances.value().value
-            }
             .overlayPreferenceValue(BoundsPreferenceKey.self) { preferences in
                 if store.isRateTooltipEnabled {
                     GeometryReader { geometry in
@@ -192,11 +187,12 @@ public struct TabsView: View {
                                         Text(L10n.CurrencyConversion.title)
                                             .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
                                             .foregroundColor(Design.Text.primary.color)
-                                            .lineLimit(nil)
+                                            .lineLimit(1)
+                                            .minimumScaleFactor(0.5)
                                     }
                                     .padding(.trailing, 16)
                                     
-                                    Spacer()
+                                    Spacer(minLength: 0)
                                     
                                     Button {
                                         store.send(.currencyConversionCloseTapped)
@@ -281,12 +277,9 @@ public struct TabsView: View {
     func hideBalancesButton(tab: Tabs.State.Tab) -> some View {
         if tab == .account || tab == .send || tab == .balances {
             Button {
-                var prevValue = hideBalances.value().value
-                prevValue.toggle()
-                areBalancesHidden = prevValue
-                hideBalances.updateValue(areBalancesHidden)
+                isSensitiveContentHidden.toggle()
             } label: {
-                let image = areBalancesHidden ? Asset.Assets.eyeOff.image : Asset.Assets.eyeOn.image
+                let image = isSensitiveContentHidden ? Asset.Assets.eyeOff.image : Asset.Assets.eyeOn.image
                 image
                     .renderingMode(.template)
                     .resizable()

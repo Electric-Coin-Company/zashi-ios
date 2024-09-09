@@ -12,25 +12,15 @@ import Combine
 import Generated
 
 struct HiddenIfSetModifier: ViewModifier {
-    @Dependency(\.hideBalances) var hideBalances
-    @State var isHidden = false
-    @State private var cancellable: AnyCancellable?
-
+    @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
+    
     func body(content: Content) -> some View {
         VStack(spacing: 0) {
-            if isHidden {
+            if isSensitiveContentHidden {
                 Text(L10n.General.hideBalancesMostStandalone)
             } else {
                 content
             }
-        }
-        .onAppear {
-            cancellable = hideBalances.value().sink { val in
-                isHidden = val
-            }
-        }
-        .onDisappear {
-            cancellable?.cancel()
         }
     }
 }

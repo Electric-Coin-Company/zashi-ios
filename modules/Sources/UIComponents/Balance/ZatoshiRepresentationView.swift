@@ -12,7 +12,6 @@ import Utils
 import ComposableArchitecture
 import BalanceFormatter
 import XCTestDynamicOverlay
-import HideBalances
 import Combine
 
 public struct ZatoshiRepresentationView: View {
@@ -25,9 +24,7 @@ public struct ZatoshiRepresentationView: View {
     let isFee: Bool
     let couldBeHidden: Bool
 
-    @Dependency(\.hideBalances) var hideBalances
-    @State var isHidden = false
-    @State private var cancellable: AnyCancellable?
+    @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
     
     public init(
         balance: Zatoshi,
@@ -71,20 +68,20 @@ public struct ZatoshiRepresentationView: View {
                     .font(.custom(fontName, size: mostSignificantFontSize))
             } else {
                 if format == .expanded {
-                    Text(couldBeHidden && isHidden
+                    Text(couldBeHidden && isSensitiveContentHidden
                          ? L10n.General.hideBalancesMost
                          : zatoshiStringRepresentation.mostSignificantDigits
                     )
                     .font(.custom(fontName, size: mostSignificantFontSize))
                     .conditionalStrikethrough(strikethrough)
-                    + Text(couldBeHidden && isHidden
+                    + Text(couldBeHidden && isSensitiveContentHidden
                            ? L10n.General.hideBalancesLeast
                            : zatoshiStringRepresentation.leastSignificantDigits
                     )
                     .font(.custom(fontName, size: leastSignificantFontSize))
                     .conditionalStrikethrough(strikethrough)
                 } else {
-                    Text(couldBeHidden && isHidden
+                    Text(couldBeHidden && isSensitiveContentHidden
                          ? L10n.General.hideBalancesMostStandalone
                          : zatoshiStringRepresentation.mostSignificantDigits
                     )
@@ -92,16 +89,6 @@ public struct ZatoshiRepresentationView: View {
                     .conditionalStrikethrough(strikethrough)
                 }
             }
-        }
-        .onAppear {
-            if !_XCTIsTesting {
-                cancellable = hideBalances.value().sink { val in
-                    isHidden = val
-                }
-            }
-        }
-        .onDisappear {
-            cancellable?.cancel()
         }
     }
 }

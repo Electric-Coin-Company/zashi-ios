@@ -31,7 +31,6 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
                 .dependency(\.mainQueue, .immediate)
                 .dependency(\.walletStatusPanel, .noOp)
                 .dependency(\.diskSpaceChecker, .mockEmptyDisk)
-                .dependency(\.hideBalances, .noOp)
                 .dependency(\.exchangeRate, .noOp)
         }
         

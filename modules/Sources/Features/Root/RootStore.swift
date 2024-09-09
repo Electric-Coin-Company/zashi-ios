@@ -23,7 +23,6 @@ import BackgroundTasks
 import WalletStatusPanel
 import Utils
 import UserDefaults
-import HideBalances
 import ServerSetup
 import ExchangeRate
 
@@ -134,7 +133,6 @@ public struct Root {
     @Dependency(\.derivationTool) var derivationTool
     @Dependency(\.diskSpaceChecker) var diskSpaceChecker
     @Dependency(\.exchangeRate) var exchangeRate
-    @Dependency(\.hideBalances) var hideBalances
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.numberFormatter) var numberFormatter

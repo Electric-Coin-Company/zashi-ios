@@ -32,7 +32,7 @@ public struct SendFlow {
 
         @Presents public var alert: AlertState<Action>?
         public var addMemoState: Bool
-        public var currencyConversion: CurrencyConversion?
+        @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
         public var destination: Destination?
         public var isCurrencyConversionEnabled = false
         public var memoState: MessageEditor.State
@@ -140,7 +140,6 @@ public struct SendFlow {
         
         public init(
             addMemoState: Bool,
-            currencyConversion: CurrencyConversion? = nil,
             destination: Destination? = nil,
             memoState: MessageEditor.State,
             scanState: Scan.State,
@@ -148,7 +147,6 @@ public struct SendFlow {
             walletBalancesState: WalletBalances.State
         ) {
             self.addMemoState = addMemoState
-            self.currencyConversion = currencyConversion
             self.destination = destination
             self.memoState = memoState
             self.scanState = scanState

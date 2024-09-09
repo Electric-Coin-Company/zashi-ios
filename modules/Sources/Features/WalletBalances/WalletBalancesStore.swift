@@ -23,7 +23,7 @@ public struct WalletBalances {
 
     @ObservableState
     public struct State: Equatable {
-        public var currencyConversion: CurrencyConversion?
+        @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
         public var fiatCurrencyResult: FiatCurrencyResult?
         public var isAvailableBalanceTappable = true
         public var isExchangeRateFeatureOn = false
@@ -52,7 +52,6 @@ public struct WalletBalances {
         }
         
         public init(
-            currencyConversion: CurrencyConversion? = nil,
             fiatCurrencyResult: FiatCurrencyResult? = nil,
             isAvailableBalanceTappable: Bool = true,
             isExchangeRateFeatureOn: Bool = false,
@@ -64,7 +63,6 @@ public struct WalletBalances {
             totalBalance: Zatoshi = .zero,
             transparentBalance: Zatoshi = .zero
         ) {
-            self.currencyConversion = currencyConversion
             self.fiatCurrencyResult = fiatCurrencyResult
             self.isAvailableBalanceTappable = isAvailableBalanceTappable
             self.isExchangeRateFeatureOn = isExchangeRateFeatureOn
