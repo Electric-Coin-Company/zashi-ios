@@ -77,11 +77,19 @@
 
 // MARK: - Address Details
 "serverSetup.title" = "Server";
-"serverSetup.custom" = "custom";
-"serverSetup.default" = "default: currently %@";
+"serverSetup.custom" = "custom server";
+"serverSetup.default" = "Default";
 "serverSetup.placeholder" = "<hostname>:<port>";
 "serverSetup.alert.failed.title" = "Invalid endpoint";
 "serverSetup.alert.failed.message" = "Error: %@";
+"serverSetup.save" = "Save selection";
+"serverSetup.active" = "Active";
+"serverSetup.performingTest" = "Performing Server Test";
+"serverSetup.couldTakeTime" = "This may take a moment...";
+"serverSetup.fastestServers" = "Fastest servers";
+"serverSetup.otherServers" = "Other servers";
+"serverSetup.allServers" = "Browse all servers";
+"serverSetup.refresh" = "Refresh";
 
 // MARK: - Balances
 "balances.spendableBalance" = "Shielded zec (spendable)";

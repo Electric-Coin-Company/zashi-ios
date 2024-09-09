@@ -14,41 +14,63 @@ import SDKSynchronizer
 import UserPreferencesStorage
 import ZcashSDKEnvironment
 
+extension LightWalletEndpoint: Equatable {
+    public static func == (lhs: LightWalletEndpoint, rhs: LightWalletEndpoint) -> Bool {
+        lhs.host == rhs.host
+        && lhs.port == rhs.port
+        && lhs.streamingCallTimeoutInMillis == rhs.streamingCallTimeoutInMillis
+        && lhs.singleCallTimeoutInMillis == rhs.singleCallTimeoutInMillis
+        && lhs.secure == rhs.secure
+    }
+}
+
 @Reducer
 public struct ServerSetup {
     let streamingCallTimeoutInMillis = ZcashSDKEnvironment.ZcashSDKConstants.streamingCallTimeoutInMillis
-    
+
     @ObservableState
     public struct State: Equatable {
+        var activeServer: String
         @Presents var alert: AlertState<Action>?
+        var customServer: String
+        var isEvaluatingServers = false
         var isUpdatingServer = false
         var initialServer: String
         var network: NetworkType = .mainnet
-        var selectedServer: String
+        var selectedServer: String?
         var servers: [ZcashSDKEnvironment.Server]
-        var customServer: String
+        var topKServers: [ZcashSDKEnvironment.Server]
         
         public init(
+            activeServer: String = "",
+            customServer: String = "",
+            isEvaluatingServers: Bool = false,
             isUpdatingServer: Bool = false,
             initialServer: String = "",
             network: NetworkType = .mainnet,
-            selectedServer: String = "",
+            selectedServer: String? = nil,
             servers: [ZcashSDKEnvironment.Server] = [],
-            customServer: String = ""
+            topKServers: [ZcashSDKEnvironment.Server] = []
         ) {
+            self.activeServer = activeServer
+            self.customServer = customServer
             self.isUpdatingServer = isUpdatingServer
             self.initialServer = initialServer
             self.network = network
             self.selectedServer = selectedServer
             self.servers = servers
-            self.customServer = customServer
+            self.topKServers = topKServers
         }
     }
     
     public enum Action: Equatable, BindableAction {
         case alert(PresentationAction<Action>)
         case binding(BindingAction<State>)
+        case evaluatedServers([LightWalletEndpoint])
+        case evaluateServers
         case onAppear
+        case onDisappear
+        case refreshServersTapped
         case setServerTapped
         case someServerTapped(ZcashSDKEnvironment.Server)
         case switchFailed(ZcashError)
@@ -69,8 +91,16 @@ public struct ServerSetup {
             switch action {
             case .onAppear:
                 state.network = zcashSDKEnvironment.network.networkType
-                state.servers = ZcashSDKEnvironment.servers(for: state.network)
                 
+                if !state.topKServers.isEmpty {
+                    let allServers = ZcashSDKEnvironment.servers(for: state.network)
+                    state.servers = allServers.filter {
+                        !state.topKServers.contains($0)
+                    }
+                } else {
+                    state.servers = ZcashSDKEnvironment.servers(for: state.network)
+                }
+
                 let serverConfig = zcashSDKEnvironment.serverConfig()
                 
                 if serverConfig.isCustom {
@@ -79,9 +109,14 @@ public struct ServerSetup {
                 } else {
                     state.initialServer = serverConfig.serverString()
                 }
-                state.selectedServer = state.initialServer
-                return .none
                 
+                state.activeServer = state.initialServer
+                return state.topKServers.isEmpty ? .send(.evaluateServers) : .none
+
+            case .onDisappear:
+                state.selectedServer = nil
+                return .none
+
             case .alert(.dismiss):
                 state.alert = nil
                 return .none
@@ -92,6 +127,39 @@ public struct ServerSetup {
             case .binding:
                 return .none
             
+            case .evaluateServers:
+                state.isEvaluatingServers = true
+                return .run { send in
+                    let kBestServers = await sdkSynchronizer.evaluateBestOf(
+                        ZcashSDKEnvironment.endpoints(),
+                        300.0,
+                        60.0,
+                        100,
+                        3,
+                        .mainnet
+                    )
+                    
+                    await send(.evaluatedServers(kBestServers))
+                }
+                
+            case .evaluatedServers(let bestServers):
+                state.isEvaluatingServers = false
+                state.topKServers = bestServers.map {
+                    if ZcashSDKEnvironment.Server.default.value(for: state.network) == $0.server() {
+                        ZcashSDKEnvironment.Server.default
+                    } else {
+                        ZcashSDKEnvironment.Server.hardcoded("\($0.host):\($0.port)")
+                    }
+                }
+                let allServers = ZcashSDKEnvironment.servers(for: state.network)
+                state.servers = allServers.filter {
+                    !state.topKServers.contains($0)
+                }
+                return .none
+                
+            case .refreshServersTapped:
+                return .send(.evaluateServers)
+
             case .setServerTapped:
                 guard state.initialServer != state.selectedServer || state.selectedServer == L10n.ServerSetup.custom else {
                     return .none
@@ -100,7 +168,7 @@ public struct ServerSetup {
                 state.isUpdatingServer = true
                 
                 // custom server needs to be stored first
-                var input = state.selectedServer
+                var input = state.selectedServer ?? state.activeServer
                 if input == L10n.ServerSetup.custom {
                     input = state.customServer
                 }
@@ -133,26 +201,31 @@ public struct ServerSetup {
                 
             case .switchSucceeded:
                 state.isUpdatingServer = false
-                state.initialServer = state.selectedServer
-                var input = state.selectedServer
+                state.initialServer = state.selectedServer ?? state.activeServer
+                state.activeServer = state.initialServer
+                var input = state.selectedServer ?? state.activeServer
                 var isCustom = false
+                state.selectedServer = nil
+
                 if input == L10n.ServerSetup.custom {
                     input = state.customServer
                     isCustom = true
                 }
-                return .run { [input, isCustom] send in
-                    if let serverConfig = UserPreferencesStorage.ServerConfig.config(
-                        for: input,
-                        isCustom: isCustom,
-                        streamingCallTimeoutInMillis: streamingCallTimeoutInMillis
-                    ) {
-                        do {
-                            try await userStoredPreferences.setServer(serverConfig)
-                        } catch UserPreferencesStorage.UserPreferencesStorageError.serverConfig {
-                            await send(.switchFailed(ZcashError.unknown(UserPreferencesStorage.UserPreferencesStorageError.serverConfig)))
-                        }
+
+                if let serverConfig = UserPreferencesStorage.ServerConfig.config(
+                    for: input,
+                    isCustom: isCustom,
+                    streamingCallTimeoutInMillis: streamingCallTimeoutInMillis
+                ) {
+                    do {
+                        try userStoredPreferences.setServer(serverConfig)
+                    } catch UserPreferencesStorage.UserPreferencesStorageError.serverConfig {
+                        return .send(.switchFailed(ZcashError.unknown(UserPreferencesStorage.UserPreferencesStorageError.serverConfig)))
+                    } catch {
+                        return .send(.switchFailed(ZcashError.unknown(error)))
                     }
                 }
+                return .none
             }
         }
     }

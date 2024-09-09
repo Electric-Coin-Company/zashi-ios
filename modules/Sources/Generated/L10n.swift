@@ -581,14 +581,28 @@ public enum L10n {
     }
   }
   public enum ServerSetup {
-    /// custom
-    public static let custom = L10n.tr("Localizable", "serverSetup.custom", fallback: "custom")
-    /// default: currently %@
-    public static func `default`(_ p1: Any) -> String {
-      return L10n.tr("Localizable", "serverSetup.default", String(describing: p1), fallback: "default: currently %@")
-    }
+    /// Active
+    public static let active = L10n.tr("Localizable", "serverSetup.active", fallback: "Active")
+    /// Browse all servers
+    public static let allServers = L10n.tr("Localizable", "serverSetup.allServers", fallback: "Browse all servers")
+    /// This may take a moment...
+    public static let couldTakeTime = L10n.tr("Localizable", "serverSetup.couldTakeTime", fallback: "This may take a moment...")
+    /// custom server
+    public static let custom = L10n.tr("Localizable", "serverSetup.custom", fallback: "custom server")
+    /// Default
+    public static let `default` = L10n.tr("Localizable", "serverSetup.default", fallback: "Default")
+    /// Fastest servers
+    public static let fastestServers = L10n.tr("Localizable", "serverSetup.fastestServers", fallback: "Fastest servers")
+    /// Other servers
+    public static let otherServers = L10n.tr("Localizable", "serverSetup.otherServers", fallback: "Other servers")
+    /// Performing Server Test
+    public static let performingTest = L10n.tr("Localizable", "serverSetup.performingTest", fallback: "Performing Server Test")
     /// <hostname>:<port>
     public static let placeholder = L10n.tr("Localizable", "serverSetup.placeholder", fallback: "<hostname>:<port>")
+    /// Refresh
+    public static let refresh = L10n.tr("Localizable", "serverSetup.refresh", fallback: "Refresh")
+    /// Save selection
+    public static let save = L10n.tr("Localizable", "serverSetup.save", fallback: "Save selection")
     /// Server
     public static let title = L10n.tr("Localizable", "serverSetup.title", fallback: "Server")
     public enum Alert {
