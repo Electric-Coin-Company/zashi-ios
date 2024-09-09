@@ -87,7 +87,7 @@ public struct SettingsView: View {
                 
                 Text(L10n.Settings.version(viewStore.appVersion, viewStore.appBuild))
                     .font(.custom(FontFamily.Archivo.regular.name, size: 16))
-                    .foregroundColor(Asset.Colors.V2.textPrimary.color)
+                    .foregroundColor(Design.Text.tertiary.color)
                     .padding(.bottom, 24)
             }
         }

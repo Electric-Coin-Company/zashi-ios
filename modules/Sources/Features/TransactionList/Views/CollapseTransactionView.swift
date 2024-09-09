@@ -17,7 +17,7 @@ public struct CollapseTransactionView: View {
                 .frame(width: 10, height: 7)
                 .scaleEffect(0.6)
                 .font(.custom(FontFamily.Inter.black.name, size: 10))
-                .foregroundColor(Asset.Colors.primaryTint.color)
+                .foregroundColor(Design.Surfaces.brandBg.color)
                 .overlay {
                     Rectangle()
                         .stroke()

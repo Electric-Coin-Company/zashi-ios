@@ -37,18 +37,18 @@ public struct ServerSetupView: View {
                                     
                                     Text(L10n.ServerSetup.performingTest)
                                         .font(.custom(FontFamily.Inter.semiBold.name, size: 20))
-                                        .foregroundColor(Asset.Colors.primary.color)
+                                        .foregroundColor(Design.Text.primary.color)
 
                                     Text(L10n.ServerSetup.couldTakeTime)
                                         .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                                        .foregroundColor(Asset.Colors.ServerSwitch.subtitle.color)
+                                        .foregroundColor(Design.Text.tertiary.color)
                                 }
                                 .frame(height: 136)
                             } else {
                                 HStack {
                                     Text(L10n.ServerSetup.fastestServers)
                                         .font(.custom(FontFamily.Inter.semiBold.name, size: 18))
-                                        .foregroundColor(Asset.Colors.primary.color)
+                                        .foregroundColor(Design.Text.primary.color)
 
                                     Spacer()
                                     
@@ -58,7 +58,7 @@ public struct ServerSetupView: View {
                                         HStack(spacing: 4) {
                                             Text(L10n.ServerSetup.refresh)
                                                 .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
-                                                .foregroundColor(Asset.Colors.primary.color)
+                                                .foregroundColor(Design.Text.primary.color)
 
                                             if store.isEvaluatingServers {
                                                 progressView()
@@ -68,7 +68,7 @@ public struct ServerSetupView: View {
                                                     .renderingMode(.template)
                                                     .resizable()
                                                     .frame(width: 20, height: 20)
-                                                    .foregroundColor(Asset.Colors.primary.color)
+                                                    .foregroundColor(Design.Text.primary.color)
                                             }
                                         }
                                         .padding(5)
@@ -87,7 +87,7 @@ public struct ServerSetupView: View {
                                     : L10n.ServerSetup.otherServers
                                 )
                                 .font(.custom(FontFamily.Inter.semiBold.name, size: 18))
-                                .foregroundColor(Asset.Colors.primary.color)
+                                .foregroundColor(Design.Text.primary.color)
 
                                 Spacer()
                             }
@@ -114,8 +114,8 @@ public struct ServerSetupView: View {
                                                 .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
                                                 .foregroundColor(
                                                     store.selectedServer == nil
-                                                    ? Asset.Colors.ServerSwitch.saveButtonDisabledText.color
-                                                    : Asset.Colors.ServerSwitch.saveButtonActiveText.color
+                                                    ? Design.Btns.Bold.fgDisabled.color
+                                                    : Design.Btns.Bold.fg.color
                                                 )
 
                                             progressView(invertTint: true)
@@ -124,8 +124,8 @@ public struct ServerSetupView: View {
                                         .frame(maxWidth: .infinity)
                                         .background(
                                             store.selectedServer == nil
-                                            ? Asset.Colors.ServerSwitch.saveButtonDisabled.color
-                                            : Asset.Colors.ServerSwitch.saveButtonActive.color
+                                            ? Design.Btns.Bold.bgDisabled.color
+                                            : Design.Btns.Bold.bg.color
                                         )
                                         .cornerRadius(10)
                                         .padding(.horizontal, 24)
@@ -136,13 +136,13 @@ public struct ServerSetupView: View {
                                             .frame(maxWidth: .infinity)
                                             .foregroundColor(
                                                 store.selectedServer == nil
-                                                ? Asset.Colors.ServerSwitch.saveButtonDisabledText.color
-                                                : Asset.Colors.ServerSwitch.saveButtonActiveText.color
+                                                ? Design.Btns.Bold.fgDisabled.color
+                                                : Design.Btns.Bold.fg.color
                                             )
                                             .background(
                                                 store.selectedServer == nil
-                                                ? Asset.Colors.ServerSwitch.saveButtonDisabled.color
-                                                : Asset.Colors.ServerSwitch.saveButtonActive.color
+                                                ? Design.Btns.Bold.bgDisabled.color
+                                                : Design.Btns.Bold.bg.color
                                             )
                                             .cornerRadius(10)
                                             .padding(.horizontal, 24)
@@ -184,30 +184,35 @@ public struct ServerSetupView: View {
                                 WithPerceptionTracking {
                                     if server.value(for: store.network) == store.activeServer && store.selectedServer == nil {
                                         Circle()
-                                            .fill(Asset.Colors.primaryTint.color)
+                                            .fill(Design.Surfaces.brandBg.color)
                                             .frame(width: 20, height: 20)
                                             .overlay {
                                                 Asset.Assets.check.image
                                                     .renderingMode(.template)
                                                     .resizable()
                                                     .frame(width: 14, height: 14)
-                                                    .foregroundColor(Asset.Colors.primary.color)
+                                                    .foregroundColor(Design.Surfaces.brandFg.color)
                                             }
                                     } else if server.value(for: store.network) == store.selectedServer {
                                         Circle()
-                                            .fill(Asset.Colors.primary.color)
+                                            .fill(Design.Checkboxes.onBg.color)
                                             .frame(width: 20, height: 20)
                                             .overlay {
                                                 Asset.Assets.check.image
                                                     .renderingMode(.template)
                                                     .resizable()
                                                     .frame(width: 14, height: 14)
-                                                    .foregroundColor(Asset.Colors.secondary.color)
+                                                    .foregroundColor(Design.Checkboxes.onFg.color)
                                             }
                                     } else {
                                         Circle()
-                                            .stroke(Asset.Colors.ServerSwitch.checkOutline.color)
+                                            .fill(Design.Checkboxes.offBg.color)
                                             .frame(width: 20, height: 20)
+                                            .overlay {
+                                                Circle()
+                                                    .stroke(Design.Checkboxes.offStroke.color)
+                                                    .frame(width: 20, height: 20)
+                                            }
                                     }
                                 }
                                 .padding(.top, isCustom(server) ? 16 : 0)
@@ -239,11 +244,11 @@ public struct ServerSetupView: View {
                                                 .padding(.leading, 10)
                                                 .background {
                                                     RoundedRectangle(cornerRadius: 8)
-                                                        .fill(Asset.Colors.ServerSwitch.fieldBcg.color)
+                                                        .fill(Design.Checkboxes.offDisabledBg.color)
                                                 }
                                                 .overlay {
                                                     RoundedRectangle(cornerRadius: 8)
-                                                        .stroke(Asset.Colors.ServerSwitch.fieldOutline.color, lineWidth: 1)
+                                                        .stroke(Design.Checkboxes.offStroke.color, lineWidth: 1)
                                                 }
                                                 .padding(.vertical, 8)
                                         }
@@ -257,13 +262,13 @@ public struct ServerSetupView: View {
                                             : server.value(for: store.network)
                                         )
                                         .font(.custom(FontFamily.Inter.medium.name, size: 14))
-                                        .foregroundColor(Asset.Colors.primary.color)
+                                        .foregroundColor(Design.Text.primary.color)
                                         .multilineTextAlignment(.leading)
                                         
                                         if let desc = server.desc(for: store.network) {
                                             Text(desc)
                                                 .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                                                .foregroundColor(Asset.Colors.ServerSwitch.desc.color)
+                                                .foregroundColor(Design.Text.tertiary.color)
                                         }
                                     }
                                 }
@@ -285,7 +290,7 @@ public struct ServerSetupView: View {
                                 RoundedRectangle(cornerRadius: 12)
                                     .fill(
                                         server.value(for: store.network) == store.selectedServer
-                                        ? Asset.Colors.ServerSwitch.highlight.color
+                                        ? Design.Surfaces.bgSecondary.color
                                         : Asset.Colors.background.color
                                     )
                             }
@@ -297,7 +302,7 @@ public struct ServerSetupView: View {
                     .padding(.leading, 8)
 
                     if let last = servers.last, last != server {
-                        Asset.Colors.ServerSwitch.divider.color
+                        Design.Surfaces.divider.color
                             .frame(height: 1)
                     }
                 }
@@ -318,23 +323,23 @@ public struct ServerSetupView: View {
             .renderingMode(.template)
             .resizable()
             .frame(width: 20, height: 20)
-            .foregroundColor(Asset.Colors.primary.color)
+            .foregroundColor(Design.Text.primary.color)
 
     }
 
     private func activeBadge() -> some View {
         Text(L10n.ServerSetup.active)
             .font(.custom(FontFamily.Inter.medium.name, size: 14))
-            .foregroundColor(Asset.Colors.ActiveBadge.text.color)
+            .foregroundColor(Design.Utility.SuccessGreen._700.color)
             .frame(height: 20)
             .padding(.horizontal, 10)
             .padding(.vertical, 2)
-            .background(Asset.Colors.ActiveBadge.bcg.color)
+            .background(Design.Utility.SuccessGreen._50.color)
             .cornerRadius(16)
             .overlay {
                 RoundedRectangle(cornerRadius: 16)
                     .inset(by: 0.5)
-                    .stroke(Asset.Colors.ActiveBadge.outline.color, lineWidth: 1)
+                    .stroke(Design.Utility.SuccessGreen._200.color, lineWidth: 1)
             }
     }
     

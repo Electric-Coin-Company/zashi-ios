@@ -164,7 +164,7 @@ extension TransactionHeaderView {
                         .renderingMode(.template)
                         .resizable()
                         .frame(width: 17, height: 11)
-                        .foregroundColor(Asset.Colors.primaryTint.color)
+                        .foregroundColor(Design.Surfaces.brandBg.color)
                 } else {
                     Asset.Assets.flyReceived.image
                         .renderingMode(.template)

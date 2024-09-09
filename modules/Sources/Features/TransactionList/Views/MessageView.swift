@@ -48,7 +48,7 @@ struct MessageView: View {
                                 .font(.custom(FontFamily.Inter.regular.name, size: 13))
                                 .foregroundColor(
                                     isFailed ?
-                                    Asset.Colors.error.color
+                                    Design.Utility.ErrorRed._600.color
                                     : Asset.Colors.primary.color
                                 )
                                 .conditionalStrikethrough(isFailed)

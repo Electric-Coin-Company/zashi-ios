@@ -115,11 +115,11 @@ public struct SendFlowView: View {
                                     
                                     if viewStore.isInvalidAmountFormat {
                                         Text(L10n.Send.Error.invalidAmount)
-                                            .foregroundColor(Asset.Colors.error.color)
+                                            .foregroundColor(Design.Utility.ErrorRed._600.color)
                                             .font(.custom(FontFamily.Inter.medium.name, size: 12))
                                     } else if viewStore.isInsufficientFunds {
                                         Text(L10n.Send.Error.insufficientFunds)
-                                            .foregroundColor(Asset.Colors.error.color)
+                                            .foregroundColor(Design.Utility.ErrorRed._600.color)
                                             .font(.custom(FontFamily.Inter.medium.name, size: 12))
                                     }
                                 }

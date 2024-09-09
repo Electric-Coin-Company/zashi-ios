@@ -19,8 +19,8 @@ public struct SettingsRow: View {
     
     init(
         icon: Image,
-        iconTint: Color = Asset.Colors.V2.textPrimary.color,
-        iconBcg: Color = Asset.Colors.V2.bgTertiary.color,
+        iconTint: Color = Design.Text.primary.color,
+        iconBcg: Color = Design.Surfaces.bgTertiary.color,
         title: String,
         divider: Bool = true,
         action: @escaping () -> Void
@@ -53,7 +53,7 @@ public struct SettingsRow: View {
 
                     Text(title)
                         .font(.custom(FontFamily.Archivo.semiBold.name, size: 16))
-                        .foregroundColor(Asset.Colors.V2.textPrimary.color)
+                        .foregroundColor(Design.Text.primary.color)
 
                     Spacer(minLength: 2)
                     
@@ -61,12 +61,12 @@ public struct SettingsRow: View {
                         .renderingMode(.template)
                         .resizable()
                         .frame(width: 20, height: 20)
-                        .foregroundColor(Asset.Colors.V2.textQuaternary.color)
+                        .foregroundColor(Design.Text.quaternary.color)
                 }
                 .padding(.horizontal, 20)
 
                 if divider {
-                    Asset.Colors.V2.divider.color
+                    Design.Surfaces.divider.color
                         .frame(height: 1)
                         .padding(.top, 12)
                 }
