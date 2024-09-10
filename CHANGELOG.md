@@ -6,8 +6,16 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.2 build 2 (2024-09-10)
+
+### Added
+- The option to buy ZEC with Coinbase in the settings.
+- Shielding transactions are now properly displayed in the transaction history with a specific UI.
+- The server switch now performs a series of checks and offers up to 3 best servers to choose from based on performance.
+
 ### Changed
-- Design of the Settings and Advanced Settings screens.
+- The design of the Settings and Advanced Settings screens.
+- The design of the Server Switch screen has been fully updated to the new style. 
 
 ## 1.1.5 build 1 (2024-08-22)
 
