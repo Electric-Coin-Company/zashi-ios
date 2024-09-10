@@ -1,6 +1,26 @@
 {
     "releases": [
         {
+            "version": "1.2",
+            "date": "09-10-2024",
+            "timestamp": 1725970426,
+            "sections": [
+                {
+                    "title": "Added:",
+                    "bulletpoints": [
+                        "We added an experimental feature which allows you to buy ZEC with Coinbase Onramp integration, you can find it in the Advanced Settings.",
+                        "No need to keep guessing which server performs best. We added a dynamic server switch, which identifies the best performing servers for you."
+                    ]
+                },
+                {
+                    "title": "Changed:",
+                    "bulletpoints": [
+                        "We updated our Settings UI."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "1.1.5",
             "date": "08-22-2024",
             "timestamp": 1724347857,
