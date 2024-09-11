@@ -108,6 +108,12 @@ public enum Design {
         }
     }
     
+    public enum Inputs {
+        public enum Default {
+            case stroke
+        }
+    }
+    
     public enum Checkboxes {
         case offBg
         case offStroke
@@ -373,6 +379,14 @@ public extension Design.Btns.Ghost {
     }
 }
 
+public extension Design.Inputs.Default {
+    var color: Color {
+        switch self {
+        case .stroke: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark800.color)
+        }
+    }
+}
+            
 public extension Design.Checkboxes {
     var color: Color {
         switch self {
