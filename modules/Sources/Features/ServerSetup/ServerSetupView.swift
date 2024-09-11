@@ -222,7 +222,7 @@ public struct ServerSetupView: View {
                                         HStack {
                                             Text(server.value(for: store.network))
                                                 .font(.custom(FontFamily.Inter.medium.name, size: 14))
-                                                .foregroundColor(Asset.Colors.primary.color)
+                                                .foregroundColor(Design.Text.primary.color)
                                                 .multilineTextAlignment(.leading)
 
                                             Spacer()
@@ -238,17 +238,17 @@ public struct ServerSetupView: View {
                                             TextField(L10n.ServerSetup.placeholder, text: $store.customServer)
                                                 .frame(height: 40)
                                                 .font(.custom(FontFamily.Inter.medium.name, size: 14))
-                                                .foregroundColor(Asset.Colors.shade30.color)
+                                                .foregroundColor(Design.Text.primary.color)
                                                 .autocapitalization(.none)
                                                 .multilineTextAlignment(.leading)
                                                 .padding(.leading, 10)
                                                 .background {
                                                     RoundedRectangle(cornerRadius: 8)
-                                                        .fill(Design.Checkboxes.offDisabledBg.color)
+                                                        .fill(Design.Surfaces.bgPrimary.color)
                                                 }
                                                 .overlay {
                                                     RoundedRectangle(cornerRadius: 8)
-                                                        .stroke(Design.Checkboxes.offStroke.color, lineWidth: 1)
+                                                        .stroke(Design.Inputs.Default.stroke.color, lineWidth: 1)
                                                 }
                                                 .padding(.vertical, 8)
                                         }
