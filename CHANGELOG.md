@@ -6,6 +6,11 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.2 build 9 (2024-09-17)
+
+### Fixed
+- Restore Wallet flow navigation.
+
 ## 1.2 build 2 (2024-09-10)
 
 ### Added

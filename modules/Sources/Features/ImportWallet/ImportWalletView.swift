@@ -113,7 +113,10 @@ public struct ImportWalletView: View {
                         destination: { ImportBirthdayView(store: store) }
                     )
                     .navigationLinkEmpty(
-                        isActive: store.bindingFor(.restoreInfo),
+                        isActive: Binding(
+                            get: { store.state.restoreInfoViewBinding },
+                            set: { store.send(.restoreInfoRequested($0)) }
+                        ),
                         destination: {
                             RestoreInfoView(
                                 store: store.scope(
@@ -202,7 +205,7 @@ extension StoreOf<ImportWallet> {
             set: { self.send(.updateDestination($0 ? destination : nil)) }
         )
     }
-    
+
     func bindingForRedactableSeedPhrase(_ importedSeedPhrase: RedactableString) -> Binding<String> {
         Binding<String>(
             get: { importedSeedPhrase.data },

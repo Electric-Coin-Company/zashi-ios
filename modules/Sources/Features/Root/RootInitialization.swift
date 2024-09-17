@@ -358,6 +358,9 @@ extension Root {
                     state = .initial
                 }
                 state.splashAppeared = true
+                state.isRestoringWallet = false
+                userDefaults.remove(Constants.udIsRestoringWallet)
+                walletStatusPanel.updateValue(.none)
                 walletStorage.nukeWallet()
                 try? readTransactionsStorage.nukeWallet()
 

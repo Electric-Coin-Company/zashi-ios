@@ -33,6 +33,7 @@ public struct ImportWallet {
         public var isValidNumberOfWords = false
         public var maxWordsCount = 0
         public var restoreInfoState: RestoreInfo.State
+        public var restoreInfoViewBinding: Bool = false
         public var wordsCount = 0
         
         public var mnemonicStatus: String {
@@ -151,10 +152,11 @@ public struct ImportWallet {
                 
             case .restoreInfo:
                 return .none
-                
+
             case .restoreInfoRequested(let newValue):
-                return .send(.updateDestination(.restoreInfo))
-                
+                state.restoreInfoViewBinding = newValue
+                return .none
+
             case .restoreWallet:
                 do {
                     // validate the seed
@@ -171,7 +173,6 @@ public struct ImportWallet {
 
                     state.birthdayHeight = .empty
                     state.importedSeedPhrase = .empty
-                    state.destination = nil
                     
                     // notify user
                     return .concatenate(
@@ -191,7 +192,8 @@ public struct ImportWallet {
                 return .none
                 
             case .successfullyRecovered:
-                return .send(.updateDestination(nil))
+                state.restoreInfoViewBinding = true
+                return .none
                 
             case .initializeSDK:
                 return .none
