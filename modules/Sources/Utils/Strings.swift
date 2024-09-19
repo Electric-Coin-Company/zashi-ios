@@ -9,6 +9,14 @@ extension String {
     }
 }
 
+public extension String {
+    var zip316: String {
+        self.count > 20
+        ? "\(self.prefix(20))..."
+        : self
+    }
+}
+
 extension String: Error {}
 
 extension String {

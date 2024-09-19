@@ -24,17 +24,26 @@ public extension View {
 public struct MessageEditorView: View {
     @Perception.Bindable var store: StoreOf<MessageEditor>
 
+    let title: String
+    let placeholder: String
+    
     @FocusState public var isFocused: Bool
     
-    public init(store: StoreOf<MessageEditor>) {
+    public init(
+        store: StoreOf<MessageEditor>,
+        title: String = L10n.Send.message,
+        placeholder: String = L10n.Send.memoPlaceholder
+    ) {
         self.store = store
+        self.title = title
+        self.placeholder = placeholder
         self.isFocused = false
     }
     
     public var body: some View {
         WithPerceptionTracking {
             VStack(alignment: .leading, spacing: 0) {
-                Text(L10n.Send.message)
+                Text(title)
                     .font(.custom(FontFamily.Inter.medium.name, size: 14))
                     .foregroundColor(Design.Inputs.Filled.label.color)
                     .padding(.bottom, 6)
@@ -52,7 +61,7 @@ public struct MessageEditorView: View {
                         if store.text.isEmpty {
                             HStack {
                                 VStack {
-                                    Text(L10n.Send.memoPlaceholder)
+                                    Text(placeholder)
                                         .font(.custom(FontFamily.Inter.regular.name, size: 16))
                                         .foregroundColor(Design.Inputs.Default.text.color)
                                         .onTapGesture {

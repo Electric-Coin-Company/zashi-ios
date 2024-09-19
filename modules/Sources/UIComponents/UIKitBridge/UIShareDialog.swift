@@ -8,6 +8,40 @@
 import Foundation
 import UIKit
 import SwiftUI
+import LinkPresentation
+
+public final class ShareableImage: NSObject, UIActivityItemSource {
+    private let image: UIImage
+
+    public init(image: UIImage) {
+        self.image = image
+        super.init()
+    }
+
+    public func activityViewControllerPlaceholderItem(
+        _ activityViewController: UIActivityViewController
+    ) -> Any {
+        image
+    }
+
+    public func activityViewController(
+        _ activityViewController: UIActivityViewController,
+        itemForActivityType activityType: UIActivity.ActivityType?
+    ) -> Any? {
+        image
+    }
+
+    public func activityViewControllerLinkMetadata(
+        _ activityViewController: UIActivityViewController
+    ) -> LPLinkMetadata? {
+        let metadata = LPLinkMetadata()
+        metadata.iconProvider = NSItemProvider(object: UIImage(named: "ZashiLogo") ?? image)
+        metadata.title = "My Zashi ZEC Address"
+        metadata.originalURL = URL(fileURLWithPath: "Hi, scan this QR code to send me a ZEC payment!")
+        
+        return metadata
+    }
+}
 
 public class UIShareDialog: UIView {
     required init?(coder aDecoder: NSCoder) {

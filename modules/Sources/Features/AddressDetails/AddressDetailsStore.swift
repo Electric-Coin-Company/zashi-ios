@@ -1,8 +1,8 @@
 //
 //  AddressDetailsStore.swift
-//  secant-testnet
+//  Zashi
 //
-//  Created by Lukáš Korba on 05.07.2022.
+//  Created by Lukáš Korba on 09-19-2024.
 //
 
 import Foundation
@@ -12,61 +12,44 @@ import ZcashLightClientKit
 import Pasteboard
 import Generated
 import Utils
+import UIComponents
 
 @Reducer
 public struct AddressDetails {
     @ObservableState
     public struct State: Equatable {
-        public enum Selection: Equatable, Hashable, CaseIterable {
-            case ua
-            case transparent
-        }
+        public var cancelId = UUID()
         
+        public var address: RedactableString
+        public var addressTitle: String
         public var addressToShare: RedactableString?
-        public var selection: Selection
-        public var uAddress: UnifiedAddress?
-        public var uaQR: CGImage?
-        public var taQR: CGImage?
-
-        public var unifiedAddress: String {
-            uAddress?.stringEncoded ?? L10n.AddressDetails.Error.cantExtractUnifiedAddress
-        }
-
-        public var saplingAddress: String {
-            do {
-                let address = try uAddress?.saplingReceiver().stringEncoded ?? L10n.AddressDetails.Error.cantExtractSaplingAddress
-                return address
-            } catch {
-                return L10n.AddressDetails.Error.cantExtractSaplingAddress
-            }
-        }
-
-        public var transparentAddress: String {
-            do {
-                let address = try uAddress?.transparentReceiver().stringEncoded ?? L10n.AddressDetails.Error.cantExtractTransparentAddress
-                return address
-            } catch {
-                return L10n.AddressDetails.Error.cantExtractTransparentAddress
-            }
-        }
+        public var isAddressExpanded = false
+        public var isQRCodeAppreanceFlipped = false
+        public var maxPrivacy = false
+        public var storedQR: CGImage?
+        @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
 
         public init(
-            addressToShare: RedactableString? = nil,
-            selection: Selection = .ua,
-            uAddress: UnifiedAddress? = nil
+            address: RedactableString = .empty,
+            addressTitle: String = "",
+            maxPrivacy: Bool = false
         ) {
-            self.addressToShare = addressToShare
-            self.selection = selection
-            self.uAddress = uAddress
+            self.address = address
+            self.addressTitle = addressTitle
+            self.maxPrivacy = maxPrivacy
         }
     }
 
-    public enum Action: BindableAction, Equatable {
-        case binding(BindingAction<AddressDetails.State>)
-        case copyToPastboard(RedactableString)
-        case rememberQR(CGImage?, Bool)
+    public enum Action: Equatable {
+        case addressTapped
+        case copyToPastboard
+        case generateQRCode(Bool)
+        case onAppear
+        case onDisappear
+        case qrCodeTapped
+        case rememberQR(CGImage?)
         case shareFinished
-        case shareQR(RedactableString)
+        case shareQR
     }
     
     @Dependency(\.pasteboard) var pasteboard
@@ -74,31 +57,54 @@ public struct AddressDetails {
     public init() { }
 
     public var body: some Reducer<State, Action> {
-        BindingReducer()
-
         Reduce { state, action in
             switch action {
-            case .binding:
+            case .addressTapped:
+                state.isAddressExpanded.toggle()
+                return .none
+
+            case .onAppear:
+                state.isAddressExpanded = false
+                state.isQRCodeAppreanceFlipped = false
                 return .none
                 
-            case let .rememberQR(image, uaQR):
-                if uaQR {
-                    state.uaQR = image
-                } else {
-                    state.taQR = image
+            case .onDisappear:
+                return .cancel(id: state.cancelId)
+
+            case .qrCodeTapped:
+                guard state.storedQR != nil else {
+                    return .none
                 }
-                return .none
+                state.isQRCodeAppreanceFlipped.toggle()
+                return .send(.generateQRCode(true))
                 
-            case .copyToPastboard(let text):
-                pasteboard.setString(text)
+            case let .rememberQR(image):
+                state.storedQR = image
                 return .none
-                
+
+            case .copyToPastboard:
+                pasteboard.setString(state.address)
+                state.toast = .top("Copied to the clipboard!")
+                return .none
+
+            case .generateQRCode:
+                return .publisher {
+                    QRCodeGenerator.generate(
+                        from: state.address.data,
+                        color: state.isQRCodeAppreanceFlipped
+                        ? .black
+                        : Asset.Colors.primary.systemColor
+                    )
+                    .map(Action.rememberQR)
+                }
+                .cancellable(id: state.cancelId)
+
             case .shareFinished:
                 state.addressToShare = nil
                 return .none
                 
-            case .shareQR(let text):
-                state.addressToShare = text
+            case .shareQR:
+                state.addressToShare = state.address
                 return .none
             }
         }

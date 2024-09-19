@@ -66,14 +66,14 @@
 "home.migratingDatabases" = "Upgrading databases…";
 
 // MARK: - Address Details
-"addressDetails.ua" = "Unified Address";
-"addressDetails.sa" = "Sapling Address";
-"addressDetails.ta" = "Transparent Address";
-"addressDetails.copy" = "Copy";
-"addressDetails.share" = "Share";
-"addressDetails.error.cantExtractUnifiedAddress" = "could not extract UA";
-"addressDetails.error.cantExtractTransparentAddress" = "could not extract transparent receiver from UA";
-"addressDetails.error.cantExtractSaplingAddress" = "could not extract sapling receiver from UA";
+"receive.ua" = "Unified Address";
+"receive.sa" = "Sapling Address";
+"receive.ta" = "Transparent Address";
+"receive.copy" = "Copy";
+"receive.share" = "Share";
+"receive.error.cantExtractUnifiedAddress" = "could not extract UA";
+"receive.error.cantExtractTransparentAddress" = "could not extract transparent receiver from UA";
+"receive.error.cantExtractSaplingAddress" = "could not extract sapling receiver from UA";
 
 // MARK: - Address Details
 "serverSetup.title" = "Server";

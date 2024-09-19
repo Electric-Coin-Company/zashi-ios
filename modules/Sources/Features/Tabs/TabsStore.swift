@@ -9,8 +9,9 @@ import Foundation
 import ComposableArchitecture
 import SwiftUI
 
-import Generated
 import AddressDetails
+import Generated
+import Receive
 import BalanceBreakdown
 import Home
 import SendFlow
@@ -21,17 +22,25 @@ import Utils
 import ExchangeRate
 import CurrencyConversionSetup
 import UserPreferencesStorage
+import RequestZec
+import ZecKeyboard
 
 @Reducer
 public struct Tabs {
     @ObservableState
     public struct State: Equatable {
         public enum Destination: Equatable {
+            case addressDetails
             case currencyConversionSetup
             case sendConfirmation
             case settings
         }
 
+        public enum StackDestination: Int, Equatable {
+            case zecKeyboard = 0
+            case requestZec
+        }
+        
         public enum Tab: Int, Equatable, CaseIterable {
             case account = 0
             case send
@@ -59,23 +68,30 @@ public struct Tabs {
         public var isRateEducationEnabled = false
         public var isRateTooltipEnabled = false
         public var homeState: Home.State
+        public var receiveState: Receive.State
+        public var requestZecState: RequestZec.State
         public var selectedTab: Tab = .account
         public var sendConfirmationState: SendConfirmation.State
         public var sendState: SendFlow.State
         public var settingsState: Settings.State
+        public var stackDestination: StackDestination?
+        public var zecKeyboardState: ZecKeyboard.State
         
         public init(
-            addressDetailsState: AddressDetails.State,
+            addressDetailsState: AddressDetails.State = .initial,
             balanceBreakdownState: Balances.State,
             currencyConversionSetupState: CurrencyConversionSetup.State,
             destination: Destination? = nil,
             isRateEducationEnabled: Bool = false,
             isRateTooltipEnabled: Bool = false,
             homeState: Home.State,
+            receiveState: Receive.State,
+            requestZecState: RequestZec.State,
             selectedTab: Tab = .account,
             sendConfirmationState: SendConfirmation.State,
             sendState: SendFlow.State,
-            settingsState: Settings.State
+            settingsState: Settings.State,
+            zecKeyboardState: ZecKeyboard.State
         ) {
             self.addressDetailsState = addressDetailsState
             self.balanceBreakdownState = balanceBreakdownState
@@ -84,10 +100,13 @@ public struct Tabs {
             self.isRateEducationEnabled = isRateEducationEnabled
             self.isRateTooltipEnabled = isRateTooltipEnabled
             self.homeState = homeState
+            self.receiveState = receiveState
+            self.requestZecState = requestZecState
             self.selectedTab = selectedTab
             self.sendConfirmationState = sendConfirmationState
             self.sendState = sendState
             self.settingsState = settingsState
+            self.zecKeyboardState = zecKeyboardState
         }
     }
     
@@ -100,11 +119,15 @@ public struct Tabs {
         case home(Home.Action)
         case onAppear
         case rateTooltipTapped
+        case receive(Receive.Action)
+        case requestZec(RequestZec.Action)
         case selectedTabChanged(State.Tab)
         case send(SendFlow.Action)
         case sendConfirmation(SendConfirmation.Action)
         case settings(Settings.Action)
         case updateDestination(Tabs.State.Destination?)
+        case updateStackDestination(Tabs.State.StackDestination?)
+        case zecKeyboard(ZecKeyboard.Action)
     }
 
     @Dependency(\.exchangeRate) var exchangeRate
@@ -124,10 +147,14 @@ public struct Tabs {
             SendConfirmation()
         }
 
-        Scope(state: \.addressDetailsState, action: \.addressDetails) {
-            AddressDetails()
+        Scope(state: \.receiveState, action: \.receive) {
+            Receive()
         }
-        
+
+        Scope(state: \.requestZecState, action: \.requestZec) {
+            RequestZec()
+        }
+
         Scope(state: \.currencyConversionSetupState, action: \.currencyConversionSetup) {
             CurrencyConversionSetup()
         }
@@ -144,18 +171,48 @@ public struct Tabs {
             Settings()
         }
 
+        Scope(state: \.addressDetailsState, action: \.addressDetails) {
+            AddressDetails()
+        }
+
+        Scope(state: \.zecKeyboardState, action: \.zecKeyboard) {
+            ZecKeyboard()
+        }
+
         Reduce { state, action in
             switch action {
             case .onAppear:
                 state.isRateEducationEnabled = userStoredPreferences.exchangeRate() == nil
                 return .none
                 
+            case let .receive(.addressDetailsRequest(address, maxPrivacy)):
+                state.addressDetailsState.address = address
+                state.addressDetailsState.maxPrivacy = maxPrivacy
+                state.addressDetailsState.addressTitle = maxPrivacy
+                ? "Zcash Shielded Address"
+                : "Zcash Transparent Address"
+                return .send(.updateDestination(.addressDetails))
+
+            case .receive(.requestTapped(let address)):
+                state.zecKeyboardState.input = "0"
+                return .send(.updateStackDestination(.zecKeyboard))
+
+            case .zecKeyboard(.nextTapped):
+                state.requestZecState.requestedZec = state.zecKeyboardState.amount
+                return .send(.updateStackDestination(.requestZec))
+
+            case .addressDetails:
+                return .none
+
             case .binding:
                 return .none
                 
-            case .addressDetails:
+            case .receive:
                 return .none
             
+            case .requestZec:
+                return .none
+                
             case .balanceBreakdown(.shieldFundsSuccess):
                 return .none
             
@@ -246,9 +303,17 @@ public struct Tabs {
             case .updateDestination(let destination):
                 state.destination = destination
                 return .none
-                
+
+            case .updateStackDestination(let destination):
+                print("__LD updateStackDestination \(destination)")
+                state.stackDestination = destination
+                return .none
+
             case .rateTooltipTapped:
                 state.isRateTooltipEnabled = false
+                return .none
+                
+            case .zecKeyboard:
                 return .none
             }
         }

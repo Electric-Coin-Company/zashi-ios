@@ -25,7 +25,7 @@
 		9E2706672AFF99F5000DA6EC /* ReadTransactionsStorageModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9E2706652AFF99F5000DA6EC /* ReadTransactionsStorageModel.xcdatamodeld */; };
 		9E2706682AFF99F5000DA6EC /* ReadTransactionsStorageModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9E2706652AFF99F5000DA6EC /* ReadTransactionsStorageModel.xcdatamodeld */; };
 		9E2F1C8C280ED6A7004E65FE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9E2F1C8B280ED6A7004E65FE /* LaunchScreen.storyboard */; };
-		9E34519529C4A4BF00177D16 /* AddressDetailsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E207C382966EF87003E2C9B /* AddressDetailsTests.swift */; };
+		9E34519529C4A4BF00177D16 /* ReceiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E207C382966EF87003E2C9B /* ReceiveTests.swift */; };
 		9E34519629C4A4D800177D16 /* secantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4E7A2526B364180058B01E /* secantUITests.swift */; };
 		9E34519729C4A51100177D16 /* RecoveryPhraseBackupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DFE93DE272C6D4B000FCCA5 /* RecoveryPhraseBackupTests.swift */; };
 		9E34519A29C4A52F00177D16 /* BalanceBreakdownTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E94C61F28AA7DEE008256E9 /* BalanceBreakdownTests.swift */; };
@@ -49,7 +49,7 @@
 		9E3451B629C8565500177D16 /* ZatoshiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E39112D283F91600073DD9A /* ZatoshiTests.swift */; };
 		9E3451B729C8565500177D16 /* DatabaseFilesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E02B56B27FED475005B809B /* DatabaseFilesTests.swift */; };
 		9E3451B829C856E700177D16 /* TransactionListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5BF63E2819542C00BA3F17 /* TransactionListTests.swift */; };
-		9E3451B929C857C000177D16 /* AddressDetailsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E207C352966EC77003E2C9B /* AddressDetailsSnapshotTests.swift */; };
+		9E3451B929C857C000177D16 /* ReceiveSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E207C352966EC77003E2C9B /* ReceiveSnapshotTests.swift */; };
 		9E3451BA29C857C500177D16 /* BalanceBreakdownSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E94C62228AA7EE0008256E9 /* BalanceBreakdownSnapshotTests.swift */; };
 		9E3451BB29C857C800177D16 /* HomeSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9ECC8C28589E150099D5A2 /* HomeSnapshotTests.swift */; };
 		9E3451BC29C857C800177D16 /* NotEnoughFeeSpaceSnapshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3448CB3628E485CB006ADEDB /* NotEnoughFeeSpaceSnapshots.swift */; };
@@ -161,8 +161,8 @@
 		9E139AAE2B07B3A600D104B8 /* ZatoshiStringRepresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZatoshiStringRepresentationTests.swift; sourceTree = "<group>"; };
 		9E1FAFB62AF2C6D40084CA3D /* PrivateDataConsentSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateDataConsentSnapshotTests.swift; sourceTree = "<group>"; };
 		9E1FAFB92AF2C7F20084CA3D /* PrivateDataConsentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateDataConsentTests.swift; sourceTree = "<group>"; };
-		9E207C352966EC77003E2C9B /* AddressDetailsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressDetailsSnapshotTests.swift; sourceTree = "<group>"; };
-		9E207C382966EF87003E2C9B /* AddressDetailsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressDetailsTests.swift; sourceTree = "<group>"; };
+		9E207C352966EC77003E2C9B /* ReceiveSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveSnapshotTests.swift; sourceTree = "<group>"; };
+		9E207C382966EF87003E2C9B /* ReceiveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveTests.swift; sourceTree = "<group>"; };
 		9E2706662AFF99F5000DA6EC /* TransactionReadUnreadM.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TransactionReadUnreadM.xcdatamodel; sourceTree = "<group>"; };
 		9E2F1C8B280ED6A7004E65FE /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9E391123283E4CAC0073DD9A /* ImportWalletTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportWalletTests.swift; sourceTree = "<group>"; };
@@ -335,7 +335,7 @@
 		0D4E7A1926B364180058B01E /* secantTests */ = {
 			isa = PBXGroup;
 			children = (
-				9E207C372966EF6E003E2C9B /* AddressDetailsTests */,
+				9E207C372966EF6E003E2C9B /* ReceiveTests */,
 				0DFE93DD272C6D4B000FCCA5 /* BackupFlowTests */,
 				9E94C61E28AA7DD5008256E9 /* BalanceBreakdownTests */,
 				9EAB4674285B5C68002904A0 /* DeeplinkTests */,
@@ -434,20 +434,20 @@
 			path = PrivateDataConsentTests;
 			sourceTree = "<group>";
 		};
-		9E207C342966EC60003E2C9B /* AddressDetailsSnapshotTests */ = {
+		9E207C342966EC60003E2C9B /* ReceiveSnapshotTests */ = {
 			isa = PBXGroup;
 			children = (
-				9E207C352966EC77003E2C9B /* AddressDetailsSnapshotTests.swift */,
+				9E207C352966EC77003E2C9B /* ReceiveSnapshotTests.swift */,
 			);
-			path = AddressDetailsSnapshotTests;
+			path = ReceiveSnapshotTests;
 			sourceTree = "<group>";
 		};
-		9E207C372966EF6E003E2C9B /* AddressDetailsTests */ = {
+		9E207C372966EF6E003E2C9B /* ReceiveTests */ = {
 			isa = PBXGroup;
 			children = (
-				9E207C382966EF87003E2C9B /* AddressDetailsTests.swift */,
+				9E207C382966EF87003E2C9B /* ReceiveTests.swift */,
 			);
-			path = AddressDetailsTests;
+			path = ReceiveTests;
 			sourceTree = "<group>";
 		};
 		9E391122283E4C970073DD9A /* ImportWalletTests */ = {
@@ -472,7 +472,7 @@
 			children = (
 				9E1FAFB52AF2C6C10084CA3D /* PrivateDataConsentSnapshotTests */,
 				9E4938D62ACE8E6C003C4C1D /* SecurityWarningSnapshotTests */,
-				9E207C342966EC60003E2C9B /* AddressDetailsSnapshotTests */,
+				9E207C342966EC60003E2C9B /* ReceiveSnapshotTests */,
 				9E94C62128AA7ECD008256E9 /* BalanceBreakdownSnapshotTests */,
 				9E9ECC8B28589E150099D5A2 /* HomeSnapshotTests */,
 				9E9ECC9328589E150099D5A2 /* ImportWalletSnapshotTests */,
@@ -1337,8 +1337,8 @@
 				9E3451C029C857D400177D16 /* RecoveryPhraseDisplaySnapshotTests.swift in Sources */,
 				9E3451B629C8565500177D16 /* ZatoshiTests.swift in Sources */,
 				9E3451B829C856E700177D16 /* TransactionListTests.swift in Sources */,
-				9E34519529C4A4BF00177D16 /* AddressDetailsTests.swift in Sources */,
-				9E3451B929C857C000177D16 /* AddressDetailsSnapshotTests.swift in Sources */,
+				9E34519529C4A4BF00177D16 /* ReceiveTests.swift in Sources */,
+				9E3451B929C857C000177D16 /* ReceiveSnapshotTests.swift in Sources */,
 				9E34519B29C4A90700177D16 /* DeeplinkTests.swift in Sources */,
 				9E3451BD29C857CC00177D16 /* ImportWalletSnapshotTests.swift in Sources */,
 				9E3451B429C8565500177D16 /* WalletStorageTests.swift in Sources */,
@@ -1784,6 +1784,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "co.electriccoin.secant-mainnet";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG UNREDACTED SECANT_MAINNET";
+				SWIFT_UPCOMING_FEATURE_CONCISE_MAGIC_FILE = NO;
+				SWIFT_UPCOMING_FEATURE_DEPRECATE_APPLICATION_MAIN = NO;
+				SWIFT_UPCOMING_FEATURE_DISABLE_OUTWARD_ACTOR_ISOLATION = NO;
+				SWIFT_UPCOMING_FEATURE_FORWARD_TRAILING_CLOSURES = NO;
+				SWIFT_UPCOMING_FEATURE_GLOBAL_CONCURRENCY = NO;
+				SWIFT_UPCOMING_FEATURE_IMPLICIT_OPEN_EXISTENTIALS = NO;
+				SWIFT_UPCOMING_FEATURE_IMPORT_OBJC_FORWARD_DECLS = NO;
+				SWIFT_UPCOMING_FEATURE_INFER_SENDABLE_FROM_CAPTURES = NO;
+				SWIFT_UPCOMING_FEATURE_ISOLATED_DEFAULT_VALUES = NO;
+				SWIFT_UPCOMING_FEATURE_REGION_BASED_ISOLATION = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				UPLOAD_CRASHLYTICS_SYMBOLS = NO;
@@ -1814,6 +1824,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "co.electriccoin.secant-mainnet";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SECANT_MAINNET;
+				SWIFT_UPCOMING_FEATURE_CONCISE_MAGIC_FILE = NO;
+				SWIFT_UPCOMING_FEATURE_DEPRECATE_APPLICATION_MAIN = NO;
+				SWIFT_UPCOMING_FEATURE_DISABLE_OUTWARD_ACTOR_ISOLATION = NO;
+				SWIFT_UPCOMING_FEATURE_FORWARD_TRAILING_CLOSURES = NO;
+				SWIFT_UPCOMING_FEATURE_GLOBAL_CONCURRENCY = NO;
+				SWIFT_UPCOMING_FEATURE_IMPLICIT_OPEN_EXISTENTIALS = NO;
+				SWIFT_UPCOMING_FEATURE_IMPORT_OBJC_FORWARD_DECLS = NO;
+				SWIFT_UPCOMING_FEATURE_INFER_SENDABLE_FROM_CAPTURES = NO;
+				SWIFT_UPCOMING_FEATURE_ISOLATED_DEFAULT_VALUES = NO;
+				SWIFT_UPCOMING_FEATURE_REGION_BASED_ISOLATION = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				UPLOAD_CRASHLYTICS_SYMBOLS = YES;
@@ -2006,6 +2026,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "co.electriccoin.secant-mainnet";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "SECANT_MAINNET SECANT_DISTRIB";
+				SWIFT_UPCOMING_FEATURE_CONCISE_MAGIC_FILE = NO;
+				SWIFT_UPCOMING_FEATURE_DEPRECATE_APPLICATION_MAIN = NO;
+				SWIFT_UPCOMING_FEATURE_DISABLE_OUTWARD_ACTOR_ISOLATION = NO;
+				SWIFT_UPCOMING_FEATURE_FORWARD_TRAILING_CLOSURES = NO;
+				SWIFT_UPCOMING_FEATURE_GLOBAL_CONCURRENCY = NO;
+				SWIFT_UPCOMING_FEATURE_IMPLICIT_OPEN_EXISTENTIALS = NO;
+				SWIFT_UPCOMING_FEATURE_IMPORT_OBJC_FORWARD_DECLS = NO;
+				SWIFT_UPCOMING_FEATURE_INFER_SENDABLE_FROM_CAPTURES = NO;
+				SWIFT_UPCOMING_FEATURE_ISOLATED_DEFAULT_VALUES = NO;
+				SWIFT_UPCOMING_FEATURE_REGION_BASED_ISOLATION = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				UPLOAD_CRASHLYTICS_SYMBOLS = YES;
@@ -2019,7 +2049,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "zashi-internal.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 14;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
 				DEVELOPMENT_TEAM = RLPRR8CPQG;
@@ -2050,7 +2080,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "zashi-internal.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
 				DEVELOPMENT_TEAM = RLPRR8CPQG;
 				ENABLE_BITCODE = NO;
@@ -2080,7 +2110,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "zashi-internal.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
 				DEVELOPMENT_TEAM = RLPRR8CPQG;
 				ENABLE_BITCODE = NO;

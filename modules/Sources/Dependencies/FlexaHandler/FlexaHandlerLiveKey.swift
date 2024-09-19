@@ -121,7 +121,7 @@ extension FlexaHandlerClient: DependencyKey {
             },
             updateBalance: {
                 latestSpendableBalance.value = $0.decimalValue.decimalValue
-                print("__LD updateAppAccounts \(latestSpendableBalance.value)")
+                print("_LD updateAppAccounts \(latestSpendableBalance.value)")
                 Flexa.updateAppAccounts(FlexaHandlerClient.accounts(latestSpendableBalance.value))
             }
         )

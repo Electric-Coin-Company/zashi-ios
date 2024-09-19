@@ -313,7 +313,7 @@ extension Root {
                 }
                 
             case .initialization(.initializationSuccessfullyDone(let uAddress)):
-                state.tabsState.addressDetailsState.uAddress = uAddress
+                state.tabsState.receiveState.uAddress = uAddress
                 state.tabsState.settingsState.integrationsState.uAddress = uAddress
                 //exchangeRate.refreshExchangeRateUSD()
                 return .merge(

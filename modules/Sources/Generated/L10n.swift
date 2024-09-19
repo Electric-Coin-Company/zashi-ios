@@ -71,26 +71,6 @@ public enum L10n {
       public static let title = L10n.tr("Localizable", "addressBook.newContact.title", fallback: "Add New Address")
     }
   }
-  public enum AddressDetails {
-    /// Copy
-    public static let copy = L10n.tr("Localizable", "addressDetails.copy", fallback: "Copy")
-    /// Sapling Address
-    public static let sa = L10n.tr("Localizable", "addressDetails.sa", fallback: "Sapling Address")
-    /// Share
-    public static let share = L10n.tr("Localizable", "addressDetails.share", fallback: "Share")
-    /// Transparent Address
-    public static let ta = L10n.tr("Localizable", "addressDetails.ta", fallback: "Transparent Address")
-    /// Unified Address
-    public static let ua = L10n.tr("Localizable", "addressDetails.ua", fallback: "Unified Address")
-    public enum Error {
-      /// could not extract sapling receiver from UA
-      public static let cantExtractSaplingAddress = L10n.tr("Localizable", "addressDetails.error.cantExtractSaplingAddress", fallback: "could not extract sapling receiver from UA")
-      /// could not extract transparent receiver from UA
-      public static let cantExtractTransparentAddress = L10n.tr("Localizable", "addressDetails.error.cantExtractTransparentAddress", fallback: "could not extract transparent receiver from UA")
-      /// could not extract UA
-      public static let cantExtractUnifiedAddress = L10n.tr("Localizable", "addressDetails.error.cantExtractUnifiedAddress", fallback: "could not extract UA")
-    }
-  }
   public enum Balance {
     /// Available Balance:
     public static let availableTitle = L10n.tr("Localizable", "balance.availableTitle", fallback: "Available Balance:")
@@ -356,6 +336,26 @@ public enum L10n {
     public static let title = L10n.tr("Localizable", "proposalPartial.title", fallback: "Transaction Error")
     /// Transaction Ids
     public static let transactionIds = L10n.tr("Localizable", "proposalPartial.transactionIds", fallback: "Transaction Ids")
+  }
+  public enum Receive {
+    /// Copy
+    public static let copy = L10n.tr("Localizable", "receive.copy", fallback: "Copy")
+    /// Sapling Address
+    public static let sa = L10n.tr("Localizable", "receive.sa", fallback: "Sapling Address")
+    /// Share
+    public static let share = L10n.tr("Localizable", "receive.share", fallback: "Share")
+    /// Transparent Address
+    public static let ta = L10n.tr("Localizable", "receive.ta", fallback: "Transparent Address")
+    /// Unified Address
+    public static let ua = L10n.tr("Localizable", "receive.ua", fallback: "Unified Address")
+    public enum Error {
+      /// could not extract sapling receiver from UA
+      public static let cantExtractSaplingAddress = L10n.tr("Localizable", "receive.error.cantExtractSaplingAddress", fallback: "could not extract sapling receiver from UA")
+      /// could not extract transparent receiver from UA
+      public static let cantExtractTransparentAddress = L10n.tr("Localizable", "receive.error.cantExtractTransparentAddress", fallback: "could not extract transparent receiver from UA")
+      /// could not extract UA
+      public static let cantExtractUnifiedAddress = L10n.tr("Localizable", "receive.error.cantExtractUnifiedAddress", fallback: "could not extract UA")
+    }
   }
   public enum RecoveryPhraseDisplay {
     /// Wallet birthday height: %@

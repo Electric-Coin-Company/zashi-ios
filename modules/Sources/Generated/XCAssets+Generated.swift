@@ -23,6 +23,11 @@ public typealias AssetImageTypeAlias = ImageAsset.UniversalImage
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
 public enum Asset {
   public enum Assets {
+    public enum Brandmarks {
+      public static let brandmarkLow = ImageAsset(name: "brandmarkLow")
+      public static let brandmarkMax = ImageAsset(name: "brandmarkMax")
+      public static let brandmarkQR = ImageAsset(name: "brandmarkQR")
+    }
     public static let fly = ImageAsset(name: "Fly")
     public static let flyReceived = ImageAsset(name: "FlyReceived")
     public enum Partners {
@@ -47,8 +52,11 @@ public enum Asset {
     public static let flyReceivedFilled = ImageAsset(name: "flyReceivedFilled")
     public static let gridTile = ImageAsset(name: "gridTile")
     public enum Icons {
+      public static let alertCircle = ImageAsset(name: "alertCircle")
+      public static let coinsHand = ImageAsset(name: "coinsHand")
       public static let currencyDollar = ImageAsset(name: "currencyDollar")
       public static let currencyZec = ImageAsset(name: "currencyZec")
+      public static let delete = ImageAsset(name: "delete")
       public static let downloadCloud = ImageAsset(name: "downloadCloud")
       public static let flashOff = ImageAsset(name: "flashOff")
       public static let flashOn = ImageAsset(name: "flashOn")
@@ -62,6 +70,8 @@ public enum Asset {
       public static let save = ImageAsset(name: "save")
       public static let server = ImageAsset(name: "server")
       public static let settings = ImageAsset(name: "settings")
+      public static let share = ImageAsset(name: "share")
+      public static let shieldTickFilled = ImageAsset(name: "shieldTickFilled")
       public static let switchHorizontal = ImageAsset(name: "switchHorizontal")
       public static let user = ImageAsset(name: "user")
       public static let userPlus = ImageAsset(name: "userPlus")

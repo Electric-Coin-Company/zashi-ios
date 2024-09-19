@@ -1,5 +1,5 @@
 //
-//  AddressDetailsTests.swift
+//  ReceiveTests.swift
 //  secantTests
 //
 //  Created by Lukáš Korba on 05.01.2023.
@@ -9,11 +9,11 @@ import XCTest
 import ComposableArchitecture
 import ZcashLightClientKit
 import Pasteboard
-import AddressDetails
+import Receive
 @testable import secant_testnet
 
 @MainActor
-class AddressDetailsTests: XCTestCase {
+class ReceiveTests: XCTestCase {
     // swiftlint:disable line_length
     let uAddressEncoding = "utest1zkkkjfxkamagznjr6ayemffj2d2gacdwpzcyw669pvg06xevzqslpmm27zjsctlkstl2vsw62xrjktmzqcu4yu9zdhdxqz3kafa4j2q85y6mv74rzjcgjg8c0ytrg7dwyzwtgnuc76h"
     
@@ -22,9 +22,9 @@ class AddressDetailsTests: XCTestCase {
         let uAddress = try UnifiedAddress(encoding: uAddressEncoding, network: .testnet)
 
         let store = TestStore(
-            initialState: AddressDetails.State(uAddress: uAddress)
+            initialState: Receive.State(uAddress: uAddress)
         ) {
-            AddressDetails()
+            Receive()
         }
         
         store.dependencies.pasteboard = testPasteboard
@@ -36,7 +36,7 @@ class AddressDetailsTests: XCTestCase {
         XCTAssertEqual(
             testPasteboard.getString()?.data,
             expectedAddress,
-            "AddressDetails: `testCopyTransparentAddressToPasteboard` is expected to match the input `\(expectedAddress)`"
+            "Receive: `testCopyTransparentAddressToPasteboard` is expected to match the input `\(expectedAddress)`"
         )
         
         await store.finish()
@@ -47,9 +47,9 @@ class AddressDetailsTests: XCTestCase {
         let uAddress = try UnifiedAddress(encoding: uAddressEncoding, network: .testnet)
 
         let store = TestStore(
-            initialState: AddressDetails.State(uAddress: uAddress)
+            initialState: Receive.State(uAddress: uAddress)
         ) {
-            AddressDetails()
+            Receive()
         }
         
         store.dependencies.pasteboard = testPasteboard
@@ -59,7 +59,7 @@ class AddressDetailsTests: XCTestCase {
         XCTAssertEqual(
             testPasteboard.getString()?.data,
             uAddress.stringEncoded,
-            "AddressDetails: `testCopyUnifiedAddressToPasteboard` is expected to match the input `\(uAddress.stringEncoded)`"
+            "Receive: `testCopyUnifiedAddressToPasteboard` is expected to match the input `\(uAddress.stringEncoded)`"
         )
         
         await store.finish()
@@ -70,9 +70,9 @@ class AddressDetailsTests: XCTestCase {
         let uAddress = try UnifiedAddress(encoding: uAddressEncoding, network: .testnet)
         
         let store = TestStore(
-            initialState: AddressDetails.State(uAddress: uAddress)
+            initialState: Receive.State(uAddress: uAddress)
         ) {
-            AddressDetails()
+            Receive()
         }
         
         store.dependencies.pasteboard = testPasteboard
@@ -84,7 +84,7 @@ class AddressDetailsTests: XCTestCase {
         XCTAssertEqual(
             testPasteboard.getString()?.data,
             expectedAddress,
-            "AddressDetails: `testCopySaplingAddressToPasteboard` is expected to match the input `\(expectedAddress)`"
+            "Receive: `testCopySaplingAddressToPasteboard` is expected to match the input `\(expectedAddress)`"
         )
         
         await store.finish()
@@ -94,9 +94,9 @@ class AddressDetailsTests: XCTestCase {
         let uAddress = try UnifiedAddress(encoding: uAddressEncoding, network: .testnet)
 
         let store = TestStore(
-            initialState: AddressDetails.State(uAddress: uAddress)
+            initialState: Receive.State(uAddress: uAddress)
         ) {
-            AddressDetails()
+            Receive()
         }
 
         let expectedAddress = try uAddress.transparentReceiver().stringEncoded
@@ -112,9 +112,9 @@ class AddressDetailsTests: XCTestCase {
         let uAddress = try UnifiedAddress(encoding: uAddressEncoding, network: .testnet)
 
         let store = TestStore(
-            initialState: AddressDetails.State(uAddress: uAddress)
+            initialState: Receive.State(uAddress: uAddress)
         ) {
-            AddressDetails()
+            Receive()
         }
 
         await store.send(.shareQR(uAddress.stringEncoded.redacted)) { state in
@@ -128,9 +128,9 @@ class AddressDetailsTests: XCTestCase {
         let uAddress = try UnifiedAddress(encoding: uAddressEncoding, network: .testnet)
 
         let store = TestStore(
-            initialState: AddressDetails.State(uAddress: uAddress)
+            initialState: Receive.State(uAddress: uAddress)
         ) {
-            AddressDetails()
+            Receive()
         }
 
         let expectedAddress = try uAddress.saplingReceiver().stringEncoded

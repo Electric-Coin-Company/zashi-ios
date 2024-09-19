@@ -14,6 +14,8 @@ public protocol Colorable {
 
 public enum Design {
 
+    case screenBackground
+    
     // MARK: Color Variables
     
     public enum Surfaces: Colorable {
@@ -290,6 +292,14 @@ public enum Design {
     }
 }
 
+public extension Design {
+    var color: Color {
+        switch self {
+        case .screenBackground: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.obsidian.color)
+        }
+    }
+}
+
 // MARK: Color Variable Values
 
 public extension Design.Surfaces {
@@ -358,11 +368,11 @@ public extension Design.Btns.Secondary {
 public extension Design.Btns.Tertiary {
     var color: Color {
         switch self {
-        case .bg: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark700.color)
-        case .bgHover: return Design.col(Asset.Colors.ZDesign.gray300.color, Asset.Colors.ZDesign.shark600.color)
-        case .fg: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark50.color)
-        case .fgHover: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark50.color)
-        case .bgDisabled: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark900.color)
+        case .bg: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark900.color)
+        case .bgHover: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark800.color)
+        case .fg: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark100.color)
+        case .fgHover: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark100.color)
+        case .bgDisabled: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark900.color)
         case .fgDisabled: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color)
         }
     }
@@ -371,11 +381,11 @@ public extension Design.Btns.Tertiary {
 public extension Design.Btns.Quaternary {
     var color: Color {
         switch self {
-        case .bg: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark900.color)
-        case .bgHover: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark800.color)
-        case .fg: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark100.color)
-        case .fgHover: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark100.color)
-        case .bgDisabled: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark900.color)
+        case .bg: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark700.color)
+        case .bgHover: return Design.col(Asset.Colors.ZDesign.gray300.color, Asset.Colors.ZDesign.shark600.color)
+        case .fg: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark50.color)
+        case .fgHover: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark50.color)
+        case .bgDisabled: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark900.color)
         case .fgDisabled: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color)
         }
     }

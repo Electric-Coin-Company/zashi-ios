@@ -1,8 +1,8 @@
 //
 //  AddressDetailsView.swift
-//  secant-testnet
+//  Zashi
 //
-//  Created by Lukáš Korba on 05.07.2022.
+//  Created by Lukáš Korba on 09-19-2024.
 //
 
 import SwiftUI
@@ -14,195 +14,120 @@ import UIComponents
 import Utils
 
 public struct AddressDetailsView: View {
-    public enum AddressType: Equatable {
-        case saplingAddress
-        case tAddress
-        case uaAddress
-    }
-
     @Environment(\.colorScheme) var colorScheme
 
     @Perception.Bindable var store: StoreOf<AddressDetails>
-    let networkType: NetworkType
     
-    public init(store: StoreOf<AddressDetails>, networkType: NetworkType) {
+    public init(store: StoreOf<AddressDetails>) {
         self.store = store
-        self.networkType = networkType
     }
     
     public var body: some View {
         WithPerceptionTracking {
-            VStack {
-                zashiPicker()
-
+            VStack(spacing: 0) {
                 ScrollView {
-                    WithPerceptionTracking {
-                        Group {
-                            if store.selection == .ua {
-                                addressBlock(type: .uaAddress, L10n.AddressDetails.ua, store.unifiedAddress) {
-                                    store.send(.copyToPastboard(store.unifiedAddress.redacted))
-                                } shareAction: {
-                                    store.send(.shareQR(store.unifiedAddress.redacted))
+                    VStack(spacing: 0) {
+                        Button {
+                            store.send(.qrCodeTapped)
+                        } label: {
+                            qrCode(store.address.data)
+                                .frame(width: 216, height: 216)
+                                .onAppear {
+                                    store.send(.generateQRCode(colorScheme == .dark ? true : false))
                                 }
-                            } else {
-                                addressBlock(type: .tAddress, L10n.AddressDetails.ta, store.transparentAddress) {
-                                    store.send(.copyToPastboard(store.transparentAddress.redacted))
-                                } shareAction: {
-                                    store.send(.shareQR(store.transparentAddress.redacted))
+                                .padding(24)
+                                .background {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(store.isQRCodeAppreanceFlipped
+                                              ? Asset.Colors.ZDesign.Base.bone.color
+                                              : Design.screenBackground.color
+                                        )
+                                        .background {
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .stroke(Design.Surfaces.strokeSecondary.color)
+                                        }
                                 }
-                            }
+                                .padding(.top, 40)
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(.top, 20)
-                    }
-                    
-#if DEBUG
-                    if networkType == .testnet {
-                        addressBlock(type: .saplingAddress, L10n.AddressDetails.sa, store.saplingAddress) {
-                            store.send(.copyToPastboard(store.saplingAddress.redacted))
-                        } shareAction: {
-                            store.send(.shareQR(store.saplingAddress.redacted))
-                        }
-                    }
-#endif
-                    
-                    shareView()
-                }
-            }
-            .applyScreenBackground()
-        }
-    }
-    
-    @ViewBuilder private func addressBlock(
-        type: AddressType,
-        _ title: String,
-        _ address: String,
-        _ copyAction: @escaping () -> Void,
-        shareAction: @escaping () -> Void
-    ) -> some View {
-        VStack {
-            qrCode(address, type: type)
-                .frame(width: 270, height: 270)
-                .padding(.bottom, 20)
-            
-            Text(address)
-                .font(.custom(FontFamily.Inter.regular.name, size: 16))
-                .foregroundColor(Asset.Colors.shade47.color)
-                .frame(width: 270)
-                .padding(.bottom, 20)
-            
-            HStack(spacing: 25) {
-                Button {
-                    copyAction()
-                } label: {
-                    HStack(spacing: 5) {
-                        Asset.Assets.copy.image
-                            .zImage(size: 11, color: Asset.Colors.primary.color)
                         
-                        Text(L10n.AddressDetails.copy)
-                            .font(.custom(FontFamily.Inter.bold.name, size: 12))
-                            .underline()
-                            .foregroundColor(Asset.Colors.primary.color)
+                        PrivacyBadge(store.maxPrivacy ? .max : .low)
+                            .padding(.top, 32)
+                        
+                        Text(store.addressTitle)
+                            .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                            .padding(.top, 12)
+                        
+                        Text(store.address.data)
+                            .zFont(size: 14, style: Design.Text.tertiary)
+                            .lineLimit(store.isAddressExpanded ? nil : 2)
+                            .padding(.top, 8)
+                            .onTapGesture {
+                                store.send(.addressTapped)
+                            }
+                            .onLongPressGesture {
+                                store.send(.copyToPastboard)
+                            }
                     }
                 }
-                
-                Button {
-                    shareAction()
-                } label: {
-                    HStack(spacing: 5) {
-                        Asset.Assets.share.image
-                            .zImage(size: 11, color: Asset.Colors.primary.color)
 
-                        Text(L10n.AddressDetails.share)
-                            .font(.custom(FontFamily.Inter.bold.name, size: 12))
-                            .underline()
-                            .foregroundColor(Asset.Colors.primary.color)
-                    }
+                Spacer()
+                
+                ZashiButton(
+                    "Share QR Code",
+                    prefixView:
+                        Asset.Assets.Icons.share.image
+                            .zImage(size: 20, style: Design.Btns.Primary.fg)
+                ) {
+                    store.send(.shareQR)
                 }
+                .padding(.bottom, 8)
+                .disabled(store.addressToShare != nil)
+
+                ZashiButton(
+                    "Copy Address",
+                    type: .ghost,
+                    prefixView:
+                        Asset.Assets.copy.image
+                            .zImage(size: 20, style: Design.Btns.Ghost.fg)
+                ) {
+                    store.send(.copyToPastboard)
+                }
+                .padding(.bottom, 20)
+
+                shareView()
             }
+            .frame(maxWidth: .infinity)
+            .padding(.top, 20)
+            .onAppear { store.send(.onAppear) }
+            .onDisappear { store.send(.onDisappear) }
         }
-        .padding(.bottom, 40)
-    }
-    
-    @MainActor @ViewBuilder private func zashiPicker() -> some View {
-        ZashiPicker(
-            AddressDetails.State.Selection.allCases,
-            selection: store.selection,
-            itemBuilder: { item in
-                WithPerceptionTracking {
-                    Text(item == .ua
-                         ? L10n.AddressDetails.ua
-                         : L10n.AddressDetails.ta
-                    ).tag(item == .ua
-                          ? AddressDetails.State.Selection.ua
-                          : AddressDetails.State.Selection.transparent
-                    )
-                    .foregroundColor(
-                        store.selection == item
-                        ? Asset.Colors.pickerTitleSelected.color
-                        : Asset.Colors.pickerTitleUnselected.color
-                    )
-                    .padding(.vertical, 12)
-                    .padding(.horizontal, 8)
-                    .frame(maxWidth: .infinity)
-                    .multilineTextAlignment(.center)
-                    .font(.custom(FontFamily.Inter.semiBold.name, size: 12))
-                    .lineLimit(1)
-                    .onTapGesture {
-                        withAnimation(.easeInOut(duration: 0.150)) {
-                            store.selection = item
-                        }
-                    }
-                    .background(
-                        store.selection == item
-                        ? Asset.Colors.pickerSelection.color
-                        : Asset.Colors.pickerBcg.color
-                    )
-                }
-            }
-        )
-        .border(Asset.Colors.pickerBcg.color, width: 4)
-        .frame(width: 290)
-        .padding(.top, 50)
+        .screenHorizontalPadding()
+        .applyScreenBackground()
+        .zashiBackV2()
     }
 }
 
 extension AddressDetailsView {
-    public func qrCode(_ qrText: String, type: AddressType) -> some View {
-        var storedImg: CGImage?
-        
-        switch type {
-        case .saplingAddress:
-            storedImg = nil
-        case .tAddress:
-            storedImg = store.taQR
-        case .uaAddress:
-            storedImg = store.uaQR
-        }
-        
-        if let storedImg {
-            return Image(storedImg, scale: 1, label: Text(L10n.qrCodeFor(qrText)))
-                .resizable()
-        }
-        if let cgImg = QRCodeGenerator.generate(
-            from: qrText,
-            color: colorScheme == .dark ? Asset.Colors.shade85.systemColor : Asset.Colors.primary.systemColor
-        ) {
-            return Image(cgImg, scale: 1, label: Text(L10n.qrCodeFor(qrText)))
-                .resizable()
-        } else {
-            return Image(systemName: "qrcode")
-                .resizable()
+    @ViewBuilder public func qrCode(_ qrText: String) -> some View {
+        Group {
+            if let storedImg = store.storedQR {
+                Image(storedImg, scale: 1, label: Text(L10n.qrCodeFor(qrText)))
+                    .resizable()
+            } else {
+                ProgressView()
+            }
         }
     }
     
     @ViewBuilder func shareView() -> some View {
         if let addressToShare = store.addressToShare,
-           let cgImg = QRCodeGenerator.generate(
+           let cgImg = QRCodeGenerator.generateCode(
             from: addressToShare.data,
-            color: colorScheme == .dark ? Asset.Colors.shade85.systemColor : Asset.Colors.primary.systemColor
+            color: .black
            ) {
-            UIShareDialogView(activityItems: [UIImage(cgImage: cgImg)]) {
+            UIShareDialogView(activityItems: [
+                ShareableImage(image: UIImage(cgImage: cgImg)), "Hi, scan this QR code to send me a ZEC payment!"
+            ]) {
                 store.send(.shareFinished)
             }
             // UIShareDialogView only wraps UIActivityViewController presentation
@@ -216,7 +141,13 @@ extension AddressDetailsView {
 
 #Preview {
     NavigationView {
-        AddressDetailsView(store: AddressDetails.placeholder, networkType: .testnet)
+        AddressDetailsView(
+            store: StoreOf<AddressDetails>(
+                initialState: AddressDetails.State(address: "u1steuf7460a4m3svyyzlg3m6xlc6xd0q5qq7n0da8m29x0vcqdeuvjyw4h82a69vg8zn43cszudgfva45d2ju46227vc0dy0f73mzdv5dsz4wfmfrkaw3ycmd4qkg9hxh3arcrh2f9fdj02d42shg7fl5elvnqed4cq4t3sxu4spcx7cd4l8ye3e5ym9njj0hhs82gf7tjre4umqa2q6".redacted)
+            ) {
+                AddressDetails()
+            }
+        )
     }
 }
 
@@ -224,12 +155,6 @@ extension AddressDetailsView {
 
 extension AddressDetails.State {
     public static let initial = AddressDetails.State()
-    
-    public static let demo = AddressDetails.State(
-        uAddress: try! UnifiedAddress(
-            encoding: "utest1vergg5jkp4xy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzjanqtl8uqp5vln3zyy246ejtx86vqftp73j7jg9099jxafyjhfm6u956j3",
-            network: .testnet)
-    )
 }
 
 extension AddressDetails {

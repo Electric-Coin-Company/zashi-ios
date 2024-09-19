@@ -8,7 +8,6 @@
 import SwiftUI
 import ComposableArchitecture
 import Generated
-import Combine
 
 public enum WalletStatus: Equatable {
     case none

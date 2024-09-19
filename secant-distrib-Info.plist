@@ -56,24 +56,6 @@
 		<string>Inter-ExtraBold.otf</string>
 		<string>Inter-ExtraLightItalic.otf</string>
 		<string>Inter-ExtraLight.otf</string>
-		<string>Archivo-Thin.otf</string>
-		<string>Archivo-ThinItalic.otf</string>
-		<string>Archivo-BlackItalic.otf</string>
-		<string>Archivo-Black.otf</string>
-		<string>Archivo-BoldItalic.otf</string>
-		<string>Archivo-Bold.otf</string>
-		<string>Archivo-MediumItalic.otf</string>
-		<string>Archivo-Medium.otf</string>
-		<string>Archivo-Italic.otf</string>
-		<string>Archivo-Regular.otf</string>
-		<string>Archivo-LightItalic.otf</string>
-		<string>Archivo-Light.otf</string>
-		<string>Archivo-SemiBoldItalic.otf</string>
-		<string>Archivo-SemiBold.otf</string>
-		<string>Archivo-ExtraBoldItalic.otf</string>
-		<string>Archivo-ExtraBold.otf</string>
-		<string>Archivo-ExtraLightItalic.otf</string>
-		<string>Archivo-ExtraLight.otf</string>
 	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>

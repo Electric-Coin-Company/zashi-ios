@@ -47,8 +47,10 @@ let package = Package(
         .library(name: "Pasteboard", targets: ["Pasteboard"]),
         .library(name: "PrivateDataConsent", targets: ["PrivateDataConsent"]),
         .library(name: "QRImageDetector", targets: ["QRImageDetector"]),
+        .library(name: "Receive", targets: ["Receive"]),
         .library(name: "RecoveryPhraseDisplay", targets: ["RecoveryPhraseDisplay"]),
         .library(name: "RemoteStorage", targets: ["RemoteStorage"]),
+        .library(name: "RequestZec", targets: ["RequestZec"]),
         .library(name: "RestoreInfo", targets: ["RestoreInfo"]),
         .library(name: "ReviewRequest", targets: ["ReviewRequest"]),
         .library(name: "Root", targets: ["Root"]),
@@ -77,7 +79,8 @@ let package = Package(
         .library(name: "Welcome", targets: ["Welcome"]),
         .library(name: "WhatsNew", targets: ["WhatsNew"]),
         .library(name: "WhatsNewProvider", targets: ["WhatsNewProvider"]),
-        .library(name: "ZcashSDKEnvironment", targets: ["ZcashSDKEnvironment"])
+        .library(name: "ZcashSDKEnvironment", targets: ["ZcashSDKEnvironment"]),
+        .library(name: "ZecKeyboard", targets: ["ZecKeyboard"])
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-custom-dump.git", from: "1.3.2"),
@@ -214,6 +217,7 @@ let package = Package(
             dependencies: [
                 "ExchangeRate",
                 "Generated",
+                "Models",
                 "SDKSynchronizer",
                 "UIComponents",
                 "UserPreferencesStorage",
@@ -474,6 +478,18 @@ let package = Package(
             path: "Sources/Dependencies/QRImageDetector"
         ),
         .target(
+            name: "Receive",
+            dependencies: [
+                "Generated",
+                "Pasteboard",
+                "UIComponents",
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
+            ],
+            path: "Sources/Features/Receive"
+        ),
+        .target(
             name: "RecoveryPhraseDisplay",
             dependencies: [
                 "Generated",
@@ -494,6 +510,19 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Dependencies/RemoteStorage"
+        ),
+        .target(
+            name: "RequestZec",
+            dependencies: [
+                "Generated",
+                "Pasteboard",
+                "UIComponents",
+                "Utils",
+                "ZcashSDKEnvironment",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
+            ],
+            path: "Sources/Features/RequestZec"
         ),
         .target(
             name: "RestoreInfo",
@@ -737,11 +766,14 @@ let package = Package(
                 "ExchangeRate",
                 "Generated",
                 "Home",
+                "Receive",
+                "RequestZec",
                 "SendConfirmation",
                 "SendFlow",
                 "Settings",
                 "UIComponents",
                 "UserPreferencesStorage",
+                "ZecKeyboard",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
@@ -885,6 +917,18 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Dependencies/ZcashSDKEnvironment"
+        ),
+        .target(
+            name: "ZecKeyboard",
+            dependencies: [
+                "Generated",
+                "Models",
+                "UIComponents",
+                "Utils",
+                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Features/ZecKeyboard"
         )
     ]
 )

@@ -9,8 +9,9 @@ import SwiftUI
 import ComposableArchitecture
 import ZcashLightClientKit
 
-import Generated
 import AddressDetails
+import Generated
+import Receive
 import BalanceBreakdown
 import Home
 import SendFlow
@@ -18,6 +19,8 @@ import Settings
 import UIComponents
 import SendConfirmation
 import CurrencyConversionSetup
+import RequestZec
+import ZecKeyboard
 
 public struct TabsView: View {
     let networkType: NetworkType
@@ -55,10 +58,10 @@ public struct TabsView: View {
                     )
                     .tag(Tabs.State.Tab.send)
                     
-                    AddressDetailsView(
+                    ReceiveView(
                         store: self.store.scope(
-                            state: \.addressDetailsState,
-                            action: \.addressDetails
+                            state: \.receiveState,
+                            action: \.receive
                         ),
                         networkType: networkType
                     )
@@ -77,13 +80,6 @@ public struct TabsView: View {
                 
                 VStack(spacing: 0) {
                     Spacer()
-                    
-                    if store.selectedTab != .account {
-                        Asset.Colors.shade30.color
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 1)
-                            .opacity(0.15)
-                    }
                     
                     HStack {
                         ForEach((Tabs.State.Tab.allCases), id: \.self) { item in
@@ -137,6 +133,24 @@ public struct TabsView: View {
                         CurrencyConversionSetupView(
                             store: store.currencyConversionSetupStore()
                         )
+                    }
+                )
+                .navigationLinkEmpty(
+                    isActive: store.bindingFor(.addressDetails),
+                    destination: {
+                        AddressDetailsView(store: store.addressDetailsStore())
+                    }
+                )
+                .navigationLinkEmpty(
+                    isActive: store.bindingForStack(.zecKeyboard),
+                    destination: {
+                        ZecKeyboardView(store: store.zecKeyboardStore())
+                            .navigationLinkEmpty(
+                                isActive: store.bindingForStack(.requestZec),
+                                destination: {
+                                    RequestZecView(store: store.requestZecStore())
+                                }
+                            )
                     }
                 )
             }
@@ -313,6 +327,27 @@ extension StoreOf<Tabs> {
             action: \.currencyConversionSetup
         )
     }
+    
+    func addressDetailsStore() -> StoreOf<AddressDetails> {
+        self.scope(
+            state: \.addressDetailsState,
+            action: \.addressDetails
+        )
+    }
+
+    func requestZecStore() -> StoreOf<RequestZec> {
+        self.scope(
+            state: \.requestZecState,
+            action: \.requestZec
+        )
+    }
+    
+    func zecKeyboardStore() -> StoreOf<ZecKeyboard> {
+        self.scope(
+            state: \.zecKeyboardState,
+            action: \.zecKeyboard
+        )
+    }
 }
 
 // MARK: - ViewStore
@@ -324,20 +359,45 @@ extension StoreOf<Tabs> {
             set: { self.send(.updateDestination($0 ? destination : nil)) }
         )
     }
+    
+    func bindingForStack(_ destination: Tabs.State.StackDestination) -> Binding<Bool> {
+        Binding<Bool>(
+            get: {
+                if let currentStackValue = self.stackDestination?.rawValue {
+                    return currentStackValue >= destination.rawValue
+                } else {
+                    return false
+                }
+            },
+            set: { _ in
+                if let currentStackValue = self.stackDestination?.rawValue, currentStackValue == destination.rawValue {
+                    let popIndex = destination.rawValue - 1
+                    if popIndex >= 0 {
+                        let popDestination = Tabs.State.StackDestination(rawValue: popIndex)
+                        self.send(.updateStackDestination(popDestination))
+                    } else {
+                        self.send(.updateStackDestination(nil))
+                    }
+                }
+            }
+        )
+    }
 }
 
 // MARK: - Placeholders
 
 extension Tabs.State {
     public static let initial = Tabs.State(
-        addressDetailsState: .initial,
         balanceBreakdownState: .initial,
         currencyConversionSetupState: .initial,
         destination: nil,
         homeState: .initial,
+        receiveState: .initial,
+        requestZecState: .initial,
         selectedTab: .account,
         sendConfirmationState: .initial,
         sendState: .initial,
-        settingsState: .initial
+        settingsState: .initial,
+        zecKeyboardState: .initial
     )
 }

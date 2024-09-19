@@ -15,12 +15,11 @@ public enum QRCodeGenerator {
     public enum QRCodeError: Error {
         case failedToGenerate
     }
-    
-    public static func generate(from string: String) -> Future<CGImage, QRCodeError> {
-        Future<CGImage, QRCodeError> { promise in
+
+    public static func generate(from string: String, color: UIColor = Asset.Colors.primary.systemColor) -> Future<CGImage, Never> {
+        Future<CGImage, Never> { promise in
             DispatchQueue.global().async {
-                guard let image = generate(from: string) else {
-                    promise(.failure(QRCodeGenerator.QRCodeError.failedToGenerate))
+                guard let image = generateCode(from: string, color: color) else {
                     return
                 }
                 
@@ -28,8 +27,8 @@ public enum QRCodeGenerator {
             }
         }
     }
-    
-    public static func generate(from string: String, scale: CGFloat = 15, color: UIColor = Asset.Colors.primary.systemColor) -> CGImage? {
+
+    public static func generateCode(from string: String, scale: CGFloat = 15, color: UIColor = Asset.Colors.primary.systemColor) -> CGImage? {
         let data = string.data(using: String.Encoding.utf8)
         
         let context = CIContext()
@@ -37,17 +36,46 @@ public enum QRCodeGenerator {
         filter.setValue(data, forKey: "inputMessage")
         let transform = CGAffineTransform(scaleX: scale, y: scale)
         
-        guard let output = filter.outputImage?.transformed(by: transform) else {
+        if color == .black {
+            guard let baseImage = filter.outputImage?.transformed(by: transform) else {
+                return nil
+            }
+
+            return QRCodeGenerator.overlayWithZecLogo(baseImage, context: context)
+        } else {
+            guard let baseImage = filter.outputImage?.transformed(by: transform).tinted(using: color) else {
+                return nil
+            }
+
+            return QRCodeGenerator.overlayWithZecLogo(baseImage, context: context, export: false)
+        }
+    }
+    
+    public static func overlayWithZecLogo(_ baseImage: CIImage, context: CIContext, export: Bool = true) -> CGImage? {
+        guard let overlayImage = UIImage(named: export ? "QROverlay" : "QRDynamicOverlay") else {
             return nil
         }
         
-        return context.createCGImage(output, from: output.extent)
+        guard let iconCIImage = CIImage(image: overlayImage) else {
+            return nil
+        }
+        
+        let ratio = 0.25
+        let size = baseImage.extent.width * ratio
+        let halfSize = size * 0.5
+        let iconRect = CGRect(x: baseImage.extent.width * 0.5 - halfSize, y: baseImage.extent.height * 0.5 - halfSize, width: size, height: size)
+        let scaleTransform = CGAffineTransform(scaleX: iconRect.size.width / iconCIImage.extent.width, y: iconRect.size.height / iconCIImage.extent.height)
+        let translationTransform = CGAffineTransform(translationX: iconRect.origin.x, y: iconRect.origin.y)
+        let transformedIconCIImage = iconCIImage.transformed(by: scaleTransform.concatenating(translationTransform))
+        let combinedImage = transformedIconCIImage.composited(over: baseImage)
+                                               
+        return context.createCGImage(combinedImage, from: combinedImage.extent)
     }
 }
 
 extension CIImage {
     var transparent: CIImage? {
-        return inverted?.blackTransparent
+        inverted?.blackTransparent
     }
 
     var inverted: CIImage? {

@@ -19,7 +19,7 @@ import Flexa
 @main
 struct SecantApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-    @Environment (\.scenePhase) private var scenePhase
+    @Environment(\.scenePhase) private var scenePhase
     
     init() {
         FontFamily.registerAllCustomFonts()

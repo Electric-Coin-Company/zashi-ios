@@ -13,4 +13,5 @@ public extension String {
     static let walletStatus = "sharedStateKey_walletStatus"
     static let flexaAccountId = "sharedStateKey_flexaAccountId"
     static let addressBookRecords = "sharedStateKey_addressBookRecords"
+    static let toast = "sharedStateKey_toast"
 }

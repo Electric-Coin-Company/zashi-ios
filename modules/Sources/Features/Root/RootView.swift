@@ -219,6 +219,7 @@ private extension RootView {
 
             shareLogsView(store)
         }
+        .toast()
     }
 }
 
