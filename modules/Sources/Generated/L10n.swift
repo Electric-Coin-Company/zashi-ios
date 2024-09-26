@@ -627,6 +627,8 @@ public enum L10n {
     public static let buyZecCB = L10n.tr("Localizable", "settings.buyZecCB", fallback: "Buy ZEC with Coinbase")
     /// Choose a Server
     public static let chooseServer = L10n.tr("Localizable", "settings.chooseServer", fallback: "Choose a Server")
+    /// A hassle-free way to buy ZEC and get it directly into your Zashi wallet.
+    public static let coinbaseDesc = L10n.tr("Localizable", "settings.coinbaseDesc", fallback: "A hassle-free way to buy ZEC and get it directly into your Zashi wallet.")
     /// Currency Conversion
     public static let currencyConversion = L10n.tr("Localizable", "settings.currencyConversion", fallback: "Currency Conversion")
     /// Delete Zashi
@@ -639,8 +641,16 @@ public enum L10n {
     public static let exportPrivateData = L10n.tr("Localizable", "settings.exportPrivateData", fallback: "Export Private Data")
     /// Send Us Feedback
     public static let feedback = L10n.tr("Localizable", "settings.feedback", fallback: "Send Us Feedback")
+    /// Pay with Flexa
+    public static let flexa = L10n.tr("Localizable", "settings.flexa", fallback: "Pay with Flexa")
+    /// Pay with Flexa payment clips and explore a new way of spending Zcash.
+    public static let flexaDesc = L10n.tr("Localizable", "settings.flexaDesc", fallback: "Pay with Flexa payment clips and explore a new way of spending Zcash.")
+    /// Integrations
+    public static let integrations = L10n.tr("Localizable", "settings.integrations", fallback: "Integrations")
     /// Recovery Phrase
     public static let recoveryPhrase = L10n.tr("Localizable", "settings.recoveryPhrase", fallback: "Recovery Phrase")
+    /// During the Restore process, it is not possible to use payment integrations.
+    public static let restoreWarning = L10n.tr("Localizable", "settings.restoreWarning", fallback: "During the Restore process, it is not possible to use payment integrations.")
     /// Settings
     public static let title = L10n.tr("Localizable", "settings.title", fallback: "Settings")
     /// Version %@ (%@)

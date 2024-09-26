@@ -10,12 +10,11 @@ import ComposableArchitecture
 import Generated
 import UIComponents
 import ExportLogs
-import WalletStatusPanel
 
 public struct PrivateDataConsentView: View {
     @Perception.Bindable var store: StoreOf<PrivateDataConsent>
     
-    @State var walletStatus = WalletStatus.none
+    @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
 
     public init(store: StoreOf<PrivateDataConsent>) {
         self.store = store
@@ -92,7 +91,7 @@ public struct PrivateDataConsentView: View {
             .onAppear {
                 store.send(.onAppear)
             }
-            .walletStatusPanel(background: .pattern, restoringStatus: $walletStatus)
+            .walletStatusPanel(background: .pattern)
 
             shareLogsView()
         }

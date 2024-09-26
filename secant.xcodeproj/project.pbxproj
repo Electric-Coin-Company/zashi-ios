@@ -164,6 +164,7 @@
 		9E5B8E732B46E04E00CA3616 /* RestoreWalletTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreWalletTests.swift; sourceTree = "<group>"; };
 		9E5BF63E2819542C00BA3F17 /* TransactionListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListTests.swift; sourceTree = "<group>"; };
 		9E5BF643281FEC9900BA3F17 /* SendTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendTests.swift; sourceTree = "<group>"; };
+		9E60E3D32C65F49F00B16C3E /* secant-distrib.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "secant-distrib.entitlements"; sourceTree = "<group>"; };
 		9E612C7829913F3600D09B09 /* SensitiveDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensitiveDataTests.swift; sourceTree = "<group>"; };
 		9E66129D288938A300C75B70 /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
 		9E6713F02897F81B00A6796F /* MultiLineTextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiLineTextFieldTests.swift; sourceTree = "<group>"; };
@@ -251,6 +252,7 @@
 		0D4E79FC26B364170058B01E = {
 			isa = PBXGroup;
 			children = (
+				9E60E3D32C65F49F00B16C3E /* secant-distrib.entitlements */,
 				9E4A01762B0C9ABD005AFC7E /* CHANGELOG.md */,
 				9EB7D14A2A20C6BC00F35E03 /* modules */,
 				0D4E7A0726B364170058B01E /* secant */,
@@ -1593,6 +1595,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "secant-distrib.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 9;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1623,6 +1626,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "secant-distrib.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
@@ -1813,6 +1817,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "secant-distrib.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";

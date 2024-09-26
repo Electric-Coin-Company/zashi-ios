@@ -21,6 +21,13 @@ public struct SettingsView: View {
                 List {
                     Group {
                         SettingsRow(
+                            icon: Asset.Assets.Icons.integrations.image,
+                            title: L10n.Settings.integrations
+                        ) {
+                            store.send(.updateDestination(.integrations))
+                        }
+
+                        SettingsRow(
                             icon: Asset.Assets.Icons.settings.image,
                             title: L10n.Settings.advanced
                         ) {
@@ -58,6 +65,12 @@ public struct SettingsView: View {
                     isActive: store.bindingFor(.advanced),
                     destination: {
                         AdvancedSettingsView(store: store.advancedSettingsStore())
+                    }
+                )
+                .navigationLinkEmpty(
+                    isActive: store.bindingFor(.integrations),
+                    destination: {
+                        IntegrationsView(store: store.integrationsStore())
                     }
                 )
                 .onAppear {
@@ -120,7 +133,8 @@ public struct SettingsView: View {
 extension Settings.State {
     public static let initial = Settings.State(
         aboutState: .initial,
-        advancedSettingsState: .initial
+        advancedSettingsState: .initial,
+        integrationsState: .initial
     )
 }
 
@@ -136,7 +150,8 @@ extension StoreOf<Settings> {
             aboutState: .initial,
             advancedSettingsState: .initial,
             appVersion: "0.0.1",
-            appBuild: "54"
+            appBuild: "54",
+            integrationsState: .initial
         )
     ) {
         Settings()
@@ -157,6 +172,13 @@ extension StoreOf<Settings> {
         self.scope(
             state: \.aboutState,
             action: \.about
+        )
+    }
+    
+    func integrationsStore() -> StoreOf<Integrations> {
+        self.scope(
+            state: \.integrationsState,
+            action: \.integrations
         )
     }
 }

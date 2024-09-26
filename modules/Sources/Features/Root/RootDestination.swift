@@ -118,6 +118,60 @@ extension Root {
                 exchangeRate.refreshExchangeRateUSD()
                 return .none
 
+            case .tabs(.settings(.integrations(.flexaTapped))):
+                flexaHandler.open()
+                return .publisher {
+                    flexaHandler.onTransactionRequest()
+                        .map(Root.Action.flexaOnTransactionRequest)
+                        .receive(on: mainQueue)
+                }
+                .cancellable(id: CancelFlexaId, cancelInFlight: true)
+
+            case .flexaOnTransactionRequest(let transaction):
+                guard let transaction else {
+                    return .none
+                }
+                print("__LD flexa transaction \(transaction)")
+                
+                return .run { send in
+                    do {
+                        // get a proposal
+                        let recipient = try Recipient(transaction.address, network: zcashSDKEnvironment.network.networkType)
+                        let proposal = try await sdkSynchronizer.proposeTransfer(0, recipient, transaction.amount, nil)
+                        
+                        // make the actual send
+                        let storedWallet = try walletStorage.exportWallet()
+                        let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
+                        let network = zcashSDKEnvironment.network.networkType
+                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, network)
+
+                        let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
+                        
+                        switch result {
+                        case .failure(let txIds):
+                            print("__LD failure \(txIds)")
+//                            await send(.sendFailed("sdkSynchronizer.createProposedTransactions".toZcashError()))
+                        case let .partial(txIds: txIds, statuses: statuses):
+                            print("__LD partial \(txIds)")
+//                            await send(.sendPartial(txIds, statuses))
+                        case .success(let txIds):
+                            print("__LD success \(txIds)")
+//                            await send(.sendDone)
+                            if let txId = txIds.first {
+                                print("__LD all good! \(txId)")
+                                flexaHandler.transactionSent(transaction.commerceSessionId, txId)
+                            }
+                            //Flexa.transactionSent(commerceSessionId: transaction.commerceSessionId, signature: signature)
+                        }
+//                        await send(.proposal(proposal))
+//                        await send(.sendConfirmationRequired)
+                    } catch {
+                        print(error)
+                        print(error)
+//                        await send(.sendFailed(error.toZcashError()))
+                    }
+                }
+                
             case .tabs, .initialization, .onboarding, .sandbox, .updateStateAfterConfigUpdate, .alert, .phraseDisplay, .synchronizerStateChanged,
                     .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .exportLogs, .confirmationDialog,
                     .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated, .batteryStateChanged, .cancelAllRunningEffects:

@@ -157,12 +157,17 @@ Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps you
 "settings.advanced" = "Advanced Settings";
 "settings.about" = "About Us";
 "settings.feedback" = "Send Us Feedback";
+"settings.integrations" = "Integrations";
 "settings.recoveryPhrase" = "Recovery Phrase";
 "settings.exportPrivateData" = "Export Private Data";
 "settings.exportLogsOnly" = "Export logs only";
 "settings.chooseServer" = "Choose a Server";
 "settings.currencyConversion" = "Currency Conversion";
 "settings.buyZecCB" = "Buy ZEC with Coinbase";
+"settings.coinbaseDesc" = "A hassle-free way to buy ZEC and get it directly into your Zashi wallet.";
+"settings.flexa" = "Pay with Flexa";
+"settings.flexaDesc" = "Pay with Flexa payment clips and explore a new way of spending Zcash.";
+"settings.restoreWarning" = "During the Restore process, it is not possible to use payment integrations.";
 "settings.deleteZashi" = "Delete Zashi";
 "settings.deleteZashiWarning" = "You will be asked to confirm on the next screen";
 "settings.version" = "Version %@ (%@)";

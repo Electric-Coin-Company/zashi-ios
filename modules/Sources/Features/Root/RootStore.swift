@@ -20,11 +20,14 @@ import CrashReporter
 import ReadTransactionsStorage
 import RecoveryPhraseDisplay
 import BackgroundTasks
-import WalletStatusPanel
 import Utils
 import UserDefaults
 import ServerSetup
 import ExchangeRate
+import FlexaHandler
+import Flexa
+import AutolockHandler
+import UIComponents
 
 @Reducer
 public struct Root {
@@ -34,6 +37,7 @@ public struct Root {
     let SynchronizerCancelId = UUID()
     let WalletConfigCancelId = UUID()
     let DidFinishLaunchingId = UUID()
+    let CancelFlexaId = UUID()
 
     @ObservableState
     public struct State: Equatable {
@@ -56,6 +60,7 @@ public struct Root {
         public var splashAppeared = false
         public var tabsState: Tabs.State
         public var walletConfig: WalletConfig
+        @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
         public var wasRestoringWhenDisconnected = false
         public var welcomeState: Welcome.State
         
@@ -108,6 +113,7 @@ public struct Root {
         case debug(DebugAction)
         case destination(DestinationAction)
         case exportLogs(ExportLogs.Action)
+        case flexaOnTransactionRequest(FlexaTransaction?)
         case tabs(Tabs.Action)
         case initialization(InitializationAction)
         case notEnoughFreeSpace(NotEnoughFreeSpace.Action)
@@ -133,6 +139,7 @@ public struct Root {
     @Dependency(\.derivationTool) var derivationTool
     @Dependency(\.diskSpaceChecker) var diskSpaceChecker
     @Dependency(\.exchangeRate) var exchangeRate
+    @Dependency(\.flexaHandler) var flexaHandler
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.numberFormatter) var numberFormatter
@@ -143,7 +150,6 @@ public struct Root {
     @Dependency(\.walletConfigProvider) var walletConfigProvider
     @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.readTransactionsStorage) var readTransactionsStorage
-    @Dependency(\.walletStatusPanel) var walletStatusPanel
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public init() { }
@@ -205,7 +211,7 @@ public struct Root {
                 return .none
                 
             case .batteryStateChanged:
-                autolockHandler.value(walletStatusPanel.value().value == .restoring)
+                autolockHandler.value(state.walletStatus == .restoring)
                 return .none
                 
             case .cancelAllRunningEffects:
@@ -217,7 +223,7 @@ public struct Root {
                     .cancel(id: WalletConfigCancelId),
                     .cancel(id: DidFinishLaunchingId)
                 )
-                
+
             default: return .none
             }
         }

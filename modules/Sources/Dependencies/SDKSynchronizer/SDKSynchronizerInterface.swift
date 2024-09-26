@@ -21,9 +21,9 @@ extension DependencyValues {
 @DependencyClient
 public struct SDKSynchronizerClient {
     public enum CreateProposedTransactionsResult: Equatable {
-        case failure
+        case failure(txIds: [String])
         case partial(txIds: [String], statuses: [String])
-        case success
+        case success(txIds: [String])
     }
     
     public let stateStream: () -> AnyPublisher<SynchronizerState, Never>
