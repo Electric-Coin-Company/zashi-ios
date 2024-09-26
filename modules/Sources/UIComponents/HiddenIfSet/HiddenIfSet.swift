@@ -15,11 +15,13 @@ struct HiddenIfSetModifier: ViewModifier {
     @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
     
     func body(content: Content) -> some View {
-        VStack(spacing: 0) {
-            if isSensitiveContentHidden {
-                Text(L10n.General.hideBalancesMostStandalone)
-            } else {
-                content
+        WithPerceptionTracking {
+            VStack(spacing: 0) {
+                if isSensitiveContentHidden {
+                    Text(L10n.General.hideBalancesMostStandalone)
+                } else {
+                    content
+                }
             }
         }
     }

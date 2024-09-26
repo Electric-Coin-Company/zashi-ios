@@ -115,6 +115,7 @@ extension Root {
             
             case .splashFinished:
                 state.splashAppeared = true
+                exchangeRate.refreshExchangeRateUSD()
                 return .none
 
             case .tabs, .initialization, .onboarding, .sandbox, .updateStateAfterConfigUpdate, .alert, .phraseDisplay, .synchronizerStateChanged,
