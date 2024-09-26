@@ -6,6 +6,11 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Fixed
+- Splash screen animation is blocked by the main thread on iOS 16 and older.
+- Inactive hide balances button on iOS 16 and older.
+- Inactive close button in the exchange rate hint bubble on iOS 16 and older.
+
 ## 1.2 build 9 (2024-09-17)
 
 ### Fixed

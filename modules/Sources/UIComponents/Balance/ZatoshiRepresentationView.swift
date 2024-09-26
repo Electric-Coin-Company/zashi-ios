@@ -62,31 +62,33 @@ public struct ZatoshiRepresentationView: View {
     }
     
     public var body: some View {
-        HStack {
-            if isFee {
-                Text(zatoshiStringRepresentation.feeFormat)
-                    .font(.custom(fontName, size: mostSignificantFontSize))
-            } else {
-                if format == .expanded {
-                    Text(couldBeHidden && isSensitiveContentHidden
-                         ? L10n.General.hideBalancesMost
-                         : zatoshiStringRepresentation.mostSignificantDigits
-                    )
-                    .font(.custom(fontName, size: mostSignificantFontSize))
-                    .conditionalStrikethrough(strikethrough)
-                    + Text(couldBeHidden && isSensitiveContentHidden
-                           ? L10n.General.hideBalancesLeast
-                           : zatoshiStringRepresentation.leastSignificantDigits
-                    )
-                    .font(.custom(fontName, size: leastSignificantFontSize))
-                    .conditionalStrikethrough(strikethrough)
+        WithPerceptionTracking {
+            HStack {
+                if isFee {
+                    Text(zatoshiStringRepresentation.feeFormat)
+                        .font(.custom(fontName, size: mostSignificantFontSize))
                 } else {
-                    Text(couldBeHidden && isSensitiveContentHidden
-                         ? L10n.General.hideBalancesMostStandalone
-                         : zatoshiStringRepresentation.mostSignificantDigits
-                    )
-                    .font(.custom(fontName, size: mostSignificantFontSize))
-                    .conditionalStrikethrough(strikethrough)
+                    if format == .expanded {
+                        Text(couldBeHidden && isSensitiveContentHidden
+                             ? L10n.General.hideBalancesMost
+                             : zatoshiStringRepresentation.mostSignificantDigits
+                        )
+                        .font(.custom(fontName, size: mostSignificantFontSize))
+                        .conditionalStrikethrough(strikethrough)
+                        + Text(couldBeHidden && isSensitiveContentHidden
+                               ? L10n.General.hideBalancesLeast
+                               : zatoshiStringRepresentation.leastSignificantDigits
+                        )
+                        .font(.custom(fontName, size: leastSignificantFontSize))
+                        .conditionalStrikethrough(strikethrough)
+                    } else {
+                        Text(couldBeHidden && isSensitiveContentHidden
+                             ? L10n.General.hideBalancesMostStandalone
+                             : zatoshiStringRepresentation.mostSignificantDigits
+                        )
+                        .font(.custom(fontName, size: mostSignificantFontSize))
+                        .conditionalStrikethrough(strikethrough)
+                    }
                 }
             }
         }

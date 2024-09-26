@@ -26,7 +26,7 @@ class ExchangeRateProvider {
 
     init() {
         if !_XCTIsTesting {
-            @Dependency (\.sdkSynchronizer) var sdkSynchronizer
+            @Dependency(\.sdkSynchronizer) var sdkSynchronizer
             
             cancellable = sdkSynchronizer.exchangeRateUSDStream().sink { [weak self] result in
                 self?.resolveResult(result)
@@ -37,7 +37,7 @@ class ExchangeRateProvider {
     func refreshExchangeRateUSD() {
         if !_XCTIsTesting {
             // guard the feature is opted-in by a user
-            @Dependency (\.userStoredPreferences) var userStoredPreferences
+            @Dependency(\.userStoredPreferences) var userStoredPreferences
             
             guard let exchangeRate = userStoredPreferences.exchangeRate(), exchangeRate.automatic else {
                 return
@@ -47,7 +47,7 @@ class ExchangeRateProvider {
                 return
             }
             
-            @Dependency (\.sdkSynchronizer) var sdkSynchronizer
+            @Dependency(\.sdkSynchronizer) var sdkSynchronizer
             
             sdkSynchronizer.refreshExchangeRateUSD()
         }
@@ -69,7 +69,7 @@ class ExchangeRateProvider {
         
         latestRate = result
 
-        @Dependency (\.zcashSDKEnvironment) var zcashSDKEnvironment
+        @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
         if isStale
             && result.state != .fetching
@@ -88,7 +88,7 @@ class ExchangeRateProvider {
         }
         
         if latestRate.state == .success {
-            @Dependency (\.zcashSDKEnvironment) var zcashSDKEnvironment
+            @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
             isStale = false
 

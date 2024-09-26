@@ -146,93 +146,97 @@ public struct TabsView: View {
             .zashiTitle { navBarView(store.selectedTab) }
             .walletStatusPanel()
             .overlayPreferenceValue(BoundsPreferenceKey.self) { preferences in
-                if store.isRateTooltipEnabled {
-                    GeometryReader { geometry in
-                        preferences.map {
-                            Tooltip(
-                                title: L10n.Tooltip.ExchangeRate.title,
-                                desc: L10n.Tooltip.ExchangeRate.desc
-                            ) {
-                                store.send(.rateTooltipTapped)
+                WithPerceptionTracking {
+                    if store.isRateTooltipEnabled {
+                        GeometryReader { geometry in
+                            preferences.map {
+                                Tooltip(
+                                    title: L10n.Tooltip.ExchangeRate.title,
+                                    desc: L10n.Tooltip.ExchangeRate.desc
+                                ) {
+                                    store.send(.rateTooltipTapped)
+                                }
+                                .frame(width: geometry.size.width - 40)
+                                .offset(x: 20, y: geometry[$0].minY + geometry[$0].height)
                             }
-                            .frame(width: geometry.size.width - 40)
-                            .offset(x: 20, y: geometry[$0].minY + geometry[$0].height)
                         }
                     }
                 }
             }
             .overlayPreferenceValue(ExchangeRateFeaturePreferenceKey.self) { preferences in
-                if store.isRateEducationEnabled {
-                    GeometryReader { geometry in
-                        preferences.map {
-                            VStack(alignment: .leading, spacing: 0) {
-                                HStack(alignment: .top, spacing: 0) {
-                                    Asset.Assets.coinsSwap.image
-                                        .renderingMode(.template)
-                                        .resizable()
-                                        .frame(width: 20, height: 20)
-                                        .foregroundColor(Design.Text.primary.color)
-                                        .padding(10)
-                                        .background {
-                                            Circle()
-                                                .fill(Design.Surfaces.bgTertiary.color)
-                                        }
-                                        .padding(.trailing, 16)
-                                    
-                                    VStack(alignment: .leading, spacing: 5) {
-                                        Text(L10n.CurrencyConversion.cardTitle)
-                                            .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                                            .foregroundColor(Design.Text.tertiary.color)
-                                        
-                                        Text(L10n.CurrencyConversion.title)
-                                            .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                                            .foregroundColor(Design.Text.primary.color)
-                                            .lineLimit(1)
-                                            .minimumScaleFactor(0.5)
-                                    }
-                                    .padding(.trailing, 16)
-                                    
-                                    Spacer(minLength: 0)
-                                    
-                                    Button {
-                                        store.send(.currencyConversionCloseTapped)
-                                    } label: {
-                                        Asset.Assets.buttonCloseX.image
+                WithPerceptionTracking {
+                    if store.isRateEducationEnabled {
+                        GeometryReader { geometry in
+                            preferences.map {
+                                VStack(alignment: .leading, spacing: 0) {
+                                    HStack(alignment: .top, spacing: 0) {
+                                        Asset.Assets.coinsSwap.image
                                             .renderingMode(.template)
                                             .resizable()
                                             .frame(width: 20, height: 20)
-                                            .foregroundColor(Design.HintTooltips.defaultFg.color)
+                                            .foregroundColor(Design.Text.primary.color)
+                                            .padding(10)
+                                            .background {
+                                                Circle()
+                                                    .fill(Design.Surfaces.bgTertiary.color)
+                                            }
+                                            .padding(.trailing, 16)
+                                        
+                                        VStack(alignment: .leading, spacing: 5) {
+                                            Text(L10n.CurrencyConversion.cardTitle)
+                                                .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                                                .foregroundColor(Design.Text.tertiary.color)
+                                            
+                                            Text(L10n.CurrencyConversion.title)
+                                                .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
+                                                .foregroundColor(Design.Text.primary.color)
+                                                .lineLimit(1)
+                                                .minimumScaleFactor(0.5)
+                                        }
+                                        .padding(.trailing, 16)
+                                        
+                                        Spacer(minLength: 0)
+                                        
+                                        Button {
+                                            store.send(.currencyConversionCloseTapped)
+                                        } label: {
+                                            Asset.Assets.buttonCloseX.image
+                                                .renderingMode(.template)
+                                                .resizable()
+                                                .frame(width: 20, height: 20)
+                                                .foregroundColor(Design.HintTooltips.defaultFg.color)
+                                        }
+                                        .padding(20)
+                                        .offset(x: 20, y: -20)
                                     }
-                                    .padding(20)
-                                    .offset(x: 20, y: -20)
+                                    
+                                    Button {
+                                        store.send(.updateDestination(.currencyConversionSetup))
+                                    } label: {
+                                        Text(L10n.CurrencyConversion.cardButton)
+                                            .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
+                                            .foregroundColor(Design.Btns.Tertiary.fg.color)
+                                            .frame(height: 24)
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, 12)
+                                            .background {
+                                                RoundedRectangle(cornerRadius: 12)
+                                                    .fill(Design.Btns.Tertiary.bg.color)
+                                            }
+                                    }
                                 }
-                                
-                                Button {
-                                    store.send(.updateDestination(.currencyConversionSetup))
-                                } label: {
-                                    Text(L10n.CurrencyConversion.cardButton)
-                                        .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                                        .foregroundColor(Design.Btns.Tertiary.fg.color)
-                                        .frame(height: 24)
-                                        .frame(maxWidth: .infinity)
-                                        .padding(.vertical, 12)
+                                .padding(24)
+                                .background {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Design.Surfaces.bgPrimary.color)
                                         .background {
                                             RoundedRectangle(cornerRadius: 12)
-                                                .fill(Design.Btns.Tertiary.bg.color)
+                                                .stroke(Design.Surfaces.strokeSecondary.color)
                                         }
                                 }
+                                .frame(width: geometry.size.width - 40)
+                                .offset(x: 20, y: geometry[$0].minY + geometry[$0].height)
                             }
-                            .padding(24)
-                            .background {
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(Design.Surfaces.bgPrimary.color)
-                                    .background {
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .stroke(Design.Surfaces.strokeSecondary.color)
-                                    }
-                            }
-                            .frame(width: geometry.size.width - 40)
-                            .offset(x: 20, y: geometry[$0].minY + geometry[$0].height)
                         }
                     }
                 }
