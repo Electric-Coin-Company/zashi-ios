@@ -9,80 +9,113 @@ import Foundation
 import ComposableArchitecture
 import ZcashLightClientKit
 
-import UserDefaults
 import Models
+import RemoteStorage
+import Combine
+
+import WalletStorage
 
 extension AddressBookClient: DependencyKey {
-    private enum Constants {
-        static let udAddressBookRoot = "udAddressBookRoot"
+    public enum AddressBookClientError: Error {
+        case missingEncryptionKey
     }
-
-    public enum AddressBookError: Error {
-        case alreadyExists
-    }
-
+    
     public static let liveValue: AddressBookClient = Self.live()
 
     public static func live() -> Self {
-        @Dependency(\.userDefaults) var userDefaults
+        let latestKnownContacts = CurrentValueSubject<IdentifiedArrayOf<ABRecord>?, Never>(nil)
+
+        @Dependency(\.remoteStorage) var remoteStorage
 
         return Self(
-            all: {
-                AddressBookClient.allRecipients(udc: userDefaults)
-            },
-            deleteRecipient: { recipientToDelete in
-                var all = AddressBookClient.allRecipients(udc: userDefaults)
-                all.remove(recipientToDelete)
+            allContacts: {
+                // return latest known contacts
+                guard latestKnownContacts.value == nil else {
+                    if let contacts = latestKnownContacts.value {
+                        return contacts
+                    } else {
+                        return []
+                    }
+                }
+                
+                // contacts haven't been loaded from the remote storage yet, do it
+                do {
+                    let data = try await remoteStorage.loadAddressBookContacts()
 
-                let encoder = JSONEncoder()
-                if let encoded = try? encoder.encode(all) {
-                    userDefaults.setValue(encoded, Constants.udAddressBookRoot)
+                    let storedContacts = try AddressBookClient.decryptData(data)
+                    latestKnownContacts.value = storedContacts
+
+                    return storedContacts
+                } catch RemoteStorageClient.RemoteStorageError.fileDoesntExist {
+                    return []
+                } catch {
+                    throw error
                 }
             },
-            name: { address in
-                AddressBookClient.allRecipients(udc: userDefaults).first {
-                    $0.id == address
-                }?.name
+            storeContact: {
+                var contacts = latestKnownContacts.value ?? []
+
+                // if already exists, remove it
+                if contacts.contains($0) {
+                    contacts.remove($0)
+                }
+                
+                contacts.append($0)
+
+                // push encrypted data to the remote storage
+                try await remoteStorage.storeAddressBookContacts(AddressBookClient.encryptContacts(contacts))
+                
+                // update the latest known contacts
+                latestKnownContacts.value = contacts
+                
+                return contacts
             },
-            recipientExists: { AddressBookClient.recipientExists($0, udc: userDefaults) },
-            storeRecipient: {
-                guard !AddressBookClient.recipientExists($0, udc: userDefaults) else {
-                    return
+            deleteContact: {
+                var contacts = latestKnownContacts.value ?? []
+
+                // if it doesn't exist, do nothing
+                guard contacts.contains($0) else {
+                    return contacts
                 }
+                
+                contacts.remove($0)
 
-                var all = AddressBookClient.allRecipients(udc: userDefaults)
+                // push encrypted data to the remote storage
+                try await remoteStorage.storeAddressBookContacts(AddressBookClient.encryptContacts(contacts))
 
-                let countBefore = all.count
-                all.append($0)
-
-                // the list is the same = not new address but mayne new name to be updated
-                if countBefore == all.count {
-                    all.remove(id: $0.id)
-                    all.append($0)
-                }
-
-                let encoder = JSONEncoder()
-                if let encoded = try? encoder.encode(all) {
-                    userDefaults.setValue(encoded, Constants.udAddressBookRoot)
-                }
+                // update the latest known contacts
+                latestKnownContacts.value = contacts
+                
+                return contacts
             }
         )
     }
+    
+    private static func encryptContacts(_ contacts: IdentifiedArrayOf<ABRecord>) throws -> Data {
+        @Dependency(\.walletStorage) var walletStorage
 
-    private static func allRecipients( udc: UserDefaultsClient) -> IdentifiedArrayOf<ABRecord> {
-        guard let root = udc.objectForKey(Constants.udAddressBookRoot) as? Data else {
-            return []
+        guard let encryptionKey = try? walletStorage.exportAddressBookKey() else {
+            throw AddressBookClient.AddressBookClientError.missingEncryptionKey
         }
 
-        let decoder = JSONDecoder()
-        if let loadedList = try? decoder.decode([ABRecord].self, from: root) {
-            return IdentifiedArrayOf(uniqueElements: loadedList)
-        } else {
-            return []
-        }
+        // TODO: str4d
+        // here you have an array of all contacts
+        // you also have a key from the keychain
+
+        return Data()
     }
+    
+    private static func decryptData(_ data: Data) throws -> IdentifiedArrayOf<ABRecord> {
+        @Dependency(\.walletStorage) var walletStorage
 
-    private static func recipientExists(_ recipient: ABRecord, udc: UserDefaultsClient) -> Bool {
-        AddressBookClient.allRecipients(udc: udc).firstIndex(of: recipient) != nil
+        guard let encryptionKey = try? walletStorage.exportAddressBookKey() else {
+            throw AddressBookClient.AddressBookClientError.missingEncryptionKey
+        }
+
+        // TODO: str4d
+        // here you have the encrypted data from the cloud, the blob
+        // you also have a key from the keychain
+
+        return []
     }
 }

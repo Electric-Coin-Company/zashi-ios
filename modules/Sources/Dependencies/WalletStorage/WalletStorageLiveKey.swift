@@ -38,6 +38,12 @@ extension WalletStorageClient: DependencyKey {
             },
             nukeWallet: {
                 walletStorage.nukeWallet()
+            },
+            importAddressBookKey: { key in
+                try walletStorage.importAddressBookKey(key)
+            },
+            exportAddressBookKey: {
+                try walletStorage.exportAddressBookKey()
             }
         )
     }

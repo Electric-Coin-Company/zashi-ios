@@ -67,6 +67,7 @@ public struct SendConfirmation {
     public enum Action: BindableAction, Equatable {
         case alert(PresentationAction<Action>)
         case binding(BindingAction<SendConfirmation.State>)
+        case fetchedABRecords(IdentifiedArrayOf<ABRecord>)
         case goBackPressed
         case onAppear
         case partialProposalError(PartialProposalError.Action)
@@ -97,7 +98,19 @@ public struct SendConfirmation {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                state.addressBookRecords = addressBook.all()
+                return .run { send in
+                    do {
+                        let records = try await addressBook.allContacts()
+                        await send(.fetchedABRecords(records))
+                        print("__LD updateRecords success")
+                    } catch {
+                        print("__LD updateRecords Error: \(error.localizedDescription)")
+                        // TODO: FIXME
+                    }
+                }
+                
+            case .fetchedABRecords(let records):
+                state.addressBookRecords = records
                 for record in state.addressBookRecords {
                     if record.id == state.address {
                         state.alias = record.name

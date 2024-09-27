@@ -18,6 +18,7 @@ import Models
 public struct WalletStorage {
     public enum Constants {
         public static let zcashStoredWallet = "zcashStoredWallet"
+        public static let zcashStoredAdressBookKey = "zcashStoredAdressBookKey"
         /// Versioning of the stored data
         public static let zcashKeychainVersion = 1
     }
@@ -32,6 +33,7 @@ public struct WalletStorage {
 
     public enum WalletStorageError: Error {
         case alreadyImported
+        case uninitializedAddressBookKey
         case uninitializedWallet
         case storageError(Error)
         case unsupportedVersion(Int)
@@ -136,6 +138,32 @@ public struct WalletStorage {
     
     public func nukeWallet() {
         deleteData(forKey: Constants.zcashStoredWallet)
+    }
+    
+    public func importAddressBookKey(_ key: String) throws {
+        do {
+            guard let data = try encode(object: key) else {
+                throw KeychainError.encoding
+            }
+            
+            try setData(data, forKey: Constants.zcashStoredAdressBookKey)
+        } catch KeychainError.duplicate {
+            throw WalletStorageError.alreadyImported
+        } catch {
+            throw WalletStorageError.storageError(error)
+        }
+    }
+    
+    public func exportAddressBookKey() throws -> String {
+        guard let data = data(forKey: Constants.zcashStoredAdressBookKey) else {
+            throw WalletStorageError.uninitializedAddressBookKey
+        }
+        
+        guard let wallet = try decode(json: data, as: String.self) else {
+            throw WalletStorageError.uninitializedAddressBookKey
+        }
+
+        return wallet
     }
     
     // MARK: - Wallet Storage Codable & Query helpers

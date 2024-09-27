@@ -48,7 +48,7 @@ public struct AddressBookContactView: View {
                 ZashiButton(L10n.General.save) {
                     store.send(.saveButtonTapped)
                 }
-                .disabled(store.isSaveButtonDisabled)
+                //.disabled(store.isSaveButtonDisabled) // TODO: FIXME
                 .padding(.bottom, isInEditMode ? 0 : 24)
 
                 if isInEditMode {

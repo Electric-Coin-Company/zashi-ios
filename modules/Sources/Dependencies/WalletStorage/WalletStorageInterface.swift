@@ -74,4 +74,9 @@ public struct WalletStorageClient {
     /// Use carefully: deletes the stored wallet.
     /// There's no fate but what we make for ourselves - Sarah Connor.
     public var nukeWallet: () -> Void
+
+    // TODO: str4d
+    // not sure what format the key is, for now I made it a String
+    public var importAddressBookKey: (String) throws -> Void
+    public var exportAddressBookKey: () throws -> String
 }

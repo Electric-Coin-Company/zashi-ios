@@ -48,6 +48,7 @@ let package = Package(
         .library(name: "PrivateDataConsent", targets: ["PrivateDataConsent"]),
         .library(name: "QRImageDetector", targets: ["QRImageDetector"]),
         .library(name: "RecoveryPhraseDisplay", targets: ["RecoveryPhraseDisplay"]),
+        .library(name: "RemoteStorage", targets: ["RemoteStorage"]),
         .library(name: "RestoreInfo", targets: ["RestoreInfo"]),
         .library(name: "ReviewRequest", targets: ["ReviewRequest"]),
         .library(name: "Root", targets: ["Root"]),
@@ -119,8 +120,10 @@ let package = Package(
             name: "AddressBookClient",
             dependencies: [
                 "Models",
+                "RemoteStorage",
                 "UserDefaults",
                 "Utils",
+                "WalletStorage",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
@@ -484,6 +487,13 @@ let package = Package(
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
             path: "Sources/Features/RecoveryPhraseDisplay"
+        ),
+        .target(
+            name: "RemoteStorage",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Dependencies/RemoteStorage"
         ),
         .target(
             name: "RestoreInfo",

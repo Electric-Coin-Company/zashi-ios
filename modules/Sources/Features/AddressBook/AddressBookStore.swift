@@ -89,16 +89,18 @@ public struct AddressBook {
         case addManualButtonTapped
         case alert(PresentationAction<Action>)
         case binding(BindingAction<AddressBook.State>)
+        case contactStoreSuccess
         case deleteId(String)
         case deleteIdConfirmed
         case editId(String)
+        case fetchedABRecords(IdentifiedArrayOf<ABRecord>)
+        case fetchABRecordsRequested
         case onAppear
         case checkDuplicates
         case saveButtonTapped
         case scan(Scan.Action)
         case scanButtonTapped
         case updateDestination(AddressBook.State.Destination?)
-        case updateRecords
     }
 
     public init() { }
@@ -130,7 +132,7 @@ public struct AddressBook {
                 state.addressAlreadyExists = false
                 state.isAddressFocused = false
                 state.isNameFocused = false
-                return .send(.updateRecords)
+                return .send(.fetchABRecordsRequested)
 
             case .alert(.presented(let action)):
                 return Effect.send(action)
@@ -201,11 +203,15 @@ public struct AddressBook {
                     $0.id == deleteIdToConfirm
                 }
                 if let record {
-                    addressBook.deleteRecipient(record)
-                    return .concatenate(
-                        .send(.updateRecords),
-                        .send(.updateDestination(nil))
-                    )
+                    return .run { send in
+                        do {
+                            let contacts = try await addressBook.deleteContact(record)
+                            await send(.fetchedABRecords(contacts))
+                            await send(.updateDestination(nil))
+                        } catch {
+                            // TODO: FIXME
+                        }
+                    }
                 }
                 return .none
 
@@ -231,20 +237,43 @@ public struct AddressBook {
                 return .send(.updateDestination(.add))
 
             case .saveButtonTapped:
-                addressBook.storeRecipient(ABRecord(address: state.address, name: state.name))
+                let name = state.name.isEmpty ? "testName" : state.name
+                let address = state.address.isEmpty ? "testAddress" : state.address
+                return .run { send in
+                    do {
+                        let contacts = try await addressBook.storeContact(ABRecord(address: address, name: name))
+                        await send(.fetchedABRecords(contacts))
+                        await send(.contactStoreSuccess)
+                    } catch {
+                        // TODO: FIXME
+                        print("__LD saveButtonTapped Error: \(error.localizedDescription)")
+                        await send(.updateDestination(nil))
+                    }
+                }
+
+            case .contactStoreSuccess:
                 state.address = ""
                 state.name = ""
                 state.isAddressFocused = false
                 state.isNameFocused = false
-                return .concatenate(
-                    .send(.updateRecords),
-                    .send(.updateDestination(nil))
-                )
+                return .send(.updateDestination(nil))
 
-            case .updateRecords:
-                state.addressBookRecords = addressBook.all()
-                return .none
+            case .fetchABRecordsRequested:
+                return .run { send in
+                    do {
+                        let records = try await addressBook.allContacts()
+                        await send(.fetchedABRecords(records))
+                        print("__LD updateRecords success")
+                    } catch {
+                        print("__LD updateRecords Error: \(error.localizedDescription)")
+                        // TODO: FIXME
+                    }
+                }
                 
+            case .fetchedABRecords(let records):
+                state.addressBookRecords = records
+                return .none
+
             case .updateDestination(let destination):
                 state.destination = destination
                 return .none

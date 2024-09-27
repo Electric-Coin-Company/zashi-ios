@@ -75,13 +75,23 @@
 		<string>Archivo-ExtraLightItalic.otf</string>
 		<string>Archivo-ExtraLight.otf</string>
 	</array>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<key>NSUbiquitousContainers</key>
+	<dict>
+		<key>iCloud.com.electriccoinco.zashi</key>
+		<dict>
+			<key>NSUbiquitousContainerIsDocumentStorage</key>
+			<true/>
+			<key>NSUbiquitousContainerName</key>
+			<string>Zashi Address Book</string>
+		</dict>
+	</dict>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<true/>
 	</dict>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

@@ -39,6 +39,7 @@ public struct TransactionList {
 
     public enum Action: Equatable {
         case copyToPastboard(RedactableString)
+        case fetchedABRecords(IdentifiedArrayOf<ABRecord>)
         case foundTransactions
         case memosFor([Memo], String)
         case onAppear
@@ -66,22 +67,6 @@ public struct TransactionList {
         switch action {
         case .onAppear:
             state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
-            state.addressBookRecords = addressBook.all()
-            let modifiedTransactionState = state.transactionList.map { transaction in
-                var copiedTransaction = transaction
-                
-                copiedTransaction.isInAddressBook = false
-                for record in state.addressBookRecords {
-                    if record.id == transaction.address {
-                        copiedTransaction.isInAddressBook = true
-                        break
-                    }
-                }
-                
-                return copiedTransaction
-            }
-            state.transactionList = IdentifiedArrayOf(uniqueElements: modifiedTransactionState)
-            
             return .merge(
                 .publisher {
                     sdkSynchronizer.stateStream()
@@ -104,8 +89,36 @@ public struct TransactionList {
                     if let transactions = try? await sdkSynchronizer.getAllTransactions() {
                         await send(.updateTransactionList(transactions))
                     }
+                },
+                .run { send in
+                    do {
+                        let records = try await addressBook.allContacts()
+                        await send(.fetchedABRecords(records))
+                        print("__LD updateRecords success")
+                    } catch {
+                        print("__LD updateRecords Error: \(error.localizedDescription)")
+                        // TODO: FIXME
+                    }
                 }
             )
+            
+        case .fetchedABRecords(let records):
+            state.addressBookRecords = records
+            let modifiedTransactionState = state.transactionList.map { transaction in
+                var copiedTransaction = transaction
+                
+                copiedTransaction.isInAddressBook = false
+                for record in state.addressBookRecords {
+                    if record.id == transaction.address {
+                        copiedTransaction.isInAddressBook = true
+                        break
+                    }
+                }
+                
+                return copiedTransaction
+            }
+            state.transactionList = IdentifiedArrayOf(uniqueElements: modifiedTransactionState)
+            return .none
 
         case .onDisappear:
             return .concatenate(

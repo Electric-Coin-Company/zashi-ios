@@ -10,9 +10,11 @@ import Foundation
 public struct ABRecord: Equatable, Codable, Identifiable, Hashable {
     public let id: String
     public var name: String
+    public let timestamp: Date
 
-    public init(address: String, name: String) {
+    public init(address: String, name: String, timestamp: Date = Date()) {
         self.id = address
         self.name = name
+        self.timestamp = timestamp
     }
 }
