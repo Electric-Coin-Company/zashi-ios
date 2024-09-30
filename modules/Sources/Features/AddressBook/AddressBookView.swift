@@ -61,7 +61,7 @@ public struct AddressBookView: View {
                                 ContactView(
                                     iconText: record.name.initials,
                                     title: record.name,
-                                    desc: record.id
+                                    desc: record.id.trailingZip316
                                 ) {
                                     store.send(.editId(record.id))
                                 }

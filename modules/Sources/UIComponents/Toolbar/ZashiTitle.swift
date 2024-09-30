@@ -13,6 +13,7 @@ struct ZashiTitleModifier<ZashiTitleContent>: ViewModifier where ZashiTitleConte
     
     func body(content: Content) -> some View {
         content
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     zashiTitleContent
@@ -26,6 +27,7 @@ struct ScreenTitleModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         content
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text(text.uppercased())

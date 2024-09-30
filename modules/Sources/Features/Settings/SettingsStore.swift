@@ -115,8 +115,6 @@ public struct Settings {
                 return .none
                 
             case .protectedAccessRequest(let destination):
-                // TODO: FIXME
-                return .send(.updateDestination(destination))
                 return .run { send in
                     if await localAuthentication.authenticate() {
                         await send(.updateDestination(destination))

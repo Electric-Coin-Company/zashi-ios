@@ -23,6 +23,19 @@
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
+			<key>CFBundleURLName</key>
+			<string>co-electriccoin.secant-mainnet</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>zcash</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FirebaseCrashlyticsCollectionEnabled</key>
@@ -35,6 +48,16 @@
 	<string>Scan zAddress Qr Codes</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>To access sensitive wallet data which should never be shared with anyone. For example backup phrase seed that can restore the wallet and gain access to funds.</string>
+	<key>NSUbiquitousContainers</key>
+	<dict>
+		<key>iCloud.com.electriccoinco.zashi</key>
+		<dict>
+			<key>NSUbiquitousContainerIsDocumentStorage</key>
+			<true/>
+			<key>NSUbiquitousContainerName</key>
+			<string>Zashi Address Book</string>
+		</dict>
+	</dict>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Zboto.otf</string>
@@ -57,23 +80,13 @@
 		<string>Inter-ExtraLightItalic.otf</string>
 		<string>Inter-ExtraLight.otf</string>
 	</array>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
-	<key>NSUbiquitousContainers</key>
-	<dict>
-		<key>iCloud.com.electriccoinco.zashi</key>
-		<dict>
-			<key>NSUbiquitousContainerIsDocumentStorage</key>
-			<true/>
-			<key>NSUbiquitousContainerName</key>
-			<string>Zashi Address Book</string>
-		</dict>
-	</dict>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<true/>
 	</dict>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

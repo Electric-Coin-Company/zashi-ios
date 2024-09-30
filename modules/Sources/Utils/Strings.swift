@@ -15,6 +15,14 @@ public extension String {
         ? "\(self.prefix(20))..."
         : self
     }
+
+    var trailingZip316: String {
+        if self.count > 25 {
+            return "\(self.prefix(20))...\(self.suffix(4))"
+        } else {
+            return self.zip316
+        }
+    }
 }
 
 extension String: Error {}

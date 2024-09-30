@@ -66,8 +66,8 @@ public struct ZecKeyboard {
                     state.decimalSeparator = decimalSeparator
                     state.keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", decimalSeparator, "0", "x"]
                 }
-                if state.currencyConversion != nil && state.input == Constants.initialValue {
-                    state.isInputInZec = false
+                if state.input == Constants.initialValue {
+                    state.isInputInZec = true
                 }
                 return .send(.validateInputs)
                 
@@ -88,6 +88,11 @@ public struct ZecKeyboard {
                 return .none
                 
             case .keyTapped(let index):
+                let inputSides = state.input.split(separator: Character(state.decimalSeparator))
+                if inputSides.count == 2, inputSides[1].count >= 8 && index != 11 {
+                    return .none
+                }
+
                 let impactFeedback = UIImpactFeedbackGenerator(style: .light)
                 impactFeedback.impactOccurred()
 
@@ -263,18 +268,35 @@ public struct ZecKeyboard {
 
                 if state.isInputInZec {
                     state.humanReadableMainInput = state.amount.decimalString()
+                    let inputSides = state.input.split(separator: Character(state.decimalSeparator))
+                    if inputSides.count == 2 {
+                        if let humanReadableInput = state.humanReadableMainInput.split(separator: Character(state.decimalSeparator)).first {
+                            state.humanReadableMainInput = "\(humanReadableInput)\(state.decimalSeparator)\(inputSides[1])"
+                        }
+                    } else {
+                        if let lastChar = state.input.last, String(lastChar) == state.decimalSeparator {
+                            state.humanReadableMainInput += state.decimalSeparator
+                        }
+                    }
                     state.humanReadableConvertedInput = Decimal(state.currencyValue).formatted(.number.precision(.fractionLength(2)))
                 } else {
                     state.humanReadableMainInput = Decimal(state.currencyValue).formatted(.number)
-                    if let lastChar = state.input.last, String(lastChar) == state.decimalSeparator {
-                        state.humanReadableMainInput += state.decimalSeparator
+                    let inputSides = state.input.split(separator: Character(state.decimalSeparator))
+                    if inputSides.count == 2 {
+                        if let humanReadableInput = state.humanReadableMainInput.split(separator: Character(state.decimalSeparator)).first {
+                            state.humanReadableMainInput = "\(humanReadableInput)\(state.decimalSeparator)\(inputSides[1])"
+                        }
+                    } else {
+                        if let lastChar = state.input.last, String(lastChar) == state.decimalSeparator {
+                            state.humanReadableMainInput += state.decimalSeparator
+                        }
                     }
                     state.humanReadableConvertedInput = state.amount.decimalString()
                 }
 //                print("__LD ZEC KEYBOARD ======== ")
 //                print("__LD")
 //                print("__LD valid \(state.isValidInput)")
-//                print("__LD amount \(state.amount)")
+//                print("__LD amount \(state.amount.amount)")
 //                print("__LD currency \(state.currencyValue)")
 //                print("__LD input '\(state.input)'")
 //                print("__LD convertedInput '\(state.convertedInput)'")

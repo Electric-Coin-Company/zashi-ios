@@ -67,7 +67,7 @@ public struct AddressDetails {
                 state.isAddressExpanded = false
                 state.isQRCodeAppreanceFlipped = false
                 return .none
-                
+
             case .onDisappear:
                 return .cancel(id: state.cancelId)
 
@@ -77,7 +77,7 @@ public struct AddressDetails {
                 }
                 state.isQRCodeAppreanceFlipped.toggle()
                 return .send(.generateQRCode(true))
-                
+
             case let .rememberQR(image):
                 state.storedQR = image
                 return .none

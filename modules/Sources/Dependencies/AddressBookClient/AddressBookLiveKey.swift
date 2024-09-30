@@ -39,18 +39,19 @@ extension AddressBookClient: DependencyKey {
                 }
                 
                 // contacts haven't been loaded from the remote storage yet, do it
-                do {
-                    let data = try await remoteStorage.loadAddressBookContacts()
-
-                    let storedContacts = try AddressBookClient.decryptData(data)
-                    latestKnownContacts.value = storedContacts
-
-                    return storedContacts
-                } catch RemoteStorageClient.RemoteStorageError.fileDoesntExist {
-                    return []
-                } catch {
-                    throw error
-                }
+//                do {
+//                    let data = try await remoteStorage.loadAddressBookContacts()
+//
+//                    let storedContacts = try AddressBookClient.decryptData(data)
+//                    latestKnownContacts.value = storedContacts
+//
+//                    return storedContacts
+//                } catch RemoteStorageClient.RemoteStorageError.fileDoesntExist {
+//                    return []
+//                } catch {
+//                    throw error
+//                }
+                return []
             },
             storeContact: {
                 var contacts = latestKnownContacts.value ?? []
@@ -63,7 +64,8 @@ extension AddressBookClient: DependencyKey {
                 contacts.append($0)
 
                 // push encrypted data to the remote storage
-                try await remoteStorage.storeAddressBookContacts(AddressBookClient.encryptContacts(contacts))
+                //try await remoteStorage.storeAddressBookContacts(AddressBookClient.encryptContacts(contacts))
+                // TODO: FIXME
                 
                 // update the latest known contacts
                 latestKnownContacts.value = contacts
@@ -81,7 +83,7 @@ extension AddressBookClient: DependencyKey {
                 contacts.remove($0)
 
                 // push encrypted data to the remote storage
-                try await remoteStorage.storeAddressBookContacts(AddressBookClient.encryptContacts(contacts))
+                //try await remoteStorage.storeAddressBookContacts(AddressBookClient.encryptContacts(contacts))
 
                 // update the latest known contacts
                 latestKnownContacts.value = contacts

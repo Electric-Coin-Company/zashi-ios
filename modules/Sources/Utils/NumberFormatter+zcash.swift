@@ -36,4 +36,14 @@ extension NumberFormatter {
         formatter.roundingMode = .halfUp
         return formatter
     }()
+    
+    public static let zcashUSNumberFormatter: NumberFormatter = {
+        var formatter = NumberFormatter()
+        formatter.maximumFractionDigits = 8
+        formatter.maximumIntegerDigits = 8
+        formatter.numberStyle = .decimal
+        formatter.usesGroupingSeparator = true
+        formatter.locale = Locale(identifier: "en_US")
+        return formatter
+    }()
 }

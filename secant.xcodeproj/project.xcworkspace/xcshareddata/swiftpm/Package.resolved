@@ -28,6 +28,24 @@
       }
     },
     {
+      "identity" : "bigdecimal",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mgriebling/BigDecimal.git",
+      "state" : {
+        "revision" : "c4e8348c7fbc90f29225d5f8681ce33a16ab33a2",
+        "version" : "2.2.3"
+      }
+    },
+    {
+      "identity" : "bigint",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mgriebling/BigInt.git",
+      "state" : {
+        "revision" : "498d4d290658d7c43a24b9e309c321592dc294f2",
+        "version" : "2.0.10"
+      }
+    },
+    {
       "identity" : "combine-schedulers",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/combine-schedulers",
@@ -68,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/flexa/flexa-ios.git",
       "state" : {
-        "revision" : "fdea95cb855689006c337dd8790e86414b10ccb6",
-        "version" : "1.0.2"
+        "revision" : "ff9a017e54cd0ae2cf499df774b19161f41bbc14",
+        "version" : "1.0.3"
       }
     },
     {
@@ -433,6 +451,15 @@
       }
     },
     {
+      "identity" : "uint128",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mgriebling/UInt128.git",
+      "state" : {
+        "revision" : "59dac4f14d657fd60bacfdfb7398d38b450af74f",
+        "version" : "3.1.5"
+      }
+    },
+    {
       "identity" : "xctest-dynamic-overlay",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",
@@ -444,10 +471,18 @@
     {
       "identity" : "zcash-light-client-ffi",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/zcash-hackworks/zcash-light-client-ffi",
+      "location" : "https://github.com/Electric-Coin-Company/zcash-light-client-ffi",
       "state" : {
-        "revision" : "8ed5b08d59ff5e7e11240be29b084dedbdf2f268",
-        "version" : "0.9.1"
+        "revision" : "a61f82942c1dad9161f346123f292a93081c7e36"
+      }
+    },
+    {
+      "identity" : "zcash-swift-payment-uri",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pacu/zcash-swift-payment-uri",
+      "state" : {
+        "revision" : "58e049fda82e56fbaf5abeee15c7a1608b173018",
+        "version" : "0.1.0-beta.9"
       }
     },
     {
@@ -455,8 +490,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk",
       "state" : {
-        "revision" : "af9383b419c2cafe37ac9edecf9d41cf37fbbf45",
-        "version" : "2.2.3"
+        "branch" : "fix/note_commitment_tree_conflict",
+        "revision" : "c11c8b027568a49f9a9ca6ac1a3c0a881bc80521"
       }
     }
   ],

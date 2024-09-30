@@ -35,12 +35,22 @@ public struct SendConfirmation {
         public var amount: Zatoshi
         public var currencyAmount: RedactableString
         public var feeRequired: Zatoshi
+        public var isAddressExpanded = false
         public var isSending = false
+        public var isTransparentAddress = false
         public var message: String
         public var partialProposalErrorState: PartialProposalError.State
         public var partialProposalErrorViewBinding = false
         public var proposal: Proposal?
 
+        public var addressToShow: String {
+            isTransparentAddress
+            ? address
+            : isAddressExpanded
+            ? address
+            : address.zip316
+        }
+        
         public init(
             address: String,
             amount: Zatoshi,
@@ -69,13 +79,16 @@ public struct SendConfirmation {
         case binding(BindingAction<SendConfirmation.State>)
         case fetchedABRecords(IdentifiedArrayOf<ABRecord>)
         case goBackPressed
+        case goBackPressedFromRequestZec
         case onAppear
         case partialProposalError(PartialProposalError.Action)
         case partialProposalErrorDismiss
+        case saveAddressTapped(RedactableString)
         case sendDone
         case sendFailed(ZcashError?)
         case sendPartial([String], [String])
         case sendPressed
+        case showHideButtonTapped
     }
 
     @Dependency(\.addressBook) var addressBook
@@ -98,6 +111,7 @@ public struct SendConfirmation {
         Reduce { state, action in
             switch action {
             case .onAppear:
+                state.isTransparentAddress = derivationTool.isTransparentAddress(state.address, zcashSDKEnvironment.network.networkType)
                 return .run { send in
                     do {
                         let records = try await addressBook.allContacts()
@@ -128,7 +142,17 @@ public struct SendConfirmation {
 
             case .binding:
                 return .none
-                
+
+            case .saveAddressTapped:
+                return .none
+
+            case .showHideButtonTapped:
+                state.isAddressExpanded.toggle()
+                return .none
+
+            case .goBackPressedFromRequestZec:
+                return .none
+
             case .goBackPressed:
                 return .none
                 

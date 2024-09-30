@@ -8,6 +8,7 @@
 import Foundation
 import ComposableArchitecture
 import SwiftUI
+import UIKit
 
 import AddressDetails
 import Generated
@@ -24,6 +25,7 @@ import CurrencyConversionSetup
 import UserPreferencesStorage
 import RequestZec
 import ZecKeyboard
+import AddressBook
 
 @Reducer
 public struct Tabs {
@@ -36,11 +38,22 @@ public struct Tabs {
             case settings
         }
 
-        public enum StackDestination: Int, Equatable {
+        public enum StackDestinationLowPrivacy: Int, Equatable {
+            case zecKeyboard = 0
+            case requestZecSummary
+        }
+
+        public enum StackDestinationMaxPrivacy: Int, Equatable {
             case zecKeyboard = 0
             case requestZec
+            case requestZecSummary
         }
-        
+
+        public enum StackDestinationRequestPayment: Int, Equatable {
+            case requestPaymentConfirmation = 0
+            case addressBookNewContact
+        }
+
         public enum Tab: Int, Equatable, CaseIterable {
             case account = 0
             case send
@@ -61,6 +74,7 @@ public struct Tabs {
             }
         }
 
+        public var addressBookState: AddressBook.State = .initial
         public var addressDetailsState: AddressDetails.State
         public var balanceBreakdownState: Balances.State
         public var currencyConversionSetupState: CurrencyConversionSetup.State
@@ -74,7 +88,12 @@ public struct Tabs {
         public var sendConfirmationState: SendConfirmation.State
         public var sendState: SendFlow.State
         public var settingsState: Settings.State
-        public var stackDestination: StackDestination?
+        public var stackDestinationLowPrivacy: StackDestinationLowPrivacy?
+        public var stackDestinationLowPrivacyBindingsAlive = 0
+        public var stackDestinationMaxPrivacy: StackDestinationMaxPrivacy?
+        public var stackDestinationMaxPrivacyBindingsAlive = 0
+        public var stackDestinationRequestPayment: StackDestinationRequestPayment?
+        public var stackDestinationRequestPaymentBindingsAlive = 0
         public var zecKeyboardState: ZecKeyboard.State
         
         public init(
@@ -111,6 +130,7 @@ public struct Tabs {
     }
     
     public enum Action: BindableAction, Equatable {
+        case addressBook(AddressBook.Action)
         case addressDetails(AddressDetails.Action)
         case balanceBreakdown(Balances.Action)
         case binding(BindingAction<Tabs.State>)
@@ -126,7 +146,9 @@ public struct Tabs {
         case sendConfirmation(SendConfirmation.Action)
         case settings(Settings.Action)
         case updateDestination(Tabs.State.Destination?)
-        case updateStackDestination(Tabs.State.StackDestination?)
+        case updateStackDestinationLowPrivacy(Tabs.State.StackDestinationLowPrivacy?)
+        case updateStackDestinationMaxPrivacy(Tabs.State.StackDestinationMaxPrivacy?)
+        case updateStackDestinationRequestPayment(Tabs.State.StackDestinationRequestPayment?)
         case zecKeyboard(ZecKeyboard.Action)
     }
 
@@ -138,7 +160,11 @@ public struct Tabs {
 
     public var body: some Reducer<State, Action> {
         BindingReducer()
-        
+
+        Scope(state: \.addressBookState, action: \.addressBook) {
+            AddressBook()
+        }
+
         Scope(state: \.sendState, action: \.send) {
             SendFlow()
         }
@@ -193,13 +219,58 @@ public struct Tabs {
                 : "Zcash Transparent Address"
                 return .send(.updateDestination(.addressDetails))
 
-            case .receive(.requestTapped(let address)):
+            case let .receive(.requestTapped(address, maxPrivacy)):
                 state.zecKeyboardState.input = "0"
-                return .send(.updateStackDestination(.zecKeyboard))
+                state.requestZecState.address = address
+                state.requestZecState.maxPrivacy = maxPrivacy
+                state.requestZecState.memoState = .initial
+                if maxPrivacy {
+                    return .send(.updateStackDestinationMaxPrivacy(.zecKeyboard))
+                } else {
+                    return .send(.updateStackDestinationLowPrivacy(.zecKeyboard))
+                }
 
             case .zecKeyboard(.nextTapped):
                 state.requestZecState.requestedZec = state.zecKeyboardState.amount
-                return .send(.updateStackDestination(.requestZec))
+                if state.requestZecState.maxPrivacy {
+                    return .send(.updateStackDestinationMaxPrivacy(.requestZec))
+                } else {
+                    return .send(.updateStackDestinationLowPrivacy(.requestZecSummary))
+                }
+                
+            case .requestZec(.requestTapped):
+                if state.requestZecState.maxPrivacy {
+                    return .send(.updateStackDestinationMaxPrivacy(.requestZecSummary))
+                }
+                return .none
+                
+            case .requestZec(.cancelRequestTapped):
+                if state.requestZecState.maxPrivacy {
+                    return .send(.updateStackDestinationMaxPrivacy(nil))
+                } else {
+                    return .send(.updateStackDestinationLowPrivacy(nil))
+                }
+                
+            case .sendConfirmation(.saveAddressTapped(let address)):
+                state.addressBookState.address = address.data
+                state.addressBookState.name = ""
+                state.addressBookState.isValidZcashAddress = true
+                state.addressBookState.isNameFocused = true
+                return .send(.updateStackDestinationRequestPayment(.addressBookNewContact))
+
+            case .addressBook(.saveButtonTapped):
+                return .send(.updateStackDestinationRequestPayment(.requestPaymentConfirmation))
+
+            case .home(.walletBalances(.exchangeRateRefreshTapped)), .send(.walletBalances(.exchangeRateRefreshTapped)), .balanceBreakdown(.walletBalances(.exchangeRateRefreshTapped)):
+                if state.isRateTooltipEnabled {
+                    state.isRateTooltipEnabled = false
+                    return .none
+                }
+                state.isRateTooltipEnabled = state.homeState.walletBalancesState.isExchangeRateStale
+                return .none
+
+            case .addressBook:
+                return .none
 
             case .addressDetails:
                 return .none
@@ -235,29 +306,25 @@ public struct Tabs {
                 .send(.walletBalances(.availableBalanceTapped)):
                 state.selectedTab = .balances
                 return .none
-                
-            case .home(.walletBalances(.exchangeRateRefreshTapped)):
-                if state.isRateTooltipEnabled {
-                    state.isRateTooltipEnabled = false
-                    return .none
-                }
-                state.isRateTooltipEnabled = state.homeState.walletBalancesState.isExchangeRateStale
-                return .none
-                
+
             case .home:
                 return .none
             
             case .settings(.advancedSettings(.currencyConversionSetup(.saveChangesTapped))):
                 return .send(.send(.exchangeRateSetupChanged))
                 
-            case .send(.sendConfirmationRequired):
+            case .send(.confirmationRequired(let type)):
                 state.sendConfirmationState.amount = state.sendState.amount
                 state.sendConfirmationState.address = state.sendState.address.data
                 state.sendConfirmationState.proposal = state.sendState.proposal
                 state.sendConfirmationState.feeRequired = state.sendState.feeRequired
                 state.sendConfirmationState.message = state.sendState.message
                 state.sendConfirmationState.currencyAmount = state.sendState.currencyConversion?.convert(state.sendState.amount).redacted ?? .empty
-                return .send(.updateDestination(.sendConfirmation))
+                if type == .send {
+                    return .send(.updateDestination(.sendConfirmation))
+                } else {
+                    return .send(.updateStackDestinationRequestPayment(.requestPaymentConfirmation))
+                }
                                 
             case .send:
                 return .none
@@ -283,6 +350,13 @@ public struct Tabs {
             case .sendConfirmation(.goBackPressed):
                 return .send(.updateDestination(nil))
 
+            case .sendConfirmation(.goBackPressedFromRequestZec):
+                state.sendState.address = .empty
+                state.sendState.memoState.text = ""
+                state.sendState.zecAmountText = .empty
+                state.sendState.currencyText = .empty
+                return .send(.updateStackDestinationRequestPayment(nil))
+
             case .sendConfirmation:
                 return .none
 
@@ -294,6 +368,7 @@ public struct Tabs {
                 if tab == .send {
                     exchangeRate.refreshExchangeRateUSD()
                 }
+                state.isRateTooltipEnabled = false
                 return .none
                 
             case .updateDestination(.currencyConversionSetup):
@@ -304,9 +379,25 @@ public struct Tabs {
                 state.destination = destination
                 return .none
 
-            case .updateStackDestination(let destination):
-                print("__LD updateStackDestination \(destination)")
-                state.stackDestination = destination
+            case .updateStackDestinationLowPrivacy(let destination):
+                if let destination {
+                    state.stackDestinationLowPrivacyBindingsAlive = destination.rawValue
+                }
+                state.stackDestinationLowPrivacy = destination
+                return .none
+
+            case .updateStackDestinationMaxPrivacy(let destination):
+                if let destination {
+                    state.stackDestinationMaxPrivacyBindingsAlive = destination.rawValue
+                }
+                state.stackDestinationMaxPrivacy = destination
+                return .none
+
+            case .updateStackDestinationRequestPayment(let destination):
+                if let destination {
+                    state.stackDestinationRequestPaymentBindingsAlive = destination.rawValue
+                }
+                state.stackDestinationRequestPayment = destination
                 return .none
 
             case .rateTooltipTapped:
@@ -319,3 +410,4 @@ public struct Tabs {
         }
     }
 }
+

@@ -23,44 +23,49 @@ public struct ZecKeyboardView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack(spacing: 0) {
-                if !store.isValidInput {
-                    HStack(spacing: 0) {
-                        Asset.Assets.infoOutline.image
-                            .zImage(size: 20, style: Design.Utility.WarningYellow._500)
-                            .padding(.trailing, 12)
-                        
-                        Text("This transaction amount is invalid.")
-                            .zFont(.medium, size: 14, style: Design.Utility.WarningYellow._700)
-                            .padding(.top, 3)
+                VStack(spacing: 0) {
+                    if !store.isValidInput {
+                        HStack(spacing: 0) {
+                            Asset.Assets.infoOutline.image
+                                .zImage(size: 20, style: Design.Utility.WarningYellow._500)
+                                .padding(.trailing, 12)
+                            
+                            Text("This transaction amount is invalid.")
+                                .zFont(.medium, size: 14, style: Design.Utility.WarningYellow._700)
+                                .padding(.top, 3)
+                        }
+                        .padding(.horizontal, 10)
+                        .screenHorizontalPadding()
+                        .padding(.bottom, 4)
                     }
-                    .padding(.horizontal, 10)
-                    .screenHorizontalPadding()
-                    .padding(.bottom, 4)
-                }
-
-                HStack(spacing: 0) {
-                    if store.isInputInZec {
-                        Text(store.humanReadableMainInput)
-                        + Text(" ZEC")
-                            .foregroundColor(Design.Text.quaternary.color)
-                    } else {
-                        if store.isCurrencySymbolPrefix {
-                            Text(store.localeCurrencySymbol)
-                                .foregroundColor(Design.Text.quaternary.color)
-                            + Text(store.humanReadableMainInput)
-                        } else {
+                    
+                    HStack(spacing: 0) {
+                        if store.isInputInZec {
                             Text(store.humanReadableMainInput)
-                            + Text(" \(store.localeCurrencySymbol)")
+                            + Text(" ZEC")
                                 .foregroundColor(Design.Text.quaternary.color)
+                        } else {
+                            if store.isCurrencySymbolPrefix {
+                                Text(store.localeCurrencySymbol)
+                                    .foregroundColor(Design.Text.quaternary.color)
+                                + Text(store.humanReadableMainInput)
+                            } else {
+                                Text(store.humanReadableMainInput)
+                                + Text(" \(store.localeCurrencySymbol)")
+                                    .foregroundColor(Design.Text.quaternary.color)
+                            }
                         }
                     }
+                    .zFont(.semiBold, size: 56, style: Design.Text.primary)
+                    .frame(height: 68)
+                    .minimumScaleFactor(0.1)
+                    .lineLimit(1)
+                    .screenHorizontalPadding()
                 }
-                .zFont(.semiBold, size: 56, style: Design.Text.primary)
-                .frame(height: 68)
-                .minimumScaleFactor(0.1)
-                .lineLimit(1)
-                .screenHorizontalPadding()
-                .padding(.vertical, 1)
+                .padding(.top, 88)
+                .onChange(of: store.currencyConversion) { _ in
+                    store.send(.validateInputs)
+                }
 
                 if store.currencyConversion != nil {
                     HStack(spacing: 0) {
@@ -118,9 +123,6 @@ public struct ZecKeyboardView: View {
                                                 if store.keys[column * 3 + row] == "x" {
                                                     Asset.Assets.Icons.delete.image
                                                         .zImage(size: 40, style: Design.Text.primary)
-                                                        .onLongPressGesture(minimumDuration: 0.7) {
-                                                            store.send(.longKeyTapped(column * 3 + row))
-                                                        }
                                                 } else {
                                                     Text(store.keys[column * 3 + row])
                                                         .zFont(.semiBold, size: 32, style: Design.Text.primary)
@@ -128,6 +130,13 @@ public struct ZecKeyboardView: View {
                                                 }
                                             }
                                             .padding(10)
+                                            .simultaneousGesture(
+                                                LongPressGesture().onEnded { _ in
+                                                    if store.keys[column * 3 + row] == "x" {
+                                                        store.send(.longKeyTapped(column * 3 + row))
+                                                    }
+                                                }
+                                            )
                                         }
                                         
                                         Spacer()

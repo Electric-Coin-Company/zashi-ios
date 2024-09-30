@@ -21,6 +21,7 @@ import SendConfirmation
 import CurrencyConversionSetup
 import RequestZec
 import ZecKeyboard
+import AddressBook
 
 public struct TabsView: View {
     let networkType: NetworkType
@@ -142,15 +143,48 @@ public struct TabsView: View {
                     }
                 )
                 .navigationLinkEmpty(
-                    isActive: store.bindingForStack(.zecKeyboard),
+                    isActive: store.bindingForStackMaxPrivacy(.zecKeyboard),
                     destination: {
                         ZecKeyboardView(store: store.zecKeyboardStore())
                             .navigationLinkEmpty(
-                                isActive: store.bindingForStack(.requestZec),
+                                isActive: store.bindingForStackMaxPrivacy(.requestZec),
                                 destination: {
                                     RequestZecView(store: store.requestZecStore())
+                                        .navigationLinkEmpty(
+                                            isActive: store.bindingForStackMaxPrivacy(.requestZecSummary),
+                                            destination: {
+                                                RequestZecSummaryView(store: store.requestZecStore())
+                                            }
+                                        )
                                 }
                             )
+                    }
+                )
+                .navigationLinkEmpty(
+                    isActive: store.bindingForStackLowPrivacy(.zecKeyboard),
+                    destination: {
+                        ZecKeyboardView(store: store.zecKeyboardStore())
+                            .navigationLinkEmpty(
+                                isActive: store.bindingForStackLowPrivacy(.requestZecSummary),
+                                destination: {
+                                    RequestZecSummaryView(store: store.requestZecStore())
+                                }
+                            )
+                    }
+                )
+                .navigationLinkEmpty(
+                    isActive: store.bindingForStackRequestPayment(.requestPaymentConfirmation),
+                    destination: {
+                        RequestPaymentConfirmationView(
+                            store: store.sendConfirmationStore(),
+                            tokenName: tokenName
+                        )
+                        .navigationLinkEmpty(
+                            isActive: store.bindingForStackRequestPayment(.addressBookNewContact),
+                            destination: {
+                                AddressBookContactView(store: store.addressBookStore())
+                            }
+                        )
                     }
                 )
             }
@@ -159,7 +193,7 @@ public struct TabsView: View {
             .navigationBarItems(leading: hideBalancesButton(tab: store.selectedTab))
             .zashiTitle { navBarView(store.selectedTab) }
             .walletStatusPanel()
-            .overlayPreferenceValue(BoundsPreferenceKey.self) { preferences in
+            .overlayPreferenceValue(ExchangeRateStaleTooltipPreferenceKey.self) { preferences in
                 WithPerceptionTracking {
                     if store.isRateTooltipEnabled {
                         GeometryReader { geometry in
@@ -348,6 +382,13 @@ extension StoreOf<Tabs> {
             action: \.zecKeyboard
         )
     }
+    
+    func addressBookStore() -> StoreOf<AddressBook> {
+        self.scope(
+            state: \.addressBookState,
+            action: \.addressBook
+        )
+    }
 }
 
 // MARK: - ViewStore
@@ -360,23 +401,87 @@ extension StoreOf<Tabs> {
         )
     }
     
-    func bindingForStack(_ destination: Tabs.State.StackDestination) -> Binding<Bool> {
+    func bindingForStackMaxPrivacy(_ destination: Tabs.State.StackDestinationMaxPrivacy) -> Binding<Bool> {
         Binding<Bool>(
             get: {
-                if let currentStackValue = self.stackDestination?.rawValue {
+                if let currentStackValue = self.stackDestinationMaxPrivacy?.rawValue {
                     return currentStackValue >= destination.rawValue
                 } else {
-                    return false
+                    if destination.rawValue == 0 {
+                        return false
+                    } else if destination.rawValue <= self.stackDestinationMaxPrivacyBindingsAlive {
+                        return true
+                    } else {
+                        return false
+                    }
                 }
             },
             set: { _ in
-                if let currentStackValue = self.stackDestination?.rawValue, currentStackValue == destination.rawValue {
+                if let currentStackValue = self.stackDestinationMaxPrivacy?.rawValue, currentStackValue == destination.rawValue {
                     let popIndex = destination.rawValue - 1
                     if popIndex >= 0 {
-                        let popDestination = Tabs.State.StackDestination(rawValue: popIndex)
-                        self.send(.updateStackDestination(popDestination))
+                        let popDestination = Tabs.State.StackDestinationMaxPrivacy(rawValue: popIndex)
+                        self.send(.updateStackDestinationMaxPrivacy(popDestination))
                     } else {
-                        self.send(.updateStackDestination(nil))
+                        self.send(.updateStackDestinationMaxPrivacy(nil))
+                    }
+                }
+            }
+        )
+    }
+    
+    func bindingForStackLowPrivacy(_ destination: Tabs.State.StackDestinationLowPrivacy) -> Binding<Bool> {
+        Binding<Bool>(
+            get: {
+                if let currentStackValue = self.stackDestinationLowPrivacy?.rawValue {
+                    return currentStackValue >= destination.rawValue
+                } else {
+                    if destination.rawValue == 0 {
+                        return false
+                    } else if destination.rawValue <= self.stackDestinationLowPrivacyBindingsAlive {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+            },
+            set: { _ in
+                if let currentStackValue = self.stackDestinationLowPrivacy?.rawValue, currentStackValue == destination.rawValue {
+                    let popIndex = destination.rawValue - 1
+                    if popIndex >= 0 {
+                        let popDestination = Tabs.State.StackDestinationLowPrivacy(rawValue: popIndex)
+                        self.send(.updateStackDestinationLowPrivacy(popDestination))
+                    } else {
+                        self.send(.updateStackDestinationLowPrivacy(nil))
+                    }
+                }
+            }
+        )
+    }
+    
+    func bindingForStackRequestPayment(_ destination: Tabs.State.StackDestinationRequestPayment) -> Binding<Bool> {
+        Binding<Bool>(
+            get: {
+                if let currentStackValue = self.stackDestinationRequestPayment?.rawValue {
+                    return currentStackValue >= destination.rawValue
+                } else {
+                    if destination.rawValue == 0 {
+                        return false
+                    } else if destination.rawValue <= self.stackDestinationRequestPaymentBindingsAlive {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+            },
+            set: { _ in
+                if let currentStackValue = self.stackDestinationRequestPayment?.rawValue, currentStackValue == destination.rawValue {
+                    let popIndex = destination.rawValue - 1
+                    if popIndex >= 0 {
+                        let popDestination = Tabs.State.StackDestinationRequestPayment(rawValue: popIndex)
+                        self.send(.updateStackDestinationRequestPayment(popDestination))
+                    } else {
+                        self.send(.updateStackDestinationRequestPayment(nil))
                     }
                 }
             }
