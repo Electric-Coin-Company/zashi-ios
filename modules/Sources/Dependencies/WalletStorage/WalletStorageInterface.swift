@@ -77,6 +77,6 @@ public struct WalletStorageClient {
 
     // TODO: str4d
     // not sure what format the key is, for now I made it a String
-    public var importAddressBookKey: (String) throws -> Void
-    public var exportAddressBookKey: () throws -> String
+    public var importAddressBookEncryptionKeys: (AddressBookEncryptionKeys) throws -> Void
+    public var exportAddressBookEncryptionKeys: () throws -> AddressBookEncryptionKeys
 }

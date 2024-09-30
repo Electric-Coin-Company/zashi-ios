@@ -285,16 +285,16 @@ extension Root {
                     try mnemonic.isValid(storedWallet.seedPhrase.value())
                     let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
                     
-                    let addressBookEncryptionKey = try? walletStorage.exportAddressBookKey()
-                    if addressBookEncryptionKey == nil {
+                    let addressBookEncryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys()
+                    if addressBookEncryptionKeys == nil {
                         // TODO: str4d
                         // here you know the encryption key for the address book is missing, we need to generate one
                         
                         // here you have `storedWallet.seedPhrase.seedPhrase`, a seed as String
 
                         // once the key is prepared, store it
-                        // let key == ""
-                        // try walletStorage.importAddressBookKey(key)
+                        // let keys == AddressBookEncryptionKeys(key: "")
+                        // try walletStorage.importAddressBookEncryptionKeys(keys)
                     }
 
                     return .run { send in

@@ -34,7 +34,7 @@ public struct AddressBookView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack() {
-                if store.addressBookRecords.isEmpty {
+                if store.addressBookContacts.contacts.isEmpty {
                     Spacer()
                     
                     VStack(spacing: 40) {
@@ -56,7 +56,7 @@ public struct AddressBookView: View {
                     }
                     
                     List {
-                        ForEach(store.addressBookRecords, id: \.self) { record in
+                        ForEach(store.addressBookContacts.contacts, id: \.self) { record in
                             VStack {
                                 ContactView(
                                     iconText: record.name.initials,
@@ -66,7 +66,7 @@ public struct AddressBookView: View {
                                     store.send(.editId(record.id))
                                 }
 
-                                if let last = store.addressBookRecords.last, last != record {
+                                if let last = store.addressBookContacts.contacts.last, last != record {
                                     Design.Surfaces.divider.color
                                         .frame(height: 1)
                                         .padding(.top, 12)

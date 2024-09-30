@@ -408,7 +408,8 @@ let package = Package(
             dependencies: [
                 "Utils",
                 "UIComponents",
-                .product(name: "MnemonicSwift", package: "MnemonicSwift")
+                .product(name: "MnemonicSwift", package: "MnemonicSwift"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Models"
         ),

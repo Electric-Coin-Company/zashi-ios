@@ -34,9 +34,7 @@ extension RemoteStorageClient: DependencyKey {
                     throw RemoteStorageError.fileDoesntExist
                 }
                 
-                return try await Task {
-                    return try Data(contentsOf: containerURL)
-                }.value
+                return try Data(contentsOf: containerURL)
             },
             storeAddressBookContacts: { data in
                 let fileManager = FileManager.default
@@ -45,9 +43,7 @@ extension RemoteStorageClient: DependencyKey {
                     throw RemoteStorageError.containerURL
                 }
 
-                try await Task {
-                    try data.write(to: containerURL)
-                }.value
+                try data.write(to: containerURL)
             }
         )
     }

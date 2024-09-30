@@ -39,11 +39,11 @@ extension WalletStorageClient: DependencyKey {
             nukeWallet: {
                 walletStorage.nukeWallet()
             },
-            importAddressBookKey: { key in
-                try walletStorage.importAddressBookKey(key)
+            importAddressBookEncryptionKeys: { keys in
+                try walletStorage.importAddressBookEncryptionKeys(keys)
             },
-            exportAddressBookKey: {
-                try walletStorage.exportAddressBookKey()
+            exportAddressBookEncryptionKeys: {
+                try walletStorage.exportAddressBookEncryptionKeys()
             }
         )
     }
