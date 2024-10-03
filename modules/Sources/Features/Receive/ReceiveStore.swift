@@ -53,7 +53,7 @@ public struct Receive {
     public enum Action: Equatable {
         case addressDetailsRequest(RedactableString, Bool)
         case copyToPastboard(RedactableString)
-        case requestTapped(RedactableString)
+        case requestTapped(RedactableString, Bool)
     }
     
     @Dependency(\.pasteboard) var pasteboard

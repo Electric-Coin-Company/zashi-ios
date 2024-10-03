@@ -60,6 +60,7 @@ public struct AddressDetailsView: View {
                         Text(store.address.data)
                             .zFont(size: 14, style: Design.Text.tertiary)
                             .lineLimit(store.isAddressExpanded ? nil : 2)
+                            .truncationMode(.middle)
                             .padding(.top, 8)
                             .onTapGesture {
                                 store.send(.addressTapped)
@@ -126,7 +127,11 @@ extension AddressDetailsView {
             color: .black
            ) {
             UIShareDialogView(activityItems: [
-                ShareableImage(image: UIImage(cgImage: cgImg)), "Hi, scan this QR code to send me a ZEC payment!"
+                ShareableImage(
+                    image: UIImage(cgImage: cgImg),
+                    title: "My Zashi ZEC Address",
+                    reason: "Hi, scan this QR code to send me a ZEC payment!"
+                ), "Hi, scan this QR code to send me a ZEC payment!"
             ]) {
                 store.send(.shareFinished)
             }

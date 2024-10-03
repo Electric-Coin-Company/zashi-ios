@@ -36,10 +36,12 @@ public struct ScanView: View {
                     
                     frameOfInterest(proxy.size)
                     
-                    if store.isTorchAvailable {
-                        torchButton(store, size: proxy.size)
+                    WithPerceptionTracking {
+                        if store.isTorchAvailable {
+                            torchButton(size: proxy.size)
+                        }
+                        libraryButton(size: proxy.size)
                     }
-                    libraryButton(store, size: proxy.size)
                 }
 
                 VStack {
@@ -115,23 +117,48 @@ public struct ScanView: View {
         .padding(.bottom, 40)
     }
     
-    private func torchButton(_ store: StoreOf<Scan>, size: CGSize) -> some View {
+    private func torchButton(size: CGSize) -> some View {
         let topLeft = ScanView.rectOfInterest(size).origin
         let frameSize = ScanView.frameSize(size)
 
-        return Button {
-            store.send(.torchPressed)
-        } label: {
-            if store.isTorchOn {
-                Asset.Assets.Icons.flashOff.image
-                    .zImage(size: 24, color: Asset.Colors.ZDesign.shark50.color)
-                    .padding(12)
-                    .background {
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Asset.Colors.ZDesign.shark900.color)
-                    }
-            } else {
-                Asset.Assets.Icons.flashOn.image
+        return WithPerceptionTracking {
+            Button {
+                store.send(.torchPressed)
+            } label: {
+                if store.isTorchOn {
+                    Asset.Assets.Icons.flashOff.image
+                        .zImage(size: 24, color: Asset.Colors.ZDesign.shark50.color)
+                        .padding(12)
+                        .background {
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Asset.Colors.ZDesign.shark900.color)
+                        }
+                } else {
+                    Asset.Assets.Icons.flashOn.image
+                        .zImage(size: 24, color: Asset.Colors.ZDesign.shark50.color)
+                        .padding(12)
+                        .background {
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Asset.Colors.ZDesign.shark900.color)
+                        }
+                }
+            }
+            .position(
+                x: topLeft.x + frameSize.width * 0.5 + 35,
+                y: topLeft.y + frameSize.height + 45
+            )
+        }
+    }
+    
+    private func libraryButton(size: CGSize) -> some View {
+        let topLeft = ScanView.rectOfInterest(size).origin
+        let frameSize = ScanView.frameSize(size)
+
+        return WithPerceptionTracking {
+            Button {
+                showSheet = true
+            } label: {
+                Asset.Assets.Icons.imageLibrary.image
                     .zImage(size: 24, color: Asset.Colors.ZDesign.shark50.color)
                     .padding(12)
                     .background {
@@ -139,32 +166,11 @@ public struct ScanView: View {
                             .fill(Asset.Colors.ZDesign.shark900.color)
                     }
             }
+            .position(
+                x: topLeft.x + frameSize.width * 0.5 - (store.isTorchAvailable ? 35 : 0),
+                y: topLeft.y + frameSize.height + 45
+            )
         }
-        .position(
-            x: topLeft.x + frameSize.width * 0.5 + 35,
-            y: topLeft.y + frameSize.height + 45
-        )
-    }
-    
-    private func libraryButton(_ store: StoreOf<Scan>, size: CGSize) -> some View {
-        let topLeft = ScanView.rectOfInterest(size).origin
-        let frameSize = ScanView.frameSize(size)
-
-        return Button {
-            showSheet = true
-        } label: {
-            Asset.Assets.Icons.imageLibrary.image
-                .zImage(size: 24, color: Asset.Colors.ZDesign.shark50.color)
-                .padding(12)
-                .background {
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Asset.Colors.ZDesign.shark900.color)
-                }
-        }
-        .position(
-            x: topLeft.x + frameSize.width * 0.5 - (store.isTorchAvailable ? 35 : 0),
-            y: topLeft.y + frameSize.height + 45
-        )
     }
 }
 

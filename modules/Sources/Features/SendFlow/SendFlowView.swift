@@ -91,7 +91,7 @@ public struct SendFlowView: View {
                                             }
                                             .padding(.bottom, 20)
                                             .anchorPreference(
-                                                key: BoundsPreferenceKey.self,
+                                                key: UnknownAddressPreferenceKey.self,
                                                 value: .bounds
                                             ) { $0 }
                                             
@@ -216,12 +216,12 @@ public struct SendFlowView: View {
                 state: \.$alert,
                 action: \.alert
             ))
-            .overlayPreferenceValue(BoundsPreferenceKey.self) { preferences in
+            .overlayPreferenceValue(UnknownAddressPreferenceKey.self) { preferences in
                 if isAddressFocused && store.isAddressBookHintVisible {
                     GeometryReader { geometry in
                         preferences.map {
                             HStack(alignment: .top, spacing: 0) {
-                                Asset.Assets.infoOutline.image
+                                Asset.Assets.Icons.userPlus.image
                                     .zImage(size: 20, style: Design.Text.lightSupport)
                                     .padding(.trailing, 12)
                                 

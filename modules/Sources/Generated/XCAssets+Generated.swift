@@ -78,6 +78,7 @@ public enum Asset {
     }
     public static let infoCircle = ImageAsset(name: "infoCircle")
     public static let infoOutline = ImageAsset(name: "infoOutline")
+    public static let qrcodeScannerErr = ImageAsset(name: "qrcodeScannerErr")
     public static let rateIcons = ImageAsset(name: "rateIcons")
     public static let refreshCCW = ImageAsset(name: "refreshCCW")
     public static let refreshCCW2 = ImageAsset(name: "refreshCCW2")

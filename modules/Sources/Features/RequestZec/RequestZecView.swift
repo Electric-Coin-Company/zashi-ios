@@ -16,6 +16,8 @@ import Utils
 public struct RequestZecView: View {
     @Perception.Bindable var store: StoreOf<RequestZec>
     
+    @State private var keyboardVisible: Bool = false
+
     @FocusState private var isMemoFocused
 
     public init(store: StoreOf<RequestZec>) {
@@ -24,53 +26,101 @@ public struct RequestZecView: View {
     
     public var body: some View {
         WithPerceptionTracking {
-            VStack(spacing: 0) {
-                ScrollView {
-                    Asset.Assets.Brandmarks.brandmarkMax.image
-                        .resizable()
-                        .frame(width: 64, height: 64)
-                        .padding(.top, 40)
-                    
-                    PrivacyBadge(.max)
-                        .padding(.top, 26)
-                    
-                    Text("Payment Request")
-                        .zFont(.medium, size: 18, style: Design.Text.tertiary)
-                        .padding(.top, 12)
-                    
-                    Group {
-                        Text(store.requestedZec.decimalString())
-                        + Text(" ZEC")
-                            .foregroundColor(Design.Text.quaternary.color)
+            ZStack {
+                VStack(spacing: 0) {
+                    ScrollView {
+                        Asset.Assets.Brandmarks.brandmarkMax.image
+                            .resizable()
+                            .frame(width: 64, height: 64)
+                            .padding(.top, 24)
+                        
+                        PrivacyBadge(store.maxPrivacy ? .max : .low)
+                            .padding(.top, 26)
+                        
+                        Text("Payment Request")
+                            .zFont(.medium, size: 18, style: Design.Text.tertiary)
+                            .padding(.top, 12)
+                        
+                        Group {
+                            Text(store.requestedZec.decimalString())
+                            + Text(" ZEC")
+                                .foregroundColor(Design.Text.quaternary.color)
+                        }
+                        .zFont(.semiBold, size: 56, style: Design.Text.primary)
+                        .minimumScaleFactor(0.1)
+                        .lineLimit(1)
+                        .padding(.top, 4)
+                        
+                        if store.maxPrivacy {
+                            MessageEditorView(
+                                store: store.memoStore(),
+                                title: "",
+                                placeholder: "What’s this for?"
+                            )
+                            .frame(minHeight: 155)
+                            .frame(maxHeight: 300)
+                            .focused($isMemoFocused)
+                            .onAppear {
+                                store.send(.onAppear)
+                                isMemoFocused = true
+                            }
+                        }
                     }
-                    .zFont(.semiBold, size: 56, style: Design.Text.primary)
-                    .minimumScaleFactor(0.1)
-                    .lineLimit(1)
-                    .padding(.top, 4)
+                    .padding(.vertical, 1)
                     
-                    MessageEditorView(
-                        store: store.memoStore(),
-                        title: "",
-                        placeholder: "What’s this for?"
-                    )
-                    .frame(minHeight: 155)
-                    .frame(maxHeight: 300)
-                    .focused($isMemoFocused)
-                    .onAppear {
-                        store.send(.onAppear)
-                        isMemoFocused = true
+                    ZashiButton("Request") {
+                        store.send(.requestTapped)
                     }
+                    .disabled(!store.memoState.isValid)
+                    .padding(.bottom, keyboardVisible ? 48 : 24)
                 }
-
-                ZashiButton("Request") {
-                    store.send(.requestTapped)
+                .screenTitle("Request")
+                .zashiBack()
+                .screenHorizontalPadding()
+                .applyScreenBackground()
+                .onAppear {
+                    observeKeyboardNotifications()
                 }
-                .disabled(!store.memoState.isValid)
-                .padding(.bottom, 24)
             }
-            .zashiBack()
-            .screenHorizontalPadding()
-            .applyScreenBackground()
+            .overlay(
+                VStack(spacing: 0) {
+                    Spacer()
+
+                    Asset.Colors.primary.color
+                        .frame(height: 1)
+                        .opacity(0.1)
+                    
+                    HStack(alignment: .center) {
+                        Spacer()
+                        
+                        Button {
+                            isMemoFocused = false
+                        } label: {
+                            Text(L10n.General.done.uppercased())
+                                .zFont(.regular, size: 14, style: Design.Text.primary)
+                        }
+                        .padding(.bottom, 4)
+                    }
+                    .applyScreenBackground()
+                    .padding(.horizontal, 20)
+                    .frame(height: keyboardVisible ? 38 : 0)
+                    .frame(maxWidth: .infinity)
+                    .opacity(keyboardVisible ? 1 : 0)
+                }
+            )
+        }
+    }
+    
+    private func observeKeyboardNotifications() {
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { _ in
+            withAnimation {
+                keyboardVisible = true
+            }
+        }
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
+            withAnimation {
+                keyboardVisible = false
+            }
         }
     }
 }

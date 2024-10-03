@@ -123,6 +123,7 @@ public struct SendConfirmationView: View {
                         .padding(.bottom, 40)
                     }
                 }
+                .padding(.vertical, 1)
                 .navigationLinkEmpty(
                     isActive: $store.partialProposalErrorViewBinding,
                     destination: {

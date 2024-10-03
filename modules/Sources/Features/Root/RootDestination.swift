@@ -18,6 +18,7 @@ import SwiftUI
 extension Root {
     public struct DestinationState: Equatable {
         public enum Destination: Equatable {
+            case deeplinkWarning
             case notEnoughFreeSpace
             case onboarding
             case phraseDisplay
@@ -54,37 +55,51 @@ extension Root {
         Reduce { state, action in
             switch action {
             case let .destination(.updateDestination(destination)):
+                guard state.destinationState.destination != .deeplinkWarning else {
+                    return .none
+                }
                 state.destinationState.destination = destination
-                
                 return .none
 
             case .sandbox(.reset):
                 state.destinationState.destination = .startup
                 return .none
 
+            case .deeplinkWarning(.gotItTapped):
+                //                let destination = state.destinationState.previousDestination ?? state.destinationState.destination
+                //                return .send(.destination(.updateDestination(destination)))
+                state.tabsState.selectedTab = .send
+                state.tabsState.sendState.destination = .scanQR
+                return .send(.destination(.updateDestination(.tabs)))
+                
             case .destination(.deeplink(let url)):
-                // get the latest synchronizer state
-                let synchronizerStatus = sdkSynchronizer.latestState().syncStatus
-
-                // process the deeplink only if app is initialized and synchronizer synced
-                guard state.appInitializationState == .initialized && synchronizerStatus == .upToDate else {
-                    // TODO: [#370] There are many different states and edge cases we need to handle here
-                    // (https://github.com/Electric-Coin-Company/zashi-ios/issues/370)
-                    return .none
+//                // get the latest synchronizer state
+//                let synchronizerStatus = sdkSynchronizer.latestState().syncStatus
+//
+//                // process the deeplink only if app is initialized and synchronizer synced
+//                guard state.appInitializationState == .initialized && synchronizerStatus == .upToDate else {
+//                    // TODO: [#370] There are many different states and edge cases we need to handle here
+//                    // (https://github.com/Electric-Coin-Company/zashi-ios/issues/370)
+//                    return .none
+//                }
+//                return .run { send in
+//                    do {
+//                        await send(
+//                            try await process(
+//                                url: url,
+//                                deeplink: deeplink,
+//                                derivationTool: derivationTool
+//                            )
+//                        )
+//                    } catch {
+//                        await send(.destination(.deeplinkFailed(url, error.toZcashError())))
+//                    }
+//                }
+                if let _ = uriParser.checkRP(url.absoluteString) {
+                    // The deeplink is some zip321, we ignore it and let users know in a warning screen
+                    return .send(.destination(.updateDestination(.deeplinkWarning)))
                 }
-                return .run { send in
-                    do {
-                        await send(
-                            try await process(
-                                url: url,
-                                deeplink: deeplink,
-                                derivationTool: derivationTool
-                            )
-                        )
-                    } catch {
-                        await send(.destination(.deeplinkFailed(url, error.toZcashError())))
-                    }
-                }
+                return .none
 
             case .destination(.deeplinkHome):
                 state.destinationState.destination = .tabs

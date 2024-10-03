@@ -11,6 +11,9 @@ extension URIParserClient: DependencyKey {
     public static let liveValue = Self(
         isValidURI: { uri, network in
             URIParser().isValidURI(uri, network: network)
+        },
+        checkRP: { data in
+            RequestPaymentParser().checkRP(data)
         }
     )
 }

@@ -237,11 +237,11 @@ public struct AddressBook {
                 return .send(.updateDestination(.add))
 
             case .saveButtonTapped:
-                let name = state.name.isEmpty ? "testName" : state.name
-                let address = state.address.isEmpty ? "testAddress" : state.address
-                return .run { send in
+//                let name = state.name.isEmpty ? "testName" : state.name
+//                let address = state.address.isEmpty ? "testAddress" : state.address
+                return .run { [state] send in
                     do {
-                        let contacts = try await addressBook.storeContact(ABRecord(address: address, name: name))
+                        let contacts = try await addressBook.storeContact(ABRecord(address: state.address, name: state.name))
                         await send(.fetchedABRecords(contacts))
                         await send(.contactStoreSuccess)
                     } catch {

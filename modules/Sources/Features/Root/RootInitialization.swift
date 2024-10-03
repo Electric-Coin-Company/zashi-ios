@@ -315,7 +315,6 @@ extension Root {
             case .initialization(.initializationSuccessfullyDone(let uAddress)):
                 state.tabsState.receiveState.uAddress = uAddress
                 state.tabsState.settingsState.integrationsState.uAddress = uAddress
-                //exchangeRate.refreshExchangeRateUSD()
                 return .merge(
                     .send(.initialization(.registerForSynchronizersUpdate)),
                     .publisher {
@@ -512,7 +511,7 @@ extension Root {
                 
             case .tabs, .destination, .onboarding, .sandbox, .phraseDisplay, .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated,
                     .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, 
-                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects, .flexaOnTransactionRequest, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted:
+                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects, .flexaOnTransactionRequest, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted, .deeplinkWarning:
                 return .none
             }
         }

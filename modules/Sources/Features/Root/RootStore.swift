@@ -30,6 +30,8 @@ import AutolockHandler
 import UIComponents
 import AddressBook
 import LocalAuthenticationHandler
+import DeeplinkWarning
+import URIParser
 
 @Reducer
 public struct Root {
@@ -52,6 +54,7 @@ public struct Root {
         public var bgTask: BGProcessingTask?
         @Presents public var confirmationDialog: ConfirmationDialogState<Action.ConfirmationDialog>?
         public var debugState: DebugState
+        public var deeplinkWarningState: DeeplinkWarning.State = .initial
         public var destinationState: DestinationState
         public var exportLogsState: ExportLogs.State
         public var isLockedInKeychainUnavailableState = false
@@ -122,6 +125,7 @@ public struct Root {
         case cancelAllRunningEffects
         case confirmationDialog(PresentationAction<ConfirmationDialog>)
         case debug(DebugAction)
+        case deeplinkWarning(DeeplinkWarning.Action)
         case destination(DestinationAction)
         case exportLogs(ExportLogs.Action)
         case flexaOnTransactionRequest(FlexaTransaction?)
@@ -157,6 +161,7 @@ public struct Root {
     @Dependency(\.numberFormatter) var numberFormatter
     @Dependency(\.pasteboard) var pasteboard
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.uriParser) var uriParser
     @Dependency(\.userDefaults) var userDefaults
     @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.walletConfigProvider) var walletConfigProvider
@@ -168,6 +173,10 @@ public struct Root {
     
     @ReducerBuilder<State, Action>
     var core: some Reducer<State, Action> {
+        Scope(state: \.deeplinkWarningState, action: \.deeplinkWarning) {
+            DeeplinkWarning()
+        }
+        
         Scope(state: \.addressBookState, action: \.addressBook) {
             AddressBook()
         }

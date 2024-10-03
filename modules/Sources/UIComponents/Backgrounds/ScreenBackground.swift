@@ -28,12 +28,53 @@ public struct ScreenBackgroundModifier: ViewModifier {
     }
 }
 
+struct ScreenGradientBackground: View {
+    @Environment(\.colorScheme) var colorScheme
+    
+    var colors: [Color]
+    
+    var body: some View {
+        LinearGradient(
+            colors: colors,
+            startPoint: UnitPoint(x: 0.5, y: 0),
+            endPoint: UnitPoint(x: 0.5, y: 0.4)
+        )
+    }
+}
+
+struct ScreenGradientBackgroundModifier: ViewModifier {
+    var colors: [Color]
+    var darkGradientEndPointY = 1.0
+
+    func body(content: Content) -> some View {
+        ZStack {
+            ScreenGradientBackground(
+                colors: colors
+            )
+            .edgesIgnoringSafeArea(.all)
+            
+            content
+        }
+    }
+}
+
 extension View {
     public func applyScreenBackground(withPattern: Bool = false) -> some View {
         self.modifier(
             ScreenBackgroundModifier(
                 color: Asset.Colors.background.color,
                 isPatternOn: withPattern
+            )
+        )
+    }
+    
+    public func applyErredScreenBackground() -> some View {
+        self.modifier(
+            ScreenGradientBackgroundModifier(
+                colors: [
+                    Design.Utility.WarningYellow._100.color,
+                    Design.screenBackground.color
+                ]
             )
         )
     }

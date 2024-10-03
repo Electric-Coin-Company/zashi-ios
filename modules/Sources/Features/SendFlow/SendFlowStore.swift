@@ -24,6 +24,11 @@ import AddressBookClient
 
 @Reducer
 public struct SendFlow {
+    public enum Confirmation: Equatable {
+        case requestPayment
+        case send
+    }
+    
     @ObservableState
     public struct State: Equatable {
         public enum Destination: Equatable {
@@ -193,6 +198,8 @@ public struct SendFlow {
         case addressBookTapped
         case addressUpdated(RedactableString)
         case alert(PresentationAction<Action>)
+        case confirmationRequired(Confirmation)
+        case getProposal(Confirmation)
         case currencyUpdated(RedactableString)
         case dismissAddressBookHint
         case exchangeRateSetupChanged
@@ -205,7 +212,6 @@ public struct SendFlow {
         case resetForm
         case reviewPressed
         case scan(Scan.Action)
-        case sendConfirmationRequired
         case sendFailed(ZcashError)
         case syncAmounts(Bool)
         case updateDestination(SendFlow.State.Destination?)
@@ -312,7 +318,10 @@ public struct SendFlow {
                 return .none
                 
             case .reviewPressed:
-                return .run { [state] send in
+                return .send(.getProposal(.send))
+                
+            case .getProposal(let confirmationType):
+                return .run { [state, confirmationType] send in
                     do {
                         let recipient = try Recipient(state.address.data, network: zcashSDKEnvironment.network.networkType)
                         
@@ -328,7 +337,7 @@ public struct SendFlow {
                         let proposal = try await sdkSynchronizer.proposeTransfer(0, recipient, state.amount, memo)
                         
                         await send(.proposal(proposal))
-                        await send(.sendConfirmationRequired)
+                        await send(.confirmationRequired(confirmationType))
                     } catch {
                         await send(.sendFailed(error.toZcashError()))
                     }
@@ -338,7 +347,7 @@ public struct SendFlow {
                 state.alert = AlertState.sendFailure(error)
                 return .none
                 
-            case .sendConfirmationRequired:
+            case .confirmationRequired:
                 return .none
 
             case .resetForm:
@@ -375,6 +384,24 @@ public struct SendFlow {
                 return .none
 
             case .memo:
+                return .none
+                
+            case .scan(.foundRP(let requestPayment)):
+                if case .legacy(let address) = requestPayment {
+                    audioServices.systemSoundVibrate()
+                    return .send(.scan(.found(address.value.redacted)))
+                } else if case .request(let paymentRequest) = requestPayment {
+                    if let payment = paymentRequest.payments.first {
+                        if let memoBytes = payment.memo, let memo = try? Memo(bytes: [UInt8](memoBytes.memoData)) {
+                            state.memoState.text = memo.toString() ?? ""
+                        }
+                        let numberLocale = numberFormatter.convertUSToLocale(payment.amount.toString()) ?? ""
+                        state.address = payment.recipientAddress.value.redacted
+                        state.zecAmountText = numberLocale.redacted
+                        audioServices.systemSoundVibrate()
+                        return .send(.getProposal(.requestPayment))
+                    }
+                }
                 return .none
                 
             case .scan(.found(let address)):

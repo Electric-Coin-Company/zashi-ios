@@ -117,7 +117,7 @@ public struct WalletBalancesView: View {
                             }
                             .frame(maxWidth: .infinity)
                             .anchorPreference(
-                                key: BoundsPreferenceKey.self,
+                                key: ExchangeRateStaleTooltipPreferenceKey.self,
                                 value: .bounds
                             ) { $0 }
                         } else if store.isExchangeRateRefreshEnabled {

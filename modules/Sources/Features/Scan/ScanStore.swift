@@ -17,6 +17,8 @@ import URIParser
 import ZcashLightClientKit
 import Generated
 import ZcashSDKEnvironment
+import Models
+import ZcashPaymentURI
 
 @Reducer
 public struct Scan {
@@ -60,6 +62,7 @@ public struct Scan {
         case onAppear
         case onDisappear
         case found(RedactableString)
+        case foundRP(ParserResult)
         case scanFailed(ScanImageResult)
         case scan(RedactableString)
         case torchPressed
@@ -85,6 +88,9 @@ public struct Scan {
             case .onDisappear:
                 return .cancel(id: state.cancelId)
                 
+            case .foundRP:
+                return .none
+
             case .cancelPressed:
                 return .none
                 
@@ -110,6 +116,8 @@ public struct Scan {
                 
                 if uriParser.isValidURI(code, zcashSDKEnvironment.network.networkType) {
                     return .send(.found(code.redacted))
+                } else if let data = uriParser.checkRP(code) {
+                        return .send(.foundRP(data))
                 } else {
                     return .send(.scanFailed(.noQRCodeFound))
                 }
@@ -135,6 +143,8 @@ public struct Scan {
             case .scan(let code):
                 if uriParser.isValidURI(code.data, zcashSDKEnvironment.network.networkType) {
                     return .send(.found(code))
+                } else if let data = uriParser.checkRP(code.data) {
+                    return .send(.foundRP(data))
                 } else {
                     return .send(.scanFailed(.invalidQRCode))
                 }

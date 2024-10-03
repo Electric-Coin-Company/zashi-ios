@@ -12,9 +12,14 @@ import LinkPresentation
 
 public final class ShareableImage: NSObject, UIActivityItemSource {
     private let image: UIImage
+    let title: String
+    let reason: String
 
-    public init(image: UIImage) {
+    public init(image: UIImage, title: String, reason: String) {
         self.image = image
+        self.title = title
+        self.reason = reason
+        
         super.init()
     }
 
@@ -36,8 +41,8 @@ public final class ShareableImage: NSObject, UIActivityItemSource {
     ) -> LPLinkMetadata? {
         let metadata = LPLinkMetadata()
         metadata.iconProvider = NSItemProvider(object: UIImage(named: "ZashiLogo") ?? image)
-        metadata.title = "My Zashi ZEC Address"
-        metadata.originalURL = URL(fileURLWithPath: "Hi, scan this QR code to send me a ZEC payment!")
+        metadata.title = title
+        metadata.originalURL = URL(fileURLWithPath: reason)
         
         return metadata
     }
