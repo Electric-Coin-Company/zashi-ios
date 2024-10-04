@@ -41,28 +41,16 @@ public struct AboutView: View {
                     .foregroundColor(Asset.Colors.shade30.color)
                     .padding(.bottom, 30)
 
-                Button(L10n.About.whatsNew.uppercased()) {
+                ZashiButton(L10n.About.whatsNew) {
                     store.send(.whatsNewButtonTapped)
                 }
-                .zcashStyle(
-                    minWidth: nil,
-                    fontSize: 10,
-                    height: 38,
-                    shadowOffset: 6
-                )
                 .padding(.bottom, 15)
 
-                Button(L10n.About.privacyPolicy.uppercased()) {
+                ZashiButton(L10n.About.privacyPolicy) {
                     if let url = URL(string: "https://electriccoin.co/zashi-privacy-policy/") {
                         openURL(url)
                     }
                 }
-                .zcashStyle(
-                    minWidth: nil,
-                    fontSize: 10,
-                    height: 38,
-                    shadowOffset: 6
-                )
                 .padding(.bottom, 25)
 
                 Spacer()
@@ -71,7 +59,6 @@ public struct AboutView: View {
             .onAppear { store.send(.onAppear) }
             .zashiBack()
             .screenTitle(L10n.Settings.about)
-            .padding(.horizontal, 70)
             .walletStatusPanel(background: .transparent)
             .navigationLinkEmpty(
                 isActive: $store.whatsNewViewBinding,
@@ -86,6 +73,7 @@ public struct AboutView: View {
             )
         }
         .navigationBarTitleDisplayMode(.inline)
+        .screenHorizontalPadding()
         .applyScreenBackground()
     }
 }

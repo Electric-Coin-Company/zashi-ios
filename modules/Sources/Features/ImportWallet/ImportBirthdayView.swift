@@ -42,6 +42,7 @@ public struct ImportBirthdayView: View {
                         Asset.Colors.primary.color
                             .frame(height: 1)
                             .offset(x: 0, y: 20)
+                            .padding(.horizontal, 30)
                     }
                     .onAppear {
                         isFocused = true
@@ -49,21 +50,19 @@ public struct ImportBirthdayView: View {
                 
                 Spacer()
 
-                Button(L10n.ImportWallet.Button.restoreWallet.uppercased()) {
+                ZashiButton(L10n.ImportWallet.Button.restoreWallet) {
                     store.send(.restoreWallet)
                 }
-                .zcashStyle()
                 .disabled(!store.isValidForm)
-                .frame(width: 236)
                 .padding(.bottom, 50)
             }
-            .padding(.horizontal, 70)
             .scrollableWhenScaledUp()
             .onAppear(perform: { store.send(.onAppear) })
             .zashiBack()
         }
         .navigationBarTitleDisplayMode(.inline)
-        .applyScreenBackground(withPattern: true)
+        .screenHorizontalPadding()
+        .applyScreenBackground()
     }
 }
 

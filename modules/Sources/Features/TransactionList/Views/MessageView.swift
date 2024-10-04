@@ -54,13 +54,10 @@ struct MessageView: View {
                                 .conditionalStrikethrough(isFailed)
                                 .padding()
                         }
-                        .messageShape(
-                            filled: nil,
-                            border: Asset.Colors.primary.color,
-                            orientation: !isSpending
-                            ? .right
-                            : .left
-                        )
+                        .background {
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Design.Surfaces.strokePrimary.color)
+                        }
                         
                         TapToCopyTransactionDataView(store: store, data: memoTexts[index].redacted)
                     }

@@ -472,7 +472,8 @@ extension Root {
                 }
 
             case .onboarding(.importWallet(.restoreInfo(.gotItTapped))):
-                return Effect.send(.destination(.updateDestination(.tabs)))
+                state.destinationState.destination = .tabs
+                return .none
 
             case .onboarding(.importWallet(.initializeSDK)):
                 state.isRestoringWallet = true

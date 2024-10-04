@@ -11,6 +11,7 @@ import Generated
 import ImportWallet
 import SecurityWarning
 import ZcashLightClientKit
+import UIComponents
 
 public struct PlainOnboardingView: View {
     @Perception.Bindable var store: StoreOf<OnboardingFlow>
@@ -22,9 +23,10 @@ public struct PlainOnboardingView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack {
+                Spacer()
+
                 Asset.Assets.welcomeScreenLogo.image
                     .zImage(width: 169, height: 160, color: Asset.Colors.primary.color)
-                    .padding(.top, 10)
 
                 Text(L10n.PlainOnboarding.title)
                     .font(.custom(FontFamily.Inter.regular.name, size: 22))
@@ -33,19 +35,19 @@ public struct PlainOnboardingView: View {
 
                 Spacer()
                 
-                Button(L10n.PlainOnboarding.Button.createNewWallet.uppercased()) {
+                ZashiButton(L10n.PlainOnboarding.Button.createNewWallet) {
                     store.send(.createNewWallet)
                 }
-                .zcashStyle()
-                .padding(.bottom, 30)
+                .padding(.bottom, 8)
 
-                Button(L10n.PlainOnboarding.Button.restoreWallet.uppercased()) {
+                ZashiButton(
+                    L10n.PlainOnboarding.Button.restoreWallet,
+                    type: .secondary
+                ) {
                     store.send(.importExistingWallet)
                 }
-                .zcashStyle(.secondary)
-                .padding(.bottom, 50)
+                .padding(.bottom, 24)
             }
-            .padding(.horizontal, 70)
             .navigationLinkEmpty(
                 isActive: store.bindingFor(.importExistingWallet),
                 destination: {
@@ -70,7 +72,8 @@ public struct PlainOnboardingView: View {
             )
         }
         .navigationBarTitleDisplayMode(.inline)
-        .applyScreenBackground(withPattern: true)
+        .screenHorizontalPadding()
+        .applyScreenBackground()
     }
 }
 

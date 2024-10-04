@@ -52,51 +52,65 @@ public struct PrivateDataConsentView: View {
                     .padding(.top, 20)
                     .padding(.bottom, 40)
 
-                    Button {
-                        store.send(.exportRequested)
-                    } label: {
-                        HStack(spacing: 10) {
-                            Text(L10n.Settings.exportPrivateData.uppercased())
-                            if store.isExportingData {
-                                ProgressView()
-                            }
+                    if store.isExportingData {
+                        ZashiButton(
+                            L10n.Settings.exportPrivateData,
+                            type: .secondary,
+                            accessoryView: ProgressView()
+                        ) {
+                            store.send(.exportRequested)
                         }
+                        .disabled(true)
+                        .padding(.horizontal, 8)
+                        .padding(.bottom, 8)
+                    } else {
+                        ZashiButton(
+                            L10n.Settings.exportPrivateData,
+                            type: .secondary
+                        ) {
+                            store.send(.exportRequested)
+                        }
+                        .disabled(!store.isExportPossible)
+                        .padding(.horizontal, 8)
+                        .padding(.bottom, 8)
                     }
-                    .zcashStyle(.secondary)
-                    .disabled(!store.isExportPossible)
-                    .padding(.horizontal, 8)
-                    .padding(.bottom, 25)
 
                     #if DEBUG
-                    Button {
-                        store.send(.exportLogsRequested)
-                    } label: {
-                        HStack(spacing: 10) {
-                            Text(L10n.Settings.exportLogsOnly.uppercased())
-                            if store.isExportingLogs {
-                                ProgressView()
-                            }
+                    if store.isExportingLogs {
+                        ZashiButton(
+                            L10n.Settings.exportLogsOnly,
+                            accessoryView: ProgressView()
+                        ) {
+                            store.send(.exportLogsRequested)
                         }
+                        .disabled(true)
+                        .padding(.horizontal, 8)
+                        .padding(.bottom, 50)
+                    } else {
+                        ZashiButton(
+                            L10n.Settings.exportLogsOnly
+                        ) {
+                            store.send(.exportLogsRequested)
+                        }
+                        .disabled(!store.isExportPossible)
+                        .padding(.horizontal, 8)
+                        .padding(.bottom, 50)
                     }
-                    .zcashStyle()
-                    .disabled(!store.isExportPossible)
-                    .padding(.horizontal, 8)
-                    .padding(.bottom, 50)
                     #endif
                 }
-                .padding(.horizontal, 60)
             }
             .padding(.vertical, 1)
             .zashiBack()
             .onAppear {
                 store.send(.onAppear)
             }
-            .walletStatusPanel(background: .pattern)
+            .walletStatusPanel()
 
             shareLogsView()
         }
         .navigationBarTitleDisplayMode(.inline)
-        .applyScreenBackground(withPattern: true)
+        .screenHorizontalPadding()
+        .applyScreenBackground()
     }
 }
 

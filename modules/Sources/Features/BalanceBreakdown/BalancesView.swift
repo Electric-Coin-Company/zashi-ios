@@ -53,7 +53,8 @@ public struct BalancesView: View {
                     .frame(minHeight: 166)
                     .padding(.horizontal, store.isHintBoxVisible ? 15 : 30)
                     .background {
-                        Asset.Colors.shade92.color
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Design.Surfaces.strokePrimary.color)
                     }
                     .padding(.horizontal, 30)
 
@@ -211,31 +212,23 @@ extension BalancesView {
             }
             .padding(.bottom, 10)
 
-            Button {
-                store.send(.shieldFunds)
-            } label: {
-                if store.isShieldingFunds {
-                    HStack(spacing: 10) {
-                        Text(L10n.Balances.shieldingInProgress.uppercased())
-                            .font(.custom(FontFamily.Inter.medium.name, size: 10))
-                        
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: Asset.Colors.primary.color))
-                    }
-                } else {
-                    Text(L10n.Balances.shieldButtonTitle.uppercased())
-                        .font(.custom(FontFamily.Inter.medium.name, size: 10))
+            if store.isShieldingFunds {
+                ZashiButton(
+                    L10n.Balances.shieldingInProgress,
+                    accessoryView: ProgressView()
+                ) { }
+                .padding(.bottom, 15)
+                .disabled(true)
+            } else {
+                ZashiButton(
+                    L10n.Balances.shieldButtonTitle
+                ) {
+                    store.send(.shieldFunds)
                 }
+                .padding(.bottom, 15)
+                .disabled(!store.isShieldableBalanceAvailable || store.isShieldingFunds || isSensitiveContentHidden)
             }
-            .zcashStyle(
-                minWidth: nil,
-                fontSize: 10,
-                height: 38,
-                shadowOffset: 6
-            )
-            .padding(.bottom, 15)
-            .disabled(!store.isShieldableBalanceAvailable || store.isShieldingFunds || isSensitiveContentHidden)
-            
+
             Text("(\(ZatoshiStringRepresentation.feeFormat))")
                 .font(.custom(FontFamily.Inter.semiBold.name, size: 11))
         }

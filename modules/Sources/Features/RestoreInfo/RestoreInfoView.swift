@@ -49,19 +49,17 @@ public struct RestoreInfoView: View {
                 }
                 .padding(.horizontal, 30)
                 
-                Button(L10n.RestoreInfo.gotIt.uppercased()) {
+                ZashiButton(L10n.RestoreInfo.gotIt) {
                     store.send(.gotItTapped)
                 }
-                .zcashStyle()
                 .padding(.vertical, 50)
-                .padding(.horizontal, 40)
             }
-            .padding(.horizontal, 50)
             .padding(.vertical, 1)
             .zashiBack(hidden: true)
         }
         .navigationBarTitleDisplayMode(.inline)
-        .applyScreenBackground(withPattern: true)
+        .screenHorizontalPadding()
+        .applyScreenBackground()
     }
     
     @ViewBuilder

@@ -10,18 +10,11 @@ import Generated
 
 public struct ScreenBackgroundModifier: ViewModifier {
     var color: Color
-    let isPatternOn: Bool
 
     public func body(content: Content) -> some View {
         ZStack {
             color
                 .edgesIgnoringSafeArea(.all)
-            
-            if isPatternOn {
-                Asset.Assets.gridTile.image
-                    .resizable(resizingMode: .tile)
-                    .edgesIgnoringSafeArea(.all)
-            }
 
             content
         }
@@ -31,25 +24,27 @@ public struct ScreenBackgroundModifier: ViewModifier {
 struct ScreenGradientBackground: View {
     @Environment(\.colorScheme) var colorScheme
     
-    var colors: [Color]
-    
+    let colors: [Color]
+    let darkGradientEndPointY: CGFloat
+
     var body: some View {
         LinearGradient(
             colors: colors,
             startPoint: UnitPoint(x: 0.5, y: 0),
-            endPoint: UnitPoint(x: 0.5, y: 0.4)
+            endPoint: UnitPoint(x: 0.5, y: darkGradientEndPointY)
         )
     }
 }
 
 struct ScreenGradientBackgroundModifier: ViewModifier {
-    var colors: [Color]
-    var darkGradientEndPointY = 1.0
+    let colors: [Color]
+    let darkGradientEndPointY: CGFloat
 
     func body(content: Content) -> some View {
         ZStack {
             ScreenGradientBackground(
-                colors: colors
+                colors: colors,
+                darkGradientEndPointY: darkGradientEndPointY
             )
             .edgesIgnoringSafeArea(.all)
             
@@ -59,11 +54,10 @@ struct ScreenGradientBackgroundModifier: ViewModifier {
 }
 
 extension View {
-    public func applyScreenBackground(withPattern: Bool = false) -> some View {
+    public func applyScreenBackground() -> some View {
         self.modifier(
             ScreenBackgroundModifier(
-                color: Asset.Colors.background.color,
-                isPatternOn: withPattern
+                color: Asset.Colors.background.color
             )
         )
     }
@@ -74,7 +68,20 @@ extension View {
                 colors: [
                     Design.Utility.WarningYellow._100.color,
                     Design.screenBackground.color
-                ]
+                ],
+                darkGradientEndPointY: 0.4
+            )
+        )
+    }
+    
+    public func applyBrandedScreenBackground() -> some View {
+        self.modifier(
+            ScreenGradientBackgroundModifier(
+                colors: [
+                    Design.Utility.Brand._500.color,
+                    Design.screenBackground.color
+                ],
+                darkGradientEndPointY: 0.75
             )
         )
     }

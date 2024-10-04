@@ -50,7 +50,6 @@ public enum Asset {
     public static let eyeOff = ImageAsset(name: "eyeOff")
     public static let eyeOn = ImageAsset(name: "eyeOn")
     public static let flyReceivedFilled = ImageAsset(name: "flyReceivedFilled")
-    public static let gridTile = ImageAsset(name: "gridTile")
     public enum Icons {
       public static let alertCircle = ImageAsset(name: "alertCircle")
       public static let coinsHand = ImageAsset(name: "coinsHand")
@@ -91,7 +90,6 @@ public enum Asset {
     public static let shieldedFunds = ImageAsset(name: "shieldedFunds")
     public static let surroundedShield = ImageAsset(name: "surroundedShield")
     public static let tooltip = ImageAsset(name: "tooltip")
-    public static let upArrow = ImageAsset(name: "upArrow")
     public static let zashiTitle = ImageAsset(name: "zashiTitle")
   }
   public enum Colors {

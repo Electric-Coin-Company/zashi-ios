@@ -289,6 +289,19 @@ public enum Design {
             case _800
             case _900
         }
+        
+        public enum Brand: Colorable {
+            case _50
+            case _100
+            case _200
+            case _300
+            case _400
+            case _500
+            case _600
+            case _700
+            case _800
+            case _900
+        }
     }
 }
 
@@ -657,6 +670,23 @@ public extension Design.Utility.Purple {
         case ._700: return Design.col(Asset.Colors.ZDesign.purple700.color, Asset.Colors.ZDesign.purple300.color)
         case ._800: return Design.col(Asset.Colors.ZDesign.purple800.color, Asset.Colors.ZDesign.purple200.color)
         case ._900: return Design.col(Asset.Colors.ZDesign.purple900.color, Asset.Colors.ZDesign.purple100.color)
+        }
+    }
+}
+
+public extension Design.Utility.Brand {
+    var color: Color {
+        switch self {
+        case ._50: return Design.col(Asset.Colors.ZDesign.brand50.color, Asset.Colors.ZDesign.brand950.color)
+        case ._100: return Design.col(Asset.Colors.ZDesign.brand100.color, Asset.Colors.ZDesign.brand900.color)
+        case ._200: return Design.col(Asset.Colors.ZDesign.brand200.color, Asset.Colors.ZDesign.brand800.color)
+        case ._300: return Design.col(Asset.Colors.ZDesign.brand300.color, Asset.Colors.ZDesign.brand700.color)
+        case ._400: return Design.col(Asset.Colors.ZDesign.brand400.color, Asset.Colors.ZDesign.brand600.color)
+        case ._500: return Design.col(Asset.Colors.ZDesign.brand500.color, Asset.Colors.ZDesign.brand500.color)
+        case ._600: return Design.col(Asset.Colors.ZDesign.brand600.color, Asset.Colors.ZDesign.brand400.color)
+        case ._700: return Design.col(Asset.Colors.ZDesign.brand700.color, Asset.Colors.ZDesign.brand300.color)
+        case ._800: return Design.col(Asset.Colors.ZDesign.brand800.color, Asset.Colors.ZDesign.brand200.color)
+        case ._900: return Design.col(Asset.Colors.ZDesign.brand900.color, Asset.Colors.ZDesign.brand100.color)
         }
     }
 }
