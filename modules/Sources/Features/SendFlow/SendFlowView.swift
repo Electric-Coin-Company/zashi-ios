@@ -125,7 +125,7 @@ public struct SendFlowView: View {
                                                         )
                                                         .keyboardType(.decimalPad)
                                                         .focused($isCurrencyFocused)
-                                                        .padding(.top, 26)
+                                                        .padding(.top, 23)
                                                         .disabled(store.currencyConversion == nil)
                                                         .opacity(store.currencyConversion == nil ? 0.5 : 1.0)
                                                     }

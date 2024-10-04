@@ -29,7 +29,7 @@ public struct SendConfirmation {
     @ObservableState
     public struct State: Equatable {
         public var address: String
-        @Shared(.inMemory(.addressBookRecords)) public var addressBookRecords: IdentifiedArrayOf<ABRecord> = []
+        @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         public var alias: String?
         @Presents public var alert: AlertState<Action>?
         public var amount: Zatoshi
@@ -77,7 +77,7 @@ public struct SendConfirmation {
     public enum Action: BindableAction, Equatable {
         case alert(PresentationAction<Action>)
         case binding(BindingAction<SendConfirmation.State>)
-        case fetchedABRecords(IdentifiedArrayOf<ABRecord>)
+        case fetchedABContacts(AddressBookContacts)
         case goBackPressed
         case goBackPressedFromRequestZec
         case onAppear
@@ -112,22 +112,20 @@ public struct SendConfirmation {
             switch action {
             case .onAppear:
                 state.isTransparentAddress = derivationTool.isTransparentAddress(state.address, zcashSDKEnvironment.network.networkType)
-                return .run { send in
-                    do {
-                        let records = try await addressBook.allContacts()
-                        await send(.fetchedABRecords(records))
-                        print("__LD updateRecords success")
-                    } catch {
-                        print("__LD updateRecords Error: \(error.localizedDescription)")
-                        // TODO: FIXME
-                    }
+                do {
+                    let abContacts = try addressBook.allLocalContacts()
+                    return .send(.fetchedABContacts(abContacts))
+                } catch {
+                    print("__LD fetchABContactsRequested Error: \(error.localizedDescription)")
+                    // TODO: FIXME
+                    return .none
                 }
-                
-            case .fetchedABRecords(let records):
-                state.addressBookRecords = records
-                for record in state.addressBookRecords {
-                    if record.id == state.address {
-                        state.alias = record.name
+
+            case .fetchedABContacts(let abContacts):
+                state.addressBookContacts = abContacts
+                for contact in state.addressBookContacts.contacts {
+                    if contact.id == state.address {
+                        state.alias = contact.name
                         break
                     }
                 }

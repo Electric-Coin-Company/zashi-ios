@@ -16,8 +16,8 @@ extension WalletStorageClient: TestDependencyKey {
         updateBirthday: unimplemented("\(Self.self).updateBirthday", placeholder: {}()),
         markUserPassedPhraseBackupTest: unimplemented("\(Self.self).markUserPassedPhraseBackupTest", placeholder: {}()),
         nukeWallet: unimplemented("\(Self.self).nukeWallet", placeholder: {}()),
-        importAddressBookKey: unimplemented("\(Self.self).importAddressBookKey", placeholder: {}()),
-        exportAddressBookKey: unimplemented("\(Self.self).exportAddressBookKey", placeholder: "")
+        importAddressBookEncryptionKeys: unimplemented("\(Self.self).importAddressBookEncryptionKeys", placeholder: {}()),
+        exportAddressBookEncryptionKeys: unimplemented("\(Self.self).exportAddressBookEncryptionKeys", placeholder: .empty)
     )
 }
 
@@ -29,7 +29,7 @@ extension WalletStorageClient {
         updateBirthday: { _ in },
         markUserPassedPhraseBackupTest: { _ in },
         nukeWallet: { },
-        importAddressBookKey: { _ in },
-        exportAddressBookKey: { "" }
+        importAddressBookEncryptionKeys: { _ in },
+        exportAddressBookEncryptionKeys: { .empty }
     )
 }

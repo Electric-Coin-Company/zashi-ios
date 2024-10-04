@@ -39,7 +39,7 @@ public struct SendFlow {
         public var cancelId = UUID()
         
         public var addMemoState: Bool
-        @Shared(.inMemory(.addressBookRecords)) public var addressBookRecords: IdentifiedArrayOf<ABRecord> = []
+        @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         @Presents public var alert: AlertState<Action>?
         @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
         public var destination: Destination?
@@ -203,7 +203,7 @@ public struct SendFlow {
         case currencyUpdated(RedactableString)
         case dismissAddressBookHint
         case exchangeRateSetupChanged
-        case fetchedABRecords(IdentifiedArrayOf<ABRecord>)
+        case fetchedABContacts(AddressBookContacts)
         case memo(MessageEditor.Action)
         case onAppear
         case onDisapear
@@ -246,22 +246,20 @@ public struct SendFlow {
             switch action {
             case .onAppear:
                 state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
-                return .merge(
-                    .send(.exchangeRateSetupChanged),
-                    .run { send in
-                        do {
-                            let records = try await addressBook.allContacts()
-                            await send(.fetchedABRecords(records))
-                            print("__LD updateRecords success")
-                        } catch {
-                            print("__LD updateRecords Error: \(error.localizedDescription)")
-                            // TODO: FIXME
-                        }
-                    }
-                )
+                do {
+                    let abContacts = try addressBook.allLocalContacts()
+                    return .merge(
+                        .send(.exchangeRateSetupChanged),
+                        .send(.fetchedABContacts(abContacts))
+                        )
+                } catch {
+                    // TODO: FIXME
+                    print("__LD fetchABContactsRequested Error: \(error.localizedDescription)")
+                    return .send(.exchangeRateSetupChanged)
+                }
 
-            case .fetchedABRecords(let records):
-                state.addressBookRecords = records
+            case .fetchedABContacts(let abContacts):
+                state.addressBookContacts = abContacts
                 return .none
                 
             case .onDisapear:
@@ -446,8 +444,8 @@ public struct SendFlow {
                 state.isNotAddressInAddressBook = state.isValidAddress
                 var isNotAddressInAddressBook = state.isNotAddressInAddressBook
                 if state.isValidAddress {
-                    for record in state.addressBookRecords {
-                        if record.id == state.address.data {
+                    for contact in state.addressBookContacts.contacts {
+                        if contact.id == state.address.data {
                             state.isNotAddressInAddressBook = false
                             isNotAddressInAddressBook = false
                             break

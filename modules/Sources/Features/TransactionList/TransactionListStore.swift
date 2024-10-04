@@ -17,7 +17,7 @@ public struct TransactionList {
 
     @ObservableState
     public struct State: Equatable {
-        @Shared(.inMemory(.addressBookRecords)) public var addressBookRecords: IdentifiedArrayOf<ABRecord> = []
+        @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         public var latestMinedHeight: BlockHeight?
         public var latestTransactionId = ""
         public var latestTransactionList: [TransactionState] = []
@@ -39,7 +39,7 @@ public struct TransactionList {
 
     public enum Action: Equatable {
         case copyToPastboard(RedactableString)
-        case fetchedABRecords(IdentifiedArrayOf<ABRecord>)
+        case fetchedABContacts(AddressBookContacts)
         case foundTransactions
         case memosFor([Memo], String)
         case onAppear
@@ -67,6 +67,14 @@ public struct TransactionList {
         switch action {
         case .onAppear:
             state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
+            do {
+                let abContacts = try addressBook.allLocalContacts()
+                state.addressBookContacts = abContacts
+            } catch {
+                print("__LD fetchABContactsRequested Error: \(error.localizedDescription)")
+                // TODO: FIXME
+            }
+
             return .merge(
                 .publisher {
                     sdkSynchronizer.stateStream()
@@ -89,27 +97,17 @@ public struct TransactionList {
                     if let transactions = try? await sdkSynchronizer.getAllTransactions() {
                         await send(.updateTransactionList(transactions))
                     }
-                },
-                .run { send in
-                    do {
-                        let records = try await addressBook.allContacts()
-                        await send(.fetchedABRecords(records))
-                        print("__LD updateRecords success")
-                    } catch {
-                        print("__LD updateRecords Error: \(error.localizedDescription)")
-                        // TODO: FIXME
-                    }
                 }
             )
             
-        case .fetchedABRecords(let records):
-            state.addressBookRecords = records
+        case .fetchedABContacts(let abContacts):
+            state.addressBookContacts = abContacts
             let modifiedTransactionState = state.transactionList.map { transaction in
                 var copiedTransaction = transaction
                 
                 copiedTransaction.isInAddressBook = false
-                for record in state.addressBookRecords {
-                    if record.id == transaction.address {
+                for contact in state.addressBookContacts.contacts {
+                    if contact.id == transaction.address {
                         copiedTransaction.isInAddressBook = true
                         break
                     }
@@ -189,8 +187,8 @@ public struct TransactionList {
                     
                     // in address book
                     copiedTransaction.isInAddressBook = false
-                    for record in state.addressBookRecords {
-                        if record.id == transaction.address {
+                    for contact in state.addressBookContacts.contacts {
+                        if contact.id == transaction.address {
                             copiedTransaction.isInAddressBook = true
                             break
                         }
@@ -220,8 +218,8 @@ public struct TransactionList {
             if let index = state.transactionList.index(id: id) {
                 if state.transactionList[index].isExpanded {
                     state.transactionList[index].isAddressExpanded = true
-                    for record in state.addressBookRecords {
-                        if record.id == state.transactionList[index].address {
+                    for contact in state.addressBookContacts.contacts {
+                        if contact.id == state.transactionList[index].address {
                             state.transactionList[index].isInAddressBook = true
                             break
                         }

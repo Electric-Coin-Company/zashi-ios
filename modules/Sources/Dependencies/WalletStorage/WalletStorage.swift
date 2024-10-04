@@ -18,7 +18,7 @@ import Models
 public struct WalletStorage {
     public enum Constants {
         public static let zcashStoredWallet = "zcashStoredWallet"
-        public static let zcashStoredAdressBookKey = "zcashStoredAdressBookKey"
+        public static let zcashStoredAdressBookEncryptionKeys = "zcashStoredAdressBookEncryptionKeys"
         /// Versioning of the stored data
         public static let zcashKeychainVersion = 1
     }
@@ -33,7 +33,7 @@ public struct WalletStorage {
 
     public enum WalletStorageError: Error {
         case alreadyImported
-        case uninitializedAddressBookKey
+        case uninitializedAddressBookEncryptionKeys
         case uninitializedWallet
         case storageError(Error)
         case unsupportedVersion(Int)
@@ -140,13 +140,13 @@ public struct WalletStorage {
         deleteData(forKey: Constants.zcashStoredWallet)
     }
     
-    public func importAddressBookKey(_ key: String) throws {
+    public func importAddressBookEncryptionKeys(_ keys: AddressBookEncryptionKeys) throws {
         do {
-            guard let data = try encode(object: key) else {
+            guard let data = try encode(object: keys) else {
                 throw KeychainError.encoding
             }
             
-            try setData(data, forKey: Constants.zcashStoredAdressBookKey)
+            try setData(data, forKey: Constants.zcashStoredAdressBookEncryptionKeys)
         } catch KeychainError.duplicate {
             throw WalletStorageError.alreadyImported
         } catch {
@@ -154,13 +154,13 @@ public struct WalletStorage {
         }
     }
     
-    public func exportAddressBookKey() throws -> String {
-        guard let data = data(forKey: Constants.zcashStoredAdressBookKey) else {
-            throw WalletStorageError.uninitializedAddressBookKey
+    public func exportAddressBookEncryptionKeys() throws -> AddressBookEncryptionKeys {
+        guard let data = data(forKey: Constants.zcashStoredAdressBookEncryptionKeys) else {
+            throw WalletStorageError.uninitializedAddressBookEncryptionKeys
         }
         
-        guard let wallet = try decode(json: data, as: String.self) else {
-            throw WalletStorageError.uninitializedAddressBookKey
+        guard let wallet = try decode(json: data, as: AddressBookEncryptionKeys.self) else {
+            throw WalletStorageError.uninitializedAddressBookEncryptionKeys
         }
 
         return wallet

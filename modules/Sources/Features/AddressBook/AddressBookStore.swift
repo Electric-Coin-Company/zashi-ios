@@ -30,7 +30,7 @@ public struct AddressBook {
         
         public var address = ""
         public var addressAlreadyExists = false
-        @Shared(.inMemory(.addressBookRecords)) public var addressBookRecords: IdentifiedArrayOf<ABRecord> = []
+        @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         @Presents public var alert: AlertState<Action>?
         public var deleteIdToConfirm: String?
         public var destination: Destination?
@@ -93,8 +93,8 @@ public struct AddressBook {
         case deleteId(String)
         case deleteIdConfirmed
         case editId(String)
-        case fetchedABRecords(IdentifiedArrayOf<ABRecord>)
-        case fetchABRecordsRequested
+        case fetchedABContacts(AddressBookContacts, Bool)
+        case fetchABContactsRequested
         case onAppear
         case checkDuplicates
         case saveButtonTapped
@@ -132,7 +132,7 @@ public struct AddressBook {
                 state.addressAlreadyExists = false
                 state.isAddressFocused = false
                 state.isNameFocused = false
-                return .send(.fetchABRecordsRequested)
+                return .send(.fetchABContactsRequested)
 
             case .alert(.presented(let action)):
                 return Effect.send(action)
@@ -155,11 +155,11 @@ public struct AddressBook {
             case .checkDuplicates:
                 state.nameAlreadyExists = false
                 state.addressAlreadyExists = false
-                for record in state.addressBookRecords {
-                    if record.name == state.name && state.name != state.originalName {
+                for contact in state.addressBookContacts.contacts {
+                    if contact.name == state.name && state.name != state.originalName {
                         state.nameAlreadyExists = true
                     }
-                    if record.id == state.address && state.address != state.originalAddress {
+                    if contact.id == state.address && state.address != state.originalAddress {
                         state.addressAlreadyExists = true
                     }
                 }
@@ -199,18 +199,18 @@ public struct AddressBook {
                     return .none
                 }
                 
-                let record = state.addressBookRecords.first {
+                let contact = state.addressBookContacts.contacts.first {
                     $0.id == deleteIdToConfirm
                 }
-                if let record {
-                    return .run { send in
-                        do {
-                            let contacts = try await addressBook.deleteContact(record)
-                            await send(.fetchedABRecords(contacts))
-                            await send(.updateDestination(nil))
-                        } catch {
-                            // TODO: FIXME
-                        }
+                if let contact {
+                    do {
+                        let contacts = try addressBook.deleteContact(contact)
+                        return .concatenate(
+                            .send(.fetchedABContacts(contacts, false)),
+                            .send(.updateDestination(nil))
+                        )
+                    } catch {
+                        // TODO: FIXME
                     }
                 }
                 return .none
@@ -220,7 +220,7 @@ public struct AddressBook {
                     return .none
                 }
                 
-                let record = state.addressBookRecords.first {
+                let record = state.addressBookContacts.contacts.first {
                     $0.id == id
                 }
                 guard let record else {
@@ -237,18 +237,16 @@ public struct AddressBook {
                 return .send(.updateDestination(.add))
 
             case .saveButtonTapped:
-//                let name = state.name.isEmpty ? "testName" : state.name
-//                let address = state.address.isEmpty ? "testAddress" : state.address
-                return .run { [state] send in
-                    do {
-                        let contacts = try await addressBook.storeContact(ABRecord(address: state.address, name: state.name))
-                        await send(.fetchedABRecords(contacts))
-                        await send(.contactStoreSuccess)
-                    } catch {
-                        // TODO: FIXME
-                        print("__LD saveButtonTapped Error: \(error.localizedDescription)")
-                        await send(.updateDestination(nil))
-                    }
+                do {
+                    let abContacts = try addressBook.storeContact(Contact(address: state.address, name: state.name))
+                    return .concatenate(
+                        .send(.fetchedABContacts(abContacts, false)),
+                        .send(.contactStoreSuccess)
+                    )
+                } catch {
+                    // TODO: FIXME
+                    print("__LD saveButtonTapped Error: \(error.localizedDescription)")
+                    return .send(.updateDestination(nil))
                 }
 
             case .contactStoreSuccess:
@@ -258,21 +256,31 @@ public struct AddressBook {
                 state.isNameFocused = false
                 return .send(.updateDestination(nil))
 
-            case .fetchABRecordsRequested:
-                return .run { send in
-                    do {
-                        let records = try await addressBook.allContacts()
-                        await send(.fetchedABRecords(records))
-                        print("__LD updateRecords success")
-                    } catch {
-                        print("__LD updateRecords Error: \(error.localizedDescription)")
-                        // TODO: FIXME
-                    }
+            case .fetchABContactsRequested:
+                do {
+                    let abContacts = try addressBook.allLocalContacts()
+                    return .send(.fetchedABContacts(abContacts, true))
+                } catch {
+                    print("__LD fetchABContactsRequested Error: \(error.localizedDescription)")
+                    // TODO: FIXME
+                    return .none
                 }
-                
-            case .fetchedABRecords(let records):
-                state.addressBookRecords = records
-                return .none
+
+            case let .fetchedABContacts(abContacts, requestToSync):
+                state.addressBookContacts = abContacts
+                if requestToSync {
+                    return .run { send in
+                        do {
+                            let syncedContacts = try await addressBook.syncContacts(abContacts)
+                            await send(.fetchedABContacts(syncedContacts, false))
+                        } catch {
+                            print("__LD syncContacts Error: \(error.localizedDescription)")
+                            // TODO: FIXME
+                        }
+                    }
+                } else {
+                    return .none
+                }
 
             case .updateDestination(let destination):
                 state.destination = destination
