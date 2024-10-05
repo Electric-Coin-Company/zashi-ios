@@ -48,7 +48,11 @@ public struct ImportWalletView: View {
                         WithPerceptionTracking {
                             TextEditor(text: store.bindingForRedactableSeedPhrase(store.importedSeedPhrase))
                                 .autocapitalization(.none)
-                                .messageShape(filled: nil)
+                                .padding(8)
+                                .background {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(Design.Surfaces.strokePrimary.color)
+                                }
                                 .colorBackground(Asset.Colors.background.color)
                                 .frame(minWidth: 270)
                                 .frame(height: 215)
@@ -80,11 +84,11 @@ public struct ImportWalletView: View {
                                             
                                             Spacer()
                                         }
-                                        .padding(.top, 10)
+                                        .padding(.top, 18)
                                         
                                         Spacer()
                                     }
-                                    .padding(.leading, 10)
+                                    .padding(.leading, 18)
                                 } else {
                                     EmptyView()
                                 }
@@ -98,15 +102,12 @@ public struct ImportWalletView: View {
                             }
                         }
                         
-                        Button(L10n.General.next.uppercased()) {
+                        ZashiButton(L10n.General.next) {
                             store.send(.nextPressed)
                         }
-                        .zcashStyle()
-                        .frame(width: 236)
                         .disabled(!store.isValidForm)
                         .padding(.top, 50)
                     }
-                    .padding(.horizontal, 70)
                     .onAppear(perform: { store.send(.onAppear) })
                     .navigationLinkEmpty(
                         isActive: store.bindingFor(.birthday),
@@ -136,7 +137,8 @@ public struct ImportWalletView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .padding(.vertical, 1)
-        .applyScreenBackground(withPattern: true)
+        .screenHorizontalPadding()
+        .applyScreenBackground()
     }
 }
 

@@ -25,7 +25,6 @@ public enum WalletStatus: Equatable {
 
 public struct WalletStatusPanelModifier: ViewModifier {
     public enum Background {
-        case pattern
         case solid
         case transparent
     }
@@ -41,26 +40,15 @@ public struct WalletStatusPanelModifier: ViewModifier {
                     .zIndex(0)
                 
                 if walletStatus != .none && !hidden {
-                    if background == .pattern {
-                        WalletStatusPanel(text: walletStatus.text())
-                            .frame(maxWidth: .infinity)
-                            .padding(.bottom, 6)
-                            .background(
-                                Asset.Assets.gridTile.image
-                                    .resizable(resizingMode: .tile)
-                            )
-                            .zIndex(1)
-                    } else {
-                        WalletStatusPanel(text: walletStatus.text())
-                            .frame(maxWidth: .infinity)
-                            .padding(.bottom, 6)
-                            .background(
-                                background == .transparent
-                                ? .clear
-                                : Asset.Colors.background.color
-                            )
-                            .zIndex(1)
-                    }
+                    WalletStatusPanel(text: walletStatus.text())
+                        .frame(maxWidth: .infinity)
+                        .padding(.bottom, 6)
+                        .background(
+                            background == .transparent
+                            ? .clear
+                            : Asset.Colors.background.color
+                        )
+                        .zIndex(1)
                 }
             }
         }

@@ -58,6 +58,9 @@ extension Root {
                 guard state.destinationState.destination != .deeplinkWarning else {
                     return .none
                 }
+                guard state.destinationState.destination != .onboarding && state.onboardingState.destination != .importExistingWallet && state.onboardingState.importWalletState.destination != .restoreInfo else {
+                    return .none
+                }
                 state.destinationState.destination = destination
                 return .none
 

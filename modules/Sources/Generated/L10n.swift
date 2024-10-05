@@ -297,8 +297,8 @@ public enum L10n {
     /// A no-frills wallet for sending and receiving Zcash (ZEC).
     public static let title = L10n.tr("Localizable", "plainOnboarding.title", fallback: "A no-frills wallet for sending and receiving Zcash (ZEC).")
     public enum Button {
-      /// Create new Wallet
-      public static let createNewWallet = L10n.tr("Localizable", "plainOnboarding.button.createNewWallet", fallback: "Create new Wallet")
+      /// Create new wallet
+      public static let createNewWallet = L10n.tr("Localizable", "plainOnboarding.button.createNewWallet", fallback: "Create new wallet")
       /// Restore existing wallet
       public static let restoreWallet = L10n.tr("Localizable", "plainOnboarding.button.restoreWallet", fallback: "Restore existing wallet")
     }

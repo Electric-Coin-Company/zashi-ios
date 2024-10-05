@@ -83,14 +83,12 @@ public struct RecoveryPhraseDisplayView: View {
                     }
 
                     if !store.showBackButton {
-                        Button(L10n.RecoveryPhraseDisplay.Button.wroteItDown.uppercased()) {
+                        ZashiButton(L10n.RecoveryPhraseDisplay.Button.wroteItDown) {
                             store.send(.finishedPressed)
                         }
-                        .zcashStyle()
                         .padding(.bottom, 50)
                     }
                 }
-                .padding(.horizontal, 60)
                 .onAppear { store.send(.onAppear) }
                 .alert($store.scope(state: \.alert, action: \.alert))
                 .zashiBack(false, hidden: !store.showBackButton)
@@ -99,7 +97,8 @@ public struct RecoveryPhraseDisplayView: View {
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
         .padding(.vertical, 1)
-        .applyScreenBackground(withPattern: true)
+        .screenHorizontalPadding()
+        .applyScreenBackground()
     }
 }
 

@@ -257,10 +257,9 @@ private extension RootView {
     @ViewBuilder func debugView(_ store: StoreOf<Root>) -> some View {
         VStack(alignment: .leading) {
             if store.destinationState.previousDestination == .tabs {
-                Button(L10n.General.back.uppercased()) {
+                ZashiButton(L10n.General.back) {
                     store.goToDestination(.tabs)
                 }
-                .zcashStyle()
                 .frame(width: 150)
                 .padding()
             }

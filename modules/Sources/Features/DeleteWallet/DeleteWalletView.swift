@@ -46,20 +46,19 @@ public struct DeleteWalletView: View {
                     }
                     .padding(.top, 30)
                     
-                    Button(L10n.DeleteWallet.actionButtonTitle.uppercased()) {
+                    ZashiButton(L10n.DeleteWallet.actionButtonTitle) {
                         store.send(.deleteTapped)
                     }
-                    .zcashStyle()
                     .disabled(!store.isAcknowledged || store.isProcessing)
                     .padding(.vertical, 50)
                 }
-                .padding(.horizontal, 60)
             }
             .padding(.vertical, 1)
             .zashiBack(store.isProcessing)
         }
         .navigationBarTitleDisplayMode(.inline)
-        .applyScreenBackground(withPattern: true)
+        .screenHorizontalPadding()
+        .applyScreenBackground()
     }
 }
 

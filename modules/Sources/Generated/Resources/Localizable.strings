@@ -1,6 +1,6 @@
 // MARK: - Plain Onboarding Flow
 "plainOnboarding.title" = "A no-frills wallet for sending and receiving Zcash (ZEC).";
-"plainOnboarding.button.createNewWallet" = "Create new Wallet";
+"plainOnboarding.button.createNewWallet" = "Create new wallet";
 "plainOnboarding.button.restoreWallet" = "Restore existing wallet";
 
 // MARK: - Security Warning

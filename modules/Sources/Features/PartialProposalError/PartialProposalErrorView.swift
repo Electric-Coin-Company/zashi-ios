@@ -43,10 +43,9 @@ public struct PartialProposalErrorView: View {
                             .padding(.bottom, 3)
                     }
 
-                    Button(L10n.ProposalPartial.contactSupport.uppercased()) {
+                    ZashiButton(L10n.ProposalPartial.contactSupport) {
                         store.send(.sendSupportMail)
                     }
-                    .zcashStyle()
                     .padding(.vertical, 25)
                     .padding(.top, 40)
                     .onChange(of: store.supportData) { supportData in
@@ -77,7 +76,7 @@ public struct PartialProposalErrorView: View {
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
         .padding(.vertical, 1)
-        .applyScreenBackground(withPattern: true)
+        .applyScreenBackground()
         .screenTitle(L10n.ProposalPartial.title)
     }
 }
