@@ -99,12 +99,13 @@ extension Root {
 
                 // update flexa balance
                 if let accountBalance = latestState.data.accountBalance?.data {
-                    let shieldedBalance = accountBalance.saplingBalance.spendableValue + accountBalance.orchardBalance.spendableValue
+//                    let shieldedBalance = accountBalance.saplingBalance.spendableValue + accountBalance.orchardBalance.spendableValue
 //                    let shieldedWithPendingBalance = accountBalance.saplingBalance.total() + accountBalance.orchardBalance.total()
 //                    let transparentBalance = accountBalance.unshielded
 //                    let totalBalance = shieldedWithPendingBalance + transparentBalance
 
-                    flexaHandler.updateBalance(shieldedBalance)
+                    // TODO: [#1284] Flexa disconnected for now, https://github.com/Electric-Coin-Company/zashi-ios/issues/1284
+//                    flexaHandler.updateBalance(shieldedBalance)
                 }
                 
                 // handle possible service unavailability

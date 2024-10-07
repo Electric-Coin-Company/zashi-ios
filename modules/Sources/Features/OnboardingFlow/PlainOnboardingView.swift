@@ -29,9 +29,10 @@ public struct PlainOnboardingView: View {
                     .zImage(width: 169, height: 160, color: Asset.Colors.primary.color)
 
                 Text(L10n.PlainOnboarding.title)
-                    .font(.custom(FontFamily.Inter.regular.name, size: 22))
+                    .zFont(size: 20, style: Design.Text.secondary)
                     .padding(.top, 15)
                     .multilineTextAlignment(.center)
+                    .padding(.horizontal, 24)
 
                 Spacer()
                 
@@ -42,7 +43,7 @@ public struct PlainOnboardingView: View {
 
                 ZashiButton(
                     L10n.PlainOnboarding.Button.restoreWallet,
-                    type: .secondary
+                    type: .tertiary
                 ) {
                     store.send(.importExistingWallet)
                 }
@@ -73,7 +74,7 @@ public struct PlainOnboardingView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .screenHorizontalPadding()
-        .applyScreenBackground()
+        .applyOnboardingScreenBackground()
     }
 }
 

@@ -58,6 +58,8 @@ public struct ZashiButton<PrefixContent, AccessoryContent>: View where PrefixCon
 
                 Text(title)
                     .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
+                    .fixedSize()
+                    .minimumScaleFactor(0.5)
                 
                 if let accessoryView {
                     accessoryView

@@ -32,6 +32,7 @@ public enum Asset {
     public static let flyReceived = ImageAsset(name: "FlyReceived")
     public enum Partners {
       public static let coinbase = ImageAsset(name: "coinbase")
+      public static let coinbaseSeeklogo = ImageAsset(name: "coinbaseSeeklogo")
       public static let flexa = ImageAsset(name: "flexa")
       public static let flexaDisabled = ImageAsset(name: "flexaDisabled")
     }

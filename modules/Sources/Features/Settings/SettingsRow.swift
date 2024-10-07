@@ -9,21 +9,23 @@ import SwiftUI
 
 import Generated
 
-public struct SettingsRow: View {
+public struct SettingsRow<AccessoryContent>: View where AccessoryContent: View{
     @Environment(\.isEnabled) private var isEnabled
     
-    var icon: Image
-    var title: String
-    var desc: String?
-    var customIcon: Bool
-    var divider: Bool
-    var action: () -> Void
+    let icon: Image
+    let title: String
+    let desc: String?
+    let customIcon: Bool
+    @ViewBuilder let accessoryView: AccessoryContent?
+    let divider: Bool
+    let action: () -> Void
     
     init(
         icon: Image,
         title: String,
         desc: String? = nil,
         customIcon: Bool = false,
+        accessoryView: AccessoryContent? = EmptyView(),
         divider: Bool = true,
         action: @escaping () -> Void
     ) {
@@ -31,6 +33,7 @@ public struct SettingsRow: View {
         self.title = title
         self.desc = desc
         self.customIcon = customIcon
+        self.accessoryView = accessoryView
         self.divider = divider
         self.action = action
     }
@@ -58,14 +61,22 @@ public struct SettingsRow: View {
                     }
 
                     VStack(alignment: .leading, spacing: 0) {
-                        Text(title)
-                            .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                            .foregroundColor(Design.Text.primary.color)
+                        if let accessoryView {
+                            HStack(spacing: 0) {
+                                Text(title)
+                                    .zFont(.semiBold, size: 16, style: Design.Text.primary)
+
+                                accessoryView
+                                    .padding(.leading, 8)
+                            }
+                        } else {
+                            Text(title)
+                                .zFont(.semiBold, size: 16, style: Design.Text.primary)
+                        }
                         
                         if let desc {
                             Text(desc)
-                                .font(.custom(FontFamily.Inter.regular.name, size: 12))
-                                .foregroundColor(Design.Text.tertiary.color)
+                                .zFont(size: 12, style: Design.Text.tertiary)
                                 .lineSpacing(1.2)
                                 .padding(.top, 2)
                         }
