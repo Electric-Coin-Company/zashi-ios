@@ -82,15 +82,15 @@ extension AddressBookClient: DependencyKey {
                     }
                 }
                 
-                let data = try remoteStorage.loadAddressBookContacts()
-                let remoteContacts = try AddressBookClient.decryptData(data)
+//                let data = try remoteStorage.loadAddressBookContacts()
+//                let remoteContacts = try AddressBookClient.decryptData(data)
                 
                 // Ensure remote contacts are prepared
                 
                 // Merge strategy
-                print("__LD SYNCING CONTACTS...")
-                print("__LD localContacts \(localContacts)")
-                print("__LD remoteContacts \(remoteContacts)")
+//                print("__LD SYNCING CONTACTS...")
+//                print("__LD localContacts \(localContacts)")
+//                print("__LD remoteContacts \(remoteContacts)")
 
                 var syncedContacts = localContacts
 
@@ -120,7 +120,7 @@ extension AddressBookClient: DependencyKey {
                 try encryptedContacts.write(to: fileURL)
                 
                 // store encrypted data to the remote storage
-                try remoteStorage.storeAddressBookContacts(encryptedContacts)
+                //try remoteStorage.storeAddressBookContacts(encryptedContacts)
 
                 // update the latest known contacts
                 latestKnownContacts = abContacts
@@ -148,7 +148,7 @@ extension AddressBookClient: DependencyKey {
                 try encryptedContacts.write(to: fileURL)
                 
                 // store encrypted data to the remote storage
-                try remoteStorage.storeAddressBookContacts(encryptedContacts)
+                //try remoteStorage.storeAddressBookContacts(encryptedContacts)
 
                 // update the latest known contacts
                 latestKnownContacts = abContacts

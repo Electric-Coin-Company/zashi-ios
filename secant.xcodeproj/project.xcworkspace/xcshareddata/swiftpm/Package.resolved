@@ -338,8 +338,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio.git",
       "state" : {
-        "revision" : "9746cf80e29edfef2a39924a66731249223f42a3",
-        "version" : "2.72.0"
+        "revision" : "665206000b8307cab5ac51203d29b0f232d7e31b",
+        "version" : "2.74.0"
       }
     },
     {
@@ -473,7 +473,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-light-client-ffi",
       "state" : {
-        "revision" : "a61f82942c1dad9161f346123f292a93081c7e36"
+        "revision" : "be1575f8d2dce5b7502448ef1f8619e2ca9359d9",
+        "version" : "0.10.0"
       }
     },
     {
@@ -490,8 +491,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk",
       "state" : {
-        "branch" : "fix/note_commitment_tree_conflict",
-        "revision" : "c11c8b027568a49f9a9ca6ac1a3c0a881bc80521"
+        "revision" : "e2ce60ef245e3d672b0703a0fbf1d4ed31eaa16c",
+        "version" : "2.2.4"
       }
     }
   ],

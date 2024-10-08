@@ -24,29 +24,52 @@ public struct ScreenBackgroundModifier: ViewModifier {
 struct ScreenGradientBackground: View {
     @Environment(\.colorScheme) var colorScheme
     
-    let colors: [Color]
-    let darkGradientEndPointY: CGFloat
+    let stops: [Gradient.Stop]
 
     var body: some View {
         LinearGradient(
-            colors: colors,
-            startPoint: UnitPoint(x: 0.5, y: 0),
-            endPoint: UnitPoint(x: 0.5, y: darkGradientEndPointY)
+            stops: stops,
+            startPoint: .top,
+            endPoint: .bottom
         )
     }
 }
 
 struct ScreenGradientBackgroundModifier: ViewModifier {
-    let colors: [Color]
-    let darkGradientEndPointY: CGFloat
+    let stops: [Gradient.Stop]
 
     func body(content: Content) -> some View {
         ZStack {
-            ScreenGradientBackground(
-                colors: colors,
-                darkGradientEndPointY: darkGradientEndPointY
-            )
-            .edgesIgnoringSafeArea(.all)
+            ScreenGradientBackground(stops: stops)
+                .edgesIgnoringSafeArea(.all)
+            
+            content
+        }
+    }
+}
+
+struct ScreenOnboardingGradientBackgroundModifier: ViewModifier {
+    @Environment(\.colorScheme) var colorScheme
+
+    func body(content: Content) -> some View {
+        ZStack {
+            if colorScheme == .light {
+                ScreenGradientBackground(
+                    stops: [
+                        Gradient.Stop(color: Asset.Colors.ZDesign.Base.concrete.color, location: 0.0),
+                        Gradient.Stop(color: Asset.Colors.ZDesign.Base.bone.color, location: 1.0)
+                    ]
+                )
+                .edgesIgnoringSafeArea(.all)
+            } else {
+                ScreenGradientBackground(
+                    stops: [
+                        Gradient.Stop(color: Asset.Colors.ZDesign.sharkShades06dp.color, location: 0.0),
+                        Gradient.Stop(color: Asset.Colors.ZDesign.Base.obsidian.color, location: 1.0)
+                    ]
+                )
+                .edgesIgnoringSafeArea(.all)
+            }
             
             content
         }
@@ -65,11 +88,10 @@ extension View {
     public func applyErredScreenBackground() -> some View {
         self.modifier(
             ScreenGradientBackgroundModifier(
-                colors: [
-                    Design.Utility.WarningYellow._100.color,
-                    Design.screenBackground.color
-                ],
-                darkGradientEndPointY: 0.4
+                stops: [
+                    Gradient.Stop(color: Design.Utility.WarningYellow._100.color, location: 0.0),
+                    Gradient.Stop(color: Design.screenBackground.color, location: 0.4)
+                ]
             )
         )
     }
@@ -77,12 +99,18 @@ extension View {
     public func applyBrandedScreenBackground() -> some View {
         self.modifier(
             ScreenGradientBackgroundModifier(
-                colors: [
-                    Design.Utility.Brand._500.color,
-                    Design.screenBackground.color
-                ],
-                darkGradientEndPointY: 0.75
+                stops: [
+                    Gradient.Stop(color: Design.Utility.Brand._600.color, location: 0.0),
+                    Gradient.Stop(color: Design.Utility.Brand._400.color, location: 0.5),
+                    Gradient.Stop(color: Design.screenBackground.color, location: 0.75)
+                ]
             )
+        )
+    }
+    
+    public func applyOnboardingScreenBackground() -> some View {
+        self.modifier(
+            ScreenOnboardingGradientBackgroundModifier()
         )
     }
 }

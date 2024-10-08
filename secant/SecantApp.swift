@@ -24,8 +24,9 @@ struct SecantApp: App {
     init() {
         FontFamily.registerAllCustomFonts()
         
-        @Dependency(\.flexaHandler) var flexaHandler
-        flexaHandler.prepare()
+        // TODO: [#1284] Flexa disconnected for now, https://github.com/Electric-Coin-Company/zashi-ios/issues/1284
+//        @Dependency(\.flexaHandler) var flexaHandler
+//        flexaHandler.prepare()
     }
 
     var body: some Scene {

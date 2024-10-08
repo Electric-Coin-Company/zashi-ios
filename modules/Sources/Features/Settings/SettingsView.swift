@@ -30,7 +30,11 @@ public struct SettingsView: View {
 
                         SettingsRow(
                             icon: Asset.Assets.Icons.integrations.image,
-                            title: L10n.Settings.integrations
+                            title: L10n.Settings.integrations,
+                            accessoryView:
+                                Asset.Assets.Partners.coinbaseSeeklogo.image
+                                    .resizable()
+                                    .frame(width: 20, height: 20)
                         ) {
                             store.send(.updateDestination(.integrations))
                         }

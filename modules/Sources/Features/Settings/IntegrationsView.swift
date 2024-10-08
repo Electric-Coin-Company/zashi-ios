@@ -32,37 +32,38 @@ public struct IntegrationsView: View {
                                 icon: Asset.Assets.Partners.coinbase.image,
                                 title: L10n.Settings.buyZecCB,
                                 desc: L10n.Settings.coinbaseDesc,
-                                customIcon: true
+                                customIcon: true,
+                                divider: false // TODO: erase when Flexa activated
                             ) {
                                 store.send(.buyZecTapped)
                             }
                         }
 
-                        SettingsRow(
-                            icon: walletStatus == .restoring
-                            ? Asset.Assets.Partners.flexaDisabled.image
-                            : Asset.Assets.Partners.flexa.image,
-                            title: L10n.Settings.flexa,
-                            desc: L10n.Settings.flexaDesc,
-                            customIcon: true,
-                            divider: false
-                        ) {
-                            store.send(.flexaTapped)
-                        }
-                        .disabled(walletStatus == .restoring)
+//                        SettingsRow(
+//                            icon: walletStatus == .restoring
+//                            ? Asset.Assets.Partners.flexaDisabled.image
+//                            : Asset.Assets.Partners.flexa.image,
+//                            title: L10n.Settings.flexa,
+//                            desc: L10n.Settings.flexaDesc,
+//                            customIcon: true,
+//                            divider: false
+//                        ) {
+//                            store.send(.flexaTapped)
+//                        }
+//                        .disabled(walletStatus == .restoring)
                         
-                        if walletStatus == .restoring {
-                            HStack(spacing: 0) {
-                                Asset.Assets.infoOutline.image
-                                    .zImage(size: 20, style: Design.Utility.WarningYellow._700)
-                                    .padding(.trailing, 12)
-
-                                Text(L10n.Settings.restoreWarning)
-                            }
-                            .zFont(size: 12, style: Design.Utility.WarningYellow._700)
-                            .padding(.vertical, 12)
-                            .screenHorizontalPadding()
-                        }
+//                        if walletStatus == .restoring {
+//                            HStack(spacing: 0) {
+//                                Asset.Assets.infoOutline.image
+//                                    .zImage(size: 20, style: Design.Utility.WarningYellow._700)
+//                                    .padding(.trailing, 12)
+//
+//                                Text(L10n.Settings.restoreWarning)
+//                            }
+//                            .zFont(size: 12, style: Design.Utility.WarningYellow._700)
+//                            .padding(.vertical, 12)
+//                            .screenHorizontalPadding()
+//                        }
                     }
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Asset.Colors.background.color)
