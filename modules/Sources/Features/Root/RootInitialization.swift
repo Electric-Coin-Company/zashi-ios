@@ -99,13 +99,12 @@ extension Root {
 
                 // update flexa balance
                 if let accountBalance = latestState.data.accountBalance?.data {
-//                    let shieldedBalance = accountBalance.saplingBalance.spendableValue + accountBalance.orchardBalance.spendableValue
-//                    let shieldedWithPendingBalance = accountBalance.saplingBalance.total() + accountBalance.orchardBalance.total()
-//                    let transparentBalance = accountBalance.unshielded
-//                    let totalBalance = shieldedWithPendingBalance + transparentBalance
+                    let shieldedBalance = accountBalance.saplingBalance.spendableValue + accountBalance.orchardBalance.spendableValue
+                    let shieldedWithPendingBalance = accountBalance.saplingBalance.total() + accountBalance.orchardBalance.total()
+                    let transparentBalance = accountBalance.unshielded
+                    let totalBalance = shieldedWithPendingBalance + transparentBalance
 
-                    // TODO: [#1284] Flexa disconnected for now, https://github.com/Electric-Coin-Company/zashi-ios/issues/1284
-//                    flexaHandler.updateBalance(shieldedBalance)
+                    flexaHandler.updateBalance(totalBalance, shieldedBalance)
                 }
                 
                 // handle possible service unavailability
@@ -513,7 +512,7 @@ extension Root {
                 
             case .tabs, .destination, .onboarding, .sandbox, .phraseDisplay, .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated,
                     .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, 
-                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects, .flexaOnTransactionRequest, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted, .deeplinkWarning:
+                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects, .flexaOnTransactionRequest, .flexaTransactionFailed, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted, .deeplinkWarning:
                 return .none
             }
         }

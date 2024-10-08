@@ -35,6 +35,7 @@ public enum Asset {
       public static let coinbaseSeeklogo = ImageAsset(name: "coinbaseSeeklogo")
       public static let flexa = ImageAsset(name: "flexa")
       public static let flexaDisabled = ImageAsset(name: "flexaDisabled")
+      public static let flexaSeekLogo = ImageAsset(name: "flexaSeekLogo")
     }
     public static let splashHi = ImageAsset(name: "SplashHi")
     public static let welcomeScreenLogo = ImageAsset(name: "WelcomeScreenLogo")

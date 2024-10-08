@@ -17,6 +17,7 @@ public struct Integrations {
         public var appVersion = ""
         public var isFlexaOn = false
         public var isInAppBrowserOn = false
+        @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
         public var uAddress: UnifiedAddress? = nil
         
         public var inAppBrowserURL: String? {

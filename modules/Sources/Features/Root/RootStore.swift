@@ -129,6 +129,7 @@ public struct Root {
         case destination(DestinationAction)
         case exportLogs(ExportLogs.Action)
         case flexaOnTransactionRequest(FlexaTransaction?)
+        case flexaTransactionFailed(String)
         case tabs(Tabs.Action)
         case initialization(InitializationAction)
         case notEnoughFreeSpace(NotEnoughFreeSpace.Action)

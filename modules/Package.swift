@@ -91,7 +91,7 @@ let package = Package(
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.4"),
         .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", exact: "2.2.3"),
         .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.27.0"),
-        .package(url: "https://github.com/flexa/flexa-ios.git", from: "1.0.3"),
+        .package(url: "https://github.com/flexa/flexa-ios.git", from: "1.0.4"),
         .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "0.1.0-beta.9")
     ],
     targets: [
@@ -331,6 +331,7 @@ let package = Package(
         .target(
             name: "FlexaHandler",
             dependencies: [
+                "Generated",
                 "PartnerKeys",
                 "UserDefaults",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),

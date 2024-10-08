@@ -29,6 +29,7 @@ public struct Settings {
         public var appVersion = ""
         public var appBuild = ""
         public var destination: Destination?
+        @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
         public var integrationsState: Integrations.State
         public var supportData: SupportData?
         

@@ -14,26 +14,18 @@ import ZcashLightClientKit
 import PartnerKeys
 import CryptoKit
 import Generated
-
-let accountId = Constants.accountId()
+import UIKit
 
 enum Constants {
     static let zecHash = "bip122:00040fe8ec8471911baa1db1266ea15d"
     static let zecId = "\(Constants.zecHash)/slip44:133"
 
     static func accountId() -> String {
-        @Shared(.appStorage(.flexaAccountId)) var flexaAccountId = ""
-
-        if flexaAccountId.isEmpty {
-            let uuid = UUID()
-            let uuidString = uuid.uuidString
-            let data = Data(uuidString.utf8)
-            let hash = SHA256.hash(data: data)
-            
-            flexaAccountId = hash.compactMap { String(format: "%02x", $0) }.joined()
-        }
-
-        return flexaAccountId
+        let uuid = UUID()
+        let uuidString = uuid.uuidString
+        let data = Data(uuidString.utf8)
+        let hash = SHA256.hash(data: data)
+        return hash.compactMap { String(format: "%02x", $0) }.joined()
     }
 }
 
@@ -53,25 +45,24 @@ extension FlexaHandlerClient: DependencyKey {
     public static var liveValue: Self {
         let onTransactionRequest = CurrentValueSubject<Result<FXTransaction, any Error>?, Never>(nil)
         let latestSpendableBalance = CurrentValueSubject<Decimal, Never>(0)
+        let latestSpendableAvailableBalance = CurrentValueSubject<Decimal?, Never>(nil)
+        let isPrepared = CurrentValueSubject<Bool, Never>(false)
 
         return .init(
             prepare: {
-                guard let flexaPublishableKey = PartnerKeys.flexaPublishableKey else {
-                    return
-                }
-                Flexa.initialize(
-                    FXClient(
-                        publishableKey: flexaPublishableKey,
-                        appAccounts: FlexaHandlerClient.accounts(),
-                        theme: .default
-                    )
-                )
+                FlexaHandlerClient.prepare()
+                isPrepared.value = true
             },
             open: {
-                print("__LD open flexa with \(latestSpendableBalance.value)")
+                if !isPrepared.value {
+                    FlexaHandlerClient.prepare()
+                    isPrepared.value = true
+                }
+                
+                onTransactionRequest.send(nil)
                 Flexa.sections([.spend])
-                    .appAccounts(FlexaHandlerClient.accounts(latestSpendableBalance.value))
-                    .selectedAsset(accountId, Constants.zecId)
+                    .appAccounts(FlexaHandlerClient.accounts(latestSpendableBalance.value, zecAvailableAmount: latestSpendableAvailableBalance.value))
+                    .selectedAsset(Constants.accountId(), Constants.zecId)
                     .onTransactionRequest({
                         onTransactionRequest.send($0)
                     })
@@ -116,33 +107,62 @@ extension FlexaHandlerClient: DependencyKey {
                     }
                     .eraseToAnyPublisher()
             },
+            clearTransactionRequest: {
+                onTransactionRequest.send(nil)
+            },
             transactionSent: {
+                onTransactionRequest.send(nil)
                 Flexa.transactionSent(commerceSessionId: $0, signature: $1)
             },
             updateBalance: {
                 latestSpendableBalance.value = $0.decimalValue.decimalValue
-                print("_LD updateAppAccounts \(latestSpendableBalance.value)")
-                Flexa.updateAppAccounts(FlexaHandlerClient.accounts(latestSpendableBalance.value))
+                latestSpendableAvailableBalance.value = $1?.decimalValue.decimalValue
+                Flexa.updateAppAccounts(FlexaHandlerClient.accounts(latestSpendableBalance.value, zecAvailableAmount: latestSpendableAvailableBalance.value))
+            },
+            flexaAlert: { title, message in
+                DispatchQueue.main.async {
+                    let alert = UIAlertController(
+                        title: title,
+                        message: message,
+                        preferredStyle: .alert
+                    )
+                    alert.addAction(UIAlertAction(title: L10n.General.ok, style: .cancel))
+                    UIViewController.showOnTop(alert)
+                }
             }
         )
     }
 }
 
 private extension FlexaHandlerClient {
-    static func accounts(_ zecAmount: Decimal = 0) -> [FXAppAccount] {
+    static func accounts(_ zecAmount: Decimal = 0, zecAvailableAmount: Decimal? = nil) -> [FXAppAccount] {
         [
             FXAppAccount(
-                accountId: accountId,
+                accountId: Constants.accountId(),
                 displayName: "",
                 custodyModel: .local,
                 availableAssets: [
                     FXAvailableAsset(
                         assetId: Constants.zecId,
                         symbol: "ZEC",
-                        balance: zecAmount
+                        balance: zecAmount,
+                        balanceAvailable: zecAvailableAmount
                     )
                 ]
             )
         ]
+    }
+    
+    static func prepare() {
+        guard let flexaPublishableKey = PartnerKeys.flexaPublishableKey else {
+            return
+        }
+        Flexa.initialize(
+            FXClient(
+                publishableKey: flexaPublishableKey,
+                appAccounts: FlexaHandlerClient.accounts(),
+                theme: .default
+            )
+        )
     }
 }
