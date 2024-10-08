@@ -32,5 +32,5 @@ public struct ReadTransactionsStorageClient {
     public let markIdAsRead: (RedactableString) throws -> Void
     public var readIds: () throws -> [RedactableString: Bool]
     public var availabilityTimestamp: () throws -> TimeInterval
-    public var nukeWallet: () throws -> Void
+    public var resetZashi: () throws -> Void
 }

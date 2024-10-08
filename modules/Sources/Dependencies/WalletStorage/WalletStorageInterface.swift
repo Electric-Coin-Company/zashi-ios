@@ -73,7 +73,7 @@ public struct WalletStorageClient {
 
     /// Use carefully: deletes the stored wallet.
     /// There's no fate but what we make for ourselves - Sarah Connor.
-    public var nukeWallet: () -> Void
+    public var resetZashi: () -> Void
 
     // TODO: str4d
     // not sure what format the key is, for now I made it a String
