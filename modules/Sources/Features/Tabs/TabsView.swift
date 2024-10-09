@@ -145,31 +145,46 @@ public struct TabsView: View {
                 .navigationLinkEmpty(
                     isActive: store.bindingForStackMaxPrivacy(.zecKeyboard),
                     destination: {
-                        ZecKeyboardView(store: store.zecKeyboardStore())
-                            .navigationLinkEmpty(
-                                isActive: store.bindingForStackMaxPrivacy(.requestZec),
-                                destination: {
-                                    RequestZecView(store: store.requestZecStore())
-                                        .navigationLinkEmpty(
-                                            isActive: store.bindingForStackMaxPrivacy(.requestZecSummary),
-                                            destination: {
-                                                RequestZecSummaryView(store: store.requestZecStore())
-                                            }
+                        ZecKeyboardView(
+                            store: store.zecKeyboardStore(),
+                            tokenName: tokenName
+                        )
+                        .navigationLinkEmpty(
+                            isActive: store.bindingForStackMaxPrivacy(.requestZec),
+                            destination: {
+                                RequestZecView(
+                                    store: store.requestZecStore(),
+                                    tokenName: tokenName
+                                )
+                                .navigationLinkEmpty(
+                                    isActive: store.bindingForStackMaxPrivacy(.requestZecSummary),
+                                    destination: {
+                                        RequestZecSummaryView(
+                                            store: store.requestZecStore(),
+                                            tokenName: tokenName
                                         )
-                                }
-                            )
+                                    }
+                                )
+                            }
+                        )
                     }
                 )
                 .navigationLinkEmpty(
                     isActive: store.bindingForStackLowPrivacy(.zecKeyboard),
                     destination: {
-                        ZecKeyboardView(store: store.zecKeyboardStore())
-                            .navigationLinkEmpty(
-                                isActive: store.bindingForStackLowPrivacy(.requestZecSummary),
-                                destination: {
-                                    RequestZecSummaryView(store: store.requestZecStore())
-                                }
-                            )
+                        ZecKeyboardView(
+                            store: store.zecKeyboardStore(),
+                            tokenName: tokenName
+                        )
+                        .navigationLinkEmpty(
+                            isActive: store.bindingForStackLowPrivacy(.requestZecSummary),
+                            destination: {
+                                RequestZecSummaryView(
+                                    store: store.requestZecStore(),
+                                    tokenName: tokenName
+                                )
+                            }
+                        )
                     }
                 )
                 .navigationLinkEmpty(

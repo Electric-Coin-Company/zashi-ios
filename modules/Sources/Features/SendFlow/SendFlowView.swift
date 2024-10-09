@@ -225,7 +225,7 @@ public struct SendFlowView: View {
                                     .zImage(size: 20, style: Design.Text.lightSupport)
                                     .padding(.trailing, 12)
                                 
-                                Text("Add contact by tapping on Address Book icon.")
+                                Text(L10n.Send.addressNotInBook)
                                     .zFont(.medium, size: 14, style: Design.Text.light)
                                     .padding(.top, 2)
                                     .lineLimit(1)
@@ -241,37 +241,6 @@ public struct SendFlowView: View {
                             }
                             .frame(width: geometry.size.width - 48)
                             .offset(x: 24, y: geometry[$0].minY + geometry[$0].height - 16)
-                            
-                            
-//                            VStack(spacing: 0) {
-//                                Asset.Assets.Icons.user.image
-//                                    .zImage(size: 20, style: Design.Text.primary)
-//
-//                                Text(L10n.Send.addressNotInBook)
-//                                    .zFont(.semiBold, size: 18, style: Design.Text.primary)
-//                                    .padding(.top, 8)
-//
-//                                ZashiButton(
-//                                    L10n.AddressBook.addNewContact,
-//                                    type: .tertiary,
-//                                    infinityWidth: false
-//                                ) {
-//                                    store.send(.addNewContactTapped(store.address))
-//                                }
-//                                .padding(.top, 16)
-//                            }
-//                            .padding(32)
-//                            .frame(width: geometry.size.width - 48)
-//                            .background {
-//                                RoundedRectangle(cornerRadius: 10)
-//                                    .fill(Design.Surfaces.bgPrimary.color)
-//                                    .background {
-//                                        RoundedRectangle(cornerRadius: 10)
-//                                            .stroke(Design.Surfaces.strokePrimary.color)
-//                                    }
-//                            }
-//                            .offset(x: 24, y: geometry[$0].minY + geometry[$0].height - 18)
-                            
                         }
                     }
                 }

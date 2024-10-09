@@ -18,8 +18,11 @@ public struct RequestZecSummaryView: View {
 
     @Perception.Bindable var store: StoreOf<RequestZec>
 
-    public init(store: StoreOf<RequestZec>) {
+    let tokenName: String
+    
+    public init(store: StoreOf<RequestZec>, tokenName: String) {
         self.store = store
+        self.tokenName = tokenName
     }
     
     public var body: some View {
@@ -30,7 +33,7 @@ public struct RequestZecSummaryView: View {
 
                 Group {
                     Text(store.requestedZec.decimalString())
-                    + Text(" ZEC")
+                    + Text(" \(tokenName)")
                         .foregroundColor(Design.Text.quaternary.color)
                 }
                 .zFont(.semiBold, size: 56, style: Design.Text.primary)
@@ -64,7 +67,7 @@ public struct RequestZecSummaryView: View {
                 Spacer()
                 
                 ZashiButton(
-                    "Share QR Code",
+                    L10n.RequestZec.Summary.shareQR,
                     prefixView:
                         Asset.Assets.Icons.share.image
                         .zImage(size: 20, style: Design.Btns.Primary.fg)
@@ -75,7 +78,7 @@ public struct RequestZecSummaryView: View {
                 .disabled(store.encryptedOutputToBeShared != nil)
                 
                 ZashiButton(
-                    "Close",
+                    L10n.General.close,
                     type: .ghost
                 ) {
                     store.send(.cancelRequestTapped)
@@ -89,7 +92,7 @@ public struct RequestZecSummaryView: View {
             .onAppear { store.send(.onAppear) }
             .onDisappear { store.send(.onDisappear) }
         }
-        .screenTitle("Request")
+        .screenTitle(L10n.General.request)
         .screenHorizontalPadding()
         .applyScreenBackground()
         .zashiBack()
@@ -117,9 +120,9 @@ extension RequestZecSummaryView {
             UIShareDialogView(activityItems: [
                 ShareableImage(
                     image: UIImage(cgImage: cgImg),
-                    title: "Request ZEC",
-                    reason: "Hi, I have generated a ZEC payment request for you using the Zashi app!"
-                ), "Hi, I have generated a ZEC payment request for you using the Zashi app! (download link: https://apps.apple.com/app/zashi-zcash-wallet/id1672392439)"
+                    title: L10n.RequestZec.Summary.shareTitle,
+                    reason: L10n.RequestZec.Summary.shareDesc
+                ), "\(L10n.RequestZec.Summary.shareDesc) \(L10n.RequestZec.Summary.shareMsg)"
             ]) {
                 store.send(.shareFinished)
             }
@@ -134,6 +137,6 @@ extension RequestZecSummaryView {
 
 #Preview {
     NavigationView {
-        RequestZecView(store: RequestZec.placeholder)
+        RequestZecView(store: RequestZec.placeholder, tokenName: "ZEC")
     }
 }

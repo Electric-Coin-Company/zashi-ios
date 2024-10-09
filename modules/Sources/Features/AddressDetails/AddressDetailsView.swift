@@ -74,7 +74,7 @@ public struct AddressDetailsView: View {
                 Spacer()
                 
                 ZashiButton(
-                    "Share QR Code",
+                    L10n.AddressDetails.shareQR,
                     prefixView:
                         Asset.Assets.Icons.share.image
                             .zImage(size: 20, style: Design.Btns.Primary.fg)
@@ -85,7 +85,7 @@ public struct AddressDetailsView: View {
                 .disabled(store.addressToShare != nil)
 
                 ZashiButton(
-                    "Copy Address",
+                    L10n.AddressDetails.copyAddress,
                     type: .ghost,
                     prefixView:
                         Asset.Assets.copy.image
@@ -129,9 +129,9 @@ extension AddressDetailsView {
             UIShareDialogView(activityItems: [
                 ShareableImage(
                     image: UIImage(cgImage: cgImg),
-                    title: "My Zashi ZEC Address",
-                    reason: "Hi, scan this QR code to send me a ZEC payment!"
-                ), "Hi, scan this QR code to send me a ZEC payment!"
+                    title: L10n.AddressDetails.shareTitle,
+                    reason: L10n.AddressDetails.shareDesc
+                ), L10n.AddressDetails.shareDesc
             ]) {
                 store.send(.shareFinished)
             }

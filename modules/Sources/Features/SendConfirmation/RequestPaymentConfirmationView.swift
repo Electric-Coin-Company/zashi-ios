@@ -40,7 +40,7 @@ public struct RequestPaymentConfirmationView: View {
 
                     HStack {
                         VStack(alignment: .leading, spacing: 6) {
-                            Text("Requested By")
+                            Text(L10n.Send.RequestPayment.requestedBy)
                                 .zFont(.medium, size: 14, style: Design.Text.tertiary)
 
                             if let alias = store.alias {
@@ -62,7 +62,7 @@ public struct RequestPaymentConfirmationView: View {
                             if !store.isTransparentAddress {
                                 if store.isAddressExpanded {
                                     ZashiButton(
-                                        "Hide",
+                                        L10n.General.hide,
                                         type: .tertiary,
                                         infinityWidth: false,
                                         prefixView:
@@ -75,7 +75,7 @@ public struct RequestPaymentConfirmationView: View {
                                     .padding(.trailing, 12)
                                 } else {
                                     ZashiButton(
-                                        "Show",
+                                        L10n.General.show,
                                         type: .tertiary,
                                         infinityWidth: false,
                                         prefixView:
@@ -90,7 +90,7 @@ public struct RequestPaymentConfirmationView: View {
                             
                             if store.alias == nil {
                                 ZashiButton(
-                                    "Save",
+                                    L10n.General.save,
                                     type: .tertiary,
                                     infinityWidth: false,
                                     prefixView:
@@ -109,7 +109,7 @@ public struct RequestPaymentConfirmationView: View {
 
                     if !store.message.isEmpty {
                         VStack(alignment: .leading) {
-                            Text("For:")
+                            Text(L10n.Send.RequestPayment.for)
                                 .zFont(.medium, size: 14, style: Design.Text.tertiary)
 
                             HStack {
@@ -148,7 +148,7 @@ public struct RequestPaymentConfirmationView: View {
                     .padding(.bottom, 20)
                     
                     HStack {
-                        Text("Total")
+                        Text(L10n.Send.RequestPayment.total)
                             .zFont(.medium, size: 14, style: Design.Text.tertiary)
                         
                         Spacer()
@@ -204,7 +204,7 @@ public struct RequestPaymentConfirmationView: View {
                 }
             }
             .onAppear { store.send(.onAppear) }
-            .screenTitle("PAYMENT REQUEST")
+            .screenTitle(L10n.Send.RequestPayment.title.uppercased())
         }
         .navigationBarBackButtonHidden()
         .padding(.vertical, 1)

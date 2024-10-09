@@ -16,8 +16,11 @@ import Utils
 public struct ZecKeyboardView: View {
     @Perception.Bindable var store: StoreOf<ZecKeyboard>
     
-    public init(store: StoreOf<ZecKeyboard>) {
+    let tokenName: String
+    
+    public init(store: StoreOf<ZecKeyboard>, tokenName: String) {
         self.store = store
+        self.tokenName = tokenName
     }
     
     public var body: some View {
@@ -30,7 +33,7 @@ public struct ZecKeyboardView: View {
                                 .zImage(size: 20, style: Design.Utility.WarningYellow._500)
                                 .padding(.trailing, 12)
                             
-                            Text("This transaction amount is invalid.")
+                            Text(L10n.ZecKeyboard.invalid)
                                 .zFont(.medium, size: 14, style: Design.Utility.WarningYellow._700)
                                 .padding(.top, 3)
                         }
@@ -42,7 +45,7 @@ public struct ZecKeyboardView: View {
                     HStack(spacing: 0) {
                         if store.isInputInZec {
                             Text(store.humanReadableMainInput)
-                            + Text(" ZEC")
+                            + Text(" \(tokenName)")
                                 .foregroundColor(Design.Text.quaternary.color)
                         } else {
                             if store.isCurrencySymbolPrefix {
@@ -82,7 +85,7 @@ public struct ZecKeyboardView: View {
                                 }
                             } else {
                                 Text(store.humanReadableConvertedInput)
-                                + Text(" ZEC")
+                                + Text(" \(tokenName)")
                                     .foregroundColor(Design.Text.quaternary.color)
                             }
                         }
@@ -150,7 +153,7 @@ public struct ZecKeyboardView: View {
                     .padding(.bottom, 24)
                 }
 
-                ZashiButton("Next") {
+                ZashiButton(L10n.General.next) {
                     store.send(.nextTapped)
                 }
                 .disabled(store.isNextButtonDisabled)
@@ -161,13 +164,13 @@ public struct ZecKeyboardView: View {
         }
         .applyScreenBackground()
         .zashiBack()
-        .screenTitle("Request")
+        .screenTitle(L10n.General.request)
     }
 }
 
 #Preview {
     NavigationView {
-        ZecKeyboardView(store: ZecKeyboard.placeholder)
+        ZecKeyboardView(store: ZecKeyboard.placeholder, tokenName: "ZEC")
     }
 }
 

@@ -33,9 +33,10 @@ public struct Scan {
         public var cancelId = UUID()
         
         public var info = ""
+        public var isCameraEnabled = true
         public var isTorchAvailable = false
         public var isTorchOn = false
-        public var isCameraEnabled = true
+        public var isRPFound = false
         
         public init(
             info: String = "",
@@ -77,6 +78,7 @@ public struct Scan {
             case .onAppear:
                 // reset the values
                 state.isTorchOn = false
+                state.isRPFound = false
                 // check the torch availability
                 state.isTorchAvailable = captureDevice.isTorchAvailable()
                 if !captureDevice.isAuthorized() {
@@ -102,6 +104,10 @@ public struct Scan {
                 return .none
 
             case .libraryImage(let image):
+                guard !state.isRPFound else {
+                    return .none
+                }
+
                 guard let codes = qrImageDetector.check(image) else {
                     return .send(.scanFailed(.noQRCodeFound))
                 }
@@ -117,7 +123,8 @@ public struct Scan {
                 if uriParser.isValidURI(code, zcashSDKEnvironment.network.networkType) {
                     return .send(.found(code.redacted))
                 } else if let data = uriParser.checkRP(code) {
-                        return .send(.foundRP(data))
+                    state.isRPFound = true
+                    return .send(.foundRP(data))
                 } else {
                     return .send(.scanFailed(.noQRCodeFound))
                 }
@@ -141,9 +148,13 @@ public struct Scan {
                 )
 
             case .scan(let code):
+                guard !state.isRPFound else {
+                    return .none
+                }
                 if uriParser.isValidURI(code.data, zcashSDKEnvironment.network.networkType) {
                     return .send(.found(code))
                 } else if let data = uriParser.checkRP(code.data) {
+                    state.isRPFound = true
                     return .send(.foundRP(data))
                 } else {
                     return .send(.scanFailed(.invalidQRCode))

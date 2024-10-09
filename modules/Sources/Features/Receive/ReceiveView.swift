@@ -38,7 +38,7 @@ public struct ReceiveView: View {
                 WithPerceptionTracking {
                     VStack(alignment: .leading, spacing: 0) {
                         HStack {
-                            Text("Receive Zcash")
+                            Text(L10n.Receive.title)
                                 .zFont(.semiBold, size: 28, style: Design.Text.primary)
                                 .lineLimit(1)
                                 .padding(.top, 24)
@@ -47,7 +47,7 @@ public struct ReceiveView: View {
                             Spacer()
                         }
                         
-                        Text("Prioritize using your shielded address for maximum privacy.")
+                        Text(L10n.Receive.warning)
                             .zFont(size: 16, style: Design.Text.secondary)
                     }
                     .padding(.horizontal, 20)
@@ -55,23 +55,9 @@ public struct ReceiveView: View {
                         currentFocus = .uaAddress
                     }
 
-//                    HStack(alignment: .top, spacing: 0) {
-//                        Asset.Assets.infoOutline.image
-//                            .zImage(size: 20, style: Design.Text.tertiary)
-//                            .padding(.trailing, 12)
-//                        
-//                        Text("Prioritize using shielded address for maximum privacy.")
-//                            .zFont(size: 12, style: Design.Text.tertiary)
-//                            .padding(.top, 3)
-//                        
-//                        Spacer(minLength: 0)
-//                    }
-//                    .padding(.horizontal, 20)
-//                    .padding(.top, 24)
-
                     addressBlock(
                         prefixIcon: Asset.Assets.Brandmarks.brandmarkMax.image,
-                        title: "Zcash Shielded Address",
+                        title: L10n.Receive.shieldedAddress,
                         address: store.unifiedAddress,
                         postfixIcon: Asset.Assets.Icons.shieldTickFilled.image,
                         iconFg: Design.Utility.Purple._800,
@@ -94,7 +80,7 @@ public struct ReceiveView: View {
 
                     addressBlock(
                         prefixIcon: Asset.Assets.Brandmarks.brandmarkLow.image,
-                        title: "Zcash Transparent Address",
+                        title: L10n.Receive.transparentAddress,
                         address: store.transparentAddress,
                         iconFg: Design.Text.primary,
                         iconBg: Design.Surfaces.bgTertiary,
@@ -116,7 +102,7 @@ public struct ReceiveView: View {
                     if networkType == .testnet {
                         addressBlock(
                             prefixIcon: Asset.Assets.Brandmarks.brandmarkLow.image,
-                            title: "Zcash Sapling Address",
+                            title: L10n.Receive.saplingAddress,
                             address: store.saplingAddress,
                             iconFg: Design.Text.primary,
                             iconBg: Design.Surfaces.bgTertiary,
@@ -170,8 +156,6 @@ public struct ReceiveView: View {
                     
                     Text(address.zip316)
                         .zFont(size: 14, style: Design.Text.tertiary)
-                        //.truncationMode(.middle)
-                        //.frame(maxWidth: 110)
                         .padding(.bottom, expanded ? 10 : 0)
                 }
                 .lineLimit(1)
@@ -188,15 +172,15 @@ public struct ReceiveView: View {
             
             if expanded {
                 HStack(spacing: 8) {
-                    button("Copy", fill: iconBg.color, icon: Asset.Assets.copy.image) {
+                    button(L10n.Receive.copy, fill: iconBg.color, icon: Asset.Assets.copy.image) {
                         copyAction()
                     }
                     
-                    button("QR Code", fill: iconBg.color, icon: Asset.Assets.Icons.qr.image) {
+                    button(L10n.Receive.qrCode, fill: iconBg.color, icon: Asset.Assets.Icons.qr.image) {
                         qrAction()
                     }
                     
-                    button("Request", fill: iconBg.color, icon: Asset.Assets.Icons.coinsHand.image) {
+                    button(L10n.Receive.request, fill: iconBg.color, icon: Asset.Assets.Icons.coinsHand.image) {
                         requestAction()
                     }
                 }

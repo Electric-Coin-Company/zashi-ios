@@ -212,7 +212,7 @@ public struct SendFlow {
         case resetForm
         case reviewPressed
         case scan(Scan.Action)
-        case sendFailed(ZcashError)
+        case sendFailed(ZcashError, Confirmation)
         case syncAmounts(Bool)
         case updateDestination(SendFlow.State.Destination?)
         case walletBalances(WalletBalances.Action)
@@ -307,7 +307,7 @@ public struct SendFlow {
                 case .value(let rate), .refreshEnable(let rate):
                     if let rate {
                         state.currencyConversion = CurrencyConversion(.usd, ratio: rate.rate.doubleValue, timestamp: rate.date.timeIntervalSince1970)
-                        return .send(.syncAmounts(false))
+                        return .send(.syncAmounts(true))
                     }
                 case .stale:
                     state.currencyConversion = nil
@@ -337,13 +337,17 @@ public struct SendFlow {
                         await send(.proposal(proposal))
                         await send(.confirmationRequired(confirmationType))
                     } catch {
-                        await send(.sendFailed(error.toZcashError()))
+                        await send(.sendFailed(error.toZcashError(), confirmationType))
                     }
                 }
                 
-            case .sendFailed(let error):
-                state.alert = AlertState.sendFailure(error)
-                return .none
+            case let .sendFailed(error, confirmationType):
+                if confirmationType == .requestPayment {
+                    return .send(.updateDestination(nil))
+                } else {
+                    state.alert = AlertState.sendFailure(error)
+                    return .none
+                }
                 
             case .confirmationRequired:
                 return .none

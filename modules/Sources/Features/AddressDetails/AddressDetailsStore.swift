@@ -84,7 +84,7 @@ public struct AddressDetails {
 
             case .copyToPastboard:
                 pasteboard.setString(state.address)
-                state.toast = .top("Copied to the clipboard!")
+                state.toast = .top(L10n.General.copiedToTheClipboard)
                 return .none
 
             case .generateQRCode:

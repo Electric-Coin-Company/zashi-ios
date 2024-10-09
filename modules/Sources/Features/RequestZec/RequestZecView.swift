@@ -19,9 +19,12 @@ public struct RequestZecView: View {
     @State private var keyboardVisible: Bool = false
 
     @FocusState private var isMemoFocused
+    
+    let tokenName: String
 
-    public init(store: StoreOf<RequestZec>) {
+    public init(store: StoreOf<RequestZec>, tokenName: String) {
         self.store = store
+        self.tokenName = tokenName
     }
     
     public var body: some View {
@@ -37,13 +40,13 @@ public struct RequestZecView: View {
                         PrivacyBadge(store.maxPrivacy ? .max : .low)
                             .padding(.top, 26)
                         
-                        Text("Payment Request")
+                        Text(L10n.RequestZec.title)
                             .zFont(.medium, size: 18, style: Design.Text.tertiary)
                             .padding(.top, 12)
                         
                         Group {
                             Text(store.requestedZec.decimalString())
-                            + Text(" ZEC")
+                            + Text(" \(tokenName)")
                                 .foregroundColor(Design.Text.quaternary.color)
                         }
                         .zFont(.semiBold, size: 56, style: Design.Text.primary)
@@ -55,7 +58,7 @@ public struct RequestZecView: View {
                             MessageEditorView(
                                 store: store.memoStore(),
                                 title: "",
-                                placeholder: "What’s this for?"
+                                placeholder: L10n.RequestZec.whatFor
                             )
                             .frame(minHeight: 155)
                             .frame(maxHeight: 300)
@@ -68,13 +71,13 @@ public struct RequestZecView: View {
                     }
                     .padding(.vertical, 1)
                     
-                    ZashiButton("Request") {
+                    ZashiButton(L10n.General.request) {
                         store.send(.requestTapped)
                     }
                     .disabled(!store.memoState.isValid)
                     .padding(.bottom, keyboardVisible ? 48 : 24)
                 }
-                .screenTitle("Request")
+                .screenTitle(L10n.General.request)
                 .zashiBack()
                 .screenHorizontalPadding()
                 .applyScreenBackground()
@@ -127,7 +130,7 @@ public struct RequestZecView: View {
 
 #Preview {
     NavigationView {
-        RequestZecView(store: RequestZec.placeholder)
+        RequestZecView(store: RequestZec.placeholder, tokenName: "ZEC")
     }
 }
 

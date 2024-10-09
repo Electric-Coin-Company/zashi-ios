@@ -68,7 +68,7 @@ public struct Receive {
                 
             case .copyToPastboard(let text):
                 pasteboard.setString(text)
-                state.toast = .top("Copied to the clipboard!")
+                state.toast = .top(L10n.General.copiedToTheClipboard)
                 return .none
 
             case .requestTapped:

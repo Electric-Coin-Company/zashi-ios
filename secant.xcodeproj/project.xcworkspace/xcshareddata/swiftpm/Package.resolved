@@ -356,8 +356,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio-http2.git",
       "state" : {
-        "revision" : "b5f7062b60e4add1e8c343ba4eb8da2e324b3a94",
-        "version" : "1.34.0"
+        "revision" : "eaa71bb6ae082eee5a07407b1ad0cbd8f48f9dca",
+        "version" : "1.34.1"
       }
     },
     {
@@ -374,8 +374,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio-transport-services.git",
       "state" : {
-        "revision" : "38ac8221dd20674682148d6451367f89c2652980",
-        "version" : "1.21.0"
+        "revision" : "dbace16f126fdcd80d58dc54526c561ca17327d7",
+        "version" : "1.22.0"
       }
     },
     {
@@ -471,10 +471,10 @@
     {
       "identity" : "zcash-light-client-ffi",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Electric-Coin-Company/zcash-light-client-ffi",
+      "location" : "https://github.com/zcash-hackworks/zcash-light-client-ffi",
       "state" : {
-        "revision" : "be1575f8d2dce5b7502448ef1f8619e2ca9359d9",
-        "version" : "0.10.0"
+        "revision" : "8ed5b08d59ff5e7e11240be29b084dedbdf2f268",
+        "version" : "0.9.1"
       }
     },
     {
@@ -491,8 +491,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk",
       "state" : {
-        "revision" : "e2ce60ef245e3d672b0703a0fbf1d4ed31eaa16c",
-        "version" : "2.2.4"
+        "revision" : "af9383b419c2cafe37ac9edecf9d41cf37fbbf45",
+        "version" : "2.2.3"
       }
     }
   ],

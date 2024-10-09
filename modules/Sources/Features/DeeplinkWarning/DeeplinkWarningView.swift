@@ -28,13 +28,13 @@ public struct DeeplinkWarningView: View {
                     .padding(.bottom, 24)
                     .padding(.leading, 12)
 
-                Text("Looks like you used a third-party app to scan for payment.")
+                Text(L10n.DeeplinkWarning.title)
                     .zFont(.semiBold, size: 24, style: Design.Text.primary)
                     .minimumScaleFactor(0.5)
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
                 
-                Text("For better safety and security, rescan the QR code with Zashi.")
+                Text(L10n.DeeplinkWarning.desc)
                     .zFont(size: 14, style: Design.Text.primary)
                     .multilineTextAlignment(.center)
                     .screenHorizontalPadding()
@@ -42,7 +42,7 @@ public struct DeeplinkWarningView: View {
 
                 Spacer()
 
-                ZashiButton("Rescan in Zashi") {
+                ZashiButton(L10n.DeeplinkWarning.cta) {
                     store.send(.gotItTapped)
                 }
                 .padding(.bottom, 24)
@@ -51,7 +51,7 @@ public struct DeeplinkWarningView: View {
         .navigationBarTitleDisplayMode(.inline)
         .screenHorizontalPadding()
         .applyErredScreenBackground()
-        .screenTitle("HELLO!")
+        .screenTitle(L10n.DeeplinkWarning.screenTitle.uppercased())
     }
 }
 

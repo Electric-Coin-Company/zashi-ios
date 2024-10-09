@@ -71,6 +71,16 @@ public enum L10n {
       public static let title = L10n.tr("Localizable", "addressBook.newContact.title", fallback: "Add New Address")
     }
   }
+  public enum AddressDetails {
+    /// Copy Address
+    public static let copyAddress = L10n.tr("Localizable", "addressDetails.copyAddress", fallback: "Copy Address")
+    /// Hi, scan this QR code to send me a ZEC payment!
+    public static let shareDesc = L10n.tr("Localizable", "addressDetails.shareDesc", fallback: "Hi, scan this QR code to send me a ZEC payment!")
+    /// Share QR Code
+    public static let shareQR = L10n.tr("Localizable", "addressDetails.shareQR", fallback: "Share QR Code")
+    /// My Zashi ZEC Address
+    public static let shareTitle = L10n.tr("Localizable", "addressDetails.shareTitle", fallback: "My Zashi ZEC Address")
+  }
   public enum Balance {
     /// Available Balance:
     public static let availableTitle = L10n.tr("Localizable", "balance.availableTitle", fallback: "Available Balance:")
@@ -149,6 +159,16 @@ public enum L10n {
     /// Currency Conversion
     public static let title = L10n.tr("Localizable", "currencyConversion.title", fallback: "Currency Conversion")
   }
+  public enum DeeplinkWarning {
+    /// Rescan in Zashi
+    public static let cta = L10n.tr("Localizable", "deeplinkWarning.cta", fallback: "Rescan in Zashi")
+    /// For better safety and security, rescan the QR code with Zashi.
+    public static let desc = L10n.tr("Localizable", "deeplinkWarning.desc", fallback: "For better safety and security, rescan the QR code with Zashi.")
+    /// HELLO!
+    public static let screenTitle = L10n.tr("Localizable", "deeplinkWarning.screenTitle", fallback: "HELLO!")
+    /// Looks like you used a third-party app to scan for payment.
+    public static let title = L10n.tr("Localizable", "deeplinkWarning.title", fallback: "Looks like you used a third-party app to scan for payment.")
+  }
   public enum DeleteWallet {
     /// Delete
     public static let actionButtonTitle = L10n.tr("Localizable", "deleteWallet.actionButtonTitle", fallback: "Delete")
@@ -182,6 +202,8 @@ public enum L10n {
     public static let close = L10n.tr("Localizable", "general.close", fallback: "Close")
     /// Confirm
     public static let confirm = L10n.tr("Localizable", "general.confirm", fallback: "Confirm")
+    /// Copied to the clipboard!
+    public static let copiedToTheClipboard = L10n.tr("Localizable", "general.copiedToTheClipboard", fallback: "Copied to the clipboard!")
     /// Delete
     public static let delete = L10n.tr("Localizable", "general.delete", fallback: "Delete")
     /// Done
@@ -190,6 +212,8 @@ public enum L10n {
     public static func fee(_ p1: Any) -> String {
       return L10n.tr("Localizable", "general.fee", String(describing: p1), fallback: "Typical Fee < %@")
     }
+    /// Hide
+    public static let hide = L10n.tr("Localizable", "general.hide", fallback: "Hide")
     /// 
     public static let hideBalancesLeast = L10n.tr("Localizable", "general.hideBalancesLeast", fallback: "")
     /// -----
@@ -206,10 +230,14 @@ public enum L10n {
     public static let no = L10n.tr("Localizable", "general.no", fallback: "No")
     /// Ok
     public static let ok = L10n.tr("Localizable", "general.ok", fallback: "Ok")
+    /// Request
+    public static let request = L10n.tr("Localizable", "general.request", fallback: "Request")
     /// Save
     public static let save = L10n.tr("Localizable", "general.save", fallback: "Save")
     /// Send
     public static let send = L10n.tr("Localizable", "general.send", fallback: "Send")
+    /// Show
+    public static let show = L10n.tr("Localizable", "general.show", fallback: "Show")
     /// Success
     public static let success = L10n.tr("Localizable", "general.success", fallback: "Success")
     /// Tap to copy
@@ -340,14 +368,26 @@ public enum L10n {
   public enum Receive {
     /// Copy
     public static let copy = L10n.tr("Localizable", "receive.copy", fallback: "Copy")
+    /// QR Code
+    public static let qrCode = L10n.tr("Localizable", "receive.qrCode", fallback: "QR Code")
+    /// Request
+    public static let request = L10n.tr("Localizable", "receive.request", fallback: "Request")
     /// Sapling Address
     public static let sa = L10n.tr("Localizable", "receive.sa", fallback: "Sapling Address")
-    /// Share
-    public static let share = L10n.tr("Localizable", "receive.share", fallback: "Share")
+    /// Zcash Sapling Address
+    public static let saplingAddress = L10n.tr("Localizable", "receive.saplingAddress", fallback: "Zcash Sapling Address")
+    /// Zcash Shielded Address
+    public static let shieldedAddress = L10n.tr("Localizable", "receive.shieldedAddress", fallback: "Zcash Shielded Address")
     /// Transparent Address
     public static let ta = L10n.tr("Localizable", "receive.ta", fallback: "Transparent Address")
+    /// Receive Zcash
+    public static let title = L10n.tr("Localizable", "receive.title", fallback: "Receive Zcash")
+    /// Zcash Transparent Address
+    public static let transparentAddress = L10n.tr("Localizable", "receive.transparentAddress", fallback: "Zcash Transparent Address")
     /// Unified Address
     public static let ua = L10n.tr("Localizable", "receive.ua", fallback: "Unified Address")
+    /// Prioritize using your shielded address for maximum privacy.
+    public static let warning = L10n.tr("Localizable", "receive.warning", fallback: "Prioritize using your shielded address for maximum privacy.")
     public enum Error {
       /// could not extract sapling receiver from UA
       public static let cantExtractSaplingAddress = L10n.tr("Localizable", "receive.error.cantExtractSaplingAddress", fallback: "could not extract sapling receiver from UA")
@@ -383,6 +423,22 @@ public enum L10n {
     public enum Button {
       /// I've saved it
       public static let wroteItDown = L10n.tr("Localizable", "recoveryPhraseDisplay.button.wroteItDown", fallback: "I've saved it")
+    }
+  }
+  public enum RequestZec {
+    /// Payment Request
+    public static let title = L10n.tr("Localizable", "requestZec.title", fallback: "Payment Request")
+    /// What’s this for?
+    public static let whatFor = L10n.tr("Localizable", "requestZec.whatFor", fallback: "What’s this for?")
+    public enum Summary {
+      /// Hi, I have generated a ZEC payment request for you using the Zashi app!
+      public static let shareDesc = L10n.tr("Localizable", "requestZec.summary.shareDesc", fallback: "Hi, I have generated a ZEC payment request for you using the Zashi app!")
+      /// (download link: https://apps.apple.com/app/zashi-zcash-wallet/id1672392439)
+      public static let shareMsg = L10n.tr("Localizable", "requestZec.summary.shareMsg", fallback: "(download link: https://apps.apple.com/app/zashi-zcash-wallet/id1672392439)")
+      /// Share QR Code
+      public static let shareQR = L10n.tr("Localizable", "requestZec.summary.shareQR", fallback: "Share QR Code")
+      /// Request ZEC
+      public static let shareTitle = L10n.tr("Localizable", "requestZec.summary.shareTitle", fallback: "Request ZEC")
     }
   }
   public enum RestoreInfo {
@@ -575,8 +631,8 @@ public enum L10n {
     public static let warningD = L10n.tr("Localizable", "securityWarning.warningD", fallback: ": Crash reports might reveal the timing of the crash and what events occurred, but do not reveal spending or viewing keys.")
   }
   public enum Send {
-    /// Address not in Address Book
-    public static let addressNotInBook = L10n.tr("Localizable", "send.addressNotInBook", fallback: "Address not in Address Book")
+    /// Add contact by tapping on Address Book icon.
+    public static let addressNotInBook = L10n.tr("Localizable", "send.addressNotInBook", fallback: "Add contact by tapping on Address Book icon.")
     /// Zcash Address
     public static let addressPlaceholder = L10n.tr("Localizable", "send.addressPlaceholder", fallback: "Zcash Address")
     /// Amount
@@ -624,6 +680,16 @@ public enum L10n {
     public enum Info {
       /// Transparent transactions can’t have memos
       public static let memo = L10n.tr("Localizable", "send.info.memo", fallback: "Transparent transactions can’t have memos")
+    }
+    public enum RequestPayment {
+      /// For:
+      public static let `for` = L10n.tr("Localizable", "send.requestPayment.for", fallback: "For:")
+      /// Requested By
+      public static let requestedBy = L10n.tr("Localizable", "send.requestPayment.requestedBy", fallback: "Requested By")
+      /// Payment Request
+      public static let title = L10n.tr("Localizable", "send.requestPayment.title", fallback: "Payment Request")
+      /// Total
+      public static let total = L10n.tr("Localizable", "send.requestPayment.total", fallback: "Total")
     }
   }
   public enum ServerSetup {
@@ -847,6 +913,10 @@ public enum L10n {
     public static func version(_ p1: Any) -> String {
       return L10n.tr("Localizable", "whatsNew.version", String(describing: p1), fallback: "Zashi Version %@")
     }
+  }
+  public enum ZecKeyboard {
+    /// This transaction amount is invalid.
+    public static let invalid = L10n.tr("Localizable", "zecKeyboard.invalid", fallback: "This transaction amount is invalid.")
   }
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
