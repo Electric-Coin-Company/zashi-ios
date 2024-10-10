@@ -10,10 +10,15 @@ import Foundation
 public struct PartnerKeys {
     private enum Constants {
         static let cbProjectId = "cbProjectId"
+        static let flexaPublishableKey = "flexaPublishableKey"
     }
 
     public static var cbProjectId: String? {
         PartnerKeys.value(for: Constants.cbProjectId)
+    }
+    
+    public static var flexaPublishableKey: String? {
+        PartnerKeys.value(for: Constants.flexaPublishableKey)
     }
 }
 

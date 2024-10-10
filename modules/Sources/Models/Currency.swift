@@ -30,7 +30,7 @@ public struct CurrencyConversion: Equatable {
     
     public init(_ iso4217: CurrencyISO4217, ratio: Double, timestamp: TimeInterval) {
         self.iso4217 = iso4217
-        self.ratio = ratio
+        self.ratio = (ratio * Double(1_000_000)).rounded(.down) / Double(1_000_000)
         self.timestamp = timestamp
     }
     

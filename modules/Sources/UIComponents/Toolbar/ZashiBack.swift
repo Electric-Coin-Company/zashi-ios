@@ -34,10 +34,9 @@ struct ZashiBackModifier: ViewModifier {
                         } label: {
                             HStack {
                                 Asset.Assets.arrowLeftLong.image
-                                    .resizable()
-                                    .renderingMode(.template)
-                                    .frame(width: 24, height: 24)
-                                    .foregroundColor(invertedColors ? Asset.Colors.secondary.color : Asset.Colors.primary.color)
+                                    .zImage(size: 24, 
+                                            color: invertedColors ? Asset.Colors.secondary.color : Asset.Colors.primary.color
+                                    )
                             }
                             .padding(.trailing, 24)
                             .padding(8)

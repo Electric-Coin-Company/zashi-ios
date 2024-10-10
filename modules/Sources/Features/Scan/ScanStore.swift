@@ -17,11 +17,11 @@ import URIParser
 import ZcashLightClientKit
 import Generated
 import ZcashSDKEnvironment
+import Models
+import ZcashPaymentURI
 
 @Reducer
 public struct Scan {
-    private let CancelId = UUID()
-
     public enum ScanImageResult: Equatable {
         case invalidQRCode
         case noQRCodeFound
@@ -30,10 +30,13 @@ public struct Scan {
     
     @ObservableState
     public struct State: Equatable {
+        public var cancelId = UUID()
+        
         public var info = ""
+        public var isCameraEnabled = true
         public var isTorchAvailable = false
         public var isTorchOn = false
-        public var isCameraEnabled = true
+        public var isRPFound = false
         
         public init(
             info: String = "",
@@ -60,6 +63,7 @@ public struct Scan {
         case onAppear
         case onDisappear
         case found(RedactableString)
+        case foundRP(ParserResult)
         case scanFailed(ScanImageResult)
         case scan(RedactableString)
         case torchPressed
@@ -74,6 +78,7 @@ public struct Scan {
             case .onAppear:
                 // reset the values
                 state.isTorchOn = false
+                state.isRPFound = false
                 // check the torch availability
                 state.isTorchAvailable = captureDevice.isTorchAvailable()
                 if !captureDevice.isAuthorized() {
@@ -83,19 +88,26 @@ public struct Scan {
                 return .none
                 
             case .onDisappear:
-                return .cancel(id: CancelId)
+                return .cancel(id: state.cancelId)
                 
+            case .foundRP:
+                return .none
+
             case .cancelPressed:
                 return .none
                 
             case .clearInfo:
                 state.info = ""
-                return .cancel(id: CancelId)
+                return .cancel(id: state.cancelId)
 
             case .found:
                 return .none
 
             case .libraryImage(let image):
+                guard !state.isRPFound else {
+                    return .none
+                }
+
                 guard let codes = qrImageDetector.check(image) else {
                     return .send(.scanFailed(.noQRCodeFound))
                 }
@@ -110,6 +122,9 @@ public struct Scan {
                 
                 if uriParser.isValidURI(code, zcashSDKEnvironment.network.networkType) {
                     return .send(.found(code.redacted))
+                } else if let data = uriParser.checkRP(code) {
+                    state.isRPFound = true
+                    return .send(.foundRP(data))
                 } else {
                     return .send(.scanFailed(.noQRCodeFound))
                 }
@@ -124,17 +139,23 @@ public struct Scan {
                     state.info = L10n.Scan.severalCodesFound
                 }
                 return .concatenate(
-                    Effect.cancel(id: CancelId),
+                    Effect.cancel(id: state.cancelId),
                     .run { send in
-                        try await mainQueue.sleep(for: .seconds(3))
+                        try await mainQueue.sleep(for: .seconds(1))
                         await send(.clearInfo)
                     }
-                    .cancellable(id: CancelId, cancelInFlight: true)
+                    .cancellable(id: state.cancelId, cancelInFlight: true)
                 )
 
             case .scan(let code):
+                guard !state.isRPFound else {
+                    return .none
+                }
                 if uriParser.isValidURI(code.data, zcashSDKEnvironment.network.networkType) {
                     return .send(.found(code))
+                } else if let data = uriParser.checkRP(code.data) {
+                    state.isRPFound = true
+                    return .send(.foundRP(data))
                 } else {
                     return .send(.scanFailed(.invalidQRCode))
                 }

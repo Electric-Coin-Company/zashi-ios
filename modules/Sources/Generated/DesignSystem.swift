@@ -8,13 +8,17 @@
 import Foundation
 import SwiftUI
 
-//case .textPrimary: return Design.col(Asset.Colors.ZDesign., Asset.Colors.ZDesign.)
+public protocol Colorable {
+    var color: Color { get }
+}
 
 public enum Design {
+
+    case screenBackground
     
     // MARK: Color Variables
     
-    public enum Surfaces {
+    public enum Surfaces: Colorable {
         case bgPrimary
         case bgAdjust
         case bgSecondary
@@ -29,7 +33,7 @@ public enum Design {
         case divider
     }
     
-    public enum Text {
+    public enum Text: Colorable {
         case primary
         case secondary
         case tertiary
@@ -43,36 +47,15 @@ public enum Design {
     }
 
     public enum Btns {
-        public enum Primary {
+        public enum Primary: Colorable {
             case bg
             case bgHover
             case fg
-            case fgHover
             case bgDisabled
             case fgDisabled
         }
 
-        public enum Secondary {
-            case bg
-            case bgHover
-            case fg
-            case fgHover
-            case border
-            case borderHover
-            case bgDisabled
-            case fgDisabled
-        }
-
-        public enum Tertiary {
-            case bg
-            case bgHover
-            case fg
-            case fgHover
-            case bgDisabled
-            case fgDisabled
-        }
-        
-        public enum Destructive1 {
+        public enum Secondary: Colorable {
             case bg
             case bgHover
             case fg
@@ -82,8 +65,37 @@ public enum Design {
             case bgDisabled
             case fgDisabled
         }
+
+        public enum Tertiary: Colorable {
+            case bg
+            case bgHover
+            case fg
+            case fgHover
+            case bgDisabled
+            case fgDisabled
+        }
+
+        public enum Quaternary: Colorable {
+            case bg
+            case bgHover
+            case fg
+            case fgHover
+            case bgDisabled
+            case fgDisabled
+        }
+
+        public enum Destructive1: Colorable {
+            case bg
+            case bgHover
+            case fg
+            case fgHover
+            case border
+            case borderHover
+            case bgDisabled
+            case fgDisabled
+        }
         
-        public enum Destructive2 {
+        public enum Destructive2: Colorable {
             case bg
             case bgHover
             case fg
@@ -91,15 +103,16 @@ public enum Design {
             case fgDisabled
         }
 
-        public enum Bold {
+        public enum Brand: Colorable {
             case bg
             case bgHover
             case fg
+            case fgHover
             case bgDisabled
             case fgDisabled
         }
 
-        public enum Ghost {
+        public enum Ghost: Colorable {
             case bg
             case bgHover
             case fg
@@ -107,14 +120,58 @@ public enum Design {
             case fgDisabled
         }
     }
-    
+
     public enum Inputs {
-        public enum Default {
+        public enum Default: Colorable {
+            case bg
+            case bgAlt
+            case label
+            case text
+            case hint
+            case required
+            case icon
             case stroke
         }
+        
+        public enum Filled: Colorable {
+            case bg
+            case bgAlt
+            case asideBg
+            case stroke
+            case label
+            case text
+            case hint
+            case icon
+            case iconMain
+            case required
+        }
+
+        public enum ErrorFilled: Colorable {
+            case bg
+            case bgAlt
+            case label
+            case text
+            case textAside
+            case hint
+            case icon
+            case iconMain
+            case stroke
+            case strokeAlt
+            case dropdown
+        }
+    }
+
+    public enum Avatars: Colorable {
+        case profileBorder
+        case bg
+        case bgSecondary
+        case status
+        case textFg
+        case badgeBg
+        case badgeFg
     }
     
-    public enum Checkboxes {
+    public enum Checkboxes: Colorable {
         case offBg
         case offStroke
         case offHoverBg
@@ -129,7 +186,7 @@ public enum Design {
         case onDisabledFb
     }
     
-    public enum HintTooltips {
+    public enum HintTooltips: Colorable {
         case surfacePrimary
         case defaultBg
         case defaultFg
@@ -142,7 +199,7 @@ public enum Design {
     }
     
     public enum Utility {
-        public enum Gray {
+        public enum Gray: Colorable {
             case _50
             case _100
             case _200
@@ -155,7 +212,7 @@ public enum Design {
             case _900
         }
 
-        public enum SuccessGreen {
+        public enum SuccessGreen: Colorable {
             case _50
             case _100
             case _200
@@ -168,7 +225,7 @@ public enum Design {
             case _900
         }
 
-        public enum ErrorRed {
+        public enum ErrorRed: Colorable {
             case _50
             case _100
             case _200
@@ -181,7 +238,7 @@ public enum Design {
             case _900
         }
 
-        public enum WarningYellow {
+        public enum WarningYellow: Colorable {
             case _50
             case _100
             case _200
@@ -194,7 +251,7 @@ public enum Design {
             case _900
         }
 
-        public enum HyperBlue {
+        public enum HyperBlue: Colorable {
             case _50
             case _100
             case _200
@@ -207,7 +264,7 @@ public enum Design {
             case _900
         }
 
-        public enum Indigo {
+        public enum Indigo: Colorable {
             case _50
             case _100
             case _200
@@ -220,7 +277,20 @@ public enum Design {
             case _900
         }
 
-        public enum Purple {
+        public enum Purple: Colorable {
+            case _50
+            case _100
+            case _200
+            case _300
+            case _400
+            case _500
+            case _600
+            case _700
+            case _800
+            case _900
+        }
+        
+        public enum Brand: Colorable {
             case _50
             case _100
             case _200
@@ -233,18 +303,12 @@ public enum Design {
             case _900
         }
     }
+}
 
-    public enum Effects {
-        public enum Shadow {
-            case surfacePrimary
-            case defaultBg
-            case defaultFg
-            case hoverBg
-            case hoverFg
-            case focusedBg
-            case focusedStroke
-            case disabledBg
-            case disabledFg
+public extension Design {
+    var color: Color {
+        switch self {
+        case .screenBackground: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.obsidian.color)
         }
     }
 }
@@ -290,10 +354,9 @@ public extension Design.Text {
 public extension Design.Btns.Primary {
     var color: Color {
         switch self {
-        case .bg: return Design.col(Asset.Colors.ZDesign.brand400.color, Asset.Colors.ZDesign.brand400.color)
-        case .bgHover: return Design.col(Asset.Colors.ZDesign.brand300.color, Asset.Colors.ZDesign.brand300.color)
-        case .fg: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.Base.obsidian.color)
-        case .fgHover: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.Base.obsidian.color)
+        case .bg: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.Base.bone.color)
+        case .bgHover: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.gray100.color)
+        case .fg: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.obsidian.color)
         case .bgDisabled: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark900.color)
         case .fgDisabled: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color)
         }
@@ -328,6 +391,19 @@ public extension Design.Btns.Tertiary {
     }
 }
 
+public extension Design.Btns.Quaternary {
+    var color: Color {
+        switch self {
+        case .bg: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark700.color)
+        case .bgHover: return Design.col(Asset.Colors.ZDesign.gray300.color, Asset.Colors.ZDesign.shark600.color)
+        case .fg: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark50.color)
+        case .fgHover: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark50.color)
+        case .bgDisabled: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark900.color)
+        case .fgDisabled: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color)
+        }
+    }
+}
+
 public extension Design.Btns.Destructive1 {
     var color: Color {
         switch self {
@@ -355,12 +431,13 @@ public extension Design.Btns.Destructive2 {
     }
 }
 
-public extension Design.Btns.Bold {
+public extension Design.Btns.Brand {
     var color: Color {
         switch self {
-        case .bg: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.Base.bone.color)
-        case .bgHover: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.gray100.color)
-        case .fg: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.obsidian.color)
+        case .bg: return Design.col(Asset.Colors.ZDesign.brand400.color, Asset.Colors.ZDesign.brand400.color)
+        case .bgHover: return Design.col(Asset.Colors.ZDesign.brand300.color, Asset.Colors.ZDesign.brand300.color)
+        case .fg: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.Base.obsidian.color)
+        case .fgHover: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.Base.obsidian.color)
         case .bgDisabled: return Design.col(Asset.Colors.ZDesign.gray100.color, Asset.Colors.ZDesign.shark900.color)
         case .fgDisabled: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color)
         }
@@ -382,7 +459,63 @@ public extension Design.Btns.Ghost {
 public extension Design.Inputs.Default {
     var color: Color {
         switch self {
+        case .bg: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark900.color)
+        case .bgAlt: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.shark950.color)
+        case .label: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.shark50.color)
+        case .text: return Design.col(Asset.Colors.ZDesign.gray600.color, Asset.Colors.ZDesign.shark400.color)
+        case .hint: return Design.col(Asset.Colors.ZDesign.gray700.color, Asset.Colors.ZDesign.shark300.color)
+        case .required: return Design.col(Asset.Colors.ZDesign.errorRed600.color, Asset.Colors.ZDesign.errorRed400.color)
+        case .icon: return Design.col(Asset.Colors.ZDesign.gray400.color, Asset.Colors.ZDesign.shark400.color)
         case .stroke: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark800.color)
+        }
+    }
+}
+
+public extension Design.Inputs.Filled {
+    var color: Color {
+        switch self {
+        case .bg: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark900.color)
+        case .bgAlt: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.shark950.color)
+        case .asideBg: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark900.color)
+        case .stroke: return Design.col(Asset.Colors.ZDesign.gray300.color, Asset.Colors.ZDesign.shark700.color)
+        case .label: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.shark50.color)
+        case .text: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark100.color)
+        case .hint: return Design.col(Asset.Colors.ZDesign.gray700.color, Asset.Colors.ZDesign.shark300.color)
+        case .icon: return Design.col(Asset.Colors.ZDesign.gray400.color, Asset.Colors.ZDesign.shark400.color)
+        case .iconMain: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color)
+        case .required: return Design.col(Asset.Colors.ZDesign.errorRed600.color, Asset.Colors.ZDesign.errorRed400.color)
+        }
+    }
+}
+
+public extension Design.Inputs.ErrorFilled {
+    var color: Color {
+        switch self {
+        case .bg: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.shark950.color)
+        case .bgAlt: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark900.color)
+        case .label: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.shark50.color)
+        case .text: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark100.color)
+        case .textAside: return Design.col(Asset.Colors.ZDesign.gray600.color, Asset.Colors.ZDesign.shark400.color)
+        case .hint: return Design.col(Asset.Colors.ZDesign.errorRed600.color, Asset.Colors.ZDesign.errorRed400.color)
+        case .icon: return Design.col(Asset.Colors.ZDesign.errorRed500.color, Asset.Colors.ZDesign.errorRed400.color)
+        case .iconMain: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color)
+        case .stroke: return Design.col(Asset.Colors.ZDesign.errorRed400.color, Asset.Colors.ZDesign.errorRed500.color)
+        case .strokeAlt: return Design.col(Asset.Colors.ZDesign.gray300.color, Asset.Colors.ZDesign.shark700.color)
+        case .dropdown: return Design.col(Asset.Colors.ZDesign.gray400.color, Asset.Colors.ZDesign.shark600.color)
+        }
+    }
+}
+
+public extension Design.Avatars {
+    var color: Color {
+        switch self {
+        case .profileBorder: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.obsidian.color)
+        case .bg: return Design.col(Asset.Colors.ZDesign.gray600.color, Asset.Colors.ZDesign.shark600.color)
+        case .bgSecondary: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color)
+        case .status: return Design.col(Asset.Colors.ZDesign.successGreen500.color, Asset.Colors.ZDesign.successGreen400.color)
+        case .textFg: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.shark100.color)
+        case .badgeBg: return Design.col(Asset.Colors.ZDesign.hyperBlue400.color, Asset.Colors.ZDesign.hyperBlue400.color)
+        case .badgeFg: return Design.col(Asset.Colors.ZDesign.Base.bone.color, Asset.Colors.ZDesign.Base.obsidian.color)
         }
     }
 }
@@ -537,6 +670,23 @@ public extension Design.Utility.Purple {
         case ._700: return Design.col(Asset.Colors.ZDesign.purple700.color, Asset.Colors.ZDesign.purple300.color)
         case ._800: return Design.col(Asset.Colors.ZDesign.purple800.color, Asset.Colors.ZDesign.purple200.color)
         case ._900: return Design.col(Asset.Colors.ZDesign.purple900.color, Asset.Colors.ZDesign.purple100.color)
+        }
+    }
+}
+
+public extension Design.Utility.Brand {
+    var color: Color {
+        switch self {
+        case ._50: return Design.col(Asset.Colors.ZDesign.brand50.color, Asset.Colors.ZDesign.brand950.color)
+        case ._100: return Design.col(Asset.Colors.ZDesign.brand100.color, Asset.Colors.ZDesign.brand900.color)
+        case ._200: return Design.col(Asset.Colors.ZDesign.brand200.color, Asset.Colors.ZDesign.brand800.color)
+        case ._300: return Design.col(Asset.Colors.ZDesign.brand300.color, Asset.Colors.ZDesign.brand700.color)
+        case ._400: return Design.col(Asset.Colors.ZDesign.brand400.color, Asset.Colors.ZDesign.brand600.color)
+        case ._500: return Design.col(Asset.Colors.ZDesign.brand500.color, Asset.Colors.ZDesign.brand500.color)
+        case ._600: return Design.col(Asset.Colors.ZDesign.brand600.color, Asset.Colors.ZDesign.brand400.color)
+        case ._700: return Design.col(Asset.Colors.ZDesign.brand700.color, Asset.Colors.ZDesign.brand300.color)
+        case ._800: return Design.col(Asset.Colors.ZDesign.brand800.color, Asset.Colors.ZDesign.brand200.color)
+        case ._900: return Design.col(Asset.Colors.ZDesign.brand900.color, Asset.Colors.ZDesign.brand100.color)
         }
     }
 }

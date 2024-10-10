@@ -1,6 +1,6 @@
 // MARK: - Plain Onboarding Flow
 "plainOnboarding.title" = "A no-frills wallet for sending and receiving Zcash (ZEC).";
-"plainOnboarding.button.createNewWallet" = "Create new Wallet";
+"plainOnboarding.button.createNewWallet" = "Create new wallet";
 "plainOnboarding.button.restoreWallet" = "Restore existing wallet";
 
 // MARK: - Security Warning
@@ -66,16 +66,36 @@
 "home.migratingDatabases" = "Upgrading databases…";
 
 // MARK: - Address Details
-"addressDetails.ua" = "Unified Address";
-"addressDetails.sa" = "Sapling Address";
-"addressDetails.ta" = "Transparent Address";
-"addressDetails.copy" = "Copy";
-"addressDetails.share" = "Share";
-"addressDetails.error.cantExtractUnifiedAddress" = "could not extract UA";
-"addressDetails.error.cantExtractTransparentAddress" = "could not extract transparent receiver from UA";
-"addressDetails.error.cantExtractSaplingAddress" = "could not extract sapling receiver from UA";
+"addressDetails.shareTitle" = "My Zashi ZEC Address";
+"addressDetails.shareDesc" = "Hi, scan this QR code to send me a ZEC payment!";
+"addressDetails.shareQR" = "Share QR Code";
+"addressDetails.copyAddress" = "Copy Address";
 
-// MARK: - Address Details
+// MARK: - Request ZEC
+"requestZec.title" = "Payment Request";
+"requestZec.whatFor" = "What’s this for?";
+"requestZec.summary.shareQR" = "Share QR Code";
+"requestZec.summary.shareTitle" = "Request ZEC";
+"requestZec.summary.shareDesc" = "Hi, I have generated a ZEC payment request for you using the Zashi app!";
+"requestZec.summary.shareMsg" = "(download link: https://apps.apple.com/app/zashi-zcash-wallet/id1672392439)";
+
+// MARK: - Receive
+"receive.ua" = "Unified Address";
+"receive.sa" = "Sapling Address";
+"receive.ta" = "Transparent Address";
+"receive.error.cantExtractUnifiedAddress" = "could not extract UA";
+"receive.error.cantExtractTransparentAddress" = "could not extract transparent receiver from UA";
+"receive.error.cantExtractSaplingAddress" = "could not extract sapling receiver from UA";
+"receive.title" = "Receive Zcash";
+"receive.warning" = "Prioritize using your shielded address for maximum privacy.";
+"receive.shieldedAddress" = "Zcash Shielded Address";
+"receive.transparentAddress" = "Zcash Transparent Address";
+"receive.saplingAddress" = "Zcash Sapling Address";
+"receive.copy" = "Copy";
+"receive.qrCode" = "QR Code";
+"receive.request" = "Request";
+
+// MARK: - Server Setup
 "serverSetup.title" = "Server";
 "serverSetup.custom" = "custom server";
 "serverSetup.default" = "Default";
@@ -117,25 +137,38 @@
 // MARK: - Send
 "send.sending" = "Sending";
 "send.message" = "Message";
-"send.memoPlaceholder" = "Write private message here...";
+"send.memoPlaceholder" = "Write encrypted message here...";
 "send.error.insufficientFunds" = "Insufficient funds";
 "send.error.invalidAmount" = "Invalid amount";
 "send.error.invalidAddress" = "Invalid address";
-"send.amountSummary" = "Amount:";
-"send.toSummary" = "To:";
-"send.feeSummary" = "Fee:";
+"send.info.memo" = "Transparent transactions can’t have memos";
+"send.addressNotInBook" = "Add contact by tapping on Address Book icon.";
+"send.amountSummary" = "Total Amount";
+"send.amount" = "Amount";
+"send.toSummary" = "Sending to";
+"send.to" = "Send to";
+"send.feeSummary" = "Fee";
 "send.confirmationTitle" = "Confirmation";
-"send.goBack" = "Go back";
+"send.goBack" = "Cancel";
 "send.review" = "Review";
 "send.alert.failure.title" = "Failed to send funds";
 "send.alert.failure.message" = "Error: %@";
+"send.addressPlaceholder" = "Zcash Address";
+"send.currencyPlaceholder" = "USD";
+"send.requestPayment.requestedBy" = "Requested By";
+"send.requestPayment.for" = "For:";
+"send.requestPayment.total" = "Total";
+"send.requestPayment.title" = "Payment Request";
+
+// MARK: - ZEC Keyboard
+"zecKeyboard.invalid" = "This transaction amount is invalid.";
 
 // MARK: - Delete Wallet
 "deleteWallet.title" = "Delete Zashi";
 "deleteWallet.message1" = "Please don't delete this app unless you're sure you understand the effects.";
 "deleteWallet.message2" = "Deleting the Zashi app will delete the database and cached data. Any funds you have in this wallet will be lost and can only be recovered by using your Zashi secret recovery phrase in Zashi or another Zcash wallet.";
 "deleteWallet.iUnderstand" = "I understand";
-"deleteWallet.actionButtonTitle" = "Delete Zashi";
+"deleteWallet.actionButtonTitle" = "Delete";
 
 // MARK: - Not Enogh Free Space
 "notEnoughFreeSpace.title" = "Not enough free space";
@@ -154,15 +187,21 @@ Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps you
 
 // MARK: - Settings
 "settings.title" = "Settings";
+"settings.addressBook" = "Address Book";
 "settings.advanced" = "Advanced Settings";
 "settings.about" = "About Us";
 "settings.feedback" = "Send Us Feedback";
+"settings.integrations" = "Integrations";
 "settings.recoveryPhrase" = "Recovery Phrase";
 "settings.exportPrivateData" = "Export Private Data";
 "settings.exportLogsOnly" = "Export logs only";
 "settings.chooseServer" = "Choose a Server";
 "settings.currencyConversion" = "Currency Conversion";
 "settings.buyZecCB" = "Buy ZEC with Coinbase";
+"settings.coinbaseDesc" = "A hassle-free way to buy ZEC and get it directly into your Zashi wallet.";
+"settings.flexa" = "Pay with Flexa";
+"settings.flexaDesc" = "Pay with Flexa payment clips and explore a new way of spending Zcash.";
+"settings.restoreWarning" = "During the Restore process, it is not possible to use payment integrations.";
 "settings.deleteZashi" = "Delete Zashi";
 "settings.deleteZashiWarning" = "You will be asked to confirm on the next screen";
 "settings.version" = "Version %@ (%@)";
@@ -199,8 +238,13 @@ Sharing this private data is irrevocable — once you have shared this private d
 "general.success" = "Success";
 "general.unknown" = "Unknown";
 "general.loading" = "Loading";
+"general.delete" = "Delete";
+"general.confirm" = "Confirm";
 "general.done" = "Done";
 "general.save" = "Save";
+"general.request" = "Request";
+"general.hide" = "Hide";
+"general.show" = "Show";
 "balance.availableTitle" = "Available Balance:";
 "qrCodeFor" = "QR Code for %@";
 "general.tapToCopy" = "Tap to copy";
@@ -212,10 +256,11 @@ Sharing this private data is irrevocable — once you have shared this private d
 "general.alert.continue" = "Continue";
 "general.alert.caution" = "Heads up";
 "general.alert.ignore" = "Ignore";
+"general.copiedToTheClipboard" = "Copied to the clipboard!";
 
 // MARK: - Wallet Status
-"walletStatus.restoringWallet" = "[RESTORING YOUR WALLET…]";
-"walletStatus.disconnected" = "[DISCONNECTED…]";
+"walletStatus.restoringWallet" = "RESTORING YOUR WALLET…";
+"walletStatus.disconnected" = "DISCONNECTED…";
 
 // MARK: - Transaction List
 "transactionList.collapse" = "Collapse transaction";
@@ -236,6 +281,7 @@ Sharing this private data is irrevocable — once you have shared this private d
 "transaction.shieldingFunds" = "Shielding Funds";
 "transaction.shieldedFunds" = "Shielded Funds";
 "transaction.failedShieldedFunds" = "Shielded Funds Failed";
+"transaction.saveAddress" = "Save address";
 
 // MARK: - Local authentication
 "localAuthentication.reason" = "The Following content requires authentication.";
@@ -300,14 +346,25 @@ Sharing this private data is irrevocable — once you have shared this private d
 "exportLogs.alert.failed.title" = "Error when exporting logs";
 "exportLogs.alert.failed.message" = "Error: %@";
 
-// MARK: - Text Fields
-"field.transactionAddress.validZcashAddress" = "Zcash Address";
-"field.transactionAddress.to" = "To:";
-
-"field.transactionAmount.zecAmount" = "%@ Amount";
-"field.transactionAmount.amount" = "Amount:";
-
-"field.transactionAmount.currencyAmount" = "10000.00";
+// MARK: - Address Book
+"addressBook.title" = "Address Book";
+"addressBook.newContact.title" = "Add New Address";
+"addressBook.newContact.address" = "Wallet Address";
+"addressBook.newContact.addressPlaceholder" = "Enter wallet address...";
+"addressBook.newContact.name" = "Contact Name";
+"addressBook.newContact.namePlaceholder" = "Enter contact name...";
+"addressBook.error.nameExists" = "This contact name is already in use. Please choose a different name.";
+"addressBook.error.nameLength" = "This contact name exceeds the 32-character limit. Please shorten the name.";
+"addressBook.error.addressExists" = "This wallet address is already in your Address Book.";
+"addressBook.error.invalidAddress" = "Invalid address.";
+"addressBook.alert.title" = "Are you sure?";
+"addressBook.alert.message" = "You are about to delete this contact. This cannot be undone.";
+"addressBook.empty" = "Your address book is empty";
+"addressBook.selectRecipient" = "Select recipient";
+"addressBook.scanAddress" = "Scan QR code";
+"addressBook.manualEntry" = "Manual Entry";
+"addressBook.addNewContact" = "Add New Contact";
+"addressBook.savedAddress" = "Saved Address";
 
 // MARK: Currency Conversion
 "currencyConversion.title" = "Currency Conversion";
@@ -326,6 +383,12 @@ Sharing this private data is irrevocable — once you have shared this private d
 "currencyConversion.refresh" = "Rate Refresh";
 "currencyConversion.refreshDesc" = "The rate is refreshed automatically and can also be refreshed manually.";
 "currencyConversion.skipBtn" = "Skip for now";
+
+// MARK: - Deeplink Warning
+"deeplinkWarning.title" = "Looks like you used a third-party app to scan for payment.";
+"deeplinkWarning.desc" = "For better safety and security, rescan the QR code with Zashi.";
+"deeplinkWarning.cta" = "Rescan in Zashi";
+"deeplinkWarning.screenTitle" = "Hello!";
 
 // MARK: - Tooltips
 "tooltip.exchangeRate.title" = "Exchange rate unavailable";

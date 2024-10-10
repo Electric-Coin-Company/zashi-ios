@@ -8,6 +8,8 @@
 import Foundation
 import ComposableArchitecture
 import ZcashLightClientKit
+import Models
+import ZcashPaymentURI
 
 extension DependencyValues {
     public var uriParser: URIParserClient {
@@ -19,5 +21,6 @@ extension DependencyValues {
 @DependencyClient
 public struct URIParserClient {
     public var isValidURI: (String, NetworkType) -> Bool = { _, _ in false }
+    public var checkRP: (String) -> ParserResult? = { _ in nil }
 }
         

@@ -49,7 +49,6 @@ class HomeSnapshotTests: XCTestCase {
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.mainQueue, .immediate)
                 .dependency(\.reviewRequest, .noOp)
-                .dependency(\.walletStatusPanel, .noOp)
                 .dependency(\.exchangeRate, .noOp)
         }
 

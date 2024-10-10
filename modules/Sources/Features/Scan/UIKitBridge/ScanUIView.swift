@@ -16,10 +16,13 @@ public class ScanUIView: UIView {
     /// Rect of interest = area of the camera view used to try to recognize the qr codes.
     private var internalRectOfInterest = CGRect(x: 0.0, y: 0.0, width: 1.0, height: 1.0)
     var rectOfInterest: CGRect {
-        get { internalRectOfInterest }
+        get {
+            internalRectOfInterest
+        }
         set {
             internalRectOfInterest = newValue
             metadataOutput?.rectOfInterest = internalRectOfInterest
+            self.layer.metadataOutputRectConverted(fromLayerRect: newValue)
         }
     }
 
@@ -53,12 +56,22 @@ extension ScanUIView {
     private func doInitialSetup() {
         clipsToBounds = true
         captureSession = AVCaptureSession()
+
+        let deviceHasUltraWideCamera = !AVCaptureDevice.DiscoverySession(
+            deviceTypes: [.builtInUltraWideCamera],
+            mediaType: .video,
+            position: .back
+        ).devices.isEmpty
         
-        guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else {
+        let captureDevice = deviceHasUltraWideCamera
+        ? AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back)
+        : AVCaptureDevice.default(for: .video)
+
+        guard let videoCaptureDevice = captureDevice else {
             scanningDidFail()
             return
         }
-        
+
         let videoInput: AVCaptureDeviceInput
         do {
             videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
@@ -88,6 +101,8 @@ extension ScanUIView {
         
         self.layer.session = captureSession
         self.layer.videoGravity = .resizeAspectFill
+        
+        self.layer.connection?.videoOrientation = .portrait
         
         captureSession?.commitConfiguration()
         captureSession?.startRunning()

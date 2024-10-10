@@ -113,14 +113,11 @@ public struct WalletBalancesView: View {
                                     .foregroundColor(Asset.Colors.primary.color)
 
                                 Asset.Assets.infoCircle.image
-                                    .renderingMode(.template)
-                                    .resizable()
-                                    .frame(width: 20, height: 20)
-                                    .foregroundColor(Asset.Colors.primary.color)
+                                    .zImage(size: 20, color: Asset.Colors.primary.color)
                             }
                             .frame(maxWidth: .infinity)
                             .anchorPreference(
-                                key: BoundsPreferenceKey.self,
+                                key: ExchangeRateStaleTooltipPreferenceKey.self,
                                 value: .bounds
                             ) { $0 }
                         } else if store.isExchangeRateRefreshEnabled {
@@ -136,10 +133,7 @@ public struct WalletBalancesView: View {
                                         .frame(width: 20, height: 20)
                                 } else {
                                     Asset.Assets.refreshCCW.image
-                                        .renderingMode(.template)
-                                        .resizable()
-                                        .frame(width: 20, height: 20)
-                                        .foregroundColor(Asset.Colors.primary.color)
+                                        .zImage(size: 20, color: Asset.Colors.primary.color)
                                 }
                             }
                             .padding(8)
@@ -165,10 +159,7 @@ public struct WalletBalancesView: View {
                                         .frame(width: 11, height: 14)
                                 } else {
                                     Asset.Assets.refreshCCW.image
-                                        .renderingMode(.template)
-                                        .resizable()
-                                        .frame(width: 20, height: 20)
-                                        .foregroundColor(Asset.Colors.shade72.color)
+                                        .zImage(size: 20, color: Asset.Colors.shade72.color)
                                 }
                             }
                             .padding(8)

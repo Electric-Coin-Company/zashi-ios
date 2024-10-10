@@ -16,6 +16,7 @@ import ExportLogs
 import DatabaseFiles
 import ExportLogs
 import ZcashSDKEnvironment
+import UIComponents
 
 @Reducer
 public struct PrivateDataConsent {
@@ -28,6 +29,7 @@ public struct PrivateDataConsent {
         public var isExportingLogs: Bool
         public var dataDbURL: [URL] = []
         public var exportLogsState: ExportLogs.State
+        @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
         
         public var isExportPossible: Bool {
             !isExportingData && !isExportingLogs && isAcknowledged
@@ -70,7 +72,6 @@ public struct PrivateDataConsent {
     public init() { }
 
     @Dependency(\.databaseFiles) var databaseFiles
-    @Dependency(\.walletStatusPanel) var walletStatusPanel
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public var body: some Reducer<State, Action> {

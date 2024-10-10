@@ -17,7 +17,7 @@ public struct MessageEditor {
     public struct State: Equatable {
         /// default 0, no char limit
         public var charLimit = 0
-        public var text = RedactableString.empty
+        public var text = ""
         
         public var isCharLimited: Bool {
             charLimit > 0
@@ -26,7 +26,7 @@ public struct MessageEditor {
         public var byteLength: Int {
             // The memo supports unicode so the overall count is not char count of text
             // but byte representation instead
-            text.data.utf8.count
+            text.utf8.count
         }
         
         public var isValid: Bool {
@@ -41,23 +41,24 @@ public struct MessageEditor {
             : ""
         }
 
-        public init(charLimit: Int = 0, text: RedactableString = .empty) {
+        public init(charLimit: Int = 0, text: String = "") {
             self.charLimit = charLimit
             self.text = text
         }
     }
 
-    public enum Action: Equatable {
-        case inputChanged(RedactableString)
+    public enum Action: BindableAction, Equatable {
+        case binding(BindingAction<MessageEditor.State>)
     }
     
     public init() {}
     
     public var body: some Reducer<State, Action> {
+        BindingReducer()
+        
         Reduce { state, action in
             switch action {
-            case .inputChanged(let text):
-                state.text = text
+            case .binding:
                 return .none
             }
         }

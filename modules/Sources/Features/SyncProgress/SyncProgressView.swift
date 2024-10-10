@@ -40,17 +40,17 @@ public struct SyncProgressView: View {
                             store.send(.errorMessageTapped)
                         } label: {
                             Text(store.syncStatusMessage)
+                                .zFont(size: 10, style: Design.Text.primary)
+                                .lineLimit(nil)
                                 .multilineTextAlignment(.center)
-                                .font(.custom(FontFamily.Inter.regular.name, size: 10))
                                 .padding(.horizontal, 35)
-                                .foregroundColor(Asset.Colors.primary.color)
                         }
                     } else {
                         Text(store.syncStatusMessage)
+                            .zFont(size: 10, style: Design.Text.primary)
+                            .lineLimit(nil)
                             .multilineTextAlignment(.center)
-                            .font(.custom(FontFamily.Inter.regular.name, size: 10))
                             .padding(.horizontal, 35)
-                            .foregroundColor(Asset.Colors.primary.color)
                     }
                 }
                 

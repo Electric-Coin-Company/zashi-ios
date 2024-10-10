@@ -29,54 +29,62 @@ public struct ScanView: View {
             ZStack {
                 GeometryReader { proxy in
                     QRCodeScanView(
-                        rectOfInterest: normalizedRectOfInterest(proxy.size),
+                        rectOfInterest: ScanView.normalizedRectsOfInterest().real,
                         onQRScanningDidFail: { store.send(.scanFailed(.invalidQRCode)) },
                         onQRScanningSucceededWithCode: { store.send(.scan($0.redacted)) }
                     )
                     
                     frameOfInterest(proxy.size)
                     
-                    if store.isTorchAvailable {
-                        torchButton(store, size: proxy.size)
+                    WithPerceptionTracking {
+                        if store.isTorchAvailable {
+                            torchButton(size: proxy.size)
+                        }
+                        libraryButton(size: proxy.size)
                     }
-                    libraryButton(store, size: proxy.size)
                 }
-                
+
                 VStack {
                     Spacer()
-                    
-                    Text(store.info)
-                        .font(Font.custom("Inter", size: 14))
-                        .foregroundColor(Asset.Colors.secondary.color)
-                        .multilineTextAlignment(.center)
-                        .padding(.bottom, 20)
-                    
-                    if !store.isCameraEnabled {
-                        Button(L10n.Scan.openSettings.uppercased()) {
-                            if let url = URL(string: UIApplication.openSettingsURLString) {
-                                openURL(url)
+  
+                    WithPerceptionTracking {
+                        HStack(alignment: .top, spacing: 0) {
+                            if !store.info.isEmpty {
+                                Asset.Assets.infoOutline.image
+                                    .zImage(size: 20, color: Asset.Colors.ZDesign.shark200.color)
+                                    .padding(.trailing, 12)
+                                
+                                Text(store.info)
+                                    .font(.custom(FontFamily.Inter.medium.name, size: 12))
+                                    .foregroundColor(Asset.Colors.ZDesign.shark200.color)
+                                    .padding(.top, 2)
+                                
+                                Spacer(minLength: 0)
                             }
                         }
-                        .zcashStyle(.secondary)
-                        .padding(.horizontal, 50)
-                        .padding(.bottom, 70)
-                    } else {
-                        Button(L10n.General.cancel.uppercased()) {
-                            store.send(.cancelPressed)
+                        .padding(.bottom, 15)
+                        
+                        if !store.isCameraEnabled {
+                            primaryButton(L10n.Scan.openSettings) {
+                                if let url = URL(string: UIApplication.openSettingsURLString) {
+                                    openURL(url)
+                                }
+                            }
+                        } else {
+                            primaryButton(L10n.General.cancel) {
+                                store.send(.cancelPressed)
+                            }
                         }
-                        .zcashStyle(.secondary)
-                        .padding(.horizontal, 50)
-                        .padding(.bottom, 70)
                     }
                 }
-                .padding(.horizontal, 30)
+                .screenHorizontalPadding()
             }
             .edgesIgnoringSafeArea(.all)
             .ignoresSafeArea()
             .applyScreenBackground()
             .onAppear { store.send(.onAppear) }
             .onDisappear { store.send(.onDisappear) }
-            .zashiBack(hidden: store.isCameraEnabled, invertedColors: colorScheme == .light)
+            .zashiBackV2(hidden: store.isCameraEnabled, invertedColors: colorScheme == .light)
             .onChange(of: image) { img in
                 if let img {
                     store.send(.libraryImage(img))
@@ -90,110 +98,145 @@ public struct ScanView: View {
             }
         }
     }
+    
+    private func primaryButton(_ text: String, action: @escaping () -> Void) -> some View {
+        Button {
+            action()
+        } label: {
+            Text(text)
+                .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
+                .foregroundColor(Asset.Colors.ZDesign.Base.obsidian.color)
+                .padding(.horizontal, 18)
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity)
+                .background {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Asset.Colors.ZDesign.Base.bone.color)
+                }
+        }
+        .padding(.bottom, 40)
+    }
+    
+    private func torchButton(size: CGSize) -> some View {
+        let topLeft = ScanView.rectOfInterest(size).origin
+        let frameSize = ScanView.frameSize(size)
+
+        return WithPerceptionTracking {
+            Button {
+                store.send(.torchPressed)
+            } label: {
+                if store.isTorchOn {
+                    Asset.Assets.Icons.flashOff.image
+                        .zImage(size: 24, color: Asset.Colors.ZDesign.shark50.color)
+                        .padding(12)
+                        .background {
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Asset.Colors.ZDesign.shark900.color)
+                        }
+                } else {
+                    Asset.Assets.Icons.flashOn.image
+                        .zImage(size: 24, color: Asset.Colors.ZDesign.shark50.color)
+                        .padding(12)
+                        .background {
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Asset.Colors.ZDesign.shark900.color)
+                        }
+                }
+            }
+            .position(
+                x: topLeft.x + frameSize.width * 0.5 + 35,
+                y: topLeft.y + frameSize.height + 45
+            )
+        }
+    }
+    
+    private func libraryButton(size: CGSize) -> some View {
+        let topLeft = ScanView.rectOfInterest(size).origin
+        let frameSize = ScanView.frameSize(size)
+
+        return WithPerceptionTracking {
+            Button {
+                showSheet = true
+            } label: {
+                Asset.Assets.Icons.imageLibrary.image
+                    .zImage(size: 24, color: Asset.Colors.ZDesign.shark50.color)
+                    .padding(12)
+                    .background {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Asset.Colors.ZDesign.shark900.color)
+                    }
+            }
+            .position(
+                x: topLeft.x + frameSize.width * 0.5 - (store.isTorchAvailable ? 35 : 0),
+                y: topLeft.y + frameSize.height + 45
+            )
+        }
+    }
 }
 
 extension ScanView {
-    func torchButton(_ store: StoreOf<Scan>, size: CGSize) -> some View {
-        let center = ScanView.rectOfInterest(size).origin
-        let frameHalfSize = ScanView.frameSize(size) * 0.5
-        
-        return Button {
-            store.send(.torchPressed)
-        } label: {
-            if store.isTorchOn {
-                Asset.Assets.torchOff.image
-                    .renderingMode(.template)
-                    .resizable()
-                    .frame(width: 20, height: 20)
-                    .foregroundColor(.white)
-            } else {
-                Asset.Assets.torchOn.image
-                    .renderingMode(.template)
-                    .resizable()
-                    .frame(width: 20, height: 20)
-                    .foregroundColor(.white)
-            }
-        }
-        .position(
-            x: center.x + frameHalfSize - 15,
-            y: center.y + frameHalfSize + 10
-        )
-        .padding(10)
-    }
-    
-    func libraryButton(_ store: StoreOf<Scan>, size: CGSize) -> some View {
-        let center = ScanView.rectOfInterest(size).origin
-        let frameHalfSize = ScanView.frameSize(size) * 0.5
-        
-        return Button {
-            showSheet = true
-        } label: {
-            Image(systemName: "photo")
-                .renderingMode(.template)
-                .resizable()
-                .frame(width: 25, height: 18)
-                .foregroundColor(.white)
-        }
-        .position(
-            x: center.x - frameHalfSize + 3,
-            y: center.y + frameHalfSize + 10
-        )
-        .padding(10)
-    }
-
     func frameOfInterest(_ size: CGSize) -> some View {
-        let center = ScanView.rectOfInterest(size).origin
+        let topLeft = ScanView.rectOfInterest(size).origin
         let frameSize = ScanView.frameSize(size)
-        let halfSize = frameSize * 0.5
-        let cornersLength = 36.0
-        let cornersHalfLength = cornersLength * 0.5
-        let leadMarkColor = Color.white
+        let sizeOfTheMark = 40.0
+        let markShiftSize = 18.0
 
         return ZStack {
             Color.black
                 .opacity(0.65)
                 .edgesIgnoringSafeArea(.all)
                 .ignoresSafeArea()
-                .reverseMask {
-                    Rectangle()
+                .reverseMask(alignment: .topLeading) {
+                    RoundedRectangle(cornerRadius: 28)
                         .frame(
-                            width: frameSize,
-                            height: frameSize,
-                            alignment: .center
+                            width: frameSize.width,
+                            height: frameSize.height,
+                            alignment: .topLeading
                         )
-                        .position(
-                            x: center.x,
-                            y: center.y
+                        .offset(
+                            x: topLeft.x,
+                            y: topLeft.y
                         )
                 }
 
-            // horizontal lead marks
-            leadMarkColor
-                .frame(width: cornersLength, height: 1)
-                .position(x: center.x - halfSize + cornersHalfLength, y: center.y - halfSize)
-            leadMarkColor
-                .frame(width: cornersLength, height: 1)
-                .position(x: center.x + halfSize - cornersHalfLength, y: center.y - halfSize)
-            leadMarkColor
-                .frame(width: cornersLength, height: 1)
-                .position(x: center.x - halfSize + cornersHalfLength, y: center.y + halfSize)
-            leadMarkColor
-                .frame(width: cornersLength, height: 1)
-                .position(x: center.x + halfSize - cornersHalfLength, y: center.y + halfSize)
+            // top right
+            Asset.Assets.scanMark.image
+                .resizable()
+                .frame(width: sizeOfTheMark, height: sizeOfTheMark)
+                .position(
+                    x: topLeft.x + frameSize.width - markShiftSize,
+                    y: topLeft.y + markShiftSize
+                )
 
-            // vertical lead marks
-            leadMarkColor
-                .frame(width: 1, height: cornersLength)
-                .position(x: center.x - halfSize, y: center.y - halfSize + cornersHalfLength)
-            leadMarkColor
-                .frame(width: 1, height: cornersLength)
-                .position(x: center.x - halfSize, y: center.y + halfSize - cornersHalfLength)
-            leadMarkColor
-                .frame(width: 1, height: cornersLength)
-                .position(x: center.x + halfSize, y: center.y - halfSize + cornersHalfLength)
-            leadMarkColor
-                .frame(width: 1, height: cornersLength)
-                .position(x: center.x + halfSize, y: center.y + halfSize - cornersHalfLength)
+            // top left
+            Asset.Assets.scanMark.image
+                .resizable()
+                .frame(width: sizeOfTheMark, height: sizeOfTheMark)
+                .rotationEffect(Angle(degrees: 270))
+                .position(
+                    x: topLeft.x + markShiftSize,
+                    y: topLeft.y + markShiftSize
+                )
+
+            // bottom left
+            Asset.Assets.scanMark.image
+                .resizable()
+                .frame(width: sizeOfTheMark, height: sizeOfTheMark)
+                .rotationEffect(Angle(degrees: 180))
+                .position(
+                    x: topLeft.x + markShiftSize,
+                    y: topLeft.y + frameSize.height - markShiftSize
+                )
+
+            // bottom right
+            Asset.Assets.scanMark.image
+                .resizable()
+                .frame(width: sizeOfTheMark, height: sizeOfTheMark)
+                .rotationEffect(Angle(degrees: 90))
+                .position(
+                    x: topLeft.x + frameSize.width - markShiftSize,
+                    y: topLeft.y + frameSize.height - markShiftSize
+                )
         }
     }
 }
@@ -215,25 +258,45 @@ extension View {
 }
 
 extension ScanView {
-    static func frameSize(_ size: CGSize) -> CGFloat {
-        size.width * 0.55
+    static func frameSize(_ size: CGSize) -> CGSize {
+        let rect = normalizedRectsOfInterest().renderOnly
+        
+        return CGSize(width: rect.width * size.width, height: rect.height * size.height)
     }
 
     static func rectOfInterest(_ size: CGSize) -> CGRect {
-        CGRect(
-            x: size.width * 0.5,
-            y: size.height * 0.5,
-            width: frameSize(size),
-            height: frameSize(size)
+        let rect = normalizedRectsOfInterest().renderOnly
+
+        return CGRect(
+            x: size.width * rect.origin.x,
+            y: size.height * rect.origin.y,
+            width: frameSize(size).width,
+            height: frameSize(size).height
         )
     }
 
-    func normalizedRectOfInterest(_ size: CGSize) -> CGRect {
-        CGRect(
-            x: 0.25,
-            y: 0.25,
-            width: 0.5,
-            height: 0.5
+    static func normalizedRectsOfInterest() -> (renderOnly: CGRect, real: CGRect) {
+        let rect = UIScreen.main.bounds
+        
+        let readRectSize = 0.6
+
+        let topLeftX = (1.0 - readRectSize) * 0.5
+        let ratio = rect.width / rect.height
+        let rectHeight = ratio * readRectSize
+        let topLeftY = (1.0 - rectHeight) * 0.5
+
+        return (
+            renderOnly: CGRect(
+                x: topLeftX,
+                y: topLeftY,
+                width: readRectSize,
+                height: rectHeight
+            ), real: CGRect(
+                x: topLeftX,
+                y: topLeftX,
+                width: readRectSize,
+                height: readRectSize
+            )
         )
     }
 }

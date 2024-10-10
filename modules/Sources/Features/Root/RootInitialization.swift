@@ -97,15 +97,26 @@ extension Root {
             case .synchronizerStateChanged(let latestState):
                 let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.data.syncStatus)
 
+                // update flexa balance
+                if let accountBalance = latestState.data.accountBalance?.data {
+//                    let shieldedBalance = accountBalance.saplingBalance.spendableValue + accountBalance.orchardBalance.spendableValue
+//                    let shieldedWithPendingBalance = accountBalance.saplingBalance.total() + accountBalance.orchardBalance.total()
+//                    let transparentBalance = accountBalance.unshielded
+//                    let totalBalance = shieldedWithPendingBalance + transparentBalance
+
+                    // TODO: [#1284] Flexa disconnected for now, https://github.com/Electric-Coin-Company/zashi-ios/issues/1284
+//                    flexaHandler.updateBalance(shieldedBalance)
+                }
+                
                 // handle possible service unavailability
                 if case .error(let error) = snapshot.syncStatus, checkUnavailableService(error) {
-                    if walletStatusPanel.value().value != .disconnected {
+                    if state.walletStatus != .disconnected {
                         state.alert = AlertState.serviceUnavailable()
                     }
-                    state.wasRestoringWhenDisconnected = walletStatusPanel.value().value == .restoring
-                    walletStatusPanel.updateValue(.disconnected)
-                } else if case .syncing = snapshot.syncStatus, walletStatusPanel.value().value == .disconnected {
-                    walletStatusPanel.updateValue(state.wasRestoringWhenDisconnected ? .restoring : .none)
+                    state.wasRestoringWhenDisconnected = state.walletStatus == .restoring
+                    state.walletStatus = .disconnected
+                } else if case .syncing = snapshot.syncStatus, state.walletStatus == .disconnected {
+                    state.walletStatus = state.wasRestoringWhenDisconnected ? .restoring : .none
                 }
 
                 // handle BCGTask
@@ -139,7 +150,7 @@ extension Root {
                 if state.isRestoringWallet && syncStatus == .upToDate {
                     state.isRestoringWallet = false
                     userDefaults.remove(Constants.udIsRestoringWallet)
-                    walletStatusPanel.updateValue(.none)
+                    state.walletStatus = .none
                 }
                 return .none
 
@@ -239,7 +250,7 @@ extension Root {
                     state.appInitializationState = .filesMissing
                     state.isRestoringWallet = true
                     userDefaults.setValue(true, Constants.udIsRestoringWallet)
-                    walletStatusPanel.updateValue(.restoring)
+                    state.walletStatus = .restoring
                     return .concatenate(
                         Effect.send(.initialization(.initializeSDK(.restoreWallet))),
                         Effect.send(.initialization(.checkBackupPhraseValidation))
@@ -247,7 +258,7 @@ extension Root {
                 case .initialized:
                     if let isRestoringWallet = userDefaults.objectForKey(Constants.udIsRestoringWallet) as? Bool, isRestoringWallet {
                         state.isRestoringWallet = true
-                        walletStatusPanel.updateValue(.restoring)
+                        state.walletStatus = .restoring
                         return .concatenate(
                             Effect.send(.initialization(.initializeSDK(.restoreWallet))),
                             Effect.send(.initialization(.checkBackupPhraseValidation))
@@ -275,6 +286,18 @@ extension Root {
                     try mnemonic.isValid(storedWallet.seedPhrase.value())
                     let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
                     
+                    let addressBookEncryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys()
+                    if addressBookEncryptionKeys == nil {
+                        // TODO: str4d
+                        // here you know the encryption key for the address book is missing, we need to generate one
+                        
+                        // here you have `storedWallet.seedPhrase.seedPhrase`, a seed as String
+
+                        // once the key is prepared, store it
+                        // let keys == AddressBookEncryptionKeys(key: "")
+                        // try walletStorage.importAddressBookEncryptionKeys(keys)
+                    }
+
                     return .run { send in
                         do {
                             try await sdkSynchronizer.prepareWith(seedBytes, birthday, walletMode)
@@ -291,8 +314,8 @@ extension Root {
                 }
                 
             case .initialization(.initializationSuccessfullyDone(let uAddress)):
-                state.tabsState.addressDetailsState.uAddress = uAddress
-                state.tabsState.settingsState.advancedSettingsState.uAddress = uAddress
+                state.tabsState.receiveState.uAddress = uAddress
+                state.tabsState.settingsState.integrationsState.uAddress = uAddress
                 return .merge(
                     .send(.initialization(.registerForSynchronizersUpdate)),
                     .publisher {
@@ -358,7 +381,7 @@ extension Root {
                 state.splashAppeared = true
                 state.isRestoringWallet = false
                 userDefaults.remove(Constants.udIsRestoringWallet)
-                walletStatusPanel.updateValue(.none)
+                state.walletStatus = .none
                 walletStorage.nukeWallet()
                 try? readTransactionsStorage.nukeWallet()
 
@@ -450,13 +473,17 @@ extension Root {
                 }
 
             case .onboarding(.importWallet(.restoreInfo(.gotItTapped))):
-                return Effect.send(.destination(.updateDestination(.tabs)))
+                state.destinationState.destination = .tabs
+                return .none
 
             case .onboarding(.importWallet(.initializeSDK)):
                 state.isRestoringWallet = true
                 userDefaults.setValue(true, Constants.udIsRestoringWallet)
-                walletStatusPanel.updateValue(.restoring)
-                return Effect.send(.initialization(.initializeSDK(.restoreWallet)))
+                state.walletStatus = .restoring
+                return .concatenate(
+                    Effect.send(.initialization(.initializeSDK(.restoreWallet))),
+                    .send(.initialization(.checkBackupPhraseValidation))
+                )
 
             case .initialization(.seedValidationResult(let validSeed)):
                 if validSeed {
@@ -486,7 +513,7 @@ extension Root {
                 
             case .tabs, .destination, .onboarding, .sandbox, .phraseDisplay, .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated,
                     .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, 
-                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects:
+                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects, .flexaOnTransactionRequest, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted, .deeplinkWarning:
                 return .none
             }
         }

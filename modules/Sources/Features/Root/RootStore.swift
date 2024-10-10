@@ -20,11 +20,18 @@ import CrashReporter
 import ReadTransactionsStorage
 import RecoveryPhraseDisplay
 import BackgroundTasks
-import WalletStatusPanel
 import Utils
 import UserDefaults
 import ServerSetup
 import ExchangeRate
+import FlexaHandler
+import Flexa
+import AutolockHandler
+import UIComponents
+import AddressBook
+import LocalAuthenticationHandler
+import DeeplinkWarning
+import URIParser
 
 @Reducer
 public struct Root {
@@ -34,15 +41,20 @@ public struct Root {
     let SynchronizerCancelId = UUID()
     let WalletConfigCancelId = UUID()
     let DidFinishLaunchingId = UUID()
+    let CancelFlexaId = UUID()
 
     @ObservableState
     public struct State: Equatable {
+        public var addressBookBinding: Bool = false
+        public var addressBookContactBinding: Bool = false
+        public var addressBookState: AddressBook.State
         @Presents public var alert: AlertState<Action>?
         public var appInitializationState: InitializationState = .uninitialized
         public var appStartState: AppStartState = .unknown
         public var bgTask: BGProcessingTask?
         @Presents public var confirmationDialog: ConfirmationDialogState<Action.ConfirmationDialog>?
         public var debugState: DebugState
+        public var deeplinkWarningState: DeeplinkWarning.State = .initial
         public var destinationState: DestinationState
         public var exportLogsState: ExportLogs.State
         public var isLockedInKeychainUnavailableState = false
@@ -56,10 +68,12 @@ public struct Root {
         public var splashAppeared = false
         public var tabsState: Tabs.State
         public var walletConfig: WalletConfig
+        @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
         public var wasRestoringWhenDisconnected = false
         public var welcomeState: Welcome.State
         
         public init(
+            addressBookState: AddressBook.State = .initial,
             appInitializationState: InitializationState = .uninitialized,
             appStartState: AppStartState = .unknown,
             debugState: DebugState,
@@ -76,6 +90,7 @@ public struct Root {
             walletConfig: WalletConfig,
             welcomeState: Welcome.State
         ) {
+            self.addressBookState = addressBookState
             self.appInitializationState = appInitializationState
             self.appStartState = appStartState
             self.debugState = debugState
@@ -100,14 +115,20 @@ public struct Root {
             case quickRescan
         }
 
+        case addressBook(AddressBook.Action)
+        case addressBookBinding(Bool)
+        case addressBookContactBinding(Bool)
+        case addressBookAccessGranted
         case alert(PresentationAction<Action>)
         case batteryStateChanged(Notification)
         case binding(BindingAction<Root.State>)
         case cancelAllRunningEffects
         case confirmationDialog(PresentationAction<ConfirmationDialog>)
         case debug(DebugAction)
+        case deeplinkWarning(DeeplinkWarning.Action)
         case destination(DestinationAction)
         case exportLogs(ExportLogs.Action)
+        case flexaOnTransactionRequest(FlexaTransaction?)
         case tabs(Tabs.Action)
         case initialization(InitializationAction)
         case notEnoughFreeSpace(NotEnoughFreeSpace.Action)
@@ -133,23 +154,33 @@ public struct Root {
     @Dependency(\.derivationTool) var derivationTool
     @Dependency(\.diskSpaceChecker) var diskSpaceChecker
     @Dependency(\.exchangeRate) var exchangeRate
+    @Dependency(\.flexaHandler) var flexaHandler
+    @Dependency(\.localAuthentication) var localAuthentication
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.numberFormatter) var numberFormatter
     @Dependency(\.pasteboard) var pasteboard
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.uriParser) var uriParser
     @Dependency(\.userDefaults) var userDefaults
     @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.walletConfigProvider) var walletConfigProvider
     @Dependency(\.walletStorage) var walletStorage
     @Dependency(\.readTransactionsStorage) var readTransactionsStorage
-    @Dependency(\.walletStatusPanel) var walletStatusPanel
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public init() { }
     
     @ReducerBuilder<State, Action>
     var core: some Reducer<State, Action> {
+        Scope(state: \.deeplinkWarningState, action: \.deeplinkWarning) {
+            DeeplinkWarning()
+        }
+        
+        Scope(state: \.addressBookState, action: \.addressBook) {
+            AddressBook()
+        }
+        
         Scope(state: \.serverSetupState, action: \.serverSetup) {
             ServerSetup()
         }
@@ -197,6 +228,54 @@ public struct Root {
                 state.alert = nil
                 return .none
             
+            case .addressBookBinding(let newValue):
+                state.addressBookBinding = newValue
+                return .none
+
+            case .addressBookContactBinding(let newValue):
+                state.addressBookContactBinding = newValue
+                return .none
+
+            case .tabs(.home(.transactionList(.saveAddressTapped(let address)))):
+                state.addressBookContactBinding = true
+                state.addressBookState.isValidZcashAddress = true
+                state.addressBookState.isNameFocused = true
+                state.addressBookState.address = address.data
+                return .none
+
+            case .tabs(.send(.addNewContactTapped(let address))):
+                state.addressBookContactBinding = true
+                state.addressBookState.isValidZcashAddress = true
+                state.addressBookState.isNameFocused = true
+                state.addressBookState.address = address.data
+                return .none
+                
+            case .addressBook(.saveButtonTapped):
+                if state.addressBookBinding {
+                    state.addressBookBinding = false
+                }
+                if state.addressBookContactBinding {
+                    state.addressBookContactBinding = false
+                }
+                return .none
+
+            case .addressBookAccessGranted:
+                state.addressBookBinding = true
+                state.addressBookState.isInSelectMode = true
+                return .none
+
+            case .tabs(.send(.addressBookTapped)):
+                return .run { send in
+                    if await !localAuthentication.authenticate() {
+                        return
+                    }
+                    await send(.addressBookAccessGranted)
+                }
+
+            case .addressBook(.editId(let address)):
+                state.addressBookBinding = false
+                return .send(.tabs(.send(.scan(.found(address.redacted)))))
+                
             case .serverSetup:
                 return .none
                 
@@ -205,7 +284,7 @@ public struct Root {
                 return .none
                 
             case .batteryStateChanged:
-                autolockHandler.value(walletStatusPanel.value().value == .restoring)
+                autolockHandler.value(state.walletStatus == .restoring)
                 return .none
                 
             case .cancelAllRunningEffects:
@@ -217,7 +296,7 @@ public struct Root {
                     .cancel(id: WalletConfigCancelId),
                     .cancel(id: DidFinishLaunchingId)
                 )
-                
+
             default: return .none
             }
         }

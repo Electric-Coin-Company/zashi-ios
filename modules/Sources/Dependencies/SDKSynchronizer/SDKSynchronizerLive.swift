@@ -169,9 +169,9 @@ extension SDKSynchronizerClient: DependencyKey {
                 }
                 
                 if successCount == 0 {
-                    return .failure
+                    return .failure(txIds: txIds)
                 } else if successCount == transactionCount {
-                    return .success
+                    return .success(txIds: txIds)
                 } else {
                     return .partial(txIds: txIds, statuses: statuses)
                 }

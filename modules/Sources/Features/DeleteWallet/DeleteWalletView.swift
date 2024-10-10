@@ -24,7 +24,7 @@ public struct DeleteWalletView: View {
                     ZashiIcon()
                     
                     Text(L10n.DeleteWallet.title)
-                        .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
+                        .font(.custom(FontFamily.Inter.semiBold.name, size: 25))
                         .padding(.bottom, 15)
                     
                     VStack(alignment: .leading) {
@@ -46,20 +46,19 @@ public struct DeleteWalletView: View {
                     }
                     .padding(.top, 30)
                     
-                    Button(L10n.DeleteWallet.actionButtonTitle.uppercased()) {
+                    ZashiButton(L10n.DeleteWallet.actionButtonTitle) {
                         store.send(.deleteTapped)
                     }
-                    .zcashStyle()
                     .disabled(!store.isAcknowledged || store.isProcessing)
                     .padding(.vertical, 50)
                 }
-                .padding(.horizontal, 60)
             }
             .padding(.vertical, 1)
             .zashiBack(store.isProcessing)
         }
         .navigationBarTitleDisplayMode(.inline)
-        .applyScreenBackground(withPattern: true)
+        .screenHorizontalPadding()
+        .applyScreenBackground()
     }
 }
 

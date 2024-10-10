@@ -9,6 +9,7 @@ import Models
 import Pasteboard
 import SupportDataGenerator
 import ZcashLightClientKit
+import AddressBook
 
 @Reducer
 public struct Settings {
@@ -16,57 +17,78 @@ public struct Settings {
     public struct State: Equatable {
         public enum Destination {
             case about
+            case addressBook
             case advanced
+            case integrations
         }
 
         public var aboutState: About.State
+        public var addressBookState: AddressBook.State
         public var advancedSettingsState: AdvancedSettings.State
         @Presents public var alert: AlertState<Action>?
         public var appVersion = ""
         public var appBuild = ""
         public var destination: Destination?
+        public var integrationsState: Integrations.State
         public var supportData: SupportData?
         
         public init(
             aboutState: About.State,
+            addressBookState: AddressBook.State,
             advancedSettingsState: AdvancedSettings.State,
             appVersion: String = "",
             appBuild: String = "",
             destination: Destination? = nil,
+            integrationsState: Integrations.State,
             supportData: SupportData? = nil
         ) {
             self.aboutState = aboutState
+            self.addressBookState = addressBookState
             self.advancedSettingsState = advancedSettingsState
             self.appVersion = appVersion
             self.appBuild = appBuild
             self.destination = destination
+            self.integrationsState = integrationsState
             self.supportData = supportData
         }
     }
 
     public enum Action: Equatable {
         case about(About.Action)
+        case addressBook(AddressBook.Action)
+        case addressBookButtonTapped
         case advancedSettings(AdvancedSettings.Action)
         case alert(PresentationAction<Action>)
         case copyEmail
+        case integrations(Integrations.Action)
         case onAppear
+        case protectedAccessRequest(State.Destination)
         case sendSupportMail
         case sendSupportMailFinished
         case updateDestination(Settings.State.Destination?)
     }
 
     @Dependency(\.appVersion) var appVersion
+    @Dependency(\.localAuthentication) var localAuthentication
     @Dependency(\.pasteboard) var pasteboard
 
     public init() { }
 
     public var body: some Reducer<State, Action> {
+        Scope(state: \.addressBookState, action: \.addressBook) {
+            AddressBook()
+        }
+        
         Scope(state: \.aboutState, action: \.about) {
             About()
         }
 
         Scope(state: \.advancedSettingsState, action: \.advancedSettings) {
             AdvancedSettings()
+        }
+
+        Scope(state: \.integrationsState, action: \.integrations) {
+            Integrations()
         }
 
         Reduce { state, action in
@@ -79,10 +101,26 @@ public struct Settings {
             case .about:
                 return .none
             
+            case .addressBook:
+                return .none
+                
+            case .addressBookButtonTapped:
+                return .none
+                
             case .copyEmail:
                 pasteboard.setString(SupportDataGenerator.Constants.email.redacted)
                 return .none
+            
+            case .integrations:
+                return .none
                 
+            case .protectedAccessRequest(let destination):
+                return .run { send in
+                    if await localAuthentication.authenticate() {
+                        await send(.updateDestination(destination))
+                    }
+                }
+
             case .updateDestination(let destination):
                 state.destination = destination
                 return .none

@@ -20,9 +20,15 @@ import BalanceFormatter
 import WalletBalances
 import NumberFormatter
 import UserPreferencesStorage
+import AddressBookClient
 
 @Reducer
 public struct SendFlow {
+    public enum Confirmation: Equatable {
+        case requestPayment
+        case send
+    }
+    
     @ObservableState
     public struct State: Equatable {
         public enum Destination: Equatable {
@@ -30,8 +36,11 @@ public struct SendFlow {
             case scanQR
         }
 
-        @Presents public var alert: AlertState<Action>?
+        public var cancelId = UUID()
+        
         public var addMemoState: Bool
+        @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
+        @Presents public var alert: AlertState<Action>?
         @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
         public var destination: Destination?
         public var isCurrencyConversionEnabled = false
@@ -44,6 +53,9 @@ public struct SendFlow {
         public var isValidAddress = false
         public var isValidTransparentAddress = false
         public var isValidTexAddress = false
+        public var isNotAddressInAddressBook = false
+        public var isAddressBookHintVisible = false
+        public var requestsAddressFocus = false
 
         public var address: RedactableString = .empty
         public var zecAmountText: RedactableString = .empty
@@ -87,7 +99,7 @@ public struct SendFlow {
         }
 
         public var message: String {
-            memoState.text.data
+            memoState.text
         }
 
         public var isValidAmount: Bool {
@@ -138,6 +150,32 @@ public struct SendFlow {
             shieldedBalance.decimalString(formatter: NumberFormatter.zashiBalanceFormatter)
         }
         
+        public var invalidAddressErrorText: String? {
+            isInvalidAddressFormat
+            ? L10n.Send.Error.invalidAddress
+            : nil
+        }
+        
+        public var invalidZecAmountErrorText: String? {
+            zecAmountText.data.isEmpty
+            ? nil
+            : isInvalidAmountFormat
+            ? L10n.Send.Error.invalidAmount
+            : isInsufficientFunds
+            ? L10n.Send.Error.insufficientFunds
+            : nil
+        }
+        
+        public var invalidCurrencyAmountErrorText: String? {
+            currencyText.data.isEmpty
+            ? nil
+            : isInvalidAmountFormat
+            ? L10n.Send.Error.invalidAmount
+            : isInsufficientFunds
+            ? L10n.Send.Error.insufficientFunds
+            : nil
+        }
+        
         public init(
             addMemoState: Bool,
             destination: Destination? = nil,
@@ -156,24 +194,32 @@ public struct SendFlow {
     }
 
     public enum Action: Equatable {
+        case addNewContactTapped(RedactableString)
+        case addressBookTapped
         case addressUpdated(RedactableString)
         case alert(PresentationAction<Action>)
+        case confirmationRequired(Confirmation)
+        case getProposal(Confirmation)
         case currencyUpdated(RedactableString)
+        case dismissAddressBookHint
         case exchangeRateSetupChanged
+        case fetchedABContacts(AddressBookContacts)
         case memo(MessageEditor.Action)
         case onAppear
+        case onDisapear
         case proposal(Proposal)
+        case requestsAddressFocusResolved
         case resetForm
         case reviewPressed
         case scan(Scan.Action)
-        case sendConfirmationRequired
-        case sendFailed(ZcashError)
+        case sendFailed(ZcashError, Confirmation)
         case syncAmounts(Bool)
         case updateDestination(SendFlow.State.Destination?)
         case walletBalances(WalletBalances.Action)
         case zecAmountUpdated(RedactableString)
     }
     
+    @Dependency(\.addressBook) var addressBook
     @Dependency(\.audioServices) var audioServices
     @Dependency(\.derivationTool) var derivationTool
     @Dependency(\.numberFormatter) var numberFormatter
@@ -198,6 +244,27 @@ public struct SendFlow {
 
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
+                do {
+                    let abContacts = try addressBook.allLocalContacts()
+                    return .merge(
+                        .send(.exchangeRateSetupChanged),
+                        .send(.fetchedABContacts(abContacts))
+                        )
+                } catch {
+                    // TODO: FIXME
+                    print("__LD fetchABContactsRequested Error: \(error.localizedDescription)")
+                    return .send(.exchangeRateSetupChanged)
+                }
+
+            case .fetchedABContacts(let abContacts):
+                state.addressBookContacts = abContacts
+                return .none
+                
+            case .onDisapear:
+                return .cancel(id: state.cancelId)
+                
             case .alert(.presented(let action)):
                 return Effect.send(action)
 
@@ -207,10 +274,17 @@ public struct SendFlow {
 
             case .alert:
                 return .none
+                
+            case .addressBookTapped:
+                return .none
 
-            case .onAppear:
-                state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
-                return .send(.exchangeRateSetupChanged)
+            case .addNewContactTapped:
+                state.requestsAddressFocus = true
+                return .none
+                
+            case .requestsAddressFocusResolved:
+                state.requestsAddressFocus = false
+                return .none
                 
             case .exchangeRateSetupChanged:
                 if let automatic = userStoredPreferences.exchangeRate()?.automatic, automatic {
@@ -233,7 +307,7 @@ public struct SendFlow {
                 case .value(let rate), .refreshEnable(let rate):
                     if let rate {
                         state.currencyConversion = CurrencyConversion(.usd, ratio: rate.rate.doubleValue, timestamp: rate.date.timeIntervalSince1970)
-                        return .send(.syncAmounts(false))
+                        return .send(.syncAmounts(true))
                     }
                 case .stale:
                     state.currencyConversion = nil
@@ -242,7 +316,10 @@ public struct SendFlow {
                 return .none
                 
             case .reviewPressed:
-                return .run { [state] send in
+                return .send(.getProposal(.send))
+                
+            case .getProposal(let confirmationType):
+                return .run { [state, confirmationType] send in
                     do {
                         let recipient = try Recipient(state.address.data, network: zcashSDKEnvironment.network.networkType)
                         
@@ -250,7 +327,7 @@ public struct SendFlow {
                         if state.isValidTransparentAddress || state.isValidTexAddress {
                             memo = nil
                         } else if let memoText = state.addMemoState ? state.memoState.text : nil {
-                            memo = memoText.data.isEmpty ? nil : try Memo(string: memoText.data)
+                            memo = memoText.isEmpty ? nil : try Memo(string: memoText)
                         } else {
                             memo = nil
                         }
@@ -258,21 +335,25 @@ public struct SendFlow {
                         let proposal = try await sdkSynchronizer.proposeTransfer(0, recipient, state.amount, memo)
                         
                         await send(.proposal(proposal))
-                        await send(.sendConfirmationRequired)
+                        await send(.confirmationRequired(confirmationType))
                     } catch {
-                        await send(.sendFailed(error.toZcashError()))
+                        await send(.sendFailed(error.toZcashError(), confirmationType))
                     }
                 }
                 
-            case .sendFailed(let error):
-                state.alert = AlertState.sendFailure(error)
-                return .none
+            case let .sendFailed(error, confirmationType):
+                if confirmationType == .requestPayment {
+                    return .send(.updateDestination(nil))
+                } else {
+                    state.alert = AlertState.sendFailure(error)
+                    return .none
+                }
                 
-            case .sendConfirmationRequired:
+            case .confirmationRequired:
                 return .none
 
             case .resetForm:
-                state.memoState.text = .empty
+                state.memoState.text = ""
                 state.address = .empty
                 state.zecAmountText = .empty
                 state.currencyText = .empty
@@ -305,6 +386,24 @@ public struct SendFlow {
                 return .none
 
             case .memo:
+                return .none
+                
+            case .scan(.foundRP(let requestPayment)):
+                if case .legacy(let address) = requestPayment {
+                    audioServices.systemSoundVibrate()
+                    return .send(.scan(.found(address.value.redacted)))
+                } else if case .request(let paymentRequest) = requestPayment {
+                    if let payment = paymentRequest.payments.first {
+                        if let memoBytes = payment.memo, let memo = try? Memo(bytes: [UInt8](memoBytes.memoData)) {
+                            state.memoState.text = memo.toString() ?? ""
+                        }
+                        let numberLocale = numberFormatter.convertUSToLocale(payment.amount.toString()) ?? ""
+                        state.address = payment.recipientAddress.value.redacted
+                        state.zecAmountText = numberLocale.redacted
+                        audioServices.systemSoundVibrate()
+                        return .send(.getProposal(.requestPayment))
+                    }
+                }
                 return .none
                 
             case .scan(.found(let address)):
@@ -344,8 +443,33 @@ public struct SendFlow {
                 state.isValidTransparentAddress = derivationTool.isTransparentAddress(state.address.data, network)
                 state.isValidTexAddress = derivationTool.isTexAddress(state.address.data, network)
                 if !state.isMemoInputEnabled {
-                    state.memoState.text = .empty
+                    state.memoState.text = ""
                 }
+                state.isNotAddressInAddressBook = state.isValidAddress
+                var isNotAddressInAddressBook = state.isNotAddressInAddressBook
+                if state.isValidAddress {
+                    for contact in state.addressBookContacts.contacts {
+                        if contact.id == state.address.data {
+                            state.isNotAddressInAddressBook = false
+                            isNotAddressInAddressBook = false
+                            break
+                        }
+                    }
+                }
+                if isNotAddressInAddressBook {
+                    state.isAddressBookHintVisible = true
+                    return .run { send in
+                        try await Task.sleep(nanoseconds: 3_000_000_000)
+                        await send(.dismissAddressBookHint)
+                    }
+                    .cancellable(id: state.cancelId)
+                } else {
+                    state.isAddressBookHintVisible = false
+                    return .cancel(id: state.cancelId)
+                }
+                
+            case .dismissAddressBookHint:
+                state.isAddressBookHintVisible = false
                 return .none
                 
             case .currencyUpdated(let newValue):

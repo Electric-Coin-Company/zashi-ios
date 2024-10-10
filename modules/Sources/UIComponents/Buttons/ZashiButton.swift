@@ -1,277 +1,400 @@
 //
 //  ZashiButton.swift
+//  Zashi
 //
-//
-//  Created by Lukáš Korba on 28.09.2023.
+//  Created by Lukáš Korba on 09-12-2024.
 //
 
 import SwiftUI
+
 import Generated
 
-public struct ZcashButtonStyle: ButtonStyle {
-    @Environment(\.colorScheme) var colorScheme
-    
-    public enum Appearance {
+public struct ZashiButton<PrefixContent, AccessoryContent>: View where PrefixContent: View, AccessoryContent: View {
+    public enum `Type` {
         case primary
         case secondary
+        case tertiary
+        case quaternary
+        case destructive1
+        case destructive2
+        case brand
+        case ghost
     }
-
-    let isEnabled: Bool
-    let appearance: Appearance
-    let fontSize: CGFloat
-    let height: CGFloat
-    let shadowOffset: CGFloat
-    @State private var offset = 0.0
     
-    public func makeBody(configuration: Self.Configuration) -> some View {
-        ZStack {
-            // shadow
-            Rectangle()
-                .fill(shadowFillColor())
-                .frame(height: height)
-                .border(shadowBorderColor())
-                .offset(CGSize(width: shadowOffset, height: shadowOffset))
+    @Environment(\.isEnabled) var isEnabled
+    
+    let title: String
+    let type: `Type`
+    let infinityWidth: Bool
+    @ViewBuilder let prefixView: PrefixContent?
+    @ViewBuilder let accessoryView: AccessoryContent?
+    let action: () -> Void
 
-            // button
-            Rectangle()
-                .fill(buttonFillColor())
-                .frame(height: height)
-                .border(buttonBorderColor())
-                .overlay(content: {
-                    configuration.label
-                        .font(.custom(FontFamily.Inter.medium.name, size: fontSize))
-                        .foregroundColor(fontColor())
-                })
-                .offset(CGSize(width: offset, height: offset))
-        }
-        .onChange(of: configuration.isPressed) { newValue in
-            if newValue {
-                withAnimation(.easeInOut(duration: 0.05)) {
-                    offset = shadowOffset
+    public init(
+        _ title: String,
+        type: `Type` = .primary,
+        infinityWidth: Bool = true,
+        prefixView: PrefixContent? = EmptyView(),
+        accessoryView: AccessoryContent? = EmptyView(),
+        action: @escaping () -> Void
+    ) {
+        self.title = title
+        self.type = type
+        self.infinityWidth = infinityWidth
+        self.accessoryView = accessoryView
+        self.prefixView = prefixView
+        self.action = action
+    }
+    
+    public var body: some View {
+        Button {
+            action()
+        } label: {
+            HStack(spacing: 0) {
+                if let prefixView {
+                    prefixView
+                        .padding(.trailing, 8)
                 }
-                withAnimation(.easeInOut(duration: 0.05).delay(0.05)) {
-                    offset = 0.0
+
+                Text(title)
+                    .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
+                    .fixedSize()
+                    .minimumScaleFactor(0.5)
+                
+                if let accessoryView {
+                    accessoryView
+                        .padding(.leading, 8)
                 }
             }
-        }
-    }
-
-    private func fontColor() -> Color {
-        if colorScheme == .light {
-            if !isEnabled {
-                return Asset.Colors.btnLabelShade.color
-            } else {
-                return appearance == .primary
-                ? Asset.Colors.btnSecondary.color
-                : Asset.Colors.btnPrimary.color
-            }
-        } else {
-            if !isEnabled && appearance == .secondary {
-                return Asset.Colors.btnLightShade.color
-            } else {
-                return Asset.Colors.btnSecondary.color
-            }
-        }
-    }
-
-    private func buttonFillColor() -> Color {
-        if colorScheme == .light {
-            if appearance == .secondary {
-                return Asset.Colors.btnSecondary.color
-            } else {
-                return isEnabled
-                ? Asset.Colors.btnPrimary.color
-                : Asset.Colors.btnLightShade.color
-            }
-        } else {
-            if isEnabled {
-                return Asset.Colors.btnPrimary.color
-            } else {
-                return appearance == .primary
-                ? Asset.Colors.btnDarkShade.color
-                : Asset.Colors.btnSecondary.color
+            .foregroundColor(fgColor())
+            .padding(.horizontal, 18)
+            .padding(.vertical, 12)
+            .frame(maxWidth: infinityWidth ? .infinity : nil)
+            .background {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(bgColor())
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(strokeColor())
+                    }
             }
         }
     }
     
-    private func buttonBorderColor() -> Color {
-        if colorScheme == .light {
-            return Asset.Colors.btnPrimary.color
-        } else {
-            if !isEnabled && appearance == .secondary {
-                return Asset.Colors.btnPrimary.color
-            } else {
-                return Asset.Colors.btnSecondary.color
-            }
+    private func bgColor() -> Color {
+        switch type {
+        case .primary:
+            return isEnabled
+            ? Design.Btns.Primary.bg.color
+            : Design.Btns.Primary.bgDisabled.color
+        case .secondary:
+            return isEnabled
+            ? Design.Btns.Secondary.bg.color
+            : Design.Btns.Secondary.bgDisabled.color
+        case .tertiary:
+            return isEnabled
+            ? Design.Btns.Tertiary.bg.color
+            : Design.Btns.Tertiary.bgDisabled.color
+        case .quaternary:
+            return isEnabled
+            ? Design.Btns.Quaternary.bg.color
+            : Design.Btns.Quaternary.bgDisabled.color
+        case .destructive1:
+            return isEnabled
+            ? Design.Btns.Destructive1.bg.color
+            : Design.Btns.Destructive1.bgDisabled.color
+        case .destructive2:
+            return isEnabled
+            ? Design.Btns.Destructive2.bg.color
+            : Design.Btns.Destructive2.bgDisabled.color
+        case .brand:
+            return isEnabled
+            ? Design.Btns.Brand.bg.color
+            : Design.Btns.Brand.bgDisabled.color
+        case .ghost:
+            return isEnabled
+            ? Design.Btns.Ghost.bg.color
+            : Design.Btns.Ghost.bgDisabled.color
         }
     }
     
-    private func shadowFillColor() -> Color {
-        if colorScheme == .light {
-            if isEnabled && appearance == .secondary {
-                return Asset.Colors.btnPrimary.color
-            } else {
-                return Asset.Colors.btnSecondary.color
-            }
-        } else {
-            if appearance == .primary {
-                return Asset.Colors.btnPrimary.color
-            } else {
-                return isEnabled
-                ? Asset.Colors.btnDarkShade.color
-                : Asset.Colors.btnSecondary.color
-            }
+    private func fgColor() -> Color {
+        switch type {
+        case .primary:
+            return isEnabled
+            ? Design.Btns.Primary.fg.color
+            : Design.Btns.Primary.fgDisabled.color
+        case .secondary:
+            return isEnabled
+            ? Design.Btns.Secondary.fg.color
+            : Design.Btns.Secondary.fgDisabled.color
+        case .tertiary:
+            return isEnabled
+            ? Design.Btns.Tertiary.fg.color
+            : Design.Btns.Tertiary.fgDisabled.color
+        case .quaternary:
+            return isEnabled
+            ? Design.Btns.Quaternary.fg.color
+            : Design.Btns.Quaternary.fgDisabled.color
+        case .destructive1:
+            return isEnabled
+            ? Design.Btns.Destructive1.fg.color
+            : Design.Btns.Destructive1.fgDisabled.color
+        case .destructive2:
+            return isEnabled
+            ? Design.Btns.Destructive2.fg.color
+            : Design.Btns.Destructive2.fgDisabled.color
+        case .brand:
+            return isEnabled
+            ? Design.Btns.Brand.fg.color
+            : Design.Btns.Brand.fgDisabled.color
+        case .ghost:
+            return isEnabled
+            ? Design.Btns.Ghost.fg.color
+            : Design.Btns.Ghost.fgDisabled.color
         }
     }
-    
-    private func shadowBorderColor() -> Color {
-        if colorScheme == .light {
-            if isEnabled && appearance == .secondary {
-                return Asset.Colors.btnSecondary.color
-            } else {
-                return Asset.Colors.btnPrimary.color
-            }
-        } else {
-            if !isEnabled && appearance == .secondary {
-                return Asset.Colors.btnPrimary.color
-            } else {
-                return Asset.Colors.btnSecondary.color
-            }
+
+    private func strokeColor() -> Color {
+        switch type {
+        case .primary:
+            return isEnabled
+            ? Design.Btns.Primary.bg.color
+            : Design.Btns.Primary.bgDisabled.color
+        case .secondary:
+            return isEnabled
+            ? Design.Btns.Secondary.border.color
+            : Design.Btns.Secondary.bgDisabled.color
+        case .tertiary:
+            return isEnabled
+            ? Design.Btns.Tertiary.bg.color
+            : Design.Btns.Tertiary.bgDisabled.color
+        case .quaternary:
+            return isEnabled
+            ? Design.Btns.Quaternary.bg.color
+            : Design.Btns.Quaternary.bgDisabled.color
+        case .destructive1:
+            return isEnabled
+            ? Design.Btns.Destructive1.border.color
+            : Design.Btns.Destructive1.bgDisabled.color
+        case .destructive2:
+            return isEnabled
+            ? Design.Btns.Destructive2.bg.color
+            : Design.Btns.Destructive2.bgDisabled.color
+        case .brand:
+            return isEnabled
+            ? Design.Btns.Brand.bg.color
+            : Design.Btns.Brand.bgDisabled.color
+        case .ghost:
+            return isEnabled
+            ? Design.Btns.Ghost.bg.color
+            : Design.Btns.Ghost.bgDisabled.color
         }
-    }
-}
-
-struct ZcashButtonModifier: ViewModifier {
-    @Environment(\.isEnabled) private var isEnabled
-
-    let appearance: ZcashButtonStyle.Appearance
-    let minWidth: CGFloat?
-    let fontSize: CGFloat
-    let height: CGFloat
-    let shadowOffset: CGFloat
-
-    func body(content: Content) -> some View {
-        if let minWidth {
-            content
-                .buttonStyle(
-                    ZcashButtonStyle(
-                        isEnabled: isEnabled,
-                        appearance: appearance,
-                        fontSize: fontSize,
-                        height: height,
-                        shadowOffset: shadowOffset
-                    )
-                )
-                .frame(minWidth: minWidth)
-        } else {
-            content
-                .buttonStyle(
-                    ZcashButtonStyle(
-                        isEnabled: isEnabled,
-                        appearance: appearance,
-                        fontSize: fontSize,
-                        height: height,
-                        shadowOffset: shadowOffset
-                    )
-                )
-        }
-    }
-}
-
-extension Button {
-    public func zcashStyle(
-        _ appearance: ZcashButtonStyle.Appearance = .primary,
-        minWidth: CGFloat? = 236,
-        fontSize: CGFloat = 14,
-        height: CGFloat = 60,
-        shadowOffset: CGFloat = 10
-    ) -> some View {
-        modifier(
-            ZcashButtonModifier(
-                appearance: appearance,
-                minWidth: minWidth,
-                fontSize: fontSize,
-                height: height,
-                shadowOffset: shadowOffset
-            )
-        )
     }
 }
 
 #Preview {
-    VStack {
-        Button { } label: {
-            Text("PRIMARY".uppercased())
-        }
-        .zcashStyle()
-        .padding(.horizontal, 40)
-        .padding(.bottom, 20)
-        .disabled(false)
-
-        Button { } label: {
-            Text("SECONDARY".uppercased())
-        }
-        .zcashStyle(.secondary)
-        .padding(.horizontal, 40)
-        .padding(.bottom, 20)
-        .disabled(false)
-
-        Button { } label: {
-            Text("PRIMARY DISABLED".uppercased())
-        }
-        .zcashStyle()
-        .padding(.horizontal, 40)
-        .padding(.bottom, 20)
-        .disabled(true)
-
-        Button { } label: {
-            Text("SECONDARY DISABLED".uppercased())
-        }
-        .zcashStyle(.secondary)
-        .padding(.horizontal, 40)
-        .padding(.bottom, 20)
-        .disabled(true)
+    VStack(spacing: 15) {
+        ZashiButton("Button") {}
+        ZashiButton("Button", type: .secondary) {}
+        ZashiButton("Button", type: .tertiary) {}
+        ZashiButton("Button", type: .quaternary) {}
+        ZashiButton("Button", type: .destructive1) {}
+        ZashiButton("Button", type: .destructive2) {}
+        ZashiButton("Button", type: .brand) {}
+        ZashiButton("Button", type: .ghost) {}
     }
-    .padding()
-    .background(.blue)
-    .preferredColorScheme(.light)
+    .screenHorizontalPadding()
 }
 
 #Preview {
-    VStack {
-        Button { } label: {
-            Text("PRIMARY".uppercased())
-        }
-        .zcashStyle()
-        .padding(.horizontal, 40)
-        .padding(.bottom, 20)
-        .disabled(false)
-
-        Button { } label: {
-            Text("SECONDARY".uppercased())
-        }
-        .zcashStyle(.secondary)
-        .padding(.horizontal, 40)
-        .padding(.bottom, 20)
-        .disabled(false)
-
-        Button { } label: {
-            Text("PRIMARY DISABLED".uppercased())
-        }
-        .zcashStyle()
-        .padding(.horizontal, 40)
-        .padding(.bottom, 20)
-        .disabled(true)
-
-        Button { } label: {
-            Text("SECONDARY DISABLED".uppercased())
-        }
-        .zcashStyle(.secondary)
-        .padding(.horizontal, 40)
-        .padding(.bottom, 20)
-        .disabled(true)
+    VStack(spacing: 15) {
+        ZashiButton(
+            "Button",
+            prefixView: 
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary),
+            accessoryView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary)
+        ) {}
+        
+        ZashiButton(
+            "Button",
+            type: .secondary,
+            prefixView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary),
+            accessoryView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary)
+        ) {}
+        
+        ZashiButton(
+            "Button",
+            type: .tertiary,
+            prefixView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary),
+            accessoryView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary)
+        ) {}
+        
+        ZashiButton(
+            "Button",
+            type: .quaternary,
+            prefixView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary),
+            accessoryView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary)
+        ) {}
+        
+        ZashiButton(
+            "Button",
+            type: .destructive1,
+            prefixView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary),
+            accessoryView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary)
+        ) {}
+        
+        ZashiButton(
+            "Button",
+            type: .destructive2,
+            prefixView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary),
+            accessoryView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary)
+        ) {}
+        
+        ZashiButton(
+            "Button",
+            type: .brand,
+            prefixView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary),
+            accessoryView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary)
+        ) {}
+        
+        ZashiButton(
+            "Button",
+            type: .ghost,
+            prefixView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary),
+            accessoryView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary)
+        ) {}
     }
-    .padding()
-    .background(.blue)
-    .preferredColorScheme(.dark)
+    .screenHorizontalPadding()
+}
+
+#Preview {
+    VStack(spacing: 15) {
+        ZashiButton(
+            "Button",
+            prefixView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary),
+            accessoryView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary)
+        ) {}
+            .disabled(true)
+        
+        ZashiButton(
+            "Button",
+            type: .secondary,
+            prefixView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary),
+            accessoryView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary)
+        ) {}
+            .disabled(true)
+        
+        ZashiButton(
+            "Button",
+            type: .tertiary,
+            prefixView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary),
+            accessoryView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary)
+        ) {}
+            .disabled(true)
+        
+        ZashiButton(
+            "Button",
+            type: .quaternary,
+            prefixView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary),
+            accessoryView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary)
+        ) {}
+            .disabled(true)
+        
+        ZashiButton(
+            "Button",
+            type: .destructive1,
+            prefixView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary),
+            accessoryView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary)
+        ) {}
+            .disabled(true)
+        
+        ZashiButton(
+            "Button",
+            type: .destructive2,
+            prefixView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary),
+            accessoryView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary)
+        ) {}
+            .disabled(true)
+        
+        ZashiButton(
+            "Button",
+            type: .brand,
+            prefixView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary),
+            accessoryView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary)
+        ) {}
+            .disabled(true)
+        
+        ZashiButton(
+            "Button",
+            type: .ghost,
+            prefixView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary),
+            accessoryView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Text.primary)
+        ) {}
+            .disabled(true)
+    }
+    .screenHorizontalPadding()
 }

@@ -10,6 +10,7 @@ import ComposableArchitecture
 import Generated
 import ExchangeRate
 import UserPreferencesStorage
+import Models
 
 @Reducer
 public struct CurrencyConversionSetup {
@@ -68,6 +69,7 @@ public struct CurrencyConversionSetup {
         }
 
         public var activeSettingsOption: SettingsOptions?
+        @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
         public var currentSettingsOption = SettingsOptions.optOut
         public var isSettingsView: Bool = false
 
@@ -124,7 +126,10 @@ public struct CurrencyConversionSetup {
                 exchangeRate.refreshExchangeRateUSD()
                 return .none
 
-            case .settingsOptionChanged:
+            case .settingsOptionChanged(let option):
+                if option == .optOut {
+                    state.currencyConversion = nil
+                }
                 return .none
 
             case .settingsOptionTapped(let newOption):

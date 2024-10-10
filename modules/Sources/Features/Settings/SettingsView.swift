@@ -7,6 +7,7 @@ import RecoveryPhraseDisplay
 import UIComponents
 import PrivateDataConsent
 import ServerSetup
+import AddressBook
 
 public struct SettingsView: View {
     @Perception.Bindable var store: StoreOf<Settings>
@@ -20,6 +21,24 @@ public struct SettingsView: View {
             VStack {
                 List {
                     Group {
+                        SettingsRow(
+                            icon: Asset.Assets.Icons.user.image,
+                            title: L10n.Settings.addressBook
+                        ) {
+                            store.send(.protectedAccessRequest(.addressBook))
+                        }
+
+                        SettingsRow(
+                            icon: Asset.Assets.Icons.integrations.image,
+                            title: L10n.Settings.integrations,
+                            accessoryView:
+                                Asset.Assets.Partners.coinbaseSeeklogo.image
+                                    .resizable()
+                                    .frame(width: 20, height: 20)
+                        ) {
+                            store.send(.updateDestination(.integrations))
+                        }
+
                         SettingsRow(
                             icon: Asset.Assets.Icons.settings.image,
                             title: L10n.Settings.advanced
@@ -60,6 +79,18 @@ public struct SettingsView: View {
                         AdvancedSettingsView(store: store.advancedSettingsStore())
                     }
                 )
+                .navigationLinkEmpty(
+                    isActive: store.bindingFor(.integrations),
+                    destination: {
+                        IntegrationsView(store: store.integrationsStore())
+                    }
+                )
+                .navigationLinkEmpty(
+                    isActive: store.bindingFor(.addressBook),
+                    destination: {
+                        AddressBookView(store: store.addressBookStore())
+                    }
+                )
                 .onAppear {
                     store.send(.onAppear)
                 }
@@ -79,15 +110,11 @@ public struct SettingsView: View {
                 Spacer()
                 
                 Asset.Assets.zashiTitle.image
-                    .renderingMode(.template)
-                    .resizable()
-                    .frame(width: 73, height: 20)
-                    .foregroundColor(Asset.Colors.primary.color)
+                    .zImage(width: 73, height: 20, color: Asset.Colors.primary.color)
                     .padding(.bottom, 16)
                 
                 Text(L10n.Settings.version(store.appVersion, store.appBuild))
-                    .font(.custom(FontFamily.Archivo.regular.name, size: 16))
-                    .foregroundColor(Design.Text.tertiary.color)
+                    .zFont(size: 16, style: Design.Text.tertiary)
                     .padding(.bottom, 24)
             }
         }
@@ -99,10 +126,7 @@ public struct SettingsView: View {
             action: \.alert
         ))
         .zashiBack()
-        .zashiTitle {
-            Text(L10n.Settings.title.uppercased())
-                .font(.custom(FontFamily.Archivo.bold.name, size: 14))
-        }
+        .screenTitle(L10n.Settings.title)
         .walletStatusPanel()
     }
 }
@@ -120,7 +144,9 @@ public struct SettingsView: View {
 extension Settings.State {
     public static let initial = Settings.State(
         aboutState: .initial,
-        advancedSettingsState: .initial
+        addressBookState: .initial,
+        advancedSettingsState: .initial,
+        integrationsState: .initial
     )
 }
 
@@ -134,9 +160,11 @@ extension StoreOf<Settings> {
     public static let demo = StoreOf<Settings>(
         initialState: .init(
             aboutState: .initial,
+            addressBookState: .initial,
             advancedSettingsState: .initial,
             appVersion: "0.0.1",
-            appBuild: "54"
+            appBuild: "54",
+            integrationsState: .initial
         )
     ) {
         Settings()
@@ -157,6 +185,20 @@ extension StoreOf<Settings> {
         self.scope(
             state: \.aboutState,
             action: \.about
+        )
+    }
+    
+    func integrationsStore() -> StoreOf<Integrations> {
+        self.scope(
+            state: \.integrationsState,
+            action: \.integrations
+        )
+    }
+    
+    func addressBookStore() -> StoreOf<AddressBook> {
+        self.scope(
+            state: \.addressBookState,
+            action: \.addressBook
         )
     }
 }

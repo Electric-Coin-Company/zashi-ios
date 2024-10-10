@@ -16,6 +16,8 @@ import PrivateDataConsent
 import ServerSetup
 import CurrencyConversionSetup
 
+import Flexa
+
 public struct AdvancedSettingsView: View {
     @Perception.Bindable var store: StoreOf<AdvancedSettings>
     
@@ -55,18 +57,6 @@ public struct AdvancedSettingsView: View {
                         ) {
                             store.send(.updateDestination(.currencyConversionSetup))
                         }
-                        
-                        if store.inAppBrowserURL != nil {
-                            SettingsRow(
-                                icon: Asset.Assets.Icons.coinbase.image,
-                                iconTint: Asset.Colors.Settings.coinbaseTint.color,
-                                iconBcg: Asset.Colors.Settings.coinbaseBcg.color,
-                                title: L10n.Settings.buyZecCB,
-                                divider: false
-                            ) {
-                                store.send(.buyZecTapped)
-                            }
-                        }
                     }
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Asset.Colors.shade97.color)
@@ -75,64 +65,55 @@ public struct AdvancedSettingsView: View {
                 .padding(.top, 24)
                 .padding(.horizontal, 4)
                 .walletStatusPanel()
-                .sheet(isPresented: $store.isInAppBrowserOn) {
-                    if let urlStr = store.inAppBrowserURL, let url = URL(string: urlStr) {
-                        InAppBrowserView(url: url)
-                    }
-                }
                 .onAppear { store.send(.onAppear) }
                 .navigationLinkEmpty(
-                    isActive: store.bindingForBackupPhrase,
+                    isActive: store.bindingFor(.backupPhrase),
                     destination: {
                         RecoveryPhraseDisplayView(store: store.backupPhraseStore())
                     }
                 )
                 .navigationLinkEmpty(
-                    isActive: store.bindingForPrivateDataConsent,
+                    isActive: store.bindingFor(.privateDataConsent),
                     destination: {
                         PrivateDataConsentView(store: store.privateDataConsentStore())
                     }
                 )
                 .navigationLinkEmpty(
-                    isActive: store.bindingForServerSetup,
+                    isActive: store.bindingFor(.serverSetup),
                     destination: {
                         ServerSetupView(store: store.serverSetupStore())
                     }
                 )
                 .navigationLinkEmpty(
-                    isActive: store.bindingDeleteWallet,
+                    isActive: store.bindingFor(.deleteWallet),
                     destination: {
                         DeleteWalletView(store: store.deleteWalletStore())
                     }
                 )
                 .navigationLinkEmpty(
-                    isActive: store.bindingCurrencyConversionSetup,
+                    isActive: store.bindingFor(.currencyConversionSetup),
                     destination: {
                         CurrencyConversionSetupView(store: store.currencyConversionSetupStore())
                     }
                 )
-                
+
                 Spacer()
 
                 HStack(spacing: 0) {
                     Asset.Assets.infoOutline.image
-                        .renderingMode(.template)
-                        .resizable()
-                        .frame(width: 20, height: 20)
+                        .zImage(size: 20, style: Design.Text.tertiary)
                         .padding(.trailing, 12)
 
                     Text(L10n.Settings.deleteZashiWarning)
-                        .font(.custom(FontFamily.Inter.regular.name, size: 12))
                 }
-                .foregroundColor(Design.Text.tertiary.color)
+                .zFont(size: 12, style: Design.Text.tertiary)
                 .padding(.bottom, 20)
 
                 Button {
                     store.send(.protectedAccessRequest(.deleteWallet))
                 } label: {
                     Text(L10n.Settings.deleteZashi)
-                        .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                        .foregroundColor(Design.Btns.Destructive1.fg.color)
+                        .zFont(.semiBold, size: 16, style: Design.Btns.Destructive1.fg)
                         .frame(height: 24)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
@@ -145,7 +126,7 @@ public struct AdvancedSettingsView: View {
                                 }
                         }
                 }
-                .padding(.horizontal, 24)
+                .screenHorizontalPadding()
                 .padding(.bottom, 24)
             }
         }
@@ -153,10 +134,7 @@ public struct AdvancedSettingsView: View {
         .listStyle(.plain)
         .navigationBarTitleDisplayMode(.inline)
         .zashiBack()
-        .zashiTitle {
-            Text(L10n.Settings.advanced.uppercased())
-                .font(.custom(FontFamily.Archivo.bold.name, size: 14))
-        }
+        .screenTitle(L10n.Settings.advanced)
     }
 }
 
@@ -169,47 +147,12 @@ public struct AdvancedSettingsView: View {
 }
 
 // MARK: - ViewStore
-extension StoreOf<AdvancedSettings> {
-    var destinationBinding: Binding<AdvancedSettings.State.Destination?> {
-        Binding {
-            self.state.destination
-        } set: {
-            self.send(.updateDestination($0))
-        }
-    }
-    
-    var bindingForBackupPhrase: Binding<Bool> {
-        self.destinationBinding.map(
-            extract: { $0 == .backupPhrase },
-            embed: { $0 ? .backupPhrase : nil }
-        )
-    }
-    
-    var bindingForPrivateDataConsent: Binding<Bool> {
-        self.destinationBinding.map(
-            extract: { $0 == .privateDataConsent },
-            embed: { $0 ? .privateDataConsent : nil }
-        )
-    }
-    
-    var bindingForServerSetup: Binding<Bool> {
-        self.destinationBinding.map(
-            extract: { $0 == .serverSetup },
-            embed: { $0 ? .serverSetup : nil }
-        )
-    }
-    
-    var bindingDeleteWallet: Binding<Bool> {
-        self.destinationBinding.map(
-            extract: { $0 == .deleteWallet },
-            embed: { $0 ? .deleteWallet : nil }
-        )
-    }
 
-    var bindingCurrencyConversionSetup: Binding<Bool> {
-        self.destinationBinding.map(
-            extract: { $0 == .currencyConversionSetup },
-            embed: { $0 ? .currencyConversionSetup : nil }
+extension StoreOf<AdvancedSettings> {
+    func bindingFor(_ destination: AdvancedSettings.State.Destination) -> Binding<Bool> {
+        Binding<Bool>(
+            get: { self.destination == destination },
+            set: { self.send(.updateDestination($0 ? destination : nil)) }
         )
     }
 

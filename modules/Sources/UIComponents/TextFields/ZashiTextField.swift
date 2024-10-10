@@ -35,48 +35,63 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
     }
     
     public var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 0) {
             if let title {
                 Text(title)
                     .lineLimit(1)
                     .truncationMode(.middle)
-                    .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                    .foregroundColor(Asset.Colors.primary.color)
+                    .font(.custom(FontFamily.Inter.medium.name, size: 14))
+                    .foregroundColor(Design.Inputs.Filled.label.color)
+                    .padding(.bottom, 6)
             }
             
             HStack(spacing: 0) {
                 if let prefixView {
                     prefixView
+                        .padding(.trailing, 8)
                 }
 
                 TextField(
                     "",
                     text: text,
-                    prompt: Text(placeholder).foregroundColor(Asset.Colors.shade72.color)
+                    prompt:
+                        Text(placeholder)
+                            .font(.custom(FontFamily.Inter.regular.name, size: 16))
+                            .foregroundColor(Design.Inputs.Default.text.color)
                 )
                 .autocapitalization(.none)
-                .font(.custom(FontFamily.Archivo.regular.name, size: 14))
+                .font(.custom(FontFamily.Inter.regular.name, size: 14))
                 .lineLimit(1)
                 .truncationMode(.middle)
                 .accentColor(Asset.Colors.primary.color)
-                .padding(10)
-                .frame(height: 40)
                 
                 Spacer()
                 
                 if let accessoryView {
                     accessoryView
+                        .padding(.leading, 8)
                 }
             }
-            .overlay(
-                Rectangle()
-                    .stroke(Asset.Colors.primary.color, lineWidth: 1)
+            .padding(.vertical, 12)
+            .padding(.horizontal, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Design.Inputs.Default.bg.color)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(
+                                error == nil
+                                ? Design.Inputs.Default.bg.color
+                                : Design.Inputs.ErrorFilled.stroke.color
+                            )
+                    }
             )
 
             if let error {
                 Text(error)
-                    .foregroundColor(Design.Utility.ErrorRed._600.color)
-                    .font(.custom(FontFamily.Inter.medium.name, size: 12))
+                    .foregroundColor(Design.Inputs.ErrorFilled.hint.color)
+                    .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                    .padding(.top, 6)
             }
         }
     }
@@ -84,5 +99,46 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
 
 #Preview {
     @State var text = ""
-    return ZashiTextField(text: $text)
+    return VStack(spacing: 30) {
+        ZashiTextField(
+            text: $text,
+            placeholder: "Placeholder"
+        )
+
+        ZashiTextField(
+            text: $text,
+            placeholder: "ZEC",
+            title: "Amount",
+            prefixView:
+                ZcashSymbol()
+                    .frame(width: 12, height: 20)
+                    .foregroundColor(Design.Inputs.Default.text.color)
+        )
+
+        ZashiTextField(
+            text: $text,
+            placeholder: "Placeholder",
+            title: "Title",
+            accessoryView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Inputs.Default.text),
+            prefixView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Inputs.Default.text)
+        )
+
+        ZashiTextField(
+            text: $text,
+            placeholder: "Placeholder",
+            title: "Title",
+            error: "This contact name exceeds the 32-character limit. Please shorten the name.",
+            accessoryView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Inputs.Default.text),
+            prefixView:
+                Asset.Assets.Icons.key.image
+                    .zImage(size: 20, style: Design.Inputs.Default.text)
+        )
+    }
+    .padding()
 }

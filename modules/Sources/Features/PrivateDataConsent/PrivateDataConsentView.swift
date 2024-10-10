@@ -10,12 +10,11 @@ import ComposableArchitecture
 import Generated
 import UIComponents
 import ExportLogs
-import WalletStatusPanel
 
 public struct PrivateDataConsentView: View {
     @Perception.Bindable var store: StoreOf<PrivateDataConsent>
     
-    @State var walletStatus = WalletStatus.none
+    @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
 
     public init(store: StoreOf<PrivateDataConsent>) {
         self.store = store
@@ -29,17 +28,17 @@ public struct PrivateDataConsentView: View {
                         .padding(.top, walletStatus != .none ? 30 : 0)
                     
                     Text(L10n.PrivateDataConsent.title)
-                        .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
+                        .font(.custom(FontFamily.Inter.semiBold.name, size: 25))
                         .multilineTextAlignment(.center)
                         .padding(.bottom, 35)
                     
                     Text(L10n.PrivateDataConsent.message)
-                        .font(.custom(FontFamily.Archivo.regular.name, size: 14))
+                        .font(.custom(FontFamily.Inter.regular.name, size: 14))
                         .padding(.bottom, 10)
                         .lineSpacing(3)
 
                     Text(L10n.PrivateDataConsent.note)
-                        .font(.custom(FontFamily.Archivo.regular.name, size: 12))
+                        .font(.custom(FontFamily.Inter.regular.name, size: 12))
                         .lineSpacing(2)
 
                     HStack {
@@ -53,51 +52,65 @@ public struct PrivateDataConsentView: View {
                     .padding(.top, 20)
                     .padding(.bottom, 40)
 
-                    Button {
-                        store.send(.exportRequested)
-                    } label: {
-                        HStack(spacing: 10) {
-                            Text(L10n.Settings.exportPrivateData.uppercased())
-                            if store.isExportingData {
-                                ProgressView()
-                            }
+                    if store.isExportingData {
+                        ZashiButton(
+                            L10n.Settings.exportPrivateData,
+                            type: .secondary,
+                            accessoryView: ProgressView()
+                        ) {
+                            store.send(.exportRequested)
                         }
+                        .disabled(true)
+                        .padding(.horizontal, 8)
+                        .padding(.bottom, 8)
+                    } else {
+                        ZashiButton(
+                            L10n.Settings.exportPrivateData,
+                            type: .secondary
+                        ) {
+                            store.send(.exportRequested)
+                        }
+                        .disabled(!store.isExportPossible)
+                        .padding(.horizontal, 8)
+                        .padding(.bottom, 8)
                     }
-                    .zcashStyle(.secondary)
-                    .disabled(!store.isExportPossible)
-                    .padding(.horizontal, 8)
-                    .padding(.bottom, 25)
 
                     #if DEBUG
-                    Button {
-                        store.send(.exportLogsRequested)
-                    } label: {
-                        HStack(spacing: 10) {
-                            Text(L10n.Settings.exportLogsOnly.uppercased())
-                            if store.isExportingLogs {
-                                ProgressView()
-                            }
+                    if store.isExportingLogs {
+                        ZashiButton(
+                            L10n.Settings.exportLogsOnly,
+                            accessoryView: ProgressView()
+                        ) {
+                            store.send(.exportLogsRequested)
                         }
+                        .disabled(true)
+                        .padding(.horizontal, 8)
+                        .padding(.bottom, 50)
+                    } else {
+                        ZashiButton(
+                            L10n.Settings.exportLogsOnly
+                        ) {
+                            store.send(.exportLogsRequested)
+                        }
+                        .disabled(!store.isExportPossible)
+                        .padding(.horizontal, 8)
+                        .padding(.bottom, 50)
                     }
-                    .zcashStyle()
-                    .disabled(!store.isExportPossible)
-                    .padding(.horizontal, 8)
-                    .padding(.bottom, 50)
                     #endif
                 }
-                .padding(.horizontal, 60)
             }
             .padding(.vertical, 1)
             .zashiBack()
             .onAppear {
                 store.send(.onAppear)
             }
-            .walletStatusPanel(background: .pattern, restoringStatus: $walletStatus)
+            .walletStatusPanel()
 
             shareLogsView()
         }
         .navigationBarTitleDisplayMode(.inline)
-        .applyScreenBackground(withPattern: true)
+        .screenHorizontalPadding()
+        .applyScreenBackground()
     }
 }
 

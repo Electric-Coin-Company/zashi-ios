@@ -107,7 +107,7 @@ public struct CurrencyConversionSetupView: View {
             }
             .padding(.bottom, 12)
         }
-        .padding(.horizontal, 24)
+        .screenHorizontalPadding()
     }
  
     private func settingsFooter() -> some View {
@@ -151,11 +151,10 @@ extension CurrencyConversionSetupView {
             action()
         } label: {
             Text(title)
-                .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                .foregroundColor(
-                    disabled
-                    ? Design.Btns.Bold.fgDisabled.color
-                    : Design.Btns.Bold.fg.color
+                .zFont(.semiBold, size: 16,
+                       style: disabled
+                       ? Design.Btns.Primary.fgDisabled
+                       : Design.Btns.Primary.fg
                 )
                 .frame(height: 24)
                 .frame(maxWidth: .infinity)
@@ -164,13 +163,13 @@ extension CurrencyConversionSetupView {
                     RoundedRectangle(cornerRadius: 12)
                         .fill(
                             disabled
-                            ? Design.Btns.Bold.bgDisabled.color
-                            : Design.Btns.Bold.bg.color
+                            ? Design.Btns.Primary.bgDisabled.color
+                            : Design.Btns.Primary.bg.color
                         )
                 }
         }
         .disabled(disabled)
-        .padding(.horizontal, 24)
+        .screenHorizontalPadding()
     }
     
     private func secondaryButton(_ title: String, action: @escaping () -> Void) -> some View {
@@ -178,13 +177,12 @@ extension CurrencyConversionSetupView {
             action()
         } label: {
             Text(title)
-                .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                .foregroundColor(Design.Btns.Ghost.fg.color)
+                .zFont(.semiBold, size: 16, style: Design.Btns.Ghost.fg)
                 .frame(height: 24)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 12)
         }
-        .padding(.horizontal, 24)
+        .screenHorizontalPadding()
     }
 
     private func icons() -> some View {
@@ -196,35 +194,28 @@ extension CurrencyConversionSetupView {
     
     private func title() -> some View {
         Text(L10n.CurrencyConversion.title)
-            .font(.custom(FontFamily.Inter.semiBold.name, size: 24))
-            .foregroundColor(Design.Text.primary.color)
+            .zFont(.semiBold, size: 24, style: Design.Text.primary)
     }
     
     private func note() -> some View {
         HStack(alignment: .top, spacing: 0) {
             Asset.Assets.infoCircle.image
-                .renderingMode(.template)
-                .resizable()
-                .frame(width: 20, height: 20)
-                .foregroundColor(Design.Text.primary.color)
+                .zImage(size: 20, style: Design.Text.primary)
                 .padding(.trailing, 12)
 
             Text(L10n.CurrencyConversion.note)
-                .font(.custom(FontFamily.Inter.regular.name, size: 12))
-                .foregroundColor(Design.Text.tertiary.color)
+                .zFont(size: 12, style: Design.Text.tertiary)
         }
-        .padding(.horizontal, 24)
+        .screenHorizontalPadding()
     }
     
     private func optionVStack(_ title: String, subtitle: String) -> some View {
         VStack(alignment: .leading, spacing: 5) {
             Text(title)
-                .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
-                .foregroundColor(Design.Text.primary.color)
+                .zFont(.semiBold, size: 14, style: Design.Text.primary)
 
             Text(subtitle)
-                .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                .foregroundColor(Design.Text.tertiary.color)
+                .zFont(size: 14, style: Design.Text.tertiary)
                 .lineLimit(nil)
                 .multilineTextAlignment(.leading)
         }
@@ -233,10 +224,7 @@ extension CurrencyConversionSetupView {
     
     private func optionIcon(_ icon: Image) -> some View {
         icon
-            .renderingMode(.template)
-            .resizable()
-            .frame(width: 20, height: 20)
-            .foregroundColor(Design.Text.primary.color)
+            .zImage(size: 20, style: Design.Text.primary)
             .padding(10)
             .background {
                 Circle()
@@ -258,8 +246,7 @@ extension CurrencyConversionSetupView {
                 .padding(.bottom, 8)
             
             Text(desc)
-                .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                .foregroundColor(Design.Text.tertiary.color)
+                .zFont(size: 14, style: Design.Text.tertiary)
                 .padding(.bottom, 4)
         }
     }

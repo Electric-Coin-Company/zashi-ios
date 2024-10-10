@@ -42,10 +42,7 @@ public struct NotEnoughFreeSpaceView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: settingsButton())
             .applyScreenBackground()
-            .zashiTitle {
-                Text(L10n.NotEnoughFreeSpace.title.uppercased())
-                    .font(.custom(FontFamily.Archivo.bold.name, size: 14))
-            }
+            .screenTitle(L10n.NotEnoughFreeSpace.title)
         }
     }
     

@@ -284,3 +284,7 @@ private final class BundleToken {
 {% else %}
 // No assets found
 {% endif %}
+
+extension ColorAsset: @unchecked Sendable { }
+extension ImageAsset: @unchecked Sendable { }
+// swiftlint:enable all

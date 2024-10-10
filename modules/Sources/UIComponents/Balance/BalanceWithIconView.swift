@@ -22,7 +22,7 @@ public struct BalanceWithIconView: View {
         HStack {
             ZatoshiRepresentationView(
                 balance: balance,
-                fontName: FontFamily.Archivo.semiBold.name,
+                fontName: FontFamily.Inter.semiBold.name,
                 mostSignificantFontSize: 42,
                 leastSignificantFontSize: 10,
                 format: .expanded,

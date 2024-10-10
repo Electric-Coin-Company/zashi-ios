@@ -56,19 +56,33 @@ struct TransactionHeaderView: View {
                         .padding(.trailing, 30)
                         
                         if transaction.zAddress != nil && transaction.isAddressExpanded {
-                            HStack {
-                                Text(transaction.address)
-                                    .font(.custom(FontFamily.Inter.regular.name, size: 13))
-                                    .foregroundColor(Asset.Colors.primary.color)
-                                
-                                Spacer(minLength: 100)
-                            }
-                            .padding(.horizontal, 60)
+                            Text(transaction.address)
+                                .font(.custom(FontFamily.Inter.regular.name, size: 13))
+                                .foregroundColor(Asset.Colors.shade47.color)
+                            .padding(.leading, 60)
+                            .padding(.trailing, 25)
                             .padding(.bottom, 5)
                             
-                            TapToCopyTransactionDataView(store: store, data: transaction.address.redacted)
-                                .padding(.horizontal, 60)
-                                .padding(.bottom, 20)
+                            HStack(spacing: 24) {
+                                TapToCopyTransactionDataView(store: store, data: transaction.address.redacted)
+                                    .padding(.leading, 60)
+
+                                if !transaction.isInAddressBook {
+                                    Button {
+                                        store.send(.saveAddressTapped(transaction.address.redacted))
+                                    } label: {
+                                        HStack {
+                                            Asset.Assets.Icons.save.image
+                                                .zImage(size: 14, style: Design.Btns.Tertiary.fg)
+                                            
+                                            Text(L10n.Transaction.saveAddress)
+                                                .zFont(.semiBold, size: 14, style: Design.Btns.Tertiary.fg)
+                                        }
+                                    }
+                                    .buttonStyle(.borderless)
+                                }
+                            }
+                            .padding(.bottom, 20)
                         }
                         
                         Text("\(transaction.dateString ?? "")")
@@ -107,10 +121,7 @@ struct TransactionHeaderView: View {
     @ViewBuilder private func addressArea() -> some View {
         if transaction.zAddress == nil {
             Asset.Assets.surroundedShield.image
-                .renderingMode(.template)
-                .resizable()
-                .frame(width: 17, height: 13)
-                .foregroundColor(Asset.Colors.primary.color)
+                .zImage(width: 17, height: 13, color: Asset.Colors.primary.color)
         } else if !transaction.isAddressExpanded {
             Button {
                 store.send(.transactionAddressExpandRequested(transaction.id))
@@ -146,31 +157,19 @@ extension TransactionHeaderView {
             switch transaction.status {
             case .paid, .failed, .sending:
                 Asset.Assets.fly.image
-                    .renderingMode(.template)
-                    .resizable()
-                    .frame(width: 20, height: 16)
-                    .foregroundColor(Asset.Colors.primary.color)
+                    .zImage(width: 20, height: 16, color: Asset.Colors.primary.color)
 
             case .shielded, .shielding:
                 Asset.Assets.shieldedFunds.image
-                    .renderingMode(.template)
-                    .resizable()
-                    .frame(width: 20, height: 19)
-                    .foregroundColor(Asset.Colors.primary.color)
+                    .zImage(width: 20, height: 19, color: Asset.Colors.primary.color)
 
             case .received, .receiving:
                 if transaction.isUnread {
                     Asset.Assets.flyReceivedFilled.image
-                        .renderingMode(.template)
-                        .resizable()
-                        .frame(width: 17, height: 11)
-                        .foregroundColor(Design.Surfaces.brandBg.color)
+                        .zImage(width: 17, height: 11, style: Design.Surfaces.brandBg)
                 } else {
                     Asset.Assets.flyReceived.image
-                        .renderingMode(.template)
-                        .resizable()
-                        .frame(width: 17, height: 11)
-                        .foregroundColor(Asset.Colors.primary.color)
+                        .zImage(width: 17, height: 11, color: Asset.Colors.primary.color)
                 }
             }
         }

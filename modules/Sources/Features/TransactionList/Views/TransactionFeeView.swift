@@ -19,24 +19,26 @@ public struct TransactionFeeView: View {
     
     public var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(L10n.TransactionList.transactionFee)
-                    .font(.custom(FontFamily.Inter.regular.name, size: 13))
-                    .foregroundColor(Asset.Colors.shade47.color)
-                
-                ZatoshiRepresentationView(
-                    balance: fee,
-                    fontName: FontFamily.Inter.bold.name,
-                    mostSignificantFontSize: 13,
-                    isFee: fee.amount == 0,
-                    leastSignificantFontSize: 7,
-                    format: .expanded
-                )
+            Text(L10n.TransactionList.transactionFee)
+                .font(.custom(FontFamily.Inter.regular.name, size: 13))
                 .foregroundColor(Asset.Colors.shade47.color)
-                .fixedSize()
-            }
             
-            Color.clear
+            Spacer()
+            
+            ZatoshiRepresentationView(
+                balance: fee,
+                fontName: FontFamily.Inter.medium.name,
+                mostSignificantFontSize: 13,
+                isFee: fee.amount == 0,
+                leastSignificantFontSize: 7,
+                format: .expanded
+            )
+            .foregroundColor(
+                fee.amount == 0
+                ? Asset.Colors.shade47.color
+                : Design.Utility.ErrorRed._600.color
+            )
+            .fixedSize()
         }
     }
 }

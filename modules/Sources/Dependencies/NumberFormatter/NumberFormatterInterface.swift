@@ -19,4 +19,5 @@ extension DependencyValues {
 public struct NumberFormatterClient {
     public var string: (NSDecimalNumber) -> String?
     public var number: (String) -> NSNumber?
+    public var convertUSToLocale: (String) -> String?
 }

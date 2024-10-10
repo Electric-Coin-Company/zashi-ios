@@ -1,6 +1,30 @@
 {
     "releases": [
         {
+            "version": "1.2.1",
+            "date": "10-08-2024",
+            "timestamp": 1728388760,
+            "sections": [
+                {
+                    "title": "Added:",
+                    "bulletpoints": [
+                        "Tired of copy pasting addresses? We’ve added an Address Book feature for you!",
+                        "Introducing the “Request ZEC” feature: easily create a payment request and share it as a QR code!"
+                    ]
+                },
+                {
+                    "title": "Changed:",
+                    "bulletpoints": [
+                        "The Receive tab got some love—we redesigned it based on your feedback and reported challenges.",
+                        "We tweaked the Send form to align with our new design system.",
+                        "We updated the transaction history to simplify your experience.",
+                        "And that’s not all—the Scan UI has been redesigned, too.",
+                        "We also made many other minor UI/UX tweaks and fixes along the way. Enjoy!"
+                    ]
+                }
+            ]
+        },
+        {
             "version": "1.2",
             "date": "09-17-2024",
             "timestamp": 1725970426,
