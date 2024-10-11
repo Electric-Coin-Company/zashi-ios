@@ -1,15 +1,14 @@
 import SwiftUI
 import ComposableArchitecture
-import MessageUI
 
 import About
 import AppVersion
 import Generated
 import Models
-import Pasteboard
-import SupportDataGenerator
 import ZcashLightClientKit
 import AddressBook
+import WhatsNew
+import SendFeedback
 
 @Reducer
 public struct Settings {
@@ -20,12 +19,13 @@ public struct Settings {
             case addressBook
             case advanced
             case integrations
+            case sendFeedback
+            case whatsNew
         }
 
         public var aboutState: About.State
         public var addressBookState: AddressBook.State
         public var advancedSettingsState: AdvancedSettings.State
-        @Presents public var alert: AlertState<Action>?
         public var appVersion = ""
         public var appBuild = ""
         public var destination: Destination?
@@ -33,7 +33,9 @@ public struct Settings {
         public var integrationsState: Integrations.State
         public var isEnoughFreeSpaceMode = true
         public var supportData: SupportData?
-        
+        public var sendFeedbackState: SendFeedback.State = .initial
+        public var whatsNewState: WhatsNew.State = .initial
+
         public init(
             aboutState: About.State,
             addressBookState: AddressBook.State,
@@ -41,8 +43,7 @@ public struct Settings {
             appVersion: String = "",
             appBuild: String = "",
             destination: Destination? = nil,
-            integrationsState: Integrations.State,
-            supportData: SupportData? = nil
+            integrationsState: Integrations.State
         ) {
             self.aboutState = aboutState
             self.addressBookState = addressBookState
@@ -51,7 +52,6 @@ public struct Settings {
             self.appBuild = appBuild
             self.destination = destination
             self.integrationsState = integrationsState
-            self.supportData = supportData
         }
     }
 
@@ -60,19 +60,16 @@ public struct Settings {
         case addressBook(AddressBook.Action)
         case addressBookButtonTapped
         case advancedSettings(AdvancedSettings.Action)
-        case alert(PresentationAction<Action>)
-        case copyEmail
         case integrations(Integrations.Action)
         case onAppear
         case protectedAccessRequest(State.Destination)
-        case sendSupportMail
-        case sendSupportMailFinished
+        case sendFeedback(SendFeedback.Action)
         case updateDestination(Settings.State.Destination?)
+        case whatsNew(WhatsNew.Action)
     }
 
     @Dependency(\.appVersion) var appVersion
     @Dependency(\.localAuthentication) var localAuthentication
-    @Dependency(\.pasteboard) var pasteboard
 
     public init() { }
 
@@ -93,6 +90,14 @@ public struct Settings {
             Integrations()
         }
 
+        Scope(state: \.sendFeedbackState, action: \.sendFeedback) {
+            SendFeedback()
+        }
+
+        Scope(state: \.whatsNewState, action: \.whatsNew) {
+            WhatsNew()
+        }
+
         Reduce { state, action in
             switch action {
             case .onAppear:
@@ -110,13 +115,15 @@ public struct Settings {
             case .addressBookButtonTapped:
                 return .none
                 
-            case .copyEmail:
-                pasteboard.setString(SupportDataGenerator.Constants.email.redacted)
-                return .none
-            
             case .integrations:
                 return .none
                 
+            case .sendFeedback:
+                return .none
+                
+            case .whatsNew:
+                return .none
+
             case .protectedAccessRequest(let destination):
                 return .run { send in
                     if await localAuthentication.authenticate() {
@@ -128,51 +135,9 @@ public struct Settings {
                 state.destination = destination
                 return .none
 
-            case .sendSupportMail:
-                if MFMailComposeViewController.canSendMail() {
-                    state.supportData = SupportDataGenerator.generate()
-                } else {
-                    state.alert = AlertState.sendSupportMail()
-                }
-                return .none
-
-            case .sendSupportMailFinished:
-                state.supportData = nil
-                return .none
-
-            case .alert(.presented(let action)):
-                return Effect.send(action)
-
-            case .alert(.dismiss):
-                state.alert = nil
-                return .none
-
             case .advancedSettings:
                 return .none
-                
-            case .alert:
-                return .none
             }
-        }
-        .ifLet(\.$alert, action: \.alert)
-    }
-}
-
-// MARK: Alerts
-
-extension AlertState where Action == Settings.Action {
-    public static func sendSupportMail() -> AlertState {
-        AlertState {
-            TextState(L10n.Settings.Alert.CantSendEmail.title)
-        } actions: {
-            ButtonState(action: .copyEmail) {
-                TextState(L10n.Settings.Alert.CantSendEmail.copyEmail(SupportDataGenerator.Constants.email))
-            }
-            ButtonState(action: .sendSupportMailFinished) {
-                TextState(L10n.General.close)
-            }
-        } message: {
-            TextState(L10n.Settings.Alert.CantSendEmail.message)
         }
     }
 }

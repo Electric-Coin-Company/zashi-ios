@@ -13,6 +13,11 @@ import MnemonicSwift
 import Utils
 
 public struct RecoveryPhraseDisplayView: View {
+    enum Constants {
+        static let blurValue = 15.0
+        static let blurBDValue = 10.0
+    }
+    
     @Perception.Bindable var store: StoreOf<RecoveryPhraseDisplay>
     
     public init(store: StoreOf<RecoveryPhraseDisplay>) {
@@ -20,85 +25,187 @@ public struct RecoveryPhraseDisplayView: View {
     }
 
     public var body: some View {
-        ScrollView {
-            WithPerceptionTracking {
-                VStack(alignment: .center) {
-                    ZashiIcon()
+        WithPerceptionTracking {
+            VStack(alignment: .leading, spacing: 0) {
+                if let groups = store.phrase?.toGroups() {
+                    Text(L10n.RecoveryPhraseDisplay.title)
+                        .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                        .padding(.top, 40)
                     
-                    if let groups = store.phrase?.toGroups() {
-                        VStack {
-                            Text(L10n.RecoveryPhraseDisplay.titlePart1)
-                                .font(.custom(FontFamily.Inter.semiBold.name, size: 25))
-                            Text(L10n.RecoveryPhraseDisplay.titlePart2)
-                                .font(.custom(FontFamily.Inter.semiBold.name, size: 25))
-                        }
-                        .padding(.bottom, 15)
+                    Text(L10n.RecoveryPhraseDisplay.description)
+                        .zFont(size: 14, style: Design.Text.primary)
+                        .lineSpacing(1.5)
+                        .padding(.top, 8)
+                    
+                    HStack(spacing: 0) {
+                        Spacer()
                         
-                        Text(L10n.RecoveryPhraseDisplay.description)
-                            .font(.custom(FontFamily.Inter.medium.name, size: 14))
-                            .multilineTextAlignment(.center)
-                            .padding(.bottom, 15)
-
-                        HStack {
-                            ForEach(groups, id: \.startIndex) { group in
-                                VStack(alignment: .leading) {
-                                    HStack(spacing: 2) {
-                                        VStack(alignment: .trailing, spacing: 2) {
-                                            ForEach(Array(group.words.enumerated()), id: \.offset) { seedWord in
-                                                Text("\(seedWord.offset + group.startIndex + 1).")
-                                                    .fixedSize()
-                                                    .font(.custom(FontFamily.Inter.medium.name, size: 16))
-                                            }
-                                        }
-                                        
-                                        VStack(alignment: .leading, spacing: 2) {
-                                            ForEach(Array(group.words.enumerated()), id: \.offset) { seedWord in
-                                                Text("\(seedWord.element.data)")
-                                                    .fixedSize()
-                                                    .font(.custom(FontFamily.Inter.medium.name, size: 16))
-                                            }
-                                        }
-                                        
-                                        if group.startIndex == 0 {
+                        ForEach(groups, id: \.startIndex) { group in
+                            VStack(alignment: .leading) {
+                                VStack(spacing: 5) {
+                                    ForEach(Array(group.words.enumerated()), id: \.offset) { seedWord in
+                                        HStack(spacing: 0) {
+                                            Text("\(seedWord.offset + group.startIndex + 1)")
+                                                .zFont(.semiBold, size: 14, style: Design.Text.tertiary)
+                                                .padding(.trailing, 8)
+                                            
+                                            Text("\(seedWord.element.data)")
+                                                .zFont(size: 14, style: Design.Text.primary)
+                                                .minimumScaleFactor(0.35)
+                                                .lineLimit(1)
+                                            
                                             Spacer()
                                         }
                                     }
                                 }
                             }
+                            
+                            Spacer()
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(.horizontal, 15)
-                        .padding(.bottom, 15)
-
-                        if let birthdayValue = store.birthdayValue {
-                            Text(L10n.RecoveryPhraseDisplay.birthdayHeight(birthdayValue))
-                                .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                                .padding(.bottom, 15)
-                        }
-                    } else {
-                        Text(L10n.RecoveryPhraseDisplay.noWords)
-                            .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                            .multilineTextAlignment(.center)
-                            .padding(.bottom, 35)
+                        
                     }
-
-                    if !store.showBackButton {
-                        ZashiButton(L10n.RecoveryPhraseDisplay.Button.wroteItDown) {
-                            store.send(.finishedPressed)
+                    .blur(radius: store.isRecoveryPhraseHidden ? Constants.blurValue : 0)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 24)
+                    .padding(.horizontal, 16)
+                    .background {
+                        RoundedRectangle(cornerRadius: 24)
+                            .fill(Design.Surfaces.bgSecondary.color)
+                    }
+                    .onTapGesture {
+                        if !store.showBackButton {
+                            store.send(.recoveryPhraseTapped, animation: .easeInOut)
                         }
-                        .padding(.bottom, 50)
+                    }
+                    .overlay {
+                        if !store.showBackButton && store.isRecoveryPhraseHidden {
+                            VStack(spacing: 0) {
+                                Asset.Assets.eyeOn.image
+                                    .zImage(size: 26, style: Design.Text.primary)
+                                
+                                Text(L10n.RecoveryPhraseDisplay.reveal)
+                                    .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                                    .lineLimit(1)
+                            }
+                        }
+                    }
+                    .padding(.top, 20)
+
+                    if let birthdayValue = store.birthdayValue {
+                        HStack {
+                            Button {
+                                store.send(.tooltipTapped)
+                            } label: {
+                                HStack(spacing: 4) {
+                                    Text(L10n.RecoveryPhraseDisplay.birthdayTitle)
+                                        .zFont(.medium, size: 14, style: Design.Inputs.Filled.text)
+                                    Asset.Assets.infoOutline.image
+                                        .zImage(size: 16, style: Design.Inputs.Default.icon)
+                                }
+                                .padding(.top, 24)
+                            }
+                            
+                            Spacer()
+                        }
+                        .anchorPreference(
+                            key: BirthdayPreferenceKey.self,
+                            value: .bounds
+                        ) { $0 }
+
+                        HStack {
+                            Text("\(birthdayValue)")
+                                .zFont(.medium, size: 16, style: Design.Inputs.Filled.text)
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 12)
+                                .blur(radius: store.isRecoveryPhraseHidden ? Constants.blurBDValue : 0)
+
+                            Spacer()
+                        }
+                        .background {
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Design.Surfaces.bgSecondary.color)
+                        }
+                        .padding(.top, 6)
+                    }
+                } else {
+                    Text(L10n.RecoveryPhraseDisplay.noWords)
+                        .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                        .padding(.top, 40)
+                        .multilineTextAlignment(.center)
+                }
+
+                Spacer()
+
+                HStack(alignment: .top, spacing: 0) {
+                    Asset.Assets.infoOutline.image
+                        .zImage(size: 20, style: Design.Utility.WarningYellow._500)
+                        .padding(.trailing, 12)
+                    
+                    Text(L10n.RecoveryPhraseDisplay.warning)
+                        .zFont(.medium, size: 12, style: Design.Utility.WarningYellow._700)
+                    
+                    Spacer(minLength: 0)
+                }
+                .padding(.bottom, 24)
+                .padding(.horizontal, 20)
+
+                if !store.showBackButton {
+                    ZashiButton(L10n.RecoveryPhraseDisplay.Button.wroteItDown) {
+                        store.send(.finishedPressed)
+                    }
+                    .padding(.bottom, 20)
+                } else {
+                    if store.isRecoveryPhraseHidden {
+                        ZashiButton(
+                            L10n.RecoveryPhraseDisplay.reveal,
+                            prefixView:
+                                Asset.Assets.eyeOn.image
+                                    .zImage(size: 20, style: Design.Btns.Primary.fg)
+                        ) {
+                            store.send(.recoveryPhraseTapped, animation: .easeInOut)
+                        }
+                        .padding(.bottom, 20)
+                    } else {
+                        ZashiButton(
+                            L10n.RecoveryPhraseDisplay.hide,
+                            prefixView:
+                                Asset.Assets.eyeOff.image
+                                    .zImage(size: 20, style: Design.Btns.Primary.fg)
+                        ) {
+                            store.send(.recoveryPhraseTapped, animation: .easeInOut)
+                        }
+                        .padding(.bottom, 20)
                     }
                 }
-                .onAppear { store.send(.onAppear) }
-                .alert($store.scope(state: \.alert, action: \.alert))
-                .zashiBack(false, hidden: !store.showBackButton)
+            }
+            .onAppear { store.send(.onAppear) }
+            .alert($store.scope(state: \.alert, action: \.alert))
+            .zashiBack(false, hidden: !store.showBackButton)
+            .overlayPreferenceValue(BirthdayPreferenceKey.self) { preferences in
+                if store.isBirthdayHintVisible {
+                    GeometryReader { geometry in
+                        preferences.map {
+                            Tooltip(
+                                title: L10n.RecoveryPhraseDisplay.birthdayTitle,
+                                desc: L10n.RecoveryPhraseDisplay.birthdayDesc,
+                                bottomMode: true
+                            ) {
+                                store.send(.tooltipTapped)
+                            }
+                            .fixedSize(horizontal: false, vertical: true)
+                            .frame(width: geometry.size.width)
+                            .position(x: geometry[$0].midX, y: geometry[$0].minY)
+                            .offset(x: 0, y: -geometry[$0].height - 10)
+                        }
+                    }
+                }
             }
         }
         .navigationBarBackButtonHidden()
         .navigationBarTitleDisplayMode(.inline)
-        .padding(.vertical, 1)
         .screenHorizontalPadding()
         .applyScreenBackground()
+        .screenTitle(L10n.RecoveryPhraseDisplay.screenTitle.uppercased())
     }
 }
 
@@ -108,9 +215,9 @@ public struct RecoveryPhraseDisplayView: View {
             store:
                 StoreOf<RecoveryPhraseDisplay>(
                     initialState: RecoveryPhraseDisplay.State(
+                        birthdayValue: nil,
                         phrase: .placeholder,
-                        showBackButton: true,
-                        birthdayValue: nil
+                        showBackButton: true
                     )
                 ) {
                     RecoveryPhraseDisplay()
@@ -123,8 +230,8 @@ public struct RecoveryPhraseDisplayView: View {
 
 extension RecoveryPhraseDisplay.State {
     public static let initial = RecoveryPhraseDisplay.State(
-        phrase: nil,
-        birthday: nil
+        birthday: nil,
+        phrase: nil
     )
 }
 

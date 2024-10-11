@@ -27,11 +27,17 @@ public struct ZashiToggle: View {
         Button {
             isOn.toggle()
         } label: {
-            Toggle(isOn: $isOn, label: {
+            HStack(alignment: .top, spacing: 0) {
+                Toggle(isOn: $isOn, label: {})
+                    .toggleStyle(CheckboxToggleStyle())
+                    .padding(.trailing, 8)
+                
                 Text(label)
-                    .font(.custom(FontFamily.Inter.medium.name, size: 14))
-            })
-            .toggleStyle(CheckboxToggleStyle())
+                    .zFont(.medium, size: 14, style: Design.Text.primary)
+                    .multilineTextAlignment(.leading)
+                
+                Spacer()
+            }
         }
         .foregroundColor(textColor)
     }

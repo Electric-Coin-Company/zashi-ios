@@ -30,14 +30,14 @@ public struct AdvancedSettingsView: View {
             VStack(spacing: 0) {
                 List {
                     Group {
-                        SettingsRow(
+                        ActionRow(
                             icon: Asset.Assets.Icons.key.image,
                             title: L10n.Settings.recoveryPhrase
                         ) {
                             store.send(.protectedAccessRequest(.backupPhrase))
                         }
                         
-                        SettingsRow(
+                        ActionRow(
                             icon: Asset.Assets.Icons.downloadCloud.image,
                             title: L10n.Settings.exportPrivateData
                         ) {
@@ -45,14 +45,14 @@ public struct AdvancedSettingsView: View {
                         }
                         
                         if store.isEnoughFreeSpaceMode {
-                            SettingsRow(
+                            ActionRow(
                                 icon: Asset.Assets.Icons.server.image,
                                 title: L10n.Settings.chooseServer
                             ) {
                                 store.send(.updateDestination(.serverSetup))
                             }
                             
-                            SettingsRow(
+                            ActionRow(
                                 icon: Asset.Assets.Icons.currencyDollar.image,
                                 title: L10n.CurrencyConversion.title
                             ) {
@@ -201,9 +201,9 @@ extension AdvancedSettings.State {
         currencyConversionSetupState: .init(isSettingsView: true),
         deleteWalletState: .initial,
         phraseDisplayState: RecoveryPhraseDisplay.State(
+            birthday: nil,
             phrase: nil,
-            showBackButton: false,
-            birthday: nil
+            showBackButton: false
         ),
         privateDataConsentState: .initial,
         serverSetupState: ServerSetup.State()
@@ -222,8 +222,8 @@ extension StoreOf<AdvancedSettings> {
             currencyConversionSetupState: .initial,
             deleteWalletState: .initial,
             phraseDisplayState: RecoveryPhraseDisplay.State(
-                phrase: nil,
-                birthday: nil
+                birthday: nil,
+                phrase: nil
             ),
             privateDataConsentState: .initial,
             serverSetupState: ServerSetup.State()

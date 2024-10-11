@@ -3,7 +3,6 @@ import ComposableArchitecture
 
 import AppVersion
 import Generated
-import WhatsNew
 
 @Reducer
 public struct About {
@@ -11,19 +10,13 @@ public struct About {
     public struct State: Equatable {
         public var appVersion = ""
         public var appBuild = ""
-        public var whatsNewState: WhatsNew.State
-        public var whatsNewViewBinding: Bool = false
 
         public init(
             appVersion: String = "",
-            appBuild: String = "",
-            whatsNewState: WhatsNew.State,
-            whatsNewViewBinding: Bool = false
+            appBuild: String = ""
         ) {
             self.appVersion = appVersion
             self.appBuild = appBuild
-            self.whatsNewState = whatsNewState
-            self.whatsNewViewBinding = whatsNewViewBinding
         }
     }
 
@@ -31,8 +24,6 @@ public struct About {
         case binding(BindingAction<About.State>)
         case onAppear
         case privacyPolicyButtonTapped
-        case whatsNew(WhatsNew.Action)
-        case whatsNewButtonTapped
     }
 
     @Dependency(\.appVersion) var appVersion
@@ -41,10 +32,6 @@ public struct About {
 
     public var body: some Reducer<State, Action> {
         BindingReducer()
-        
-        Scope(state: \.whatsNewState, action: \.whatsNew) {
-            WhatsNew()
-        }
 
         Reduce { state, action in
             switch action {
@@ -57,13 +44,6 @@ public struct About {
                 return .none
 
             case .privacyPolicyButtonTapped:
-                return .none
-                
-            case .whatsNew:
-                return .none
-                
-            case .whatsNewButtonTapped:
-                state.whatsNewViewBinding = true
                 return .none
             }
         }
