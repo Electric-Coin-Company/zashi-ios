@@ -22,88 +22,79 @@ public struct PrivateDataConsentView: View {
 
     public var body: some View {
         WithPerceptionTracking {
-            ScrollView {
-                Group {
-                    ZashiIcon()
-                        .padding(.top, walletStatus != .none ? 30 : 0)
-                    
-                    Text(L10n.PrivateDataConsent.title)
-                        .font(.custom(FontFamily.Inter.semiBold.name, size: 25))
-                        .multilineTextAlignment(.center)
-                        .padding(.bottom, 35)
-                    
-                    Text(L10n.PrivateDataConsent.message)
-                        .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                        .padding(.bottom, 10)
-                        .lineSpacing(3)
-
-                    Text(L10n.PrivateDataConsent.note)
-                        .font(.custom(FontFamily.Inter.regular.name, size: 12))
-                        .lineSpacing(2)
-
-                    HStack {
-                        ZashiToggle(
-                            isOn: $store.isAcknowledged,
-                            label: L10n.PrivateDataConsent.confirmation
-                        )
-                        
-                        Spacer()
+            VStack(alignment: .leading, spacing: 0) {
+                Text(L10n.PrivateDataConsent.title)
+                    .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                    .padding(.top, 40)
+                
+                Text(L10n.PrivateDataConsent.message1)
+                    .zFont(size: 14, style: Design.Text.primary)
+                    .padding(.top, 12)
+                
+                Text(L10n.PrivateDataConsent.message2)
+                    .zFont(size: 14, style: Design.Text.primary)
+                    .padding(.top, 8)
+                
+                Text(L10n.PrivateDataConsent.message3)
+                    .zFont(size: 14, style: Design.Text.primary)
+                    .padding(.top, 8)
+                
+                Text(L10n.PrivateDataConsent.message4)
+                    .zFont(size: 14, style: Design.Text.primary)
+                    .padding(.top, 8)
+                
+                Spacer()
+                
+                ZashiToggle(
+                    isOn: $store.isAcknowledged,
+                    label: L10n.PrivateDataConsent.confirmation
+                )
+                .padding(.bottom, 24)
+                
+                if store.isExportingData {
+                    ZashiButton(
+                        L10n.Settings.exportPrivateData,
+                        type: .secondary,
+                        accessoryView: ProgressView()
+                    ) {
+                        store.send(.exportRequested)
                     }
-                    .padding(.top, 20)
-                    .padding(.bottom, 40)
-
-                    if store.isExportingData {
-                        ZashiButton(
-                            L10n.Settings.exportPrivateData,
-                            type: .secondary,
-                            accessoryView: ProgressView()
-                        ) {
-                            store.send(.exportRequested)
-                        }
-                        .disabled(true)
-                        .padding(.horizontal, 8)
-                        .padding(.bottom, 8)
-                    } else {
-                        ZashiButton(
-                            L10n.Settings.exportPrivateData,
-                            type: .secondary
-                        ) {
-                            store.send(.exportRequested)
-                        }
-                        .disabled(!store.isExportPossible)
-                        .padding(.horizontal, 8)
-                        .padding(.bottom, 8)
+                    .disabled(true)
+                    .padding(.bottom, 8)
+                } else {
+                    ZashiButton(
+                        L10n.Settings.exportPrivateData,
+                        type: .secondary
+                    ) {
+                        store.send(.exportRequested)
                     }
-
-                    #if DEBUG
-                    if store.isExportingLogs {
-                        ZashiButton(
-                            L10n.Settings.exportLogsOnly,
-                            accessoryView: ProgressView()
-                        ) {
-                            store.send(.exportLogsRequested)
-                        }
-                        .disabled(true)
-                        .padding(.horizontal, 8)
-                        .padding(.bottom, 50)
-                    } else {
-                        ZashiButton(
-                            L10n.Settings.exportLogsOnly
-                        ) {
-                            store.send(.exportLogsRequested)
-                        }
-                        .disabled(!store.isExportPossible)
-                        .padding(.horizontal, 8)
-                        .padding(.bottom, 50)
-                    }
-                    #endif
+                    .disabled(!store.isExportPossible)
+                    .padding(.bottom, 8)
                 }
+                
+#if DEBUG
+                if store.isExportingLogs {
+                    ZashiButton(
+                        L10n.Settings.exportLogsOnly,
+                        accessoryView: ProgressView()
+                    ) {
+                        store.send(.exportLogsRequested)
+                    }
+                    .disabled(true)
+                    .padding(.bottom, 20)
+                } else {
+                    ZashiButton(
+                        L10n.Settings.exportLogsOnly
+                    ) {
+                        store.send(.exportLogsRequested)
+                    }
+                    .disabled(!store.isExportPossible)
+                    .padding(.bottom, 20)
+                }
+#endif
             }
-            .padding(.vertical, 1)
             .zashiBack()
-            .onAppear {
-                store.send(.onAppear)
-            }
+            .onAppear { store.send(.onAppear)}
             .walletStatusPanel()
 
             shareLogsView()
@@ -111,6 +102,7 @@ public struct PrivateDataConsentView: View {
         .navigationBarTitleDisplayMode(.inline)
         .screenHorizontalPadding()
         .applyScreenBackground()
+        .screenTitle(L10n.PrivateDataConsent.screenTitle.uppercased())
     }
 }
 

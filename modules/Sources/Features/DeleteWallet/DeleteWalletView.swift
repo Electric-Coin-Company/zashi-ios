@@ -19,46 +19,43 @@ public struct DeleteWalletView: View {
 
     public var body: some View {
         WithPerceptionTracking {
-            ScrollView {
-                Group {
-                    ZashiIcon()
-                    
-                    Text(L10n.DeleteWallet.title)
-                        .font(.custom(FontFamily.Inter.semiBold.name, size: 25))
-                        .padding(.bottom, 15)
-                    
-                    VStack(alignment: .leading) {
-                        Text(L10n.DeleteWallet.message1)
-                            .font(.custom(FontFamily.Inter.bold.name, size: 16))
-                        
-                        Text(L10n.DeleteWallet.message2)
-                            .font(.custom(FontFamily.Inter.medium.name, size: 16))
-                            .padding(.top, 20)
-                    }
-                    
-                    HStack {
-                        ZashiToggle(
-                            isOn: $store.isAcknowledged,
-                            label: L10n.DeleteWallet.iUnderstand
-                        )
+            VStack(alignment: .leading, spacing: 0) {
+                Text(L10n.DeleteWallet.title)
+                    .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                    .padding(.top, 40)
 
-                        Spacer()
-                    }
-                    .padding(.top, 30)
-                    
-                    ZashiButton(L10n.DeleteWallet.actionButtonTitle) {
-                        store.send(.deleteTapped)
-                    }
-                    .disabled(!store.isAcknowledged || store.isProcessing)
-                    .padding(.vertical, 50)
+                Text(L10n.DeleteWallet.message1)
+                    .zFont(.semiBold, size: 16, style: Design.Text.primary)
+                    .padding(.top, 12)
+
+                Text(L10n.DeleteWallet.message2)
+                    .zFont(size: 14, style: Design.Text.primary)
+                    .padding(.top, 8)
+                    .lineSpacing(1.5)
+
+                Spacer()
+                
+                ZashiToggle(
+                    isOn: $store.isAcknowledged,
+                    label: L10n.DeleteWallet.iUnderstand
+                )
+                .padding(.bottom, 24)
+                
+                ZashiButton(
+                    L10n.DeleteWallet.actionButtonTitle,
+                    type: .destructive1
+                ) {
+                    store.send(.deleteTapped)
                 }
+                .disabled(!store.isAcknowledged || store.isProcessing)
+                .padding(.bottom, 20)
             }
-            .padding(.vertical, 1)
             .zashiBack(store.isProcessing)
         }
         .navigationBarTitleDisplayMode(.inline)
         .screenHorizontalPadding()
         .applyScreenBackground()
+        .screenTitle(L10n.DeleteWallet.screenTitle.uppercased())
     }
 }
 

@@ -9,7 +9,6 @@ import SwiftUI
 import ComposableArchitecture
 import Generated
 import UIComponents
-import WhatsNew
 
 public struct AboutView: View {
     @Environment(\.openURL) var openURL
@@ -22,55 +21,47 @@ public struct AboutView: View {
     
     public var body: some View {
         WithPerceptionTracking {
-            VStack(alignment: .leading) {
-                VStack(alignment: .center) {
-                    Asset.Assets.zashiTitle.image
-                        .zImage(width: 63, height: 17, color: Asset.Colors.primary.color)
-                        .padding(.top, 15)
-                        .padding(.bottom, 8)
+            VStack(spacing: 0) {
+                VStack(alignment: .leading, spacing: 0) {
+                    Text(L10n.About.title)
+                        .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                        .padding(.top, 40)
                     
-                    Text(L10n.About.version(store.appVersion, store.appBuild))
-                        .font(.custom(FontFamily.Inter.bold.name, size: 12))
-                        .foregroundColor(Asset.Colors.primary.color)
-                        .padding(.bottom, 25)
+                    Text(L10n.About.info)
+                        .zFont(size: 14, style: Design.Text.primary)
+                        .padding(.top, 12)
+                    
+                    Text(L10n.About.additionalInfo)
+                        .zFont(size: 14, style: Design.Text.primary)
+                        .padding(.top, 8)
                 }
-                .frame(maxWidth: .infinity)
 
-                Text(L10n.About.info)
-                    .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                    .foregroundColor(Asset.Colors.shade30.color)
-                    .padding(.bottom, 30)
-
-                ZashiButton(L10n.About.whatsNew) {
-                    store.send(.whatsNewButtonTapped)
-                }
-                .padding(.bottom, 15)
-
-                ZashiButton(L10n.About.privacyPolicy) {
+                ActionRow(
+                    icon: Asset.Assets.infoCircle.image,
+                    title: L10n.About.privacyPolicy,
+                    divider: false,
+                    horizontalPadding: 4
+                ) {
                     if let url = URL(string: "https://electriccoin.co/zashi-privacy-policy/") {
                         openURL(url)
                     }
                 }
-                .padding(.bottom, 25)
+                .padding(.top, 32)
 
                 Spacer()
+                
+                Asset.Assets.zashiTitle.image
+                    .zImage(width: 73, height: 20, color: Asset.Colors.primary.color)
+                    .padding(.bottom, 16)
+                
+                Text(L10n.Settings.version(store.appVersion, store.appBuild))
+                    .zFont(size: 16, style: Design.Text.tertiary)
+                    .padding(.bottom, 24)
             }
-            .padding(.top, 20)
             .onAppear { store.send(.onAppear) }
             .zashiBack()
             .screenTitle(L10n.Settings.about)
             .walletStatusPanel(background: .transparent)
-            .navigationLinkEmpty(
-                isActive: $store.whatsNewViewBinding,
-                destination: {
-                    WhatsNewView(
-                        store: store.scope(
-                            state: \.whatsNewState,
-                            action: \.whatsNew
-                        )
-                    )
-                }
-            )
         }
         .navigationBarTitleDisplayMode(.inline)
         .screenHorizontalPadding()
@@ -81,7 +72,7 @@ public struct AboutView: View {
 // MARK: Placeholders
 
 extension About.State {
-    public static let initial = About.State(whatsNewState: .initial)
+    public static let initial = About.State()
 }
 
 extension About {

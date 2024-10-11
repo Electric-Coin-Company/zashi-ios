@@ -22,10 +22,9 @@ public struct SecurityWarningView: View {
         WithPerceptionTracking {
             ScrollView {
                 Group {
-                    ZashiIcon()
-                    
                     Text(L10n.SecurityWarning.title)
                         .font(.custom(FontFamily.Inter.semiBold.name, size: 25))
+                        .padding(.top, 40)
                         .padding(.bottom, 15)
                     
                     VStack(alignment: .leading) {
@@ -54,6 +53,7 @@ public struct SecurityWarningView: View {
                         Spacer()
                     }
                     .padding(.top, 30)
+                    .padding(.leading, 1)
                     
                     ZashiButton(L10n.SecurityWarning.confirm) {
                         store.send(.confirmTapped)
@@ -81,6 +81,7 @@ public struct SecurityWarningView: View {
         .navigationBarTitleDisplayMode(.inline)
         .screenHorizontalPadding()
         .applyScreenBackground()
+        .screenTitle(L10n.SecurityWarning.screenTitle.uppercased())
     }
 }
 

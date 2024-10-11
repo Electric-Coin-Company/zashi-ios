@@ -14,6 +14,7 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ### Changed
 - Not enough free space screen has been redesigned.
+- All settings flow screen have been redesigned
 
 ### Fixed
 - Splash screen animation is blocked by the main thread on iOS 16 and older.
