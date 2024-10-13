@@ -12,7 +12,10 @@ directly impact users rather than highlighting other crucial architectural updat
 - Send experience reworked to display a sending screen, followed by transaction result screens. 
 - You can now select any text you want from a memo directly in Zashi. 
 
- ### Fixed
+### Changed
+- Not enough free space screen has been redesigned.
+
+### Fixed
 - Splash screen animation is blocked by the main thread on iOS 16 and older.
 - Inactive hide balances button on iOS 16 and older.
 - Inactive close button in the exchange rate hint bubble on iOS 16 and older.
