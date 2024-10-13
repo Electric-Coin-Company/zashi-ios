@@ -10,6 +10,9 @@ directly impact users rather than highlighting other crucial architectural updat
 - Flexa integrated into Zashi, users can pay with ZEC for Flexa codes.
 - Authentication for the app launch and cold starts after 15 minutes. 
 
+### Changed
+- Not enough free space screen has been redesigned.
+
 ### Fixed
 - Splash screen animation is blocked by the main thread on iOS 16 and older.
 - Inactive hide balances button on iOS 16 and older.

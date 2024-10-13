@@ -30,6 +30,7 @@ public struct AdvancedSettings {
         public var currencyConversionSetupState: CurrencyConversionSetup.State
         public var deleteWalletState: DeleteWallet.State
         public var destination: Destination?
+        public var isEnoughFreeSpaceMode = true
         public var phraseDisplayState: RecoveryPhraseDisplay.State
         public var privateDataConsentState: PrivateDataConsent.State
         public var serverSetupState: ServerSetup.State
