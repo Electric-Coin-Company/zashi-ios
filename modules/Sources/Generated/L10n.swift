@@ -303,15 +303,20 @@ public enum L10n {
     public static let reason = L10n.tr("Localizable", "localAuthentication.reason", fallback: "The Following content requires authentication.")
   }
   public enum NotEnoughFreeSpace {
-    /// Zashi requires at
-    /// least %@ GB of space to
-    /// operate but there is only
-    /// %@ MB available.
-    public static func message1(_ p1: Any, _ p2: Any) -> String {
-      return L10n.tr("Localizable", "notEnoughFreeSpace.message1", String(describing: p1), String(describing: p2), fallback: "Zashi requires at\nleast %@ GB of space to\noperate but there is only\n%@ MB available.")
+    /// %@ MB available. 
+    public static func dataAvailable(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "notEnoughFreeSpace.dataAvailable", String(describing: p1), fallback: "%@ MB available. ")
     }
-    /// Go to your device settings and make more space available if you wish to use the Zashi app.
-    public static let message2 = L10n.tr("Localizable", "notEnoughFreeSpace.message2", fallback: "Go to your device settings and make more space available if you wish to use the Zashi app.")
+    /// Syncing will stay paused until more space is available.
+    public static let messagePost = L10n.tr("Localizable", "notEnoughFreeSpace.messagePost", fallback: "Syncing will stay paused until more space is available.")
+    /// Zashi requires %@ GB of space to synchronize the Zcash blockchain but there is only 
+    public static func messagePre(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "notEnoughFreeSpace.messagePre", String(describing: p1), fallback: "Zashi requires %@ GB of space to synchronize the Zcash blockchain but there is only ")
+    }
+    /// ~%@ MB of additional space required to continue
+    public static func requiredSpace(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "notEnoughFreeSpace.requiredSpace", String(describing: p1), fallback: "~%@ MB of additional space required to continue")
+    }
     /// Not enough free space
     public static let title = L10n.tr("Localizable", "notEnoughFreeSpace.title", fallback: "Not enough free space")
   }
