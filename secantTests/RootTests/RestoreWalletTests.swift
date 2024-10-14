@@ -11,7 +11,6 @@ import ComposableArchitecture
 import Root
 import Utils
 import ZcashLightClientKit
-import WalletStatusPanel
 @testable import secant_testnet
 
 @MainActor
@@ -26,9 +25,6 @@ final class RestoreWalletTests: XCTestCase {
         store.dependencies.mainQueue = .immediate
         store.dependencies.mnemonic = .noOp
         store.dependencies.walletStatusPanel = .noOp
-        store.dependencies.walletStatusPanel.updateValue = { value in
-            XCTAssertEqual(value, WalletStatus.restoring)
-        }
         store.dependencies.sdkSynchronizer = .noOp
         store.dependencies.walletStorage = .noOp
         store.dependencies.userDefaults = .noOp
@@ -63,9 +59,6 @@ final class RestoreWalletTests: XCTestCase {
         store.dependencies.mainQueue = .immediate
         store.dependencies.mnemonic = .noOp
         store.dependencies.walletStatusPanel = .noOp
-        store.dependencies.walletStatusPanel.updateValue = { value in
-            XCTAssertNotEqual(value, WalletStatus.restoring)
-        }
         store.dependencies.sdkSynchronizer = .noOp
         store.dependencies.walletStorage = .noOp
         store.dependencies.userDefaults = .noOp

@@ -9,26 +9,31 @@ import SwiftUI
 
 import Generated
 
-public struct SettingsRow: View {
-    var icon: Image
-    var iconTint: Color
-    var iconBcg: Color
-    var title: String
-    var divider: Bool
-    var action: () -> Void
+public struct SettingsRow<AccessoryContent>: View where AccessoryContent: View{
+    @Environment(\.isEnabled) private var isEnabled
+    
+    let icon: Image
+    let title: String
+    let desc: String?
+    let customIcon: Bool
+    @ViewBuilder let accessoryView: AccessoryContent?
+    let divider: Bool
+    let action: () -> Void
     
     init(
         icon: Image,
-        iconTint: Color = Design.Text.primary.color,
-        iconBcg: Color = Design.Surfaces.bgTertiary.color,
         title: String,
+        desc: String? = nil,
+        customIcon: Bool = false,
+        accessoryView: AccessoryContent? = EmptyView(),
         divider: Bool = true,
         action: @escaping () -> Void
     ) {
         self.icon = icon
-        self.iconTint = iconTint
-        self.iconBcg = iconBcg
         self.title = title
+        self.desc = desc
+        self.customIcon = customIcon
+        self.accessoryView = accessoryView
         self.divider = divider
         self.action = action
     }
@@ -39,29 +44,50 @@ public struct SettingsRow: View {
         } label: {
             VStack(spacing: 0) {
                 HStack(spacing: 0) {
-                    icon
-                        .renderingMode(.template)
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(iconTint)
-                        .padding(10)
-                        .background {
-                            Circle()
-                                .fill(iconBcg)
-                        }
-                        .padding(.trailing, 16)
+                    if customIcon {
+                        icon
+                            .resizable()
+                            .frame(width: 40, height: 40)
+                            .padding(.trailing, 16)
+                    } else {
+                        icon
+                            .zImage(size: 20, style: Design.Text.primary)
+                            .padding(10)
+                            .background {
+                                Circle()
+                                    .fill(Design.Surfaces.bgTertiary.color)
+                            }
+                            .padding(.trailing, 16)
+                    }
 
-                    Text(title)
-                        .font(.custom(FontFamily.Archivo.semiBold.name, size: 16))
-                        .foregroundColor(Design.Text.primary.color)
+                    VStack(alignment: .leading, spacing: 0) {
+                        if let accessoryView {
+                            HStack(spacing: 0) {
+                                Text(title)
+                                    .zFont(.semiBold, size: 16, style: Design.Text.primary)
+
+                                accessoryView
+                                    .padding(.leading, 8)
+                            }
+                        } else {
+                            Text(title)
+                                .zFont(.semiBold, size: 16, style: Design.Text.primary)
+                        }
+                        
+                        if let desc {
+                            Text(desc)
+                                .zFont(size: 12, style: Design.Text.tertiary)
+                                .lineSpacing(1.2)
+                                .padding(.top, 2)
+                        }
+                    }
 
                     Spacer(minLength: 2)
                     
-                    Asset.Assets.chevronRight.image
-                        .renderingMode(.template)
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(Design.Text.quaternary.color)
+                    if isEnabled {
+                        Asset.Assets.chevronRight.image
+                            .zImage(size: 20, style: Design.Text.quaternary)
+                    }
                 }
                 .padding(.horizontal, 20)
 

@@ -19,27 +19,6 @@ public typealias SystemFont = FontConvertible.SystemFont
 
 // swiftlint:disable identifier_name line_length type_body_length
 public enum FontFamily {
-  public enum Archivo {
-    public static let black = FontConvertible(name: "Archivo-Black", family: "Archivo", path: "Archivo-Black.ttf")
-    public static let blackItalic = FontConvertible(name: "Archivo-BlackItalic", family: "Archivo", path: "Archivo-BlackItalic.ttf")
-    public static let bold = FontConvertible(name: "Archivo-Bold", family: "Archivo", path: "Archivo-Bold.ttf")
-    public static let boldItalic = FontConvertible(name: "Archivo-BoldItalic", family: "Archivo", path: "Archivo-BoldItalic.ttf")
-    public static let extraBold = FontConvertible(name: "Archivo-ExtraBold", family: "Archivo", path: "Archivo-ExtraBold.ttf")
-    public static let extraBoldItalic = FontConvertible(name: "Archivo-ExtraBoldItalic", family: "Archivo", path: "Archivo-ExtraBoldItalic.ttf")
-    public static let extraLight = FontConvertible(name: "Archivo-ExtraLight", family: "Archivo", path: "Archivo-ExtraLight.ttf")
-    public static let extraLightItalic = FontConvertible(name: "Archivo-ExtraLightItalic", family: "Archivo", path: "Archivo-ExtraLightItalic.ttf")
-    public static let italic = FontConvertible(name: "Archivo-Italic", family: "Archivo", path: "Archivo-Italic.ttf")
-    public static let light = FontConvertible(name: "Archivo-Light", family: "Archivo", path: "Archivo-Light.ttf")
-    public static let lightItalic = FontConvertible(name: "Archivo-LightItalic", family: "Archivo", path: "Archivo-LightItalic.ttf")
-    public static let medium = FontConvertible(name: "Archivo-Medium", family: "Archivo", path: "Archivo-Medium.ttf")
-    public static let mediumItalic = FontConvertible(name: "Archivo-MediumItalic", family: "Archivo", path: "Archivo-MediumItalic.ttf")
-    public static let regular = FontConvertible(name: "Archivo-Regular", family: "Archivo", path: "Archivo-Regular.ttf")
-    public static let semiBold = FontConvertible(name: "Archivo-SemiBold", family: "Archivo", path: "Archivo-SemiBold.ttf")
-    public static let semiBoldItalic = FontConvertible(name: "Archivo-SemiBoldItalic", family: "Archivo", path: "Archivo-SemiBoldItalic.ttf")
-    public static let thin = FontConvertible(name: "Archivo-Thin", family: "Archivo", path: "Archivo-Thin.ttf")
-    public static let thinItalic = FontConvertible(name: "Archivo-ThinItalic", family: "Archivo", path: "Archivo-ThinItalic.ttf")
-    public static let all: [FontConvertible] = [black, blackItalic, bold, boldItalic, extraBold, extraBoldItalic, extraLight, extraLightItalic, italic, light, lightItalic, medium, mediumItalic, regular, semiBold, semiBoldItalic, thin, thinItalic]
-  }
   public enum Inter {
     public static let black = FontConvertible(name: "Inter-Black", family: "Inter", path: "Inter-Black.otf")
     public static let blackItalic = FontConvertible(name: "Inter-BlackItalic", family: "Inter", path: "Inter-BlackItalic.otf")
@@ -65,7 +44,7 @@ public enum FontFamily {
     public static let regular = FontConvertible(name: "ZbotoRegular", family: "Zboto", path: "Zboto.otf")
     public static let all: [FontConvertible] = [regular]
   }
-  public static let allCustomFonts: [FontConvertible] = [Archivo.all, Inter.all, Zboto.all].flatMap { $0 }
+  public static let allCustomFonts: [FontConvertible] = [Inter.all, Zboto.all].flatMap { $0 }
   public static func registerAllCustomFonts() {
     allCustomFonts.forEach { $0.register() }
   }
@@ -173,3 +152,6 @@ fileprivate extension Font {
 }
 
 // swiftlint:enable convenience_type
+
+extension FontConvertible: @unchecked Sendable { }
+// swiftlint:enable all

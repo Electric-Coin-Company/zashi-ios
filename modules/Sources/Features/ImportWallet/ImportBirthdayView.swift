@@ -24,7 +24,7 @@ public struct ImportBirthdayView: View {
                 ZashiIcon()
 
                 Text(L10n.ImportWallet.Birthday.title)
-                    .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
+                    .font(.custom(FontFamily.Inter.semiBold.name, size: 25))
                     .foregroundColor(Asset.Colors.primary.color)
                     .minimumScaleFactor(0.3)
                     .multilineTextAlignment(.center)
@@ -33,7 +33,7 @@ public struct ImportBirthdayView: View {
 
                 TextField("", text: store.bindingForRedactableBirthday(store.birthdayHeight))
                     .frame(height: 40)
-                    .font(.custom(FontFamily.Archivo.semiBold.name, size: 25))
+                    .font(.custom(FontFamily.Inter.semiBold.name, size: 25))
                     .focused($isFocused)
                     .keyboardType(.numberPad)
                     .autocapitalization(.none)
@@ -42,6 +42,7 @@ public struct ImportBirthdayView: View {
                         Asset.Colors.primary.color
                             .frame(height: 1)
                             .offset(x: 0, y: 20)
+                            .padding(.horizontal, 30)
                     }
                     .onAppear {
                         isFocused = true
@@ -49,21 +50,19 @@ public struct ImportBirthdayView: View {
                 
                 Spacer()
 
-                Button(L10n.ImportWallet.Button.restoreWallet.uppercased()) {
+                ZashiButton(L10n.ImportWallet.Button.restoreWallet) {
                     store.send(.restoreWallet)
                 }
-                .zcashStyle()
                 .disabled(!store.isValidForm)
-                .frame(width: 236)
                 .padding(.bottom, 50)
             }
-            .padding(.horizontal, 70)
             .scrollableWhenScaledUp()
             .onAppear(perform: { store.send(.onAppear) })
             .zashiBack()
         }
         .navigationBarTitleDisplayMode(.inline)
-        .applyScreenBackground(withPattern: true)
+        .screenHorizontalPadding()
+        .applyScreenBackground()
     }
 }
 

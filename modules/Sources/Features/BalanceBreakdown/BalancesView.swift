@@ -17,14 +17,13 @@ import BalanceFormatter
 import SyncProgress
 import WalletBalances
 import Combine
-import WalletStatusPanel
 
 public struct BalancesView: View {
     @Perception.Bindable var store: StoreOf<Balances>
     let tokenName: String
     
     @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
-    @State var walletStatus = WalletStatus.none
+    @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
 
     public init(store: StoreOf<Balances>, tokenName: String) {
         self.store = store
@@ -54,14 +53,15 @@ public struct BalancesView: View {
                     .frame(minHeight: 166)
                     .padding(.horizontal, store.isHintBoxVisible ? 15 : 30)
                     .background {
-                        Asset.Colors.shade92.color
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Design.Surfaces.strokePrimary.color)
                     }
                     .padding(.horizontal, 30)
 
                 if walletStatus == .restoring {
                     Text(L10n.Balances.restoringWalletWarning)
-                        .font(.custom(FontFamily.Inter.medium.name, size: 10))
-                        .foregroundColor(Design.Utility.ErrorRed._600.color)
+                        .zFont(.medium, size: 10, style: Design.Utility.ErrorRed._600)
+                        .lineLimit(nil)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 60)
                         .padding(.vertical, 20)
@@ -82,7 +82,7 @@ public struct BalancesView: View {
                     }
                 )
             }
-            .walletStatusPanel(restoringStatus: $walletStatus)
+            .walletStatusPanel()
         }
         .padding(.vertical, 1)
         .applyScreenBackground()
@@ -108,7 +108,7 @@ extension BalancesView {
                 
                 ZatoshiRepresentationView(
                     balance: store.shieldedBalance,
-                    fontName: FontFamily.Archivo.semiBold.name,
+                    fontName: FontFamily.Inter.semiBold.name,
                     mostSignificantFontSize: 16,
                     leastSignificantFontSize: 8,
                     format: .expanded,
@@ -116,11 +116,8 @@ extension BalancesView {
                 )
                 
                 Asset.Assets.shield.image
-                    .renderingMode(.template)
-                    .resizable()
-                    .frame(width: 11, height: 14)
+                    .zImage(width: 11, height: 14, color: Asset.Colors.primary.color)
                     .padding(.leading, 10)
-                    .foregroundColor(Asset.Colors.primary.color)
             }
             
             HStack(spacing: 0) {
@@ -131,7 +128,7 @@ extension BalancesView {
                 
                 ZatoshiRepresentationView(
                     balance: store.changePending,
-                    fontName: FontFamily.Archivo.semiBold.name,
+                    fontName: FontFamily.Inter.semiBold.name,
                     mostSignificantFontSize: 16,
                     leastSignificantFontSize: 8,
                     format: .expanded,
@@ -154,7 +151,7 @@ extension BalancesView {
                 
                 ZatoshiRepresentationView(
                     balance: store.pendingTransactions,
-                    fontName: FontFamily.Archivo.semiBold.name,
+                    fontName: FontFamily.Inter.semiBold.name,
                     mostSignificantFontSize: 16,
                     leastSignificantFontSize: 8,
                     format: .expanded,
@@ -205,7 +202,7 @@ extension BalancesView {
                 
                 ZatoshiRepresentationView(
                     balance: store.transparentBalance,
-                    fontName: FontFamily.Archivo.semiBold.name,
+                    fontName: FontFamily.Inter.semiBold.name,
                     mostSignificantFontSize: 16,
                     leastSignificantFontSize: 8,
                     format: .expanded,
@@ -215,31 +212,23 @@ extension BalancesView {
             }
             .padding(.bottom, 10)
 
-            Button {
-                store.send(.shieldFunds)
-            } label: {
-                if store.isShieldingFunds {
-                    HStack(spacing: 10) {
-                        Text(L10n.Balances.shieldingInProgress.uppercased())
-                            .font(.custom(FontFamily.Inter.medium.name, size: 10))
-                        
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: Asset.Colors.primary.color))
-                    }
-                } else {
-                    Text(L10n.Balances.shieldButtonTitle.uppercased())
-                        .font(.custom(FontFamily.Inter.medium.name, size: 10))
+            if store.isShieldingFunds {
+                ZashiButton(
+                    L10n.Balances.shieldingInProgress,
+                    accessoryView: ProgressView()
+                ) { }
+                .padding(.bottom, 15)
+                .disabled(true)
+            } else {
+                ZashiButton(
+                    L10n.Balances.shieldButtonTitle
+                ) {
+                    store.send(.shieldFunds)
                 }
+                .padding(.bottom, 15)
+                .disabled(!store.isShieldableBalanceAvailable || store.isShieldingFunds || isSensitiveContentHidden)
             }
-            .zcashStyle(
-                minWidth: nil,
-                fontSize: 10,
-                height: 38,
-                shadowOffset: 6
-            )
-            .padding(.bottom, 15)
-            .disabled(!store.isShieldableBalanceAvailable || store.isShieldingFunds || isSensitiveContentHidden)
-            
+
             Text("(\(ZatoshiStringRepresentation.feeFormat))")
                 .font(.custom(FontFamily.Inter.semiBold.name, size: 11))
         }

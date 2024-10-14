@@ -22,22 +22,35 @@ import Generated
 import BalanceFormatter
 import WalletBalances
 import LocalAuthenticationHandler
+import AddressBookClient
 
 @Reducer
 public struct SendConfirmation {
     @ObservableState
     public struct State: Equatable {
         public var address: String
+        @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
+        public var alias: String?
         @Presents public var alert: AlertState<Action>?
         public var amount: Zatoshi
         public var currencyAmount: RedactableString
         public var feeRequired: Zatoshi
-        public var isSending: Bool = false
+        public var isAddressExpanded = false
+        public var isSending = false
+        public var isTransparentAddress = false
         public var message: String
         public var partialProposalErrorState: PartialProposalError.State
-        public var partialProposalErrorViewBinding: Bool = false
+        public var partialProposalErrorViewBinding = false
         public var proposal: Proposal?
 
+        public var addressToShow: String {
+            isTransparentAddress
+            ? address
+            : isAddressExpanded
+            ? address
+            : address.zip316
+        }
+        
         public init(
             address: String,
             amount: Zatoshi,
@@ -64,15 +77,21 @@ public struct SendConfirmation {
     public enum Action: BindableAction, Equatable {
         case alert(PresentationAction<Action>)
         case binding(BindingAction<SendConfirmation.State>)
+        case fetchedABContacts(AddressBookContacts)
         case goBackPressed
+        case goBackPressedFromRequestZec
+        case onAppear
         case partialProposalError(PartialProposalError.Action)
         case partialProposalErrorDismiss
+        case saveAddressTapped(RedactableString)
         case sendDone
         case sendFailed(ZcashError?)
         case sendPartial([String], [String])
         case sendPressed
+        case showHideButtonTapped
     }
 
+    @Dependency(\.addressBook) var addressBook
     @Dependency(\.localAuthentication) var localAuthentication
     @Dependency(\.derivationTool) var derivationTool
     @Dependency(\.mnemonic) var mnemonic
@@ -91,6 +110,27 @@ public struct SendConfirmation {
 
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                state.isTransparentAddress = derivationTool.isTransparentAddress(state.address, zcashSDKEnvironment.network.networkType)
+                do {
+                    let abContacts = try addressBook.allLocalContacts()
+                    return .send(.fetchedABContacts(abContacts))
+                } catch {
+                    print("__LD fetchABContactsRequested Error: \(error.localizedDescription)")
+                    // TODO: FIXME
+                    return .none
+                }
+
+            case .fetchedABContacts(let abContacts):
+                state.addressBookContacts = abContacts
+                for contact in state.addressBookContacts.contacts {
+                    if contact.id == state.address {
+                        state.alias = contact.name
+                        break
+                    }
+                }
+                return .none
+                
             case .alert(.presented(let action)):
                 return .send(action)
 
@@ -100,7 +140,17 @@ public struct SendConfirmation {
 
             case .binding:
                 return .none
-                
+
+            case .saveAddressTapped:
+                return .none
+
+            case .showHideButtonTapped:
+                state.isAddressExpanded.toggle()
+                return .none
+
+            case .goBackPressedFromRequestZec:
+                return .none
+
             case .goBackPressed:
                 return .none
                 

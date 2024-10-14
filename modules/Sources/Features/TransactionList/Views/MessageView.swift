@@ -54,17 +54,10 @@ struct MessageView: View {
                                 .conditionalStrikethrough(isFailed)
                                 .padding()
                         }
-                        .messageShape(
-                            filled: !isSpending
-                            ? Asset.Colors.messageBcgReceived.color
-                            : nil,
-                            border: isSpending
-                            ? Asset.Colors.primary.color
-                            : nil,
-                            orientation: !isSpending
-                            ? .right
-                            : .left
-                        )
+                        .background {
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Design.Surfaces.strokePrimary.color)
+                        }
                         
                         TapToCopyTransactionDataView(store: store, data: memoTexts[index].redacted)
                     }
@@ -73,9 +66,7 @@ struct MessageView: View {
                 .padding(.bottom, 7)
                 .padding(.vertical, 10)
             } else {
-                Text(L10n.TransactionList.noMessageIncluded)
-                    .font(.custom(FontFamily.Inter.regular.name, size: 13))
-                    .foregroundColor(Asset.Colors.primary.color)
+                EmptyView()
             }
         }
     }

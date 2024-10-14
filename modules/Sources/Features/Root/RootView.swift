@@ -13,6 +13,8 @@ import Tabs
 import ZcashLightClientKit
 import UIComponents
 import ServerSetup
+import AddressBook
+import DeeplinkWarning
 
 public struct RootView: View {
     @Environment(\.scenePhase) var scenePhase
@@ -65,6 +67,20 @@ private extension RootView {
         WithPerceptionTracking {
             Group {
                 switch store.destinationState.destination {
+                case .deeplinkWarning:
+                    NavigationView {
+                        DeeplinkWarningView(
+                            store: store.scope(
+                                state: \.deeplinkWarningState,
+                                action: \.deeplinkWarning
+                            )
+                        )
+                    }
+                    .navigationViewStyle(.stack)
+                    .overlayedWithSplash(store.splashAppeared) {
+                        store.send(.splashRemovalRequested)
+                    }
+                    
                 case .notEnoughFreeSpace:
                     NavigationView {
                         NotEnoughFreeSpaceView(
@@ -88,6 +104,40 @@ private extension RootView {
                             ),
                             tokenName: tokenName,
                             networkType: networkType
+                        )
+                        .navigationLinkEmpty(
+                            isActive: Binding<Bool>(
+                                get: {
+                                    store.addressBookBinding
+                                }, set: {
+                                    store.send(.addressBookBinding($0))
+                                }
+                            ),
+                            destination: {
+                                AddressBookView(
+                                    store: store.scope(
+                                        state: \.addressBookState,
+                                        action: \.addressBook
+                                    )
+                                )
+                            }
+                        )
+                        .navigationLinkEmpty(
+                            isActive: Binding<Bool>(
+                                get: {
+                                    store.addressBookContactBinding
+                                }, set: {
+                                    store.send(.addressBookContactBinding($0))
+                                }
+                            ),
+                            destination: {
+                                AddressBookContactView(
+                                    store: store.scope(
+                                        state: \.addressBookState,
+                                        action: \.addressBook
+                                    )
+                                )
+                            }
                         )
                     }
                     .navigationViewStyle(.stack)
@@ -184,6 +234,7 @@ private extension RootView {
 
             shareLogsView(store)
         }
+        .toast()
     }
 }
 
@@ -206,10 +257,9 @@ private extension RootView {
     @ViewBuilder func debugView(_ store: StoreOf<Root>) -> some View {
         VStack(alignment: .leading) {
             if store.destinationState.previousDestination == .tabs {
-                Button(L10n.General.back.uppercased()) {
+                ZashiButton(L10n.General.back) {
                     store.goToDestination(.tabs)
                 }
-                .zcashStyle()
                 .frame(width: 150)
                 .padding()
             }

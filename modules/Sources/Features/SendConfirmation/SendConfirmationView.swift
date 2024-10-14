@@ -25,119 +25,105 @@ public struct SendConfirmationView: View {
     
     public var body: some View {
         WithPerceptionTracking {
-            ZStack {
+            VStack {
                 ScrollView {
                     HStack {
                         VStack(alignment: .leading, spacing: 0) {
                             Text(L10n.Send.amountSummary)
-                                .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                                .zFont(size: 14, style: Design.Text.primary)
+                                .padding(.bottom, 2)
                             
-                            BalanceWithIconView(balance: store.amount)
+                            BalanceWithIconView(balance: store.amount + store.feeRequired)
                             
                             Text(store.currencyAmount.data)
-                                .font(.custom(FontFamily.Archivo.bold.name, size: 16))
-                                .foregroundColor(Asset.Colors.shade72.color)
+                                .zFont(.semiBold, size: 16, style: Design.Text.primary)
                                 .padding(.top, 10)
                         }
+                        
                         Spacer()
                     }
-                    .padding(.horizontal, 35)
+                    .screenHorizontalPadding()
                     .padding(.top, 40)
                     .padding(.bottom, 20)
 
                     HStack {
                         VStack(alignment: .leading, spacing: 6) {
                             Text(L10n.Send.toSummary)
-                                .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                                .zFont(.medium, size: 14, style: Design.Text.tertiary)
+
+                            if let alias = store.alias {
+                                Text(alias)
+                                    .zFont(.medium, size: 14, style: Design.Inputs.Filled.label)
+                            }
+                            
                             Text(store.address)
-                                .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                                .zFont(size: 12, style: Design.Text.primary)
                         }
+                        
                         Spacer()
                     }
-                    .padding(.horizontal, 35)
+                    .screenHorizontalPadding()
                     .padding(.bottom, 20)
 
                     HStack {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text(L10n.Send.feeSummary)
-                                .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                            HStack(spacing: 4) {
-                                ZatoshiRepresentationView(
-                                    balance: store.feeRequired,
-                                    fontName: FontFamily.Archivo.semiBold.name,
-                                    mostSignificantFontSize: 16,
-                                    leastSignificantFontSize: 8,
-                                    format: .expanded
-                                )
-                                Text(tokenName)
-                                    .font(.custom(FontFamily.Archivo.semiBold.name, size: 16))
-                            }
-                        }
+                        Text(L10n.Send.amount)
+                            .zFont(.medium, size: 14, style: Design.Text.tertiary)
+                        
                         Spacer()
+
+                        ZatoshiRepresentationView(
+                            balance: store.amount,
+                            fontName: FontFamily.Inter.semiBold.name,
+                            mostSignificantFontSize: 14,
+                            leastSignificantFontSize: 7,
+                            format: .expanded
+                        )
+                        .padding(.trailing, 4)
                     }
-                    .padding(.horizontal, 35)
+                    .screenHorizontalPadding()
+                    .padding(.bottom, 20)
+                    
+                    HStack {
+                        Text(L10n.Send.feeSummary)
+                            .zFont(.medium, size: 14, style: Design.Text.tertiary)
+                        
+                        Spacer()
+
+                        ZatoshiRepresentationView(
+                            balance: store.feeRequired,
+                            fontName: FontFamily.Inter.semiBold.name,
+                            mostSignificantFontSize: 14,
+                            leastSignificantFontSize: 7,
+                            format: .expanded
+                        )
+                        .padding(.trailing, 4)
+                    }
+                    .screenHorizontalPadding()
                     .padding(.bottom, 20)
 
                     if !store.message.isEmpty {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 10) {
-                                Text(L10n.Send.message)
-                                    .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                                VStack(alignment: .leading, spacing: 0) {
-                                    Color.clear.frame(height: 0)
-                                    
-                                    Text(store.message)
-                                        .font(.custom(FontFamily.Inter.regular.name, size: 13))
-                                        .foregroundColor(Asset.Colors.primary.color)
-                                        .padding()
-                                }
-                                .messageShape()
+                        VStack(alignment: .leading) {
+                            Text(L10n.Send.message)
+                                .zFont(.medium, size: 14, style: Design.Text.tertiary)
+
+                            HStack {
+                                Text(store.message)
+                                    .zFont(.medium, size: 14, style: Design.Inputs.Filled.text)
+                                
+                                Spacer(minLength: 0)
                             }
-                            Spacer()
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Design.Inputs.Filled.bg.color)
+                            }
                         }
-                        .padding(.horizontal, 35)
+                        .screenHorizontalPadding()
                         .padding(.bottom, 40)
                     }
-
-                    HStack(spacing: 30) {
-                        Button {
-                            store.send(.sendPressed)
-                        } label: {
-                            if store.isSending {
-                                HStack(spacing: 10) {
-                                    Text(L10n.Send.sending.uppercased())
-                                    
-                                    ProgressView()
-                                        .progressViewStyle(
-                                            CircularProgressViewStyle(
-                                                tint: Asset.Colors.secondary.color
-                                            )
-                                        )
-                                }
-                            } else {
-                                Text(L10n.General.send.uppercased())
-                            }
-                        }
-                        .zcashStyle(
-                            minWidth: nil,
-                            height: 38,
-                            shadowOffset: 6
-                        )
-
-                        Button {
-                            store.send(.goBackPressed)
-                        } label: {
-                            Text(L10n.Send.goBack.uppercased())
-                        }
-                        .zcashStyle(
-                            minWidth: nil,
-                            height: 38,
-                            shadowOffset: 6
-                        )
-                    }
-                    .disabled(store.isSending)
-                    .padding(.horizontal, 35)
                 }
+                .padding(.vertical, 1)
                 .navigationLinkEmpty(
                     isActive: $store.partialProposalErrorViewBinding,
                     destination: {
@@ -150,11 +136,40 @@ public struct SendConfirmationView: View {
                     }
                 )
                 .alert($store.scope(state: \.alert, action: \.alert))
+                
+                Spacer()
+                
+                if store.isSending {
+                    ZashiButton(
+                        L10n.Send.sending,
+                        accessoryView:
+                            ProgressView()
+                            .progressViewStyle(
+                                CircularProgressViewStyle(
+                                    tint: Asset.Colors.secondary.color
+                                )
+                            )
+                    ) { }
+                    .screenHorizontalPadding()
+                    .padding(.top, 40)
+                    .disabled(store.isSending)
+                } else {
+                    ZashiButton(L10n.General.send) {
+                        store.send(.sendPressed)
+                    }
+                    .screenHorizontalPadding()
+                    .padding(.top, 40)
+                }
+                
+                ZashiButton(L10n.Send.goBack, type: .tertiary) {
+                    store.send(.goBackPressed)
+                }
+                .screenHorizontalPadding()
+                .padding(.top, 4)
+                .padding(.bottom, 24)
             }
-            .zashiTitle {
-                Text(L10n.Send.confirmationTitle.uppercased())
-                    .font(.custom(FontFamily.Archivo.bold.name, size: 14))
-            }
+            .onAppear { store.send(.onAppear) }
+            .screenTitle(L10n.Send.confirmationTitle)
         }
         .navigationBarBackButtonHidden()
         .padding(.vertical, 1)

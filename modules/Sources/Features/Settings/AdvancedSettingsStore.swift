@@ -12,6 +12,7 @@ import ServerSetup
 import ZcashLightClientKit
 import PartnerKeys
 import CurrencyConversionSetup
+import Flexa
 
 @Reducer
 public struct AdvancedSettings {
@@ -29,20 +30,10 @@ public struct AdvancedSettings {
         public var currencyConversionSetupState: CurrencyConversionSetup.State
         public var deleteWalletState: DeleteWallet.State
         public var destination: Destination?
-        public var isInAppBrowserOn = false
         public var phraseDisplayState: RecoveryPhraseDisplay.State
         public var privateDataConsentState: PrivateDataConsent.State
         public var serverSetupState: ServerSetup.State
-        public var uAddress: UnifiedAddress? = nil
-        
-        public var inAppBrowserURL: String? {
-            if let address = try? uAddress?.transparentReceiver().stringEncoded, let appId {
-                return L10n.Partners.coinbaseOnrampUrl(appId, address)
-            }
-            
-            return nil
-        }
-        
+
         public init(
             currencyConversionSetupState: CurrencyConversionSetup.State,
             deleteWalletState: DeleteWallet.State,
@@ -56,17 +47,14 @@ public struct AdvancedSettings {
             self.currencyConversionSetupState = currencyConversionSetupState
             self.deleteWalletState = deleteWalletState
             self.destination = destination
-            self.isInAppBrowserOn = isInAppBrowserOn
             self.phraseDisplayState = phraseDisplayState
             self.privateDataConsentState = privateDataConsentState
             self.serverSetupState = serverSetupState
-            self.uAddress = uAddress
         }
     }
 
     public enum Action: BindableAction, Equatable {
         case binding(BindingAction<AdvancedSettings.State>)
-        case buyZecTapped
         case currencyConversionSetup(CurrencyConversionSetup.Action)
         case deleteWallet(DeleteWallet.Action)
         case onAppear
@@ -91,10 +79,6 @@ public struct AdvancedSettings {
                 return .none
                 
             case .binding:
-                return .none
-                
-            case .buyZecTapped:
-                state.isInAppBrowserOn = true
                 return .none
 
             case .currencyConversionSetup:
@@ -163,4 +147,3 @@ public struct AdvancedSettings {
         }
     }
 }
-

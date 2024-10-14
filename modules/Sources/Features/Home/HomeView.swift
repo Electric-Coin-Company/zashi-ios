@@ -9,13 +9,12 @@ import SyncProgress
 import Utils
 import Models
 import WalletBalances
-import WalletStatusPanel
 
 public struct HomeView: View {
     let store: StoreOf<Home>
     let tokenName: String
     
-    @State var walletStatus = WalletStatus.none
+    @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
 
     public init(store: StoreOf<Home>, tokenName: String) {
         self.store = store
@@ -57,7 +56,7 @@ public struct HomeView: View {
                     tokenName: tokenName
                 )
             }
-            .walletStatusPanel(restoringStatus: $walletStatus)
+            .walletStatusPanel()
             .applyScreenBackground()
             .onAppear {
                 store.send(.onAppear)
@@ -111,9 +110,7 @@ struct HomeView_Previews: PreviewProvider {
             .navigationBarItems(
                 trailing: Text("M")
             )
-            .zashiTitle {
-                Text("Title")
-            }
+            .screenTitle("Title")
         }
     }
 }

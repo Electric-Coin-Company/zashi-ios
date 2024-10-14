@@ -8,6 +8,7 @@ import Pasteboard
 import SDKSynchronizer
 import ReadTransactionsStorage
 import ZcashSDKEnvironment
+import AddressBookClient
 
 @Reducer
 public struct TransactionList {
@@ -16,31 +17,34 @@ public struct TransactionList {
 
     @ObservableState
     public struct State: Equatable {
+        @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         public var latestMinedHeight: BlockHeight?
-        public var requiredTransactionConfirmations = 0
-        public var latestTransactionList: [TransactionState] = []
-        public var transactionList: IdentifiedArrayOf<TransactionState>
         public var latestTransactionId = ""
-        
+        public var latestTransactionList: [TransactionState] = []
+        public var requiredTransactionConfirmations = 0
+        public var transactionList: IdentifiedArrayOf<TransactionState>
+
         public init(
             latestMinedHeight: BlockHeight? = nil,
-            requiredTransactionConfirmations: Int = 0,
             latestTransactionList: [TransactionState] = [],
+            requiredTransactionConfirmations: Int = 0,
             transactionList: IdentifiedArrayOf<TransactionState>
         ) {
             self.latestMinedHeight = latestMinedHeight
-            self.requiredTransactionConfirmations = requiredTransactionConfirmations
             self.latestTransactionList = latestTransactionList
+            self.requiredTransactionConfirmations = requiredTransactionConfirmations
             self.transactionList = transactionList
         }
     }
 
     public enum Action: Equatable {
         case copyToPastboard(RedactableString)
+        case fetchedABContacts(AddressBookContacts)
         case foundTransactions
         case memosFor([Memo], String)
         case onAppear
         case onDisappear
+        case saveAddressTapped(RedactableString)
         case synchronizerStateChanged(SyncStatus)
         case transactionCollapseRequested(String)
         case transactionAddressExpandRequested(String)
@@ -49,6 +53,7 @@ public struct TransactionList {
         case updateTransactionList([TransactionState])
     }
     
+    @Dependency(\.addressBook) var addressBook
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.pasteboard) var pasteboard
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
@@ -62,7 +67,14 @@ public struct TransactionList {
         switch action {
         case .onAppear:
             state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
-            
+            do {
+                let abContacts = try addressBook.allLocalContacts()
+                state.addressBookContacts = abContacts
+            } catch {
+                print("__LD fetchABContactsRequested Error: \(error.localizedDescription)")
+                // TODO: FIXME
+            }
+
             return .merge(
                 .publisher {
                     sdkSynchronizer.stateStream()
@@ -87,6 +99,24 @@ public struct TransactionList {
                     }
                 }
             )
+            
+        case .fetchedABContacts(let abContacts):
+            state.addressBookContacts = abContacts
+            let modifiedTransactionState = state.transactionList.map { transaction in
+                var copiedTransaction = transaction
+                
+                copiedTransaction.isInAddressBook = false
+                for contact in state.addressBookContacts.contacts {
+                    if contact.id == transaction.address {
+                        copiedTransaction.isInAddressBook = true
+                        break
+                    }
+                }
+                
+                return copiedTransaction
+            }
+            state.transactionList = IdentifiedArrayOf(uniqueElements: modifiedTransactionState)
+            return .none
 
         case .onDisappear:
             return .concatenate(
@@ -94,6 +124,9 @@ public struct TransactionList {
                 .cancel(id: CancelEventId)
             )
 
+        case .saveAddressTapped:
+            return .none
+            
         case .synchronizerStateChanged(.upToDate):
             state.latestMinedHeight = sdkSynchronizer.latestState().latestBlockHeight
             return .run { send in
@@ -118,7 +151,7 @@ public struct TransactionList {
                 return .none
             }
             state.latestTransactionList = transactionList
-            
+
             var readIds: [RedactableString: Bool] = [:]
             if let ids = try? readTransactionsStorage.readIds() {
                 readIds = ids
@@ -151,13 +184,22 @@ public struct TransactionList {
                             copiedTransaction.isMarkedAsRead = true
                         }
                     }
+                    
+                    // in address book
+                    copiedTransaction.isInAddressBook = false
+                    for contact in state.addressBookContacts.contacts {
+                        if contact.id == transaction.address {
+                            copiedTransaction.isInAddressBook = true
+                            break
+                        }
+                    }
 
                     return copiedTransaction
                 }
             
             state.transactionList = IdentifiedArrayOf(uniqueElements: sortedTransactionList)
             state.latestTransactionId = state.transactionList.first?.id ?? ""
-            
+
             return .none
             
         case .copyToPastboard(let value):
@@ -176,6 +218,12 @@ public struct TransactionList {
             if let index = state.transactionList.index(id: id) {
                 if state.transactionList[index].isExpanded {
                     state.transactionList[index].isAddressExpanded = true
+                    for contact in state.addressBookContacts.contacts {
+                        if contact.id == state.transactionList[index].address {
+                            state.transactionList[index].isInAddressBook = true
+                            break
+                        }
+                    }
                 } else {
                     state.transactionList[index].isExpanded = true
                 }

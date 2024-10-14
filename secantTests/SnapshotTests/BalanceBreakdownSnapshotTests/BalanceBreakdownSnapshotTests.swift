@@ -29,7 +29,6 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
             Balances()
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.mainQueue, .immediate)
-                .dependency(\.walletStatusPanel, .noOp)
                 .dependency(\.diskSpaceChecker, .mockEmptyDisk)
                 .dependency(\.exchangeRate, .noOp)
         }
@@ -53,7 +52,6 @@ class BalanceBreakdownSnapshotTests: XCTestCase {
             Balances()
                 .dependency(\.sdkSynchronizer, .noOp)
                 .dependency(\.mainQueue, .immediate)
-                .dependency(\.walletStatusPanel, .noOp)
                 .dependency(\.diskSpaceChecker, .mockEmptyDisk)
                 .dependency(\.exchangeRate, .noOp)
         }

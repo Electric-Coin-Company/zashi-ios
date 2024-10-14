@@ -11,6 +11,7 @@ import Generated
 import ImportWallet
 import SecurityWarning
 import ZcashLightClientKit
+import UIComponents
 
 public struct PlainOnboardingView: View {
     @Perception.Bindable var store: StoreOf<OnboardingFlow>
@@ -22,33 +23,32 @@ public struct PlainOnboardingView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack {
+                Spacer()
+
                 Asset.Assets.welcomeScreenLogo.image
-                    .renderingMode(.template)
-                    .resizable()
-                    .frame(width: 169, height: 160)
-                    .padding(.top, 10)
-                    .foregroundColor(Asset.Colors.primary.color)
+                    .zImage(width: 169, height: 160, color: Asset.Colors.primary.color)
 
                 Text(L10n.PlainOnboarding.title)
-                    .font(.custom(FontFamily.Inter.regular.name, size: 22))
+                    .zFont(size: 20, style: Design.Text.secondary)
                     .padding(.top, 15)
                     .multilineTextAlignment(.center)
+                    .padding(.horizontal, 24)
 
                 Spacer()
                 
-                Button(L10n.PlainOnboarding.Button.createNewWallet.uppercased()) {
+                ZashiButton(L10n.PlainOnboarding.Button.createNewWallet) {
                     store.send(.createNewWallet)
                 }
-                .zcashStyle()
-                .padding(.bottom, 30)
+                .padding(.bottom, 8)
 
-                Button(L10n.PlainOnboarding.Button.restoreWallet.uppercased()) {
+                ZashiButton(
+                    L10n.PlainOnboarding.Button.restoreWallet,
+                    type: .tertiary
+                ) {
                     store.send(.importExistingWallet)
                 }
-                .zcashStyle(.secondary)
-                .padding(.bottom, 50)
+                .padding(.bottom, 24)
             }
-            .padding(.horizontal, 70)
             .navigationLinkEmpty(
                 isActive: store.bindingFor(.importExistingWallet),
                 destination: {
@@ -73,7 +73,8 @@ public struct PlainOnboardingView: View {
             )
         }
         .navigationBarTitleDisplayMode(.inline)
-        .applyScreenBackground(withPattern: true)
+        .screenHorizontalPadding()
+        .applyOnboardingScreenBackground()
     }
 }
 

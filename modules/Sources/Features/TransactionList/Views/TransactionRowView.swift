@@ -33,52 +33,47 @@ public struct TransactionRowView: View {
     public var body: some View {
         WithPerceptionTracking {
             Button {
-                store.send(.transactionExpandRequested(transaction.id), animation: .default)
-            } label: {
                 if transaction.isExpanded {
-                    TransactionHeaderView(
-                        store: store,
-                        transaction: transaction,
-                        isLatestTransaction: isLatestTransaction
-                    )
+                    store.send(.transactionCollapseRequested(transaction.id), animation: .default)
                 } else {
-                    TransactionHeaderView(
-                        store: store,
-                        transaction: transaction,
-                        isLatestTransaction: isLatestTransaction
-                    )
+                    store.send(.transactionExpandRequested(transaction.id), animation: .default)
                 }
+            } label: {
+                TransactionHeaderView(
+                    store: store,
+                    transaction: transaction,
+                    isLatestTransaction: isLatestTransaction
+                )
             }
             
             if transaction.isExpanded {
-                Group {
-                    if !transaction.isTransparentRecipient && !transaction.isShieldingTransaction {
-                        MessageView(
+                Button {
+                    store.send(.transactionCollapseRequested(transaction.id), animation: .default)
+                } label: {
+                    Group {
+                        if !transaction.isTransparentRecipient && !transaction.isShieldingTransaction {
+                            MessageView(
+                                store: store,
+                                messages: transaction.textMemos,
+                                isSpending: transaction.isSpending,
+                                isFailed: transaction.status == .failed
+                            )
+                        }
+                        
+                        TransactionIdView(
                             store: store,
-                            messages: transaction.textMemos,
-                            isSpending: transaction.isSpending,
-                            isFailed: transaction.status == .failed
+                            transaction: transaction
                         )
+                        
+                        if transaction.isSpending || transaction.isShieldingTransaction {
+                            TransactionFeeView(fee: transaction.fee ?? .zero)
+                                .padding(.vertical, 10)
+                                .padding(.bottom, 10)
+                        }
                     }
-
-                    TransactionIdView(
-                        store: store,
-                        transaction: transaction
-                    )
-
-                    if transaction.isSpending || transaction.isShieldingTransaction {
-                        TransactionFeeView(fee: transaction.fee ?? .zero)
-                            .padding(.vertical, 10)
-                    }
-                    
-                    Button {
-                        store.send(.transactionCollapseRequested(transaction.id), animation: .default)
-                    } label: {
-                        CollapseTransactionView()
-                            .padding(.vertical, 20)
-                    }
+                    .padding(.leading, 60)
+                    .padding(.trailing, 25)
                 }
-                .padding(.horizontal, 60)
             }
         }
     }

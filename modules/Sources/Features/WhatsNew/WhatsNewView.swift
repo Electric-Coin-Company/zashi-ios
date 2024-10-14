@@ -76,10 +76,7 @@ public struct WhatsNewView: View {
             .padding(.vertical, 1)
             .zashiBack()
             .onAppear { store.send(.onAppear) }
-            .zashiTitle {
-                Text(L10n.About.whatsNew.uppercased())
-                    .font(.custom(FontFamily.Archivo.bold.name, size: 14))
-            }
+            .screenTitle(L10n.About.whatsNew)
         }
         .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground()

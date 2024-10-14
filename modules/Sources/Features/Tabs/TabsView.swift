@@ -1,6 +1,6 @@
 //
-//  WelcomeView.swift
-//  secant-testnet
+//  TabsView.swift
+//  Zashi
 //
 //  Created by Lukáš Korba on 09.10.2023.
 //
@@ -9,8 +9,9 @@ import SwiftUI
 import ComposableArchitecture
 import ZcashLightClientKit
 
-import Generated
 import AddressDetails
+import Generated
+import Receive
 import BalanceBreakdown
 import Home
 import SendFlow
@@ -18,6 +19,9 @@ import Settings
 import UIComponents
 import SendConfirmation
 import CurrencyConversionSetup
+import RequestZec
+import ZecKeyboard
+import AddressBook
 
 public struct TabsView: View {
     let networkType: NetworkType
@@ -55,10 +59,10 @@ public struct TabsView: View {
                     )
                     .tag(Tabs.State.Tab.send)
                     
-                    AddressDetailsView(
+                    ReceiveView(
                         store: self.store.scope(
-                            state: \.addressDetailsState,
-                            action: \.addressDetails
+                            state: \.receiveState,
+                            action: \.receive
                         ),
                         networkType: networkType
                     )
@@ -78,13 +82,6 @@ public struct TabsView: View {
                 VStack(spacing: 0) {
                     Spacer()
                     
-                    if store.selectedTab != .account {
-                        Asset.Colors.shade30.color
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 1)
-                            .opacity(0.15)
-                    }
-                    
                     HStack {
                         ForEach((Tabs.State.Tab.allCases), id: \.self) { item in
                             Button {
@@ -94,7 +91,7 @@ public struct TabsView: View {
                                     WithPerceptionTracking {
                                         if store.selectedTab == item {
                                             Text("\(item.title)")
-                                                .font(.custom(FontFamily.Archivo.black.name, size: 12))
+                                                .font(.custom(FontFamily.Inter.black.name, size: 12))
                                                 .foregroundColor(Asset.Colors.primary.color)
                                             Rectangle()
                                                 .frame(height: 2)
@@ -102,7 +99,7 @@ public struct TabsView: View {
                                                 .matchedGeometryEffect(id: "Tabs", in: tabsID, properties: .frame)
                                         } else {
                                             Text("\(item.title)")
-                                                .font(.custom(FontFamily.Archivo.regular.name, size: 12))
+                                                .font(.custom(FontFamily.Inter.regular.name, size: 12))
                                                 .foregroundColor(Asset.Colors.primary.color)
                                             Rectangle()
                                                 .frame(height: 2)
@@ -139,13 +136,79 @@ public struct TabsView: View {
                         )
                     }
                 )
+                .navigationLinkEmpty(
+                    isActive: store.bindingFor(.addressDetails),
+                    destination: {
+                        AddressDetailsView(store: store.addressDetailsStore())
+                    }
+                )
+                .navigationLinkEmpty(
+                    isActive: store.bindingForStackMaxPrivacy(.zecKeyboard),
+                    destination: {
+                        ZecKeyboardView(
+                            store: store.zecKeyboardStore(),
+                            tokenName: tokenName
+                        )
+                        .navigationLinkEmpty(
+                            isActive: store.bindingForStackMaxPrivacy(.requestZec),
+                            destination: {
+                                RequestZecView(
+                                    store: store.requestZecStore(),
+                                    tokenName: tokenName
+                                )
+                                .navigationLinkEmpty(
+                                    isActive: store.bindingForStackMaxPrivacy(.requestZecSummary),
+                                    destination: {
+                                        RequestZecSummaryView(
+                                            store: store.requestZecStore(),
+                                            tokenName: tokenName
+                                        )
+                                    }
+                                )
+                            }
+                        )
+                    }
+                )
+                .navigationLinkEmpty(
+                    isActive: store.bindingForStackLowPrivacy(.zecKeyboard),
+                    destination: {
+                        ZecKeyboardView(
+                            store: store.zecKeyboardStore(),
+                            tokenName: tokenName
+                        )
+                        .navigationLinkEmpty(
+                            isActive: store.bindingForStackLowPrivacy(.requestZecSummary),
+                            destination: {
+                                RequestZecSummaryView(
+                                    store: store.requestZecStore(),
+                                    tokenName: tokenName
+                                )
+                            }
+                        )
+                    }
+                )
+                .navigationLinkEmpty(
+                    isActive: store.bindingForStackRequestPayment(.requestPaymentConfirmation),
+                    destination: {
+                        RequestPaymentConfirmationView(
+                            store: store.sendConfirmationStore(),
+                            tokenName: tokenName
+                        )
+                        .navigationLinkEmpty(
+                            isActive: store.bindingForStackRequestPayment(.addressBookNewContact),
+                            destination: {
+                                AddressBookContactView(store: store.addressBookStore())
+                            }
+                        )
+                    }
+                )
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: settingsButton())
             .navigationBarItems(leading: hideBalancesButton(tab: store.selectedTab))
             .zashiTitle { navBarView(store.selectedTab) }
             .walletStatusPanel()
-            .overlayPreferenceValue(BoundsPreferenceKey.self) { preferences in
+            .overlayPreferenceValue(ExchangeRateStaleTooltipPreferenceKey.self) { preferences in
                 WithPerceptionTracking {
                     if store.isRateTooltipEnabled {
                         GeometryReader { geometry in
@@ -171,10 +234,7 @@ public struct TabsView: View {
                                 VStack(alignment: .leading, spacing: 0) {
                                     HStack(alignment: .top, spacing: 0) {
                                         Asset.Assets.coinsSwap.image
-                                            .renderingMode(.template)
-                                            .resizable()
-                                            .frame(width: 20, height: 20)
-                                            .foregroundColor(Design.Text.primary.color)
+                                            .zImage(size: 20, style: Design.Text.primary)
                                             .padding(10)
                                             .background {
                                                 Circle()
@@ -184,12 +244,10 @@ public struct TabsView: View {
                                         
                                         VStack(alignment: .leading, spacing: 5) {
                                             Text(L10n.CurrencyConversion.cardTitle)
-                                                .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                                                .foregroundColor(Design.Text.tertiary.color)
+                                                .zFont(size: 14, style: Design.Text.tertiary)
                                             
                                             Text(L10n.CurrencyConversion.title)
-                                                .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                                                .foregroundColor(Design.Text.primary.color)
+                                                .zFont(.semiBold, size: 16, style: Design.Text.primary)
                                                 .lineLimit(1)
                                                 .minimumScaleFactor(0.5)
                                         }
@@ -201,10 +259,7 @@ public struct TabsView: View {
                                             store.send(.currencyConversionCloseTapped)
                                         } label: {
                                             Asset.Assets.buttonCloseX.image
-                                                .renderingMode(.template)
-                                                .resizable()
-                                                .frame(width: 20, height: 20)
-                                                .foregroundColor(Design.HintTooltips.defaultFg.color)
+                                                .zImage(size: 20, style: Design.HintTooltips.defaultFg)
                                         }
                                         .padding(20)
                                         .offset(x: 20, y: -20)
@@ -214,8 +269,7 @@ public struct TabsView: View {
                                         store.send(.updateDestination(.currencyConversionSetup))
                                     } label: {
                                         Text(L10n.CurrencyConversion.cardButton)
-                                            .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                                            .foregroundColor(Design.Btns.Tertiary.fg.color)
+                                            .zFont(.semiBold, size: 16, style: Design.Btns.Tertiary.fg)
                                             .frame(height: 24)
                                             .frame(maxWidth: .infinity)
                                             .padding(.vertical, 12)
@@ -246,20 +300,13 @@ public struct TabsView: View {
     
     @ViewBuilder private func navBarView(_ tab: Tabs.State.Tab) -> some View {
         switch tab {
-        case .receive, .send:
+        case .receive, .send, .balances:
             Text(tab.title.uppercased())
-                .font(.custom(FontFamily.Archivo.bold.name, size: 14))
+                .zFont(.semiBold, size: 16, style: Design.Text.primary)
 
         case .account:
             Asset.Assets.zashiTitle.image
-                .renderingMode(.template)
-                .resizable()
-                .frame(width: 62, height: 17)
-                .foregroundColor(Asset.Colors.primary.color)
-
-        case .balances:
-            Text(L10n.Tabs.balances.uppercased())
-                .font(.custom(FontFamily.Archivo.bold.name, size: 14))
+                .zImage(width: 62, height: 17, color: Asset.Colors.primary.color)
         }
     }
     
@@ -285,11 +332,8 @@ public struct TabsView: View {
             } label: {
                 let image = isSensitiveContentHidden ? Asset.Assets.eyeOff.image : Asset.Assets.eyeOn.image
                 image
-                    .renderingMode(.template)
-                    .resizable()
-                    .frame(width: 25, height: 25)
+                    .zImage(size: 25, color: Asset.Colors.primary.color)
                     .padding(15)
-                    .tint(Asset.Colors.primary.color)
             }
         }
     }
@@ -332,6 +376,34 @@ extension StoreOf<Tabs> {
             action: \.currencyConversionSetup
         )
     }
+    
+    func addressDetailsStore() -> StoreOf<AddressDetails> {
+        self.scope(
+            state: \.addressDetailsState,
+            action: \.addressDetails
+        )
+    }
+
+    func requestZecStore() -> StoreOf<RequestZec> {
+        self.scope(
+            state: \.requestZecState,
+            action: \.requestZec
+        )
+    }
+    
+    func zecKeyboardStore() -> StoreOf<ZecKeyboard> {
+        self.scope(
+            state: \.zecKeyboardState,
+            action: \.zecKeyboard
+        )
+    }
+    
+    func addressBookStore() -> StoreOf<AddressBook> {
+        self.scope(
+            state: \.addressBookState,
+            action: \.addressBook
+        )
+    }
 }
 
 // MARK: - ViewStore
@@ -343,20 +415,109 @@ extension StoreOf<Tabs> {
             set: { self.send(.updateDestination($0 ? destination : nil)) }
         )
     }
+    
+    func bindingForStackMaxPrivacy(_ destination: Tabs.State.StackDestinationMaxPrivacy) -> Binding<Bool> {
+        Binding<Bool>(
+            get: {
+                if let currentStackValue = self.stackDestinationMaxPrivacy?.rawValue {
+                    return currentStackValue >= destination.rawValue
+                } else {
+                    if destination.rawValue == 0 {
+                        return false
+                    } else if destination.rawValue <= self.stackDestinationMaxPrivacyBindingsAlive {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+            },
+            set: { _ in
+                if let currentStackValue = self.stackDestinationMaxPrivacy?.rawValue, currentStackValue == destination.rawValue {
+                    let popIndex = destination.rawValue - 1
+                    if popIndex >= 0 {
+                        let popDestination = Tabs.State.StackDestinationMaxPrivacy(rawValue: popIndex)
+                        self.send(.updateStackDestinationMaxPrivacy(popDestination))
+                    } else {
+                        self.send(.updateStackDestinationMaxPrivacy(nil))
+                    }
+                }
+            }
+        )
+    }
+    
+    func bindingForStackLowPrivacy(_ destination: Tabs.State.StackDestinationLowPrivacy) -> Binding<Bool> {
+        Binding<Bool>(
+            get: {
+                if let currentStackValue = self.stackDestinationLowPrivacy?.rawValue {
+                    return currentStackValue >= destination.rawValue
+                } else {
+                    if destination.rawValue == 0 {
+                        return false
+                    } else if destination.rawValue <= self.stackDestinationLowPrivacyBindingsAlive {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+            },
+            set: { _ in
+                if let currentStackValue = self.stackDestinationLowPrivacy?.rawValue, currentStackValue == destination.rawValue {
+                    let popIndex = destination.rawValue - 1
+                    if popIndex >= 0 {
+                        let popDestination = Tabs.State.StackDestinationLowPrivacy(rawValue: popIndex)
+                        self.send(.updateStackDestinationLowPrivacy(popDestination))
+                    } else {
+                        self.send(.updateStackDestinationLowPrivacy(nil))
+                    }
+                }
+            }
+        )
+    }
+    
+    func bindingForStackRequestPayment(_ destination: Tabs.State.StackDestinationRequestPayment) -> Binding<Bool> {
+        Binding<Bool>(
+            get: {
+                if let currentStackValue = self.stackDestinationRequestPayment?.rawValue {
+                    return currentStackValue >= destination.rawValue
+                } else {
+                    if destination.rawValue == 0 {
+                        return false
+                    } else if destination.rawValue <= self.stackDestinationRequestPaymentBindingsAlive {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+            },
+            set: { _ in
+                if let currentStackValue = self.stackDestinationRequestPayment?.rawValue, currentStackValue == destination.rawValue {
+                    let popIndex = destination.rawValue - 1
+                    if popIndex >= 0 {
+                        let popDestination = Tabs.State.StackDestinationRequestPayment(rawValue: popIndex)
+                        self.send(.updateStackDestinationRequestPayment(popDestination))
+                    } else {
+                        self.send(.updateStackDestinationRequestPayment(nil))
+                    }
+                }
+            }
+        )
+    }
 }
 
 // MARK: - Placeholders
 
 extension Tabs.State {
     public static let initial = Tabs.State(
-        addressDetailsState: .initial,
         balanceBreakdownState: .initial,
         currencyConversionSetupState: .initial,
         destination: nil,
         homeState: .initial,
+        receiveState: .initial,
+        requestZecState: .initial,
         selectedTab: .account,
         sendConfirmationState: .initial,
         sendState: .initial,
-        settingsState: .initial
+        settingsState: .initial,
+        zecKeyboardState: .initial
     )
 }

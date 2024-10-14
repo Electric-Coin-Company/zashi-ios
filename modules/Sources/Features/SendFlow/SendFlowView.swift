@@ -17,7 +17,10 @@ import WalletBalances
 public struct SendFlowView: View {
     private enum InputID: Hashable {
         case message
+        case addressBookHint
     }
+    
+    @State private var keyboardVisible: Bool = false
     
     @Perception.Bindable var store: StoreOf<SendFlow>
     let tokenName: String
@@ -33,152 +36,276 @@ public struct SendFlowView: View {
     }
     
     public var body: some View {
-        ZStack {
-            WithPerceptionTracking {
-                ScrollView {
-                    ScrollViewReader { value in
-                        VStack(alignment: .center) {
-                            WalletBalancesView(
-                                store: store.scope(
-                                    state: \.walletBalancesState,
-                                    action: \.walletBalances
-                                ),
-                                tokenName: tokenName,
-                                couldBeHidden: true
-                            )
-                            
-                            VStack(alignment: .leading) {
-                                ZashiTextField(
-                                    text: store.bindingForAddress,
-                                    placeholder: L10n.Field.TransactionAddress.validZcashAddress,
-                                    title: L10n.Field.TransactionAddress.to,
-                                    error: store.isInvalidAddressFormat
-                                    ? L10n.Send.Error.invalidAddress
-                                    : nil,
-                                    accessoryView:
-                                        Button {
-                                            store.send(.updateDestination(.scanQR))
-                                        } label: {
-                                            Image(systemName: "qrcode")
-                                                .resizable()
-                                                .frame(width: 25, height: 25)
-                                                .tint(Asset.Colors.primary.color)
-                                        }
-                                        .padding(.trailing, 8)
-                                )
-                                .keyboardType(.alphabet)
-                                .focused($isAddressFocused)
-                                .submitLabel(.next)
-                                .onSubmit {
-                                    isAmountFocused = true
-                                }
-                                .padding(.bottom, 20)
-                                
-                                VStack(alignment: .leading) {
-                                    HStack(spacing: 4) {
-                                        ZashiTextField(
-                                            text: store.bindingForZecAmount,
-                                            placeholder: L10n.Field.TransactionAmount.zecAmount(tokenName),
-                                            title: L10n.Field.TransactionAmount.amount,
-                                            prefixView:
-                                                ZcashSymbol()
-                                                    .frame(width: 7, height: 12)
-                                                    .padding(.leading, 10)
+        WithPerceptionTracking {
+            ZStack {
+                WithPerceptionTracking {
+                    ScrollView {
+                        ScrollViewReader { value in
+                            WithPerceptionTracking {
+                                VStack(alignment: .center) {
+                                    WithPerceptionTracking {
+                                        WalletBalancesView(
+                                            store: store.scope(
+                                                state: \.walletBalancesState,
+                                                action: \.walletBalances
+                                            ),
+                                            tokenName: tokenName,
+                                            couldBeHidden: true
                                         )
-                                        .keyboardType(.decimalPad)
-                                        .focused($isAmountFocused)
-
-                                        if store.isCurrencyConversionEnabled {
-                                            Asset.Assets.convertIcon.image
-                                                .renderingMode(.template)
-                                                .resizable()
-                                                .frame(width: 10, height: 8)
-                                                .foregroundColor(Asset.Colors.primary.color)
-                                                .padding(.horizontal, 3)
-                                                .padding(.top, 24)
-                                            
-                                            ZashiTextField(
-                                                text: store.bindingForCurrency,
-                                                placeholder: L10n.Field.TransactionAmount.currencyAmount,
-                                                prefixView:
-                                                    Text(store.currencySymbol)
-                                                    .font(.custom(FontFamily.Archivo.bold.name, size: 14))
-                                                    .padding(.leading, 10)
-                                            )
-                                            .keyboardType(.decimalPad)
-                                            .focused($isCurrencyFocused)
-                                            .padding(.top, 26)
-                                            .disabled(store.currencyConversion == nil)
-                                            .opacity(store.currencyConversion == nil ? 0.5 : 1.0)
-                                        }
-                                    }
-                                    
-                                    if store.isInvalidAmountFormat {
-                                        Text(L10n.Send.Error.invalidAmount)
-                                            .foregroundColor(Design.Utility.ErrorRed._600.color)
-                                            .font(.custom(FontFamily.Inter.medium.name, size: 12))
-                                    } else if store.isInsufficientFunds {
-                                        Text(L10n.Send.Error.insufficientFunds)
-                                            .foregroundColor(Design.Utility.ErrorRed._600.color)
-                                            .font(.custom(FontFamily.Inter.medium.name, size: 12))
-                                    }
-                                }
-                                .padding(.bottom, 20)
-                            }
-                            
-                            MessageEditorView(store: store.memoStore())
-                                .frame(height: 190)
-                                .disabled(!store.isMemoInputEnabled)
-                                .toolbar {
-                                    ToolbarItemGroup(placement: .keyboard) {
-                                        Spacer()
                                         
-                                        Button(L10n.General.done.uppercased()) {
-                                            isAmountFocused = false
-                                            isAddressFocused = false
-                                            isCurrencyFocused = false
-                                            isMemoFocused = false
+                                        VStack(alignment: .leading) {
+                                            ZashiTextField(
+                                                text: store.bindingForAddress,
+                                                placeholder: L10n.Send.addressPlaceholder,
+                                                title: L10n.Send.to,
+                                                error: store.invalidAddressErrorText,
+                                                accessoryView:
+                                                    HStack(spacing: 4) {
+                                                        WithPerceptionTracking {
+                                                            fieldButton(
+                                                                icon: store.isNotAddressInAddressBook
+                                                                ? Asset.Assets.Icons.userPlus.image
+                                                                : Asset.Assets.Icons.user.image
+                                                            ) {
+                                                                if store.isNotAddressInAddressBook {
+                                                                    store.send(.addNewContactTapped(store.address))
+                                                                } else {
+                                                                    store.send(.addressBookTapped)
+                                                                }
+                                                            }
+                                                            
+                                                            fieldButton(icon: Asset.Assets.Icons.qr.image) {
+                                                                store.send(.updateDestination(.scanQR))
+                                                            }
+                                                        }
+                                                    }
+                                                    .frame(height: 20)
+                                                    .offset(x: 8)
+                                            )
+                                            .id(InputID.addressBookHint)
+                                            .keyboardType(.alphabet)
+                                            .focused($isAddressFocused)
+                                            .submitLabel(.next)
+                                            .onSubmit {
+                                                isAmountFocused = true
+                                            }
+                                            .padding(.bottom, 20)
+                                            .anchorPreference(
+                                                key: UnknownAddressPreferenceKey.self,
+                                                value: .bounds
+                                            ) { $0 }
+                                            
+                                            VStack(alignment: .leading) {
+                                                HStack(alignment: .top, spacing: 4) {
+                                                    ZashiTextField(
+                                                        text: store.bindingForZecAmount,
+                                                        placeholder: tokenName.uppercased(),
+                                                        title: L10n.Send.amount,
+                                                        error: store.invalidZecAmountErrorText,
+                                                        prefixView:
+                                                            Asset.Assets.Icons.currencyZec.image
+                                                            .zImage(size: 20, style: Design.Inputs.Default.text)
+                                                    )
+                                                    .keyboardType(.decimalPad)
+                                                    .focused($isAmountFocused)
+                                                    
+                                                    if store.isCurrencyConversionEnabled {
+                                                        Asset.Assets.Icons.switchHorizontal.image
+                                                            .zImage(size: 24, style: Design.Btns.Ghost.fg)
+                                                            .padding(8)
+                                                            .padding(.top, 24)
+                                                        
+                                                        ZashiTextField(
+                                                            text: store.bindingForCurrency,
+                                                            placeholder: L10n.Send.currencyPlaceholder,
+                                                            error: store.invalidCurrencyAmountErrorText,
+                                                            prefixView:
+                                                                Asset.Assets.Icons.currencyDollar.image
+                                                                .zImage(size: 20, style: Design.Inputs.Default.text)
+                                                        )
+                                                        .keyboardType(.decimalPad)
+                                                        .focused($isCurrencyFocused)
+                                                        .padding(.top, 23)
+                                                        .disabled(store.currencyConversion == nil)
+                                                        .opacity(store.currencyConversion == nil ? 0.5 : 1.0)
+                                                    }
+                                                }
+                                            }
+                                            .padding(.bottom, 20)
                                         }
-                                        .foregroundColor(Asset.Colors.primary.color)
-                                        .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                                        
+                                        if store.isMemoInputEnabled {
+                                            MessageEditorView(store: store.memoStore())
+                                                .frame(minHeight: 155)
+                                                .frame(maxHeight: 300)
+                                                .id(InputID.message)
+                                                .focused($isMemoFocused)
+                                        } else {
+                                            VStack(alignment: .leading, spacing: 0) {
+                                                Text(L10n.Send.message)
+                                                    .zFont(.medium, size: 14, style: Design.Inputs.Filled.label)
+                                                    .padding(.bottom, 6)
+                                                
+                                                HStack(spacing: 0) {
+                                                    VStack {
+                                                        Asset.Assets.infoOutline.image
+                                                            .zImage(size: 20, style: Design.Utility.Gray._500)
+                                                            .padding(.trailing, 12)
+                                                        
+                                                        Spacer(minLength: 0)
+                                                    }
+                                                    
+                                                    Text(L10n.Send.Info.memo)
+                                                        .zFont(size: 12, style: Design.Utility.Gray._700)
+                                                    
+                                                    Spacer()
+                                                }
+                                                .padding(10)
+                                                .background {
+                                                    RoundedRectangle(cornerRadius: 8)
+                                                        .fill(Design.Utility.Gray._50.color)
+                                                }
+                                            }
+                                        }
+                                        
+                                        ZashiButton(L10n.Send.review) {
+                                            store.send(.reviewPressed)
+                                        }
+                                        .disabled(!store.isValidForm)
+                                        .padding(.top, 40)
                                     }
                                 }
-                                .id(InputID.message)
-                                .focused($isMemoFocused)
-                            
-                            Button {
-                                store.send(.reviewPressed)
-                            } label: {
-                                Text(L10n.Send.review.uppercased())
+                                .screenHorizontalPadding()
+                                .onChange(of: store.isNotAddressInAddressBook) { update in
+                                    withAnimation {
+                                        if update {
+                                            value.scrollTo(InputID.addressBookHint, anchor: .top)
+                                        }
+                                    }
+                                }
+                                .onChange(of: isAddressFocused) { update in
+                                    withAnimation {
+                                        if update && store.isNotAddressInAddressBook {
+                                            value.scrollTo(InputID.addressBookHint, anchor: .top)
+                                        }
+                                    }
+                                }
                             }
-                            .zcashStyle()
-                            .disabled(!store.isValidForm)
-                            .padding(.top, 40)
-                            .padding(.horizontal, 30)
-                            
-                            Text(store.feeFormat)
-                                .font(.custom(FontFamily.Inter.semiBold.name, size: 11))
-                                .padding(.vertical, 20)
                         }
-                        .padding(.horizontal, 30)
+                        .onAppear {
+                            store.send(.onAppear)
+                            observeKeyboardNotifications()
+                            if store.requestsAddressFocus {
+                                isAddressFocused = true
+                                store.send(.requestsAddressFocusResolved)
+                            }
+                        }
+                        .applyScreenBackground()
+                        .navigationLinkEmpty(
+                            isActive: store.bindingFor(.scanQR),
+                            destination: {
+                                ScanView(store: store.scanStore())
+                            }
+                        )
                     }
-                    .onAppear { store.send(.onAppear) }
-                    .applyScreenBackground()
-                    .navigationLinkEmpty(
-                        isActive: store.bindingFor(.scanQR),
-                        destination: {
-                            ScanView(store: store.scanStore())
-                        }
-                    )
                 }
             }
+            .padding(.vertical, 1)
+            .applyScreenBackground()
+            .alert(store: store.scope(
+                state: \.$alert,
+                action: \.alert
+            ))
+            .overlayPreferenceValue(UnknownAddressPreferenceKey.self) { preferences in
+                if isAddressFocused && store.isAddressBookHintVisible {
+                    GeometryReader { geometry in
+                        preferences.map {
+                            HStack(alignment: .top, spacing: 0) {
+                                Asset.Assets.Icons.userPlus.image
+                                    .zImage(size: 20, style: Design.Text.lightSupport)
+                                    .padding(.trailing, 12)
+                                
+                                Text(L10n.Send.addressNotInBook)
+                                    .zFont(.medium, size: 14, style: Design.Text.light)
+                                    .padding(.top, 2)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.5)
+                                
+                                Spacer(minLength: 0)
+                            }
+                            .padding(.horizontal, 10)
+                            .frame(height: 40)
+                            .background {
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(Design.HintTooltips.surfacePrimary.color)
+                            }
+                            .frame(width: geometry.size.width - 48)
+                            .offset(x: 24, y: geometry[$0].minY + geometry[$0].height - 16)
+                        }
+                    }
+                }
+            }
+            .overlay(
+                VStack(spacing: 0) {
+                    Spacer()
+
+                    Asset.Colors.primary.color
+                        .frame(height: 1)
+                        .opacity(0.1)
+                    
+                    HStack(alignment: .center) {
+                        Spacer()
+                        
+                        Button {
+                            isAmountFocused = false
+                            isAddressFocused = false
+                            isCurrencyFocused = false
+                            isMemoFocused = false
+                        } label: {
+                            Text(L10n.General.done.uppercased())
+                                .zFont(.regular, size: 14, style: Design.Text.primary)
+                        }
+                        .padding(.bottom, 4)
+                    }
+                    .applyScreenBackground()
+                    .padding(.horizontal, 20)
+                    .frame(height: keyboardVisible ? 38 : 0)
+                    .frame(maxWidth: .infinity)
+                    .opacity(keyboardVisible ? 1 : 0)
+                }
+            )
         }
-        .padding(.vertical, 1)
-        .applyScreenBackground()
-        .alert(store: store.scope(
-            state: \.$alert,
-            action: \.alert
-        ))
+    }
+    
+    private func fieldButton(icon: Image, _ action: @escaping () -> Void) -> some View {
+        Button {
+            action()
+        } label: {
+            icon
+                .zImage(size: 20, style: Design.Inputs.Default.label)
+        }
+        .padding(8)
+        .background {
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Design.Btns.Secondary.bg.color)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(Design.Btns.Secondary.border.color)
+                }
+        }
+    }
+    
+    private func observeKeyboardNotifications() {
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { _ in
+            withAnimation {
+                keyboardVisible = true
+            }
+        }
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
+            withAnimation {
+                keyboardVisible = false
+            }
+        }
     }
 }
 
