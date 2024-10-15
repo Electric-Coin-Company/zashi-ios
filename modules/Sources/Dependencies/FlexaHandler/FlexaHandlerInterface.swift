@@ -23,6 +23,8 @@ public struct FlexaHandlerClient {
     public var prepare: @Sendable () -> Void
     public var open: @Sendable () -> Void
     public var onTransactionRequest: @Sendable () -> AnyPublisher<FlexaTransaction?, Never> = { Just(nil).eraseToAnyPublisher() }
+    public var clearTransactionRequest: @Sendable () -> Void
     public var transactionSent: @Sendable (String, String) -> Void
-    public var updateBalance: @Sendable (Zatoshi) -> Void
+    public var updateBalance: @Sendable (Zatoshi, Zatoshi?) -> Void
+    public var flexaAlert: @Sendable (String, String) -> Void
 }

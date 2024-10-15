@@ -13,20 +13,17 @@ import SDKSynchronizer
 import Utils
 import Root
 import ZcashSDKEnvironment
-import FlexaHandler
 import Flexa
+import Models
 
 @main
 struct SecantApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @Environment(\.scenePhase) private var scenePhase
-    
+    @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
+
     init() {
         FontFamily.registerAllCustomFonts()
-        
-        // TODO: [#1284] Flexa disconnected for now, https://github.com/Electric-Coin-Company/zashi-ios/issues/1284
-//        @Dependency(\.flexaHandler) var flexaHandler
-//        flexaHandler.prepare()
     }
 
     var body: some Scene {
@@ -48,7 +45,9 @@ struct SecantApp: App {
                 appDelegate.scheduleSchedulerBackgroundTask()
             }
             .onOpenURL { url in
-                Flexa.processUniversalLink(url: url)
+                if featureFlags.flexa {
+                    Flexa.processUniversalLink(url: url)
+                }
             }
         }
     }

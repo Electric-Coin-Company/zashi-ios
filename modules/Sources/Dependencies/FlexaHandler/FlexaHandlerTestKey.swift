@@ -14,8 +14,10 @@ extension FlexaHandlerClient: TestDependencyKey {
         prepare: XCTUnimplemented("\(Self.self).prepare"),
         open: XCTUnimplemented("\(Self.self).open"),
         onTransactionRequest: XCTUnimplemented("\(Self.self).onTransactionRequest", placeholder: Empty().eraseToAnyPublisher()),
+        clearTransactionRequest: XCTUnimplemented("\(Self.self).clearTransactionRequest"),
         transactionSent: XCTUnimplemented("\(Self.self).transactionSent"),
-        updateBalance: XCTUnimplemented("\(Self.self).updateBalance")
+        updateBalance: XCTUnimplemented("\(Self.self).updateBalance"),
+        flexaAlert: XCTUnimplemented("\(Self.self).flexaAlert")
     )
 }
 
@@ -24,7 +26,9 @@ extension FlexaHandlerClient {
         prepare: { },
         open: { },
         onTransactionRequest: { Empty().eraseToAnyPublisher() },
+        clearTransactionRequest: { },
         transactionSent: { _, _ in },
-        updateBalance: { _ in }
+        updateBalance: { _, _ in },
+        flexaAlert: { _, _ in }
     )
 }

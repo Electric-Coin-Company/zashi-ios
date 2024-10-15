@@ -164,8 +164,8 @@ public enum L10n {
     public static let cta = L10n.tr("Localizable", "deeplinkWarning.cta", fallback: "Rescan in Zashi")
     /// For better safety and security, rescan the QR code with Zashi.
     public static let desc = L10n.tr("Localizable", "deeplinkWarning.desc", fallback: "For better safety and security, rescan the QR code with Zashi.")
-    /// HELLO!
-    public static let screenTitle = L10n.tr("Localizable", "deeplinkWarning.screenTitle", fallback: "HELLO!")
+    /// Hello!
+    public static let screenTitle = L10n.tr("Localizable", "deeplinkWarning.screenTitle", fallback: "Hello!")
     /// Looks like you used a third-party app to scan for payment.
     public static let title = L10n.tr("Localizable", "deeplinkWarning.title", fallback: "Looks like you used a third-party app to scan for payment.")
   }
@@ -319,6 +319,12 @@ public enum L10n {
     /// https://pay.coinbase.com/buy/select-asset?appId=%@&addresses={"%@":["zcash"]}
     public static func coinbaseOnrampUrl(_ p1: Any, _ p2: Any) -> String {
       return L10n.tr("Localizable", "partners.coinbaseOnrampUrl", String(describing: p1), String(describing: p2), fallback: "https://pay.coinbase.com/buy/select-asset?appId=%@&addresses={\"%@\":[\"zcash\"]}")
+    }
+    public enum Flexa {
+      /// We're sorry but something has failed. Please try again.
+      public static let transactionFailedMessage = L10n.tr("Localizable", "partners.flexa.transactionFailedMessage", fallback: "We're sorry but something has failed. Please try again.")
+      /// Transaction Failed
+      public static let transactionFailedTitle = L10n.tr("Localizable", "partners.flexa.transactionFailedTitle", fallback: "Transaction Failed")
     }
   }
   public enum PlainOnboarding {

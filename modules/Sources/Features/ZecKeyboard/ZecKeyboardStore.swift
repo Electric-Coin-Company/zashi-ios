@@ -188,12 +188,21 @@ public struct ZecKeyboard {
                     }
                 } else {
                     // ZEC only input
-                    state.amount = .zero
+                    var amount = Zatoshi.zero
                     if let number = numberFormatter.number(from: state.input) {
-                        state.amount = Zatoshi(NSDecimalNumber(
-                            decimal: number.decimalValue * Decimal(Zatoshi.Constants.oneZecInZatoshi)
+                        amount = Zatoshi(
+                            NSDecimalNumber(
+                                decimal: number.decimalValue * Decimal(Zatoshi.Constants.oneZecInZatoshi)
                         ).roundedZec.int64Value)
-                        state.isValidInput = true
+                        
+                        // valid range
+                        if amount.amount < Zatoshi.Constants.maxZatoshi {
+                            state.amount = amount
+                            state.isValidInput = true
+                        } else {
+                            // revert last input
+                            return .send(.revertLastInput)
+                        }
                     } else {
                         state.isValidInput = false
                     }
@@ -205,10 +214,6 @@ public struct ZecKeyboard {
                 return .send(.resolveHumanReadableStrings)
 
             case .revertLastInput:
-                guard let currencyConversion = state.currencyConversion else {
-                    return .none
-                }
-                
                 let numberFormatter = NumberFormatter()
                 numberFormatter.maximumFractionDigits = 8
                 numberFormatter.maximumIntegerDigits = 8
@@ -226,11 +231,17 @@ public struct ZecKeyboard {
                                 decimal: number.decimalValue * Decimal(Zatoshi.Constants.oneZecInZatoshi)
                             ).roundedZec.int64Value)
                         state.amount = amount
-                        state.currencyValue = currencyConversion.convert(amount)
-                        state.convertedInput = Decimal(state.currencyValue).formatted(.number.grouping(.never))
+                        if let currencyConversion = state.currencyConversion {
+                            state.currencyValue = currencyConversion.convert(amount)
+                            state.convertedInput = Decimal(state.currencyValue).formatted(.number.grouping(.never))
+                        }
                         state.isValidInput = true
                     }
                 } else {
+                    guard let currencyConversion = state.currencyConversion else {
+                        return .none
+                    }
+
                     let newValue = String(state.input.dropLast())
                     state.input =  newValue.isEmpty ? Constants.initialValue : newValue
                     if let number = numberFormatter.number(from: state.input) {
@@ -293,15 +304,6 @@ public struct ZecKeyboard {
                     }
                     state.humanReadableConvertedInput = state.amount.decimalString()
                 }
-//                print("__LD ZEC KEYBOARD ======== ")
-//                print("__LD")
-//                print("__LD valid \(state.isValidInput)")
-//                print("__LD amount \(state.amount.amount)")
-//                print("__LD currency \(state.currencyValue)")
-//                print("__LD input '\(state.input)'")
-//                print("__LD convertedInput '\(state.convertedInput)'")
-//                print("__LD humanReadableMainInput '\(state.humanReadableMainInput)'")
-//                print("__LD humanReadableConvertedInput '\(state.humanReadableConvertedInput)'")
                 return .none
                 
             case .nextTapped:
