@@ -134,6 +134,7 @@ extension Root {
             
             case .splashFinished:
                 state.splashAppeared = true
+                state.lastAuthenticationTimestamp = Int(Date().timeIntervalSince1970)
                 exchangeRate.refreshExchangeRateUSD()
                 return .none
 

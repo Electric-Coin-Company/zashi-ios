@@ -390,6 +390,12 @@ Sharing this private data is irrevocable — once you have shared this private d
 "deeplinkWarning.cta" = "Rescan in Zashi";
 "deeplinkWarning.screenTitle" = "Hello!";
 
+// MARK: - Splash Screen
+"splash.authTitle" = "Your Zashi account is secured.";
+"splash.authFaceID" = "Tap the face icon to use Face ID and unlock it.";
+"splash.authTouchID" = "Tap the print icon to use Touch ID and unlock it.";
+"splash.authPasscode" = "Tap the key icon to enter your passcode and unlock it.";
+
 // MARK: - Tooltips
 "tooltip.exchangeRate.title" = "Exchange rate unavailable";
 "tooltip.exchangeRate.desc" = "We tried but we couldn’t refresh the exchange rate for you. Check your connection, relaunch the app, and we’ll try again.";

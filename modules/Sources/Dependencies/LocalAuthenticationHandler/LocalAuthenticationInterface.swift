@@ -16,5 +16,13 @@ extension DependencyValues {
 
 @DependencyClient
 public struct LocalAuthenticationClient {
+    public enum Method: Equatable {
+        case faceID
+        case none
+        case passcode
+        case touchID
+    }
+    
     public let authenticate: @Sendable () async -> Bool
+    public let method: @Sendable () -> Method
 }

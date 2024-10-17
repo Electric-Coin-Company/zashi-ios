@@ -54,6 +54,7 @@ public enum Asset {
     public static let flyReceivedFilled = ImageAsset(name: "flyReceivedFilled")
     public enum Icons {
       public static let alertCircle = ImageAsset(name: "alertCircle")
+      public static let authKey = ImageAsset(name: "authKey")
       public static let coinsHand = ImageAsset(name: "coinsHand")
       public static let currencyDollar = ImageAsset(name: "currencyDollar")
       public static let currencyZec = ImageAsset(name: "currencyZec")

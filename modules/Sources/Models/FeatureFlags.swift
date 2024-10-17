@@ -7,11 +7,14 @@
 
 public struct FeatureFlags: Equatable {
     public let flexa: Bool
-    
+    public let appLaunchBiometric: Bool
+
     init(
-        flexa: Bool = false
+        flexa: Bool = false,
+        appLaunchBiometric: Bool = false
     ) {
         self.flexa = flexa
+        self.appLaunchBiometric = appLaunchBiometric
     }
 }
 
@@ -27,11 +30,13 @@ private extension FeatureFlags {
         FeatureFlags.disabled
 #elseif SECANT_TESTNET
         FeatureFlags(
-            flexa: false
+            flexa: false,
+            appLaunchBiometric: true
         )
 #else
         FeatureFlags(
-            flexa: true
+            flexa: true,
+            appLaunchBiometric: true
         )
 #endif
     }

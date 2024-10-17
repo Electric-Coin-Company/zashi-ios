@@ -7,6 +7,8 @@
 
 import SwiftUI
 import Generated
+import LocalAuthenticationHandler
+import ComposableArchitecture
 
 final class SplashManager: ObservableObject {
     struct SplashShape: Shape {
@@ -29,8 +31,10 @@ final class SplashManager: ObservableObject {
     var task: Task<(), Never>?
     var currentMaxHeight: CGFloat = 0.0
     var step: CGFloat = 0.0
+    @Published var authenticationDidntSucceed = false
     @Published var isOn = true
     let completion: () -> Void
+    var timer: Timer?
 
     init(_ isHidden: Bool, completion: @escaping () -> Void) {
         self.isHidden = isHidden
@@ -39,12 +43,31 @@ final class SplashManager: ObservableObject {
         
         if !isHidden {
             preparePoints()
-            self.spinTheWheel()
+            authenticate()
+        }
+    }
+
+    func authenticate() {
+        @Dependency(\.localAuthentication) var localAuthentication
+
+        authenticationDidntSucceed = false
+        
+        Task {
+            if await !localAuthentication.authenticate() {
+                await self.authenticationFailed()
+            } else {
+                await self.spinTheWheel()
+            }
         }
     }
     
-    func spinTheWheel() {
-        Timer.scheduledTimer(withTimeInterval: 1.0 / 60.0, repeats: true) { timer in
+    @MainActor func authenticationFailed() {
+        authenticationDidntSucceed = true
+    }
+    
+    @MainActor func spinTheWheel() {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0 / 60.0, repeats: true) { timer in
             if self.isOn {
                 Task {
                     await self.tick()
@@ -125,31 +148,88 @@ final class SplashManager: ObservableObject {
 struct SplashView: View {
     @StateObject var splashManager: SplashManager
     let isHidden: Bool
-    
+    var authenticationIcon: Image {
+        @Dependency(\.localAuthentication) var localAuthentication
+
+        switch localAuthentication.method() {
+        case .faceID: return Image(systemName: "faceid")
+        case .touchID: return Image(systemName: "touchid")
+        case .passcode: return Asset.Assets.Icons.authKey.image
+        default: return Asset.Assets.Icons.coinsHand.image
+        }
+    }
+
+    var authenticationDesc: String {
+        @Dependency(\.localAuthentication) var localAuthentication
+
+        switch localAuthentication.method() {
+        case .faceID: return L10n.Splash.authFaceID
+        case .touchID: return L10n.Splash.authTouchID
+        case .passcode: return L10n.Splash.authPasscode
+        default: return ""
+        }
+    }
+
     var body: some View {
         if splashManager.isOn && !isHidden {
-            GeometryReader { proxy in
-                Asset.Assets.zashiLogo.image
-                    .zImage(width: 249, height: 321, color: .white)
-                    .scaleEffect(0.35)
-                    .position(
-                        x: proxy.frame(in: .local).midX,
-                        y: proxy.frame(in: .local).midY * 0.5
-                    )
+            ZStack {
+                GeometryReader { proxy in
+                    Asset.Assets.zashiLogo.image
+                        .zImage(width: 249, height: 321, color: .white)
+                        .scaleEffect(0.35)
+                        .position(
+                            x: proxy.frame(in: .local).midX,
+                            y: proxy.frame(in: .local).midY * 0.5
+                        )
+                    
+                    Asset.Assets.splashHi.image
+                        .zImage(width: 246, height: 213, color: .white)
+                        .scaleEffect(0.35)
+                        .position(
+                            x: proxy.frame(in: .local).midX,
+                            y: proxy.frame(in: .local).midY * 0.8
+                        )
+                }
+                .background(Asset.Colors.splash.color)
+                .mask {
+                    SplashManager.SplashShape(points: splashManager.points)
+                }
+                .ignoresSafeArea()
+                .onChange(of: isHidden) { value in
+                    if value {
+                        splashManager.preparePoints()
+                    }
+                }
+                if splashManager.authenticationDidntSucceed {
+                    VStack(spacing: 0) {
+                        Spacer()
+                        
+                        Button {
+                            splashManager.authenticate()
+                        } label: {
+                            authenticationIcon
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 64, height: 64)
+                                .foregroundColor(.white)
+                        }
 
-                Asset.Assets.splashHi.image
-                    .zImage(width: 246, height: 213, color: .white)
-                    .scaleEffect(0.35)
-                    .position(
-                        x: proxy.frame(in: .local).midX,
-                        y: proxy.frame(in: .local).midY * 0.8
-                    )
+                        Text(L10n.Splash.authTitle)
+                            .font(.custom(FontFamily.Inter.semiBold.name, size: 20))
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                            .padding(.top, 24)
+
+                        Text(authenticationDesc)
+                            .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                            .padding(.top, 8)
+                    }
+                    .padding(.bottom, 120)
+                    .screenHorizontalPadding()
+                }
             }
-            .background(Asset.Colors.splash.color)
-            .mask {
-                SplashManager.SplashShape(points: splashManager.points)
-            }
-            .ignoresSafeArea()
         }
     }
 }
@@ -161,12 +241,22 @@ struct SplashModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .overlay {
-                SplashView(
-                    splashManager: SplashManager(isHidden) {
-                        completion()
-                    },
-                    isHidden: isHidden
-                )
+                if isHidden {
+                    SplashView(
+                        splashManager: SplashManager(isHidden) {
+                            completion()
+                        },
+                        isHidden: isHidden
+                    )
+                    .hidden()
+                } else {
+                    SplashView(
+                        splashManager: SplashManager(isHidden) {
+                            completion()
+                        },
+                        isHidden: isHidden
+                    )
+                }
             }
     }
 }

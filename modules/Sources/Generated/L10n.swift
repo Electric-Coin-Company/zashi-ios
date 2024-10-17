@@ -788,6 +788,16 @@ public enum L10n {
       }
     }
   }
+  public enum Splash {
+    /// Tap the face icon to use Face ID and unlock it.
+    public static let authFaceID = L10n.tr("Localizable", "splash.authFaceID", fallback: "Tap the face icon to use Face ID and unlock it.")
+    /// Tap the key icon to enter your passcode and unlock it.
+    public static let authPasscode = L10n.tr("Localizable", "splash.authPasscode", fallback: "Tap the key icon to enter your passcode and unlock it.")
+    /// Your Zashi account is secured.
+    public static let authTitle = L10n.tr("Localizable", "splash.authTitle", fallback: "Your Zashi account is secured.")
+    /// Tap the print icon to use Touch ID and unlock it.
+    public static let authTouchID = L10n.tr("Localizable", "splash.authTouchID", fallback: "Tap the print icon to use Touch ID and unlock it.")
+  }
   public enum SupportData {
     public enum AppVersionItem {
       /// App identifier

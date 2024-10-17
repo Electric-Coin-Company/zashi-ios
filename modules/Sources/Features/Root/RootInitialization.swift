@@ -17,6 +17,7 @@ import Utils
 extension Root {
     public enum Constants {
         static let udIsRestoringWallet = "udIsRestoringWallet"
+        static let noAuthenticationWithinXMinutes = 15
     }
     
     public enum InitializationAction: Equatable {
@@ -59,6 +60,14 @@ extension Root {
                 )
 
             case .initialization(.appDelegate(.willEnterForeground)):
+                if state.featureFlags.appLaunchBiometric {
+                    let now = Date()
+                    let before = Date.init(timeIntervalSince1970: TimeInterval(state.lastAuthenticationTimestamp))
+                    if let xMinutesAgo = Calendar.current.date(byAdding: .minute, value: -Constants.noAuthenticationWithinXMinutes, to: now),
+                       before < xMinutesAgo {
+                        state.splashAppeared = false
+                    }
+                }
                 state.appStartState = .willEnterForeground
                 if state.isLockedInKeychainUnavailableState || !sdkSynchronizer.latestState().syncStatus.isPrepared {
                     return .send(.initialization(.initialSetups))

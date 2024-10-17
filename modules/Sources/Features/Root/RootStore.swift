@@ -57,8 +57,10 @@ public struct Root {
         public var deeplinkWarningState: DeeplinkWarning.State = .initial
         public var destinationState: DestinationState
         public var exportLogsState: ExportLogs.State
+        @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
         public var isLockedInKeychainUnavailableState = false
         public var isRestoringWallet = false
+        @Shared(.appStorage(.lastAuthenticationTimestamp)) public var lastAuthenticationTimestamp: Int = 0
         public var notEnoughFreeSpaceState: NotEnoughFreeSpace.State
         public var onboardingState: OnboardingFlow.State
         public var phraseDisplayState: RecoveryPhraseDisplay.State
