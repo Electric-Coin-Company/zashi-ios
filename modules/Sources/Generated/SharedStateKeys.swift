@@ -15,4 +15,5 @@ public extension String {
     static let addressBookContacts = "sharedStateKey_addressBookContacts"
     static let toast = "sharedStateKey_toast"
     static let featureFlags = "sharedStateKey_featureFlags"
+    static let lastAuthenticationTimestamp = "sharedStateKey_lastAuthenticationTimestamp"
 }

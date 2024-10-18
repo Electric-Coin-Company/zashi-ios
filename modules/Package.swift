@@ -820,10 +820,12 @@ let package = Package(
                 "BalanceFormatter",
                 "DerivationTool",
                 "Generated",
+                "LocalAuthenticationHandler",
                 "NumberFormatter",
                 "SupportDataGenerator",
                 "Utils",
-                "ZcashSDKEnvironment"
+                "ZcashSDKEnvironment",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/UIComponents"
         ),
