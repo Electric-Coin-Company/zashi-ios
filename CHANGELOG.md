@@ -14,6 +14,7 @@ directly impact users rather than highlighting other crucial architectural updat
 - Splash screen animation is blocked by the main thread on iOS 16 and older.
 - Inactive hide balances button on iOS 16 and older.
 - Inactive close button in the exchange rate hint bubble on iOS 16 and older.
+- A shield icon is no longer presented for received transactions to a transparent pool.
 
 ## 1.2 build 9 (2024-09-17)
 

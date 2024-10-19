@@ -67,9 +67,19 @@ extension SDKSynchronizerClient: DependencyKey {
                 let latestBlockHeight = try await SDKSynchronizerClient.latestBlockHeight(synchronizer: synchronizer)
                 
                 for clearedTransaction in clearedTransactions {
+                    var hasTransparentOutputs = false
+                    let outputs = await synchronizer.getTransactionOutputs(for: clearedTransaction)
+                    for output in outputs {
+                        if case .transaparent = output.pool {
+                            hasTransparentOutputs = true
+                            break
+                        }
+                    }
+
                     var transaction = TransactionState.init(
                         transaction: clearedTransaction,
                         memos: nil,
+                        hasTransparentOutputs: hasTransparentOutputs,
                         latestBlockHeight: latestBlockHeight
                     )
 

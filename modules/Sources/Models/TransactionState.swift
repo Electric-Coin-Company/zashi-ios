@@ -44,7 +44,8 @@ public struct TransactionState: Equatable, Identifiable {
     public var isIdExpanded: Bool
     public var isMarkedAsRead = false
     public var isInAddressBook = false
-
+    public var hasTransparentOutputs = false
+    
     public var rawID: Data? = nil
     
     // UI Colors
@@ -249,7 +250,12 @@ public struct TransactionState: Equatable, Identifiable {
 }
 
 extension TransactionState {
-    public init(transaction: ZcashTransaction.Overview, memos: [Memo]? = nil, latestBlockHeight: BlockHeight) {
+    public init(
+        transaction: ZcashTransaction.Overview,
+        memos: [Memo]? = nil,
+        hasTransparentOutputs: Bool = false,
+        latestBlockHeight: BlockHeight
+    ) {
         expiryHeight = transaction.expiryHeight
         minedHeight = transaction.minedHeight
         fee = transaction.fee
@@ -262,6 +268,7 @@ extension TransactionState {
         isAddressExpanded = false
         isExpanded = false
         isIdExpanded = false
+        self.hasTransparentOutputs = hasTransparentOutputs
         memoCount = transaction.memoCount
         self.memos = memos
 
