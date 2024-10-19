@@ -119,7 +119,7 @@ struct TransactionHeaderView: View {
     }
 
     @ViewBuilder private func addressArea() -> some View {
-        if transaction.zAddress == nil {
+        if transaction.zAddress == nil && !transaction.hasTransparentOutputs {
             Asset.Assets.surroundedShield.image
                 .zImage(width: 17, height: 13, color: Asset.Colors.primary.color)
         } else if !transaction.isAddressExpanded {
