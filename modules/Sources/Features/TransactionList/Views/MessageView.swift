@@ -43,7 +43,7 @@ struct MessageView: View {
                     ForEach(0..<memoTexts.count, id: \.self) { index in
                         VStack(alignment: .leading, spacing: 0) {
                             Color.clear.frame(height: 0)
-                            
+
                             Text(memoTexts[index])
                                 .font(.custom(FontFamily.Inter.regular.name, size: 13))
                                 .foregroundColor(
@@ -59,7 +59,27 @@ struct MessageView: View {
                                 .stroke(Design.Surfaces.strokePrimary.color)
                         }
                         
-                        TapToCopyTransactionDataView(store: store, data: memoTexts[index].redacted)
+                        if store.featureFlags.selectText {
+                            HStack(spacing: 0) {
+                                TapToCopyTransactionDataView(store: store, data: memoTexts[index].redacted)
+                                
+                                Button {
+                                    store.send(.selectText(memoTexts[index]))
+                                } label: {
+                                    HStack {
+                                        Asset.Assets.Icons.textInput.image
+                                            .zImage(size: 16, style: Design.Btns.Tertiary.fg)
+                                        
+                                        Text(L10n.Transaction.selectText)
+                                            .zFont(.semiBold, size: 14, style: Design.Btns.Tertiary.fg)
+                                    }
+                                }
+                                .buttonStyle(.borderless)
+                                .padding(.leading, 24)
+                            }
+                        } else {
+                            TapToCopyTransactionDataView(store: store, data: memoTexts[index].redacted)
+                        }
                     }
                     .padding(.bottom, 20)
                 }

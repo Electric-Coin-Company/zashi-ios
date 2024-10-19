@@ -324,6 +324,9 @@ extension Root {
             case .initialization(.initializationSuccessfullyDone(let uAddress)):
                 state.tabsState.receiveState.uAddress = uAddress
                 state.tabsState.settingsState.integrationsState.uAddress = uAddress
+                if let uAddress = try? uAddress?.stringEncoded {
+                    state.tabsState.sendState.memoState.uAddress = uAddress
+                }
                 return .merge(
                     .send(.initialization(.registerForSynchronizersUpdate)),
                     .publisher {

@@ -10,6 +10,7 @@ import ComposableArchitecture
 import SwiftUI
 import Utils
 import Generated
+import Models
 
 @Reducer
 public struct MessageEditor {
@@ -17,7 +18,10 @@ public struct MessageEditor {
     public struct State: Equatable {
         /// default 0, no char limit
         public var charLimit = 0
+        @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
+        public var isUAaddedToMemo: Bool = false
         public var text = ""
+        public var uAddress = ""
         
         public var isCharLimited: Bool {
             charLimit > 0
@@ -58,6 +62,19 @@ public struct MessageEditor {
         
         Reduce { state, action in
             switch action {
+            case .binding(\.isUAaddedToMemo):
+                let blob = L10n.MessageEditor.addUAformat(state.uAddress)
+                if state.isUAaddedToMemo {
+                    state.text += blob
+                } else {
+                    if state.text.contains(blob) {
+                        state.text = state.text.replacingOccurrences(of: blob, with: "")
+                    } else if state.text.contains(state.uAddress) {
+                        state.text = state.text.replacingOccurrences(of: state.uAddress, with: "")
+                    }
+                }
+                return .none
+
             case .binding:
                 return .none
             }

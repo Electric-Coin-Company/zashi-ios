@@ -11,10 +11,16 @@ import Generated
 public struct ZashiToggle: View {
     @Binding var isOn: Bool
     let label: String
+    let textColor: Color
     
-    public init(isOn: Binding<Bool>, label: String) {
+    public init(
+        isOn: Binding<Bool>,
+        label: String,
+        textColor: Color = Asset.Colors.primary.color
+    ) {
         self._isOn = isOn
         self.label = label
+        self.textColor = textColor
     }
     
     public var body: some View {
@@ -27,7 +33,7 @@ public struct ZashiToggle: View {
             })
             .toggleStyle(CheckboxToggleStyle())
         }
-        .foregroundColor(Asset.Colors.primary.color)
+        .foregroundColor(textColor)
     }
 }
 

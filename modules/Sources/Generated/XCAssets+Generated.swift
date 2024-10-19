@@ -85,6 +85,7 @@ public enum Asset {
       public static let share = ImageAsset(name: "share")
       public static let shieldTickFilled = ImageAsset(name: "shieldTickFilled")
       public static let switchHorizontal = ImageAsset(name: "switchHorizontal")
+      public static let textInput = ImageAsset(name: "textInput")
       public static let user = ImageAsset(name: "user")
       public static let userPlus = ImageAsset(name: "userPlus")
     }
