@@ -14,7 +14,7 @@ import SDKSynchronizer
 import UserPreferencesStorage
 import ZcashSDKEnvironment
 
-extension LightWalletEndpoint: Equatable {
+extension LightWalletEndpoint: @retroactive Equatable {
     public static func == (lhs: LightWalletEndpoint, rhs: LightWalletEndpoint) -> Bool {
         lhs.host == rhs.host
         && lhs.port == rhs.port

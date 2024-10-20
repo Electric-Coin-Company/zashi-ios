@@ -1,7 +1,6 @@
 {
-  "images" : [
+  "colors" : [
     {
-      "filename" : "share.png",
       "idiom" : "universal"
     }
   ],

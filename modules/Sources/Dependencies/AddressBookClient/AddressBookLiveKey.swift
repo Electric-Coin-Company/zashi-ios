@@ -92,7 +92,7 @@ extension AddressBookClient: DependencyKey {
 //                print("__LD localContacts \(localContacts)")
 //                print("__LD remoteContacts \(remoteContacts)")
 
-                var syncedContacts = localContacts
+                let syncedContacts = localContacts
 
                 // TBD
 

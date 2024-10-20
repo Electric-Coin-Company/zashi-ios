@@ -14,7 +14,6 @@ import Generated
 import Foundation
 import ExportLogs
 import OnboardingFlow
-import Sandbox
 import Tabs
 import CrashReporter
 import ReadTransactionsStorage
@@ -64,7 +63,6 @@ public struct Root {
         public var notEnoughFreeSpaceState: NotEnoughFreeSpace.State
         public var onboardingState: OnboardingFlow.State
         public var phraseDisplayState: RecoveryPhraseDisplay.State
-        public var sandboxState: Sandbox.State
         public var serverSetupState: ServerSetup.State
         public var serverSetupViewBinding: Bool = false
         public var splashAppeared = false
@@ -86,7 +84,6 @@ public struct Root {
             notEnoughFreeSpaceState: NotEnoughFreeSpace.State = .initial,
             onboardingState: OnboardingFlow.State,
             phraseDisplayState: RecoveryPhraseDisplay.State,
-            sandboxState: Sandbox.State,
             tabsState: Tabs.State,
             serverSetupState: ServerSetup.State = .initial,
             walletConfig: WalletConfig,
@@ -103,7 +100,6 @@ public struct Root {
             self.onboardingState = onboardingState
             self.notEnoughFreeSpaceState = notEnoughFreeSpaceState
             self.phraseDisplayState = phraseDisplayState
-            self.sandboxState = sandboxState
             self.serverSetupState = serverSetupState
             self.tabsState = tabsState
             self.walletConfig = walletConfig
@@ -141,7 +137,6 @@ public struct Root {
         case phraseDisplay(RecoveryPhraseDisplay.Action)
         case splashFinished
         case splashRemovalRequested
-        case sandbox(Sandbox.Action)
         case serverSetup(ServerSetup.Action)
         case serverSetupBindingUpdated(Bool)
         case synchronizerStateChanged(RedactableSynchronizerState)
@@ -202,10 +197,6 @@ public struct Root {
 
         Scope(state: \.onboardingState, action: \.onboarding) {
             OnboardingFlow()
-        }
-
-        Scope(state: \.sandboxState, action: \.sandbox) {
-            Sandbox()
         }
 
         Scope(state: \.welcomeState, action: \.welcome) {

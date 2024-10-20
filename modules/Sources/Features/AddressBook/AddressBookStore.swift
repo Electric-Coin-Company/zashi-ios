@@ -266,7 +266,7 @@ public struct AddressBook {
                     return .none
                 }
 
-            case let .fetchedABContacts(abContacts, requestToSync):
+            case let .fetchedABContacts(abContacts, _):
                 state.addressBookContacts = abContacts
 //                if requestToSync {
 //                    return .run { send in
