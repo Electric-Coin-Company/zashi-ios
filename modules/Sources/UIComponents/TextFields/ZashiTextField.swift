@@ -98,47 +98,48 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
 }
 
 #Preview {
-    @State var text = ""
-    return VStack(spacing: 30) {
-        ZashiTextField(
-            text: $text,
-            placeholder: "Placeholder"
-        )
-
-        ZashiTextField(
-            text: $text,
-            placeholder: "ZEC",
-            title: "Amount",
-            prefixView:
-                ZcashSymbol()
+    VStack(spacing: 30) {
+        StringStateWrapper {
+            ZashiTextField(
+                text: $0,
+                placeholder: "Placeholder"
+            )
+            
+            ZashiTextField(
+                text: $0,
+                placeholder: "ZEC",
+                title: "Amount",
+                prefixView:
+                    ZcashSymbol()
                     .frame(width: 12, height: 20)
                     .foregroundColor(Design.Inputs.Default.text.color)
-        )
-
-        ZashiTextField(
-            text: $text,
-            placeholder: "Placeholder",
-            title: "Title",
-            accessoryView:
-                Asset.Assets.Icons.key.image
+            )
+            
+            ZashiTextField(
+                text: $0,
+                placeholder: "Placeholder",
+                title: "Title",
+                accessoryView:
+                    Asset.Assets.Icons.key.image
                     .zImage(size: 20, style: Design.Inputs.Default.text),
-            prefixView:
-                Asset.Assets.Icons.key.image
+                prefixView:
+                    Asset.Assets.Icons.key.image
                     .zImage(size: 20, style: Design.Inputs.Default.text)
-        )
-
-        ZashiTextField(
-            text: $text,
-            placeholder: "Placeholder",
-            title: "Title",
-            error: "This contact name exceeds the 32-character limit. Please shorten the name.",
-            accessoryView:
-                Asset.Assets.Icons.key.image
+            )
+            
+            ZashiTextField(
+                text: $0,
+                placeholder: "Placeholder",
+                title: "Title",
+                error: "This contact name exceeds the 32-character limit. Please shorten the name.",
+                accessoryView:
+                    Asset.Assets.Icons.key.image
                     .zImage(size: 20, style: Design.Inputs.Default.text),
-            prefixView:
-                Asset.Assets.Icons.key.image
+                prefixView:
+                    Asset.Assets.Icons.key.image
                     .zImage(size: 20, style: Design.Inputs.Default.text)
-        )
+            )
+        }
     }
     .padding()
 }

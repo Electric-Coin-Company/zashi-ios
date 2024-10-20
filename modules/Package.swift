@@ -55,7 +55,6 @@ let package = Package(
         .library(name: "RestoreInfo", targets: ["RestoreInfo"]),
         .library(name: "ReviewRequest", targets: ["ReviewRequest"]),
         .library(name: "Root", targets: ["Root"]),
-        .library(name: "Sandbox", targets: ["Sandbox"]),
         .library(name: "Scan", targets: ["Scan"]),
         .library(name: "SDKSynchronizer", targets: ["SDKSynchronizer"]),
         .library(name: "SecItem", targets: ["SecItem"]),
@@ -84,12 +83,11 @@ let package = Package(
         .library(name: "ZecKeyboard", targets: ["ZecKeyboard"])
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-custom-dump.git", from: "1.3.2"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.15.0"),
         .package(url: "https://github.com/pointfreeco/swift-case-paths", from: "1.5.4"),
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.6.2"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.4"),
-        .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", exact: "2.2.3"),
+        .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.2.5"),
         .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.27.0"),
         .package(url: "https://github.com/flexa/flexa-ios.git", from: "1.0.4"),
         .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "0.1.0-beta.9")
@@ -581,7 +579,6 @@ let package = Package(
                 "Pasteboard",
                 "ReadTransactionsStorage",
                 "RecoveryPhraseDisplay",
-                "Sandbox",
                 "SDKSynchronizer",
                 "ServerSetup",
                 "Tabs",
@@ -598,18 +595,6 @@ let package = Package(
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
             path: "Sources/Features/Root"
-        ),
-        .target(
-            name: "Sandbox",
-            dependencies: [
-                "RecoveryPhraseDisplay",
-                "Scan",
-                "SendFlow",
-                "TransactionList",
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
-            ],
-            path: "Sources/Features/Sandbox"
         ),
         .target(
             name: "Scan",

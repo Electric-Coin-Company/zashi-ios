@@ -87,7 +87,6 @@ public enum Asset {
     public static let restoreInfo = ImageAsset(name: "restoreInfo")
     public static let scanMark = ImageAsset(name: "scanMark")
     public static let send = ImageAsset(name: "send")
-    public static let share = ImageAsset(name: "share")
     public static let shield = ImageAsset(name: "shield")
     public static let shieldTick = ImageAsset(name: "shieldTick")
     public static let shieldedFunds = ImageAsset(name: "shieldedFunds")

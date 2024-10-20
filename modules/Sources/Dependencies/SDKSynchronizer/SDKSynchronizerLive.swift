@@ -19,7 +19,7 @@ extension SDKSynchronizerClient: DependencyKey {
     public static func live(
         databaseFiles: DatabaseFilesClient = .liveValue
     ) -> Self {
-        @Dependency (\.zcashSDKEnvironment) var zcashSDKEnvironment
+        @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
         
         let network = zcashSDKEnvironment.network
         

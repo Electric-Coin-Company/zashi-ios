@@ -46,29 +46,16 @@ public struct CheckboxToggleStyle: ToggleStyle {
 }
 
 #Preview {
-    @State var isOn = true
-    @State var isOff = false
-
-    return VStack {
-        Toggle("toggle on", isOn: $isOn)
-            .toggleStyle(CheckboxToggleStyle())
-
-        Toggle("toggle off", isOn: $isOff)
-            .toggleStyle(CheckboxToggleStyle())
-    }
-    .applyScreenBackground()
-}
-
-#Preview {
-    @State var isOn = true
-    @State var isOff = false
-
-    return VStack {
-        Toggle("toggle on", isOn: $isOn)
-            .toggleStyle(CheckboxToggleStyle())
-
-        Toggle("toggle off", isOn: $isOff)
-            .toggleStyle(CheckboxToggleStyle())
+    VStack {
+        BoolStateWrapper {
+            Toggle("toggle on", isOn: $0)
+                .toggleStyle(CheckboxToggleStyle())
+        }
+        
+        BoolStateWrapper(initialValue: false) {
+            Toggle("toggle off", isOn: $0)
+                .toggleStyle(CheckboxToggleStyle())
+        }
     }
     .applyScreenBackground()
     .preferredColorScheme(.dark)

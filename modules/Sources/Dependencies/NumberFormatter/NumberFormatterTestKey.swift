@@ -12,7 +12,7 @@ extension NumberFormatterClient: TestDependencyKey {
     public static let testValue = Self(
         string: unimplemented("\(Self.self).string", placeholder: nil),
         number: unimplemented("\(Self.self).number", placeholder: nil),
-        convertUSToLocale: XCTUnimplemented("\(Self.self).number", placeholder: nil)
+        convertUSToLocale: unimplemented("\(Self.self).number", placeholder: nil)
     )
 }
 
