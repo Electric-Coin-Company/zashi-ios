@@ -80,6 +80,6 @@ public enum TargetConstants {
     }
 }
 
-extension ZcashSDKEnvironment: DependencyKey {
+extension ZcashSDKEnvironment: @retroactive DependencyKey {
     public static let liveValue: ZcashSDKEnvironment = Self.live(network: TargetConstants.zcashNetwork)
 }

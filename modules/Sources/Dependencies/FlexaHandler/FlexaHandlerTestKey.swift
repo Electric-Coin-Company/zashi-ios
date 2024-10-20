@@ -11,13 +11,13 @@ import Combine
 
 extension FlexaHandlerClient: TestDependencyKey {
     public static let testValue = Self(
-        prepare: XCTUnimplemented("\(Self.self).prepare"),
-        open: XCTUnimplemented("\(Self.self).open"),
-        onTransactionRequest: XCTUnimplemented("\(Self.self).onTransactionRequest", placeholder: Empty().eraseToAnyPublisher()),
-        clearTransactionRequest: XCTUnimplemented("\(Self.self).clearTransactionRequest"),
-        transactionSent: XCTUnimplemented("\(Self.self).transactionSent"),
-        updateBalance: XCTUnimplemented("\(Self.self).updateBalance"),
-        flexaAlert: XCTUnimplemented("\(Self.self).flexaAlert")
+        prepare: unimplemented("\(Self.self).prepare"),
+        open: unimplemented("\(Self.self).open"),
+        onTransactionRequest: unimplemented("\(Self.self).onTransactionRequest", placeholder: Empty().eraseToAnyPublisher()),
+        clearTransactionRequest: unimplemented("\(Self.self).clearTransactionRequest"),
+        transactionSent: unimplemented("\(Self.self).transactionSent"),
+        updateBalance: unimplemented("\(Self.self).updateBalance"),
+        flexaAlert: unimplemented("\(Self.self).flexaAlert")
     )
 }
 

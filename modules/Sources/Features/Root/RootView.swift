@@ -8,7 +8,6 @@ import RecoveryPhraseDisplay
 import Welcome
 import ExportLogs
 import OnboardingFlow
-import Sandbox
 import Tabs
 import ZcashLightClientKit
 import UIComponents
@@ -158,19 +157,6 @@ private extension RootView {
                         store.send(.splashRemovalRequested)
                     }
 
-                case .sandbox:
-                    NavigationView {
-                        SandboxView(
-                            store: store.scope(
-                                state: \.sandboxState,
-                                action: \.sandbox
-                            ),
-                            tokenName: tokenName,
-                            networkType: networkType
-                        )
-                    }
-                    .navigationViewStyle(.stack)
-                    
                 case .onboarding:
                     NavigationView {
                         PlainOnboardingView(
@@ -334,7 +320,6 @@ extension Root.State {
             exportLogsState: .initial,
             onboardingState: .initial,
             phraseDisplayState: .initial,
-            sandboxState: .initial,
             tabsState: .initial,
             walletConfig: .initial,
             welcomeState: .initial
