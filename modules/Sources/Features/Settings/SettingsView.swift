@@ -28,24 +28,26 @@ public struct SettingsView: View {
                             store.send(.protectedAccessRequest(.addressBook))
                         }
 
-                        SettingsRow(
-                            icon: Asset.Assets.Icons.integrations.image,
-                            title: L10n.Settings.integrations,
-                            accessoryView:
-                                HStack(spacing: 0) {
-                                    Asset.Assets.Partners.coinbaseSeeklogo.image
-                                        .resizable()
-                                        .frame(width: 20, height: 20)
-                                    
-                                    if store.featureFlags.flexa {
-                                        Asset.Assets.Partners.flexaSeekLogo.image
+                        if store.isEnoughFreeSpaceMode {
+                            SettingsRow(
+                                icon: Asset.Assets.Icons.integrations.image,
+                                title: L10n.Settings.integrations,
+                                accessoryView:
+                                    HStack(spacing: 0) {
+                                        Asset.Assets.Partners.coinbaseSeeklogo.image
                                             .resizable()
                                             .frame(width: 20, height: 20)
-                                            .padding(.leading, 8)
+                                        
+                                        if store.featureFlags.flexa {
+                                            Asset.Assets.Partners.flexaSeekLogo.image
+                                                .resizable()
+                                                .frame(width: 20, height: 20)
+                                                .padding(.leading, 8)
+                                        }
                                     }
-                                }
-                        ) {
-                            store.send(.updateDestination(.integrations))
+                            ) {
+                                store.send(.updateDestination(.integrations))
+                            }
                         }
 
                         SettingsRow(

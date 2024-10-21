@@ -44,18 +44,20 @@ public struct AdvancedSettingsView: View {
                             store.send(.protectedAccessRequest(.privateDataConsent))
                         }
                         
-                        SettingsRow(
-                            icon: Asset.Assets.Icons.server.image,
-                            title: L10n.Settings.chooseServer
-                        ) {
-                            store.send(.updateDestination(.serverSetup))
-                        }
-                        
-                        SettingsRow(
-                            icon: Asset.Assets.Icons.currencyDollar.image,
-                            title: L10n.CurrencyConversion.title
-                        ) {
-                            store.send(.updateDestination(.currencyConversionSetup))
+                        if store.isEnoughFreeSpaceMode {
+                            SettingsRow(
+                                icon: Asset.Assets.Icons.server.image,
+                                title: L10n.Settings.chooseServer
+                            ) {
+                                store.send(.updateDestination(.serverSetup))
+                            }
+                            
+                            SettingsRow(
+                                icon: Asset.Assets.Icons.currencyDollar.image,
+                                title: L10n.CurrencyConversion.title
+                            ) {
+                                store.send(.updateDestination(.currencyConversionSetup))
+                            }
                         }
                     }
                     .listRowInsets(EdgeInsets())

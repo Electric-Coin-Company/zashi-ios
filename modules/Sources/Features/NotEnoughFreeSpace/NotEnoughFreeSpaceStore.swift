@@ -18,6 +18,7 @@ public struct NotEnoughFreeSpace {
         public var freeSpace = ""
         public var isSettingsOpen = false
         public var settingsState: Settings.State
+        public var spaceToFreeUp = ""
 
         public init(
             isSettingsOpen: Bool = false,
@@ -54,6 +55,8 @@ public struct NotEnoughFreeSpace {
                 state.freeSpaceRequiredForSync = String(format: "%0.0f", fsrts / Double(1_073_741_824))
                 // We show the value in MB so any required value is divided by 1_048_576 bytes
                 state.freeSpace = String(format: "%0.0f", fSpace / Double(1_048_576))
+                state.spaceToFreeUp = String(format: "%0.0f", (fsrts / Double(1_073_741_824)) - (fSpace / Double(1_048_576)))
+                state.settingsState.isEnoughFreeSpaceMode = false
                 return .none
                 
             case .binding:

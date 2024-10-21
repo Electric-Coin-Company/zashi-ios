@@ -31,6 +31,7 @@ public struct Settings {
         public var destination: Destination?
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
         public var integrationsState: Integrations.State
+        public var isEnoughFreeSpaceMode = true
         public var supportData: SupportData?
         
         public init(
@@ -97,6 +98,7 @@ public struct Settings {
             case .onAppear:
                 state.appVersion = appVersion.appVersion()
                 state.appBuild = appVersion.appBuild()
+                state.advancedSettingsState.isEnoughFreeSpaceMode = state.isEnoughFreeSpaceMode
                 return .none
             
             case .about:
