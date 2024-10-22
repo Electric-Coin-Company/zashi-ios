@@ -1,5 +1,25 @@
 {
     "releases": [
+         {
+            "version": "1.2.2",
+            "date": "10-22-2024",
+            "timestamp": 1729598399,
+            "sections": [
+                {
+                    "title": "Changed:",
+                    "bulletpoints": [
+                        "We have adopted SDK release 2.2.5 which includes an important fix for a note commitment tree related bug which was affecting some Zashi users for a while now."
+                    ]
+                },
+                {
+                    "title": "Fixed:",
+                    "bulletpoints": [
+                        "We fixed a UX issue in the Request ZEC payer experience. After sending a transaction, we will now correctly route you back to the Account screen.",
+                        "We also fixed an Address Book and Request ZEC interference issue."
+                    ]
+                }
+            ]
+        },
         {
             "version": "1.2.1",
             "date": "10-08-2024",
