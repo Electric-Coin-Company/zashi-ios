@@ -14,6 +14,7 @@ import RemoteStorage
 import Combine
 
 import WalletStorage
+import CryptoKit
 
 extension AddressBookClient: DependencyKey {
     private enum Constants {
@@ -157,14 +158,27 @@ extension AddressBookClient: DependencyKey {
             }
         )
     }
-    
+
+    /**
+     * Derives a one-time address book encryption key.
+     *
+     * At encryption time, the one-time property MUST be ensured by generating a
+     * random 32-byte salt.
+     */
+    private static func deriveEncryptionKey(
+        addressBookKey: SymmetricKey,
+        salt: Data
+    ) -> SymmetricKey {
+        assert(salt.count == 32)
+        return HKDF<SHA256>.deriveKey(inputKeyMaterial: addressBookKey, salt: salt, outputByteCount: 32)
+    }
+
     private static func encryptContacts(_ abContacts: AddressBookContacts) throws -> Data {
         @Dependency(\.walletStorage) var walletStorage
 
-        // TODO: str4d
-//        guard let encryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys() else {
-//            throw AddressBookClient.AddressBookClientError.missingEncryptionKey
-//        }
+        guard let encryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys() else {
+            throw AddressBookClient.AddressBookClientError.missingEncryptionKey
+        }
 
         // here you have an array of all contacts
         // you also have a key from the keychain
@@ -185,20 +199,36 @@ extension AddressBookClient: DependencyKey {
             data.append(serializedContact)
         }
 
-        return data
+        // Generate a fresh one-time sub-key for encrypting the address book.
+        var salt = SymmetricKey(size: SymmetricKeySize.bits256)
+        return try salt.withUnsafeBytes { salt in
+            var salt = Data(salt)
+            var subKey = deriveEncryptionKey(addressBookKey: encryptionKeys.key, salt: salt)
+
+            // Encrypt the serialized address book.
+            // CryptoKit encodes the SealedBox as `nonce || ciphertext || tag`.
+            var sealed = try ChaChaPoly.seal(data, using: subKey)
+
+            // Prepand the salt to the SealedBox so we can re-derive the sub-key.
+            return salt + sealed.combined
+        }
     }
     
-    private static func decryptData(_ data: Data) throws -> AddressBookContacts {
+    private static func decryptData(_ encrypted: Data) throws -> AddressBookContacts {
         @Dependency(\.walletStorage) var walletStorage
 
-        // TODO: str4d
-//        guard let encryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys() else {
-//            throw AddressBookClient.AddressBookClientError.missingEncryptionKey
-//        }
+        guard let encryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys() else {
+            throw AddressBookClient.AddressBookClientError.missingEncryptionKey
+        }
 
-        // here you have the encrypted data from the cloud, the blob
-        // you also have a key from the keychain
-        
+        // Derive the sub-key for decrypting the address book.
+        var salt = encrypted.prefix(upTo: 32)
+        var subKey = deriveEncryptionKey(addressBookKey: encryptionKeys.key, salt: salt)
+
+        // Unseal the encrypted address book.
+        var sealed = try ChaChaPoly.SealedBox.init(combined: encrypted.suffix(from: 32))
+        var data = try ChaChaPoly.open(sealed, using: subKey)
+
         var offset = 0
 
         // Deserialize `version`

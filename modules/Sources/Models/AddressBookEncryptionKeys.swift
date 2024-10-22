@@ -6,12 +6,13 @@
 //
 
 import Foundation
+import CryptoKit
 
 /// Representation of the address book encryption keys
 public struct AddressBookEncryptionKeys: Codable, Equatable {
-    public let key: String
+    public let key: SymmetricKey
 
-    public init(key: String) {
+    public init(key: SymmetricKey) {
         self.key = key
     }
 }
