@@ -337,6 +337,7 @@ public struct Tabs {
                 state.selectedTab = .account
                 return .merge(
                     .send(.updateDestination(nil)),
+                    .send(.updateStackDestinationRequestPayment(nil)),
                     .send(.send(.resetForm))
                     )
                 

@@ -112,6 +112,7 @@ public struct SendConfirmation {
             switch action {
             case .onAppear:
                 state.isTransparentAddress = derivationTool.isTransparentAddress(state.address, zcashSDKEnvironment.network.networkType)
+                state.alias = nil
                 do {
                     let abContacts = try addressBook.allLocalContacts()
                     return .send(.fetchedABContacts(abContacts))
@@ -123,6 +124,7 @@ public struct SendConfirmation {
 
             case .fetchedABContacts(let abContacts):
                 state.addressBookContacts = abContacts
+                state.alias = nil
                 for contact in state.addressBookContacts.contacts {
                     if contact.id == state.address {
                         state.alias = contact.name
