@@ -117,6 +117,11 @@
 		9E6C984A2BF4C65F00EACDCB /* whatsNew.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E6C98472BF4C65F00EACDCB /* whatsNew.json */; };
 		9E6C984B2BF4C65F00EACDCB /* whatsNew.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E6C98472BF4C65F00EACDCB /* whatsNew.json */; };
 		9E74CCD029DC0628003D6E32 /* ReviewRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E74CCCF29DC0628003D6E32 /* ReviewRequestTests.swift */; };
+		9E89DF702CD27344002E5317 /* whatsNew_es.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E89DF6F2CD27344002E5317 /* whatsNew_es.json */; };
+		9E89DF712CD27344002E5317 /* whatsNew_es.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E89DF6F2CD27344002E5317 /* whatsNew_es.json */; };
+		9E89DF722CD27344002E5317 /* whatsNew_es.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E89DF6F2CD27344002E5317 /* whatsNew_es.json */; };
+		9E89DF732CD27344002E5317 /* whatsNew_es.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E89DF6F2CD27344002E5317 /* whatsNew_es.json */; };
+		9E89DF742CD27344002E5317 /* whatsNew_es.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E89DF6F2CD27344002E5317 /* whatsNew_es.json */; };
 		9E9075022A2681F700269308 /* Generated in Frameworks */ = {isa = PBXBuildFile; productRef = 9E9075012A2681F700269308 /* Generated */; };
 		9E9075042A2681FF00269308 /* Generated in Frameworks */ = {isa = PBXBuildFile; productRef = 9E9075032A2681FF00269308 /* Generated */; };
 		9E90751E2A269BE300269308 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E90751D2A269BE300269308 /* Assets.xcassets */; };
@@ -203,6 +208,8 @@
 		9E5B8E732B46E04E00CA3616 /* RestoreWalletTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreWalletTests.swift; sourceTree = "<group>"; };
 		9E5BF63E2819542C00BA3F17 /* TransactionListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListTests.swift; sourceTree = "<group>"; };
 		9E5BF643281FEC9900BA3F17 /* SendTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendTests.swift; sourceTree = "<group>"; };
+		9E5CFBB12CE38EF000C95713 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
+		9E5CFBB42CE38EF000C95713 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Localizable.strings; sourceTree = "<group>"; };
 		9E60E3D32C65F49F00B16C3E /* secant-distrib.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "secant-distrib.entitlements"; sourceTree = "<group>"; };
 		9E612C7829913F3600D09B09 /* SensitiveDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensitiveDataTests.swift; sourceTree = "<group>"; };
 		9E66129D288938A300C75B70 /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
@@ -213,6 +220,8 @@
 		9E74CCCF29DC0628003D6E32 /* ReviewRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewRequestTests.swift; sourceTree = "<group>"; };
 		9E7CB6112869882D00A02233 /* TransactionListSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListSnapshotTests.swift; sourceTree = "<group>"; };
 		9E852D6429B0A86300CF4AC1 /* DebugTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugTests.swift; sourceTree = "<group>"; };
+		9E89DF6F2CD27344002E5317 /* whatsNew_es.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = whatsNew_es.json; sourceTree = "<group>"; };
+		9E89DF752CD2B2E8002E5317 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		9E90751D2A269BE300269308 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9E92AF0728530EBF007367AD /* View+UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+UIImage.swift"; sourceTree = "<group>"; };
 		9E94C61F28AA7DEE008256E9 /* BalanceBreakdownTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceBreakdownTests.swift; sourceTree = "<group>"; };
@@ -326,6 +335,7 @@
 				0D4E7A2426B364180058B01E /* secantUITests */,
 				0D4E7A0626B364170058B01E /* Products */,
 				343CF3F429BB5A14009E44DF /* Frameworks */,
+				9E318C622CE37F5500FC342A /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -486,6 +496,14 @@
 			path = ReceiveTests;
 			sourceTree = "<group>";
 		};
+		9E318C622CE37F5500FC342A /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				9E89DF752CD2B2E8002E5317 /* Localizable.strings */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		9E391122283E4C970073DD9A /* ImportWalletTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -555,6 +573,22 @@
 			path = SendTests;
 			sourceTree = "<group>";
 		};
+		9E5CFBB32CE38EF000C95713 /* en.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				9E5CFBB22CE38EF000C95713 /* Localizable.strings */,
+			);
+			path = en.lproj;
+			sourceTree = "<group>";
+		};
+		9E5CFBB62CE38EF000C95713 /* es.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				9E5CFBB52CE38EF000C95713 /* Localizable.strings */,
+			);
+			path = es.lproj;
+			sourceTree = "<group>";
+		};
 		9E612C7729913F2300D09B09 /* SensitiveDataTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -582,6 +616,7 @@
 		9E6C98482BF4C65F00EACDCB /* WhatsNew */ = {
 			isa = PBXGroup;
 			children = (
+				9E89DF6F2CD27344002E5317 /* whatsNew_es.json */,
 				9E6C98472BF4C65F00EACDCB /* whatsNew.json */,
 			);
 			path = WhatsNew;
@@ -614,6 +649,8 @@
 		9E7FE0B6282D1D9800C374E8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9E5CFBB32CE38EF000C95713 /* en.lproj */,
+				9E5CFBB62CE38EF000C95713 /* es.lproj */,
 				9EBAAAB52CD14889005B026F /* Lotties */,
 				9E6C98482BF4C65F00EACDCB /* WhatsNew */,
 				9E90751D2A269BE300269308 /* Assets.xcassets */,
@@ -733,6 +770,7 @@
 			buildPhases = (
 				9E599F2F2C3EEE5A000E4997 /* Generate PartnerKeys.plist */,
 				0D26AE97299E8196005260EE /* Generate GoogleService-Info.plist  */,
+				9E89DF8A2CD3971E002E5317 /* Localizations */,
 				34968BEE2ABDC6FA0027F495 /* Swiftgen */,
 				0D26AE99299E8196005260EE /* SwiftLint */,
 				0D26AE9A299E8196005260EE /* Sources */,
@@ -762,6 +800,7 @@
 			buildPhases = (
 				9E599F2E2C3EEE25000E4997 /* Generate PartnerKeys.plist */,
 				0D3B01ED298DB0FE007EBCDA /* Generate GoogleService-Info.plist  */,
+				9E89DF8D2CD39751002E5317 /* Localizations */,
 				34968BED2ABDC6310027F495 /* Swiftgen */,
 				6696BA8726F0B1D200D5C875 /* SwiftLint */,
 				0D4E7A0126B364170058B01E /* Sources */,
@@ -827,6 +866,7 @@
 			buildPhases = (
 				9E41FFA12CB2814500783CFD /* Generate PartnerKeys.plist */,
 				9E41FFA22CB2814500783CFD /* Generate GoogleService-Info.plist  */,
+				9E89DF8C2CD39740002E5317 /* Localizations */,
 				9E41FFA32CB2814500783CFD /* Swiftgen */,
 				9E41FFA42CB2814500783CFD /* SwiftLint */,
 				9E41FFA52CB2814500783CFD /* Sources */,
@@ -854,6 +894,7 @@
 			buildPhases = (
 				9E599F302C3EEE83000E4997 /* Generate PartnerKeys.plist */,
 				9E4AB29E2BA1BEE900F5D6DB /* Generate GoogleService-Info.plist  */,
+				9E89DF892CD382C7002E5317 /* Localizations */,
 				9E4AB29F2BA1BEE900F5D6DB /* Swiftgen */,
 				9E4AB2A02BA1BEE900F5D6DB /* SwiftLint */,
 				9E4AB2A12BA1BEE900F5D6DB /* Sources */,
@@ -884,6 +925,7 @@
 			buildPhases = (
 				9E5AB4682C94777800065483 /* Generate PartnerKeys.plist */,
 				9E5AB4692C94777800065483 /* Generate GoogleService-Info.plist  */,
+				9E89DF8B2CD3972F002E5317 /* Localizations */,
 				9E5AB46A2C94777800065483 /* Swiftgen */,
 				9E5AB46B2C94777800065483 /* SwiftLint */,
 				9E5AB46C2C94777800065483 /* Sources */,
@@ -963,6 +1005,7 @@
 				0D26AF84299E8196005260EE /* Preview Assets.xcassets in Resources */,
 				0D26AF88299E8196005260EE /* LaunchScreen.storyboard in Resources */,
 				9EBAAABD2CD14919005B026F /* sending.json in Resources */,
+				9E89DF732CD27344002E5317 /* whatsNew_es.json in Resources */,
 				9E90751F2A269BE300269308 /* Assets.xcassets in Resources */,
 				9E599F332C3EEEF3000E4997 /* PartnerKeys.plist in Resources */,
 				9E6C984A2BF4C65F00EACDCB /* whatsNew.json in Resources */,
@@ -979,6 +1022,7 @@
 				0D4E7A1026B364180058B01E /* Preview Assets.xcassets in Resources */,
 				9E2F1C8C280ED6A7004E65FE /* LaunchScreen.storyboard in Resources */,
 				9EBAAABE2CD14919005B026F /* sending.json in Resources */,
+				9E89DF742CD27344002E5317 /* whatsNew_es.json in Resources */,
 				9E90751E2A269BE300269308 /* Assets.xcassets in Resources */,
 				9E599F322C3EEEF3000E4997 /* PartnerKeys.plist in Resources */,
 				9E6C98492BF4C65F00EACDCB /* whatsNew.json in Resources */,
@@ -1009,6 +1053,7 @@
 				9E41FFAF2CB2814500783CFD /* Preview Assets.xcassets in Resources */,
 				9E41FFB02CB2814500783CFD /* LaunchScreen.storyboard in Resources */,
 				9EBAAAC12CD14919005B026F /* sending.json in Resources */,
+				9E89DF702CD27344002E5317 /* whatsNew_es.json in Resources */,
 				9E41FFB12CB2814500783CFD /* Assets.xcassets in Resources */,
 				9E41FFB22CB2814500783CFD /* PartnerKeys.plist in Resources */,
 				9E41FFB32CB2814500783CFD /* whatsNew.json in Resources */,
@@ -1025,6 +1070,7 @@
 				9E4AB2AF2BA1BEE900F5D6DB /* Preview Assets.xcassets in Resources */,
 				9E4AB2B02BA1BEE900F5D6DB /* LaunchScreen.storyboard in Resources */,
 				9EBAAAC02CD14919005B026F /* sending.json in Resources */,
+				9E89DF712CD27344002E5317 /* whatsNew_es.json in Resources */,
 				9E4AB2B12BA1BEE900F5D6DB /* Assets.xcassets in Resources */,
 				9E599F342C3EEEF3000E4997 /* PartnerKeys.plist in Resources */,
 				9E6C984B2BF4C65F00EACDCB /* whatsNew.json in Resources */,
@@ -1041,6 +1087,7 @@
 				9E5AB4762C94777800065483 /* Preview Assets.xcassets in Resources */,
 				9E5AB4772C94777800065483 /* LaunchScreen.storyboard in Resources */,
 				9EBAAABF2CD14919005B026F /* sending.json in Resources */,
+				9E89DF722CD27344002E5317 /* whatsNew_es.json in Resources */,
 				9E5AB4782C94777800065483 /* Assets.xcassets in Resources */,
 				9E5AB4792C94777800065483 /* PartnerKeys.plist in Resources */,
 				9E5AB47A2C94777800065483 /* whatsNew.json in Resources */,
@@ -1477,6 +1524,101 @@
 			shellPath = /bin/zsh;
 			shellScript = "swiftlint_version=0.50.3\n\nif which swiftlint >/dev/null; then\n  if [[ $(swiftlint version) != $swiftlint_version ]]; then\n    echo \"warning: Compatible SwiftLint version not installed, download version $swiftlint_version from https://github.com/realm/SwiftLint. Currently installed version is $(swiftlint version)\"\n  fi\n   \n  echo \"Linting the Secant code\"\n  swiftlint lint --config .swiftlint.yml\n  echo \"Linting tests\"\n  swiftlint lint --config .swiftlint_tests.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
+		9E89DF892CD382C7002E5317 /* Localizations */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Localizations;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "cp modules/Sources/Generated/Resources/en.lproj/Localizable.strings secant/Resources/en.lproj/\ncp modules/Sources/Generated/Resources/es.lproj/Localizable.strings secant/Resources/es.lproj/\n";
+		};
+		9E89DF8A2CD3971E002E5317 /* Localizations */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Localizations;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "cp modules/Sources/Generated/Resources/en.lproj/Localizable.strings secant/Resources/en.lproj/\ncp modules/Sources/Generated/Resources/es.lproj/Localizable.strings secant/Resources/es.lproj/\n";
+		};
+		9E89DF8B2CD3972F002E5317 /* Localizations */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Localizations;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "cp modules/Sources/Generated/Resources/en.lproj/Localizable.strings secant/Resources/en.lproj/\ncp modules/Sources/Generated/Resources/es.lproj/Localizable.strings secant/Resources/es.lproj/\n";
+		};
+		9E89DF8C2CD39740002E5317 /* Localizations */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Localizations;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "cp modules/Sources/Generated/Resources/en.lproj/Localizable.strings secant/Resources/en.lproj/\ncp modules/Sources/Generated/Resources/es.lproj/Localizable.strings secant/Resources/es.lproj/\n";
+		};
+		9E89DF8D2CD39751002E5317 /* Localizations */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Localizations;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "cp modules/Sources/Generated/Resources/en.lproj/Localizable.strings secant/Resources/en.lproj/\ncp modules/Sources/Generated/Resources/es.lproj/Localizable.strings secant/Resources/es.lproj/\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1604,6 +1746,25 @@
 			targetProxy = 0D4E7A2226B364180058B01E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		9E5CFBB22CE38EF000C95713 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9E5CFBB12CE38EF000C95713 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		9E5CFBB52CE38EF000C95713 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9E5CFBB42CE38EF000C95713 /* es */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		0D26AF92299E8196005260EE /* Debug */ = {
@@ -2334,7 +2495,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.3;
+				MARKETING_VERSION = 0.4.4;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "co.electriccoin.secant-testnet";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2364,7 +2525,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.3;
+				MARKETING_VERSION = 0.4.4;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "co.electriccoin.secant-testnet";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2394,7 +2555,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.3;
+				MARKETING_VERSION = 0.4.4;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "co.electriccoin.secant-testnet";
 				PRODUCT_NAME = "$(TARGET_NAME)";

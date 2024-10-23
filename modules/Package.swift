@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "modules",
+    defaultLocalization: "en",
     platforms: [
       .iOS(.v15)
     ],
@@ -737,6 +738,7 @@ let package = Package(
                 "RecoveryPhraseDisplay",
                 "SendFeedback",
                 "ServerSetup",
+                "SupportDataGenerator",
                 "UIComponents",
                 "WhatsNew",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),

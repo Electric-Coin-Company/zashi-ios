@@ -9,6 +9,7 @@ import ZcashLightClientKit
 import AddressBook
 import WhatsNew
 import SendFeedback
+import SupportDataGenerator
 
 @Reducer
 public struct Settings {
