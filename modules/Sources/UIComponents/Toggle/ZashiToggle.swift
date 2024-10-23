@@ -32,7 +32,7 @@ public struct ZashiToggle: View {
 }
 
 #Preview {
-    @State var isOn: Bool = false
-    
-    return ZashiToggle(isOn: $isOn, label: "I acknowledge")
+    BoolStateWrapper(initialValue: false) {
+        ZashiToggle(isOn: $0, label: "I acknowledge")
+    }
 }

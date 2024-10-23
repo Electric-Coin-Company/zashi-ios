@@ -23,7 +23,6 @@ extension Root {
             case notEnoughFreeSpace
             case onboarding
             case phraseDisplay
-            case sandbox
             case startup
             case tabs
             case welcome
@@ -63,10 +62,6 @@ extension Root {
                     return .none
                 }
                 state.destinationState.destination = destination
-                return .none
-
-            case .sandbox(.reset):
-                state.destinationState.destination = .startup
                 return .none
 
             case .deeplinkWarning(.gotItTapped):
@@ -187,7 +182,7 @@ extension Root {
                 flexaHandler.flexaAlert(L10n.Partners.Flexa.transactionFailedTitle, message)
                 return .none
                 
-            case .tabs, .initialization, .onboarding, .sandbox, .updateStateAfterConfigUpdate, .alert, .phraseDisplay, .synchronizerStateChanged,
+            case .tabs, .initialization, .onboarding, .updateStateAfterConfigUpdate, .alert, .phraseDisplay, .synchronizerStateChanged,
                     .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .exportLogs, .confirmationDialog,
                     .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated, .batteryStateChanged, .cancelAllRunningEffects, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted:
                 return .none

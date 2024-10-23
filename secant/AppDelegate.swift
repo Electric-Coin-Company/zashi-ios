@@ -14,6 +14,7 @@ import Utils
 import Root
 import BackgroundTasks
 
+// swiftlint:disable indentation_width
 final class AppDelegate: NSObject, UIApplicationDelegate {
     private let bcgTaskId = "co.electriccoin.power_wifi_sync"
     private let bcgSchedulerTaskId = "co.electriccoin.scheduler"
