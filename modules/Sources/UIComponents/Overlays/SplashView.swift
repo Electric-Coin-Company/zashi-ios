@@ -9,6 +9,7 @@ import SwiftUI
 import Generated
 import LocalAuthenticationHandler
 import ComposableArchitecture
+import Models
 
 final class SplashManager: ObservableObject {
     struct SplashShape: Shape {
@@ -25,6 +26,7 @@ final class SplashManager: ObservableObject {
     }
 
     @Published var points: [CGPoint] = []
+    @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
 
     let isHidden: Bool
     let screenSize: CGSize
@@ -43,7 +45,19 @@ final class SplashManager: ObservableObject {
         
         if !isHidden {
             preparePoints()
-            authenticate()
+            if featureFlags.appLaunchBiometric {
+#if targetEnvironment(simulator)
+                Task {
+                    await self.spinTheWheel()
+                }
+#else
+                authenticate()
+#endif
+            } else {
+                Task {
+                    await self.spinTheWheel()
+                }
+            }
         }
     }
 

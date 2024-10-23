@@ -10,11 +10,32 @@ directly impact users rather than highlighting other crucial architectural updat
 - Flexa integrated into Zashi, users can pay with ZEC for Flexa codes.
 - Authentication for the app launch and cold starts after 15 minutes. 
 
-### Fixed
+ ### Fixed
 - Splash screen animation is blocked by the main thread on iOS 16 and older.
 - Inactive hide balances button on iOS 16 and older.
 - Inactive close button in the exchange rate hint bubble on iOS 16 and older.
 - A shield icon is no longer presented for received transactions to a transparent pool.
+   
+## 1.2.2 build 1 (2024-10-22)
+
+### Changed
+- SDK 2.2.5 addopted. It includes an important fix for a note commitment tree related bug which was affecting some Zashi users for a while now.
+
+### Fixed
+- A UX issue in the Request ZEC payer experience. After sending a transaction, we will now correctly route you back to the Account screen.
+- An Address Book and Request ZEC interference issue.
+
+## 1.2.1 build 5 (2024-10-21)
+
+### Added
+- Request ZEC flow. Generate a QR code with requested ZEC and share it.
+- Address Book integrated troughout the Zashi.
+
+### Changed
+- Receive screen has been redesigned.
+- Scan UI has been redesigned.
+- Send screen has been redesigned.
+- Transaction history item has been tweaked a bit and collapse is now done by tap on the row itself.
 
 ## 1.2 build 9 (2024-09-17)
 

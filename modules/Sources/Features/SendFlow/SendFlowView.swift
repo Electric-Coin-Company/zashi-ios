@@ -11,7 +11,6 @@ import Generated
 import Scan
 import UIComponents
 import BalanceFormatter
-import PartialProposalError
 import WalletBalances
 
 public struct SendFlowView: View {
