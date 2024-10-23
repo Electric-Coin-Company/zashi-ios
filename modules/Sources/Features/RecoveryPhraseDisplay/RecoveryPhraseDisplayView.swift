@@ -34,6 +34,7 @@ public struct RecoveryPhraseDisplayView: View {
                     
                     Text(L10n.RecoveryPhraseDisplay.description)
                         .zFont(size: 14, style: Design.Text.primary)
+                        .minimumScaleFactor(0.6)
                         .lineSpacing(1.5)
                         .padding(.top, 8)
                     
@@ -127,60 +128,60 @@ public struct RecoveryPhraseDisplayView: View {
                         }
                         .padding(.top, 6)
                     }
+                    
+                    Spacer()
+
+                    HStack(alignment: .top, spacing: 0) {
+                        Asset.Assets.infoOutline.image
+                            .zImage(size: 20, style: Design.Utility.WarningYellow._500)
+                            .padding(.trailing, 12)
+                        
+                        Text(L10n.RecoveryPhraseDisplay.warning)
+                            .zFont(.medium, size: 12, style: Design.Utility.WarningYellow._700)
+                            .minimumScaleFactor(0.6)
+
+                        Spacer(minLength: 0)
+                    }
+                    .padding(.bottom, 24)
+                    .padding(.horizontal, 20)
+                    
+                    if !store.showBackButton {
+                        ZashiButton(L10n.RecoveryPhraseDisplay.Button.wroteItDown) {
+                            store.send(.finishedPressed)
+                        }
+                        .padding(.bottom, 20)
+                    } else {
+                        if store.isRecoveryPhraseHidden {
+                            ZashiButton(
+                                L10n.RecoveryPhraseDisplay.reveal,
+                                prefixView:
+                                    Asset.Assets.eyeOn.image
+                                        .zImage(size: 20, style: Design.Btns.Primary.fg)
+                            ) {
+                                store.send(.recoveryPhraseTapped, animation: .easeInOut)
+                            }
+                            .padding(.bottom, 20)
+                        } else {
+                            ZashiButton(
+                                L10n.RecoveryPhraseDisplay.hide,
+                                prefixView:
+                                    Asset.Assets.eyeOff.image
+                                        .zImage(size: 20, style: Design.Btns.Primary.fg)
+                            ) {
+                                store.send(.recoveryPhraseTapped, animation: .easeInOut)
+                            }
+                            .padding(.bottom, 20)
+                        }
+                    }
                 } else {
                     Text(L10n.RecoveryPhraseDisplay.noWords)
                         .zFont(.semiBold, size: 24, style: Design.Text.primary)
                         .padding(.top, 40)
                         .multilineTextAlignment(.center)
-                }
-
-                Spacer()
-
-                HStack(alignment: .top, spacing: 0) {
-                    Asset.Assets.infoOutline.image
-                        .zImage(size: 20, style: Design.Utility.WarningYellow._500)
-                        .padding(.trailing, 12)
-                    
-                    Text(L10n.RecoveryPhraseDisplay.warning)
-                        .zFont(.medium, size: 12, style: Design.Utility.WarningYellow._700)
-                    
-                    Spacer(minLength: 0)
-                }
-                .padding(.bottom, 24)
-                .padding(.horizontal, 20)
-
-                if !store.showBackButton {
-                    ZashiButton(L10n.RecoveryPhraseDisplay.Button.wroteItDown) {
-                        store.send(.finishedPressed)
-                    }
-                    .padding(.bottom, 20)
-                } else {
-                    if store.isRecoveryPhraseHidden {
-                        ZashiButton(
-                            L10n.RecoveryPhraseDisplay.reveal,
-                            prefixView:
-                                Asset.Assets.eyeOn.image
-                                    .zImage(size: 20, style: Design.Btns.Primary.fg)
-                        ) {
-                            store.send(.recoveryPhraseTapped, animation: .easeInOut)
-                        }
-                        .padding(.bottom, 20)
-                    } else {
-                        ZashiButton(
-                            L10n.RecoveryPhraseDisplay.hide,
-                            prefixView:
-                                Asset.Assets.eyeOff.image
-                                    .zImage(size: 20, style: Design.Btns.Primary.fg)
-                        ) {
-                            store.send(.recoveryPhraseTapped, animation: .easeInOut)
-                        }
-                        .padding(.bottom, 20)
-                    }
+                        .zashiBackV2()
                 }
             }
             .onAppear { store.send(.onAppear) }
-            .alert($store.scope(state: \.alert, action: \.alert))
-            .zashiBack(false, hidden: !store.showBackButton)
             .overlayPreferenceValue(BirthdayPreferenceKey.self) { preferences in
                 if store.isBirthdayHintVisible {
                     GeometryReader { geometry in

@@ -17,9 +17,8 @@ public enum L10n {
   public enum About {
     /// Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.
     public static let additionalInfo = L10n.tr("Localizable", "about.additionalInfo", fallback: "Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.")
-    /// Send and receive ZEC on Zashi!
-    /// Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private.
-    public static let info = L10n.tr("Localizable", "about.info", fallback: "Send and receive ZEC on Zashi!\nZashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private.")
+    /// Send and receive ZEC on Zashi! Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private.
+    public static let info = L10n.tr("Localizable", "about.info", fallback: "Send and receive ZEC on Zashi! Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private.")
     /// Privacy Policy
     public static let privacyPolicy = L10n.tr("Localizable", "about.privacyPolicy", fallback: "Privacy Policy")
     /// Introducing Zashi
@@ -122,6 +121,12 @@ public enum L10n {
       /// Zashi uses the latest network upgrade and does not support sending transparent (unshielded) ZEC. Use the Shield and Consolidate button to shield your funds, which will add to your available balance and make your ZEC spendable.
       public static let message = L10n.tr("Localizable", "balances.hintBox.message", fallback: "Zashi uses the latest network upgrade and does not support sending transparent (unshielded) ZEC. Use the Shield and Consolidate button to shield your funds, which will add to your available balance and make your ZEC spendable.")
     }
+  }
+  public enum Component {
+    /// Low Privacy
+    public static let lowPrivacy = L10n.tr("Localizable", "component.lowPrivacy", fallback: "Low Privacy")
+    /// Maximum Privacy
+    public static let maxPrivacy = L10n.tr("Localizable", "component.maxPrivacy", fallback: "Maximum Privacy")
   }
   public enum CurrencyConversion {
     /// Review

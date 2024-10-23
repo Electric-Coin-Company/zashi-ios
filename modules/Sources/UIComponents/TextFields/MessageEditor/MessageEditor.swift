@@ -106,7 +106,7 @@ public struct MessageEditorView: View {
                 if store.featureFlags.addUAtoMemo && isAddUAtoMemoActive && !store.uAddress.isEmpty {
                     ZashiToggle(
                         isOn: $store.isUAaddedToMemo,
-                        label: store.isUAaddedToMemo ? L10n.MessageEditor.addUA : L10n.MessageEditor.addUA,
+                        label: store.isUAaddedToMemo ? L10n.MessageEditor.removeUA : L10n.MessageEditor.addUA,
                         textColor: Design.Inputs.Filled.label.color
                     )
                     .padding(.top, 12)

@@ -97,8 +97,8 @@ extension SecantApp {
         )
 #else
         featureFlags = FeatureFlags(
-            flexa: true,
             appLaunchBiometric: true,
+            flexa: true,
             sendingScreen: true
         )
 #endif

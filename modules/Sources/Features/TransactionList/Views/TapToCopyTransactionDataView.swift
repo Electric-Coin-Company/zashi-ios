@@ -30,6 +30,8 @@ struct TapToCopyTransactionDataView: View {
                     
                     Text(L10n.General.tapToCopy)
                         .zFont(.semiBold, size: 14, style: Design.Btns.Tertiary.fg)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
                 }
             }
             .buttonStyle(.borderless)
