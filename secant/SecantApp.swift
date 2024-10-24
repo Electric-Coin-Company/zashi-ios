@@ -24,6 +24,7 @@ struct SecantApp: App {
 
     init() {
         FontFamily.registerAllCustomFonts()
+        setupFeatureFlags()
     }
 
     var body: some Scene {
@@ -82,4 +83,22 @@ public enum TargetConstants {
 
 extension ZcashSDKEnvironment: @retroactive DependencyKey {
     public static let liveValue: ZcashSDKEnvironment = Self.live(network: TargetConstants.zcashNetwork)
+}
+
+extension SecantApp {
+    func setupFeatureFlags() {
+#if SECANT_DISTRIB
+        featureFlags = FeatureFlags()
+#elseif SECANT_TESTNET
+        featureFlags = FeatureFlags(
+            flexa: true,
+            appLaunchBiometric: true
+        )
+#else
+        featureFlags = FeatureFlags(
+            flexa: false,
+            appLaunchBiometric: true
+        )
+#endif
+    }
 }
