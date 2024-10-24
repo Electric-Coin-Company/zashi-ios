@@ -21,20 +21,32 @@ extension CaptureDeviceClient: DependencyKey {
             return videoCaptureDevice.hasTorch
         },
         torch: { isTorchOn in
-            guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else {
+            var device: AVCaptureDevice?
+            
+            if #available(iOS 17, *) {
+                device = AVCaptureDevice.userPreferredCamera
+            } else {
+                let deviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInTripleCamera, .builtInDualWideCamera, .builtInUltraWideCamera, .builtInWideAngleCamera, .builtInTrueDepthCamera], mediaType: AVMediaType.video, position: .back)
+                device = deviceDiscoverySession.devices.first
+            }
+            guard let device else {
                 throw CaptureDeviceClientError.captureDevice
             }
             
-            guard videoCaptureDevice.hasTorch else {
+            if device.hasTorch && device.isTorchAvailable {
+                do {
+                    try device.lockForConfiguration()
+                    if isTorchOn {
+                        try device.setTorchModeOn(level: 1.0)
+                    } else {
+                        device.torchMode = .off
+                    }
+                    device.unlockForConfiguration()
+                } catch {
+                    throw CaptureDeviceClientError.lockForConfiguration
+                }
+            } else {
                 throw CaptureDeviceClientError.torchUnavailable
-            }
-
-            do {
-                try videoCaptureDevice.lockForConfiguration()
-                videoCaptureDevice.torchMode = isTorchOn ? .on : .off
-                videoCaptureDevice.unlockForConfiguration()
-            } catch {
-                throw CaptureDeviceClientError.lockForConfiguration
             }
         }
     )

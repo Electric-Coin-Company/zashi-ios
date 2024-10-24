@@ -15,7 +15,8 @@ directly impact users rather than highlighting other crucial architectural updat
 - Inactive hide balances button on iOS 16 and older.
 - Inactive close button in the exchange rate hint bubble on iOS 16 and older.
 - A shield icon is no longer presented for received transactions to a transparent pool.
-   
+- Flashlight freezes camera feed.
+
 ## 1.2.2 build 1 (2024-10-22)
 
 ### Changed
