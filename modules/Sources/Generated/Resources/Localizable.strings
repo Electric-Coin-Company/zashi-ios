@@ -23,9 +23,9 @@
 "recoveryPhraseDisplay.alert.failed.message" = "Attempt to load the stored wallet from the keychain failed. Error: %@";
 
 // MARK: - Proposal Partial Error
-"proposalPartial.title" = "Transaction Error";
-"proposalPartial.message1" = "Sending to this recipient required multiple transactions, but only some of them succeeded. Your funds are safe, but they need to be recovered with the help of Zashi team support.";
-"proposalPartial.message2" = "Please use the button below to contact us and recover your funds. Your message to us will be pre-populated with all the data we need to resolve this issue.";
+"proposalPartial.title" = "Send Failed";
+"proposalPartial.message1" = "Send to this recipient required multiple transactions but only some of them succeeded and the rest failed. Your funds are safe but need to be recovered with assistance from our side.";
+"proposalPartial.message2" = "Please use the button below to contact us. it automatically prepares all the data we need in order to help you restore your funds.";
 "proposalPartial.transactionIds" = "Transaction Ids";
 "proposalPartial.contactSupport" = "Contact Support";
 "proposalPartial.mailSubject" = "TEX Transaction Error";
@@ -159,6 +159,17 @@
 "send.requestPayment.for" = "For:";
 "send.requestPayment.total" = "Total";
 "send.requestPayment.title" = "Payment Request";
+"send.sending" = "Sending...";
+"send.sendingInfo" = "Your tokens are being sent to";
+"send.viewTransaction" = "View Transaction";
+"send.success" = "Sent!";
+"send.successInfo" = "Your tokens were successfully sent to";
+"send.failure" = "Unable to send";
+"send.failureInfo" = "There was an error attempting to send tokens to";
+"send.resubmission" = "Connection Error";
+"send.resubmissionInfo" = "Zashi encountered connection issues when submitting the transaction. It will retry in the next few minutes.";
+"send" = "";
+"send" = "";
 
 // MARK: - ZEC Keyboard
 "zecKeyboard.invalid" = "This transaction amount is invalid.";

@@ -156,7 +156,7 @@ extension Root {
                         // get a proposal
                         let recipient = try Recipient(transaction.address, network: zcashSDKEnvironment.network.networkType)
                         let proposal = try await sdkSynchronizer.proposeTransfer(0, recipient, transaction.amount, nil)
-                        
+
                         // make the actual send
                         let storedWallet = try walletStorage.exportWallet()
                         let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
@@ -166,9 +166,9 @@ extension Root {
                         let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
                         
                         switch result {
-                        case .failure, .partial:
+                        case .partial, .grpcFailure:
                             await send(.flexaTransactionFailed(L10n.Partners.Flexa.transactionFailedMessage))
-                        case .success(let txIds):
+                        case .success(let txIds), .failure(let txIds):
                             if let txId = txIds.first {
                                 flexaHandler.transactionSent(transaction.commerceSessionId, txId)
                             }

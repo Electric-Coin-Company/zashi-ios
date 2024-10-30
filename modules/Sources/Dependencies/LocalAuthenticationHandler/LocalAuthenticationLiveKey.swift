@@ -12,6 +12,9 @@ import Generated
 extension LocalAuthenticationClient: DependencyKey {
     public static let liveValue = Self(
         authenticate: {
+#if targetEnvironment(simulator)
+            return true
+#endif
             let context = LAContext()
             var error: NSError?
             let reason = L10n.LocalAuthentication.reason

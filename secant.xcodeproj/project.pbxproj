@@ -126,6 +126,11 @@
 		9EB35D632A31F1DD00A2149B /* Root in Frameworks */ = {isa = PBXBuildFile; productRef = 9EB35D622A31F1DD00A2149B /* Root */; };
 		9EB35D6A2A3A2D7B00A2149B /* Utils in Frameworks */ = {isa = PBXBuildFile; productRef = 9EB35D692A3A2D7B00A2149B /* Utils */; };
 		9EB35D6C2A3A2D9200A2149B /* Utils in Frameworks */ = {isa = PBXBuildFile; productRef = 9EB35D6B2A3A2D9200A2149B /* Utils */; };
+		9EBAAABD2CD14919005B026F /* sending.json in Resources */ = {isa = PBXBuildFile; fileRef = 9EBAAABC2CD14919005B026F /* sending.json */; };
+		9EBAAABE2CD14919005B026F /* sending.json in Resources */ = {isa = PBXBuildFile; fileRef = 9EBAAABC2CD14919005B026F /* sending.json */; };
+		9EBAAABF2CD14919005B026F /* sending.json in Resources */ = {isa = PBXBuildFile; fileRef = 9EBAAABC2CD14919005B026F /* sending.json */; };
+		9EBAAAC02CD14919005B026F /* sending.json in Resources */ = {isa = PBXBuildFile; fileRef = 9EBAAABC2CD14919005B026F /* sending.json */; };
+		9EBAAAC12CD14919005B026F /* sending.json in Resources */ = {isa = PBXBuildFile; fileRef = 9EBAAABC2CD14919005B026F /* sending.json */; };
 		9EDDAF6D2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */; };
 		9EDDAF6E2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */; };
 		9EDDAF6F2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */; };
@@ -221,6 +226,7 @@
 		9EAFEB812805793200199FC9 /* RootTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTests.swift; sourceTree = "<group>"; };
 		9EAFEB852805A23100199FC9 /* SecItemClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecItemClientTests.swift; sourceTree = "<group>"; };
 		9EB7D14A2A20C6BC00F35E03 /* modules */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = modules; sourceTree = "<group>"; };
+		9EBAAABC2CD14919005B026F /* sending.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = sending.json; sourceTree = "<group>"; };
 		9ECDD9512CA687B300D81CA0 /* secant-mainnet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "secant-mainnet.entitlements"; sourceTree = "<group>"; };
 		9ECDD9522CA6B2B400D81CA0 /* zashi-internal.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "zashi-internal.entitlements"; sourceTree = "<group>"; };
 		9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -608,6 +614,7 @@
 		9E7FE0B6282D1D9800C374E8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9EBAAAB52CD14889005B026F /* Lotties */,
 				9E6C98482BF4C65F00EACDCB /* WhatsNew */,
 				9E90751D2A269BE300269308 /* Assets.xcassets */,
 				0D3B01EB298DAF89007EBCDA /* GoogleService-Info.plist */,
@@ -686,6 +693,14 @@
 				9E5B8E732B46E04E00CA3616 /* RestoreWalletTests.swift */,
 			);
 			path = RootTests;
+			sourceTree = "<group>";
+		};
+		9EBAAAB52CD14889005B026F /* Lotties */ = {
+			isa = PBXGroup;
+			children = (
+				9EBAAABC2CD14919005B026F /* sending.json */,
+			);
+			path = Lotties;
 			sourceTree = "<group>";
 		};
 		9EEB06C42B344F0E00EEE50F /* SyncProgressTests */ = {
@@ -947,6 +962,7 @@
 			files = (
 				0D26AF84299E8196005260EE /* Preview Assets.xcassets in Resources */,
 				0D26AF88299E8196005260EE /* LaunchScreen.storyboard in Resources */,
+				9EBAAABD2CD14919005B026F /* sending.json in Resources */,
 				9E90751F2A269BE300269308 /* Assets.xcassets in Resources */,
 				9E599F332C3EEEF3000E4997 /* PartnerKeys.plist in Resources */,
 				9E6C984A2BF4C65F00EACDCB /* whatsNew.json in Resources */,
@@ -962,6 +978,7 @@
 			files = (
 				0D4E7A1026B364180058B01E /* Preview Assets.xcassets in Resources */,
 				9E2F1C8C280ED6A7004E65FE /* LaunchScreen.storyboard in Resources */,
+				9EBAAABE2CD14919005B026F /* sending.json in Resources */,
 				9E90751E2A269BE300269308 /* Assets.xcassets in Resources */,
 				9E599F322C3EEEF3000E4997 /* PartnerKeys.plist in Resources */,
 				9E6C98492BF4C65F00EACDCB /* whatsNew.json in Resources */,
@@ -991,6 +1008,7 @@
 			files = (
 				9E41FFAF2CB2814500783CFD /* Preview Assets.xcassets in Resources */,
 				9E41FFB02CB2814500783CFD /* LaunchScreen.storyboard in Resources */,
+				9EBAAAC12CD14919005B026F /* sending.json in Resources */,
 				9E41FFB12CB2814500783CFD /* Assets.xcassets in Resources */,
 				9E41FFB22CB2814500783CFD /* PartnerKeys.plist in Resources */,
 				9E41FFB32CB2814500783CFD /* whatsNew.json in Resources */,
@@ -1006,6 +1024,7 @@
 			files = (
 				9E4AB2AF2BA1BEE900F5D6DB /* Preview Assets.xcassets in Resources */,
 				9E4AB2B02BA1BEE900F5D6DB /* LaunchScreen.storyboard in Resources */,
+				9EBAAAC02CD14919005B026F /* sending.json in Resources */,
 				9E4AB2B12BA1BEE900F5D6DB /* Assets.xcassets in Resources */,
 				9E599F342C3EEEF3000E4997 /* PartnerKeys.plist in Resources */,
 				9E6C984B2BF4C65F00EACDCB /* whatsNew.json in Resources */,
@@ -1021,6 +1040,7 @@
 			files = (
 				9E5AB4762C94777800065483 /* Preview Assets.xcassets in Resources */,
 				9E5AB4772C94777800065483 /* LaunchScreen.storyboard in Resources */,
+				9EBAAABF2CD14919005B026F /* sending.json in Resources */,
 				9E5AB4782C94777800065483 /* Assets.xcassets in Resources */,
 				9E5AB4792C94777800065483 /* PartnerKeys.plist in Resources */,
 				9E5AB47A2C94777800065483 /* whatsNew.json in Resources */,

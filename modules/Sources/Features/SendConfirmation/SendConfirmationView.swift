@@ -26,6 +26,11 @@ public struct SendConfirmationView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack {
+                // FIXME
+                Button("success") {
+                    store.send(.updateDestination(.sending))
+                }
+                
                 ScrollView {
                     HStack {
                         VStack(alignment: .leading, spacing: 0) {
@@ -170,6 +175,12 @@ public struct SendConfirmationView: View {
             }
             .onAppear { store.send(.onAppear) }
             .screenTitle(L10n.Send.confirmationTitle)
+            .navigationLinkEmpty(
+                isActive: store.bindingFor(.sending),
+                destination: {
+                    SendingView(store: store, tokenName: tokenName)
+                }
+            )
         }
         .navigationBarBackButtonHidden()
         .padding(.vertical, 1)
@@ -207,4 +218,22 @@ extension SendConfirmation.State {
         partialProposalErrorState: .initial,
         proposal: nil
     )
+}
+
+// MARK: - ViewStore
+
+extension StoreOf<SendConfirmation> {
+    func bindingFor(_ destination: SendConfirmation.State.Destination) -> Binding<Bool> {
+        Binding<Bool>(
+            get: { self.destination == destination },
+            set: { self.send(.updateDestination($0 ? destination : nil)) }
+        )
+    }
+    
+    func bindingForResult(_ result: SendConfirmation.State.Result) -> Binding<Bool> {
+        Binding<Bool>(
+            get: { self.result == result },
+            set: { self.send(.updateResult($0 ? result : nil)) }
+        )
+    }
 }

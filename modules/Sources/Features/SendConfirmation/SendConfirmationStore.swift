@@ -28,12 +28,25 @@ import AddressBookClient
 public struct SendConfirmation {
     @ObservableState
     public struct State: Equatable {
+        public enum Destination: Equatable {
+            case sending
+        }
+        
+        public enum Result: Equatable {
+            case failure
+            case partial
+            case resubmission
+            case success
+        }
+
         public var address: String
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         public var alias: String?
         @Presents public var alert: AlertState<Action>?
         public var amount: Zatoshi
         public var currencyAmount: RedactableString
+        public var destination: Destination?
+        @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
         public var feeRequired: Zatoshi
         public var isAddressExpanded = false
         public var isSending = false
@@ -42,6 +55,7 @@ public struct SendConfirmation {
         public var partialProposalErrorState: PartialProposalError.State
         public var partialProposalErrorViewBinding = false
         public var proposal: Proposal?
+        public var result: Result?
 
         public var addressToShow: String {
             isTransparentAddress
@@ -51,6 +65,32 @@ public struct SendConfirmation {
             : address.zip316
         }
         
+        public var successIlustration: Image {
+            let rand = Int.random(in: 1...2)
+            switch rand {
+            case 1: return Asset.Assets.Illustrations.success1.image
+            default: return Asset.Assets.Illustrations.success2.image
+            }
+            
+        }
+
+        public var failureIlustration: Image {
+            let rand = Int.random(in: 1...3)
+            switch rand {
+            case 1: return Asset.Assets.Illustrations.failure1.image
+            case 2: return Asset.Assets.Illustrations.failure2.image
+            default: return Asset.Assets.Illustrations.failure3.image
+            }
+        }
+
+        public var resubmissionIlustration: Image {
+            let rand = Int.random(in: 1...2)
+            switch rand {
+            case 1: return Asset.Assets.Illustrations.resubmission1.image
+            default: return Asset.Assets.Illustrations.resubmission2.image
+            }
+        }
+
         public init(
             address: String,
             amount: Zatoshi,
@@ -77,6 +117,7 @@ public struct SendConfirmation {
     public enum Action: BindableAction, Equatable {
         case alert(PresentationAction<Action>)
         case binding(BindingAction<SendConfirmation.State>)
+        case closeTapped
         case fetchedABContacts(AddressBookContacts)
         case goBackPressed
         case goBackPressedFromRequestZec
@@ -85,10 +126,13 @@ public struct SendConfirmation {
         case partialProposalErrorDismiss
         case saveAddressTapped(RedactableString)
         case sendDone
-        case sendFailed(ZcashError?)
+        case sendFailed(ZcashError?, Bool)
         case sendPartial([String], [String])
         case sendPressed
+        case sendTriggered
         case showHideButtonTapped
+        case updateDestination(State.Destination?)
+        case updateResult(State.Result?)
     }
 
     @Dependency(\.addressBook) var addressBook
@@ -143,6 +187,9 @@ public struct SendConfirmation {
             case .binding:
                 return .none
 
+            case .closeTapped:
+                return .none
+                
             case .saveAddressTapped:
                 return .none
 
@@ -157,15 +204,23 @@ public struct SendConfirmation {
                 return .none
                 
             case .sendPressed:
-                state.isSending = true
-
-                guard let proposal = state.proposal else {
-                    return .send(.sendFailed("missing proposal".toZcashError()))
+                if state.featureFlags.sendingScreen {
+                    state.isSending = true
+                    return .concatenate(
+                        .send(.updateDestination(.sending)),
+                        .send(.sendTriggered)
+                    )
+                } else {
+                    return .send(.sendTriggered)
                 }
-
+                
+            case .sendTriggered:
+                guard let proposal = state.proposal else {
+                    return .send(.sendFailed("missing proposal".toZcashError(), true))
+                }
                 return .run { send in
                     if await !localAuthentication.authenticate() {
-                        await send(.sendFailed(nil))
+                        await send(.sendFailed(nil, true))
                         return
                     }
 
@@ -178,28 +233,35 @@ public struct SendConfirmation {
                         let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
                         
                         switch result {
+                        case .grpcFailure:
+                            await send(.sendFailed("sdkSynchronizer.createProposedTransactions".toZcashError(), true))
                         case .failure:
-                            await send(.sendFailed("sdkSynchronizer.createProposedTransactions".toZcashError()))
+                            await send(.sendFailed("sdkSynchronizer.createProposedTransactions".toZcashError(), false))
                         case let .partial(txIds: txIds, statuses: statuses):
                             await send(.sendPartial(txIds, statuses))
                         case .success:
                             await send(.sendDone)
                         }
                     } catch {
-                        await send(.sendFailed(error.toZcashError()))
+                        await send(.sendFailed(error.toZcashError(), true))
                     }
                 }
 
             case .sendDone:
                 state.isSending = false
-                return .none
-                
-            case .sendFailed(let error):
-                state.isSending = false
-                if let error {
-                    state.alert = AlertState.sendFailure(error)
+                if state.featureFlags.sendingScreen {
+                    return .send(.updateResult(.success))
+                } else {
+                    return .none
                 }
-                return .none
+
+            case let .sendFailed(error, isFatal):
+                state.isSending = false
+                if state.featureFlags.sendingScreen {
+                    return .send(.updateResult(isFatal ? .failure : .resubmission))
+                } else {
+                    return .none
+                }
                 
             case let .sendPartial(txIds, statuses):
                 state.isSending = false
@@ -214,19 +276,15 @@ public struct SendConfirmation {
             case .partialProposalErrorDismiss:
                 state.partialProposalErrorViewBinding = false
                 return .none
+                
+            case .updateDestination(let destination):
+                state.destination = destination
+                return .none
+
+            case .updateResult(let result):
+                state.result = result
+                return .none
             }
-        }
-    }
-}
-
-// MARK: Alerts
-
-extension AlertState where Action == SendConfirmation.Action {
-    public static func sendFailure(_ error: ZcashError) -> AlertState {
-        AlertState {
-            TextState(L10n.Send.Alert.Failure.title)
-        } message: {
-            TextState(L10n.Send.Alert.Failure.message(error.detailedMessage))
         }
     }
 }

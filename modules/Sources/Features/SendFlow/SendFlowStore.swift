@@ -319,6 +319,8 @@ public struct SendFlow {
                 return .send(.getProposal(.send))
                 
             case .getProposal(let confirmationType):
+                state.address = "u12pgnsjq2c2k5q6wuc7z4068xlcuqcw93wujlar47pwv9rrl6ujp2sjumtpnwxdemvg52t86cwu8hk740v7p2at7neq5delmtjk502q0xrnaz0kfyextpm8l687wsk0m3zqzdvynme2d".redacted
+                state.amount = .zero
                 return .run { [state, confirmationType] send in
                     do {
                         let recipient = try Recipient(state.address.data, network: zcashSDKEnvironment.network.networkType)

@@ -14,6 +14,8 @@ public enum L10n {
   public static func qrCodeFor(_ p1: Any) -> String {
     return L10n.tr("Localizable", "qrCodeFor", String(describing: p1), fallback: "QR Code for %@")
   }
+  /// 
+  public static let send = L10n.tr("Localizable", "send", fallback: "")
   public enum About {
     /// Send and receive ZEC on Zashi!
     /// Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.
@@ -362,12 +364,12 @@ public enum L10n {
     public static let mailPart3 = L10n.tr("Localizable", "proposalPartial.mailPart3", fallback: "Thank you.")
     /// TEX Transaction Error
     public static let mailSubject = L10n.tr("Localizable", "proposalPartial.mailSubject", fallback: "TEX Transaction Error")
-    /// Sending to this recipient required multiple transactions, but only some of them succeeded. Your funds are safe, but they need to be recovered with the help of Zashi team support.
-    public static let message1 = L10n.tr("Localizable", "proposalPartial.message1", fallback: "Sending to this recipient required multiple transactions, but only some of them succeeded. Your funds are safe, but they need to be recovered with the help of Zashi team support.")
-    /// Please use the button below to contact us and recover your funds. Your message to us will be pre-populated with all the data we need to resolve this issue.
-    public static let message2 = L10n.tr("Localizable", "proposalPartial.message2", fallback: "Please use the button below to contact us and recover your funds. Your message to us will be pre-populated with all the data we need to resolve this issue.")
-    /// Transaction Error
-    public static let title = L10n.tr("Localizable", "proposalPartial.title", fallback: "Transaction Error")
+    /// Send to this recipient required multiple transactions but only some of them succeeded and the rest failed. Your funds are safe but need to be recovered with assistance from our side.
+    public static let message1 = L10n.tr("Localizable", "proposalPartial.message1", fallback: "Send to this recipient required multiple transactions but only some of them succeeded and the rest failed. Your funds are safe but need to be recovered with assistance from our side.")
+    /// Please use the button below to contact us. it automatically prepares all the data we need in order to help you restore your funds.
+    public static let message2 = L10n.tr("Localizable", "proposalPartial.message2", fallback: "Please use the button below to contact us. it automatically prepares all the data we need in order to help you restore your funds.")
+    /// Send Failed
+    public static let title = L10n.tr("Localizable", "proposalPartial.title", fallback: "Send Failed")
     /// Transaction Ids
     public static let transactionIds = L10n.tr("Localizable", "proposalPartial.transactionIds", fallback: "Transaction Ids")
   }
@@ -649,6 +651,10 @@ public enum L10n {
     public static let confirmationTitle = L10n.tr("Localizable", "send.confirmationTitle", fallback: "Confirmation")
     /// USD
     public static let currencyPlaceholder = L10n.tr("Localizable", "send.currencyPlaceholder", fallback: "USD")
+    /// Unable to send
+    public static let failure = L10n.tr("Localizable", "send.failure", fallback: "Unable to send")
+    /// There was an error attempting to send tokens to
+    public static let failureInfo = L10n.tr("Localizable", "send.failureInfo", fallback: "There was an error attempting to send tokens to")
     /// Fee
     public static let feeSummary = L10n.tr("Localizable", "send.feeSummary", fallback: "Fee")
     /// Cancel
@@ -657,14 +663,26 @@ public enum L10n {
     public static let memoPlaceholder = L10n.tr("Localizable", "send.memoPlaceholder", fallback: "Write encrypted message here...")
     /// Message
     public static let message = L10n.tr("Localizable", "send.message", fallback: "Message")
+    /// Connection Error
+    public static let resubmission = L10n.tr("Localizable", "send.resubmission", fallback: "Connection Error")
+    /// Zashi encountered connection issues when submitting the transaction. It will retry in the next few minutes.
+    public static let resubmissionInfo = L10n.tr("Localizable", "send.resubmissionInfo", fallback: "Zashi encountered connection issues when submitting the transaction. It will retry in the next few minutes.")
     /// Review
     public static let review = L10n.tr("Localizable", "send.review", fallback: "Review")
-    /// Sending
-    public static let sending = L10n.tr("Localizable", "send.sending", fallback: "Sending")
+    /// Sending...
+    public static let sending = L10n.tr("Localizable", "send.sending", fallback: "Sending...")
+    /// Your tokens are being sent to
+    public static let sendingInfo = L10n.tr("Localizable", "send.sendingInfo", fallback: "Your tokens are being sent to")
+    /// Sent!
+    public static let success = L10n.tr("Localizable", "send.success", fallback: "Sent!")
+    /// Your tokens were successfully sent to
+    public static let successInfo = L10n.tr("Localizable", "send.successInfo", fallback: "Your tokens were successfully sent to")
     /// Send to
     public static let to = L10n.tr("Localizable", "send.to", fallback: "Send to")
     /// Sending to
     public static let toSummary = L10n.tr("Localizable", "send.toSummary", fallback: "Sending to")
+    /// View Transaction
+    public static let viewTransaction = L10n.tr("Localizable", "send.viewTransaction", fallback: "View Transaction")
     public enum Alert {
       public enum Failure {
         /// Error: %@

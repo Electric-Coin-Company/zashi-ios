@@ -26,6 +26,7 @@ import UserPreferencesStorage
 import RequestZec
 import ZecKeyboard
 import AddressBook
+import Models
 
 @Reducer
 public struct Tabs {
@@ -79,6 +80,7 @@ public struct Tabs {
         public var balanceBreakdownState: Balances.State
         public var currencyConversionSetupState: CurrencyConversionSetup.State
         public var destination: Destination?
+        @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
         public var isRateEducationEnabled = false
         public var isRateTooltipEnabled = false
         public var homeState: Home.State
@@ -215,8 +217,8 @@ public struct Tabs {
                 state.addressDetailsState.address = address
                 state.addressDetailsState.maxPrivacy = maxPrivacy
                 state.addressDetailsState.addressTitle = maxPrivacy
-                ? "Zcash Shielded Address"
-                : "Zcash Transparent Address"
+                ? L10n.Receive.shieldedAddress
+                : L10n.Receive.transparentAddress
                 return .send(.updateDestination(.addressDetails))
 
             case let .receive(.requestTapped(address, maxPrivacy)):
@@ -334,10 +336,24 @@ public struct Tabs {
                 return .none
 
             case .sendConfirmation(.sendDone):
+                if state.featureFlags.sendingScreen {
+                    return .none
+                } else {
+                    state.selectedTab = .account
+                    return .merge(
+                        .send(.updateDestination(nil)),
+                        .send(.updateStackDestinationRequestPayment(nil)),
+                        .send(.send(.resetForm))
+                    )
+                }
+
+            case .sendConfirmation(.closeTapped):
                 state.selectedTab = .account
                 return .merge(
                     .send(.updateDestination(nil)),
                     .send(.updateStackDestinationRequestPayment(nil)),
+                    .send(.sendConfirmation(.updateDestination(nil))),
+                    .send(.sendConfirmation(.updateResult(nil))),
                     .send(.send(.resetForm))
                     )
                 

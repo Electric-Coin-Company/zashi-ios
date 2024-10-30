@@ -170,7 +170,8 @@ public struct SendFlowView: View {
                                         ZashiButton(L10n.Send.review) {
                                             store.send(.reviewPressed)
                                         }
-                                        .disabled(!store.isValidForm)
+                                        // FIXME
+                                        //.disabled(!store.isValidForm)
                                         .padding(.top, 40)
                                     }
                                 }
