@@ -91,6 +91,7 @@ public enum Asset {
     public static let shieldTick = ImageAsset(name: "shieldTick")
     public static let shieldedFunds = ImageAsset(name: "shieldedFunds")
     public static let surroundedShield = ImageAsset(name: "surroundedShield")
+    public static let test = DataAsset(name: "test")
     public static let tooltip = ImageAsset(name: "tooltip")
     public static let zashiTitle = ImageAsset(name: "zashiTitle")
   }
@@ -304,6 +305,34 @@ public extension ColorAsset.SystemColor {
     #endif
   }
 }
+
+public struct DataAsset {
+  public fileprivate(set) var name: String
+
+  #if os(iOS) || os(tvOS) || os(macOS)
+  @available(iOS 9.0, macOS 10.11, *)
+  public var data: NSDataAsset {
+    guard let data = NSDataAsset(asset: self) else {
+      fatalError("Unable to load data asset named \(name).")
+    }
+    return data
+  }
+  #endif
+}
+
+#if os(iOS) || os(tvOS) || os(macOS)
+@available(iOS 9.0, macOS 10.11, *)
+public extension NSDataAsset {
+  convenience init?(asset: DataAsset) {
+    let bundle = BundleToken.bundle
+    #if os(iOS) || os(tvOS)
+    self.init(name: asset.name, bundle: bundle)
+    #elseif os(macOS)
+    self.init(name: NSDataAsset.Name(asset.name), bundle: bundle)
+    #endif
+  }
+}
+#endif
 
 public struct ImageAsset {
   public fileprivate(set) var name: String

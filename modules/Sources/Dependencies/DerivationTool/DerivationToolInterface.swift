@@ -44,4 +44,30 @@ public struct DerivationToolClient {
 
     /// Checks if given address is a valid zcash address.
     public var isZcashAddress: (String, NetworkType) -> Bool = { _, _ in false }
+
+    /// Derives and returns a ZIP 32 Arbitrary Key from the given seed at the "wallet level", i.e.
+    /// directly from the seed with no ZIP 32 path applied.
+    ///
+    /// The resulting key will be the same across all networks (Zcash mainnet, Zcash testnet,
+    /// OtherCoin mainnet, and so on). You can think of it as a context-specific seed fingerprint
+    /// that can be used as (static) key material.
+    ///
+    /// - Parameter contextString: a globally-unique non-empty sequence of at most 252 bytes that identifies the desired context.
+    /// - Parameter seed: `[Uint8]` seed bytes
+    /// - Throws:
+    ///     - `derivationToolInvalidAccount` if the `accountIndex` is invalid.
+    ///     - some `ZcashError.rust*` error if the derivation fails.
+    /// - Returns a `[Uint8]`
+    public var deriveArbitraryWalletKey: ([UInt8], [UInt8]) throws -> [UInt8]
+
+    /// Derives and returns a ZIP 32 Arbitrary Key from the given seed at the account level.
+    ///
+    /// - Parameter contextString: a globally-unique non-empty sequence of at most 252 bytes that identifies the desired context.
+    /// - Parameter seed: `[Uint8]` seed bytes
+    /// - Parameter accountNumber: `Int` with the account number
+    /// - Throws:
+    ///     - `derivationToolInvalidAccount` if the `accountIndex` is invalid.
+    ///     - some `ZcashError.rust*` error if the derivation fails.
+    /// - Returns a `[Uint8]`
+    public var deriveArbitraryAccountKey: ([UInt8], [UInt8], Int, NetworkType) throws -> [UInt8]
 }

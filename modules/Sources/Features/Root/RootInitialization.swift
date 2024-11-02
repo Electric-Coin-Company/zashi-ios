@@ -296,14 +296,16 @@ extension Root {
                     
                     let addressBookEncryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys()
                     if addressBookEncryptionKeys == nil {
-                        // TODO: str4d
-                        // here you know the encryption key for the address book is missing, we need to generate one
-                        
-                        // here you have `storedWallet.seedPhrase.seedPhrase`, a seed as String
-
-                        // once the key is prepared, store it
-                        // let keys == AddressBookEncryptionKeys(key: "")
-                        // try walletStorage.importAddressBookEncryptionKeys(keys)
+                        var keys = AddressBookEncryptionKeys.empty
+                        keys.cacheFor(
+                            seed: seedBytes,
+                            account: 0,
+                            network: zcashSDKEnvironment.network
+                        )
+                        // TODO: Why are the address book keys stored in wallet storage?
+                        // Doesn't that mean they require the same authentication as the
+                        // seed phrase, instead of being accessible without biometric auth?
+                        try walletStorage.importAddressBookEncryptionKeys(keys)
                     }
 
                     return .run { send in
