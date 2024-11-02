@@ -84,6 +84,19 @@ extension DerivationToolClient: DependencyKey {
                 } catch {
                     return false
                 }
+            },
+            deriveArbitraryWalletKey: { contextString, seed in
+                try DerivationTool.deriveArbitraryWalletKey(
+                    contextString: contextString,
+                    seed: seed
+                )
+            },
+            deriveArbitraryAccountKey: { contextString, seed, accountIndex, networkType in
+                try DerivationTool(networkType: networkType).deriveArbitraryAccountKey(
+                    contextString: contextString,
+                    seed: seed,
+                    accountIndex: accountIndex
+                )
             }
         )
     }
