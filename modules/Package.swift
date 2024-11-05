@@ -89,8 +89,7 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-case-paths", from: "1.5.4"),
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.6.2"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.4"),
-//        .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.2.6"),
-        .package(url: "https://github.com/LukasKorba/ZcashLightClientKit", branch: "note_management-preview"),
+        .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.2.7"),
         .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.27.0"),
         .package(url: "https://github.com/flexa/flexa-ios.git", exact: "1.0.4"),
         .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "0.1.0-beta.9"),
@@ -407,6 +406,7 @@ let package = Package(
         .target(
             name: "Models",
             dependencies: [
+                "DerivationTool",
                 "Utils",
                 .product(name: "MnemonicSwift", package: "MnemonicSwift"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")

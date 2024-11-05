@@ -48,6 +48,16 @@
 	<string>Scan zAddress Qr Codes</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>To access sensitive wallet data which should never be shared with anyone. For example backup phrase seed that can restore the wallet and gain access to funds.</string>
+	<key>NSUbiquitousContainers</key>
+	<dict>
+		<key>iCloud.com.electriccoinco.zashi</key>
+		<dict>
+			<key>NSUbiquitousContainerIsDocumentStorage</key>
+			<true/>
+			<key>NSUbiquitousContainerName</key>
+			<string>Zashi Address Book</string>
+		</dict>
+	</dict>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Zboto.otf</string>
