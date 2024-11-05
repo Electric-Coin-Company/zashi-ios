@@ -10,7 +10,7 @@ import Foundation
 public struct Contact: Equatable, Codable, Identifiable, Hashable {
     public let id: String
     public var name: String
-    public let lastUpdated: Date
+    public var lastUpdated: Date
 
     public init(address: String, name: String, lastUpdated: Date = Date()) {
         self.id = address

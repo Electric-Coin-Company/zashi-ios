@@ -266,21 +266,21 @@ public struct AddressBook {
                     return .none
                 }
 
-            case let .fetchedABContacts(abContacts, _):
+            case let .fetchedABContacts(abContacts, requestToSync):
                 state.addressBookContacts = abContacts
-//                if requestToSync {
-//                    return .run { send in
-//                        do {
-//                            let syncedContacts = try await addressBook.syncContacts(abContacts)
-//                            await send(.fetchedABContacts(syncedContacts, false))
-//                        } catch {
-//                            print("__LD syncContacts Error: \(error.localizedDescription)")
-//                            // TODO: FIXME
-//                        }
-//                    }
-//                } else {
+                if requestToSync {
+                    return .run { send in
+                        do {
+                            let syncedContacts = try await addressBook.syncContacts(abContacts)
+                            await send(.fetchedABContacts(syncedContacts, false))
+                        } catch {
+                            print("__LD syncContacts Error: \(error.localizedDescription)")
+                            // TODO: FIXME
+                        }
+                    }
+                } else {
                     return .none
-//                }
+                }
 
             case .updateDestination(let destination):
                 state.destination = destination
