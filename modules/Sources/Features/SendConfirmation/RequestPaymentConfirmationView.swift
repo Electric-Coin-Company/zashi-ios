@@ -205,6 +205,12 @@ public struct RequestPaymentConfirmationView: View {
             }
             .onAppear { store.send(.onAppear) }
             .screenTitle(L10n.Send.RequestPayment.title.uppercased())
+            .navigationLinkEmpty(
+                isActive: store.bindingFor(.sending),
+                destination: {
+                    SendingView(store: store, tokenName: tokenName)
+                }
+            )
         }
         .navigationBarBackButtonHidden()
         .padding(.vertical, 1)

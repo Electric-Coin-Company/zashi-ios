@@ -25,7 +25,7 @@ public struct SuccessView: View {
     
     public var body: some View {
         WithPerceptionTracking {
-            VStack {
+            VStack(spacing: 0) {
                 Spacer()
 
                 store.successIlustration
@@ -38,20 +38,22 @@ public struct SuccessView: View {
 
                 Text(L10n.Send.successInfo)
                     .zFont(size: 14, style: Design.Text.primary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.5)
+                    .multilineTextAlignment(.center)
+                    .lineSpacing(1.5)
+                    .screenHorizontalPadding()
 
                 Text(store.address.zip316)
                     .zFont(size: 14, style: Design.Text.primary)
+                    .padding(.top, 4)
 
-                Button {
-                } label: {
-                    Text(L10n.Send.viewTransaction)
-                        .zFont(.semiBold, size: 16, style: Design.Text.primary)
-                        .padding()
+                ZashiButton(
+                    L10n.Send.viewTransaction,
+                    type: .tertiary,
+                    infinityWidth: false
+                ) {
+                    store.send(.viewTransactionTapped)
                 }
                 .padding(.top, 16)
-                .hidden()
 
                 Spacer()
                 

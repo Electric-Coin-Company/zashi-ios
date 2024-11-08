@@ -25,7 +25,7 @@ public struct ResubmissionView: View {
     
     public var body: some View {
         WithPerceptionTracking {
-            VStack {
+            VStack(spacing: 0) {
                 Spacer()
 
                 store.resubmissionIlustration
@@ -39,9 +39,20 @@ public struct ResubmissionView: View {
                 Text(L10n.Send.resubmissionInfo)
                     .zFont(size: 14, style: Design.Text.primary)
                     .multilineTextAlignment(.center)
+                    .lineSpacing(1.5)
+                    .screenHorizontalPadding()
+
+                ZashiButton(
+                    L10n.Send.viewTransaction,
+                    type: .tertiary,
+                    infinityWidth: false
+                ) {
+                    store.send(.viewTransactionTapped)
+                }
+                .padding(.top, 16)
 
                 Spacer()
-                
+
                 ZashiButton(L10n.General.close) {
                     store.send(.closeTapped)
                 }

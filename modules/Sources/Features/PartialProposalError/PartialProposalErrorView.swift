@@ -84,6 +84,17 @@ public struct PartialProposalErrorView: View {
 
                 Spacer()
                 
+                ZashiButton(
+                    L10n.ProposalPartial.copyIds,
+                    type: .tertiary,
+                    prefixView:
+                        Asset.Assets.copy.image
+                            .zImage(size: 20, style: Design.Btns.Ghost.fg)
+                ) {
+                    store.send(.copyToPastboard)
+                }
+                .padding(.bottom, 8)
+
                 ZashiButton(L10n.ProposalPartial.contactSupport) {
                     store.send(.sendSupportMail)
                 }

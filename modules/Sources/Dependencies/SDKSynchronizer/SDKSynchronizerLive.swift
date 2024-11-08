@@ -157,7 +157,9 @@ extension SDKSynchronizerClient: DependencyKey {
                 
                 var txIds: [String] = []
                 var statuses: [String] = []
-                var fatalErrors = 0
+                var errCode = 0
+                var errDesc = ""
+                var resubmitableFailure = false
                 
                 for _ in 1...transactionCount {
                     if let transactionSubmitResult = try await iterator.next() {
@@ -169,22 +171,25 @@ extension SDKSynchronizerClient: DependencyKey {
                         case let .grpcFailure(txId: id, error: error):
                             txIds.append(id.toHexStringTxId())
                             statuses.append(error.localizedDescription)
-                            fatalErrors += 1
+                            resubmitableFailure = true
                         case let .submitFailure(txId: id, code: code, description: description):
                             txIds.append(id.toHexStringTxId())
                             statuses.append("code: \(code) desc: \(description)")
+                            errCode = code
+                            errDesc = description
                         case .notAttempted(txId: let id):
                             txIds.append(id.toHexStringTxId())
                             statuses.append("notAttempted")
-                            fatalErrors += 1
                         }
                     }
                 }
                 
-                if fatalErrors > 0 && successCount == 0 {
-                    return .grpcFailure(txIds: txIds)
-                } else if successCount >= 0 && fatalErrors == 0 {
-                    return .failure(txIds: txIds)
+                if successCount == 0 {
+                    if resubmitableFailure {
+                        return .failure(txIds: txIds, code: errCode, description: errDesc)
+                    } else {
+                        return .grpcFailure(txIds: txIds)
+                    }
                 } else if successCount == transactionCount {
                     return .success(txIds: txIds)
                 } else {

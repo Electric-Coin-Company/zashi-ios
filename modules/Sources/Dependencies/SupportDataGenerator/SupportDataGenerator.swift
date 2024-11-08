@@ -15,7 +15,7 @@ import Utils
 public struct SupportData: Equatable {
     public let toAddress: String
     public let subject: String
-    public let message: String
+    public var message: String
 }
 
 public enum SupportDataGenerator {

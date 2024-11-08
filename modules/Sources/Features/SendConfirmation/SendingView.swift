@@ -46,20 +46,7 @@ public struct SendingView: View {
 
                 Text(store.address.zip316)
                     .zFont(size: 14, style: Design.Text.primary)
-            
-                // FIXME
-                Button("success") {
-                    store.send(.updateResult(.success))
-                }
-                Button("failure") {
-                    store.send(.updateResult(.failure))
-                }
-                Button("resubmission") {
-                    store.send(.updateResult(.resubmission))
-                }
-                Button("partial") {
-                    store.send(.updateResult(.partial))
-                }
+                    .padding(.top, 4)
             }
             .navigationLinkEmpty(
                 isActive: store.bindingForResult(.success),

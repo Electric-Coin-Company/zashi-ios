@@ -335,6 +335,16 @@ public struct Tabs {
                 state.selectedTab = .send
                 return .none
 
+            case .sendConfirmation(.viewTransactionTapped):
+                state.selectedTab = .account
+                state.sendConfirmationState.txIdToExpand = state.homeState.transactionListState.transactionList.first?.id
+                return .merge(
+                    .send(.updateDestination(nil)),
+                    .send(.updateStackDestinationRequestPayment(nil)),
+                    .send(.send(.resetForm)),
+                    .send(.home(.transactionList(.transactionExpandRequested(state.sendConfirmationState.txIdToExpand ?? ""))))
+                )
+                
             case .sendConfirmation(.sendDone):
                 if state.featureFlags.sendingScreen {
                     return .none
@@ -427,4 +437,3 @@ public struct Tabs {
         }
     }
 }
-

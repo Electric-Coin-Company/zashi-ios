@@ -166,9 +166,9 @@ extension Root {
                         let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
                         
                         switch result {
-                        case .partial, .grpcFailure:
+                        case .partial, .failure:
                             await send(.flexaTransactionFailed(L10n.Partners.Flexa.transactionFailedMessage))
-                        case .success(let txIds), .failure(let txIds):
+                        case .success(let txIds), .grpcFailure(let txIds):
                             if let txId = txIds.first {
                                 flexaHandler.transactionSent(transaction.commerceSessionId, txId)
                             }

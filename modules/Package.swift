@@ -89,7 +89,7 @@ let package = Package(
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.4"),
         .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.2.6"),
         .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.27.0"),
-        .package(url: "https://github.com/flexa/flexa-ios.git", from: "1.0.4"),
+        .package(url: "https://github.com/flexa/flexa-ios.git", exact: "1.0.4"),
         .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "0.1.0-beta.9"),
         .package(url: "https://github.com/airbnb/lottie-spm.git", from: "4.5.0")
     ],
@@ -448,6 +448,7 @@ let package = Package(
             name: "PartialProposalError",
             dependencies: [
                 "Generated",
+                "Pasteboard",
                 "SupportDataGenerator",
                 "UIComponents",
                 "Utils",
@@ -662,6 +663,7 @@ let package = Package(
                 "PartialProposalError",
                 "Scan",
                 "SDKSynchronizer",
+                "SupportDataGenerator",
                 "UIComponents",
                 "Utils",
                 "WalletBalances",

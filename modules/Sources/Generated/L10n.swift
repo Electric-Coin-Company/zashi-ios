@@ -14,8 +14,6 @@ public enum L10n {
   public static func qrCodeFor(_ p1: Any) -> String {
     return L10n.tr("Localizable", "qrCodeFor", String(describing: p1), fallback: "QR Code for %@")
   }
-  /// 
-  public static let send = L10n.tr("Localizable", "send", fallback: "")
   public enum About {
     /// Send and receive ZEC on Zashi!
     /// Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private. Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.
@@ -356,6 +354,8 @@ public enum L10n {
   public enum ProposalPartial {
     /// Contact Support
     public static let contactSupport = L10n.tr("Localizable", "proposalPartial.contactSupport", fallback: "Contact Support")
+    /// Copy transaction IDs
+    public static let copyIds = L10n.tr("Localizable", "proposalPartial.copyIds", fallback: "Copy transaction IDs")
     /// Hi Zashi Team,
     public static let mailPart1 = L10n.tr("Localizable", "proposalPartial.mailPart1", fallback: "Hi Zashi Team,")
     /// While sending a transaction to a TEX address, I encountered an error state. I'm reaching out to get guidance on how to recover my funds.
@@ -653,8 +653,8 @@ public enum L10n {
     public static let currencyPlaceholder = L10n.tr("Localizable", "send.currencyPlaceholder", fallback: "USD")
     /// Unable to send
     public static let failure = L10n.tr("Localizable", "send.failure", fallback: "Unable to send")
-    /// There was an error attempting to send tokens to
-    public static let failureInfo = L10n.tr("Localizable", "send.failureInfo", fallback: "There was an error attempting to send tokens to")
+    /// There was an error attempting to send tokens. Try it again, please.
+    public static let failureInfo = L10n.tr("Localizable", "send.failureInfo", fallback: "There was an error attempting to send tokens. Try it again, please.")
     /// Fee
     public static let feeSummary = L10n.tr("Localizable", "send.feeSummary", fallback: "Fee")
     /// Cancel
@@ -663,6 +663,8 @@ public enum L10n {
     public static let memoPlaceholder = L10n.tr("Localizable", "send.memoPlaceholder", fallback: "Write encrypted message here...")
     /// Message
     public static let message = L10n.tr("Localizable", "send.message", fallback: "Message")
+    /// Report
+    public static let report = L10n.tr("Localizable", "send.report", fallback: "Report")
     /// Connection Error
     public static let resubmission = L10n.tr("Localizable", "send.resubmission", fallback: "Connection Error")
     /// Zashi encountered connection issues when submitting the transaction. It will retry in the next few minutes.

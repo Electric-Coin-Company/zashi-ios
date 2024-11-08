@@ -28,6 +28,7 @@
 "proposalPartial.message2" = "Please use the button below to contact us. it automatically prepares all the data we need in order to help you restore your funds.";
 "proposalPartial.transactionIds" = "Transaction Ids";
 "proposalPartial.contactSupport" = "Contact Support";
+"proposalPartial.copyIds" = "Copy transaction IDs";
 "proposalPartial.mailSubject" = "TEX Transaction Error";
 "proposalPartial.mailPart1" = "Hi Zashi Team,";
 "proposalPartial.mailPart2" = "While sending a transaction to a TEX address, I encountered an error state. I'm reaching out to get guidance on how to recover my funds.";
@@ -165,11 +166,10 @@
 "send.success" = "Sent!";
 "send.successInfo" = "Your tokens were successfully sent to";
 "send.failure" = "Unable to send";
-"send.failureInfo" = "There was an error attempting to send tokens to";
+"send.failureInfo" = "There was an error attempting to send tokens. Try it again, please.";
 "send.resubmission" = "Connection Error";
 "send.resubmissionInfo" = "Zashi encountered connection issues when submitting the transaction. It will retry in the next few minutes.";
-"send" = "";
-"send" = "";
+"send.report" = "Report";
 
 // MARK: - ZEC Keyboard
 "zecKeyboard.invalid" = "This transaction amount is invalid.";

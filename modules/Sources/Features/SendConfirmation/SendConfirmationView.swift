@@ -26,11 +26,6 @@ public struct SendConfirmationView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack {
-                // FIXME
-                Button("success") {
-                    store.send(.updateDestination(.sending))
-                }
-                
                 ScrollView {
                     HStack {
                         VStack(alignment: .leading, spacing: 0) {
@@ -170,6 +165,7 @@ public struct SendConfirmationView: View {
                     store.send(.goBackPressed)
                 }
                 .screenHorizontalPadding()
+                .disabled(store.isSending)
                 .padding(.top, 4)
                 .padding(.bottom, 24)
             }
