@@ -13,6 +13,11 @@ import ZcashLightClientKit
 
 /// Representation of the address book encryption keys
 public struct AddressBookEncryptionKeys: Codable, Equatable {
+    /// Latest encryption version
+    public enum Constants {
+        public static let version = 1
+    }
+    
     var keys: [Int: AddressBookKey]
 
     public mutating func cacheFor(seed: [UInt8], account: Int, network: NetworkType) throws{
@@ -74,5 +79,23 @@ public struct AddressBookKey: Codable, Equatable, Redactable {
     ) -> SymmetricKey {
         assert(salt.count == 32)
         return HKDF<SHA256>.deriveKey(inputKeyMaterial: key, salt: salt, outputByteCount: 32)
+    }
+
+    /**
+     * Derives the filename that this key is able to decrypt.
+     */
+    public func fileIdentifier() -> String? {
+        let info = "file_identifier".data(using: .utf8)!
+        
+        // Perform HKDF with SHA-256
+        let hkdfKey = HKDF<SHA256>.deriveKey(inputKeyMaterial: key, info: info, outputByteCount: 32)
+        
+        // Convert the HKDF output to a hex string
+        let fileIdentifier = hkdfKey.withUnsafeBytes { rawBytes in
+            rawBytes.map { String(format: "%02x", $0) }.joined()
+        }
+        
+        // Prepend the prefix to the result
+        return "zashi-address-book-\(fileIdentifier)"
     }
 }

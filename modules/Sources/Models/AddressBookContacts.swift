@@ -10,7 +10,7 @@ import ComposableArchitecture
 
 public struct AddressBookContacts: Equatable, Codable {
     public enum Constants {
-        public static let version = 2
+        public static let version = 1
     }
     
     public let lastUpdated: Date

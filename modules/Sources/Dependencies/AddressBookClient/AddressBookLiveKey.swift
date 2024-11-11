@@ -18,12 +18,16 @@ import CryptoKit
 
 extension AddressBookClient: DependencyKey {
     private enum Constants {
-        static let component = "AddressBookData"
+        static let unencryptedFilename = "AddressBookData"
     }
 
     public enum AddressBookClientError: Error {
         case missingEncryptionKey
         case documentsFolder
+        case fileIdentifier
+        case unencryptedFileStore
+        case unencryptedFileDelete
+        case encryptionVersionNotSupported
     }
 
     public static let liveValue: AddressBookClient = Self.live()
@@ -35,13 +39,9 @@ extension AddressBookClient: DependencyKey {
 
         return Self(
             allLocalContacts: {
-                // return latest known contacts
+                // return latest known contacts or load ones for the first time
                 guard latestKnownContacts == nil else {
-                    if let contacts = latestKnownContacts {
-                        return contacts
-                    } else {
-                        return .empty
-                    }
+                    return latestKnownContacts ?? .empty
                 }
 
                 // contacts haven't been loaded from the locale storage yet, do it
@@ -49,27 +49,54 @@ extension AddressBookClient: DependencyKey {
                     guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
                         throw AddressBookClientError.documentsFolder
                     }
-                    let fileURL = documentsDirectory.appendingPathComponent(Constants.component)
-                    let encryptedContacts: Data
-                    
-                    do {
-                        encryptedContacts = try Data(contentsOf: fileURL)
-                    } catch {
-                        let syncedContacts = try syncContacts(contacts: .empty, remoteStorage: remoteStorage)
-                        latestKnownContacts = syncedContacts
-                        return syncedContacts
-                    }
-                    
-                    let decryptedContacts = try AddressBookClient.decryptData(encryptedContacts)
-                    latestKnownContacts = decryptedContacts
 
-                    return decryptedContacts
+                    // Try to find and get the data from the encrypted file with the latest encryption version
+                    let encryptedFileURL = documentsDirectory.appendingPathComponent(try AddressBookClient.filenameForEncryptedFile())
+
+                    if let contactsData = try? Data(contentsOf: encryptedFileURL) {
+                        // file exists, try to find the unencrypted file in case the delete failed
+                        let unencryptedFileURL = documentsDirectory.appendingPathComponent(Constants.unencryptedFilename)
+                        if FileManager.default.fileExists(atPath: unencryptedFileURL.path) {
+                            try? FileManager.default.removeItem(at: unencryptedFileURL)
+                        }
+                        
+                        let contacts = try AddressBookClient.contactsFrom(encryptedData: contactsData)
+
+                        latestKnownContacts = contacts
+                        return contacts
+                    } else {
+                        // Fallback to the unencrypted file check and resolution
+                        let unencryptedFileURL = documentsDirectory.appendingPathComponent(Constants.unencryptedFilename)
+                        
+                        if let contactsData = try? Data(contentsOf: unencryptedFileURL) {
+                            // file exists, ensure data are parsed, re-saved and file deteled
+                            let contacts = try AddressBookClient.contactsFrom(unencryptedData: contactsData)
+
+                            // try to encrypt and store the data
+                            do {
+                                try AddressBookClient.storeContacts(contacts, remoteStorage: remoteStorage, remoteStore: false)
+                            } catch {
+                                // the store of the new file failed, skip the file remove
+                                latestKnownContacts = contacts
+                                return contacts
+                            }
+                            
+                            try? FileManager.default.removeItem(at: unencryptedFileURL)
+                            
+                            latestKnownContacts = contacts
+                            return contacts
+                        } else {
+                            return .empty
+                        }
+                    }
                 } catch {
                     throw error
                 }
             },
-            syncContacts: { contacts in
-                let syncedContacts =  try syncContacts(contacts: contacts, remoteStorage: remoteStorage)
+            syncContacts: {
+                let abContacts = $0 ?? latestKnownContacts ?? AddressBookContacts.empty
+
+                let syncedContacts =  try syncContacts(contacts: abContacts, remoteStorage: remoteStorage)
                 
                 latestKnownContacts = syncedContacts
 
@@ -117,69 +144,31 @@ extension AddressBookClient: DependencyKey {
     }
     
     private static func syncContacts(
-        contacts: AddressBookContacts?,
+        contacts: AddressBookContacts,
         remoteStorage: RemoteStorageClient,
         storeAfterSync: Bool = true
     ) throws -> AddressBookContacts {
-        // Ensure local contacts are prepared
-        var localContacts: AddressBookContacts
-        
-        if let contacts {
-            localContacts = contacts
-        } else {
-            do {
-                guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-                    throw AddressBookClientError.documentsFolder
-                }
-                let fileURL = documentsDirectory.appendingPathComponent(Constants.component)
-                let encryptedContacts = try Data(contentsOf: fileURL)
-
-                let decryptedContacts = try AddressBookClient.decryptData(encryptedContacts)
-                localContacts = decryptedContacts
-
-                return decryptedContacts
-            } catch {
-                throw error
-            }
-        }
-
         // Ensure remote contacts are prepared
-        let data: Data
         var remoteContacts: AddressBookContacts = .empty
         var storeData = true
-        
+
         do {
-            data = try remoteStorage.loadAddressBookContacts()
-            remoteContacts = try AddressBookClient.decryptData(data)
+            let filenameForEncryptedFile = try AddressBookClient.filenameForEncryptedFile()
+            let encryptedData = try remoteStorage.loadAddressBookContacts(filenameForEncryptedFile)
+            remoteContacts = try AddressBookClient.contactsFrom(encryptedData: encryptedData)
         } catch RemoteStorageClient.RemoteStorageError.fileDoesntExist {
+            storeData = false
+        } catch RemoteStorageClient.RemoteStorageError.containerURL {
             storeData = false
         } catch {
             throw error
         }
 
-        // TMP
-//      let rContacts: [Contact] = [
-//          Contact(address: "Ar", name: "ar", lastUpdated: Date.init(timeIntervalSince1970: 1730796715)),
-//          Contact(address: "C", name: "cle", lastUpdated: Date.init(timeIntervalSince1970: 1730796315)),
-//          Contact(address: "D", name: "dr", lastUpdated: Date.init(timeIntervalSince1970: 1730796315))
-//      ]
-//      let idContacts = IdentifiedArray(rContacts)
-//      var remoteContacts = AddressBookContacts(lastUpdated: Date(), version: 2, contacts: idContacts)
-//
-//      let lContacts: [Contact] = [
-//          Contact(address: "Al", name: "al", lastUpdated: Date.init(timeIntervalSince1970: 1730796615)),
-//          Contact(address: "Bl", name: "bl", lastUpdated: Date.init(timeIntervalSince1970: 1730796515)),
-//          Contact(address: "C", name: "cl", lastUpdated: Date.init(timeIntervalSince1970: 1730796415)),
-//          Contact(address: "D", name: "dl", lastUpdated: Date.init(timeIntervalSince1970: 1730796215)),
-//      ]
-//      let idlContacts = IdentifiedArray(lContacts)
-//      var localContacts = AddressBookContacts(lastUpdated: Date(), version: 2, contacts: idlContacts)
-
         // Merge strategy
         var syncedContacts = AddressBookContacts(
             lastUpdated: Date(),
             version: AddressBookContacts.Constants.version,
-            contacts: localContacts.contacts
+            contacts: contacts.contacts
         )
 
         remoteContacts.contacts.forEach {
@@ -229,247 +218,29 @@ extension AddressBookClient: DependencyKey {
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             throw AddressBookClientError.documentsFolder
         }
-        let fileURL = documentsDirectory.appendingPathComponent(Constants.component)
+        
+        let filenameForEncryptedFile = try AddressBookClient.filenameForEncryptedFile()
+
+        let fileURL = documentsDirectory.appendingPathComponent(filenameForEncryptedFile)
         try encryptedContacts.write(to: fileURL)
         
         // store encrypted data to the remote storage
         if remoteStore {
-            try remoteStorage.storeAddressBookContacts(encryptedContacts)
+            try? remoteStorage.storeAddressBookContacts(encryptedContacts, filenameForEncryptedFile)
         }
     }
-
-    private static func encryptContacts(_ abContacts: AddressBookContacts) throws -> Data {
+    
+    private static func filenameForEncryptedFile() throws -> String {
         @Dependency(\.walletStorage) var walletStorage
 
         guard let encryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys(), let addressBookKey = encryptionKeys.getCached(account: 0) else {
-            throw AddressBookClient.AddressBookClientError.missingEncryptionKey
+            throw AddressBookClientError.missingEncryptionKey
         }
 
-        // here you have an array of all contacts
-        // you also have a key from the keychain
-        var versionData = Data()
-        var data = Data()
-
-        // Serialize `version`
-        versionData.append(contentsOf: intToBytes(abContacts.version))
-
-        // Serialize `lastUpdated`
-        data.append(contentsOf: AddressBookClient.serializeDate(Date()))
-
-        // Serialize `contacts.count`
-        data.append(contentsOf: intToBytes(abContacts.contacts.count))
-
-        // Serialize `contacts`
-        abContacts.contacts.forEach { contact in
-            let serializedContact = serializeContact(contact)
-            data.append(serializedContact)
-        }
-
-        // Generate a fresh one-time sub-key for encrypting the address book.
-        let salt = SymmetricKey(size: SymmetricKeySize.bits256)
-        return try salt.withUnsafeBytes { salt in
-            let salt = Data(salt)
-            let subKey = addressBookKey.deriveEncryptionKey(salt: salt)
-
-            // Encrypt the serialized address book.
-            // CryptoKit encodes the SealedBox as `nonce || ciphertext || tag`.
-            let sealed = try ChaChaPoly.seal(data, using: subKey)
-
-            // Prepend the version & salt to the SealedBox so we can re-derive the sub-key.
-            return versionData + salt + sealed.combined
-        }
-    }
-    
-    private static func decryptData(_ encrypted: Data) throws -> AddressBookContacts {
-        @Dependency(\.walletStorage) var walletStorage
-
-        guard let encryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys(), let addressBookKey = encryptionKeys.getCached(account: 0) else {
-            throw AddressBookClient.AddressBookClientError.missingEncryptionKey
-        }
-
-        var offset = 0
-
-        // Deserialize `version`
-        let versionBytes = encrypted.subdata(in: offset..<(offset + MemoryLayout<Int>.size))
-        offset += MemoryLayout<Int>.size
-
-        guard let version = AddressBookClient.bytesToInt(Array(versionBytes)) else {
-            return .empty
-        }
-
-        if version == AddressBookContacts.Constants.version {
-            let subData = encrypted.subdata(in: offset..<encrypted.count)
-
-            return try decryptLatestVersionData(subData, addressBookKey: addressBookKey)
-        } else if version == 1 {
-            return try decryptV1Data(encrypted)
-        } else {
-            return .empty
-        }
-    }
-    
-    private static func decryptV1Data(_ encrypted: Data) throws -> AddressBookContacts {
-        var offset = MemoryLayout<Int>.size
-
-        // Deserialize `lastUpdated`
-        guard let lastUpdated = AddressBookClient.deserializeDate(from: encrypted, at: &offset) else {
-            return .empty
-        }
-
-        // Deserialize `contactsCount`
-        let contactsCountBytes = encrypted.subdata(in: offset..<(offset + MemoryLayout<Int>.size))
-        offset += MemoryLayout<Int>.size
-
-        guard let contactsCount = AddressBookClient.bytesToInt(Array(contactsCountBytes)) else {
-            return .empty
+        guard let filename = addressBookKey.fileIdentifier() else {
+            throw AddressBookClientError.fileIdentifier
         }
         
-        var contacts: [Contact] = []
-        for _ in 0..<contactsCount {
-            if let contact = AddressBookClient.deserializeContact(from: encrypted, at: &offset) {
-                contacts.append(contact)
-            }
-        }
-        
-        let abContacts = AddressBookContacts(
-            lastUpdated: lastUpdated,
-            version: AddressBookContacts.Constants.version,
-            contacts: IdentifiedArrayOf(uniqueElements: contacts)
-        )
-
-        return abContacts
-    }
-
-    private static func decryptLatestVersionData(_ encrypted: Data, addressBookKey: AddressBookKey) throws -> AddressBookContacts {
-        var offset = 0
-        
-        // Derive the sub-key for decrypting the address book.
-        let salt = encrypted.prefix(upTo: 32)
-        let subKey = addressBookKey.deriveEncryptionKey(salt: salt)
-
-        // Unseal the encrypted address book.
-        let sealed = try ChaChaPoly.SealedBox.init(combined: encrypted.suffix(from: 32))
-        let data = try ChaChaPoly.open(sealed, using: subKey)
-
-        // Deserialize `lastUpdated`
-        guard let lastUpdated = AddressBookClient.deserializeDate(from: data, at: &offset) else {
-            return .empty
-        }
-
-        // Deserialize `contactsCount`
-        let contactsCountBytes = data.subdata(in: offset..<(offset + MemoryLayout<Int>.size))
-        offset += MemoryLayout<Int>.size
-
-        guard let contactsCount = AddressBookClient.bytesToInt(Array(contactsCountBytes)) else {
-            return .empty
-        }
-        
-        var contacts: [Contact] = []
-        for _ in 0..<contactsCount {
-            if let contact = AddressBookClient.deserializeContact(from: data, at: &offset) {
-                contacts.append(contact)
-            }
-        }
-        
-        let abContacts = AddressBookContacts(
-            lastUpdated: lastUpdated,
-            version: AddressBookContacts.Constants.version,
-            contacts: IdentifiedArrayOf(uniqueElements: contacts)
-        )
-
-        return abContacts
-    }
-
-    private static func serializeContact(_ contact: Contact) -> Data {
-        var data = Data()
-
-        // Serialize `lastUpdated`
-        data.append(contentsOf: AddressBookClient.serializeDate(contact.lastUpdated))
-
-        // Serialize `address` (length + UTF-8 bytes)
-        let addressBytes = stringToBytes(contact.id)
-        data.append(contentsOf: intToBytes(addressBytes.count))
-        data.append(contentsOf: addressBytes)
-
-        // Serialize `name` (length + UTF-8 bytes)
-        let nameBytes = stringToBytes(contact.name)
-        data.append(contentsOf: intToBytes(nameBytes.count))
-        data.append(contentsOf: nameBytes)
-
-        return data
-    }
-    
-    private static func deserializeContact(from data: Data, at offset: inout Int) -> Contact? {
-        // Deserialize `lastUpdated`
-        guard let lastUpdated = AddressBookClient.deserializeDate(from: data, at: &offset) else {
-            return nil
-        }
-        
-        // Deserialize `address`
-        guard let address = readString(from: data, at: &offset) else {
-            return nil
-        }
-        
-        // Deserialize `name`
-        guard let name = readString(from: data, at: &offset) else {
-            return nil
-        }
-        
-        return Contact(address: address, name: name, lastUpdated: lastUpdated)
-    }
-    
-    private static func stringToBytes(_ string: String) -> [UInt8] {
-        return Array(string.utf8)
-    }
-
-    private static func bytesToString(_ bytes: [UInt8]) -> String? {
-        return String(bytes: bytes, encoding: .utf8)
-    }
-    
-    private static func intToBytes(_ value: Int) -> [UInt8] {
-        withUnsafeBytes(of: value.bigEndian, Array.init)
-    }
-
-    private static func bytesToInt(_ bytes: [UInt8]) -> Int? {
-        guard bytes.count == MemoryLayout<Int>.size else {
-            return nil
-        }
-        
-        return bytes.withUnsafeBytes {
-            $0.load(as: Int.self).bigEndian
-        }
-    }
-    
-    private static func serializeDate(_ date: Date) -> [UInt8] {
-        // Convert Date to Unix time (number of seconds since 1970)
-        let timestamp = Int(date.timeIntervalSince1970)
-        
-        // Convert the timestamp to bytes
-        return AddressBookClient.intToBytes(timestamp)
-    }
-    
-    private static func deserializeDate(from data: Data, at offset: inout Int) -> Date? {
-        // Extract the bytes for the timestamp (assume it's stored as an Int)
-        let timestampBytes = data.subdata(in: offset..<(offset + MemoryLayout<Int>.size))
-        offset += MemoryLayout<Int>.size
-        
-        // Convert the bytes back to an Int
-        guard let timestamp = AddressBookClient.bytesToInt(Array(timestampBytes)) else { return nil }
-        
-        // Convert the timestamp back to a Date
-        return Date(timeIntervalSince1970: TimeInterval(timestamp))
-    }
-    
-    // Helper function to read a string from the data using a length prefix
-    private static func readString(from data: Data, at offset: inout Int) -> String? {
-        // Read the length first (assumes the length is stored as an Int)
-        let lengthBytes = data.subdata(in: offset..<(offset + MemoryLayout<Int>.size))
-        offset += MemoryLayout<Int>.size
-        guard let length = AddressBookClient.bytesToInt(Array(lengthBytes)), length > 0 else { return nil }
-        
-        // Read the string bytes
-        let stringBytes = data.subdata(in: offset..<(offset + length))
-        offset += length
-        return AddressBookClient.bytesToString(Array(stringBytes))
+        return filename
     }
 }

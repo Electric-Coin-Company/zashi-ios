@@ -17,6 +17,6 @@ extension DependencyValues {
 
 @DependencyClient
 public struct RemoteStorageClient {
-    public let loadAddressBookContacts: () throws -> Data
-    public let storeAddressBookContacts: (Data) throws -> Void
+    public let loadAddressBookContacts: (String) throws -> Data
+    public let storeAddressBookContacts: (Data, String) throws -> Void
 }
