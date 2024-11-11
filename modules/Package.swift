@@ -812,6 +812,7 @@ let package = Package(
                 "LocalAuthenticationHandler",
                 "Models",
                 "NumberFormatter",
+                "Models",
                 "SupportDataGenerator",
                 "Utils",
                 "ZcashSDKEnvironment",

@@ -26,7 +26,7 @@ struct TapToCopyTransactionDataView: View {
             } label: {
                 HStack {
                     Asset.Assets.copy.image
-                        .zImage(size: 11, style: Design.Btns.Tertiary.fg)
+                        .zImage(size: 16, style: Design.Btns.Tertiary.fg)
                     
                     Text(L10n.General.tapToCopy)
                         .zFont(.semiBold, size: 14, style: Design.Btns.Tertiary.fg)

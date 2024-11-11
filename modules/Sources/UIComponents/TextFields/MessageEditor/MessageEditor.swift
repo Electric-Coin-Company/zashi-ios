@@ -26,17 +26,20 @@ public struct MessageEditorView: View {
 
     let title: String
     let placeholder: String
+    let isAddUAtoMemoActive: Bool
     
     @FocusState public var isFocused: Bool
     
     public init(
         store: StoreOf<MessageEditor>,
         title: String = L10n.Send.message,
-        placeholder: String = L10n.Send.memoPlaceholder
+        placeholder: String = L10n.Send.memoPlaceholder,
+        isAddUAtoMemoActive: Bool = false
     ) {
         self.store = store
         self.title = title
         self.placeholder = placeholder
+        self.isAddUAtoMemoActive = isAddUAtoMemoActive
         self.isFocused = false
     }
     
@@ -44,43 +47,41 @@ public struct MessageEditorView: View {
         WithPerceptionTracking {
             VStack(alignment: .leading, spacing: 0) {
                 Text(title)
-                    .font(.custom(FontFamily.Inter.medium.name, size: 14))
-                    .foregroundColor(Design.Inputs.Filled.label.color)
+                    .zFont(.medium, size: 14, style: Design.Inputs.Filled.label)
                     .padding(.bottom, 6)
                 
-                TextEditor(text: $store.text)
-                    .focused($isFocused)
-                    .font(.custom(FontFamily.Inter.regular.name, size: 16))
-                    .padding(.horizontal, 10)
-                    .padding(.top, 2)
-                    .padding(.bottom, 10)
-                    .colorBackground(Design.Inputs.Default.bg.color)
-                    .background(Design.Inputs.Default.bg.color)
-                    .cornerRadius(10)
-                    .overlay {
-                        if store.text.isEmpty {
-                            HStack {
-                                VStack {
-                                    Text(placeholder)
-                                        .font(.custom(FontFamily.Inter.regular.name, size: 16))
-                                        .foregroundColor(Design.Inputs.Default.text.color)
-                                        .onTapGesture {
-                                            isFocused = true
-                                        }
+                VStack(spacing: 0) {
+                    TextEditor(text: $store.text)
+                        .focused($isFocused)
+                        .font(.custom(FontFamily.Inter.regular.name, size: 16))
+                        .padding(.horizontal, 10)
+                        .padding(.top, 2)
+                        .padding(.bottom, 10)
+                        .colorBackground(Design.Inputs.Default.bg.color)
+                        .cornerRadius(10)
+                        .overlay {
+                            if store.text.isEmpty {
+                                HStack {
+                                    VStack {
+                                        Text(placeholder)
+                                            .font(.custom(FontFamily.Inter.regular.name, size: 16))
+                                            .foregroundColor(Design.Inputs.Default.text.color)
+                                            .onTapGesture {
+                                                isFocused = true
+                                            }
+                                        
+                                        Spacer()
+                                    }
+                                    .padding(.top, 10)
                                     
                                     Spacer()
                                 }
-                                .padding(.top, 10)
-                                
-                                Spacer()
+                                .padding(.leading, 14)
+                            } else {
+                                EmptyView()
                             }
-                            .padding(.leading, 14)
-                        } else {
-                            EmptyView()
                         }
-                    }
-                
-                if store.isCharLimited {
+                    
                     HStack {
                         Spacer()
                         
@@ -91,9 +92,24 @@ public struct MessageEditorView: View {
                                 ? Design.Inputs.Default.hint.color
                                 : Design.Inputs.Filled.required.color
                             )
+                            .padding(.trailing, 14)
+                            .padding(.bottom, 14)
                     }
                     .frame(height: 20)
                     .padding(.top, 4)
+                }
+                .background {
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Design.Inputs.Default.bg.color)
+                }
+                
+                if store.featureFlags.addUAtoMemo && isAddUAtoMemoActive && !store.uAddress.isEmpty {
+                    ZashiToggle(
+                        isOn: $store.isUAaddedToMemo,
+                        label: store.isUAaddedToMemo ? L10n.MessageEditor.addUA : L10n.MessageEditor.addUA,
+                        textColor: Design.Inputs.Filled.label.color
+                    )
+                    .padding(.top, 12)
                 }
             }
         }

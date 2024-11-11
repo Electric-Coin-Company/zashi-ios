@@ -208,6 +208,32 @@ public struct TabsView: View {
             .navigationBarItems(leading: hideBalancesButton(tab: store.selectedTab))
             .zashiTitle { navBarView(store.selectedTab) }
             .walletStatusPanel()
+            .sheet(isPresented: $store.selectTextRequest) {
+                VStack(alignment: .leading) {
+                    HStack {
+                        Spacer()
+                        
+                        Button {
+                            store.send(.dismissSelectTextEditor)
+                        } label: {
+                            Asset.Assets.buttonCloseX.image
+                                .zImage(size: 24, style: Design.Btns.Tertiary.fg)
+                                .padding(8)
+                                .background {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Design.Btns.Tertiary.bg.color)
+                                }
+                        }
+                    }
+                    
+                    TextEditor(text: $store.textToSelect)
+                        .colorBackground(Asset.Colors.background.color)
+                        .background(Asset.Colors.background.color)
+                        .zFont(size: 14, style: Design.Text.primary)
+                }
+                .padding()
+                .applyScreenBackground()
+            }
             .overlayPreferenceValue(ExchangeRateStaleTooltipPreferenceKey.self) { preferences in
                 WithPerceptionTracking {
                     if store.isRateTooltipEnabled {

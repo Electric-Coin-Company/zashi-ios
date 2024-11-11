@@ -302,6 +302,17 @@ public enum L10n {
     /// The Following content requires authentication.
     public static let reason = L10n.tr("Localizable", "localAuthentication.reason", fallback: "The Following content requires authentication.")
   }
+  public enum MessageEditor {
+    /// Reply-to: Include my address in the memo
+    public static let addUA = L10n.tr("Localizable", "messageEditor.addUA", fallback: "Reply-to: Include my address in the memo")
+    /// 
+    /// >>> reply-to: %@
+    public static func addUAformat(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "messageEditor.addUAformat", String(describing: p1), fallback: "\n>>> reply-to: %@")
+    }
+    /// Your address is included in the memo
+    public static let removeUA = L10n.tr("Localizable", "messageEditor.removeUA", fallback: "Your address is included in the memo")
+  }
   public enum NotEnoughFreeSpace {
     /// Zashi requires at
     /// least %@ GB of space to
@@ -913,6 +924,8 @@ public enum L10n {
     public static let receiving = L10n.tr("Localizable", "transaction.receiving", fallback: "Receiving...")
     /// Save address
     public static let saveAddress = L10n.tr("Localizable", "transaction.saveAddress", fallback: "Save address")
+    /// Select text
+    public static let selectText = L10n.tr("Localizable", "transaction.selectText", fallback: "Select text")
     /// Sending...
     public static let sending = L10n.tr("Localizable", "transaction.sending", fallback: "Sending...")
     /// Sent

@@ -134,7 +134,7 @@ public struct SendFlowView: View {
                                         }
                                         
                                         if store.isMemoInputEnabled {
-                                            MessageEditorView(store: store.memoStore())
+                                            MessageEditorView(store: store.memoStore(), isAddUAtoMemoActive: true)
                                                 .frame(minHeight: 155)
                                                 .frame(maxHeight: 300)
                                                 .id(InputID.message)

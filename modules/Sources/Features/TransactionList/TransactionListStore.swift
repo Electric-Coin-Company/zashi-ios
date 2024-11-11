@@ -18,6 +18,7 @@ public struct TransactionList {
     @ObservableState
     public struct State: Equatable {
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
+        @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
         public var latestMinedHeight: BlockHeight?
         public var latestTransactionId = ""
         public var latestTransactionList: [TransactionState] = []
@@ -45,6 +46,7 @@ public struct TransactionList {
         case onAppear
         case onDisappear
         case saveAddressTapped(RedactableString)
+        case selectText(String)
         case synchronizerStateChanged(SyncStatus)
         case transactionCollapseRequested(String)
         case transactionAddressExpandRequested(String)
@@ -124,6 +126,9 @@ public struct TransactionList {
                 .cancel(id: CancelEventId)
             )
 
+        case .selectText:
+            return .none
+            
         case .saveAddressTapped:
             return .none
             

@@ -293,6 +293,7 @@ Sharing this private data is irrevocable — once you have shared this private d
 "transaction.shieldedFunds" = "Shielded Funds";
 "transaction.failedShieldedFunds" = "Shielded Funds Failed";
 "transaction.saveAddress" = "Save address";
+"transaction.selectText" = "Select text";
 
 // MARK: - Local authentication
 "localAuthentication.reason" = "The Following content requires authentication.";
@@ -356,6 +357,11 @@ Sharing this private data is irrevocable — once you have shared this private d
 // MARK: - Export logs
 "exportLogs.alert.failed.title" = "Error when exporting logs";
 "exportLogs.alert.failed.message" = "Error: %@";
+
+// MARK: - Message Editor
+"messageEditor.addUA" = "Reply-to: Include my address in the memo";
+"messageEditor.removeUA" = "Your address is included in the memo";
+"messageEditor.addUAformat" = "\n>>> reply-to: %@";
 
 // MARK: - Address Book
 "addressBook.title" = "Address Book";
