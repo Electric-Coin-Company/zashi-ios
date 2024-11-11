@@ -168,6 +168,8 @@ public struct Balances {
                         await send(.walletBalances(.updateBalances))
                         
                         switch result {
+                        case .grpcFailure:
+                            await send(.shieldFundsFailure("sdkSynchronizer.createProposedTransactions".toZcashError()))
                         case .failure:
                             await send(.shieldFundsFailure("sdkSynchronizer.createProposedTransactions".toZcashError()))
                         case let .partial(txIds: txIds, statuses: statuses):

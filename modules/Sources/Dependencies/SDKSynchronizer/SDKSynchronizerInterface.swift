@@ -21,7 +21,8 @@ extension DependencyValues {
 @DependencyClient
 public struct SDKSynchronizerClient {
     public enum CreateProposedTransactionsResult: Equatable {
-        case failure(txIds: [String])
+        case failure(txIds: [String], code: Int, description: String)
+        case grpcFailure(txIds: [String])
         case partial(txIds: [String], statuses: [String])
         case success(txIds: [String])
     }

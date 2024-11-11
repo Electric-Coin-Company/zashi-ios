@@ -354,6 +354,8 @@ public enum L10n {
   public enum ProposalPartial {
     /// Contact Support
     public static let contactSupport = L10n.tr("Localizable", "proposalPartial.contactSupport", fallback: "Contact Support")
+    /// Copy transaction IDs
+    public static let copyIds = L10n.tr("Localizable", "proposalPartial.copyIds", fallback: "Copy transaction IDs")
     /// Hi Zashi Team,
     public static let mailPart1 = L10n.tr("Localizable", "proposalPartial.mailPart1", fallback: "Hi Zashi Team,")
     /// While sending a transaction to a TEX address, I encountered an error state. I'm reaching out to get guidance on how to recover my funds.
@@ -362,12 +364,12 @@ public enum L10n {
     public static let mailPart3 = L10n.tr("Localizable", "proposalPartial.mailPart3", fallback: "Thank you.")
     /// TEX Transaction Error
     public static let mailSubject = L10n.tr("Localizable", "proposalPartial.mailSubject", fallback: "TEX Transaction Error")
-    /// Sending to this recipient required multiple transactions, but only some of them succeeded. Your funds are safe, but they need to be recovered with the help of Zashi team support.
-    public static let message1 = L10n.tr("Localizable", "proposalPartial.message1", fallback: "Sending to this recipient required multiple transactions, but only some of them succeeded. Your funds are safe, but they need to be recovered with the help of Zashi team support.")
-    /// Please use the button below to contact us and recover your funds. Your message to us will be pre-populated with all the data we need to resolve this issue.
-    public static let message2 = L10n.tr("Localizable", "proposalPartial.message2", fallback: "Please use the button below to contact us and recover your funds. Your message to us will be pre-populated with all the data we need to resolve this issue.")
-    /// Transaction Error
-    public static let title = L10n.tr("Localizable", "proposalPartial.title", fallback: "Transaction Error")
+    /// Send to this recipient required multiple transactions but only some of them succeeded and the rest failed. Your funds are safe but need to be recovered with assistance from our side.
+    public static let message1 = L10n.tr("Localizable", "proposalPartial.message1", fallback: "Send to this recipient required multiple transactions but only some of them succeeded and the rest failed. Your funds are safe but need to be recovered with assistance from our side.")
+    /// Please use the button below to contact us. it automatically prepares all the data we need in order to help you restore your funds.
+    public static let message2 = L10n.tr("Localizable", "proposalPartial.message2", fallback: "Please use the button below to contact us. it automatically prepares all the data we need in order to help you restore your funds.")
+    /// Send Failed
+    public static let title = L10n.tr("Localizable", "proposalPartial.title", fallback: "Send Failed")
     /// Transaction Ids
     public static let transactionIds = L10n.tr("Localizable", "proposalPartial.transactionIds", fallback: "Transaction Ids")
   }
@@ -649,6 +651,10 @@ public enum L10n {
     public static let confirmationTitle = L10n.tr("Localizable", "send.confirmationTitle", fallback: "Confirmation")
     /// USD
     public static let currencyPlaceholder = L10n.tr("Localizable", "send.currencyPlaceholder", fallback: "USD")
+    /// Unable to send
+    public static let failure = L10n.tr("Localizable", "send.failure", fallback: "Unable to send")
+    /// There was an error attempting to send tokens. Try it again, please.
+    public static let failureInfo = L10n.tr("Localizable", "send.failureInfo", fallback: "There was an error attempting to send tokens. Try it again, please.")
     /// Fee
     public static let feeSummary = L10n.tr("Localizable", "send.feeSummary", fallback: "Fee")
     /// Cancel
@@ -657,14 +663,28 @@ public enum L10n {
     public static let memoPlaceholder = L10n.tr("Localizable", "send.memoPlaceholder", fallback: "Write encrypted message here...")
     /// Message
     public static let message = L10n.tr("Localizable", "send.message", fallback: "Message")
+    /// Report
+    public static let report = L10n.tr("Localizable", "send.report", fallback: "Report")
+    /// Connection Error
+    public static let resubmission = L10n.tr("Localizable", "send.resubmission", fallback: "Connection Error")
+    /// Zashi encountered connection issues when submitting the transaction. It will retry in the next few minutes.
+    public static let resubmissionInfo = L10n.tr("Localizable", "send.resubmissionInfo", fallback: "Zashi encountered connection issues when submitting the transaction. It will retry in the next few minutes.")
     /// Review
     public static let review = L10n.tr("Localizable", "send.review", fallback: "Review")
-    /// Sending
-    public static let sending = L10n.tr("Localizable", "send.sending", fallback: "Sending")
+    /// Sending...
+    public static let sending = L10n.tr("Localizable", "send.sending", fallback: "Sending...")
+    /// Your tokens are being sent to
+    public static let sendingInfo = L10n.tr("Localizable", "send.sendingInfo", fallback: "Your tokens are being sent to")
+    /// Sent!
+    public static let success = L10n.tr("Localizable", "send.success", fallback: "Sent!")
+    /// Your tokens were successfully sent to
+    public static let successInfo = L10n.tr("Localizable", "send.successInfo", fallback: "Your tokens were successfully sent to")
     /// Send to
     public static let to = L10n.tr("Localizable", "send.to", fallback: "Send to")
     /// Sending to
     public static let toSummary = L10n.tr("Localizable", "send.toSummary", fallback: "Sending to")
+    /// View Transaction
+    public static let viewTransaction = L10n.tr("Localizable", "send.viewTransaction", fallback: "View Transaction")
     public enum Alert {
       public enum Failure {
         /// Error: %@

@@ -83,14 +83,15 @@ let package = Package(
         .library(name: "ZecKeyboard", targets: ["ZecKeyboard"])
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.15.0"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.15.2"),
         .package(url: "https://github.com/pointfreeco/swift-case-paths", from: "1.5.4"),
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.6.2"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.4"),
         .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.2.6"),
         .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.27.0"),
-        .package(url: "https://github.com/flexa/flexa-ios.git", from: "1.0.4"),
-        .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "0.1.0-beta.9")
+        .package(url: "https://github.com/flexa/flexa-ios.git", exact: "1.0.4"),
+        .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "0.1.0-beta.9"),
+        .package(url: "https://github.com/airbnb/lottie-spm.git", from: "4.5.0")
     ],
     targets: [
         .target(
@@ -447,6 +448,7 @@ let package = Package(
             name: "PartialProposalError",
             dependencies: [
                 "Generated",
+                "Pasteboard",
                 "SupportDataGenerator",
                 "UIComponents",
                 "Utils",
@@ -661,12 +663,14 @@ let package = Package(
                 "PartialProposalError",
                 "Scan",
                 "SDKSynchronizer",
+                "SupportDataGenerator",
                 "UIComponents",
                 "Utils",
                 "WalletBalances",
                 "WalletStorage",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Lottie", package: "lottie-spm"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
             path: "Sources/Features/SendConfirmation"
@@ -768,6 +772,7 @@ let package = Package(
                 "ExchangeRate",
                 "Generated",
                 "Home",
+                "Models",
                 "Receive",
                 "RequestZec",
                 "SendConfirmation",

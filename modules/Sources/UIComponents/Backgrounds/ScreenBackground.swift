@@ -113,6 +113,28 @@ extension View {
             ScreenOnboardingGradientBackgroundModifier()
         )
     }
+    
+    public func applySuccessScreenBackground() -> some View {
+        self.modifier(
+            ScreenGradientBackgroundModifier(
+                stops: [
+                    Gradient.Stop(color: Design.Utility.SuccessGreen._100.color, location: 0.0),
+                    Gradient.Stop(color: Design.screenBackground.color, location: 0.4)
+                ]
+            )
+        )
+    }
+    
+    public func applyFailureScreenBackground() -> some View {
+        self.modifier(
+            ScreenGradientBackgroundModifier(
+                stops: [
+                    Gradient.Stop(color: Design.Utility.ErrorRed._100.color, location: 0.0),
+                    Gradient.Stop(color: Design.screenBackground.color, location: 0.4)
+                ]
+            )
+        )
+    }
 }
 
 struct ScreenBackground_Previews: PreviewProvider {

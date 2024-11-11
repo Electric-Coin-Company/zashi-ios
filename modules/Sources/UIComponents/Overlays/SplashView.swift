@@ -46,13 +46,7 @@ final class SplashManager: ObservableObject {
         if !isHidden {
             preparePoints()
             if featureFlags.appLaunchBiometric {
-#if targetEnvironment(simulator)
-                Task {
-                    await self.spinTheWheel()
-                }
-#else
                 authenticate()
-#endif
             } else {
                 Task {
                     await self.spinTheWheel()

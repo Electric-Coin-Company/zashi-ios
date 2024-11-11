@@ -157,7 +157,10 @@ extension SDKSynchronizerClient: DependencyKey {
                 
                 var txIds: [String] = []
                 var statuses: [String] = []
-
+                var errCode = 0
+                var errDesc = ""
+                var resubmitableFailure = false
+                
                 for _ in 1...transactionCount {
                     if let transactionSubmitResult = try await iterator.next() {
                         switch transactionSubmitResult {
@@ -168,9 +171,12 @@ extension SDKSynchronizerClient: DependencyKey {
                         case let .grpcFailure(txId: id, error: error):
                             txIds.append(id.toHexStringTxId())
                             statuses.append(error.localizedDescription)
+                            resubmitableFailure = true
                         case let .submitFailure(txId: id, code: code, description: description):
                             txIds.append(id.toHexStringTxId())
                             statuses.append("code: \(code) desc: \(description)")
+                            errCode = code
+                            errDesc = description
                         case .notAttempted(txId: let id):
                             txIds.append(id.toHexStringTxId())
                             statuses.append("notAttempted")
@@ -179,7 +185,11 @@ extension SDKSynchronizerClient: DependencyKey {
                 }
                 
                 if successCount == 0 {
-                    return .failure(txIds: txIds)
+                    if resubmitableFailure {
+                        return .failure(txIds: txIds, code: errCode, description: errDesc)
+                    } else {
+                        return .grpcFailure(txIds: txIds)
+                    }
                 } else if successCount == transactionCount {
                     return .success(txIds: txIds)
                 } else {

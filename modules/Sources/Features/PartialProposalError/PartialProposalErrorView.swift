@@ -19,65 +19,96 @@ public struct PartialProposalErrorView: View {
     }
 
     public var body: some View {
-        ScrollView {
-            WithPerceptionTracking {
-                VStack(alignment: .center) {
-                    ZashiErrorIcon()
+        WithPerceptionTracking {
+            VStack {
+                ScrollView {
+                    VStack(alignment: .center, spacing: 0) {
+                        Asset.Assets.Icons.partial.image
+                            .resizable()
+                            .frame(width: 90, height: 90)
+                            .padding(.top, 40)
 
-                    Group {
-                        Text(L10n.ProposalPartial.message1)
-                        Text(L10n.ProposalPartial.message2)
-                    }
-                    .font(.custom(FontFamily.Inter.medium.name, size: 14))
-                    .multilineTextAlignment(.center)
-                    .padding(.bottom, 10)
+                        Text(L10n.ProposalPartial.title)
+                            .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                            .padding(.top, 16)
 
-                    Text(L10n.ProposalPartial.transactionIds.uppercased())
-                        .font(.custom(FontFamily.Inter.bold.name, size: 14))
-                        .padding(.top, 30)
-                        .padding(.bottom, 3)
-
-                    ForEach(store.txIds, id: \.self) { txId in
-                        Text(txId)
-                            .font(.custom(FontFamily.Inter.regular.name, size: 13))
-                            .padding(.bottom, 3)
-                    }
-
-                    ZashiButton(L10n.ProposalPartial.contactSupport) {
-                        store.send(.sendSupportMail)
-                    }
-                    .padding(.vertical, 25)
-                    .padding(.top, 40)
-                    .onChange(of: store.supportData) { supportData in
-                        if supportData == nil {
-                            store.send(.shareFinished)
+                        Group {
+                            Text(L10n.ProposalPartial.message1)
+                            Text(L10n.ProposalPartial.message2)
                         }
-                    }
+                        .zFont(size: 14, style: Design.Text.primary)
+                        .multilineTextAlignment(.center)
+                        .padding(.top, 12)
 
-                    if let supportData = store.supportData {
-                        UIMailDialogView(
-                            supportData: supportData,
-                            completion: {
-                                store.send(.sendSupportMailFinished)
-                            }
-                        )
-                        // UIMailDialogView only wraps MFMailComposeViewController presentation
-                        // so frame is set to 0 to not break SwiftUIs layout
-                        .frame(width: 0, height: 0)
+                        HStack(spacing: 0) {
+                            Text(L10n.ProposalPartial.transactionIds)
+                                .zFont(.medium, size: 14, style: Design.Text.primary)
+
+                            Spacer()
+                        }
+                        .padding(.top, 32)
+                        .padding(.bottom, 4)
+
+                        ForEach(store.txIds, id: \.self) { txId in
+                            Text(txId)
+                                .zFont(size: 16, style: Design.Inputs.Default.text)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .lineLimit(1)
+                                .truncationMode(.middle)
+                                .background {
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(Design.Inputs.Default.bg.color)
+                                }
+                                .padding(.bottom, 8)
+                        }
+
+                        if let supportData = store.supportData {
+                            UIMailDialogView(
+                                supportData: supportData,
+                                completion: {
+                                    store.send(.sendSupportMailFinished)
+                                }
+                            )
+                            // UIMailDialogView only wraps MFMailComposeViewController presentation
+                            // so frame is set to 0 to not break SwiftUIs layout
+                            .frame(width: 0, height: 0)
+                        }
+                        
+                        shareMessageView()
                     }
-                    
-                    shareMessageView()
+                    .zashiBack(hidden: store.isBackButtonHidden) { store.send(.dismiss) }
+                    .onAppear { store.send(.onAppear) }
                 }
-                .padding(.horizontal, 60)
-                .zashiBack(hidden: store.isBackButtonHidden) { store.send(.dismiss) }
-                .onAppear { store.send(.onAppear) }
+                .padding(.vertical, 1)
+
+                Spacer()
+                
+                ZashiButton(
+                    L10n.ProposalPartial.copyIds,
+                    type: .tertiary,
+                    prefixView:
+                        Asset.Assets.copy.image
+                            .zImage(size: 20, style: Design.Btns.Ghost.fg)
+                ) {
+                    store.send(.copyToPastboard)
+                }
+                .padding(.bottom, 8)
+
+                ZashiButton(L10n.ProposalPartial.contactSupport) {
+                    store.send(.sendSupportMail)
+                }
+                .padding(.bottom, 24)
+                .onChange(of: store.supportData) { supportData in
+                    if supportData == nil {
+                        store.send(.shareFinished)
+                    }
+                }
             }
         }
         .navigationBarBackButtonHidden()
-        .navigationBarTitleDisplayMode(.inline)
-        .padding(.vertical, 1)
-        .applyScreenBackground()
-        .screenTitle(L10n.ProposalPartial.title)
+        .screenHorizontalPadding()
+        .applyFailureScreenBackground()
     }
 }
 

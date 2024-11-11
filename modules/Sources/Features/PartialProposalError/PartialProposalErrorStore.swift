@@ -9,6 +9,9 @@ import ComposableArchitecture
 import MessageUI
 
 import SupportDataGenerator
+import Pasteboard
+import UIComponents
+import Generated
 
 @Reducer
 public struct PartialProposalError {
@@ -19,8 +22,9 @@ public struct PartialProposalError {
         public var message: String
         public var statuses: [String]
         public var supportData: SupportData?
+        @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
         public var txIds: [String]
-        
+
         public init(
             isBackButtonHidden: Bool = true,
             isExportingData: Bool = false,
@@ -39,6 +43,7 @@ public struct PartialProposalError {
     }
     
     public enum Action: Equatable {
+        case copyToPastboard
         case dismiss
         case onAppear
         case sendSupportMail
@@ -46,12 +51,15 @@ public struct PartialProposalError {
         case shareFinished
     }
     
+    @Dependency(\.pasteboard) var pasteboard
+
     public init() {}
     
     public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case .onAppear:
+                state.txIds = ["txid1", "txid2"]
                 state.isBackButtonHidden = true
                 return .none
                 
@@ -76,6 +84,12 @@ public struct PartialProposalError {
             case .shareFinished:
                 state.isBackButtonHidden = false
                 state.isExportingData = false
+                return .none
+                
+            case .copyToPastboard:
+                let payload = state.txIds.reduce("") { $0 + ($0.isEmpty ? "" : ", ") + $1 }
+                pasteboard.setString(payload.redacted)
+                state.toast = .top(L10n.General.copiedToTheClipboard)
                 return .none
             }
         }
