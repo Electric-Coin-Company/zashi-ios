@@ -28,7 +28,7 @@ public struct IntegrationsView: View {
                 List {
                     Group {
                         if store.inAppBrowserURL != nil {
-                            SettingsRow(
+                            ActionRow(
                                 icon: Asset.Assets.Partners.coinbase.image,
                                 title: L10n.Settings.buyZecCB,
                                 desc: L10n.Settings.coinbaseDesc,
@@ -40,7 +40,7 @@ public struct IntegrationsView: View {
                         }
 
                         if store.featureFlags.flexa {
-                            SettingsRow(
+                            ActionRow(
                                 icon: walletStatus == .restoring
                                 ? Asset.Assets.Partners.flexaDisabled.image
                                 : Asset.Assets.Partners.flexa.image,

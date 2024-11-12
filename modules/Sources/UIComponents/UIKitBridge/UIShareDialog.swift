@@ -48,6 +48,46 @@ public final class ShareableImage: NSObject, UIActivityItemSource {
     }
 }
 
+public final class ShareableMessage: NSObject, UIActivityItemSource {
+    let title: String
+    let message: String
+    let desc: String
+
+    public init(title: String, message: String, desc: String) {
+        self.title = title
+        self.message = message
+        self.desc = desc
+        
+        super.init()
+    }
+
+    public func activityViewControllerPlaceholderItem(
+        _ activityViewController: UIActivityViewController
+    ) -> Any {
+        message
+    }
+
+    public func activityViewController(
+        _ activityViewController: UIActivityViewController,
+        itemForActivityType activityType: UIActivity.ActivityType?
+    ) -> Any? {
+        message
+    }
+
+    public func activityViewControllerLinkMetadata(
+        _ activityViewController: UIActivityViewController
+    ) -> LPLinkMetadata? {
+        let metadata = LPLinkMetadata()
+        if let image = UIImage(named: "ZashiLogo") {
+            metadata.iconProvider = NSItemProvider(object: image)
+        }
+        metadata.title = title
+        metadata.originalURL = URL(fileURLWithPath: desc)
+        
+        return metadata
+    }
+}
+
 public class UIShareDialog: UIView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)

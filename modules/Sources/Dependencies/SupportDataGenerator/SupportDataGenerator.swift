@@ -25,7 +25,7 @@ public enum SupportDataGenerator {
         public static let subjectPPE = L10n.ProposalPartial.mailSubject
     }
     
-    public static func generate() -> SupportData {
+    public static func generate(_ prefix: String? = nil) -> SupportData {
         let items: [SupportDataGeneratorItem] = [
             TimeItem(),
             AppVersionItem(),
@@ -42,7 +42,13 @@ public enum SupportDataGenerator {
             .map { "\($0.0): \($0.1)" }
             .joined(separator: "\n")
 
-        return SupportData(toAddress: Constants.email, subject: Constants.subject, message: message)
+        if let prefix {
+            let finalMessage = "\(prefix)\n\(message)"
+            
+            return SupportData(toAddress: Constants.email, subject: Constants.subject, message: finalMessage)
+        } else {
+            return SupportData(toAddress: Constants.email, subject: Constants.subject, message: message)
+        }
     }
     
     public static func generatePartialProposalError(txIds: [String], statuses: [String]) -> SupportData {
@@ -62,7 +68,7 @@ public enum SupportDataGenerator {
 
         \(data.message)
         
-        Transaction statuses:
+        \(L10n.ProposalPartial.transactionStatuses)
         \(statusStrings)
         """
         
@@ -160,8 +166,8 @@ private struct LocaleItem: SupportDataGeneratorItem {
 
         return [
             (Constants.localeKey, locale.identifier),
-            (Constants.groupingSeparatorKey, locale.groupingSeparator ?? Constants.unknownSeparator),
-            (Constants.decimalSeparatorKey, locale.decimalSeparator ?? Constants.unknownSeparator)
+            (Constants.groupingSeparatorKey, "'\(locale.groupingSeparator ?? Constants.unknownSeparator)'"),
+            (Constants.decimalSeparatorKey, "'\(locale.decimalSeparator ?? Constants.unknownSeparator)'")
         ]
     }
 }

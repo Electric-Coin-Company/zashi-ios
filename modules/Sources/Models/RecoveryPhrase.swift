@@ -29,11 +29,11 @@ public struct RecoveryPhrase: Equatable, Redactable {
     }
     
     public func toGroups() -> [Group] {
-        let chunks = words.count / 2
+        let chunks = words.count / 3
 
         var res: [Group] = []
         
-        for i in 0..<2 {
+        for i in 0..<3 {
             var subwords: [RedactableString] = []
             for j in (i * chunks)..<((i + 1) * chunks) {
                 subwords.append(words[j])

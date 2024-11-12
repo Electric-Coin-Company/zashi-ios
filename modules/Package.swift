@@ -60,6 +60,7 @@ let package = Package(
         .library(name: "SecItem", targets: ["SecItem"]),
         .library(name: "SecurityWarning", targets: ["SecurityWarning"]),
         .library(name: "SendConfirmation", targets: ["SendConfirmation"]),
+        .library(name: "SendFeedback", targets: ["SendFeedback"]),
         .library(name: "SendFlow", targets: ["SendFlow"]),
         .library(name: "ServerSetup", targets: ["ServerSetup"]),
         .library(name: "Settings", targets: ["Settings"]),
@@ -101,7 +102,6 @@ let package = Package(
                 "Generated",
                 "Models",
                 "UIComponents",
-                "WhatsNew",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
             path: "Sources/Features/About"
@@ -676,6 +676,17 @@ let package = Package(
             path: "Sources/Features/SendConfirmation"
         ),
         .target(
+            name: "SendFeedback",
+            dependencies: [
+                "Generated",
+                "SupportDataGenerator",
+                "UIComponents",
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Features/SendFeedback"
+        ),
+        .target(
             name: "SendFlow",
             dependencies: [
                 "AddressBookClient",
@@ -724,9 +735,10 @@ let package = Package(
                 "Pasteboard",
                 "PrivateDataConsent",
                 "RecoveryPhraseDisplay",
+                "SendFeedback",
                 "ServerSetup",
-                "SupportDataGenerator",
                 "UIComponents",
+                "WhatsNew",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk"),
                 .product(name: "Flexa", package: "flexa-ios")
@@ -906,6 +918,7 @@ let package = Package(
         .target(
             name: "WhatsNew",
             dependencies: [
+                "AppVersion",
                 "Generated",
                 "UIComponents",
                 "WhatsNewProvider",

@@ -1,5 +1,5 @@
 //
-//  SettingsRow.swift
+//  ActionRow.swift
 //  Zashi
 //
 //  Created by Lukáš Korba on 22.08.2024.
@@ -9,7 +9,7 @@ import SwiftUI
 
 import Generated
 
-public struct SettingsRow<AccessoryContent>: View where AccessoryContent: View{
+public struct ActionRow<AccessoryContent>: View where AccessoryContent: View{
     @Environment(\.isEnabled) private var isEnabled
     
     let icon: Image
@@ -18,15 +18,17 @@ public struct SettingsRow<AccessoryContent>: View where AccessoryContent: View{
     let customIcon: Bool
     @ViewBuilder let accessoryView: AccessoryContent?
     let divider: Bool
+    let horizontalPadding: CGFloat
     let action: () -> Void
     
-    init(
+    public init(
         icon: Image,
         title: String,
         desc: String? = nil,
         customIcon: Bool = false,
         accessoryView: AccessoryContent? = EmptyView(),
         divider: Bool = true,
+        horizontalPadding: CGFloat = 20,
         action: @escaping () -> Void
     ) {
         self.icon = icon
@@ -35,6 +37,7 @@ public struct SettingsRow<AccessoryContent>: View where AccessoryContent: View{
         self.customIcon = customIcon
         self.accessoryView = accessoryView
         self.divider = divider
+        self.horizontalPadding = horizontalPadding
         self.action = action
     }
     
@@ -89,7 +92,7 @@ public struct SettingsRow<AccessoryContent>: View where AccessoryContent: View{
                             .zImage(size: 20, style: Design.Text.quaternary)
                     }
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal, horizontalPadding)
 
                 if divider {
                     Design.Surfaces.divider.color
