@@ -31,8 +31,8 @@ extension Root {
         case initialSetups
         case initializationFailed(ZcashError)
         case initializationSuccessfullyDone(UnifiedAddress?)
-        case nukeWallet
-        case nukeWalletRequest
+        case resetZashi
+        case resetZashiRequest
         case respondToWalletInitializationState(InitializationState)
         case restoreExistingWallet
         case seedValidationResult(Bool)
@@ -110,10 +110,8 @@ extension Root {
                 if let accountBalance = latestState.data.accountBalance?.data {
                     let shieldedBalance = accountBalance.saplingBalance.spendableValue + accountBalance.orchardBalance.spendableValue
                     let shieldedWithPendingBalance = accountBalance.saplingBalance.total() + accountBalance.orchardBalance.total()
-                    let transparentBalance = accountBalance.unshielded
-                    let totalBalance = shieldedWithPendingBalance + transparentBalance
 
-                    flexaHandler.updateBalance(totalBalance, shieldedBalance)
+                    flexaHandler.updateBalance(shieldedWithPendingBalance, shieldedBalance)
                 }
                 
                 // handle possible service unavailability
@@ -368,24 +366,24 @@ extension Root {
                     return Effect.send(.initialization(.initializationFailed(error.toZcashError())))
                 }
 
-            case .initialization(.nukeWalletRequest):
+            case .initialization(.resetZashiRequest):
                 state.alert = AlertState.wipeRequest()
                 return .none
                 
-            case .initialization(.nukeWallet), .tabs(.settings(.advancedSettings(.deleteWallet(.deleteTapped)))):
+            case .initialization(.resetZashi), .tabs(.settings(.advancedSettings(.deleteWallet(.deleteTapped)))):
                 guard let wipePublisher = sdkSynchronizer.wipe() else {
-                    return Effect.send(.nukeWalletFailed)
+                    return Effect.send(.resetZashiFailed)
                 }
                 return .publisher {
                     wipePublisher
                         .replaceEmpty(with: Void())
-                        .map { _ in return Root.Action.nukeWalletSucceeded }
-                        .replaceError(with: Root.Action.nukeWalletFailed)
+                        .map { _ in return Root.Action.resetZashiSucceeded }
+                        .replaceError(with: Root.Action.resetZashiFailed)
                         .receive(on: mainQueue)
                 }
                 .cancellable(id: SynchronizerCancelId, cancelInFlight: true)
 
-            case .nukeWalletSucceeded:
+            case .resetZashiSucceeded:
                 if state.appInitializationState != .keysMissing {
                     state = .initial
                 }
@@ -393,8 +391,9 @@ extension Root {
                 state.isRestoringWallet = false
                 userDefaults.remove(Constants.udIsRestoringWallet)
                 state.walletStatus = .none
-                walletStorage.nukeWallet()
-                try? readTransactionsStorage.nukeWallet()
+                walletStorage.resetZashi()
+                flexaHandler.signOut()
+                try? readTransactionsStorage.resetZashi()
 
                 if state.appInitializationState == .keysMissing && state.onboardingState.destination == .importExistingWallet {
                     state.appInitializationState = .uninitialized
@@ -418,7 +417,7 @@ extension Root {
                     )
                 }
 
-            case .nukeWalletFailed:
+            case .resetZashiFailed:
                 let backDestination: Effect<Root.Action>
                 if let previousDestination = state.destinationState.previousDestination {
                     backDestination = Effect.send(.destination(.updateDestination(previousDestination)))

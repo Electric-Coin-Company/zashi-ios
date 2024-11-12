@@ -13,7 +13,7 @@ extension ReadTransactionsStorageClient: TestDependencyKey {
         markIdAsRead: unimplemented("\(Self.self).markIdAsRead", placeholder: {}()),
         readIds: unimplemented("\(Self.self).readIds", placeholder: [:]),
         availabilityTimestamp: unimplemented("\(Self.self).availabilityTimestamp", placeholder: 0),
-        nukeWallet: unimplemented("\(Self.self).nukeWallet", placeholder: {}())
+        resetZashi: unimplemented("\(Self.self).resetZashi", placeholder: {}())
     )
 }
 
@@ -22,6 +22,6 @@ extension ReadTransactionsStorageClient {
         markIdAsRead: { _ in },
         readIds: { [:] },
         availabilityTimestamp: { 0 },
-        nukeWallet: { }
+        resetZashi: { }
     )
 }

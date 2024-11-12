@@ -36,8 +36,8 @@ extension WalletStorageClient: DependencyKey {
             markUserPassedPhraseBackupTest: { flag in
                 try walletStorage.markUserPassedPhraseBackupTest(flag)
             },
-            nukeWallet: {
-                walletStorage.nukeWallet()
+            resetZashi: {
+                walletStorage.resetZashi()
             },
             importAddressBookEncryptionKeys: { keys in
                 try walletStorage.importAddressBookEncryptionKeys(keys)

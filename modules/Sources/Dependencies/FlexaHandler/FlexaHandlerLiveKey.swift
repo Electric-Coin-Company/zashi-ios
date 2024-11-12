@@ -20,7 +20,7 @@ enum Constants {
     static let zecHash = "bip122:00040fe8ec8471911baa1db1266ea15d"
     static let zecId = "\(Constants.zecHash)/slip44:133"
 
-    static func accountId() -> String {
+    static func assetAccountHash() -> String {
         let uuid = UUID()
         let uuidString = uuid.uuidString
         let data = Data(uuidString.utf8)
@@ -61,8 +61,10 @@ extension FlexaHandlerClient: DependencyKey {
                 
                 onTransactionRequest.send(nil)
                 Flexa.sections([.spend])
-                    .appAccounts(FlexaHandlerClient.accounts(latestSpendableBalance.value, zecAvailableAmount: latestSpendableAvailableBalance.value))
-                    .selectedAsset(Constants.accountId(), Constants.zecId)
+                    .assetAccounts(
+                        FlexaHandlerClient.accounts(latestSpendableBalance.value, zecAvailableAmount: latestSpendableAvailableBalance.value)
+                    )
+                    .selectedAsset(Constants.assetAccountHash(), Constants.zecId)
                     .onTransactionRequest({
                         onTransactionRequest.send($0)
                     })
@@ -117,7 +119,9 @@ extension FlexaHandlerClient: DependencyKey {
             updateBalance: {
                 latestSpendableBalance.value = $0.decimalValue.decimalValue
                 latestSpendableAvailableBalance.value = $1?.decimalValue.decimalValue
-                Flexa.updateAppAccounts(FlexaHandlerClient.accounts(latestSpendableBalance.value, zecAvailableAmount: latestSpendableAvailableBalance.value))
+                Flexa.updateAssetAccounts(
+                    FlexaHandlerClient.accounts(latestSpendableBalance.value, zecAvailableAmount: latestSpendableAvailableBalance.value)
+                )
             },
             flexaAlert: { title, message in
                 DispatchQueue.main.async {
@@ -129,16 +133,19 @@ extension FlexaHandlerClient: DependencyKey {
                     alert.addAction(UIAlertAction(title: L10n.General.ok, style: .cancel))
                     UIViewController.showOnTop(alert)
                 }
+            },
+            signOut: {
+                Flexa.buildIdentity().build().close()
             }
         )
     }
 }
 
 private extension FlexaHandlerClient {
-    static func accounts(_ zecAmount: Decimal = 0, zecAvailableAmount: Decimal? = nil) -> [FXAppAccount] {
+    static func accounts(_ zecAmount: Decimal = 0, zecAvailableAmount: Decimal? = nil) -> [FXAssetAccount] {
         [
-            FXAppAccount(
-                accountId: Constants.accountId(),
+            FXAssetAccount(
+                assetAccountHash: Constants.assetAccountHash(),
                 displayName: "",
                 custodyModel: .local,
                 availableAssets: [
@@ -146,7 +153,8 @@ private extension FlexaHandlerClient {
                         assetId: Constants.zecId,
                         symbol: "ZEC",
                         balance: zecAmount,
-                        balanceAvailable: zecAvailableAmount
+                        balanceAvailable: zecAvailableAmount,
+                        icon: UIImage(named: "zcashZecLogo")
                     )
                 ]
             )
@@ -160,7 +168,7 @@ private extension FlexaHandlerClient {
         Flexa.initialize(
             FXClient(
                 publishableKey: flexaPublishableKey,
-                appAccounts: FlexaHandlerClient.accounts(),
+                assetAccounts: FlexaHandlerClient.accounts(),
                 theme: .default
             )
         )

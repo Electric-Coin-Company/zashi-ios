@@ -17,7 +17,8 @@ extension FlexaHandlerClient: TestDependencyKey {
         clearTransactionRequest: unimplemented("\(Self.self).clearTransactionRequest"),
         transactionSent: unimplemented("\(Self.self).transactionSent"),
         updateBalance: unimplemented("\(Self.self).updateBalance"),
-        flexaAlert: unimplemented("\(Self.self).flexaAlert")
+        flexaAlert: unimplemented("\(Self.self).flexaAlert"),
+        signOut: unimplemented("\(Self.self).signOut")
     )
 }
 
@@ -29,6 +30,7 @@ extension FlexaHandlerClient {
         clearTransactionRequest: { },
         transactionSent: { _, _ in },
         updateBalance: { _, _ in },
-        flexaAlert: { _, _ in }
+        flexaAlert: { _, _ in },
+        signOut: { }
     )
 }

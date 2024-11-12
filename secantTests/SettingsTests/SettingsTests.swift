@@ -50,7 +50,7 @@ class SettingsTests: XCTestCase {
             markUserPassedPhraseBackupTest: { _ in
                 throw WalletStorage.KeychainError.encoding
             },
-            nukeWallet: { }
+            resetZashi: { }
         )
         
         let store = TestStore(

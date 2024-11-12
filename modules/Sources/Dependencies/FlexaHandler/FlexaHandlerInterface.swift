@@ -27,4 +27,5 @@ public struct FlexaHandlerClient {
     public var transactionSent: @Sendable (String, String) -> Void
     public var updateBalance: @Sendable (Zatoshi, Zatoshi?) -> Void
     public var flexaAlert: @Sendable (String, String) -> Void
+    public var signOut: @Sendable () -> Void
 }

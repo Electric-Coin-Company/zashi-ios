@@ -105,7 +105,7 @@ extension ReadTransactionsStorageClient: DependencyKey {
                 throw error
             }
         },
-        nukeWallet: {
+        resetZashi: {
             let context = persistentContainer.viewContext
 
             let deleteRequestIds = NSBatchDeleteRequest(

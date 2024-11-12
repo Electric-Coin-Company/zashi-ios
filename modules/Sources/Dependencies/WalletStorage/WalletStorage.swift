@@ -136,7 +136,7 @@ public struct WalletStorage {
         }
     }
     
-    public func nukeWallet() {
+    public func resetZashi() {
         deleteData(forKey: Constants.zcashStoredWallet)
     }
     

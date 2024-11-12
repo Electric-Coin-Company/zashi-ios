@@ -182,9 +182,9 @@ extension Root {
             case .flexaTransactionFailed(let message):
                 flexaHandler.flexaAlert(L10n.Partners.Flexa.transactionFailedTitle, message)
                 return .none
-                
+
             case .tabs, .initialization, .onboarding, .updateStateAfterConfigUpdate, .alert, .phraseDisplay, .synchronizerStateChanged,
-                    .welcome, .binding, .nukeWalletFailed, .nukeWalletSucceeded, .debug, .walletConfigLoaded, .exportLogs, .confirmationDialog,
+                    .welcome, .binding, .resetZashiFailed, .resetZashiSucceeded, .debug, .walletConfigLoaded, .exportLogs, .confirmationDialog,
                     .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated, .batteryStateChanged, .cancelAllRunningEffects, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted:
                 return .none
             }

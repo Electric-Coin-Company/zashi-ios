@@ -131,8 +131,8 @@ public struct Root {
         case tabs(Tabs.Action)
         case initialization(InitializationAction)
         case notEnoughFreeSpace(NotEnoughFreeSpace.Action)
-        case nukeWalletFailed
-        case nukeWalletSucceeded
+        case resetZashiFailed
+        case resetZashiSucceeded
         case onboarding(OnboardingFlow.Action)
         case phraseDisplay(RecoveryPhraseDisplay.Action)
         case splashFinished
@@ -402,7 +402,7 @@ extension AlertState where Action == Root.Action {
         AlertState {
             TextState(L10n.Root.Initialization.Alert.Wipe.title)
         } actions: {
-            ButtonState(role: .destructive, action: .initialization(.nukeWallet)) {
+            ButtonState(role: .destructive, action: .initialization(.resetZashi)) {
                 TextState(L10n.General.yes)
             }
             ButtonState(role: .cancel, action: .alert(.dismiss)) {
@@ -428,7 +428,7 @@ extension AlertState where Action == Root.Action {
             ButtonState(role: .cancel, action: .alert(.dismiss)) {
                 TextState(L10n.Root.SeedPhrase.DifferentSeed.tryAgain)
             }
-            ButtonState(role: .destructive, action: .initialization(.nukeWallet)) {
+            ButtonState(role: .destructive, action: .initialization(.resetZashi)) {
                 TextState(L10n.General.Alert.continue)
             }
         } message: {
@@ -443,7 +443,7 @@ extension AlertState where Action == Root.Action {
             ButtonState(role: .cancel, action: .initialization(.restoreExistingWallet)) {
                 TextState(L10n.Root.ExistingWallet.restore)
             }
-            ButtonState(role: .destructive, action: .initialization(.nukeWallet)) {
+            ButtonState(role: .destructive, action: .initialization(.resetZashi)) {
                 TextState(L10n.General.Alert.continue)
             }
         } message: {

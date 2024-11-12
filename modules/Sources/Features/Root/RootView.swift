@@ -279,7 +279,7 @@ private extension RootView {
                     }
 
                     Button(L10n.Root.Debug.Option.nukeWallet) {
-                        store.send(.initialization(.nukeWalletRequest))
+                        store.send(.initialization(.resetZashiRequest))
                     }
                 }
             }

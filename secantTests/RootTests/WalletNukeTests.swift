@@ -22,7 +22,7 @@ final class WalletNukeTests: XCTestCase {
             Root()
         }
         
-        await store.send(.initialization(.nukeWalletRequest)) { state in
+        await store.send(.initialization(.resetZashiRequest)) { state in
             state.alert = AlertState.wipeRequest()
         }
         
@@ -40,9 +40,9 @@ final class WalletNukeTests: XCTestCase {
         store.dependencies.sdkSynchronizer.wipe = { nil }
         store.dependencies.readTransactionsStorage = .noOp
 
-        await store.send(.initialization(.nukeWallet))
+        await store.send(.initialization(.resetZashi))
         
-        await store.receive(.nukeWalletFailed) { state in
+        await store.receive(.resetZashiFailed) { state in
             state.alert = AlertState.wipeFailed()
         }
         
@@ -65,17 +65,17 @@ final class WalletNukeTests: XCTestCase {
         
         store.dependencies.readTransactionsStorage = .noOp
         store.dependencies.readTransactionsStorage.readIds = { readIds }
-        store.dependencies.readTransactionsStorage.nukeWallet = { readIds.removeAll() }
+        store.dependencies.readTransactionsStorage.resetZashi = { readIds.removeAll() }
         store.dependencies.walletStorage = .noOp
         store.dependencies.walletStorage.areKeysPresent = { areKeysPresent }
-        store.dependencies.walletStorage.nukeWallet = { areKeysPresent = false }
+        store.dependencies.walletStorage.resetZashi = { areKeysPresent = false }
         store.dependencies.mainQueue = .immediate
         store.dependencies.databaseFiles = .noOp
         
         XCTAssertEqual(readIds, ["id1".redacted: true])
         XCTAssertTrue(areKeysPresent)
 
-        await store.send(.nukeWalletSucceeded) { state in
+        await store.send(.resetZashiSucceeded) { state in
             var stateAfterWipe = Root.State.initial
             stateAfterWipe.splashAppeared = true
 
