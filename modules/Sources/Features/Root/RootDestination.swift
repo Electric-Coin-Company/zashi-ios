@@ -55,7 +55,8 @@ extension Root {
         Reduce { state, action in
             switch action {
             case let .destination(.updateDestination(destination)):
-                guard state.destinationState.destination != .deeplinkWarning else {
+                guard (state.destinationState.destination != .deeplinkWarning)
+                        || (state.destinationState.destination == .deeplinkWarning && destination == .tabs) else {
                     return .none
                 }
                 guard state.destinationState.destination != .onboarding && state.onboardingState.destination != .importExistingWallet && state.onboardingState.importWalletState.destination != .restoreInfo else {

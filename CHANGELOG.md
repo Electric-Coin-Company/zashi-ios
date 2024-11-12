@@ -18,6 +18,7 @@ directly impact users rather than highlighting other crucial architectural updat
 - Inactive close button in the exchange rate hint bubble on iOS 16 and older.
 - A shield icon is no longer presented for received transactions to a transparent pool.
 - Flashlight freezes camera feed.
+- Rescan in Zashi button takes a user to the scanner.
 
 ## 1.2.2 build 1 (2024-10-22)
 
