@@ -78,15 +78,22 @@ public struct AddressBookKey: Codable, Equatable, Redactable {
         salt: Data
     ) -> SymmetricKey {
         assert(salt.count == 32)
-        return HKDF<SHA256>.deriveKey(inputKeyMaterial: key, salt: salt, outputByteCount: 32)
+
+        guard let info = "encryption_key".data(using: .utf8) else {
+            fatalError("Unable to prepare `encryption_key` info")
+        }
+        
+        return HKDF<SHA256>.deriveKey(inputKeyMaterial: key, info: salt + info, outputByteCount: 32)
     }
 
     /**
      * Derives the filename that this key is able to decrypt.
      */
     public func fileIdentifier() -> String? {
-        let info = "file_identifier".data(using: .utf8)!
-        
+        guard let info = "file_identifier".data(using: .utf8) else {
+            fatalError("Unable to prepare `file_identifier` info")
+        }
+
         // Perform HKDF with SHA-256
         let hkdfKey = HKDF<SHA256>.deriveKey(inputKeyMaterial: key, info: info, outputByteCount: 32)
         
