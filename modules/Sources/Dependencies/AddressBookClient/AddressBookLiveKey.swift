@@ -78,7 +78,7 @@ extension AddressBookClient: DependencyKey {
                         
                         if let contactsData = try? Data(contentsOf: unencryptedFileURL) {
                             // file exists; ensure data are parsed, re-saved and file deteled
-                            let contacts = try AddressBookClient.contactsFrom(unencryptedData: contactsData)
+                            let contacts = try AddressBookClient.contactsFrom(contactsData)
 
                             // try to encrypt and store the data
                             do {

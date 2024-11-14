@@ -108,7 +108,7 @@ extension AddressBookClient {
             let sealed = try ChaChaPoly.SealedBox.init(combined: encryptedSubData.suffix(from: 32))
             let data = try ChaChaPoly.open(sealed, using: subKey)
             
-            return try contactsFrom(unencryptedData: data)
+            return try contactsFrom(data)
         } else {
             throw AddressBookClientError.encryptionVersionNotSupported
         }
@@ -118,11 +118,11 @@ extension AddressBookClient {
     ///     [Unencrypted data]        `address book version`
     ///     [Unencrypted data]        `timestamp`
     ///     [Unencrypted data]        `contacts`
-    static func contactsFrom(unencryptedData: Data) throws -> AddressBookContacts {
+    static func contactsFrom(_ data: Data) throws -> AddressBookContacts {
         var offset = 0
         
         // Deserialize `version`
-        let versionBytes = try AddressBookClient.subdata(of: unencryptedData, in: offset..<(offset + Constants.int64Size))
+        let versionBytes = try AddressBookClient.subdata(of: data, in: offset..<(offset + Constants.int64Size))
         offset += Constants.int64Size
         
         // Deserialize and check `address book version`
@@ -131,12 +131,12 @@ extension AddressBookClient {
         }
         
         // Deserialize `lastUpdated`
-        guard let lastUpdated = try AddressBookClient.deserializeDate(from: unencryptedData, at: &offset) else {
+        guard let lastUpdated = try AddressBookClient.deserializeDate(from: data, at: &offset) else {
             return .empty
         }
         
         // Deserialize `contactsCount`
-        let contactsCountBytes = try AddressBookClient.subdata(of: unencryptedData, in: offset..<(offset + Constants.int64Size))
+        let contactsCountBytes = try AddressBookClient.subdata(of: data, in: offset..<(offset + Constants.int64Size))
         offset += Constants.int64Size
         
         guard let contactsCount = AddressBookClient.bytesToInt(Array(contactsCountBytes)) else {
@@ -145,7 +145,7 @@ extension AddressBookClient {
         
         var contacts: [Contact] = []
         for _ in 0..<contactsCount {
-            if let contact = try AddressBookClient.deserializeContact(from: unencryptedData, at: &offset) {
+            if let contact = try AddressBookClient.deserializeContact(from: data, at: &offset) {
                 contacts.append(contact)
             }
         }
@@ -257,7 +257,7 @@ extension AddressBookClient {
     }
     
     private static func subdata(of data: Data, in range: Range<Data.Index>) throws -> Data {
-        guard data.count >= range.lowerBound.distance(to: range.upperBound) else {
+        guard data.count >= range.upperBound else {
             throw AddressBookClient.AddressBookClientError.subdataRange
         }
         
