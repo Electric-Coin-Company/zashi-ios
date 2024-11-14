@@ -253,8 +253,7 @@ public struct SendFlow {
                         .send(.fetchedABContacts(abContacts))
                         )
                 } catch {
-                    // TODO: FIXME
-                    print("__LD fetchABContactsRequested Error: \(error.localizedDescription)")
+                    // TODO: [#1408] erro handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
                     return .send(.exchangeRateSetupChanged)
                 }
 

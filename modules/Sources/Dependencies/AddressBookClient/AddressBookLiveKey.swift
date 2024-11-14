@@ -17,8 +17,14 @@ import WalletStorage
 import CryptoKit
 
 extension AddressBookClient: DependencyKey {
-    private enum Constants {
+    enum Constants {
         static let unencryptedFilename = "AddressBookData"
+        static let int64Size = MemoryLayout<Int64>.size
+    }
+    
+    public enum StoreResult: Equatable {
+        case success
+        case remoteFailed
     }
 
     public enum AddressBookClientError: Error {
@@ -28,6 +34,7 @@ extension AddressBookClient: DependencyKey {
         case unencryptedFileStore
         case unencryptedFileDelete
         case encryptionVersionNotSupported
+        case subdataRange
     }
 
     public static let liveValue: AddressBookClient = Self.live()
@@ -54,13 +61,14 @@ extension AddressBookClient: DependencyKey {
                     let encryptedFileURL = documentsDirectory.appendingPathComponent(try AddressBookClient.filenameForEncryptedFile())
 
                     if let contactsData = try? Data(contentsOf: encryptedFileURL) {
-                        // file exists, try to find the unencrypted file in case the delete failed
+                        let contacts = try AddressBookClient.contactsFrom(encryptedData: contactsData)
+                        
+                        // file exists and was successfuly decrypted;
+                        // try to find the unencrypted file and delete it
                         let unencryptedFileURL = documentsDirectory.appendingPathComponent(Constants.unencryptedFilename)
                         if FileManager.default.fileExists(atPath: unencryptedFileURL.path) {
                             try? FileManager.default.removeItem(at: unencryptedFileURL)
                         }
-                        
-                        let contacts = try AddressBookClient.contactsFrom(encryptedData: contactsData)
 
                         latestKnownContacts = contacts
                         return contacts
@@ -69,7 +77,7 @@ extension AddressBookClient: DependencyKey {
                         let unencryptedFileURL = documentsDirectory.appendingPathComponent(Constants.unencryptedFilename)
                         
                         if let contactsData = try? Data(contentsOf: unencryptedFileURL) {
-                            // file exists, ensure data are parsed, re-saved and file deteled
+                            // file exists; ensure data are parsed, re-saved and file deteled
                             let contacts = try AddressBookClient.contactsFrom(unencryptedData: contactsData)
 
                             // try to encrypt and store the data
@@ -78,7 +86,7 @@ extension AddressBookClient: DependencyKey {
                             } catch {
                                 // the store of the new file failed, skip the file remove
                                 latestKnownContacts = contacts
-                                return contacts
+                                throw error
                             }
                             
                             try? FileManager.default.removeItem(at: unencryptedFileURL)
@@ -114,12 +122,12 @@ extension AddressBookClient: DependencyKey {
                 
                 syncedContacts.contacts.append($0)
                 
-                try storeContacts(syncedContacts, remoteStorage: remoteStorage)
+                let storeResult = try storeContacts(syncedContacts, remoteStorage: remoteStorage)
                 
                 // update the latest known contacts
                 latestKnownContacts = syncedContacts
                 
-                return syncedContacts
+                return (syncedContacts, storeResult)
             },
             deleteContact: {
                 let abContacts = latestKnownContacts ?? AddressBookContacts.empty
@@ -206,11 +214,11 @@ extension AddressBookClient: DependencyKey {
         return syncedContacts
     }
     
-    private static func storeContacts(
+    @discardableResult private static func storeContacts(
         _ abContacts: AddressBookContacts,
         remoteStorage: RemoteStorageClient,
         remoteStore: Bool = true
-    ) throws {
+    ) throws -> StoreResult {
         // encrypt data
         let encryptedContacts = try AddressBookClient.encryptContacts(abContacts)
 
@@ -224,10 +232,18 @@ extension AddressBookClient: DependencyKey {
         let fileURL = documentsDirectory.appendingPathComponent(filenameForEncryptedFile)
         try encryptedContacts.write(to: fileURL)
         
+        var storeResult = StoreResult.success
+        
         // store encrypted data to the remote storage
         if remoteStore {
-            try? remoteStorage.storeAddressBookContacts(encryptedContacts, filenameForEncryptedFile)
+            do {
+                try remoteStorage.storeAddressBookContacts(encryptedContacts, filenameForEncryptedFile)
+            } catch {
+                storeResult = .remoteFailed
+            }
         }
+        
+        return storeResult
     }
     
     private static func filenameForEncryptedFile() throws -> String {

@@ -19,6 +19,6 @@ extension DependencyValues {
 public struct AddressBookClient {
     public let allLocalContacts: () throws -> AddressBookContacts
     public let syncContacts: (AddressBookContacts?) async throws -> AddressBookContacts
-    public let storeContact: (Contact) throws -> AddressBookContacts
+    public let storeContact: (Contact) throws -> (contacts: AddressBookContacts, storeResult: StoreResult)
     public let deleteContact: (Contact) throws -> AddressBookContacts
 }
