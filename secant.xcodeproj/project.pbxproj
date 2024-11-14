@@ -112,6 +112,16 @@
 		9E5AB47C2C94777800065483 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */; };
 		9E5AB47D2C94777800065483 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E5AAEBF2A67CEC4003F283D /* Colors.xcassets */; };
 		9E5B8E742B46E04E00CA3616 /* RestoreWalletTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5B8E732B46E04E00CA3616 /* RestoreWalletTests.swift */; };
+		9E5CFD0F2CE61B7200C95713 /* sending.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E5CFD0E2CE61B7200C95713 /* sending.json */; };
+		9E5CFD102CE61B7200C95713 /* sending.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E5CFD0E2CE61B7200C95713 /* sending.json */; };
+		9E5CFD112CE61B7200C95713 /* sending.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E5CFD0E2CE61B7200C95713 /* sending.json */; };
+		9E5CFD122CE61B7200C95713 /* sending.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E5CFD0E2CE61B7200C95713 /* sending.json */; };
+		9E5CFD132CE61B7200C95713 /* sending.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E5CFD0E2CE61B7200C95713 /* sending.json */; };
+		9E5CFD152CE6215500C95713 /* sending-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E5CFD142CE6215500C95713 /* sending-dark.json */; };
+		9E5CFD162CE6215500C95713 /* sending-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E5CFD142CE6215500C95713 /* sending-dark.json */; };
+		9E5CFD172CE6215500C95713 /* sending-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E5CFD142CE6215500C95713 /* sending-dark.json */; };
+		9E5CFD182CE6215500C95713 /* sending-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E5CFD142CE6215500C95713 /* sending-dark.json */; };
+		9E5CFD192CE6215500C95713 /* sending-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E5CFD142CE6215500C95713 /* sending-dark.json */; };
 		9E683E472B0377F0002E7B5D /* WalletNukeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E683E462B0377F0002E7B5D /* WalletNukeTests.swift */; };
 		9E6C98492BF4C65F00EACDCB /* whatsNew.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E6C98472BF4C65F00EACDCB /* whatsNew.json */; };
 		9E6C984A2BF4C65F00EACDCB /* whatsNew.json in Resources */ = {isa = PBXBuildFile; fileRef = 9E6C98472BF4C65F00EACDCB /* whatsNew.json */; };
@@ -131,11 +141,6 @@
 		9EB35D632A31F1DD00A2149B /* Root in Frameworks */ = {isa = PBXBuildFile; productRef = 9EB35D622A31F1DD00A2149B /* Root */; };
 		9EB35D6A2A3A2D7B00A2149B /* Utils in Frameworks */ = {isa = PBXBuildFile; productRef = 9EB35D692A3A2D7B00A2149B /* Utils */; };
 		9EB35D6C2A3A2D9200A2149B /* Utils in Frameworks */ = {isa = PBXBuildFile; productRef = 9EB35D6B2A3A2D9200A2149B /* Utils */; };
-		9EBAAABD2CD14919005B026F /* sending.json in Resources */ = {isa = PBXBuildFile; fileRef = 9EBAAABC2CD14919005B026F /* sending.json */; };
-		9EBAAABE2CD14919005B026F /* sending.json in Resources */ = {isa = PBXBuildFile; fileRef = 9EBAAABC2CD14919005B026F /* sending.json */; };
-		9EBAAABF2CD14919005B026F /* sending.json in Resources */ = {isa = PBXBuildFile; fileRef = 9EBAAABC2CD14919005B026F /* sending.json */; };
-		9EBAAAC02CD14919005B026F /* sending.json in Resources */ = {isa = PBXBuildFile; fileRef = 9EBAAABC2CD14919005B026F /* sending.json */; };
-		9EBAAAC12CD14919005B026F /* sending.json in Resources */ = {isa = PBXBuildFile; fileRef = 9EBAAABC2CD14919005B026F /* sending.json */; };
 		9EDDAF6D2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */; };
 		9EDDAF6E2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */; };
 		9EDDAF6F2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */; };
@@ -210,6 +215,8 @@
 		9E5BF643281FEC9900BA3F17 /* SendTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendTests.swift; sourceTree = "<group>"; };
 		9E5CFBB12CE38EF000C95713 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		9E5CFBB42CE38EF000C95713 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Localizable.strings; sourceTree = "<group>"; };
+		9E5CFD0E2CE61B7200C95713 /* sending.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = sending.json; sourceTree = "<group>"; };
+		9E5CFD142CE6215500C95713 /* sending-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "sending-dark.json"; sourceTree = "<group>"; };
 		9E60E3D32C65F49F00B16C3E /* secant-distrib.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "secant-distrib.entitlements"; sourceTree = "<group>"; };
 		9E612C7829913F3600D09B09 /* SensitiveDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensitiveDataTests.swift; sourceTree = "<group>"; };
 		9E66129D288938A300C75B70 /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
@@ -235,7 +242,6 @@
 		9EAFEB812805793200199FC9 /* RootTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTests.swift; sourceTree = "<group>"; };
 		9EAFEB852805A23100199FC9 /* SecItemClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecItemClientTests.swift; sourceTree = "<group>"; };
 		9EB7D14A2A20C6BC00F35E03 /* modules */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = modules; sourceTree = "<group>"; };
-		9EBAAABC2CD14919005B026F /* sending.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = sending.json; sourceTree = "<group>"; };
 		9ECDD9512CA687B300D81CA0 /* secant-mainnet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "secant-mainnet.entitlements"; sourceTree = "<group>"; };
 		9ECDD9522CA6B2B400D81CA0 /* zashi-internal.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "zashi-internal.entitlements"; sourceTree = "<group>"; };
 		9EDDAF6C2BA2D71700A69A07 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -735,7 +741,8 @@
 		9EBAAAB52CD14889005B026F /* Lotties */ = {
 			isa = PBXGroup;
 			children = (
-				9EBAAABC2CD14919005B026F /* sending.json */,
+				9E5CFD0E2CE61B7200C95713 /* sending.json */,
+				9E5CFD142CE6215500C95713 /* sending-dark.json */,
 			);
 			path = Lotties;
 			sourceTree = "<group>";
@@ -1004,12 +1011,13 @@
 			files = (
 				0D26AF84299E8196005260EE /* Preview Assets.xcassets in Resources */,
 				0D26AF88299E8196005260EE /* LaunchScreen.storyboard in Resources */,
-				9EBAAABD2CD14919005B026F /* sending.json in Resources */,
 				9E89DF732CD27344002E5317 /* whatsNew_es.json in Resources */,
 				9E90751F2A269BE300269308 /* Assets.xcassets in Resources */,
 				9E599F332C3EEEF3000E4997 /* PartnerKeys.plist in Resources */,
 				9E6C984A2BF4C65F00EACDCB /* whatsNew.json in Resources */,
+				9E5CFD132CE61B7200C95713 /* sending.json in Resources */,
 				0D26AF8C299E8196005260EE /* GoogleService-Info.plist in Resources */,
+				9E5CFD182CE6215500C95713 /* sending-dark.json in Resources */,
 				9EDDAF6E2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */,
 				9E5AAEC12A67CEC4003F283D /* Colors.xcassets in Resources */,
 			);
@@ -1021,12 +1029,13 @@
 			files = (
 				0D4E7A1026B364180058B01E /* Preview Assets.xcassets in Resources */,
 				9E2F1C8C280ED6A7004E65FE /* LaunchScreen.storyboard in Resources */,
-				9EBAAABE2CD14919005B026F /* sending.json in Resources */,
 				9E89DF742CD27344002E5317 /* whatsNew_es.json in Resources */,
 				9E90751E2A269BE300269308 /* Assets.xcassets in Resources */,
 				9E599F322C3EEEF3000E4997 /* PartnerKeys.plist in Resources */,
 				9E6C98492BF4C65F00EACDCB /* whatsNew.json in Resources */,
+				9E5CFD102CE61B7200C95713 /* sending.json in Resources */,
 				0D3B01EC298DAF89007EBCDA /* GoogleService-Info.plist in Resources */,
+				9E5CFD162CE6215500C95713 /* sending-dark.json in Resources */,
 				9EDDAF6D2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */,
 				9E5AAEC02A67CEC4003F283D /* Colors.xcassets in Resources */,
 			);
@@ -1052,12 +1061,13 @@
 			files = (
 				9E41FFAF2CB2814500783CFD /* Preview Assets.xcassets in Resources */,
 				9E41FFB02CB2814500783CFD /* LaunchScreen.storyboard in Resources */,
-				9EBAAAC12CD14919005B026F /* sending.json in Resources */,
 				9E89DF702CD27344002E5317 /* whatsNew_es.json in Resources */,
 				9E41FFB12CB2814500783CFD /* Assets.xcassets in Resources */,
 				9E41FFB22CB2814500783CFD /* PartnerKeys.plist in Resources */,
 				9E41FFB32CB2814500783CFD /* whatsNew.json in Resources */,
+				9E5CFD122CE61B7200C95713 /* sending.json in Resources */,
 				9E41FFB42CB2814500783CFD /* GoogleService-Info.plist in Resources */,
+				9E5CFD152CE6215500C95713 /* sending-dark.json in Resources */,
 				9E41FFB52CB2814500783CFD /* PrivacyInfo.xcprivacy in Resources */,
 				9E41FFB62CB2814500783CFD /* Colors.xcassets in Resources */,
 			);
@@ -1069,12 +1079,13 @@
 			files = (
 				9E4AB2AF2BA1BEE900F5D6DB /* Preview Assets.xcassets in Resources */,
 				9E4AB2B02BA1BEE900F5D6DB /* LaunchScreen.storyboard in Resources */,
-				9EBAAAC02CD14919005B026F /* sending.json in Resources */,
 				9E89DF712CD27344002E5317 /* whatsNew_es.json in Resources */,
 				9E4AB2B12BA1BEE900F5D6DB /* Assets.xcassets in Resources */,
 				9E599F342C3EEEF3000E4997 /* PartnerKeys.plist in Resources */,
 				9E6C984B2BF4C65F00EACDCB /* whatsNew.json in Resources */,
+				9E5CFD112CE61B7200C95713 /* sending.json in Resources */,
 				9E4AB2B22BA1BEE900F5D6DB /* GoogleService-Info.plist in Resources */,
+				9E5CFD192CE6215500C95713 /* sending-dark.json in Resources */,
 				9EDDAF6F2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */,
 				9E4AB2B32BA1BEE900F5D6DB /* Colors.xcassets in Resources */,
 			);
@@ -1086,12 +1097,13 @@
 			files = (
 				9E5AB4762C94777800065483 /* Preview Assets.xcassets in Resources */,
 				9E5AB4772C94777800065483 /* LaunchScreen.storyboard in Resources */,
-				9EBAAABF2CD14919005B026F /* sending.json in Resources */,
 				9E89DF722CD27344002E5317 /* whatsNew_es.json in Resources */,
 				9E5AB4782C94777800065483 /* Assets.xcassets in Resources */,
 				9E5AB4792C94777800065483 /* PartnerKeys.plist in Resources */,
 				9E5AB47A2C94777800065483 /* whatsNew.json in Resources */,
+				9E5CFD0F2CE61B7200C95713 /* sending.json in Resources */,
 				9E5AB47B2C94777800065483 /* GoogleService-Info.plist in Resources */,
+				9E5CFD172CE6215500C95713 /* sending-dark.json in Resources */,
 				9E5AB47C2C94777800065483 /* PrivacyInfo.xcprivacy in Resources */,
 				9E5AB47D2C94777800065483 /* Colors.xcassets in Resources */,
 			);
@@ -2482,7 +2494,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "zashi-internal.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
 				DEVELOPMENT_TEAM = RLPRR8CPQG;
@@ -2495,7 +2507,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.4;
+				MARKETING_VERSION = 0.4.5;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "co.electriccoin.secant-testnet";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2513,7 +2525,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "zashi-internal.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
 				DEVELOPMENT_TEAM = RLPRR8CPQG;
 				ENABLE_BITCODE = NO;
@@ -2525,7 +2537,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.4;
+				MARKETING_VERSION = 0.4.5;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "co.electriccoin.secant-testnet";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2543,7 +2555,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "zashi-internal.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"secant/Preview Content\"";
 				DEVELOPMENT_TEAM = RLPRR8CPQG;
 				ENABLE_BITCODE = NO;
@@ -2555,7 +2567,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.4;
+				MARKETING_VERSION = 0.4.5;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "co.electriccoin.secant-testnet";
 				PRODUCT_NAME = "$(TARGET_NAME)";

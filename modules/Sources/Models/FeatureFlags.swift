@@ -14,10 +14,10 @@ public struct FeatureFlags: Equatable {
 
     public init(
         addUAtoMemo: Bool = false,
-        appLaunchBiometric: Bool = false,
+        appLaunchBiometric: Bool = true,
         flexa: Bool = false,
-        selectText: Bool = false,
-        sendingScreen: Bool = false
+        selectText: Bool = true,
+        sendingScreen: Bool = true
     ) {
         self.addUAtoMemo = addUAtoMemo
         self.appLaunchBiometric = appLaunchBiometric

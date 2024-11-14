@@ -9,6 +9,7 @@ import SDKSynchronizer
 import ReadTransactionsStorage
 import ZcashSDKEnvironment
 import AddressBookClient
+import UIComponents
 
 @Reducer
 public struct TransactionList {
@@ -23,6 +24,7 @@ public struct TransactionList {
         public var latestTransactionId = ""
         public var latestTransactionList: [TransactionState] = []
         public var requiredTransactionConfirmations = 0
+        @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
         public var transactionList: IdentifiedArrayOf<TransactionState>
 
         public init(
@@ -209,6 +211,7 @@ public struct TransactionList {
             
         case .copyToPastboard(let value):
             pasteboard.setString(value)
+            state.toast = .top(L10n.General.copiedToTheClipboard)
             return .none
 
         case .transactionCollapseRequested(let id):
