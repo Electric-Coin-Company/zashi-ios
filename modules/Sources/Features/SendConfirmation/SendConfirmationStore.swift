@@ -117,8 +117,7 @@ public struct SendConfirmation {
                     let abContacts = try addressBook.allLocalContacts()
                     return .send(.fetchedABContacts(abContacts))
                 } catch {
-                    print("__LD fetchABContactsRequested Error: \(error.localizedDescription)")
-                    // TODO: FIXME
+                    // TODO: [#1408] erro handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
                     return .none
                 }
 
