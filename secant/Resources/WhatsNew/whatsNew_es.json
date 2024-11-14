@@ -1,0 +1,17 @@
+{
+    "releases": [
+        {
+            "version": "1.2.2",
+            "date": "10-22-2024",
+            "timestamp": 1729608639,
+            "sections": [
+                {
+                    "title": "Cambiado:",
+                    "bulletpoints": [
+                        "Español añadido"
+                    ]
+                }
+            ]
+        }
+    ]
+}

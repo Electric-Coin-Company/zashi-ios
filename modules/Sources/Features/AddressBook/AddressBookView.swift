@@ -42,6 +42,7 @@ public struct AddressBookView: View {
                         
                         Text(L10n.AddressBook.empty)
                             .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                            .multilineTextAlignment(.center)
                     }
                     .screenHorizontalPadding()
                 } else {

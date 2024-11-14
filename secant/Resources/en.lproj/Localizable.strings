@@ -177,6 +177,11 @@
 "send.resubmissionInfo" = "Zashi encountered connection issues when submitting the transaction. It will retry in the next few minutes.";
 "send.report" = "Report";
 
+// MARK: - Message Editor
+"messageEditor.addUA" = "Reply-to: Include my address in the memo";
+"messageEditor.removeUA" = "Your address is included in the memo";
+"messageEditor.addUAformat" = "\n>>> reply-to: %@";
+
 // MARK: - ZEC Keyboard
 "zecKeyboard.invalid" = "This transaction amount is invalid.";
 
@@ -196,8 +201,7 @@
 "notEnoughFreeSpace.requiredSpace" = "~%@ MB of additional space required to continue";
 
 // MARK: - About
-"about.info" = "Send and receive ZEC on Zashi!
-Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private.";
+"about.info" = "Send and receive ZEC on Zashi! Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps your transaction history and wallet balance private.";
 "about.additionalInfo" = "Built by Zcashers, for Zcashers. Developed and maintained by Electric Coin Co., the inventor of Zcash, Zashi features a built-in user-feedback mechanism to enable more features, more quickly.";
 "about.title" = "Introducing Zashi";
 "about.privacyPolicy" = "Privacy Policy";
@@ -380,11 +384,6 @@ Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps you
 "exportLogs.alert.failed.title" = "Error when exporting logs";
 "exportLogs.alert.failed.message" = "Error: %@";
 
-// MARK: - Message Editor
-"messageEditor.addUA" = "Reply-to: Include my address in the memo";
-"messageEditor.removeUA" = "Your address is included in the memo";
-"messageEditor.addUAformat" = "\n>>> reply-to: %@";
-
 // MARK: - Address Book
 "addressBook.title" = "Address Book";
 "addressBook.newContact.title" = "Add New Address";
@@ -438,6 +437,10 @@ Zashi is a minimal-design, self-custody, ZEC-only shielded wallet that keeps you
 // MARK: - Tooltips
 "tooltip.exchangeRate.title" = "Exchange rate unavailable";
 "tooltip.exchangeRate.desc" = "We tried but we couldn’t refresh the exchange rate for you. Check your connection, relaunch the app, and we’ll try again.";
+
+// MARK: - UI Components
+"component.maxPrivacy" = "Maximum Privacy";
+"component.lowPrivacy" = "Low Privacy";
 
 // MARK: - Partners
 "partners.coinbaseOnrampUrl" = "https://pay.coinbase.com/buy/select-asset?appId=%@&addresses={\"%@\":[\"zcash\"]}";
