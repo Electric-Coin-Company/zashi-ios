@@ -152,7 +152,7 @@ extension AddressBookClient {
         
         let abContacts = AddressBookContacts(
             lastUpdated: lastUpdated,
-            version: AddressBookContacts.Constants.version,
+            version: version,
             contacts: IdentifiedArrayOf(uniqueElements: contacts)
         )
         
