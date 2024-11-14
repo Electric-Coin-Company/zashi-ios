@@ -13,6 +13,22 @@ import NumberFormatter
 
 public struct WelcomeView: View {
     @Perception.Bindable var store: StoreOf<Welcome>
+
+    var hiHeight: CGFloat {
+        var potentialCountryCode: String?
+        
+        if #available(iOS 16, *) {
+            potentialCountryCode = Locale.current.language.languageCode?.identifier
+        } else {
+            potentialCountryCode = Locale.current.languageCode
+        }
+        
+        if let potentialCountryCode, potentialCountryCode == "es" {
+            return 0.6
+        } else {
+            return 0.35
+        }
+    }
     
     public init(store: StoreOf<Welcome>) {
         self.store = store
@@ -30,8 +46,12 @@ public struct WelcomeView: View {
                     )
                 
                 Asset.Assets.splashHi.image
-                    .zImage(width: 246, height: 213, color: .white)
-                    .scaleEffect(0.35)
+                    .resizable()
+                    .renderingMode(.template)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: 213)
+                    .foregroundColor(.white)
+                    .scaleEffect(hiHeight)
                     .position(
                         x: proxy.frame(in: .local).midX,
                         y: proxy.frame(in: .local).midY * 0.8

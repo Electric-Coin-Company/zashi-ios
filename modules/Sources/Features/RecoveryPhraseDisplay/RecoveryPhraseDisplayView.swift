@@ -178,10 +178,11 @@ public struct RecoveryPhraseDisplayView: View {
                         .zFont(.semiBold, size: 24, style: Design.Text.primary)
                         .padding(.top, 40)
                         .multilineTextAlignment(.center)
-                        .zashiBackV2()
                 }
             }
             .onAppear { store.send(.onAppear) }
+            .alert($store.scope(state: \.alert, action: \.alert))
+            .zashiBack(false, hidden: !store.showBackButton)
             .overlayPreferenceValue(BirthdayPreferenceKey.self) { preferences in
                 if store.isBirthdayHintVisible {
                     GeometryReader { geometry in
