@@ -13,24 +13,7 @@ import CryptoKit
 import WalletStorage
 
 extension AddressBookClient {
-    /// Encrypts address book contacts. The structure:
-    ///     [Unencrypted data]    `encryption version`
-    ///     [Unencrypted data]    `salt`
-    ///     [Encrypted data]        `address book version`
-    ///     [Encrypted data]        `timestamp`
-    ///     [Encrypted data]        `contacts`
-    ///
-    /// This method always produces the latest structure with he latest encryption version.
-    static func encryptContacts(_ abContacts: AddressBookContacts) throws -> Data {
-        @Dependency(\.walletStorage) var walletStorage
-        
-        guard let encryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys(), let addressBookKey = encryptionKeys.getCached(account: 0) else {
-            throw AddressBookClient.AddressBookClientError.missingEncryptionKey
-        }
-        
-        var encryptionVersionData = Data()
-        encryptionVersionData.append(contentsOf: intToBytes(AddressBookEncryptionKeys.Constants.version))
-        
+    static func serializeContacts(_ abContacts: AddressBookContacts) -> Data {
         var dataForEncryption = Data()
         
         // Serialize `address book version`
@@ -47,6 +30,29 @@ extension AddressBookClient {
             let serializedContact = serializeContact(contact)
             dataForEncryption.append(serializedContact)
         }
+        
+        return dataForEncryption
+    }
+    
+    /// Encrypts address book contacts. The structure:
+    ///     [Unencrypted data]    `encryption version`
+    ///     [Unencrypted data]    `salt`
+    ///     [Encrypted data]        `address book version`
+    ///     [Encrypted data]        `timestamp`
+    ///     [Encrypted data]        `contacts`
+    ///
+    /// This method always produces the latest structure with the latest encryption version.
+    static func encryptContacts(_ abContacts: AddressBookContacts) throws -> Data {
+        @Dependency(\.walletStorage) var walletStorage
+        
+        guard let encryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys(), let addressBookKey = encryptionKeys.getCached(account: 0) else {
+            throw AddressBookClient.AddressBookClientError.missingEncryptionKey
+        }
+        
+        var encryptionVersionData = Data()
+        encryptionVersionData.append(contentsOf: intToBytes(AddressBookEncryptionKeys.Constants.version))
+        
+        let dataForEncryption = AddressBookClient.serializeContacts(abContacts)
         
         // Generate a fresh one-time sub-key for encrypting the address book.
         let salt = SymmetricKey(size: SymmetricKeySize.bits256)
@@ -84,15 +90,15 @@ extension AddressBookClient {
         var offset = 0
         
         // Deserialize `encryption version`
-        let encryptionVersionBytes = encryptedData.subdata(in: offset..<(offset + MemoryLayout<Int>.size))
-        offset += MemoryLayout<Int>.size
+        let encryptionVersionBytes = try AddressBookClient.subdata(of: encryptedData, in: offset..<(offset + Constants.int64Size))
+        offset += Constants.int64Size
         
         guard let encryptionVersion = AddressBookClient.bytesToInt(Array(encryptionVersionBytes)) else {
             return .empty
         }
         
         if encryptionVersion == AddressBookEncryptionKeys.Constants.version {
-            let encryptedSubData = encryptedData.subdata(in: offset..<encryptedData.count)
+            let encryptedSubData = try AddressBookClient.subdata(of: encryptedData, in: offset..<encryptedData.count)
             
             // Derive the sub-key for decrypting the address book.
             let salt = encryptedSubData.prefix(upTo: 32)
@@ -101,42 +107,8 @@ extension AddressBookClient {
             // Unseal the encrypted address book.
             let sealed = try ChaChaPoly.SealedBox.init(combined: encryptedSubData.suffix(from: 32))
             let data = try ChaChaPoly.open(sealed, using: subKey)
-            offset = 0
             
-            // Deserialize `address book version`
-            let abVersionCountBytes = data.subdata(in: offset..<(offset + MemoryLayout<Int>.size))
-            guard let abVersion =  AddressBookClient.bytesToInt(Array(abVersionCountBytes)) else {
-                return .empty
-            }
-            offset += MemoryLayout<Int>.size
-            
-            // Deserialize `lastUpdated`
-            guard let lastUpdated = AddressBookClient.deserializeDate(from: data, at: &offset) else {
-                return .empty
-            }
-            
-            // Deserialize `contactsCount`
-            let contactsCountBytes = data.subdata(in: offset..<(offset + MemoryLayout<Int>.size))
-            offset += MemoryLayout<Int>.size
-            
-            guard let contactsCount = AddressBookClient.bytesToInt(Array(contactsCountBytes)) else {
-                return .empty
-            }
-            
-            var contacts: [Contact] = []
-            for _ in 0..<contactsCount {
-                if let contact = AddressBookClient.deserializeContact(from: data, at: &offset) {
-                    contacts.append(contact)
-                }
-            }
-            
-            let abContacts = AddressBookContacts(
-                lastUpdated: lastUpdated,
-                version: abVersion,
-                contacts: IdentifiedArrayOf(uniqueElements: contacts)
-            )
-            
-            return abContacts
+            return try contactsFrom(unencryptedData: data)
         } else {
             throw AddressBookClientError.encryptionVersionNotSupported
         }
@@ -150,8 +122,8 @@ extension AddressBookClient {
         var offset = 0
         
         // Deserialize `version`
-        let versionBytes = unencryptedData.subdata(in: offset..<(offset + MemoryLayout<Int>.size))
-        offset += MemoryLayout<Int>.size
+        let versionBytes = try AddressBookClient.subdata(of: unencryptedData, in: offset..<(offset + Constants.int64Size))
+        offset += Constants.int64Size
         
         // Deserialize and check `address book version`
         guard let version = AddressBookClient.bytesToInt(Array(versionBytes)), version == AddressBookContacts.Constants.version else {
@@ -159,13 +131,13 @@ extension AddressBookClient {
         }
         
         // Deserialize `lastUpdated`
-        guard let lastUpdated = AddressBookClient.deserializeDate(from: unencryptedData, at: &offset) else {
+        guard let lastUpdated = try AddressBookClient.deserializeDate(from: unencryptedData, at: &offset) else {
             return .empty
         }
         
         // Deserialize `contactsCount`
-        let contactsCountBytes = unencryptedData.subdata(in: offset..<(offset + MemoryLayout<Int>.size))
-        offset += MemoryLayout<Int>.size
+        let contactsCountBytes = try AddressBookClient.subdata(of: unencryptedData, in: offset..<(offset + Constants.int64Size))
+        offset += Constants.int64Size
         
         guard let contactsCount = AddressBookClient.bytesToInt(Array(contactsCountBytes)) else {
             return .empty
@@ -173,7 +145,7 @@ extension AddressBookClient {
         
         var contacts: [Contact] = []
         for _ in 0..<contactsCount {
-            if let contact = AddressBookClient.deserializeContact(from: unencryptedData, at: &offset) {
+            if let contact = try AddressBookClient.deserializeContact(from: unencryptedData, at: &offset) {
                 contacts.append(contact)
             }
         }
@@ -210,19 +182,19 @@ extension AddressBookClient {
         return data
     }
     
-    private static func deserializeContact(from data: Data, at offset: inout Int) -> Contact? {
+    private static func deserializeContact(from data: Data, at offset: inout Int) throws -> Contact? {
         // Deserialize `lastUpdated`
-        guard let lastUpdated = AddressBookClient.deserializeDate(from: data, at: &offset) else {
+        guard let lastUpdated = try AddressBookClient.deserializeDate(from: data, at: &offset) else {
             return nil
         }
         
         // Deserialize `address`
-        guard let address = readString(from: data, at: &offset) else {
+        guard let address = try readString(from: data, at: &offset) else {
             return nil
         }
         
         // Deserialize `name`
-        guard let name = readString(from: data, at: &offset) else {
+        guard let name = try readString(from: data, at: &offset) else {
             return nil
         }
         
@@ -242,7 +214,7 @@ extension AddressBookClient {
     }
     
     private static func bytesToInt(_ bytes: [UInt8]) -> Int? {
-        guard bytes.count == MemoryLayout<Int>.size else {
+        guard bytes.count == Constants.int64Size else {
             return nil
         }
         
@@ -259,10 +231,10 @@ extension AddressBookClient {
         return AddressBookClient.intToBytes(timestamp)
     }
     
-    private static func deserializeDate(from data: Data, at offset: inout Int) -> Date? {
+    private static func deserializeDate(from data: Data, at offset: inout Int) throws -> Date? {
         // Extract the bytes for the timestamp (assume it's stored as an Int)
-        let timestampBytes = data.subdata(in: offset..<(offset + MemoryLayout<Int>.size))
-        offset += MemoryLayout<Int>.size
+        let timestampBytes = try AddressBookClient.subdata(of: data, in: offset..<(offset + Constants.int64Size))
+        offset += Constants.int64Size
         
         // Convert the bytes back to an Int
         guard let timestamp = AddressBookClient.bytesToInt(Array(timestampBytes)) else { return nil }
@@ -272,15 +244,25 @@ extension AddressBookClient {
     }
     
     // Helper function to read a string from the data using a length prefix
-    private static func readString(from data: Data, at offset: inout Int) -> String? {
+    private static func readString(from data: Data, at offset: inout Int) throws -> String? {
         // Read the length first (assumes the length is stored as an Int)
-        let lengthBytes = data.subdata(in: offset..<(offset + MemoryLayout<Int>.size))
-        offset += MemoryLayout<Int>.size
+        let lengthBytes = try AddressBookClient.subdata(of: data, in: offset..<(offset + Constants.int64Size))
+        offset += Constants.int64Size
         guard let length = AddressBookClient.bytesToInt(Array(lengthBytes)), length > 0 else { return nil }
         
         // Read the string bytes
-        let stringBytes = data.subdata(in: offset..<(offset + length))
+        let stringBytes = try AddressBookClient.subdata(of: data, in: offset..<(offset + length))
         offset += length
         return AddressBookClient.bytesToString(Array(stringBytes))
     }
+    
+    private static func subdata(of data: Data, in range: Range<Data.Index>) throws -> Data {
+        guard data.count >= range.lowerBound.distance(to: range.upperBound) else {
+            throw AddressBookClient.AddressBookClientError.subdataRange
+        }
+        
+        return data.subdata(in: range)
+    }
 }
+
+
