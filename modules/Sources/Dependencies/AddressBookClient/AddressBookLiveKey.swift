@@ -22,9 +22,10 @@ extension AddressBookClient: DependencyKey {
         static let int64Size = MemoryLayout<Int64>.size
     }
     
-    public enum StoreResult: Equatable {
+    public enum RemoteStoreResult: Equatable {
+        case failure
+        case notAttempted
         case success
-        case remoteFailed
     }
 
     public enum AddressBookClientError: Error {
@@ -48,10 +49,10 @@ extension AddressBookClient: DependencyKey {
             allLocalContacts: {
                 // return latest known contacts or load ones for the first time
                 guard latestKnownContacts == nil else {
-                    return latestKnownContacts ?? .empty
+                    return (latestKnownContacts ?? .empty, nil)
                 }
 
-                // contacts haven't been loaded from the locale storage yet, do it
+                // contacts haven't been loaded from the local storage yet, do it
                 do {
                     guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
                         throw AddressBookClientError.documentsFolder
@@ -63,7 +64,7 @@ extension AddressBookClient: DependencyKey {
                     if let contactsData = try? Data(contentsOf: encryptedFileURL) {
                         let contacts = try AddressBookClient.contactsFrom(encryptedData: contactsData)
                         
-                        // file exists and was successfuly decrypted;
+                        // file exists and was successfully decrypted and parsed;
                         // try to find the unencrypted file and delete it
                         let unencryptedFileURL = documentsDirectory.appendingPathComponent(Constants.unencryptedFilename)
                         if FileManager.default.fileExists(atPath: unencryptedFileURL.path) {
@@ -71,20 +72,26 @@ extension AddressBookClient: DependencyKey {
                         }
 
                         latestKnownContacts = contacts
-                        return contacts
+                        return (contacts, nil)
                     } else {
                         // Fallback to the unencrypted file check and resolution
                         let unencryptedFileURL = documentsDirectory.appendingPathComponent(Constants.unencryptedFilename)
                         
                         if let contactsData = try? Data(contentsOf: unencryptedFileURL) {
-                            // Unencrypted file exists; ensure data are parsed, re-saved as encrypted, and file deteled
-                            let contacts = try AddressBookClient.contactsFrom(contactsData)
+                            // Unencrypted file exists; ensure data are parsed, re-saved as encrypted, and the original file deleted.
+
+                            var contacts = try AddressBookClient.contactsFrom(contactsData)
 
                             // try to encrypt and store the data
+                            var remoteStoreResult: RemoteStoreResult
                             do {
-                                try AddressBookClient.storeContacts(contacts, remoteStorage: remoteStorage, remoteStore: false)
+                                remoteStoreResult = try AddressBookClient.storeContacts(contacts, remoteStorage: remoteStorage, remoteStore: false)
+
+                                let result = try syncContacts(contacts: contacts, remoteStorage: remoteStorage, storeAfterSync: true)
+                                remoteStoreResult = result.remoteStoreResult
+                                contacts = result.contacts
                             } catch {
-                                // the store of the new file failed, skip the file remove
+                                // the store of the new file failed locally, skip the file remove
                                 latestKnownContacts = contacts
                                 throw error
                             }
@@ -92,9 +99,9 @@ extension AddressBookClient: DependencyKey {
                             try? FileManager.default.removeItem(at: unencryptedFileURL)
                             
                             latestKnownContacts = contacts
-                            return contacts
+                            return (contacts, remoteStoreResult)
                         } else {
-                            return .empty
+                            return (.empty, nil)
                         }
                     }
                 } catch {
@@ -104,16 +111,17 @@ extension AddressBookClient: DependencyKey {
             syncContacts: {
                 let abContacts = $0 ?? latestKnownContacts ?? AddressBookContacts.empty
 
-                let syncedContacts =  try syncContacts(contacts: abContacts, remoteStorage: remoteStorage)
-                
-                latestKnownContacts = syncedContacts
+                let result = try syncContacts(contacts: abContacts, remoteStorage: remoteStorage)
 
-                return syncedContacts
+                latestKnownContacts = result.contacts
+
+                return result
             },
             storeContact: {
                 let abContacts = latestKnownContacts ?? AddressBookContacts.empty
 
-                var syncedContacts = try syncContacts(contacts: abContacts, remoteStorage: remoteStorage, storeAfterSync: false)
+                let result = try syncContacts(contacts: abContacts, remoteStorage: remoteStorage, storeAfterSync: false)
+                var syncedContacts = result.contacts
 
                 // if already exists, remove it
                 if syncedContacts.contacts.contains($0) {
@@ -122,31 +130,32 @@ extension AddressBookClient: DependencyKey {
                 
                 syncedContacts.contacts.append($0)
                 
-                let storeResult = try storeContacts(syncedContacts, remoteStorage: remoteStorage)
+                let remoteStoreResult = try storeContacts(syncedContacts, remoteStorage: remoteStorage)
                 
                 // update the latest known contacts
                 latestKnownContacts = syncedContacts
                 
-                return (syncedContacts, storeResult)
+                return (syncedContacts, remoteStoreResult)
             },
             deleteContact: {
                 let abContacts = latestKnownContacts ?? AddressBookContacts.empty
                 
-                var syncedContacts = try syncContacts(contacts: abContacts, remoteStorage: remoteStorage, storeAfterSync: false)
-                
+                let result = try syncContacts(contacts: abContacts, remoteStorage: remoteStorage, storeAfterSync: false)
+                var syncedContacts = result.contacts
+
                 // if it doesn't exist, do nothing
                 guard syncedContacts.contacts.contains($0) else {
-                    return syncedContacts
+                    return (syncedContacts, nil)
                 }
                 
                 syncedContacts.contacts.remove($0)
                 
-                try storeContacts(syncedContacts, remoteStorage: remoteStorage)
+                let remoteStoreResult = try storeContacts(syncedContacts, remoteStorage: remoteStorage)
                 
                 // update the latest known contacts
                 latestKnownContacts = syncedContacts
                 
-                return syncedContacts
+                return (syncedContacts, remoteStoreResult)
             }
         )
     }
@@ -155,7 +164,7 @@ extension AddressBookClient: DependencyKey {
         contacts: AddressBookContacts,
         remoteStorage: RemoteStorageClient,
         storeAfterSync: Bool = true
-    ) throws -> AddressBookContacts {
+    ) throws -> (contacts: AddressBookContacts, remoteStoreResult: RemoteStoreResult) {
         // Ensure remote contacts are prepared
         var remoteContacts: AddressBookContacts = .empty
         var storeData = true
@@ -207,43 +216,49 @@ extension AddressBookClient: DependencyKey {
             }
         }
 
+        var remoteStoreResult = RemoteStoreResult.notAttempted
         if storeAfterSync {
-            try storeContacts(syncedContacts, remoteStorage: remoteStorage, remoteStore: storeData)
+            remoteStoreResult = try storeContacts(syncedContacts, remoteStorage: remoteStorage, remoteStore: storeData)
         }
 
-        return syncedContacts
+        return (syncedContacts, remoteStoreResult)
     }
     
-    @discardableResult private static func storeContacts(
+    private static func storeContacts(
         _ abContacts: AddressBookContacts,
         remoteStorage: RemoteStorageClient,
         remoteStore: Bool = true
-    ) throws -> StoreResult {
+    ) throws -> RemoteStoreResult {
         // encrypt data
         let encryptedContacts = try AddressBookClient.encryptContacts(abContacts)
+
+        let filenameForEncryptedFile = try AddressBookClient.filenameForEncryptedFile()
 
         // store encrypted data to the local storage
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             throw AddressBookClientError.documentsFolder
         }
-        
-        let filenameForEncryptedFile = try AddressBookClient.filenameForEncryptedFile()
 
         let fileURL = documentsDirectory.appendingPathComponent(filenameForEncryptedFile)
         try encryptedContacts.write(to: fileURL)
-        
-        var storeResult = StoreResult.success
-        
+
         // store encrypted data to the remote storage
+        var isRemoteSuccess = remoteStore
+        
         if remoteStore {
             do {
                 try remoteStorage.storeAddressBookContacts(encryptedContacts, filenameForEncryptedFile)
             } catch {
-                storeResult = .remoteFailed
+                isRemoteSuccess = false
             }
         }
-        
-        return storeResult
+
+        switch (remoteStore, isRemoteSuccess) {
+        case (true, true): return .success
+        case (true, false): return .failure
+        case (false, true): return .notAttempted
+        case (false, false): return .notAttempted
+        }
     }
     
     private static func filenameForEncryptedFile() throws -> String {
