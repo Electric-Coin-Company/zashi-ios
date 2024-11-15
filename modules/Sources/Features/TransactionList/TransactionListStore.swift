@@ -68,10 +68,14 @@ public struct TransactionList {
         case .onAppear:
             state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
             do {
-                let abContacts = try addressBook.allLocalContacts()
+                let result = try addressBook.allLocalContacts()
+                let abContacts = result.contacts
+                if let remoteStoreResult = result.remoteStoreResult, remoteStoreResult == .failure {
+                    // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                }
                 state.addressBookContacts = abContacts
             } catch {
-                // TODO: [#1408] erro handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
             }
 
             return .merge(
