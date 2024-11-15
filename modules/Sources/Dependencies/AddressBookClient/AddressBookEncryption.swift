@@ -218,8 +218,23 @@ extension AddressBookClient {
             return nil
         }
         
-        return bytes.withUnsafeBytes {
-            $0.load(as: Int.self).bigEndian
+        return bytes.withUnsafeBytes { ptr -> Int in
+            // Check if the pointer is properly aligned for Int
+            if ptr.baseAddress?.alignedUp(toMultipleOf: MemoryLayout<Int>.alignment) == ptr.baseAddress {
+                // Memory is already aligned
+                return ptr.load(as: Int.self).bigEndian
+            } else {
+                // Handle unaligned memory
+                var value: Int = 0
+                
+                withUnsafeMutableBytes(of: &value) { valuePtr in
+                    // Copy bytes manually to handle unaligned access
+                    for i in 0..<Swift.min(ptr.count, MemoryLayout<Int>.size) {
+                        valuePtr[i] = ptr[i]
+                    }
+                }
+                return value.bigEndian
+            }
         }
     }
     

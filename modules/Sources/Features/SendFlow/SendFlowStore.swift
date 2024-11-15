@@ -247,13 +247,17 @@ public struct SendFlow {
             case .onAppear:
                 state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
                 do {
-                    let abContacts = try addressBook.allLocalContacts()
+                    let result = try addressBook.allLocalContacts()
+                    let abContacts = result.contacts
+                    if let remoteStoreResult = result.remoteStoreResult, remoteStoreResult == .failure {
+                        // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                    }
                     return .merge(
                         .send(.exchangeRateSetupChanged),
                         .send(.fetchedABContacts(abContacts))
                         )
                 } catch {
-                    // TODO: [#1408] erro handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                    // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
                     return .send(.exchangeRateSetupChanged)
                 }
 
