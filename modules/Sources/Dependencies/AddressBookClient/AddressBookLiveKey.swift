@@ -49,7 +49,7 @@ extension AddressBookClient: DependencyKey {
             allLocalContacts: {
                 // return latest known contacts or load ones for the first time
                 guard latestKnownContacts == nil else {
-                    return (latestKnownContacts ?? .empty, nil)
+                    return (latestKnownContacts ?? .empty, .notAttempted)
                 }
 
                 // contacts haven't been loaded from the local storage yet, do it
@@ -72,7 +72,7 @@ extension AddressBookClient: DependencyKey {
                         }
 
                         latestKnownContacts = contacts
-                        return (contacts, nil)
+                        return (contacts, .notAttempted)
                     } else {
                         // Fallback to the unencrypted file check and resolution
                         let unencryptedFileURL = documentsDirectory.appendingPathComponent(Constants.unencryptedFilename)
@@ -80,7 +80,7 @@ extension AddressBookClient: DependencyKey {
                         if let contactsData = try? Data(contentsOf: unencryptedFileURL) {
                             // Unencrypted file exists; ensure data are parsed, re-saved as encrypted, and the original file deleted.
 
-                            var contacts = try AddressBookClient.contactsFrom(contactsData)
+                            var contacts = try AddressBookClient.contactsFrom(plainData: contactsData)
 
                             // try to encrypt and store the data
                             var remoteStoreResult: RemoteStoreResult
@@ -101,7 +101,7 @@ extension AddressBookClient: DependencyKey {
                             latestKnownContacts = contacts
                             return (contacts, remoteStoreResult)
                         } else {
-                            return (.empty, nil)
+                            return (.empty, .notAttempted)
                         }
                     }
                 } catch {
@@ -145,7 +145,7 @@ extension AddressBookClient: DependencyKey {
 
                 // if it doesn't exist, do nothing
                 guard syncedContacts.contacts.contains($0) else {
-                    return (syncedContacts, nil)
+                    return (syncedContacts, .notAttempted)
                 }
                 
                 syncedContacts.contacts.remove($0)
@@ -167,16 +167,20 @@ extension AddressBookClient: DependencyKey {
     ) throws -> (contacts: AddressBookContacts, remoteStoreResult: RemoteStoreResult) {
         // Ensure remote contacts are prepared
         var remoteContacts: AddressBookContacts = .empty
-        var storeData = true
+        var shouldUpdateRemote = false
+        var cannotUpdateRemote = false
 
         do {
             let filenameForEncryptedFile = try AddressBookClient.filenameForEncryptedFile()
             let encryptedData = try remoteStorage.loadAddressBookContacts(filenameForEncryptedFile)
             remoteContacts = try AddressBookClient.contactsFrom(encryptedData: encryptedData)
         } catch RemoteStorageClient.RemoteStorageError.fileDoesntExist {
-            storeData = false
+            // If the remote file doesn't exist, always try to write it when
+            // storeAfterSync is true.
+            shouldUpdateRemote = true
         } catch RemoteStorageClient.RemoteStorageError.containerURL {
-            storeData = false
+            // Remember that we got this error when setting remoteStoreResult.
+            cannotUpdateRemote = true
         } catch {
             throw error
         }
@@ -190,7 +194,6 @@ extension AddressBookClient: DependencyKey {
 
         remoteContacts.contacts.forEach {
             var notFound = true
-            var indexToUpdate = -1
             
             for i in 0..<syncedContacts.contacts.count {
                 let contact = syncedContacts.contacts[i]
@@ -198,29 +201,32 @@ extension AddressBookClient: DependencyKey {
                 if $0.id == contact.id {
                     notFound = false
                     
-                    if $0.lastUpdated > contact.lastUpdated {
-                        indexToUpdate = i
+                    // If the timestamps are equal, the local entry takes priority.
+                    if $0.lastUpdated >= contact.lastUpdated {
+                        syncedContacts.contacts[i].name = $0.name
+                        syncedContacts.contacts[i].lastUpdated = $0.lastUpdated
+                        shouldUpdateRemote = true
                     }
-                    
                     break
                 }
             }
             
-            if indexToUpdate > -1 {
-                syncedContacts.contacts[indexToUpdate].name = $0.name
-                syncedContacts.contacts[indexToUpdate].lastUpdated = $0.lastUpdated
-            }
-            
             if notFound {
                 syncedContacts.contacts.append($0)
+                shouldUpdateRemote = true
             }
         }
 
         var remoteStoreResult = RemoteStoreResult.notAttempted
-        if storeAfterSync {
-            remoteStoreResult = try storeContacts(syncedContacts, remoteStorage: remoteStorage, remoteStore: storeData)
-        }
 
+        if storeAfterSync {
+            remoteStoreResult = try storeContacts(syncedContacts, remoteStorage: remoteStorage,
+                                                  remoteStore: shouldUpdateRemote && !cannotUpdateRemote)
+            if cannotUpdateRemote {
+                remoteStoreResult = .failure
+            }
+        }
+        
         return (syncedContacts, remoteStoreResult)
     }
     
@@ -243,21 +249,15 @@ extension AddressBookClient: DependencyKey {
         try encryptedContacts.write(to: fileURL)
 
         // store encrypted data to the remote storage
-        var isRemoteSuccess = remoteStore
-        
         if remoteStore {
             do {
                 try remoteStorage.storeAddressBookContacts(encryptedContacts, filenameForEncryptedFile)
+                return .success
             } catch {
-                isRemoteSuccess = false
+                return .failure
             }
-        }
-
-        switch (remoteStore, isRemoteSuccess) {
-        case (true, true): return .success
-        case (true, false): return .failure
-        case (false, true): return .notAttempted
-        case (false, false): return .notAttempted
+        } else {
+            return .notAttempted
         }
     }
     
