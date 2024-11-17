@@ -70,7 +70,7 @@ public struct TransactionList {
             do {
                 let result = try addressBook.allLocalContacts()
                 let abContacts = result.contacts
-                if let remoteStoreResult = result.remoteStoreResult, remoteStoreResult == .failure {
+                if result.remoteStoreResult == .failure {
                     // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
                 }
                 state.addressBookContacts = abContacts
