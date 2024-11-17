@@ -108,7 +108,7 @@ extension AddressBookClient {
             let sealed = try ChaChaPoly.SealedBox.init(combined: encryptedSubData.suffix(from: 32))
             let data = try ChaChaPoly.open(sealed, using: subKey)
             
-            return try contactsFrom(data)
+            return try contactsFrom(plainData: data)
         } else {
             throw AddressBookClientError.encryptionVersionNotSupported
         }
@@ -118,11 +118,11 @@ extension AddressBookClient {
     ///     [Unencrypted data]        `address book version`
     ///     [Unencrypted data]        `timestamp`
     ///     [Unencrypted data]        `contacts`
-    static func contactsFrom(_ data: Data) throws -> AddressBookContacts {
+    static func contactsFrom(plainData: Data) throws -> AddressBookContacts {
         var offset = 0
         
         // Deserialize `version`
-        let versionBytes = try AddressBookClient.subdata(of: data, in: offset..<(offset + Constants.int64Size))
+        let versionBytes = try AddressBookClient.subdata(of: plainData, in: offset..<(offset + Constants.int64Size))
         offset += Constants.int64Size
         
         // Deserialize and check `address book version`
@@ -131,12 +131,12 @@ extension AddressBookClient {
         }
         
         // Deserialize `lastUpdated`
-        guard let lastUpdated = try AddressBookClient.deserializeDate(from: data, at: &offset) else {
+        guard let lastUpdated = try AddressBookClient.deserializeDate(from: plainData, at: &offset) else {
             return .empty
         }
         
         // Deserialize `contactsCount`
-        let contactsCountBytes = try AddressBookClient.subdata(of: data, in: offset..<(offset + Constants.int64Size))
+        let contactsCountBytes = try AddressBookClient.subdata(of: plainData, in: offset..<(offset + Constants.int64Size))
         offset += Constants.int64Size
         
         guard let contactsCount = AddressBookClient.bytesToInt(Array(contactsCountBytes)) else {
@@ -145,7 +145,7 @@ extension AddressBookClient {
         
         var contacts: [Contact] = []
         for _ in 0..<contactsCount {
-            if let contact = try AddressBookClient.deserializeContact(from: data, at: &offset) {
+            if let contact = try AddressBookClient.deserializeContact(from: plainData, at: &offset) {
                 contacts.append(contact)
             }
         }
@@ -218,23 +218,8 @@ extension AddressBookClient {
             return nil
         }
         
-        return bytes.withUnsafeBytes { ptr -> Int in
-            // Check if the pointer is properly aligned for Int
-            if ptr.baseAddress?.alignedUp(toMultipleOf: MemoryLayout<Int>.alignment) == ptr.baseAddress {
-                // Memory is already aligned
-                return ptr.load(as: Int.self).bigEndian
-            } else {
-                // Handle unaligned memory
-                var value: Int = 0
-                
-                withUnsafeMutableBytes(of: &value) { valuePtr in
-                    // Copy bytes manually to handle unaligned access
-                    for i in 0..<Swift.min(ptr.count, MemoryLayout<Int>.size) {
-                        valuePtr[i] = ptr[i]
-                    }
-                }
-                return value.bigEndian
-            }
+        return bytes.withUnsafeBytes { ptr -> Int? in
+            Int.init(exactly: ptr.loadUnaligned(as: Int64.self).bigEndian)
         }
     }
     

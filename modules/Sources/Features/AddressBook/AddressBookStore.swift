@@ -206,7 +206,7 @@ public struct AddressBook {
                     do {
                         let result = try addressBook.deleteContact(contact)
                         let abContacts = result.contacts
-                        if let remoteStoreResult = result.remoteStoreResult, remoteStoreResult == .failure {
+                        if result.remoteStoreResult == .failure {
                             // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
                         }
                         return .concatenate(
@@ -267,7 +267,7 @@ public struct AddressBook {
                 do {
                     let result = try addressBook.allLocalContacts()
                     let abContacts = result.contacts
-                    if let remoteStoreResult = result.remoteStoreResult, remoteStoreResult == .failure {
+                    if result.remoteStoreResult == .failure {
                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
                     }
                     return .send(.fetchedABContacts(abContacts, true))
