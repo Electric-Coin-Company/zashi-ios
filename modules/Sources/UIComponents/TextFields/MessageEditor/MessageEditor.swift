@@ -110,6 +110,7 @@ public struct MessageEditorView: View {
                         textColor: Design.Inputs.Filled.label.color
                     )
                     .padding(.top, 12)
+                    .padding(.leading, 1)
                 }
             }
         }

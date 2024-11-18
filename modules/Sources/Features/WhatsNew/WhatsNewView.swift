@@ -34,7 +34,8 @@ public struct WhatsNewView: View {
                     .padding(.top, 40)
                     .padding(.bottom, 16)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    
+                    .screenHorizontalPadding()
+
                     WithPerceptionTracking {
                         ForEach(0..<store.latest.sections.count, id: \.self) { sectionIndex in
                             VStack(alignment: .leading, spacing: 6) {
@@ -74,12 +75,13 @@ public struct WhatsNewView: View {
                             .padding(.bottom, 16)
                         }
                     }
+                    .screenHorizontalPadding()
                 }
                 .padding(.vertical, 1)
                 .zashiBack()
                 .onAppear { store.send(.onAppear) }
                 .screenTitle(L10n.Settings.whatsNew.uppercased())
-                
+
                 Spacer()
                 
                 Asset.Assets.zashiTitle.image
@@ -92,7 +94,6 @@ public struct WhatsNewView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .screenHorizontalPadding()
         .applyScreenBackground()
     }
 }

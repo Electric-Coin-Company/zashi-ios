@@ -61,6 +61,7 @@ public struct SecurityWarningView: View {
                     .disabled(!store.isAcknowledged)
                     .padding(.vertical, 50)
                 }
+                .screenHorizontalPadding()
             }
             .padding(.vertical, 1)
             .zashiBack()
@@ -79,7 +80,6 @@ public struct SecurityWarningView: View {
             .onAppear { store.send(.onAppear) }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .screenHorizontalPadding()
         .applyScreenBackground()
         .screenTitle(L10n.SecurityWarning.screenTitle.uppercased())
     }

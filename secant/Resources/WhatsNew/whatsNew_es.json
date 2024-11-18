@@ -6,7 +6,7 @@
             "timestamp": 1731922524,
             "sections": [
                 {
-                    "title": "Added:",
+                    "title": "Agregado:",
                     "bulletpoints": [
                         "¡Hola!, le enseñamos a Zashi a hablar Español!",
                         "En la ultima version del SDK 2.2.7 adoptamos una nueva implementación para el manejo de transacciones de bajas denominaciones, haciendo posible transacciones mas rápidas y permitiendo un uso mas eficiente del saldo remanente en tu wallet.",
@@ -16,14 +16,14 @@
                     ]
                 },
                 {
-                    "title": "Changed:",
+                    "title": "Cambiado:",
                     "bulletpoints": [
                         "Hemos rediseñado las secciones de configuración y status haciéndolas mas elegantes, y hemos mejorado el nivel de seguridad de la frase de recuperación secreta (Recovery Phrase).",
                         "Nos encargamos de mejorar el proceso para mandar comentarios y sugerencias. ¡Nos importa saber que te parece Zashi y que podemos hacer para hacerlo mejor!"
                     ]
                 },
                 {
-                    "title": "Fixed:",
+                    "title": "Arreglado:",
                     "bulletpoints": [
                         "Arreglamos la funcionalidad del icono para transacciones privadas (shielded) en la pantalla de historial de transacciones.",
                         "Arreglamos la funcionalidad de la linterna que congelaba la aplicación.",

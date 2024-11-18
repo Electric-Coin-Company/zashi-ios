@@ -40,6 +40,7 @@ public struct DeleteWalletView: View {
                     label: L10n.DeleteWallet.iUnderstand
                 )
                 .padding(.bottom, 24)
+                .padding(.leading, 1)
                 
                 ZashiButton(
                     L10n.DeleteWallet.actionButtonTitle,

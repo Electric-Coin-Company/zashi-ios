@@ -51,6 +51,7 @@ public struct PrivateDataConsentView: View {
                         label: L10n.PrivateDataConsent.confirmation
                     )
                     .padding(.bottom, 24)
+                    .padding(.leading, 1)
                     
                     if store.isExportingData {
                         ZashiButton(
