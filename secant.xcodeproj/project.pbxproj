@@ -136,6 +136,16 @@
 		9E9075042A2681FF00269308 /* Generated in Frameworks */ = {isa = PBXBuildFile; productRef = 9E9075032A2681FF00269308 /* Generated */; };
 		9E90751E2A269BE300269308 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E90751D2A269BE300269308 /* Assets.xcassets */; };
 		9E90751F2A269BE300269308 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E90751D2A269BE300269308 /* Assets.xcassets */; };
+		9E9CE8A82CEB2B64009EFFEB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E5CFBB52CE38EF000C95713 /* Localizable.strings */; };
+		9E9CE8A92CEB2B64009EFFEB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E5CFBB22CE38EF000C95713 /* Localizable.strings */; };
+		9E9CE8AA2CEB2B64009EFFEB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E5CFBB22CE38EF000C95713 /* Localizable.strings */; };
+		9E9CE8AB2CEB2B64009EFFEB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E5CFBB52CE38EF000C95713 /* Localizable.strings */; };
+		9E9CE8AC2CEB2B64009EFFEB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E5CFBB52CE38EF000C95713 /* Localizable.strings */; };
+		9E9CE8AD2CEB2B64009EFFEB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E5CFBB22CE38EF000C95713 /* Localizable.strings */; };
+		9E9CE8AE2CEB2B64009EFFEB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E5CFBB22CE38EF000C95713 /* Localizable.strings */; };
+		9E9CE8AF2CEB2B64009EFFEB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E5CFBB52CE38EF000C95713 /* Localizable.strings */; };
+		9E9CE8B02CEB2B64009EFFEB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E5CFBB52CE38EF000C95713 /* Localizable.strings */; };
+		9E9CE8B12CEB2B64009EFFEB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E5CFBB22CE38EF000C95713 /* Localizable.strings */; };
 		9EA7ED062B7A591C005979F4 /* ZatoshiStringRepresentationCommaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA7ED052B7A591C005979F4 /* ZatoshiStringRepresentationCommaTests.swift */; };
 		9EB35D612A31F1D800A2149B /* Root in Frameworks */ = {isa = PBXBuildFile; productRef = 9EB35D602A31F1D800A2149B /* Root */; };
 		9EB35D632A31F1DD00A2149B /* Root in Frameworks */ = {isa = PBXBuildFile; productRef = 9EB35D622A31F1DD00A2149B /* Root */; };
@@ -1019,6 +1029,8 @@
 				0D26AF8C299E8196005260EE /* GoogleService-Info.plist in Resources */,
 				9E5CFD182CE6215500C95713 /* sending-dark.json in Resources */,
 				9EDDAF6E2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */,
+				9E9CE8AA2CEB2B64009EFFEB /* Localizable.strings in Resources */,
+				9E9CE8AB2CEB2B64009EFFEB /* Localizable.strings in Resources */,
 				9E5AAEC12A67CEC4003F283D /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1037,6 +1049,8 @@
 				0D3B01EC298DAF89007EBCDA /* GoogleService-Info.plist in Resources */,
 				9E5CFD162CE6215500C95713 /* sending-dark.json in Resources */,
 				9EDDAF6D2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */,
+				9E9CE8A82CEB2B64009EFFEB /* Localizable.strings in Resources */,
+				9E9CE8A92CEB2B64009EFFEB /* Localizable.strings in Resources */,
 				9E5AAEC02A67CEC4003F283D /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1069,6 +1083,8 @@
 				9E41FFB42CB2814500783CFD /* GoogleService-Info.plist in Resources */,
 				9E5CFD152CE6215500C95713 /* sending-dark.json in Resources */,
 				9E41FFB52CB2814500783CFD /* PrivacyInfo.xcprivacy in Resources */,
+				9E9CE8B02CEB2B64009EFFEB /* Localizable.strings in Resources */,
+				9E9CE8B12CEB2B64009EFFEB /* Localizable.strings in Resources */,
 				9E41FFB62CB2814500783CFD /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1087,6 +1103,8 @@
 				9E4AB2B22BA1BEE900F5D6DB /* GoogleService-Info.plist in Resources */,
 				9E5CFD192CE6215500C95713 /* sending-dark.json in Resources */,
 				9EDDAF6F2BA2D71700A69A07 /* PrivacyInfo.xcprivacy in Resources */,
+				9E9CE8AC2CEB2B64009EFFEB /* Localizable.strings in Resources */,
+				9E9CE8AD2CEB2B64009EFFEB /* Localizable.strings in Resources */,
 				9E4AB2B32BA1BEE900F5D6DB /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1105,6 +1123,8 @@
 				9E5AB47B2C94777800065483 /* GoogleService-Info.plist in Resources */,
 				9E5CFD172CE6215500C95713 /* sending-dark.json in Resources */,
 				9E5AB47C2C94777800065483 /* PrivacyInfo.xcprivacy in Resources */,
+				9E9CE8AE2CEB2B64009EFFEB /* Localizable.strings in Resources */,
+				9E9CE8AF2CEB2B64009EFFEB /* Localizable.strings in Resources */,
 				9E5AB47D2C94777800065483 /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

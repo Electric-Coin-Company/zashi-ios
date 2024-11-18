@@ -7,7 +7,6 @@ directly impact users rather than highlighting other crucial architectural updat
 ## [Unreleased]
 
 ### Added
-- Flexa integrated into Zashi, users can pay with ZEC for Flexa codes.
 - Authentication for the app launch and cold starts after 15 minutes.
 - Send experience reworked to display a sending screen, followed by transaction result screens. 
 - You can now select any text you want from a memo directly in Zashi. 
