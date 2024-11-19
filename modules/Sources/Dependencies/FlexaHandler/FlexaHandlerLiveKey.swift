@@ -154,7 +154,7 @@ private extension FlexaHandlerClient {
                         symbol: "ZEC",
                         balance: zecAmount,
                         balanceAvailable: zecAvailableAmount,
-                        icon: UIImage(named: "zcashZecLogo")
+                        icon: UIImage(named: "zcashZecLogo") ?? UIImage()
                     )
                 ]
             )
