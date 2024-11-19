@@ -28,6 +28,33 @@
       }
     },
     {
+      "identity" : "bcswiftcrypto",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/KeystoneHQ/BCSwiftCrypto.git",
+      "state" : {
+        "revision" : "f3b7faadfbd681786e9db73d66d3fe1053628fe5",
+        "version" : "0.9.0"
+      }
+    },
+    {
+      "identity" : "bcswiftdcbor",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/KeystoneHQ/BCSwiftDCBOR.git",
+      "state" : {
+        "revision" : "0330a29a502a43e0c5da1289f00bfa0c1488378c",
+        "version" : "0.11.1"
+      }
+    },
+    {
+      "identity" : "bcswiftfloat16",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/KeystoneHQ/BCSwiftFloat16.git",
+      "state" : {
+        "revision" : "5781bf741d202b69ffaa98c5e84e1229bd99e694",
+        "version" : "0.3.0"
+      }
+    },
+    {
       "identity" : "bigdecimal",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mgriebling/BigDecimal.git",
@@ -46,12 +73,30 @@
       }
     },
     {
+      "identity" : "codescanner",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/twostraws/CodeScanner",
+      "state" : {
+        "branch" : "main",
+        "revision" : "9fa582f4b36c69c2a55bff5fb3377eb170ae273c"
+      }
+    },
+    {
       "identity" : "combine-schedulers",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/combine-schedulers",
       "state" : {
         "revision" : "9fa31f4403da54855f1e2aeaeff478f4f0e40b13",
         "version" : "1.0.2"
+      }
+    },
+    {
+      "identity" : "cryptoswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/krzyzanowskim/CryptoSwift.git",
+      "state" : {
+        "revision" : "678d442c6f7828def400a70ae15968aef67ef52d",
+        "version" : "1.8.3"
       }
     },
     {
@@ -163,6 +208,15 @@
       }
     },
     {
+      "identity" : "keystone-sdk-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/KeystoneHQ/keystone-sdk-ios/",
+      "state" : {
+        "revision" : "f79469836e6ad33634cd4ae55371fc0a9acddf3f",
+        "version" : "0.7.1"
+      }
+    },
+    {
       "identity" : "leveldb",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/leveldb.git",
@@ -205,6 +259,24 @@
       "state" : {
         "revision" : "540318ecedd63d883069ae7f1ed811a2df00b6ac",
         "version" : "2.4.0"
+      }
+    },
+    {
+      "identity" : "secp256k1",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/portto/secp256k1.git",
+      "state" : {
+        "revision" : "6864a2560066cedede330c4b344689432a7300f7",
+        "version" : "0.0.5"
+      }
+    },
+    {
+      "identity" : "secp256k1.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/KeystoneHQ/secp256k1.swift.git",
+      "state" : {
+        "revision" : "95bfcee9f194c7a0d52ec29f40bf884812559a7c",
+        "version" : "0.8.1"
       }
     },
     {
@@ -257,8 +329,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections",
       "state" : {
-        "revision" : "3d2dc41a01f9e49d84f0a3925fb858bed64f702d",
-        "version" : "1.1.2"
+        "revision" : "671108c96644956dddcd89dd59c203dcdb36cec7",
+        "version" : "1.1.4"
+      }
+    },
+    {
+      "identity" : "swift-collections-sorted-collections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/soralit/swift-collections-sorted-collections",
+      "state" : {
+        "revision" : "eebe309da4f42ab6a38a057c74b3d8e7b4233b38",
+        "version" : "1.2.2"
       }
     },
     {
@@ -466,6 +547,15 @@
       "state" : {
         "revision" : "59dac4f14d657fd60bacfdfb7398d38b450af74f",
         "version" : "3.1.5"
+      }
+    },
+    {
+      "identity" : "urkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/KeystoneHQ/URKit.git",
+      "state" : {
+        "revision" : "dfac3005730c2ac189e7db173705c9e400046dcd",
+        "version" : "11.5.1"
       }
     },
     {

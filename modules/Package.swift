@@ -94,7 +94,9 @@ let package = Package(
         .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.27.0"),
         .package(url: "https://github.com/flexa/flexa-ios.git", from: "1.0.8"),
         .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "0.1.0-beta.9"),
-        .package(url: "https://github.com/airbnb/lottie-spm.git", from: "4.5.0")
+        .package(url: "https://github.com/airbnb/lottie-spm.git", from: "4.5.0"),
+        .package(url: "https://github.com/KeystoneHQ/keystone-sdk-ios/", from: "0.0.1"),
+        .package(url: "https://github.com/twostraws/CodeScanner", branch: "main")
     ],
     targets: [
         .target(
@@ -361,6 +363,7 @@ let package = Package(
                 "WalletBalances",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "KeystoneSDK", package: "keystone-sdk-ios"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
             path: "Sources/Features/Home"
