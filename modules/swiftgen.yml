@@ -23,7 +23,7 @@ fonts:
       output: Fonts+Generated.swift
 
 strings:
-  inputs: Localizable.strings
+  inputs: en.lproj/Localizable.strings
   outputs:
     - templateName: structured-swift5
       params:

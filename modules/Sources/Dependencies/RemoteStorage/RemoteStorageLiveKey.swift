@@ -23,28 +23,33 @@ extension RemoteStorageClient: DependencyKey {
     
     public static func live() -> Self {
         return Self(
-            loadAddressBookContacts: {
+            loadAddressBookContacts: { filename in
                 let fileManager = FileManager.default
 
-                guard let containerURL = fileManager.url(forUbiquityContainerIdentifier: Constants.ubiquityContainerIdentifier)?.appendingPathComponent(Constants.component) else {
+                guard let containerURL = path(fileManager, filename: filename) else {
                     throw RemoteStorageError.containerURL
                 }
 
                 guard fileManager.fileExists(atPath: containerURL.path) else {
                     throw RemoteStorageError.fileDoesntExist
                 }
-                
+
                 return try Data(contentsOf: containerURL)
             },
-            storeAddressBookContacts: { data in
+            storeAddressBookContacts: { data, filename in
                 let fileManager = FileManager.default
 
-                guard let containerURL = fileManager.url(forUbiquityContainerIdentifier: Constants.ubiquityContainerIdentifier)?.appendingPathComponent(Constants.component) else {
+                guard let containerURL = path(fileManager, filename: filename) else {
                     throw RemoteStorageError.containerURL
                 }
 
                 try data.write(to: containerURL)
             }
         )
+    }
+    
+    private static func path(_ fileManager: FileManager, filename: String) -> URL? {
+        fileManager.url(
+            forUbiquityContainerIdentifier: Constants.ubiquityContainerIdentifier)?.appendingPathComponent("Documents").appendingPathComponent(filename)
     }
 }

@@ -204,13 +204,17 @@ public struct AddressBook {
                 }
                 if let contact {
                     do {
-                        let contacts = try addressBook.deleteContact(contact)
+                        let result = try addressBook.deleteContact(contact)
+                        let abContacts = result.contacts
+                        if result.remoteStoreResult == .failure {
+                            // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                        }
                         return .concatenate(
-                            .send(.fetchedABContacts(contacts, false)),
+                            .send(.fetchedABContacts(abContacts, false)),
                             .send(.updateDestination(nil))
                         )
                     } catch {
-                        // TODO: FIXME
+                        // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
                     }
                 }
                 return .none
@@ -238,14 +242,17 @@ public struct AddressBook {
 
             case .saveButtonTapped:
                 do {
-                    let abContacts = try addressBook.storeContact(Contact(address: state.address, name: state.name))
+                    let result = try addressBook.storeContact(Contact(address: state.address, name: state.name))
+                    let abContacts = result.contacts
+                    if result.remoteStoreResult == .failure {
+                        // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                    }
                     return .concatenate(
                         .send(.fetchedABContacts(abContacts, false)),
                         .send(.contactStoreSuccess)
                     )
                 } catch {
-                    // TODO: FIXME
-                    print("__LD saveButtonTapped Error: \(error.localizedDescription)")
+                    // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
                     return .send(.updateDestination(nil))
                 }
 
@@ -258,29 +265,35 @@ public struct AddressBook {
 
             case .fetchABContactsRequested:
                 do {
-                    let abContacts = try addressBook.allLocalContacts()
+                    let result = try addressBook.allLocalContacts()
+                    let abContacts = result.contacts
+                    if result.remoteStoreResult == .failure {
+                        // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                    }
                     return .send(.fetchedABContacts(abContacts, true))
                 } catch {
-                    print("__LD fetchABContactsRequested Error: \(error.localizedDescription)")
-                    // TODO: FIXME
+                    // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
                     return .none
                 }
 
-            case let .fetchedABContacts(abContacts, _):
+            case let .fetchedABContacts(abContacts, requestToSync):
                 state.addressBookContacts = abContacts
-//                if requestToSync {
-//                    return .run { send in
-//                        do {
-//                            let syncedContacts = try await addressBook.syncContacts(abContacts)
-//                            await send(.fetchedABContacts(syncedContacts, false))
-//                        } catch {
-//                            print("__LD syncContacts Error: \(error.localizedDescription)")
-//                            // TODO: FIXME
-//                        }
-//                    }
-//                } else {
+                if requestToSync {
+                    return .run { send in
+                        do {
+                            let result = try await addressBook.syncContacts(abContacts)
+                            let syncedContacts = result.contacts
+                            if result.remoteStoreResult == .failure {
+                                // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                            }
+                            await send(.fetchedABContacts(syncedContacts, false))
+                        } catch {
+                            // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                        }
+                    }
+                } else {
                     return .none
-//                }
+                }
 
             case .updateDestination(let destination):
                 state.destination = destination

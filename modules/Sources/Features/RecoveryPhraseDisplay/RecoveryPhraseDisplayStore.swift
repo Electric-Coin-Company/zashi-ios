@@ -19,21 +19,24 @@ public struct RecoveryPhraseDisplay {
     @ObservableState
     public struct State: Equatable {
         @Presents public var alert: AlertState<Action>?
-        public var phrase: RecoveryPhrase?
-        public var showBackButton = false
         public var birthday: Birthday?
         public var birthdayValue: String?
+        public var isBirthdayHintVisible = false
+        public var isRecoveryPhraseHidden = true
+        public var phrase: RecoveryPhrase?
+        public var showBackButton = false
+        
         
         public init(
-            phrase: RecoveryPhrase? = nil,
-            showBackButton: Bool = false,
             birthday: Birthday? = nil,
-            birthdayValue: String? = nil
+            birthdayValue: String? = nil,
+            phrase: RecoveryPhrase? = nil,
+            showBackButton: Bool = false
         ) {
-            self.phrase = phrase
-            self.showBackButton = showBackButton
             self.birthday = birthday
             self.birthdayValue = birthdayValue
+            self.phrase = phrase
+            self.showBackButton = showBackButton
         }
     }
     
@@ -41,6 +44,8 @@ public struct RecoveryPhraseDisplay {
         case alert(PresentationAction<Action>)
         case finishedPressed
         case onAppear
+        case recoveryPhraseTapped
+        case tooltipTapped
     }
     
     @Dependency(\.walletStorage) var walletStorage
@@ -52,6 +57,7 @@ public struct RecoveryPhraseDisplay {
         Reduce { state, action in
             switch action {
             case .onAppear:
+                state.isRecoveryPhraseHidden = true
                 do {
                     let storedWallet = try walletStorage.exportWallet()
                     state.birthday = storedWallet.birthday
@@ -77,6 +83,14 @@ public struct RecoveryPhraseDisplay {
                 return .none
                 
             case .finishedPressed:
+                return .none
+                
+            case .tooltipTapped:
+                state.isBirthdayHintVisible.toggle()
+                return .none
+                
+            case .recoveryPhraseTapped:
+                state.isRecoveryPhraseHidden.toggle()
                 return .none
             }
         }

@@ -34,8 +34,8 @@ public struct PrivacyBadge: View {
             }
             
             Text(privacy == .max
-                 ? "Maximum Privacy"
-                 : "Low Privacy"
+                 ? L10n.Component.maxPrivacy
+                 : L10n.Component.lowPrivacy
             )
             .zFont(
                 .medium,

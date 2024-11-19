@@ -15,25 +15,21 @@ public struct CheckboxToggleStyle: ToggleStyle {
         HStack {
             ZStack {
                 if configuration.isOn {
-                    Image(systemName: "checkmark.square.fill")
-                        .renderingMode(.template)
-                        .resizable()
-                        .frame(width: 20, height: 20, alignment: .center)
-                        .background {
-                            Asset.Colors.background.color
-                                .scaleEffect(x: 0.94, y: 0.94)
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(Design.Checkboxes.onBg.color)
+                        .frame(width: 16, height: 16)
+                        .overlay {
+                            Asset.Assets.check.image
+                                .zImage(size: 12, style: Design.Checkboxes.onFg)
                         }
-                        .foregroundColor(Asset.Colors.primary.color)
                 } else {
-                    Image(systemName: "square")
-                        .renderingMode(.template)
-                        .resizable()
-                        .frame(width: 20, height: 20, alignment: .center)
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(Design.Checkboxes.offBg.color)
+                        .frame(width: 16, height: 16)
                         .background {
-                            Asset.Colors.background.color
-                                .scaleEffect(x: 0.94, y: 0.94)
+                            RoundedRectangle(cornerRadius: 4)
+                                .stroke(Design.Checkboxes.offStroke.color)
                         }
-                        .foregroundColor(Asset.Colors.primary.color)
                 }
             }
             .onTapGesture {

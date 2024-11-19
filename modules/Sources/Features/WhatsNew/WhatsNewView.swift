@@ -20,63 +20,78 @@ public struct WhatsNewView: View {
 
     public var body: some View {
         WithPerceptionTracking {
-            ScrollView {
-                HStack {
-                    Text(L10n.WhatsNew.version(store.latest.version))
-                        .font(.custom(FontFamily.Inter.bold.name, size: 14))
-                    
-                    Spacer()
-                    
-                    Text(store.latest.date)
-                        .font(.custom(FontFamily.Inter.bold.name, size: 14))
-                }
-                .padding(.vertical, 25)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 35)
-                
-                WithPerceptionTracking {
-                    ForEach(0..<store.latest.sections.count, id: \.self) { sectionIndex in
-                        VStack(alignment: .leading, spacing: 6) {
-                            WithPerceptionTracking {
-                                Text(store.latest.sections[sectionIndex].title)
-                                    .font(.custom(FontFamily.Inter.bold.name, size: 14))
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                
+            VStack(spacing: 0) {
+                ScrollView {
+                    HStack(spacing: 0) {
+                        Text(L10n.WhatsNew.version(store.latest.version))
+                            .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                        
+                        Spacer()
+                        
+                        Text(store.latest.date)
+                            .zFont(.semiBold, size: 14, style: Design.Text.primary)
+                    }
+                    .padding(.top, 40)
+                    .padding(.bottom, 16)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .screenHorizontalPadding()
+
+                    WithPerceptionTracking {
+                        ForEach(0..<store.latest.sections.count, id: \.self) { sectionIndex in
+                            VStack(alignment: .leading, spacing: 6) {
                                 WithPerceptionTracking {
-                                    ForEach(0..<store.latest.sections[sectionIndex].bulletpoints.count, id: \.self) { index in
-                                        WithPerceptionTracking {
-                                            if let previewText = try? AttributedString(
-                                                markdown: store.latest.sections[sectionIndex].bulletpoints[index],
-                                                including: \.zashiApp) {
-                                                HStack {
-                                                    VStack {
-                                                        Circle()
-                                                            .frame(width: 4, height: 4)
-                                                            .padding(.top, 7)
+                                    Text(store.latest.sections[sectionIndex].title)
+                                        .zFont(.semiBold, size: 16, style: Design.Text.primary)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    
+                                    WithPerceptionTracking {
+                                        ForEach(0..<store.latest.sections[sectionIndex].bulletpoints.count, id: \.self) { index in
+                                            WithPerceptionTracking {
+                                                if let previewText = try? AttributedString(
+                                                    markdown: store.latest.sections[sectionIndex].bulletpoints[index],
+                                                    including: \.zashiApp) {
+                                                    HStack {
+                                                        VStack {
+                                                            Circle()
+                                                                .frame(width: 4, height: 4)
+                                                                .padding(.top, 7)
+                                                                .padding(.leading, 8)
+                                                            
+                                                            Spacer()
+                                                        }
                                                         
-                                                        Spacer()
+                                                        ZashiText(withAttributedString: previewText)
+                                                            .zFont(size: 14, style: Design.Text.primary)
+                                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                                            .accentColor(Asset.Colors.primary.color)
+                                                            .lineSpacing(1.5)
                                                     }
-                                                    
-                                                    ZashiText(withAttributedString: previewText)
-                                                        .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                                        .accentColor(Asset.Colors.primary.color)
                                                 }
                                             }
                                         }
                                     }
                                 }
                             }
+                            .padding(.bottom, 16)
                         }
-                        .padding(.bottom, 20)
                     }
-                    .padding(.horizontal, 35)
+                    .screenHorizontalPadding()
                 }
+                .padding(.vertical, 1)
+                .zashiBack()
+                .onAppear { store.send(.onAppear) }
+                .screenTitle(L10n.Settings.whatsNew.uppercased())
+
+                Spacer()
+                
+                Asset.Assets.zashiTitle.image
+                    .zImage(width: 73, height: 20, color: Asset.Colors.primary.color)
+                    .padding(.bottom, 16)
+                
+                Text(L10n.Settings.version(store.appVersion, store.appBuild))
+                    .zFont(size: 16, style: Design.Text.tertiary)
+                    .padding(.bottom, 24)
             }
-            .padding(.vertical, 1)
-            .zashiBack()
-            .onAppear { store.send(.onAppear) }
-            .screenTitle(L10n.About.whatsNew)
         }
         .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground()

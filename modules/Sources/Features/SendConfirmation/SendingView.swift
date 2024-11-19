@@ -16,8 +16,11 @@ import PartialProposalError
 import Lottie
 
 public struct SendingView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     private enum Constants {
-        static let lottieName = "sending"
+        static let lottieNameLight = "sending"
+        static let lottieNameDark = "sending-dark"
     }
     
     @Perception.Bindable var store: StoreOf<SendConfirmation>
@@ -31,9 +34,12 @@ public struct SendingView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack(spacing: 0) {
-                LottieView(animation: .named(Constants.lottieName))
+                LottieView(animation: .named(
+                    colorScheme == .light ? Constants.lottieNameLight : Constants.lottieNameDark
+                ))
+                    .resizable()
                     .looping()
-                    .frame(width: 200, height: 200)
+                    .frame(width: 110, height: 110)
 
                 Text(L10n.Send.sending)
                     .zFont(.semiBold, size: 28, style: Design.Text.primary)

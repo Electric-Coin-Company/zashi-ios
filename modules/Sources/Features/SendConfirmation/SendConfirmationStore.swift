@@ -151,8 +151,10 @@ public struct SendConfirmation {
     }
 
     @Dependency(\.addressBook) var addressBook
+    @Dependency(\.audioServices) var audioServices
     @Dependency(\.localAuthentication) var localAuthentication
     @Dependency(\.derivationTool) var derivationTool
+    @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.walletStorage) var walletStorage
@@ -177,11 +179,14 @@ public struct SendConfirmation {
                 state.canSendMail = MFMailComposeViewController.canSendMail()
                 state.alias = nil
                 do {
-                    let abContacts = try addressBook.allLocalContacts()
+                    let result = try addressBook.allLocalContacts()
+                    let abContacts = result.contacts
+                    if result.remoteStoreResult == .failure {
+                        // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                    }
                     return .send(.fetchedABContacts(abContacts))
                 } catch {
-                    print("__LD fetchABContactsRequested Error: \(error.localizedDescription)")
-                    // TODO: FIXME
+                    // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
                     return .none
                 }
 
@@ -317,7 +322,20 @@ public struct SendConfirmation {
 
             case .updateResult(let result):
                 state.result = result
-                return .none
+                if let result {
+                    if result == .success {
+                        audioServices.systemSoundVibrate()
+                        return .none
+                    } else {
+                        return .run { _ in
+                            audioServices.systemSoundVibrate()
+                            try? await mainQueue.sleep(for: .seconds(1.0))
+                            audioServices.systemSoundVibrate()
+                        }
+                    }
+                } else {
+                    return .none
+                }
                 
             case let .updateFailedData(code, desc):
                 state.failedCode = code

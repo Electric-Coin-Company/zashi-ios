@@ -21,28 +21,46 @@ public struct NotEnoughFreeSpaceView: View {
 
     public var body: some View {
         WithPerceptionTracking {
-            VStack {
-                ZashiErrorIcon()
-                    .padding(.vertical, 20)
+            VStack(spacing: 0) {
+                Asset.Assets.infoCircle.image
+                    .zImage(size: 28, style: Design.Utility.ErrorRed._700)
+                    .padding(18)
+                    .background {
+                        Circle()
+                            .fill(Design.Utility.ErrorRed._100.color)
+                    }
+                    .rotationEffect(.degrees(180))
+                    .padding(.top, 100)
+
+                Text(L10n.NotEnoughFreeSpace.title)
+                    .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                    .padding(.top, 16)
+                    .padding(.bottom, 12)
+
+                Group {
+                    Text(L10n.NotEnoughFreeSpace.messagePre(store.freeSpaceRequiredForSync))
+                    + Text(L10n.NotEnoughFreeSpace.dataAvailable(store.freeSpace)).bold()
+                    + Text(L10n.NotEnoughFreeSpace.messagePost)
+                }
+                .zFont(size: 14, style: Design.Text.primary)
+                .multilineTextAlignment(.center)
+                .lineSpacing(1.5)
+
+                Text(L10n.NotEnoughFreeSpace.requiredSpace(store.spaceToFreeUp))
+                    .zFont(size: 12, style: Design.Text.primary)
+                    .minimumScaleFactor(0.6)
+                    .lineLimit(1)
+                    .multilineTextAlignment(.center)
+                    .padding(.top, 12)
                 
-                Text(L10n.NotEnoughFreeSpace.message1(store.freeSpaceRequiredForSync, store.freeSpace))
-                    .font(.custom(FontFamily.Inter.bold.name, size: 22))
-                    .multilineTextAlignment(.center)
-                    .padding(.bottom, 20)
-
-                Text(L10n.NotEnoughFreeSpace.message2)
-                    .font(.custom(FontFamily.Inter.regular.name, size: 17))
-                    .multilineTextAlignment(.center)
-
                 Spacer()
             }
-            .padding(.horizontal, 53)
-            .padding(.vertical, 1)
+            .frame(maxWidth: .infinity)
             .onAppear { store.send(.onAppear) }
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: settingsButton())
-            .applyScreenBackground()
-            .screenTitle(L10n.NotEnoughFreeSpace.title)
+            .screenHorizontalPadding()
+            .applyErredScreenBackground()
         }
     }
     

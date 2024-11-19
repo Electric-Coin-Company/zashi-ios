@@ -1,0 +1,448 @@
+// MARK: - Plain Onboarding Flow
+"plainOnboarding.title" = "Una billetera sencilla para enviar y recibir Zcash (ZEC).";
+"plainOnboarding.button.createNewWallet" = "Crear nueva billetera";
+"plainOnboarding.button.restoreWallet" = "Restaurar billetera existente";
+
+// MARK: - Security Warning
+"securityWarning.title" = "Advertencia de seguridad:";
+"securityWarning.screenTitle" = "Aviso de privacidad";
+"securityWarning.warningA" = "Zashi %@ (%@) es una billetera exclusiva para Zcash con protección, creada por Zcashers para Zcashers. Zashi ha sido diseñada para tu privacidad y seguridad. Al instalar y usar Zashi, aceptas compartir informes de fallos con Electric Coin Co. (el desarrollador de la billetera), lo cual nos ayudará a mejorar la experiencia del usuario de Zashi.*";
+"securityWarning.warningB" = "Por favor, confirma y acepta a continuación para continuar.";
+"securityWarning.warningC" = "*Nota";
+"securityWarning.warningD" = ": Los informes de fallos podrían revelar el momento del fallo y los eventos ocurridos, pero no revelarán las claves de gasto o visualización.";
+"securityWarning.acknowledge" = "Acepto";
+"securityWarning.confirm" = "Confirmar";
+
+// MARK: - Secret Recovery Phrase Display
+"recoveryPhraseDisplay.screenTitle" = "Frase de Recuperación";
+"recoveryPhraseDisplay.title" = "Protege tu billetera";
+"recoveryPhraseDisplay.description" = "Las siguientes 24 palabras son la clave para tus fondos y constituyen la única forma de recuperarlos si pierdes el acceso o adquieres un nuevo dispositivo. ¡Protege tu ZEC almacenando esta frase en un lugar de confianza y nunca la compartas con nadie!";
+"recoveryPhraseDisplay.button.wroteItDown" = "Ya la guardé";
+"recoveryPhraseDisplay.noWords" = "Las claves están ausentes. No hay una frase de respaldo almacenada en el llavero.";
+"recoveryPhraseDisplay.birthdayTitle" = "Altura de cumpleaños de la billetera";
+"recoveryPhraseDisplay.birthdayDesc" = "La Altura de Cumpleaños de la Billetera determina la altura de nacimiento (cadena) de tu billetera y facilita un proceso de restauración más rápido. Guarda este número junto con tu frase de recuperación en un lugar seguro.";
+"recoveryPhraseDisplay.warning" = "Protege tu ZEC almacenando esta frase en un lugar de confianza y nunca la compartas con nadie.";
+"recoveryPhraseDisplay.reveal" = "Revelar detalles de seguridad";
+"recoveryPhraseDisplay.hide" = "Ocultar detalles de seguridad";
+"recoveryPhraseDisplay.alert.failed.title" = "No se pudo cargar la billetera almacenada";
+"recoveryPhraseDisplay.alert.failed.message" = "El intento de cargar la billetera almacenada desde el llavero falló. Error: %@";
+
+// MARK: - Proposal Partial Error
+"proposalPartial.title" = "Envío Fallido";
+"proposalPartial.message1" = "Enviar a este destinatario requirió múltiples transacciones, pero solo algunas de ellas se completaron con éxito. Tus fondos están seguros, pero deben recuperarse con la ayuda del soporte del equipo de Zashi.";
+"proposalPartial.message2" = "Por favor, usa el botón de abajo para contactarnos y recuperar tus fondos. Tu mensaje estará pre-rellenado con todos los datos necesarios para resolver este problema.";
+"proposalPartial.transactionIds" = "IDs de transacción";
+"proposalPartial.contactSupport" = "Contactar Soporte";
+"proposalPartial.copyIds" = "Copiar IDs de transacción";
+"proposalPartial.mailSubject" = "Error de transacción TEX";
+"proposalPartial.mailPart1" = "Hola, equipo de Zashi,";
+"proposalPartial.mailPart2" = "Al enviar una transacción a una dirección TEX, encontré un estado de error. Me pongo en contacto para recibir orientación sobre cómo recuperar mis fondos.";
+"proposalPartial.mailPart3" = "Gracias.";
+"proposalPartial.transactionStatuses" = "Estados de la transacción:";
+
+// MARK: - Import Wallet Screen
+"importWallet.description" = "Ingresa la frase\nsecreta de recuperación";
+"importWallet.message" = "Ingresa tu frase semilla de 24 palabras para restaurar la billetera asociada.";
+"importWallet.button.restoreWallet" = "Restaurar";
+"importWallet.birthday.title" = "Altura de cumpleaños de la billetera";
+"importWallet.seed.valid" = "FRASE SEMILLA VÁLIDA";
+"importWallet.alert.success.message" = "¡Tu billetera ha sido restaurada con éxito! Durante la sincronización inicial, tus fondos no se podrán gastar ni enviar. Dependiendo de la antigüedad de tu billetera, puede tomar algunas horas sincronizar completamente.";
+"importWallet.alert.failed.title" = "No se pudo restaurar la billetera";
+"importWallet.alert.failed.message" = "Error: %@";
+"importWallet.optionalBirthday" = "(opcional)";
+"importWallet.enterPlaceholder" = "privacidad dignidad libertad ...";
+
+// MARK: - Restore Info
+"restoreInfo.title" = "¡Mantén Zashi abierto!";
+"restoreInfo.subTitle" = "Tu billetera ha sido restaurada con éxito y ahora se está sincronizando";
+"restoreInfo.tips" = "Consejos de sincronización:";
+"restoreInfo.tip1" = "Zashi debe permanecer abierto para continuar sincronizando.";
+"restoreInfo.tip2" = "Para evitar interrupciones, conecta tu teléfono encendido a una fuente de energía.";
+"restoreInfo.tip3" = "Mantén tu teléfono encendido en un lugar seguro.";
+"restoreInfo.note" = "Nota: ";
+"restoreInfo.noteInfo" = "Durante la sincronización inicial, tus fondos no se pueden enviar ni gastar. Dependiendo de la antigüedad de tu billetera, puede tomar algunas horas sincronizar completamente.";
+"restoreInfo.gotIt" = "¡Entendido!";
+
+// MARK: - Tabs
+"tabs.account" = "Cuenta";
+"tabs.send" = "Enviar";
+"tabs.receive" = "Recibir";
+"tabs.balances" = "Saldos";
+
+// MARK: - Home Screen
+"home.migratingDatabases" = "Actualizando bases de datos…";
+
+// MARK: - Address Details
+"addressDetails.shareTitle" = "Mi Dirección ZEC de Zashi";
+"addressDetails.shareDesc" = "Hola, ¡escanea este código QR para enviarme un pago en ZEC!";
+"addressDetails.shareQR" = "Compartir Código QR";
+"addressDetails.copyAddress" = "Copiar Dirección";
+
+// MARK: - Request ZEC
+"requestZec.title" = "Solicitud de Pago";
+"requestZec.whatFor" = "¿Para qué es esto?";
+"requestZec.summary.shareQR" = "Compartir Código QR";
+"requestZec.summary.shareTitle" = "Solicitar ZEC";
+"requestZec.summary.shareDesc" = "Hola, he generado una solicitud de pago en ZEC para ti utilizando la aplicación Zashi.";
+"requestZec.summary.shareMsg" = "(enlace de descarga: https://apps.apple.com/app/zashi-zcash-wallet/id1672392439)";
+
+// MARK: - Receive
+"receive.ua" = "Dirección Unificada";
+"receive.sa" = "Dirección Sapling";
+"receive.ta" = "Dirección Transparente";
+"receive.error.cantExtractUnifiedAddress" = "no se pudo extraer la Dirección Unificada";
+"receive.error.cantExtractTransparentAddress" = "no se pudo extraer el receptor transparente de la Dirección Unificada";
+"receive.error.cantExtractSaplingAddress" = "no se pudo extraer el receptor Sapling de la Dirección Unificada";
+"receive.title" = "Recibir Zcash";
+"receive.warning" = "Prioriza usar tu dirección protegida para máxima privacidad.";
+"receive.shieldedAddress" = "Dirección Protegida de Zcash";
+"receive.transparentAddress" = "Dirección Transparente de Zcash";
+"receive.saplingAddress" = "Dirección Sapling de Zcash";
+"receive.copy" = "Copiar";
+"receive.qrCode" = "Código QR";
+"receive.request" = "Solicitar";
+
+// MARK: - Server Setup
+"serverSetup.title" = "Servidor";
+"serverSetup.custom" = "Servidor personalizado";
+"serverSetup.default" = "Predeterminado";
+"serverSetup.placeholder" = "<nombre del host>:<puerto>";
+"serverSetup.alert.failed.title" = "Punto final no válido";
+"serverSetup.alert.failed.message" = "Error: %@";
+"serverSetup.save" = "Guardar selección";
+"serverSetup.active" = "Activo";
+"serverSetup.performingTest" = "Realizando prueba de servidor";
+"serverSetup.couldTakeTime" = "Esto puede tardar un momento...";
+"serverSetup.fastestServers" = "Servidores más rápidos";
+"serverSetup.otherServers" = "Otros servidores";
+"serverSetup.allServers" = "Explorar todos los servidores";
+"serverSetup.refresh" = "Actualizar";
+
+// MARK: - Balances
+"balances.spendableBalance" = "ZEC protegido (disponible)";
+"balances.changePending" = "Cambio pendiente";
+"balances.pendingTransactions" = "Transacciones pendientes";
+"balances.transparentBalance" = "Saldo transparente";
+"balances.shieldButtonTitle" = "Proteger y consolidar fondos";
+"balances.shieldingInProgress" = "Protegiendo fondos";
+"balances.synced" = "Sincronizado";
+"balances.syncing" = "Sincronizando";
+"balances.syncingError" = "Zashi encontró un error al sincronizar, intentando resolver...";
+"balances.hintBox.message" = "Zashi utiliza la última actualización de la red y no admite el envío de ZEC transparentes (sin protección). Utiliza el botón Proteger y Consolidar para proteger tus fondos, lo que añadirá a tu saldo disponible y hará que tu ZEC sea gastable.";
+"balances.hintBox.dismiss" = "¡Entendido!";
+"balances.restoringWalletWarning" = "El proceso de restauración puede llevar varias horas en dispositivos de menor potencia, e incluso en dispositivos potentes es probable que lleve más de una hora.";
+"balances.alert.shieldFunds.failure.title" = "No se pudo proteger los fondos";
+"balances.alert.shieldFunds.failure.message" = "Error: %@";
+
+// MARK: - Scan
+"scan.invalidQR" = "Este código QR no contiene una dirección válida de Zcash.";
+"scan.invalidImage" = "Esta imagen no contiene una dirección válida de Zcash.";
+"scan.severalCodesFound" = "Esta imagen contiene varias direcciones válidas de Zcash.";
+"scan.cameraSettings" = "La cámara no está autorizada. Por favor, ve a la configuración del sistema de Zashi y actívala.";
+"scan.openSettings" = "Abrir configuración";
+
+// MARK: - Send
+"send.sending" = "Enviando";
+"send.message" = "Mensaje";
+"send.memoPlaceholder" = "Escribe un mensaje que será enviado cifrado...";
+"send.error.insufficientFunds" = "Fondos insuficientes";
+"send.error.invalidAmount" = "Monto no válido";
+"send.error.invalidAddress" = "Dirección no válida";
+"send.info.memo" = "Las transacciones transparentes no pueden tener mensajes";
+"send.addressNotInBook" = "Agrega un contacto tocando el ícono de la libreta de direcciones.";
+"send.amountSummary" = "Monto Total";
+"send.amount" = "Monto";
+"send.toSummary" = "Enviando a";
+"send.to" = "Enviar a";
+"send.feeSummary" = "Tarifa";
+"send.confirmationTitle" = "Confirmación";
+"send.goBack" = "Cancelar";
+"send.review" = "Revisar";
+"send.alert.failure.title" = "No se pudo enviar fondos";
+"send.alert.failure.message" = "Error: %@";
+"send.addressPlaceholder" = "Dirección de Zcash";
+"send.currencyPlaceholder" = "USD";
+"send.requestPayment.requestedBy" = "Solicitado por";
+"send.requestPayment.for" = "Para:";
+"send.requestPayment.total" = "Total";
+"send.requestPayment.title" = "Solicitud de Pago";
+"send.sending" = "Enviando...";
+"send.sendingInfo" = "Tus tokens están siendo enviados a";
+"send.viewTransaction" = "Ver Transacción";
+"send.success" = "¡Enviado!";
+"send.successInfo" = "Tus tokens fueron enviados exitosamente a";
+"send.failure" = "No se pudo enviar";
+"send.failureInfo" = "Hubo un error al intentar enviar tokens. Por favor, inténtalo de nuevo.";
+"send.resubmission" = "Error de Conexión";
+"send.resubmissionInfo" = "Zashi encontró problemas de conexión al enviar la transacción. Intentará de nuevo en los próximos minutos.";
+"send.report" = "Reportar";
+
+// MARK: - Message Editor
+"messageEditor.addUA" = "Responder a: Incluir mi dirección en el memo";
+"messageEditor.removeUA" = "Tu dirección está incluida en el memo";
+"messageEditor.addUAformat" = "\n>>> responder a: %@";
+
+// MARK: - ZEC Keyboard
+"zecKeyboard.invalid" = "Este monto de transacción no es válido.";
+
+// MARK: - Delete Wallet
+"deleteWallet.title" = "Restablecer Zashi";
+"deleteWallet.message1" = "Por favor, no restablezcas esta aplicación a menos que estés seguro de comprender los efectos.";
+"deleteWallet.message2" = "Restablecer la aplicación Zashi eliminará la base de datos y los datos almacenados en caché. Cualquier fondo que tengas en esta billetera se perderá y solo podrá recuperarse utilizando tu frase de recuperación secreta de Zashi en otra billetera de Zcash.";
+"deleteWallet.iUnderstand" = "Entiendo";
+"deleteWallet.actionButtonTitle" = "Restablecer Zashi";
+"deleteWallet.screenTitle" = "Restablecer";
+
+// MARK: - Not Enough Free Space
+"notEnoughFreeSpace.title" = "No hay suficiente espacio libre";
+"notEnoughFreeSpace.messagePre" = "Zashi requiere %@ GB de espacio para sincronizar la blockchain de Zcash, pero solo hay ";
+"notEnoughFreeSpace.dataAvailable" = "%@ MB disponibles. ";
+"notEnoughFreeSpace.messagePost" = "La sincronización permanecerá pausada hasta que haya más espacio disponible.";
+"notEnoughFreeSpace.requiredSpace" = "Se requieren ~%@ MB de espacio adicional para continuar.";
+
+// MARK: - About
+"about.info" = "¡Envía y recibe ZEC en Zashi!\nZashi es una billetera de diseño minimalista y autocustodia, exclusiva para ZEC protegida, que mantiene tu historial de transacciones y saldo de billetera en privado.";
+"about.additionalInfo" = "Creado por Zcashers, para Zcashers. Desarrollado y mantenido por Electric Coin Co., el creador de Zcash, Zashi cuenta con un mecanismo integrado de retroalimentación de usuarios para habilitar más funciones, más rápido.";
+"about.title" = "Presentando Zashi";
+"about.privacyPolicy" = "Política de Privacidad";
+
+// MARK: - What's New
+"whatsNew.version" = "Versión de Zashi %@";
+
+// MARK: - Settings
+"settings.title" = "Configuración";
+"settings.addressBook" = "Libreta de Direcciones";
+"settings.advanced" = "Configuración Avanzada";
+"settings.about" = "Acerca de";
+"settings.feedback" = "Envíanos tus Comentarios";
+"settings.integrations" = "Integraciones";
+"settings.recoveryPhrase" = "Frase de Recuperación";
+"settings.exportPrivateData" = "Exportar Datos Privados";
+"settings.exportLogsOnly" = "Exportar solo registros";
+"settings.chooseServer" = "Elegir un Servidor";
+"settings.currencyConversion" = "Conversión de Moneda";
+"settings.whatsNew" = "Novedades";
+"settings.buyZecCB" = "Comprar ZEC con Coinbase";
+"settings.coinbaseDesc" = "Una forma sencilla de comprar ZEC y recibirlo directamente en tu billetera Zashi.";
+"settings.flexa" = "Pagar con Flexa";
+"settings.flexaDesc" = "Paga con clips de pago de Flexa y explora una nueva forma de gastar Zcash.";
+"settings.restoreWarning" = "Durante el proceso de Restauración, no es posible usar integraciones de pago.";
+"settings.deleteZashi" = "Restablecer Zashi";
+"settings.deleteZashiWarning" = "Se te pedirá que confirmes en la siguiente pantalla";
+"settings.version" = "Versión %@ (%@)";
+"settings.alert.cantSendEmail.title" = "¡Oh, no!";
+"settings.alert.cantSendEmail.message" = "Parece que no tienes configurada una aplicación de correo predeterminada en tu dispositivo. Copia la dirección a continuación y utiliza tu cliente de correo favorito para enviarnos un mensaje.";
+"settings.alert.cantSendEmail.copyEmail" = "Copiar %@";
+
+// MARK: - Send Feedback
+"sendFeedback.title" = "Envíanos tus Comentarios";
+"sendFeedback.screenTitle" = "Soporte";
+"sendFeedback.desc" = "Por favor, háznos saber sobre cualquier problema que hayas tenido, o funciones que te gustaría ver en el futuro.";
+"sendFeedback.ratingQuestion" = "¿Cómo ha sido tu experiencia con Zashi?";
+"sendFeedback.howCanWeHelp" = "¿Cómo podemos ayudarte?";
+"sendFeedback.hcwhPlaceholder" = "Me gustaría preguntar sobre...";
+"sendFeedback.share.title" = "Mensaje de soporte";
+"sendFeedback.share.desc" = "Zashi";
+"sendFeedback.share.notAppleMailInfo" = "Tu dispositivo no tiene configurado un correo de Apple, así que preparamos este mensaje para que lo envíes usando tu cliente de correo preferido. Por favor, envía este mensaje a:";
+
+// MARK: - Private Data Consent
+"privateDataConsent.title" = "Consentimiento para Exportar Datos Privados";
+"privateDataConsent.message1" = "Al hacer clic en “Estoy de acuerdo” a continuación, das tu consentimiento para exportar los datos privados de Zashi, que incluyen todo el historial de la billetera, toda la información privada, los memos, los montos y las direcciones de los destinatarios, incluso para tu actividad protegida.*";
+"privateDataConsent.message2" = "Los datos privados también permiten ver ciertas acciones futuras que realices con Zashi.";
+"privateDataConsent.message3" = "Compartir estos datos privados es irrevocable: una vez que hayas compartido estos datos privados con alguien, no hay forma de revocar su acceso.";
+"privateDataConsent.message4" = "*Ten en cuenta que estos datos privados no les dan la capacidad de gastar tus fondos, solo la capacidad de ver lo que haces con tus fondos.";
+"privateDataConsent.confirmation" = "Acepto las Políticas de Exportación de Datos Privados y la Política de Privacidad de Zashi";
+"privateDataConsent.screenTitle" = "Exportación de Datos";
+
+// MARK: - Sync message
+"sync.message.uptodate" = "Actualizado";
+"sync.message.unprepared" = "No preparado";
+"sync.message.error" = "Error: %@";
+"sync.message.stopped" = "Detenido";
+"sync.message.sync" = "%@%% Sincronizado";
+"sync.alert.title" = "Error";
+
+// MARK: - Common & Shared
+"general.back" = "Atrás";
+"general.next" = "Siguiente";
+"general.send" = "Enviar";
+"general.close" = "Cerrar";
+"general.max" = "Máx";
+"general.ok" = "Ok";
+"general.yes" = "Sí";
+"general.no" = "No";
+"general.cancel" = "Cancelar";
+"general.success" = "Éxito";
+"general.unknown" = "Desconocido";
+"general.loading" = "Cargando";
+"general.delete" = "Eliminar";
+"general.confirm" = "Confirmar";
+"general.done" = "Hecho";
+"general.save" = "Guardar";
+"general.request" = "Solicitar";
+"general.hide" = "Ocultar";
+"general.show" = "Mostrar";
+"balance.availableTitle" = "Saldo Disponible:";
+"qrCodeFor" = "Código QR para %@";
+"general.tapToCopy" = "Toca para copiar";
+"general.fee" = "Tarifa Típica < %@";
+"general.hideBalancesMost" = "-----";
+"general.hideBalancesMostStandalone" = "-----";
+"general.hideBalancesLeast" = "";
+"general.alert.warning" = "Advertencia";
+"general.alert.continue" = "Continuar";
+"general.alert.caution" = "Aviso";
+"general.alert.ignore" = "Ignorar";
+"general.copiedToTheClipboard" = "¡Copiado al portapapeles!";
+
+// MARK: - Wallet Status
+"walletStatus.restoringWallet" = "RESTAURANDO TU BILLETERA…";
+"walletStatus.disconnected" = "DESCONECTADO…";
+
+// MARK: - Transaction List
+"transactionList.collapse" = "Colapsar transacción";
+"transactionList.messageTitle" = "Mensaje";
+"transactionList.messageTitlePlural" = "Mensajes";
+"transactionList.noMessageIncluded" = "No se incluyó ningún mensaje en la transacción";
+"transactionList.transactionFee" = "Tarifa de Transacción";
+"transactionList.transactionId" = "ID de Transacción";
+"transactionList.noTransactions" = "Sin historial de transacciones";
+
+// MARK: - Transactions
+"transaction.sent" = "Enviado";
+"transaction.sending" = "Enviando...";
+"transaction.receiving" = "Recibiendo...";
+"transaction.received" = "Recibido";
+"transaction.failedSend" = "Envío fallido";
+"transaction.failedReceive" = "Recepción fallida";
+"transaction.shieldingFunds" = "Protegiendo Fondos";
+"transaction.shieldedFunds" = "Fondos Protegidos";
+"transaction.failedShieldedFunds" = "Fondos Protegidos Fallidos";
+"transaction.saveAddress" = "Guardar dirección";
+"transaction.selectText" = "Seleccionar texto";
+
+// MARK: - Local authentication
+"localAuthentication.reason" = "El siguiente contenido requiere autenticación.";
+
+// MARK: - Support Data
+"supportData.timeItem.time" = "Hora actual";
+"supportData.appVersionItem.bundleIdentifier" = "Identificador de la aplicación";
+"supportData.appVersionItem.version" = "Versión de la aplicación";
+"supportData.systemVersionItem.version" = "Versión de iOS";
+"supportData.deviceModelItem.device" = "Dispositivo";
+"supportData.localeItem.locale" = "Región";
+"supportData.localeItem.groupingSeparator" = "Separador de agrupación de moneda";
+"supportData.localeItem.decimalSeparator" = "Separador decimal de moneda";
+"supportData.freeDiskSpaceItem.freeDiskSpace" = "Almacenamiento disponible";
+"supportData.permissionItem.permissions" = "Permisos";
+"supportData.permissionItem.camera" = "Acceso a la cámara";
+"supportData.permissionItem.faceID" = "FaceID disponible";
+"supportData.permissionItem.touchID" = "TouchID disponible";
+
+// MARK: - Root
+"root.initialization.alert.failed.title" = "Falló la inicialización de la billetera.";
+"root.initialization.alert.error.message" = "Error: %@";
+"root.initialization.alert.sdkInitFailed.title" = "No se pudo inicializar el SDK";
+"root.initialization.alert.walletStateFailed.message" = "Estado de inicialización de la aplicación: %@.";
+"root.initialization.alert.cantLoadSeedPhrase.message" = "No se puede cargar la frase semilla desde el almacenamiento local.";
+"root.initialization.alert.cantCreateNewWallet.message" = "No se puede crear una nueva billetera. Error: %@";
+"root.initialization.alert.cantStoreThatUserPassedPhraseBackupTest.message" = "No se puede almacenar la información de que el usuario pasó la prueba de respaldo de frase. Error: %@";
+"root.initialization.alert.wipe.title" = "Borrado de la billetera";
+"root.initialization.alert.wipe.message" = "¿Estás seguro?";
+"root.initialization.alert.wipeFailed.title" = "Falló el borrado de la billetera";
+
+"root.destination.alert.failedToProcessDeeplink.title" = "No se pudo procesar el enlace profundo.";
+"root.destination.alert.failedToProcessDeeplink.message" = "Enlace profundo: \(%@))\nError: \(%@) (código: %@)";
+
+"root.debug.title" = "Opciones de soporte";
+"root.debug.navigationTitle" = "Inicio";
+"root.debug.option.rescanBlockchain" = "Reescanear Blockchain";
+"root.debug.option.copySeed" = "Copiar frase semilla al portapapeles";
+"root.debug.option.nukeWallet" = "[Ten cuidado] Borrar billetera";
+"root.debug.option.exportLogs" = "Exportar registros";
+"root.debug.option.appReview" = "Califica la aplicación";
+"root.debug.option.testCrashReporter" = "Probar Informador de Fallos";
+"root.debug.dialog.rescan.title" = "Reescanear";
+"root.debug.dialog.rescan.message" = "Selecciona el reescaneo que deseas";
+"root.debug.dialog.rescan.option.quick" = "Reescaneo rápido";
+"root.debug.dialog.rescan.option.full" = "Reescaneo completo";
+"root.debug.alert.rewind.failed.title" = "El rebobinado falló";
+"root.debug.alert.rewind.failed.message" = "Error: %@";
+"root.debug.alert.rewind.cantStartSync.title" = "No se puede iniciar el proceso de sincronización después del rebobinado";
+"root.debug.alert.rewind.cantStartSync.message" = "Error: %@";
+
+"root.seedPhrase.differentSeed.tryAgain" = "Intentar de nuevo";
+"root.seedPhrase.differentSeed.message" = "Esta frase de recuperación no coincide con la copia de seguridad de la base de datos de Zashi guardada en este dispositivo. Si continúas, perderás acceso a esta copia de seguridad de la base de datos y si intentas restaurarla más tarde, se podría perder información.";
+
+"root.existingWallet.restore" = "Restaurar";
+"root.existingWallet.Message" = "Identificamos una copia de seguridad de la base de datos de Zashi en este dispositivo. Si creas una nueva billetera, perderás acceso a esta copia de seguridad de la base de datos y si intentas restaurarla más tarde, se podría perder información.";
+
+"root.serviceUnavailable.switchServer" = "Cambiar servidor";
+"root.serviceUnavailable.Message" = "Tu servidor actual está experimentando dificultades. Verifica la conexión de tu dispositivo y/o navega a Configuración Avanzada para elegir un servidor diferente.";
+
+// MARK: - Export logs
+"exportLogs.alert.failed.title" = "Error al exportar registros";
+"exportLogs.alert.failed.message" = "Error: %@";
+
+// MARK: - Address Book
+"addressBook.title" = "Libreta de Direcciones";
+"addressBook.newContact.title" = "Agregar nueva dirección";
+"addressBook.newContact.address" = "Dirección de la billetera";
+"addressBook.newContact.addressPlaceholder" = "Ingresa la dirección de la billetera...";
+"addressBook.newContact.name" = "Nombre del contacto";
+"addressBook.newContact.namePlaceholder" = "Ingresa el nombre del contacto...";
+"addressBook.error.nameExists" = "Este nombre de contacto ya está en uso. Por favor, elige un nombre diferente.";
+"addressBook.error.nameLength" = "Este nombre de contacto supera el límite de 32 caracteres. Por favor, acorta el nombre.";
+"addressBook.error.addressExists" = "Esta dirección de billetera ya está en tu Libreta de Direcciones.";
+"addressBook.error.invalidAddress" = "Dirección no válida.";
+"addressBook.alert.title" = "¿Estás seguro?";
+"addressBook.alert.message" = "Estás a punto de eliminar este contacto. Esto no se puede deshacer.";
+"addressBook.empty" = "Tu libreta de direcciones está vacía";
+"addressBook.selectRecipient" = "Seleccionar destinatario";
+"addressBook.scanAddress" = "Escanear código QR";
+"addressBook.manualEntry" = "Entrada manual";
+"addressBook.addNewContact" = "Agregar nuevo contacto";
+"addressBook.savedAddress" = "Dirección guardada";
+
+// MARK: Currency Conversion
+"currencyConversion.title" = "Conversión de Moneda";
+"currencyConversion.cardTitle" = "Nueva Función";
+"currencyConversion.cardButton" = "Revisar";
+"currencyConversion.learnMoreDesc" = "Muestra tu saldo y los montos de pago en USD. Puedes gestionar esta función en Configuración Avanzada.";
+"currencyConversion.settingsDesc" = "Muestra tu saldo y los montos de pago en USD. La función de conversión de moneda de Zashi protege tu dirección IP en todo momento.";
+"currencyConversion.enable" = "Habilitar";
+"currencyConversion.learnMoreOptionEnableDesc" = "Mostrarme la conversión de moneda.";
+"currencyConversion.learnMoreOptionDisable" = "Deshabilitar";
+"currencyConversion.learnMoreOptionDisableDesc" = "No mostrar la conversión de moneda.";
+"currencyConversion.note" = "Nota para los más conscientes de la privacidad: Debido a que obtenemos la tasa de conversión de los intercambios, un intercambio podría ver que la tasa de cambio fue consultada antes de que ocurriera una transacción.";
+"currencyConversion.saveBtn" = "Guardar cambios";
+"currencyConversion.ipTitle" = "Protección de Dirección IP";
+"currencyConversion.ipDesc" = "La función de conversión de moneda de Zashi no compromete tu dirección IP.";
+"currencyConversion.refresh" = "Actualizar tasa";
+"currencyConversion.refreshDesc" = "La tasa se actualiza automáticamente y también se puede actualizar manualmente.";
+"currencyConversion.skipBtn" = "Omitir por ahora";
+
+// MARK: - Deeplink Warning
+"deeplinkWarning.title" = "Parece que utilizaste una aplicación de terceros para escanear un pago.";
+"deeplinkWarning.desc" = "Para mayor seguridad y protección, vuelve a escanear el código QR con Zashi.";
+"deeplinkWarning.cta" = "Reescanear en Zashi";
+"deeplinkWarning.screenTitle" = "¡Hola!";
+
+// MARK: - Splash Screen
+"splash.authTitle" = "Tu cuenta Zashi está protegida.";
+"splash.authFaceID" = "Toca el ícono de la cara para usar Face ID y desbloquear.";
+"splash.authTouchID" = "Toca el ícono de la huella para usar Touch ID y desbloquear.";
+"splash.authPasscode" = "Toca el ícono de la llave para ingresar tu código y desbloquear.";
+
+// MARK: - Tooltips
+"tooltip.exchangeRate.title" = "Tasa de cambio no disponible";
+"tooltip.exchangeRate.desc" = "Lo intentamos pero no pudimos actualizar la tasa de cambio para ti. Verifica tu conexión, reinicia la aplicación e intentaremos de nuevo.";
+
+// MARK: - UI Components
+"component.maxPrivacy" = "Máxima privacidad";
+"component.lowPrivacy" = "Baja privacidad";
+
+// MARK: - Partners
+"partners.coinbaseOnrampUrl" = "https://pay.coinbase.com/buy/select-asset?appId=%@&addresses={\"%@\":[\"zcash\"]}";
+"partners.flexa.transactionFailedTitle" = "Transacción Fallida";
+"partners.flexa.transactionFailedMessage" = "Lo sentimos, pero algo falló. Por favor, inténtalo de nuevo.";

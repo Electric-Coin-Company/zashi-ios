@@ -73,6 +73,7 @@ public struct SecurityWarning {
             case .onAppear:
                 state.appBuild = appVersion.appBuild()
                 state.appVersion = appVersion.appVersion()
+                state.isAcknowledged = false
                 return .none
 
             case .alert(.presented(let action)):

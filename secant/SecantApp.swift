@@ -96,11 +96,13 @@ extension SecantApp {
             sendingScreen: true
         )
 #else
-        featureFlags = FeatureFlags(
-            flexa: true,
-            appLaunchBiometric: true,
-            sendingScreen: true
-        )
+        featureFlags = FeatureFlags()
+//        featureFlags = FeatureFlags(
+//            appLaunchBiometric: true,
+//            flexa: false,
+//            selectText: true,
+//            sendingScreen: true
+//        )
 #endif
     }
 }

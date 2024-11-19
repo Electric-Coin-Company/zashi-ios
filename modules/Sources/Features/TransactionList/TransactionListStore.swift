@@ -9,6 +9,7 @@ import SDKSynchronizer
 import ReadTransactionsStorage
 import ZcashSDKEnvironment
 import AddressBookClient
+import UIComponents
 
 @Reducer
 public struct TransactionList {
@@ -23,6 +24,7 @@ public struct TransactionList {
         public var latestTransactionId = ""
         public var latestTransactionList: [TransactionState] = []
         public var requiredTransactionConfirmations = 0
+        @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
         public var transactionList: IdentifiedArrayOf<TransactionState>
 
         public init(
@@ -70,11 +72,14 @@ public struct TransactionList {
         case .onAppear:
             state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
             do {
-                let abContacts = try addressBook.allLocalContacts()
+                let result = try addressBook.allLocalContacts()
+                let abContacts = result.contacts
+                if result.remoteStoreResult == .failure {
+                    // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                }
                 state.addressBookContacts = abContacts
             } catch {
-                print("__LD fetchABContactsRequested Error: \(error.localizedDescription)")
-                // TODO: FIXME
+                // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
             }
 
             return .merge(
@@ -209,6 +214,7 @@ public struct TransactionList {
             
         case .copyToPastboard(let value):
             pasteboard.setString(value)
+            state.toast = .top(L10n.General.copiedToTheClipboard)
             return .none
 
         case .transactionCollapseRequested(let id):

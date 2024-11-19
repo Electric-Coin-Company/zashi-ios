@@ -1,6 +1,38 @@
 {
     "releases": [
         {
+            "version": "1.2.3",
+            "date": "11-18-2024",
+            "timestamp": 1731922524,
+            "sections": [
+                {
+                    "title": "Added:",
+                    "bulletpoints": [
+                        "Hola! We taught Zashi to speak Spanish!",
+                        "We adopted SDK release 2.2.7 with initial implementation of note management. This should speed up sending one transaction after another.",
+                        "We implemented encryption and remote storage for Address Book!",
+                        "We added device authentication on app launch.",
+                        "We also added an animated progress screen and new success and failure screens. Zashi is fun again!"
+                    ]
+                },
+                {
+                    "title": "Changed:",
+                    "bulletpoints": [
+                        "We made Settings and status screens pretty, and improved security of the Recovery Phrase screen.",
+                        "We also improved Send Feedback feature, let us know how you like Zashi!"
+                    ]
+                },
+                {
+                    "title": "Fixed:",
+                    "bulletpoints": [
+                        "We fixed the behaviour of the shield icon in Transaction History.",
+                        "We fixed the flashlight functionality freezing the app.",
+                        "We also fixed the issue with Rescan button not working."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "1.2.2",
             "date": "10-22-2024",
             "timestamp": 1729608639,

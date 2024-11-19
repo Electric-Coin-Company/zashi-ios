@@ -8,6 +8,8 @@ import UIComponents
 import PrivateDataConsent
 import ServerSetup
 import AddressBook
+import WhatsNew
+import SendFeedback
 
 public struct SettingsView: View {
     @Perception.Bindable var store: StoreOf<Settings>
@@ -21,53 +23,63 @@ public struct SettingsView: View {
             VStack {
                 List {
                     Group {
-                        SettingsRow(
+                        ActionRow(
                             icon: Asset.Assets.Icons.user.image,
                             title: L10n.Settings.addressBook
                         ) {
                             store.send(.protectedAccessRequest(.addressBook))
                         }
 
-                        SettingsRow(
-                            icon: Asset.Assets.Icons.integrations.image,
-                            title: L10n.Settings.integrations,
-                            accessoryView:
-                                HStack(spacing: 0) {
-                                    Asset.Assets.Partners.coinbaseSeeklogo.image
+                        if store.isEnoughFreeSpaceMode {
+                            ActionRow(
+                                icon: Asset.Assets.Icons.integrations.image,
+                                title: L10n.Settings.integrations,
+                                accessoryView:
+                                    HStack(spacing: 0) {
+                                        Asset.Assets.Partners.coinbaseSeeklogo.image
                                         .resizable()
                                         .frame(width: 20, height: 20)
                                     
-                                    if store.featureFlags.flexa {
-                                        Asset.Assets.Partners.flexaSeekLogo.image
-                                            .resizable()
-                                            .frame(width: 20, height: 20)
-                                            .padding(.leading, 8)
+                                        if store.featureFlags.flexa {
+                                            Asset.Assets.Partners.flexaSeekLogo.image
+                                                .resizable()
+                                                .frame(width: 20, height: 20)
+                                                .padding(.leading, 8)
+                                        }
                                     }
-                                }
-                        ) {
-                            store.send(.updateDestination(.integrations))
+                            ) {
+                                store.send(.updateDestination(.integrations))
+                            }
                         }
 
-                        SettingsRow(
+                        ActionRow(
                             icon: Asset.Assets.Icons.settings.image,
                             title: L10n.Settings.advanced
                         ) {
                             store.send(.updateDestination(.advanced))
                         }
-                        
-                        SettingsRow(
+
+                        ActionRow(
+                            icon: Asset.Assets.Icons.magicWand.image,
+                            title: L10n.Settings.whatsNew
+                        ) {
+                            store.send(.updateDestination(.whatsNew))
+                        }
+
+                        ActionRow(
                             icon: Asset.Assets.infoOutline.image,
                             title: L10n.Settings.about
                         ) {
                             store.send(.updateDestination(.about))
                         }
                         
-                        SettingsRow(
+                        ActionRow(
                             icon: Asset.Assets.Icons.messageSmile.image,
                             title: L10n.Settings.feedback,
                             divider: false
                         ) {
-                            store.send(.sendSupportMail)
+                            store.send(.updateDestination(.sendFeedback))
+                            //store.send(.sendSupportMail)
                         }
                     }
                     .listRowInsets(EdgeInsets())
@@ -100,22 +112,22 @@ public struct SettingsView: View {
                         AddressBookView(store: store.addressBookStore())
                     }
                 )
+                .navigationLinkEmpty(
+                    isActive: store.bindingFor(.whatsNew),
+                    destination: {
+                        WhatsNewView(store: store.whatsNewStore())
+                    }
+                )
+                .navigationLinkEmpty(
+                    isActive: store.bindingFor(.sendFeedback),
+                    destination: {
+                        SendFeedbackView(store: store.sendFeedbackStore())
+                    }
+                )
                 .onAppear {
                     store.send(.onAppear)
                 }
-                
-                if let supportData = store.supportData {
-                    UIMailDialogView(
-                        supportData: supportData,
-                        completion: {
-                            store.send(.sendSupportMailFinished)
-                        }
-                    )
-                    // UIMailDialogView only wraps MFMailComposeViewController presentation
-                    // so frame is set to 0 to not break SwiftUIs layout
-                    .frame(width: 0, height: 0)
-                }
-                
+
                 Spacer()
                 
                 Asset.Assets.zashiTitle.image
@@ -130,10 +142,6 @@ public struct SettingsView: View {
         .applyScreenBackground()
         .listStyle(.plain)
         .navigationBarTitleDisplayMode(.inline)
-        .alert(store: store.scope(
-            state: \.$alert,
-            action: \.alert
-        ))
         .zashiBack()
         .screenTitle(L10n.Settings.title)
         .walletStatusPanel()
@@ -196,18 +204,32 @@ extension StoreOf<Settings> {
             action: \.about
         )
     }
-    
+
+    func addressBookStore() -> StoreOf<AddressBook> {
+        self.scope(
+            state: \.addressBookState,
+            action: \.addressBook
+        )
+    }
+
     func integrationsStore() -> StoreOf<Integrations> {
         self.scope(
             state: \.integrationsState,
             action: \.integrations
         )
     }
-    
-    func addressBookStore() -> StoreOf<AddressBook> {
+
+    func sendFeedbackStore() -> StoreOf<SendFeedback> {
         self.scope(
-            state: \.addressBookState,
-            action: \.addressBook
+            state: \.sendFeedbackState,
+            action: \.sendFeedback
+        )
+    }
+
+    func whatsNewStore() -> StoreOf<WhatsNew> {
+        self.scope(
+            state: \.whatsNewState,
+            action: \.whatsNew
         )
     }
 }
