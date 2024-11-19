@@ -34,6 +34,7 @@ public enum Asset {
       public static let failure1 = ImageAsset(name: "failure1")
       public static let failure2 = ImageAsset(name: "failure2")
       public static let failure3 = ImageAsset(name: "failure3")
+      public static let lightning = ImageAsset(name: "lightning")
       public static let resubmission1 = ImageAsset(name: "resubmission1")
       public static let resubmission2 = ImageAsset(name: "resubmission2")
       public static let success1 = ImageAsset(name: "success1")

@@ -234,6 +234,9 @@
 "settings.alert.cantSendEmail.message" = "Parece que no tienes configurada una aplicación de correo predeterminada en tu dispositivo. Copia la dirección a continuación y utiliza tu cliente de correo favorito para enviarnos un mensaje.";
 "settings.alert.cantSendEmail.copyEmail" = "Copiar %@";
 
+// MARK: - Integrations
+"integrations.info" = "Las integraciones de Zashi proporcionan acceso a servicios de terceros. Las funcionalidades y la información compartida con ellos están fuera de nuestro control y están sujetas a sus políticas de privacidad.";
+
 // MARK: - Send Feedback
 "sendFeedback.title" = "Envíanos tus Comentarios";
 "sendFeedback.screenTitle" = "Soporte";
