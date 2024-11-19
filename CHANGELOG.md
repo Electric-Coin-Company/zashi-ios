@@ -6,6 +6,8 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.2.3 build 3 (2024-11-19)
+
 ### Added
 - Authentication for the app launch and cold starts after 15 minutes.
 - Send experience reworked to display a sending screen, followed by transaction result screens. 
