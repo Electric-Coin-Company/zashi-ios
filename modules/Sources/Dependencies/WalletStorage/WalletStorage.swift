@@ -80,7 +80,13 @@ public struct WalletStorage {
     }
     
     public func exportWallet() throws -> StoredWallet {
-        guard let data = data(forKey: Constants.zcashStoredWallet) else {
+#if targetEnvironment(simulator)
+        // TODO: can't go to the production
+        // FIXME: temporary debug only
+        throw KeychainError.unknown(errSecDuplicateItem)
+#endif
+        
+        guard let data = try data(forKey: Constants.zcashStoredWallet) else {
             throw WalletStorageError.uninitializedWallet
         }
         
@@ -155,7 +161,7 @@ public struct WalletStorage {
     }
     
     public func exportAddressBookEncryptionKeys() throws -> AddressBookEncryptionKeys {
-        guard let data = data(forKey: Constants.zcashStoredAdressBookEncryptionKeys) else {
+        guard let data = try data(forKey: Constants.zcashStoredAdressBookEncryptionKeys) else {
             throw WalletStorageError.uninitializedAddressBookEncryptionKeys
         }
         
@@ -219,11 +225,15 @@ public struct WalletStorage {
     public func data(
         forKey: String,
         account: String = ""
-    ) -> Data? {
+    ) throws -> Data? {
         let query = restoreQuery(forAccount: account, andKey: forKey)
 
         var result: AnyObject?
-        _ = secItem.copyMatching(query as CFDictionary, &result)
+        let status = secItem.copyMatching(query as CFDictionary, &result)
+        
+        guard status == errSecSuccess else {
+            throw KeychainError.unknown(status)
+        }
         
         return result as? Data
     }

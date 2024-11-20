@@ -14,6 +14,7 @@ import UIComponents
 import ServerSetup
 import AddressBook
 import DeeplinkWarning
+import OSStatusError
 
 public struct RootView: View {
     @Environment(\.scenePhase) var scenePhase
@@ -86,6 +87,20 @@ private extension RootView {
                             store: store.scope(
                                 state: \.notEnoughFreeSpaceState,
                                 action: \.notEnoughFreeSpace
+                            )
+                        )
+                    }
+                    .navigationViewStyle(.stack)
+                    .overlayedWithSplash(store.splashAppeared) {
+                        store.send(.splashRemovalRequested)
+                    }
+
+                case .osStatusError:
+                    NavigationView {
+                        OSStatusErrorView(
+                            store: store.scope(
+                                state: \.osStatusErrorState,
+                                action: \.osStatusError
                             )
                         )
                     }

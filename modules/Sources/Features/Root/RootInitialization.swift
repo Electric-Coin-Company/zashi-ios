@@ -245,6 +245,9 @@ extension Root {
                 /// Respond to all possible states of the wallet and initiate appropriate side effects including errors handling
             case .initialization(.respondToWalletInitializationState(let walletState)):
                 switch walletState {
+                case .osStatus(let osStatus):
+                    state.osStatusErrorState.osStatus = osStatus
+                    return .send(.destination(.updateDestination(.osStatusError)))
                 case .failed:
                     state.appInitializationState = .failed
                     state.alert = AlertState.walletStateFailed(walletState)
@@ -287,7 +290,12 @@ extension Root {
                 /// When initialization succeeds user is taken to the home screen.
             case .initialization(.initializeSDK(let walletMode)):
                 do {
-                    let storedWallet = try walletStorage.exportWallet()
+                    let storedWallet: StoredWallet
+                    do {
+                        storedWallet = try walletStorage.exportWallet()
+                    } catch {
+                        return .send(.destination(.updateDestination(.osStatusError)))
+                    }
                     let birthday = storedWallet.birthday?.value() ?? zcashSDKEnvironment.latestCheckpoint
                     try mnemonic.isValid(storedWallet.seedPhrase.value())
                     let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
@@ -335,7 +343,12 @@ extension Root {
                 
             case .initialization(.checkBackupPhraseValidation):
                 do {
-                    let storedWallet = try walletStorage.exportWallet()
+                    let storedWallet: StoredWallet
+                    do {
+                        storedWallet = try walletStorage.exportWallet()
+                    } catch {
+                        return .send(.destination(.updateDestination(.osStatusError)))
+                    }
                     var landingDestination = Root.DestinationState.Destination.tabs
 
                     if !storedWallet.hasUserPassedPhraseBackupTest {
@@ -522,7 +535,7 @@ extension Root {
                 
             case .tabs, .destination, .onboarding, .phraseDisplay, .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated,
                     .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, 
-                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects, .flexaOnTransactionRequest, .flexaTransactionFailed, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted, .deeplinkWarning:
+                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects, .flexaOnTransactionRequest, .flexaTransactionFailed, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted, .deeplinkWarning, .osStatusError:
                 return .none
             }
         }

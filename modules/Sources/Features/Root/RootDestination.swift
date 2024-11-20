@@ -22,6 +22,7 @@ extension Root {
             case deeplinkWarning
             case notEnoughFreeSpace
             case onboarding
+            case osStatusError
             case phraseDisplay
             case startup
             case tabs
@@ -185,7 +186,7 @@ extension Root {
 
             case .tabs, .initialization, .onboarding, .updateStateAfterConfigUpdate, .alert, .phraseDisplay, .synchronizerStateChanged,
                     .welcome, .binding, .resetZashiFailed, .resetZashiSucceeded, .debug, .walletConfigLoaded, .exportLogs, .confirmationDialog,
-                    .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated, .batteryStateChanged, .cancelAllRunningEffects, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted:
+                    .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated, .batteryStateChanged, .cancelAllRunningEffects, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted, .osStatusError:
                 return .none
             }
         }
