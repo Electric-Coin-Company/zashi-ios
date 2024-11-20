@@ -82,14 +82,26 @@ public struct IntegrationsView: View {
                 .onAppear { store.send(.onAppear) }
 
                 Spacer()
-                
-                Asset.Assets.zashiTitle.image
-                    .zImage(width: 73, height: 20, color: Asset.Colors.primary.color)
-                    .padding(.bottom, 16)
-                
-                Text(L10n.Settings.version(store.appVersion, store.appBuild))
-                    .zFont(size: 16, style: Design.Text.tertiary)
-                    .padding(.bottom, 24)
+
+                VStack(spacing: 0) {
+                    Asset.Assets.Illustrations.lightning.image
+                        .resizable()
+                        .frame(width: 38, height: 60)
+
+                    Text(L10n.Integrations.info)
+                        .zFont(size: 16, style: Design.Text.tertiary)
+                        .multilineTextAlignment(.center)
+                        .lineSpacing(3.0)
+                        .padding(.top, 16)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(24)
+                .background {
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Design.Surfaces.bgSecondary.color)
+                }
+                .padding(.bottom, 24)
+                .screenHorizontalPadding()
             }
         }
         .applyScreenBackground()

@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Added
+- Integration screen informs users of partner policies that are applied.
+
 ## 1.2.3 build 3 (2024-11-19)
 
 ### Added

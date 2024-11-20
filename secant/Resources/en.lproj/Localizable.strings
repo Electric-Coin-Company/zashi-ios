@@ -234,6 +234,9 @@
 "settings.alert.cantSendEmail.message" = "It looks like you don't have a default email app configured on your device. Copy the address below, and use your favorite email client to send us a message.";
 "settings.alert.cantSendEmail.copyEmail" = "Copy %@";
 
+// MARK: - Integrations
+"integrations.info" = "Zashi integrations provide access to third party services. Features and information shared with them are outside of our control and subject to their privacy policies.";
+
 // MARK: - Send Feedback
 "sendFeedback.title" = "Send Us Feedback";
 "sendFeedback.screenTitle" = "Support";

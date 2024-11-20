@@ -303,6 +303,10 @@ public enum L10n {
       public static let valid = L10n.tr("Localizable", "importWallet.seed.valid", fallback: "VALID SEED PHRASE")
     }
   }
+  public enum Integrations {
+    /// Zashi integrations provide access to third party services. Features and information shared with them are outside of our control and subject to their privacy policies.
+    public static let info = L10n.tr("Localizable", "integrations.info", fallback: "Zashi integrations provide access to third party services. Features and information shared with them are outside of our control and subject to their privacy policies.")
+  }
   public enum LocalAuthentication {
     /// The Following content requires authentication.
     public static let reason = L10n.tr("Localizable", "localAuthentication.reason", fallback: "The Following content requires authentication.")
