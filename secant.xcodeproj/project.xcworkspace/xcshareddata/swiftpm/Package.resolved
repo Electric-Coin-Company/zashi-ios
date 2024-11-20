@@ -73,15 +73,6 @@
       }
     },
     {
-      "identity" : "codescanner",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/twostraws/CodeScanner",
-      "state" : {
-        "branch" : "main",
-        "revision" : "9fa582f4b36c69c2a55bff5fb3377eb170ae273c"
-      }
-    },
-    {
       "identity" : "combine-schedulers",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/combine-schedulers",

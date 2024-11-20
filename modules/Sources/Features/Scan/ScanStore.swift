@@ -19,6 +19,8 @@ import Generated
 import ZcashSDKEnvironment
 import Models
 import ZcashPaymentURI
+import KeystoneHandler
+import KeystoneSDK
 
 @Reducer
 public struct Scan {
@@ -37,7 +39,7 @@ public struct Scan {
         public var isTorchAvailable = false
         public var isTorchOn = false
         public var isRPFound = false
-        
+
         public init(
             info: String = "",
             isTorchAvailable: Bool = false,
@@ -52,10 +54,11 @@ public struct Scan {
 
     @Dependency(\.captureDevice) var captureDevice
     @Dependency(\.mainQueue) var mainQueue
+    @Dependency(\.keystoneHandler) var keystoneHandler
     @Dependency(\.qrImageDetector) var qrImageDetector
     @Dependency(\.uriParser) var uriParser
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
-
+    
     public enum Action: Equatable {
         case cancelPressed
         case clearInfo
@@ -157,7 +160,21 @@ public struct Scan {
                     state.isRPFound = true
                     return .send(.foundRP(data))
                 } else {
-                    return .send(.scanFailed(.invalidQRCode))
+                    do {
+                        if let result = keystoneHandler.decodeQR(code.data) {
+                            print("__LD ==============> progress: \(result.progress)")
+                            
+                            if let resultUR = result.ur, result.progress == 100 {
+                                let scanResult = try KeystoneSDK().cosmos.parseSignature(ur: resultUR)
+                                print("__LD scanResult \(scanResult)")
+                                // CosmosSignature here to report as found
+                            }
+                        }
+                        
+                        return .none
+                    } catch {
+                        return .send(.scanFailed(.invalidQRCode))
+                    }
                 }
                 
             case .torchPressed:

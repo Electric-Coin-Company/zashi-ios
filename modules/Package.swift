@@ -37,6 +37,7 @@ let package = Package(
         .library(name: "Generated", targets: ["Generated"]),
         .library(name: "Home", targets: ["Home"]),
         .library(name: "ImportWallet", targets: ["ImportWallet"]),
+        .library(name: "KeystoneHandler", targets: ["KeystoneHandler"]),
         .library(name: "LocalAuthenticationHandler", targets: ["LocalAuthenticationHandler"]),
         .library(name: "LogsHandler", targets: ["LogsHandler"]),
         .library(name: "MnemonicClient", targets: ["MnemonicClient"]),
@@ -76,6 +77,7 @@ let package = Package(
         .library(name: "UserDefaults", targets: ["UserDefaults"]),
         .library(name: "UserPreferencesStorage", targets: ["UserPreferencesStorage"]),
         .library(name: "Utils", targets: ["Utils"]),
+        .library(name: "Vendors", targets: ["Vendors"]),
         .library(name: "WalletBalances", targets: ["WalletBalances"]),
         .library(name: "WalletConfigProvider", targets: ["WalletConfigProvider"]),
         .library(name: "WalletStorage", targets: ["WalletStorage"]),
@@ -95,8 +97,7 @@ let package = Package(
         .package(url: "https://github.com/flexa/flexa-ios.git", from: "1.0.8"),
         .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "0.1.0-beta.9"),
         .package(url: "https://github.com/airbnb/lottie-spm.git", from: "4.5.0"),
-        .package(url: "https://github.com/KeystoneHQ/keystone-sdk-ios/", from: "0.0.1"),
-        .package(url: "https://github.com/twostraws/CodeScanner", branch: "main")
+        .package(url: "https://github.com/KeystoneHQ/keystone-sdk-ios/", from: "0.0.1")
     ],
     targets: [
         .target(
@@ -357,13 +358,13 @@ let package = Package(
                 "Settings",
                 "SDKSynchronizer",
                 "SyncProgress",
+                "TransactionList",
                 "UIComponents",
                 "Utils",
-                "TransactionList",
+                "Vendors",
                 "WalletBalances",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "KeystoneSDK", package: "keystone-sdk-ios"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
             path: "Sources/Features/Home"
@@ -382,6 +383,14 @@ let package = Package(
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
             path: "Sources/Features/ImportWallet"
+        ),
+        .target(
+            name: "KeystoneHandler",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "KeystoneSDK", package: "keystone-sdk-ios")
+            ],
+            path: "Sources/Dependencies/KeystoneHandler"
         ),
         .target(
             name: "LocalAuthenticationHandler",
@@ -620,6 +629,7 @@ let package = Package(
             dependencies: [
                 "CaptureDevice",
                 "Generated",
+                "KeystoneHandler",
                 "QRImageDetector",
                 "URIParser",
                 "UIComponents",
@@ -627,7 +637,8 @@ let package = Package(
                 "ZcashSDKEnvironment",
                 .product(name: "ZcashPaymentURI", package: "zcash-swift-payment-uri"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
+                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk"),
+                .product(name: "KeystoneSDK", package: "keystone-sdk-ios")
             ],
             path: "Sources/Features/Scan"
         ),
@@ -886,6 +897,13 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Utils"
+        ),
+        .target(
+            name: "Vendors",
+            dependencies: [
+                .product(name: "KeystoneSDK", package: "keystone-sdk-ios")
+            ],
+            path: "Sources/Vendors"
         ),
         .target(
             name: "WalletBalances",

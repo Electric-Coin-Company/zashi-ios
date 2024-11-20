@@ -114,6 +114,8 @@ extension ScanUIView {
     }
     
     func found(code: String) {
+        print("__LD \(code)")
+        print("__LD size \(code.count)")
         onQRScanningSucceededWithCode?(code)
     }
 }
