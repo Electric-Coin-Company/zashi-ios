@@ -1,5 +1,5 @@
 // MARK: - Plain Onboarding Flow
-"plainOnboarding.title" = "A no-frills wallet for sending and receiving Zcash (ZEC).";
+"plainOnboarding.title" = "The most user-friendly Zcash wallet. Built for private payments.";
 "plainOnboarding.button.createNewWallet" = "Create new wallet";
 "plainOnboarding.button.restoreWallet" = "Restore existing wallet";
 
@@ -27,18 +27,25 @@
 "recoveryPhraseDisplay.alert.failed.title" = "Failed to load stored wallet";
 "recoveryPhraseDisplay.alert.failed.message" = "Attempt to load the stored wallet from the keychain failed. Error: %@";
 
+// MARK: - Error Pages
+"errorPage.action.contactSupport" = "Contact Support";
+
 // MARK: - Proposal Partial Error
 "proposalPartial.title" = "Send Failed";
 "proposalPartial.message1" = "Send to this recipient required multiple transactions but only some of them succeeded and the rest failed. Your funds are safe but need to be recovered with assistance from our side.";
 "proposalPartial.message2" = "Please use the button below to contact us. it automatically prepares all the data we need in order to help you restore your funds.";
 "proposalPartial.transactionIds" = "Transaction Ids";
-"proposalPartial.contactSupport" = "Contact Support";
 "proposalPartial.copyIds" = "Copy transaction IDs";
 "proposalPartial.mailSubject" = "TEX Transaction Error";
 "proposalPartial.mailPart1" = "Hi Zashi Team,";
 "proposalPartial.mailPart2" = "While sending a transaction to a TEX address, I encountered an error state. I'm reaching out to get guidance on how to recover my funds.";
 "proposalPartial.mailPart3" = "Thank you.";
 "proposalPartial.transactionStatuses" = "Transaction statuses:";
+
+// MARK: OSStatusError
+"osStatusError.title" = "It’s not you, it’s us.";
+"osStatusError.message" = "Your funds are safe but something happened while we were trying to retrieve the Keychain data. Close the Zashi app, and give it a fresh launch, we will try again.";
+"osStatusError.error" = "Error code: %@";
 
 // MARK: - Import Wallet Screen
 "importWallet.description" = "Enter secret\nrecovery phrase";
@@ -250,7 +257,7 @@
 
 // MARK: - Private Data Consent
 "privateDataConsent.title" = "Consent for Exporting Private Data";
-"privateDataConsent.message1" = "By clicking “I Agree” below, you give your consent to export Zashi’s private data which includes the entire history of the wallet, sll private information, memos, amounts, and recipient addresses, even for your shielded activity.*";
+"privateDataConsent.message1" = "By clicking “I Agree” below, you give your consent to export Zashi’s private data which includes the entire history of the wallet, all private information, memos, amounts, and recipient addresses, even for your shielded activity.*";
 "privateDataConsent.message2" = "The private data also gives the ability to see certain future actions you take with Zashi.";
 "privateDataConsent.message3" = "Sharing this private data is irrevocable - once you have shared this private data with someone, there is no way to revoke their access.";
 "privateDataConsent.message4" = "*Note that this private data does not give them the ability to spend your funds, only the ability to see what you do with your funds.";

@@ -95,7 +95,7 @@ public struct PartialProposalErrorView: View {
                 }
                 .padding(.bottom, 8)
 
-                ZashiButton(L10n.ProposalPartial.contactSupport) {
+                ZashiButton(L10n.ErrorPage.Action.contactSupport) {
                     store.send(.sendSupportMail)
                 }
                 .padding(.bottom, 24)

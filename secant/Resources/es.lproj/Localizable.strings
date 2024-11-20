@@ -1,5 +1,5 @@
 // MARK: - Plain Onboarding Flow
-"plainOnboarding.title" = "Una billetera sencilla para enviar y recibir Zcash (ZEC).";
+"plainOnboarding.title" = "La billetera de Zcash más fácil de usar. Diseñada para pagos privados.";
 "plainOnboarding.button.createNewWallet" = "Crear nueva billetera";
 "plainOnboarding.button.restoreWallet" = "Restaurar billetera existente";
 
@@ -27,18 +27,25 @@
 "recoveryPhraseDisplay.alert.failed.title" = "No se pudo cargar la billetera almacenada";
 "recoveryPhraseDisplay.alert.failed.message" = "El intento de cargar la billetera almacenada desde el llavero falló. Error: %@";
 
+// MARK: - Error Pages
+"errorPage.action.contactSupport" = "Contactar Soporte";
+
 // MARK: - Proposal Partial Error
 "proposalPartial.title" = "Envío Fallido";
 "proposalPartial.message1" = "Enviar a este destinatario requirió múltiples transacciones, pero solo algunas de ellas se completaron con éxito. Tus fondos están seguros, pero deben recuperarse con la ayuda del soporte del equipo de Zashi.";
 "proposalPartial.message2" = "Por favor, usa el botón de abajo para contactarnos y recuperar tus fondos. Tu mensaje estará pre-rellenado con todos los datos necesarios para resolver este problema.";
 "proposalPartial.transactionIds" = "IDs de transacción";
-"proposalPartial.contactSupport" = "Contactar Soporte";
 "proposalPartial.copyIds" = "Copiar IDs de transacción";
 "proposalPartial.mailSubject" = "Error de transacción TEX";
 "proposalPartial.mailPart1" = "Hola, equipo de Zashi,";
 "proposalPartial.mailPart2" = "Al enviar una transacción a una dirección TEX, encontré un estado de error. Me pongo en contacto para recibir orientación sobre cómo recuperar mis fondos.";
 "proposalPartial.mailPart3" = "Gracias.";
 "proposalPartial.transactionStatuses" = "Estados de la transacción:";
+
+// MARK: OSStatusError
+"osStatusError.title" = "No eres tú, somos nosotros.";
+"osStatusError.message" = "Tus fondos están seguros, pero algo ocurrió mientras intentábamos recuperar los datos del llavero. Cierra la aplicación de Zashi y ábrela de nuevo; lo intentaremos otra vez.";
+"osStatusError.error" = "Código de error: %@";
 
 // MARK: - Import Wallet Screen
 "importWallet.description" = "Ingresa la frase\nsecreta de recuperación";

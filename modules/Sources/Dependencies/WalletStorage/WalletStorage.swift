@@ -80,12 +80,6 @@ public struct WalletStorage {
     }
     
     public func exportWallet() throws -> StoredWallet {
-#if targetEnvironment(simulator)
-        // TODO: can't go to the production
-        // FIXME: temporary debug only
-        throw KeychainError.unknown(errSecDuplicateItem)
-#endif
-        
         guard let data = try data(forKey: Constants.zcashStoredWallet) else {
             throw WalletStorageError.uninitializedWallet
         }

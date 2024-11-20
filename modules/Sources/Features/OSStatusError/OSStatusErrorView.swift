@@ -32,24 +32,24 @@ public struct OSStatusErrorView: View {
                     }
                     .rotationEffect(.degrees(180))
 
-                Text("It’s not you, it’s us.")
+                Text(L10n.OsStatusError.title)
                     .zFont(.semiBold, size: 24, style: Design.Text.primary)
                     .padding(.top, 16)
                     .padding(.bottom, 12)
 
-                Text("Your funds are safe but something happened while we were trying to retrieve the Keychain data. Close the Zashi app, and give it a fresh launch, we will try again.")
+                Text(L10n.OsStatusError.message)
                     .zFont(size: 14, style: Design.Text.primary)
                     .multilineTextAlignment(.center)
-                    .lineSpacing(1.5)
+                    .lineSpacing(3)
                     .padding(.bottom, 12)
 
-                Text("Error code: \(String(format: "%d", store.osStatus))")
-                    .zFont(size: 14, style: Design.Text.primary)
+                Text(L10n.OsStatusError.error(String(format: "%d", store.osStatus)))
+                    .zFont(.medium, size: 14, style: Design.Text.primary)
                     .padding(.bottom, 100)
 
                 Spacer()
                 
-                ZashiButton(L10n.ProposalPartial.contactSupport) {
+                ZashiButton(L10n.ErrorPage.Action.contactSupport) {
                     store.send(.sendSupportMail)
                 }
                 .padding(.bottom, 24)
