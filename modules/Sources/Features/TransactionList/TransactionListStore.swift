@@ -18,6 +18,7 @@ public struct TransactionList {
 
     @ObservableState
     public struct State: Equatable {
+        @Shared(.inMemory(.account)) public var account: Zip32Account = Zip32Account(0)
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
         public var latestMinedHeight: BlockHeight?
@@ -72,7 +73,7 @@ public struct TransactionList {
         case .onAppear:
             state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
             do {
-                let result = try addressBook.allLocalContacts()
+                let result = try addressBook.allLocalContacts(state.account)
                 let abContacts = result.contacts
                 if result.remoteStoreResult == .failure {
                     // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408

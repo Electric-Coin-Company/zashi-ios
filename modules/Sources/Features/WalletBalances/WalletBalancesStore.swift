@@ -23,6 +23,7 @@ public struct WalletBalances {
 
     @ObservableState
     public struct State: Equatable {
+        @Shared(.inMemory(.account)) public var account: Zip32Account = Zip32Account(0)
         @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
         public var fiatCurrencyResult: FiatCurrencyResult?
         public var isAvailableBalanceTappable = true
@@ -166,8 +167,8 @@ public struct WalletBalances {
                 return .none
 
             case .updateBalances:
-                return .run { send in
-                    if let accountBalance = try? await sdkSynchronizer.getAccountBalance(0) {
+                return .run { [account = state.account] send in
+                    if let accountBalance = try? await sdkSynchronizer.getAccountBalance(account) {
                         await send(.balancesUpdated(accountBalance))
                     } else if let accountBalance = sdkSynchronizer.latestState().accountBalance {
                         await send(.balancesUpdated(accountBalance))

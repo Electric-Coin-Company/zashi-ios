@@ -20,12 +20,12 @@ public struct AddressBookEncryptionKeys: Codable, Equatable {
     
     var keys: [Int: AddressBookKey]
 
-    public mutating func cacheFor(seed: [UInt8], account: Int, network: NetworkType) throws{
-        keys[account] = try AddressBookKey(seed: seed, account: account, network: network)
+    public mutating func cacheFor(seed: [UInt8], account: Zip32Account, network: NetworkType) throws{
+        keys[Int(account.index)] = try AddressBookKey(seed: seed, account: account, network: network)
     }
 
-    public func getCached(account: Int) -> AddressBookKey? {
-        keys[account]
+    public func getCached(account: Zip32Account) -> AddressBookKey? {
+        keys[Int(account.index)]
     }
 }
 
@@ -59,11 +59,11 @@ public struct AddressBookKey: Codable, Equatable, Redactable {
      * control requirements for the seed phrase and the address book, this key
      * should be cached in the app's keystore.
      */
-    public init(seed: [UInt8], account: Int, network: NetworkType) throws {
+    public init(seed: [UInt8], account: Zip32Account, network: NetworkType) throws {
         self.key = try SymmetricKey(data: DerivationToolClient.live().deriveArbitraryAccountKey(
             [UInt8]("ZashiAddressBookEncryptionV1".utf8),
             seed,
-            account,
+            account.index,
             network
         ))
     }

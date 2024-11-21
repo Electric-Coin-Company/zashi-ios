@@ -31,6 +31,7 @@ public struct Balances {
             case partialProposalError
         }
 
+        @Shared(.inMemory(.account)) public var account: Zip32Account = Zip32Account(0)
         @Presents public var alert: AlertState<Action>?
         public var autoShieldingThreshold: Zatoshi
         public var changePending: Zatoshi
@@ -150,16 +151,16 @@ public struct Balances {
 
             case .shieldFunds:
                 state.isShieldingFunds = true
-                return .run { send in
+                return .run { [account = state.account] send in
                     do {
                         let storedWallet = try walletStorage.exportWallet()
                         let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
-                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, zcashSDKEnvironment.network.networkType)
+                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, account.index, zcashSDKEnvironment.network.networkType)
                         
-                        guard let uAddress = try await sdkSynchronizer.getUnifiedAddress(0) else { throw "sdkSynchronizer.getUnifiedAddress" }
+                        guard let uAddress = try await sdkSynchronizer.getUnifiedAddress(account) else { throw "sdkSynchronizer.getUnifiedAddress" }
 
                         let address = try uAddress.transparentReceiver()
-                        let proposal = try await sdkSynchronizer.proposeShielding(0, zcashSDKEnvironment.shieldingThreshold, .empty, address)
+                        let proposal = try await sdkSynchronizer.proposeShielding(account, zcashSDKEnvironment.shieldingThreshold, .empty, address)
                         
                         guard let proposal else { throw "sdkSynchronizer.proposeShielding" }
                         

@@ -16,4 +16,5 @@ public extension String {
     static let toast = "sharedStateKey_toast"
     static let featureFlags = "sharedStateKey_featureFlags"
     static let lastAuthenticationTimestamp = "sharedStateKey_lastAuthenticationTimestamp"
+    static let account = "sharedStateKey_account"
 }

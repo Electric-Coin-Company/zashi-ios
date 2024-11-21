@@ -11,6 +11,7 @@ import Models
 import Foundation
 import CryptoKit
 import WalletStorage
+import ZcashLightClientKit
 
 extension AddressBookClient {
     static func serializeContacts(_ abContacts: AddressBookContacts) -> Data {
@@ -42,17 +43,17 @@ extension AddressBookClient {
     ///     [Encrypted data]        `contacts`
     ///
     /// This method always produces the latest structure with the latest encryption version.
-    static func encryptContacts(_ abContacts: AddressBookContacts) throws -> Data {
+    static func encryptContacts(_ contacts: AddressBookContacts, account: Zip32Account) throws -> Data {
         @Dependency(\.walletStorage) var walletStorage
         
-        guard let encryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys(), let addressBookKey = encryptionKeys.getCached(account: 0) else {
+        guard let encryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys(), let addressBookKey = encryptionKeys.getCached(account: account) else {
             throw AddressBookClient.AddressBookClientError.missingEncryptionKey
         }
         
         var encryptionVersionData = Data()
         encryptionVersionData.append(contentsOf: intToBytes(AddressBookEncryptionKeys.Constants.version))
         
-        let dataForEncryption = AddressBookClient.serializeContacts(abContacts)
+        let dataForEncryption = AddressBookClient.serializeContacts(contacts)
         
         // Generate a fresh one-time sub-key for encrypting the address book.
         let salt = SymmetricKey(size: SymmetricKeySize.bits256)
@@ -80,10 +81,10 @@ extension AddressBookClient {
     ///     [Encrypted data]        `address book version`
     ///     [Encrypted data]        `timestamp`
     ///     [Encrypted data]        `contacts`
-    static func contactsFrom(encryptedData: Data) throws -> AddressBookContacts {
+    static func contactsFrom(encryptedData: Data, account: Zip32Account) throws -> AddressBookContacts {
         @Dependency(\.walletStorage) var walletStorage
         
-        guard let encryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys(), let addressBookKey = encryptionKeys.getCached(account: 0) else {
+        guard let encryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys(), let addressBookKey = encryptionKeys.getCached(account: account) else {
             throw AddressBookClient.AddressBookClientError.missingEncryptionKey
         }
         

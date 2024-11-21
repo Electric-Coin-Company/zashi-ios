@@ -38,6 +38,7 @@ public struct SendFlow {
 
         public var cancelId = UUID()
         
+        @Shared(.inMemory(.account)) public var account: Zip32Account = Zip32Account(0)
         public var addMemoState: Bool
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         @Presents public var alert: AlertState<Action>?
@@ -247,7 +248,7 @@ public struct SendFlow {
             case .onAppear:
                 state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
                 do {
-                    let result = try addressBook.allLocalContacts()
+                    let result = try addressBook.allLocalContacts(state.account)
                     let abContacts = result.contacts
                     if result.remoteStoreResult == .failure {
                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
@@ -335,7 +336,7 @@ public struct SendFlow {
                             memo = nil
                         }
 
-                        let proposal = try await sdkSynchronizer.proposeTransfer(0, recipient, state.amount, memo)
+                        let proposal = try await sdkSynchronizer.proposeTransfer(state.account, recipient, state.amount, memo)
                         
                         await send(.proposal(proposal))
                         await send(.confirmationRequired(confirmationType))

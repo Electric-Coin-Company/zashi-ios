@@ -45,6 +45,7 @@ public struct Root {
 
     @ObservableState
     public struct State: Equatable {
+        @Shared(.inMemory(.account)) public var account: Zip32Account = Zip32Account(0)
         public var addressBookBinding: Bool = false
         public var addressBookContactBinding: Bool = false
         public var addressBookState: AddressBook.State

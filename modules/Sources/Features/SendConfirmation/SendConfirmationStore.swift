@@ -41,6 +41,7 @@ public struct SendConfirmation {
             case success
         }
 
+        @Shared(.inMemory(.account)) public var account: Zip32Account = Zip32Account(0)
         public var address: String
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         public var alias: String?
@@ -179,7 +180,7 @@ public struct SendConfirmation {
                 state.canSendMail = MFMailComposeViewController.canSendMail()
                 state.alias = nil
                 do {
-                    let result = try addressBook.allLocalContacts()
+                    let result = try addressBook.allLocalContacts(state.account)
                     let abContacts = result.contacts
                     if result.remoteStoreResult == .failure {
                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
@@ -245,7 +246,7 @@ public struct SendConfirmation {
                 guard let proposal = state.proposal else {
                     return .send(.sendFailed("missing proposal".toZcashError(), true))
                 }
-                return .run { send in
+                return .run { [account = state.account] send in
                     if await !localAuthentication.authenticate() {
                         await send(.sendFailed(nil, true))
                         return
@@ -255,7 +256,7 @@ public struct SendConfirmation {
                         let storedWallet = try walletStorage.exportWallet()
                         let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
                         let network = zcashSDKEnvironment.network.networkType
-                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, network)
+                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, account.index, network)
 
                         let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
                         

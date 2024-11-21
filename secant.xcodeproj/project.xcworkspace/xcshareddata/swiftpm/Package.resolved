@@ -167,8 +167,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/grpc/grpc-swift.git",
       "state" : {
-        "revision" : "6a90b7e77e29f9bda6c2b3a4165a40d6c02cfda1",
-        "version" : "1.23.0"
+        "revision" : "8c5e99d0255c373e0330730d191a3423c57373fb",
+        "version" : "1.24.2"
       }
     },
     {
@@ -482,8 +482,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-protobuf.git",
       "state" : {
-        "revision" : "e17d61f26df0f0e06f58f6977ba05a097a720106",
-        "version" : "1.27.1"
+        "revision" : "ebc7251dd5b37f627c93698e4374084d98409633",
+        "version" : "1.28.2"
       }
     },
     {
@@ -577,12 +577,12 @@
       }
     },
     {
-      "identity" : "zcash-swift-wallet-sdk",
+      "identity" : "zcashlightclientkit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk",
+      "location" : "https://github.com/LukasKorba/ZcashLightClientKit",
       "state" : {
-        "revision" : "b248ae6a9008ac8198cd50b325fb616b763876d5",
-        "version" : "2.2.7"
+        "branch" : "1511-Refactor-account-representation-from-Int-to-a-dedicated-Account-structure",
+        "revision" : "b31e1c91d78a5320b8988f19af4fbae2d633e207"
       }
     }
   ],

@@ -22,7 +22,7 @@ public struct DerivationToolClient {
     /// - Parameter accountIndex: Index of account to use. Multiple accounts are not fully
     /// supported so the default value of 0 is recommended.
     /// - Returns: the spending keys that correspond to the seed, formatted as Strings.
-    public var deriveSpendingKey: ([UInt8], Int, NetworkType) throws -> UnifiedSpendingKey
+    public var deriveSpendingKey: ([UInt8], Int32, NetworkType) throws -> UnifiedSpendingKey
 
     /// Given a unified spending key, returns the associated unified viewwing key.
     public var deriveUnifiedFullViewingKey: (UnifiedSpendingKey, NetworkType) throws -> UnifiedFullViewingKey
@@ -69,5 +69,5 @@ public struct DerivationToolClient {
     ///     - `derivationToolInvalidAccount` if the `accountIndex` is invalid.
     ///     - some `ZcashError.rust*` error if the derivation fails.
     /// - Returns a `[Uint8]`
-    public var deriveArbitraryAccountKey: ([UInt8], [UInt8], Int, NetworkType) throws -> [UInt8]
+    public var deriveArbitraryAccountKey: ([UInt8], [UInt8], Int32, NetworkType) throws -> [UInt8]
 }
