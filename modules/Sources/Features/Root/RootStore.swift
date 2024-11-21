@@ -31,6 +31,7 @@ import AddressBook
 import LocalAuthenticationHandler
 import DeeplinkWarning
 import URIParser
+import OSStatusError
 
 @Reducer
 public struct Root {
@@ -62,6 +63,7 @@ public struct Root {
         @Shared(.appStorage(.lastAuthenticationTimestamp)) public var lastAuthenticationTimestamp: Int = 0
         public var notEnoughFreeSpaceState: NotEnoughFreeSpace.State
         public var onboardingState: OnboardingFlow.State
+        public var osStatusErrorState: OSStatusError.State
         public var phraseDisplayState: RecoveryPhraseDisplay.State
         public var serverSetupState: ServerSetup.State
         public var serverSetupViewBinding: Bool = false
@@ -83,6 +85,7 @@ public struct Root {
             isRestoringWallet: Bool = false,
             notEnoughFreeSpaceState: NotEnoughFreeSpace.State = .initial,
             onboardingState: OnboardingFlow.State,
+            osStatusErrorState: OSStatusError.State = .initial,
             phraseDisplayState: RecoveryPhraseDisplay.State,
             tabsState: Tabs.State,
             serverSetupState: ServerSetup.State = .initial,
@@ -98,6 +101,7 @@ public struct Root {
             self.isLockedInKeychainUnavailableState = isLockedInKeychainUnavailableState
             self.isRestoringWallet = isRestoringWallet
             self.onboardingState = onboardingState
+            self.osStatusErrorState = osStatusErrorState
             self.notEnoughFreeSpaceState = notEnoughFreeSpaceState
             self.phraseDisplayState = phraseDisplayState
             self.serverSetupState = serverSetupState
@@ -134,6 +138,7 @@ public struct Root {
         case resetZashiFailed
         case resetZashiSucceeded
         case onboarding(OnboardingFlow.Action)
+        case osStatusError(OSStatusError.Action)
         case phraseDisplay(RecoveryPhraseDisplay.Action)
         case splashFinished
         case splashRemovalRequested
@@ -205,6 +210,10 @@ public struct Root {
 
         Scope(state: \.phraseDisplayState, action: \.phraseDisplay) {
             RecoveryPhraseDisplay()
+        }
+
+        Scope(state: \.osStatusErrorState, action: \.osStatusError) {
+            OSStatusError()
         }
 
         initializationReduce()
@@ -327,6 +336,8 @@ extension Root {
             if databaseFiles.areDbFilesPresentFor(zcashNetwork) {
                 return .keysMissing
             }
+        } catch WalletStorage.KeychainError.unknown(let osStatus) {
+            return .osStatus(osStatus)
         } catch {
             return .failed
         }

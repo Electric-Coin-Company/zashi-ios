@@ -17,9 +17,10 @@ public enum AppStartState: Equatable {
 
 public enum InitializationState: Equatable {
     case failed
+    case filesMissing
     case initialized
     case keysMissing
-    case filesMissing
+    case osStatus(OSStatus)
     case uninitialized
 }
 

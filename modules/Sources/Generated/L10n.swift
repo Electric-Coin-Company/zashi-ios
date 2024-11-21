@@ -186,6 +186,12 @@ public enum L10n {
     /// Reset Zashi
     public static let title = L10n.tr("Localizable", "deleteWallet.title", fallback: "Reset Zashi")
   }
+  public enum ErrorPage {
+    public enum Action {
+      /// Contact Support
+      public static let contactSupport = L10n.tr("Localizable", "errorPage.action.contactSupport", fallback: "Contact Support")
+    }
+  }
   public enum ExportLogs {
     public enum Alert {
       public enum Failed {
@@ -340,6 +346,16 @@ public enum L10n {
     /// Not enough free space
     public static let title = L10n.tr("Localizable", "notEnoughFreeSpace.title", fallback: "Not enough free space")
   }
+  public enum OsStatusError {
+    /// Error code: %@
+    public static func error(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "osStatusError.error", String(describing: p1), fallback: "Error code: %@")
+    }
+    /// Your funds are safe but something happened while we were trying to retrieve the Keychain data. Close the Zashi app, and give it a fresh launch, we will try again.
+    public static let message = L10n.tr("Localizable", "osStatusError.message", fallback: "Your funds are safe but something happened while we were trying to retrieve the Keychain data. Close the Zashi app, and give it a fresh launch, we will try again.")
+    /// It’s not you, it’s us.
+    public static let title = L10n.tr("Localizable", "osStatusError.title", fallback: "It’s not you, it’s us.")
+  }
   public enum Partners {
     /// https://pay.coinbase.com/buy/select-asset?appId=%@&addresses={"%@":["zcash"]}
     public static func coinbaseOnrampUrl(_ p1: Any, _ p2: Any) -> String {
@@ -353,8 +369,8 @@ public enum L10n {
     }
   }
   public enum PlainOnboarding {
-    /// A no-frills wallet for sending and receiving Zcash (ZEC).
-    public static let title = L10n.tr("Localizable", "plainOnboarding.title", fallback: "A no-frills wallet for sending and receiving Zcash (ZEC).")
+    /// The most user-friendly Zcash wallet. Built for private payments.
+    public static let title = L10n.tr("Localizable", "plainOnboarding.title", fallback: "The most user-friendly Zcash wallet. Built for private payments.")
     public enum Button {
       /// Create new wallet
       public static let createNewWallet = L10n.tr("Localizable", "plainOnboarding.button.createNewWallet", fallback: "Create new wallet")
@@ -365,8 +381,8 @@ public enum L10n {
   public enum PrivateDataConsent {
     /// I agree to Zashi's Export Private Data Policies and Privacy Policy
     public static let confirmation = L10n.tr("Localizable", "privateDataConsent.confirmation", fallback: "I agree to Zashi's Export Private Data Policies and Privacy Policy")
-    /// By clicking “I Agree” below, you give your consent to export Zashi’s private data which includes the entire history of the wallet, sll private information, memos, amounts, and recipient addresses, even for your shielded activity.*
-    public static let message1 = L10n.tr("Localizable", "privateDataConsent.message1", fallback: "By clicking “I Agree” below, you give your consent to export Zashi’s private data which includes the entire history of the wallet, sll private information, memos, amounts, and recipient addresses, even for your shielded activity.*")
+    /// By clicking “I Agree” below, you give your consent to export Zashi’s private data which includes the entire history of the wallet, all private information, memos, amounts, and recipient addresses, even for your shielded activity.*
+    public static let message1 = L10n.tr("Localizable", "privateDataConsent.message1", fallback: "By clicking “I Agree” below, you give your consent to export Zashi’s private data which includes the entire history of the wallet, all private information, memos, amounts, and recipient addresses, even for your shielded activity.*")
     /// The private data also gives the ability to see certain future actions you take with Zashi.
     public static let message2 = L10n.tr("Localizable", "privateDataConsent.message2", fallback: "The private data also gives the ability to see certain future actions you take with Zashi.")
     /// Sharing this private data is irrevocable - once you have shared this private data with someone, there is no way to revoke their access.
@@ -379,8 +395,6 @@ public enum L10n {
     public static let title = L10n.tr("Localizable", "privateDataConsent.title", fallback: "Consent for Exporting Private Data")
   }
   public enum ProposalPartial {
-    /// Contact Support
-    public static let contactSupport = L10n.tr("Localizable", "proposalPartial.contactSupport", fallback: "Contact Support")
     /// Copy transaction IDs
     public static let copyIds = L10n.tr("Localizable", "proposalPartial.copyIds", fallback: "Copy transaction IDs")
     /// Hi Zashi Team,

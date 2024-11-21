@@ -44,6 +44,7 @@ let package = Package(
         .library(name: "NotEnoughFreeSpace", targets: ["NotEnoughFreeSpace"]),
         .library(name: "NumberFormatter", targets: ["NumberFormatter"]),
         .library(name: "OnboardingFlow", targets: ["OnboardingFlow"]),
+        .library(name: "OSStatusError", targets: ["OSStatusError"]),
         .library(name: "PartialProposalError", targets: ["PartialProposalError"]),
         .library(name: "PartnerKeys", targets: ["PartnerKeys"]),
         .library(name: "Pasteboard", targets: ["Pasteboard"]),
@@ -447,6 +448,17 @@ let package = Package(
             path: "Sources/Features/OnboardingFlow"
         ),
         .target(
+            name: "OSStatusError",
+            dependencies: [
+                "Generated",
+                "SupportDataGenerator",
+                "UIComponents",
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Features/OSStatusError"
+        ),
+        .target(
             name: "PartialProposalError",
             dependencies: [
                 "Generated",
@@ -579,6 +591,7 @@ let package = Package(
                 "NotEnoughFreeSpace",
                 "NumberFormatter",
                 "OnboardingFlow",
+                "OSStatusError",
                 "Pasteboard",
                 "ReadTransactionsStorage",
                 "RecoveryPhraseDisplay",

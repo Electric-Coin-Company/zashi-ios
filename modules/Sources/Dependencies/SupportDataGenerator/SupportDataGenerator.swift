@@ -74,6 +74,18 @@ public enum SupportDataGenerator {
         
         return SupportData(toAddress: Constants.email, subject: Constants.subjectPPE, message: message)
     }
+    
+    public static func generateOSStatusError(osStatus: OSStatus) -> SupportData {
+        let data = SupportDataGenerator.generate()
+        
+        let message =
+        """
+        OSStatus: \(osStatus)
+        \(data.message)
+        """
+        
+        return SupportData(toAddress: Constants.email, subject: Constants.subjectPPE, message: message)
+    }
 }
 
 private protocol SupportDataGeneratorItem {
