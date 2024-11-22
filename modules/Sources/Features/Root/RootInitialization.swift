@@ -308,7 +308,12 @@ extension Root {
                             account: 0,
                             network: zcashSDKEnvironment.network.networkType
                         )
-                        try walletStorage.importAddressBookEncryptionKeys(keys)
+                        
+                        do {
+                            try walletStorage.importAddressBookEncryptionKeys(keys)
+                        } catch {
+                            // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                        }
                     }
 
                     return .run { send in

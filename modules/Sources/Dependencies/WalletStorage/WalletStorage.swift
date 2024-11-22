@@ -80,11 +80,21 @@ public struct WalletStorage {
     }
     
     public func exportWallet() throws -> StoredWallet {
-        guard let data = try data(forKey: Constants.zcashStoredWallet) else {
+        let reqData: Data?
+        
+        do {
+            reqData = try data(forKey: Constants.zcashStoredWallet)
+        } catch KeychainError.noDataFound {
+            throw WalletStorageError.uninitializedWallet
+        } catch {
+            throw error
+        }
+        
+        guard let reqData else {
             throw WalletStorageError.uninitializedWallet
         }
         
-        guard let wallet = try decode(json: data, as: StoredWallet.self) else {
+        guard let wallet = try decode(json: reqData, as: StoredWallet.self) else {
             throw WalletStorageError.uninitializedWallet
         }
         
@@ -155,11 +165,21 @@ public struct WalletStorage {
     }
     
     public func exportAddressBookEncryptionKeys() throws -> AddressBookEncryptionKeys {
-        guard let data = try data(forKey: Constants.zcashStoredAdressBookEncryptionKeys) else {
+        let reqData: Data?
+        
+        do {
+            reqData = try data(forKey: Constants.zcashStoredAdressBookEncryptionKeys)
+        } catch KeychainError.noDataFound {
+            throw WalletStorageError.uninitializedAddressBookEncryptionKeys
+        } catch {
+            throw error
+        }
+        
+        guard let reqData else {
             throw WalletStorageError.uninitializedAddressBookEncryptionKeys
         }
         
-        guard let wallet = try decode(json: data, as: AddressBookEncryptionKeys.self) else {
+        guard let wallet = try decode(json: reqData, as: AddressBookEncryptionKeys.self) else {
             throw WalletStorageError.uninitializedAddressBookEncryptionKeys
         }
 
@@ -225,6 +245,10 @@ public struct WalletStorage {
         var result: AnyObject?
         let status = secItem.copyMatching(query as CFDictionary, &result)
         
+        guard status != errSecItemNotFound else {
+            throw KeychainError.noDataFound
+        }
+
         guard status == errSecSuccess else {
             throw KeychainError.unknown(status)
         }
