@@ -91,8 +91,8 @@ extension SecantApp {
         featureFlags = FeatureFlags()
 #elseif SECANT_TESTNET
         featureFlags = FeatureFlags(
-            flexa: false,
             appLaunchBiometric: true,
+            flexa: false,
             sendingScreen: true
         )
 #else
