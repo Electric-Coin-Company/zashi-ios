@@ -305,7 +305,7 @@ extension Root {
                         var keys = AddressBookEncryptionKeys.empty
                         try keys.cacheFor(
                             seed: seedBytes,
-                            account: state.account,
+                            account: state.accountIndex,
                             network: zcashSDKEnvironment.network.networkType
                         )
                         
@@ -316,12 +316,12 @@ extension Root {
                         }
                     }
 
-                    return .run { [account = state.account] send in
+                    return .run { [accountIndex = state.accountIndex] send in
                         do {
                             try await sdkSynchronizer.prepareWith(seedBytes, birthday, walletMode)
                             try await sdkSynchronizer.start(false)
                             
-                            let uAddress = try? await sdkSynchronizer.getUnifiedAddress(account)
+                            let uAddress = try? await sdkSynchronizer.getUnifiedAddress(accountIndex)
                             await send(.initialization(.initializationSuccessfullyDone(uAddress)))
                         } catch {
                             await send(.initialization(.initializationFailed(error.toZcashError())))

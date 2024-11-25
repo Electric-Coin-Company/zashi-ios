@@ -31,7 +31,7 @@ public struct AddressBook {
         
         public var address = ""
         public var addressAlreadyExists = false
-        @Shared(.inMemory(.account)) public var account: Zip32Account = Zip32Account(0)
+        @Shared(.inMemory(.account)) public var accountIndex: Zip32AccountIndex = Zip32AccountIndex(0)
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         @Presents public var alert: AlertState<Action>?
         public var deleteIdToConfirm: String?
@@ -206,7 +206,7 @@ public struct AddressBook {
                 }
                 if let contact {
                     do {
-                        let result = try addressBook.deleteContact(state.account, contact)
+                        let result = try addressBook.deleteContact(state.accountIndex, contact)
                         let abContacts = result.contacts
                         if result.remoteStoreResult == .failure {
                             // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
@@ -244,7 +244,7 @@ public struct AddressBook {
 
             case .saveButtonTapped:
                 do {
-                    let result = try addressBook.storeContact(state.account, Contact(address: state.address, name: state.name))
+                    let result = try addressBook.storeContact(state.accountIndex, Contact(address: state.address, name: state.name))
                     let abContacts = result.contacts
                     if result.remoteStoreResult == .failure {
                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
@@ -267,7 +267,7 @@ public struct AddressBook {
 
             case .fetchABContactsRequested:
                 do {
-                    let result = try addressBook.allLocalContacts(state.account)
+                    let result = try addressBook.allLocalContacts(state.accountIndex)
                     let abContacts = result.contacts
                     if result.remoteStoreResult == .failure {
                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
@@ -281,9 +281,9 @@ public struct AddressBook {
             case let .fetchedABContacts(abContacts, requestToSync):
                 state.addressBookContacts = abContacts
                 if requestToSync {
-                    return .run { [account = state.account] send in
+                    return .run { [accountIndex = state.accountIndex] send in
                         do {
-                            let result = try await addressBook.syncContacts(account, abContacts)
+                            let result = try await addressBook.syncContacts(accountIndex, abContacts)
                             let syncedContacts = result.contacts
                             if result.remoteStoreResult == .failure {
                                 // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408

@@ -149,7 +149,7 @@ extension Root {
                     return .none
                 }
                 flexaHandler.clearTransactionRequest()
-                return .run { [account = state.account] send in
+                return .run { [accountIndex = state.accountIndex] send in
                     do {
                         if await !localAuthentication.authenticate() {
                             return
@@ -157,13 +157,13 @@ extension Root {
 
                         // get a proposal
                         let recipient = try Recipient(transaction.address, network: zcashSDKEnvironment.network.networkType)
-                        let proposal = try await sdkSynchronizer.proposeTransfer(account, recipient, transaction.amount, nil)
+                        let proposal = try await sdkSynchronizer.proposeTransfer(accountIndex, recipient, transaction.amount, nil)
 
                         // make the actual send
                         let storedWallet = try walletStorage.exportWallet()
                         let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
                         let network = zcashSDKEnvironment.network.networkType
-                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, account.index, network)
+                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, accountIndex, network)
                         
                         let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
                         

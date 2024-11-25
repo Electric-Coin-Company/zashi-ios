@@ -43,11 +43,11 @@ public struct SDKSynchronizerClient {
     public var getAllTransactions: () async throws -> [TransactionState]
     public var getMemos: (Data) async throws -> [Memo]
 
-    public let getUnifiedAddress: (_ account: Zip32Account) async throws -> UnifiedAddress?
-    public let getTransparentAddress: (_ account: Zip32Account) async throws -> TransparentAddress?
-    public let getSaplingAddress: (_ account: Zip32Account) async throws -> SaplingAddress?
+    public let getUnifiedAddress: (_ account: Zip32AccountIndex) async throws -> UnifiedAddress?
+    public let getTransparentAddress: (_ account: Zip32AccountIndex) async throws -> TransparentAddress?
+    public let getSaplingAddress: (_ account: Zip32AccountIndex) async throws -> SaplingAddress?
     
-    public let getAccountBalance: (_ account: Zip32Account) async throws -> AccountBalance?
+    public let getAccountBalance: (_ account: Zip32AccountIndex) async throws -> AccountBalance?
     
     public var sendTransaction: (UnifiedSpendingKey, Zatoshi, Recipient, Memo?) async throws -> TransactionState
     public let shieldFunds: (UnifiedSpendingKey, Memo, Zatoshi) async throws -> TransactionState
@@ -57,9 +57,9 @@ public struct SDKSynchronizerClient {
     public var switchToEndpoint: (LightWalletEndpoint) async throws -> Void
     
     // Proposals
-    public var proposeTransfer: (Zip32Account, Recipient, Zatoshi, Memo?) async throws -> Proposal
+    public var proposeTransfer: (Zip32AccountIndex, Recipient, Zatoshi, Memo?) async throws -> Proposal
     public var createProposedTransactions: (Proposal, UnifiedSpendingKey) async throws -> CreateProposedTransactionsResult
-    public var proposeShielding: (Zip32Account, Zatoshi, Memo, TransparentAddress?) async throws -> Proposal?
+    public var proposeShielding: (Zip32AccountIndex, Zatoshi, Memo, TransparentAddress?) async throws -> Proposal?
 
     public var isSeedRelevantToAnyDerivedAccount: ([UInt8]) async throws -> Bool
     

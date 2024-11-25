@@ -582,7 +582,7 @@
       "location" : "https://github.com/LukasKorba/ZcashLightClientKit",
       "state" : {
         "branch" : "1511-Refactor-account-representation-from-Int-to-a-dedicated-Account-structure",
-        "revision" : "b31e1c91d78a5320b8988f19af4fbae2d633e207"
+        "revision" : "ea549c34282acee8ae3135f96e03df3237d06ecc"
       }
     }
   ],

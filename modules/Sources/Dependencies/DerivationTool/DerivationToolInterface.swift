@@ -19,10 +19,9 @@ extension DependencyValues {
 public struct DerivationToolClient {
     /// Given a seed and a number of accounts, return the associated spending keys.
     /// - Parameter seed: the seed from which to derive spending keys.
-    /// - Parameter accountIndex: Index of account to use. Multiple accounts are not fully
-    /// supported so the default value of 0 is recommended.
+    /// - Parameter accountIndex: the ZIP 32 index of the account
     /// - Returns: the spending keys that correspond to the seed, formatted as Strings.
-    public var deriveSpendingKey: ([UInt8], Int32, NetworkType) throws -> UnifiedSpendingKey
+    public var deriveSpendingKey: ([UInt8], Zip32AccountIndex, NetworkType) throws -> UnifiedSpendingKey
 
     /// Given a unified spending key, returns the associated unified viewwing key.
     public var deriveUnifiedFullViewingKey: (UnifiedSpendingKey, NetworkType) throws -> UnifiedFullViewingKey
@@ -64,10 +63,10 @@ public struct DerivationToolClient {
     ///
     /// - Parameter contextString: a globally-unique non-empty sequence of at most 252 bytes that identifies the desired context.
     /// - Parameter seed: `[Uint8]` seed bytes
-    /// - Parameter accountNumber: `Int` with the account number
+    /// - Parameter accountIndex: the ZIP 32 index of the account
     /// - Throws:
     ///     - `derivationToolInvalidAccount` if the `accountIndex` is invalid.
     ///     - some `ZcashError.rust*` error if the derivation fails.
     /// - Returns a `[Uint8]`
-    public var deriveArbitraryAccountKey: ([UInt8], [UInt8], Int32, NetworkType) throws -> [UInt8]
+    public var deriveArbitraryAccountKey: ([UInt8], [UInt8], Zip32AccountIndex, NetworkType) throws -> [UInt8]
 }

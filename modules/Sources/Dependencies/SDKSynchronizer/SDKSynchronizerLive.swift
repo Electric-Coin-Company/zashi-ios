@@ -104,10 +104,10 @@ extension SDKSynchronizerClient: DependencyKey {
                 return clearedTxs
             },
             getMemos: { try await synchronizer.getMemos(for: $0) },
-            getUnifiedAddress: { try await synchronizer.getUnifiedAddress(account: $0) },
-            getTransparentAddress: { try await synchronizer.getTransparentAddress(account: $0) },
-            getSaplingAddress: { try await synchronizer.getSaplingAddress(account: $0) },
-            getAccountBalance: { try await synchronizer.getAccountBalance(account: $0) },
+            getUnifiedAddress: { try await synchronizer.getUnifiedAddress(accountIndex: $0) },
+            getTransparentAddress: { try await synchronizer.getTransparentAddress(accountIndex: $0) },
+            getSaplingAddress: { try await synchronizer.getSaplingAddress(accountIndex: $0) },
+            getAccountBalance: { try await synchronizer.getAccountBalance(accountIndex: $0) },
             sendTransaction: { spendingKey, amount, recipient, memo in
                 let pendingTransaction = try await synchronizer.sendToAddress(
                     spendingKey: spendingKey,
@@ -137,9 +137,9 @@ extension SDKSynchronizerClient: DependencyKey {
             switchToEndpoint: { endpoint in
                 try await synchronizer.switchTo(endpoint: endpoint)
             },
-            proposeTransfer: { account, recipient, amount, memo in
+            proposeTransfer: { accountIndex, recipient, amount, memo in
                 try await synchronizer.proposeTransfer(
-                    account: account,
+                    accountIndex: accountIndex,
                     recipient: recipient,
                     amount: amount,
                     memo: memo
@@ -196,9 +196,9 @@ extension SDKSynchronizerClient: DependencyKey {
                     return .partial(txIds: txIds, statuses: statuses)
                 }
             },
-            proposeShielding: { account, shieldingThreshold, memo, transparentReceiver in
+            proposeShielding: { accountIndex, shieldingThreshold, memo, transparentReceiver in
                 try await synchronizer.proposeShielding(
-                    account: account,
+                    accountIndex: accountIndex,
                     shieldingThreshold: shieldingThreshold,
                     memo: memo,
                     transparentReceiver: transparentReceiver
