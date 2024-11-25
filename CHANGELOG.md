@@ -9,6 +9,7 @@ directly impact users rather than highlighting other crucial architectural updat
 ### Added
 - Integration screen informs users of partner policies that are applied.
 - Error screen for the keychain failures.
+- Flexa integrated into Zashi, users can pay with ZEC for Flexa codes.
 
 ## 1.2.3 build 3 (2024-11-19)
 
