@@ -6,6 +6,8 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.2.4 build 3 (2024-11-26)
+
 ### Added
 - Integration screen informs users of partner policies that are applied.
 - Error screen for the keychain failures.
