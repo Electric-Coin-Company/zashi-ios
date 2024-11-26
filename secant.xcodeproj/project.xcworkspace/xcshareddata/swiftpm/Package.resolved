@@ -86,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/flexa/flexa-ios.git",
       "state" : {
-        "revision" : "ee5e67380ba402e84f34eaf4299484419938cfbc",
-        "version" : "1.0.6"
+        "revision" : "5d33adf6507ea33e239f7fb8ec27978cf4e08243",
+        "version" : "1.0.8"
       }
     },
     {

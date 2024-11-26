@@ -1,6 +1,21 @@
 {
     "releases": [
         {
+            "version": "1.2.4",
+            "date": "11-25-2024",
+            "timestamp": 1732369942,
+            "sections": [
+                {
+                    "title": "Agregado:",
+                    "bulletpoints": [
+                        "¡Finalmente está aquí! ¡La integración de Flexa a tu servicio!",
+                        "Paga con Flexa en comercios compatibles en Estados Unidos, Canadá y El Salvador.",
+                        "Te está esperando en la configuración de Zashi."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "1.2.3",
             "date": "11-18-2024",
             "timestamp": 1731922524,
