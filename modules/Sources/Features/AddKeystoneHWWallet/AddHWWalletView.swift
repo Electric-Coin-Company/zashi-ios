@@ -9,7 +9,6 @@ import SwiftUI
 import ComposableArchitecture
 import Generated
 import UIComponents
-import Scan
 
 public struct AddKeystoneHWWalletView: View {
     @Perception.Bindable var store: StoreOf<AddKeystoneHWWallet>
