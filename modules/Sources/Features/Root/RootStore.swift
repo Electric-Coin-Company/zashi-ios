@@ -70,6 +70,7 @@ public struct Root {
         public var serverSetupViewBinding: Bool = false
         public var splashAppeared = false
         public var tabsState: Tabs.State
+        @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = [.default]
         public var walletConfig: WalletConfig
         @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
         public var wasRestoringWhenDisconnected = false

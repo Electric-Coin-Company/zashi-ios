@@ -9,7 +9,7 @@ import SwiftUI
 
 import Generated
 
-public struct ActionRow<AccessoryContent>: View where AccessoryContent: View{
+public struct ActionRow<AccessoryContent>: View where AccessoryContent: View {
     @Environment(\.isEnabled) private var isEnabled
     
     let icon: Image

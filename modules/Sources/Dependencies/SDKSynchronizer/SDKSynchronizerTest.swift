@@ -39,7 +39,8 @@ extension SDKSynchronizerClient: TestDependencyKey {
         proposeShielding: unimplemented("\(Self.self).proposeShielding", placeholder: nil),
         isSeedRelevantToAnyDerivedAccount: unimplemented("\(Self.self).isSeedRelevantToAnyDerivedAccount"),
         refreshExchangeRateUSD: unimplemented("\(Self.self).refreshExchangeRateUSD", placeholder: {}()),
-        evaluateBestOf: { _, _, _, _, _, _ in fatalError("evaluateBestOf not implemented") }
+        evaluateBestOf: { _, _, _, _, _, _ in fatalError("evaluateBestOf not implemented") },
+        walletAccounts: unimplemented("\(Self.self).walletAccounts", placeholder: [])
     )
 }
 
@@ -70,7 +71,8 @@ extension SDKSynchronizerClient {
         proposeShielding: { _, _, _, _ in nil },
         isSeedRelevantToAnyDerivedAccount: { _ in false },
         refreshExchangeRateUSD: { },
-        evaluateBestOf: { _, _, _, _, _, _ in [] }
+        evaluateBestOf: { _, _, _, _, _, _ in [] },
+        walletAccounts: { [] }
     )
 
     public static let mock = Self.mocked()
@@ -202,7 +204,8 @@ extension SDKSynchronizerClient {
         @escaping (Zip32AccountIndex, Zatoshi, Memo, TransparentAddress?) async throws -> Proposal? = { _, _, _, _ in nil },
         isSeedRelevantToAnyDerivedAccount: @escaping ([UInt8]) async throws -> Bool = { _ in false },
         refreshExchangeRateUSD: @escaping () -> Void = { },
-        evaluateBestOf: @escaping ([LightWalletEndpoint], Double, Double, UInt64, Int, NetworkType) async -> [LightWalletEndpoint] = { _, _, _, _, _, _ in [] }
+        evaluateBestOf: @escaping ([LightWalletEndpoint], Double, Double, UInt64, Int, NetworkType) async -> [LightWalletEndpoint] = { _, _, _, _, _, _ in [] },
+        walletAccounts: @escaping () -> [WalletAccount] = { [] }
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
             stateStream: stateStream,
@@ -230,7 +233,8 @@ extension SDKSynchronizerClient {
             proposeShielding: proposeShielding,
             isSeedRelevantToAnyDerivedAccount: isSeedRelevantToAnyDerivedAccount,
             refreshExchangeRateUSD: refreshExchangeRateUSD,
-            evaluateBestOf: evaluateBestOf
+            evaluateBestOf: evaluateBestOf,
+            walletAccounts: walletAccounts
         )
     }
 }

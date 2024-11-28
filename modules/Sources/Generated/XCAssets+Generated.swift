@@ -46,6 +46,9 @@ public enum Asset {
       public static let flexa = ImageAsset(name: "flexa")
       public static let flexaDisabled = ImageAsset(name: "flexaDisabled")
       public static let flexaSeekLogo = ImageAsset(name: "flexaSeekLogo")
+      public static let keystoneLogo = ImageAsset(name: "keystoneLogo")
+      public static let keystoneLogoInv = ImageAsset(name: "keystoneLogoInv")
+      public static let keystoneTitleLogo = ImageAsset(name: "keystoneTitleLogo")
     }
     public static let splashHi = ImageAsset(name: "SplashHi")
     public static let welcomeScreenLogo = ImageAsset(name: "WelcomeScreenLogo")
@@ -75,7 +78,9 @@ public enum Asset {
       public static let imageLibrary = ImageAsset(name: "imageLibrary")
       public static let integrations = ImageAsset(name: "integrations")
       public static let key = ImageAsset(name: "key")
+      public static let lockUnlocked = ImageAsset(name: "lockUnlocked")
       public static let magicWand = ImageAsset(name: "magicWand")
+      public static let menu = ImageAsset(name: "menu")
       public static let messageSmile = ImageAsset(name: "messageSmile")
       public static let partial = ImageAsset(name: "partial")
       public static let pencil = ImageAsset(name: "pencil")
@@ -90,6 +95,7 @@ public enum Asset {
       public static let textInput = ImageAsset(name: "textInput")
       public static let user = ImageAsset(name: "user")
       public static let userPlus = ImageAsset(name: "userPlus")
+      public static let zashiLogoSq = ImageAsset(name: "zashiLogoSq")
     }
     public static let infoCircle = ImageAsset(name: "infoCircle")
     public static let infoOutline = ImageAsset(name: "infoOutline")

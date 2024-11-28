@@ -1,4 +1,4 @@
-// swift-tools-version: 5.6
+// swift-tools-version: 5.7
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -7,10 +7,11 @@ let package = Package(
     name: "modules",
     defaultLocalization: "en",
     platforms: [
-      .iOS(.v15)
+        .iOS(.v16)
     ],
     products: [
         .library(name: "About", targets: ["About"]),
+        .library(name: "AddKeystoneHWWallet", targets: ["AddKeystoneHWWallet"]),
         .library(name: "AddressBook", targets: ["AddressBook"]),
         .library(name: "AddressBookClient", targets: ["AddressBookClient"]),
         .library(name: "AddressDetails", targets: ["AddressDetails"]),
@@ -111,6 +112,17 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
             path: "Sources/Features/About"
+        ),
+        .target(
+            name: "AddKeystoneHWWallet",
+            dependencies: [
+                "Generated",
+                "Models",
+                "UIComponents",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "KeystoneSDK", package: "keystone-sdk-ios")
+            ],
+            path: "Sources/Features/AddKeystoneHWWallet"
         ),
         .target(
             name: "AddressBook",
@@ -809,6 +821,7 @@ let package = Package(
         .target(
             name: "Tabs",
             dependencies: [
+                "AddKeystoneHWWallet",
                 "AddressBook",
                 "AddressDetails",
                 "BalanceBreakdown",
@@ -819,6 +832,7 @@ let package = Package(
                 "Models",
                 "Receive",
                 "RequestZec",
+                "Scan",
                 "SendConfirmation",
                 "SendFlow",
                 "Settings",

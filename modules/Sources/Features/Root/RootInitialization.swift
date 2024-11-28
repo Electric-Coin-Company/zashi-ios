@@ -31,6 +31,7 @@ extension Root {
         case initialSetups
         case initializationFailed(ZcashError)
         case initializationSuccessfullyDone(UnifiedAddress?)
+        case loadWalletAccounts
         case resetZashi
         case resetZashiRequest
         case respondToWalletInitializationState(InitializationState)
@@ -334,7 +335,7 @@ extension Root {
             case .initialization(.initializationSuccessfullyDone(let uAddress)):
                 state.tabsState.receiveState.uAddress = uAddress
                 state.tabsState.settingsState.integrationsState.uAddress = uAddress
-                if let uAddress = try? uAddress?.stringEncoded {
+                if let uAddress = uAddress?.stringEncoded {
                     state.tabsState.sendState.memoState.uAddress = uAddress
                 }
                 return .merge(
@@ -343,8 +344,13 @@ extension Root {
                         autolockHandler.batteryStatePublisher()
                             .map(Root.Action.batteryStateChanged)
                     }
-                    .cancellable(id: CancelBatteryStateId, cancelInFlight: true)
+                    .cancellable(id: CancelBatteryStateId, cancelInFlight: true),
+                    .send(.initialization(.loadWalletAccounts))
                 )
+                
+            case .initialization(.loadWalletAccounts):
+                state.walletAccounts = sdkSynchronizer.walletAccounts()
+                return .none
                 
             case .initialization(.checkBackupPhraseValidation):
                 do {

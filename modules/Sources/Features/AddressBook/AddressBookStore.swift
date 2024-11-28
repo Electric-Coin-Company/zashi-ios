@@ -134,6 +134,7 @@ public struct AddressBook {
                 state.addressAlreadyExists = false
                 state.isAddressFocused = false
                 state.isNameFocused = false
+                state.scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
                 return .send(.fetchABContactsRequested)
 
             case .alert(.presented(let action)):

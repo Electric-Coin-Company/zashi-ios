@@ -246,6 +246,7 @@ public struct SendFlow {
         Reduce { state, action in
             switch action {
             case .onAppear:
+                state.scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
                 state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
                 do {
                     let result = try addressBook.allLocalContacts(state.accountIndex)

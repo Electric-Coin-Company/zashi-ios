@@ -28,30 +28,30 @@
       }
     },
     {
-      "identity" : "bcswiftcrypto",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/KeystoneHQ/BCSwiftCrypto.git",
-      "state" : {
-        "revision" : "f3b7faadfbd681786e9db73d66d3fe1053628fe5",
-        "version" : "0.9.0"
-      }
-    },
-    {
       "identity" : "bcswiftdcbor",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/KeystoneHQ/BCSwiftDCBOR.git",
+      "location" : "https://github.com/BlockchainCommons/BCSwiftDCBOR",
       "state" : {
-        "revision" : "0330a29a502a43e0c5da1289f00bfa0c1488378c",
-        "version" : "0.11.1"
+        "revision" : "21efa67ada2f22a6c277e1961f1059bb376e9b1a",
+        "version" : "2.0.2"
       }
     },
     {
       "identity" : "bcswiftfloat16",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/KeystoneHQ/BCSwiftFloat16.git",
+      "location" : "https://github.com/blockchaincommons/BCSwiftFloat16",
       "state" : {
-        "revision" : "5781bf741d202b69ffaa98c5e84e1229bd99e694",
-        "version" : "0.3.0"
+        "revision" : "a27f3935a7b1db715713eda67369b02feade2ded",
+        "version" : "2.0.0"
+      }
+    },
+    {
+      "identity" : "bcswifttags",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/BlockchainCommons/BCSwiftTags",
+      "state" : {
+        "revision" : "ced8d92c7cc53375cdf9806c59251fe0161f02ec",
+        "version" : "0.2.3"
       }
     },
     {
@@ -79,15 +79,6 @@
       "state" : {
         "revision" : "9fa31f4403da54855f1e2aeaeff478f4f0e40b13",
         "version" : "1.0.2"
-      }
-    },
-    {
-      "identity" : "cryptoswift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/krzyzanowskim/CryptoSwift.git",
-      "state" : {
-        "revision" : "678d442c6f7828def400a70ae15968aef67ef52d",
-        "version" : "1.8.3"
       }
     },
     {
@@ -203,8 +194,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KeystoneHQ/keystone-sdk-ios/",
       "state" : {
-        "revision" : "c89c8e61acaec4418fc1d19d363627ff6efc6abe",
-        "version" : "0.7.2"
+        "revision" : "1d826dff694cc0fbbf457bc05053fd9f6f8fe386",
+        "version" : "0.8.5"
       }
     },
     {
@@ -250,24 +241,6 @@
       "state" : {
         "revision" : "540318ecedd63d883069ae7f1ed811a2df00b6ac",
         "version" : "2.4.0"
-      }
-    },
-    {
-      "identity" : "secp256k1",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/portto/secp256k1.git",
-      "state" : {
-        "revision" : "6864a2560066cedede330c4b344689432a7300f7",
-        "version" : "0.0.5"
-      }
-    },
-    {
-      "identity" : "secp256k1.swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/KeystoneHQ/secp256k1.swift.git",
-      "state" : {
-        "revision" : "95bfcee9f194c7a0d52ec29f40bf884812559a7c",
-        "version" : "0.8.1"
       }
     },
     {
@@ -322,15 +295,6 @@
       "state" : {
         "revision" : "671108c96644956dddcd89dd59c203dcdb36cec7",
         "version" : "1.1.4"
-      }
-    },
-    {
-      "identity" : "swift-collections-sorted-collections",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/soralit/swift-collections-sorted-collections",
-      "state" : {
-        "revision" : "eebe309da4f42ab6a38a057c74b3d8e7b4233b38",
-        "version" : "1.2.2"
       }
     },
     {
@@ -460,6 +424,15 @@
       }
     },
     {
+      "identity" : "swift-numberkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/objecthub/swift-numberkit.git",
+      "state" : {
+        "revision" : "33af3f9011e45dcd8ee696492d30dbcd5a8a67f3",
+        "version" : "2.6.0"
+      }
+    },
+    {
       "identity" : "swift-parsing",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-parsing",
@@ -523,6 +496,15 @@
       }
     },
     {
+      "identity" : "swiftsortedcollections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/wolfmcnally/SwiftSortedCollections",
+      "state" : {
+        "revision" : "dd6c8e0eaef987e55a35c056d185144a7c71fc19",
+        "version" : "0.1.0"
+      }
+    },
+    {
       "identity" : "swiftui-introspect",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/siteline/swiftui-introspect",
@@ -543,10 +525,10 @@
     {
       "identity" : "urkit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/KeystoneHQ/URKit.git",
+      "location" : "https://github.com/BlockchainCommons/URKit",
       "state" : {
-        "revision" : "dfac3005730c2ac189e7db173705c9e400046dcd",
-        "version" : "11.5.1"
+        "revision" : "c7cf16b03ce061c2d461fb4c635cc27c9e1d00e3",
+        "version" : "15.0.0"
       }
     },
     {
