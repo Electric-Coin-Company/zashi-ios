@@ -222,10 +222,14 @@ extension SDKSynchronizerClient: DependencyKey {
             },
             walletAccounts: {
                 [
-                    WalletAccount.default
-//                    WalletAccount.default,
+//                    WalletAccount.default
+                    WalletAccount.default,
+                    WalletAccount(
+                        id: "1",
+                        vendor: .keystone
+                    )
 //                    WalletAccount(
-//                        id: "1",
+//                        id: "2",
 //                        vendor: .keystone
 //                    )
                 ]

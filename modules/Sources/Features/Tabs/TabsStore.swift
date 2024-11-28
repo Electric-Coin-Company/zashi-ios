@@ -174,7 +174,7 @@ public struct Tabs {
         case updateStackDestinationLowPrivacy(Tabs.State.StackDestinationLowPrivacy?)
         case updateStackDestinationMaxPrivacy(Tabs.State.StackDestinationMaxPrivacy?)
         case updateStackDestinationRequestPayment(Tabs.State.StackDestinationRequestPayment?)
-        case walletAccountTapped(Bool)
+        case walletAccountTapped(WalletAccount)
         case zecKeyboard(ZecKeyboard.Action)
     }
 
@@ -256,10 +256,8 @@ public struct Tabs {
                 state.accountSwitchRequest = false
                 return .send(.updateStackDestinationAddKeystoneHWWallet(.addKeystoneHWWallet))
                 
-            case .walletAccountTapped(let zashiWallet):
-                if state.walletAccounts.count >= 2 {
-                    state.selectedWalletAccount = zashiWallet ? state.walletAccounts[0] : state.walletAccounts[1]
-                }
+            case .walletAccountTapped(let walletAccount):
+                state.selectedWalletAccount = walletAccount
                 state.accountSwitchRequest = false
                 return .none
             
@@ -513,8 +511,11 @@ public struct Tabs {
                 return .send(.updateStackDestinationAddKeystoneHWWallet(.addKeystoneHWWallet))
 
             case .scan(.foundZA(let zcashAccounts)):
-                state.addKeystoneHWWalletState.zcashAccounts = zcashAccounts
-                return .send(.updateStackDestinationAddKeystoneHWWallet(.accountSelection))
+                if state.addKeystoneHWWalletState.zcashAccounts == nil {
+                    state.addKeystoneHWWalletState.zcashAccounts = zcashAccounts
+                    return .send(.updateStackDestinationAddKeystoneHWWallet(.accountSelection))
+                }
+                return .none
                 
             case .scan:
                 return .none

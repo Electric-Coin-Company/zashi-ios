@@ -56,7 +56,9 @@ public struct AccountsSelectionView: View {
                 .padding(.bottom, 24)
             }
             .screenHorizontalPadding()
-            .zashiBackV2(background: false)
+            .zashiBackV2(background: false) {
+                store.send(.forgetThisDeviceTapped)
+            }
         }
         .applyScreenBackground()
     }

@@ -67,9 +67,7 @@ public struct IntegrationsView: View {
                             }
                         }
                     }
-                    .listRowInsets(EdgeInsets())
-                    .listRowBackground(Asset.Colors.background.color)
-                    .listRowSeparator(.hidden)
+                    .listBackground()
                 }
                 .padding(.top, 24)
                 .padding(.horizontal, 4)

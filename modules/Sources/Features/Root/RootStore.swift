@@ -281,6 +281,12 @@ public struct Root {
                     await send(.addressBookAccessGranted)
                 }
 
+            case .addressBook(.walletAccountTapped(let walletAccount)):
+                // TODO: add an address once we have it
+                let address = "u12pgnsjq2c2k5q6wuc7z4068xlcuqcw93wujlar47pwv9rrl6ujp2sjumtpnwxdemvg52t86cwu8hk740v7p2at7neq5delmtjk502q0xrnaz0kfyextpm8l687wsk0m3zqzdvynme2d"
+                state.addressBookBinding = false
+                return .send(.tabs(.send(.scan(.found(address.redacted)))))
+
             case .addressBook(.editId(let address)):
                 state.addressBookBinding = false
                 return .send(.tabs(.send(.scan(.found(address.redacted)))))

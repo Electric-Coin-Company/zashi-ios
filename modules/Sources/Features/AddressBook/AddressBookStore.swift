@@ -48,6 +48,7 @@ public struct AddressBook {
         public var originalName = ""
         public var scanState: Scan.State
         public var scanViewBinding = false
+        @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = [.default]
 
         public var isEditChange: Bool {
             (address != originalAddress || name != originalName) && isValidForm
@@ -103,6 +104,7 @@ public struct AddressBook {
         case scan(Scan.Action)
         case scanButtonTapped
         case updateDestination(AddressBook.State.Destination?)
+        case walletAccountTapped(WalletAccount)
     }
 
     public init() { }
@@ -221,7 +223,10 @@ public struct AddressBook {
                     }
                 }
                 return .none
-
+                
+            case .walletAccountTapped(let walletAccount):
+                return .none
+                
             case .editId(let id):
                 guard !state.isInSelectMode else {
                     return .none

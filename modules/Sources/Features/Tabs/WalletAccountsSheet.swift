@@ -19,36 +19,21 @@ extension TabsView {
                     .padding(.top, 32)
                     .padding(.bottom, 24)
                     .padding(.horizontal, 20)
-
-                // default wallet account only
-                if store.walletAccounts.count == 1 {
+                
+                ForEach(store.walletAccounts, id: \.self) { walletAccount in
                     walletAcoountView(
-                        icon: Asset.Assets.Icons.zashiLogoSq.image,
-                        title: "Zashi",
+                        icon: walletAccount.vendor.icon(),
+                        title: walletAccount.vendor.name(),
                         address: "u1078r23uvtj8xj6dpdx...",
-                        selected: true
-                    )
-
+                        selected: store.selectedWalletAccount == walletAccount
+                    ) {
+                        store.send(.walletAccountTapped(walletAccount))
+                    }
+                }
+                
+                if store.walletAccounts.count == 1 {
                     addKeystoneBannerView()
                         .padding(.top, 8)
-                } else {
-                    walletAcoountView(
-                        icon: Asset.Assets.Icons.zashiLogoSq.image,
-                        title: "Zashi",
-                        address: "u1078r23uvtj8xj6dpdx...",
-                        selected: store.selectedWalletAccount.vendor.isDefault()
-                    ) {
-                        store.send(.walletAccountTapped(true))
-                    }
-                    
-                    walletAcoountView(
-                        icon: Asset.Assets.Partners.keystoneLogoInv.image,
-                        title: "Keystone",
-                        address: "0x8EgiqpBzgfeFqB6cde...",
-                        selected: store.selectedWalletAccount.vendor.isHWWallet()
-                    ) {
-                        store.send(.walletAccountTapped(false))
-                    }
                 }
                 
                 ZashiButton(
