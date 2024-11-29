@@ -450,6 +450,12 @@ public struct Tabs {
                 state.sendState.currencyText = .empty
                 return .send(.updateStackDestinationRequestPayment(nil))
 
+            case .sendConfirmation(.rejectTapped):
+                return .concatenate(
+                    .send(.updateDestination(nil)),
+                    .send(.sendConfirmation(.updateStackDestination(nil)))
+                )
+                
             case .sendConfirmation:
                 return .none
 

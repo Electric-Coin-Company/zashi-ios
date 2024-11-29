@@ -376,7 +376,6 @@ let package = Package(
                 "TransactionList",
                 "UIComponents",
                 "Utils",
-                "Vendors",
                 "WalletBalances",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -712,12 +711,14 @@ let package = Package(
                 "SupportDataGenerator",
                 "UIComponents",
                 "Utils",
+                "Vendors",
                 "WalletBalances",
                 "WalletStorage",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Lottie", package: "lottie-spm"),
-                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit"),
+                .product(name: "KeystoneSDK", package: "keystone-sdk-ios")
             ],
             path: "Sources/Features/SendConfirmation"
         ),

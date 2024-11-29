@@ -13,6 +13,7 @@ import Generated
 import UIComponents
 import Utils
 import PartialProposalError
+import Scan
 
 public struct SendConfirmationView: View {
     @Perception.Bindable var store: StoreOf<SendConfirmation>
@@ -27,25 +28,23 @@ public struct SendConfirmationView: View {
         WithPerceptionTracking {
             VStack {
                 ScrollView {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 0) {
-                            Text(L10n.Send.amountSummary)
-                                .zFont(size: 14, style: Design.Text.primary)
-                                .padding(.bottom, 2)
-                            
-                            BalanceWithIconView(balance: store.amount + store.feeRequired)
-                            
-                            Text(store.currencyAmount.data)
-                                .zFont(.semiBold, size: 16, style: Design.Text.primary)
-                                .padding(.top, 10)
-                        }
+                    // Total Amount
+                    VStack(spacing: 0) {
+                        Text(L10n.Send.amountSummary)
+                            .zFont(size: 14, style: Design.Text.primary)
+                            .padding(.bottom, 2)
                         
-                        Spacer()
+                        BalanceWithIconView(balance: store.amount + store.feeRequired)
+                        
+                        Text(store.currencyAmount.data)
+                            .zFont(.semiBold, size: 16, style: Design.Text.primary)
+                            .padding(.top, 10)
                     }
                     .screenHorizontalPadding()
                     .padding(.top, 40)
                     .padding(.bottom, 20)
 
+                    // Sending to
                     HStack {
                         VStack(alignment: .leading, spacing: 6) {
                             Text(L10n.Send.toSummary)
@@ -65,6 +64,36 @@ public struct SendConfirmationView: View {
                     .screenHorizontalPadding()
                     .padding(.bottom, 20)
 
+                    // Sending from
+                    if store.walletAccounts.count > 1 {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("Sending from")
+                                    .zFont(.medium, size: 14, style: Design.Text.tertiary)
+                                
+                                HStack(spacing: 0) {
+                                    store.selectedWalletAccount.vendor.icon()
+                                        .resizable()
+                                        .frame(width: 24, height: 24)
+                                        .background {
+                                            Circle()
+                                                .fill(.black)
+                                                .frame(width: 32, height: 32)
+                                        }
+
+                                    Text("\(store.selectedWalletAccount.vendor.name()) Wallet")
+                                        .zFont(.semiBold, size: 16, style: Design.Text.primary)
+                                        .padding(.leading, 16)
+                                }
+                            }
+                            
+                            Spacer()
+                        }
+                        .screenHorizontalPadding()
+                        .padding(.bottom, 20)
+                    }
+
+                    // Amount
                     HStack {
                         Text(L10n.Send.amount)
                             .zFont(.medium, size: 14, style: Design.Text.tertiary)
@@ -83,6 +112,7 @@ public struct SendConfirmationView: View {
                     .screenHorizontalPadding()
                     .padding(.bottom, 20)
                     
+                    // Fee
                     HStack {
                         Text(L10n.Send.feeSummary)
                             .zFont(.medium, size: 14, style: Design.Text.tertiary)
@@ -101,6 +131,7 @@ public struct SendConfirmationView: View {
                     .screenHorizontalPadding()
                     .padding(.bottom, 20)
 
+                    // Memo
                     if !store.message.isEmpty {
                         VStack(alignment: .leading) {
                             Text(L10n.Send.message)
@@ -139,26 +170,34 @@ public struct SendConfirmationView: View {
                 
                 Spacer()
                 
-                if store.isSending {
-                    ZashiButton(
-                        L10n.Send.sending,
-                        accessoryView:
-                            ProgressView()
-                            .progressViewStyle(
-                                CircularProgressViewStyle(
-                                    tint: Asset.Colors.secondary.color
-                                )
-                            )
-                    ) { }
-                    .screenHorizontalPadding()
-                    .padding(.top, 40)
-                    .disabled(store.isSending)
-                } else {
-                    ZashiButton(L10n.General.send) {
-                        store.send(.sendPressed)
+                if store.selectedWalletAccount.vendor == .keystone {
+                    ZashiButton("Confirm with Keystone") {
+                        store.send(.confirmWithKeystoneTapped)
                     }
                     .screenHorizontalPadding()
                     .padding(.top, 40)
+                } else {
+                    if store.isSending {
+                        ZashiButton(
+                            L10n.Send.sending,
+                            accessoryView:
+                                ProgressView()
+                                .progressViewStyle(
+                                    CircularProgressViewStyle(
+                                        tint: Asset.Colors.secondary.color
+                                    )
+                                )
+                        ) { }
+                            .screenHorizontalPadding()
+                            .padding(.top, 40)
+                            .disabled(store.isSending)
+                    } else {
+                        ZashiButton(L10n.General.send) {
+                            store.send(.sendPressed)
+                        }
+                        .screenHorizontalPadding()
+                        .padding(.top, 40)
+                    }
                 }
                 
                 ZashiButton(L10n.Send.goBack, type: .tertiary) {
@@ -170,11 +209,35 @@ public struct SendConfirmationView: View {
                 .padding(.bottom, 24)
             }
             .onAppear { store.send(.onAppear) }
-            .screenTitle(L10n.Send.confirmationTitle)
+            .screenTitle(
+                store.selectedWalletAccount.vendor == .keystone
+                ? "REVIEW"
+                : L10n.Send.confirmationTitle
+            )
             .navigationLinkEmpty(
                 isActive: store.bindingFor(.sending),
                 destination: {
                     SendingView(store: store, tokenName: tokenName)
+                }
+            )
+            .navigationLinkEmpty(
+                isActive: store.bindingForStack(.signWithKeystone),
+                destination: {
+                    SignWithKeystoneView(store: store)
+                    .navigationLinkEmpty(
+                        isActive: store.bindingForStack(.scan),
+                        destination: {
+                            ScanView(
+                                store: store.scanStore()
+                            )
+                            .navigationLinkEmpty(
+                                isActive: store.bindingForStack(.sending),
+                                destination: {
+                                    SendingView(store: store, tokenName: tokenName)
+                                }
+                            )
+                        }
+                    )
                 }
             )
         }
@@ -189,6 +252,48 @@ public struct SendConfirmationView: View {
         SendConfirmationView(
             store: SendConfirmation.initial,
             tokenName: "ZEC"
+        )
+    }
+}
+
+// MARK: - ViewStore
+
+extension StoreOf<SendConfirmation> {
+    func bindingForStack(_ destination: SendConfirmation.State.StackDestination) -> Binding<Bool> {
+        Binding<Bool>(
+            get: {
+                if let currentStackValue = self.stackDestination?.rawValue {
+                    return currentStackValue >= destination.rawValue
+                } else {
+                    if destination.rawValue == 0 {
+                        return false
+                    } else if destination.rawValue <= self.stackDestinationBindingsAlive {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+            },
+            set: { _ in
+                if let currentStackValue = self.stackDestination?.rawValue, currentStackValue == destination.rawValue {
+                    let popIndex = destination.rawValue - 1
+                    if popIndex >= 0 {
+                        let popDestination = SendConfirmation.State.StackDestination(rawValue: popIndex)
+                        self.send(.updateStackDestination(popDestination))
+                    } else {
+                        self.send(.updateStackDestination(nil))
+                    }
+                }
+            }
+        )
+    }
+}
+
+extension StoreOf<SendConfirmation> {
+    func scanStore() -> StoreOf<Scan> {
+        self.scope(
+            state: \.scanState,
+            action: \.scan
         )
     }
 }
