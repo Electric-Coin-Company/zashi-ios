@@ -24,6 +24,7 @@ public typealias AssetImageTypeAlias = ImageAsset.UniversalImage
 public enum Asset {
   public enum Assets {
     public enum Brandmarks {
+      public static let brandmarkKeystone = ImageAsset(name: "brandmarkKeystone")
       public static let brandmarkLow = ImageAsset(name: "brandmarkLow")
       public static let brandmarkMax = ImageAsset(name: "brandmarkMax")
       public static let brandmarkQR = ImageAsset(name: "brandmarkQR")
@@ -47,7 +48,7 @@ public enum Asset {
       public static let flexaDisabled = ImageAsset(name: "flexaDisabled")
       public static let flexaSeekLogo = ImageAsset(name: "flexaSeekLogo")
       public static let keystoneLogo = ImageAsset(name: "keystoneLogo")
-      public static let keystoneLogoInv = ImageAsset(name: "keystoneLogoInv")
+      public static let keystoneLogoLight = ImageAsset(name: "keystoneLogoLight")
       public static let keystoneTitleLogo = ImageAsset(name: "keystoneTitleLogo")
     }
     public static let splashHi = ImageAsset(name: "SplashHi")

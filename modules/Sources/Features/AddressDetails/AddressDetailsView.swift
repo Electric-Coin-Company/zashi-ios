@@ -124,6 +124,8 @@ extension AddressDetailsView {
         if let addressToShare = store.addressToShare,
            let cgImg = QRCodeGenerator.generateCode(
             from: addressToShare.data,
+            maxPrivacy: store.maxPrivacy,
+            vendor: store.selectedWalletAccount.vendor == .keystone ? .keystone : .zashi,
             color: .black
            ) {
             UIShareDialogView(activityItems: [

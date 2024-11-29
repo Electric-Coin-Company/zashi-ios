@@ -15,6 +15,7 @@ import Utils
 import UIComponents
 import ZcashSDKEnvironment
 import ZcashPaymentURI
+import Models
 
 @Reducer
 public struct RequestZec {
@@ -29,6 +30,7 @@ public struct RequestZec {
         public var maxPrivacy = false
         public var memoState: MessageEditor.State = .initial
         public var requestedZec: Zatoshi = .zero
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount = .default
         public var storedQR: CGImage?
 
         public init() {}
@@ -104,6 +106,8 @@ public struct RequestZec {
                         return .publisher {
                             QRCodeGenerator.generate(
                                 from: encryptedOutput,
+                                maxPrivacy: state.maxPrivacy,
+                                vendor: state.selectedWalletAccount.vendor == .keystone ? .keystone : .zashi,
                                 color: state.isQRCodeAppreanceFlipped
                                 ? .black
                                 : Asset.Colors.primary.systemColor

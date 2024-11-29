@@ -115,6 +115,8 @@ extension RequestZecSummaryView {
         if let encryptedOutput = store.encryptedOutputToBeShared,
            let cgImg = QRCodeGenerator.generateCode(
             from: encryptedOutput,
+            maxPrivacy: store.maxPrivacy,
+            vendor: store.selectedWalletAccount.vendor == .keystone ? .keystone : .zashi,
             color: .black
            ) {
             UIShareDialogView(activityItems: [

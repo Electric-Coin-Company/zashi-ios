@@ -156,6 +156,7 @@ let package = Package(
             name: "AddressDetails",
             dependencies: [
                 "Generated",
+                "Models",
                 "Pasteboard",
                 "UIComponents",
                 "Utils",
@@ -533,6 +534,7 @@ let package = Package(
             name: "Receive",
             dependencies: [
                 "Generated",
+                "Models",
                 "Pasteboard",
                 "UIComponents",
                 "Utils",
@@ -567,6 +569,7 @@ let package = Package(
             name: "RequestZec",
             dependencies: [
                 "Generated",
+                "Models",
                 "Pasteboard",
                 "UIComponents",
                 "Utils",

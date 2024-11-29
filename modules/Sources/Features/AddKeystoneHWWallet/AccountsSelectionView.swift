@@ -69,7 +69,7 @@ public struct AccountsSelectionView: View {
                 store.send(.accountTapped)
             } label: {
                 HStack(spacing: 0) {
-                    Asset.Assets.Partners.keystoneLogo.image
+                    Asset.Assets.Partners.keystoneLogoLight.image
                         .resizable()
                         .frame(width: 24, height: 24)
                         .padding(8)

@@ -17,7 +17,7 @@ public struct WalletAccount: Equatable, Hashable, Codable, Identifiable {
         public func icon() -> Image {
             switch self {
             case .keystone:
-                return Asset.Assets.Partners.keystoneLogo.image
+                return Asset.Assets.Partners.keystoneLogoLight.image
             case .zcash:
                 return Asset.Assets.Icons.zashiLogoSq.image
             }

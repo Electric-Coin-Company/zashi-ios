@@ -34,19 +34,21 @@ extension TabsView {
                 if store.walletAccounts.count == 1 {
                     addKeystoneBannerView()
                         .padding(.top, 8)
+                    
+                    ZashiButton(
+                        "Connect Hardware Wallet",
+                        type: .secondary
+                    ) {
+                        store.send(.addKeystoneHWWalletTapped)
+                    }
+                    .padding(.top, 32)
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 24)
+                } else {
+                    Color.clear
+                        .frame(height: 1)
+                        .padding(.bottom, 23)
                 }
-                
-                ZashiButton(
-                    store.walletAccounts.count == 1
-                    ? "Connect Hardware Wallet"
-                    : "Remove Hardware Wallet",
-                    type: .secondary
-                ) {
-                    store.send(.addKeystoneHWWalletTapped)
-                }
-                .padding(.top, 32)
-                .padding(.horizontal, 20)
-                .padding(.bottom, 24)
             }
             .padding(.horizontal, 4)
             .background {
