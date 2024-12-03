@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "zashiLogoSq.png",
+      "filename" : "zashiBoldStroke3.png",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "zashiBoldStroke3Dark.png",
       "idiom" : "universal"
     }
   ],

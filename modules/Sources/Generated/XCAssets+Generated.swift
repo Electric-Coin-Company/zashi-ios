@@ -48,7 +48,6 @@ public enum Asset {
       public static let flexaDisabled = ImageAsset(name: "flexaDisabled")
       public static let flexaSeekLogo = ImageAsset(name: "flexaSeekLogo")
       public static let keystoneLogo = ImageAsset(name: "keystoneLogo")
-      public static let keystoneLogoLight = ImageAsset(name: "keystoneLogoLight")
       public static let keystoneTitleLogo = ImageAsset(name: "keystoneTitleLogo")
     }
     public static let splashHi = ImageAsset(name: "SplashHi")
@@ -97,6 +96,7 @@ public enum Asset {
       public static let user = ImageAsset(name: "user")
       public static let userPlus = ImageAsset(name: "userPlus")
       public static let zashiLogoSq = ImageAsset(name: "zashiLogoSq")
+      public static let zashiLogoSqBold = ImageAsset(name: "zashiLogoSqBold")
     }
     public static let infoCircle = ImageAsset(name: "infoCircle")
     public static let infoOutline = ImageAsset(name: "infoOutline")

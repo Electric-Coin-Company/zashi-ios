@@ -68,7 +68,7 @@ public struct AddKeystoneHWWallet {
                 // TODO: mocked here until SDK side is ready
                 state.walletAccounts.append(
                     WalletAccount(
-                        id: "1",
+                        id: 1,
                         vendor: .keystone,
                         uaAddressString: "0x8EgiqpBzgfeFqB6cde..."
                     )

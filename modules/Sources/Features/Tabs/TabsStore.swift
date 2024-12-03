@@ -452,6 +452,8 @@ public struct Tabs {
 
             case .sendConfirmation(.rejectTapped):
                 return .concatenate(
+                    .send(.send(.resetForm)),
+                    .send(.updateStackDestinationRequestPayment(nil)),
                     .send(.updateDestination(nil)),
                     .send(.sendConfirmation(.updateStackDestination(nil)))
                 )

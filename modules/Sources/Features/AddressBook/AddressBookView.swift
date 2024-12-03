@@ -297,7 +297,7 @@ public struct AddressBookView: View {
                         .padding(8)
                         .background {
                             Circle()
-                                .fill(Design.Surfaces.brandFg.color)
+                                .fill(Design.Surfaces.bgAlt.color)
                         }
                         .padding(.trailing, 12)
                     

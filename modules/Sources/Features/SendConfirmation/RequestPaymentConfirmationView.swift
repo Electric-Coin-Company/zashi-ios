@@ -13,6 +13,7 @@ import Generated
 import UIComponents
 import Utils
 import PartialProposalError
+import Scan
 
 public struct RequestPaymentConfirmationView: View {
     @Perception.Bindable var store: StoreOf<SendConfirmation>
@@ -27,6 +28,7 @@ public struct RequestPaymentConfirmationView: View {
         WithPerceptionTracking {
             VStack(spacing: 0) {
                 ScrollView {
+                    // requested amount
                     VStack(spacing: 0) {
                         BalanceWithIconView(balance: store.amount)
                         
@@ -38,6 +40,7 @@ public struct RequestPaymentConfirmationView: View {
                     .padding(.top, 40)
                     .padding(.bottom, 24)
 
+                    // requested by
                     HStack {
                         VStack(alignment: .leading, spacing: 6) {
                             Text(L10n.Send.RequestPayment.requestedBy)
@@ -107,6 +110,36 @@ public struct RequestPaymentConfirmationView: View {
                         .padding(.bottom, 24)
                     }
 
+                    // Sending from
+                    if store.walletAccounts.count > 1 {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("Sending from")
+                                    .zFont(.medium, size: 14, style: Design.Text.tertiary)
+                                
+                                HStack(spacing: 0) {
+                                    store.selectedWalletAccount.vendor.icon()
+                                        .resizable()
+                                        .frame(width: 24, height: 24)
+                                        .background {
+                                            Circle()
+                                                .fill(Design.Surfaces.bgAlt.color)
+                                                .frame(width: 32, height: 32)
+                                        }
+
+                                    Text("\(store.selectedWalletAccount.vendor.name()) Wallet")
+                                        .zFont(.semiBold, size: 16, style: Design.Text.primary)
+                                        .padding(.leading, 16)
+                                }
+                                .padding(.top, 8)
+                            }
+                            
+                            Spacer()
+                        }
+                        .screenHorizontalPadding()
+                        .padding(.bottom, 20)
+                    }
+                    
                     if !store.message.isEmpty {
                         VStack(alignment: .leading) {
                             Text(L10n.Send.RequestPayment.for)
@@ -181,27 +214,43 @@ public struct RequestPaymentConfirmationView: View {
                 
                 Spacer()
                 
-                if store.isSending {
-                    ZashiButton(
-                        L10n.Send.sending,
-                        accessoryView:
-                            ProgressView()
-                            .progressViewStyle(
-                                CircularProgressViewStyle(
-                                    tint: Asset.Colors.secondary.color
-                                )
-                            )
-                    ) { }
-                    .screenHorizontalPadding()
-                    .padding(.vertical, 24)
-                    .disabled(store.isSending)
-                } else {
-                    ZashiButton(L10n.General.send) {
-                        store.send(.sendPressed)
+                if store.selectedWalletAccount.vendor == .keystone {
+                    ZashiButton("Confirm with Keystone") {
+                        store.send(.confirmWithKeystoneTapped)
                     }
                     .screenHorizontalPadding()
-                    .padding(.vertical, 24)
+                    .padding(.top, 40)
+                } else {
+                    if store.isSending {
+                        ZashiButton(
+                            L10n.Send.sending,
+                            accessoryView:
+                                ProgressView()
+                                .progressViewStyle(
+                                    CircularProgressViewStyle(
+                                        tint: Asset.Colors.secondary.color
+                                    )
+                                )
+                        ) { }
+                            .screenHorizontalPadding()
+                            .padding(.top, 40)
+                            .disabled(store.isSending)
+                    } else {
+                        ZashiButton(L10n.General.send) {
+                            store.send(.sendPressed)
+                        }
+                        .screenHorizontalPadding()
+                        .padding(.top, 40)
+                    }
                 }
+                
+                ZashiButton(L10n.Send.goBack, type: .tertiary) {
+                    store.send(.goBackPressedFromRequestZec)
+                }
+                .screenHorizontalPadding()
+                .disabled(store.isSending)
+                .padding(.top, 8)
+                .padding(.bottom, 24)
             }
             .onAppear { store.send(.onAppear) }
             .screenTitle(L10n.Send.RequestPayment.title.uppercased())
@@ -211,13 +260,31 @@ public struct RequestPaymentConfirmationView: View {
                     SendingView(store: store, tokenName: tokenName)
                 }
             )
+            .navigationLinkEmpty(
+                isActive: store.bindingForStack(.signWithKeystone),
+                destination: {
+                    SignWithKeystoneView(store: store)
+                    .navigationLinkEmpty(
+                        isActive: store.bindingForStack(.scan),
+                        destination: {
+                            ScanView(
+                                store: store.scanStore()
+                            )
+                            .navigationLinkEmpty(
+                                isActive: store.bindingForStack(.sending),
+                                destination: {
+                                    SendingView(store: store, tokenName: tokenName)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
         .navigationBarBackButtonHidden()
         .padding(.vertical, 1)
         .applyScreenBackground()
-        .zashiBackV2 {
-            store.send(.goBackPressedFromRequestZec)
-        }
+        .zashiBack(hidden: true)
     }
 }
 

@@ -68,7 +68,7 @@ public struct AddKeystoneHWWalletView: View {
                         .padding(.top, 16)
 
                         InfoRow(
-                            icon: Asset.Assets.Icons.zashiLogoSq.image,
+                            icon: Asset.Assets.Icons.zashiLogoSqBold.image,
                             title: "Select Zashi app"
                         )
                         .padding(.top, 16)

@@ -21,7 +21,7 @@ extension TabsView {
                     .padding(.horizontal, 20)
                 
                 ForEach(store.walletAccounts, id: \.self) { walletAccount in
-                    walletAcoountView(
+                    walletAccountView(
                         icon: walletAccount.vendor.icon(),
                         title: walletAccount.vendor.name(),
                         address: walletAccount.uaAddressString,
@@ -64,7 +64,7 @@ extension TabsView {
         }
     }
     
-    @ViewBuilder func walletAcoountView(
+    @ViewBuilder func walletAccountView(
         icon: Image,
         title: String,
         address: String,
@@ -82,7 +82,7 @@ extension TabsView {
                         .padding(8)
                         .background {
                             Circle()
-                                .fill(Design.Surfaces.brandFg.color)
+                                .fill(Design.Surfaces.bgAlt.color)
                         }
                         .padding(.trailing, 12)
                     
@@ -114,17 +114,22 @@ extension TabsView {
                 VStack(spacing: 0) {
                     Asset.Assets.Partners.keystoneLogo.image
                         .resizable()
-                        .frame(width: 48, height: 48)
+                        .frame(width: 32, height: 32)
+                        .padding(4)
+                        .background {
+                            Circle()
+                                .fill(Design.Surfaces.bgAlt.color)
+                        }
                         .padding(.trailing, 12)
-                    
+
                     Spacer()
                 }
 
                 VStack(alignment: .leading, spacing: 0) {
                     Text("Keystone Hardware Wallet")
-                        .zFont(.semiBold, size: 18, style: Design.Text.primary)
-                    
-                    Text("Get a Keystone Hardware Wallet and secure your Zcash.")
+                        .zFont(.semiBold, size: 14, style: Design.Text.primary)
+
+                    Text("Get a Keystone Hardware Wallet with 10% discount.")
                         .zFont(size: 14, style: Design.Text.tertiary)
                         .fixedSize(horizontal: false, vertical: true)
                         .lineSpacing(2)

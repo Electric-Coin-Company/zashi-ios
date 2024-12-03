@@ -47,13 +47,13 @@ public struct SignWithKeystoneView: View {
                 ScrollView {
                     VStack(spacing: 0) {
                         HStack(spacing: 0) {
-                            Asset.Assets.Partners.keystoneLogoLight.image
+                            Asset.Assets.Partners.keystoneLogo.image
                                 .resizable()
                                 .frame(width: 24, height: 24)
                                 .padding(8)
                                 .background {
                                     Circle()
-                                        .fill(Design.Surfaces.brandFg.color)
+                                        .fill(Design.Surfaces.bgAlt.color)
                                 }
                                 .padding(.trailing, 12)
                             

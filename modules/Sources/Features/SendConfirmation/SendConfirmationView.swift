@@ -77,7 +77,7 @@ public struct SendConfirmationView: View {
                                         .frame(width: 24, height: 24)
                                         .background {
                                             Circle()
-                                                .fill(.black)
+                                                .fill(Design.Surfaces.bgAlt.color)
                                                 .frame(width: 32, height: 32)
                                         }
 

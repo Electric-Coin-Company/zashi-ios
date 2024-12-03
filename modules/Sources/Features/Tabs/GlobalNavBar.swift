@@ -48,7 +48,7 @@ extension TabsView {
                     .frame(width: 16, height: 16)
                     .background {
                         Circle()
-                            .fill(.black)
+                            .fill(Design.Surfaces.bgAlt.color)
                             .frame(width: 24, height: 24)
                     }
 

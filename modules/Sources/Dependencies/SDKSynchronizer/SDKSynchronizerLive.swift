@@ -225,14 +225,14 @@ extension SDKSynchronizerClient: DependencyKey {
                     WalletAccount.default
 //                    WalletAccount.default,
 //                    WalletAccount(
-//                        id: "1",
+//                        id: 1,
 //                        vendor: .keystone,
-//                        uaAddress: "0x8EgiqpBzgfeFqB6cde..."
+//                        uaAddressString: "0x8EgiqpBzgfeFqB6cde..."
 //                    )
 //                    WalletAccount(
-//                        id: "2",
+//                        id: 2,
 //                        vendor: .keystone,
-//                        uaAddress: "0x8EgiqpBzgfeFqB6cde..."
+//                        uaAddressString: "0x8EgiqpBzgfeFqB6cde..."
 //                    )
                 ]
             }

@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "keystoneLogo.png",
+      "filename" : "keystoneLogo 1.png",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "keystoneLogo 1.png",
+      "filename" : "keystoneLogo.png",
       "idiom" : "universal"
     }
   ],

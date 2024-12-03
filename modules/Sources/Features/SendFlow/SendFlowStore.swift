@@ -40,27 +40,26 @@ public struct SendFlow {
         
         @Shared(.inMemory(.account)) public var accountIndex: Zip32AccountIndex = Zip32AccountIndex(0)
         public var addMemoState: Bool
+        public var address: RedactableString = .empty
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         @Presents public var alert: AlertState<Action>?
         @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
+        public var currencyText: RedactableString = .empty
         public var destination: Destination?
+        public var isAddressBookHintVisible = false
         public var isCurrencyConversionEnabled = false
+        public var isNotAddressInAddressBook = false
+        public var isPaymentRequestInProgress = false
+        public var isValidAddress = false
+        public var isValidTransparentAddress = false
+        public var isValidTexAddress = false
         public var memoState: MessageEditor.State
         public var proposal: Proposal?
         public var scanState: Scan.State
         public var shieldedBalance: Zatoshi
         public var walletBalancesState: WalletBalances.State
-        
-        public var isValidAddress = false
-        public var isValidTransparentAddress = false
-        public var isValidTexAddress = false
-        public var isNotAddressInAddressBook = false
-        public var isAddressBookHintVisible = false
         public var requestsAddressFocus = false
-
-        public var address: RedactableString = .empty
         public var zecAmountText: RedactableString = .empty
-        public var currencyText: RedactableString = .empty
 
         public var amount: Zatoshi {
             get {
@@ -304,6 +303,9 @@ public struct SendFlow {
                 return .none
         
             case let .updateDestination(destination):
+                if destination == .scanQR {
+                    state.isPaymentRequestInProgress = false
+                }
                 state.destination = destination
                 return .none
 
@@ -394,6 +396,10 @@ public struct SendFlow {
                 return .none
                 
             case .scan(.foundRP(let requestPayment)):
+                guard !state.isPaymentRequestInProgress else {
+                    return .none
+                }
+                state.isPaymentRequestInProgress = true
                 if case .legacy(let address) = requestPayment {
                     audioServices.systemSoundVibrate()
                     return .send(.scan(.found(address.value.redacted)))
@@ -425,7 +431,7 @@ public struct SendFlow {
                     zcashSDKEnvironment.network.networkType
                 )
                 audioServices.systemSoundVibrate()
-                return Effect.send(.updateDestination(nil))
+                return .send(.updateDestination(nil))
 
             case .scan(.cancelPressed):
                 state.destination = nil
