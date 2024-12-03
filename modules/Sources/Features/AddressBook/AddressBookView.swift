@@ -179,7 +179,7 @@ public struct AddressBookView: View {
                         walletAcoountView(
                             icon: walletAccount.vendor.icon(),
                             title: walletAccount.vendor.name(),
-                            address: "u1078r23uvtj8xj6dpdx..."
+                            address: walletAccount.uaAddressString
                         ) {
                             store.send(.walletAccountTapped(walletAccount))
                         }
@@ -257,7 +257,7 @@ public struct AddressBookView: View {
                     walletAcoountView(
                         icon: walletAccount.vendor.icon(),
                         title: walletAccount.vendor.name(),
-                        address: "u1078r23uvtj8xj6dpdx..."
+                        address: walletAccount.uaAddressString
                     ) {
                         store.send(.walletAccountTapped(walletAccount))
                     }

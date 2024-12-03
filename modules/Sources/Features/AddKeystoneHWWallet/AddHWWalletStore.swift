@@ -69,7 +69,8 @@ public struct AddKeystoneHWWallet {
                 state.walletAccounts.append(
                     WalletAccount(
                         id: "1",
-                        vendor: .keystone
+                        vendor: .keystone,
+                        uaAddressString: "0x8EgiqpBzgfeFqB6cde..."
                     )
                 )
                 state.selectedWalletAccount = state.walletAccounts.last ?? .default

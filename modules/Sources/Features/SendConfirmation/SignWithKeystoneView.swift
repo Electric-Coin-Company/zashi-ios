@@ -61,7 +61,7 @@ public struct SignWithKeystoneView: View {
                                 Text("Keystone")
                                     .zFont(.semiBold, size: 16, style: Design.Text.primary)
                                 
-                                Text("0x8EgiqpBzgfeFqB6cde...")
+                                Text(store.selectedWalletAccount.uaAddressString)
                                     .zFont(size: 12, style: Design.Text.tertiary)
                             }
                             

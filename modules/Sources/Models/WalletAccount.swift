@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ZcashLightClientKit
 
 import Generated
 
@@ -48,12 +49,15 @@ public struct WalletAccount: Equatable, Hashable, Codable, Identifiable {
 
     public let id: String
     public let vendor: Vendor
-    
+    public var uaAddressString: String
+
     public init(
         id: String,
-        vendor: Vendor
+        vendor: Vendor,
+        uaAddressString: String = ""
     ) {
         self.id = id
         self.vendor = vendor
+        self.uaAddressString = uaAddressString
     }
 }

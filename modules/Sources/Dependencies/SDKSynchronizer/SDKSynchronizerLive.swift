@@ -226,11 +226,13 @@ extension SDKSynchronizerClient: DependencyKey {
 //                    WalletAccount.default,
 //                    WalletAccount(
 //                        id: "1",
-//                        vendor: .keystone
+//                        vendor: .keystone,
+//                        uaAddress: "0x8EgiqpBzgfeFqB6cde..."
 //                    )
 //                    WalletAccount(
 //                        id: "2",
-//                        vendor: .keystone
+//                        vendor: .keystone,
+//                        uaAddress: "0x8EgiqpBzgfeFqB6cde..."
 //                    )
                 ]
             }

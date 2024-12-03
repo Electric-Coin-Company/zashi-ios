@@ -24,7 +24,7 @@ extension TabsView {
                     walletAcoountView(
                         icon: walletAccount.vendor.icon(),
                         title: walletAccount.vendor.name(),
-                        address: "u1078r23uvtj8xj6dpdx...",
+                        address: walletAccount.uaAddressString,
                         selected: store.selectedWalletAccount == walletAccount
                     ) {
                         store.send(.walletAccountTapped(walletAccount))
