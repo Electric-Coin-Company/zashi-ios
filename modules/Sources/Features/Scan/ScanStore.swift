@@ -19,6 +19,8 @@ import Generated
 import ZcashSDKEnvironment
 import Models
 import ZcashPaymentURI
+import KeystoneHandler
+import KeystoneSDK
 
 @Reducer
 public struct Scan {
@@ -26,18 +28,22 @@ public struct Scan {
         case invalidQRCode
         case noQRCodeFound
         case severalQRCodesFound
+        case keystoneCheckOnly
     }
     
     @ObservableState
     public struct State: Equatable {
         public var cancelId = UUID()
         
+        public var checkers: [ScanCheckerWrapper] = []
+        public var forceLibraryToHide = false
         public var info = ""
+        public var instructions: String?
         public var isCameraEnabled = true
         public var isTorchAvailable = false
         public var isTorchOn = false
         public var isRPFound = false
-        
+
         public init(
             info: String = "",
             isTorchAvailable: Bool = false,
@@ -52,10 +58,11 @@ public struct Scan {
 
     @Dependency(\.captureDevice) var captureDevice
     @Dependency(\.mainQueue) var mainQueue
+    @Dependency(\.keystoneHandler) var keystoneHandler
     @Dependency(\.qrImageDetector) var qrImageDetector
     @Dependency(\.uriParser) var uriParser
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
-
+    
     public enum Action: Equatable {
         case cancelPressed
         case clearInfo
@@ -64,6 +71,7 @@ public struct Scan {
         case onDisappear
         case found(RedactableString)
         case foundRP(ParserResult)
+        case foundZA(ZcashAccounts)
         case scanFailed(ScanImageResult)
         case scan(RedactableString)
         case torchPressed
@@ -79,6 +87,7 @@ public struct Scan {
                 // reset the values
                 state.isTorchOn = false
                 state.isRPFound = false
+                state.info = ""
                 // check the torch availability
                 state.isTorchAvailable = captureDevice.isTorchAvailable()
                 if !captureDevice.isAuthorized() {
@@ -91,6 +100,9 @@ public struct Scan {
                 return .cancel(id: state.cancelId)
                 
             case .foundRP:
+                return .none
+                
+            case .foundZA:
                 return .none
 
             case .cancelPressed:
@@ -119,15 +131,8 @@ public struct Scan {
                 guard let code = codes.first else {
                     return .send(.scanFailed(.noQRCodeFound))
                 }
-                
-                if uriParser.isValidURI(code, zcashSDKEnvironment.network.networkType) {
-                    return .send(.found(code.redacted))
-                } else if let data = uriParser.checkRP(code) {
-                    state.isRPFound = true
-                    return .send(.foundRP(data))
-                } else {
-                    return .send(.scanFailed(.noQRCodeFound))
-                }
+
+                return .send(.scan(code.redacted))
 
             case .scanFailed(let result):
                 switch result {
@@ -137,6 +142,8 @@ public struct Scan {
                     state.info = L10n.Scan.invalidImage
                 case .severalQRCodesFound:
                     state.info = L10n.Scan.severalCodesFound
+                case .keystoneCheckOnly:
+                    state.info = "Please hold steady so Keystone code can be read."
                 }
                 return .concatenate(
                     Effect.cancel(id: state.cancelId),
@@ -148,18 +155,17 @@ public struct Scan {
                 )
 
             case .scan(let code):
-                guard !state.isRPFound else {
-                    return .none
+                for checker in state.checkers {
+                    if let action = checker.checker.checkQRCode(code.data) {
+                        return .send(action)
+                    }
                 }
-                if uriParser.isValidURI(code.data, zcashSDKEnvironment.network.networkType) {
-                    return .send(.found(code))
-                } else if let data = uriParser.checkRP(code.data) {
-                    state.isRPFound = true
-                    return .send(.foundRP(data))
-                } else {
-                    return .send(.scanFailed(.invalidQRCode))
+
+                if state.checkers.count == 1 && state.checkers[0] == .keystoneScanChecker {
+                    return .send(.scanFailed(.keystoneCheckOnly))
                 }
-                
+                return .send(.scanFailed(.noQRCodeFound))
+
             case .torchPressed:
                 do {
                     try captureDevice.torch(!state.isTorchOn)

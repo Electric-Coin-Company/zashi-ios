@@ -15,6 +15,7 @@ import Models
 import ZcashSDKEnvironment
 import Scan
 import AudioServices
+import ZcashLightClientKit
 
 @Reducer
 public struct AddressBook {
@@ -30,6 +31,7 @@ public struct AddressBook {
         
         public var address = ""
         public var addressAlreadyExists = false
+        @Shared(.inMemory(.account)) public var accountIndex: Zip32AccountIndex = Zip32AccountIndex(0)
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         @Presents public var alert: AlertState<Action>?
         public var deleteIdToConfirm: String?
@@ -46,6 +48,7 @@ public struct AddressBook {
         public var originalName = ""
         public var scanState: Scan.State
         public var scanViewBinding = false
+        @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = [.default]
 
         public var isEditChange: Bool {
             (address != originalAddress || name != originalName) && isValidForm
@@ -101,6 +104,7 @@ public struct AddressBook {
         case scan(Scan.Action)
         case scanButtonTapped
         case updateDestination(AddressBook.State.Destination?)
+        case walletAccountTapped(WalletAccount)
     }
 
     public init() { }
@@ -132,6 +136,7 @@ public struct AddressBook {
                 state.addressAlreadyExists = false
                 state.isAddressFocused = false
                 state.isNameFocused = false
+                state.scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
                 return .send(.fetchABContactsRequested)
 
             case .alert(.presented(let action)):
@@ -204,7 +209,7 @@ public struct AddressBook {
                 }
                 if let contact {
                     do {
-                        let result = try addressBook.deleteContact(contact)
+                        let result = try addressBook.deleteContact(state.accountIndex, contact)
                         let abContacts = result.contacts
                         if result.remoteStoreResult == .failure {
                             // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
@@ -218,7 +223,10 @@ public struct AddressBook {
                     }
                 }
                 return .none
-
+                
+            case .walletAccountTapped(let walletAccount):
+                return .none
+                
             case .editId(let id):
                 guard !state.isInSelectMode else {
                     return .none
@@ -242,7 +250,7 @@ public struct AddressBook {
 
             case .saveButtonTapped:
                 do {
-                    let result = try addressBook.storeContact(Contact(address: state.address, name: state.name))
+                    let result = try addressBook.storeContact(state.accountIndex, Contact(address: state.address, name: state.name))
                     let abContacts = result.contacts
                     if result.remoteStoreResult == .failure {
                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
@@ -265,7 +273,7 @@ public struct AddressBook {
 
             case .fetchABContactsRequested:
                 do {
-                    let result = try addressBook.allLocalContacts()
+                    let result = try addressBook.allLocalContacts(state.accountIndex)
                     let abContacts = result.contacts
                     if result.remoteStoreResult == .failure {
                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
@@ -279,9 +287,9 @@ public struct AddressBook {
             case let .fetchedABContacts(abContacts, requestToSync):
                 state.addressBookContacts = abContacts
                 if requestToSync {
-                    return .run { send in
+                    return .run { [accountIndex = state.accountIndex] send in
                         do {
-                            let result = try await addressBook.syncContacts(abContacts)
+                            let result = try await addressBook.syncContacts(accountIndex, abContacts)
                             let syncedContacts = result.contacts
                             if result.remoteStoreResult == .failure {
                                 // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408

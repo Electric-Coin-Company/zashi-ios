@@ -244,7 +244,7 @@ public struct WalletStorage {
 
         var result: AnyObject?
         let status = secItem.copyMatching(query as CFDictionary, &result)
-        
+
         guard status != errSecItemNotFound else {
             throw KeychainError.noDataFound
         }

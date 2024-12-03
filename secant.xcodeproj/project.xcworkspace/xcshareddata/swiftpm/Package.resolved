@@ -28,6 +28,33 @@
       }
     },
     {
+      "identity" : "bcswiftdcbor",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/BlockchainCommons/BCSwiftDCBOR",
+      "state" : {
+        "revision" : "21efa67ada2f22a6c277e1961f1059bb376e9b1a",
+        "version" : "2.0.2"
+      }
+    },
+    {
+      "identity" : "bcswiftfloat16",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/blockchaincommons/BCSwiftFloat16",
+      "state" : {
+        "revision" : "a27f3935a7b1db715713eda67369b02feade2ded",
+        "version" : "2.0.0"
+      }
+    },
+    {
+      "identity" : "bcswifttags",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/BlockchainCommons/BCSwiftTags",
+      "state" : {
+        "revision" : "ced8d92c7cc53375cdf9806c59251fe0161f02ec",
+        "version" : "0.2.3"
+      }
+    },
+    {
       "identity" : "bigdecimal",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mgriebling/BigDecimal.git",
@@ -131,8 +158,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/grpc/grpc-swift.git",
       "state" : {
-        "revision" : "6a90b7e77e29f9bda6c2b3a4165a40d6c02cfda1",
-        "version" : "1.23.0"
+        "revision" : "8c5e99d0255c373e0330730d191a3423c57373fb",
+        "version" : "1.24.2"
       }
     },
     {
@@ -160,6 +187,15 @@
       "state" : {
         "revision" : "8d33ffd6f74b3bcfc99af759d4204c6395a3f918",
         "version" : "3.2.1"
+      }
+    },
+    {
+      "identity" : "keystone-sdk-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/KeystoneHQ/keystone-sdk-ios/",
+      "state" : {
+        "revision" : "1d826dff694cc0fbbf457bc05053fd9f6f8fe386",
+        "version" : "0.8.5"
       }
     },
     {
@@ -257,8 +293,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections",
       "state" : {
-        "revision" : "3d2dc41a01f9e49d84f0a3925fb858bed64f702d",
-        "version" : "1.1.2"
+        "revision" : "671108c96644956dddcd89dd59c203dcdb36cec7",
+        "version" : "1.1.4"
       }
     },
     {
@@ -388,6 +424,15 @@
       }
     },
     {
+      "identity" : "swift-numberkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/objecthub/swift-numberkit.git",
+      "state" : {
+        "revision" : "33af3f9011e45dcd8ee696492d30dbcd5a8a67f3",
+        "version" : "2.6.0"
+      }
+    },
+    {
       "identity" : "swift-parsing",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-parsing",
@@ -410,8 +455,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-protobuf.git",
       "state" : {
-        "revision" : "e17d61f26df0f0e06f58f6977ba05a097a720106",
-        "version" : "1.27.1"
+        "revision" : "ebc7251dd5b37f627c93698e4374084d98409633",
+        "version" : "1.28.2"
       }
     },
     {
@@ -451,6 +496,15 @@
       }
     },
     {
+      "identity" : "swiftsortedcollections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/wolfmcnally/SwiftSortedCollections",
+      "state" : {
+        "revision" : "dd6c8e0eaef987e55a35c056d185144a7c71fc19",
+        "version" : "0.1.0"
+      }
+    },
+    {
       "identity" : "swiftui-introspect",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/siteline/swiftui-introspect",
@@ -466,6 +520,15 @@
       "state" : {
         "revision" : "59dac4f14d657fd60bacfdfb7398d38b450af74f",
         "version" : "3.1.5"
+      }
+    },
+    {
+      "identity" : "urkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/BlockchainCommons/URKit",
+      "state" : {
+        "revision" : "c7cf16b03ce061c2d461fb4c635cc27c9e1d00e3",
+        "version" : "15.0.0"
       }
     },
     {
@@ -496,12 +559,12 @@
       }
     },
     {
-      "identity" : "zcash-swift-wallet-sdk",
+      "identity" : "zcashlightclientkit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk",
+      "location" : "https://github.com/LukasKorba/ZcashLightClientKit",
       "state" : {
-        "revision" : "b248ae6a9008ac8198cd50b325fb616b763876d5",
-        "version" : "2.2.7"
+        "branch" : "1511-Refactor-account-representation-from-Int-to-a-dedicated-Account-structure",
+        "revision" : "ea549c34282acee8ae3135f96e03df3237d06ecc"
       }
     }
   ],

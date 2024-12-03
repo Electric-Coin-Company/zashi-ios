@@ -39,7 +39,8 @@ extension SDKSynchronizerClient: TestDependencyKey {
         proposeShielding: unimplemented("\(Self.self).proposeShielding", placeholder: nil),
         isSeedRelevantToAnyDerivedAccount: unimplemented("\(Self.self).isSeedRelevantToAnyDerivedAccount"),
         refreshExchangeRateUSD: unimplemented("\(Self.self).refreshExchangeRateUSD", placeholder: {}()),
-        evaluateBestOf: { _, _, _, _, _, _ in fatalError("evaluateBestOf not implemented") }
+        evaluateBestOf: { _, _, _, _, _, _ in fatalError("evaluateBestOf not implemented") },
+        walletAccounts: unimplemented("\(Self.self).walletAccounts", placeholder: [])
     )
 }
 
@@ -70,7 +71,8 @@ extension SDKSynchronizerClient {
         proposeShielding: { _, _, _, _ in nil },
         isSeedRelevantToAnyDerivedAccount: { _ in false },
         refreshExchangeRateUSD: { },
-        evaluateBestOf: { _, _, _, _, _, _ in [] }
+        evaluateBestOf: { _, _, _, _, _, _ in [] },
+        walletAccounts: { [] }
     )
 
     public static let mock = Self.mocked()
@@ -141,7 +143,7 @@ extension SDKSynchronizerClient {
             return clearedTransactions
         },
         getMemos: @escaping (_ rawID: Data) -> [Memo] = { _ in [] },
-        getUnifiedAddress: @escaping (_ account: Int) -> UnifiedAddress? = { _ in
+        getUnifiedAddress: @escaping (_ account: Zip32AccountIndex) -> UnifiedAddress? = { _ in
             // swiftlint:disable force_try
             try! UnifiedAddress(
                 encoding: """
@@ -151,15 +153,15 @@ extension SDKSynchronizerClient {
                 network: .testnet
             )
         },
-        getTransparentAddress: @escaping (_ account: Int) -> TransparentAddress? = { _ in return nil },
-        getSaplingAddress: @escaping (_ accountIndex: Int) async -> SaplingAddress? = { _ in
+        getTransparentAddress: @escaping (_ account: Zip32AccountIndex) -> TransparentAddress? = { _ in return nil },
+        getSaplingAddress: @escaping (_ account: Zip32AccountIndex) async -> SaplingAddress? = { _ in
             // swiftlint:disable:next force_try
             try! SaplingAddress(
                 encoding: "ztestsapling1edm52k336nk70gxqxedd89slrrf5xwnnp5rt6gqnk0tgw4mynv6fcx42ym6x27yac5amvfvwypz",
                 network: .testnet
             )
         },
-        getAccountBalance: @escaping (_ accountIndex: Int) async -> AccountBalance? = { _ in nil },
+        getAccountBalance: @escaping (_ account: Zip32AccountIndex) async -> AccountBalance? = { _ in nil },
         sendTransaction:
         @escaping (UnifiedSpendingKey, Zatoshi, Recipient, Memo?) async throws -> TransactionState = { _, _, _, memo in
             var memos: [Memo]? = []
@@ -195,14 +197,15 @@ extension SDKSynchronizerClient {
         wipe: @escaping () -> AnyPublisher<Void, Error>? = { Fail(error: "Error").eraseToAnyPublisher() },
         switchToEndpoint: @escaping (LightWalletEndpoint) async throws -> Void = { _ in },
         proposeTransfer:
-        @escaping (Int, Recipient, Zatoshi, Memo?) async throws -> Proposal = { _, _, _, _ in .testOnlyFakeProposal(totalFee: 0) },
+        @escaping (Zip32AccountIndex, Recipient, Zatoshi, Memo?) async throws -> Proposal = { _, _, _, _ in .testOnlyFakeProposal(totalFee: 0) },
         createProposedTransactions:
         @escaping (Proposal, UnifiedSpendingKey) async throws -> CreateProposedTransactionsResult = { _, _ in .success(txIds: []) },
         proposeShielding:
-        @escaping (Int, Zatoshi, Memo, TransparentAddress?) async throws -> Proposal? = { _, _, _, _ in nil },
+        @escaping (Zip32AccountIndex, Zatoshi, Memo, TransparentAddress?) async throws -> Proposal? = { _, _, _, _ in nil },
         isSeedRelevantToAnyDerivedAccount: @escaping ([UInt8]) async throws -> Bool = { _ in false },
         refreshExchangeRateUSD: @escaping () -> Void = { },
-        evaluateBestOf: @escaping ([LightWalletEndpoint], Double, Double, UInt64, Int, NetworkType) async -> [LightWalletEndpoint] = { _, _, _, _, _, _ in [] }
+        evaluateBestOf: @escaping ([LightWalletEndpoint], Double, Double, UInt64, Int, NetworkType) async -> [LightWalletEndpoint] = { _, _, _, _, _, _ in [] },
+        walletAccounts: @escaping () -> [WalletAccount] = { [] }
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
             stateStream: stateStream,
@@ -230,7 +233,8 @@ extension SDKSynchronizerClient {
             proposeShielding: proposeShielding,
             isSeedRelevantToAnyDerivedAccount: isSeedRelevantToAnyDerivedAccount,
             refreshExchangeRateUSD: refreshExchangeRateUSD,
-            evaluateBestOf: evaluateBestOf
+            evaluateBestOf: evaluateBestOf,
+            walletAccounts: walletAccounts
         )
     }
 }

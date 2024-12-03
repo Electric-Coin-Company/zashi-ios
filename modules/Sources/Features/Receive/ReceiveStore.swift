@@ -13,11 +13,13 @@ import Pasteboard
 import Generated
 import Utils
 import UIComponents
+import Models
 
 @Reducer
 public struct Receive {
     @ObservableState
     public struct State: Equatable {
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount = .default
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
         public var uAddress: UnifiedAddress?
 

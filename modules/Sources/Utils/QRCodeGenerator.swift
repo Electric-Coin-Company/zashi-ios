@@ -15,11 +15,21 @@ public enum QRCodeGenerator {
     public enum QRCodeError: Error {
         case failedToGenerate
     }
+    
+    public enum Vendor: Equatable {
+        case keystone
+        case zashi
+    }
 
-    public static func generate(from string: String, color: UIColor = Asset.Colors.primary.systemColor) -> Future<CGImage, Never> {
+    public static func generate(
+        from string: String,
+        maxPrivacy: Bool = true,
+        vendor: Vendor = .zashi,
+        color: UIColor = Asset.Colors.primary.systemColor
+    ) -> Future<CGImage, Never> {
         Future<CGImage, Never> { promise in
             DispatchQueue.global().async {
-                guard let image = generateCode(from: string, color: color) else {
+                guard let image = generateCode(from: string, maxPrivacy: maxPrivacy, vendor: vendor, color: color) else {
                     return
                 }
                 
@@ -28,7 +38,13 @@ public enum QRCodeGenerator {
         }
     }
 
-    public static func generateCode(from string: String, scale: CGFloat = 15, color: UIColor = Asset.Colors.primary.systemColor) -> CGImage? {
+    public static func generateCode(
+        from string: String,
+        scale: CGFloat = 15,
+        maxPrivacy: Bool = true,
+        vendor: Vendor = .zashi,
+        color: UIColor = Asset.Colors.primary.systemColor
+    ) -> CGImage? {
         let data = string.data(using: String.Encoding.utf8)
         
         let context = CIContext()
@@ -41,21 +57,43 @@ public enum QRCodeGenerator {
                 return nil
             }
 
-            return QRCodeGenerator.overlayWithZecLogo(baseImage, context: context)
+            return QRCodeGenerator.overlayWithZecLogo(
+                baseImage,
+                context: context,
+                maxPrivacy: maxPrivacy,
+                vendor: vendor
+            )
         } else {
             guard let baseImage = filter.outputImage?.transformed(by: transform).tinted(using: color) else {
                 return nil
             }
 
-            return QRCodeGenerator.overlayWithZecLogo(baseImage, context: context, export: false)
+            return QRCodeGenerator.overlayWithZecLogo(
+                baseImage,
+                context: context,
+                maxPrivacy: maxPrivacy,
+                vendor : vendor,
+                export: false
+            )
         }
     }
     
-    public static func overlayWithZecLogo(_ baseImage: CIImage, context: CIContext, export: Bool = true) -> CGImage? {
-        guard let overlayImage = UIImage(named: export ? "QROverlay" : "QRDynamicOverlay") else {
+    public static func overlayWithZecLogo(
+        _ baseImage: CIImage,
+        context: CIContext,
+        maxPrivacy: Bool,
+        vendor: Vendor,
+        export: Bool = true
+    ) -> CGImage? {
+        var maxPrivacyPostfix = vendor == .zashi ? maxPrivacy ? "Max" : "Low" : ""
+        let vendorPrefix = vendor == .zashi ? "" : "KS_"
+        let filename = export ? "QROverlay" : "QRDynamicOverlay"
+        var overlayImageName = "\(vendorPrefix)\(filename)\(maxPrivacyPostfix)"
+        
+        guard let overlayImage = UIImage(named: overlayImageName) else {
             return nil
         }
-        
+
         guard let iconCIImage = CIImage(image: overlayImage) else {
             return nil
         }

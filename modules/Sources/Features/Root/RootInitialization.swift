@@ -31,6 +31,7 @@ extension Root {
         case initialSetups
         case initializationFailed(ZcashError)
         case initializationSuccessfullyDone(UnifiedAddress?)
+        case loadWalletAccounts
         case resetZashi
         case resetZashiRequest
         case respondToWalletInitializationState(InitializationState)
@@ -305,7 +306,7 @@ extension Root {
                         var keys = AddressBookEncryptionKeys.empty
                         try keys.cacheFor(
                             seed: seedBytes,
-                            account: 0,
+                            account: state.accountIndex,
                             network: zcashSDKEnvironment.network.networkType
                         )
                         
@@ -316,12 +317,12 @@ extension Root {
                         }
                     }
 
-                    return .run { send in
+                    return .run { [accountIndex = state.accountIndex] send in
                         do {
                             try await sdkSynchronizer.prepareWith(seedBytes, birthday, walletMode)
                             try await sdkSynchronizer.start(false)
                             
-                            let uAddress = try? await sdkSynchronizer.getUnifiedAddress(0)
+                            let uAddress = try? await sdkSynchronizer.getUnifiedAddress(accountIndex)
                             await send(.initialization(.initializationSuccessfullyDone(uAddress)))
                         } catch {
                             await send(.initialization(.initializationFailed(error.toZcashError())))
@@ -334,7 +335,7 @@ extension Root {
             case .initialization(.initializationSuccessfullyDone(let uAddress)):
                 state.tabsState.receiveState.uAddress = uAddress
                 state.tabsState.settingsState.integrationsState.uAddress = uAddress
-                if let uAddress = try? uAddress?.stringEncoded {
+                if let uAddress = uAddress?.stringEncoded {
                     state.tabsState.sendState.memoState.uAddress = uAddress
                 }
                 return .merge(
@@ -343,8 +344,13 @@ extension Root {
                         autolockHandler.batteryStatePublisher()
                             .map(Root.Action.batteryStateChanged)
                     }
-                    .cancellable(id: CancelBatteryStateId, cancelInFlight: true)
+                    .cancellable(id: CancelBatteryStateId, cancelInFlight: true),
+                    .send(.initialization(.loadWalletAccounts))
                 )
+                
+            case .initialization(.loadWalletAccounts):
+                state.walletAccounts = sdkSynchronizer.walletAccounts()
+                return .none
                 
             case .initialization(.checkBackupPhraseValidation):
                 do {

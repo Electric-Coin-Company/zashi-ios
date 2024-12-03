@@ -219,6 +219,22 @@ extension SDKSynchronizerClient: DependencyKey {
                     kServers: kServers,
                     network: network
                 )
+            },
+            walletAccounts: {
+                [
+                    WalletAccount.default
+//                    WalletAccount.default,
+//                    WalletAccount(
+//                        id: 1,
+//                        vendor: .keystone,
+//                        uaAddressString: "0x8EgiqpBzgfeFqB6cde..."
+//                    )
+//                    WalletAccount(
+//                        id: 2,
+//                        vendor: .keystone,
+//                        uaAddressString: "0x8EgiqpBzgfeFqB6cde..."
+//                    )
+                ]
             }
         )
     }

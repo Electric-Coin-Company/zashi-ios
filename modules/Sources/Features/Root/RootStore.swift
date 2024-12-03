@@ -45,6 +45,7 @@ public struct Root {
 
     @ObservableState
     public struct State: Equatable {
+        @Shared(.inMemory(.account)) public var accountIndex: Zip32AccountIndex = Zip32AccountIndex(0)
         public var addressBookBinding: Bool = false
         public var addressBookContactBinding: Bool = false
         public var addressBookState: AddressBook.State
@@ -69,6 +70,7 @@ public struct Root {
         public var serverSetupViewBinding: Bool = false
         public var splashAppeared = false
         public var tabsState: Tabs.State
+        @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = [.default]
         public var walletConfig: WalletConfig
         @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
         public var wasRestoringWhenDisconnected = false
@@ -278,6 +280,12 @@ public struct Root {
                     }
                     await send(.addressBookAccessGranted)
                 }
+
+            case .addressBook(.walletAccountTapped(let walletAccount)):
+                // TODO: add an address once we have it
+                let address = "u12pgnsjq2c2k5q6wuc7z4068xlcuqcw93wujlar47pwv9rrl6ujp2sjumtpnwxdemvg52t86cwu8hk740v7p2at7neq5delmtjk502q0xrnaz0kfyextpm8l687wsk0m3zqzdvynme2d"
+                state.addressBookBinding = false
+                return .send(.tabs(.send(.scan(.found(address.redacted)))))
 
             case .addressBook(.editId(let address)):
                 state.addressBookBinding = false

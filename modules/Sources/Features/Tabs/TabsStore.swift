@@ -27,6 +27,8 @@ import RequestZec
 import ZecKeyboard
 import AddressBook
 import Models
+import AddKeystoneHWWallet
+import Scan
 
 @Reducer
 public struct Tabs {
@@ -54,6 +56,12 @@ public struct Tabs {
             case requestPaymentConfirmation = 0
             case addressBookNewContact
         }
+        
+        public enum StackDestinationAddKeystoneHWWallet: Int, Equatable {
+            case addKeystoneHWWallet = 0
+            case scan
+            case accountSelection
+        }
 
         public enum Tab: Int, Equatable, CaseIterable {
             case account = 0
@@ -75,6 +83,8 @@ public struct Tabs {
             }
         }
 
+        public var accountSwitchRequest = false
+        public var addKeystoneHWWalletState: AddKeystoneHWWallet.State = .initial
         public var addressBookState: AddressBook.State = .initial
         public var addressDetailsState: AddressDetails.State
         public var balanceBreakdownState: Balances.State
@@ -86,11 +96,15 @@ public struct Tabs {
         public var homeState: Home.State
         public var receiveState: Receive.State
         public var requestZecState: RequestZec.State
+        public var scanState: Scan.State = .initial
         public var selectedTab: Tab = .account
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount = .default
         public var selectTextRequest = false
         public var sendConfirmationState: SendConfirmation.State
         public var sendState: SendFlow.State
         public var settingsState: Settings.State
+        public var stackDestinationAddKeystoneHWWallet: StackDestinationAddKeystoneHWWallet?
+        public var stackDestinationAddKeystoneHWWalletBindingsAlive = 0
         public var stackDestinationLowPrivacy: StackDestinationLowPrivacy?
         public var stackDestinationLowPrivacyBindingsAlive = 0
         public var stackDestinationMaxPrivacy: StackDestinationMaxPrivacy?
@@ -98,6 +112,7 @@ public struct Tabs {
         public var stackDestinationRequestPayment: StackDestinationRequestPayment?
         public var stackDestinationRequestPaymentBindingsAlive = 0
         public var textToSelect = ""
+        @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = [.default]
         public var zecKeyboardState: ZecKeyboard.State
         
         public init(
@@ -134,6 +149,9 @@ public struct Tabs {
     }
     
     public enum Action: BindableAction, Equatable {
+        case accountSwitchTapped
+        case addKeystoneHWWalletTapped
+        case addKeystoneHWWallet(AddKeystoneHWWallet.Action)
         case addressBook(AddressBook.Action)
         case addressDetails(AddressDetails.Action)
         case balanceBreakdown(Balances.Action)
@@ -146,14 +164,17 @@ public struct Tabs {
         case rateTooltipTapped
         case receive(Receive.Action)
         case requestZec(RequestZec.Action)
+        case scan(Scan.Action)
         case selectedTabChanged(State.Tab)
         case send(SendFlow.Action)
         case sendConfirmation(SendConfirmation.Action)
         case settings(Settings.Action)
         case updateDestination(Tabs.State.Destination?)
+        case updateStackDestinationAddKeystoneHWWallet(Tabs.State.StackDestinationAddKeystoneHWWallet?)
         case updateStackDestinationLowPrivacy(Tabs.State.StackDestinationLowPrivacy?)
         case updateStackDestinationMaxPrivacy(Tabs.State.StackDestinationMaxPrivacy?)
         case updateStackDestinationRequestPayment(Tabs.State.StackDestinationRequestPayment?)
+        case walletAccountTapped(WalletAccount)
         case zecKeyboard(ZecKeyboard.Action)
     }
 
@@ -168,6 +189,14 @@ public struct Tabs {
 
         Scope(state: \.addressBookState, action: \.addressBook) {
             AddressBook()
+        }
+
+        Scope(state: \.addKeystoneHWWalletState, action: \.addKeystoneHWWallet) {
+            AddKeystoneHWWallet()
+        }
+        
+        Scope(state: \.scanState, action: \.scan) {
+            Scan()
         }
 
         Scope(state: \.sendState, action: \.send) {
@@ -213,9 +242,34 @@ public struct Tabs {
         Reduce { state, action in
             switch action {
             case .onAppear:
+                state.scanState.checkers = [.keystoneScanChecker]
+                state.scanState.instructions = "Scan your Keystone wallet to connect"
+                state.scanState.forceLibraryToHide = true
                 state.isRateEducationEnabled = userStoredPreferences.exchangeRate() == nil
                 return .none
                 
+            case .accountSwitchTapped:
+                state.accountSwitchRequest = true
+                return .none
+                
+            case .addKeystoneHWWalletTapped:
+                state.accountSwitchRequest = false
+                return .send(.updateStackDestinationAddKeystoneHWWallet(.addKeystoneHWWallet))
+                
+            case .walletAccountTapped(let walletAccount):
+                state.selectedWalletAccount = walletAccount
+                state.accountSwitchRequest = false
+                return .none
+            
+            case .addKeystoneHWWallet(.continueTapped):
+                return .send(.updateStackDestinationAddKeystoneHWWallet(.scan))
+
+            case .addKeystoneHWWallet(.forgetThisDeviceTapped):
+                return .send(.updateStackDestinationAddKeystoneHWWallet(nil))
+                
+            case .addKeystoneHWWallet:
+                return .none
+
             case let .receive(.addressDetailsRequest(address, maxPrivacy)):
                 state.addressDetailsState.address = address
                 state.addressDetailsState.maxPrivacy = maxPrivacy
@@ -396,6 +450,14 @@ public struct Tabs {
                 state.sendState.currencyText = .empty
                 return .send(.updateStackDestinationRequestPayment(nil))
 
+            case .sendConfirmation(.rejectTapped):
+                return .concatenate(
+                    .send(.send(.resetForm)),
+                    .send(.updateStackDestinationRequestPayment(nil)),
+                    .send(.updateDestination(nil)),
+                    .send(.sendConfirmation(.updateStackDestination(nil)))
+                )
+                
             case .sendConfirmation:
                 return .none
 
@@ -416,6 +478,13 @@ public struct Tabs {
                 
             case .updateDestination(let destination):
                 state.destination = destination
+                return .none
+
+            case .updateStackDestinationAddKeystoneHWWallet(let destination):
+                if let destination {
+                    state.stackDestinationAddKeystoneHWWalletBindingsAlive = destination.rawValue
+                }
+                state.stackDestinationAddKeystoneHWWallet = destination
                 return .none
 
             case .updateStackDestinationLowPrivacy(let destination):
@@ -444,6 +513,19 @@ public struct Tabs {
                 return .none
                 
             case .zecKeyboard:
+                return .none
+
+            case .scan(.cancelPressed):
+                return .send(.updateStackDestinationAddKeystoneHWWallet(.addKeystoneHWWallet))
+
+            case .scan(.foundZA(let zcashAccounts)):
+                if state.addKeystoneHWWalletState.zcashAccounts == nil {
+                    state.addKeystoneHWWalletState.zcashAccounts = zcashAccounts
+                    return .send(.updateStackDestinationAddKeystoneHWWallet(.accountSelection))
+                }
+                return .none
+                
+            case .scan:
                 return .none
             }
         }
