@@ -20,10 +20,11 @@ public struct HomeView: View {
         self.store = store
         self.tokenName = tokenName
     }
-    
+
     public var body: some View {
         WithPerceptionTracking {
             VStack(spacing: 0) {
+
                 WalletBalancesView(
                     store: store.scope(
                         state: \.walletBalancesState,
@@ -91,7 +92,6 @@ struct HomeView_Previews: PreviewProvider {
                     StoreOf<Home>(
                         initialState:
                                 .init(
-                                    scanState: .initial,
                                     syncProgressState: .init(
                                         lastKnownSyncPercentage: Float(0.43),
                                         synchronizerStatusSnapshot: SyncStatusSnapshot(.syncing(0.41)),
@@ -120,7 +120,6 @@ struct HomeView_Previews: PreviewProvider {
 extension Home.State {
     public static var initial: Self {
         .init(
-            scanState: .initial,
             syncProgressState: .initial,
             transactionListState: .initial,
             walletBalancesState: .initial,
@@ -141,7 +140,6 @@ extension Home {
     public static var error: StoreOf<Home> {
         StoreOf<Home>(
             initialState: .init(
-                scanState: .initial,
                 syncProgressState: .initial,
                 transactionListState: .initial,
                 walletBalancesState: .initial,

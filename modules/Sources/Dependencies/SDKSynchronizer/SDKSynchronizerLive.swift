@@ -46,22 +46,50 @@ extension SDKSynchronizerClient: DependencyKey {
         let synchronizer = SDKSynchronizer(initializer: initializer)
 
         return SDKSynchronizerClient(
-            stateStream: { synchronizer.stateStream },
+            stateStream: { synchronizer.stateStream
+            },
             eventStream: { synchronizer.eventStream },
             exchangeRateUSDStream: { synchronizer.exchangeRateUSDStream },
             latestState: { synchronizer.latestState },
-            prepareWith: { seedBytes, walletBirtday, walletMode in
-                let result = try await synchronizer.prepare(with: seedBytes, walletBirthday: walletBirtday, for: walletMode)
+            prepareWith: {
+                seedBytes,
+                walletBirtday,
+                walletMode,
+                name,
+                keySource in
+                let result = try await synchronizer.prepare(
+                    with: seedBytes,
+                    walletBirthday: walletBirtday,
+                    for: walletMode,
+                    name: name,
+                    keySource: keySource
+                )
                 if result != .success { throw ZcashError.synchronizerNotPrepared }
             },
             start: { retry in try await synchronizer.start(retry: retry) },
             stop: { synchronizer.stop() },
             isSyncing: { synchronizer.latestState.syncStatus.isSyncing },
             isInitialized: { synchronizer.latestState.syncStatus != SyncStatus.unprepared },
+            importAccount: { ufvk, seedFingerprint, zip32AccountIndex, purpose, name, keySource in
+                try await synchronizer.importAccount(
+                    ufvk: ufvk,
+                    seedFingerprint: seedFingerprint,
+                    zip32AccountIndex: zip32AccountIndex,
+                    purpose: purpose,
+                    name: name,
+                    keySource: keySource
+                )
+            },
             rewind: { synchronizer.rewind($0) },
-            getAllTransactions: {
-                let clearedTransactions = try await synchronizer.allTransactions()
+            getAllTransactions: { accountUUID in
+                let clearedTransactions = try await synchronizer.allTransactions().compactMap { rawTransaction in
+                    guard let accountUUID else {
+                        return rawTransaction
+                    }
 
+                    return rawTransaction.accountUUID == accountUUID ? rawTransaction : nil
+                }
+                
                 var clearedTxs: [TransactionState] = []
                 
                 let latestBlockHeight = try await SDKSynchronizerClient.latestBlockHeight(synchronizer: synchronizer)
@@ -75,14 +103,14 @@ extension SDKSynchronizerClient: DependencyKey {
                             break
                         }
                     }
-
+                    
                     var transaction = TransactionState.init(
                         transaction: clearedTransaction,
                         memos: nil,
                         hasTransparentOutputs: hasTransparentOutputs,
                         latestBlockHeight: latestBlockHeight
                     )
-
+                    
                     let recipients = await synchronizer.getRecipients(for: clearedTransaction)
                     let addresses = recipients.compactMap {
                         if case let .address(address) = $0 {
@@ -94,7 +122,8 @@ extension SDKSynchronizerClient: DependencyKey {
                     
                     transaction.rawID = clearedTransaction.rawID
                     transaction.zAddress = addresses.first?.stringEncoded
-                    if let someAddress = addresses.first, case .transparent = someAddress {
+                    if let someAddress = addresses.first,
+                       case .transparent = someAddress {
                         transaction.isTransparentRecipient = true
                     }
                     
@@ -104,42 +133,17 @@ extension SDKSynchronizerClient: DependencyKey {
                 return clearedTxs
             },
             getMemos: { try await synchronizer.getMemos(for: $0) },
-            getUnifiedAddress: { try await synchronizer.getUnifiedAddress(accountIndex: $0) },
-            getTransparentAddress: { try await synchronizer.getTransparentAddress(accountIndex: $0) },
-            getSaplingAddress: { try await synchronizer.getSaplingAddress(accountIndex: $0) },
-            getAccountBalance: { try await synchronizer.getAccountBalance(accountIndex: $0) },
-            sendTransaction: { spendingKey, amount, recipient, memo in
-                let pendingTransaction = try await synchronizer.sendToAddress(
-                    spendingKey: spendingKey,
-                    zatoshi: amount,
-                    toAddress: recipient,
-                    memo: memo
-                )
-                
-                return TransactionState(
-                    transaction: pendingTransaction,
-                    latestBlockHeight: try await SDKSynchronizerClient.latestBlockHeight(synchronizer: synchronizer)
-                )
-            },
-            shieldFunds: { spendingKey, memo, shieldingThreshold in
-                let pendingTransaction = try await synchronizer.shieldFunds(
-                    spendingKey: spendingKey,
-                    memo: memo,
-                    shieldingThreshold: shieldingThreshold
-                )
-                
-                return TransactionState(
-                    transaction: pendingTransaction,
-                    latestBlockHeight: try await SDKSynchronizerClient.latestBlockHeight(synchronizer: synchronizer)
-                )
-            },
+            getUnifiedAddress: { try await synchronizer.getUnifiedAddress(accountUUID: $0) },
+            getTransparentAddress: { try await synchronizer.getTransparentAddress(accountUUID: $0) },
+            getSaplingAddress: { try await synchronizer.getSaplingAddress(accountUUID: $0) },
+            getAccountsBalances: { try await synchronizer.getAccountsBalances() },
             wipe: { synchronizer.wipe() },
             switchToEndpoint: { endpoint in
                 try await synchronizer.switchTo(endpoint: endpoint)
             },
-            proposeTransfer: { accountIndex, recipient, amount, memo in
+            proposeTransfer: { accountUUID, recipient, amount, memo in
                 try await synchronizer.proposeTransfer(
-                    accountIndex: accountIndex,
+                    accountUUID: accountUUID,
                     recipient: recipient,
                     amount: amount,
                     memo: memo
@@ -196,9 +200,9 @@ extension SDKSynchronizerClient: DependencyKey {
                     return .partial(txIds: txIds, statuses: statuses)
                 }
             },
-            proposeShielding: { accountIndex, shieldingThreshold, memo, transparentReceiver in
+            proposeShielding: { accountUUID, shieldingThreshold, memo, transparentReceiver in
                 try await synchronizer.proposeShielding(
-                    accountIndex: accountIndex,
+                    accountUUID: accountUUID,
                     shieldingThreshold: shieldingThreshold,
                     memo: memo,
                     transparentReceiver: transparentReceiver
@@ -219,6 +223,22 @@ extension SDKSynchronizerClient: DependencyKey {
                     kServers: kServers,
                     network: network
                 )
+            },
+            walletAccounts: {
+                // get the Accounts and map it to WalletAccounts
+                var walletAccounts = try await synchronizer.listAccounts().map {
+                    WalletAccount($0)
+                }
+                
+                // Enrich the WalletAccounts with UnifiedAddresses
+                for i in 0..<walletAccounts.count {
+                    walletAccounts[i].uAddress = try? await synchronizer.getUnifiedAddress(accountUUID: walletAccounts[i].id)
+                }
+                
+                // Put the Zashi account to the top
+                //let sortedWalletAccounts = walletAccounts.sorted { $0.vendor.rawValue > $1.vendor.rawValue }
+
+                return walletAccounts
             }
         )
     }

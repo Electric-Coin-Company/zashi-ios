@@ -30,6 +30,7 @@ public struct WalletBalances {
         public var isExchangeRateRefreshEnabled = false
         public var isExchangeRateStale = false
         public var migratingDatabase = false
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var shieldedBalance: Zatoshi
         public var shieldedWithPendingBalance: Zatoshi
         public var totalBalance: Zatoshi
@@ -166,10 +167,13 @@ public struct WalletBalances {
                 return .none
 
             case .updateBalances:
+                guard let account = state.selectedWalletAccount else {
+                    return .none
+                }
                 return .run { send in
-                    if let accountBalance = try? await sdkSynchronizer.getAccountBalance(0) {
+                    if let accountBalance = try? await sdkSynchronizer.getAccountsBalances()[account.id] {
                         await send(.balancesUpdated(accountBalance))
-                    } else if let accountBalance = sdkSynchronizer.latestState().accountBalance {
+                    } else if let accountBalance = sdkSynchronizer.latestState().accountsBalances[account.id] {
                         await send(.balancesUpdated(accountBalance))
                     }
                 }
@@ -191,7 +195,11 @@ public struct WalletBalances {
                     state.migratingDatabase = false
                 }
 
-                return .send(.balancesUpdated(latestState.data.accountBalance?.data))
+                guard let account = state.selectedWalletAccount else {
+                    return .none
+                }
+
+                return .send(.balancesUpdated(latestState.data.accountsBalances[account.id]))
             }
         }
     }

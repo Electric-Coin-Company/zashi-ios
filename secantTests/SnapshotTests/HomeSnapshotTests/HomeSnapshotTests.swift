@@ -37,7 +37,6 @@ class HomeSnapshotTests: XCTestCase {
         
         let store = StoreOf<Home>(
             initialState: .init(
-                scanState: .initial,
                 syncProgressState: .initial,
                 transactionListState: .init(transactionList: IdentifiedArrayOf(uniqueElements: transactionList)),
                 walletBalancesState: .initial,

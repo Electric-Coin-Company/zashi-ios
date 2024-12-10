@@ -41,6 +41,12 @@ public struct SendConfirmation {
             case success
         }
 
+        public enum StackDestination: Int, Equatable {
+            case signWithKeystone = 0
+            case scan
+            case sending
+        }
+
         public var address: String
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         public var alias: String?
@@ -65,9 +71,16 @@ public struct SendConfirmation {
         public var randomFailureIconIndex = 0
         public var randomResubmissionIconIndex = 0
         public var result: Result?
+        public var scanState: Scan.State = .initial
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
+        public var stackDestination: StackDestination?
+        public var stackDestinationBindingsAlive = 0
         public var supportData: SupportData?
         public var txIdToExpand: String?
+        @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
 
+        public var tmpHelper = false
+        
         public var addressToShow: String {
             isTransparentAddress
             ? address
@@ -127,14 +140,18 @@ public struct SendConfirmation {
         case backFromFailurePressed
         case binding(BindingAction<SendConfirmation.State>)
         case closeTapped
+        case confirmWithKeystoneTapped
         case fetchedABContacts(AddressBookContacts)
+        case getSignatureTapped
         case goBackPressed
         case goBackPressedFromRequestZec
         case onAppear
         case partialProposalError(PartialProposalError.Action)
         case partialProposalErrorDismiss
+        case rejectTapped
         case reportTapped
         case saveAddressTapped(RedactableString)
+        case scan(Scan.Action)
         case sendDone
         case sendFailed(ZcashError?, Bool)
         case sendPartial([String], [String])
@@ -146,6 +163,7 @@ public struct SendConfirmation {
         case updateDestination(State.Destination?)
         case updateFailedData(Int, String)
         case updateResult(State.Result?)
+        case updateStackDestination(SendConfirmation.State.StackDestination?)
         case updateTxIdToExpand(String?)
         case viewTransactionTapped
     }
@@ -169,17 +187,27 @@ public struct SendConfirmation {
             PartialProposalError()
         }
 
+        Scope(state: \.scanState, action: \.scan) {
+            Scan()
+        }
+        
         Reduce { state, action in
             switch action {
             case .onAppear:
+                state.scanState.checkers = [.keystoneScanChecker]
+                state.scanState.instructions = "Scan your Keystone wallet to connect"
+                state.scanState.forceLibraryToHide = true
                 state.randomSuccessIconIndex = Int.random(in: 1...2)
                 state.randomFailureIconIndex = Int.random(in: 1...3)
                 state.randomResubmissionIconIndex = Int.random(in: 1...2)
                 state.isTransparentAddress = derivationTool.isTransparentAddress(state.address, zcashSDKEnvironment.network.networkType)
                 state.canSendMail = MFMailComposeViewController.canSendMail()
                 state.alias = nil
+                guard let account = state.selectedWalletAccount else {
+                    return .none
+                }
                 do {
-                    let result = try addressBook.allLocalContacts()
+                    let result = try addressBook.allLocalContacts(account.id)
                     let abContacts = result.contacts
                     if result.remoteStoreResult == .failure {
                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
@@ -245,6 +273,9 @@ public struct SendConfirmation {
                 guard let proposal = state.proposal else {
                     return .send(.sendFailed("missing proposal".toZcashError(), true))
                 }
+                guard let zip32AccountIndex = state.selectedWalletAccount?.zip32AccountIndex else {
+                    return .none
+                }
                 return .run { send in
                     if await !localAuthentication.authenticate() {
                         await send(.sendFailed(nil, true))
@@ -255,7 +286,7 @@ public struct SendConfirmation {
                         let storedWallet = try walletStorage.exportWallet()
                         let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
                         let network = zcashSDKEnvironment.network.networkType
-                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, network)
+                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, zip32AccountIndex, network)
 
                         let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
                         
@@ -342,6 +373,13 @@ public struct SendConfirmation {
                 state.failedDescription = desc
                 return .none
                 
+            case .updateStackDestination(let destination):
+                if let destination {
+                    state.stackDestinationBindingsAlive = destination.rawValue
+                }
+                state.stackDestination = destination
+                return .none
+                
             case .reportTapped:
                 var supportData = SupportDataGenerator.generate()
                 if let code = state.failedCode, let desc = state.failedDescription {
@@ -367,6 +405,30 @@ public struct SendConfirmation {
                 
             case .shareFinished:
                 state.messageToBeShared = nil
+                return .none
+            
+                // MARK: - Keystone
+                
+            case .getSignatureTapped:
+                return .send(.updateStackDestination(.scan))
+                
+            case .rejectTapped:
+                return .none
+                
+            case .confirmWithKeystoneTapped:
+                return .send(.updateStackDestination(.signWithKeystone))
+                
+            case .scan(.cancelPressed):
+                return .send(.updateStackDestination(.signWithKeystone))
+
+            case .scan(.foundZA(let zcashAccounts)):
+                if !state.tmpHelper {
+                    state.tmpHelper = true
+                    return .send(.updateStackDestination(.sending))
+                }
+                return .none
+                
+            case .scan:
                 return .none
             }
         }

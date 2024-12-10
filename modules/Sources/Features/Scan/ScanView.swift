@@ -40,7 +40,10 @@ public struct ScanView: View {
                         if store.isTorchAvailable {
                             torchButton(size: proxy.size)
                         }
-                        libraryButton(size: proxy.size)
+                        
+                        if !store.forceLibraryToHide {
+                            libraryButton(size: proxy.size)
+                        }
                     }
                 }
 
@@ -48,6 +51,17 @@ public struct ScanView: View {
                     Spacer()
   
                     WithPerceptionTracking {
+                        if let instructions = store.instructions {
+                            Text(instructions)
+                                .font(.custom(FontFamily.Inter.semiBold.name, size: 20))
+                                .foregroundColor(Asset.Colors.ZDesign.shark200.color)
+                                .padding(.bottom, 32)
+                                .lineLimit(nil)
+                                .multilineTextAlignment(.center)
+                                .lineSpacing(3)
+                                .screenHorizontalPadding()
+                        }
+                        
                         HStack(alignment: .top, spacing: 0) {
                             if !store.info.isEmpty {
                                 Asset.Assets.infoOutline.image
@@ -144,7 +158,7 @@ public struct ScanView: View {
                 }
             }
             .position(
-                x: topLeft.x + frameSize.width * 0.5 + 35,
+                x: topLeft.x + frameSize.width * 0.5 + (store.forceLibraryToHide ? 0 : 35),
                 y: topLeft.y + frameSize.height + 45
             )
         }

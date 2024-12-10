@@ -55,71 +55,119 @@ public struct ReceiveView: View {
                         currentFocus = .uaAddress
                     }
 
-                    addressBlock(
-                        prefixIcon: Asset.Assets.Brandmarks.brandmarkMax.image,
-                        title: L10n.Receive.shieldedAddress,
-                        address: store.unifiedAddress,
-                        postfixIcon: Asset.Assets.Icons.shieldTickFilled.image,
-                        iconFg: Design.Utility.Purple._800,
-                        iconBg: Design.Utility.Purple._100,
-                        bcgColor: Design.Utility.Purple._50.color,
-                        expanded: currentFocus == .uaAddress
-                    ) {
-                        store.send(.copyToPastboard(store.unifiedAddress.redacted))
-                    } qrAction: {
-                        store.send(.addressDetailsRequest(store.unifiedAddress.redacted, true))
-                    } requestAction: {
-                        store.send(.requestTapped(store.unifiedAddress.redacted, true))
-                    }
-                    .onTapGesture {
-                        withAnimation {
-                            currentFocus = .uaAddress
-                        }
-                    }
-                    .padding(.top, 24)
-
-                    addressBlock(
-                        prefixIcon: Asset.Assets.Brandmarks.brandmarkLow.image,
-                        title: L10n.Receive.transparentAddress,
-                        address: store.transparentAddress,
-                        iconFg: Design.Text.primary,
-                        iconBg: Design.Surfaces.bgTertiary,
-                        bcgColor: Design.Utility.Gray._50.color,
-                        expanded: currentFocus == .tAddress
-                    ) {
-                        store.send(.copyToPastboard(store.transparentAddress.redacted))
-                    } qrAction: {
-                        store.send(.addressDetailsRequest(store.transparentAddress.redacted, false))
-                    } requestAction: {
-                        store.send(.requestTapped(store.transparentAddress.redacted, false))
-                    }
-                    .onTapGesture {
-                        withAnimation {
-                            currentFocus = .tAddress
-                        }
-                    }
-#if DEBUG
-                    if networkType == .testnet {
+                    if store.selectedWalletAccount?.vendor == .keystone {
                         addressBlock(
-                            prefixIcon: Asset.Assets.Brandmarks.brandmarkLow.image,
-                            title: L10n.Receive.saplingAddress,
-                            address: store.saplingAddress,
-                            iconFg: Design.Text.primary,
-                            iconBg: Design.Surfaces.bgTertiary,
-                            bcgColor: .clear,
-                            expanded: currentFocus == .saplingAddress
+                            prefixIcon: Asset.Assets.Brandmarks.brandmarkKeystone.image,
+                            title: "Keystone Shielded Address",
+                            address: store.unifiedAddress,
+                            postfixIcon: Asset.Assets.Icons.shieldTickFilled.image,
+                            iconFg: Design.Utility.Indigo._800,
+                            iconBg: Design.Utility.Indigo._100,
+                            bcgColor: Design.Utility.Indigo._50.color,
+                            expanded: currentFocus == .uaAddress
                         ) {
-                            store.send(.copyToPastboard(store.saplingAddress.redacted))
+                            store.send(.copyToPastboard(store.unifiedAddress.redacted))
                         } qrAction: {
-                            store.send(.addressDetailsRequest(store.saplingAddress.redacted, true))
+                            store.send(.addressDetailsRequest(store.unifiedAddress.redacted, true))
                         } requestAction: {
-                            store.send(.requestTapped(store.saplingAddress.redacted, true))
+                            store.send(.requestTapped(store.unifiedAddress.redacted, true))
                         }
                         .onTapGesture {
-                            currentFocus = .saplingAddress
+                            withAnimation {
+                                currentFocus = .uaAddress
+                            }
                         }
-                    }
+                        .padding(.top, 24)
+                        
+                        if let transparentAddress = store.selectedWalletAccount?.transparentAddress {
+                            addressBlock(
+                                prefixIcon: Asset.Assets.Brandmarks.brandmarkLow.image,
+                                title: "Keystone Transparent Address",
+                                address: transparentAddress,
+                                iconFg: Design.Text.primary,
+                                iconBg: Design.Surfaces.bgTertiary,
+                                bcgColor: Design.Utility.Gray._50.color,
+                                expanded: currentFocus == .tAddress
+                            ) {
+                                store.send(.copyToPastboard(store.transparentAddress.redacted))
+                            } qrAction: {
+                                store.send(.addressDetailsRequest(store.transparentAddress.redacted, false))
+                            } requestAction: {
+                                store.send(.requestTapped(store.transparentAddress.redacted, false))
+                            }
+                            .onTapGesture {
+                                withAnimation {
+                                    currentFocus = .tAddress
+                                }
+                            }
+                        }
+                    } else {
+                        addressBlock(
+                            prefixIcon: Asset.Assets.Brandmarks.brandmarkMax.image,
+                            title: L10n.Receive.shieldedAddress,
+                            address: store.unifiedAddress,
+                            postfixIcon: Asset.Assets.Icons.shieldTickFilled.image,
+                            iconFg: Design.Utility.Purple._800,
+                            iconBg: Design.Utility.Purple._100,
+                            bcgColor: Design.Utility.Purple._50.color,
+                            expanded: currentFocus == .uaAddress
+                        ) {
+                            store.send(.copyToPastboard(store.unifiedAddress.redacted))
+                        } qrAction: {
+                            store.send(.addressDetailsRequest(store.unifiedAddress.redacted, true))
+                        } requestAction: {
+                            store.send(.requestTapped(store.unifiedAddress.redacted, true))
+                        }
+                        .onTapGesture {
+                            withAnimation {
+                                currentFocus = .uaAddress
+                            }
+                        }
+                        .padding(.top, 24)
+                        
+                        addressBlock(
+                            prefixIcon: Asset.Assets.Brandmarks.brandmarkLow.image,
+                            title: L10n.Receive.transparentAddress,
+                            address: store.transparentAddress,
+                            iconFg: Design.Text.primary,
+                            iconBg: Design.Surfaces.bgTertiary,
+                            bcgColor: Design.Utility.Gray._50.color,
+                            expanded: currentFocus == .tAddress
+                        ) {
+                            store.send(.copyToPastboard(store.transparentAddress.redacted))
+                        } qrAction: {
+                            store.send(.addressDetailsRequest(store.transparentAddress.redacted, false))
+                        } requestAction: {
+                            store.send(.requestTapped(store.transparentAddress.redacted, false))
+                        }
+                        .onTapGesture {
+                            withAnimation {
+                                currentFocus = .tAddress
+                            }
+                        }
+#if DEBUG
+                        if networkType == .testnet {
+                            addressBlock(
+                                prefixIcon: Asset.Assets.Brandmarks.brandmarkLow.image,
+                                title: L10n.Receive.saplingAddress,
+                                address: store.saplingAddress,
+                                iconFg: Design.Text.primary,
+                                iconBg: Design.Surfaces.bgTertiary,
+                                bcgColor: .clear,
+                                expanded: currentFocus == .saplingAddress
+                            ) {
+                                store.send(.copyToPastboard(store.saplingAddress.redacted))
+                            } qrAction: {
+                                store.send(.addressDetailsRequest(store.saplingAddress.redacted, true))
+                            } requestAction: {
+                                store.send(.requestTapped(store.saplingAddress.redacted, true))
+                            }
+                            .onTapGesture {
+                                currentFocus = .saplingAddress
+                            }
+                        }
 #endif
+                    }
                 }
             }
             .padding(.vertical, 1)
@@ -229,12 +277,6 @@ public struct ReceiveView: View {
 
 extension Receive.State {
     public static let initial = Receive.State()
-    
-    public static let demo = Receive.State(
-        uAddress: try! UnifiedAddress(
-            encoding: "utest1vergg5jkp4xy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzjanqtl8uqp5vln3zyy246ejtx86vqftp73j7jg9099jxafyjhfm6u956j3",
-            network: .testnet)
-    )
 }
 
 extension Receive {

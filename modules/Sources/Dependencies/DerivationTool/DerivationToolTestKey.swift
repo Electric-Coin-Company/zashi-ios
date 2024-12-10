@@ -20,6 +20,7 @@ extension DerivationToolClient: TestDependencyKey {
         isTransparentAddress: unimplemented("\(Self.self).isTransparentAddress", placeholder: false),
         isTexAddress: unimplemented("\(Self.self).isTexAddress", placeholder: false),
         isZcashAddress: unimplemented("\(Self.self).isZcashAddress", placeholder: false),
+        deriveUnifiedAddressFrom: unimplemented("\(Self.self).deriveUnifiedAddressFrom"),
         deriveArbitraryWalletKey: unimplemented("\(Self.self).deriveArbitraryWalletKey"),
         deriveArbitraryAccountKey: unimplemented("\(Self.self).deriveArbitraryAccountKey")
     )
@@ -35,6 +36,7 @@ extension DerivationToolClient {
         isTransparentAddress: { _, _ in return false },
         isTexAddress: { _, _ in return false },
         isZcashAddress: { _, _ in return false },
+        deriveUnifiedAddressFrom: { _, _ in throw "NotImplemented" },
         deriveArbitraryWalletKey: { _, _ in throw "NotImplemented" },
         deriveArbitraryAccountKey: { _, _, _, _ in throw "NotImplemented" }
     )

@@ -24,6 +24,7 @@ public struct TransactionList {
         public var latestTransactionId = ""
         public var latestTransactionList: [TransactionState] = []
         public var requiredTransactionConfirmations = 0
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
         public var transactionList: IdentifiedArrayOf<TransactionState>
 
@@ -71,8 +72,11 @@ public struct TransactionList {
         switch action {
         case .onAppear:
             state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
+            guard let account = state.selectedWalletAccount else {
+                return .none
+            }
             do {
-                let result = try addressBook.allLocalContacts()
+                let result = try addressBook.allLocalContacts(account.id)
                 let abContacts = result.contacts
                 if result.remoteStoreResult == .failure {
                     // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
@@ -101,7 +105,7 @@ public struct TransactionList {
                 }
                 .cancellable(id: CancelEventId, cancelInFlight: true),
                 .run { send in
-                    if let transactions = try? await sdkSynchronizer.getAllTransactions() {
+                    if let transactions = try? await sdkSynchronizer.getAllTransactions(account.id) {
                         await send(.updateTransactionList(transactions))
                     }
                 }
@@ -139,8 +143,9 @@ public struct TransactionList {
             
         case .synchronizerStateChanged(.upToDate):
             state.latestMinedHeight = sdkSynchronizer.latestState().latestBlockHeight
+            let accountUUID = state.selectedWalletAccount?.id
             return .run { send in
-                if let transactions = try? await sdkSynchronizer.getAllTransactions() {
+                if let transactions = try? await sdkSynchronizer.getAllTransactions(accountUUID) {
                     await send(.updateTransactionList(transactions))
                 }
             }
@@ -149,8 +154,9 @@ public struct TransactionList {
             return .none
         
         case .foundTransactions:
+            let accountUUID = state.selectedWalletAccount?.id
             return .run { send in
-                if let transactions = try? await sdkSynchronizer.getAllTransactions() {
+                if let transactions = try? await sdkSynchronizer.getAllTransactions(accountUUID) {
                     await send(.updateTransactionList(transactions))
                 }
             }

@@ -7,6 +7,7 @@
 
 import ComposableArchitecture
 import Models
+import ZcashLightClientKit
 
 extension DependencyValues {
     public var addressBook: AddressBookClient {
@@ -17,8 +18,8 @@ extension DependencyValues {
 
 @DependencyClient
 public struct AddressBookClient {
-    public let allLocalContacts: () throws -> (contacts: AddressBookContacts, remoteStoreResult: RemoteStoreResult)
-    public let syncContacts: (AddressBookContacts?) async throws -> (contacts: AddressBookContacts, remoteStoreResult: RemoteStoreResult)
-    public let storeContact: (Contact) throws -> (contacts: AddressBookContacts, remoteStoreResult: RemoteStoreResult)
-    public let deleteContact: (Contact) throws -> (contacts: AddressBookContacts, remoteStoreResult: RemoteStoreResult)
+    public let allLocalContacts: (AccountUUID) throws -> (contacts: AddressBookContacts, remoteStoreResult: RemoteStoreResult)
+    public let syncContacts: (AccountUUID, AddressBookContacts?) async throws -> (contacts: AddressBookContacts, remoteStoreResult: RemoteStoreResult)
+    public let storeContact: (AccountUUID, Contact) throws -> (contacts: AddressBookContacts, remoteStoreResult: RemoteStoreResult)
+    public let deleteContact: (AccountUUID, Contact) throws -> (contacts: AddressBookContacts, remoteStoreResult: RemoteStoreResult)
 }
