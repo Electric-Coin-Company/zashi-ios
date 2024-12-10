@@ -114,24 +114,26 @@ public struct RequestPaymentConfirmationView: View {
                     if store.walletAccounts.count > 1 {
                         HStack {
                             VStack(alignment: .leading, spacing: 6) {
-                                Text("Sending from")
+                                Text(L10n.Accounts.sendingFrom)
                                     .zFont(.medium, size: 14, style: Design.Text.tertiary)
                                 
-                                HStack(spacing: 0) {
-                                    store.selectedWalletAccount.vendor.icon()
-                                        .resizable()
-                                        .frame(width: 24, height: 24)
-                                        .background {
-                                            Circle()
-                                                .fill(Design.Surfaces.bgAlt.color)
-                                                .frame(width: 32, height: 32)
-                                        }
-
-                                    Text("\(store.selectedWalletAccount.vendor.name()) Wallet")
-                                        .zFont(.semiBold, size: 16, style: Design.Text.primary)
-                                        .padding(.leading, 16)
+                                if let selectedWalletAccount = store.selectedWalletAccount {
+                                    HStack(spacing: 0) {
+                                        selectedWalletAccount.vendor.icon()
+                                            .resizable()
+                                            .frame(width: 24, height: 24)
+                                            .background {
+                                                Circle()
+                                                    .fill(Design.Surfaces.bgAlt.color)
+                                                    .frame(width: 32, height: 32)
+                                            }
+                                        
+                                        Text(selectedWalletAccount.vendor.name())
+                                            .zFont(.semiBold, size: 16, style: Design.Text.primary)
+                                            .padding(.leading, 16)
+                                    }
+                                    .padding(.top, 8)
                                 }
-                                .padding(.top, 8)
                             }
                             
                             Spacer()
@@ -214,8 +216,8 @@ public struct RequestPaymentConfirmationView: View {
                 
                 Spacer()
                 
-                if store.selectedWalletAccount.vendor == .keystone {
-                    ZashiButton("Confirm with Keystone") {
+                if let vendor = store.selectedWalletAccount?.vendor, vendor == .keystone {
+                    ZashiButton(L10n.Keystone.confirm) {
                         store.send(.confirmWithKeystoneTapped)
                     }
                     .screenHorizontalPadding()

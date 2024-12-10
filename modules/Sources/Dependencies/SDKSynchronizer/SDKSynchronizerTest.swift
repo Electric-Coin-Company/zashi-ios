@@ -23,15 +23,14 @@ extension SDKSynchronizerClient: TestDependencyKey {
         stop: unimplemented("\(Self.self).stop", placeholder: {}()),
         isSyncing: unimplemented("\(Self.self).isSyncing", placeholder: false),
         isInitialized: unimplemented("\(Self.self).isInitialized", placeholder: false),
+        importAccount: unimplemented("\(Self.self).importAccount", placeholder: nil),
         rewind: unimplemented("\(Self.self).rewind", placeholder: Fail(error: "Error").eraseToAnyPublisher()),
         getAllTransactions: unimplemented("\(Self.self).getAllTransactions", placeholder: []),
         getMemos: unimplemented("\(Self.self).getMemos", placeholder: []),
         getUnifiedAddress: unimplemented("\(Self.self).getUnifiedAddress", placeholder: nil),
         getTransparentAddress: unimplemented("\(Self.self).getTransparentAddress", placeholder: nil),
         getSaplingAddress: unimplemented("\(Self.self).getSaplingAddress", placeholder: nil),
-        getAccountBalance: unimplemented("\(Self.self).getAccountBalance", placeholder: nil),
-        sendTransaction: unimplemented("\(Self.self).sendTransaction", placeholder: .placeholder()),
-        shieldFunds: unimplemented("\(Self.self).shieldFunds", placeholder: .placeholder()),
+        getAccountsBalances: unimplemented("\(Self.self).getAccountsBalances", placeholder: [:]),
         wipe: unimplemented("\(Self.self).wipe", placeholder: nil),
         switchToEndpoint: unimplemented("\(Self.self).switchToEndpoint"),
         proposeTransfer: unimplemented("\(Self.self).proposeTransfer", placeholder: .testOnlyFakeProposal(totalFee: 0)),
@@ -50,20 +49,19 @@ extension SDKSynchronizerClient {
         eventStream: { Empty().eraseToAnyPublisher() },
         exchangeRateUSDStream: { Empty().eraseToAnyPublisher() },
         latestState: { .zero },
-        prepareWith: { _, _, _ in },
+        prepareWith: { _, _, _, _, _ in },
         start: { _ in },
         stop: { },
         isSyncing: { false },
         isInitialized: { false },
+        importAccount: { _, _, _, _, _, _ in nil },
         rewind: { _ in Empty<Void, Error>().eraseToAnyPublisher() },
         getAllTransactions: { [] },
         getMemos: { _ in [] },
         getUnifiedAddress: { _ in nil },
         getTransparentAddress: { _ in nil },
         getSaplingAddress: { _ in nil },
-        getAccountBalance: { _ in nil },
-        sendTransaction: { _, _, _, _ in .placeholder() },
-        shieldFunds: { _, _, _ in .placeholder() },
+        getAccountsBalances: { [:] },
         wipe: { Empty<Void, Error>().eraseToAnyPublisher() },
         switchToEndpoint: { _ in },
         proposeTransfer: { _, _, _, _ in .testOnlyFakeProposal(totalFee: 0) },
@@ -85,11 +83,12 @@ extension SDKSynchronizerClient {
         exchangeRateUSDStream: @escaping () -> AnyPublisher<FiatCurrencyResult?, Never> = { Empty().eraseToAnyPublisher() },
         latestState: @escaping () -> SynchronizerState = { .zero },
         latestScannedHeight: @escaping () -> BlockHeight = { 0 },
-        prepareWith: @escaping ([UInt8], BlockHeight, WalletInitMode) throws -> Void = { _, _, _ in },
+        prepareWith: @escaping ([UInt8], BlockHeight, WalletInitMode, String, String?) throws -> Void = { _, _, _, _, _ in },
         start: @escaping (_ retry: Bool) throws -> Void = { _ in },
         stop: @escaping () -> Void = { },
         isSyncing: @escaping () -> Bool = { false },
         isInitialized: @escaping () -> Bool = { false },
+        importAccount: @escaping (String, [UInt8]?, Zip32AccountIndex?, AccountPurpose, String, String?) async throws -> AccountUUID? = { _, _, _, _, _, _ in nil },
         rewind: @escaping (RewindPolicy) -> AnyPublisher<Void, Error> = { _ in return Empty<Void, Error>().eraseToAnyPublisher() },
         getAllTransactions: @escaping () -> [TransactionState] = {
             let mockedCleared: [TransactionStateMockHelper] = [
@@ -143,7 +142,7 @@ extension SDKSynchronizerClient {
             return clearedTransactions
         },
         getMemos: @escaping (_ rawID: Data) -> [Memo] = { _ in [] },
-        getUnifiedAddress: @escaping (_ account: Zip32AccountIndex) -> UnifiedAddress? = { _ in
+        getUnifiedAddress: @escaping (_ account: AccountUUID) -> UnifiedAddress? = { _ in
             // swiftlint:disable force_try
             try! UnifiedAddress(
                 encoding: """
@@ -153,59 +152,27 @@ extension SDKSynchronizerClient {
                 network: .testnet
             )
         },
-        getTransparentAddress: @escaping (_ account: Zip32AccountIndex) -> TransparentAddress? = { _ in return nil },
-        getSaplingAddress: @escaping (_ account: Zip32AccountIndex) async -> SaplingAddress? = { _ in
+        getTransparentAddress: @escaping (_ account: AccountUUID) -> TransparentAddress? = { _ in return nil },
+        getSaplingAddress: @escaping (_ account: AccountUUID) async -> SaplingAddress? = { _ in
             // swiftlint:disable:next force_try
             try! SaplingAddress(
                 encoding: "ztestsapling1edm52k336nk70gxqxedd89slrrf5xwnnp5rt6gqnk0tgw4mynv6fcx42ym6x27yac5amvfvwypz",
                 network: .testnet
             )
         },
-        getAccountBalance: @escaping (_ account: Zip32AccountIndex) async -> AccountBalance? = { _ in nil },
-        sendTransaction:
-        @escaping (UnifiedSpendingKey, Zatoshi, Recipient, Memo?) async throws -> TransactionState = { _, _, _, memo in
-            var memos: [Memo]? = []
-            if let memo { memos?.append(memo) }
-
-            return TransactionState(
-                expiryHeight: 40,
-                memos: memos,
-                minedHeight: 50,
-                shielded: true,
-                zAddress: "tteafadlamnelkqe",
-                fee: Zatoshi(10),
-                id: "id",
-                status: .paid,
-                timestamp: 1234567,
-                zecAmount: Zatoshi(10)
-            )
-        },
-        shieldFunds: @escaping (UnifiedSpendingKey, Memo, Zatoshi) async throws -> TransactionState = { _, memo, _  in
-            TransactionState(
-                expiryHeight: 40,
-                memos: [memo],
-                minedHeight: 50,
-                shielded: true,
-                zAddress: "tteafadlamnelkqe",
-                fee: Zatoshi(10),
-                id: "id",
-                status: .paid,
-                timestamp: 1234567,
-                zecAmount: Zatoshi(10)
-            )
-        },
+        getAccountsBalances: @escaping () async -> [AccountUUID: AccountBalance] = { [:] },
         wipe: @escaping () -> AnyPublisher<Void, Error>? = { Fail(error: "Error").eraseToAnyPublisher() },
         switchToEndpoint: @escaping (LightWalletEndpoint) async throws -> Void = { _ in },
         proposeTransfer:
-        @escaping (Zip32AccountIndex, Recipient, Zatoshi, Memo?) async throws -> Proposal = { _, _, _, _ in .testOnlyFakeProposal(totalFee: 0) },
+        @escaping (AccountUUID, Recipient, Zatoshi, Memo?) async throws -> Proposal = { _, _, _, _ in .testOnlyFakeProposal(totalFee: 0) },
         createProposedTransactions:
         @escaping (Proposal, UnifiedSpendingKey) async throws -> CreateProposedTransactionsResult = { _, _ in .success(txIds: []) },
         proposeShielding:
-        @escaping (Zip32AccountIndex, Zatoshi, Memo, TransparentAddress?) async throws -> Proposal? = { _, _, _, _ in nil },
+        @escaping (AccountUUID, Zatoshi, Memo, TransparentAddress?) async throws -> Proposal? = { _, _, _, _ in nil },
         isSeedRelevantToAnyDerivedAccount: @escaping ([UInt8]) async throws -> Bool = { _ in false },
         refreshExchangeRateUSD: @escaping () -> Void = { },
         evaluateBestOf: @escaping ([LightWalletEndpoint], Double, Double, UInt64, Int, NetworkType) async -> [LightWalletEndpoint] = { _, _, _, _, _, _ in [] },
-        walletAccounts: @escaping () -> [WalletAccount] = { [] }
+        walletAccounts: @escaping () async throws -> [WalletAccount] = { [] }
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
             stateStream: stateStream,
@@ -217,15 +184,14 @@ extension SDKSynchronizerClient {
             stop: stop,
             isSyncing: isSyncing,
             isInitialized: isInitialized,
+            importAccount: importAccount,
             rewind: rewind,
             getAllTransactions: getAllTransactions,
             getMemos: getMemos,
             getUnifiedAddress: getUnifiedAddress,
             getTransparentAddress: getTransparentAddress,
             getSaplingAddress: getSaplingAddress,
-            getAccountBalance: getAccountBalance,
-            sendTransaction: sendTransaction,
-            shieldFunds: shieldFunds,
+            getAccountsBalances: getAccountsBalances,
             wipe: wipe,
             switchToEndpoint: switchToEndpoint,
             proposeTransfer: proposeTransfer,

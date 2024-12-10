@@ -31,7 +31,6 @@ public struct Balances {
             case partialProposalError
         }
 
-        @Shared(.inMemory(.account)) public var accountIndex: Zip32AccountIndex = Zip32AccountIndex(0)
         @Presents public var alert: AlertState<Action>?
         public var autoShieldingThreshold: Zatoshi
         public var changePending: Zatoshi
@@ -41,6 +40,7 @@ public struct Balances {
         public var partialProposalErrorState: PartialProposalError.State
         public var pendingTransactions: Zatoshi
         public var shieldedBalance: Zatoshi
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var syncProgressState: SyncProgress.State
         public var transparentBalance: Zatoshi
         public var walletBalancesState: WalletBalances.State
@@ -92,7 +92,7 @@ public struct Balances {
         case shieldFundsSuccess
         case synchronizerStateChanged(RedactableSynchronizerState)
         case syncProgress(SyncProgress.Action)
-        case updateBalances(AccountBalance?)
+        case updateBalances([AccountUUID: AccountBalance])
         case updateDestination(Balances.State.Destination?)
         case updateHintBoxVisibility(Bool)
         case walletBalances(WalletBalances.Action)
@@ -150,17 +150,20 @@ public struct Balances {
                 return .none
 
             case .shieldFunds:
+                guard let account = state.selectedWalletAccount, let zip32AccountIndex = account.zip32AccountIndex else {
+                    return .none
+                }
                 state.isShieldingFunds = true
-                return .run { [accountIndex = state.accountIndex] send in
+                return .run { send in
                     do {
                         let storedWallet = try walletStorage.exportWallet()
                         let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
-                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, accountIndex, zcashSDKEnvironment.network.networkType)
+                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, zip32AccountIndex, zcashSDKEnvironment.network.networkType)
                         
-                        guard let uAddress = try await sdkSynchronizer.getUnifiedAddress(accountIndex) else { throw "sdkSynchronizer.getUnifiedAddress" }
+                        guard let uAddress = try await sdkSynchronizer.getUnifiedAddress(account.id) else { throw "sdkSynchronizer.getUnifiedAddress" }
 
                         let address = try uAddress.transparentReceiver()
-                        let proposal = try await sdkSynchronizer.proposeShielding(accountIndex, zcashSDKEnvironment.shieldingThreshold, .empty, address)
+                        let proposal = try await sdkSynchronizer.proposeShielding(account.id, zcashSDKEnvironment.shieldingThreshold, .empty, address)
                         
                         guard let proposal else { throw "sdkSynchronizer.proposeShielding" }
                         
@@ -199,14 +202,20 @@ public struct Balances {
                 return .send(.updateDestination(.partialProposalError))
                 
             case .synchronizerStateChanged(let latestState):
-                return .send(.updateBalances(latestState.data.accountBalance?.data))
+                return .send(.updateBalances(latestState.data.accountsBalances))
 
             case .walletBalances(.balancesUpdated(let accountBalance)):
                 state.shieldedBalance = state.walletBalancesState.shieldedBalance
                 state.transparentBalance = state.walletBalancesState.transparentBalance
-                return .send(.updateBalances(accountBalance))
+                // TODO: fixme
+                //return .send(.updateBalances(accountBalance))
+                return .none
 
-            case .updateBalances(let accountBalance):
+            case .updateBalances(let accountsBalances):
+                guard let account = state.selectedWalletAccount else {
+                    return .none
+                }
+                let accountBalance = accountsBalances[account.id]
                 state.changePending = (accountBalance?.saplingBalance.changePendingConfirmation ?? .zero) +
                     (accountBalance?.orchardBalance.changePendingConfirmation ?? .zero)
                 state.pendingTransactions = (accountBalance?.saplingBalance.valuePendingSpendability ?? .zero) +

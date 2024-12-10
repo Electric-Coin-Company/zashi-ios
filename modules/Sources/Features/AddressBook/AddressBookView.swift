@@ -167,7 +167,7 @@ public struct AddressBookView: View {
     @ViewBuilder func contactsList() -> some View {
         List {
             if store.walletAccounts.count > 1 && store.isInSelectMode {
-                Text("Your Wallets")
+                Text(L10n.Accounts.AddressBook.your)
                     .zFont(.medium, size: 14, style: Design.Text.tertiary)
                     .padding(.top, 24)
                     .padding(.bottom, 16)
@@ -179,7 +179,7 @@ public struct AddressBookView: View {
                         walletAcoountView(
                             icon: walletAccount.vendor.icon(),
                             title: walletAccount.vendor.name(),
-                            address: walletAccount.uaAddressString
+                            address: walletAccount.unifiedAddress ?? L10n.Receive.Error.cantExtractUnifiedAddress
                         ) {
                             store.send(.walletAccountTapped(walletAccount))
                         }
@@ -214,7 +214,7 @@ public struct AddressBookView: View {
                     .padding(.top, 24)
                     .screenHorizontalPadding()
                 } else {
-                    Text("Address Book Contacts")
+                    Text(L10n.Accounts.AddressBook.contacts)
                         .zFont(.medium, size: 14, style: Design.Text.tertiary)
                         .padding(.top, 32)
                         .padding(.bottom, 16)
@@ -257,7 +257,7 @@ public struct AddressBookView: View {
                     walletAcoountView(
                         icon: walletAccount.vendor.icon(),
                         title: walletAccount.vendor.name(),
-                        address: walletAccount.uaAddressString
+                        address: walletAccount.unifiedAddress ?? L10n.Receive.Error.cantExtractUnifiedAddress
                     ) {
                         store.send(.walletAccountTapped(walletAccount))
                     }
@@ -305,7 +305,7 @@ public struct AddressBookView: View {
                         Text(title)
                             .zFont(.semiBold, size: 14, style: Design.Text.primary)
                         
-                        Text(address)
+                        Text(address.zip316)
                             .zFont(size: 12, style: Design.Text.tertiary)
                     }
                     

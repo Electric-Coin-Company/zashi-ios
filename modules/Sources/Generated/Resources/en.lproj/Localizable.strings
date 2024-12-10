@@ -456,3 +456,35 @@
 "partners.coinbaseOnrampUrl" = "https://pay.coinbase.com/buy/select-asset?appId=%@&addresses={\"%@\":[\"zcash\"]}";
 "partners.flexa.transactionFailedTitle" = "Transaction Failed";
 "partners.flexa.transactionFailedMessage" = "We're sorry but something has failed. Please try again.";
+
+// MARK: Keystone integration
+"keystone.wallet" = "Keystone Wallet";
+"keystone.drawer.title" = "Wallets & Hardware";
+"keystone.connect" = "Connect Hardware Wallet";
+"keystone.drawer.banner.title" = "Keystone Hardware Wallet";
+"keystone.drawer.banner.desc" = "Get 5%% off airgapped hardware wallet with “AwesomeZashi” coupon code.";
+"keystone.addHWWallet.title" = "Confirm Account to Access";
+"keystone.addHWWallet.desc" = "Select the wallet you'd like to connect to proceed. Once connected, you’ll be able to wirelessly sign transactions with your hardware wallet.";
+"keystone.addHWWallet.connect" = "Connect";
+"keystone.addHWWallet.forgetDevice" = "Forget this device";
+"keystone.addHWWallet.scan" = "Scan your device’s QR code to connect.";
+"keystone.addHWWallet.tutorial" = "View Keystone tutorial";
+"keystone.addHWWallet.howTo" = "Instructions:";
+"keystone.addHWWallet.step1" = "Unlock your Keystone";
+"keystone.addHWWallet.step2" = "Tap the menu icon";
+"keystone.addHWWallet.step3" = "Select Watch-only Wallet";
+"keystone.addHWWallet.step4" = "Select Zashi app and scan QR code";
+"keystone.addHWWallet.readyToScan" = "Ready to Scan";
+"keystone.confirm" = "Confirm with Keystone";
+"keystone.signWith.hardware" = "Hardware";
+"keystone.signWith.title" = "Scan with your Keystone wallet";
+"keystone.signWith.desc" = "After you have signed with Keystone, tap on the Get Signature button below.";
+"keystone.signWith.getSignature" = "Get Signature";
+"keystone.signWith.reject" = "Reject";
+"keystone.signWith.signTransaction" = "Sign Transaction";
+"keystone.scanInfo" = "Scan your Keystone wallet to connect";
+"accounts.sendingFrom" = "Sending from";
+"accounts.addressBook.your" = "Your Wallets";
+"accounts.addressBook.contacts" = "Address Book Contacts";
+"accounts.keystone" = "Keystone";
+"accounts.zashi" = "Zashi";

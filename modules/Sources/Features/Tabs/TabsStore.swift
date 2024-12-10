@@ -98,7 +98,7 @@ public struct Tabs {
         public var requestZecState: RequestZec.State
         public var scanState: Scan.State = .initial
         public var selectedTab: Tab = .account
-        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount = .default
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var selectTextRequest = false
         public var sendConfirmationState: SendConfirmation.State
         public var sendState: SendFlow.State
@@ -112,7 +112,7 @@ public struct Tabs {
         public var stackDestinationRequestPayment: StackDestinationRequestPayment?
         public var stackDestinationRequestPaymentBindingsAlive = 0
         public var textToSelect = ""
-        @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = [.default]
+        @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         public var zecKeyboardState: ZecKeyboard.State
         
         public init(
@@ -259,7 +259,11 @@ public struct Tabs {
             case .walletAccountTapped(let walletAccount):
                 state.selectedWalletAccount = walletAccount
                 state.accountSwitchRequest = false
-                return .none
+                return .concatenate(
+                    .send(.home(.walletBalances(.updateBalances))),
+                    .send(.send(.walletBalances(.updateBalances))),
+                    .send(.balanceBreakdown(.walletBalances(.updateBalances)))
+                )
             
             case .addKeystoneHWWallet(.continueTapped):
                 return .send(.updateStackDestinationAddKeystoneHWWallet(.scan))

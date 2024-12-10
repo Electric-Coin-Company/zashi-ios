@@ -43,7 +43,7 @@ extension AddressBookClient {
     ///     [Encrypted data]        `contacts`
     ///
     /// This method always produces the latest structure with the latest encryption version.
-    static func encryptContacts(_ contacts: AddressBookContacts, account: Zip32AccountIndex) throws -> Data {
+    static func encryptContacts(_ contacts: AddressBookContacts, account: AccountUUID) throws -> Data {
         @Dependency(\.walletStorage) var walletStorage
         
         guard let encryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys(), let addressBookKey = encryptionKeys.getCached(account: account) else {
@@ -81,7 +81,7 @@ extension AddressBookClient {
     ///     [Encrypted data]        `address book version`
     ///     [Encrypted data]        `timestamp`
     ///     [Encrypted data]        `contacts`
-    static func contactsFrom(encryptedData: Data, account: Zip32AccountIndex) throws -> AddressBookContacts {
+    static func contactsFrom(encryptedData: Data, account: AccountUUID) throws -> AddressBookContacts {
         @Dependency(\.walletStorage) var walletStorage
         
         guard let encryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys(), let addressBookKey = encryptionKeys.getCached(account: account) else {

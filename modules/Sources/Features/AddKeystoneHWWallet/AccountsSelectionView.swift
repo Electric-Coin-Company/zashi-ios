@@ -25,11 +25,11 @@ public struct AccountsSelectionView: View {
                     .frame(width: 193, height: 32)
                     .padding(.top, 16)
                 
-                Text("Confirm Account to Access")
+                Text(L10n.Keystone.AddHWWallet.title)
                     .zFont(.semiBold, size: 24, style: Design.Text.primary)
                     .padding(.top, 24)
                 
-                Text("Select the wallet you'd like to connect to proceed. Once connected, you’ll be able to wirelessly sign transactions with your hardware wallet.")
+                Text(L10n.Keystone.AddHWWallet.desc)
                     .zFont(size: 14, style: Design.Text.tertiary)
                     .lineSpacing(1.5)
                     .padding(.top, 8)
@@ -40,7 +40,7 @@ public struct AccountsSelectionView: View {
                 Spacer()
 
                 ZashiButton(
-                    "Unlock"
+                    L10n.Keystone.AddHWWallet.connect
                 ) {
                     store.send(.unlockTapped)
                 }
@@ -48,7 +48,7 @@ public struct AccountsSelectionView: View {
                 .disabled(!store.isKSAccountSelected)
 
                 ZashiButton(
-                    "Forget this device",
+                    L10n.Keystone.AddHWWallet.forgetDevice,
                     type: .ghost
                 ) {
                     store.send(.forgetThisDeviceTapped)
@@ -80,7 +80,7 @@ public struct AccountsSelectionView: View {
                         .padding(.trailing, 8)
                     
                     VStack(alignment: .leading, spacing: 0) {
-                        Text("Keystone Wallet")
+                        Text(L10n.Keystone.wallet)
                             .zFont(.semiBold, size: 14, style: Design.Text.primary)
                         
                         Text(store.keystoneAddress)

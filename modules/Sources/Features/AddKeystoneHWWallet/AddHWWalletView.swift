@@ -27,49 +27,46 @@ public struct AddKeystoneHWWalletView: View {
                             .frame(width: 193, height: 32)
                             .padding(.top, 16)
 
-                        Text("Connect Hardware Wallet")
+                        Text(L10n.Keystone.connect)
                             .zFont(.semiBold, size: 24, style: Design.Text.primary)
                             .padding(.top, 24)
                         
-                        Text("Connect an airgapped hardware wallet that communicates through QR-code.")
+                        Text(L10n.Keystone.AddHWWallet.scan)
                             .zFont(size: 14, style: Design.Text.tertiary)
                             .lineSpacing(1.5)
                             .padding(.top, 8)
                         
-                        Text("Have questions?")
-                            .zFont(size: 14, style: Design.Text.tertiary)
-                            .padding(.top, 8)
-                        
-                        Text("View Keystone tutorial")
-                            .zFont(.semiBold, size: 14, style: Design.Utility.HyperBlue._700)
-                            .padding(.top, 4)
+                        Text(L10n.Keystone.AddHWWallet.tutorial)
+                            .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
+                            .foregroundColor(Design.Utility.HyperBlue._700.color)
                             .underline()
+                            .padding(.top, 4)
                         
-                        Text("How to connect:")
+                        Text(L10n.Keystone.AddHWWallet.howTo)
                             .zFont(.semiBold, size: 18, style: Design.Text.primary)
                             .padding(.top, 24)
                         
                         InfoRow(
                             icon: Asset.Assets.Icons.lockUnlocked.image,
-                            title: "Unlock your Keystone"
+                            title: L10n.Keystone.AddHWWallet.step1
                         )
                         .padding(.top, 16)
                         
                         InfoRow(
                             icon: Asset.Assets.Icons.menu.image,
-                            title: "Tap the menu icon"
+                            title: L10n.Keystone.AddHWWallet.step2
                         )
                         .padding(.top, 16)
 
                         InfoRow(
                             icon: Asset.Assets.eyeOn.image,
-                            title: "Select Watch-only Wallet"
+                            title: L10n.Keystone.AddHWWallet.step3
                         )
                         .padding(.top, 16)
 
                         InfoRow(
                             icon: Asset.Assets.Icons.zashiLogoSqBold.image,
-                            title: "Select Zashi app"
+                            title: L10n.Keystone.AddHWWallet.step4
                         )
                         .padding(.top, 16)
                     }
@@ -78,17 +75,8 @@ public struct AddKeystoneHWWalletView: View {
                 
                 Spacer()
                 
-                HStack(alignment: .top, spacing: 0) {
-                    Asset.Assets.infoCircle.image
-                        .zImage(size: 20, style: Design.Text.primary)
-                        .padding(.trailing, 12)
-
-                    Text("Security warning here")
-                        .zFont(size: 12, style: Design.Text.tertiary)
-                }
-
                 ZashiButton(
-                    "Continue"
+                    L10n.Keystone.AddHWWallet.readyToScan
                 ) {
                     store.send(.continueTapped)
                 }

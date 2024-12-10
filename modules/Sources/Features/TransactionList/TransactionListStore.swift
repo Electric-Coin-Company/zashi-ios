@@ -18,13 +18,13 @@ public struct TransactionList {
 
     @ObservableState
     public struct State: Equatable {
-        @Shared(.inMemory(.account)) public var accountIndex: Zip32AccountIndex = Zip32AccountIndex(0)
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
         public var latestMinedHeight: BlockHeight?
         public var latestTransactionId = ""
         public var latestTransactionList: [TransactionState] = []
         public var requiredTransactionConfirmations = 0
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
         public var transactionList: IdentifiedArrayOf<TransactionState>
 
@@ -72,8 +72,11 @@ public struct TransactionList {
         switch action {
         case .onAppear:
             state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
+            guard let account = state.selectedWalletAccount else {
+                return .none
+            }
             do {
-                let result = try addressBook.allLocalContacts(state.accountIndex)
+                let result = try addressBook.allLocalContacts(account.id)
                 let abContacts = result.contacts
                 if result.remoteStoreResult == .failure {
                     // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408

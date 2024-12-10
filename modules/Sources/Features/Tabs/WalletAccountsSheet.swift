@@ -13,54 +13,66 @@ import UIComponents
 extension TabsView {
     @ViewBuilder func accountSwitchContent() -> some View {
         WithPerceptionTracking {
-            VStack(alignment: .leading, spacing: 0) {
-                Text("Wallets & Hardware")
-                    .zFont(.semiBold, size: 20, style: Design.Text.primary)
-                    .padding(.top, 32)
-                    .padding(.bottom, 24)
-                    .padding(.horizontal, 20)
-                
-                ForEach(store.walletAccounts, id: \.self) { walletAccount in
-                    walletAccountView(
-                        icon: walletAccount.vendor.icon(),
-                        title: walletAccount.vendor.name(),
-                        address: walletAccount.uaAddressString,
-                        selected: store.selectedWalletAccount == walletAccount
-                    ) {
-                        store.send(.walletAccountTapped(walletAccount))
-                    }
-                }
-                
-                if store.walletAccounts.count == 1 {
-                    addKeystoneBannerView()
-                        .padding(.top, 8)
-                    
-                    ZashiButton(
-                        "Connect Hardware Wallet",
-                        type: .secondary
-                    ) {
-                        store.send(.addKeystoneHWWalletTapped)
-                    }
-                    .padding(.top, 32)
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 24)
-                } else {
-                    Color.clear
-                        .frame(height: 1)
-                        .padding(.bottom, 23)
+            if #available(iOS 16.0, *) {
+                mainBody()
+                    .presentationDetents([.height(accountSwitchSheetHeight)])
+                    .presentationDragIndicator(.visible)
+            } else {
+                mainBody(stickToBottom: true)
+            }
+        }
+    }
+    
+    @ViewBuilder func mainBody(stickToBottom: Bool = false) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            if stickToBottom {
+               Spacer()
+            }
+            
+            Text(L10n.Keystone.Drawer.title)
+                .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                .padding(.top, 32)
+                .padding(.bottom, 24)
+                .padding(.horizontal, 20)
+            
+            ForEach(store.walletAccounts, id: \.self) { walletAccount in
+                walletAccountView(
+                    icon: walletAccount.vendor.icon(),
+                    title: walletAccount.vendor.name(),
+                    address: walletAccount.unifiedAddress ?? L10n.Receive.Error.cantExtractUnifiedAddress,
+                    selected: store.selectedWalletAccount == walletAccount
+                ) {
+                    store.send(.walletAccountTapped(walletAccount))
                 }
             }
-            .padding(.horizontal, 4)
-            .background {
-                GeometryReader { proxy in
-                    Color.clear
-                        .task {
-                            accountSwitchSheetHeight = proxy.size.height
-                        }
+            
+            if store.walletAccounts.count == 1 {
+                addKeystoneBannerView()
+                    .padding(.top, 8)
+                
+                ZashiButton(
+                    L10n.Keystone.connect,
+                    type: .secondary
+                ) {
+                    store.send(.addKeystoneHWWalletTapped)
                 }
+                .padding(.top, 32)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 24)
+            } else {
+                Color.clear
+                    .frame(height: 1)
+                    .padding(.bottom, 23)
             }
-            .presentationDetents([.height(accountSwitchSheetHeight)])
-            .presentationDragIndicator(.visible)
+        }
+        .padding(.horizontal, 4)
+        .background {
+            GeometryReader { proxy in
+                Color.clear
+                    .task {
+                        accountSwitchSheetHeight = proxy.size.height
+                    }
+            }
         }
     }
     
@@ -88,9 +100,9 @@ extension TabsView {
                     
                     VStack(alignment: .leading, spacing: 0) {
                         Text(title)
-                            .zFont(.semiBold, size: 14, style: Design.Text.primary)
+                            .zFont(.semiBold, size: 16, style: Design.Text.primary)
                         
-                        Text(address)
+                        Text(address.zip316)
                             .zFont(size: 12, style: Design.Text.tertiary)
                     }
                     
@@ -111,7 +123,7 @@ extension TabsView {
     @ViewBuilder func addKeystoneBannerView() -> some View {
         WithPerceptionTracking {
             HStack(spacing: 0) {
-                VStack(spacing: 0) {
+                HStack(alignment: .top, spacing: 0) {
                     Asset.Assets.Partners.keystoneLogo.image
                         .resizable()
                         .frame(width: 32, height: 32)
@@ -121,21 +133,19 @@ extension TabsView {
                                 .fill(Design.Surfaces.bgAlt.color)
                         }
                         .padding(.trailing, 12)
-
-                    Spacer()
+                    
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text(L10n.Keystone.Drawer.Banner.title)
+                            .zFont(.semiBold, size: 14, style: Design.Text.primary)
+                        
+                        Text(L10n.Keystone.Drawer.Banner.desc)
+                            .zFont(size: 14, style: Design.Text.tertiary)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .lineSpacing(2)
+                            .padding(.top, 2)
+                    }
+                    .padding(.trailing, 12)
                 }
-
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Keystone Hardware Wallet")
-                        .zFont(.semiBold, size: 14, style: Design.Text.primary)
-
-                    Text("Get a Keystone Hardware Wallet with 10% discount.")
-                        .zFont(size: 14, style: Design.Text.tertiary)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .lineSpacing(2)
-                        .padding(.top, 2)
-                }
-                .padding(.trailing, 12)
 
                 Spacer()
                 

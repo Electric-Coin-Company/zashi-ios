@@ -19,17 +19,17 @@ import Models
 public struct Receive {
     @ObservableState
     public struct State: Equatable {
-        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount = .default
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
-        public var uAddress: UnifiedAddress?
+        //public var uAddress: UnifiedAddress?
 
         public var unifiedAddress: String {
-            uAddress?.stringEncoded ?? L10n.Receive.Error.cantExtractUnifiedAddress
+            selectedWalletAccount?.uAddress?.stringEncoded ?? L10n.Receive.Error.cantExtractUnifiedAddress
         }
 
         public var saplingAddress: String {
             do {
-                let address = try uAddress?.saplingReceiver().stringEncoded ?? L10n.Receive.Error.cantExtractSaplingAddress
+                let address = try selectedWalletAccount?.uAddress?.saplingReceiver().stringEncoded ?? L10n.Receive.Error.cantExtractSaplingAddress
                 return address
             } catch {
                 return L10n.Receive.Error.cantExtractSaplingAddress
@@ -38,7 +38,7 @@ public struct Receive {
 
         public var transparentAddress: String {
             do {
-                let address = try uAddress?.transparentReceiver().stringEncoded ?? L10n.Receive.Error.cantExtractTransparentAddress
+                let address = try selectedWalletAccount?.uAddress?.transparentReceiver().stringEncoded ?? L10n.Receive.Error.cantExtractTransparentAddress
                 return address
             } catch {
                 return L10n.Receive.Error.cantExtractTransparentAddress
@@ -46,9 +46,9 @@ public struct Receive {
         }
 
         public init(
-            uAddress: UnifiedAddress? = nil
+            //uAddress: UnifiedAddress? = nil
         ) {
-            self.uAddress = uAddress
+            //self.uAddress = uAddress
         }
     }
 

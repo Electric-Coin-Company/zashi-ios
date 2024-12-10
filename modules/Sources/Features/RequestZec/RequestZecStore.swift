@@ -30,7 +30,7 @@ public struct RequestZec {
         public var maxPrivacy = false
         public var memoState: MessageEditor.State = .initial
         public var requestedZec: Zatoshi = .zero
-        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount = .default
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var storedQR: CGImage?
 
         public init() {}
@@ -107,7 +107,7 @@ public struct RequestZec {
                             QRCodeGenerator.generate(
                                 from: encryptedOutput,
                                 maxPrivacy: state.maxPrivacy,
-                                vendor: state.selectedWalletAccount.vendor == .keystone ? .keystone : .zashi,
+                                vendor: state.selectedWalletAccount?.vendor == .keystone ? .keystone : .zashi,
                                 color: state.isQRCodeAppreanceFlipped
                                 ? .black
                                 : Asset.Colors.primary.systemColor

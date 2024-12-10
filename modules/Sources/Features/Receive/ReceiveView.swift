@@ -55,10 +55,10 @@ public struct ReceiveView: View {
                         currentFocus = .uaAddress
                     }
 
-                    if store.selectedWalletAccount.vendor == .keystone {
+                    if store.selectedWalletAccount?.vendor == .keystone {
                         addressBlock(
                             prefixIcon: Asset.Assets.Brandmarks.brandmarkKeystone.image,
-                            title: "Keystone Wallet",
+                            title: "Keystone Shielded Address",
                             address: store.unifiedAddress,
                             postfixIcon: Asset.Assets.Icons.shieldTickFilled.image,
                             iconFg: Design.Utility.Indigo._800,
@@ -78,6 +78,29 @@ public struct ReceiveView: View {
                             }
                         }
                         .padding(.top, 24)
+                        
+                        if let transparentAddress = store.selectedWalletAccount?.transparentAddress {
+                            addressBlock(
+                                prefixIcon: Asset.Assets.Brandmarks.brandmarkLow.image,
+                                title: "Keystone Transparent Address",
+                                address: transparentAddress,
+                                iconFg: Design.Text.primary,
+                                iconBg: Design.Surfaces.bgTertiary,
+                                bcgColor: Design.Utility.Gray._50.color,
+                                expanded: currentFocus == .tAddress
+                            ) {
+                                store.send(.copyToPastboard(store.transparentAddress.redacted))
+                            } qrAction: {
+                                store.send(.addressDetailsRequest(store.transparentAddress.redacted, false))
+                            } requestAction: {
+                                store.send(.requestTapped(store.transparentAddress.redacted, false))
+                            }
+                            .onTapGesture {
+                                withAnimation {
+                                    currentFocus = .tAddress
+                                }
+                            }
+                        }
                     } else {
                         addressBlock(
                             prefixIcon: Asset.Assets.Brandmarks.brandmarkMax.image,
@@ -254,12 +277,6 @@ public struct ReceiveView: View {
 
 extension Receive.State {
     public static let initial = Receive.State()
-    
-    public static let demo = Receive.State(
-        uAddress: try! UnifiedAddress(
-            encoding: "utest1vergg5jkp4xy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzjanqtl8uqp5vln3zyy246ejtx86vqftp73j7jg9099jxafyjhfm6u956j3",
-            network: .testnet)
-    )
 }
 
 extension Receive {

@@ -47,7 +47,6 @@ public struct SendConfirmation {
             case sending
         }
 
-        @Shared(.inMemory(.account)) public var accountIndex: Zip32AccountIndex = Zip32AccountIndex(0)
         public var address: String
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         public var alias: String?
@@ -73,12 +72,12 @@ public struct SendConfirmation {
         public var randomResubmissionIconIndex = 0
         public var result: Result?
         public var scanState: Scan.State = .initial
-        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount = .default
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var stackDestination: StackDestination?
         public var stackDestinationBindingsAlive = 0
         public var supportData: SupportData?
         public var txIdToExpand: String?
-        @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = [.default]
+        @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
 
         public var tmpHelper = false
         
@@ -204,8 +203,11 @@ public struct SendConfirmation {
                 state.isTransparentAddress = derivationTool.isTransparentAddress(state.address, zcashSDKEnvironment.network.networkType)
                 state.canSendMail = MFMailComposeViewController.canSendMail()
                 state.alias = nil
+                guard let account = state.selectedWalletAccount else {
+                    return .none
+                }
                 do {
-                    let result = try addressBook.allLocalContacts(state.accountIndex)
+                    let result = try addressBook.allLocalContacts(account.id)
                     let abContacts = result.contacts
                     if result.remoteStoreResult == .failure {
                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
@@ -271,7 +273,10 @@ public struct SendConfirmation {
                 guard let proposal = state.proposal else {
                     return .send(.sendFailed("missing proposal".toZcashError(), true))
                 }
-                return .run { [accountIndex = state.accountIndex] send in
+                guard let zip32AccountIndex = state.selectedWalletAccount?.zip32AccountIndex else {
+                    return .none
+                }
+                return .run { send in
                     if await !localAuthentication.authenticate() {
                         await send(.sendFailed(nil, true))
                         return
@@ -281,7 +286,7 @@ public struct SendConfirmation {
                         let storedWallet = try walletStorage.exportWallet()
                         let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
                         let network = zcashSDKEnvironment.network.networkType
-                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, accountIndex, network)
+                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, zip32AccountIndex, network)
 
                         let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
                         

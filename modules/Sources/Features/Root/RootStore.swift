@@ -45,7 +45,6 @@ public struct Root {
 
     @ObservableState
     public struct State: Equatable {
-        @Shared(.inMemory(.account)) public var accountIndex: Zip32AccountIndex = Zip32AccountIndex(0)
         public var addressBookBinding: Bool = false
         public var addressBookContactBinding: Bool = false
         public var addressBookState: AddressBook.State
@@ -66,11 +65,12 @@ public struct Root {
         public var onboardingState: OnboardingFlow.State
         public var osStatusErrorState: OSStatusError.State
         public var phraseDisplayState: RecoveryPhraseDisplay.State
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var serverSetupState: ServerSetup.State
         public var serverSetupViewBinding: Bool = false
         public var splashAppeared = false
         public var tabsState: Tabs.State
-        @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = [.default]
+        @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         public var walletConfig: WalletConfig
         @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
         public var wasRestoringWhenDisconnected = false

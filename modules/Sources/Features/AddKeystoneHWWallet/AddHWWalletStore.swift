@@ -10,18 +10,21 @@ import ComposableArchitecture
 import Generated
 import KeystoneSDK
 import Models
+import SDKSynchronizer
+import ZcashLightClientKit
 
 @Reducer
 public struct AddKeystoneHWWallet {
     @ObservableState
     public struct State: Equatable {
         public var isKSAccountSelected = false
-        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount = .default
-        @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = [.default]
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
+        @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         public var zcashAccounts: ZcashAccounts?
 
         public var keystoneAddress: String {
             if let _ = zcashAccounts?.accounts.first {
+                // TODO: put a real logic here
                 return "0x7F...EE2d"
             }
             
@@ -34,15 +37,20 @@ public struct AddKeystoneHWWallet {
     }
 
     public enum Action: BindableAction, Equatable {
+        case accountImported(AccountUUID)
+        case accountImportFailed
         case accountTapped
         case binding(BindingAction<AddKeystoneHWWallet.State>)
         case continueTapped
         case forgetThisDeviceTapped
+        case loadedWalletAccounts([WalletAccount], AccountUUID)
         case onAppear
         case unlockTapped
     }
 
     public init() { }
+
+    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
 
     public var body: some Reducer<State, Action> {
         BindingReducer()
@@ -65,20 +73,69 @@ public struct AddKeystoneHWWallet {
                 return .none
 
             case .unlockTapped:
-                // TODO: mocked here until SDK side is ready
-                state.walletAccounts.append(
-                    WalletAccount(
-                        id: 1,
-                        vendor: .keystone,
-                        uaAddressString: "0x8EgiqpBzgfeFqB6cde..."
-                    )
-                )
-                state.selectedWalletAccount = state.walletAccounts.last ?? .default
-                return .send(.forgetThisDeviceTapped)
+                guard let account = state.zcashAccounts, let firstAccount = account.accounts.first else {
+                    return .none
+                }
+                return .run { send in
+                    do {
+                        let uuid = try await sdkSynchronizer.importAccount(
+                            firstAccount.ufvk,
+                            AddKeystoneHWWallet.hexStringToBytes(account.seedFingerprint),
+                            Zip32AccountIndex(firstAccount.index),
+                            AccountPurpose.spending,
+                            L10n.Accounts.keystone,
+                            L10n.Accounts.keystone.lowercased()
+                        )
+                        if let uuid {
+                            await send(.accountImported(uuid))
+                            await send(.forgetThisDeviceTapped)
+                        }
+                    } catch {
+                        // TODO: error handling
+                        await send(.accountImportFailed)
+                    }
+                }
+                
+            case .accountImported(let uuid):
+                return .run { send in
+                    let walletAccounts = try await sdkSynchronizer.walletAccounts()
+                    await send(.loadedWalletAccounts(walletAccounts, uuid))
+                }
+                
+            case .accountImportFailed:
+                return .none
 
+            case let .loadedWalletAccounts(walletAccounts, uuid):
+                state.walletAccounts = walletAccounts
+                for walletAccount in walletAccounts {
+                    if walletAccount.id == uuid {
+                        state.selectedWalletAccount = walletAccount
+                        break
+                    }
+                }
+                return .none
+                
             case .continueTapped:
                 return .none
             }
         }
+    }
+}
+
+extension AddKeystoneHWWallet {
+    static func hexStringToBytes(_ hex: String) -> [UInt8]? {
+        // Ensure the hex string has an even number of characters
+        guard hex.count % 2 == 0 else { return nil }
+
+        // Map pairs of hex characters to UInt8
+        var byteArray = [UInt8]()
+        var index = hex.startIndex
+        while index < hex.endIndex {
+            let nextIndex = hex.index(index, offsetBy: 2)
+            guard let byte = UInt8(hex[index..<nextIndex], radix: 16) else { return nil }
+            byteArray.append(byte)
+            index = nextIndex
+        }
+        return byteArray
     }
 }

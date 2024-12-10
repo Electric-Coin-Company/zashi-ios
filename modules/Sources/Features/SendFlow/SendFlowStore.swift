@@ -38,7 +38,6 @@ public struct SendFlow {
 
         public var cancelId = UUID()
         
-        @Shared(.inMemory(.account)) public var accountIndex: Zip32AccountIndex = Zip32AccountIndex(0)
         public var addMemoState: Bool
         public var address: RedactableString = .empty
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
@@ -55,6 +54,7 @@ public struct SendFlow {
         public var isValidTexAddress = false
         public var memoState: MessageEditor.State
         public var proposal: Proposal?
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var scanState: Scan.State
         public var shieldedBalance: Zatoshi
         public var walletBalancesState: WalletBalances.State
@@ -247,8 +247,11 @@ public struct SendFlow {
             case .onAppear:
                 state.scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
                 state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
+                guard let account = state.selectedWalletAccount else {
+                    return .none
+                }
                 do {
-                    let result = try addressBook.allLocalContacts(state.accountIndex)
+                    let result = try addressBook.allLocalContacts(account.id)
                     let abContacts = result.contacts
                     if result.remoteStoreResult == .failure {
                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
@@ -326,6 +329,9 @@ public struct SendFlow {
                 return .send(.getProposal(.send))
                 
             case .getProposal(let confirmationType):
+                guard let account = state.selectedWalletAccount else {
+                    return .none
+                }
                 return .run { [state, confirmationType] send in
                     do {
                         let recipient = try Recipient(state.address.data, network: zcashSDKEnvironment.network.networkType)
@@ -339,7 +345,7 @@ public struct SendFlow {
                             memo = nil
                         }
 
-                        let proposal = try await sdkSynchronizer.proposeTransfer(state.accountIndex, recipient, state.amount, memo)
+                        let proposal = try await sdkSynchronizer.proposeTransfer(account.id, recipient, state.amount, memo)
                         
                         await send(.proposal(proposal))
                         await send(.confirmationRequired(confirmationType))

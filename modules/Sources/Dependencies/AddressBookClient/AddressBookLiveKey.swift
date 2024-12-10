@@ -196,7 +196,7 @@ extension AddressBookClient: DependencyKey {
     }
     
     private static func syncContacts(
-        account: Zip32AccountIndex,
+        account: AccountUUID,
         contacts: AddressBookContacts,
         remoteStorage: RemoteStorageClient,
         storeAfterSync: Bool = true
@@ -272,7 +272,7 @@ extension AddressBookClient: DependencyKey {
     }
     
     private static func storeContacts(
-        account: Zip32AccountIndex,
+        account: AccountUUID,
         contacts: AddressBookContacts,
         remoteStorage: RemoteStorageClient,
         remoteStore: Bool = true
@@ -303,7 +303,7 @@ extension AddressBookClient: DependencyKey {
         }
     }
     
-    private static func filenameForEncryptedFile(account: Zip32AccountIndex) throws -> String {
+    private static func filenameForEncryptedFile(account: AccountUUID) throws -> String {
         @Dependency(\.walletStorage) var walletStorage
 
         guard let encryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys(), let addressBookKey = encryptionKeys.getCached(account: account) else {

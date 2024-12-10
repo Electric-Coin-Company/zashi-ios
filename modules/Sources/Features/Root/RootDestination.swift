@@ -142,14 +142,17 @@ extension Root {
                         .map(Root.Action.flexaOnTransactionRequest)
                         .receive(on: mainQueue)
                 }
-                .cancellable(id: CancelFlexaId, cancelInFlight: true)
+                //.cancellable(id: CancelFlexaId, cancelInFlight: true)
 
             case .flexaOnTransactionRequest(let transaction):
                 guard let transaction else {
                     return .none
                 }
+                guard let account = state.selectedWalletAccount, let zip32AccountIndex = account.zip32AccountIndex else {
+                    return .none
+                }
                 flexaHandler.clearTransactionRequest()
-                return .run { [accountIndex = state.accountIndex] send in
+                return .run { send in
                     do {
                         if await !localAuthentication.authenticate() {
                             return
@@ -157,13 +160,13 @@ extension Root {
 
                         // get a proposal
                         let recipient = try Recipient(transaction.address, network: zcashSDKEnvironment.network.networkType)
-                        let proposal = try await sdkSynchronizer.proposeTransfer(accountIndex, recipient, transaction.amount, nil)
+                        let proposal = try await sdkSynchronizer.proposeTransfer(account.id, recipient, transaction.amount, nil)
 
                         // make the actual send
                         let storedWallet = try walletStorage.exportWallet()
                         let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
                         let network = zcashSDKEnvironment.network.networkType
-                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, accountIndex, network)
+                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, zip32AccountIndex, network)
                         
                         let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
                         

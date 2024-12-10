@@ -35,31 +35,31 @@ public struct WalletAccount: Equatable, Hashable, Codable, Identifiable {
         public func name() -> String {
             switch self {
             case .keystone:
-                return "Keystone"
+                return L10n.Accounts.keystone
             case .zcash:
-                return "Zashi"
+                return L10n.Accounts.zashi
             }
         }
     }
-    
-    public static let `default` = WalletAccount(
-        id: 0,
-        vendor: .zcash,
-        uaAddressString: "u1078r23uvtj8xj6dpdx..."
-    )
 
-    // TODO: this will be UUID once supported in the SDK
-    public let id: UInt32
+    public let id: AccountUUID
     public let vendor: Vendor
-    public var uaAddressString: String
+    public var uAddress: UnifiedAddress?
+    public var seedFingerprint: [UInt8]?
+    public var zip32AccountIndex: Zip32AccountIndex?
 
-    public init(
-        id: UInt32,
-        vendor: Vendor,
-        uaAddressString: String = ""
-    ) {
-        self.id = id
-        self.vendor = vendor
-        self.uaAddressString = uaAddressString
+    public var unifiedAddress: String? {
+        uAddress?.stringEncoded
+    }
+
+    public var transparentAddress: String? {
+        try? uAddress?.transparentReceiver().stringEncoded
+    }
+
+    public init(_ account: Account) {
+        self.id = account.id
+        self.vendor = account.keySource == L10n.Accounts.keystone.lowercased() ? .keystone : .zcash
+        self.seedFingerprint = account.seedFingerprint
+        self.zip32AccountIndex = account.hdAccountIndex
     }
 }

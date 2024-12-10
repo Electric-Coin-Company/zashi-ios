@@ -43,18 +43,20 @@ extension TabsView {
             store.send(.accountSwitchTapped)
         } label: {
             HStack(spacing: 0) {
-                store.selectedWalletAccount.vendor.icon()
-                    .resizable()
-                    .frame(width: 16, height: 16)
-                    .background {
-                        Circle()
-                            .fill(Design.Surfaces.bgAlt.color)
-                            .frame(width: 24, height: 24)
-                    }
-
-                Text(store.selectedWalletAccount.vendor.name().lowercased())
-                    .zFont(.semiBold, size: 24, style: Design.Text.primary)
-                    .padding(.leading, 8)
+                if let selectedWalletAccount = store.selectedWalletAccount {
+                    selectedWalletAccount.vendor.icon()
+                        .resizable()
+                        .frame(width: 16, height: 16)
+                        .background {
+                            Circle()
+                                .fill(Design.Surfaces.bgAlt.color)
+                                .frame(width: 24, height: 24)
+                        }
+                    
+                    Text(selectedWalletAccount.vendor.name().lowercased())
+                        .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                        .padding(.leading, 8)
+                }
 
                 Asset.Assets.chevronDown.image
                     .zImage(size: 24, style: Design.Text.primary)

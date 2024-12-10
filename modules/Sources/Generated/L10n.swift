@@ -24,6 +24,20 @@ public enum L10n {
     /// Introducing Zashi
     public static let title = L10n.tr("Localizable", "about.title", fallback: "Introducing Zashi")
   }
+  public enum Accounts {
+    /// Keystone
+    public static let keystone = L10n.tr("Localizable", "accounts.keystone", fallback: "Keystone")
+    /// Sending from
+    public static let sendingFrom = L10n.tr("Localizable", "accounts.sendingFrom", fallback: "Sending from")
+    /// Zashi
+    public static let zashi = L10n.tr("Localizable", "accounts.zashi", fallback: "Zashi")
+    public enum AddressBook {
+      /// Address Book Contacts
+      public static let contacts = L10n.tr("Localizable", "accounts.addressBook.contacts", fallback: "Address Book Contacts")
+      /// Your Wallets
+      public static let your = L10n.tr("Localizable", "accounts.addressBook.your", fallback: "Your Wallets")
+    }
+  }
   public enum AddressBook {
     /// Add New Contact
     public static let addNewContact = L10n.tr("Localizable", "addressBook.addNewContact", fallback: "Add New Contact")
@@ -312,6 +326,66 @@ public enum L10n {
   public enum Integrations {
     /// Zashi integrations provide access to third party services. Features and information shared with them are outside of our control and subject to their privacy policies.
     public static let info = L10n.tr("Localizable", "integrations.info", fallback: "Zashi integrations provide access to third party services. Features and information shared with them are outside of our control and subject to their privacy policies.")
+  }
+  public enum Keystone {
+    /// Confirm with Keystone
+    public static let confirm = L10n.tr("Localizable", "keystone.confirm", fallback: "Confirm with Keystone")
+    /// Connect Hardware Wallet
+    public static let connect = L10n.tr("Localizable", "keystone.connect", fallback: "Connect Hardware Wallet")
+    /// Scan your Keystone wallet to connect
+    public static let scanInfo = L10n.tr("Localizable", "keystone.scanInfo", fallback: "Scan your Keystone wallet to connect")
+    /// Keystone Wallet
+    public static let wallet = L10n.tr("Localizable", "keystone.wallet", fallback: "Keystone Wallet")
+    public enum AddHWWallet {
+      /// Connect
+      public static let connect = L10n.tr("Localizable", "keystone.addHWWallet.connect", fallback: "Connect")
+      /// Select the wallet you'd like to connect to proceed. Once connected, you’ll be able to wirelessly sign transactions with your hardware wallet.
+      public static let desc = L10n.tr("Localizable", "keystone.addHWWallet.desc", fallback: "Select the wallet you'd like to connect to proceed. Once connected, you’ll be able to wirelessly sign transactions with your hardware wallet.")
+      /// Forget this device
+      public static let forgetDevice = L10n.tr("Localizable", "keystone.addHWWallet.forgetDevice", fallback: "Forget this device")
+      /// Instructions:
+      public static let howTo = L10n.tr("Localizable", "keystone.addHWWallet.howTo", fallback: "Instructions:")
+      /// Ready to Scan
+      public static let readyToScan = L10n.tr("Localizable", "keystone.addHWWallet.readyToScan", fallback: "Ready to Scan")
+      /// Scan your device’s QR code to connect.
+      public static let scan = L10n.tr("Localizable", "keystone.addHWWallet.scan", fallback: "Scan your device’s QR code to connect.")
+      /// Unlock your Keystone
+      public static let step1 = L10n.tr("Localizable", "keystone.addHWWallet.step1", fallback: "Unlock your Keystone")
+      /// Tap the menu icon
+      public static let step2 = L10n.tr("Localizable", "keystone.addHWWallet.step2", fallback: "Tap the menu icon")
+      /// Select Watch-only Wallet
+      public static let step3 = L10n.tr("Localizable", "keystone.addHWWallet.step3", fallback: "Select Watch-only Wallet")
+      /// Select Zashi app and scan QR code
+      public static let step4 = L10n.tr("Localizable", "keystone.addHWWallet.step4", fallback: "Select Zashi app and scan QR code")
+      /// Confirm Account to Access
+      public static let title = L10n.tr("Localizable", "keystone.addHWWallet.title", fallback: "Confirm Account to Access")
+      /// View Keystone tutorial
+      public static let tutorial = L10n.tr("Localizable", "keystone.addHWWallet.tutorial", fallback: "View Keystone tutorial")
+    }
+    public enum Drawer {
+      /// Wallets & Hardware
+      public static let title = L10n.tr("Localizable", "keystone.drawer.title", fallback: "Wallets & Hardware")
+      public enum Banner {
+        /// Get 5%% off airgapped hardware wallet with “AwesomeZashi” coupon code.
+        public static let desc = L10n.tr("Localizable", "keystone.drawer.banner.desc", fallback: "Get 5%% off airgapped hardware wallet with “AwesomeZashi” coupon code.")
+        /// Keystone Hardware Wallet
+        public static let title = L10n.tr("Localizable", "keystone.drawer.banner.title", fallback: "Keystone Hardware Wallet")
+      }
+    }
+    public enum SignWith {
+      /// After you have signed with Keystone, tap on the Get Signature button below.
+      public static let desc = L10n.tr("Localizable", "keystone.signWith.desc", fallback: "After you have signed with Keystone, tap on the Get Signature button below.")
+      /// Get Signature
+      public static let getSignature = L10n.tr("Localizable", "keystone.signWith.getSignature", fallback: "Get Signature")
+      /// Hardware
+      public static let hardware = L10n.tr("Localizable", "keystone.signWith.hardware", fallback: "Hardware")
+      /// Reject
+      public static let reject = L10n.tr("Localizable", "keystone.signWith.reject", fallback: "Reject")
+      /// Sign Transaction
+      public static let signTransaction = L10n.tr("Localizable", "keystone.signWith.signTransaction", fallback: "Sign Transaction")
+      /// Scan with your Keystone wallet
+      public static let title = L10n.tr("Localizable", "keystone.signWith.title", fallback: "Scan with your Keystone wallet")
+    }
   }
   public enum LocalAuthentication {
     /// The Following content requires authentication.

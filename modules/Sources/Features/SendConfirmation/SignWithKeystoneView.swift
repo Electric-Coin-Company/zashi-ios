@@ -58,16 +58,16 @@ public struct SignWithKeystoneView: View {
                                 .padding(.trailing, 12)
                             
                             VStack(alignment: .leading, spacing: 0) {
-                                Text("Keystone")
+                                Text(L10n.Accounts.keystone)
                                     .zFont(.semiBold, size: 16, style: Design.Text.primary)
                                 
-                                Text(store.selectedWalletAccount.uaAddressString)
+                                Text(store.selectedWalletAccount?.unifiedAddress ?? "")
                                     .zFont(size: 12, style: Design.Text.tertiary)
                             }
                             
                             Spacer()
                             
-                            Text("Hardware")
+                            Text(L10n.Keystone.SignWith.hardware)
                                 .zFont(.medium, size: 12, style: Design.Utility.HyperBlue._700)
                                 .padding(.vertical, 2)
                                 .padding(.horizontal, 8)
@@ -101,11 +101,11 @@ public struct SignWithKeystoneView: View {
                             }
                             .padding(.top, 32)
 
-                        Text("Scan with your Keystone wallet")
+                        Text(L10n.Keystone.SignWith.title)
                             .zFont(.medium, size: 16, style: Design.Text.primary)
                             .padding(.top, 32)
                         
-                        Text("After you have signed with Keystone, tap on the Get Signature button below.")
+                        Text(L10n.Keystone.SignWith.desc)
                             .zFont(size: 14, style: Design.Text.tertiary)
                             .screenHorizontalPadding()
                             .lineLimit(2)
@@ -118,14 +118,14 @@ public struct SignWithKeystoneView: View {
                 Spacer()
                 
                 ZashiButton(
-                    "Get Signature"
+                    L10n.Keystone.SignWith.getSignature
                 ) {
                     store.send(.getSignatureTapped)
                 }
                 .padding(.bottom, 8)
 
                 ZashiButton(
-                    "Reject",
+                    L10n.Keystone.SignWith.reject,
                     type: .ghost
                 ) {
                     store.send(.rejectTapped)
@@ -138,7 +138,7 @@ public struct SignWithKeystoneView: View {
         .screenHorizontalPadding()
         .applyScreenBackground()
         .zashiBack(hidden: true)
-        .screenTitle("SIGN TRANSACTION")
+        .screenTitle(L10n.Keystone.SignWith.signTransaction)
     }
 }
  

@@ -1,4 +1,4 @@
-// swift-tools-version: 5.7
+// swift-tools-version: 5.6
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -7,7 +7,7 @@ let package = Package(
     name: "modules",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v16)
+        .iOS(.v15)
     ],
     products: [
         .library(name: "About", targets: ["About"]),
@@ -94,7 +94,8 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.6.2"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.4"),
 //        .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.2.7"),
-        .package(url: "https://github.com/LukasKorba/ZcashLightClientKit", branch: "1511-Refactor-account-representation-from-Int-to-a-dedicated-Account-structure"),
+//        .package(url: "https://github.com/LukasKorba/ZcashLightClientKit", branch: "1511-Refactor-account-representation-from-Int-to-a-dedicated-Account-structure"),
+        .package(url: "https://github.com/LukasKorba/ZcashLightClientKit", branch: "import-ufvk-ffi-preview"),
         .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.27.0"),
         .package(url: "https://github.com/flexa/flexa-ios.git", from: "1.0.8"),
         .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "0.1.0-beta.9"),
@@ -118,8 +119,10 @@ let package = Package(
             dependencies: [
                 "Generated",
                 "Models",
+                "SDKSynchronizer",
                 "UIComponents",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit"),
                 .product(name: "KeystoneSDK", package: "keystone-sdk-ios")
             ],
             path: "Sources/Features/AddKeystoneHWWallet"
