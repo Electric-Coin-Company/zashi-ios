@@ -83,7 +83,7 @@ public struct AccountsSelectionView: View {
                         Text(L10n.Keystone.wallet)
                             .zFont(.semiBold, size: 14, style: Design.Text.primary)
                         
-                        Text(store.keystoneAddress)
+                        Text(store.keystoneAddress.zip316)
                             .zFont(size: 12, style: Design.Text.tertiary)
                     }
                     

@@ -12,6 +12,8 @@ import KeystoneSDK
 import Models
 import SDKSynchronizer
 import ZcashLightClientKit
+import DerivationTool
+import ZcashSDKEnvironment
 
 @Reducer
 public struct AddKeystoneHWWallet {
@@ -23,9 +25,15 @@ public struct AddKeystoneHWWallet {
         public var zcashAccounts: ZcashAccounts?
 
         public var keystoneAddress: String {
-            if let _ = zcashAccounts?.accounts.first {
-                // TODO: put a real logic here
-                return "0x7F...EE2d"
+            @Dependency(\.derivationTool) var derivationTool
+            @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
+
+            if let zcashAccount = zcashAccounts?.accounts.first {
+                do {
+                    return try derivationTool.deriveUnifiedAddressFrom(zcashAccount.ufvk, zcashSDKEnvironment.network.networkType).stringEncoded
+                } catch {
+                    return ""
+                }
             }
             
             return ""

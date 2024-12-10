@@ -11,8 +11,8 @@ import ZcashLightClientKit
 import Generated
 
 public struct WalletAccount: Equatable, Hashable, Codable, Identifiable {
-    public enum Vendor: Equatable, Codable, Hashable {
-        case keystone
+    public enum Vendor: Int, Equatable, Codable, Hashable {
+        case keystone = 0
         case zcash
         
         public func icon() -> Image {

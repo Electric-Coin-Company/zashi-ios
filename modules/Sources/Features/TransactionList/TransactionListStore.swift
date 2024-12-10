@@ -105,7 +105,7 @@ public struct TransactionList {
                 }
                 .cancellable(id: CancelEventId, cancelInFlight: true),
                 .run { send in
-                    if let transactions = try? await sdkSynchronizer.getAllTransactions() {
+                    if let transactions = try? await sdkSynchronizer.getAllTransactions(account.id) {
                         await send(.updateTransactionList(transactions))
                     }
                 }
@@ -143,8 +143,9 @@ public struct TransactionList {
             
         case .synchronizerStateChanged(.upToDate):
             state.latestMinedHeight = sdkSynchronizer.latestState().latestBlockHeight
+            let accountUUID = state.selectedWalletAccount?.id
             return .run { send in
-                if let transactions = try? await sdkSynchronizer.getAllTransactions() {
+                if let transactions = try? await sdkSynchronizer.getAllTransactions(accountUUID) {
                     await send(.updateTransactionList(transactions))
                 }
             }
@@ -153,8 +154,9 @@ public struct TransactionList {
             return .none
         
         case .foundTransactions:
+            let accountUUID = state.selectedWalletAccount?.id
             return .run { send in
-                if let transactions = try? await sdkSynchronizer.getAllTransactions() {
+                if let transactions = try? await sdkSynchronizer.getAllTransactions(accountUUID) {
                     await send(.updateTransactionList(transactions))
                 }
             }

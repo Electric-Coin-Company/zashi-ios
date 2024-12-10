@@ -56,7 +56,7 @@ extension SDKSynchronizerClient {
         isInitialized: { false },
         importAccount: { _, _, _, _, _, _ in nil },
         rewind: { _ in Empty<Void, Error>().eraseToAnyPublisher() },
-        getAllTransactions: { [] },
+        getAllTransactions: { _ in [] },
         getMemos: { _ in [] },
         getUnifiedAddress: { _ in nil },
         getTransparentAddress: { _ in nil },
@@ -90,7 +90,7 @@ extension SDKSynchronizerClient {
         isInitialized: @escaping () -> Bool = { false },
         importAccount: @escaping (String, [UInt8]?, Zip32AccountIndex?, AccountPurpose, String, String?) async throws -> AccountUUID? = { _, _, _, _, _, _ in nil },
         rewind: @escaping (RewindPolicy) -> AnyPublisher<Void, Error> = { _ in return Empty<Void, Error>().eraseToAnyPublisher() },
-        getAllTransactions: @escaping () -> [TransactionState] = {
+        getAllTransactions: @escaping (AccountUUID?) -> [TransactionState] = { _ in
             let mockedCleared: [TransactionStateMockHelper] = [
                 TransactionStateMockHelper(date: 1651039202, amount: Zatoshi(1), status: .paid, uuid: "aa11"),
                 TransactionStateMockHelper(date: 1651039101, amount: Zatoshi(2), uuid: "bb22"),

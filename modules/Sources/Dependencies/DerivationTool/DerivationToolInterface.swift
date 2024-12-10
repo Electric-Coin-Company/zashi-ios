@@ -44,6 +44,12 @@ public struct DerivationToolClient {
     /// Checks if given address is a valid zcash address.
     public var isZcashAddress: (String, NetworkType) -> Bool = { _, _ in false }
 
+    
+    /// Derives and returns a UnifiedAddress from a UnifiedFullViewingKey
+    /// - Parameter ufvk: UTF-8 encoded String to validate
+    /// - Returns: true `UnifiedAddress`
+    public var deriveUnifiedAddressFrom: (String, NetworkType) throws -> UnifiedAddress
+
     /// Derives and returns a ZIP 32 Arbitrary Key from the given seed at the "wallet level", i.e.
     /// directly from the seed with no ZIP 32 path applied.
     ///

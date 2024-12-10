@@ -81,8 +81,14 @@ extension SDKSynchronizerClient: DependencyKey {
                 )
             },
             rewind: { synchronizer.rewind($0) },
-            getAllTransactions: {
-                let clearedTransactions = try await synchronizer.allTransactions()
+            getAllTransactions: { accountUUID in
+                let clearedTransactions = try await synchronizer.allTransactions().compactMap { rawTransaction in
+                    guard let accountUUID else {
+                        return rawTransaction
+                    }
+
+                    return rawTransaction.accountUUID == accountUUID ? rawTransaction : nil
+                }
                 
                 var clearedTxs: [TransactionState] = []
                 
@@ -219,13 +225,18 @@ extension SDKSynchronizerClient: DependencyKey {
                 )
             },
             walletAccounts: {
+                // get the Accounts and map it to WalletAccounts
                 var walletAccounts = try await synchronizer.listAccounts().map {
                     WalletAccount($0)
                 }
                 
+                // Enrich the WalletAccounts with UnifiedAddresses
                 for i in 0..<walletAccounts.count {
                     walletAccounts[i].uAddress = try? await synchronizer.getUnifiedAddress(accountUUID: walletAccounts[i].id)
                 }
+                
+                // Put the Zashi account to the top
+                //let sortedWalletAccounts = walletAccounts.sorted { $0.vendor.rawValue > $1.vendor.rawValue }
 
                 return walletAccounts
             }
