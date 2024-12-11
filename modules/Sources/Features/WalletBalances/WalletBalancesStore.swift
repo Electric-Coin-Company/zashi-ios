@@ -79,7 +79,7 @@ public struct WalletBalances {
     
     public enum Action: Equatable {
         case availableBalanceTapped
-        case balancesUpdated(AccountBalance?)
+        case balanceUpdated(AccountBalance?)
         case debugMenuStartup
         case exchangeRateRefreshTapped
         case exchangeRateEvent(ExchangeRateClient.EchangeRateEvent)
@@ -172,13 +172,13 @@ public struct WalletBalances {
                 }
                 return .run { send in
                     if let accountBalance = try? await sdkSynchronizer.getAccountsBalances()[account.id] {
-                        await send(.balancesUpdated(accountBalance))
+                        await send(.balanceUpdated(accountBalance))
                     } else if let accountBalance = sdkSynchronizer.latestState().accountsBalances[account.id] {
-                        await send(.balancesUpdated(accountBalance))
+                        await send(.balanceUpdated(accountBalance))
                     }
                 }
                 
-            case .balancesUpdated(let accountBalance):
+            case .balanceUpdated(let accountBalance):
                 state.shieldedBalance = (accountBalance?.saplingBalance.spendableValue ?? .zero) + (accountBalance?.orchardBalance.spendableValue ?? .zero)
                 state.shieldedWithPendingBalance = (accountBalance?.saplingBalance.total() ?? .zero) + (accountBalance?.orchardBalance.total() ?? .zero)
                 state.transparentBalance = accountBalance?.unshielded ?? .zero
@@ -199,7 +199,7 @@ public struct WalletBalances {
                     return .none
                 }
 
-                return .send(.balancesUpdated(latestState.data.accountsBalances[account.id]))
+                return .send(.balanceUpdated(latestState.data.accountsBalances[account.id]))
             }
         }
     }

@@ -336,7 +336,7 @@ extension Root {
                                     var keys = AddressBookEncryptionKeys.empty
                                     try keys.cacheFor(
                                         seed: seedBytes,
-                                        account: account.id,
+                                        account: account.account,
                                         network: zcashSDKEnvironment.network.networkType
                                     )
                                     
@@ -380,6 +380,7 @@ extension Root {
                     for account in walletAccounts {
                         if account.vendor == .zcash {
                             state.selectedWalletAccount = account
+                            state.zashiWalletAccount = account
                             break
                         }
                     }

@@ -18,4 +18,5 @@ public extension String {
     static let lastAuthenticationTimestamp = "sharedStateKey_lastAuthenticationTimestamp"
     static let walletAccounts = "sharedStateKey_walletAccounts"
     static let selectedWalletAccount = "sharedStateKey_selectedWalletAccount"
+    static let zashiWalletAccount = "sharedStateKey_zashiWalletAccount"
 }

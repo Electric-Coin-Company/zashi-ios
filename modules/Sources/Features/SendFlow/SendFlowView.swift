@@ -54,6 +54,7 @@ public struct SendFlowView: View {
                                         
                                         VStack(alignment: .leading) {
                                             ZashiTextField(
+                                                addressFont: true,
                                                 text: store.bindingForAddress,
                                                 placeholder: L10n.Send.addressPlaceholder,
                                                 title: L10n.Send.to,

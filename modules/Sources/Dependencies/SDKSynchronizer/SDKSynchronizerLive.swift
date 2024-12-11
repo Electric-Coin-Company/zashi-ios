@@ -12,6 +12,7 @@ import ZcashLightClientKit
 import DatabaseFiles
 import Models
 import ZcashSDKEnvironment
+import KeystoneSDK
 
 extension SDKSynchronizerClient: DependencyKey {
     public static let liveValue: SDKSynchronizerClient = Self.live()
@@ -89,7 +90,9 @@ extension SDKSynchronizerClient: DependencyKey {
 
                     return rawTransaction.accountUUID == accountUUID ? rawTransaction : nil
                 }
-                
+//
+//                let clearedTransactions = try await synchronizer.allTransactions()
+
                 var clearedTxs: [TransactionState] = []
                 
                 let latestBlockHeight = try await SDKSynchronizerClient.latestBlockHeight(synchronizer: synchronizer)
@@ -239,6 +242,22 @@ extension SDKSynchronizerClient: DependencyKey {
                 //let sortedWalletAccounts = walletAccounts.sorted { $0.vendor.rawValue > $1.vendor.rawValue }
 
                 return walletAccounts
+            },
+            createPCZTFromProposal: { accountUUID, proposal in
+                try await synchronizer.createPCZTFromProposal(accountUUID: accountUUID, proposal: proposal)
+            },
+            addProofsToPCZT: { pczt in
+                try await synchronizer.addProofsToPCZT(pczt: pczt)
+            },
+            extractAndStoreTxFromPCZT: { pcztWithProofs, pcztWithSigs in
+                try await synchronizer.extractAndStoreTxFromPCZT(pcztWithProofs: pcztWithProofs, pcztWithSigs: pcztWithSigs)
+            },
+            urEncoderForPCZT: { pczt in
+                let keystoneSDK = KeystoneZcashSDK()
+
+                let encoder = try? keystoneSDK.generateZcashPczt(pczt_hex: pczt)
+                
+                return encoder
             }
         )
     }

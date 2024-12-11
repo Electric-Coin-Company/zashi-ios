@@ -10,6 +10,7 @@ import Combine
 import ComposableArchitecture
 import ZcashLightClientKit
 import Models
+import URKit
 
 extension DependencyValues {
     public var sdkSynchronizer: SDKSynchronizerClient {
@@ -66,4 +67,10 @@ public struct SDKSynchronizerClient {
     public var evaluateBestOf: ([LightWalletEndpoint], Double, Double, UInt64, Int, NetworkType) async -> [LightWalletEndpoint] = { _,_,_,_,_,_ in [] }
     
     public var walletAccounts: () async throws -> [WalletAccount] = { [] }
+    
+    // PCZT
+    public var createPCZTFromProposal: (AccountUUID, Proposal) async throws -> Data
+    public var addProofsToPCZT: (Data) async throws -> Data
+    public var extractAndStoreTxFromPCZT: (Data, Data) async throws -> Data
+    public var urEncoderForPCZT: (Data) -> UREncoder?
 }

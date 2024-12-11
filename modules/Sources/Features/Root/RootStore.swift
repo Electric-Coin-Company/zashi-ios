@@ -75,7 +75,8 @@ public struct Root {
         @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
         public var wasRestoringWhenDisconnected = false
         public var welcomeState: Welcome.State
-        
+        @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
+
         public init(
             addressBookState: AddressBook.State = .initial,
             appInitializationState: InitializationState = .uninitialized,
@@ -282,8 +283,9 @@ public struct Root {
                 }
 
             case .addressBook(.walletAccountTapped(let walletAccount)):
-                // TODO: add an address once we have it
-                let address = "u12pgnsjq2c2k5q6wuc7z4068xlcuqcw93wujlar47pwv9rrl6ujp2sjumtpnwxdemvg52t86cwu8hk740v7p2at7neq5delmtjk502q0xrnaz0kfyextpm8l687wsk0m3zqzdvynme2d"
+                guard let address = walletAccount.uAddress?.stringEncoded else {
+                    return .none
+                }
                 state.addressBookBinding = false
                 return .send(.tabs(.send(.scan(.found(address.redacted)))))
 

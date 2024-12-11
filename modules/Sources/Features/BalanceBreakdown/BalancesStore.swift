@@ -92,6 +92,7 @@ public struct Balances {
         case shieldFundsSuccess
         case synchronizerStateChanged(RedactableSynchronizerState)
         case syncProgress(SyncProgress.Action)
+        case updateBalance(AccountBalance?)
         case updateBalances([AccountUUID: AccountBalance])
         case updateDestination(Balances.State.Destination?)
         case updateHintBoxVisibility(Bool)
@@ -204,18 +205,18 @@ public struct Balances {
             case .synchronizerStateChanged(let latestState):
                 return .send(.updateBalances(latestState.data.accountsBalances))
 
-            case .walletBalances(.balancesUpdated(let accountBalance)):
+            case .walletBalances(.balanceUpdated(let accountBalance)):
                 state.shieldedBalance = state.walletBalancesState.shieldedBalance
                 state.transparentBalance = state.walletBalancesState.transparentBalance
-                // TODO: fixme
-                //return .send(.updateBalances(accountBalance))
-                return .none
+                return .send(.updateBalance(accountBalance))
 
             case .updateBalances(let accountsBalances):
                 guard let account = state.selectedWalletAccount else {
                     return .none
                 }
-                let accountBalance = accountsBalances[account.id]
+                return .send(.updateBalance(accountsBalances[account.id]))
+
+            case .updateBalance(let accountBalance):
                 state.changePending = (accountBalance?.saplingBalance.changePendingConfirmation ?? .zero) +
                     (accountBalance?.orchardBalance.changePendingConfirmation ?? .zero)
                 state.pendingTransactions = (accountBalance?.saplingBalance.valuePendingSpendability ?? .zero) +

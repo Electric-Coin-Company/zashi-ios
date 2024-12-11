@@ -43,7 +43,7 @@ public struct SuccessView: View {
                     .screenHorizontalPadding()
 
                 Text(store.address.zip316)
-                    .zFont(size: 14, style: Design.Text.primary)
+                    .zFont(addressFont: true, size: 14, style: Design.Text.primary)
                     .padding(.top, 4)
 
                 ZashiButton(

@@ -11,6 +11,7 @@ import Foundation
 import ZcashLightClientKit
 import Models
 import Utils
+import URKit
 
 extension SDKSynchronizerClient: TestDependencyKey {
     public static let testValue = Self(
@@ -39,7 +40,11 @@ extension SDKSynchronizerClient: TestDependencyKey {
         isSeedRelevantToAnyDerivedAccount: unimplemented("\(Self.self).isSeedRelevantToAnyDerivedAccount"),
         refreshExchangeRateUSD: unimplemented("\(Self.self).refreshExchangeRateUSD", placeholder: {}()),
         evaluateBestOf: { _, _, _, _, _, _ in fatalError("evaluateBestOf not implemented") },
-        walletAccounts: unimplemented("\(Self.self).walletAccounts", placeholder: [])
+        walletAccounts: unimplemented("\(Self.self).walletAccounts", placeholder: []),
+        createPCZTFromProposal: unimplemented("\(Self.self).createPCZTFromProposal", placeholder: Data()),
+        addProofsToPCZT: unimplemented("\(Self.self).addProofsToPCZT", placeholder: Data()),
+        extractAndStoreTxFromPCZT: unimplemented("\(Self.self).extractAndStoreTxFromPCZT", placeholder: Data()),
+        urEncoderForPCZT: unimplemented("\(Self.self).urEncoderForPCZT", placeholder: nil)
     )
 }
 
@@ -70,7 +75,11 @@ extension SDKSynchronizerClient {
         isSeedRelevantToAnyDerivedAccount: { _ in false },
         refreshExchangeRateUSD: { },
         evaluateBestOf: { _, _, _, _, _, _ in [] },
-        walletAccounts: { [] }
+        walletAccounts: { [] },
+        createPCZTFromProposal: { _, _ in Data() },
+        addProofsToPCZT: { _ in Data() },
+        extractAndStoreTxFromPCZT: { _, _ in Data() },
+        urEncoderForPCZT: { _ in nil }
     )
 
     public static let mock = Self.mocked()
@@ -172,7 +181,11 @@ extension SDKSynchronizerClient {
         isSeedRelevantToAnyDerivedAccount: @escaping ([UInt8]) async throws -> Bool = { _ in false },
         refreshExchangeRateUSD: @escaping () -> Void = { },
         evaluateBestOf: @escaping ([LightWalletEndpoint], Double, Double, UInt64, Int, NetworkType) async -> [LightWalletEndpoint] = { _, _, _, _, _, _ in [] },
-        walletAccounts: @escaping () async throws -> [WalletAccount] = { [] }
+        walletAccounts: @escaping () async throws -> [WalletAccount] = { [] },
+        createPCZTFromProposal: @escaping (AccountUUID, Proposal) async throws -> Data = { _, _ in Data() },
+        addProofsToPCZT: @escaping (Data) async throws -> Data = { _ in Data() },
+        extractAndStoreTxFromPCZT: @escaping (Data, Data) async throws -> Data = { _, _ in Data() },
+        urEncoderForPCZT: @escaping (Data) -> UREncoder? = { _ in nil}
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
             stateStream: stateStream,
@@ -200,7 +213,11 @@ extension SDKSynchronizerClient {
             isSeedRelevantToAnyDerivedAccount: isSeedRelevantToAnyDerivedAccount,
             refreshExchangeRateUSD: refreshExchangeRateUSD,
             evaluateBestOf: evaluateBestOf,
-            walletAccounts: walletAccounts
+            walletAccounts: walletAccounts,
+            createPCZTFromProposal: createPCZTFromProposal,
+            addProofsToPCZT: addProofsToPCZT,
+            extractAndStoreTxFromPCZT: extractAndStoreTxFromPCZT,
+            urEncoderForPCZT: urEncoderForPCZT
         )
     }
 }

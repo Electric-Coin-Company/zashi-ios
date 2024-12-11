@@ -47,6 +47,7 @@ public struct WalletAccount: Equatable, Hashable, Codable, Identifiable {
     public var uAddress: UnifiedAddress?
     public var seedFingerprint: [UInt8]?
     public var zip32AccountIndex: Zip32AccountIndex?
+    public let account: Account
 
     public var unifiedAddress: String? {
         uAddress?.stringEncoded
@@ -61,5 +62,6 @@ public struct WalletAccount: Equatable, Hashable, Codable, Identifiable {
         self.vendor = account.keySource == L10n.Accounts.keystone.lowercased() ? .keystone : .zcash
         self.seedFingerprint = account.seedFingerprint
         self.zip32AccountIndex = account.hdAccountIndex
+        self.account = account
     }
 }

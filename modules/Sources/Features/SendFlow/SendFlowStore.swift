@@ -59,6 +59,7 @@ public struct SendFlow {
         public var shieldedBalance: Zatoshi
         public var walletBalancesState: WalletBalances.State
         public var requestsAddressFocus = false
+        @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
         public var zecAmountText: RedactableString = .empty
 
         public var amount: Zatoshi {
@@ -247,11 +248,11 @@ public struct SendFlow {
             case .onAppear:
                 state.scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
                 state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
-                guard let account = state.selectedWalletAccount else {
-                    return .none
+                guard let account = state.zashiWalletAccount else {
+                    return .send(.exchangeRateSetupChanged)
                 }
                 do {
-                    let result = try addressBook.allLocalContacts(account.id)
+                    let result = try addressBook.allLocalContacts(account.account)
                     let abContacts = result.contacts
                     if result.remoteStoreResult == .failure {
                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
@@ -446,7 +447,7 @@ public struct SendFlow {
             case .scan:
                 return .none
                 
-            case .walletBalances(.balancesUpdated):
+            case .walletBalances(.balanceUpdated):
                 state.shieldedBalance = state.walletBalancesState.shieldedBalance
                 return .none
                 

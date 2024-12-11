@@ -27,6 +27,7 @@ public struct TransactionList {
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
         public var transactionList: IdentifiedArrayOf<TransactionState>
+        @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
         public init(
             latestMinedHeight: BlockHeight? = nil,
@@ -72,20 +73,19 @@ public struct TransactionList {
         switch action {
         case .onAppear:
             state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
-            guard let account = state.selectedWalletAccount else {
-                return .none
-            }
-            do {
-                let result = try addressBook.allLocalContacts(account.id)
-                let abContacts = result.contacts
-                if result.remoteStoreResult == .failure {
+            let account = state.zashiWalletAccount
+            if let account {
+                do {
+                    let result = try addressBook.allLocalContacts(account.account)
+                    let abContacts = result.contacts
+                    if result.remoteStoreResult == .failure {
+                        // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                    }
+                    state.addressBookContacts = abContacts
+                } catch {
                     // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
                 }
-                state.addressBookContacts = abContacts
-            } catch {
-                // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
             }
-
             return .merge(
                 .publisher {
                     sdkSynchronizer.stateStream()
@@ -105,7 +105,7 @@ public struct TransactionList {
                 }
                 .cancellable(id: CancelEventId, cancelInFlight: true),
                 .run { send in
-                    if let transactions = try? await sdkSynchronizer.getAllTransactions(account.id) {
+                    if let transactions = try? await sdkSynchronizer.getAllTransactions(account?.id) {
                         await send(.updateTransactionList(transactions))
                     }
                 }

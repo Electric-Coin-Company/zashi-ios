@@ -20,12 +20,20 @@ public struct AddressBookEncryptionKeys: Codable, Equatable {
     
     var keys: [Int: AddressBookKey]
 
-    public mutating func cacheFor(seed: [UInt8], account: AccountUUID, network: NetworkType) throws{
-        keys[Int(account.id.count)] = try AddressBookKey(seed: seed, account: account, network: network)
+    public mutating func cacheFor(seed: [UInt8], account: Account, network: NetworkType) throws{
+        guard let zip32AccountIndex = account.hdAccountIndex else {
+            return
+        }
+        
+        keys[Int(zip32AccountIndex.index)] = try AddressBookKey(seed: seed, account: account, network: network)
     }
 
-    public func getCached(account: AccountUUID) -> AddressBookKey? {
-        keys[Int(account.id.count)]
+    public func getCached(account: Account) -> AddressBookKey? {
+        guard let zip32AccountIndex = account.hdAccountIndex else {
+            return nil
+        }
+
+        return keys[Int(zip32AccountIndex.index)]
     }
 }
 
@@ -59,11 +67,19 @@ public struct AddressBookKey: Codable, Equatable, Redactable {
      * control requirements for the seed phrase and the address book, this key
      * should be cached in the app's keystore.
      */
-    public init(seed: [UInt8], account: AccountUUID, network: NetworkType) throws {
+    public init(seed: [UInt8], account: Account, network: NetworkType) throws {
+        let zip32AccountIndex: Zip32AccountIndex
+        
+        if let zip32AccountIndexUnwrapped = account.hdAccountIndex {
+            zip32AccountIndex = zip32AccountIndexUnwrapped
+        } else {
+            zip32AccountIndex = Zip32AccountIndex(0)
+        }
+
         self.key = try SymmetricKey(data: DerivationToolClient.live().deriveArbitraryAccountKey(
             [UInt8]("ZashiAddressBookEncryptionV1".utf8),
             seed,
-            Zip32AccountIndex(UInt32(account.id.count)),
+            zip32AccountIndex,
             network
         ))
     }

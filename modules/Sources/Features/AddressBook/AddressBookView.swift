@@ -306,7 +306,7 @@ public struct AddressBookView: View {
                             .zFont(.semiBold, size: 14, style: Design.Text.primary)
                         
                         Text(address.zip316)
-                            .zFont(size: 12, style: Design.Text.tertiary)
+                            .zFont(addressFont: true, size: 12, style: Design.Text.tertiary)
                     }
                     
                     Spacer()

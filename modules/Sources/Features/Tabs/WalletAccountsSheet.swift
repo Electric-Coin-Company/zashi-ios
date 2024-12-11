@@ -103,7 +103,7 @@ extension TabsView {
                             .zFont(.semiBold, size: 16, style: Design.Text.primary)
                         
                         Text(address.zip316)
-                            .zFont(size: 12, style: Design.Text.tertiary)
+                            .zFont(addressFont: true, size: 12, style: Design.Text.tertiary)
                     }
                     
                     Spacer()
