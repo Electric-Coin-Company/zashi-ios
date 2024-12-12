@@ -84,7 +84,7 @@ public struct ZatoshiStringRepresentation: Equatable {
 }
 
 extension ZatoshiStringRepresentation {
-    static let placeholer = Self(Zatoshi(123_456_000))
+    static let placeholder = Self(Zatoshi(123_456_000))
 }
 
 extension ZatoshiStringRepresentation {

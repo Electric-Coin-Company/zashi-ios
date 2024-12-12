@@ -50,7 +50,7 @@ extension ReviewRequestClient: DependencyKey {
                 userDefaults.setValue(appVersion.appVersion(), Constants.versionKey)
             },
             syncFinished: {
-                // synchronizer's sync has been finished successfuly
+                // synchronizer's sync has been finished successfully
                 userDefaults.setValue(date.now().timeIntervalSince1970, Constants.latestSyncKey)
             }
         )
