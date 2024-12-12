@@ -206,7 +206,7 @@
 "deleteWallet.actionButtonTitle" = "Reset Zashi";
 "deleteWallet.screenTitle" = "Reset";
 
-// MARK: - Not Enogh Free Space
+// MARK: - Not Enough Free Space
 "notEnoughFreeSpace.title" = "Not enough free space";
 "notEnoughFreeSpace.messagePre" = "Zashi requires %@ GB of space to synchronize the Zcash blockchain but there is only ";
 "notEnoughFreeSpace.dataAvailable" = "%@ MB available. ";

@@ -54,13 +54,13 @@ extension SDKSynchronizerClient: DependencyKey {
             latestState: { synchronizer.latestState },
             prepareWith: {
                 seedBytes,
-                walletBirtday,
+                walletBirthday,
                 walletMode,
                 name,
                 keySource in
                 let result = try await synchronizer.prepare(
                     with: seedBytes,
-                    walletBirthday: walletBirtday,
+                    walletBirthday: walletBirthday,
                     for: walletMode,
                     name: name,
                     keySource: keySource
@@ -266,20 +266,14 @@ extension SDKSynchronizerClient: DependencyKey {
                 let encoder = try? keystoneSDK.generateZcashPczt(pczt_hex: pczt)
                 
                 return encoder
-            },
-            redactPCZTForSigner: { pczt in
-                try await synchronizer.redactPCZTForSigner(pczt: pczt)
-            },
-            fetchTxidsWithMemoContaining: { searchTerm in
-                try await synchronizer.fetchTxidsWithMemoContaining(searchTerm: searchTerm)
             }
         )
     }
 }
 
-// TODO: [#1313] SDK improvements so a client doesn't need to determing if the transaction isPending
+// TODO: [#1313] SDK improvements so a client doesn't need to determine if the transaction isPending
 // https://github.com/zcash/ZcashLightClientKit/issues/1313
-// Once #1313 is done, cleint will no longer need to call for a `latestHeight()`
+// Once #1313 is done, client will no longer need to call for a `latestHeight()`
 private extension SDKSynchronizerClient {
     static func latestBlockHeight(synchronizer: SDKSynchronizer) async throws -> BlockHeight {
         let latestBlockHeight: BlockHeight
