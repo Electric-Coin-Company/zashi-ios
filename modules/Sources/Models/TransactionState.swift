@@ -103,7 +103,7 @@ public struct TransactionState: Equatable, Identifiable {
     public var title: String {
         switch status {
         case .failed:
-            // TODO: failed shileded is not covered!
+            // TODO: failed shielded is not covered!
             return isSentTransaction
             ? L10n.Transaction.failedSend
             : L10n.Transaction.failedReceive
@@ -272,7 +272,7 @@ extension TransactionState {
         memoCount = transaction.memoCount
         self.memos = memos
 
-        // TODO: [#1313] SDK improvements so a client doesn't need to determing if the transaction isPending
+        // TODO: [#1313] SDK improvements so a client doesn't need to determine if the transaction isPending
         // https://github.com/zcash/ZcashLightClientKit/issues/1313
         // The only reason why `latestBlockHeight` is provided here is to determine pending
         // state of the transaction. SDK knows the latestBlockHeight so ideally ZcashTransaction.Overview
