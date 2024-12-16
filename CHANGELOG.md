@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Added
+- Keystone HW wallet integration.
+
 ## 1.2.4 build 3 (2024-11-26)
 
 ### Added
