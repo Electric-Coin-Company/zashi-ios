@@ -37,6 +37,18 @@ public enum L10n {
       /// Your Wallets
       public static let your = L10n.tr("Localizable", "accounts.addressBook.your", fallback: "Your Wallets")
     }
+    public enum Keystone {
+      /// Keystone Shielded Address
+      public static let shieldedAddress = L10n.tr("Localizable", "accounts.keystone.shieldedAddress", fallback: "Keystone Shielded Address")
+      /// Keystone Transparent Address
+      public static let transparentAddress = L10n.tr("Localizable", "accounts.keystone.transparentAddress", fallback: "Keystone Transparent Address")
+    }
+    public enum Zashi {
+      /// Zashi Shielded Address
+      public static let shieldedAddress = L10n.tr("Localizable", "accounts.zashi.shieldedAddress", fallback: "Zashi Shielded Address")
+      /// Zashi Transparent Address
+      public static let transparentAddress = L10n.tr("Localizable", "accounts.zashi.transparentAddress", fallback: "Zashi Transparent Address")
+    }
   }
   public enum AddressBook {
     /// Add New Contact
@@ -509,14 +521,10 @@ public enum L10n {
     public static let sa = L10n.tr("Localizable", "receive.sa", fallback: "Sapling Address")
     /// Zcash Sapling Address
     public static let saplingAddress = L10n.tr("Localizable", "receive.saplingAddress", fallback: "Zcash Sapling Address")
-    /// Zcash Shielded Address
-    public static let shieldedAddress = L10n.tr("Localizable", "receive.shieldedAddress", fallback: "Zcash Shielded Address")
     /// Transparent Address
     public static let ta = L10n.tr("Localizable", "receive.ta", fallback: "Transparent Address")
     /// Receive Zcash
     public static let title = L10n.tr("Localizable", "receive.title", fallback: "Receive Zcash")
-    /// Zcash Transparent Address
-    public static let transparentAddress = L10n.tr("Localizable", "receive.transparentAddress", fallback: "Zcash Transparent Address")
     /// Unified Address
     public static let ua = L10n.tr("Localizable", "receive.ua", fallback: "Unified Address")
     /// Prioritize using your shielded address for maximum privacy.

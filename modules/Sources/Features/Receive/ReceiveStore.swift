@@ -21,7 +21,6 @@ public struct Receive {
     public struct State: Equatable {
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
-        //public var uAddress: UnifiedAddress?
 
         public var unifiedAddress: String {
             selectedWalletAccount?.uAddress?.stringEncoded ?? L10n.Receive.Error.cantExtractUnifiedAddress
@@ -45,11 +44,7 @@ public struct Receive {
             }
         }
 
-        public init(
-            //uAddress: UnifiedAddress? = nil
-        ) {
-            //self.uAddress = uAddress
-        }
+        public init() { }
     }
 
     public enum Action: Equatable {

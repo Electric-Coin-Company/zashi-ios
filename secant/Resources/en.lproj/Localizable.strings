@@ -102,8 +102,6 @@
 "receive.error.cantExtractSaplingAddress" = "could not extract sapling receiver from UA";
 "receive.title" = "Receive Zcash";
 "receive.warning" = "Prioritize using your shielded address for maximum privacy.";
-"receive.shieldedAddress" = "Zcash Shielded Address";
-"receive.transparentAddress" = "Zcash Transparent Address";
 "receive.saplingAddress" = "Zcash Sapling Address";
 "receive.copy" = "Copy";
 "receive.qrCode" = "QR Code";
@@ -498,3 +496,7 @@
 "accounts.addressBook.contacts" = "Address Book Contacts";
 "accounts.keystone" = "Keystone";
 "accounts.zashi" = "Zashi";
+"accounts.zashi.shieldedAddress" = "Zashi Shielded Address";
+"accounts.zashi.transparentAddress" = "Zashi Transparent Address";
+"accounts.keystone.shieldedAddress" = "Keystone Shielded Address";
+"accounts.keystone.transparentAddress" = "Keystone Transparent Address";

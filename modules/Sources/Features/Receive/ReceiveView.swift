@@ -58,7 +58,7 @@ public struct ReceiveView: View {
                     if store.selectedWalletAccount?.vendor == .keystone {
                         addressBlock(
                             prefixIcon: Asset.Assets.Brandmarks.brandmarkKeystone.image,
-                            title: "Keystone Shielded Address",
+                            title: L10n.Accounts.Keystone.shieldedAddress,
                             address: store.unifiedAddress,
                             postfixIcon: Asset.Assets.Icons.shieldTickFilled.image,
                             iconFg: Design.Utility.Indigo._800,
@@ -82,7 +82,7 @@ public struct ReceiveView: View {
                         if let transparentAddress = store.selectedWalletAccount?.transparentAddress {
                             addressBlock(
                                 prefixIcon: Asset.Assets.Brandmarks.brandmarkLow.image,
-                                title: "Keystone Transparent Address",
+                                title: L10n.Accounts.Keystone.transparentAddress,
                                 address: transparentAddress,
                                 iconFg: Design.Text.primary,
                                 iconBg: Design.Surfaces.bgTertiary,
@@ -104,7 +104,7 @@ public struct ReceiveView: View {
                     } else {
                         addressBlock(
                             prefixIcon: Asset.Assets.Brandmarks.brandmarkMax.image,
-                            title: L10n.Receive.shieldedAddress,
+                            title: L10n.Accounts.Zashi.shieldedAddress,
                             address: store.unifiedAddress,
                             postfixIcon: Asset.Assets.Icons.shieldTickFilled.image,
                             iconFg: Design.Utility.Purple._800,
@@ -127,7 +127,7 @@ public struct ReceiveView: View {
                         
                         addressBlock(
                             prefixIcon: Asset.Assets.Brandmarks.brandmarkLow.image,
-                            title: L10n.Receive.transparentAddress,
+                            title: L10n.Accounts.Zashi.transparentAddress,
                             address: store.transparentAddress,
                             iconFg: Design.Text.primary,
                             iconBg: Design.Surfaces.bgTertiary,

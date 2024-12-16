@@ -35,16 +35,18 @@ public struct AddKeystoneHWWalletView: View {
                             .zFont(size: 14, style: Design.Text.tertiary)
                             .lineSpacing(1.5)
                             .padding(.top, 8)
-                        
-//                        Button {
-//                            store.send(.viewTutorialTapped)
-//                        } label: {
-//                            Text(L10n.Keystone.AddHWWallet.tutorial)
-//                                .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
-//                                .foregroundColor(Design.Utility.HyperBlue._700.color)
-//                                .underline()
-//                                .padding(.top, 4)
-//                        }
+
+                        #if DEBUG
+                        Button {
+                            store.send(.viewTutorialTapped)
+                        } label: {
+                            Text(L10n.Keystone.AddHWWallet.tutorial)
+                                .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
+                                .foregroundColor(Design.Utility.HyperBlue._700.color)
+                                .underline()
+                                .padding(.top, 4)
+                        }
+                        #endif
 
                         Text(L10n.Keystone.AddHWWallet.howTo)
                             .zFont(.semiBold, size: 18, style: Design.Text.primary)
@@ -57,13 +59,13 @@ public struct AddKeystoneHWWalletView: View {
                         .padding(.top, 16)
                         
                         InfoRow(
-                            icon: Asset.Assets.Icons.menu.image,
+                            icon: Asset.Assets.Icons.dotsMenu.image,
                             title: L10n.Keystone.AddHWWallet.step2
                         )
                         .padding(.top, 16)
 
                         InfoRow(
-                            icon: Asset.Assets.eyeOn.image,
+                            icon: Asset.Assets.Icons.connectWallet.image,
                             title: L10n.Keystone.AddHWWallet.step3
                         )
                         .padding(.top, 16)

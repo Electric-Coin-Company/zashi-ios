@@ -47,7 +47,7 @@ public struct ScanView: View {
                     }
                     
                     if store.progress != nil {
-                        progress(size: proxy.size, progress: store.prog)
+                        progress(size: proxy.size, progress: store.countedProgress)
                     }
                 }
 

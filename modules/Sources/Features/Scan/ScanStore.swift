@@ -48,10 +48,10 @@ public struct Scan {
         public var reportedParts = 0
         public var reportedPart = -1
 
-        var prog: Int {
+        var countedProgress: Int {
             guard expectedParts > 0 else { return 0 }
             
-            return min(100, Int(Float(reportedParts) / Float(expectedParts) * 100))
+            return min(99, Int(Float(reportedParts) / Float(expectedParts) * 100))
         }
         
         public init(
@@ -72,7 +72,7 @@ public struct Scan {
     @Dependency(\.qrImageDetector) var qrImageDetector
     @Dependency(\.uriParser) var uriParser
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
-    
+
     public enum Action: Equatable {
         case cancelPressed
         case clearInfo

@@ -142,7 +142,7 @@ extension Root {
                         .map(Root.Action.flexaOnTransactionRequest)
                         .receive(on: mainQueue)
                 }
-                //.cancellable(id: CancelFlexaId, cancelInFlight: true)
+                .cancellable(id: CancelFlexaId, cancelInFlight: true)
 
             case .flexaOnTransactionRequest(let transaction):
                 guard let transaction else {

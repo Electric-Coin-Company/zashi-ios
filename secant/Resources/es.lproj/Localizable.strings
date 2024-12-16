@@ -102,8 +102,6 @@
 "receive.error.cantExtractSaplingAddress" = "no se pudo extraer el receptor Sapling de la Dirección Unificada";
 "receive.title" = "Recibir Zcash";
 "receive.warning" = "Prioriza usar tu dirección protegida para máxima privacidad.";
-"receive.shieldedAddress" = "Dirección Protegida de Zcash";
-"receive.transparentAddress" = "Dirección Transparente de Zcash";
 "receive.saplingAddress" = "Dirección Sapling de Zcash";
 "receive.copy" = "Copiar";
 "receive.qrCode" = "Código QR";
@@ -498,3 +496,7 @@
 "accounts.addressBook.contacts" = "Contactos del Libro de Direcciones";
 "accounts.keystone" = "Keystone";
 "accounts.zashi" = "Zashi";
+"accounts.zashi.shieldedAddress" = "Dirección Protegida de Zashi";
+"accounts.zashi.transparentAddress" = "Dirección Transparente de Zashi";
+"accounts.keystone.shieldedAddress" = "Dirección Protegida de Keystone";
+"accounts.keystone.transparentAddress" = "Dirección Transparente de Keystone";

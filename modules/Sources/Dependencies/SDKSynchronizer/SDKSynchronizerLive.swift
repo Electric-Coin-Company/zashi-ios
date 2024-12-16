@@ -104,14 +104,14 @@ extension SDKSynchronizerClient: DependencyKey {
                             break
                         }
                     }
-                    
+
                     var transaction = TransactionState.init(
                         transaction: clearedTransaction,
                         memos: nil,
                         hasTransparentOutputs: hasTransparentOutputs,
                         latestBlockHeight: latestBlockHeight
                     )
-                    
+
                     let recipients = await synchronizer.getRecipients(for: clearedTransaction)
                     let addresses = recipients.compactMap {
                         if case let .address(address) = $0 {

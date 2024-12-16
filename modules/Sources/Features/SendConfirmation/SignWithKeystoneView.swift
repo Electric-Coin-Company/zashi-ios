@@ -119,7 +119,8 @@ public struct SignWithKeystoneView: View {
                             .padding(.top, 4)
                     }
                 }
-                
+
+                #if DEBUG
                 ZashiButton(
                     "Share PCZT",
                     type: .ghost
@@ -127,6 +128,7 @@ public struct SignWithKeystoneView: View {
                     store.send(.sharePCZT)
                 }
                 .padding(.top, 16)
+                #endif
 
                 Spacer()
 

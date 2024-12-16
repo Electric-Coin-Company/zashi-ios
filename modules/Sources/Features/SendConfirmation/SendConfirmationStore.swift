@@ -273,11 +273,6 @@ public struct SendConfirmation {
 
             case .closeTapped, .viewTransactionTapped, .backFromFailurePressed:
                 return .none
-                // TODO: do I need this?
-//                return .concatenate(
-//                    .send(.updateDestination(nil)),
-//                    .send(.updateResult(nil))
-//                )
 
             case .sendPressed:
                 if state.featureFlags.sendingScreen {
@@ -520,16 +515,6 @@ public struct SendConfirmation {
                 }
                 return .run { send in
                     do {
-                        print(pcztWithProofs.hexEncodedString())
-                        print("")
-                        print("x")
-                        print("x")
-                        print("")
-                        print(pcztWithSigs.hexEncodedString())
-
-//                        print("__LD await send(.sendDone)")
-//
-//                        await send(.sendDone)
                         let result = try await sdkSynchronizer.createTransactionFromPCZT(pcztWithProofs, pcztWithSigs)
                         
                         await send(.resetPCZTs)

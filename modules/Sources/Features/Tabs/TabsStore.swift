@@ -287,9 +287,15 @@ public struct Tabs {
             case let .receive(.addressDetailsRequest(address, maxPrivacy)):
                 state.addressDetailsState.address = address
                 state.addressDetailsState.maxPrivacy = maxPrivacy
-                state.addressDetailsState.addressTitle = maxPrivacy
-                ? L10n.Receive.shieldedAddress
-                : L10n.Receive.transparentAddress
+                if state.selectedWalletAccount?.vendor == .keystone {
+                    state.addressDetailsState.addressTitle = maxPrivacy
+                    ? L10n.Accounts.Keystone.shieldedAddress
+                    : L10n.Accounts.Keystone.transparentAddress
+                } else {
+                    state.addressDetailsState.addressTitle = maxPrivacy
+                    ? L10n.Accounts.Zashi.shieldedAddress
+                    : L10n.Accounts.Zashi.transparentAddress
+                }
                 return .send(.updateDestination(.addressDetails))
 
             case let .receive(.requestTapped(address, maxPrivacy)):

@@ -14,10 +14,6 @@ public struct DiskSpaceChecker {
     }
 
     public func hasEnoughFreeSpaceForSync() -> Bool {
-        // TODO: FIXME !!!
-//        #if DEBUG
-//        return true
-//        #endif
         freeSpace() > freeSpaceRequiredForSync()
     }
 
