@@ -265,21 +265,7 @@ public struct RequestPaymentConfirmationView: View {
             .navigationLinkEmpty(
                 isActive: store.bindingForStack(.signWithKeystone),
                 destination: {
-                    SignWithKeystoneView(store: store)
-                    .navigationLinkEmpty(
-                        isActive: store.bindingForStack(.scan),
-                        destination: {
-                            ScanView(
-                                store: store.scanStore()
-                            )
-                            .navigationLinkEmpty(
-                                isActive: store.bindingForStack(.sending),
-                                destination: {
-                                    SendingView(store: store, tokenName: tokenName)
-                                }
-                            )
-                        }
-                    )
+                    SignWithKeystoneView(store: store, tokenName: tokenName)
                 }
             )
         }

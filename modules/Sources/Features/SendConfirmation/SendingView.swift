@@ -34,26 +34,32 @@ public struct SendingView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack(spacing: 0) {
-                LottieView(animation: .named(
-                    colorScheme == .light ? Constants.lottieNameLight : Constants.lottieNameDark
-                ))
-                    .resizable()
-                    .looping()
-                    .frame(width: 110, height: 110)
+                LottieView(
+                    animation:
+                            .named(
+                                colorScheme == .light ? Constants.lottieNameLight : Constants.lottieNameDark
+                            )
+                )
+                .resizable()
+                .looping()
+                .frame(width: 110, height: 110)
 
-                Text(L10n.Send.sending)
+                Text(store.isShielding ? L10n.Send.shielding : L10n.Send.sending)
                     .zFont(.semiBold, size: 28, style: Design.Text.primary)
                     .padding(.top, 16)
 
-                Text(L10n.Send.sendingInfo)
+                Text(store.isShielding ? L10n.Send.shieldingInfo : L10n.Send.sendingInfo)
                     .zFont(size: 14, style: Design.Text.primary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
 
-                Text(store.address.zip316)
-                    .zFont(addressFont: true, size: 14, style: Design.Text.primary)
-                    .padding(.top, 4)
+                if !store.isShielding {
+                    Text(store.address.zip316)
+                        .zFont(addressFont: true, size: 14, style: Design.Text.primary)
+                        .padding(.top, 4)
+                }
             }
+            .onAppear { store.send(.sendingScreenOnAppear) }
             .navigationLinkEmpty(
                 isActive: store.bindingForResult(.success),
                 destination: {

@@ -34,9 +34,14 @@ public struct Settings {
         public var integrationsState: Integrations.State
         public var isEnoughFreeSpaceMode = true
         public var supportData: SupportData?
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var sendFeedbackState: SendFeedback.State = .initial
         public var whatsNewState: WhatsNew.State = .initial
 
+        public var isKeystoneAccount: Bool {
+            selectedWalletAccount?.vendor == .keystone ? true : false
+        }
+        
         public init(
             aboutState: About.State,
             addressBookState: AddressBook.State,

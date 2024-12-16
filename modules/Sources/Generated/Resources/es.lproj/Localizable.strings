@@ -15,7 +15,7 @@
 
 // MARK: - Secret Recovery Phrase Display
 "recoveryPhraseDisplay.screenTitle" = "Frase de Recuperación";
-"recoveryPhraseDisplay.title" = "Protege tu billetera";
+"recoveryPhraseDisplay.title" = "Asegura tu Billetera Zashi";
 "recoveryPhraseDisplay.description" = "Las siguientes 24 palabras son la clave para tus fondos y constituyen la única forma de recuperarlos si pierdes el acceso o adquieres un nuevo dispositivo. ¡Protege tu ZEC almacenando esta frase en un lugar de confianza y nunca la compartas con nadie!";
 "recoveryPhraseDisplay.button.wroteItDown" = "Ya la guardé";
 "recoveryPhraseDisplay.noWords" = "Las claves están ausentes. No hay una frase de respaldo almacenada en el llavero.";
@@ -183,6 +183,12 @@
 "send.resubmission" = "Error de Conexión";
 "send.resubmissionInfo" = "Zashi encontró problemas de conexión al enviar la transacción. Intentará de nuevo en los próximos minutos.";
 "send.report" = "Reportar";
+"send.shielding" = "Protegiendo...";
+"send.shieldingInfo" = "Tus tokens están siendo protegidos";
+"send.successShielding" = "¡Protegidos!";
+"send.successShieldingInfo" = "Tus tokens han sido protegidos con éxito";
+"send.failureShielding" = "No se pudo proteger";
+"send.failureShieldingInfo" = "Hubo un error al intentar proteger tus tokens. Por favor, inténtalo de nuevo.";
 
 // MARK: - Message Editor
 "messageEditor.addUA" = "Responder a: Incluir mi dirección en el memo";
@@ -194,8 +200,10 @@
 
 // MARK: - Delete Wallet
 "deleteWallet.title" = "Restablecer Zashi";
-"deleteWallet.message1" = "Por favor, no restablezcas esta aplicación a menos que estés seguro de comprender los efectos.";
-"deleteWallet.message2" = "Restablecer la aplicación Zashi eliminará la base de datos y los datos almacenados en caché. Cualquier fondo que tengas en esta billetera se perderá y solo podrá recuperarse utilizando tu frase de recuperación secreta de Zashi en otra billetera de Zcash.";
+"deleteWallet.message1" = "¡Restablecer tu aplicación puede provocar la pérdida completa de acceso a tus fondos! ⚠️";
+"deleteWallet.message2" = "Asegúrate de haber guardado tanto tu frase de recuperación secreta como la altura de cumpleaños de la billetera antes de continuar.";
+"deleteWallet.message3" = "Restablecer la aplicación Zashi eliminará la base de datos y los datos en caché de la aplicación, además de desconectar todas las billeteras de hardware conectadas.";
+"deleteWallet.message4" = "Una vez que restablezcas Zashi, la única forma de acceder a tus fondos será mediante un proceso de restauración de billetera que requiere tu Frase de Recuperación de Zashi y la Altura de Cumpleaños de la Billetera.";
 "deleteWallet.iUnderstand" = "Entiendo";
 "deleteWallet.actionButtonTitle" = "Restablecer Zashi";
 "deleteWallet.screenTitle" = "Restablecer";
@@ -223,7 +231,7 @@
 "settings.about" = "Acerca de";
 "settings.feedback" = "Envíanos tus Comentarios";
 "settings.integrations" = "Integraciones";
-"settings.recoveryPhrase" = "Frase de Recuperación";
+"settings.recoveryPhrase" = "Frase de Recuperación de Zashi";
 "settings.exportPrivateData" = "Exportar Datos Privados";
 "settings.exportLogsOnly" = "Exportar solo registros";
 "settings.chooseServer" = "Elegir un Servidor";
@@ -257,7 +265,7 @@
 
 // MARK: - Private Data Consent
 "privateDataConsent.title" = "Consentimiento para Exportar Datos Privados";
-"privateDataConsent.message1" = "Al hacer clic en “Estoy de acuerdo” a continuación, das tu consentimiento para exportar los datos privados de Zashi, que incluyen todo el historial de la billetera, toda la información privada, los memos, los montos y las direcciones de los destinatarios, incluso para tu actividad protegida.*";
+"privateDataConsent.message1" = "Al hacer clic en 'Estoy de Acuerdo', das tu consentimiento para exportar todos los datos privados de tus billeteras, como el historial completo de tus billeteras, incluyendo cualquier billetera de hardware conectada. Toda información privada, notas, montos y direcciones de destinatarios, incluso para tus actividades protegidas, serán exportadas.*";
 "privateDataConsent.message2" = "Los datos privados también permiten ver ciertas acciones futuras que realices con Zashi.";
 "privateDataConsent.message3" = "Compartir estos datos privados es irrevocable: una vez que hayas compartido estos datos privados con alguien, no hay forma de revocar su acceso.";
 "privateDataConsent.message4" = "*Ten en cuenta que estos datos privados no les dan la capacidad de gastar tus fondos, solo la capacidad de ver lo que haces con tus fondos.";
@@ -456,3 +464,37 @@
 "partners.coinbaseOnrampUrl" = "https://pay.coinbase.com/buy/select-asset?appId=%@&addresses={\"%@\":[\"zcash\"]}";
 "partners.flexa.transactionFailedTitle" = "Transacción Fallida";
 "partners.flexa.transactionFailedMessage" = "Lo sentimos, pero algo falló. Por favor, inténtalo de nuevo.";
+
+// MARK: Keystone integration
+"keystone.wallet" = "Billetera Keystone";
+"keystone.drawer.title" = "Billeteras y Hardware";
+"keystone.connect" = "Conectar Billetera de Hardware";
+"keystone.drawer.banner.title" = "Billetera de Hardware Keystone";
+"keystone.drawer.banner.desc" = "Obtén un 5%% de descuento en una billetera de hardware aislada. Código promocional: 'Zashi'.";
+"keystone.addHWWallet.title" = "Confirma tu Cuenta para Acceder";
+"keystone.addHWWallet.desc" = "Selecciona la billetera que deseas conectar para continuar. Una vez conectada, podrás firmar transacciones de manera inalámbrica con tu billetera de hardware.";
+"keystone.addHWWallet.connect" = "Conectar";
+"keystone.addHWWallet.forgetDevice" = "Olvidar este dispositivo";
+"keystone.addHWWallet.scan" = "Escanea el código QR de tu dispositivo para conectarte.";
+"keystone.addHWWallet.tutorial" = "Ver tutorial de Keystone";
+"keystone.addHWWallet.howTo" = "Instrucciones:";
+"keystone.addHWWallet.step1" = "Desbloquea tu Keystone";
+"keystone.addHWWallet.step2" = "Toca el ícono del menú";
+"keystone.addHWWallet.step3" = "Selecciona 'Conectar Billetera de Software'";
+"keystone.addHWWallet.step4" = "Selecciona la app Zashi y escanea el código QR";
+"keystone.addHWWallet.readyToScan" = "Listo para Escanear";
+"keystone.confirm" = "Confirma con Keystone";
+"keystone.signWith.hardware" = "Hardware";
+"keystone.signWith.title" = "Escanea con tu billetera Keystone";
+"keystone.signWith.desc" = "Después de firmar con Keystone, toca el botón 'Obtener Firma' abajo.";
+"keystone.signWith.getSignature" = "Obtener Firma";
+"keystone.signWith.reject" = "Rechazar";
+"keystone.signWith.signTransaction" = "Firmar Transacción";
+"keystone.scanInfo" = "Escanea el código QR de tu billetera Keystone";
+"keystone.scanInfoTransaction" = "Escanea el código QR de Keystone para firmar la transacción";
+"keystone.settings" = "Cambia de Keystone a Zashi para usar Integraciones.";
+"accounts.sendingFrom" = "Enviando desde";
+"accounts.addressBook.your" = "Tus Billeteras";
+"accounts.addressBook.contacts" = "Contactos del Libro de Direcciones";
+"accounts.keystone" = "Keystone";
+"accounts.zashi" = "Zashi";

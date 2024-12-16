@@ -43,7 +43,17 @@ public struct Scan {
         public var isTorchAvailable = false
         public var isTorchOn = false
         public var isRPFound = false
+        public var progress: Int?
+        public var expectedParts = 0
+        public var reportedParts = 0
+        public var reportedPart = -1
 
+        var prog: Int {
+            guard expectedParts > 0 else { return 0 }
+            
+            return min(100, Int(Float(reportedParts) / Float(expectedParts) * 100))
+        }
+        
         public init(
             info: String = "",
             isTorchAvailable: Bool = false,
@@ -72,6 +82,8 @@ public struct Scan {
         case found(RedactableString)
         case foundRP(ParserResult)
         case foundZA(ZcashAccounts)
+        case foundPCZT(Data)
+        case animatedQRProgress(Int, Int?, Int?)
         case scanFailed(ScanImageResult)
         case scan(RedactableString)
         case torchPressed
@@ -85,6 +97,10 @@ public struct Scan {
             switch action {
             case .onAppear:
                 // reset the values
+                state.reportedPart = -1
+                state.reportedParts = 0
+                state.expectedParts = 0
+                state.progress = nil
                 state.isTorchOn = false
                 state.isRPFound = false
                 state.info = ""
@@ -103,6 +119,11 @@ public struct Scan {
                 return .none
                 
             case .foundZA:
+                state.progress = nil
+                return .none
+
+            case .foundPCZT:
+                state.progress = nil
                 return .none
 
             case .cancelPressed:
@@ -112,6 +133,16 @@ public struct Scan {
                 state.info = ""
                 return .cancel(id: state.cancelId)
 
+            case let .animatedQRProgress(progress, part, expectedParts):
+                let partInt = part ?? -1
+                if partInt != -1 && partInt != state.reportedPart {
+                    state.reportedPart = partInt
+                    state.reportedParts = state.reportedParts + 1
+                }
+                state.expectedParts = Int(Float(expectedParts ?? 0) * 1.75)
+                state.progress = progress
+                return .none
+                
             case .found:
                 return .none
 
@@ -143,7 +174,7 @@ public struct Scan {
                 case .severalQRCodesFound:
                     state.info = L10n.Scan.severalCodesFound
                 case .keystoneCheckOnly:
-                    state.info = "Please hold steady so Keystone code can be read."
+                    state.info = ""
                 }
                 return .concatenate(
                     Effect.cancel(id: state.cancelId),
@@ -161,8 +192,8 @@ public struct Scan {
                     }
                 }
 
-                if state.checkers.count == 1 && state.checkers[0] == .keystoneScanChecker {
-                    return .send(.scanFailed(.keystoneCheckOnly))
+                if state.checkers.count == 2 && state.checkers[0] == .keystoneScanChecker && state.checkers[1] == .keystonePCZTScanChecker {
+                    return .none
                 }
                 return .send(.scanFailed(.noQRCodeFound))
 

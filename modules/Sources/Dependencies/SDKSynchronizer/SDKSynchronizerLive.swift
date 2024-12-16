@@ -83,15 +83,13 @@ extension SDKSynchronizerClient: DependencyKey {
             },
             rewind: { synchronizer.rewind($0) },
             getAllTransactions: { accountUUID in
-                let clearedTransactions = try await synchronizer.allTransactions().compactMap { rawTransaction in
-                    guard let accountUUID else {
-                        return rawTransaction
-                    }
-
-                    return rawTransaction.accountUUID == accountUUID ? rawTransaction : nil
+                guard let accountUUID else {
+                    return []
                 }
-//
-//                let clearedTransactions = try await synchronizer.allTransactions()
+                
+                let clearedTransactions = try await synchronizer.allTransactions().compactMap { rawTransaction in
+                    rawTransaction.accountUUID == accountUUID ? rawTransaction : nil
+                }
 
                 var clearedTxs: [TransactionState] = []
                 
@@ -193,9 +191,9 @@ extension SDKSynchronizerClient: DependencyKey {
                 
                 if successCount == 0 {
                     if resubmitableFailure {
-                        return .failure(txIds: txIds, code: errCode, description: errDesc)
-                    } else {
                         return .grpcFailure(txIds: txIds)
+                    } else {
+                        return .failure(txIds: txIds, code: errCode, description: errDesc)
                     }
                 } else if successCount == transactionCount {
                     return .success(txIds: txIds)
@@ -239,9 +237,9 @@ extension SDKSynchronizerClient: DependencyKey {
                 }
                 
                 // Put the Zashi account to the top
-                //let sortedWalletAccounts = walletAccounts.sorted { $0.vendor.rawValue > $1.vendor.rawValue }
+                let sortedWalletAccounts = walletAccounts.sorted { $0.vendor.rawValue > $1.vendor.rawValue }
 
-                return walletAccounts
+                return sortedWalletAccounts
             },
             createPCZTFromProposal: { accountUUID, proposal in
                 try await synchronizer.createPCZTFromProposal(accountUUID: accountUUID, proposal: proposal)
@@ -249,8 +247,53 @@ extension SDKSynchronizerClient: DependencyKey {
             addProofsToPCZT: { pczt in
                 try await synchronizer.addProofsToPCZT(pczt: pczt)
             },
-            extractAndStoreTxFromPCZT: { pcztWithProofs, pcztWithSigs in
-                try await synchronizer.extractAndStoreTxFromPCZT(pcztWithProofs: pcztWithProofs, pcztWithSigs: pcztWithSigs)
+            createTransactionFromPCZT: { pcztWithProofs, pcztWithSigs in
+                let stream = try await synchronizer.createTransactionFromPCZT(
+                    pcztWithProofs: pcztWithProofs,
+                    pcztWithSigs: pcztWithSigs
+                )
+
+                var successCount = 0
+                var iterator = stream.makeAsyncIterator()
+                
+                var txIds: [String] = []
+                var statuses: [String] = []
+                var errCode = 0
+                var errDesc = ""
+                var resubmitableFailure = false
+                
+                if let transactionSubmitResult = try await iterator.next() {
+                    switch transactionSubmitResult {
+                    case .success(txId: let id):
+                        successCount += 1
+                        txIds.append(id.toHexStringTxId())
+                        statuses.append("success")
+                    case let .grpcFailure(txId: id, error: error):
+                        txIds.append(id.toHexStringTxId())
+                        statuses.append(error.localizedDescription)
+                        resubmitableFailure = true
+                    case let .submitFailure(txId: id, code: code, description: description):
+                        txIds.append(id.toHexStringTxId())
+                        statuses.append("code: \(code) desc: \(description)")
+                        errCode = code
+                        errDesc = description
+                    case .notAttempted(txId: let id):
+                        txIds.append(id.toHexStringTxId())
+                        statuses.append("notAttempted")
+                    }
+                }
+                
+                if successCount == 0 {
+                    if resubmitableFailure {
+                        return .grpcFailure(txIds: txIds)
+                    } else {
+                        return .failure(txIds: txIds, code: errCode, description: errDesc)
+                    }
+                } else if successCount == 1 {
+                    return .success(txIds: txIds)
+                } else {
+                    return .partial(txIds: txIds, statuses: statuses)
+                }
             },
             urEncoderForPCZT: { pczt in
                 let keystoneSDK = KeystoneZcashSDK()

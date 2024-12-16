@@ -39,8 +39,8 @@ public struct Balances {
         public var isHintBoxVisible = false
         public var partialProposalErrorState: PartialProposalError.State
         public var pendingTransactions: Zatoshi
-        public var shieldedBalance: Zatoshi
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
+        public var shieldedBalance: Zatoshi
         public var syncProgressState: SyncProgress.State
         public var transparentBalance: Zatoshi
         public var walletBalancesState: WalletBalances.State
@@ -86,10 +86,12 @@ public struct Balances {
         case onAppear
         case onDisappear
         case partialProposalError(PartialProposalError.Action)
+        case proposalReadyForShieldingWithKeystone(Proposal)
         case shieldFunds
         case shieldFundsFailure(ZcashError)
         case shieldFundsPartial([String], [String])
         case shieldFundsSuccess
+        case shieldFundsWithKeystone
         case synchronizerStateChanged(RedactableSynchronizerState)
         case syncProgress(SyncProgress.Action)
         case updateBalance(AccountBalance?)
@@ -154,6 +156,10 @@ public struct Balances {
                 guard let account = state.selectedWalletAccount, let zip32AccountIndex = account.zip32AccountIndex else {
                     return .none
                 }
+                if account.vendor == .keystone {
+                    return .send(.shieldFundsWithKeystone)
+                }
+                // Regular path only for Zashi account
                 state.isShieldingFunds = true
                 return .run { send in
                     do {
@@ -186,6 +192,27 @@ public struct Balances {
                         await send(.shieldFundsFailure(error.toZcashError()))
                     }
                 }
+                
+            case .shieldFundsWithKeystone:
+                guard let account = state.selectedWalletAccount else {
+                    return .none
+                }
+                guard let address = try? account.uAddress?.transparentReceiver() else {
+                    return .none
+                }
+                return .run { send in
+                    do {
+                        let proposal = try await sdkSynchronizer.proposeShielding(account.id, zcashSDKEnvironment.shieldingThreshold, .empty, address)
+                        
+                        guard let proposal else { throw "sdkSynchronizer.proposeShielding" }
+                        await send(.proposalReadyForShieldingWithKeystone(proposal))
+                    } catch {
+                        await send(.shieldFundsFailure(error.toZcashError()))
+                    }
+                }
+                
+            case .proposalReadyForShieldingWithKeystone:
+                return .none
 
             case .shieldFundsFailure(let error):
                 state.isShieldingFunds = false

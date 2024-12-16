@@ -18,4 +18,5 @@ extension DependencyValues {
 @DependencyClient
 public struct KeystoneHandlerClient {
     public var decodeQR: @Sendable (String) -> DecodeResult?
+    public var resetQRDecoder: @Sendable () -> Void
 }

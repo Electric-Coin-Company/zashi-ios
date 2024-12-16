@@ -20,6 +20,7 @@ public struct TransactionList {
     public struct State: Equatable {
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
+        public var isInvalidated = true
         public var latestMinedHeight: BlockHeight?
         public var latestTransactionId = ""
         public var latestTransactionList: [TransactionState] = []
@@ -73,10 +74,10 @@ public struct TransactionList {
         switch action {
         case .onAppear:
             state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
-            let account = state.zashiWalletAccount
-            if let account {
+            let selectedAccount = state.selectedWalletAccount
+            if let abAccount = state.zashiWalletAccount {
                 do {
-                    let result = try addressBook.allLocalContacts(account.account)
+                    let result = try addressBook.allLocalContacts(abAccount.account)
                     let abContacts = result.contacts
                     if result.remoteStoreResult == .failure {
                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
@@ -105,7 +106,7 @@ public struct TransactionList {
                 }
                 .cancellable(id: CancelEventId, cancelInFlight: true),
                 .run { send in
-                    if let transactions = try? await sdkSynchronizer.getAllTransactions(account?.id) {
+                    if let transactions = try? await sdkSynchronizer.getAllTransactions(selectedAccount?.id) {
                         await send(.updateTransactionList(transactions))
                     }
                 }
@@ -162,6 +163,7 @@ public struct TransactionList {
             }
 
         case .updateTransactionList(let transactionList):
+            state.isInvalidated = false
             // update the list only if there is anything new
             guard state.latestTransactionList != transactionList else {
                 return .none

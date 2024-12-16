@@ -69,8 +69,8 @@ public struct SDKSynchronizerClient {
     public var walletAccounts: () async throws -> [WalletAccount] = { [] }
     
     // PCZT
-    public var createPCZTFromProposal: (AccountUUID, Proposal) async throws -> Data
-    public var addProofsToPCZT: (Data) async throws -> Data
-    public var extractAndStoreTxFromPCZT: (Data, Data) async throws -> Data
-    public var urEncoderForPCZT: (Data) -> UREncoder?
+    public var createPCZTFromProposal: (AccountUUID, Proposal) async throws -> Pczt
+    public var addProofsToPCZT: (Pczt) async throws -> Pczt
+    public var createTransactionFromPCZT: (Pczt, Pczt) async throws -> CreateProposedTransactionsResult
+    public var urEncoderForPCZT: (Pczt) -> UREncoder?
 }

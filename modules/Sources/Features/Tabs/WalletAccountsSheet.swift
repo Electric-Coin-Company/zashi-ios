@@ -49,7 +49,10 @@ extension TabsView {
             if store.walletAccounts.count == 1 {
                 addKeystoneBannerView()
                     .padding(.top, 8)
-                
+                    .onTapGesture {
+                        store.send(.keystoneBannerTapped)
+                    }
+
                 ZashiButton(
                     L10n.Keystone.connect,
                     type: .secondary
@@ -120,7 +123,7 @@ extension TabsView {
         }
     }
     
-    @ViewBuilder func addKeystoneBannerView() -> some View {
+    @ViewBuilder func addKeystoneBannerViewOldDesign() -> some View {
         WithPerceptionTracking {
             HStack(spacing: 0) {
                 HStack(alignment: .top, spacing: 0) {
@@ -157,6 +160,37 @@ extension TabsView {
             .background {
                 RoundedRectangle(cornerRadius: 24)
                     .stroke(Design.Surfaces.strokeSecondary.color)
+            }
+        }
+    }
+    
+    @ViewBuilder func addKeystoneBannerView() -> some View {
+        WithPerceptionTracking {
+            VStack(spacing: 0) {
+                VStack(alignment: .leading, spacing: 0) {
+                    Text(L10n.Keystone.Drawer.Banner.title)
+                        .zFont(.semiBold, size: 18, style: Design.Text.primary)
+                    
+                    Text(L10n.Keystone.Drawer.Banner.desc)
+                        .zFont(size: 12, style: Design.Text.tertiary)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .lineSpacing(2)
+                        .padding(.top, 2)
+                        .padding(.trailing, 80)
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 24)
+
+                Asset.Assets.Partners.keystonePromo.image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 346, height: 148)
+                    .clipped()
+            }
+            .frame(maxWidth: .infinity)
+            .background {
+                RoundedRectangle(cornerRadius: 24)
+                    .fill(Design.Surfaces.bgTertiary.color)
             }
         }
     }

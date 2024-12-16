@@ -25,16 +25,14 @@ extension TabsView {
             .tint(Asset.Colors.primary.color)
     }
     
-    @ViewBuilder func hideBalancesButton(tab: Tabs.State.Tab) -> some View {
-        if tab == .account || tab == .send || tab == .balances {
-            Button {
-                isSensitiveContentHidden.toggle()
-            } label: {
-                let image = isSensitiveContentHidden ? Asset.Assets.eyeOff.image : Asset.Assets.eyeOn.image
-                image
-                    .zImage(size: 24, color: Asset.Colors.primary.color)
-                    .padding(8)
-            }
+    @ViewBuilder func hideBalancesButton() -> some View {
+        Button {
+            isSensitiveContentHidden.toggle()
+        } label: {
+            let image = isSensitiveContentHidden ? Asset.Assets.eyeOff.image : Asset.Assets.eyeOn.image
+            image
+                .zImage(size: 24, color: Asset.Colors.primary.color)
+                .padding(8)
         }
     }
     

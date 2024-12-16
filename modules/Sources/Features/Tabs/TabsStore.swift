@@ -38,6 +38,7 @@ public struct Tabs {
             case addressDetails
             case currencyConversionSetup
             case sendConfirmation
+            case sendConfirmationKeystone
             case settings
         }
 
@@ -91,6 +92,7 @@ public struct Tabs {
         public var currencyConversionSetupState: CurrencyConversionSetup.State
         public var destination: Destination?
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
+        public var isInAppBrowserOn = false
         public var isRateEducationEnabled = false
         public var isRateTooltipEnabled = false
         public var homeState: Home.State
@@ -115,6 +117,10 @@ public struct Tabs {
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         public var zecKeyboardState: ZecKeyboard.State
         
+        public var inAppBrowserURL: String {
+            "https://shop.keyst.one/products/keystone-3-pro"
+        }
+
         public init(
             addressDetailsState: AddressDetails.State = .initial,
             balanceBreakdownState: Balances.State,
@@ -160,7 +166,9 @@ public struct Tabs {
         case currencyConversionSetup(CurrencyConversionSetup.Action)
         case dismissSelectTextEditor
         case home(Home.Action)
+        case keystoneBannerTapped
         case onAppear
+        case presentKeystoneWeb
         case rateTooltipTapped
         case receive(Receive.Action)
         case requestZec(RequestZec.Action)
@@ -242,14 +250,14 @@ public struct Tabs {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                state.scanState.checkers = [.keystoneScanChecker]
-                state.scanState.instructions = "Scan your Keystone wallet to connect"
+                state.scanState.checkers = [.keystoneScanChecker, .keystonePCZTScanChecker]
+                state.scanState.instructions = L10n.Keystone.scanInfo
                 state.scanState.forceLibraryToHide = true
                 state.isRateEducationEnabled = userStoredPreferences.exchangeRate() == nil
                 return .none
                 
             case .accountSwitchTapped:
-                state.accountSwitchRequest = true
+                state.accountSwitchRequest.toggle()
                 return .none
                 
             case .addKeystoneHWWalletTapped:
@@ -259,6 +267,7 @@ public struct Tabs {
             case .walletAccountTapped(let walletAccount):
                 state.selectedWalletAccount = walletAccount
                 state.accountSwitchRequest = false
+                state.homeState.transactionListState.isInvalidated = true
                 return .concatenate(
                     .send(.home(.walletBalances(.updateBalances))),
                     .send(.send(.walletBalances(.updateBalances))),
@@ -351,6 +360,14 @@ public struct Tabs {
             case .balanceBreakdown(.shieldFundsSuccess):
                 return .none
             
+            case .balanceBreakdown(.proposalReadyForShieldingWithKeystone(let proposal)):
+                state.sendConfirmationState.proposal = proposal
+                state.sendConfirmationState.isShielding = true
+                return .concatenate(
+                    .send(.updateDestination(.sendConfirmationKeystone)),
+                    .send(.sendConfirmation(.resolvePCZT))
+                    )
+                
             case .balanceBreakdown:
                 return .none
 
@@ -389,6 +406,7 @@ public struct Tabs {
             case .send(.confirmationRequired(let type)):
                 state.sendConfirmationState.amount = state.sendState.amount
                 state.sendConfirmationState.address = state.sendState.address.data
+                state.sendConfirmationState.isShielding = false
                 state.sendConfirmationState.proposal = state.sendState.proposal
                 state.sendConfirmationState.feeRequired = state.sendState.feeRequired
                 state.sendConfirmationState.message = state.sendState.message
@@ -409,34 +427,38 @@ public struct Tabs {
             case .sendConfirmation(.viewTransactionTapped):
                 state.selectedTab = .account
                 state.sendConfirmationState.txIdToExpand = state.homeState.transactionListState.transactionList.first?.id
-                return .merge(
-                    .send(.updateDestination(nil)),
-                    .send(.updateStackDestinationRequestPayment(nil)),
-                    .send(.send(.resetForm)),
-                    .send(.home(.transactionList(.transactionExpandRequested(state.sendConfirmationState.txIdToExpand ?? ""))))
-                )
-                
-            case .sendConfirmation(.sendDone):
-                if state.featureFlags.sendingScreen {
-                    return .none
-                } else {
-                    state.selectedTab = .account
-                    return .merge(
-                        .send(.updateDestination(nil)),
-                        .send(.updateStackDestinationRequestPayment(nil)),
-                        .send(.send(.resetForm))
-                    )
-                }
-
-            case .sendConfirmation(.closeTapped):
-                state.selectedTab = .account
-                return .merge(
+                state.sendConfirmationState.stackDestinationBindingsAlive = 0
+                return .concatenate(
                     .send(.updateDestination(nil)),
                     .send(.updateStackDestinationRequestPayment(nil)),
                     .send(.sendConfirmation(.updateDestination(nil))),
                     .send(.sendConfirmation(.updateResult(nil))),
+                    .send(.sendConfirmation(.updateStackDestination(nil))),
+                    .send(.send(.resetForm)),
+                    .send(.home(.transactionList(.transactionExpandRequested(state.sendConfirmationState.txIdToExpand ?? ""))))
+                )
+
+            case .sendConfirmation(.backFromFailurePressed):
+                state.sendConfirmationState.stackDestinationBindingsAlive = 0
+                return .concatenate(
+                    .send(.updateDestination(nil)),
+                    .send(.updateStackDestinationRequestPayment(nil)),
+                    .send(.sendConfirmation(.updateDestination(nil))),
+                    .send(.sendConfirmation(.updateResult(nil))),
+                    .send(.sendConfirmation(.updateStackDestination(nil)))
+                )
+
+            case .sendConfirmation(.closeTapped):
+                state.selectedTab = .account
+                state.sendConfirmationState.stackDestinationBindingsAlive = 0
+                return .concatenate(
+                    .send(.updateDestination(nil)),
+                    .send(.updateStackDestinationRequestPayment(nil)),
+                    .send(.sendConfirmation(.updateDestination(nil))),
+                    .send(.sendConfirmation(.updateResult(nil))),
+                    .send(.sendConfirmation(.updateStackDestination(nil))),
                     .send(.send(.resetForm))
-                    )
+                )
                 
             case .sendConfirmation(.partialProposalError(.dismiss)):
                 return .run { send in
@@ -456,13 +478,16 @@ public struct Tabs {
                 return .send(.updateStackDestinationRequestPayment(nil))
 
             case .sendConfirmation(.rejectTapped):
+                state.sendConfirmationState.stackDestinationBindingsAlive = 0
                 return .concatenate(
                     .send(.send(.resetForm)),
                     .send(.updateStackDestinationRequestPayment(nil)),
                     .send(.updateDestination(nil)),
+                    .send(.sendConfirmation(.updateDestination(nil))),
+                    .send(.sendConfirmation(.updateResult(nil))),
                     .send(.sendConfirmation(.updateStackDestination(nil)))
                 )
-                
+
             case .sendConfirmation:
                 return .none
 
@@ -531,6 +556,17 @@ public struct Tabs {
                 return .none
                 
             case .scan:
+                return .none
+                
+            case .keystoneBannerTapped:
+                return .run { send in
+                    await send(.accountSwitchTapped)
+                    try? await mainQueue.sleep(for: .seconds(1))
+                    await send(.presentKeystoneWeb)
+                }
+                
+            case .presentKeystoneWeb:
+                state.isInAppBrowserOn = true
                 return .none
             }
         }

@@ -19,10 +19,15 @@ import ZcashSDKEnvironment
 public struct AddKeystoneHWWallet {
     @ObservableState
     public struct State: Equatable {
+        public var isInAppBrowserOn = false
         public var isKSAccountSelected = false
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         public var zcashAccounts: ZcashAccounts?
+
+        public var inAppBrowserURL: String {
+            "https://www.youtube.com/watch?v=pyN4UPwFIrM"
+        }
 
         public var keystoneAddress: String {
             @Dependency(\.derivationTool) var derivationTool
@@ -54,6 +59,7 @@ public struct AddKeystoneHWWallet {
         case loadedWalletAccounts([WalletAccount], AccountUUID)
         case onAppear
         case unlockTapped
+        case viewTutorialTapped
     }
 
     public init() { }
@@ -124,6 +130,10 @@ public struct AddKeystoneHWWallet {
                 return .none
                 
             case .continueTapped:
+                return .none
+                
+            case .viewTutorialTapped:
+                state.isInAppBrowserOn = true
                 return .none
             }
         }

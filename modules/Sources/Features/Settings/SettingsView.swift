@@ -34,22 +34,39 @@ public struct SettingsView: View {
                             ActionRow(
                                 icon: Asset.Assets.Icons.integrations.image,
                                 title: L10n.Settings.integrations,
+                                desc: store.isKeystoneAccount
+                                ? L10n.Keystone.settings
+                                : nil,
                                 accessoryView:
                                     HStack(spacing: 0) {
-                                        Asset.Assets.Partners.coinbaseSeeklogo.image
-                                        .resizable()
-                                        .frame(width: 20, height: 20)
-                                    
-                                        if store.featureFlags.flexa {
-                                            Asset.Assets.Partners.flexaSeekLogo.image
+                                        if store.isKeystoneAccount {
+                                            Asset.Assets.Partners.coinbaseSeeklogoDisabled.image
                                                 .resizable()
                                                 .frame(width: 20, height: 20)
-                                                .padding(.leading, 8)
+                                            
+                                            if store.featureFlags.flexa {
+                                                Asset.Assets.Partners.flexaSeeklogoDisabled.image
+                                                    .resizable()
+                                                    .frame(width: 20, height: 20)
+                                                    .offset(x: -4)
+                                            }
+                                        } else {
+                                            Asset.Assets.Partners.coinbaseSeeklogo.image
+                                                .resizable()
+                                                .frame(width: 20, height: 20)
+                                            
+                                            if store.featureFlags.flexa {
+                                                Asset.Assets.Partners.flexaSeekLogo.image
+                                                    .resizable()
+                                                    .frame(width: 20, height: 20)
+                                                    .offset(x: -4)
+                                            }
                                         }
                                     }
                             ) {
                                 store.send(.updateDestination(.integrations))
                             }
+                            .disabled(store.isKeystoneAccount)
                         }
 
                         ActionRow(

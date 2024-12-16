@@ -41,9 +41,9 @@ extension SDKSynchronizerClient: TestDependencyKey {
         refreshExchangeRateUSD: unimplemented("\(Self.self).refreshExchangeRateUSD", placeholder: {}()),
         evaluateBestOf: { _, _, _, _, _, _ in fatalError("evaluateBestOf not implemented") },
         walletAccounts: unimplemented("\(Self.self).walletAccounts", placeholder: []),
-        createPCZTFromProposal: unimplemented("\(Self.self).createPCZTFromProposal", placeholder: Data()),
-        addProofsToPCZT: unimplemented("\(Self.self).addProofsToPCZT", placeholder: Data()),
-        extractAndStoreTxFromPCZT: unimplemented("\(Self.self).extractAndStoreTxFromPCZT", placeholder: Data()),
+        createPCZTFromProposal: unimplemented("\(Self.self).createPCZTFromProposal", placeholder: Pczt()),
+        addProofsToPCZT: unimplemented("\(Self.self).addProofsToPCZT", placeholder: Pczt()),
+        createTransactionFromPCZT: unimplemented("\(Self.self).createTransactionFromPCZT", placeholder: .success(txIds: [])),
         urEncoderForPCZT: unimplemented("\(Self.self).urEncoderForPCZT", placeholder: nil)
     )
 }
@@ -76,9 +76,9 @@ extension SDKSynchronizerClient {
         refreshExchangeRateUSD: { },
         evaluateBestOf: { _, _, _, _, _, _ in [] },
         walletAccounts: { [] },
-        createPCZTFromProposal: { _, _ in Data() },
-        addProofsToPCZT: { _ in Data() },
-        extractAndStoreTxFromPCZT: { _, _ in Data() },
+        createPCZTFromProposal: { _, _ in Pczt() },
+        addProofsToPCZT: { _ in Pczt() },
+        createTransactionFromPCZT: { _, _ in .success(txIds: []) },
         urEncoderForPCZT: { _ in nil }
     )
 
@@ -182,10 +182,10 @@ extension SDKSynchronizerClient {
         refreshExchangeRateUSD: @escaping () -> Void = { },
         evaluateBestOf: @escaping ([LightWalletEndpoint], Double, Double, UInt64, Int, NetworkType) async -> [LightWalletEndpoint] = { _, _, _, _, _, _ in [] },
         walletAccounts: @escaping () async throws -> [WalletAccount] = { [] },
-        createPCZTFromProposal: @escaping (AccountUUID, Proposal) async throws -> Data = { _, _ in Data() },
-        addProofsToPCZT: @escaping (Data) async throws -> Data = { _ in Data() },
-        extractAndStoreTxFromPCZT: @escaping (Data, Data) async throws -> Data = { _, _ in Data() },
-        urEncoderForPCZT: @escaping (Data) -> UREncoder? = { _ in nil}
+        createPCZTFromProposal: @escaping (AccountUUID, Proposal) async throws -> Pczt = { _, _ in Pczt() },
+        addProofsToPCZT: @escaping (Data) async throws -> Pczt = { _ in Pczt() },
+        createTransactionFromPCZT: @escaping (Pczt, Pczt) async throws -> CreateProposedTransactionsResult = { _, _ in .success(txIds: []) },
+        urEncoderForPCZT: @escaping (Pczt) -> UREncoder? = { _ in nil}
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
             stateStream: stateStream,
@@ -216,7 +216,7 @@ extension SDKSynchronizerClient {
             walletAccounts: walletAccounts,
             createPCZTFromProposal: createPCZTFromProposal,
             addProofsToPCZT: addProofsToPCZT,
-            extractAndStoreTxFromPCZT: extractAndStoreTxFromPCZT,
+            createTransactionFromPCZT: createTransactionFromPCZT,
             urEncoderForPCZT: urEncoderForPCZT
         )
     }

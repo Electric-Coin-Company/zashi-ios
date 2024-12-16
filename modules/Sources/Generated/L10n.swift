@@ -191,10 +191,14 @@ public enum L10n {
     public static let actionButtonTitle = L10n.tr("Localizable", "deleteWallet.actionButtonTitle", fallback: "Reset Zashi")
     /// I understand
     public static let iUnderstand = L10n.tr("Localizable", "deleteWallet.iUnderstand", fallback: "I understand")
-    /// Please don't reset this app unless you're sure you understand the effects.
-    public static let message1 = L10n.tr("Localizable", "deleteWallet.message1", fallback: "Please don't reset this app unless you're sure you understand the effects.")
-    /// Resetting the Zashi app will delete the database and cached data. Any funds you have in this wallet will be lost and can only be recovered by using your Zashi secret recovery phrase in another Zcash wallet.
-    public static let message2 = L10n.tr("Localizable", "deleteWallet.message2", fallback: "Resetting the Zashi app will delete the database and cached data. Any funds you have in this wallet will be lost and can only be recovered by using your Zashi secret recovery phrase in another Zcash wallet.")
+    /// Resetting your app can lead to complete loss of access to your funds! ⚠️
+    public static let message1 = L10n.tr("Localizable", "deleteWallet.message1", fallback: "Resetting your app can lead to complete loss of access to your funds! ⚠️")
+    /// Make sure you have both your secret recovery phrase and wallet birthday height saved before you proceed.
+    public static let message2 = L10n.tr("Localizable", "deleteWallet.message2", fallback: "Make sure you have both your secret recovery phrase and wallet birthday height saved before you proceed.")
+    /// Resetting the Zashi app will delete the app database and cached app data, and disconnect all connected hardware wallets.
+    public static let message3 = L10n.tr("Localizable", "deleteWallet.message3", fallback: "Resetting the Zashi app will delete the app database and cached app data, and disconnect all connected hardware wallets.")
+    /// Once you Reset Zashi, the only way to access your funds is through a wallet restore process that requires your Zashi Recovery Phrase and Wallet Birthday Height.
+    public static let message4 = L10n.tr("Localizable", "deleteWallet.message4", fallback: "Once you Reset Zashi, the only way to access your funds is through a wallet restore process that requires your Zashi Recovery Phrase and Wallet Birthday Height.")
     /// Reset
     public static let screenTitle = L10n.tr("Localizable", "deleteWallet.screenTitle", fallback: "Reset")
     /// Reset Zashi
@@ -332,8 +336,12 @@ public enum L10n {
     public static let confirm = L10n.tr("Localizable", "keystone.confirm", fallback: "Confirm with Keystone")
     /// Connect Hardware Wallet
     public static let connect = L10n.tr("Localizable", "keystone.connect", fallback: "Connect Hardware Wallet")
-    /// Scan your Keystone wallet to connect
-    public static let scanInfo = L10n.tr("Localizable", "keystone.scanInfo", fallback: "Scan your Keystone wallet to connect")
+    /// Scan Keystone wallet QR code
+    public static let scanInfo = L10n.tr("Localizable", "keystone.scanInfo", fallback: "Scan Keystone wallet QR code")
+    /// Scan Keystone QR code to sign the transaction
+    public static let scanInfoTransaction = L10n.tr("Localizable", "keystone.scanInfoTransaction", fallback: "Scan Keystone QR code to sign the transaction")
+    /// Switch from Keystone to Zashi to use Integrations.
+    public static let settings = L10n.tr("Localizable", "keystone.settings", fallback: "Switch from Keystone to Zashi to use Integrations.")
     /// Keystone Wallet
     public static let wallet = L10n.tr("Localizable", "keystone.wallet", fallback: "Keystone Wallet")
     public enum AddHWWallet {
@@ -353,8 +361,8 @@ public enum L10n {
       public static let step1 = L10n.tr("Localizable", "keystone.addHWWallet.step1", fallback: "Unlock your Keystone")
       /// Tap the menu icon
       public static let step2 = L10n.tr("Localizable", "keystone.addHWWallet.step2", fallback: "Tap the menu icon")
-      /// Select Watch-only Wallet
-      public static let step3 = L10n.tr("Localizable", "keystone.addHWWallet.step3", fallback: "Select Watch-only Wallet")
+      /// Tap on Connect Software Wallet
+      public static let step3 = L10n.tr("Localizable", "keystone.addHWWallet.step3", fallback: "Tap on Connect Software Wallet")
       /// Select Zashi app and scan QR code
       public static let step4 = L10n.tr("Localizable", "keystone.addHWWallet.step4", fallback: "Select Zashi app and scan QR code")
       /// Confirm Account to Access
@@ -366,8 +374,8 @@ public enum L10n {
       /// Wallets & Hardware
       public static let title = L10n.tr("Localizable", "keystone.drawer.title", fallback: "Wallets & Hardware")
       public enum Banner {
-        /// Get 5%% off airgapped hardware wallet with “AwesomeZashi” coupon code.
-        public static let desc = L10n.tr("Localizable", "keystone.drawer.banner.desc", fallback: "Get 5%% off airgapped hardware wallet with “AwesomeZashi” coupon code.")
+        /// Get 5%% off airgapped hardware wallet. Promo code "Zashi".
+        public static let desc = L10n.tr("Localizable", "keystone.drawer.banner.desc", fallback: "Get 5%% off airgapped hardware wallet. Promo code \"Zashi\".")
         /// Keystone Hardware Wallet
         public static let title = L10n.tr("Localizable", "keystone.drawer.banner.title", fallback: "Keystone Hardware Wallet")
       }
@@ -455,8 +463,8 @@ public enum L10n {
   public enum PrivateDataConsent {
     /// I agree to Zashi's Export Private Data Policies and Privacy Policy
     public static let confirmation = L10n.tr("Localizable", "privateDataConsent.confirmation", fallback: "I agree to Zashi's Export Private Data Policies and Privacy Policy")
-    /// By clicking “I Agree” below, you give your consent to export Zashi’s private data which includes the entire history of the wallet, all private information, memos, amounts, and recipient addresses, even for your shielded activity.*
-    public static let message1 = L10n.tr("Localizable", "privateDataConsent.message1", fallback: "By clicking “I Agree” below, you give your consent to export Zashi’s private data which includes the entire history of the wallet, all private information, memos, amounts, and recipient addresses, even for your shielded activity.*")
+    /// By clicking "I Agree" below, you give your consent to export all of your wallets’ private data such as the entire history of your wallet(s), including any connected hardware wallets. All private information, memos, amounts, and recipient addresses, even for your shielded activity will be exported.*
+    public static let message1 = L10n.tr("Localizable", "privateDataConsent.message1", fallback: "By clicking \"I Agree\" below, you give your consent to export all of your wallets’ private data such as the entire history of your wallet(s), including any connected hardware wallets. All private information, memos, amounts, and recipient addresses, even for your shielded activity will be exported.*")
     /// The private data also gives the ability to see certain future actions you take with Zashi.
     public static let message2 = L10n.tr("Localizable", "privateDataConsent.message2", fallback: "The private data also gives the ability to see certain future actions you take with Zashi.")
     /// Sharing this private data is irrevocable - once you have shared this private data with someone, there is no way to revoke their access.
@@ -537,8 +545,8 @@ public enum L10n {
     public static let reveal = L10n.tr("Localizable", "recoveryPhraseDisplay.reveal", fallback: "Reveal security details")
     /// Recovery Phrase
     public static let screenTitle = L10n.tr("Localizable", "recoveryPhraseDisplay.screenTitle", fallback: "Recovery Phrase")
-    /// Secure Your Wallet
-    public static let title = L10n.tr("Localizable", "recoveryPhraseDisplay.title", fallback: "Secure Your Wallet")
+    /// Secure Your Zashi Wallet
+    public static let title = L10n.tr("Localizable", "recoveryPhraseDisplay.title", fallback: "Secure Your Zashi Wallet")
     /// Protect your ZEC by storing this phrase in a place you trust and never share it with anyone!
     public static let warning = L10n.tr("Localizable", "recoveryPhraseDisplay.warning", fallback: "Protect your ZEC by storing this phrase in a place you trust and never share it with anyone!")
     public enum Alert {
@@ -780,6 +788,10 @@ public enum L10n {
     public static let failure = L10n.tr("Localizable", "send.failure", fallback: "Unable to send")
     /// There was an error attempting to send tokens. Try it again, please.
     public static let failureInfo = L10n.tr("Localizable", "send.failureInfo", fallback: "There was an error attempting to send tokens. Try it again, please.")
+    /// Unable to shield
+    public static let failureShielding = L10n.tr("Localizable", "send.failureShielding", fallback: "Unable to shield")
+    /// There was an error attempting to shield your tokens. Try it again, please.
+    public static let failureShieldingInfo = L10n.tr("Localizable", "send.failureShieldingInfo", fallback: "There was an error attempting to shield your tokens. Try it again, please.")
     /// Fee
     public static let feeSummary = L10n.tr("Localizable", "send.feeSummary", fallback: "Fee")
     /// Cancel
@@ -800,10 +812,18 @@ public enum L10n {
     public static let sending = L10n.tr("Localizable", "send.sending", fallback: "Sending...")
     /// Your tokens are being sent to
     public static let sendingInfo = L10n.tr("Localizable", "send.sendingInfo", fallback: "Your tokens are being sent to")
+    /// Shielding...
+    public static let shielding = L10n.tr("Localizable", "send.shielding", fallback: "Shielding...")
+    /// Your tokens are getting shielded
+    public static let shieldingInfo = L10n.tr("Localizable", "send.shieldingInfo", fallback: "Your tokens are getting shielded")
     /// Sent!
     public static let success = L10n.tr("Localizable", "send.success", fallback: "Sent!")
     /// Your tokens were successfully sent to
     public static let successInfo = L10n.tr("Localizable", "send.successInfo", fallback: "Your tokens were successfully sent to")
+    /// Shielded!
+    public static let successShielding = L10n.tr("Localizable", "send.successShielding", fallback: "Shielded!")
+    /// Your tokens have been successfully shielded
+    public static let successShieldingInfo = L10n.tr("Localizable", "send.successShieldingInfo", fallback: "Your tokens have been successfully shielded")
     /// Send to
     public static let to = L10n.tr("Localizable", "send.to", fallback: "Send to")
     /// Sending to
@@ -932,8 +952,8 @@ public enum L10n {
     public static let flexaDesc = L10n.tr("Localizable", "settings.flexaDesc", fallback: "Pay with Flexa payment clips and explore a new way of spending Zcash.")
     /// Integrations
     public static let integrations = L10n.tr("Localizable", "settings.integrations", fallback: "Integrations")
-    /// Recovery Phrase
-    public static let recoveryPhrase = L10n.tr("Localizable", "settings.recoveryPhrase", fallback: "Recovery Phrase")
+    /// Zashi Recovery Phrase
+    public static let recoveryPhrase = L10n.tr("Localizable", "settings.recoveryPhrase", fallback: "Zashi Recovery Phrase")
     /// During the Restore process, it is not possible to use payment integrations.
     public static let restoreWarning = L10n.tr("Localizable", "settings.restoreWarning", fallback: "During the Restore process, it is not possible to use payment integrations.")
     /// Settings

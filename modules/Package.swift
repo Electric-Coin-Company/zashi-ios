@@ -707,6 +707,7 @@ let package = Package(
                 "BalanceFormatter",
                 "DerivationTool",
                 "Generated",
+                "KeystoneHandler",
                 "LocalAuthenticationHandler",
                 "MnemonicClient",
                 "Models",

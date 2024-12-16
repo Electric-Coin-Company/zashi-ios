@@ -132,6 +132,12 @@ public struct TabsView: View {
                     }
                 )
                 .navigationLinkEmpty(
+                    isActive: store.bindingFor(.sendConfirmationKeystone),
+                    destination: {
+                        SignWithKeystoneView(store: store.sendConfirmationStore(), tokenName: tokenName)
+                    }
+                )
+                .navigationLinkEmpty(
                     isActive: store.bindingFor(.currencyConversionSetup),
                     destination: {
                         CurrencyConversionSetupView(
@@ -238,12 +244,20 @@ public struct TabsView: View {
             .navigationBarItems(
                 trailing:
                     HStack(spacing: 0) {
-                        hideBalancesButton(tab: store.selectedTab)
+                        if store.selectedTab != .receive {
+                            hideBalancesButton()
+                        }
                         
                         settingsButton()
                     }
+                    .animation(nil, value: store.selectedTab)
             )
             .walletStatusPanel()
+            .sheet(isPresented: $store.isInAppBrowserOn) {
+                if let url = URL(string: store.inAppBrowserURL) {
+                    InAppBrowserView(url: url)
+                }
+            }
             .sheet(isPresented: $store.accountSwitchRequest) {
                 accountSwitchContent()
             }
@@ -293,7 +307,7 @@ public struct TabsView: View {
             }
             .overlayPreferenceValue(ExchangeRateFeaturePreferenceKey.self) { preferences in
                 WithPerceptionTracking {
-                    if store.isRateEducationEnabled {
+                    if store.isRateEducationEnabled && store.selectedTab != .receive {
                         GeometryReader { geometry in
                             preferences.map {
                                 VStack(alignment: .leading, spacing: 0) {

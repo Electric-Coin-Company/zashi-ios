@@ -173,7 +173,7 @@ public struct SendConfirmationView: View {
                 Spacer()
                 
                 if store.selectedWalletAccount?.vendor == .keystone {
-                    ZashiButton("Confirm with Keystone") {
+                    ZashiButton(L10n.Keystone.confirm) {
                         store.send(.confirmWithKeystoneTapped)
                     }
                     .screenHorizontalPadding()
@@ -225,21 +225,7 @@ public struct SendConfirmationView: View {
             .navigationLinkEmpty(
                 isActive: store.bindingForStack(.signWithKeystone),
                 destination: {
-                    SignWithKeystoneView(store: store)
-                    .navigationLinkEmpty(
-                        isActive: store.bindingForStack(.scan),
-                        destination: {
-                            ScanView(
-                                store: store.scanStore()
-                            )
-                            .navigationLinkEmpty(
-                                isActive: store.bindingForStack(.sending),
-                                destination: {
-                                    SendingView(store: store, tokenName: tokenName)
-                                }
-                            )
-                        }
-                    )
+                    SignWithKeystoneView(store: store, tokenName: tokenName)
                 }
             )
         }

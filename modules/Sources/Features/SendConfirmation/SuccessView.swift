@@ -32,19 +32,21 @@ public struct SuccessView: View {
                     .resizable()
                     .frame(width: 148, height: 148)
 
-                Text(L10n.Send.success)
+                Text(store.isShielding ? L10n.Send.successShielding : L10n.Send.success)
                     .zFont(.semiBold, size: 28, style: Design.Text.primary)
                     .padding(.top, 16)
 
-                Text(L10n.Send.successInfo)
+                Text(store.isShielding ? L10n.Send.successShieldingInfo : L10n.Send.successInfo)
                     .zFont(size: 14, style: Design.Text.primary)
                     .multilineTextAlignment(.center)
                     .lineSpacing(1.5)
                     .screenHorizontalPadding()
 
-                Text(store.address.zip316)
-                    .zFont(addressFont: true, size: 14, style: Design.Text.primary)
-                    .padding(.top, 4)
+                if !store.isShielding {
+                    Text(store.address.zip316)
+                        .zFont(addressFont: true, size: 14, style: Design.Text.primary)
+                        .padding(.top, 4)
+                }
 
                 ZashiButton(
                     L10n.Send.viewTransaction,

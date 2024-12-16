@@ -45,6 +45,10 @@ public struct ScanView: View {
                             libraryButton(size: proxy.size)
                         }
                     }
+                    
+                    if store.progress != nil {
+                        progress(size: proxy.size, progress: store.prog)
+                    }
                 }
 
                 VStack {
@@ -183,6 +187,27 @@ public struct ScanView: View {
             .position(
                 x: topLeft.x + frameSize.width * 0.5 - (store.isTorchAvailable ? 35 : 0),
                 y: topLeft.y + frameSize.height + 45
+            )
+        }
+    }
+    
+    private func progress(size: CGSize, progress: Int) -> some View {
+        let topLeft = ScanView.rectOfInterest(size).origin
+        let frameSize = ScanView.frameSize(size)
+
+        return WithPerceptionTracking {
+            VStack {
+                Text(String(format: "%d%%", progress))
+                    .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
+                    .foregroundColor(Asset.Colors.ZDesign.shark50.color)
+                    .padding(.bottom, 4)
+                ProgressView(value: Float(progress), total: Float(100))
+            }
+            .frame(width: frameSize.width * 0.8)
+            .tint(Asset.Colors.ZDesign.Base.brand.color)
+            .position(
+                x: topLeft.x + frameSize.width * 0.5,
+                y: topLeft.y - 80
             )
         }
     }

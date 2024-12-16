@@ -15,6 +15,9 @@ extension KeystoneHandlerClient: DependencyKey {
         return .init(
             decodeQR: {
                 try? keystoneSDK.decodeQR(qrCode: $0)
+            },
+            resetQRDecoder: {
+                keystoneSDK.resetQRDecoder()
             }
         )
     }

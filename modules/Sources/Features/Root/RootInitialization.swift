@@ -306,6 +306,8 @@ extension Root {
                     try mnemonic.isValid(storedWallet.seedPhrase.value())
                     let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
 
+                    let check = databaseFiles.areDbFilesPresentFor(zcashSDKEnvironment.network)
+
                     return .run { send in
                         do {
                             try await sdkSynchronizer.prepareWith(

@@ -11,12 +11,14 @@ import KeystoneSDK
 
 extension KeystoneHandlerClient: TestDependencyKey {
     public static let testValue = Self(
-        decodeQR: unimplemented("\(Self.self).decodeQR", placeholder: nil)
+        decodeQR: unimplemented("\(Self.self).decodeQR", placeholder: nil),
+        resetQRDecoder: unimplemented("\(Self.self).resetQRDecoder")
     )
 }
 
 extension KeystoneHandlerClient {
     public static let noOp = Self(
-        decodeQR: { _ in nil }
+        decodeQR: { _ in nil },
+        resetQRDecoder: { }
     )
 }

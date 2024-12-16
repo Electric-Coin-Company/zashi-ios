@@ -44,10 +44,13 @@ public enum Asset {
     public enum Partners {
       public static let coinbase = ImageAsset(name: "coinbase")
       public static let coinbaseSeeklogo = ImageAsset(name: "coinbaseSeeklogo")
+      public static let coinbaseSeeklogoDisabled = ImageAsset(name: "coinbaseSeeklogoDisabled")
       public static let flexa = ImageAsset(name: "flexa")
       public static let flexaDisabled = ImageAsset(name: "flexaDisabled")
       public static let flexaSeekLogo = ImageAsset(name: "flexaSeekLogo")
+      public static let flexaSeeklogoDisabled = ImageAsset(name: "flexaSeeklogoDisabled")
       public static let keystoneLogo = ImageAsset(name: "keystoneLogo")
+      public static let keystonePromo = ImageAsset(name: "keystonePromo")
       public static let keystoneTitleLogo = ImageAsset(name: "keystoneTitleLogo")
     }
     public static let splashHi = ImageAsset(name: "SplashHi")

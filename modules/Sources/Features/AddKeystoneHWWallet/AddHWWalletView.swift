@@ -36,12 +36,16 @@ public struct AddKeystoneHWWalletView: View {
                             .lineSpacing(1.5)
                             .padding(.top, 8)
                         
-                        Text(L10n.Keystone.AddHWWallet.tutorial)
-                            .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
-                            .foregroundColor(Design.Utility.HyperBlue._700.color)
-                            .underline()
-                            .padding(.top, 4)
-                        
+//                        Button {
+//                            store.send(.viewTutorialTapped)
+//                        } label: {
+//                            Text(L10n.Keystone.AddHWWallet.tutorial)
+//                                .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
+//                                .foregroundColor(Design.Utility.HyperBlue._700.color)
+//                                .underline()
+//                                .padding(.top, 4)
+//                        }
+
                         Text(L10n.Keystone.AddHWWallet.howTo)
                             .zFont(.semiBold, size: 18, style: Design.Text.primary)
                             .padding(.top, 24)
@@ -85,6 +89,11 @@ public struct AddKeystoneHWWalletView: View {
             .screenHorizontalPadding()
             .onAppear { store.send(.onAppear) }
             .zashiBackV2(background: false)
+            .sheet(isPresented: $store.isInAppBrowserOn) {
+                if let url = URL(string: store.inAppBrowserURL) {
+                    InAppBrowserView(url: url)
+                }
+            }
         }
         .navigationBarTitleDisplayMode(.inline)
         .applyScreenBackground()

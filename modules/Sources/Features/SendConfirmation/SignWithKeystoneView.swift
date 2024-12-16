@@ -15,16 +15,20 @@ import Utils
 import KeystoneSDK
 import Vendors
 import SDKSynchronizer
+import Scan
 
 public struct SignWithKeystoneView: View {
     @Perception.Bindable var store: StoreOf<SendConfirmation>
 
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     
-    public init(store: StoreOf<SendConfirmation>) {
-        self.store = store
-    }
+    let tokenName: String
     
+    public init(store: StoreOf<SendConfirmation>, tokenName: String) {
+        self.store = store
+        self.tokenName = tokenName
+    }
+
     public var body: some View {
         WithPerceptionTracking {
             VStack(spacing: 0) {
@@ -72,7 +76,7 @@ public struct SignWithKeystoneView: View {
                         }
                         .padding(.top, 40)
 
-                        if let pczt = store.pczt, let encoder = sdkSynchronizer.urEncoderForPCZT(pczt) {
+                        if let pczt = store.pczt, let encoder = sdkSynchronizer.urEncoderForPCZT(Pczt(pczt)) {
                             AnimatedQRCode(urEncoder: encoder)
                                 .frame(width: 216, height: 216)
                                 .padding(24)
@@ -115,9 +119,17 @@ public struct SignWithKeystoneView: View {
                             .padding(.top, 4)
                     }
                 }
+                
+                ZashiButton(
+                    "Share PCZT",
+                    type: .ghost
+                ) {
+                    store.send(.sharePCZT)
+                }
+                .padding(.top, 16)
 
                 Spacer()
-                
+
                 ZashiButton(
                     L10n.Keystone.SignWith.getSignature
                 ) {
@@ -132,9 +144,26 @@ public struct SignWithKeystoneView: View {
                     store.send(.rejectTapped)
                 }
                 .padding(.bottom, 20)
+                
+                shareView()
             }
+            .onAppear { store.send(.onAppear) }
             .frame(maxWidth: .infinity)
             .padding(.top, 20)
+            .navigationLinkEmpty(
+                isActive: store.bindingForStack(.scan),
+                destination: {
+                    ScanView(
+                        store: store.scanStore()
+                    )
+                    .navigationLinkEmpty(
+                        isActive: store.bindingForStack(.sending),
+                        destination: {
+                            SendingView(store: store, tokenName: tokenName)
+                        }
+                    )
+                }
+            )
         }
         .screenHorizontalPadding()
         .applyScreenBackground()
@@ -143,3 +172,13 @@ public struct SignWithKeystoneView: View {
     }
 }
  
+extension SignWithKeystoneView {
+    @ViewBuilder func shareView() -> some View {
+        if let pczt = store.pcztToShare {
+            UIShareDialogView(activityItems: [pczt]) {
+                store.send(.shareFinished)
+            }
+            .frame(width: 0, height: 0)
+        }
+    }
+}
