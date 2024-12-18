@@ -10,6 +10,7 @@ import SwiftUI
 import Generated
 
 public struct ZashiTextField<PrefixContent, AccessoryContent>: View where PrefixContent: View, AccessoryContent: View {
+    let addressFont: Bool
     var text: Binding<String>
     var placeholder: String
     var title: String?
@@ -19,6 +20,7 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
     @ViewBuilder let prefixView: PrefixContent?
 
     public init(
+        addressFont: Bool = false,
         text: Binding<String>,
         placeholder: String = "",
         title: String? = nil,
@@ -26,6 +28,7 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
         accessoryView: AccessoryContent? = EmptyView(),
         prefixView: PrefixContent? = EmptyView()
     ) {
+        self.addressFont = addressFont
         self.text = text
         self.placeholder = placeholder
         self.title = title
@@ -60,7 +63,12 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
                             .foregroundColor(Design.Inputs.Default.text.color)
                 )
                 .autocapitalization(.none)
-                .font(.custom(FontFamily.Inter.regular.name, size: 14))
+                .font(.custom(
+                    addressFont
+                    ? FontFamily.RobotoMono.regular.name
+                    : FontFamily.Inter.regular.name,
+                    size: 14)
+                )
                 .lineLimit(1)
                 .truncationMode(.middle)
                 .accentColor(Asset.Colors.primary.color)

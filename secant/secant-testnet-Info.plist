@@ -56,6 +56,10 @@
 		<string>Inter-ExtraBold.otf</string>
 		<string>Inter-ExtraLightItalic.otf</string>
 		<string>Inter-ExtraLight.otf</string>
+		<string>RobotoMono-Bold.ttf</string>
+		<string>RobotoMono-Medium.ttf</string>
+		<string>RobotoMono-Regular.ttf</string>
+		<string>RobotoMono-SemiBold.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

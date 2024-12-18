@@ -84,6 +84,7 @@ public struct BalancesView: View {
             }
             .walletStatusPanel()
         }
+        .navigationBarTitleDisplayMode(.inline)
         .padding(.vertical, 1)
         .applyScreenBackground()
         .alert(
@@ -248,8 +249,8 @@ extension BalancesView {
             } label: {
                 Text(L10n.Balances.HintBox.dismiss.uppercased())
                     .font(.custom(FontFamily.Inter.semiBold.name, size: 10))
-                  .underline()
-                  .foregroundColor(Asset.Colors.primary.color)
+                    .underline()
+                    .foregroundColor(Asset.Colors.primary.color)
             }
         }
         .hintBoxShape()

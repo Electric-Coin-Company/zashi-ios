@@ -39,27 +39,28 @@ public struct SendFlow {
         public var cancelId = UUID()
         
         public var addMemoState: Bool
+        public var address: RedactableString = .empty
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         @Presents public var alert: AlertState<Action>?
         @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
+        public var currencyText: RedactableString = .empty
         public var destination: Destination?
+        public var isAddressBookHintVisible = false
         public var isCurrencyConversionEnabled = false
-        public var memoState: MessageEditor.State
-        public var proposal: Proposal?
-        public var scanState: Scan.State
-        public var shieldedBalance: Zatoshi
-        public var walletBalancesState: WalletBalances.State
-        
+        public var isNotAddressInAddressBook = false
+        public var isPaymentRequestInProgress = false
         public var isValidAddress = false
         public var isValidTransparentAddress = false
         public var isValidTexAddress = false
-        public var isNotAddressInAddressBook = false
-        public var isAddressBookHintVisible = false
+        public var memoState: MessageEditor.State
+        public var proposal: Proposal?
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
+        public var scanState: Scan.State
+        public var shieldedBalance: Zatoshi
+        public var walletBalancesState: WalletBalances.State
         public var requestsAddressFocus = false
-
-        public var address: RedactableString = .empty
+        @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
         public var zecAmountText: RedactableString = .empty
-        public var currencyText: RedactableString = .empty
 
         public var amount: Zatoshi {
             get {
@@ -245,9 +246,13 @@ public struct SendFlow {
         Reduce { state, action in
             switch action {
             case .onAppear:
+                state.scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
                 state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
+                guard let account = state.zashiWalletAccount else {
+                    return .send(.exchangeRateSetupChanged)
+                }
                 do {
-                    let result = try addressBook.allLocalContacts()
+                    let result = try addressBook.allLocalContacts(account.account)
                     let abContacts = result.contacts
                     if result.remoteStoreResult == .failure {
                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
@@ -302,6 +307,9 @@ public struct SendFlow {
                 return .none
         
             case let .updateDestination(destination):
+                if destination == .scanQR {
+                    state.isPaymentRequestInProgress = false
+                }
                 state.destination = destination
                 return .none
 
@@ -322,6 +330,9 @@ public struct SendFlow {
                 return .send(.getProposal(.send))
                 
             case .getProposal(let confirmationType):
+                guard let account = state.selectedWalletAccount else {
+                    return .none
+                }
                 return .run { [state, confirmationType] send in
                     do {
                         let recipient = try Recipient(state.address.data, network: zcashSDKEnvironment.network.networkType)
@@ -335,7 +346,7 @@ public struct SendFlow {
                             memo = nil
                         }
 
-                        let proposal = try await sdkSynchronizer.proposeTransfer(0, recipient, state.amount, memo)
+                        let proposal = try await sdkSynchronizer.proposeTransfer(account.id, recipient, state.amount, memo)
                         
                         await send(.proposal(proposal))
                         await send(.confirmationRequired(confirmationType))
@@ -363,6 +374,7 @@ public struct SendFlow {
                 state.isValidAddress = false
                 state.isValidTransparentAddress = false
                 state.isValidTexAddress = false
+                state.isNotAddressInAddressBook = false
                 return .none
                 
             case .syncAmounts(let zecToCurrency):
@@ -392,6 +404,10 @@ public struct SendFlow {
                 return .none
                 
             case .scan(.foundRP(let requestPayment)):
+                guard !state.isPaymentRequestInProgress else {
+                    return .none
+                }
+                state.isPaymentRequestInProgress = true
                 if case .legacy(let address) = requestPayment {
                     audioServices.systemSoundVibrate()
                     return .send(.scan(.found(address.value.redacted)))
@@ -423,7 +439,7 @@ public struct SendFlow {
                     zcashSDKEnvironment.network.networkType
                 )
                 audioServices.systemSoundVibrate()
-                return Effect.send(.updateDestination(nil))
+                return .send(.updateDestination(nil))
 
             case .scan(.cancelPressed):
                 state.destination = nil
@@ -432,7 +448,7 @@ public struct SendFlow {
             case .scan:
                 return .none
                 
-            case .walletBalances(.balancesUpdated):
+            case .walletBalances(.balanceUpdated):
                 state.shieldedBalance = state.walletBalancesState.shieldedBalance
                 return .none
                 

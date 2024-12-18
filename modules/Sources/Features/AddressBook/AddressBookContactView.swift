@@ -26,6 +26,7 @@ public struct AddressBookContactView: View {
         WithPerceptionTracking {
             VStack {
                 ZashiTextField(
+                    addressFont: true,
                     text: $store.address,
                     placeholder: L10n.AddressBook.NewContact.addressPlaceholder,
                     title: L10n.AddressBook.NewContact.address,

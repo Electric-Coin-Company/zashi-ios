@@ -40,7 +40,18 @@ public struct ScanView: View {
                         if store.isTorchAvailable {
                             torchButton(size: proxy.size)
                         }
-                        libraryButton(size: proxy.size)
+                        
+                        if !store.forceLibraryToHide {
+                            libraryButton(size: proxy.size)
+                        }
+                    }
+                    
+                    WithPerceptionTracking {
+                        if store.progress != nil {
+                            WithPerceptionTracking {
+                                progress(size: proxy.size, progress: store.countedProgress)
+                            }
+                        }
                     }
                 }
 
@@ -48,6 +59,17 @@ public struct ScanView: View {
                     Spacer()
   
                     WithPerceptionTracking {
+                        if let instructions = store.instructions {
+                            Text(instructions)
+                                .font(.custom(FontFamily.Inter.semiBold.name, size: 20))
+                                .foregroundColor(Asset.Colors.ZDesign.shark200.color)
+                                .padding(.bottom, 32)
+                                .lineLimit(nil)
+                                .multilineTextAlignment(.center)
+                                .lineSpacing(3)
+                                .screenHorizontalPadding()
+                        }
+                        
                         HStack(alignment: .top, spacing: 0) {
                             if !store.info.isEmpty {
                                 Asset.Assets.infoOutline.image
@@ -144,7 +166,7 @@ public struct ScanView: View {
                 }
             }
             .position(
-                x: topLeft.x + frameSize.width * 0.5 + 35,
+                x: topLeft.x + frameSize.width * 0.5 + (store.forceLibraryToHide ? 0 : 35),
                 y: topLeft.y + frameSize.height + 45
             )
         }
@@ -171,6 +193,25 @@ public struct ScanView: View {
                 y: topLeft.y + frameSize.height + 45
             )
         }
+    }
+    
+    private func progress(size: CGSize, progress: Int) -> some View {
+        let topLeft = ScanView.rectOfInterest(size).origin
+        let frameSize = ScanView.frameSize(size)
+
+        return VStack {
+            Text(String(format: "%d%%", progress))
+                .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
+                .foregroundColor(Asset.Colors.ZDesign.shark50.color)
+                .padding(.bottom, 4)
+            ProgressView(value: Float(progress), total: Float(100))
+        }
+        .frame(width: frameSize.width * 0.8)
+        .tint(Asset.Colors.ZDesign.Base.brand.color)
+        .position(
+            x: topLeft.x + frameSize.width * 0.5,
+            y: topLeft.y - 80
+        )
     }
 }
 

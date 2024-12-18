@@ -15,7 +15,7 @@
 
 // MARK: - Secret Recovery Phrase Display
 "recoveryPhraseDisplay.screenTitle" = "Recovery Phrase";
-"recoveryPhraseDisplay.title" = "Secure Your Wallet";
+"recoveryPhraseDisplay.title" = "Secure Your Zashi Wallet";
 "recoveryPhraseDisplay.description" = "The following 24 words are the keys to your funds and are the only way to recover your funds if you get locked out or get a new device.";
 "recoveryPhraseDisplay.button.wroteItDown" = "I've saved it";
 "recoveryPhraseDisplay.noWords" = "The keys are missing. No backup phrase is stored in the keychain.";
@@ -102,8 +102,6 @@
 "receive.error.cantExtractSaplingAddress" = "could not extract sapling receiver from UA";
 "receive.title" = "Receive Zcash";
 "receive.warning" = "Prioritize using your shielded address for maximum privacy.";
-"receive.shieldedAddress" = "Zcash Shielded Address";
-"receive.transparentAddress" = "Zcash Transparent Address";
 "receive.saplingAddress" = "Zcash Sapling Address";
 "receive.copy" = "Copy";
 "receive.qrCode" = "QR Code";
@@ -183,6 +181,12 @@
 "send.resubmission" = "Connection Error";
 "send.resubmissionInfo" = "Zashi encountered connection issues when submitting the transaction. It will retry in the next few minutes.";
 "send.report" = "Report";
+"send.shielding" = "Shielding...";
+"send.shieldingInfo" = "Your tokens are getting shielded";
+"send.successShielding" = "Shielded!";
+"send.successShieldingInfo" = "Your tokens have been successfully shielded";
+"send.failureShielding" = "Unable to shield";
+"send.failureShieldingInfo" = "There was an error attempting to shield your tokens. Try it again, please.";
 
 // MARK: - Message Editor
 "messageEditor.addUA" = "Reply-to: Include my address in the memo";
@@ -194,8 +198,10 @@
 
 // MARK: - Delete Wallet
 "deleteWallet.title" = "Reset Zashi";
-"deleteWallet.message1" = "Please don't reset this app unless you're sure you understand the effects.";
-"deleteWallet.message2" = "Resetting the Zashi app will delete the database and cached data. Any funds you have in this wallet will be lost and can only be recovered by using your Zashi secret recovery phrase in another Zcash wallet.";
+"deleteWallet.message1" = "Resetting your app can lead to complete loss of access to your funds! ⚠️";
+"deleteWallet.message2" = "Make sure you have both your secret recovery phrase and wallet birthday height saved before you proceed.";
+"deleteWallet.message3" = "Resetting the Zashi app will delete the app database and cached app data, and disconnect all connected hardware wallets.";
+"deleteWallet.message4" = "Once you Reset Zashi, the only way to access your funds is through a wallet restore process that requires your Zashi Recovery Phrase and Wallet Birthday Height.";
 "deleteWallet.iUnderstand" = "I understand";
 "deleteWallet.actionButtonTitle" = "Reset Zashi";
 "deleteWallet.screenTitle" = "Reset";
@@ -223,7 +229,7 @@
 "settings.about" = "About";
 "settings.feedback" = "Send Us Feedback";
 "settings.integrations" = "Integrations";
-"settings.recoveryPhrase" = "Recovery Phrase";
+"settings.recoveryPhrase" = "Zashi Recovery Phrase";
 "settings.exportPrivateData" = "Export Private Data";
 "settings.exportLogsOnly" = "Export logs only";
 "settings.chooseServer" = "Choose a Server";
@@ -257,7 +263,7 @@
 
 // MARK: - Private Data Consent
 "privateDataConsent.title" = "Consent for Exporting Private Data";
-"privateDataConsent.message1" = "By clicking “I Agree” below, you give your consent to export Zashi’s private data which includes the entire history of the wallet, all private information, memos, amounts, and recipient addresses, even for your shielded activity.*";
+"privateDataConsent.message1" = "By clicking \"I Agree\" below, you give your consent to export all of your wallets’ private data such as the entire history of your wallet(s), including any connected hardware wallets. All private information, memos, amounts, and recipient addresses, even for your shielded activity will be exported.*";
 "privateDataConsent.message2" = "The private data also gives the ability to see certain future actions you take with Zashi.";
 "privateDataConsent.message3" = "Sharing this private data is irrevocable - once you have shared this private data with someone, there is no way to revoke their access.";
 "privateDataConsent.message4" = "*Note that this private data does not give them the ability to spend your funds, only the ability to see what you do with your funds.";
@@ -456,3 +462,41 @@
 "partners.coinbaseOnrampUrl" = "https://pay.coinbase.com/buy/select-asset?appId=%@&addresses={\"%@\":[\"zcash\"]}";
 "partners.flexa.transactionFailedTitle" = "Transaction Failed";
 "partners.flexa.transactionFailedMessage" = "We're sorry but something has failed. Please try again.";
+
+// MARK: Keystone integration
+"keystone.wallet" = "Keystone Wallet";
+"keystone.drawer.title" = "Wallets & Hardware";
+"keystone.connect" = "Connect Hardware Wallet";
+"keystone.drawer.banner.title" = "Keystone Hardware Wallet";
+"keystone.drawer.banner.desc" = "Get 5%% off airgapped hardware wallet. Promo code \"Zashi\".";
+"keystone.addHWWallet.title" = "Confirm Account to Access";
+"keystone.addHWWallet.desc" = "Select the wallet you'd like to connect to proceed. Once connected, you’ll be able to wirelessly sign transactions with your hardware wallet.";
+"keystone.addHWWallet.connect" = "Connect";
+"keystone.addHWWallet.forgetDevice" = "Forget this device";
+"keystone.addHWWallet.scan" = "Scan your device’s QR code to connect.";
+"keystone.addHWWallet.tutorial" = "View Keystone tutorial";
+"keystone.addHWWallet.howTo" = "Instructions:";
+"keystone.addHWWallet.step1" = "Unlock your Keystone";
+"keystone.addHWWallet.step2" = "Tap the menu icon";
+"keystone.addHWWallet.step3" = "Tap on Connect Software Wallet";
+"keystone.addHWWallet.step4" = "Select Zashi app and scan QR code";
+"keystone.addHWWallet.readyToScan" = "Ready to Scan";
+"keystone.confirm" = "Confirm with Keystone";
+"keystone.signWith.hardware" = "Hardware";
+"keystone.signWith.title" = "Scan with your Keystone wallet";
+"keystone.signWith.desc" = "After you have signed with Keystone, tap on the Get Signature button below.";
+"keystone.signWith.getSignature" = "Get Signature";
+"keystone.signWith.reject" = "Reject";
+"keystone.signWith.signTransaction" = "Sign Transaction";
+"keystone.scanInfo" = "Scan Keystone wallet QR code";
+"keystone.scanInfoTransaction" = "Scan Keystone QR code to sign the transaction";
+"keystone.settings" = "Switch from Keystone to Zashi to use Integrations.";
+"accounts.sendingFrom" = "Sending from";
+"accounts.addressBook.your" = "Your Wallets";
+"accounts.addressBook.contacts" = "Address Book Contacts";
+"accounts.keystone" = "Keystone";
+"accounts.zashi" = "Zashi";
+"accounts.zashi.shieldedAddress" = "Zashi Shielded Address";
+"accounts.zashi.transparentAddress" = "Zashi Transparent Address";
+"accounts.keystone.shieldedAddress" = "Keystone Shielded Address";
+"accounts.keystone.transparentAddress" = "Keystone Transparent Address";

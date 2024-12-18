@@ -1,6 +1,22 @@
 {
     "releases": [
         {
+            "version": "1.3",
+            "date": "12-16-2024",
+            "timestamp": 1734351641,
+            "sections": [
+                {
+                    "title": "Agregado:",
+                    "bulletpoints": [
+                        "La integración de Zashi con la Billetera Física Keystone esta ya disponible!",
+                        "Conecta to billetera Fisica Keystone con Zashi.",
+                        "Firma tus transacciones con tu billetera Keystone.",
+                        "Mantén tus ZEC privados protegidos."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "1.2.4",
             "date": "11-25-2024",
             "timestamp": 1732369942,

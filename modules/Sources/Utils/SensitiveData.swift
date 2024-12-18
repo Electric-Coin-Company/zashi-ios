@@ -104,7 +104,7 @@ extension AccountBalance {
 public struct RedactableSynchronizerState: Equatable, Redactable {
     public struct SynchronizerStateWrapper: Equatable {
         public var syncSessionID: UUID
-        public var accountBalance: RedactableAccountBalance?
+        public var accountsBalances: [AccountUUID: AccountBalance]
         public var syncStatus: SyncStatus
         public var latestBlockHeight: BlockHeight
     }
@@ -114,7 +114,7 @@ public struct RedactableSynchronizerState: Equatable, Redactable {
     public init(_ data: SynchronizerState) {
         self.data = SynchronizerStateWrapper(
             syncSessionID: data.syncSessionID,
-            accountBalance: data.accountBalance?.redacted,
+            accountsBalances: data.accountsBalances,
             syncStatus: data.syncStatus,
             latestBlockHeight: data.latestBlockHeight
         )

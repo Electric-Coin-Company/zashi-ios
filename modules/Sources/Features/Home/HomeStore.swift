@@ -22,7 +22,6 @@ public struct Home {
         @Presents public var alert: AlertState<Action>?
         public var canRequestReview = false
         public var migratingDatabase = true
-        public var scanState: Scan.State
         public var syncProgressState: SyncProgress.State
         public var walletConfig: WalletConfig
         public var transactionListState: TransactionList.State
@@ -31,7 +30,6 @@ public struct Home {
         public init(
             canRequestReview: Bool = false,
             migratingDatabase: Bool = true,
-            scanState: Scan.State,
             syncProgressState: SyncProgress.State,
             transactionListState: TransactionList.State,
             walletBalancesState: WalletBalances.State,
@@ -39,7 +37,6 @@ public struct Home {
         ) {
             self.canRequestReview = canRequestReview
             self.migratingDatabase = migratingDatabase
-            self.scanState = scanState
             self.syncProgressState = syncProgressState
             self.transactionListState = transactionListState
             self.walletConfig = walletConfig

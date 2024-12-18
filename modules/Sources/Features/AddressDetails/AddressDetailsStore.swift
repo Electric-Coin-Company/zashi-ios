@@ -13,6 +13,7 @@ import Pasteboard
 import Generated
 import Utils
 import UIComponents
+import Models
 
 @Reducer
 public struct AddressDetails {
@@ -26,6 +27,7 @@ public struct AddressDetails {
         public var isAddressExpanded = false
         public var isQRCodeAppreanceFlipped = false
         public var maxPrivacy = false
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var storedQR: CGImage?
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
 
@@ -91,6 +93,8 @@ public struct AddressDetails {
                 return .publisher {
                     QRCodeGenerator.generate(
                         from: state.address.data,
+                        maxPrivacy: state.maxPrivacy,
+                        vendor: state.selectedWalletAccount?.vendor == .keystone ? .keystone : .zashi,
                         color: state.isQRCodeAppreanceFlipped
                         ? .black
                         : Asset.Colors.primary.systemColor

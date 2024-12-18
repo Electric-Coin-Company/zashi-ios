@@ -40,11 +40,18 @@ public enum FontFamily {
     public static let thinItalic = FontConvertible(name: "Inter-ThinItalic", family: "Inter", path: "Inter-ThinItalic.otf")
     public static let all: [FontConvertible] = [black, blackItalic, bold, boldItalic, extraBold, extraBoldItalic, extraLight, extraLightItalic, italic, light, lightItalic, medium, mediumItalic, regular, semiBold, semiBoldItalic, thin, thinItalic]
   }
+  public enum RobotoMono {
+    public static let bold = FontConvertible(name: "RobotoMono-Bold", family: "Roboto Mono", path: "RobotoMono-Bold.ttf")
+    public static let medium = FontConvertible(name: "RobotoMono-Medium", family: "Roboto Mono", path: "RobotoMono-Medium.ttf")
+    public static let regular = FontConvertible(name: "RobotoMono-Regular", family: "Roboto Mono", path: "RobotoMono-Regular.ttf")
+    public static let semiBold = FontConvertible(name: "RobotoMono-SemiBold", family: "Roboto Mono", path: "RobotoMono-SemiBold.ttf")
+    public static let all: [FontConvertible] = [bold, medium, regular, semiBold]
+  }
   public enum Zboto {
     public static let regular = FontConvertible(name: "ZbotoRegular", family: "Zboto", path: "Zboto.otf")
     public static let all: [FontConvertible] = [regular]
   }
-  public static let allCustomFonts: [FontConvertible] = [Inter.all, Zboto.all].flatMap { $0 }
+  public static let allCustomFonts: [FontConvertible] = [Inter.all, RobotoMono.all, Zboto.all].flatMap { $0 }
   public static func registerAllCustomFonts() {
     allCustomFonts.forEach { $0.register() }
   }

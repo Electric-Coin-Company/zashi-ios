@@ -10,6 +10,7 @@ import Combine
 import ComposableArchitecture
 import ZcashLightClientKit
 import Models
+import URKit
 
 extension DependencyValues {
     public var sdkSynchronizer: SDKSynchronizerClient {
@@ -32,38 +33,44 @@ public struct SDKSynchronizerClient {
     public let exchangeRateUSDStream: () -> AnyPublisher<FiatCurrencyResult?, Never>
     public let latestState: () -> SynchronizerState
     
-    public let prepareWith: ([UInt8], BlockHeight, WalletInitMode) async throws -> Void
+    public let prepareWith: ([UInt8], BlockHeight, WalletInitMode, String, String?) async throws -> Void
     public let start: (_ retry: Bool) async throws -> Void
     public let stop: () -> Void
     public let isSyncing: () -> Bool
     public let isInitialized: () -> Bool
+    public let importAccount: (String, [UInt8]?, Zip32AccountIndex?, AccountPurpose, String, String?) async throws -> AccountUUID?
     
     public let rewind: (RewindPolicy) -> AnyPublisher<Void, Error>
     
-    public var getAllTransactions: () async throws -> [TransactionState]
+    public var getAllTransactions: (AccountUUID?) async throws -> [TransactionState]
     public var getMemos: (Data) async throws -> [Memo]
 
-    public let getUnifiedAddress: (_ account: Int) async throws -> UnifiedAddress?
-    public let getTransparentAddress: (_ account: Int) async throws -> TransparentAddress?
-    public let getSaplingAddress: (_ accountIndex: Int) async throws -> SaplingAddress?
+    public let getUnifiedAddress: (_ account: AccountUUID) async throws -> UnifiedAddress?
+    public let getTransparentAddress: (_ account: AccountUUID) async throws -> TransparentAddress?
+    public let getSaplingAddress: (_ account: AccountUUID) async throws -> SaplingAddress?
     
-    public let getAccountBalance: (_ accountIndex: Int) async throws -> AccountBalance?
-    
-    public var sendTransaction: (UnifiedSpendingKey, Zatoshi, Recipient, Memo?) async throws -> TransactionState
-    public let shieldFunds: (UnifiedSpendingKey, Memo, Zatoshi) async throws -> TransactionState
-    
+    public let getAccountsBalances: () async throws -> [AccountUUID: AccountBalance]
+
     public var wipe: () -> AnyPublisher<Void, Error>?
     
     public var switchToEndpoint: (LightWalletEndpoint) async throws -> Void
     
     // Proposals
-    public var proposeTransfer: (Int, Recipient, Zatoshi, Memo?) async throws -> Proposal
+    public var proposeTransfer: (AccountUUID, Recipient, Zatoshi, Memo?) async throws -> Proposal
     public var createProposedTransactions: (Proposal, UnifiedSpendingKey) async throws -> CreateProposedTransactionsResult
-    public var proposeShielding: (Int, Zatoshi, Memo, TransparentAddress?) async throws -> Proposal?
+    public var proposeShielding: (AccountUUID, Zatoshi, Memo, TransparentAddress?) async throws -> Proposal?
 
     public var isSeedRelevantToAnyDerivedAccount: ([UInt8]) async throws -> Bool
     
     public var refreshExchangeRateUSD: () -> Void
 
     public var evaluateBestOf: ([LightWalletEndpoint], Double, Double, UInt64, Int, NetworkType) async -> [LightWalletEndpoint] = { _,_,_,_,_,_ in [] }
+    
+    public var walletAccounts: () async throws -> [WalletAccount] = { [] }
+    
+    // PCZT
+    public var createPCZTFromProposal: (AccountUUID, Proposal) async throws -> Pczt
+    public var addProofsToPCZT: (Pczt) async throws -> Pczt
+    public var createTransactionFromPCZT: (Pczt, Pczt) async throws -> CreateProposedTransactionsResult
+    public var urEncoderForPCZT: (Pczt) -> UREncoder?
 }

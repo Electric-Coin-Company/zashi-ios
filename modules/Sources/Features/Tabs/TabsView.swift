@@ -22,12 +22,15 @@ import CurrencyConversionSetup
 import RequestZec
 import ZecKeyboard
 import AddressBook
+import AddKeystoneHWWallet
+import Scan
 
 public struct TabsView: View {
     let networkType: NetworkType
     @Perception.Bindable var store: StoreOf<Tabs>
     let tokenName: String
     @Namespace var tabsID
+    @State var accountSwitchSheetHeight: CGFloat = .zero
 
     @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
     
@@ -129,6 +132,12 @@ public struct TabsView: View {
                     }
                 )
                 .navigationLinkEmpty(
+                    isActive: store.bindingFor(.sendConfirmationKeystone),
+                    destination: {
+                        SignWithKeystoneView(store: store.sendConfirmationStore(), tokenName: tokenName)
+                    }
+                )
+                .navigationLinkEmpty(
                     isActive: store.bindingFor(.currencyConversionSetup),
                     destination: {
                         CurrencyConversionSetupView(
@@ -140,6 +149,30 @@ public struct TabsView: View {
                     isActive: store.bindingFor(.addressDetails),
                     destination: {
                         AddressDetailsView(store: store.addressDetailsStore())
+                    }
+                )
+                .navigationLinkEmpty(
+                    isActive: store.bindingForStackAddKeystoneKWWallet(.addKeystoneHWWallet),
+                    destination: {
+                        AddKeystoneHWWalletView(
+                            store: store.addKeystoneHWWalletStore()
+                        )
+                        .navigationLinkEmpty(
+                            isActive: store.bindingForStackAddKeystoneKWWallet(.scan),
+                            destination: {
+                                ScanView(
+                                    store: store.scanStore()
+                                )
+                                .navigationLinkEmpty(
+                                    isActive: store.bindingForStackAddKeystoneKWWallet(.accountSelection),
+                                    destination: {
+                                        AccountsSelectionView(
+                                            store: store.addKeystoneHWWalletStore()
+                                        )
+                                    }
+                                )
+                            }
+                        )
                     }
                 )
                 .navigationLinkEmpty(
@@ -204,10 +237,30 @@ public struct TabsView: View {
                 )
             }
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(trailing: settingsButton())
-            .navigationBarItems(leading: hideBalancesButton(tab: store.selectedTab))
-            .zashiTitle { navBarView(store.selectedTab) }
+            .navigationBarItems(
+                leading:
+                    walletAccountSwitcher()
+            )
+            .navigationBarItems(
+                trailing:
+                    HStack(spacing: 0) {
+                        if store.selectedTab != .receive {
+                            hideBalancesButton()
+                        }
+                        
+                        settingsButton()
+                    }
+                    .animation(nil, value: store.selectedTab)
+            )
             .walletStatusPanel()
+            .sheet(isPresented: $store.isInAppBrowserOn) {
+                if let url = URL(string: store.inAppBrowserURL) {
+                    InAppBrowserView(url: url)
+                }
+            }
+            .sheet(isPresented: $store.accountSwitchRequest) {
+                accountSwitchContent()
+            }
             .sheet(isPresented: $store.selectTextRequest) {
                 VStack(alignment: .leading) {
                     HStack {
@@ -254,7 +307,7 @@ public struct TabsView: View {
             }
             .overlayPreferenceValue(ExchangeRateFeaturePreferenceKey.self) { preferences in
                 WithPerceptionTracking {
-                    if store.isRateEducationEnabled {
+                    if store.isRateEducationEnabled && store.selectedTab != .receive {
                         GeometryReader { geometry in
                             preferences.map {
                                 VStack(alignment: .leading, spacing: 0) {
@@ -323,46 +376,6 @@ public struct TabsView: View {
             }
         }
     }
-    
-    @ViewBuilder private func navBarView(_ tab: Tabs.State.Tab) -> some View {
-        switch tab {
-        case .receive, .send, .balances:
-            Text(tab.title.uppercased())
-                .zFont(.semiBold, size: 16, style: Design.Text.primary)
-
-        case .account:
-            Asset.Assets.zashiTitle.image
-                .zImage(width: 62, height: 17, color: Asset.Colors.primary.color)
-        }
-    }
-    
-    func settingsButton() -> some View {
-        Image(systemName: "line.3.horizontal")
-            .resizable()
-            .frame(width: 21, height: 15)
-            .padding(15)
-            .navigationLink(
-                isActive: store.bindingFor(.settings),
-                destination: {
-                    SettingsView(store: store.settingsStore())
-                }
-            )
-            .tint(Asset.Colors.primary.color)
-    }
-    
-    @ViewBuilder
-    func hideBalancesButton(tab: Tabs.State.Tab) -> some View {
-        if tab == .account || tab == .send || tab == .balances {
-            Button {
-                isSensitiveContentHidden.toggle()
-            } label: {
-                let image = isSensitiveContentHidden ? Asset.Assets.eyeOff.image : Asset.Assets.eyeOn.image
-                image
-                    .zImage(size: 25, color: Asset.Colors.primary.color)
-                    .padding(15)
-            }
-        }
-    }
 }
 
 #Preview {
@@ -409,7 +422,7 @@ extension StoreOf<Tabs> {
             action: \.addressDetails
         )
     }
-
+    
     func requestZecStore() -> StoreOf<RequestZec> {
         self.scope(
             state: \.requestZecState,
@@ -430,6 +443,20 @@ extension StoreOf<Tabs> {
             action: \.addressBook
         )
     }
+    
+    func addKeystoneHWWalletStore() -> StoreOf<AddKeystoneHWWallet> {
+        self.scope(
+            state: \.addKeystoneHWWalletState,
+            action: \.addKeystoneHWWallet
+        )
+    }
+    
+    func scanStore() -> StoreOf<Scan> {
+        self.scope(
+            state: \.scanState,
+            action: \.scan
+        )
+    }
 }
 
 // MARK: - ViewStore
@@ -439,6 +466,35 @@ extension StoreOf<Tabs> {
         Binding<Bool>(
             get: { self.destination == destination },
             set: { self.send(.updateDestination($0 ? destination : nil)) }
+        )
+    }
+    
+    func bindingForStackAddKeystoneKWWallet(_ destination: Tabs.State.StackDestinationAddKeystoneHWWallet) -> Binding<Bool> {
+        Binding<Bool>(
+            get: {
+                if let currentStackValue = self.stackDestinationAddKeystoneHWWallet?.rawValue {
+                    return currentStackValue >= destination.rawValue
+                } else {
+                    if destination.rawValue == 0 {
+                        return false
+                    } else if destination.rawValue <= self.stackDestinationAddKeystoneHWWalletBindingsAlive {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+            },
+            set: { _ in
+                if let currentStackValue = self.stackDestinationAddKeystoneHWWallet?.rawValue, currentStackValue == destination.rawValue {
+                    let popIndex = destination.rawValue - 1
+                    if popIndex >= 0 {
+                        let popDestination = Tabs.State.StackDestinationAddKeystoneHWWallet(rawValue: popIndex)
+                        self.send(.updateStackDestinationAddKeystoneHWWallet(popDestination))
+                    } else {
+                        self.send(.updateStackDestinationAddKeystoneHWWallet(nil))
+                    }
+                }
+            }
         )
     }
     

@@ -43,14 +43,12 @@ public struct PrivateDataConsentView: View {
                     Text(L10n.PrivateDataConsent.message4)
                         .zFont(size: 14, style: Design.Text.primary)
                         .padding(.top, 8)
-                    
-                    Spacer()
-                    
+
                     ZashiToggle(
                         isOn: $store.isAcknowledged,
                         label: L10n.PrivateDataConsent.confirmation
                     )
-                    .padding(.bottom, 24)
+                    .padding(.vertical, 24)
                     .padding(.leading, 1)
                     
                     if store.isExportingData {

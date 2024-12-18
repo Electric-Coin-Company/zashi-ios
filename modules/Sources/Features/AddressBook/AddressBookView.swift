@@ -33,64 +33,38 @@ public struct AddressBookView: View {
 
     public var body: some View {
         WithPerceptionTracking {
-            VStack() {
-                if store.addressBookContacts.contacts.isEmpty {
-                    Spacer()
-                    
-                    VStack(spacing: 40) {
-                        emptyComposition()
-                        
-                        Text(L10n.AddressBook.empty)
-                            .zFont(.semiBold, size: 24, style: Design.Text.primary)
-                            .multilineTextAlignment(.center)
-                    }
-                    .screenHorizontalPadding()
+            VStack(alignment: .leading, spacing: 0) {
+                if store.isInSelectMode && store.walletAccounts.count > 1 {
+                    contactsList()
                 } else {
-                    if store.isInSelectMode {
-                        HStack {
-                            Text(L10n.AddressBook.selectRecipient)
-                                .zFont(.semiBold, size: 18, style: Design.Text.primary)
+                    if store.addressBookContacts.contacts.isEmpty {
+                        Spacer()
+                        
+                        VStack(spacing: 40) {
+                            emptyComposition()
                             
-                            Spacer()
+                            Text(L10n.AddressBook.empty)
+                                .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                                .multilineTextAlignment(.center)
                         }
-                        .padding(24)
+                        .frame(maxWidth: .infinity)
+                        .screenHorizontalPadding()
+                    } else {
+                        contactsList()
                     }
-                    
-                    List {
-                        ForEach(store.addressBookContacts.contacts, id: \.self) { record in
-                            VStack {
-                                ContactView(
-                                    iconText: record.name.initials,
-                                    title: record.name,
-                                    desc: record.id.trailingZip316
-                                ) {
-                                    store.send(.editId(record.id))
-                                }
-
-                                if let last = store.addressBookContacts.contacts.last, last != record {
-                                    Design.Surfaces.divider.color
-                                        .frame(height: 1)
-                                        .padding(.top, 12)
-                                        .padding(.horizontal, 4)
-                                }
-                            }
-                            .listRowInsets(EdgeInsets())
-                            .listRowBackground(Asset.Colors.background.color)
-                            .listRowSeparator(.hidden)
-                        }
-                    }
-                    .padding(.vertical, 1)
-                    .background(Asset.Colors.background.color)
-                    .listStyle(.plain)
                 }
-                
+
                 Spacer()
 
                 addContactButton(store)
             }
             .onAppear { store.send(.onAppear) }
             .zashiBack()
-            .screenTitle(L10n.AddressBook.title)
+            .screenTitle(
+                store.isInSelectMode && (!store.addressBookContacts.contacts.isEmpty || store.walletAccounts.count > 1)
+                ? L10n.AddressBook.selectRecipient
+                : L10n.AddressBook.title
+            )
             .navigationBarTitleDisplayMode(.inline)
             .applyScreenBackground()
             .navigationLinkEmpty(
@@ -187,6 +161,168 @@ public struct AddressBookView: View {
                 .offset(x: 30, y: 30)
                 .shadow(color: .black.opacity(0.02), radius: 0.66667, x: 0, y: 1.33333)
                 .shadow(color: .black.opacity(0.08), radius: 1.33333, x: 0, y: 1.33333)
+        }
+    }
+    
+    @ViewBuilder func contactsList() -> some View {
+        List {
+            if store.walletAccounts.count > 1 && store.isInSelectMode {
+                Text(L10n.Accounts.AddressBook.your)
+                    .zFont(.medium, size: 14, style: Design.Text.tertiary)
+                    .padding(.top, 24)
+                    .padding(.bottom, 16)
+                    .screenHorizontalPadding()
+                    .listBackground()
+
+                ForEach(store.walletAccounts, id: \.self) { walletAccount in
+                    VStack {
+                        walletAcoountView(
+                            icon: walletAccount.vendor.icon(),
+                            title: walletAccount.vendor.name(),
+                            address: walletAccount.unifiedAddress ?? L10n.Receive.Error.cantExtractUnifiedAddress
+                        ) {
+                            store.send(.walletAccountTapped(walletAccount))
+                        }
+                        
+                        if let last = store.walletAccounts.last, last != walletAccount {
+                            Design.Surfaces.divider.color
+                                .frame(height: 1)
+                                .padding(.top, 12)
+                                .padding(.horizontal, 4)
+                        }
+                    }
+                    .listBackground()
+                }
+                
+                if store.addressBookContacts.contacts.isEmpty {
+                    VStack(spacing: 40) {
+                        emptyComposition()
+                        
+                        Text(L10n.AddressBook.empty)
+                            .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                            .multilineTextAlignment(.center)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .listBackground()
+                    .screenHorizontalPadding()
+                    .padding(.bottom, 40)
+                    .padding(.top, 70)
+                    .background {
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(Design.Surfaces.strokeSecondary.color, style: StrokeStyle(lineWidth: 2.0, dash: [8, 6]))
+                    }
+                    .padding(.top, 24)
+                    .screenHorizontalPadding()
+                } else {
+                    Text(L10n.Accounts.AddressBook.contacts)
+                        .zFont(.medium, size: 14, style: Design.Text.tertiary)
+                        .padding(.top, 32)
+                        .padding(.bottom, 16)
+                        .screenHorizontalPadding()
+                        .listBackground()
+                }
+            }
+
+            ForEach(store.addressBookContacts.contacts, id: \.self) { record in
+                VStack {
+                    ContactView(
+                        iconText: record.name.initials,
+                        title: record.name,
+                        desc: record.id.trailingZip316
+                    ) {
+                        store.send(.editId(record.id))
+                    }
+
+                    if let last = store.addressBookContacts.contacts.last, last != record {
+                        Design.Surfaces.divider.color
+                            .frame(height: 1)
+                            .padding(.top, 12)
+                            .padding(.horizontal, 4)
+                    }
+                }
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Asset.Colors.background.color)
+                .listRowSeparator(.hidden)
+            }
+        }
+        .padding(.vertical, 1)
+        .background(Asset.Colors.background.color)
+        .listStyle(.plain)
+    }
+    
+    @ViewBuilder func walletAccountsList() -> some View {
+        List {
+            ForEach(store.walletAccounts, id: \.self) { walletAccount in
+                VStack {
+                    walletAcoountView(
+                        icon: walletAccount.vendor.icon(),
+                        title: walletAccount.vendor.name(),
+                        address: walletAccount.unifiedAddress ?? L10n.Receive.Error.cantExtractUnifiedAddress
+                    ) {
+                        store.send(.walletAccountTapped(walletAccount))
+                    }
+                    
+                    if let last = store.walletAccounts.last, last != walletAccount {
+                        Design.Surfaces.divider.color
+                            .frame(height: 1)
+                            .padding(.top, 12)
+                            .padding(.horizontal, 4)
+                    }
+                }
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Asset.Colors.background.color)
+                .listRowSeparator(.hidden)
+            }
+        }
+        .padding(.vertical, 1)
+        .background(Asset.Colors.background.color)
+        .listStyle(.plain)
+    }
+    
+    @ViewBuilder func walletAcoountView(
+        icon: Image,
+        title: String,
+        address: String,
+        selected: Bool = false,
+        action: (() -> Void)? = nil
+    ) -> some View {
+        WithPerceptionTracking {
+            Button {
+                action?()
+            } label: {
+                HStack(spacing: 0) {
+                    icon
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .padding(8)
+                        .background {
+                            Circle()
+                                .fill(Design.Surfaces.bgAlt.color)
+                        }
+                        .padding(.trailing, 12)
+                    
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text(title)
+                            .zFont(.semiBold, size: 14, style: Design.Text.primary)
+                        
+                        Text(address.zip316)
+                            .zFont(addressFont: true, size: 12, style: Design.Text.tertiary)
+                    }
+                    
+                    Spacer()
+                    
+                    Asset.Assets.chevronRight.image
+                        .zImage(size: 20, style: Design.Text.tertiary)
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 12)
+                .background {
+                    if selected {
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(Design.Surfaces.bgSecondary.color)
+                    }
+                }
+            }
         }
     }
 }

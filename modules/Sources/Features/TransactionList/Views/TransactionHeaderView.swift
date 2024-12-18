@@ -57,7 +57,7 @@ struct TransactionHeaderView: View {
                         
                         if transaction.zAddress != nil && transaction.isAddressExpanded {
                             Text(transaction.address)
-                                .font(.custom(FontFamily.Inter.regular.name, size: 13))
+                                .font(.custom(FontFamily.RobotoMono.regular.name, size: 13))
                                 .foregroundColor(Asset.Colors.shade47.color)
                             .padding(.leading, 60)
                             .padding(.trailing, 25)
@@ -129,7 +129,7 @@ struct TransactionHeaderView: View {
                 store.send(.transactionAddressExpandRequested(transaction.id))
             } label: {
                 Text(transaction.address)
-                    .font(.custom(FontFamily.Inter.regular.name, size: 13))
+                    .font(.custom(FontFamily.RobotoMono.regular.name, size: 13))
                     .foregroundColor(Asset.Colors.shade47.color)
                     .lineLimit(1)
                     .truncationMode(.middle)

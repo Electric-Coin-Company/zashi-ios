@@ -20,12 +20,15 @@ public struct TransactionList {
     public struct State: Equatable {
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
+        public var isInvalidated = true
         public var latestMinedHeight: BlockHeight?
         public var latestTransactionId = ""
         public var latestTransactionList: [TransactionState] = []
         public var requiredTransactionConfirmations = 0
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
         public var transactionList: IdentifiedArrayOf<TransactionState>
+        @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
         public init(
             latestMinedHeight: BlockHeight? = nil,
@@ -71,17 +74,19 @@ public struct TransactionList {
         switch action {
         case .onAppear:
             state.requiredTransactionConfirmations = zcashSDKEnvironment.requiredTransactionConfirmations
-            do {
-                let result = try addressBook.allLocalContacts()
-                let abContacts = result.contacts
-                if result.remoteStoreResult == .failure {
+            let selectedAccount = state.selectedWalletAccount
+            if let abAccount = state.zashiWalletAccount {
+                do {
+                    let result = try addressBook.allLocalContacts(abAccount.account)
+                    let abContacts = result.contacts
+                    if result.remoteStoreResult == .failure {
+                        // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                    }
+                    state.addressBookContacts = abContacts
+                } catch {
                     // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
                 }
-                state.addressBookContacts = abContacts
-            } catch {
-                // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
             }
-
             return .merge(
                 .publisher {
                     sdkSynchronizer.stateStream()
@@ -101,7 +106,7 @@ public struct TransactionList {
                 }
                 .cancellable(id: CancelEventId, cancelInFlight: true),
                 .run { send in
-                    if let transactions = try? await sdkSynchronizer.getAllTransactions() {
+                    if let transactions = try? await sdkSynchronizer.getAllTransactions(selectedAccount?.id) {
                         await send(.updateTransactionList(transactions))
                     }
                 }
@@ -139,8 +144,9 @@ public struct TransactionList {
             
         case .synchronizerStateChanged(.upToDate):
             state.latestMinedHeight = sdkSynchronizer.latestState().latestBlockHeight
+            let accountUUID = state.selectedWalletAccount?.id
             return .run { send in
-                if let transactions = try? await sdkSynchronizer.getAllTransactions() {
+                if let transactions = try? await sdkSynchronizer.getAllTransactions(accountUUID) {
                     await send(.updateTransactionList(transactions))
                 }
             }
@@ -149,13 +155,15 @@ public struct TransactionList {
             return .none
         
         case .foundTransactions:
+            let accountUUID = state.selectedWalletAccount?.id
             return .run { send in
-                if let transactions = try? await sdkSynchronizer.getAllTransactions() {
+                if let transactions = try? await sdkSynchronizer.getAllTransactions(accountUUID) {
                     await send(.updateTransactionList(transactions))
                 }
             }
 
         case .updateTransactionList(let transactionList):
+            state.isInvalidated = false
             // update the list only if there is anything new
             guard state.latestTransactionList != transactionList else {
                 return .none
