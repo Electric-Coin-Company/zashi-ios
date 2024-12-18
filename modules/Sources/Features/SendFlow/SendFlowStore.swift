@@ -374,6 +374,7 @@ public struct SendFlow {
                 state.isValidAddress = false
                 state.isValidTransparentAddress = false
                 state.isValidTexAddress = false
+                state.isNotAddressInAddressBook = false
                 return .none
                 
             case .syncAmounts(let zecToCurrency):

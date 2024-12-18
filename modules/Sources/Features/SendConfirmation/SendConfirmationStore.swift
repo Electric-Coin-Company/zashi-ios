@@ -169,6 +169,7 @@ public struct SendConfirmation {
         case sendTriggered
         case shareFinished
         case showHideButtonTapped
+        case transactionResultReady
         case updateDestination(State.Destination?)
         case updateFailedData(Int, String)
         case updateResult(State.Result?)
@@ -213,6 +214,7 @@ public struct SendConfirmation {
         Reduce { state, action in
             switch action {
             case .onAppear:
+                state.txIdToExpand = nil
                 state.scanState.checkers = [.keystoneScanChecker, .keystonePCZTScanChecker]
                 state.scanState.instructions = L10n.Keystone.scanInfoTransaction
                 state.scanState.forceLibraryToHide = true
@@ -305,7 +307,9 @@ public struct SendConfirmation {
                         let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, zip32AccountIndex, network)
 
                         let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
-                        
+
+                        await send(.transactionResultReady)
+
                         switch result {
                         case .grpcFailure(let txIds):
                             await send(.updateTxIdToExpand(txIds.last))
@@ -516,8 +520,9 @@ public struct SendConfirmation {
                 return .run { send in
                     do {
                         let result = try await sdkSynchronizer.createTransactionFromPCZT(pcztWithProofs, pcztWithSigs)
-                        
+
                         await send(.resetPCZTs)
+                        await send(.transactionResultReady)
 
                         switch result {
                         case .grpcFailure(let txIds):
@@ -552,7 +557,9 @@ public struct SendConfirmation {
                 state.pcztWithSigs = nil
                 state.pcztToShare = nil
                 state.proposal = nil
+                return .none
                 
+            case .transactionResultReady:
                 return .none
             }
         }

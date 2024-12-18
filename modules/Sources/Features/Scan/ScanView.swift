@@ -46,8 +46,12 @@ public struct ScanView: View {
                         }
                     }
                     
-                    if store.progress != nil {
-                        progress(size: proxy.size, progress: store.countedProgress)
+                    WithPerceptionTracking {
+                        if store.progress != nil {
+                            WithPerceptionTracking {
+                                progress(size: proxy.size, progress: store.countedProgress)
+                            }
+                        }
                     }
                 }
 
@@ -195,21 +199,19 @@ public struct ScanView: View {
         let topLeft = ScanView.rectOfInterest(size).origin
         let frameSize = ScanView.frameSize(size)
 
-        return WithPerceptionTracking {
-            VStack {
-                Text(String(format: "%d%%", progress))
-                    .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                    .foregroundColor(Asset.Colors.ZDesign.shark50.color)
-                    .padding(.bottom, 4)
-                ProgressView(value: Float(progress), total: Float(100))
-            }
-            .frame(width: frameSize.width * 0.8)
-            .tint(Asset.Colors.ZDesign.Base.brand.color)
-            .position(
-                x: topLeft.x + frameSize.width * 0.5,
-                y: topLeft.y - 80
-            )
+        return VStack {
+            Text(String(format: "%d%%", progress))
+                .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
+                .foregroundColor(Asset.Colors.ZDesign.shark50.color)
+                .padding(.bottom, 4)
+            ProgressView(value: Float(progress), total: Float(100))
         }
+        .frame(width: frameSize.width * 0.8)
+        .tint(Asset.Colors.ZDesign.Base.brand.color)
+        .position(
+            x: topLeft.x + frameSize.width * 0.5,
+            y: topLeft.y - 80
+        )
     }
 }
 

@@ -15,18 +15,10 @@ import Utils
 
 public struct ReceiveView: View {
     @Environment(\.colorScheme) var colorScheme
-    
-    public enum AddressType: Equatable {
-        case saplingAddress
-        case tAddress
-        case uaAddress
-    }
 
     @Perception.Bindable var store: StoreOf<Receive>
     let networkType: NetworkType
-    
-    @State private var currentFocus = AddressType.uaAddress
-    
+
     public init(store: StoreOf<Receive>, networkType: NetworkType) {
         self.store = store
         self.networkType = networkType
@@ -52,7 +44,7 @@ public struct ReceiveView: View {
                     }
                     .padding(.horizontal, 20)
                     .onAppear {
-                        currentFocus = .uaAddress
+                        store.send(.updateCurrentFocus(.uaAddress))
                     }
 
                     if store.selectedWalletAccount?.vendor == .keystone {
@@ -64,7 +56,7 @@ public struct ReceiveView: View {
                             iconFg: Design.Utility.Indigo._800,
                             iconBg: Design.Utility.Indigo._100,
                             bcgColor: Design.Utility.Indigo._50.color,
-                            expanded: currentFocus == .uaAddress
+                            expanded: store.currentFocus == .uaAddress
                         ) {
                             store.send(.copyToPastboard(store.unifiedAddress.redacted))
                         } qrAction: {
@@ -73,9 +65,7 @@ public struct ReceiveView: View {
                             store.send(.requestTapped(store.unifiedAddress.redacted, true))
                         }
                         .onTapGesture {
-                            withAnimation {
-                                currentFocus = .uaAddress
-                            }
+                            store.send(.updateCurrentFocus(.uaAddress), animation: .default)
                         }
                         .padding(.top, 24)
                         
@@ -87,7 +77,7 @@ public struct ReceiveView: View {
                                 iconFg: Design.Text.primary,
                                 iconBg: Design.Surfaces.bgTertiary,
                                 bcgColor: Design.Utility.Gray._50.color,
-                                expanded: currentFocus == .tAddress
+                                expanded: store.currentFocus == .tAddress
                             ) {
                                 store.send(.copyToPastboard(store.transparentAddress.redacted))
                             } qrAction: {
@@ -96,9 +86,7 @@ public struct ReceiveView: View {
                                 store.send(.requestTapped(store.transparentAddress.redacted, false))
                             }
                             .onTapGesture {
-                                withAnimation {
-                                    currentFocus = .tAddress
-                                }
+                                store.send(.updateCurrentFocus(.tAddress), animation: .default)
                             }
                         }
                     } else {
@@ -110,7 +98,7 @@ public struct ReceiveView: View {
                             iconFg: Design.Utility.Purple._800,
                             iconBg: Design.Utility.Purple._100,
                             bcgColor: Design.Utility.Purple._50.color,
-                            expanded: currentFocus == .uaAddress
+                            expanded: store.currentFocus == .uaAddress
                         ) {
                             store.send(.copyToPastboard(store.unifiedAddress.redacted))
                         } qrAction: {
@@ -119,9 +107,7 @@ public struct ReceiveView: View {
                             store.send(.requestTapped(store.unifiedAddress.redacted, true))
                         }
                         .onTapGesture {
-                            withAnimation {
-                                currentFocus = .uaAddress
-                            }
+                            store.send(.updateCurrentFocus(.uaAddress), animation: .default)
                         }
                         .padding(.top, 24)
                         
@@ -132,7 +118,7 @@ public struct ReceiveView: View {
                             iconFg: Design.Text.primary,
                             iconBg: Design.Surfaces.bgTertiary,
                             bcgColor: Design.Utility.Gray._50.color,
-                            expanded: currentFocus == .tAddress
+                            expanded: store.currentFocus == .tAddress
                         ) {
                             store.send(.copyToPastboard(store.transparentAddress.redacted))
                         } qrAction: {
@@ -141,9 +127,7 @@ public struct ReceiveView: View {
                             store.send(.requestTapped(store.transparentAddress.redacted, false))
                         }
                         .onTapGesture {
-                            withAnimation {
-                                currentFocus = .tAddress
-                            }
+                            store.send(.updateCurrentFocus(.tAddress), animation: .default)
                         }
 #if DEBUG
                         if networkType == .testnet {
@@ -154,7 +138,7 @@ public struct ReceiveView: View {
                                 iconFg: Design.Text.primary,
                                 iconBg: Design.Surfaces.bgTertiary,
                                 bcgColor: .clear,
-                                expanded: currentFocus == .saplingAddress
+                                expanded: store.currentFocus == .saplingAddress
                             ) {
                                 store.send(.copyToPastboard(store.saplingAddress.redacted))
                             } qrAction: {
@@ -163,7 +147,7 @@ public struct ReceiveView: View {
                                 store.send(.requestTapped(store.saplingAddress.redacted, true))
                             }
                             .onTapGesture {
-                                currentFocus = .saplingAddress
+                                store.send(.updateCurrentFocus(.saplingAddress))
                             }
                         }
 #endif

@@ -119,6 +119,7 @@ let package = Package(
             dependencies: [
                 "DerivationTool",
                 "Generated",
+                "KeystoneHandler",
                 "Models",
                 "SDKSynchronizer",
                 "UIComponents",

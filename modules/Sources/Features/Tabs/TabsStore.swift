@@ -118,7 +118,7 @@ public struct Tabs {
         public var zecKeyboardState: ZecKeyboard.State
         
         public var inAppBrowserURL: String {
-            "https://shop.keyst.one/products/keystone-3-pro"
+            "https://keyst.one/shop/products/keystone-3-pro?discount=Zashi"
         }
 
         public init(
@@ -268,6 +268,7 @@ public struct Tabs {
                 state.selectedWalletAccount = walletAccount
                 state.accountSwitchRequest = false
                 state.homeState.transactionListState.isInvalidated = true
+                state.receiveState.currentFocus = .uaAddress
                 return .concatenate(
                     .send(.home(.walletBalances(.updateBalances))),
                     .send(.send(.walletBalances(.updateBalances))),
@@ -432,7 +433,9 @@ public struct Tabs {
 
             case .sendConfirmation(.viewTransactionTapped):
                 state.selectedTab = .account
-                state.sendConfirmationState.txIdToExpand = state.homeState.transactionListState.transactionList.first?.id
+                if state.sendConfirmationState.txIdToExpand == nil {
+                    state.sendConfirmationState.txIdToExpand = state.homeState.transactionListState.transactionList.first?.id
+                }
                 state.sendConfirmationState.stackDestinationBindingsAlive = 0
                 return .concatenate(
                     .send(.updateDestination(nil)),
@@ -493,6 +496,9 @@ public struct Tabs {
                     .send(.sendConfirmation(.updateResult(nil))),
                     .send(.sendConfirmation(.updateStackDestination(nil)))
                 )
+
+            case.sendConfirmation(.transactionResultReady):
+                return .send(.home(.transactionList(.foundTransactions)))
 
             case .sendConfirmation:
                 return .none

@@ -14,6 +14,7 @@ import SDKSynchronizer
 import ZcashLightClientKit
 import DerivationTool
 import ZcashSDKEnvironment
+import KeystoneHandler
 
 @Reducer
 public struct AddKeystoneHWWallet {
@@ -64,6 +65,7 @@ public struct AddKeystoneHWWallet {
 
     public init() { }
 
+    @Dependency(\.keystoneHandler) var keystoneHandler
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
 
     public var body: some Reducer<State, Action> {
@@ -130,6 +132,7 @@ public struct AddKeystoneHWWallet {
                 return .none
                 
             case .continueTapped:
+                keystoneHandler.resetQRDecoder()
                 return .none
                 
             case .viewTutorialTapped:

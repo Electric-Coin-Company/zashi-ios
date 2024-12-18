@@ -19,6 +19,13 @@ import Models
 public struct Receive {
     @ObservableState
     public struct State: Equatable {
+        public enum AddressType: Equatable {
+            case saplingAddress
+            case tAddress
+            case uaAddress
+        }
+
+        public var currentFocus = AddressType.uaAddress
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
 
@@ -51,6 +58,7 @@ public struct Receive {
         case addressDetailsRequest(RedactableString, Bool)
         case copyToPastboard(RedactableString)
         case requestTapped(RedactableString, Bool)
+        case updateCurrentFocus(State.AddressType)
     }
     
     @Dependency(\.pasteboard) var pasteboard
@@ -69,6 +77,10 @@ public struct Receive {
                 return .none
 
             case .requestTapped:
+                return .none
+                
+            case .updateCurrentFocus(let newFocus):
+                state.currentFocus = newFocus
                 return .none
             }
         }

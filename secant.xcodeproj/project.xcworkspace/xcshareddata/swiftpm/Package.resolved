@@ -545,7 +545,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-light-client-ffi",
       "state" : {
-        "revision" : "2487d2cd04128c6e5d7a53d29b11d8c06197b840"
+        "revision" : "11b0db058288b12ada9c5a95ed56f17f82d2868f",
+        "version" : "0.12.0"
       }
     },
     {
@@ -563,7 +564,7 @@
       "location" : "https://github.com/LukasKorba/ZcashLightClientKit",
       "state" : {
         "branch" : "import-ufvk-ffi-preview",
-        "revision" : "f16d09892569ff5b43df3bee535b4479cc5fe4fa"
+        "revision" : "ce667eb18f714b1a53ba4cf1f4b9f82d025d790f"
       }
     }
   ],
