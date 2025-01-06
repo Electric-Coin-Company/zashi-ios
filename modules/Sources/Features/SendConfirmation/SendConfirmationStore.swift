@@ -58,6 +58,7 @@ public struct SendConfirmation {
         public var destination: Destination?
         public var failedCode: Int?
         public var failedDescription: String?
+        public var failedPcztMsg: String?
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
         public var feeRequired: Zatoshi
         public var isAddressExpanded = false
@@ -171,7 +172,7 @@ public struct SendConfirmation {
         case showHideButtonTapped
         case transactionResultReady
         case updateDestination(State.Destination?)
-        case updateFailedData(Int, String)
+        case updateFailedData(Int, String, String)
         case updateResult(State.Result?)
         case updateStackDestination(SendConfirmation.State.StackDestination?)
         case updateTxIdToExpand(String?)
@@ -315,7 +316,7 @@ public struct SendConfirmation {
                             await send(.updateTxIdToExpand(txIds.last))
                             await send(.sendFailed("sdkSynchronizer.createProposedTransactions".toZcashError(), false))
                         case let .failure(txIds, code, description):
-                            await send(.updateFailedData(code, description))
+                            await send(.updateFailedData(code, description, ""))
                             await send(.updateTxIdToExpand(txIds.last))
                             await send(.sendFailed("sdkSynchronizer.createProposedTransactions".toZcashError(), true))
                         case let .partial(txIds: txIds, statuses: statuses):
@@ -398,9 +399,12 @@ public struct SendConfirmation {
                     return .none
                 }
                 
-            case let .updateFailedData(code, desc):
+            case let .updateFailedData(code, desc, pcztMsg):
                 state.failedCode = code
                 state.failedDescription = desc
+                #if DEBUG
+                state.failedPcztMsg = pcztMsg
+                #endif
                 return .none
                 
             case .updateStackDestination(let destination):
@@ -412,16 +416,14 @@ public struct SendConfirmation {
                 
             case .reportTapped:
                 var supportData = SupportDataGenerator.generate()
-                if let code = state.failedCode, let desc = state.failedDescription {
-                    supportData.message =
-                    """
-                    \(code)
-                    
-                    \(desc)
-
-                    \(supportData.message)
-                    """
-                }
+                supportData.message =
+                """
+                \(state.failedCode ?? -1000) \(state.failedDescription ?? "")
+                
+                \(supportData.message)
+                
+                \(state.failedPcztMsg ?? "")
+                """
                 if state.canSendMail {
                     state.supportData = supportData
                 } else {
@@ -450,7 +452,7 @@ public struct SendConfirmation {
                 return .send(.updateStackDestination(.scan))
                 
             case .rejectTapped:
-                return .none
+                return .send(.resetPCZTs)
                 
             case .confirmWithKeystoneTapped:
                 return .concatenate(
@@ -484,7 +486,7 @@ public struct SendConfirmation {
                         let pczt = try await sdkSynchronizer.createPCZTFromProposal(account.id, proposal)
                         await send(.pcztResolved(pczt))
                     } catch {
-                        print(error)
+                        await send(.updateFailedData(-996, error.toZcashError().detailedMessage, ""))
                     }
                 }
                 
@@ -501,7 +503,7 @@ public struct SendConfirmation {
                         let pcztWithProofs = try await sdkSynchronizer.addProofsToPCZT(Pczt(pczt))
                         await send(.pcztWithProofsResolved(pcztWithProofs))
                     } catch {
-                        print(error)
+                        await send(.updateFailedData(-995, error.toZcashError().detailedMessage, ""))
                     }
                 }
                 
@@ -517,6 +519,21 @@ public struct SendConfirmation {
                 guard let pcztWithProofs = state.pcztWithProofs, let pcztWithSigs = state.pcztWithSigs else {
                     return .none
                 }
+                #if DEBUG
+                let pcztMessage =
+                """
+                original pczt:
+                \(state.pczt!.hexEncodedString())
+                
+                pcztWithProofs:
+                \(pcztWithProofs.hexEncodedString())
+                
+                pcztWithSigs:
+                \(pcztWithSigs.hexEncodedString())
+                """
+                #else
+                let pcztMessage = ""
+                #endif
                 return .run { send in
                     do {
                         let result = try await sdkSynchronizer.createTransactionFromPCZT(pcztWithProofs, pcztWithSigs)
@@ -526,14 +543,14 @@ public struct SendConfirmation {
 
                         switch result {
                         case .grpcFailure(let txIds):
-                            await send(.updateFailedData(-999, "grpcFailure"))
+                            await send(.updateFailedData(-999, "grpcFailure", pcztMessage))
                             await send(.updateTxIdToExpand(txIds.last))
                             await send(.sendFailed("sdkSynchronizer.createProposedTransactions".toZcashError(), false))
                         case let .failure(txIds, code, description):
                             if description.isEmpty {
-                                await send(.updateFailedData(-997, "result.failure \(txIds)"))
+                                await send(.updateFailedData(-997, "result.failure \(txIds)", pcztMessage))
                             } else {
-                                await send(.updateFailedData(code, description))
+                                await send(.updateFailedData(code, description, pcztMessage))
                             }
                             await send(.updateTxIdToExpand(txIds.last))
                             await send(.sendFailed("sdkSynchronizer.createProposedTransactions".toZcashError(), true))
@@ -546,7 +563,7 @@ public struct SendConfirmation {
                         }
                     } catch {
                         await send(.resetPCZTs)
-                        await send(.updateFailedData(-998, error.toZcashError().detailedMessage))
+                        await send(.updateFailedData(-998, error.toZcashError().detailedMessage, pcztMessage))
                         await send(.sendFailed(error.toZcashError(), true))
                     }
                 }
