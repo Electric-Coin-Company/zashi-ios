@@ -62,7 +62,7 @@ public struct BalancesView: View {
                 if walletStatus == .restoring {
                     Text(L10n.Balances.restoringWalletWarning)
                         .zFont(.medium, size: 10, style: Design.Utility.ErrorRed._600)
-                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 60)
                         .padding(.vertical, 20)
