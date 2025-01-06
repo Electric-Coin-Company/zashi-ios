@@ -21,7 +21,7 @@
                 {
                     "title": "Added:",
                     "bulletpoints": [
-                        "Zashi + Keystone Hardware Wallet integration is live!"
+                        "Zashi + Keystone Hardware Wallet integration is live!",
                         "Connect your Keystone wallet with Zashi.",
                         "Sign a transaction with your Keystone wallet.",
                         "Secure your shielded ZEC!"

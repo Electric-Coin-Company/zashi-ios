@@ -9,6 +9,7 @@ directly impact users rather than highlighting other crucial architectural updat
 ### Fixed
 - Appearance colors when mode changed.
 - Info text truncation removed on a balance tab.
+- What's new data are no longer corrupted.
 
 ## 1.3.1 build 1 (2024-12-24)
 
