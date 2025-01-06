@@ -10,6 +10,8 @@ import SwiftUI
 import Generated
 
 public struct InfoRow: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     let icon: Image
     let title: String
     
@@ -28,7 +30,7 @@ public struct InfoRow: View {
                 .padding(10)
                 .background {
                     Circle()
-                        .fill(Design.Surfaces.bgTertiary.color)
+                        .fill(Design.Surfaces.bgTertiary.color(colorScheme))
                 }
                 .padding(.trailing, 16)
             

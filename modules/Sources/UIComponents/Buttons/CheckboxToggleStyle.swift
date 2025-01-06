@@ -9,6 +9,8 @@ import SwiftUI
 import Generated
 
 public struct CheckboxToggleStyle: ToggleStyle {
+    @Environment(\.colorScheme) private var colorScheme
+    
     public init() { }
     
     public func makeBody(configuration: Configuration) -> some View {
@@ -16,7 +18,7 @@ public struct CheckboxToggleStyle: ToggleStyle {
             ZStack {
                 if configuration.isOn {
                     RoundedRectangle(cornerRadius: 4)
-                        .fill(Design.Checkboxes.onBg.color)
+                        .fill(Design.Checkboxes.onBg.color(colorScheme))
                         .frame(width: 16, height: 16)
                         .overlay {
                             Asset.Assets.check.image
@@ -24,11 +26,11 @@ public struct CheckboxToggleStyle: ToggleStyle {
                         }
                 } else {
                     RoundedRectangle(cornerRadius: 4)
-                        .fill(Design.Checkboxes.offBg.color)
+                        .fill(Design.Checkboxes.offBg.color(colorScheme))
                         .frame(width: 16, height: 16)
                         .background {
                             RoundedRectangle(cornerRadius: 4)
-                                .stroke(Design.Checkboxes.offStroke.color)
+                                .stroke(Design.Checkboxes.offStroke.color(colorScheme))
                         }
                 }
             }

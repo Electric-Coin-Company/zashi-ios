@@ -49,22 +49,22 @@ public struct TransactionState: Equatable, Identifiable {
     public var rawID: Data? = nil
     
     // UI Colors
-    public var balanceColor: Color {
+    public func balanceColor(_ colorScheme: ColorScheme) -> Color {
         status == .failed
-        ? Design.Utility.ErrorRed._600.color
+        ? Design.Utility.ErrorRed._600.color(colorScheme)
         : (isSpending || isShieldingTransaction)
-        ? Design.Utility.ErrorRed._600.color
+        ? Design.Utility.ErrorRed._600.color(colorScheme)
         : Asset.Colors.primary.color
     }
 
-    public var titleColor: Color {
+    public func titleColor(_ colorScheme: ColorScheme) -> Color {
         status == .failed
-        ? Design.Utility.ErrorRed._600.color
+        ? Design.Utility.ErrorRed._600.color(colorScheme)
         : isPending
         ? Asset.Colors.shade47.color
         : Asset.Colors.primary.color
     }
-    
+
     public var isUnread: Bool {
         // in case memos haven't been loaded yet
         // non-nil rawID represents unloaded memos state

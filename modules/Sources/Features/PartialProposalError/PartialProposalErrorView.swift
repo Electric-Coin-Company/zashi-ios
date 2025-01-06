@@ -12,6 +12,8 @@ import Generated
 import UIComponents
 
 public struct PartialProposalErrorView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     @Perception.Bindable var store: StoreOf<PartialProposalError>
     
     public init(store: StoreOf<PartialProposalError>) {
@@ -58,7 +60,7 @@ public struct PartialProposalErrorView: View {
                                 .truncationMode(.middle)
                                 .background {
                                     RoundedRectangle(cornerRadius: 10)
-                                        .fill(Design.Inputs.Default.bg.color)
+                                        .fill(Design.Inputs.Default.bg.color(colorScheme))
                                 }
                                 .padding(.bottom, 8)
                         }

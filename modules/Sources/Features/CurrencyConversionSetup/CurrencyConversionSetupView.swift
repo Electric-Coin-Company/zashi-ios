@@ -11,6 +11,7 @@ import Generated
 import UIComponents
 
 public struct CurrencyConversionSetupView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @Perception.Bindable var store: StoreOf<CurrencyConversionSetup>
     
     public init(store: StoreOf<CurrencyConversionSetup>) {
@@ -63,20 +64,20 @@ public struct CurrencyConversionSetupView: View {
                         
                         if option == store.currentSettingsOption {
                             Circle()
-                                .fill(Design.Checkboxes.onBg.color)
+                                .fill(Design.Checkboxes.onBg.color(colorScheme))
                                 .frame(width: 20, height: 20)
                                 .overlay {
                                     Circle()
-                                        .fill(Design.Checkboxes.onFg.color)
+                                        .fill(Design.Checkboxes.onFg.color(colorScheme))
                                         .frame(width: 10, height: 10)
                                 }
                         } else {
                             Circle()
-                                .fill(Design.Checkboxes.offBg.color)
+                                .fill(Design.Checkboxes.offBg.color(colorScheme))
                                 .frame(width: 20, height: 20)
                                 .overlay {
                                     Circle()
-                                        .stroke(Design.Checkboxes.offStroke.color)
+                                        .stroke(Design.Checkboxes.offStroke.color(colorScheme))
                                         .frame(width: 20, height: 20)
                                 }
                         }
@@ -85,7 +86,7 @@ public struct CurrencyConversionSetupView: View {
                     .padding(20)
                     .background {
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(Design.Surfaces.strokeSecondary.color)
+                            .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                     }
                 }
             }
@@ -163,8 +164,8 @@ extension CurrencyConversionSetupView {
                     RoundedRectangle(cornerRadius: 12)
                         .fill(
                             disabled
-                            ? Design.Btns.Primary.bgDisabled.color
-                            : Design.Btns.Primary.bg.color
+                            ? Design.Btns.Primary.bgDisabled.color(colorScheme)
+                            : Design.Btns.Primary.bg.color(colorScheme)
                         )
                 }
         }
@@ -228,7 +229,7 @@ extension CurrencyConversionSetupView {
             .padding(10)
             .background {
                 Circle()
-                    .fill(Design.Surfaces.bgTertiary.color)
+                    .fill(Design.Surfaces.bgTertiary.color(colorScheme))
             }
             .padding(.trailing, 16)
     }

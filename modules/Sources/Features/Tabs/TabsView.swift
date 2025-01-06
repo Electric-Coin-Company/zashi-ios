@@ -26,6 +26,8 @@ import AddKeystoneHWWallet
 import Scan
 
 public struct TabsView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     let networkType: NetworkType
     @Perception.Bindable var store: StoreOf<Tabs>
     let tokenName: String
@@ -98,7 +100,7 @@ public struct TabsView: View {
                                                 .foregroundColor(Asset.Colors.primary.color)
                                             Rectangle()
                                                 .frame(height: 2)
-                                                .foregroundColor(Design.Surfaces.brandBg.color)
+                                                .zForegroundColor(Design.Surfaces.brandBg)
                                                 .matchedGeometryEffect(id: "Tabs", in: tabsID, properties: .frame)
                                         } else {
                                             Text("\(item.title)")
@@ -274,7 +276,7 @@ public struct TabsView: View {
                                 .padding(8)
                                 .background {
                                     RoundedRectangle(cornerRadius: 12)
-                                        .fill(Design.Btns.Tertiary.bg.color)
+                                        .fill(Design.Btns.Tertiary.bg.color(colorScheme))
                                 }
                         }
                     }
@@ -317,7 +319,7 @@ public struct TabsView: View {
                                             .padding(10)
                                             .background {
                                                 Circle()
-                                                    .fill(Design.Surfaces.bgTertiary.color)
+                                                    .fill(Design.Surfaces.bgTertiary.color(colorScheme))
                                             }
                                             .padding(.trailing, 16)
                                         
@@ -354,17 +356,17 @@ public struct TabsView: View {
                                             .padding(.vertical, 12)
                                             .background {
                                                 RoundedRectangle(cornerRadius: 12)
-                                                    .fill(Design.Btns.Tertiary.bg.color)
+                                                    .fill(Design.Btns.Tertiary.bg.color(colorScheme))
                                             }
                                     }
                                 }
                                 .padding(24)
                                 .background {
                                     RoundedRectangle(cornerRadius: 12)
-                                        .fill(Design.Surfaces.bgPrimary.color)
+                                        .fill(Design.Surfaces.bgPrimary.color(colorScheme))
                                         .background {
                                             RoundedRectangle(cornerRadius: 12)
-                                                .stroke(Design.Surfaces.strokeSecondary.color)
+                                                .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                                         }
                                 }
                                 .frame(width: geometry.size.width - 40)

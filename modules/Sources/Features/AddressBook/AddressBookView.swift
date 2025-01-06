@@ -25,6 +25,7 @@ extension String {
 }
 
 public struct AddressBookView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @Perception.Bindable var store: StoreOf<AddressBook>
 
     public init(store: StoreOf<AddressBook>) {
@@ -138,23 +139,23 @@ public struct AddressBookView: View {
         ZStack {
             Asset.Assets.send.image
                 .zImage(size: 32, style: Design.Btns.Tertiary.fg)
-                .foregroundColor(Design.Btns.Tertiary.fg.color)
+                .zForegroundColor(Design.Btns.Tertiary.fg)
                 .background {
                     Circle()
-                        .fill(Design.Btns.Tertiary.bg.color)
+                        .fill(Design.Btns.Tertiary.bg.color(colorScheme))
                         .frame(width: 72, height: 72)
                 }
 
             ZcashSymbol()
                 .frame(width: 24, height: 24)
-                .foregroundColor(Design.Surfaces.bgPrimary.color)
+                .zForegroundColor(Design.Surfaces.bgPrimary)
                 .background {
                     Circle()
-                        .fill(Design.Surfaces.brandBg.color)
+                        .fill(Design.Surfaces.brandBg.color(colorScheme))
                         .frame(width: 32, height: 32)
                         .background {
                             Circle()
-                                .fill(Design.Surfaces.bgPrimary.color)
+                                .fill(Design.Surfaces.bgPrimary.color(colorScheme))
                                 .frame(width: 36, height: 36)
                         }
                 }
@@ -185,7 +186,7 @@ public struct AddressBookView: View {
                         }
                         
                         if let last = store.walletAccounts.last, last != walletAccount {
-                            Design.Surfaces.divider.color
+                            Design.Surfaces.divider.color(colorScheme)
                                 .frame(height: 1)
                                 .padding(.top, 12)
                                 .padding(.horizontal, 4)
@@ -209,7 +210,7 @@ public struct AddressBookView: View {
                     .padding(.top, 70)
                     .background {
                         RoundedRectangle(cornerRadius: 16)
-                            .stroke(Design.Surfaces.strokeSecondary.color, style: StrokeStyle(lineWidth: 2.0, dash: [8, 6]))
+                            .stroke(Design.Surfaces.strokeSecondary.color(colorScheme), style: StrokeStyle(lineWidth: 2.0, dash: [8, 6]))
                     }
                     .padding(.top, 24)
                     .screenHorizontalPadding()
@@ -234,7 +235,7 @@ public struct AddressBookView: View {
                     }
 
                     if let last = store.addressBookContacts.contacts.last, last != record {
-                        Design.Surfaces.divider.color
+                        Design.Surfaces.divider.color(colorScheme)
                             .frame(height: 1)
                             .padding(.top, 12)
                             .padding(.horizontal, 4)
@@ -263,7 +264,7 @@ public struct AddressBookView: View {
                     }
                     
                     if let last = store.walletAccounts.last, last != walletAccount {
-                        Design.Surfaces.divider.color
+                        Design.Surfaces.divider.color(colorScheme)
                             .frame(height: 1)
                             .padding(.top, 12)
                             .padding(.horizontal, 4)
@@ -297,7 +298,7 @@ public struct AddressBookView: View {
                         .padding(8)
                         .background {
                             Circle()
-                                .fill(Design.Surfaces.bgAlt.color)
+                                .fill(Design.Surfaces.bgAlt.color(colorScheme))
                         }
                         .padding(.trailing, 12)
                     
@@ -319,7 +320,7 @@ public struct AddressBookView: View {
                 .background {
                     if selected {
                         RoundedRectangle(cornerRadius: 16)
-                            .fill(Design.Surfaces.bgSecondary.color)
+                            .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                     }
                 }
             }

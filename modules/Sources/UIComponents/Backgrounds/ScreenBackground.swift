@@ -86,23 +86,27 @@ extension View {
     }
     
     public func applyErredScreenBackground() -> some View {
-        self.modifier(
+        @Environment(\.colorScheme) var colorScheme
+
+        return self.modifier(
             ScreenGradientBackgroundModifier(
                 stops: [
-                    Gradient.Stop(color: Design.Utility.WarningYellow._100.color, location: 0.0),
-                    Gradient.Stop(color: Design.screenBackground.color, location: 0.4)
+                    Gradient.Stop(color: Design.Utility.WarningYellow._100.color(colorScheme), location: 0.0),
+                    Gradient.Stop(color: Design.screenBackground.color(colorScheme), location: 0.4)
                 ]
             )
         )
     }
     
     public func applyBrandedScreenBackground() -> some View {
-        self.modifier(
+        @Environment(\.colorScheme) var colorScheme
+
+        return self.modifier(
             ScreenGradientBackgroundModifier(
                 stops: [
-                    Gradient.Stop(color: Design.Utility.Brand._600.color, location: 0.0),
-                    Gradient.Stop(color: Design.Utility.Brand._400.color, location: 0.5),
-                    Gradient.Stop(color: Design.screenBackground.color, location: 0.75)
+                    Gradient.Stop(color: Design.Utility.Brand._600.color(colorScheme), location: 0.0),
+                    Gradient.Stop(color: Design.Utility.Brand._400.color(colorScheme), location: 0.5),
+                    Gradient.Stop(color: Design.screenBackground.color(colorScheme), location: 0.75)
                 ]
             )
         )
@@ -115,22 +119,26 @@ extension View {
     }
     
     public func applySuccessScreenBackground() -> some View {
-        self.modifier(
+        @Environment(\.colorScheme) var colorScheme
+
+        return self.modifier(
             ScreenGradientBackgroundModifier(
                 stops: [
-                    Gradient.Stop(color: Design.Utility.SuccessGreen._100.color, location: 0.0),
-                    Gradient.Stop(color: Design.screenBackground.color, location: 0.4)
+                    Gradient.Stop(color: Design.Utility.SuccessGreen._100.color(colorScheme), location: 0.0),
+                    Gradient.Stop(color: Design.screenBackground.color(colorScheme), location: 0.4)
                 ]
             )
         )
     }
     
     public func applyFailureScreenBackground() -> some View {
-        self.modifier(
+        @Environment(\.colorScheme) var colorScheme
+
+        return self.modifier(
             ScreenGradientBackgroundModifier(
                 stops: [
-                    Gradient.Stop(color: Design.Utility.ErrorRed._100.color, location: 0.0),
-                    Gradient.Stop(color: Design.screenBackground.color, location: 0.4)
+                    Gradient.Stop(color: Design.Utility.ErrorRed._100.color(colorScheme), location: 0.0),
+                    Gradient.Stop(color: Design.screenBackground.color(colorScheme), location: 0.4)
                 ]
             )
         )

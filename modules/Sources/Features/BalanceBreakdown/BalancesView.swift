@@ -19,6 +19,7 @@ import WalletBalances
 import Combine
 
 public struct BalancesView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @Perception.Bindable var store: StoreOf<Balances>
     let tokenName: String
     
@@ -54,7 +55,7 @@ public struct BalancesView: View {
                     .padding(.horizontal, store.isHintBoxVisible ? 15 : 30)
                     .background {
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(Design.Surfaces.strokePrimary.color)
+                            .stroke(Design.Surfaces.strokePrimary.color(colorScheme))
                     }
                     .padding(.horizontal, 30)
 

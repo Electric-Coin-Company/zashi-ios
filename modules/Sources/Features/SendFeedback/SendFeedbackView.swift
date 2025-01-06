@@ -12,6 +12,8 @@ import UIComponents
 import Utils
 
 public struct SendFeedbackView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     @Perception.Bindable var store: StoreOf<SendFeedback>
     
     public init(store: StoreOf<SendFeedback>) {
@@ -44,13 +46,13 @@ public struct SendFeedbackView: View {
                                     .frame(maxWidth: .infinity)
                                     .background {
                                         RoundedRectangle(cornerRadius: 12)
-                                            .fill(Design.Surfaces.bgSecondary.color)
+                                            .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                                     }
                                     .padding(3)
                                     .overlay {
                                         if let selectedRating = store.selectedRating, selectedRating == rating {
                                             RoundedRectangle(cornerRadius: 14)
-                                                .stroke(Design.Text.primary.color)
+                                                .stroke(Design.Text.primary.color(colorScheme))
                                         }
                                     }
                             }

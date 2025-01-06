@@ -16,6 +16,8 @@ import PartialProposalError
 import Scan
 
 public struct SendConfirmationView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     @Perception.Bindable var store: StoreOf<SendConfirmation>
     let tokenName: String
     
@@ -78,7 +80,7 @@ public struct SendConfirmationView: View {
                                             .frame(width: 24, height: 24)
                                             .background {
                                                 Circle()
-                                                    .fill(Design.Surfaces.bgAlt.color)
+                                                    .fill(Design.Surfaces.bgAlt.color(colorScheme))
                                                     .frame(width: 32, height: 32)
                                             }
                                         
@@ -149,7 +151,7 @@ public struct SendConfirmationView: View {
                             .padding()
                             .background {
                                 RoundedRectangle(cornerRadius: 10)
-                                    .fill(Design.Inputs.Filled.bg.color)
+                                    .fill(Design.Inputs.Filled.bg.color(colorScheme))
                             }
                         }
                         .screenHorizontalPadding()

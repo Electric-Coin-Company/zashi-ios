@@ -11,6 +11,7 @@ import ZcashLightClientKit
 import UIComponents
 
 public struct TransactionFeeView: View {
+    @Environment(\.colorScheme) private var colorScheme
     let fee: Zatoshi
 
     public init(fee: Zatoshi) {
@@ -36,7 +37,7 @@ public struct TransactionFeeView: View {
             .foregroundColor(
                 fee.amount == 0
                 ? Asset.Colors.shade47.color
-                : Design.Utility.ErrorRed._600.color
+                : Design.Utility.ErrorRed._600.color(colorScheme)
             )
             .fixedSize()
         }

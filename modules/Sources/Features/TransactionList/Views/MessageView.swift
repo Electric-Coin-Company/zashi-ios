@@ -11,6 +11,7 @@ import ComposableArchitecture
 import Generated
 
 struct MessageView: View {
+    @Environment(\.colorScheme) private var colorScheme
     let store: StoreOf<TransactionList>
 
     let messages: [String]?
@@ -48,7 +49,7 @@ struct MessageView: View {
                                 .font(.custom(FontFamily.Inter.regular.name, size: 13))
                                 .foregroundColor(
                                     isFailed ?
-                                    Design.Utility.ErrorRed._600.color
+                                    Design.Utility.ErrorRed._600.color(colorScheme)
                                     : Asset.Colors.primary.color
                                 )
                                 .conditionalStrikethrough(isFailed)
@@ -56,7 +57,7 @@ struct MessageView: View {
                         }
                         .background {
                             RoundedRectangle(cornerRadius: 12)
-                                .stroke(Design.Surfaces.strokePrimary.color)
+                                .stroke(Design.Surfaces.strokePrimary.color(colorScheme))
                         }
                         
                         if store.featureFlags.selectText {

@@ -14,6 +14,8 @@ import BalanceFormatter
 import WalletBalances
 
 public struct SendFlowView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     private enum InputID: Hashable {
         case message
         case addressBookHint
@@ -163,7 +165,7 @@ public struct SendFlowView: View {
                                                 .padding(10)
                                                 .background {
                                                     RoundedRectangle(cornerRadius: 8)
-                                                        .fill(Design.Utility.Gray._50.color)
+                                                        .fill(Design.Utility.Gray._50.color(colorScheme))
                                                 }
                                             }
                                         }
@@ -237,7 +239,7 @@ public struct SendFlowView: View {
                             .frame(height: 40)
                             .background {
                                 RoundedRectangle(cornerRadius: 8)
-                                    .fill(Design.HintTooltips.surfacePrimary.color)
+                                    .fill(Design.HintTooltips.surfacePrimary.color(colorScheme))
                             }
                             .frame(width: geometry.size.width - 48)
                             .offset(x: 24, y: geometry[$0].minY + geometry[$0].height - 16)
@@ -287,10 +289,10 @@ public struct SendFlowView: View {
         .padding(8)
         .background {
             RoundedRectangle(cornerRadius: 8)
-                .fill(Design.Btns.Secondary.bg.color)
+                .fill(Design.Btns.Secondary.bg.color(colorScheme))
                 .overlay {
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(Design.Btns.Secondary.border.color)
+                        .stroke(Design.Btns.Secondary.border.color(colorScheme))
                 }
         }
     }

@@ -9,6 +9,8 @@ import SwiftUI
 import Generated
 
 public struct ContactView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     var iconText: String
     var title: String
     var desc: String?
@@ -35,24 +37,24 @@ public struct ContactView: View {
                     Text(iconText)
                         .minimumScaleFactor(0.5)
                         .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
-                        .foregroundColor(Design.Avatars.textFg.color)
+                        .zForegroundColor(Design.Avatars.textFg)
                         .frame(width: 20, height: 20)
                         .padding(10)
                         .background {
                             Circle()
-                                .fill(Design.Avatars.bg.color)
+                                .fill(Design.Avatars.bg.color(colorScheme))
                         }
                         .padding(.trailing, 16)
                     
                     VStack(alignment: .leading, spacing: 0) {
                         Text(title)
                             .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
-                            .foregroundColor(Design.Text.primary.color)
+                            .zForegroundColor(Design.Text.primary)
                         
                         if let desc {
                             Text(desc)
                                 .font(.custom(FontFamily.Inter.regular.name, size: 14))
-                                .foregroundColor(Design.Text.tertiary.color)
+                                .zForegroundColor(Design.Text.tertiary)
                                 .lineLimit(1)
                                 .truncationMode(.middle)
                                 .padding(.top, 2)

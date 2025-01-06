@@ -13,6 +13,8 @@ import MnemonicSwift
 import Utils
 
 public struct RecoveryPhraseDisplayView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     enum Constants {
         static let blurValue = 15.0
         static let blurBDValue = 10.0
@@ -71,7 +73,7 @@ public struct RecoveryPhraseDisplayView: View {
                     .padding(.horizontal, 16)
                     .background {
                         RoundedRectangle(cornerRadius: 24)
-                            .fill(Design.Surfaces.bgSecondary.color)
+                            .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                     }
                     .onTapGesture {
                         if !store.showBackButton {
@@ -124,7 +126,7 @@ public struct RecoveryPhraseDisplayView: View {
                         }
                         .background {
                             RoundedRectangle(cornerRadius: 10)
-                                .fill(Design.Surfaces.bgSecondary.color)
+                                .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                         }
                         .padding(.top, 6)
                     }

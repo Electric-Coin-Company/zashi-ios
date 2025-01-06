@@ -14,6 +14,7 @@ import UIComponents
 import Utils
 
 public struct ZecKeyboardView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @Perception.Bindable var store: StoreOf<ZecKeyboard>
     
     let tokenName: String
@@ -46,16 +47,16 @@ public struct ZecKeyboardView: View {
                         if store.isInputInZec {
                             Text(store.humanReadableMainInput)
                             + Text(" \(tokenName)")
-                                .foregroundColor(Design.Text.quaternary.color)
+                                .foregroundColor(Design.Text.quaternary.color(colorScheme))
                         } else {
                             if store.isCurrencySymbolPrefix {
                                 Text(store.localeCurrencySymbol)
-                                    .foregroundColor(Design.Text.quaternary.color)
+                                    .foregroundColor(Design.Text.quaternary.color(colorScheme))
                                 + Text(store.humanReadableMainInput)
                             } else {
                                 Text(store.humanReadableMainInput)
                                 + Text(" \(store.localeCurrencySymbol)")
-                                    .foregroundColor(Design.Text.quaternary.color)
+                                    .foregroundColor(Design.Text.quaternary.color(colorScheme))
                             }
                         }
                     }
@@ -76,17 +77,17 @@ public struct ZecKeyboardView: View {
                             if store.isInputInZec {
                                 if store.isCurrencySymbolPrefix {
                                     Text(store.localeCurrencySymbol)
-                                        .foregroundColor(Design.Text.quaternary.color)
+                                        .foregroundColor(Design.Text.quaternary.color(colorScheme))
                                     + Text(store.humanReadableConvertedInput)
                                 } else {
                                     Text(store.humanReadableConvertedInput)
                                     + Text(" \(store.localeCurrencySymbol)")
-                                        .foregroundColor(Design.Text.quaternary.color)
+                                        .foregroundColor(Design.Text.quaternary.color(colorScheme))
                                 }
                             } else {
                                 Text(store.humanReadableConvertedInput)
                                 + Text(" \(tokenName)")
-                                    .foregroundColor(Design.Text.quaternary.color)
+                                    .foregroundColor(Design.Text.quaternary.color(colorScheme))
                             }
                         }
                         .zFont(.medium, size: 18, style: Design.Text.primary)
@@ -100,7 +101,7 @@ public struct ZecKeyboardView: View {
                                 .padding(8)
                                 .background {
                                     RoundedRectangle(cornerRadius: 12)
-                                        .fill(Design.Btns.Tertiary.bg.color)
+                                        .fill(Design.Btns.Tertiary.bg.color(colorScheme))
                                 }
                                 .rotationEffect(Angle(degrees: 90))
                         }

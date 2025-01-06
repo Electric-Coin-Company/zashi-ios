@@ -55,7 +55,7 @@ public struct ReceiveView: View {
                             postfixIcon: Asset.Assets.Icons.shieldTickFilled.image,
                             iconFg: Design.Utility.Indigo._800,
                             iconBg: Design.Utility.Indigo._100,
-                            bcgColor: Design.Utility.Indigo._50.color,
+                            bcgColor: Design.Utility.Indigo._50.color(colorScheme),
                             expanded: store.currentFocus == .uaAddress
                         ) {
                             store.send(.copyToPastboard(store.unifiedAddress.redacted))
@@ -76,7 +76,7 @@ public struct ReceiveView: View {
                                 address: transparentAddress,
                                 iconFg: Design.Text.primary,
                                 iconBg: Design.Surfaces.bgTertiary,
-                                bcgColor: Design.Utility.Gray._50.color,
+                                bcgColor: Design.Utility.Gray._50.color(colorScheme),
                                 expanded: store.currentFocus == .tAddress
                             ) {
                                 store.send(.copyToPastboard(store.transparentAddress.redacted))
@@ -97,7 +97,7 @@ public struct ReceiveView: View {
                             postfixIcon: Asset.Assets.Icons.shieldTickFilled.image,
                             iconFg: Design.Utility.Purple._800,
                             iconBg: Design.Utility.Purple._100,
-                            bcgColor: Design.Utility.Purple._50.color,
+                            bcgColor: Design.Utility.Purple._50.color(colorScheme),
                             expanded: store.currentFocus == .uaAddress
                         ) {
                             store.send(.copyToPastboard(store.unifiedAddress.redacted))
@@ -117,7 +117,7 @@ public struct ReceiveView: View {
                             address: store.transparentAddress,
                             iconFg: Design.Text.primary,
                             iconBg: Design.Surfaces.bgTertiary,
-                            bcgColor: Design.Utility.Gray._50.color,
+                            bcgColor: Design.Utility.Gray._50.color(colorScheme),
                             expanded: store.currentFocus == .tAddress
                         ) {
                             store.send(.copyToPastboard(store.transparentAddress.redacted))
@@ -204,15 +204,27 @@ public struct ReceiveView: View {
             
             if expanded {
                 HStack(spacing: 8) {
-                    button(L10n.Receive.copy, fill: iconBg.color, icon: Asset.Assets.copy.image) {
+                    button(
+                        L10n.Receive.copy,
+                        fill: iconBg.color(colorScheme),
+                        icon: Asset.Assets.copy.image
+                    ) {
                         copyAction()
                     }
                     
-                    button(L10n.Receive.qrCode, fill: iconBg.color, icon: Asset.Assets.Icons.qr.image) {
+                    button(
+                        L10n.Receive.qrCode,
+                        fill: iconBg.color(colorScheme),
+                        icon: Asset.Assets.Icons.qr.image
+                    ) {
                         qrAction()
                     }
                     
-                    button(L10n.Receive.request, fill: iconBg.color, icon: Asset.Assets.Icons.coinsHand.image) {
+                    button(
+                        L10n.Receive.request,
+                        fill: iconBg.color(colorScheme),
+                        icon: Asset.Assets.Icons.coinsHand.image
+                    ) {
                         requestAction()
                     }
                 }

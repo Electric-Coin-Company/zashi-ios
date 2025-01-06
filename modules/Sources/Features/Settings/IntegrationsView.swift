@@ -14,6 +14,8 @@ import UIComponents
 import Flexa
 
 public struct IntegrationsView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     @Perception.Bindable var store: StoreOf<Integrations>
     
     @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
@@ -96,7 +98,7 @@ public struct IntegrationsView: View {
                 .padding(24)
                 .background {
                     RoundedRectangle(cornerRadius: 20)
-                        .fill(Design.Surfaces.bgSecondary.color)
+                        .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                 }
                 .padding(.bottom, 24)
                 .screenHorizontalPadding()

@@ -11,6 +11,8 @@ import Generated
 import UIComponents
 
 public struct WalletBalancesView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     @Perception.Bindable var store: StoreOf<WalletBalances>
     let tokenName: String
     let underlinedAvailableBalance: Bool
@@ -140,9 +142,9 @@ public struct WalletBalancesView: View {
                             .padding(.horizontal, 6)
                             .background {
                                 RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Design.Surfaces.strokePrimary.color)
+                                    .stroke(Design.Surfaces.strokePrimary.color(colorScheme))
                                     .background {
-                                        Design.Surfaces.bgSecondary.color
+                                        Design.Surfaces.bgSecondary.color(colorScheme)
                                             .cornerRadius(10)
                                     }
                             }

@@ -115,8 +115,8 @@ public struct ServerSetupView: View {
                                         .frame(maxWidth: .infinity)
                                         .background(
                                             store.selectedServer == nil
-                                            ? Design.Btns.Primary.bgDisabled.color
-                                            : Design.Btns.Primary.bg.color
+                                            ? Design.Btns.Primary.bgDisabled.color(colorScheme)
+                                            : Design.Btns.Primary.bg.color(colorScheme)
                                         )
                                         .cornerRadius(10)
                                         .screenHorizontalPadding()
@@ -131,8 +131,8 @@ public struct ServerSetupView: View {
                                             .frame(maxWidth: .infinity)
                                             .background(
                                                 store.selectedServer == nil
-                                                ? Design.Btns.Primary.bgDisabled.color
-                                                : Design.Btns.Primary.bg.color
+                                                ? Design.Btns.Primary.bgDisabled.color(colorScheme)
+                                                : Design.Btns.Primary.bg.color(colorScheme)
                                             )
                                             .cornerRadius(10)
                                             .screenHorizontalPadding()
@@ -171,7 +171,7 @@ public struct ServerSetupView: View {
                                 WithPerceptionTracking {
                                     if server.value(for: store.network) == store.activeServer && store.selectedServer == nil {
                                         Circle()
-                                            .fill(Design.Surfaces.brandBg.color)
+                                            .fill(Design.Surfaces.brandBg.color(colorScheme))
                                             .frame(width: 20, height: 20)
                                             .overlay {
                                                 Asset.Assets.check.image
@@ -179,7 +179,7 @@ public struct ServerSetupView: View {
                                             }
                                     } else if server.value(for: store.network) == store.selectedServer {
                                         Circle()
-                                            .fill(Design.Checkboxes.onBg.color)
+                                            .fill(Design.Checkboxes.onBg.color(colorScheme))
                                             .frame(width: 20, height: 20)
                                             .overlay {
                                                 Asset.Assets.check.image
@@ -187,11 +187,11 @@ public struct ServerSetupView: View {
                                             }
                                     } else {
                                         Circle()
-                                            .fill(Design.Checkboxes.offBg.color)
+                                            .fill(Design.Checkboxes.offBg.color(colorScheme))
                                             .frame(width: 20, height: 20)
                                             .overlay {
                                                 Circle()
-                                                    .stroke(Design.Checkboxes.offStroke.color)
+                                                    .stroke(Design.Checkboxes.offStroke.color(colorScheme))
                                                     .frame(width: 20, height: 20)
                                             }
                                     }
@@ -223,11 +223,11 @@ public struct ServerSetupView: View {
                                                 .padding(.leading, 10)
                                                 .background {
                                                     RoundedRectangle(cornerRadius: 8)
-                                                        .fill(Design.Surfaces.bgPrimary.color)
+                                                        .fill(Design.Surfaces.bgPrimary.color(colorScheme))
                                                 }
                                                 .overlay {
                                                     RoundedRectangle(cornerRadius: 8)
-                                                        .stroke(Design.Inputs.Default.stroke.color, lineWidth: 1)
+                                                        .stroke(Design.Inputs.Default.stroke.color(colorScheme), lineWidth: 1)
                                                 }
                                                 .padding(.vertical, 8)
                                         }
@@ -267,7 +267,7 @@ public struct ServerSetupView: View {
                                 RoundedRectangle(cornerRadius: 12)
                                     .fill(
                                         server.value(for: store.network) == store.selectedServer
-                                        ? Design.Surfaces.bgSecondary.color
+                                        ? Design.Surfaces.bgSecondary.color(colorScheme)
                                         : Asset.Colors.background.color
                                     )
                             }
@@ -279,7 +279,7 @@ public struct ServerSetupView: View {
                     .padding(.leading, 8)
 
                     if let last = servers.last, last != server {
-                        Design.Surfaces.divider.color
+                        Design.Surfaces.divider.color(colorScheme)
                             .frame(height: 1)
                     }
                 }
@@ -306,12 +306,12 @@ public struct ServerSetupView: View {
             .frame(height: 20)
             .padding(.horizontal, 10)
             .padding(.vertical, 2)
-            .background(Design.Utility.SuccessGreen._50.color)
+            .zBackground(Design.Utility.SuccessGreen._50)
             .cornerRadius(16)
             .overlay {
                 RoundedRectangle(cornerRadius: 16)
                     .inset(by: 0.5)
-                    .stroke(Design.Utility.SuccessGreen._200.color, lineWidth: 1)
+                    .stroke(Design.Utility.SuccessGreen._200.color(colorScheme), lineWidth: 1)
             }
     }
     

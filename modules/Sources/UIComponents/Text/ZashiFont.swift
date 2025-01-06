@@ -39,7 +39,7 @@ public struct ZashiFontModifier: ViewModifier {
     public func body(content: Content) -> some View {
         content
             .font(.custom(fontName(weight, addressFont: addressFont), size: size))
-            .foregroundColor(style.color)
+            .zForegroundColor(style)
     }
     
     private func fontName(_ weight: FontWeight, addressFont: Bool = false) -> String {

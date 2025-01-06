@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Fixed
+- Appearance colors when mode changed.
+
 ## 1.3.1 build 1 (2024-12-24)
 
 ### Fixed

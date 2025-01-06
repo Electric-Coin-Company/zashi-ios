@@ -19,7 +19,7 @@ public extension Image {
             .resizable()
             .renderingMode(.template)
             .frame(width: width, height: height)
-            .foregroundColor(style.color)
+            .zForegroundColor(style)
     }
     
     func zImage(
@@ -42,7 +42,7 @@ public extension Image {
             .resizable()
             .renderingMode(.template)
             .frame(width: size, height: size)
-            .foregroundColor(style.color)
+            .zForegroundColor(style)
     }
     
     func zImage(

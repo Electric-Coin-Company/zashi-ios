@@ -13,6 +13,8 @@ import Utils
 import RestoreInfo
 
 public struct ImportWalletView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     private enum InputID: Hashable {
         case seed
     }
@@ -51,7 +53,7 @@ public struct ImportWalletView: View {
                                 .padding(8)
                                 .background {
                                     RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Design.Surfaces.strokePrimary.color)
+                                        .stroke(Design.Surfaces.strokePrimary.color(colorScheme))
                                 }
                                 .colorBackground(Asset.Colors.background.color)
                                 .frame(minWidth: 270)

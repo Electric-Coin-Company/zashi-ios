@@ -12,6 +12,8 @@ import Models
 import UIComponents
 
 struct TransactionHeaderView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     let store: StoreOf<TransactionList>
     let transaction: TransactionState
     let isLatestTransaction: Bool
@@ -116,7 +118,7 @@ struct TransactionHeaderView: View {
                 true: .custom(FontFamily.Inter.boldItalic.name, size: 13),
                 else: .custom(FontFamily.Inter.bold.name, size: 13)
             )
-            .foregroundColor(transaction.titleColor)
+            .foregroundColor(transaction.titleColor(colorScheme))
             .padding(.trailing, 8)
     }
 
@@ -149,7 +151,7 @@ struct TransactionHeaderView: View {
             strikethrough: transaction.status == .failed,
             couldBeHidden: true
         )
-        .foregroundColor(transaction.balanceColor)
+        .foregroundColor(transaction.balanceColor(colorScheme))
     }
 }
 

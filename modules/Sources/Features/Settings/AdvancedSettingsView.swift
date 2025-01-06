@@ -19,6 +19,8 @@ import CurrencyConversionSetup
 import Flexa
 
 public struct AdvancedSettingsView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     @Perception.Bindable var store: StoreOf<AdvancedSettings>
     
     public init(store: StoreOf<AdvancedSettings>) {
@@ -121,10 +123,10 @@ public struct AdvancedSettingsView: View {
                         .padding(.vertical, 12)
                         .background {
                             RoundedRectangle(cornerRadius: 12)
-                                .fill(Design.Btns.Destructive1.bg.color)
+                                .fill(Design.Btns.Destructive1.bg.color(colorScheme))
                                 .overlay {
                                     RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Design.Btns.Destructive1.border.color)
+                                        .stroke(Design.Btns.Destructive1.border.color(colorScheme))
                                 }
                         }
                 }

@@ -11,6 +11,7 @@ import Generated
 
 public struct ActionRow<AccessoryContent>: View where AccessoryContent: View {
     @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.colorScheme) private var colorScheme
     
     let icon: Image
     let title: String
@@ -64,8 +65,8 @@ public struct ActionRow<AccessoryContent>: View where AccessoryContent: View {
                             .background {
                                 Circle()
                                     .fill(isEnabled
-                                          ? Design.Surfaces.bgTertiary.color
-                                          : Design.Surfaces.bgSecondary.color)
+                                          ? Design.Surfaces.bgTertiary.color(colorScheme)
+                                          : Design.Surfaces.bgSecondary.color(colorScheme))
                             }
                             .padding(.trailing, 16)
                     }
@@ -111,7 +112,7 @@ public struct ActionRow<AccessoryContent>: View where AccessoryContent: View {
                 .padding(.horizontal, horizontalPadding)
 
                 if divider {
-                    Design.Surfaces.divider.color
+                    Design.Surfaces.divider.color(colorScheme)
                         .frame(height: 1)
                         .padding(.top, 12)
                 }
