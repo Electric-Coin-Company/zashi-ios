@@ -83,7 +83,6 @@ public struct BalancesView: View {
                     }
                 )
             }
-            .walletStatusPanel()
         }
         .navigationBarTitleDisplayMode(.inline)
         .padding(.vertical, 1)
