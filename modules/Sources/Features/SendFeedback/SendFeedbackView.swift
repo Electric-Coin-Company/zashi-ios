@@ -111,7 +111,7 @@ public struct SendFeedbackView: View {
 
 extension SendFeedbackView {
     @ViewBuilder func shareView() -> some View {
-        if let message = store.messageToBeShared{
+        if let message = store.messageToBeShared {
             UIShareDialogView(activityItems: [
                 ShareableMessage(
                     title: L10n.SendFeedback.Share.title,

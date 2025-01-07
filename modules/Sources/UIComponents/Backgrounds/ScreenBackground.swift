@@ -21,14 +21,59 @@ public struct ScreenBackgroundModifier: ViewModifier {
     }
 }
 
-struct ScreenGradientBackground: View {
+public struct ScreenGradientBackground: View {
     @Environment(\.colorScheme) var colorScheme
-    
-    let stops: [Gradient.Stop]
 
-    var body: some View {
+    public enum Mode {
+        case branded
+        case erred
+        case failure
+        case onboardingDark
+        case onboardingLight
+        case success
+
+        public func stops(_ colorScheme: ColorScheme) -> [Gradient.Stop] {
+            switch self {
+            case .branded:
+                return [
+                    Gradient.Stop(color: Design.Utility.Brand._600.color(colorScheme), location: 0.0),
+                    Gradient.Stop(color: Design.Utility.Brand._400.color(colorScheme), location: 0.5),
+                    Gradient.Stop(color: Design.screenBackground.color(colorScheme), location: 0.75)
+                ]
+            case .erred:
+                return [
+                    Gradient.Stop(color: Design.Utility.WarningYellow._100.color(colorScheme), location: 0.0),
+                    Gradient.Stop(color: Design.screenBackground.color(colorScheme), location: 0.4)
+                ]
+            case .failure:
+                return [
+                    Gradient.Stop(color: Design.Utility.ErrorRed._100.color(colorScheme), location: 0.0),
+                    Gradient.Stop(color: Design.screenBackground.color(colorScheme), location: 0.4)
+                ]
+            case .onboardingDark:
+                return [
+                    Gradient.Stop(color: Asset.Colors.ZDesign.sharkShades06dp.color, location: 0.0),
+                    Gradient.Stop(color: Asset.Colors.ZDesign.Base.obsidian.color, location: 1.0)
+                ]
+            case .onboardingLight:
+                return [
+                    Gradient.Stop(color: Asset.Colors.ZDesign.Base.concrete.color, location: 0.0),
+                    Gradient.Stop(color: Asset.Colors.ZDesign.Base.bone.color, location: 1.0)
+                ]
+            case .success:
+                return [
+                    Gradient.Stop(color: Design.Utility.SuccessGreen._100.color(colorScheme), location: 0.0),
+                    Gradient.Stop(color: Design.screenBackground.color(colorScheme), location: 0.4)
+                ]
+            }
+        }
+    }
+    
+    let mode: Mode
+
+    public var body: some View {
         LinearGradient(
-            stops: stops,
+            stops: mode.stops(colorScheme),
             startPoint: .top,
             endPoint: .bottom
         )
@@ -36,11 +81,11 @@ struct ScreenGradientBackground: View {
 }
 
 struct ScreenGradientBackgroundModifier: ViewModifier {
-    let stops: [Gradient.Stop]
+    let mode: ScreenGradientBackground.Mode
 
     func body(content: Content) -> some View {
         ZStack {
-            ScreenGradientBackground(stops: stops)
+            ScreenGradientBackground(mode: mode)
                 .edgesIgnoringSafeArea(.all)
             
             content
@@ -53,23 +98,10 @@ struct ScreenOnboardingGradientBackgroundModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         ZStack {
-            if colorScheme == .light {
-                ScreenGradientBackground(
-                    stops: [
-                        Gradient.Stop(color: Asset.Colors.ZDesign.Base.concrete.color, location: 0.0),
-                        Gradient.Stop(color: Asset.Colors.ZDesign.Base.bone.color, location: 1.0)
-                    ]
-                )
-                .edgesIgnoringSafeArea(.all)
-            } else {
-                ScreenGradientBackground(
-                    stops: [
-                        Gradient.Stop(color: Asset.Colors.ZDesign.sharkShades06dp.color, location: 0.0),
-                        Gradient.Stop(color: Asset.Colors.ZDesign.Base.obsidian.color, location: 1.0)
-                    ]
-                )
-                .edgesIgnoringSafeArea(.all)
-            }
+            ScreenGradientBackground(
+                mode: colorScheme == .light ? .onboardingLight : .onboardingDark
+            )
+            .edgesIgnoringSafeArea(.all)
             
             content
         }
@@ -78,7 +110,7 @@ struct ScreenOnboardingGradientBackgroundModifier: ViewModifier {
 
 extension View {
     public func applyScreenBackground() -> some View {
-        self.modifier(
+        modifier(
             ScreenBackgroundModifier(
                 color: Asset.Colors.background.color
             )
@@ -86,29 +118,14 @@ extension View {
     }
     
     public func applyErredScreenBackground() -> some View {
-        @Environment(\.colorScheme) var colorScheme
-
-        return self.modifier(
-            ScreenGradientBackgroundModifier(
-                stops: [
-                    Gradient.Stop(color: Design.Utility.WarningYellow._100.color(colorScheme), location: 0.0),
-                    Gradient.Stop(color: Design.screenBackground.color(colorScheme), location: 0.4)
-                ]
-            )
+        modifier(
+            ScreenGradientBackgroundModifier(mode: .erred)
         )
     }
     
     public func applyBrandedScreenBackground() -> some View {
-        @Environment(\.colorScheme) var colorScheme
-
-        return self.modifier(
-            ScreenGradientBackgroundModifier(
-                stops: [
-                    Gradient.Stop(color: Design.Utility.Brand._600.color(colorScheme), location: 0.0),
-                    Gradient.Stop(color: Design.Utility.Brand._400.color(colorScheme), location: 0.5),
-                    Gradient.Stop(color: Design.screenBackground.color(colorScheme), location: 0.75)
-                ]
-            )
+        modifier(
+            ScreenGradientBackgroundModifier(mode: .branded)
         )
     }
     
@@ -119,28 +136,14 @@ extension View {
     }
     
     public func applySuccessScreenBackground() -> some View {
-        @Environment(\.colorScheme) var colorScheme
-
-        return self.modifier(
-            ScreenGradientBackgroundModifier(
-                stops: [
-                    Gradient.Stop(color: Design.Utility.SuccessGreen._100.color(colorScheme), location: 0.0),
-                    Gradient.Stop(color: Design.screenBackground.color(colorScheme), location: 0.4)
-                ]
-            )
+        modifier(
+            ScreenGradientBackgroundModifier(mode: .success)
         )
     }
     
     public func applyFailureScreenBackground() -> some View {
-        @Environment(\.colorScheme) var colorScheme
-
-        return self.modifier(
-            ScreenGradientBackgroundModifier(
-                stops: [
-                    Gradient.Stop(color: Design.Utility.ErrorRed._100.color(colorScheme), location: 0.0),
-                    Gradient.Stop(color: Design.screenBackground.color(colorScheme), location: 0.4)
-                ]
-            )
+        modifier(
+            ScreenGradientBackgroundModifier(mode: .failure)
         )
     }
 }
