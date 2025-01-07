@@ -176,23 +176,25 @@ public struct AddressBookView: View {
                     .listBackground()
 
                 ForEach(store.walletAccounts, id: \.self) { walletAccount in
-                    VStack {
-                        walletAcoountView(
-                            icon: walletAccount.vendor.icon(),
-                            title: walletAccount.vendor.name(),
-                            address: walletAccount.unifiedAddress ?? L10n.Receive.Error.cantExtractUnifiedAddress
-                        ) {
-                            store.send(.walletAccountTapped(walletAccount))
+                    if walletAccount != store.selectedWalletAccount {
+                        VStack {
+                            walletAccountView(
+                                icon: walletAccount.vendor.icon(),
+                                title: walletAccount.vendor.name(),
+                                address: walletAccount.unifiedAddress ?? L10n.Receive.Error.cantExtractUnifiedAddress
+                            ) {
+                                store.send(.walletAccountTapped(walletAccount))
+                            }
+                            
+                            if let last = store.walletAccounts.last, last != walletAccount {
+                                Design.Surfaces.divider.color(colorScheme)
+                                    .frame(height: 1)
+                                    .padding(.top, 12)
+                                    .padding(.horizontal, 4)
+                            }
                         }
-                        
-                        if let last = store.walletAccounts.last, last != walletAccount {
-                            Design.Surfaces.divider.color(colorScheme)
-                                .frame(height: 1)
-                                .padding(.top, 12)
-                                .padding(.horizontal, 4)
-                        }
+                        .listBackground()
                     }
-                    .listBackground()
                 }
                 
                 if store.addressBookContacts.contacts.isEmpty {
@@ -250,37 +252,8 @@ public struct AddressBookView: View {
         .background(Asset.Colors.background.color)
         .listStyle(.plain)
     }
-    
-    @ViewBuilder func walletAccountsList() -> some View {
-        List {
-            ForEach(store.walletAccounts, id: \.self) { walletAccount in
-                VStack {
-                    walletAcoountView(
-                        icon: walletAccount.vendor.icon(),
-                        title: walletAccount.vendor.name(),
-                        address: walletAccount.unifiedAddress ?? L10n.Receive.Error.cantExtractUnifiedAddress
-                    ) {
-                        store.send(.walletAccountTapped(walletAccount))
-                    }
-                    
-                    if let last = store.walletAccounts.last, last != walletAccount {
-                        Design.Surfaces.divider.color(colorScheme)
-                            .frame(height: 1)
-                            .padding(.top, 12)
-                            .padding(.horizontal, 4)
-                    }
-                }
-                .listRowInsets(EdgeInsets())
-                .listRowBackground(Asset.Colors.background.color)
-                .listRowSeparator(.hidden)
-            }
-        }
-        .padding(.vertical, 1)
-        .background(Asset.Colors.background.color)
-        .listStyle(.plain)
-    }
-    
-    @ViewBuilder func walletAcoountView(
+
+    @ViewBuilder func walletAccountView(
         icon: Image,
         title: String,
         address: String,
