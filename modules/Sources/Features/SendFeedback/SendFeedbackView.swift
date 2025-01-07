@@ -22,85 +22,88 @@ public struct SendFeedbackView: View {
 
     public var body: some View {
         WithPerceptionTracking {
-            VStack(alignment: .leading, spacing: 0) {
-                Text(L10n.SendFeedback.title)
-                    .zFont(.semiBold, size: 24, style: Design.Text.primary)
-                    .padding(.top, 40)
-
-                Text(L10n.SendFeedback.desc)
-                    .zFont(size: 14, style: Design.Text.primary)
-                    .padding(.top, 8)
-
-                Text(L10n.SendFeedback.ratingQuestion)
-                    .zFont(.medium, size: 14, style: Design.Text.primary)
-                    .padding(.top, 32)
-
-                HStack(spacing: 12) {
-                    ForEach(0..<5) { rating in
-                        WithPerceptionTracking {
-                            Button {
-                                store.send(.ratingTapped(rating))
-                            } label: {
-                                Text(store.ratings[rating])
-                                    .padding(.vertical, 12)
-                                    .frame(maxWidth: .infinity)
-                                    .background {
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .fill(Design.Surfaces.bgSecondary.color(colorScheme))
-                                    }
-                                    .padding(3)
-                                    .overlay {
-                                        if let selectedRating = store.selectedRating, selectedRating == rating {
-                                            RoundedRectangle(cornerRadius: 14)
-                                                .stroke(Design.Text.primary.color(colorScheme))
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    Text(L10n.SendFeedback.title)
+                        .zFont(.semiBold, size: 24, style: Design.Text.primary)
+                        .padding(.top, 40)
+                    
+                    Text(L10n.SendFeedback.desc)
+                        .zFont(size: 14, style: Design.Text.primary)
+                        .padding(.top, 8)
+                    
+                    Text(L10n.SendFeedback.ratingQuestion)
+                        .zFont(.medium, size: 14, style: Design.Text.primary)
+                        .padding(.top, 32)
+                    
+                    HStack(spacing: 12) {
+                        ForEach(0..<5) { rating in
+                            WithPerceptionTracking {
+                                Button {
+                                    store.send(.ratingTapped(rating))
+                                } label: {
+                                    Text(store.ratings[rating])
+                                        .padding(.vertical, 12)
+                                        .frame(maxWidth: .infinity)
+                                        .background {
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                                         }
-                                    }
+                                        .padding(3)
+                                        .overlay {
+                                            if let selectedRating = store.selectedRating, selectedRating == rating {
+                                                RoundedRectangle(cornerRadius: 14)
+                                                    .stroke(Design.Text.primary.color(colorScheme))
+                                            }
+                                        }
+                                }
                             }
                         }
                     }
-                }
-                .padding(.top, 12)
-
-                Text(L10n.SendFeedback.howCanWeHelp)
-                    .zFont(.medium, size: 14, style: Design.Text.primary)
-                    .padding(.top, 24)
-
-                MessageEditorView(
-                    store: store.memoStore(),
-                    title: "",
-                    placeholder: L10n.SendFeedback.hcwhPlaceholder
-                )
-                .frame(height: 155)
-
-                if let supportData = store.supportData {
-                    UIMailDialogView(
-                        supportData: supportData,
-                        completion: {
-                            store.send(.sendSupportMailFinished)
-                        }
+                    .padding(.top, 12)
+                    
+                    Text(L10n.SendFeedback.howCanWeHelp)
+                        .zFont(.medium, size: 14, style: Design.Text.primary)
+                        .padding(.top, 24)
+                    
+                    MessageEditorView(
+                        store: store.memoStore(),
+                        title: "",
+                        placeholder: L10n.SendFeedback.hcwhPlaceholder
                     )
-                    // UIMailDialogView only wraps MFMailComposeViewController presentation
-                    // so frame is set to 0 to not break SwiftUIs layout
-                    .frame(width: 0, height: 0)
+                    .frame(height: 155)
+                    
+                    if let supportData = store.supportData {
+                        UIMailDialogView(
+                            supportData: supportData,
+                            completion: {
+                                store.send(.sendSupportMailFinished)
+                            }
+                        )
+                        // UIMailDialogView only wraps MFMailComposeViewController presentation
+                        // so frame is set to 0 to not break SwiftUIs layout
+                        .frame(width: 0, height: 0)
+                    }
+                    
+                    Spacer()
+                    
+                    ZashiButton(
+                        L10n.General.send
+                    ) {
+                        store.send(.sendTapped)
+                    }
+                    .disabled(store.invalidForm)
+                    .padding(.bottom, 20)
+                    
+                    shareView()
                 }
-                
-                Spacer()
-
-                ZashiButton(
-                    L10n.General.send
-                ) {
-                    store.send(.sendTapped)
-                }
-                .disabled(store.invalidForm)
-                .padding(.bottom, 20)
-                
-                shareView()
+                .screenHorizontalPadding()
             }
+            .padding(.vertical, 1)
             .zashiBack()
             .onAppear { store.send(.onAppear) }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .screenHorizontalPadding()
         .applyScreenBackground()
         .screenTitle(L10n.SendFeedback.screenTitle.uppercased())
     }
