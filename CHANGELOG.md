@@ -11,6 +11,7 @@ directly impact users rather than highlighting other crucial architectural updat
 - Info text truncation removed on a balance tab.
 - What's new data are no longer corrupted.
 - Balances tab's duplicated status bar removed.
+- Reset Zashi clears out accounts so cached addresses and previously selected account properly are no longer invalid.
 
 ## 1.3.1 build 1 (2024-12-24)
 

@@ -306,8 +306,6 @@ extension Root {
                     try mnemonic.isValid(storedWallet.seedPhrase.value())
                     let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
 
-                    let check = databaseFiles.areDbFilesPresentFor(zcashSDKEnvironment.network)
-
                     return .run { send in
                         do {
                             try await sdkSynchronizer.prepareWith(
@@ -454,6 +452,9 @@ extension Root {
                 walletStorage.resetZashi()
                 flexaHandler.signOut()
                 try? readTransactionsStorage.resetZashi()
+                state.selectedWalletAccount = nil
+                state.walletAccounts = []
+                state.zashiWalletAccount = nil
 
                 if state.appInitializationState == .keysMissing && state.onboardingState.destination == .importExistingWallet {
                     state.appInitializationState = .uninitialized
