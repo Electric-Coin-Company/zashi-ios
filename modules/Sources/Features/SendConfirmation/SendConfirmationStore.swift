@@ -307,9 +307,6 @@ public struct SendConfirmation {
                         let network = zcashSDKEnvironment.network.networkType
                         let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, zip32AccountIndex, network)
 
-                        await send(.sendFailed("sdkSynchronizer.sendTriggered".toZcashError(), true))
-                        return
-                        
                         let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
 
                         await send(.transactionResultReady)
