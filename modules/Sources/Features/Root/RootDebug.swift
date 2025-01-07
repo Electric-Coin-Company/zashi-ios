@@ -92,7 +92,7 @@ extension Root {
                 return .none
                 
             case let .debug(.walletConfigLoaded(walletConfig)):
-                return Effect.send(.updateStateAfterConfigUpdate(walletConfig))
+                return .send(.updateStateAfterConfigUpdate(walletConfig))
 
             case .debug(.cantStartSync(let error)):
                 state.alert = AlertState.cantStartSync(error)

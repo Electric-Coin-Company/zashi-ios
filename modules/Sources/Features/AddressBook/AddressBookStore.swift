@@ -141,7 +141,7 @@ public struct AddressBook {
                 return .send(.fetchABContactsRequested)
 
             case .alert(.presented(let action)):
-                return Effect.send(action)
+                return .send(action)
 
             case .alert(.dismiss):
                 state.alert = nil

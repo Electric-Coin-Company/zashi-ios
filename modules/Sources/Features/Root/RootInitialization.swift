@@ -53,7 +53,7 @@ extension Root {
                 // TODO: [#704], trigger the review request logic when approved by the team,
                 // https://github.com/Electric-Coin-Company/zashi-ios/issues/704
                 return .concatenate(
-                    Effect.send(.initialization(.configureCrashReporter)),
+                    .send(.initialization(.configureCrashReporter)),
                     .run { send in
                         try await mainQueue.sleep(for: .seconds(0.5))
                         await send(.initialization(.initialSetups))
@@ -215,15 +215,15 @@ extension Root {
 
             case .walletConfigLoaded(let walletConfig):
                 if walletConfig == WalletConfig.initial {
-                    return Effect.send(.initialization(.initialSetups))
+                    return .send(.initialization(.initialSetups))
                 } else {
-                    return Effect.send(.initialization(.walletConfigChanged(walletConfig)))
+                    return .send(.initialization(.walletConfigChanged(walletConfig)))
                 }
                 
             case .initialization(.walletConfigChanged(let walletConfig)):
                 return .concatenate(
-                    Effect.send(.updateStateAfterConfigUpdate(walletConfig)),
-                    Effect.send(.initialization(.initialSetups))
+                    .send(.updateStateAfterConfigUpdate(walletConfig)),
+                    .send(.initialization(.initialSetups))
                 )
                 
             case .initialization(.initialSetups):
@@ -237,7 +237,7 @@ extension Root {
                 // TODO: [#524] finish all the wallet events according to definition, https://github.com/Electric-Coin-Company/zashi-ios/issues/524
                 LoggerProxy.event(".appDelegate(.didFinishLaunching)")
                 /// We need to fetch data from keychain, in order to be 100% sure the keychain can be read we delay the check a bit
-                return Effect.send(.initialization(.checkWalletInitialization))
+                return .send(.initialization(.checkWalletInitialization))
 
                 /// Evaluate the wallet's state based on keychain keys and database files presence
             case .initialization(.checkWalletInitialization):
@@ -246,7 +246,7 @@ extension Root {
                     walletStorage: walletStorage,
                     zcashNetwork: zcashSDKEnvironment.network
                 )
-                return Effect.send(.initialization(.respondToWalletInitializationState(walletState)))
+                return .send(.initialization(.respondToWalletInitializationState(walletState)))
                 
                 /// Respond to all possible states of the wallet and initiate appropriate side effects including errors handling
             case .initialization(.respondToWalletInitializationState(let walletState)):
@@ -267,21 +267,21 @@ extension Root {
                     userDefaults.setValue(true, Constants.udIsRestoringWallet)
                     state.walletStatus = .restoring
                     return .concatenate(
-                        Effect.send(.initialization(.initializeSDK(.restoreWallet))),
-                        Effect.send(.initialization(.checkBackupPhraseValidation))
+                        .send(.initialization(.initializeSDK(.restoreWallet))),
+                        .send(.initialization(.checkBackupPhraseValidation))
                     )
                 case .initialized:
                     if let isRestoringWallet = userDefaults.objectForKey(Constants.udIsRestoringWallet) as? Bool, isRestoringWallet {
                         state.isRestoringWallet = true
                         state.walletStatus = .restoring
                         return .concatenate(
-                            Effect.send(.initialization(.initializeSDK(.restoreWallet))),
-                            Effect.send(.initialization(.checkBackupPhraseValidation))
+                            .send(.initialization(.initializeSDK(.restoreWallet))),
+                            .send(.initialization(.checkBackupPhraseValidation))
                         )
                     }
                     return .concatenate(
-                        Effect.send(.initialization(.initializeSDK(.existingWallet))),
-                        Effect.send(.initialization(.checkBackupPhraseValidation))
+                        .send(.initialization(.initializeSDK(.existingWallet))),
+                        .send(.initialization(.checkBackupPhraseValidation))
                     )
                 case .uninitialized:
                     state.appInitializationState = .uninitialized
@@ -357,7 +357,7 @@ extension Root {
                         }
                     }
                 } catch {
-                    return Effect.send(.initialization(.initializationFailed(error.toZcashError())))
+                    return .send(.initialization(.initializationFailed(error.toZcashError())))
                 }
                 
             case .initialization(.initializationSuccessfullyDone(let uAddress)):
@@ -421,7 +421,7 @@ extension Root {
                     }
                     .cancellable(id: CancelId, cancelInFlight: true)
                 } catch {
-                    return Effect.send(.initialization(.initializationFailed(error.toZcashError())))
+                    return .send(.initialization(.initializationFailed(error.toZcashError())))
                 }
 
             case .initialization(.resetZashiRequest):
@@ -430,7 +430,7 @@ extension Root {
                 
             case .initialization(.resetZashi), .tabs(.settings(.advancedSettings(.deleteWallet(.deleteTapped)))):
                 guard let wipePublisher = sdkSynchronizer.wipe() else {
-                    return Effect.send(.resetZashiFailed)
+                    return .send(.resetZashiFailed)
                 }
                 return .publisher {
                     wipePublisher
@@ -461,29 +461,29 @@ extension Root {
                     userStoredPreferences.removeAll()
                     return .concatenate(
                         .cancel(id: SynchronizerCancelId),
-                        Effect.send(.onboarding(.importWallet(.updateDestination(.birthday))))
+                        .send(.onboarding(.importWallet(.updateDestination(.birthday))))
                     )
                 } else if state.appInitializationState == .keysMissing && state.onboardingState.destination == .createNewWallet {
                     state.appInitializationState = .uninitialized
                     userStoredPreferences.removeAll()
                     return .concatenate(
                         .cancel(id: SynchronizerCancelId),
-                        Effect.send(.onboarding(.securityWarning(.createNewWallet)))
+                        .send(.onboarding(.securityWarning(.createNewWallet)))
                     )
                 } else {
                     userStoredPreferences.removeAll()
                     return .concatenate(
                         .cancel(id: SynchronizerCancelId),
-                        Effect.send(.initialization(.checkWalletInitialization))
+                        .send(.initialization(.checkWalletInitialization))
                     )
                 }
 
             case .resetZashiFailed:
                 let backDestination: Effect<Root.Action>
                 if let previousDestination = state.destinationState.previousDestination {
-                    backDestination = Effect.send(.destination(.updateDestination(previousDestination)))
+                    backDestination = .send(.destination(.updateDestination(previousDestination)))
                 } else {
-                    backDestination = Effect.send(.destination(.updateDestination(state.destinationState.destination)))
+                    backDestination = .send(.destination(.updateDestination(state.destinationState.destination)))
                 }
                 state.alert = AlertState.wipeFailed()
 
@@ -508,7 +508,7 @@ extension Root {
             case .welcome(.debugMenuStartup), .tabs(.home(.walletBalances(.debugMenuStartup))):
                 return .concatenate(
                     Effect.cancel(id: CancelId),
-                    Effect.send(.destination(.updateDestination(.startup)))
+                    .send(.destination(.updateDestination(.startup)))
                 )
 
             case .onboarding(.securityWarning(.confirmTapped)):
@@ -552,13 +552,13 @@ extension Root {
                 userDefaults.setValue(true, Constants.udIsRestoringWallet)
                 state.walletStatus = .restoring
                 return .concatenate(
-                    Effect.send(.initialization(.initializeSDK(.restoreWallet))),
+                    .send(.initialization(.initializeSDK(.restoreWallet))),
                     .send(.initialization(.checkBackupPhraseValidation))
                 )
 
             case .initialization(.seedValidationResult(let validSeed)):
                 if validSeed {
-                    return .send(.onboarding(.importWallet(.restoreWallet)))
+                    state.onboardingState.importWalletState.destination = .birthday
                 } else {
                     state.alert = AlertState.differentSeed()
                 }
@@ -580,7 +580,7 @@ extension Root {
                 return .none
 
             case .onboarding(.securityWarning(.newWalletCreated)):
-                return Effect.send(.initialization(.initializeSDK(.newWallet)))
+                return .send(.initialization(.initializeSDK(.newWallet)))
                 
             case .tabs, .destination, .onboarding, .phraseDisplay, .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated,
                     .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, 

@@ -81,7 +81,7 @@ public struct SyncProgress {
                 return .cancel(id: CancelId)
 
             case .alert(.presented(let action)):
-                return Effect.send(action)
+                return .send(action)
 
             case .alert(.dismiss):
                 state.alert = nil

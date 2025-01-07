@@ -107,9 +107,6 @@ public struct ImportWallet {
                 return .none
 
             case .binding(\.importedSeedPhrase):
-                return .none
-
-            case .binding(\.importedSeedPhrase):
                 state.wordsCount = state.importedSeedPhrase.split(separator: " ").count
                 state.isValidNumberOfWords = state.wordsCount == state.maxWordsCount
                 // is the mnemonic valid one?
@@ -136,7 +133,7 @@ public struct ImportWallet {
                 return .none
 
             case .alert(.presented(let action)):
-                return Effect.send(action)
+                return .send(action)
 
             case .alert(.dismiss):
                 state.alert = nil
@@ -174,8 +171,8 @@ public struct ImportWallet {
                     
                     // notify user
                     return .concatenate(
-                        Effect.send(.successfullyRecovered),
-                        Effect.send(.initializeSDK)
+                        .send(.successfullyRecovered),
+                        .send(.initializeSDK)
                     )
                 } catch {
                     state.alert = AlertState.failed(error.toZcashError())

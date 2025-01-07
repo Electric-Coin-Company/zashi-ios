@@ -77,7 +77,7 @@ public struct SecurityWarning {
                 return .none
 
             case .alert(.presented(let action)):
-                return Effect.send(action)
+                return .send(action)
 
             case .alert(.dismiss):
                 state.alert = nil
@@ -100,7 +100,7 @@ public struct SecurityWarning {
                     
                     state.recoveryPhraseDisplayViewBinding = true
                     
-                    return Effect.send(.newWalletCreated)
+                    return .send(.newWalletCreated)
                 } catch {
                     state.alert = AlertState.cantCreateNewWallet(error.toZcashError())
                 }

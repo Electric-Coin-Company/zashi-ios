@@ -124,7 +124,7 @@ public struct Home {
                 let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.data.syncStatus)
                 switch snapshot.syncStatus {
                 case .error(let error):
-                    return Effect.send(.showSynchronizerErrorAlert(error.toZcashError()))
+                    return .send(.showSynchronizerErrorAlert(error.toZcashError()))
 
                 case .upToDate:
                     return .run { _ in
@@ -165,7 +165,7 @@ public struct Home {
                 return .none
                 
             case .alert(.presented(let action)):
-                return Effect.send(action)
+                return .send(action)
 
             case .alert(.dismiss):
                 state.alert = nil
