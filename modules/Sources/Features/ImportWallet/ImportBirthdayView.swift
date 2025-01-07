@@ -31,7 +31,7 @@ public struct ImportBirthdayView: View {
 
                 Text(L10n.ImportWallet.optionalBirthday)
 
-                TextField("", text: store.bindingForRedactableBirthday(store.birthdayHeight))
+                TextField("", text: $store.birthdayHeight)
                     .frame(height: 40)
                     .font(.custom(FontFamily.Inter.semiBold.name, size: 25))
                     .focused($isFocused)

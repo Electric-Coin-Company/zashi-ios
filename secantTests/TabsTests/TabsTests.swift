@@ -174,7 +174,7 @@ class TabsTests: XCTestCase {
         store.dependencies.sdkSynchronizer = .mock
         let proposal = Proposal.testOnlyFakeProposal(totalFee: 10_000)
         store.dependencies.sdkSynchronizer.proposeShielding = { _, _, _, _ in proposal }
-        store.dependencies.sdkSynchronizer.createProposedTransactions = { _, _ in .success }
+        store.dependencies.sdkSynchronizer.createProposedTransactions = { _, _ in .success(txIds: []) }
         store.dependencies.derivationTool = .liveValue
         store.dependencies.mnemonic = .mock
         store.dependencies.walletStorage.exportWallet = { .placeholder }
@@ -192,7 +192,7 @@ class TabsTests: XCTestCase {
         }
 
         let accountsBalances = [AccountUUID(id: Array<UInt8>(repeating: 0, count: 16)): AccountBalance(saplingBalance: .zero, orchardBalance: .zero, unshielded: .zero)]
-        await store.receive(.balanceBreakdown(.walletBalances(.balancesUpdated(accountsBalances))))
+        await store.receive(.balanceBreakdown(.walletBalances(.balanceUpdated(accountsBalances.first?.value))))
 
         await store.receive(.balanceBreakdown(.updateBalances(accountsBalances)))
 

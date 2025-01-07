@@ -528,7 +528,7 @@ extension Root {
                 
             case .onboarding(.importWallet(.nextPressed)):
                 if state.appInitializationState == .keysMissing {
-                    let seedPhrase = state.onboardingState.importWalletState.importedSeedPhrase.data
+                    let seedPhrase = state.onboardingState.importWalletState.importedSeedPhrase
                     return .run { send in
                         do {
                             let seedBytes = try mnemonic.toSeed(seedPhrase)

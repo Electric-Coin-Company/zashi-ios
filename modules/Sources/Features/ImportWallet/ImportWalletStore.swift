@@ -25,10 +25,10 @@ public struct ImportWallet {
         }
 
         @Presents public var alert: AlertState<Action>?
-        public var birthdayHeight = RedactableString.empty
+        public var birthdayHeight = ""
         public var birthdayHeightValue: RedactableBlockHeight?
         public var destination: Destination?
-        public var importedSeedPhrase = RedactableString.empty
+        public var importedSeedPhrase = ""
         public var isValidMnemonic = false
         public var isValidNumberOfWords = false
         public var maxWordsCount = 0
@@ -46,15 +46,15 @@ public struct ImportWallet {
         
         public var isValidForm: Bool {
             isValidMnemonic &&
-            (birthdayHeight.data.isEmpty ||
-            (!birthdayHeight.data.isEmpty && birthdayHeightValue != nil))
+            (birthdayHeight.isEmpty ||
+            (!birthdayHeight.isEmpty && birthdayHeightValue != nil))
         }
         
         public init(
-            birthdayHeight: RedactableString = .empty,
+            birthdayHeight: String = "",
             birthdayHeightValue: RedactableBlockHeight? = nil,
             destination: Destination? = nil,
-            importedSeedPhrase: RedactableString = .empty,
+            importedSeedPhrase: String = "",
             isValidMnemonic: Bool = false,
             isValidNumberOfWords: Bool = false,
             maxWordsCount: Int = 0,
@@ -76,7 +76,6 @@ public struct ImportWallet {
     public enum Action: BindableAction, Equatable {
         case alert(PresentationAction<Action>)
         case binding(BindingAction<ImportWallet.State>)
-        case birthdayInputChanged(RedactableString)
         case importPrivateOrViewingKey
         case initializeSDK
         case nextPressed
@@ -84,7 +83,6 @@ public struct ImportWallet {
         case restoreInfo(RestoreInfo.Action)
         case restoreInfoRequested(Bool)
         case restoreWallet
-        case seedPhraseInputChanged(RedactableString)
         case successfullyRecovered
         case updateDestination(ImportWallet.State.Destination?)
     }
@@ -107,17 +105,16 @@ public struct ImportWallet {
             case .onAppear:
                 state.maxWordsCount = zcashSDKEnvironment.mnemonicWordsMaxCount
                 return .none
-                
-            case .binding:
+
+            case .binding(\.importedSeedPhrase):
                 return .none
-                
-            case .seedPhraseInputChanged(let redactedSeedPhrase):
-                state.importedSeedPhrase = redactedSeedPhrase
-                state.wordsCount = state.importedSeedPhrase.data.split(separator: " ").count
+
+            case .binding(\.importedSeedPhrase):
+                state.wordsCount = state.importedSeedPhrase.split(separator: " ").count
                 state.isValidNumberOfWords = state.wordsCount == state.maxWordsCount
                 // is the mnemonic valid one?
                 do {
-                    try mnemonic.isValid(state.importedSeedPhrase.data)
+                    try mnemonic.isValid(state.importedSeedPhrase)
                 } catch {
                     state.isValidMnemonic = false
                     return .none
@@ -125,18 +122,19 @@ public struct ImportWallet {
                 state.isValidMnemonic = true
                 return .none
                 
-            case .birthdayInputChanged(let redactedBirthday):
+            case .binding(\.birthdayHeight):
                 let saplingActivation = zcashSDKEnvironment.network.constants.saplingActivationHeight
 
-                state.birthdayHeight = redactedBirthday
-
-                if let birthdayHeight = BlockHeight(state.birthdayHeight.data), birthdayHeight >= saplingActivation {
+                if let birthdayHeight = BlockHeight(state.birthdayHeight), birthdayHeight >= saplingActivation {
                     state.birthdayHeightValue = birthdayHeight.redacted
                 } else {
                     state.birthdayHeightValue = nil
                 }
                 return .none
                 
+            case .binding:
+                return .none
+
             case .alert(.presented(let action)):
                 return Effect.send(action)
 
@@ -160,19 +158,19 @@ public struct ImportWallet {
             case .restoreWallet:
                 do {
                     // validate the seed
-                    try mnemonic.isValid(state.importedSeedPhrase.data)
+                    try mnemonic.isValid(state.importedSeedPhrase)
                     
                     // store it to the keychain, if the user did not input a height,
                     // fall back to sapling activation
                     let birthday = state.birthdayHeightValue ?? zcashSDKEnvironment.network.constants.saplingActivationHeight.redacted
                     
-                    try walletStorage.importWallet(state.importedSeedPhrase.data, birthday.data, .english, false)
+                    try walletStorage.importWallet(state.importedSeedPhrase, birthday.data, .english, false)
                     
                     // update the backup phrase validation flag
                     try walletStorage.markUserPassedPhraseBackupTest(true)
 
-                    state.birthdayHeight = .empty
-                    state.importedSeedPhrase = .empty
+                    state.birthdayHeight = ""
+                    state.importedSeedPhrase = ""
                     
                     // notify user
                     return .concatenate(
