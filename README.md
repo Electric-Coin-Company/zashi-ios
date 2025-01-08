@@ -11,6 +11,8 @@ The Zashi IOS wallet is publicly available for download in the [AppStore](https:
 
 Join the Zashi community on ECC Discord server, report bugs, share ideas, request new features, and help shape Zashi's journey!
 
+https://discord.gg/jQPU7aXe7A
+
 # Reporting an issue
 
 If you'd like to report a technical issue or feature request for the IOS
