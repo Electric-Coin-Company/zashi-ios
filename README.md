@@ -1,6 +1,6 @@
 # Zashi iOS Wallet
 
-This is the official home of the Zashi Zcash wallet for Wallet, a no-frills
+This is the official home of the Zashi Zcash wallet, a no-frills
 Zcash mobile wallet leveraging the [Zcash Swift SDK](https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk).
 
 # Production
