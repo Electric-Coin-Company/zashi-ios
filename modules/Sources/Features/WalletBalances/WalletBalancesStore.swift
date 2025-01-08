@@ -146,7 +146,7 @@ public struct WalletBalances {
                     }
                     
                     state.fiatCurrencyResult = rate
-                    state.currencyConversion = CurrencyConversion(.usd, ratio: rate.rate.doubleValue, timestamp: rate.date.timeIntervalSince1970)
+                    state.$currencyConversion.withLock { $0 = CurrencyConversion(.usd, ratio: rate.rate.doubleValue, timestamp: rate.date.timeIntervalSince1970) }
                     state.isExchangeRateRefreshEnabled = false
                     state.isExchangeRateStale = false
                 case .refreshEnable(let rate):
@@ -155,11 +155,11 @@ public struct WalletBalances {
                     }
                     
                     state.fiatCurrencyResult = rate
-                    state.currencyConversion = CurrencyConversion(.usd, ratio: rate.rate.doubleValue, timestamp: rate.date.timeIntervalSince1970)
+                    state.$currencyConversion.withLock { $0 = CurrencyConversion(.usd, ratio: rate.rate.doubleValue, timestamp: rate.date.timeIntervalSince1970) }
                     state.isExchangeRateRefreshEnabled = true
                     state.isExchangeRateStale = false
                 case .stale:
-                    state.currencyConversion = nil
+                    state.$currencyConversion.withLock { $0 = nil }
                     state.isExchangeRateStale = true
                     break
                 }

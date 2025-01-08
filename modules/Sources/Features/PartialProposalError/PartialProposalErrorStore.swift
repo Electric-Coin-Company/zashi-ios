@@ -89,7 +89,7 @@ public struct PartialProposalError {
             case .copyToPastboard:
                 let payload = state.txIds.reduce("") { $0 + ($0.isEmpty ? "" : ", ") + $1 }
                 pasteboard.setString(payload.redacted)
-                state.toast = .top(L10n.General.copiedToTheClipboard)
+                state.$toast.withLock { $0 = .top(L10n.General.copiedToTheClipboard) }
                 return .none
             }
         }

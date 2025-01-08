@@ -126,9 +126,9 @@ extension Root {
                         state.alert = AlertState.serviceUnavailable()
                     }
                     state.wasRestoringWhenDisconnected = state.walletStatus == .restoring
-                    state.walletStatus = .disconnected
+                    state.$walletStatus.withLock { $0 = .disconnected }
                 } else if case .syncing = snapshot.syncStatus, state.walletStatus == .disconnected {
-                    state.walletStatus = state.wasRestoringWhenDisconnected ? .restoring : .none
+                    state.$walletStatus.withLock { $0 = state.wasRestoringWhenDisconnected ? .restoring : .none }
                 }
 
                 // handle BCGTask
@@ -162,7 +162,7 @@ extension Root {
                 if state.isRestoringWallet && syncStatus == .upToDate {
                     state.isRestoringWallet = false
                     userDefaults.remove(Constants.udIsRestoringWallet)
-                    state.walletStatus = .none
+                    state.$walletStatus.withLock { $0 = .none }
                 }
                 return .none
 
@@ -265,7 +265,7 @@ extension Root {
                     state.appInitializationState = .filesMissing
                     state.isRestoringWallet = true
                     userDefaults.setValue(true, Constants.udIsRestoringWallet)
-                    state.walletStatus = .restoring
+                    state.$walletStatus.withLock { $0 = .restoring }
                     return .concatenate(
                         .send(.initialization(.initializeSDK(.restoreWallet))),
                         .send(.initialization(.checkBackupPhraseValidation))
@@ -273,7 +273,7 @@ extension Root {
                 case .initialized:
                     if let isRestoringWallet = userDefaults.objectForKey(Constants.udIsRestoringWallet) as? Bool, isRestoringWallet {
                         state.isRestoringWallet = true
-                        state.walletStatus = .restoring
+                        state.$walletStatus.withLock { $0 = .restoring }
                         return .concatenate(
                             .send(.initialization(.initializeSDK(.restoreWallet))),
                             .send(.initialization(.checkBackupPhraseValidation))
@@ -375,12 +375,12 @@ extension Root {
                 )
                 
             case .initialization(.loadedWalletAccounts(let walletAccounts)):
-                state.walletAccounts = walletAccounts
+                state.$walletAccounts.withLock { $0 = walletAccounts }
                 if state.selectedWalletAccount == nil {
                     for account in walletAccounts {
                         if account.vendor == .zcash {
-                            state.selectedWalletAccount = account
-                            state.zashiWalletAccount = account
+                            state.$selectedWalletAccount.withLock { $0 = account }
+                            state.$zashiWalletAccount.withLock { $0 = account }
                             break
                         }
                     }
@@ -448,13 +448,13 @@ extension Root {
                 state.splashAppeared = true
                 state.isRestoringWallet = false
                 userDefaults.remove(Constants.udIsRestoringWallet)
-                state.walletStatus = .none
+                state.$walletStatus.withLock { $0 = .none }
                 walletStorage.resetZashi()
                 flexaHandler.signOut()
                 try? readTransactionsStorage.resetZashi()
-                state.selectedWalletAccount = nil
-                state.walletAccounts = []
-                state.zashiWalletAccount = nil
+                state.$selectedWalletAccount.withLock { $0 = nil }
+                state.$walletAccounts.withLock { $0 = [] }
+                state.$zashiWalletAccount.withLock { $0 = nil }
 
                 if state.appInitializationState == .keysMissing && state.onboardingState.destination == .importExistingWallet {
                     state.appInitializationState = .uninitialized
@@ -550,7 +550,7 @@ extension Root {
             case .onboarding(.importWallet(.initializeSDK)):
                 state.isRestoringWallet = true
                 userDefaults.setValue(true, Constants.udIsRestoringWallet)
-                state.walletStatus = .restoring
+                state.$walletStatus.withLock { $0 = .restoring }
                 return .concatenate(
                     .send(.initialization(.initializeSDK(.restoreWallet))),
                     .send(.initialization(.checkBackupPhraseValidation))

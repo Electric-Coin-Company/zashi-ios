@@ -65,7 +65,7 @@ public struct Toast: ViewModifier {
                         }
                     }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                        toast = nil
+                        $toast.withLock { $0 = nil }
                         self.message = nil
                     }
                 }
