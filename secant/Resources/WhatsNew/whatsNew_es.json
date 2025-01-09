@@ -1,6 +1,27 @@
 {
     "releases": [
         {
+            "version": "1.3.2",
+            "date": "01-09-2025",
+            "timestamp": 1736420570,
+            "sections": [
+                {
+                    "title": "Corregido:",
+                    "bulletpoints": [
+                        "Apariencia de los colores cuando el modo cambia (dark vs light).",
+                        "Eliminado el acortamiento del texto en la pestaña de saldos.",
+                        "La información en  “Novedades” ya no esta corrupta.",
+                        "Las  barras de estados duplicados en la pestaña de saldos han sido removidas.",
+                        "Reiniciar Zashi limpia las cuentas que están en la cache y por lo tanto las cuentas pre-seleccionadas no son validas.",
+                        "La cuenta seleccionada no se encontrara dentro de la libreta de direcciones entre las cuentas posibles.",
+                        "La pantalla para enviar comentarios es deslizable, haciendo posible que el botón de “Enviar” sea visible incluso en pantallas pequeñas.",
+                        "El botón para reportar una falla en algún punto de la aplicación usara por default la opción de “enviar mensaje” cuando una cuenta de correo electrónico no se encuentre configurada en el teléfono mobil.",
+                        "La migración a un nuevo dispositivo a travez del backup de la base de datos ahora permite al usuario entrar la altura de cumpleaños de la billetera."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "1.3.1",
             "date": "12-23-2024",
             "timestamp": 1734964156,

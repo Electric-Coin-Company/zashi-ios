@@ -6,6 +6,8 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.3.2 build 1 (2025-01-09)
+
 ### Fixed
 - Appearance colors when mode changed.
 - Info text truncation removed on a balance tab.
