@@ -4,6 +4,7 @@ import Generated
 import UIComponents
 import Models
 import ZcashLightClientKit
+import TransactionDetails
 
 public struct TransactionListView: View {
     let store: StoreOf<TransactionList>
@@ -50,12 +51,62 @@ public struct TransactionListView: View {
                     .listRowSeparator(.hidden)
                 }
             }
+            .navigationLinkEmpty(
+                isActive: store.bindingForStack(.transactionDetails),
+                destination: {
+                    TransactionDetailsView(store: store.transactionDetailsStore(), tokenName: tokenName)
+                }
+            )
             .disabled(store.transactionList.isEmpty)
             .background(Asset.Colors.shade97.color)
             .listStyle(.plain)
             .onAppear { store.send(.onAppear) }
             .onDisappear(perform: { store.send(.onDisappear) })
         }
+    }
+}
+
+// MARK: - Store
+
+extension StoreOf<TransactionList> {
+    func transactionDetailsStore() -> StoreOf<TransactionDetails> {
+        self.scope(
+            state: \.transactionDetailsState,
+            action: \.transactionDetails
+        )
+    }
+}
+
+// MARK: - ViewStore
+
+extension StoreOf<TransactionList> {
+    func bindingForStack(_ destination: TransactionList.State.StackDestination) -> Binding<Bool> {
+        Binding<Bool>(
+            get: {
+                if let currentStackValue = self.stackDestination?.rawValue {
+                    return currentStackValue >= destination.rawValue
+                } else {
+                    if destination.rawValue == 0 {
+                        return false
+                    } else if destination.rawValue <= self.stackDestinationBindingsAlive {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+            },
+            set: { _ in
+                if let currentStackValue = self.stackDestination?.rawValue, currentStackValue == destination.rawValue {
+                    let popIndex = destination.rawValue - 1
+                    if popIndex >= 0 {
+                        let popDestination = TransactionList.State.StackDestination(rawValue: popIndex)
+                        self.send(.updateStackDestination(popDestination))
+                    } else {
+                        self.send(.updateStackDestination(nil))
+                    }
+                }
+            }
+        )
     }
 }
 
