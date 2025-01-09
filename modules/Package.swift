@@ -72,6 +72,7 @@ let package = Package(
         .library(name: "SyncProgress", targets: ["SyncProgress"]),
         .library(name: "ReadTransactionsStorage", targets: ["ReadTransactionsStorage"]),
         .library(name: "Tabs", targets: ["Tabs"]),
+        .library(name: "TransactionDetails", targets: ["TransactionDetails"]),
         .library(name: "TransactionList", targets: ["TransactionList"]),
         .library(name: "UIComponents", targets: ["UIComponents"]),
         .library(name: "URIParser", targets: ["URIParser"]),
@@ -855,7 +856,7 @@ let package = Package(
             path: "Sources/Features/Tabs"
         ),
         .target(
-            name: "TransactionList",
+            name: "TransactionDetails",
             dependencies: [
                 "AddressBookClient",
                 "Generated",
@@ -868,6 +869,24 @@ let package = Package(
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
+            ],
+            path: "Sources/Features/TransactionDetails"
+        ),
+        .target(
+            name: "TransactionList",
+            dependencies: [
+                "AddressBookClient",
+                "Generated",
+                "Models",
+                "Pasteboard",
+                "ReadTransactionsStorage",
+                "SDKSynchronizer",
+                "TransactionDetails",
+                "UIComponents",
+                "Utils",
+                "ZcashSDKEnvironment",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
             ],
             path: "Sources/Features/TransactionList"
         ),
