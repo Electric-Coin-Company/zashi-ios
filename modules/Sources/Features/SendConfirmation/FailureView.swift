@@ -32,11 +32,11 @@ public struct FailureView: View {
                     .resizable()
                     .frame(width: 148, height: 148)
 
-                Text(L10n.Send.failure)
+                Text(store.isShielding ? L10n.Send.failureShielding : L10n.Send.failure)
                     .zFont(.semiBold, size: 28, style: Design.Text.primary)
                     .padding(.top, 16)
 
-                Text(L10n.Send.failureInfo)
+                Text(store.isShielding ? L10n.Send.failureShieldingInfo : L10n.Send.failureInfo)
                     .zFont(size: 14, style: Design.Text.primary)
                     .multilineTextAlignment(.center)
                     .lineSpacing(1.5)

@@ -6,6 +6,16 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.3.1 build 1 (2024-12-24)
+
+### Fixed
+- Occasional 'dataMismatch' error for Keystone transactions.
+
+## 1.3 build 1 (2024-12-19)
+
+### Added
+- Keystone HW wallet integration.
+
 ## 1.2.4 build 3 (2024-11-26)
 
 ### Added

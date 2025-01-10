@@ -14,6 +14,7 @@ struct ZashiBackV2Modifier: ViewModifier {
     let disabled: Bool
     let hidden: Bool
     let invertedColors: Bool
+    let background: Bool
     let customDismiss: (() -> Void)?
     
     func body(content: Content) -> some View {
@@ -45,8 +46,10 @@ struct ZashiBackV2Modifier: ViewModifier {
                                     .zImage(size: 24, style: Design.Btns.Tertiary.fg)
                                     .padding(8)
                                     .background {
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .fill(Design.Btns.Tertiary.bg.color)
+                                        if background {
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .fill(Design.Btns.Tertiary.bg.color)
+                                        }
                                     }
                             }
                         }
@@ -62,6 +65,7 @@ extension View {
         _ disabled: Bool = false,
         hidden: Bool = false,
         invertedColors: Bool = false,
+        background: Bool = true,
         customDismiss: (() -> Void)? = nil
     ) -> some View {
         modifier(
@@ -69,6 +73,7 @@ extension View {
                 disabled: disabled,
                 hidden: hidden,
                 invertedColors: invertedColors,
+                background: background,
                 customDismiss: customDismiss
             )
         )

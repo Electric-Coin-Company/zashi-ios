@@ -11,6 +11,7 @@ import ZcashLightClientKit
 import Models
 import NotEnoughFreeSpace
 import Utils
+import Generated
 
 /// In this file is a collection of helpers that control all state and action related operations
 /// for the `Root` with a connection to the app/wallet initialization and erasure of the wallet.
@@ -31,6 +32,7 @@ extension Root {
         case initialSetups
         case initializationFailed(ZcashError)
         case initializationSuccessfullyDone(UnifiedAddress?)
+        case loadedWalletAccounts([WalletAccount])
         case resetZashi
         case resetZashiRequest
         case respondToWalletInitializationState(InitializationState)
@@ -106,8 +108,12 @@ extension Root {
             case .synchronizerStateChanged(let latestState):
                 let snapshot = SyncStatusSnapshot.snapshotFor(state: latestState.data.syncStatus)
 
+                guard let account = state.selectedWalletAccount else {
+                    return .none
+                }
+                
                 // update flexa balance
-                if let accountBalance = latestState.data.accountBalance?.data {
+                if let accountBalance = latestState.data.accountsBalances[account.id] {
                     let shieldedBalance = accountBalance.saplingBalance.spendableValue + accountBalance.orchardBalance.spendableValue
                     let shieldedWithPendingBalance = accountBalance.saplingBalance.total() + accountBalance.orchardBalance.total()
 
@@ -299,30 +305,55 @@ extension Root {
                     let birthday = storedWallet.birthday?.value() ?? zcashSDKEnvironment.latestCheckpoint
                     try mnemonic.isValid(storedWallet.seedPhrase.value())
                     let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
-                    
-                    let addressBookEncryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys()
-                    if addressBookEncryptionKeys == nil {
-                        var keys = AddressBookEncryptionKeys.empty
-                        try keys.cacheFor(
-                            seed: seedBytes,
-                            account: 0,
-                            network: zcashSDKEnvironment.network.networkType
-                        )
-                        
-                        do {
-                            try walletStorage.importAddressBookEncryptionKeys(keys)
-                        } catch {
-                            // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
-                        }
-                    }
+
+                    let check = databaseFiles.areDbFilesPresentFor(zcashSDKEnvironment.network)
 
                     return .run { send in
                         do {
-                            try await sdkSynchronizer.prepareWith(seedBytes, birthday, walletMode)
-                            try await sdkSynchronizer.start(false)
+                            try await sdkSynchronizer.prepareWith(
+                                seedBytes,
+                                birthday,
+                                walletMode,
+                                L10n.Accounts.zashi,
+                                L10n.Accounts.zashi.lowercased()
+                            )
                             
-                            let uAddress = try? await sdkSynchronizer.getUnifiedAddress(0)
-                            await send(.initialization(.initializationSuccessfullyDone(uAddress)))
+                            let walletAccounts = try await sdkSynchronizer.walletAccounts()
+                            await send(.initialization(.loadedWalletAccounts(walletAccounts)))
+
+                            try await sdkSynchronizer.start(false)
+
+                            var selectedAccount: WalletAccount?
+                                
+                            for account in walletAccounts {
+                                if account.vendor == .zcash {
+                                    selectedAccount = account
+                                    break
+                                }
+                            }
+
+                            let addressBookEncryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys()
+                            if let account = selectedAccount {
+                                if addressBookEncryptionKeys == nil {
+                                    var keys = AddressBookEncryptionKeys.empty
+                                    try keys.cacheFor(
+                                        seed: seedBytes,
+                                        account: account.account,
+                                        network: zcashSDKEnvironment.network.networkType
+                                    )
+                                    
+                                    do {
+                                        try walletStorage.importAddressBookEncryptionKeys(keys)
+                                    } catch {
+                                        // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                                    }
+                                }
+
+                                let uAddress = try? await sdkSynchronizer.getUnifiedAddress(account.id)
+                                await send(.initialization(.initializationSuccessfullyDone(uAddress)))
+                            } else {
+                                await send(.initialization(.initializationSuccessfullyDone(nil)))
+                            }
                         } catch {
                             await send(.initialization(.initializationFailed(error.toZcashError())))
                         }
@@ -332,9 +363,8 @@ extension Root {
                 }
                 
             case .initialization(.initializationSuccessfullyDone(let uAddress)):
-                state.tabsState.receiveState.uAddress = uAddress
                 state.tabsState.settingsState.integrationsState.uAddress = uAddress
-                if let uAddress = try? uAddress?.stringEncoded {
+                if let uAddress = uAddress?.stringEncoded {
                     state.tabsState.sendState.memoState.uAddress = uAddress
                 }
                 return .merge(
@@ -345,6 +375,19 @@ extension Root {
                     }
                     .cancellable(id: CancelBatteryStateId, cancelInFlight: true)
                 )
+                
+            case .initialization(.loadedWalletAccounts(let walletAccounts)):
+                state.walletAccounts = walletAccounts
+                if state.selectedWalletAccount == nil {
+                    for account in walletAccounts {
+                        if account.vendor == .zcash {
+                            state.selectedWalletAccount = account
+                            state.zashiWalletAccount = account
+                            break
+                        }
+                    }
+                }
+                return .none
                 
             case .initialization(.checkBackupPhraseValidation):
                 do {

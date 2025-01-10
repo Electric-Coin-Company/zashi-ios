@@ -9,7 +9,7 @@ import SwiftUI
 
 import Generated
 
-public struct ActionRow<AccessoryContent>: View where AccessoryContent: View{
+public struct ActionRow<AccessoryContent>: View where AccessoryContent: View {
     @Environment(\.isEnabled) private var isEnabled
     
     let icon: Image
@@ -54,11 +54,18 @@ public struct ActionRow<AccessoryContent>: View where AccessoryContent: View{
                             .padding(.trailing, 16)
                     } else {
                         icon
-                            .zImage(size: 20, style: Design.Text.primary)
+                            .zImage(
+                                size: 20,
+                                style: isEnabled
+                                    ? Design.Text.primary
+                                    : Design.Text.disabled
+                            )
                             .padding(10)
                             .background {
                                 Circle()
-                                    .fill(Design.Surfaces.bgTertiary.color)
+                                    .fill(isEnabled
+                                          ? Design.Surfaces.bgTertiary.color
+                                          : Design.Surfaces.bgSecondary.color)
                             }
                             .padding(.trailing, 16)
                     }
@@ -67,14 +74,23 @@ public struct ActionRow<AccessoryContent>: View where AccessoryContent: View{
                         if let accessoryView {
                             HStack(spacing: 0) {
                                 Text(title)
-                                    .zFont(.semiBold, size: 16, style: Design.Text.primary)
+                                    .zFont(.semiBold, size: 16, style: isEnabled
+                                           ? Design.Text.primary
+                                           : Design.Text.disabled
+                                    )
 
                                 accessoryView
                                     .padding(.leading, 8)
                             }
                         } else {
                             Text(title)
-                                .zFont(.semiBold, size: 16, style: Design.Text.primary)
+                                .zFont(
+                                    .semiBold,
+                                    size: 16,
+                                    style: isEnabled
+                                    ? Design.Text.primary
+                                    : Design.Text.disabled
+                                )
                         }
                         
                         if let desc {

@@ -25,6 +25,15 @@ public struct TransactionListView: View {
                         .listRowBackground(Asset.Colors.shade97.color)
                         .listRowSeparator(.hidden)
                         .padding(.top, 30)
+                } else if store.isInvalidated {
+                    VStack {
+                        ProgressView()
+                    }
+                    .frame(maxWidth: .infinity)
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Asset.Colors.shade97.color)
+                    .listRowSeparator(.hidden)
+                    .padding(.top, 30)
                 } else {
                     ForEach(store.transactionList) { transaction in
                         WithPerceptionTracking {

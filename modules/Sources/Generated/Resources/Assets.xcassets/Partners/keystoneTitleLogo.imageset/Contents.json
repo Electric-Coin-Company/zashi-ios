@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "brandmarkQRLight 2.png",
+      "filename" : "keystoneTitleLogo.png",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "brandmarkQRDark 2.png",
+      "filename" : "ksDark.png",
       "idiom" : "universal"
     }
   ],

@@ -39,6 +39,7 @@ public struct Balances {
         public var isHintBoxVisible = false
         public var partialProposalErrorState: PartialProposalError.State
         public var pendingTransactions: Zatoshi
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var shieldedBalance: Zatoshi
         public var syncProgressState: SyncProgress.State
         public var transparentBalance: Zatoshi
@@ -85,13 +86,16 @@ public struct Balances {
         case onAppear
         case onDisappear
         case partialProposalError(PartialProposalError.Action)
+        case proposalReadyForShieldingWithKeystone(Proposal)
         case shieldFunds
         case shieldFundsFailure(ZcashError)
         case shieldFundsPartial([String], [String])
         case shieldFundsSuccess
+        case shieldFundsWithKeystone
         case synchronizerStateChanged(RedactableSynchronizerState)
         case syncProgress(SyncProgress.Action)
-        case updateBalances(AccountBalance?)
+        case updateBalance(AccountBalance?)
+        case updateBalances([AccountUUID: AccountBalance])
         case updateDestination(Balances.State.Destination?)
         case updateHintBoxVisibility(Bool)
         case walletBalances(WalletBalances.Action)
@@ -149,17 +153,24 @@ public struct Balances {
                 return .none
 
             case .shieldFunds:
+                guard let account = state.selectedWalletAccount, let zip32AccountIndex = account.zip32AccountIndex else {
+                    return .none
+                }
+                if account.vendor == .keystone {
+                    return .send(.shieldFundsWithKeystone)
+                }
+                // Regular path only for Zashi account
                 state.isShieldingFunds = true
                 return .run { send in
                     do {
                         let storedWallet = try walletStorage.exportWallet()
                         let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
-                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, zcashSDKEnvironment.network.networkType)
+                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, zip32AccountIndex, zcashSDKEnvironment.network.networkType)
                         
-                        guard let uAddress = try await sdkSynchronizer.getUnifiedAddress(0) else { throw "sdkSynchronizer.getUnifiedAddress" }
+                        guard let uAddress = try await sdkSynchronizer.getUnifiedAddress(account.id) else { throw "sdkSynchronizer.getUnifiedAddress" }
 
                         let address = try uAddress.transparentReceiver()
-                        let proposal = try await sdkSynchronizer.proposeShielding(0, zcashSDKEnvironment.shieldingThreshold, .empty, address)
+                        let proposal = try await sdkSynchronizer.proposeShielding(account.id, zcashSDKEnvironment.shieldingThreshold, .empty, address)
                         
                         guard let proposal else { throw "sdkSynchronizer.proposeShielding" }
                         
@@ -181,6 +192,27 @@ public struct Balances {
                         await send(.shieldFundsFailure(error.toZcashError()))
                     }
                 }
+                
+            case .shieldFundsWithKeystone:
+                guard let account = state.selectedWalletAccount else {
+                    return .none
+                }
+                guard let address = try? account.uAddress?.transparentReceiver() else {
+                    return .none
+                }
+                return .run { send in
+                    do {
+                        let proposal = try await sdkSynchronizer.proposeShielding(account.id, zcashSDKEnvironment.shieldingThreshold, .empty, address)
+                        
+                        guard let proposal else { throw "sdkSynchronizer.proposeShielding" }
+                        await send(.proposalReadyForShieldingWithKeystone(proposal))
+                    } catch {
+                        await send(.shieldFundsFailure(error.toZcashError()))
+                    }
+                }
+                
+            case .proposalReadyForShieldingWithKeystone:
+                return .none
 
             case .shieldFundsFailure(let error):
                 state.isShieldingFunds = false
@@ -198,14 +230,20 @@ public struct Balances {
                 return .send(.updateDestination(.partialProposalError))
                 
             case .synchronizerStateChanged(let latestState):
-                return .send(.updateBalances(latestState.data.accountBalance?.data))
+                return .send(.updateBalances(latestState.data.accountsBalances))
 
-            case .walletBalances(.balancesUpdated(let accountBalance)):
+            case .walletBalances(.balanceUpdated(let accountBalance)):
                 state.shieldedBalance = state.walletBalancesState.shieldedBalance
                 state.transparentBalance = state.walletBalancesState.transparentBalance
-                return .send(.updateBalances(accountBalance))
+                return .send(.updateBalance(accountBalance))
 
-            case .updateBalances(let accountBalance):
+            case .updateBalances(let accountsBalances):
+                guard let account = state.selectedWalletAccount else {
+                    return .none
+                }
+                return .send(.updateBalance(accountsBalances[account.id]))
+
+            case .updateBalance(let accountBalance):
                 state.changePending = (accountBalance?.saplingBalance.changePendingConfirmation ?? .zero) +
                     (accountBalance?.orchardBalance.changePendingConfirmation ?? .zero)
                 state.pendingTransactions = (accountBalance?.saplingBalance.valuePendingSpendability ?? .zero) +

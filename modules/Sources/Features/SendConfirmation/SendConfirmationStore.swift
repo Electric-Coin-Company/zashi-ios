@@ -25,6 +25,7 @@ import LocalAuthenticationHandler
 import AddressBookClient
 import MessageUI
 import SupportDataGenerator
+import KeystoneHandler
 
 @Reducer
 public struct SendConfirmation {
@@ -41,6 +42,12 @@ public struct SendConfirmation {
             case success
         }
 
+        public enum StackDestination: Int, Equatable {
+            case signWithKeystone = 0
+            case scan
+            case sending
+        }
+
         public var address: String
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         public var alias: String?
@@ -51,22 +58,37 @@ public struct SendConfirmation {
         public var destination: Destination?
         public var failedCode: Int?
         public var failedDescription: String?
+        public var failedPcztMsg: String?
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
         public var feeRequired: Zatoshi
         public var isAddressExpanded = false
+        public var isKeystoneCodeFound = false
         public var isSending = false
+        public var isShielding = false
         public var isTransparentAddress = false
         public var message: String
         public var messageToBeShared: String?
         public var partialProposalErrorState: PartialProposalError.State
         public var partialProposalErrorViewBinding = false
+        public var pczt: Pczt?
+        public var pcztWithProofs: Pczt?
+        public var pcztWithSigs: Pczt?
         public var proposal: Proposal?
         public var randomSuccessIconIndex = 0
         public var randomFailureIconIndex = 0
         public var randomResubmissionIconIndex = 0
         public var result: Result?
+        public var scanState: Scan.State = .initial
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
+        public var sendingScreenOnAppearTimestamp: TimeInterval = 0
+        public var stackDestination: StackDestination?
+        public var stackDestinationBindingsAlive = 0
         public var supportData: SupportData?
         public var txIdToExpand: String?
+        @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
+        @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
+
+        public var pcztToShare: Pczt?
 
         public var addressToShow: String {
             isTransparentAddress
@@ -127,33 +149,50 @@ public struct SendConfirmation {
         case backFromFailurePressed
         case binding(BindingAction<SendConfirmation.State>)
         case closeTapped
+        case confirmWithKeystoneTapped
         case fetchedABContacts(AddressBookContacts)
+        case getSignatureTapped
         case goBackPressed
         case goBackPressedFromRequestZec
         case onAppear
         case partialProposalError(PartialProposalError.Action)
         case partialProposalErrorDismiss
+        case rejectTapped
         case reportTapped
         case saveAddressTapped(RedactableString)
+        case scan(Scan.Action)
         case sendDone
         case sendFailed(ZcashError?, Bool)
+        case sendingScreenOnAppear
         case sendPartial([String], [String])
         case sendPressed
         case sendSupportMailFinished
         case sendTriggered
         case shareFinished
         case showHideButtonTapped
+        case transactionResultReady
         case updateDestination(State.Destination?)
-        case updateFailedData(Int, String)
+        case updateFailedData(Int, String, String)
         case updateResult(State.Result?)
+        case updateStackDestination(SendConfirmation.State.StackDestination?)
         case updateTxIdToExpand(String?)
         case viewTransactionTapped
+        
+        // PCZT
+        case addProofsToPczt
+        case createTransactionFromPCZT
+        case pcztResolved(Pczt)
+        case pcztWithProofsResolved(Pczt)
+        case resetPCZTs
+        case resolvePCZT
+        case sharePCZT
     }
 
     @Dependency(\.addressBook) var addressBook
     @Dependency(\.audioServices) var audioServices
     @Dependency(\.localAuthentication) var localAuthentication
     @Dependency(\.derivationTool) var derivationTool
+    @Dependency(\.keystoneHandler) var keystoneHandler
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.mnemonic) var mnemonic
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
@@ -169,26 +208,37 @@ public struct SendConfirmation {
             PartialProposalError()
         }
 
+        Scope(state: \.scanState, action: \.scan) {
+            Scan()
+        }
+        
         Reduce { state, action in
             switch action {
             case .onAppear:
+                state.txIdToExpand = nil
+                state.scanState.checkers = [.keystoneScanChecker, .keystonePCZTScanChecker]
+                state.scanState.instructions = L10n.Keystone.scanInfoTransaction
+                state.scanState.forceLibraryToHide = true
                 state.randomSuccessIconIndex = Int.random(in: 1...2)
                 state.randomFailureIconIndex = Int.random(in: 1...3)
                 state.randomResubmissionIconIndex = Int.random(in: 1...2)
                 state.isTransparentAddress = derivationTool.isTransparentAddress(state.address, zcashSDKEnvironment.network.networkType)
                 state.canSendMail = MFMailComposeViewController.canSendMail()
                 state.alias = nil
-                do {
-                    let result = try addressBook.allLocalContacts()
-                    let abContacts = result.contacts
-                    if result.remoteStoreResult == .failure {
+                if let account = state.zashiWalletAccount {
+                    do {
+                        let result = try addressBook.allLocalContacts(account.account)
+                        let abContacts = result.contacts
+                        if result.remoteStoreResult == .failure {
+                            // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                        }
+                        return .send(.fetchedABContacts(abContacts))
+                    } catch {
                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                        return .none
                     }
-                    return .send(.fetchedABContacts(abContacts))
-                } catch {
-                    // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
-                    return .none
                 }
+                return .none
 
             case .fetchedABContacts(let abContacts):
                 state.addressBookContacts = abContacts
@@ -225,10 +275,7 @@ public struct SendConfirmation {
                 return .none
 
             case .closeTapped, .viewTransactionTapped, .backFromFailurePressed:
-                return .concatenate(
-                    .send(.updateDestination(nil)),
-                    .send(.updateResult(nil))
-                )
+                return .none
 
             case .sendPressed:
                 if state.featureFlags.sendingScreen {
@@ -245,6 +292,9 @@ public struct SendConfirmation {
                 guard let proposal = state.proposal else {
                     return .send(.sendFailed("missing proposal".toZcashError(), true))
                 }
+                guard let zip32AccountIndex = state.selectedWalletAccount?.zip32AccountIndex else {
+                    return .none
+                }
                 return .run { send in
                     if await !localAuthentication.authenticate() {
                         await send(.sendFailed(nil, true))
@@ -255,16 +305,18 @@ public struct SendConfirmation {
                         let storedWallet = try walletStorage.exportWallet()
                         let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
                         let network = zcashSDKEnvironment.network.networkType
-                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, 0, network)
+                        let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, zip32AccountIndex, network)
 
                         let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
-                        
+
+                        await send(.transactionResultReady)
+
                         switch result {
                         case .grpcFailure(let txIds):
                             await send(.updateTxIdToExpand(txIds.last))
                             await send(.sendFailed("sdkSynchronizer.createProposedTransactions".toZcashError(), false))
                         case let .failure(txIds, code, description):
-                            await send(.updateFailedData(code, description))
+                            await send(.updateFailedData(code, description, ""))
                             await send(.updateTxIdToExpand(txIds.last))
                             await send(.sendFailed("sdkSynchronizer.createProposedTransactions".toZcashError(), true))
                         case let .partial(txIds: txIds, statuses: statuses):
@@ -282,7 +334,12 @@ public struct SendConfirmation {
             case .sendDone:
                 state.isSending = false
                 if state.featureFlags.sendingScreen {
-                    return .send(.updateResult(.success))
+                    let diffTime = Date().timeIntervalSince1970 - state.sendingScreenOnAppearTimestamp
+                    let waitTimeToPresentScreen = diffTime > 2.0 ? 0.01 : 2.0 - diffTime
+                    return .run { send in
+                        try? await mainQueue.sleep(for: .seconds(waitTimeToPresentScreen))
+                        await send(.updateResult(.success))
+                    }
                 } else {
                     return .none
                 }
@@ -290,7 +347,12 @@ public struct SendConfirmation {
             case let .sendFailed(error, isFatal):
                 state.isSending = false
                 if state.featureFlags.sendingScreen {
-                    return .send(.updateResult(isFatal ? .failure : .resubmission))
+                    let diffTime = Date().timeIntervalSince1970 - state.sendingScreenOnAppearTimestamp
+                    let waitTimeToPresentScreen = diffTime > 2.0 ? 0.01 : 2.0 - diffTime
+                    return .run { send in
+                        try? await mainQueue.sleep(for: .seconds(waitTimeToPresentScreen))
+                        await send(.updateResult(isFatal ? .failure : .resubmission))
+                    }
                 } else {
                     if let error {
                         state.alert = AlertState.sendFailure(error)
@@ -337,23 +399,31 @@ public struct SendConfirmation {
                     return .none
                 }
                 
-            case let .updateFailedData(code, desc):
+            case let .updateFailedData(code, desc, pcztMsg):
                 state.failedCode = code
                 state.failedDescription = desc
+                #if DEBUG
+                state.failedPcztMsg = pcztMsg
+                #endif
+                return .none
+                
+            case .updateStackDestination(let destination):
+                if let destination {
+                    state.stackDestinationBindingsAlive = destination.rawValue
+                }
+                state.stackDestination = destination
                 return .none
                 
             case .reportTapped:
                 var supportData = SupportDataGenerator.generate()
-                if let code = state.failedCode, let desc = state.failedDescription {
-                    supportData.message =
-                    """
-                    \(code)
-                    
-                    \(desc)
-
-                    \(supportData.message)
-                    """
-                }
+                supportData.message =
+                """
+                \(state.failedCode ?? -1000) \(state.failedDescription ?? "")
+                
+                \(supportData.message)
+                
+                \(state.failedPcztMsg ?? "")
+                """
                 if state.canSendMail {
                     state.supportData = supportData
                 } else {
@@ -367,6 +437,146 @@ public struct SendConfirmation {
                 
             case .shareFinished:
                 state.messageToBeShared = nil
+                state.pcztToShare = nil
+                return .none
+            
+            case .sendingScreenOnAppear:
+                state.sendingScreenOnAppearTimestamp = Date().timeIntervalSince1970
+                return .none
+                
+                // MARK: - Keystone
+                
+            case .getSignatureTapped:
+                state.isKeystoneCodeFound = false
+                keystoneHandler.resetQRDecoder()
+                return .send(.updateStackDestination(.scan))
+                
+            case .rejectTapped:
+                return .send(.resetPCZTs)
+                
+            case .confirmWithKeystoneTapped:
+                return .concatenate(
+                    .send(.resolvePCZT),
+                    .send(.updateStackDestination(.signWithKeystone))
+                    )
+                
+            case .scan(.cancelPressed):
+                return .send(.updateStackDestination(.signWithKeystone))
+
+            case .scan(.foundPCZT(let pcztWithSigs)):
+                if !state.isKeystoneCodeFound {
+                    state.isKeystoneCodeFound = true
+                    state.pcztWithSigs = pcztWithSigs
+                    return .run { send in
+                        await send(.updateStackDestination(.sending))
+                        await send(.createTransactionFromPCZT)
+                    }
+                }
+                return .none
+                
+            case .scan:
+                return .none
+                
+            case .resolvePCZT:
+                guard let proposal = state.proposal, let account = state.selectedWalletAccount else {
+                    return .none
+                }
+                return .run { send in
+                    do {
+                        let pczt = try await sdkSynchronizer.createPCZTFromProposal(account.id, proposal)
+                        await send(.pcztResolved(pczt))
+                    } catch {
+                        await send(.updateFailedData(-996, error.toZcashError().detailedMessage, ""))
+                    }
+                }
+                
+            case .pcztResolved(let pczt):
+                state.pczt = pczt
+                return .send(.addProofsToPczt)
+                
+            case .addProofsToPczt:
+                guard let pczt = state.pczt else {
+                    return .none
+                }
+                return .run { send in
+                    do {
+                        let pcztWithProofs = try await sdkSynchronizer.addProofsToPCZT(Pczt(pczt))
+                        await send(.pcztWithProofsResolved(pcztWithProofs))
+                    } catch {
+                        await send(.updateFailedData(-995, error.toZcashError().detailedMessage, ""))
+                    }
+                }
+                
+            case .pcztWithProofsResolved(let pcztWithProofs):
+                state.pcztWithProofs = pcztWithProofs
+                return .send(.createTransactionFromPCZT)
+                
+            case .sharePCZT:
+                state.pcztToShare = state.pczt
+                return .none
+                
+            case .createTransactionFromPCZT:
+                guard let pcztWithProofs = state.pcztWithProofs, let pcztWithSigs = state.pcztWithSigs else {
+                    return .none
+                }
+                #if DEBUG
+                let pcztMessage =
+                """
+                original pczt:
+                \(state.pczt!.hexEncodedString())
+                
+                pcztWithProofs:
+                \(pcztWithProofs.hexEncodedString())
+                
+                pcztWithSigs:
+                \(pcztWithSigs.hexEncodedString())
+                """
+                #else
+                let pcztMessage = ""
+                #endif
+                return .run { send in
+                    do {
+                        let result = try await sdkSynchronizer.createTransactionFromPCZT(pcztWithProofs, pcztWithSigs)
+
+                        await send(.resetPCZTs)
+                        await send(.transactionResultReady)
+
+                        switch result {
+                        case .grpcFailure(let txIds):
+                            await send(.updateFailedData(-999, "grpcFailure", pcztMessage))
+                            await send(.updateTxIdToExpand(txIds.last))
+                            await send(.sendFailed("sdkSynchronizer.createProposedTransactions".toZcashError(), false))
+                        case let .failure(txIds, code, description):
+                            if description.isEmpty {
+                                await send(.updateFailedData(-997, "result.failure \(txIds)", pcztMessage))
+                            } else {
+                                await send(.updateFailedData(code, description, pcztMessage))
+                            }
+                            await send(.updateTxIdToExpand(txIds.last))
+                            await send(.sendFailed("sdkSynchronizer.createProposedTransactions".toZcashError(), true))
+                        case let .partial(txIds: txIds, statuses: statuses):
+                            await send(.updateTxIdToExpand(txIds.last))
+                            await send(.sendPartial(txIds, statuses))
+                        case .success(let txIds):
+                            await send(.updateTxIdToExpand(txIds.last))
+                            await send(.sendDone)
+                        }
+                    } catch {
+                        await send(.resetPCZTs)
+                        await send(.updateFailedData(-998, error.toZcashError().detailedMessage, pcztMessage))
+                        await send(.sendFailed(error.toZcashError(), true))
+                    }
+                }
+                
+            case .resetPCZTs:
+                state.pczt = nil
+                state.pcztWithProofs = nil
+                state.pcztWithSigs = nil
+                state.pcztToShare = nil
+                state.proposal = nil
+                return .none
+                
+            case .transactionResultReady:
                 return .none
             }
         }
@@ -382,5 +592,11 @@ extension AlertState where Action == SendConfirmation.Action {
         } message: {
             TextState(L10n.Send.Alert.Failure.message(error.detailedMessage))
         }
+    }
+}
+
+extension Pczt {
+    func hexEncodedString() -> String {
+        return map { String(format: "%02hhx", $0) }.joined()
     }
 }

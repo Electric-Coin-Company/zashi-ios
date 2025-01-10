@@ -58,7 +58,7 @@ public struct AddressDetailsView: View {
                             .padding(.top, 12)
                         
                         Text(store.address.data)
-                            .zFont(size: 14, style: Design.Text.tertiary)
+                            .zFont(addressFont: true, size: 14, style: Design.Text.tertiary)
                             .lineLimit(store.isAddressExpanded ? nil : 2)
                             .truncationMode(.middle)
                             .padding(.top, 8)
@@ -124,6 +124,8 @@ extension AddressDetailsView {
         if let addressToShare = store.addressToShare,
            let cgImg = QRCodeGenerator.generateCode(
             from: addressToShare.data,
+            maxPrivacy: store.maxPrivacy,
+            vendor: store.selectedWalletAccount?.vendor == .keystone ? .keystone : .zashi,
             color: .black
            ) {
             UIShareDialogView(activityItems: [

@@ -85,6 +85,9 @@ extension DerivationToolClient: DependencyKey {
                     return false
                 }
             },
+            deriveUnifiedAddressFrom: { ufvk, networkType in
+                try DerivationTool(networkType: networkType).deriveUnifiedAddressFrom(ufvk: ufvk)
+            },
             deriveArbitraryWalletKey: { contextString, seed in
                 try DerivationTool.deriveArbitraryWalletKey(
                     contextString: contextString,

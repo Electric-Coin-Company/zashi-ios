@@ -27,8 +27,19 @@ public struct DeleteWalletView: View {
                 Text(L10n.DeleteWallet.message1)
                     .zFont(.semiBold, size: 16, style: Design.Text.primary)
                     .padding(.top, 12)
+                    .accentColor(.blue)
 
                 Text(L10n.DeleteWallet.message2)
+                    .zFont(size: 14, style: Design.Text.primary)
+                    .padding(.top, 8)
+                    .lineSpacing(1.5)
+
+                Text(L10n.DeleteWallet.message3)
+                    .zFont(size: 14, style: Design.Text.primary)
+                    .padding(.top, 8)
+                    .lineSpacing(1.5)
+
+                Text(L10n.DeleteWallet.message4)
                     .zFont(size: 14, style: Design.Text.primary)
                     .padding(.top, 8)
                     .lineSpacing(1.5)

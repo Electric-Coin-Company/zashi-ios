@@ -28,6 +28,33 @@
       }
     },
     {
+      "identity" : "bcswiftdcbor",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/BlockchainCommons/BCSwiftDCBOR",
+      "state" : {
+        "revision" : "21efa67ada2f22a6c277e1961f1059bb376e9b1a",
+        "version" : "2.0.2"
+      }
+    },
+    {
+      "identity" : "bcswiftfloat16",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/blockchaincommons/BCSwiftFloat16",
+      "state" : {
+        "revision" : "a27f3935a7b1db715713eda67369b02feade2ded",
+        "version" : "2.0.0"
+      }
+    },
+    {
+      "identity" : "bcswifttags",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/BlockchainCommons/BCSwiftTags",
+      "state" : {
+        "revision" : "ced8d92c7cc53375cdf9806c59251fe0161f02ec",
+        "version" : "0.2.3"
+      }
+    },
+    {
       "identity" : "bigdecimal",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mgriebling/BigDecimal.git",
@@ -86,8 +113,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/flexa/flexa-ios.git",
       "state" : {
-        "revision" : "5d33adf6507ea33e239f7fb8ec27978cf4e08243",
-        "version" : "1.0.8"
+        "revision" : "509cda5c27f1a7d903a3fc68cb7d8975c79abf08",
+        "version" : "1.0.9"
       }
     },
     {
@@ -131,8 +158,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/grpc/grpc-swift.git",
       "state" : {
-        "revision" : "6a90b7e77e29f9bda6c2b3a4165a40d6c02cfda1",
-        "version" : "1.23.0"
+        "revision" : "8c5e99d0255c373e0330730d191a3423c57373fb",
+        "version" : "1.24.2"
       }
     },
     {
@@ -163,6 +190,15 @@
       }
     },
     {
+      "identity" : "keystone-sdk-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/KeystoneHQ/keystone-sdk-ios/",
+      "state" : {
+        "revision" : "1d826dff694cc0fbbf457bc05053fd9f6f8fe386",
+        "version" : "0.8.5"
+      }
+    },
+    {
       "identity" : "leveldb",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/leveldb.git",
@@ -176,8 +212,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/airbnb/lottie-spm.git",
       "state" : {
-        "revision" : "b842598f1295f3ffa1475b1580672d1fe5b83580",
-        "version" : "4.5.0"
+        "revision" : "8c6edf4f0fa84fe9c058600a4295eb0c01661c69",
+        "version" : "4.5.1"
       }
     },
     {
@@ -239,8 +275,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-case-paths",
       "state" : {
-        "revision" : "71344dd930fde41e8f3adafe260adcbb2fc2a3dc",
-        "version" : "1.5.4"
+        "revision" : "bc92c4b27f9a84bfb498cdbfdf35d5a357e9161f",
+        "version" : "1.5.6"
       }
     },
     {
@@ -257,8 +293,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections",
       "state" : {
-        "revision" : "3d2dc41a01f9e49d84f0a3925fb858bed64f702d",
-        "version" : "1.1.2"
+        "revision" : "671108c96644956dddcd89dd59c203dcdb36cec7",
+        "version" : "1.1.4"
       }
     },
     {
@@ -302,8 +338,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-dependencies",
       "state" : {
-        "revision" : "fd1fb25b68fdb9756cd61d23dbd9e2614b340085",
-        "version" : "1.4.0"
+        "revision" : "85f89f5d0ce5a18945f65371d40ca997da85a41a",
+        "version" : "1.6.3"
       }
     },
     {
@@ -329,8 +365,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "revision" : "9cb486020ebf03bfa5b5df985387a14a98744537",
-        "version" : "1.6.1"
+        "revision" : "96a2f8a0fa41e9e09af4585e2724c4e825410b91",
+        "version" : "1.6.2"
       }
     },
     {
@@ -347,8 +383,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio.git",
       "state" : {
-        "revision" : "914081701062b11e3bb9e21accc379822621995e",
-        "version" : "2.76.1"
+        "revision" : "dca6594f65308c761a9c409e09fbf35f48d50d34",
+        "version" : "2.77.0"
       }
     },
     {
@@ -365,8 +401,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio-http2.git",
       "state" : {
-        "revision" : "eaa71bb6ae082eee5a07407b1ad0cbd8f48f9dca",
-        "version" : "1.34.1"
+        "revision" : "170f4ca06b6a9c57b811293cebcb96e81b661310",
+        "version" : "1.35.0"
       }
     },
     {
@@ -388,6 +424,15 @@
       }
     },
     {
+      "identity" : "swift-numberkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/objecthub/swift-numberkit.git",
+      "state" : {
+        "revision" : "33af3f9011e45dcd8ee696492d30dbcd5a8a67f3",
+        "version" : "2.6.0"
+      }
+    },
+    {
       "identity" : "swift-parsing",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-parsing",
@@ -401,8 +446,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-perception",
       "state" : {
-        "revision" : "1552c8f722ac256cc0b8daaf1a7073217d4fcdfb",
-        "version" : "1.3.4"
+        "revision" : "8d52279b9809ef27eabe7d5420f03734528f19da",
+        "version" : "1.4.1"
       }
     },
     {
@@ -410,8 +455,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-protobuf.git",
       "state" : {
-        "revision" : "e17d61f26df0f0e06f58f6977ba05a097a720106",
-        "version" : "1.27.1"
+        "revision" : "ebc7251dd5b37f627c93698e4374084d98409633",
+        "version" : "1.28.2"
       }
     },
     {
@@ -451,6 +496,15 @@
       }
     },
     {
+      "identity" : "swiftsortedcollections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/wolfmcnally/SwiftSortedCollections",
+      "state" : {
+        "revision" : "dd6c8e0eaef987e55a35c056d185144a7c71fc19",
+        "version" : "0.1.0"
+      }
+    },
+    {
       "identity" : "swiftui-introspect",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/siteline/swiftui-introspect",
@@ -469,12 +523,21 @@
       }
     },
     {
+      "identity" : "urkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/BlockchainCommons/URKit",
+      "state" : {
+        "revision" : "c7cf16b03ce061c2d461fb4c635cc27c9e1d00e3",
+        "version" : "15.0.0"
+      }
+    },
+    {
       "identity" : "xctest-dynamic-overlay",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",
       "state" : {
-        "revision" : "bc2a151366f2cd0e347274544933bc2acb00c9fe",
-        "version" : "1.4.0"
+        "revision" : "a3f634d1a409c7979cabc0a71b3f26ffa9fc8af1",
+        "version" : "1.4.3"
       }
     },
     {
@@ -482,8 +545,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-light-client-ffi",
       "state" : {
-        "revision" : "31a97a1478bc0354abdf208722b670f7fd3d9f8c",
-        "version" : "0.11.0"
+        "revision" : "11b0db058288b12ada9c5a95ed56f17f82d2868f",
+        "version" : "0.12.0"
       }
     },
     {
@@ -491,8 +554,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pacu/zcash-swift-payment-uri",
       "state" : {
-        "revision" : "58e049fda82e56fbaf5abeee15c7a1608b173018",
-        "version" : "0.1.0-beta.9"
+        "revision" : "c24dd72a60cf0f2bca4a9a6503ef63e079c96f77",
+        "version" : "0.1.0-beta.10"
       }
     },
     {
@@ -500,8 +563,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk",
       "state" : {
-        "revision" : "b248ae6a9008ac8198cd50b325fb616b763876d5",
-        "version" : "2.2.7"
+        "revision" : "69dc9e9cb9df7e3592f7a8245a421698717c5232",
+        "version" : "2.2.8"
       }
     }
   ],

@@ -15,7 +15,7 @@ public struct ZashiToggle: View {
     
     public init(
         isOn: Binding<Bool>,
-        label: String,
+        label: String = "",
         textColor: Color = Asset.Colors.primary.color
     ) {
         self._isOn = isOn
@@ -35,8 +35,6 @@ public struct ZashiToggle: View {
                 Text(label)
                     .zFont(.medium, size: 14, style: Design.Text.primary)
                     .multilineTextAlignment(.leading)
-                
-                Spacer()
             }
         }
         .foregroundColor(textColor)

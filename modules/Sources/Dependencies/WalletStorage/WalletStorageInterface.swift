@@ -75,8 +75,6 @@ public struct WalletStorageClient {
     /// There's no fate but what we make for ourselves - Sarah Connor.
     public var resetZashi: () -> Void
 
-    // TODO: str4d
-    // not sure what format the key is, for now I made it a String
     public var importAddressBookEncryptionKeys: (AddressBookEncryptionKeys) throws -> Void
     public var exportAddressBookEncryptionKeys: () throws -> AddressBookEncryptionKeys
 }

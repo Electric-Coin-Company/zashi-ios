@@ -65,15 +65,18 @@ public struct Root {
         public var onboardingState: OnboardingFlow.State
         public var osStatusErrorState: OSStatusError.State
         public var phraseDisplayState: RecoveryPhraseDisplay.State
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var serverSetupState: ServerSetup.State
         public var serverSetupViewBinding: Bool = false
         public var splashAppeared = false
         public var tabsState: Tabs.State
+        @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         public var walletConfig: WalletConfig
         @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
         public var wasRestoringWhenDisconnected = false
         public var welcomeState: Welcome.State
-        
+        @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
+
         public init(
             addressBookState: AddressBook.State = .initial,
             appInitializationState: InitializationState = .uninitialized,
@@ -278,6 +281,13 @@ public struct Root {
                     }
                     await send(.addressBookAccessGranted)
                 }
+
+            case .addressBook(.walletAccountTapped(let walletAccount)):
+                guard let address = walletAccount.uAddress?.stringEncoded else {
+                    return .none
+                }
+                state.addressBookBinding = false
+                return .send(.tabs(.send(.scan(.found(address.redacted)))))
 
             case .addressBook(.editId(let address)):
                 state.addressBookBinding = false
