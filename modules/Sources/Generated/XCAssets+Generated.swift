@@ -62,6 +62,7 @@ public enum Asset {
     public static let check = ImageAsset(name: "check")
     public static let chevronDown = ImageAsset(name: "chevronDown")
     public static let chevronRight = ImageAsset(name: "chevronRight")
+    public static let chevronUp = ImageAsset(name: "chevronUp")
     public static let coinsSwap = ImageAsset(name: "coinsSwap")
     public static let convertIcon = ImageAsset(name: "convertIcon")
     public static let copy = ImageAsset(name: "copy")
