@@ -22,6 +22,8 @@ import UIComponents
 public struct TransactionDetails {
     @ObservableState
     public struct State: Equatable {
+        public var areDetailsExpanded = false
+        public var isMessageExpanded = false
         public var transaction: TransactionState
         
         public init(
@@ -33,6 +35,9 @@ public struct TransactionDetails {
     
     public enum Action: Equatable {
         case bookmarkTapped
+        case messageTapped
+        case onAppear
+        case sentToRowTapped
     }
 
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
@@ -42,7 +47,20 @@ public struct TransactionDetails {
     public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                state.areDetailsExpanded = false
+                state.isMessageExpanded = false
+                return .none
+                
             case .bookmarkTapped:
+                return .none
+
+            case .messageTapped:
+                state.isMessageExpanded.toggle()
+                return .none
+
+            case .sentToRowTapped:
+                state.areDetailsExpanded.toggle()
                 return .none
             }
         }
