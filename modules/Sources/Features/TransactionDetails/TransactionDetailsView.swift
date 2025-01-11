@@ -288,32 +288,33 @@ extension TransactionDetailsView {
                             .zFont(size: 14, style: Design.Text.primary)
                     }
                     
-                    Button {
-                        store.send(.messageTapped, animation: .easeInOut)
-                    } label: {
-                        HStack(spacing: 6) {
-                            Text(store.isMessageExpanded
-                                 ? "View less"
-                                 : "View more"
-                            )
-                            .zFont(.medium, size: 14, style: Design.Text.primary)
-                            
-                            
-                            if store.isMessageExpanded {
-                                Asset.Assets.chevronUp.image
-                                    .zImage(size: 16, style: Design.Text.primary)
-                            } else {
-                                Asset.Assets.chevronDown.image
-                                    .zImage(size: 16, style: Design.Text.primary)
-                            }
+                    HStack(spacing: 6) {
+                        Text(store.isMessageExpanded
+                             ? "View less"
+                             : "View more"
+                        )
+                        .zFont(.medium, size: 14, style: Design.Text.primary)
+                        
+                        
+                        if store.isMessageExpanded {
+                            Asset.Assets.chevronUp.image
+                                .zImage(size: 16, style: Design.Text.primary)
+                        } else {
+                            Asset.Assets.chevronDown.image
+                                .zImage(size: 16, style: Design.Text.primary)
                         }
-                        .padding(.top, 12)
                     }
+                    .padding(.top, 12)
+                    
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(12)
                 .background {
                     RoundedRectangle(cornerRadius: 12)
                         .fill(Design.Surfaces.bgSecondary.color(colorScheme))
+                }
+                .onTapGesture {
+                    store.send(.messageTapped, animation: .easeInOut)
                 }
             }
             .frame(maxWidth: .infinity)
