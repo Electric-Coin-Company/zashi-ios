@@ -9,6 +9,7 @@ import SwiftUI
 import Generated
 
 struct ZashiBackV2Modifier: ViewModifier {
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dismiss) private var dismiss
 
     let disabled: Bool
@@ -48,7 +49,7 @@ struct ZashiBackV2Modifier: ViewModifier {
                                     .background {
                                         if background {
                                             RoundedRectangle(cornerRadius: 12)
-                                                .fill(Design.Btns.Tertiary.bg.color)
+                                                .fill(Design.Btns.Tertiary.bg.color(colorScheme))
                                         }
                                     }
                             }

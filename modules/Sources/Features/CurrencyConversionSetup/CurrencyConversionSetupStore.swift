@@ -128,7 +128,7 @@ public struct CurrencyConversionSetup {
 
             case .settingsOptionChanged(let option):
                 if option == .optOut {
-                    state.currencyConversion = nil
+                    state.$currencyConversion.withLock { $0 = nil }
                 }
                 return .none
 

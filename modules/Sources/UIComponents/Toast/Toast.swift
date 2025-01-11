@@ -10,6 +10,8 @@ import ComposableArchitecture
 import Generated
 
 public struct Toast: ViewModifier {
+    @Environment(\.colorScheme) private var colorScheme
+    
     public enum Edge: Equatable {
         case top(String)
         case bottom(String)
@@ -39,7 +41,7 @@ public struct Toast: ViewModifier {
                         .padding(.vertical, 12)
                         .background {
                             RoundedRectangle(cornerRadius: 12)
-                                .fill(Design.Btns.Primary.bg.color)
+                                .fill(Design.Btns.Primary.bg.color(colorScheme))
                         }
                     
                     if top {
@@ -63,7 +65,7 @@ public struct Toast: ViewModifier {
                         }
                     }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                        toast = nil
+                        $toast.withLock { $0 = nil }
                         self.message = nil
                     }
                 }

@@ -241,7 +241,7 @@ public struct SendConfirmation {
                 return .none
 
             case .fetchedABContacts(let abContacts):
-                state.addressBookContacts = abContacts
+                state.$addressBookContacts.withLock { $0 = abContacts }
                 state.alias = nil
                 for contact in state.addressBookContacts.contacts {
                     if contact.id == state.address {

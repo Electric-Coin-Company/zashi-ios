@@ -11,6 +11,7 @@ import Generated
 import UIComponents
 
 public struct AccountsSelectionView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @Perception.Bindable var store: StoreOf<AddKeystoneHWWallet>
     
     public init(store: StoreOf<AddKeystoneHWWallet>) {
@@ -75,7 +76,7 @@ public struct AccountsSelectionView: View {
                         .padding(8)
                         .background {
                             Circle()
-                                .fill(Design.Surfaces.bgAlt.color)
+                                .fill(Design.Surfaces.bgAlt.color(colorScheme))
                         }
                         .padding(.trailing, 8)
                     
@@ -97,7 +98,7 @@ public struct AccountsSelectionView: View {
                 .padding(.vertical, 12)
                 .background {
                     RoundedRectangle(cornerRadius: 20)
-                        .stroke(Design.Surfaces.strokeSecondary.color)
+                        .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                 }
             }
         }

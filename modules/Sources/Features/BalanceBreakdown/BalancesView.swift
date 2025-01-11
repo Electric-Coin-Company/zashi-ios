@@ -19,6 +19,7 @@ import WalletBalances
 import Combine
 
 public struct BalancesView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @Perception.Bindable var store: StoreOf<Balances>
     let tokenName: String
     
@@ -54,14 +55,14 @@ public struct BalancesView: View {
                     .padding(.horizontal, store.isHintBoxVisible ? 15 : 30)
                     .background {
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(Design.Surfaces.strokePrimary.color)
+                            .stroke(Design.Surfaces.strokePrimary.color(colorScheme))
                     }
                     .padding(.horizontal, 30)
 
                 if walletStatus == .restoring {
                     Text(L10n.Balances.restoringWalletWarning)
                         .zFont(.medium, size: 10, style: Design.Utility.ErrorRed._600)
-                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 60)
                         .padding(.vertical, 20)
@@ -82,7 +83,6 @@ public struct BalancesView: View {
                     }
                 )
             }
-            .walletStatusPanel()
         }
         .navigationBarTitleDisplayMode(.inline)
         .padding(.vertical, 1)

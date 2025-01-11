@@ -97,7 +97,7 @@ extension TabsView {
                         .padding(8)
                         .background {
                             Circle()
-                                .fill(Design.Surfaces.bgAlt.color)
+                                .fill(Design.Surfaces.bgAlt.color(colorScheme))
                         }
                         .padding(.trailing, 12)
                     
@@ -116,7 +116,7 @@ extension TabsView {
                 .background {
                     if selected {
                         RoundedRectangle(cornerRadius: 16)
-                            .fill(Design.Surfaces.bgSecondary.color)
+                            .fill(Design.Surfaces.bgSecondary.color(colorScheme))
                     }
                 }
             }
@@ -133,7 +133,7 @@ extension TabsView {
                         .padding(4)
                         .background {
                             Circle()
-                                .fill(Design.Surfaces.bgAlt.color)
+                                .fill(Design.Surfaces.bgAlt.color(colorScheme))
                         }
                         .padding(.trailing, 12)
                     
@@ -159,7 +159,7 @@ extension TabsView {
             .padding(.vertical, 12)
             .background {
                 RoundedRectangle(cornerRadius: 24)
-                    .stroke(Design.Surfaces.strokeSecondary.color)
+                    .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
             }
         }
     }
@@ -190,7 +190,7 @@ extension TabsView {
             .frame(maxWidth: .infinity)
             .background {
                 RoundedRectangle(cornerRadius: 24)
-                    .fill(Design.Surfaces.bgTertiary.color)
+                    .fill(Design.Surfaces.bgTertiary.color(colorScheme))
             }
         }
     }

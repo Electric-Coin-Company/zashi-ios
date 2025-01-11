@@ -127,7 +127,7 @@ public struct Balances {
         Reduce { state, action in
             switch action {
             case .alert(.presented(let action)):
-                return Effect.send(action)
+                return .send(action)
 
             case .alert(.dismiss):
                 state.alert = nil

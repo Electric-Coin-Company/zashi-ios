@@ -6,6 +6,19 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+## 1.3.2 build 1 (2025-01-09)
+
+### Fixed
+- Appearance colors when mode changed.
+- Info text truncation removed on a balance tab.
+- What's new data are no longer corrupted.
+- Balances tab's duplicated status bar removed.
+- Reset Zashi clears out accounts so cached addresses and previously selected account properly are no longer invalid.
+- Selected account is not listed in the Address Book among accounts.
+- Send Feedback screen is now scrollable so a Send button can be reached on a smaller screens.
+- Report button on a failed screen fallbacks to share a message when a native mail client is not set up.
+- Migration to a new device with backed up database lets a user to set the birthday.
+
 ## 1.3.1 build 1 (2024-12-24)
 
 ### Fixed

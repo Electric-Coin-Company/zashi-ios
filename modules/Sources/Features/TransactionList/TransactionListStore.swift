@@ -82,7 +82,7 @@ public struct TransactionList {
                     if result.remoteStoreResult == .failure {
                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
                     }
-                    state.addressBookContacts = abContacts
+                    state.$addressBookContacts.withLock { $0 = abContacts }
                 } catch {
                     // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
                 }
@@ -113,7 +113,7 @@ public struct TransactionList {
             )
             
         case .fetchedABContacts(let abContacts):
-            state.addressBookContacts = abContacts
+            state.$addressBookContacts.withLock { $0 = abContacts }
             let modifiedTransactionState = state.transactionList.map { transaction in
                 var copiedTransaction = transaction
                 
@@ -222,7 +222,7 @@ public struct TransactionList {
             
         case .copyToPastboard(let value):
             pasteboard.setString(value)
-            state.toast = .top(L10n.General.copiedToTheClipboard)
+            state.$toast.withLock { $0 = .top(L10n.General.copiedToTheClipboard) }
             return .none
 
         case .transactionCollapseRequested(let id):

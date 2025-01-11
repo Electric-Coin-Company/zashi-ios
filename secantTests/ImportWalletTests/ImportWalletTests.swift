@@ -38,14 +38,12 @@ class ImportWalletTests: XCTestCase {
         store.dependencies.mnemonic = .noOp
         store.dependencies.mnemonic.isValid = { _ in throw "invalid mnemonic" }
         
-        let seedPhrase = "one two three".redacted
+        let seedPhrase = "one two three"
         
-        await store.send(.seedPhraseInputChanged(seedPhrase)) { state in
+        await store.send(.binding(.set(\.importedSeedPhrase, seedPhrase))) { state in
             state.importedSeedPhrase = seedPhrase
-            state.wordsCount = 3
-            state.isValidMnemonic = false
         }
-        
+
         await store.finish()
     }
 

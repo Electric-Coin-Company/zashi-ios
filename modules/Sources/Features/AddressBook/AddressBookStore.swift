@@ -141,7 +141,7 @@ public struct AddressBook {
                 return .send(.fetchABContactsRequested)
 
             case .alert(.presented(let action)):
-                return Effect.send(action)
+                return .send(action)
 
             case .alert(.dismiss):
                 state.alert = nil
@@ -295,7 +295,7 @@ public struct AddressBook {
                 guard let account = state.zashiWalletAccount else {
                     return .none
                 }
-                state.addressBookContacts = abContacts
+                state.$addressBookContacts.withLock { $0 = abContacts }
                 if requestToSync {
                     return .run { send in
                         do {

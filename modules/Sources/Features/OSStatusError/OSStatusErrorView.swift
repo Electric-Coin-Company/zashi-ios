@@ -12,6 +12,8 @@ import Generated
 import UIComponents
 
 public struct OSStatusErrorView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     @Perception.Bindable var store: StoreOf<OSStatusError>
     
     public init(store: StoreOf<OSStatusError>) {
@@ -28,7 +30,7 @@ public struct OSStatusErrorView: View {
                     .padding(18)
                     .background {
                         Circle()
-                            .fill(Design.Utility.ErrorRed._100.color)
+                            .fill(Design.Utility.ErrorRed._100.color(colorScheme))
                     }
                     .rotationEffect(.degrees(180))
 

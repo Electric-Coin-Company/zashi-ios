@@ -22,6 +22,7 @@ public struct ZashiButton<PrefixContent, AccessoryContent>: View where PrefixCon
     }
     
     @Environment(\.isEnabled) var isEnabled
+    @Environment(\.colorScheme) private var colorScheme
     
     let title: String
     let type: `Type`
@@ -66,129 +67,129 @@ public struct ZashiButton<PrefixContent, AccessoryContent>: View where PrefixCon
                         .padding(.leading, 8)
                 }
             }
-            .foregroundColor(fgColor())
+            .zForegroundColor(fgColor())
             .padding(.horizontal, 18)
             .padding(.vertical, 12)
             .frame(maxWidth: infinityWidth ? .infinity : nil)
             .background {
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(bgColor())
+                    .fill(bgColor().color(colorScheme))
                     .overlay {
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(strokeColor())
+                            .stroke(strokeColor().color(colorScheme))
                     }
             }
         }
     }
     
-    private func bgColor() -> Color {
+    private func bgColor() -> Colorable {
         switch type {
         case .primary:
             return isEnabled
-            ? Design.Btns.Primary.bg.color
-            : Design.Btns.Primary.bgDisabled.color
+            ? Design.Btns.Primary.bg
+            : Design.Btns.Primary.bgDisabled
         case .secondary:
             return isEnabled
-            ? Design.Btns.Secondary.bg.color
-            : Design.Btns.Secondary.bgDisabled.color
+            ? Design.Btns.Secondary.bg
+            : Design.Btns.Secondary.bgDisabled
         case .tertiary:
             return isEnabled
-            ? Design.Btns.Tertiary.bg.color
-            : Design.Btns.Tertiary.bgDisabled.color
+            ? Design.Btns.Tertiary.bg
+            : Design.Btns.Tertiary.bgDisabled
         case .quaternary:
             return isEnabled
-            ? Design.Btns.Quaternary.bg.color
-            : Design.Btns.Quaternary.bgDisabled.color
+            ? Design.Btns.Quaternary.bg
+            : Design.Btns.Quaternary.bgDisabled
         case .destructive1:
             return isEnabled
-            ? Design.Btns.Destructive1.bg.color
-            : Design.Btns.Destructive1.bgDisabled.color
+            ? Design.Btns.Destructive1.bg
+            : Design.Btns.Destructive1.bgDisabled
         case .destructive2:
             return isEnabled
-            ? Design.Btns.Destructive2.bg.color
-            : Design.Btns.Destructive2.bgDisabled.color
+            ? Design.Btns.Destructive2.bg
+            : Design.Btns.Destructive2.bgDisabled
         case .brand:
             return isEnabled
-            ? Design.Btns.Brand.bg.color
-            : Design.Btns.Brand.bgDisabled.color
+            ? Design.Btns.Brand.bg
+            : Design.Btns.Brand.bgDisabled
         case .ghost:
             return isEnabled
-            ? Design.Btns.Ghost.bg.color
-            : Design.Btns.Ghost.bgDisabled.color
+            ? Design.Btns.Ghost.bg
+            : Design.Btns.Ghost.bgDisabled
         }
     }
     
-    private func fgColor() -> Color {
+    private func fgColor() -> Colorable {
         switch type {
         case .primary:
             return isEnabled
-            ? Design.Btns.Primary.fg.color
-            : Design.Btns.Primary.fgDisabled.color
+            ? Design.Btns.Primary.fg
+            : Design.Btns.Primary.fgDisabled
         case .secondary:
             return isEnabled
-            ? Design.Btns.Secondary.fg.color
-            : Design.Btns.Secondary.fgDisabled.color
+            ? Design.Btns.Secondary.fg
+            : Design.Btns.Secondary.fgDisabled
         case .tertiary:
             return isEnabled
-            ? Design.Btns.Tertiary.fg.color
-            : Design.Btns.Tertiary.fgDisabled.color
+            ? Design.Btns.Tertiary.fg
+            : Design.Btns.Tertiary.fgDisabled
         case .quaternary:
             return isEnabled
-            ? Design.Btns.Quaternary.fg.color
-            : Design.Btns.Quaternary.fgDisabled.color
+            ? Design.Btns.Quaternary.fg
+            : Design.Btns.Quaternary.fgDisabled
         case .destructive1:
             return isEnabled
-            ? Design.Btns.Destructive1.fg.color
-            : Design.Btns.Destructive1.fgDisabled.color
+            ? Design.Btns.Destructive1.fg
+            : Design.Btns.Destructive1.fgDisabled
         case .destructive2:
             return isEnabled
-            ? Design.Btns.Destructive2.fg.color
-            : Design.Btns.Destructive2.fgDisabled.color
+            ? Design.Btns.Destructive2.fg
+            : Design.Btns.Destructive2.fgDisabled
         case .brand:
             return isEnabled
-            ? Design.Btns.Brand.fg.color
-            : Design.Btns.Brand.fgDisabled.color
+            ? Design.Btns.Brand.fg
+            : Design.Btns.Brand.fgDisabled
         case .ghost:
             return isEnabled
-            ? Design.Btns.Ghost.fg.color
-            : Design.Btns.Ghost.fgDisabled.color
+            ? Design.Btns.Ghost.fg
+            : Design.Btns.Ghost.fgDisabled
         }
     }
 
-    private func strokeColor() -> Color {
+    private func strokeColor() -> Colorable {
         switch type {
         case .primary:
             return isEnabled
-            ? Design.Btns.Primary.bg.color
-            : Design.Btns.Primary.bgDisabled.color
+            ? Design.Btns.Primary.bg
+            : Design.Btns.Primary.bgDisabled
         case .secondary:
             return isEnabled
-            ? Design.Btns.Secondary.border.color
-            : Design.Btns.Secondary.bgDisabled.color
+            ? Design.Btns.Secondary.border
+            : Design.Btns.Secondary.bgDisabled
         case .tertiary:
             return isEnabled
-            ? Design.Btns.Tertiary.bg.color
-            : Design.Btns.Tertiary.bgDisabled.color
+            ? Design.Btns.Tertiary.bg
+            : Design.Btns.Tertiary.bgDisabled
         case .quaternary:
             return isEnabled
-            ? Design.Btns.Quaternary.bg.color
-            : Design.Btns.Quaternary.bgDisabled.color
+            ? Design.Btns.Quaternary.bg
+            : Design.Btns.Quaternary.bgDisabled
         case .destructive1:
             return isEnabled
-            ? Design.Btns.Destructive1.border.color
-            : Design.Btns.Destructive1.bgDisabled.color
+            ? Design.Btns.Destructive1.border
+            : Design.Btns.Destructive1.bgDisabled
         case .destructive2:
             return isEnabled
-            ? Design.Btns.Destructive2.bg.color
-            : Design.Btns.Destructive2.bgDisabled.color
+            ? Design.Btns.Destructive2.bg
+            : Design.Btns.Destructive2.bgDisabled
         case .brand:
             return isEnabled
-            ? Design.Btns.Brand.bg.color
-            : Design.Btns.Brand.bgDisabled.color
+            ? Design.Btns.Brand.bg
+            : Design.Btns.Brand.bgDisabled
         case .ghost:
             return isEnabled
-            ? Design.Btns.Ghost.bg.color
-            : Design.Btns.Ghost.bgDisabled.color
+            ? Design.Btns.Ghost.bg
+            : Design.Btns.Ghost.bgDisabled
         }
     }
 }

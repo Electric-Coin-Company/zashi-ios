@@ -34,7 +34,7 @@ public struct RequestZecSummaryView: View {
                 Group {
                     Text(store.requestedZec.decimalString())
                     + Text(" \(tokenName)")
-                        .foregroundColor(Design.Text.quaternary.color)
+                        .foregroundColor(Design.Text.quaternary.color(colorScheme))
                 }
                 .zFont(.semiBold, size: 56, style: Design.Text.primary)
                 .minimumScaleFactor(0.1)
@@ -54,11 +54,11 @@ public struct RequestZecSummaryView: View {
                             RoundedRectangle(cornerRadius: 12)
                                 .fill(store.isQRCodeAppreanceFlipped
                                       ? Asset.Colors.ZDesign.Base.bone.color
-                                      : Design.screenBackground.color
+                                      : Design.screenBackground.color(colorScheme)
                                 )
                                 .background {
                                     RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Design.Surfaces.strokeSecondary.color)
+                                        .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                                 }
                         }
                         .padding(.top, 32)

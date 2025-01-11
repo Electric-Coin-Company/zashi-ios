@@ -10,6 +10,8 @@ import SwiftUI
 import Generated
 
 public struct ZashiTextField<PrefixContent, AccessoryContent>: View where PrefixContent: View, AccessoryContent: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     let addressFont: Bool
     var text: Binding<String>
     var placeholder: String
@@ -44,7 +46,7 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
                     .lineLimit(1)
                     .truncationMode(.middle)
                     .font(.custom(FontFamily.Inter.medium.name, size: 14))
-                    .foregroundColor(Design.Inputs.Filled.label.color)
+                    .zForegroundColor(Design.Inputs.Filled.label)
                     .padding(.bottom, 6)
             }
             
@@ -60,7 +62,7 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
                     prompt:
                         Text(placeholder)
                             .font(.custom(FontFamily.Inter.regular.name, size: 16))
-                            .foregroundColor(Design.Inputs.Default.text.color)
+                            .foregroundColor(Design.Inputs.Default.text.color(colorScheme))
                 )
                 .autocapitalization(.none)
                 .font(.custom(
@@ -84,20 +86,20 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
             .padding(.horizontal, 12)
             .background(
                 RoundedRectangle(cornerRadius: 10)
-                    .fill(Design.Inputs.Default.bg.color)
+                    .fill(Design.Inputs.Default.bg.color(colorScheme))
                     .overlay {
                         RoundedRectangle(cornerRadius: 10)
                             .stroke(
                                 error == nil
-                                ? Design.Inputs.Default.bg.color
-                                : Design.Inputs.ErrorFilled.stroke.color
+                                ? Design.Inputs.Default.bg.color(colorScheme)
+                                : Design.Inputs.ErrorFilled.stroke.color(colorScheme)
                             )
                     }
             )
 
             if let error {
                 Text(error)
-                    .foregroundColor(Design.Inputs.ErrorFilled.hint.color)
+                    .zForegroundColor(Design.Inputs.ErrorFilled.hint)
                     .font(.custom(FontFamily.Inter.regular.name, size: 14))
                     .padding(.top, 6)
             }
@@ -120,7 +122,7 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
                 prefixView:
                     ZcashSymbol()
                     .frame(width: 12, height: 20)
-                    .foregroundColor(Design.Inputs.Default.text.color)
+                    .zForegroundColor(Design.Inputs.Default.text)
             )
             
             ZashiTextField(

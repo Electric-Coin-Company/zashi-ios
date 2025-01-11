@@ -10,6 +10,8 @@ import SwiftUI
 import Generated
 
 public struct PrivacyBadge: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     public enum Privacy {
         case low
         case max
@@ -50,14 +52,14 @@ public struct PrivacyBadge: View {
         .background {
             RoundedRectangle(cornerRadius: 16)
                 .fill(privacy == .max
-                      ? Design.Utility.Purple._50.color
-                      : Design.Utility.WarningYellow._50.color
+                      ? Design.Utility.Purple._50.color(colorScheme)
+                      : Design.Utility.WarningYellow._50.color(colorScheme)
                 )
                 .background {
                     RoundedRectangle(cornerRadius: 16)
                         .stroke(privacy == .max
-                                ? Design.Utility.Purple._200.color
-                                : Design.Utility.WarningYellow._200.color
+                                ? Design.Utility.Purple._200.color(colorScheme)
+                                : Design.Utility.WarningYellow._200.color(colorScheme)
                         )
                 }
         }

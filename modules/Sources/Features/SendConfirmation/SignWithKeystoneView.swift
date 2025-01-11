@@ -18,6 +18,8 @@ import SDKSynchronizer
 import Scan
 
 public struct SignWithKeystoneView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     @Perception.Bindable var store: StoreOf<SendConfirmation>
 
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
@@ -41,7 +43,7 @@ public struct SignWithKeystoneView: View {
                                 .padding(8)
                                 .background {
                                     Circle()
-                                        .fill(Design.Surfaces.bgAlt.color)
+                                        .fill(Design.Surfaces.bgAlt.color(colorScheme))
                                 }
                                 .padding(.trailing, 12)
                             
@@ -61,10 +63,10 @@ public struct SignWithKeystoneView: View {
                                 .padding(.horizontal, 8)
                                 .background {
                                     RoundedRectangle(cornerRadius: 16)
-                                        .fill(Design.Utility.HyperBlue._50.color)
+                                        .fill(Design.Utility.HyperBlue._50.color(colorScheme))
                                         .background {
                                             RoundedRectangle(cornerRadius: 16)
-                                                .stroke(Design.Utility.HyperBlue._200.color)
+                                                .stroke(Design.Utility.HyperBlue._200.color(colorScheme))
                                         }
                                 }
                         }
@@ -72,7 +74,7 @@ public struct SignWithKeystoneView: View {
                         .padding(.vertical, 12)
                         .background {
                             RoundedRectangle(cornerRadius: 16)
-                                .stroke(Design.Surfaces.strokeSecondary.color)
+                                .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                         }
                         .padding(.top, 40)
 
@@ -85,7 +87,7 @@ public struct SignWithKeystoneView: View {
                                         .fill(Asset.Colors.ZDesign.Base.bone.color)
                                         .background {
                                             RoundedRectangle(cornerRadius: 12)
-                                                .stroke(Design.Surfaces.strokeSecondary.color)
+                                                .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                                         }
                                 }
                                 .padding(.top, 32)
@@ -100,7 +102,7 @@ public struct SignWithKeystoneView: View {
                                     .fill(Asset.Colors.ZDesign.Base.bone.color)
                                     .background {
                                         RoundedRectangle(cornerRadius: 12)
-                                            .stroke(Design.Surfaces.strokeSecondary.color)
+                                            .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                                     }
                             }
                             .padding(.top, 32)

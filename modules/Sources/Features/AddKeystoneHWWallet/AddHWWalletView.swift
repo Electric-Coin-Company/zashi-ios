@@ -11,6 +11,7 @@ import Generated
 import UIComponents
 
 public struct AddKeystoneHWWalletView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @Perception.Bindable var store: StoreOf<AddKeystoneHWWallet>
     
     public init(store: StoreOf<AddKeystoneHWWallet>) {
@@ -42,7 +43,7 @@ public struct AddKeystoneHWWalletView: View {
                         } label: {
                             Text(L10n.Keystone.AddHWWallet.tutorial)
                                 .font(.custom(FontFamily.Inter.semiBold.name, size: 14))
-                                .foregroundColor(Design.Utility.HyperBlue._700.color)
+                                .foregroundColor(Design.Utility.HyperBlue._700.color(colorScheme))
                                 .underline()
                                 .padding(.top, 4)
                         }

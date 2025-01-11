@@ -31,7 +31,7 @@ public struct BalanceWithIconView: View {
             
             Circle()
                 .frame(width: 25, height: 25)
-                .foregroundColor(Design.Surfaces.brandBg.color)
+                .zForegroundColor(Design.Surfaces.brandBg)
                 .overlay {
                     ZcashSymbol()
                         .frame(width: 15, height: 15)

@@ -39,12 +39,12 @@ public struct Tooltip: View {
                 VStack(alignment: .leading) {
                     Text(title)
                         .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                        .foregroundColor(Design.Text.light.color)
+                        .zForegroundColor(Design.Text.light)
                         .padding(.bottom, 4)
                     
                     Text(desc)
                         .font(.custom(FontFamily.Inter.medium.name, size: 14))
-                        .foregroundColor(Design.Text.lightSupport.color)
+                        .zForegroundColor(Design.Text.lightSupport)
                         .lineLimit(nil)
                         .lineSpacing(1.5)
                 }
@@ -52,10 +52,10 @@ public struct Tooltip: View {
                 Asset.Assets.buttonCloseX.image
                     .resizable()
                     .frame(width: 20, height: 20)
-                    .foregroundColor(Design.HintTooltips.defaultFg.color)
+                    .zForegroundColor(Design.HintTooltips.defaultFg)
             }
             .padding(12)
-            .background(Design.HintTooltips.surfacePrimary.color)
+            .zBackground(Design.HintTooltips.surfacePrimary)
             .cornerRadius(8)
             // TODO: Colors from Design once available
             .shadow(color: Color(red: 0.137, green: 0.122, blue: 0.125).opacity(0.03), radius: 4, x: 0, y: 4)

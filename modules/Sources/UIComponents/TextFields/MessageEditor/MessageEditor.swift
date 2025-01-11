@@ -22,6 +22,7 @@ public extension View {
 }
 
 public struct MessageEditorView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @Perception.Bindable var store: StoreOf<MessageEditor>
 
     let title: String
@@ -57,7 +58,7 @@ public struct MessageEditorView: View {
                         .padding(.horizontal, 10)
                         .padding(.top, 2)
                         .padding(.bottom, 10)
-                        .colorBackground(Design.Inputs.Default.bg.color)
+                        .colorBackground(Design.Inputs.Default.bg.color(colorScheme))
                         .cornerRadius(10)
                         .overlay {
                             if store.text.isEmpty {
@@ -65,7 +66,7 @@ public struct MessageEditorView: View {
                                     VStack {
                                         Text(placeholder)
                                             .font(.custom(FontFamily.Inter.regular.name, size: 16))
-                                            .foregroundColor(Design.Inputs.Default.text.color)
+                                            .zForegroundColor(Design.Inputs.Default.text)
                                             .onTapGesture {
                                                 isFocused = true
                                             }
@@ -89,8 +90,8 @@ public struct MessageEditorView: View {
                             .font(.custom(FontFamily.Inter.regular.name, size: 14))
                             .foregroundColor(
                                 store.isValid
-                                ? Design.Inputs.Default.hint.color
-                                : Design.Inputs.Filled.required.color
+                                ? Design.Inputs.Default.hint.color(colorScheme)
+                                : Design.Inputs.Filled.required.color(colorScheme)
                             )
                             .padding(.trailing, 14)
                             .padding(.bottom, 14)
@@ -100,14 +101,14 @@ public struct MessageEditorView: View {
                 }
                 .background {
                     RoundedRectangle(cornerRadius: 10)
-                        .fill(Design.Inputs.Default.bg.color)
+                        .fill(Design.Inputs.Default.bg.color(colorScheme))
                 }
                 
                 if store.featureFlags.addUAtoMemo && isAddUAtoMemoActive && !store.uAddress.isEmpty {
                     ZashiToggle(
                         isOn: $store.isUAaddedToMemo,
                         label: store.isUAaddedToMemo ? L10n.MessageEditor.removeUA : L10n.MessageEditor.addUA,
-                        textColor: Design.Inputs.Filled.label.color
+                        textColor: Design.Inputs.Filled.label.color(colorScheme)
                     )
                     .padding(.top, 12)
                     .padding(.leading, 1)

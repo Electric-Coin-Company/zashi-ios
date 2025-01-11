@@ -267,14 +267,14 @@ public struct SendFlow {
                 }
 
             case .fetchedABContacts(let abContacts):
-                state.addressBookContacts = abContacts
+                state.$addressBookContacts.withLock { $0 = abContacts }
                 return .none
                 
             case .onDisapear:
                 return .cancel(id: state.cancelId)
                 
             case .alert(.presented(let action)):
-                return Effect.send(action)
+                return .send(action)
 
             case .alert(.dismiss):
                 state.alert = nil
@@ -317,11 +317,11 @@ public struct SendFlow {
                 switch result {
                 case .value(let rate), .refreshEnable(let rate):
                     if let rate {
-                        state.currencyConversion = CurrencyConversion(.usd, ratio: rate.rate.doubleValue, timestamp: rate.date.timeIntervalSince1970)
+                        state.$currencyConversion.withLock { $0 = CurrencyConversion(.usd, ratio: rate.rate.doubleValue, timestamp: rate.date.timeIntervalSince1970) }
                         return .send(.syncAmounts(true))
                     }
                 case .stale:
-                    state.currencyConversion = nil
+                    state.$currencyConversion.withLock { $0 = nil }
                     return .none
                 }
                 return .none

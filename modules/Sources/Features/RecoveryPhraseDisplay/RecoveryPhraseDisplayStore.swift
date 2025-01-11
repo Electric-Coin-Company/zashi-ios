@@ -76,7 +76,7 @@ public struct RecoveryPhraseDisplay {
                 return .none
                 
             case .alert(.presented(let action)):
-                return Effect.send(action)
+                return .send(action)
 
             case .alert(.dismiss):
                 state.alert = nil

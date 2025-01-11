@@ -77,12 +77,29 @@ public struct FailureView: View {
                     // so frame is set to 0 to not break SwiftUIs layout
                     .frame(width: 0, height: 0)
                 }
+                
+                shareMessageView()
             }
         }
         .navigationBarBackButtonHidden()
         .padding(.vertical, 1)
         .screenHorizontalPadding()
         .applyFailureScreenBackground()
+    }
+}
+
+extension FailureView {
+    @ViewBuilder func shareMessageView() -> some View {
+        if let message = store.messageToBeShared {
+            UIShareDialogView(activityItems: [message]) {
+                store.send(.shareFinished)
+            }
+            // UIShareDialogView only wraps UIActivityViewController presentation
+            // so frame is set to 0 to not break SwiftUIs layout
+            .frame(width: 0, height: 0)
+        } else {
+            EmptyView()
+        }
     }
 }
 

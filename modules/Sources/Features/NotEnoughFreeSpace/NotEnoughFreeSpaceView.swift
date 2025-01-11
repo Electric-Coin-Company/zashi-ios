@@ -13,6 +13,8 @@ import Settings
 import UIComponents
 
 public struct NotEnoughFreeSpaceView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     @Perception.Bindable var store: StoreOf<NotEnoughFreeSpace>
     
     public init(store: StoreOf<NotEnoughFreeSpace>) {
@@ -27,7 +29,7 @@ public struct NotEnoughFreeSpaceView: View {
                     .padding(18)
                     .background {
                         Circle()
-                            .fill(Design.Utility.ErrorRed._100.color)
+                            .fill(Design.Utility.ErrorRed._100.color(colorScheme))
                     }
                     .rotationEffect(.degrees(180))
                     .padding(.top, 100)

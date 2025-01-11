@@ -39,12 +39,12 @@ public struct AddressDetailsView: View {
                                 .background {
                                     RoundedRectangle(cornerRadius: 12)
                                         .fill(store.isQRCodeAppreanceFlipped
-                                              ? Asset.Colors.ZDesign.Base.bone.color
-                                              : Design.screenBackground.color
+                                               ? Asset.Colors.ZDesign.Base.bone.color
+                                               : Design.screenBackground.color(colorScheme)
                                         )
                                         .background {
                                             RoundedRectangle(cornerRadius: 12)
-                                                .stroke(Design.Surfaces.strokeSecondary.color)
+                                                .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                                         }
                                 }
                                 .padding(.top, 40)

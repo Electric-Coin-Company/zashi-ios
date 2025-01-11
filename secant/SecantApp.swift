@@ -88,19 +88,23 @@ extension ZcashSDKEnvironment: @retroactive DependencyKey {
 extension SecantApp {
     func setupFeatureFlags() {
 #if SECANT_DISTRIB
-        featureFlags = FeatureFlags()
+        $featureFlags.withLock { $0 = FeatureFlags() }
 #elseif SECANT_TESTNET
-        featureFlags = FeatureFlags(
-            flexa: true,
-            appLaunchBiometric: true,
-            sendingScreen: true
-        )
+        $featureFlags.withLock {
+            $0 = FeatureFlags(
+                appLaunchBiometric: true,
+                flexa: true,
+                sendingScreen: true
+            )
+        }
 #else
-        featureFlags = FeatureFlags(
-            appLaunchBiometric: true,
-            flexa: true,
-            sendingScreen: true
-        )
+        $featureFlags.withLock {
+            $0 = FeatureFlags(
+                appLaunchBiometric: true,
+                flexa: true,
+                sendingScreen: true
+            )
+        }
 #endif
     }
 }

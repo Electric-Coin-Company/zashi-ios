@@ -1,6 +1,27 @@
 {
     "releases": [
         {
+            "version": "1.3.2",
+            "date": "01-09-2025",
+            "timestamp": 1736420570,
+            "sections": [
+                {
+                    "title": "Fixed:",
+                    "bulletpoints": [
+                        "Appearance colors when dark/light mode changes.",
+                        "Info text truncation removed on a balance tab.",
+                        "What's New data is no longer corrupted.",
+                        "Balances tab's duplicated status bar removed.",
+                        "Reset Zashi clears out accounts so cached addresses and previously selected accounts are no longer valid.",
+                        "Selected account is not listed in the Address Book among accounts.",
+                        "Send Feedback screen is now scrollable so a Send button can be reached on a smaller screens.",
+                        "Report button on a failed screen fallbacks to share a message when a native mail client is not set up.",
+                        "Migration to a new device with backed up database allows a user to set a wallet birthday height."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "1.3.1",
             "date": "12-23-2024",
             "timestamp": 1734964156,
@@ -21,7 +42,7 @@
                 {
                     "title": "Added:",
                     "bulletpoints": [
-                        "Zashi + Keystone Hardware Wallet integration is live!"
+                        "Zashi + Keystone Hardware Wallet integration is live!",
                         "Connect your Keystone wallet with Zashi.",
                         "Sign a transaction with your Keystone wallet.",
                         "Secure your shielded ZEC!"

@@ -13,6 +13,8 @@ import Utils
 import RestoreInfo
 
 public struct ImportWalletView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     private enum InputID: Hashable {
         case seed
     }
@@ -46,12 +48,12 @@ public struct ImportWalletView: View {
                             .padding(.horizontal, 10)
                         
                         WithPerceptionTracking {
-                            TextEditor(text: store.bindingForRedactableSeedPhrase(store.importedSeedPhrase))
+                            TextEditor(text: $store.importedSeedPhrase)
                                 .autocapitalization(.none)
                                 .padding(8)
                                 .background {
                                     RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Design.Surfaces.strokePrimary.color)
+                                        .stroke(Design.Surfaces.strokePrimary.color(colorScheme))
                                 }
                                 .colorBackground(Asset.Colors.background.color)
                                 .frame(minWidth: 270)
@@ -72,7 +74,7 @@ public struct ImportWalletView: View {
                         }
                         .overlay {
                             WithPerceptionTracking {
-                                if store.importedSeedPhrase.data.isEmpty {
+                                if store.importedSeedPhrase.isEmpty {
                                     HStack {
                                         VStack {
                                             Text(L10n.ImportWallet.enterPlaceholder)
@@ -205,20 +207,6 @@ extension StoreOf<ImportWallet> {
         Binding<Bool>(
             get: { self.destination == destination },
             set: { self.send(.updateDestination($0 ? destination : nil)) }
-        )
-    }
-
-    func bindingForRedactableSeedPhrase(_ importedSeedPhrase: RedactableString) -> Binding<String> {
-        Binding<String>(
-            get: { importedSeedPhrase.data },
-            set: { self.send(.seedPhraseInputChanged($0.redacted)) }
-        )
-    }
-    
-    func bindingForRedactableBirthday(_ birthdayHeight: RedactableString) -> Binding<String> {
-        Binding<String>(
-            get: { birthdayHeight.data },
-            set: { self.send(.birthdayInputChanged($0.redacted)) }
         )
     }
 }

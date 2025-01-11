@@ -27,7 +27,7 @@ extension TabsView {
     
     @ViewBuilder func hideBalancesButton() -> some View {
         Button {
-            isSensitiveContentHidden.toggle()
+            $isSensitiveContentHidden.withLock { $0.toggle() }
         } label: {
             let image = isSensitiveContentHidden ? Asset.Assets.eyeOff.image : Asset.Assets.eyeOn.image
             image
@@ -47,7 +47,7 @@ extension TabsView {
                         .frame(width: 16, height: 16)
                         .background {
                             Circle()
-                                .fill(Design.Surfaces.bgAlt.color)
+                                .fill(Design.Surfaces.bgAlt.color(colorScheme))
                                 .frame(width: 24, height: 24)
                         }
                     

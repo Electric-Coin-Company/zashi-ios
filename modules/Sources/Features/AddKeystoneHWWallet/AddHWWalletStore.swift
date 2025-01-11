@@ -122,10 +122,10 @@ public struct AddKeystoneHWWallet {
                 return .none
 
             case let .loadedWalletAccounts(walletAccounts, uuid):
-                state.walletAccounts = walletAccounts
+                state.$walletAccounts.withLock { $0 = walletAccounts }
                 for walletAccount in walletAccounts {
                     if walletAccount.id == uuid {
-                        state.selectedWalletAccount = walletAccount
+                        state.$selectedWalletAccount.withLock { $0 = walletAccount }
                         break
                     }
                 }

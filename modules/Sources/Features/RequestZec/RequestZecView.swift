@@ -14,6 +14,7 @@ import UIComponents
 import Utils
 
 public struct RequestZecView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @Perception.Bindable var store: StoreOf<RequestZec>
     
     @State private var keyboardVisible: Bool = false
@@ -47,7 +48,7 @@ public struct RequestZecView: View {
                         Group {
                             Text(store.requestedZec.decimalString())
                             + Text(" \(tokenName)")
-                                .foregroundColor(Design.Text.quaternary.color)
+                                .foregroundColor(Design.Text.quaternary.color(colorScheme))
                         }
                         .zFont(.semiBold, size: 56, style: Design.Text.primary)
                         .minimumScaleFactor(0.1)
