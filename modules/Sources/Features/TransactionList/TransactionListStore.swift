@@ -15,6 +15,10 @@ import AddressBook
 
 @Reducer
 public struct TransactionList {
+    public enum Constants {
+        public static let homePageTransactionsCount = 5
+    }
+    
     private let CancelStateId = UUID()
     private let CancelEventId = UUID()
 
@@ -29,6 +33,7 @@ public struct TransactionList {
         public var addressBookState: AddressBook.State = .initial
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
         public var isInvalidated = true
+        @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
         public var latestMinedHeight: BlockHeight?
         public var latestTransactionId = ""
         public var latestTransactionList: [TransactionState] = []
@@ -39,6 +44,7 @@ public struct TransactionList {
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
         public var transactionDetailsState: TransactionDetails.State = .initial
         public var transactionList: IdentifiedArrayOf<TransactionState>
+        public var transactionListHomePage: IdentifiedArrayOf<TransactionState> = []
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
         public init(
@@ -51,6 +57,7 @@ public struct TransactionList {
             self.latestTransactionList = latestTransactionList
             self.requiredTransactionConfirmations = requiredTransactionConfirmations
             self.transactionList = transactionList
+            self.transactionListHomePage = IdentifiedArrayOf<TransactionState>(uniqueElements: transactionList.prefix(Constants.homePageTransactionsCount))
         }
     }
 
@@ -152,6 +159,7 @@ public struct TransactionList {
                     return copiedTransaction
                 }
                 state.transactionList = IdentifiedArrayOf(uniqueElements: modifiedTransactionState)
+                state.transactionListHomePage = IdentifiedArrayOf(uniqueElements: modifiedTransactionState.prefix(Constants.homePageTransactionsCount))
                 return .none
                 
             case .onDisappear:
@@ -253,6 +261,7 @@ public struct TransactionList {
                     }
                 
                 state.transactionList = IdentifiedArrayOf(uniqueElements: sortedTransactionList)
+                state.transactionListHomePage = IdentifiedArrayOf(uniqueElements: sortedTransactionList.prefix(Constants.homePageTransactionsCount))
                 state.latestTransactionId = state.transactionList.first?.id ?? ""
                 
                 return .none

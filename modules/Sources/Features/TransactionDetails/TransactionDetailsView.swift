@@ -211,7 +211,10 @@ extension TransactionDetailsView {
             .padding(.top, 10)
 
             Group {
-                Text(store.transaction.zecAmount.decimalString())
+                Text(store.isSensitiveContentHidden
+                     ?  L10n.General.hideBalancesMost
+                     : store.transaction.zecAmount.decimalString()
+                )
                 + Text(" \(tokenName)")
                     .foregroundColor(Design.Text.quaternary.color(colorScheme))
             }
