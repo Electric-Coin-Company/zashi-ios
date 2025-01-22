@@ -404,13 +404,24 @@ public struct Tabs {
                 state.textToSelect = selectText
                 return .none
                 
+            case .home(.transactionList(.transactionDetails(.sendAgainTapped))):
+                state.selectedTab = .send
+                state.homeState.transactionListState.stackDestination = nil
+                state.sendState.address = state.homeState.transactionListState.transactionDetailsState.transaction.address.redacted
+                state.sendState.memoState.text = state.homeState.transactionListState.transactionDetailsState.transaction.textMemos?.first ?? ""
+                let zecAmount = state.homeState.transactionListState.transactionDetailsState.transaction.zecAmount.decimalString().redacted
+                return .merge(
+                    .send(.send(.zecAmountUpdated(zecAmount))),
+                    .send(.send(.validateAddress))
+                )
+                
+            case .home:
+                return .none
+
             case .dismissSelectTextEditor:
                 state.selectTextRequest = false
                 return .none
-            
-            case .home:
-                return .none
-            
+
             case .settings(.advancedSettings(.currencyConversionSetup(.saveChangesTapped))):
                 return .send(.send(.exchangeRateSetupChanged))
                 

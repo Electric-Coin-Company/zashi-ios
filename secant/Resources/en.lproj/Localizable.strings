@@ -302,6 +302,7 @@
 "qrCodeFor" = "QR Code for %@";
 "general.tapToCopy" = "Tap to copy";
 "general.fee" = "Typical Fee < %@";
+"general.feeShort" = "< %@";
 "general.hideBalancesMost" = "-----";
 "general.hideBalancesMostStandalone" = "-----";
 "general.hideBalancesLeast" = "";

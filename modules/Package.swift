@@ -883,6 +883,7 @@ let package = Package(
         .target(
             name: "TransactionDetails",
             dependencies: [
+                "AddressBook",
                 "AddressBookClient",
                 "Generated",
                 "Models",
@@ -900,6 +901,7 @@ let package = Package(
         .target(
             name: "TransactionList",
             dependencies: [
+                "AddressBook",
                 "AddressBookClient",
                 "Generated",
                 "Models",

@@ -216,6 +216,7 @@ public struct SendFlow {
         case sendFailed(ZcashError, Confirmation)
         case syncAmounts(Bool)
         case updateDestination(SendFlow.State.Destination?)
+        case validateAddress
         case walletBalances(WalletBalances.Action)
         case zecAmountUpdated(RedactableString)
     }
@@ -494,6 +495,13 @@ public struct SendFlow {
             case .currencyUpdated(let newValue):
                 state.currencyText = newValue
                 return .send(.syncAmounts(false))
+                
+            case .validateAddress:
+                let network = zcashSDKEnvironment.network.networkType
+                state.isValidAddress = derivationTool.isZcashAddress(state.address.data, network)
+                state.isValidTransparentAddress = derivationTool.isTransparentAddress(state.address.data, network)
+                state.isValidTexAddress = derivationTool.isTexAddress(state.address.data, network)
+                return .none
                 
             case .zecAmountUpdated(let newValue):
                 state.zecAmountText = newValue
