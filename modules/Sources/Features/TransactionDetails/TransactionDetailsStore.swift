@@ -36,6 +36,7 @@ public struct TransactionDetails {
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         public var alias: String?
         public var areDetailsExpanded = false
+        @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
         public var messageStates: [MessageState] = []
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
         public var transaction: TransactionState
