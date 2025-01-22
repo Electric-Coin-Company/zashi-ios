@@ -92,6 +92,7 @@ public enum Asset {
       public static let menu = ImageAsset(name: "menu")
       public static let messageSmile = ImageAsset(name: "messageSmile")
       public static let noMessage = ImageAsset(name: "noMessage")
+      public static let noTransactions = ImageAsset(name: "noTransactions")
       public static let partial = ImageAsset(name: "partial")
       public static let pencil = ImageAsset(name: "pencil")
       public static let plus = ImageAsset(name: "plus")

@@ -47,11 +47,13 @@ public struct Home {
     public enum Action: Equatable {
         case alert(PresentationAction<Action>)
         case foundTransactions
+        case makeATransactionTapped
         case onAppear
         case onDisappear
         case resolveReviewRequest
         case retrySync
         case reviewRequestFinished
+        case seeAllTransactionsTapped
         case showSynchronizerErrorAlert(ZcashError)
         case synchronizerStateChanged(RedactableSynchronizerState)
         case syncFailed(ZcashError)
@@ -116,7 +118,13 @@ public struct Home {
             case .reviewRequestFinished:
                 state.canRequestReview = false
                 return .none
-                                
+                          
+            case .makeATransactionTapped:
+                return .none
+                
+            case .seeAllTransactionsTapped:
+                return .none
+                
             case .updateTransactionList:
                 return .none
                 

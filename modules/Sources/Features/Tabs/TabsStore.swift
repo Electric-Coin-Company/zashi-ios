@@ -415,6 +415,10 @@ public struct Tabs {
                     .send(.send(.validateAddress))
                 )
                 
+            case .home(.makeATransactionTapped):
+                state.selectedTab = .send
+                return .none
+                
             case .home:
                 return .none
 

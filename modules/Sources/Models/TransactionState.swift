@@ -128,6 +128,30 @@ public struct TransactionState: Equatable, Identifiable {
         
         return Date(timeIntervalSince1970: timestamp).asHumanReadable()
     }
+        
+    public var daysAgo: String {
+        guard minedHeight != nil else { return "" }
+        guard let timestamp else { return "" }
+        
+        let transactionDate = Date(timeIntervalSince1970: timestamp)
+        
+        let calendar = Calendar.current
+        let startOfToday = calendar.startOfDay(for: Date())
+        let startOfGivenDate = calendar.startOfDay(for: transactionDate)
+        let components = calendar.dateComponents([.day], from: startOfGivenDate, to: startOfToday)
+        
+        if let daysAgo = components.day {
+            if daysAgo == 0 {
+                return "Today"
+            } else if daysAgo == 1 {
+                return "1 day ago"
+            } else {
+                return "\(daysAgo) days ago"
+            }
+        } else {
+            return ""
+        }
+    }
 
     // Helper flags
     public var isPending: Bool {

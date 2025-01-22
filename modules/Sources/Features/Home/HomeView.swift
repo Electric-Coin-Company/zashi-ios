@@ -11,6 +11,8 @@ import Models
 import WalletBalances
 
 public struct HomeView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     let store: StoreOf<Home>
     let tokenName: String
     
@@ -24,7 +26,6 @@ public struct HomeView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack(spacing: 0) {
-
                 WalletBalancesView(
                     store: store.scope(
                         state: \.walletBalancesState,
@@ -48,14 +49,22 @@ public struct HomeView: View {
                     .padding(.top, 7)
                 }
                 
-                TransactionListView(
-                    store:
-                        store.scope(
-                            state: \.transactionListState,
-                            action: \.transactionList
-                        ),
-                    tokenName: tokenName
-                )
+                VStack(spacing: 0) {
+                    if store.transactionListState.transactionList.isEmpty {
+                        noTransactionsView()
+                    } else {
+                        transactionsView()
+                    }
+                    
+                    TransactionListView(
+                        store:
+                            store.scope(
+                                state: \.transactionListState,
+                                action: \.transactionList
+                            ),
+                        tokenName: tokenName
+                    )
+                }
             }
             .walletStatusPanel()
             .applyScreenBackground()
@@ -78,6 +87,83 @@ public struct HomeView: View {
                         action: \.alert
                     )
             )
+        }
+    }
+
+    @ViewBuilder func transactionsView() -> some View {
+        WithPerceptionTracking {
+            HStack(spacing: 0) {
+                Text("Transactions")
+                    .zFont(.semiBold, size: 18, style: Design.Text.primary)
+                
+                Spacer()
+                
+                if store.transactionListState.transactionList.count > TransactionList.Constants.homePageTransactionsCount {
+                    Button {
+                        store.send(.seeAllTransactionsTapped)
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text("See all")
+                                .zFont(.semiBold, size: 14, style: Design.Btns.Tertiary.fg)
+                            
+                            Asset.Assets.chevronRight.image
+                                .zImage(size: 16, style: Design.Btns.Tertiary.fg)
+                        }
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background {
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(Design.Btns.Tertiary.bg.color(colorScheme))
+                        }
+                    }
+                }
+            }
+            .screenHorizontalPadding()
+        }
+    }
+
+    @ViewBuilder func noTransactionsView() -> some View {
+        WithPerceptionTracking {
+            ZStack {
+                VStack(spacing: 0) {
+                    ForEach(0..<5) { _ in
+                        NoTransactionPlaceholder()
+                    }
+                }
+                .overlay {
+                    LinearGradient(
+                        stops: [
+                            Gradient.Stop(color: .clear, location: 0.0),
+                            Gradient.Stop(color: Asset.Colors.background.color, location: 0.5)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                }
+                
+                VStack(spacing: 0) {
+                    Asset.Assets.Icons.noTransactions.image
+                        .resizable()
+                        .frame(width: 60, height: 60)
+                        .padding(.bottom, 20)
+
+                    Text("There’s nothing here, yet.")
+                        .zFont(.semiBold, size: 18, style: Design.Text.primary)
+                        .padding(.bottom, 8)
+
+                    Text("Make the first move...")
+                        .zFont(size: 14, style: Design.Text.tertiary)
+                        .padding(.bottom, 20)
+                    
+                    ZashiButton(
+                        "Send a transaction",
+                        type: .tertiary,
+                        infinityWidth: false
+                    ) {
+                        store.send(.makeATransactionTapped)
+                    }
+                }
+            }
         }
     }
 }
