@@ -5,6 +5,7 @@ import UIComponents
 import Models
 import ZcashLightClientKit
 import TransactionDetails
+import AddressBook
 
 public struct TransactionListView: View {
     let store: StoreOf<TransactionList>
@@ -55,6 +56,12 @@ public struct TransactionListView: View {
                 isActive: store.bindingForStack(.transactionDetails),
                 destination: {
                     TransactionDetailsView(store: store.transactionDetailsStore(), tokenName: tokenName)
+                        .navigationLinkEmpty(
+                            isActive: store.bindingForStack(.addressBookNewContact),
+                            destination: {
+                                AddressBookContactView(store: store.addressBookStore())
+                            }
+                        )
                 }
             )
             .disabled(store.transactionList.isEmpty)
@@ -73,6 +80,13 @@ extension StoreOf<TransactionList> {
         self.scope(
             state: \.transactionDetailsState,
             action: \.transactionDetails
+        )
+    }
+    
+    func addressBookStore() -> StoreOf<AddressBook> {
+        self.scope(
+            state: \.addressBookState,
+            action: \.addressBook
         )
     }
 }
