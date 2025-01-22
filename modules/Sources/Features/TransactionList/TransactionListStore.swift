@@ -11,6 +11,7 @@ import ZcashSDKEnvironment
 import AddressBookClient
 import UIComponents
 import TransactionDetails
+import AddressBook
 
 @Reducer
 public struct TransactionList {
@@ -21,9 +22,11 @@ public struct TransactionList {
     public struct State: Equatable {
         public enum StackDestination: Int, Equatable {
             case transactionDetails = 0
+            case addressBookNewContact
         }
         
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
+        public var addressBookState: AddressBook.State = .initial
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
         public var isInvalidated = true
         public var latestMinedHeight: BlockHeight?
@@ -52,6 +55,7 @@ public struct TransactionList {
     }
 
     public enum Action: Equatable {
+        case addressBook(AddressBook.Action)
         case copyToPastboard(RedactableString)
         case fetchedABContacts(AddressBookContacts)
         case foundTransactions
@@ -86,6 +90,10 @@ public struct TransactionList {
             TransactionDetails()
         }
         
+        Scope(state: \.addressBookState, action: \.addressBook) {
+            AddressBook()
+        }
+
         Reduce { state, action in
             switch action {
             case .onAppear:
@@ -151,7 +159,20 @@ public struct TransactionList {
                     .cancel(id: CancelStateId),
                     .cancel(id: CancelEventId)
                 )
+
+            case .transactionDetails(.saveAddressTapped):
+                state.addressBookState.address = state.transactionDetailsState.transaction.address
+                state.addressBookState.originalAddress = state.addressBookState.address
+                state.addressBookState.isNameFocused = true
+                state.addressBookState.isValidZcashAddress = true
+                return .send(.updateStackDestination(.addressBookNewContact))
                 
+            case .addressBook(.saveButtonTapped):
+                return .send(.updateStackDestination(.transactionDetails))
+
+            case .addressBook:
+                return .none
+
             case .selectText:
                 return .none
                 
@@ -243,6 +264,15 @@ public struct TransactionList {
                 
             case .transactionTapped(let id):
                 if let index = state.transactionList.index(id: id) {
+                    // update of the unread state
+                    if !state.transactionList[index].isSpending
+                        && !state.transactionList[index].isMarkedAsRead
+                        && state.transactionList[index].isUnread {
+                        do {
+                            try readTransactionsStorage.markIdAsRead(state.transactionList[index].id.redacted)
+                            state.transactionList[index].isMarkedAsRead = true
+                        } catch { }
+                    }
                     state.transactionDetailsState.transaction = state.transactionList[index]
                 }
                 return .send(.updateStackDestination(.transactionDetails))

@@ -64,12 +64,29 @@ public struct TransactionDetailsView: View {
                     .screenHorizontalPadding()
 
                 ScrollView {
-                    transactionDetailsList()
-                        .padding(.bottom, 20)
-                        .screenHorizontalPadding()
-                    
-                    messageView()
-                        .screenHorizontalPadding()
+                    if store.transaction.isSentTransaction {
+                        transactionDetailsList()
+                            .padding(.bottom, 20)
+                            .screenHorizontalPadding()
+                        
+                        if !store.memos.isEmpty {
+                            messageViews()
+                                .screenHorizontalPadding()
+                        }
+                    } else {
+                        if store.memos.isEmpty {
+                            noMessageView()
+                                .padding(.bottom, 20)
+                                .screenHorizontalPadding()
+                        } else {
+                            messageViews()
+                                .padding(.bottom, 20)
+                                .screenHorizontalPadding()
+                        }
+
+                        transactionDetailsList()
+                            .screenHorizontalPadding()
+                    }
                 }
                 
                 Spacer()
@@ -79,13 +96,23 @@ public struct TransactionDetailsView: View {
                         "Add a note",
                         type: .tertiary
                     ) {
-                        
+                        store.send(.addNoteTapped)
                     }
 
-                    ZashiButton(
-                        "Save address"
-                    ) {
-                        
+                    if store.transaction.isSentTransaction {
+                        if store.alias == nil {
+                            ZashiButton(
+                                "Save address"
+                            ) {
+                                store.send(.saveAddressTapped)
+                            }
+                        } else {
+                            ZashiButton(
+                                "Send again"
+                            ) {
+                                store.send(.sendAgainTapped)
+                            }
+                        }
                     }
                 }
                 .padding(.bottom, 24)
@@ -202,32 +229,83 @@ extension TransactionDetailsView {
                 Text("Transaction Details")
                     .zFont(.medium, size: 14, style: Design.Text.tertiary)
                     .padding(.bottom, 8)
-                
-                Button {
-                    store.send(.sentToRowTapped, animation: .easeInOut)
-                } label: {
-                    detailView(
-                        title: "Send to",
-                        value: "Lukas",
-                        icon: store.areDetailsExpanded
-                        ? Asset.Assets.chevronUp.image
-                        : Asset.Assets.chevronDown.image,
-                        rowAppereance: store.areDetailsExpanded ? .top : .full
-                    )
+
+                if store.transaction.isSentTransaction {
+                    if store.areDetailsExpanded {
+                        VStack(alignment: .leading, spacing: 0) {
+                            HStack(spacing: 0) {
+                                Text("Sent to")
+                                    .zFont(size: 14, style: Design.Text.tertiary)
+                                
+                                Spacer()
+                                
+                                if let alias = store.alias {
+                                    Text(alias)
+                                        .zFont(.medium, size: 14, style: Design.Text.primary)
+                                        .lineLimit(1)
+                                }
+                                
+                                Asset.Assets.chevronUp.image
+                                    .zImage(size: 20, style: Design.Text.primary)
+                                    .padding(.leading, 6)
+                            }
+                            .padding(.bottom, 24)
+                            
+                            VStack(alignment: .leading, spacing: 0) {
+                                Text("Address")
+                                    .zFont(size: 14, style: Design.Text.tertiary)
+                                    .padding(.bottom, 4)
+                                
+                                Text(store.transaction.address)
+                                    .zFont(.medium, size: 14, style: Design.Text.primary)
+                                    .lineSpacing(3)
+                            }
+                            .onTapGesture {
+                                store.send(.addressTapped)
+                            }
+                        }
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 20)
+                        .background {
+                            CustomRoundedRectangle(corners: RowAppereance.top.corners, radius: 12)
+                                .fill(Design.Surfaces.bgSecondary.color(colorScheme))
+                        }
+                        .padding(.bottom, 1)
+                        .onTapGesture {
+                            store.send(.sentToRowTapped, animation: .easeInOut)
+                        }
+                    } else {
+                        detailView(
+                            title: "Sent to",
+                            value: store.alias ?? store.transaction.address.zip316,
+                            icon: store.areDetailsExpanded
+                            ? Asset.Assets.chevronUp.image
+                            : Asset.Assets.chevronDown.image,
+                            rowAppereance: store.areDetailsExpanded ? .top : .full
+                        )
+                        .onTapGesture {
+                            store.send(.sentToRowTapped, animation: .easeInOut)
+                        }
+                    }
                 }
-                
-                if store.areDetailsExpanded {
-                    detailView(
-                        title: "Fee",
-                        value: "0.0001 ZEC",
-                        rowAppereance: .middle
-                    )
+
+                if store.areDetailsExpanded || !store.transaction.isSentTransaction {
+                    if store.transaction.isSentTransaction {
+                        detailView(
+                            title: L10n.Send.feeSummary,
+                            value: "\(L10n.General.feeShort(store.feeStr)) \(tokenName)",
+                            rowAppereance: .middle
+                        )
+                    }
                     
                     detailView(
                         title: L10n.TransactionList.transactionId,
                         value: store.transaction.id.truncateMiddle,
-                        rowAppereance: .middle
+                        rowAppereance: store.transaction.isSentTransaction ? .middle : .top
                     )
+                    .onTapGesture {
+                        store.send(.transactionIdTapped)
+                    }
                     
                     if let date = store.transaction.dateString {
                         detailView(
@@ -240,7 +318,7 @@ extension TransactionDetailsView {
             }
         }
     }
-    
+
     @ViewBuilder func detailView(
         title: String,
         value: String,
@@ -272,49 +350,81 @@ extension TransactionDetailsView {
         .padding(.bottom, rowAppereance == .full || rowAppereance == .bottom ? 0 : 1)
     }
     
-    @ViewBuilder func messageView() -> some View {
+    @ViewBuilder func messageViews() -> some View {
         WithPerceptionTracking {
-            VStack(alignment: .leading, spacing: 0) {
+            VStack(alignment: .leading, spacing: 8) {
                 Text(L10n.Send.message)
                     .zFont(.medium, size: 14, style: Design.Text.tertiary)
                     .padding(.bottom, 8)
                 
-                VStack(alignment: .leading, spacing: 0) {
-                    if store.isMessageExpanded {
-                        Text("Hey man, just sent over the $250 I owe you for the football tickets. Thanks again for covering me at the game, really appreciate it! Sorry it took me a bit to get this to you, things have been a bit hectic. I’m hoping we can hit another game soon—maybe next time I’ll grab the tickets and we can make it a whole weekend thing! Let me know if you get the payment alright, but it should come through no problem. Hope all’s good with you, let’s catch up soon and plan something! Thanks again, and talk to you later!")
-                            .zFont(size: 14, style: Design.Text.primary)
-                    } else {
-                        Text("Hey man, just sent over the $250 I owe you for the football tickets. Thanks again for covering me at the game, really appreciate it...")
-                            .zFont(size: 14, style: Design.Text.primary)
-                    }
-                    
-                    HStack(spacing: 6) {
-                        Text(store.isMessageExpanded
-                             ? "View less"
-                             : "View more"
-                        )
-                        .zFont(.medium, size: 14, style: Design.Text.primary)
-                        
-                        
-                        if store.isMessageExpanded {
-                            Asset.Assets.chevronUp.image
-                                .zImage(size: 16, style: Design.Text.primary)
+                ForEach(0..<store.memos.count, id: \.self) { index in
+                    VStack(alignment: .leading, spacing: 0) {
+                        if index < store.messageStates.count && store.messageStates[index] == .longExpanded {
+                            Text("\(store.memos[index].prefix(TransactionDetails.State.Constants.messageExpandThreshold))...")
+                                .zFont(size: 14, style: Design.Text.primary)
                         } else {
-                            Asset.Assets.chevronDown.image
-                                .zImage(size: 16, style: Design.Text.primary)
+                            Text(store.memos[index])
+                                .textSelection(.enabled)
+                                .zFont(size: 14, style: Design.Text.primary)
+                        }
+
+                        if index < store.messageStates.count && store.messageStates[index] != .short {
+                            HStack(spacing: 6) {
+                                Text(index < store.messageStates.count && store.messageStates[index] == .longExpanded
+                                     ? "View less"
+                                     : "View more"
+                                )
+                                .zFont(.medium, size: 14, style: Design.Text.primary)
+                                
+                                
+                                if index < store.messageStates.count && store.messageStates[index] == .longExpanded {
+                                    Asset.Assets.chevronUp.image
+                                        .zImage(size: 16, style: Design.Text.primary)
+                                } else {
+                                    Asset.Assets.chevronDown.image
+                                        .zImage(size: 16, style: Design.Text.primary)
+                                }
+                            }
+                            .padding(.top, 12)
                         }
                     }
-                    .padding(.top, 12)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(12)
+                    .background {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Design.Surfaces.bgSecondary.color(colorScheme))
+                    }
+                    .onTapGesture {
+                        store.send(.messageTapped(index), animation: .easeInOut)
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity)
+        }
+    }
+    
+    @ViewBuilder func noMessageView() -> some View {
+        WithPerceptionTracking {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(L10n.Send.message)
+                    .zFont(.medium, size: 14, style: Design.Text.tertiary)
+                    .padding(.bottom, 8)
+
+                HStack(spacing: 0) {
+                    Asset.Assets.Icons.noMessage.image
+                        .zImage(size: 20, style: Design.Text.support)
+                        .padding(.trailing, 8)
                     
+                    Text("No Message")
+                        .zFont(size: 14, style: Design.Text.support)
+                    
+                    Spacer()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(12)
                 .background {
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(Design.Surfaces.bgSecondary.color(colorScheme))
-                }
-                .onTapGesture {
-                    store.send(.messageTapped, animation: .easeInOut)
+                        .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
                 }
             }
             .frame(maxWidth: .infinity)

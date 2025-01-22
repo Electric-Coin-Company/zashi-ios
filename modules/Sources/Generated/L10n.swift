@@ -253,6 +253,10 @@ public enum L10n {
     public static func fee(_ p1: Any) -> String {
       return L10n.tr("Localizable", "general.fee", String(describing: p1), fallback: "Typical Fee < %@")
     }
+    /// < %@
+    public static func feeShort(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "general.feeShort", String(describing: p1), fallback: "< %@")
+    }
     /// Hide
     public static let hide = L10n.tr("Localizable", "general.hide", fallback: "Hide")
     /// 
