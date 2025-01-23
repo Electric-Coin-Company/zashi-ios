@@ -1,3 +1,10 @@
+//
+//  TransactionsManagerStore.swift
+//  Zashi
+//
+//  Created by Lukáš Korba on 01-22-2025.
+//
+
 import ComposableArchitecture
 import SwiftUI
 import ZcashLightClientKit
@@ -10,38 +17,30 @@ import ReadTransactionsStorage
 import ZcashSDKEnvironment
 import AddressBookClient
 import UIComponents
-import TransactionDetails
 import AddressBook
 
 @Reducer
-public struct TransactionList {
-    public enum Constants {
-        public static let homePageTransactionsCount = 5
-    }
-    
-    private let CancelStateId = UUID()
-    private let CancelEventId = UUID()
-
+public struct TransactionsManager {
     @ObservableState
     public struct State: Equatable {
+        public var CancelStateId = UUID()
+        public var CancelEventId = UUID()
+
+        @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         public var isInvalidated = true
         public var latestTransactionId = ""
         public var latestTransactionList: [TransactionState] = []
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var transactionList: IdentifiedArrayOf<TransactionState>
-        public var transactionListHomePage: IdentifiedArrayOf<TransactionState> = []
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
         public init(
-            latestTransactionList: [TransactionState] = [],
             transactionList: IdentifiedArrayOf<TransactionState>
         ) {
-            self.latestTransactionList = latestTransactionList
             self.transactionList = transactionList
-            self.transactionListHomePage = IdentifiedArrayOf<TransactionState>(uniqueElements: transactionList.prefix(Constants.homePageTransactionsCount))
         }
     }
-
+    
     public enum Action: Equatable {
         case foundTransactions
         case onAppear
@@ -51,37 +50,49 @@ public struct TransactionList {
         case updateTransactionList([TransactionState])
     }
 
+    @Dependency(\.addressBook) var addressBook
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.readTransactionsStorage) var readTransactionsStorage
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
-    public init() {}
+    public init() { }
 
-    // swiftlint:disable:next cyclomatic_complexity
     public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case .onAppear:
                 let selectedAccount = state.selectedWalletAccount
+                if let abAccount = state.zashiWalletAccount {
+                    do {
+                        let result = try addressBook.allLocalContacts(abAccount.account)
+                        let abContacts = result.contacts
+                        if result.remoteStoreResult == .failure {
+                            // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                        }
+                        state.$addressBookContacts.withLock { $0 = abContacts }
+                    } catch {
+                        // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                    }
+                }
                 return .merge(
                     .publisher {
                         sdkSynchronizer.stateStream()
                             .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                            .map { TransactionList.Action.synchronizerStateChanged($0.syncStatus) }
+                            .map { TransactionsManager.Action.synchronizerStateChanged($0.syncStatus) }
                     }
-                        .cancellable(id: CancelStateId, cancelInFlight: true),
+                        .cancellable(id: state.CancelStateId, cancelInFlight: true),
                     .publisher {
                         sdkSynchronizer.eventStream()
                             .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
                             .compactMap {
                                 if case SynchronizerEvent.foundTransactions = $0 {
-                                    return TransactionList.Action.foundTransactions
+                                    return TransactionsManager.Action.foundTransactions
                                 }
                                 return nil
                             }
                     }
-                    .cancellable(id: CancelEventId, cancelInFlight: true),
+                        .cancellable(id: state.CancelEventId, cancelInFlight: true),
                     .run { send in
                         guard selectedAccount != nil else { return }
                         if let transactions = try? await sdkSynchronizer.getAllTransactions(selectedAccount?.id) {
@@ -89,13 +100,13 @@ public struct TransactionList {
                         }
                     }
                 )
-
+                
             case .onDisappear:
                 return .concatenate(
-                    .cancel(id: CancelStateId),
-                    .cancel(id: CancelEventId)
+                    .cancel(id: state.CancelStateId),
+                    .cancel(id: state.CancelEventId)
                 )
-
+                
             case .synchronizerStateChanged(.upToDate):
                 guard let accountUUID = state.selectedWalletAccount?.id else {
                     return .none
@@ -105,8 +116,11 @@ public struct TransactionList {
                         await send(.updateTransactionList(transactions))
                     }
                 }
-                
+
             case .synchronizerStateChanged:
+                return .none
+
+            case .transactionTapped:
                 return .none
                 
             case .foundTransactions:
@@ -156,17 +170,22 @@ public struct TransactionList {
                                 copiedTransaction.isMarkedAsRead = true
                             }
                         }
-
+                        
+                        // in address book
+                        copiedTransaction.isInAddressBook = false
+                        for contact in state.addressBookContacts.contacts {
+                            if contact.id == transaction.address {
+                                copiedTransaction.isInAddressBook = true
+                                break
+                            }
+                        }
+                        
                         return copiedTransaction
                     }
                 
                 state.transactionList = IdentifiedArrayOf(uniqueElements: sortedTransactionList)
-                state.transactionListHomePage = IdentifiedArrayOf(uniqueElements: sortedTransactionList.prefix(Constants.homePageTransactionsCount))
                 state.latestTransactionId = state.transactionList.first?.id ?? ""
                 
-                return .none
-
-            case .transactionTapped:
                 return .none
             }
         }

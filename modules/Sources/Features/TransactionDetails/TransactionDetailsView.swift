@@ -304,6 +304,7 @@ extension TransactionDetailsView {
                     detailView(
                         title: L10n.TransactionList.transactionId,
                         value: store.transaction.id.truncateMiddle,
+                        icon: Asset.Assets.copy.image,
                         rowAppereance: store.transaction.isSentTransaction ? .middle : .top
                     )
                     .onTapGesture {

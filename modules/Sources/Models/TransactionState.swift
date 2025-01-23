@@ -39,9 +39,9 @@ public struct TransactionState: Equatable, Identifiable {
     public var timestamp: TimeInterval?
     public var zecAmount: Zatoshi
 
-    public var isAddressExpanded: Bool
-    public var isExpanded: Bool
-    public var isIdExpanded: Bool
+//    public var isAddressExpanded: Bool
+//    public var isExpanded: Bool
+//    public var isIdExpanded: Bool
     public var isMarkedAsRead = false
     public var isInAddressBook = false
     public var hasTransparentOutputs = false
@@ -144,7 +144,7 @@ public struct TransactionState: Equatable, Identifiable {
             if daysAgo == 0 {
                 return "Today"
             } else if daysAgo == 1 {
-                return "1 day ago"
+                return "Yesterday"
             } else {
                 return "\(daysAgo) days ago"
             }
@@ -246,9 +246,9 @@ public struct TransactionState: Equatable, Identifiable {
         self.isSentTransaction = isSentTransaction
         self.isShieldingTransaction = isShieldingTransaction
         self.isTransparentRecipient = isTransparentRecipient
-        self.isAddressExpanded = isAddressExpanded
-        self.isExpanded = isExpanded
-        self.isIdExpanded = isIdExpanded
+//        self.isAddressExpanded = isAddressExpanded
+//        self.isExpanded = isExpanded
+//        self.isIdExpanded = isIdExpanded
         self.isMarkedAsRead = isMarkedAsRead
     }
     
@@ -289,9 +289,9 @@ extension TransactionState {
         isShieldingTransaction = transaction.isShielding
         zecAmount = isSentTransaction ? Zatoshi(-transaction.value.amount) : transaction.value
         isTransparentRecipient = false
-        isAddressExpanded = false
-        isExpanded = false
-        isIdExpanded = false
+//        isAddressExpanded = false
+//        isExpanded = false
+//        isIdExpanded = false
         self.hasTransparentOutputs = hasTransparentOutputs
         memoCount = transaction.memoCount
         self.memos = memos

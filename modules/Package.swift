@@ -76,6 +76,7 @@ let package = Package(
         .library(name: "TaxExporter", targets: ["TaxExporter"]),
         .library(name: "TransactionDetails", targets: ["TransactionDetails"]),
         .library(name: "TransactionList", targets: ["TransactionList"]),
+        .library(name: "TransactionsManager", targets: ["TransactionsManager"]),
         .library(name: "UIComponents", targets: ["UIComponents"]),
         .library(name: "URIParser", targets: ["URIParser"]),
         .library(name: "UserDefaults", targets: ["UserDefaults"]),
@@ -857,12 +858,15 @@ let package = Package(
                 "Generated",
                 "Home",
                 "Models",
+                "ReadTransactionsStorage",
                 "Receive",
                 "RequestZec",
                 "Scan",
                 "SendConfirmation",
                 "SendFlow",
                 "Settings",
+                "TransactionDetails",
+                "TransactionsManager",
                 "UIComponents",
                 "UserPreferencesStorage",
                 "ZecKeyboard",
@@ -916,6 +920,25 @@ let package = Package(
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
             path: "Sources/Features/TransactionList"
+        ),
+        .target(
+            name: "TransactionsManager",
+            dependencies: [
+                "AddressBook",
+                "AddressBookClient",
+                "Generated",
+                "Models",
+                "Pasteboard",
+                "ReadTransactionsStorage",
+                "SDKSynchronizer",
+                "TransactionDetails",
+                "UIComponents",
+                "Utils",
+                "ZcashSDKEnvironment",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
+            ],
+            path: "Sources/Features/TransactionsManager"
         ),
         .target(
             name: "UIComponents",
