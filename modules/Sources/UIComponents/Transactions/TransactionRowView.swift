@@ -9,29 +9,26 @@ import SwiftUI
 import ComposableArchitecture
 import Generated
 import Models
-import UIComponents
 
-struct TransactionRowView: View {
+public struct TransactionRowView: View {
     @Environment(\.colorScheme) private var colorScheme
-    
-    let store: StoreOf<TransactionList>
+
     let transaction: TransactionState
     let isLatestTransaction: Bool
+    @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
     let tokenName: String
 
-    init(
-        store: StoreOf<TransactionList>,
+    public init(
         transaction: TransactionState,
         tokenName: String = "ZEC",
         isLatestTransaction: Bool = false
     ) {
-        self.store = store
         self.transaction = transaction
         self.tokenName = tokenName
         self.isLatestTransaction = isLatestTransaction
     }
     
-    var body: some View {
+    public var body: some View {
         WithPerceptionTracking {
             VStack(spacing: 0) {
                 Divider()
@@ -90,7 +87,7 @@ struct TransactionRowView: View {
     @ViewBuilder private func balanceView() -> some View {
         Group {
             Text(transaction.isSpending ? "- " : "+ ")
-            + Text(store.isSensitiveContentHidden
+            + Text(isSensitiveContentHidden
                  ?  L10n.General.hideBalancesMost
                  : transaction.zecAmount.decimalString()
             )
@@ -105,43 +102,36 @@ struct TransactionRowView: View {
 #Preview {
     VStack(spacing: 0) {
         TransactionRowView(
-            store: .placeholder,
             transaction: .mockedFailed
         )
         .listRowSeparator(.hidden)
 
         TransactionRowView(
-            store: .placeholder,
             transaction: .mockedFailedReceive
         )
         .listRowSeparator(.hidden)
 
         TransactionRowView(
-            store: .placeholder,
             transaction: .mockedSent
         )
         .listRowSeparator(.hidden)
 
         TransactionRowView(
-            store: .placeholder,
             transaction: .mockedReceived
         )
         .listRowSeparator(.hidden)
         
         TransactionRowView(
-            store: .placeholder,
             transaction: .mockedSending
         )
         .listRowSeparator(.hidden)
 
         TransactionRowView(
-            store: .placeholder,
             transaction: .mockedShielded
         )
         .listRowSeparator(.hidden)
 
         TransactionRowView(
-            store: .placeholder,
             transaction: .mockedReceiving
         )
         .listRowSeparator(.hidden)

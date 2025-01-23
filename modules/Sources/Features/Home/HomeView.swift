@@ -50,20 +50,22 @@ public struct HomeView: View {
                 }
                 
                 VStack(spacing: 0) {
-                    if store.transactionListState.transactionList.isEmpty {
-                        noTransactionsView()
+                    if store.transactionListState.transactionList.isEmpty && !store.transactionListState.isInvalidated {
+                        ScrollView {
+                            noTransactionsView()
+                        }
                     } else {
                         transactionsView()
+
+                        TransactionListView(
+                            store:
+                                store.scope(
+                                    state: \.transactionListState,
+                                    action: \.transactionList
+                                ),
+                            tokenName: tokenName
+                        )
                     }
-                    
-                    TransactionListView(
-                        store:
-                            store.scope(
-                                state: \.transactionListState,
-                                action: \.transactionList
-                            ),
-                        tokenName: tokenName
-                    )
                 }
             }
             .walletStatusPanel()
@@ -134,7 +136,7 @@ public struct HomeView: View {
                     LinearGradient(
                         stops: [
                             Gradient.Stop(color: .clear, location: 0.0),
-                            Gradient.Stop(color: Asset.Colors.background.color, location: 0.5)
+                            Gradient.Stop(color: Asset.Colors.background.color, location: 0.3)
                         ],
                         startPoint: .top,
                         endPoint: .bottom
@@ -142,9 +144,9 @@ public struct HomeView: View {
                 }
                 
                 VStack(spacing: 0) {
-                    Asset.Assets.Icons.noTransactions.image
+                    Asset.Assets.Illustrations.emptyState.image
                         .resizable()
-                        .frame(width: 60, height: 60)
+                        .frame(width: 164, height: 164)
                         .padding(.bottom, 20)
 
                     Text("There’s nothing here, yet.")
@@ -163,6 +165,7 @@ public struct HomeView: View {
                         store.send(.makeATransactionTapped)
                     }
                 }
+                .padding(.top, 40)
             }
         }
     }

@@ -24,6 +24,8 @@ import ZecKeyboard
 import AddressBook
 import AddKeystoneHWWallet
 import Scan
+import TransactionsManager
+import TransactionDetails
 
 public struct TabsView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -231,6 +233,45 @@ public struct TabsView: View {
                         )
                         .navigationLinkEmpty(
                             isActive: store.bindingForStackRequestPayment(.addressBookNewContact),
+                            destination: {
+                                AddressBookContactView(store: store.addressBookStore())
+                            }
+                        )
+                    }
+                )
+                .navigationLinkEmpty(
+                    isActive: store.bindingForStackTransactions(.manager),
+                    destination: {
+                        TransactionsManagerView(
+                            store: store.transactionsManagerStore(),
+                            tokenName: tokenName
+                        )
+                        .navigationLinkEmpty(
+                            isActive: store.bindingForStackTransactions(.details),
+                            destination: {
+                                TransactionDetailsView(
+                                    store: store.transactionDetailsStore(),
+                                    tokenName: tokenName
+                                )
+                                .navigationLinkEmpty(
+                                    isActive: store.bindingForStackTransactions(.addressBook),
+                                    destination: {
+                                        AddressBookContactView(store: store.addressBookStore())
+                                    }
+                                )
+                            }
+                        )
+                    }
+                )
+                .navigationLinkEmpty(
+                    isActive: store.bindingForStackTransactionsHP(.details),
+                    destination: {
+                        TransactionDetailsView(
+                            store: store.transactionDetailsStore(),
+                            tokenName: tokenName
+                        )
+                        .navigationLinkEmpty(
+                            isActive: store.bindingForStackTransactionsHP(.addressBook),
                             destination: {
                                 AddressBookContactView(store: store.addressBookStore())
                             }
@@ -459,6 +500,20 @@ extension StoreOf<Tabs> {
             action: \.scan
         )
     }
+    
+    func transactionsManagerStore() -> StoreOf<TransactionsManager> {
+        self.scope(
+            state: \.transactionsManagerState,
+            action: \.transactionsManager
+        )
+    }
+    
+    func transactionDetailsStore() -> StoreOf<TransactionDetails> {
+        self.scope(
+            state: \.transactionDetailsState,
+            action: \.transactionDetails
+        )
+    }
 }
 
 // MARK: - ViewStore
@@ -581,6 +636,64 @@ extension StoreOf<Tabs> {
                         self.send(.updateStackDestinationRequestPayment(popDestination))
                     } else {
                         self.send(.updateStackDestinationRequestPayment(nil))
+                    }
+                }
+            }
+        )
+    }
+    
+    func bindingForStackTransactions(_ destination: Tabs.State.StackDestinationTransactions) -> Binding<Bool> {
+        Binding<Bool>(
+            get: {
+                if let currentStackValue = self.stackDestinationTransactions?.rawValue {
+                    return currentStackValue >= destination.rawValue
+                } else {
+                    if destination.rawValue == 0 {
+                        return false
+                    } else if destination.rawValue <= self.stackDestinationTransactionsBindingsAlive {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+            },
+            set: { _ in
+                if let currentStackValue = self.stackDestinationTransactions?.rawValue, currentStackValue == destination.rawValue {
+                    let popIndex = destination.rawValue - 1
+                    if popIndex >= 0 {
+                        let popDestination = Tabs.State.StackDestinationTransactions(rawValue: popIndex)
+                        self.send(.updateStackDestinationTransactions(popDestination))
+                    } else {
+                        self.send(.updateStackDestinationTransactions(nil))
+                    }
+                }
+            }
+        )
+    }
+    
+    func bindingForStackTransactionsHP(_ destination: Tabs.State.StackDestinationTransactionsHP) -> Binding<Bool> {
+        Binding<Bool>(
+            get: {
+                if let currentStackValue = self.stackDestinationTransactionsHP?.rawValue {
+                    return currentStackValue >= destination.rawValue
+                } else {
+                    if destination.rawValue == 0 {
+                        return false
+                    } else if destination.rawValue <= self.stackDestinationTransactionsHPBindingsAlive {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+            },
+            set: { _ in
+                if let currentStackValue = self.stackDestinationTransactionsHP?.rawValue, currentStackValue == destination.rawValue {
+                    let popIndex = destination.rawValue - 1
+                    if popIndex >= 0 {
+                        let popDestination = Tabs.State.StackDestinationTransactionsHP(rawValue: popIndex)
+                        self.send(.updateStackDestinationTransactionsHP(popDestination))
+                    } else {
+                        self.send(.updateStackDestinationTransactionsHP(nil))
                     }
                 }
             }
