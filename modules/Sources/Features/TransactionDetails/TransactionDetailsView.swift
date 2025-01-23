@@ -52,6 +52,8 @@ public struct TransactionDetailsView: View {
     @Perception.Bindable var store: StoreOf<TransactionDetails>
     let tokenName: String
     
+    @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
+
     public init(store: StoreOf<TransactionDetails>, tokenName: String) {
         self.store = store
         self.tokenName = tokenName
@@ -119,7 +121,13 @@ public struct TransactionDetailsView: View {
                 .screenHorizontalPadding()
             }
             .zashiBack()
-            .navigationBarItems(trailing: bookmarkButton())
+            .navigationBarItems(
+                trailing:
+                    HStack(spacing: 0) {
+                        hideBalancesButton()
+                        bookmarkButton()
+                    }
+            )
             .onAppear {
                 store.send(.onAppear)
             }
@@ -211,12 +219,13 @@ extension TransactionDetailsView {
             .padding(.top, 10)
 
             Group {
-                Text(store.isSensitiveContentHidden
-                     ?  L10n.General.hideBalancesMost
-                     : store.transaction.zecAmount.decimalString()
-                )
-                + Text(" \(tokenName)")
-                    .foregroundColor(Design.Text.quaternary.color(colorScheme))
+                if store.isSensitiveContentHidden {
+                    Text(L10n.General.hideBalancesMost)
+                } else {
+                    Text(store.transaction.zecAmount.decimalString())
+                    + Text(" \(tokenName)")
+                        .foregroundColor(Design.Text.quaternary.color(colorScheme))
+                }
             }
             .zFont(.semiBold, size: 40, style: Design.Text.primary)
             .minimumScaleFactor(0.1)
@@ -432,6 +441,17 @@ extension TransactionDetailsView {
                 }
             }
             .frame(maxWidth: .infinity)
+        }
+    }
+    
+    @ViewBuilder func hideBalancesButton() -> some View {
+        Button {
+            $isSensitiveContentHidden.withLock { $0.toggle() }
+        } label: {
+            let image = isSensitiveContentHidden ? Asset.Assets.eyeOff.image : Asset.Assets.eyeOn.image
+            image
+                .zImage(size: 24, color: Asset.Colors.primary.color)
+                .padding(8)
         }
     }
 }

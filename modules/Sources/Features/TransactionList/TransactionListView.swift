@@ -35,7 +35,7 @@ public struct TransactionListView: View {
                             } label: {
                                 TransactionRowView(
                                     transaction: transaction,
-                                    isLatestTransaction: store.latestTransactionId == transaction.id
+                                    divider: store.latestTransactionId == transaction.id
                                 )
                             }
                             .listRowInsets(EdgeInsets())
