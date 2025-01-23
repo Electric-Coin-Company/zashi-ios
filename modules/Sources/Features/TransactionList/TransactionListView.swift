@@ -4,6 +4,7 @@ import Generated
 import UIComponents
 import Models
 import ZcashLightClientKit
+import AddressBook
 
 public struct TransactionListView: View {
     let store: StoreOf<TransactionList>
@@ -17,41 +18,35 @@ public struct TransactionListView: View {
     public var body: some View {
         WithPerceptionTracking {
             List {
-                if store.transactionList.isEmpty {
-                    Text(L10n.TransactionList.noTransactions)
-                        .font(.custom(FontFamily.Inter.bold.name, size: 13))
-                        .frame(maxWidth: .infinity)
-                        .listRowInsets(EdgeInsets())
-                        .listRowBackground(Asset.Colors.shade97.color)
-                        .listRowSeparator(.hidden)
-                        .padding(.top, 30)
-                } else if store.isInvalidated {
+                if store.isInvalidated {
                     VStack {
                         ProgressView()
                     }
                     .frame(maxWidth: .infinity)
                     .listRowInsets(EdgeInsets())
-                    .listRowBackground(Asset.Colors.shade97.color)
+                    .listRowBackground(Asset.Colors.background.color)
                     .listRowSeparator(.hidden)
                     .padding(.top, 30)
                 } else {
-                    ForEach(store.transactionList) { transaction in
+                    ForEach(store.transactionListHomePage) { transaction in
                         WithPerceptionTracking {
-                            TransactionRowView(
-                                store: store,
-                                transaction: transaction,
-                                tokenName: tokenName,
-                                isLatestTransaction: store.latestTransactionId == transaction.id
-                            )
+                            Button {
+                                store.send(.transactionTapped(transaction.id))
+                            } label: {
+                                TransactionRowView(
+                                    transaction: transaction,
+                                    divider: store.latestTransactionId == transaction.id
+                                )
+                            }
                             .listRowInsets(EdgeInsets())
                         }
                     }
-                    .listRowBackground(Asset.Colors.shade97.color)
+                    .listRowBackground(Asset.Colors.background.color)
                     .listRowSeparator(.hidden)
                 }
             }
             .disabled(store.transactionList.isEmpty)
-            .background(Asset.Colors.shade97.color)
+            .applyScreenBackground()
             .listStyle(.plain)
             .onAppear { store.send(.onAppear) }
             .onDisappear(perform: { store.send(.onDisappear) })

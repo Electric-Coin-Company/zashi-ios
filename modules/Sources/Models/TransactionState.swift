@@ -38,10 +38,6 @@ public struct TransactionState: Equatable, Identifiable {
     public var status: Status
     public var timestamp: TimeInterval?
     public var zecAmount: Zatoshi
-
-    public var isAddressExpanded: Bool
-    public var isExpanded: Bool
-    public var isIdExpanded: Bool
     public var isMarkedAsRead = false
     public var isInAddressBook = false
     public var hasTransparentOutputs = false
@@ -128,6 +124,30 @@ public struct TransactionState: Equatable, Identifiable {
         
         return Date(timeIntervalSince1970: timestamp).asHumanReadable()
     }
+        
+    public var daysAgo: String {
+        guard minedHeight != nil else { return "" }
+        guard let timestamp else { return "" }
+        
+        let transactionDate = Date(timeIntervalSince1970: timestamp)
+        
+        let calendar = Calendar.current
+        let startOfToday = calendar.startOfDay(for: Date())
+        let startOfGivenDate = calendar.startOfDay(for: transactionDate)
+        let components = calendar.dateComponents([.day], from: startOfGivenDate, to: startOfToday)
+        
+        if let daysAgo = components.day {
+            if daysAgo == 0 {
+                return "Today"
+            } else if daysAgo == 1 {
+                return "Yesterday"
+            } else {
+                return "\(daysAgo) days ago"
+            }
+        } else {
+            return ""
+        }
+    }
 
     // Helper flags
     public var isPending: Bool {
@@ -202,9 +222,6 @@ public struct TransactionState: Equatable, Identifiable {
         isSentTransaction: Bool = false,
         isShieldingTransaction: Bool = false,
         isTransparentRecipient: Bool = false,
-        isAddressExpanded: Bool = false,
-        isExpanded: Bool = false,
-        isIdExpanded: Bool = false,
         isMarkedAsRead: Bool = false
     ) {
         self.errorMessage = errorMessage
@@ -222,9 +239,6 @@ public struct TransactionState: Equatable, Identifiable {
         self.isSentTransaction = isSentTransaction
         self.isShieldingTransaction = isShieldingTransaction
         self.isTransparentRecipient = isTransparentRecipient
-        self.isAddressExpanded = isAddressExpanded
-        self.isExpanded = isExpanded
-        self.isIdExpanded = isIdExpanded
         self.isMarkedAsRead = isMarkedAsRead
     }
     
@@ -265,9 +279,6 @@ extension TransactionState {
         isShieldingTransaction = transaction.isShielding
         zecAmount = isSentTransaction ? Zatoshi(-transaction.value.amount) : transaction.value
         isTransparentRecipient = false
-        isAddressExpanded = false
-        isExpanded = false
-        isIdExpanded = false
         self.hasTransparentOutputs = hasTransparentOutputs
         memoCount = transaction.memoCount
         self.memos = memos
@@ -329,10 +340,7 @@ extension TransactionState {
         id: "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja",
         status: .paid,
         timestamp: 1699290621,
-        zecAmount: Zatoshi(25_000_000),
-        isAddressExpanded: false,
-        isExpanded: false,
-        isIdExpanded: false
+        zecAmount: Zatoshi(25_000_000)
     )
     
     public static let mockedReceived = TransactionState(
@@ -342,10 +350,7 @@ extension TransactionState {
         id: "t1vergg5jkp4xy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja",
         status: .received,
         timestamp: 1699292621,
-        zecAmount: Zatoshi(25_000_000),
-        isAddressExpanded: false,
-        isExpanded: false,
-        isIdExpanded: false
+        zecAmount: Zatoshi(25_000_000)
     )
     
     public static let mockedFailed = TransactionState(
@@ -357,10 +362,7 @@ extension TransactionState {
         status: .failed,
         timestamp: 1699290621,
         zecAmount: Zatoshi(25_108_700),
-        isSentTransaction: true,
-        isAddressExpanded: true,
-        isExpanded: true,
-        isIdExpanded: false
+        isSentTransaction: true
     )
     
     public static let mockedFailedReceive = TransactionState(
@@ -371,10 +373,7 @@ extension TransactionState {
         status: .failed,
         timestamp: 1699290621,
         zecAmount: Zatoshi(25_001_000),
-        isSentTransaction: false,
-        isAddressExpanded: false,
-        isExpanded: false,
-        isIdExpanded: false
+        isSentTransaction: false
     )
     
     public static let mockedSending = TransactionState(
@@ -386,10 +385,7 @@ extension TransactionState {
         status: .sending,
         timestamp: 1699290621,
         zecAmount: Zatoshi(25_000_000),
-        isSentTransaction: true,
-        isAddressExpanded: false,
-        isExpanded: false,
-        isIdExpanded: false
+        isSentTransaction: true
     )
     
     public static let mockedReceiving = TransactionState(
@@ -400,10 +396,7 @@ extension TransactionState {
         status: .receiving,
         timestamp: 1699290621,
         zecAmount: Zatoshi(25_000_000),
-        isSentTransaction: false,
-        isAddressExpanded: false,
-        isExpanded: false,
-        isIdExpanded: false
+        isSentTransaction: false
     )
     
     public static let mockedShielded = TransactionState(
@@ -414,10 +407,7 @@ extension TransactionState {
         status: .shielded,
         timestamp: 1699290621,
         zecAmount: Zatoshi(25_000_000),
-        isShieldingTransaction: true,
-        isAddressExpanded: false,
-        isExpanded: false,
-        isIdExpanded: false
+        isShieldingTransaction: true
     )
     
     public static let mockedShieldedExpanded = TransactionState(
@@ -428,10 +418,7 @@ extension TransactionState {
         status: .shielded,
         timestamp: 1699290621,
         zecAmount: Zatoshi(25_000_000),
-        isShieldingTransaction: true,
-        isAddressExpanded: false,
-        isExpanded: true,
-        isIdExpanded: false
+        isShieldingTransaction: true
     )
 }
 
