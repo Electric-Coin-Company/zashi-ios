@@ -1,3 +1,10 @@
+//
+//  TransactionsManagerView.swift
+//  Zashi
+//
+//  Created by Lukáš Korba on 01-22-2025.
+//
+
 import SwiftUI
 import ComposableArchitecture
 import Generated
@@ -6,15 +13,15 @@ import Models
 import ZcashLightClientKit
 import AddressBook
 
-public struct TransactionListView: View {
-    let store: StoreOf<TransactionList>
+public struct TransactionsManagerView: View {
+    @Perception.Bindable var store: StoreOf<TransactionsManager>
     let tokenName: String
     
-    public init(store: StoreOf<TransactionList>, tokenName: String) {
+    public init(store: StoreOf<TransactionsManager>, tokenName: String) {
         self.store = store
         self.tokenName = tokenName
     }
-    
+
     public var body: some View {
         WithPerceptionTracking {
             List {
@@ -28,7 +35,14 @@ public struct TransactionListView: View {
                     .listRowSeparator(.hidden)
                     .padding(.top, 30)
                 } else {
-                    ForEach(store.transactionListHomePage) { transaction in
+                    Text("Previous 7 days")
+                        .zFont(.medium, size: 16, style: Design.Text.tertiary)
+                        .screenHorizontalPadding()
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Asset.Colors.background.color)
+                        .listRowSeparator(.hidden)
+
+                    ForEach(store.transactionList) { transaction in
                         WithPerceptionTracking {
                             Button {
                                 store.send(.transactionTapped(transaction.id))
@@ -45,68 +59,37 @@ public struct TransactionListView: View {
                     .listRowSeparator(.hidden)
                 }
             }
+            .padding(.vertical, 1)
             .disabled(store.transactionList.isEmpty)
             .applyScreenBackground()
             .listStyle(.plain)
             .onAppear { store.send(.onAppear) }
             .onDisappear(perform: { store.send(.onDisappear) })
         }
+        .navigationBarTitleDisplayMode(.inline)
+        .zashiBack()
+        .screenTitle("Transactions".uppercased())
     }
 }
 
 // MARK: - Previews
 
 #Preview {
-    NavigationView {
-        TransactionListView(store: .placeholder, tokenName: "ZEC")
-            .preferredColorScheme(.light)
+    TransactionsManagerView(store: TransactionsManager.initial, tokenName: "ZEC")
+}
+
+// MARK: - Store
+
+extension TransactionsManager {
+    public static var initial = StoreOf<TransactionsManager>(
+        initialState: .initial
+    ) {
+        TransactionsManager()
     }
 }
 
-// MARK: Placeholders
+// MARK: - Placeholders
 
-extension TransactionList.State {
-    public static var placeholder: Self {
-        .init(transactionList: .mocked)
-    }
-
-    public static var initial: Self {
-        .init(transactionList: [])
-    }
-}
-
-extension StoreOf<TransactionList> {
-    public static var placeholder: Store<TransactionList.State, TransactionList.Action> {
-        Store(
-            initialState: .placeholder
-        ) {
-            TransactionList()
-                .dependency(\.zcashSDKEnvironment, .testnet)
-        }
-    }
-}
-
-extension IdentifiedArrayOf where Element == TransactionState {
-    public static var placeholder: IdentifiedArrayOf<TransactionState> {
-        .init(
-            uniqueElements: (0..<30).map {
-                TransactionState(
-                    fee: Zatoshi(10),
-                    id: String($0),
-                    status: .paid,
-                    timestamp: 1234567,
-                    zecAmount: Zatoshi(25)
-                )
-            }
-        )
-    }
-    
-    public static var mocked: IdentifiedArrayOf<TransactionState> {
-        .init(
-            uniqueElements: [
-                TransactionState.mockedSent,
-                TransactionState.mockedReceived
-            ]
-        )
-    }
+extension TransactionsManager.State {
+    public static let initial = TransactionsManager.State(transactionList: [])
 }

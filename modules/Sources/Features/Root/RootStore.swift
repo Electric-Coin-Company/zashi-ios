@@ -257,12 +257,12 @@ public struct Root {
                 state.addressBookContactBinding = newValue
                 return .none
 
-            case .tabs(.home(.transactionList(.saveAddressTapped(let address)))):
-                state.addressBookContactBinding = true
-                state.addressBookState.isValidZcashAddress = true
-                state.addressBookState.isNameFocused = true
-                state.addressBookState.address = address.data
-                return .none
+//            case .tabs(.home(.transactionList(.saveAddressTapped(let address)))):
+//                state.addressBookContactBinding = true
+//                state.addressBookState.isValidZcashAddress = true
+//                state.addressBookState.isNameFocused = true
+//                state.addressBookState.address = address.data
+//                return .none
 
             case .tabs(.send(.addNewContactTapped(let address))):
                 state.addressBookContactBinding = true
