@@ -501,6 +501,7 @@ public struct Tabs {
                     .send(.sendConfirmation(.updateResult(nil))),
                     .send(.sendConfirmation(.updateStackDestination(nil))),
                     .send(.send(.resetForm))
+                    // TODO: !!!
 //                    .send(.home(.transactionList(.transactionExpandRequested(state.sendConfirmationState.txIdToExpand ?? ""))))
                 )
 

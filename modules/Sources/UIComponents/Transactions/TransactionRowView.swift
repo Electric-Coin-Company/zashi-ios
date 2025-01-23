@@ -14,18 +14,18 @@ public struct TransactionRowView: View {
     @Environment(\.colorScheme) private var colorScheme
 
     let transaction: TransactionState
-    let isLatestTransaction: Bool
+    let divider: Bool
     @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
     let tokenName: String
 
     public init(
         transaction: TransactionState,
         tokenName: String = "ZEC",
-        isLatestTransaction: Bool = false
+        divider: Bool = false
     ) {
         self.transaction = transaction
         self.tokenName = tokenName
-        self.isLatestTransaction = isLatestTransaction
+        self.divider = divider
     }
     
     public var body: some View {
@@ -34,7 +34,7 @@ public struct TransactionRowView: View {
                 Divider()
                     .padding(.horizontal, 4)
                     .padding(.bottom, 12)
-                    .opacity(isLatestTransaction ? 0.0 : 1.0)
+                    .opacity(divider ? 0.0 : 1.0)
                 
                 HStack(spacing: 0) {
                     transationIcon()
@@ -86,12 +86,13 @@ public struct TransactionRowView: View {
 
     @ViewBuilder private func balanceView() -> some View {
         Group {
-            Text(transaction.isSpending ? "- " : "+ ")
-            + Text(isSensitiveContentHidden
-                 ?  L10n.General.hideBalancesMost
-                 : transaction.zecAmount.decimalString()
-            )
-            + Text(" \(tokenName)")
+            if isSensitiveContentHidden {
+                Text(L10n.General.hideBalancesMost)
+            } else {
+                Text(transaction.isSpending ? "- " : "+ ")
+                + Text(transaction.zecAmount.decimalString())
+                + Text(" \(tokenName)")
+            }
         }
         .zFont(size: 14, style: Design.Text.primary)
         .minimumScaleFactor(0.1)
