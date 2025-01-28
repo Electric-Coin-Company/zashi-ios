@@ -44,7 +44,8 @@ extension SDKSynchronizerClient: TestDependencyKey {
         createPCZTFromProposal: unimplemented("\(Self.self).createPCZTFromProposal", placeholder: Pczt()),
         addProofsToPCZT: unimplemented("\(Self.self).addProofsToPCZT", placeholder: Pczt()),
         createTransactionFromPCZT: unimplemented("\(Self.self).createTransactionFromPCZT", placeholder: .success(txIds: [])),
-        urEncoderForPCZT: unimplemented("\(Self.self).urEncoderForPCZT", placeholder: nil)
+        urEncoderForPCZT: unimplemented("\(Self.self).urEncoderForPCZT", placeholder: nil),
+        fetchTxidsWithMemoContaining: unimplemented("\(Self.self).fetchTxidsWithMemoContaining", placeholder: [])
     )
 }
 
@@ -79,7 +80,8 @@ extension SDKSynchronizerClient {
         createPCZTFromProposal: { _, _ in Pczt() },
         addProofsToPCZT: { _ in Pczt() },
         createTransactionFromPCZT: { _, _ in .success(txIds: []) },
-        urEncoderForPCZT: { _ in nil }
+        urEncoderForPCZT: { _ in nil },
+        fetchTxidsWithMemoContaining: { _ in [] }
     )
 
     public static let mock = Self.mocked()
@@ -185,7 +187,8 @@ extension SDKSynchronizerClient {
         createPCZTFromProposal: @escaping (AccountUUID, Proposal) async throws -> Pczt = { _, _ in Pczt() },
         addProofsToPCZT: @escaping (Data) async throws -> Pczt = { _ in Pczt() },
         createTransactionFromPCZT: @escaping (Pczt, Pczt) async throws -> CreateProposedTransactionsResult = { _, _ in .success(txIds: []) },
-        urEncoderForPCZT: @escaping (Pczt) -> UREncoder? = { _ in nil}
+        urEncoderForPCZT: @escaping (Pczt) -> UREncoder? = { _ in nil },
+        fetchTxidsWithMemoContaining: @escaping (String) async throws -> [Data] = { _ in [] }
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
             stateStream: stateStream,
@@ -217,7 +220,8 @@ extension SDKSynchronizerClient {
             createPCZTFromProposal: createPCZTFromProposal,
             addProofsToPCZT: addProofsToPCZT,
             createTransactionFromPCZT: createTransactionFromPCZT,
-            urEncoderForPCZT: urEncoderForPCZT
+            urEncoderForPCZT: urEncoderForPCZT,
+            fetchTxidsWithMemoContaining: fetchTxidsWithMemoContaining
         )
     }
 }

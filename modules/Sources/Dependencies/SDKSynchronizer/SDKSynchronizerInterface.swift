@@ -73,4 +73,7 @@ public struct SDKSynchronizerClient {
     public var addProofsToPCZT: (Pczt) async throws -> Pczt
     public var createTransactionFromPCZT: (Pczt, Pczt) async throws -> CreateProposedTransactionsResult
     public var urEncoderForPCZT: (Pczt) -> UREncoder?
+    
+    // Search
+    public var fetchTxidsWithMemoContaining: (String) async throws -> [Data]
 }

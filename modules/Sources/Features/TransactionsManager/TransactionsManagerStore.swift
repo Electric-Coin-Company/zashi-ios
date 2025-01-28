@@ -74,6 +74,7 @@ public struct TransactionsManager {
     }
     
     public enum Action: BindableAction, Equatable {
+        case asynchronousMemoSearchResult([String])
         case applyFiltersTapped
         case binding(BindingAction<TransactionsManager.State>)
         case eraseSearchTermTapped
@@ -270,9 +271,23 @@ public struct TransactionsManager {
                 if !state.searchTerm.isEmpty && state.searchTerm.count >= 2 {
                     state.searchedTransactionsList.removeAll()
 
+                    // synchronous search
                     state.transactionList.forEach { transaction in
                         if checkSearchTerm(state.searchTerm, transaction: transaction, addressBookContacts: state.addressBookContacts) {
                             state.searchedTransactionsList.append(transaction)
+                        }
+                    }
+
+                    // asynchronous search
+                    return .run { [searchTerm = state.searchTerm] send in
+                        let txids = try? await sdkSynchronizer.fetchTxidsWithMemoContaining(searchTerm).map {
+                            $0.toHexStringTxId()
+                        }
+                        
+                        if let txids {
+                            await send(.asynchronousMemoSearchResult(txids))
+                        } else {
+                            await send(.updateTransactionsAccordingToFilters)
                         }
                     }
                 } else {
@@ -281,6 +296,11 @@ public struct TransactionsManager {
                 
                 return .send(.updateTransactionsAccordingToFilters)
 
+            case .asynchronousMemoSearchResult(let txids):
+                let results = state.transactionList.filter { txids.contains($0.id) }
+                state.searchedTransactionsList.append(contentsOf: results)
+                return .send(.updateTransactionsAccordingToFilters)
+                
             case .updateTransactionsAccordingToFilters:
                 // modify the initial list of all transactions according to active filters
                 if !state.activeFilters.isEmpty {
@@ -423,11 +443,11 @@ extension TransactionsManager {
             }
         }
         
-        // fulsearch amounts
+        // fullsearch amounts
         if input.contains(searchTerm) {
             return true
         }
-        
+
         return false
     }
     
