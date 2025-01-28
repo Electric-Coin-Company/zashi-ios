@@ -224,11 +224,11 @@ public struct SendFlowView: View {
                         preferences.map {
                             HStack(alignment: .top, spacing: 0) {
                                 Asset.Assets.Icons.userPlus.image
-                                    .zImage(size: 20, style: Design.Text.lightSupport)
+                                    .zImage(size: 20, style: Design.Text.primary)
                                     .padding(.trailing, 12)
                                 
                                 Text(L10n.Send.addressNotInBook)
-                                    .zFont(.medium, size: 14, style: Design.Text.light)
+                                    .zFont(.medium, size: 14, style: Design.Text.primary)
                                     .padding(.top, 2)
                                     .lineLimit(1)
                                     .minimumScaleFactor(0.5)

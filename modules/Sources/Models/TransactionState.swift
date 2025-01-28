@@ -42,6 +42,10 @@ public struct TransactionState: Equatable, Identifiable {
     public var isInAddressBook = false
     public var hasTransparentOutputs = false
     
+    public var bookmarked = false
+    public var userMetadata = "" // equivalent of note in the UI
+//    public var userMetadata = "testing of note in the ui, to see it as a user data that somebody willingly put into the form." // equivalent of note in the UI
+
     public var rawID: Data? = nil
     
     // UI Colors
@@ -55,10 +59,34 @@ public struct TransactionState: Equatable, Identifiable {
 
     public func titleColor(_ colorScheme: ColorScheme) -> Color {
         status == .failed
-        ? Design.Utility.ErrorRed._600.color(colorScheme)
+        ? Design.Text.error.color(colorScheme)
+        : !isSentTransaction
+        ? Design.Utility.SuccessGreen._700.color(colorScheme)
+        : Design.Text.primary.color(colorScheme)
+    }
+    
+    public func iconColor(_ colorScheme: ColorScheme) -> Color {
+        status == .failed
+        ? Design.Utility.WarningYellow._500.color(colorScheme)
         : isPending
-        ? Asset.Colors.shade47.color
-        : Asset.Colors.primary.color
+        ? Design.Utility.HyperBlue._500.color(colorScheme)
+        : Design.Text.tertiary.color(colorScheme)
+    }
+
+    public func iconGradientStartColor(_ colorScheme: ColorScheme) -> Color {
+        status == .failed
+        ? Design.Utility.WarningYellow._50.color(colorScheme)
+        : isPending
+        ? Design.Utility.HyperBlue._50.color(colorScheme)
+        : Design.Surfaces.bgSecondary.color(colorScheme)
+    }
+
+    public func iconGradientEndColor(_ colorScheme: ColorScheme) -> Color {
+        status == .failed
+        ? Design.Utility.WarningYellow._100.color(colorScheme)
+        : isPending
+        ? Design.Utility.HyperBlue._100.color(colorScheme)
+        : Design.Surfaces.bgSecondary.color(colorScheme)
     }
 
     public var isUnread: Bool {
@@ -119,14 +147,30 @@ public struct TransactionState: Equatable, Identifiable {
     }
 
     public var dateString: String? {
-        guard minedHeight != nil else { return "" }
         guard let timestamp else { return nil }
         
         return Date(timeIntervalSince1970: timestamp).asHumanReadable()
     }
-        
+
+    public var listDateString: String? {
+        guard let timestamp else { return nil }
+
+        let formatter = DateFormatter()
+        let date = Date(timeIntervalSince1970: timestamp)
+        formatter.dateFormat = "MMM d 'at' h:mm a"
+        return formatter.string(from: date)
+    }
+    
+    public var listDateYearString: String? {
+        guard let timestamp else { return nil }
+
+        let formatter = DateFormatter()
+        let date = Date(timeIntervalSince1970: timestamp)
+        formatter.dateFormat = "MMM d, YYYY 'at' h:mm a"
+        return formatter.string(from: date)
+    }
+
     public var daysAgo: String {
-        guard minedHeight != nil else { return "" }
         guard let timestamp else { return "" }
         
         let transactionDate = Date(timeIntervalSince1970: timestamp)
@@ -141,8 +185,10 @@ public struct TransactionState: Equatable, Identifiable {
                 return "Today"
             } else if daysAgo == 1 {
                 return "Yesterday"
-            } else {
+            } else if daysAgo < 31 {
                 return "\(daysAgo) days ago"
+            } else {
+                return listDateString ?? ""
             }
         } else {
             return ""

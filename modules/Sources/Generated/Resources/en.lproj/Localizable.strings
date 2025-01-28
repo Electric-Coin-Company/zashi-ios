@@ -129,7 +129,7 @@
 "balances.pendingTransactions" = "Pending transactions";
 "balances.transparentBalance" = "Transparent balance";
 "balances.shieldButtonTitle" = "Shield and consolidate funds";
-"balances.shieldingInProgress" = "Shielding funds";
+"balances.shieldingInProgress" = "Shielding";
 "balances.synced" = "Synced";
 "balances.syncing" = "Syncing";
 "balances.syncingError" = "Zashi encountered an error while syncing, attempting to resolve...";
@@ -181,7 +181,7 @@
 "send.resubmission" = "Connection Error";
 "send.resubmissionInfo" = "Zashi encountered connection issues when submitting the transaction. It will retry in the next few minutes.";
 "send.report" = "Report";
-"send.shielding" = "Shielding...";
+"send.shielding" = "Shielding";
 "send.shieldingInfo" = "Your tokens are getting shielded";
 "send.successShielding" = "Shielded!";
 "send.successShieldingInfo" = "Your tokens have been successfully shielded";
@@ -327,13 +327,12 @@
 
 // MARK: - Transactions
 "transaction.sent" = "Sent";
-"transaction.sending" = "Sending...";
-"transaction.receiving" = "Receiving...";
+"transaction.sending" = "Sending";
+"transaction.receiving" = "Receiving";
 "transaction.received" = "Received";
 "transaction.failedSend" = "Send failed";
 "transaction.failedReceive" = "Receive failed";
-"transaction.shieldingFunds" = "Shielding Funds";
-"transaction.shieldedFunds" = "Shielded Funds";
+"transaction.shieldingFunds" = "Shielding";
 "transaction.failedShieldedFunds" = "Shielded Funds Failed";
 "transaction.saveAddress" = "Save address";
 "transaction.selectText" = "Select text";
@@ -516,3 +515,6 @@
 "taxExport.taxFile" = "Export Tax File";
 "taxExport.desc" = "Download your %@ transaction history from the previous calendar year in a .csv format.";
 "taxExport.shareDesc" = "%@ transaction history";
+
+// transaction history redesign
+"transaction.shieldedFunds" = "Shielded";

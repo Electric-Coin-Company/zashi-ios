@@ -75,6 +75,7 @@ public enum Asset {
       public static let arrowUp = ImageAsset(name: "arrowUp")
       public static let authKey = ImageAsset(name: "authKey")
       public static let bookmark = ImageAsset(name: "bookmark")
+      public static let bookmarkCheck = ImageAsset(name: "bookmarkCheck")
       public static let coinsHand = ImageAsset(name: "coinsHand")
       public static let connectWallet = ImageAsset(name: "connectWallet")
       public static let currencyDollar = ImageAsset(name: "currencyDollar")
@@ -101,6 +102,7 @@ public enum Asset {
       public static let qr = ImageAsset(name: "qr")
       public static let received = ImageAsset(name: "received")
       public static let save = ImageAsset(name: "save")
+      public static let search = ImageAsset(name: "search")
       public static let sent = ImageAsset(name: "sent")
       public static let server = ImageAsset(name: "server")
       public static let settings = ImageAsset(name: "settings")
@@ -110,6 +112,7 @@ public enum Asset {
       public static let textInput = ImageAsset(name: "textInput")
       public static let user = ImageAsset(name: "user")
       public static let userPlus = ImageAsset(name: "userPlus")
+      public static let xClose = ImageAsset(name: "xClose")
       public static let zashiLogoSq = ImageAsset(name: "zashiLogoSq")
       public static let zashiLogoSqBold = ImageAsset(name: "zashiLogoSqBold")
     }

@@ -19,14 +19,17 @@ public struct TransactionListView: View {
         WithPerceptionTracking {
             List {
                 if store.isInvalidated {
-                    VStack {
-                        ProgressView()
+                    VStack(alignment: .leading, spacing: 0) {
+                        ForEach(0..<5) { _ in
+                            NoTransactionPlaceholder(true)
+                        }
+                        
+                        Spacer()
                     }
                     .frame(maxWidth: .infinity)
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Asset.Colors.background.color)
                     .listRowSeparator(.hidden)
-                    .padding(.top, 30)
                 } else {
                     ForEach(store.transactionListHomePage) { transaction in
                         WithPerceptionTracking {
@@ -35,7 +38,7 @@ public struct TransactionListView: View {
                             } label: {
                                 TransactionRowView(
                                     transaction: transaction,
-                                    divider: store.latestTransactionId == transaction.id
+                                    divider: store.latestTransactionId != transaction.id
                                 )
                             }
                             .listRowInsets(EdgeInsets())

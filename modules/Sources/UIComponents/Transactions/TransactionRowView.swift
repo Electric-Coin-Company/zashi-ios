@@ -31,28 +31,35 @@ public struct TransactionRowView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack(spacing: 0) {
-                Divider()
-                    .padding(.horizontal, 4)
-                    .padding(.bottom, 12)
-                    .opacity(divider ? 0.0 : 1.0)
-                
                 HStack(spacing: 0) {
                     transationIcon()
-                        .zImage(size: 20, style: Design.Text.tertiary)
+                        .zImage(size: 20, color: transaction.iconColor(colorScheme))
                         .background {
                             Circle()
+                                .fill(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [
+                                            transaction.iconGradientEndColor(colorScheme),
+                                            transaction.iconGradientStartColor(colorScheme)
+                                        ]),
+                                        startPoint: .top,
+                                        endPoint: .bottom
+                                    )
+                                )
                                 .frame(width: 40, height: 40)
-                                .zForegroundColor(Design.Surfaces.bgSecondary)
                         }
                         .frame(width: 40, height: 40)
                         .padding(.trailing, 16)
 
                     VStack(alignment: .leading, spacing: 0) {
                         HStack(spacing: 0) {
-                            Text(transaction.title)
-                                .zFont(.semiBold, size: 14, style: Design.Text.primary)
+                            Text(transaction.isPending
+                                 ? "\(transaction.title)..."
+                                 : transaction.title
+                            )
+                            .zFont(.semiBold, size: 14, style: Design.Text.primary)
                             
-                            if transaction.zAddress == nil && !transaction.hasTransparentOutputs {
+                            if !transaction.hasTransparentOutputs && !transaction.isShieldingTransaction {
                                 Asset.Assets.shieldTick.image
                                     .zImage(size: 16, style: Design.Text.tertiary)
                                     .padding(.leading, 4)
@@ -69,8 +76,12 @@ public struct TransactionRowView: View {
                     balanceView()
                 }
                 .screenHorizontalPadding()
+                .padding(.vertical, 12)
+
+                Divider()
+                    .padding(.horizontal, 4)
+                    .opacity(divider ? 1.0 : 0.0)
             }
-            .padding(.bottom, 12)
         }
     }
 
@@ -89,13 +100,13 @@ public struct TransactionRowView: View {
             if isSensitiveContentHidden {
                 Text(L10n.General.hideBalancesMost)
             } else {
-                Text(transaction.isSpending ? "- " : "+ ")
-                + Text(transaction.zecAmount.decimalString())
+                Text(transaction.isSpending ? "- " : "")
+                + Text(transaction.totalAmount.decimalString())
                 + Text(" \(tokenName)")
             }
         }
-        .zFont(size: 14, style: Design.Text.primary)
-        .minimumScaleFactor(0.1)
+        .font(.custom(FontFamily.Inter.regular.name, size: 14))
+        .foregroundColor(transaction.titleColor(colorScheme))
         .lineLimit(1)
     }
 }

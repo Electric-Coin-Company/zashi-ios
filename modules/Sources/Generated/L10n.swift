@@ -117,8 +117,8 @@ public enum L10n {
     public static let restoringWalletWarning = L10n.tr("Localizable", "balances.restoringWalletWarning", fallback: "The restore process can take several hours on lower-powered devices, and even on powerful devices is likely to take more than an hour.")
     /// Shield and consolidate funds
     public static let shieldButtonTitle = L10n.tr("Localizable", "balances.shieldButtonTitle", fallback: "Shield and consolidate funds")
-    /// Shielding funds
-    public static let shieldingInProgress = L10n.tr("Localizable", "balances.shieldingInProgress", fallback: "Shielding funds")
+    /// Shielding
+    public static let shieldingInProgress = L10n.tr("Localizable", "balances.shieldingInProgress", fallback: "Shielding")
     /// Shielded zec (spendable)
     public static let spendableBalance = L10n.tr("Localizable", "balances.spendableBalance", fallback: "Shielded zec (spendable)")
     /// Synced
@@ -836,8 +836,8 @@ public enum L10n {
     public static let sending = L10n.tr("Localizable", "send.sending", fallback: "Sending...")
     /// Your tokens are being sent to
     public static let sendingInfo = L10n.tr("Localizable", "send.sendingInfo", fallback: "Your tokens are being sent to")
-    /// Shielding...
-    public static let shielding = L10n.tr("Localizable", "send.shielding", fallback: "Shielding...")
+    /// Shielding
+    public static let shielding = L10n.tr("Localizable", "send.shielding", fallback: "Shielding")
     /// Your tokens are getting shielded
     public static let shieldingInfo = L10n.tr("Localizable", "send.shieldingInfo", fallback: "Your tokens are getting shielded")
     /// Sent!
@@ -1122,20 +1122,20 @@ public enum L10n {
     public static let failedShieldedFunds = L10n.tr("Localizable", "transaction.failedShieldedFunds", fallback: "Shielded Funds Failed")
     /// Received
     public static let received = L10n.tr("Localizable", "transaction.received", fallback: "Received")
-    /// Receiving...
-    public static let receiving = L10n.tr("Localizable", "transaction.receiving", fallback: "Receiving...")
+    /// Receiving
+    public static let receiving = L10n.tr("Localizable", "transaction.receiving", fallback: "Receiving")
     /// Save address
     public static let saveAddress = L10n.tr("Localizable", "transaction.saveAddress", fallback: "Save address")
     /// Select text
     public static let selectText = L10n.tr("Localizable", "transaction.selectText", fallback: "Select text")
-    /// Sending...
-    public static let sending = L10n.tr("Localizable", "transaction.sending", fallback: "Sending...")
+    /// Sending
+    public static let sending = L10n.tr("Localizable", "transaction.sending", fallback: "Sending")
     /// Sent
     public static let sent = L10n.tr("Localizable", "transaction.sent", fallback: "Sent")
-    /// Shielded Funds
-    public static let shieldedFunds = L10n.tr("Localizable", "transaction.shieldedFunds", fallback: "Shielded Funds")
-    /// Shielding Funds
-    public static let shieldingFunds = L10n.tr("Localizable", "transaction.shieldingFunds", fallback: "Shielding Funds")
+    /// Shielded
+    public static let shieldedFunds = L10n.tr("Localizable", "transaction.shieldedFunds", fallback: "Shielded")
+    /// Shielding
+    public static let shieldingFunds = L10n.tr("Localizable", "transaction.shieldingFunds", fallback: "Shielding")
   }
   public enum TransactionList {
     /// Collapse transaction

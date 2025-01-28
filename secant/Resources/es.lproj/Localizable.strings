@@ -129,7 +129,7 @@
 "balances.pendingTransactions" = "Transacciones pendientes";
 "balances.transparentBalance" = "Saldo transparente";
 "balances.shieldButtonTitle" = "Proteger y consolidar fondos";
-"balances.shieldingInProgress" = "Protegiendo fondos";
+"balances.shieldingInProgress" = "Protegiendo";
 "balances.synced" = "Sincronizado";
 "balances.syncing" = "Sincronizando";
 "balances.syncingError" = "Zashi encontró un error al sincronizar, intentando resolver...";
@@ -181,7 +181,7 @@
 "send.resubmission" = "Error de Conexión";
 "send.resubmissionInfo" = "Zashi encontró problemas de conexión al enviar la transacción. Intentará de nuevo en los próximos minutos.";
 "send.report" = "Reportar";
-"send.shielding" = "Protegiendo...";
+"send.shielding" = "Protegiendo";
 "send.shieldingInfo" = "Tus tokens están siendo protegidos";
 "send.successShielding" = "¡Protegidos!";
 "send.successShieldingInfo" = "Tus tokens han sido protegidos con éxito";
@@ -327,13 +327,12 @@
 
 // MARK: - Transactions
 "transaction.sent" = "Enviado";
-"transaction.sending" = "Enviando...";
-"transaction.receiving" = "Recibiendo...";
+"transaction.sending" = "Enviando";
+"transaction.receiving" = "Recibiendo";
 "transaction.received" = "Recibido";
 "transaction.failedSend" = "Envío fallido";
 "transaction.failedReceive" = "Recepción fallida";
-"transaction.shieldingFunds" = "Protegiendo Fondos";
-"transaction.shieldedFunds" = "Fondos Protegidos";
+"transaction.shieldingFunds" = "Protegiendo";
 "transaction.failedShieldedFunds" = "Fondos Protegidos Fallidos";
 "transaction.saveAddress" = "Guardar dirección";
 "transaction.selectText" = "Seleccionar texto";
@@ -516,3 +515,6 @@
 "taxExport.taxFile" = "Export Tax File";
 "taxExport.desc" = "Download your %@ transaction history from the previous calendar year in a .csv format.";
 "taxExport.shareDesc" = "%@ transaction history";
+
+// transaction history redesign
+"transaction.shieldedFunds" = "Fondos Protegidos";
