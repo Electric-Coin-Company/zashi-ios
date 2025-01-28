@@ -41,6 +41,7 @@ public struct TransactionDetails {
         @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
         public var messageStates: [MessageState] = []
         public var userMetadata = ""
+        public var userMetadataOrigin = ""
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
         public var transaction: TransactionState
         public var userMetadataRequest = false
@@ -70,6 +71,7 @@ public struct TransactionDetails {
         case addressTapped
         case binding(BindingAction<TransactionDetails.State>)
         case bookmarkTapped(String)
+        case deleteNoteTapped(String)
         case fetchedABContacts(AddressBookContacts)
         case memosLoaded([Memo])
         case messageTapped(Int)
@@ -77,6 +79,7 @@ public struct TransactionDetails {
         case onAppear
         case resolveMemos
         case saveAddressTapped
+        case saveNoteTapped(String)
         case sendAgainTapped
         case sentToRowTapped
         case transactionIdTapped
@@ -124,7 +127,17 @@ public struct TransactionDetails {
                 
             case .binding:
                 return .none
-                
+
+            case .deleteNoteTapped:
+                state.userMetadata = ""
+                state.transaction.userMetadata = ""
+                return .none
+
+            case .saveNoteTapped:
+                state.transaction.userMetadata = state.userMetadata
+                state.userMetadataOrigin = ""
+                return .none
+
             case .addNoteTapped:
                 state.transaction.userMetadata = state.userMetadata
                 return .none
@@ -160,6 +173,7 @@ public struct TransactionDetails {
                 return .none
 
             case .noteButtonTapped:
+                state.userMetadataOrigin = state.userMetadata
                 return .none
 
             case .bookmarkTapped:

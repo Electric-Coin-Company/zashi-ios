@@ -301,6 +301,9 @@ extension SDKSynchronizerClient: DependencyKey {
                 let encoder = try? keystoneSDK.generateZcashPczt(pczt_hex: pczt)
                 
                 return encoder
+            },
+            fetchTxidsWithMemoContaining: { searchTerm in
+                try await synchronizer.fetchTxidsWithMemoContaining(searchTerm: searchTerm)
             }
         )
     }

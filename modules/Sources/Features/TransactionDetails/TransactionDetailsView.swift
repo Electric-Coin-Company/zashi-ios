@@ -116,10 +116,9 @@ public struct TransactionDetailsView: View {
                         type: .tertiary
                     ) {
                         store.send(.noteButtonTapped)
-                        isUserMetadataFocused = true
                     }
 
-                    if store.transaction.isSentTransaction {
+                    if store.transaction.isSentTransaction && !store.transaction.isShieldingTransaction {
                         if store.alias == nil {
                             ZashiButton(
                                 "Save address"
@@ -150,7 +149,7 @@ public struct TransactionDetailsView: View {
                 store.send(.onAppear)
             }
             .sheet(isPresented: $store.userMetadataRequest) {
-                userMetadataContent()
+                userMetadataContent(!store.transaction.userMetadata.isEmpty)
             }
         }
         .navigationBarTitleDisplayMode(.inline)

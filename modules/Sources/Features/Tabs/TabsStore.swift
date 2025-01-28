@@ -728,7 +728,7 @@ public struct Tabs {
                 state.transactionDetailsState.userMetadataRequest = true
                 return .none
 
-            case .transactionDetails(.addNoteTapped(let txId)):
+            case .transactionDetails(.addNoteTapped(let txId)), .transactionDetails(.saveNoteTapped(let txId)):
                 state.transactionDetailsState.userMetadataRequest = false
                 if let index = state.homeState.transactionListState.transactionList.index(id: txId) {
                     state.homeState.transactionListState.transactionList[index].userMetadata = state.transactionDetailsState.userMetadata
@@ -736,6 +736,18 @@ public struct Tabs {
                 if let index = state.transactionsManagerState.transactionList.index(id: txId) {
                     state.transactionsManagerState.transactionList[index].userMetadata = state.transactionDetailsState.userMetadata
                     state.transactionDetailsState.transaction.userMetadata = state.transactionDetailsState.userMetadata
+                    state.transactionDetailsState.userMetadata = ""
+                }
+                return .none
+
+            case .transactionDetails(.deleteNoteTapped(let txId)):
+                state.transactionDetailsState.userMetadataRequest = false
+                if let index = state.homeState.transactionListState.transactionList.index(id: txId) {
+                    state.homeState.transactionListState.transactionList[index].userMetadata = ""
+                }
+                if let index = state.transactionsManagerState.transactionList.index(id: txId) {
+                    state.transactionsManagerState.transactionList[index].userMetadata = ""
+                    state.transactionDetailsState.transaction.userMetadata = ""
                     state.transactionDetailsState.userMetadata = ""
                 }
                 return .none

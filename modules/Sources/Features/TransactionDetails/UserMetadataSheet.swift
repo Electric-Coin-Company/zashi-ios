@@ -11,33 +11,36 @@ import Generated
 import UIComponents
 
 extension TransactionDetailsView {
-    @ViewBuilder func userMetadataContent() -> some View {
+    @ViewBuilder func userMetadataContent(_ isEditMode: Bool) -> some View {
         WithPerceptionTracking {
             if #available(iOS 16.0, *) {
-                mainBodyUM()
+                mainBodyUM(isEditMode: isEditMode)
                     .presentationDetents([.height(filtersSheetHeight)])
                     .presentationDragIndicator(.visible)
             } else {
-                mainBodyUM(stickToBottom: true)
+                mainBodyUM(isEditMode: isEditMode, stickToBottom: true)
             }
         }
     }
 
-    @ViewBuilder func mainBodyUM(stickToBottom: Bool = false) -> some View {
+    @ViewBuilder func mainBodyUM(isEditMode: Bool, stickToBottom: Bool = false) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             if stickToBottom {
                 Spacer()
             }
             
-            Text("Add a note")
-                .zFont(.semiBold, size: 20, style: Design.Text.primary)
-                .padding(.top, 32)
-                .padding(.bottom, 16)
+            Text(isEditMode
+                 ? "Edit a note"
+                 : "Add a note"
+            )
+            .zFont(.semiBold, size: 20, style: Design.Text.primary)
+            .padding(.top, 32)
+            .padding(.bottom, 16)
             
             VStack(alignment: .leading, spacing: 6) {
                 TextEditor(text: $store.userMetadata)
                     .focused($isUserMetadataFocused)
-                    .font(.custom(FontFamily.Inter.regular.name, size: 16))
+                    .font(.custom(FontFamily.Inter.medium.name, size: 16))
                     .frame(height: 122)
                     .padding(.horizontal, 10)
                     .padding(.top, 2)
@@ -54,7 +57,7 @@ extension TransactionDetailsView {
                                         .onTapGesture {
                                             isUserMetadataFocused = true
                                         }
-                                    
+
                                     Spacer()
                                 }
                                 .padding(.top, 10)
@@ -66,19 +69,40 @@ extension TransactionDetailsView {
                             EmptyView()
                         }
                     }
-                
+
                 Text("\(store.userMetadata.count)/\(TransactionDetails.State.Constants.userMetadataMaxLength) characters")
+                    .zFont(size: 14, style: Design.Inputs.Default.hint)
             }
             .padding(.bottom, 32)
             
-            ZashiButton(
-                "Add note",
-                type: .secondary
-            ) {
-                store.send(.addNoteTapped(store.transaction.id))
+            if isEditMode {
+                HStack(spacing: 8) {
+                    ZashiButton(
+                        "Delete note",
+                        type: .destructive1
+                    ) {
+                        store.send(.deleteNoteTapped(store.transaction.id))
+                    }
+
+                    ZashiButton(
+                        "Save note",
+                        type: .secondary
+                    ) {
+                        store.send(.saveNoteTapped(store.transaction.id))
+                    }
+                    .disabled(store.userMetadata == store.userMetadataOrigin)
+                }
+                .padding(.bottom, 24)
+            } else {
+                ZashiButton(
+                    "Add note",
+                    type: .secondary
+                ) {
+                    store.send(.addNoteTapped(store.transaction.id))
+                }
+                .disabled(store.userMetadata.isEmpty)
+                .padding(.bottom, 24)
             }
-            .disabled(store.userMetadata.isEmpty)
-            .padding(.bottom, 24)
         }
         .screenHorizontalPadding()
         .background {
