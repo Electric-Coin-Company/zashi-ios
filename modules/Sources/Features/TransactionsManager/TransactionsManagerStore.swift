@@ -18,29 +18,25 @@ import ZcashSDKEnvironment
 import AddressBookClient
 import UIComponents
 import AddressBook
+import NumberFormatter
 
 @Reducer
 public struct TransactionsManager {
-    struct Section: Equatable {
+    public struct Section: Equatable, Identifiable {
+        public let id: String
+        public var latestTransactionId = ""
         let timestamp: TimeInterval
-        let title: String
-        let transactions: IdentifiedArrayOf<TransactionState>
+        public let transactions: IdentifiedArrayOf<TransactionState>
     }
     
-    func getTimePeriod(for date: Date, now: Date) -> String {
-        if Calendar.current.isDateInToday(date) {
-            return "Today"
-        } else if Calendar.current.isDateInYesterday(date) {
-            return "Yesterday"
-        } else if Calendar.current.isDate(date, equalTo: now, toGranularity: .weekOfYear) {
-            return "This Week"
-        } else if Calendar.current.isDate(date, equalTo: now, toGranularity: .month) {
-            return "This Month"
-        } else {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "MMMM yyyy"
-            return formatter.string(from: date)
-        }
+    public enum Filter: Equatable {
+        case bookmarked
+        case contact
+        case memos
+        case notes
+        case received
+        case sent
+        case unread
     }
 
     @ObservableState
@@ -48,16 +44,27 @@ public struct TransactionsManager {
         public var CancelStateId = UUID()
         public var CancelEventId = UUID()
 
+        public var activeFilters: [Filter] = []
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         public var filteredTransactionsList: IdentifiedArrayOf<TransactionState> = []
+        public var filtersRequest = false
         public var isInvalidated = true
-        public var latestTransactionId = ""
         public var latestTransactionList: [TransactionState] = []
+        public var searchedTransactionsList: IdentifiedArrayOf<TransactionState> = []
+        public var searchTerm = ""
+        public var selectedFilters: [Filter] = []
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var transactionList: IdentifiedArrayOf<TransactionState>
-        public var transactionPeriods: [String] = []
-        public var transactionPeriodsList: [IdentifiedArrayOf<TransactionState>] = []
+        public var transactionSections: [Section] = []
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
+
+        public var isBookmarkedFilterActive: Bool { selectedFilters.contains(.bookmarked) }
+        public var isContactFilterActive: Bool { selectedFilters.contains(.contact) }
+        public var isMemosFilterActive: Bool { selectedFilters.contains(.memos) }
+        public var isNotesFilterActive: Bool { selectedFilters.contains(.notes) }
+        public var isReceivedFilterActive: Bool { selectedFilters.contains(.received) }
+        public var isSentFilterActive: Bool { selectedFilters.contains(.sent) }
+        public var isUnreadFilterActive: Bool { selectedFilters.contains(.unread) }
 
         public init(
             transactionList: IdentifiedArrayOf<TransactionState>
@@ -66,19 +73,27 @@ public struct TransactionsManager {
         }
     }
     
-    public enum Action: Equatable {
+    public enum Action: BindableAction, Equatable {
+        case applyFiltersTapped
+        case binding(BindingAction<TransactionsManager.State>)
+        case eraseSearchTermTapped
+        case filterTapped
         case foundTransactions
         case onAppear
         case onDisappear
+        case resetFiltersTapped
         case synchronizerStateChanged(SyncStatus)
+        case toggleFilter(Filter)
         case transactionTapped(String)
         case updateTransactionList([TransactionState])
         case updateTransactionPeriods
         case updateTransactionsAccordingToFilters
+        case updateTransactionsAccordingToSearchTerm
     }
 
     @Dependency(\.addressBook) var addressBook
     @Dependency(\.mainQueue) var mainQueue
+    @Dependency(\.numberFormatter) var numberFormatter
     @Dependency(\.readTransactionsStorage) var readTransactionsStorage
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
@@ -86,6 +101,8 @@ public struct TransactionsManager {
     public init() { }
 
     public var body: some Reducer<State, Action> {
+        BindingReducer()
+        
         Reduce { state, action in
             switch action {
             case .onAppear:
@@ -108,7 +125,7 @@ public struct TransactionsManager {
                             .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
                             .map { TransactionsManager.Action.synchronizerStateChanged($0.syncStatus) }
                     }
-                        .cancellable(id: state.CancelStateId, cancelInFlight: true),
+                    .cancellable(id: state.CancelStateId, cancelInFlight: true),
                     .publisher {
                         sdkSynchronizer.eventStream()
                             .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
@@ -119,7 +136,7 @@ public struct TransactionsManager {
                                 return nil
                             }
                     }
-                        .cancellable(id: state.CancelEventId, cancelInFlight: true),
+                    .cancellable(id: state.CancelEventId, cancelInFlight: true),
                     .run { send in
                         guard selectedAccount != nil else { return }
                         if let transactions = try? await sdkSynchronizer.getAllTransactions(selectedAccount?.id) {
@@ -133,6 +150,39 @@ public struct TransactionsManager {
                     .cancel(id: state.CancelStateId),
                     .cancel(id: state.CancelEventId)
                 )
+                
+            case .binding(\.searchTerm):
+                return .send(.updateTransactionsAccordingToSearchTerm)
+
+            case .binding:
+                return .none
+
+            case .applyFiltersTapped:
+                state.activeFilters = state.selectedFilters
+                state.filtersRequest = false
+                return .send(.updateTransactionsAccordingToSearchTerm)
+
+            case .resetFiltersTapped:
+                state.selectedFilters.removeAll()
+                state.activeFilters.removeAll()
+                return .send(.updateTransactionsAccordingToSearchTerm)
+
+            case .eraseSearchTermTapped:
+                state.searchTerm = ""
+                return .send(.updateTransactionsAccordingToSearchTerm)
+                
+            case .filterTapped:
+                state.selectedFilters = state.activeFilters
+                state.filtersRequest = true
+                return .none
+                
+            case .toggleFilter(let filter):
+                if state.selectedFilters.contains(filter) {
+                    state.selectedFilters.removeAll { $0 == filter }
+                } else {
+                    state.selectedFilters.append(filter)
+                }
+                return .none
                 
             case .synchronizerStateChanged(.upToDate):
                 guard let accountUUID = state.selectedWalletAccount?.id else {
@@ -187,6 +237,8 @@ public struct TransactionsManager {
                         if let index = state.transactionList.index(id: transaction.id) {
                             copiedTransaction.rawID = state.transactionList[index].rawID
                             copiedTransaction.memos = state.transactionList[index].memos
+                            copiedTransaction.bookmarked = state.transactionList[index].bookmarked
+                            copiedTransaction.userMetadata = state.transactionList[index].userMetadata
                         }
                         
                         // update the read/unread state
@@ -211,20 +263,57 @@ public struct TransactionsManager {
                     }
                 
                 state.transactionList = IdentifiedArrayOf(uniqueElements: sortedTransactionList)
-                state.latestTransactionId = state.transactionList.first?.id ?? ""
+                
+                return .send(.updateTransactionsAccordingToSearchTerm)
+                
+            case .updateTransactionsAccordingToSearchTerm:
+                if !state.searchTerm.isEmpty && state.searchTerm.count >= 2 {
+                    state.searchedTransactionsList.removeAll()
+
+                    state.transactionList.forEach { transaction in
+                        if checkSearchTerm(state.searchTerm, transaction: transaction, addressBookContacts: state.addressBookContacts) {
+                            state.searchedTransactionsList.append(transaction)
+                        }
+                    }
+                } else {
+                    state.searchedTransactionsList = state.transactionList
+                }
                 
                 return .send(.updateTransactionsAccordingToFilters)
-                
+
             case .updateTransactionsAccordingToFilters:
                 // modify the initial list of all transactions according to active filters
-                state.filteredTransactionsList = state.transactionList
+                if !state.activeFilters.isEmpty {
+                    state.filteredTransactionsList.removeAll()
+
+                    state.searchedTransactionsList.forEach { transaction in
+                        var isFilteredOut = false
+                        
+                        for i in 0..<state.activeFilters.count {
+                            let filter = state.activeFilters[i]
+                            
+                            if !filter.applyFilter(transaction, addressBookContacts: state.addressBookContacts) {
+                                isFilteredOut = true
+                                break
+                            }
+                        }
+                        
+                        if !isFilteredOut {
+                            state.filteredTransactionsList.append(transaction)
+                        }
+                    }
+                } else {
+                    state.filteredTransactionsList = state.searchedTransactionsList
+                }
+
                 return .send(.updateTransactionPeriods)
                 
             case .updateTransactionPeriods:
+                state.transactionSections.removeAll()
+
                 // divide the filtered list of transactions into a time periods
                 let grouped = Dictionary(grouping: state.filteredTransactionsList) { transaction in
-                    guard transaction.minedHeight != nil else { return "none" }
-                    guard let timestamp = transaction.timestamp else { return "none" }
+                    guard let timestamp = transaction.timestamp else { return "Today" }
 
                     let calendar = Calendar.current
                     let startOfToday = calendar.startOfDay(for: Date())
@@ -234,9 +323,19 @@ public struct TransactionsManager {
                 }
 
                 let sections = grouped.map { key, transactions in
-                    Section(
-                        timestamp: transactions.first?.timestamp ?? 0,
-                        title: key,
+                    var timestamp: TimeInterval = 0
+                    
+                    for transaction in transactions {
+                        if transaction.timestamp != nil {
+                            timestamp = transaction.timestamp ?? 0
+                            break
+                        }
+                    }
+                    
+                    return Section(
+                        id: key,
+                        latestTransactionId: transactions.last?.id ?? "",
+                        timestamp: timestamp,
                         transactions: IdentifiedArrayOf<TransactionState>(uniqueElements: transactions)
                     )
                 }
@@ -246,12 +345,111 @@ public struct TransactionsManager {
                 }
                 
                 sortedSections.forEach { section in
-                    state.transactionPeriods.append(section.title)
-                    state.transactionPeriodsList.append(section.transactions)
+                    state.transactionSections.append(section)
                 }
 
                 return .none
             }
+        }
+    }
+}
+
+extension TransactionsManager {
+    func getTimePeriod(for date: Date, now: Date) -> String {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.day], from: date, to: now)
+        let daysAgo = components.day ?? Int.max
+        
+        if Calendar.current.isDateInToday(date) {
+            return "Today"
+        } else if Calendar.current.isDateInYesterday(date) {
+            return "Yesterday"
+        } else if daysAgo < 7 {
+            return "Previous 7 days"
+        } else if daysAgo < 31 {
+            return "Previous 30 days"
+        } else {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MMMM yyyy"
+            return formatter.string(from: date)
+        }
+    }
+    
+    func unicodeContains(_ searchTerm: String, in text: String) -> Bool {
+        let normalizedText = text.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
+        let normalizedSearchTerm = searchTerm.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
+        
+        return normalizedText.range(of: normalizedSearchTerm) != nil
+    }
+    
+    func checkSearchTerm(_ searchTerm: String, transaction: TransactionState, addressBookContacts: AddressBookContacts) -> Bool {
+        // search contact name
+        if addressBookContacts.contacts.contains(where: {
+            $0.id == transaction.address && unicodeContains(searchTerm, in: $0.name)
+        }) {
+            return true
+        }
+        
+        // search address
+        if unicodeContains(searchTerm, in: transaction.address) {
+            return true
+        }
+
+        // Regex amounts
+        var input = transaction.totalAmount.decimalString()
+        
+        if transaction.isSpending {
+            input = "-\(input)"
+        }
+        
+        let pattern = "([<>])\\s*(-?(?:0|(?=\\.))?\\d*(?:[.,]\\d+)?)"
+        
+        if let regex = try? NSRegularExpression(pattern: pattern),
+           let match = regex.firstMatch(in: searchTerm, range: NSRange(searchTerm.startIndex..., in: searchTerm)) {
+            
+            if let operatorRange = Range(match.range(at: 1), in: searchTerm),
+               let numberRange = Range(match.range(at: 2), in: searchTerm),
+               let threshold = numberFormatter.number(String(searchTerm[numberRange])) {
+                let op = String(searchTerm[operatorRange])
+                
+                if let amount = numberFormatter.number(input) {
+                    print("__LD amount \(amount)")
+                    if op == "<" {
+                        return amount.doubleValue < threshold.doubleValue
+                    } else if op == ">" {
+                        return amount.doubleValue > threshold.doubleValue
+                    }
+                }
+            }
+        }
+        
+        // fulsearch amounts
+        if input.contains(searchTerm) {
+            return true
+        }
+        
+        return false
+    }
+    
+}
+
+extension TransactionsManager.Filter {
+    func applyFilter(_ transaction: TransactionState, addressBookContacts: AddressBookContacts) -> Bool {
+        switch self {
+        case .bookmarked:
+            return transaction.bookmarked
+        case .contact:
+            return addressBookContacts.contacts.contains(where: { $0.id == transaction.address })
+        case .memos:
+            return transaction.memoCount > 0
+        case .notes:
+            return !transaction.userMetadata.isEmpty
+        case .received:
+            return !transaction.isSentTransaction
+        case .sent:
+            return transaction.isSentTransaction
+        case .unread:
+            return true
         }
     }
 }

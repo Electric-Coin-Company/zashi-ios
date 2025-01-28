@@ -24,7 +24,8 @@ public struct TransactionDetails {
     @ObservableState
     public struct State: Equatable {
         enum Constants {
-            static let messageExpandThreshold = 130
+            static let messageExpandThreshold: Int = 130
+            static let userMetadataMaxLength: Int = 90
         }
         
         public enum MessageState: Equatable {
@@ -34,12 +35,15 @@ public struct TransactionDetails {
         }
         
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
+        public var areMessagesResolved = false
         public var alias: String?
         public var areDetailsExpanded = false
         @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
         public var messageStates: [MessageState] = []
+        public var userMetadata = ""
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
         public var transaction: TransactionState
+        public var userMetadataRequest = false
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
         public var feeStr: String {
@@ -61,13 +65,15 @@ public struct TransactionDetails {
         }
     }
     
-    public enum Action: Equatable {
-        case addNoteTapped
+    public enum Action: BindableAction, Equatable {
+        case addNoteTapped(String)
         case addressTapped
-        case bookmarkTapped
+        case binding(BindingAction<TransactionDetails.State>)
+        case bookmarkTapped(String)
         case fetchedABContacts(AddressBookContacts)
         case memosLoaded([Memo])
         case messageTapped(Int)
+        case noteButtonTapped
         case onAppear
         case resolveMemos
         case saveAddressTapped
@@ -83,12 +89,15 @@ public struct TransactionDetails {
     public init() { }
 
     public var body: some Reducer<State, Action> {
+        BindingReducer()
+        
         Reduce { state, action in
             switch action {
             case .onAppear:
                 state.areDetailsExpanded = false
                 state.messageStates = []
                 state.alias = nil
+                state.areMessagesResolved = false
                 if let account = state.zashiWalletAccount {
                     do {
                         let result = try addressBook.allLocalContacts(account.account)
@@ -107,6 +116,19 @@ public struct TransactionDetails {
                 }
                 return .send(.resolveMemos)
 
+            case .binding(\.userMetadata):
+                if state.userMetadata.count > TransactionDetails.State.Constants.userMetadataMaxLength {
+                    state.userMetadata = String(state.userMetadata.prefix(TransactionDetails.State.Constants.userMetadataMaxLength))
+                }
+                return .none
+                
+            case .binding:
+                return .none
+                
+            case .addNoteTapped:
+                state.transaction.userMetadata = state.userMetadata
+                return .none
+                
             case .resolveMemos:
                 if let rawID = state.transaction.rawID {
                     return .run { send in
@@ -115,6 +137,7 @@ public struct TransactionDetails {
                         }
                     }
                 }
+                state.areMessagesResolved = true
                 return .none
 
             case .fetchedABContacts(let abContacts):
@@ -133,9 +156,10 @@ public struct TransactionDetails {
                 state.messageStates = state.memos.map {
                     $0.count < State.Constants.messageExpandThreshold ? .short : .longCollapsed
                 }
+                state.areMessagesResolved = true
                 return .none
 
-            case .addNoteTapped:
+            case .noteButtonTapped:
                 return .none
 
             case .bookmarkTapped:

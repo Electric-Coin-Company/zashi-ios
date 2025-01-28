@@ -14,10 +14,14 @@ import ZcashLightClientKit
 import AddressBook
 
 public struct TransactionsManagerView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    @State var filtersSheetHeight: CGFloat = .zero
+
     @Perception.Bindable var store: StoreOf<TransactionsManager>
     let tokenName: String
     
     @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
+    @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
 
     public init(store: StoreOf<TransactionsManager>, tokenName: String) {
         self.store = store
@@ -26,54 +30,128 @@ public struct TransactionsManagerView: View {
 
     public var body: some View {
         WithPerceptionTracking {
-            List {
-                if store.isInvalidated {
-                    VStack {
-                        ProgressView()
-                    }
-                    .frame(maxWidth: .infinity)
-                    .listRowInsets(EdgeInsets())
-                    .listRowBackground(Asset.Colors.background.color)
-                    .listRowSeparator(.hidden)
-                    .padding(.top, 30)
-                } else {
-                    ForEach(0..<store.transactionPeriods.count) { sectionIndex in
-                        WithPerceptionTracking {
-                            Section {
-                                ForEach(0..<store.transactionPeriodsList[sectionIndex].count) { transactionIndex in
-                                    WithPerceptionTracking {
-                                        Button {
-                                            store.send(.transactionTapped(store.transactionPeriodsList[sectionIndex][transactionIndex].id))
-                                        } label: {
-                                            TransactionRowView(
-                                                transaction: store.transactionPeriodsList[sectionIndex][transactionIndex],
-                                                divider: store.latestTransactionId == store.transactionPeriodsList[sectionIndex][transactionIndex].id || transactionIndex == 0
-                                            )
+            VStack(spacing: 0) {
+                HStack(spacing: 0) {
+                    ZashiTextField(
+                        text: $store.searchTerm,
+                        placeholder: "Search",
+                        eraseAction: { store.send(.eraseSearchTermTapped) },
+                        accessoryView: !store.searchTerm.isEmpty ? Asset.Assets.Icons.xClose.image
+                            .zImage(size: 16, style: Design.Btns.Tertiary.fg) : nil,
+                        prefixView: Asset.Assets.Icons.search.image
+                            .zImage(size: 20, style: Design.Dropdowns.Default.text)
+                    )
+                    .padding(.trailing, 8)
+                    
+                    Button {
+                        store.send(.filterTapped)
+                    } label: {
+                        ZStack {
+                            Asset.Assets.Icons.filter.image
+                                .zImage(size: 24, style: Design.Text.primary)
+                                .padding(10)
+                                .background {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Design.Btns.Secondary.bg.color(colorScheme))
+                                        .overlay {
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .stroke(store.activeFilters.count > 0
+                                                        ? Design.Utility.Gray._900.color(colorScheme)
+                                                        : Design.Utility.Gray._100.color(colorScheme),
+                                                        style: StrokeStyle(lineWidth: store.activeFilters.count > 0 ? 2.0 : 1.0)
+                                                )
                                         }
-                                        .listRowInsets(EdgeInsets())
-                                    }
                                 }
-                                .listRowBackground(Asset.Colors.background.color)
-                                .listRowSeparator(.hidden)
-                            } header: {
-                                Text(store.transactionPeriods[sectionIndex])
-                                    .zFont(.medium, size: 16, style: Design.Text.tertiary)
-                                    .screenHorizontalPadding()
-                                    .listRowInsets(EdgeInsets())
-                                    .listRowBackground(Asset.Colors.background.color)
-                                    .listRowSeparator(.hidden)
+                            
+                            if store.activeFilters.count > 0 {
+                                Text("\(store.activeFilters.count)")
+                                    .zFont(.medium, size: 12, style: Design.Text.opposite)
+                                    .background {
+                                        Circle()
+                                            .fill(Design.Utility.Gray._900.color(colorScheme))
+                                            .frame(width: 20, height: 20)
+                                            .background {
+                                                Circle()
+                                                    .fill(Asset.Colors.background.color)
+                                                    .frame(width: 24, height: 24)
+                                            }
+                                    }
+                                    .offset(x: 22, y: -22)
                             }
                         }
                     }
                 }
+                .screenHorizontalPadding()
+                .padding(.vertical, 12)
+                .padding(.top, walletStatus == .restoring ? 24 : 0)
+                
+                if store.transactionSections.isEmpty && !store.isInvalidated {
+                    noTransactionsView()
+                    
+                    Spacer()
+                } else {
+                    ScrollViewReader { scrollViewProxy in
+                        List {
+                            if store.isInvalidated {
+                                VStack(alignment: .leading, spacing: 0) {
+                                    ForEach(0..<15) { _ in
+                                        NoTransactionPlaceholder(true)
+                                    }
+                                    
+                                    Spacer()
+                                }
+                                .frame(maxWidth: .infinity)
+                                .listRowInsets(EdgeInsets())
+                                .listRowBackground(Asset.Colors.background.color)
+                                .listRowSeparator(.hidden)
+                            } else {
+                                ForEach(store.transactionSections) { section in
+                                    WithPerceptionTracking {
+                                        Section {
+                                            ForEach(section.transactions) { transaction in
+                                                WithPerceptionTracking {
+                                                    Button {
+                                                        store.send(.transactionTapped(transaction.id))
+                                                    } label: {
+                                                        TransactionRowView(
+                                                            transaction: transaction,
+                                                            divider: section.latestTransactionId != transaction.id
+                                                        )
+                                                    }
+                                                    .listRowInsets(EdgeInsets())
+                                                }
+                                            }
+                                            .listRowBackground(Asset.Colors.background.color)
+                                            .listRowSeparator(.hidden)
+                                        } header: {
+                                            Text(section.id)
+                                                .zFont(.medium, size: 16, style: Design.Text.tertiary)
+                                                .screenHorizontalPadding()
+                                                .listRowInsets(EdgeInsets())
+                                                .listRowBackground(Asset.Colors.background.color)
+                                                .listRowSeparator(.hidden)
+                                                .id(section.id)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .onChange(of: store.transactionSections) { _ in
+                            scrollViewProxy.scrollTo(store.transactionSections.first?.id, anchor: .top)
+                        }
+                    }
+                }
             }
-            .padding(.vertical, 1)
             .disabled(store.transactionList.isEmpty)
+            .walletStatusPanel()
             .applyScreenBackground()
             .listStyle(.plain)
             .onAppear { store.send(.onAppear) }
             .onDisappear(perform: { store.send(.onDisappear) })
             .navigationBarItems(trailing: hideBalancesButton())
+            .sheet(isPresented: $store.filtersRequest) {
+                filtersContent()
+            }
         }
         .navigationBarTitleDisplayMode(.inline)
         .zashiBack()
@@ -88,6 +166,46 @@ public struct TransactionsManagerView: View {
             image
                 .zImage(size: 24, color: Asset.Colors.primary.color)
                 .padding(8)
+        }
+    }
+    
+    @ViewBuilder func noTransactionsView() -> some View {
+        WithPerceptionTracking {
+            ZStack {
+                VStack(spacing: 0) {
+                    ForEach(0..<5) { _ in
+                        NoTransactionPlaceholder()
+                    }
+                    
+                    Spacer()
+                }
+                .overlay {
+                    LinearGradient(
+                        stops: [
+                            Gradient.Stop(color: .clear, location: 0.0),
+                            Gradient.Stop(color: Asset.Colors.background.color, location: 0.3)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                }
+                
+                VStack(spacing: 0) {
+                    Asset.Assets.Illustrations.emptyState.image
+                        .resizable()
+                        .frame(width: 164, height: 164)
+                        .padding(.bottom, 20)
+
+                    Text("No results")
+                        .zFont(.semiBold, size: 20, style: Design.Text.primary)
+                        .padding(.bottom, 8)
+
+                    Text("We tried but couldn’t find anything.")
+                        .zFont(size: 14, style: Design.Text.tertiary)
+                        .padding(.bottom, 20)
+                }
+                .padding(.top, 40)
+            }
         }
     }
 }

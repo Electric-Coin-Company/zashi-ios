@@ -146,6 +146,8 @@ public struct TransactionList {
                         if let index = state.transactionList.index(id: transaction.id) {
                             copiedTransaction.rawID = state.transactionList[index].rawID
                             copiedTransaction.memos = state.transactionList[index].memos
+                            copiedTransaction.bookmarked = state.transactionList[index].bookmarked
+                            copiedTransaction.userMetadata = state.transactionList[index].userMetadata
                         }
                         
                         // update the read/unread state
@@ -162,7 +164,7 @@ public struct TransactionList {
                 
                 state.transactionList = IdentifiedArrayOf(uniqueElements: sortedTransactionList)
                 state.transactionListHomePage = IdentifiedArrayOf(uniqueElements: sortedTransactionList.prefix(Constants.homePageTransactionsCount))
-                state.latestTransactionId = state.transactionList.first?.id ?? ""
+                state.latestTransactionId = state.transactionListHomePage.last?.id ?? ""
                 
                 return .none
 

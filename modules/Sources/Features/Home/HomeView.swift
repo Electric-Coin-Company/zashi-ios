@@ -47,13 +47,12 @@ public struct HomeView: View {
                     .frame(maxWidth: .infinity)
                     .background(Asset.Colors.syncProgresBcg.color)
                     .padding(.top, 7)
+                    .padding(.bottom, 20)
                 }
                 
                 VStack(spacing: 0) {
                     if store.transactionListState.transactionList.isEmpty && !store.transactionListState.isInvalidated {
-                        ScrollView {
-                            noTransactionsView()
-                        }
+                        noTransactionsView()
                     } else {
                         transactionsView()
 
@@ -131,6 +130,8 @@ public struct HomeView: View {
                     ForEach(0..<5) { _ in
                         NoTransactionPlaceholder()
                     }
+                    
+                    Spacer()
                 }
                 .overlay {
                     LinearGradient(
@@ -153,16 +154,18 @@ public struct HomeView: View {
                         .zFont(.semiBold, size: 18, style: Design.Text.primary)
                         .padding(.bottom, 8)
 
-                    Text("Make the first move...")
-                        .zFont(size: 14, style: Design.Text.tertiary)
-                        .padding(.bottom, 20)
-                    
-                    ZashiButton(
-                        "Send a transaction",
-                        type: .tertiary,
-                        infinityWidth: false
-                    ) {
-                        store.send(.makeATransactionTapped)
+                    if walletStatus != .restoring {
+                        Text("Make the first move...")
+                            .zFont(size: 14, style: Design.Text.tertiary)
+                            .padding(.bottom, 20)
+                        
+                        ZashiButton(
+                            "Send a transaction",
+                            type: .tertiary,
+                            infinityWidth: false
+                        ) {
+                            store.send(.makeATransactionTapped)
+                        }
                     }
                 }
                 .padding(.top, 40)
