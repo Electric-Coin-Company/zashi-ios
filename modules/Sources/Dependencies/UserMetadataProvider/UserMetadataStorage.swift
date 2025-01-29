@@ -13,7 +13,10 @@ public class UserMetadataStorage {
     
     // Annotations
     var annotations: [String: String] = [:]
-    
+
+    // Unread
+    var unreadIds: [String] = []
+
     public init() {
         
     }
@@ -54,5 +57,19 @@ public class UserMetadataStorage {
     
     public func deleteAnnotationFor(txid: String) {
         annotations.removeValue(forKey: txid)
+    }
+    
+    // MARK: - Unread
+    
+    public func isUnread(txid: String) -> Bool {
+        unreadIds.contains(txid)
+    }
+    
+    public func toggleUnreadFor(txid: String) {
+        if unreadIds.contains(txid) {
+            unreadIds.removeAll { $0 == txid }
+        } else {
+            unreadIds.append(txid)
+        }
     }
 }

@@ -12,13 +12,15 @@ extension UserMetadataProviderClient: DependencyKey {
         let ums = UserMetadataStorage.live
         
         return UserMetadataProviderClient(
+            store: { try await ums.store() },
+            load: { try await ums.load() },
             isBookmarked: { ums.isBookmarked(txid: $0) },
             toggleBookmarkFor: { ums.toggleBookmarkFor(txid: $0) },
             annotationFor: { ums.annotationFor(txid: $0) },
             addAnnotationFor: { ums.add(annotation: $0, for: $1) },
             deleteAnnotationFor: { ums.deleteAnnotationFor(txid: $0) },
-            store: { try await ums.store() },
-            load: { try await ums.load() }
+            isUnread: { ums.isUnread(txid: $0) },
+            toggleUnreadFor: { ums.toggleUnreadFor(txid: $0) }
         )
     }()
 }

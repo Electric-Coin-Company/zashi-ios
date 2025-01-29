@@ -474,11 +474,21 @@ public struct Tabs {
                 state.selectedTab = .send
                 return .none
 
+            case .sendConfirmation(.updateTxIdToExpand):
+                return .send(.home(.transactionList(.synchronizerStateChanged(.upToDate))))
+
             case .sendConfirmation(.viewTransactionTapped):
-                state.selectedTab = .account
-                if state.sendConfirmationState.txIdToExpand == nil {
-                    state.sendConfirmationState.txIdToExpand = state.homeState.transactionListState.transactionList.first?.id
+                if let txid = state.sendConfirmationState.txIdToExpand {
+                    if let index = state.homeState.transactionListState.transactionList.index(id: txid) {
+                        state.sendConfirmationState.transactionDetailsState.transaction = state.homeState.transactionListState.transactionList[index]
+                        state.sendConfirmationState.transactionDetailsState.isCloseButtonRequired = true
+                        return .send(.sendConfirmation(.updateStackDestinationTransactions(.details)))
+                    }
                 }
+                return .none
+
+            case .sendConfirmation(.transactionDetails(.closeDetailTapped)):
+                state.selectedTab = .account
                 state.sendConfirmationState.stackDestinationBindingsAlive = 0
                 return .concatenate(
                     .send(.updateDestination(nil)),
@@ -486,9 +496,8 @@ public struct Tabs {
                     .send(.sendConfirmation(.updateDestination(nil))),
                     .send(.sendConfirmation(.updateResult(nil))),
                     .send(.sendConfirmation(.updateStackDestination(nil))),
+                    .send(.sendConfirmation(.updateStackDestinationTransactions(nil))),
                     .send(.send(.resetForm))
-                    // TODO: !!!
-//                    .send(.home(.transactionList(.transactionExpandRequested(state.sendConfirmationState.txIdToExpand ?? ""))))
                 )
 
             case .sendConfirmation(.backFromFailurePressed):

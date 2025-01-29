@@ -705,6 +705,7 @@ let package = Package(
         .target(
             name: "SendConfirmation",
             dependencies: [
+                "AddressBook",
                 "AddressBookClient",
                 "AudioServices",
                 "BalanceFormatter",
@@ -719,6 +720,7 @@ let package = Package(
                 "Scan",
                 "SDKSynchronizer",
                 "SupportDataGenerator",
+                "TransactionDetails",
                 "UIComponents",
                 "Utils",
                 "Vendors",

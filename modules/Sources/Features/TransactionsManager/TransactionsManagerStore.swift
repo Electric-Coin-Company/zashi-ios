@@ -347,7 +347,7 @@ public struct TransactionsManager {
                 }
 
                 let sections = grouped.map { key, transactions in
-                    var timestamp: TimeInterval = 0
+                    var timestamp: TimeInterval = Date().timeIntervalSince1970
                     
                     for transaction in transactions {
                         if transaction.timestamp != nil {

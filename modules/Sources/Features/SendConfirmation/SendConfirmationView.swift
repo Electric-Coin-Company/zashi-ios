@@ -14,6 +14,8 @@ import UIComponents
 import Utils
 import PartialProposalError
 import Scan
+import AddressBook
+import TransactionDetails
 
 public struct SendConfirmationView: View {
     @Environment(\.colorScheme) private var colorScheme
@@ -277,6 +279,35 @@ extension StoreOf<SendConfirmation> {
             }
         )
     }
+    
+    func bindingForStackTransactions(_ destination: SendConfirmation.State.StackDestinationTransactions) -> Binding<Bool> {
+        Binding<Bool>(
+            get: {
+                if let currentStackValue = self.stackDestinationTransactions?.rawValue {
+                    return currentStackValue >= destination.rawValue
+                } else {
+                    if destination.rawValue == 0 {
+                        return false
+                    } else if destination.rawValue <= self.stackDestinationTransactionsBindingsAlive {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+            },
+            set: { _ in
+                if let currentStackValue = self.stackDestinationTransactions?.rawValue, currentStackValue == destination.rawValue {
+                    let popIndex = destination.rawValue - 1
+                    if popIndex >= 0 {
+                        let popDestination = SendConfirmation.State.StackDestinationTransactions(rawValue: popIndex)
+                        self.send(.updateStackDestinationTransactions(popDestination))
+                    } else {
+                        self.send(.updateStackDestinationTransactions(nil))
+                    }
+                }
+            }
+        )
+    }
 }
 
 extension StoreOf<SendConfirmation> {
@@ -284,6 +315,20 @@ extension StoreOf<SendConfirmation> {
         self.scope(
             state: \.scanState,
             action: \.scan
+        )
+    }
+    
+    func addressBookStore() -> StoreOf<AddressBook> {
+        self.scope(
+            state: \.addressBookState,
+            action: \.addressBook
+        )
+    }
+    
+    func transactionDetailsStore() -> StoreOf<TransactionDetails> {
+        self.scope(
+            state: \.transactionDetailsState,
+            action: \.transactionDetails
         )
     }
 }

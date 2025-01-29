@@ -13,6 +13,8 @@ import Generated
 import UIComponents
 import Utils
 import PartialProposalError
+import AddressBook
+import TransactionDetails
 
 public struct SuccessView: View {
     @Perception.Bindable var store: StoreOf<SendConfirmation>
@@ -48,14 +50,16 @@ public struct SuccessView: View {
                         .padding(.top, 4)
                 }
 
-                ZashiButton(
-                    L10n.Send.viewTransaction,
-                    type: .tertiary,
-                    infinityWidth: false
-                ) {
-                    store.send(.viewTransactionTapped)
+                if store.txIdToExpand != nil {
+                    ZashiButton(
+                        L10n.Send.viewTransaction,
+                        type: .tertiary,
+                        infinityWidth: false
+                    ) {
+                        store.send(.viewTransactionTapped)
+                    }
+                    .padding(.top, 16)
                 }
-                .padding(.top, 16)
 
                 Spacer()
                 
@@ -64,6 +68,21 @@ public struct SuccessView: View {
                 }
                 .padding(.bottom, 24)
             }
+            .navigationLinkEmpty(
+                isActive: store.bindingForStackTransactions(.details),
+                destination: {
+                    TransactionDetailsView(
+                        store: store.transactionDetailsStore(),
+                        tokenName: tokenName
+                    )
+                    .navigationLinkEmpty(
+                        isActive: store.bindingForStackTransactions(.addressBook),
+                        destination: {
+                            AddressBookContactView(store: store.addressBookStore())
+                        }
+                    )
+                }
+            )
         }
         .navigationBarBackButtonHidden()
         .padding(.vertical, 1)

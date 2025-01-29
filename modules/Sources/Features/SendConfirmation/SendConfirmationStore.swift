@@ -26,6 +26,8 @@ import AddressBookClient
 import MessageUI
 import SupportDataGenerator
 import KeystoneHandler
+import TransactionDetails
+import AddressBook
 
 @Reducer
 public struct SendConfirmation {
@@ -52,8 +54,14 @@ public struct SendConfirmation {
             case sending
         }
 
+        public enum StackDestinationTransactions: Int, Equatable {
+            case details = 0
+            case addressBook
+        }
+
         public var address: String
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
+        public var addressBookState: AddressBook.State = .initial
         public var alias: String?
         @Presents public var alert: AlertState<Action>?
         public var amount: Zatoshi
@@ -90,7 +98,10 @@ public struct SendConfirmation {
         public var sendingScreenOnAppearTimestamp: TimeInterval = 0
         public var stackDestination: StackDestination?
         public var stackDestinationBindingsAlive = 0
+        public var stackDestinationTransactions: StackDestinationTransactions?
+        public var stackDestinationTransactionsBindingsAlive = 0
         public var supportData: SupportData?
+        public var transactionDetailsState: TransactionDetails.State = .initial
         public var txIdToExpand: String?
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
@@ -152,6 +163,7 @@ public struct SendConfirmation {
     }
     
     public enum Action: BindableAction, Equatable {
+        case addressBook(AddressBook.Action)
         case alert(PresentationAction<Action>)
         case backFromFailurePressed
         case binding(BindingAction<SendConfirmation.State>)
@@ -179,11 +191,13 @@ public struct SendConfirmation {
         case sendTriggered
         case shareFinished
         case showHideButtonTapped
+        case transactionDetails(TransactionDetails.Action)
         case transactionResultReady
         case updateDestination(State.Destination?)
         case updateFailedData(Int, String, String)
         case updateResult(State.Result?)
         case updateStackDestination(SendConfirmation.State.StackDestination?)
+        case updateStackDestinationTransactions(SendConfirmation.State.StackDestinationTransactions?)
         case updateTxIdToExpand(String?)
         case viewTransactionTapped
         
@@ -215,12 +229,20 @@ public struct SendConfirmation {
     public var body: some Reducer<State, Action> {
         BindingReducer()
         
+        Scope(state: \.addressBookState, action: \.addressBook) {
+            AddressBook()
+        }
+
         Scope(state: \.partialProposalErrorState, action: \.partialProposalError) {
             PartialProposalError()
         }
 
         Scope(state: \.scanState, action: \.scan) {
             Scan()
+        }
+        
+        Scope(state: \.transactionDetailsState, action: \.transactionDetails) {
+            TransactionDetails()
         }
         
         Reduce { state, action in
@@ -285,7 +307,10 @@ public struct SendConfirmation {
             case .goBackPressed:
                 return .none
 
-            case .closeTapped, .viewTransactionTapped, .backFromFailurePressed:
+            case .viewTransactionTapped:
+                return .none
+                
+            case .closeTapped, .backFromFailurePressed:
                 return .none
 
             case .sendPressed:
@@ -430,6 +455,13 @@ public struct SendConfirmation {
                 state.stackDestination = destination
                 return .none
                 
+            case .updateStackDestinationTransactions(let destination):
+                if let destination {
+                    state.stackDestinationTransactionsBindingsAlive = destination.rawValue
+                }
+                state.stackDestinationTransactions = destination
+                return .none
+
             case .reportTapped:
                 var supportData = SupportDataGenerator.generate()
                 supportData.message =
@@ -629,6 +661,12 @@ public struct SendConfirmation {
                 return .none
                 
             case .transactionResultReady:
+                return .none
+                
+            case .addressBook:
+                return .none
+                
+            case .transactionDetails:
                 return .none
             }
         }
