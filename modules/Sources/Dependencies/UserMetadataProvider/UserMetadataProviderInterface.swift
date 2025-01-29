@@ -16,6 +16,10 @@ extension DependencyValues {
 
 @DependencyClient
 public struct UserMetadataProviderClient {
+    // General
+    public let store: () async throws -> Void
+    public let load: () async throws -> Void
+
     // Bookmarking
     public let isBookmarked: (String) -> Bool
     public let toggleBookmarkFor: (String) -> Void
@@ -25,7 +29,7 @@ public struct UserMetadataProviderClient {
     public let addAnnotationFor: (String, String) -> Void
     public let deleteAnnotationFor: (String) -> Void
 
-    // General
-    public let store: () async throws -> Void
-    public let load: () async throws -> Void
+    // Unread
+    public let isUnread: (String) -> Bool
+    public let toggleUnreadFor: (String) -> Void
 }

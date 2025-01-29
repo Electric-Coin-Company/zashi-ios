@@ -41,6 +41,7 @@ public struct TransactionDetails {
         public var areDetailsExpanded = false
         public var isEditMode = false
         public var isBookmarked = false
+        public var isCloseButtonRequired = false
         @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
         public var messageStates: [MessageState] = []
         public var annotation = ""
@@ -74,6 +75,7 @@ public struct TransactionDetails {
         case addressTapped
         case binding(BindingAction<TransactionDetails.State>)
         case bookmarkTapped
+        case closeDetailTapped
         case deleteNoteTapped
         case fetchedABContacts(AddressBookContacts)
         case memosLoaded([Memo])
@@ -135,6 +137,9 @@ public struct TransactionDetails {
             case .binding:
                 return .none
 
+            case .closeDetailTapped:
+                return .none
+                
             case .deleteNoteTapped:
                 userMetadataProvider.deleteAnnotationFor(state.transaction.id)
                 state.annotation = userMetadataProvider.annotationFor(state.transaction.id) ?? ""

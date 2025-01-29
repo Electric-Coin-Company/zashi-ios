@@ -133,7 +133,10 @@ public struct TransactionDetailsView: View {
                 .padding(.bottom, 24)
                 .screenHorizontalPadding()
             }
-            .zashiBack()
+            .zashiBack(hidden: store.isCloseButtonRequired)
+            .zashiBackV2(hidden: !store.isCloseButtonRequired) {
+                store.send(.closeDetailTapped)
+            }
             .navigationBarItems(
                 trailing:
                     HStack(spacing: 0) {
@@ -290,12 +293,14 @@ extension TransactionDetailsView {
                                     .zImage(size: 20, style: Design.Text.primary)
                                     .padding(.leading, 6)
                             }
-                            .padding(.bottom, 24)
+                            .padding(.bottom, store.alias == nil ? 8 : 24)
                             
                             VStack(alignment: .leading, spacing: 0) {
-                                Text(L10n.TransactionHistory.address)
-                                    .zFont(size: 14, style: Design.Text.tertiary)
-                                    .padding(.bottom, 4)
+                                if store.alias != nil {
+                                    Text(L10n.TransactionHistory.address)
+                                        .zFont(size: 14, style: Design.Text.tertiary)
+                                        .padding(.bottom, 4)
+                                }
                                 
                                 Text(store.transaction.address)
                                     .zFont(.medium, size: 14, style: Design.Text.primary)
@@ -395,12 +400,14 @@ extension TransactionDetailsView {
                                     .zImage(size: 20, style: Design.Text.primary)
                                     .padding(.leading, 6)
                             }
-                            .padding(.bottom, 24)
+                            .padding(.bottom, store.alias == nil ? 8 : 24)
                             
                             VStack(alignment: .leading, spacing: 0) {
-                                Text(L10n.TransactionHistory.address)
-                                    .zFont(size: 14, style: Design.Text.tertiary)
-                                    .padding(.bottom, 4)
+                                if store.alias != nil {
+                                    Text(L10n.TransactionHistory.address)
+                                        .zFont(size: 14, style: Design.Text.tertiary)
+                                        .padding(.bottom, 4)
+                                }
                                 
                                 Text(store.transaction.address)
                                     .zFont(.medium, size: 14, style: Design.Text.primary)
