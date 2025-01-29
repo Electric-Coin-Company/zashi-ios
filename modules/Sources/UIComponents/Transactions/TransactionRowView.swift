@@ -16,15 +16,18 @@ public struct TransactionRowView: View {
     let transaction: TransactionState
     let divider: Bool
     @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
+    let isUnread: Bool
     let tokenName: String
 
     public init(
         transaction: TransactionState,
         tokenName: String = "ZEC",
+        isUnread: Bool = false,
         divider: Bool = false
     ) {
         self.transaction = transaction
         self.tokenName = tokenName
+        self.isUnread = isUnread
         self.divider = divider
     }
     
@@ -32,24 +35,38 @@ public struct TransactionRowView: View {
         WithPerceptionTracking {
             VStack(spacing: 0) {
                 HStack(spacing: 0) {
-                    transationIcon()
-                        .zImage(size: 20, color: transaction.iconColor(colorScheme))
-                        .background {
-                            Circle()
-                                .fill(
-                                    LinearGradient(
-                                        gradient: Gradient(colors: [
-                                            transaction.iconGradientEndColor(colorScheme),
-                                            transaction.iconGradientStartColor(colorScheme)
-                                        ]),
-                                        startPoint: .top,
-                                        endPoint: .bottom
+                    ZStack {
+                        transationIcon()
+                            .zImage(size: 20, color: transaction.iconColor(colorScheme))
+                            .background {
+                                Circle()
+                                    .fill(
+                                        LinearGradient(
+                                            gradient: Gradient(colors: [
+                                                transaction.iconGradientStartColor(colorScheme),
+                                                transaction.iconGradientEndColor(colorScheme)
+                                            ]),
+                                            startPoint: .top,
+                                            endPoint: .bottom
+                                        )
                                     )
-                                )
-                                .frame(width: 40, height: 40)
+                                    .frame(width: 40, height: 40)
+                            }
+                            .frame(width: 40, height: 40)
+                            .padding(.trailing, 16)
+                        
+                        if isUnread {
+                            Circle()
+                                .fill(Design.Avatars.badgeBg.color(colorScheme))
+                                .frame(width: 9, height: 9)
+                                .background {
+                                    Circle()
+                                        .fill(Design.Avatars.profileBorder.color(colorScheme))
+                                        .frame(width: 14, height: 14)
+                                }
+                                .offset(x: 9, y: 11)
                         }
-                        .frame(width: 40, height: 40)
-                        .padding(.trailing, 16)
+                    }
 
                     VStack(alignment: .leading, spacing: 0) {
                         HStack(spacing: 0) {
