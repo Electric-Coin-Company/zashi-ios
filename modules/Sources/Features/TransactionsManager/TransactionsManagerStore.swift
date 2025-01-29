@@ -337,7 +337,7 @@ public struct TransactionsManager {
 
                 // divide the filtered list of transactions into a time periods
                 let grouped = Dictionary(grouping: state.filteredTransactionsList) { transaction in
-                    guard let timestamp = transaction.timestamp else { return "Today" }
+                    guard let timestamp = transaction.timestamp else { return L10n.Filter.today }
 
                     let calendar = Calendar.current
                     let startOfToday = calendar.startOfDay(for: Date())
@@ -385,13 +385,13 @@ extension TransactionsManager {
         let daysAgo = components.day ?? Int.max
         
         if Calendar.current.isDateInToday(date) {
-            return "Today"
+            return L10n.Filter.today
         } else if Calendar.current.isDateInYesterday(date) {
-            return "Yesterday"
+            return L10n.Filter.yesterday
         } else if daysAgo < 7 {
-            return "Previous 7 days"
+            return L10n.Filter.previous7days
         } else if daysAgo < 31 {
-            return "Previous 30 days"
+            return L10n.Filter.previous30days
         } else {
             let formatter = DateFormatter()
             formatter.dateFormat = "MMMM yyyy"
@@ -437,7 +437,6 @@ extension TransactionsManager {
                 let op = String(searchTerm[operatorRange])
                 
                 if let amount = numberFormatter.number(input) {
-                    print("__LD amount \(amount)")
                     if op == "<" {
                         return amount.doubleValue < threshold.doubleValue
                     } else if op == ">" {

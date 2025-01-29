@@ -336,6 +336,7 @@
 "transaction.failedShieldedFunds" = "Shielded Funds Failed";
 "transaction.saveAddress" = "Save address";
 "transaction.selectText" = "Select text";
+"transaction.shieldedFunds" = "Shielded";
 
 // MARK: - Local authentication
 "localAuthentication.reason" = "The Following content requires authentication.";
@@ -517,4 +518,46 @@
 "taxExport.shareDesc" = "%@ transaction history";
 
 // transaction history redesign
-"transaction.shieldedFunds" = "Shielded";
+"transactionHistory.title" = "Transactions";
+"transactionHistory.seeAll" = "See all";
+"transactionHistory.nothingHere" = "There’s nothing here, yet.";
+"transactionHistory.makeTransaction" = "Make the first move...";
+"transactionHistory.sendTransaction" = "Send a transaction";
+"transactionHistory.saveAddress" = "Save address";
+"transactionHistory.sendAgain" = "Send again";
+"transactionHistory.details" = "Transaction Details";
+"transactionHistory.sentTo" = "Sent to";
+"transactionHistory.address" = "Address";
+"transactionHistory.pending" = "Pending";
+"transactionHistory.completed" = "Completed";
+"transactionHistory.viewMore" = "View more";
+"transactionHistory.viewLess" = "View less";
+"transactionHistory.noMessage" = "No Message";
+"transactionHistory.threeDots" = "%@...";
+"transactionHistory.defaultFee" = "0.001";
+"annotation.edit" = "Edit a note";
+"annotation.addArticle" = "Add a note";
+"annotation.add" = "Add note";
+"annotation.delete" = "Delete note";
+"annotation.save" = "Save note";
+"annotation.placeholder" = "Write an optional note to describe this transaction...";
+"annotation.chars" = "%@/%@ characters";
+"annotation.title" = "Note";
+"filter.title" = "Filter";
+"filter.sent" = "Sent";
+"filter.received" = "Received";
+"filter.memos" = "Memos";
+"filter.notes" = "Notes";
+"filter.bookmarked" = "Bookmarked";
+"filter.contact" = "Contact";
+"filter.reset" = "Reset";
+"filter.apply" = "Apply";
+"filter.today" = "Today";
+"filter.yesterday" = "Yesterday";
+"filter.previous7days" = "Previous 7 days";
+"filter.previous30days" = "Previous 30 days";
+"filter.search" = "Search";
+"filter.noResults" = "No results";
+"filter.weTried" = "We tried but couldn’t find anything.";
+"filter.at" = "at"; // example: Nov 29 at 4:15pm
+"filter.daysAgo" = "%@ days ago";

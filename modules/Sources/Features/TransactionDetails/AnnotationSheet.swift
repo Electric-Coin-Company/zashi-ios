@@ -30,8 +30,8 @@ extension TransactionDetailsView {
             }
             
             Text(isEditMode
-                 ? "Edit a note"
-                 : "Add a note"
+                 ? L10n.Annotation.edit
+                 : L10n.Annotation.addArticle
             )
             .zFont(.semiBold, size: 20, style: Design.Text.primary)
             .padding(.top, 32)
@@ -51,7 +51,7 @@ extension TransactionDetailsView {
                         if store.annotation.isEmpty {
                             HStack {
                                 VStack {
-                                    Text("Write an optional note to describe this transaction...")
+                                    Text(L10n.Annotation.placeholder)
                                         .font(.custom(FontFamily.Inter.regular.name, size: 16))
                                         .zForegroundColor(Design.Inputs.Default.text)
                                         .onTapGesture {
@@ -70,7 +70,7 @@ extension TransactionDetailsView {
                         }
                     }
 
-                Text("\(store.annotation.count)/\(TransactionDetails.State.Constants.annotationMaxLength) characters")
+                Text(L10n.Annotation.chars(store.annotation.count, TransactionDetails.State.Constants.annotationMaxLength))
                     .zFont(size: 14, style: Design.Inputs.Default.hint)
             }
             .padding(.bottom, 32)
@@ -78,14 +78,14 @@ extension TransactionDetailsView {
             if isEditMode {
                 HStack(spacing: 8) {
                     ZashiButton(
-                        "Delete note",
+                        L10n.Annotation.delete,
                         type: .destructive1
                     ) {
                         store.send(.deleteNoteTapped)
                     }
 
                     ZashiButton(
-                        "Save note",
+                        L10n.Annotation.save,
                         type: .secondary
                     ) {
                         store.send(.saveNoteTapped)
@@ -95,7 +95,7 @@ extension TransactionDetailsView {
                 .padding(.bottom, 24)
             } else {
                 ZashiButton(
-                    "Add note",
+                    L10n.Annotation.add,
                     type: .secondary
                 ) {
                     store.send(.addNoteTapped)

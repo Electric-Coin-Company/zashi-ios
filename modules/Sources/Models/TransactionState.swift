@@ -153,7 +153,7 @@ public struct TransactionState: Equatable, Identifiable {
 
         let formatter = DateFormatter()
         let date = Date(timeIntervalSince1970: timestamp)
-        formatter.dateFormat = "MMM d 'at' h:mm a"
+        formatter.dateFormat = "MMM d '\(L10n.Filter.at)' h:mm a"
         return formatter.string(from: date)
     }
     
@@ -162,7 +162,7 @@ public struct TransactionState: Equatable, Identifiable {
 
         let formatter = DateFormatter()
         let date = Date(timeIntervalSince1970: timestamp)
-        formatter.dateFormat = "MMM d, YYYY 'at' h:mm a"
+        formatter.dateFormat = "MMM d, YYYY '\(L10n.Filter.at)' h:mm a"
         return formatter.string(from: date)
     }
 
@@ -178,11 +178,11 @@ public struct TransactionState: Equatable, Identifiable {
         
         if let daysAgo = components.day {
             if daysAgo == 0 {
-                return "Today"
+                return L10n.Filter.today
             } else if daysAgo == 1 {
-                return "Yesterday"
+                return L10n.Filter.yesterday
             } else if daysAgo < 31 {
-                return "\(daysAgo) days ago"
+                return L10n.Filter.daysAgo(daysAgo)
             } else {
                 return listDateString ?? ""
             }

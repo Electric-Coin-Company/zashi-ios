@@ -51,7 +51,7 @@ public struct TransactionDetails {
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
         public var feeStr: String {
-            transaction.fee?.decimalString() ?? "0.001"
+            transaction.fee?.decimalString() ?? L10n.TransactionHistory.defaultFee
         }
         
         public var memos: [String] {
