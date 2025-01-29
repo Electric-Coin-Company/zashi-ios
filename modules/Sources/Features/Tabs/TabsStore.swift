@@ -32,6 +32,7 @@ import Scan
 import TransactionsManager
 import TransactionDetails
 import ReadTransactionsStorage
+import UserMetadataProvider
 
 @Reducer
 public struct Tabs {
@@ -213,6 +214,7 @@ public struct Tabs {
     @Dependency(\.exchangeRate) var exchangeRate
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.readTransactionsStorage) var readTransactionsStorage
+    @Dependency(\.userMetadataProvider) var userMetadataProvider
     @Dependency(\.userStoredPreferences) var userStoredPreferences
 
     public init() { }
@@ -724,41 +726,8 @@ public struct Tabs {
                     await send(.selectedTabChanged(.send))
                 }
 
-            case .transactionDetails(.noteButtonTapped):
-                state.transactionDetailsState.userMetadataRequest = true
-                return .none
-
-            case .transactionDetails(.addNoteTapped(let txId)), .transactionDetails(.saveNoteTapped(let txId)):
-                state.transactionDetailsState.userMetadataRequest = false
-                if let index = state.homeState.transactionListState.transactionList.index(id: txId) {
-                    state.homeState.transactionListState.transactionList[index].userMetadata = state.transactionDetailsState.userMetadata
-                }
-                if let index = state.transactionsManagerState.transactionList.index(id: txId) {
-                    state.transactionsManagerState.transactionList[index].userMetadata = state.transactionDetailsState.userMetadata
-                    state.transactionDetailsState.transaction.userMetadata = state.transactionDetailsState.userMetadata
-                    state.transactionDetailsState.userMetadata = ""
-                }
-                return .none
-
-            case .transactionDetails(.deleteNoteTapped(let txId)):
-                state.transactionDetailsState.userMetadataRequest = false
-                if let index = state.homeState.transactionListState.transactionList.index(id: txId) {
-                    state.homeState.transactionListState.transactionList[index].userMetadata = ""
-                }
-                if let index = state.transactionsManagerState.transactionList.index(id: txId) {
-                    state.transactionsManagerState.transactionList[index].userMetadata = ""
-                    state.transactionDetailsState.transaction.userMetadata = ""
-                    state.transactionDetailsState.userMetadata = ""
-                }
-                return .none
-
-            case .transactionDetails(.bookmarkTapped(let txId)):
-                if let index = state.transactionsManagerState.transactionList.index(id: txId) {
-                    state.transactionsManagerState.transactionList[index].bookmarked.toggle()
-                    state.transactionDetailsState.transaction.bookmarked.toggle()
-                    return .send(.transactionsManager(.updateTransactionsAccordingToSearchTerm))
-                }
-                return .none
+            case .transactionDetails(.bookmarkTapped):
+                return .send(.transactionsManager(.updateTransactionsAccordingToSearchTerm))
                 
             case .transactionsManager:
                 return .none

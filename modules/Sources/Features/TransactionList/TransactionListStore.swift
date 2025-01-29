@@ -146,8 +146,6 @@ public struct TransactionList {
                         if let index = state.transactionList.index(id: transaction.id) {
                             copiedTransaction.rawID = state.transactionList[index].rawID
                             copiedTransaction.memos = state.transactionList[index].memos
-                            copiedTransaction.bookmarked = state.transactionList[index].bookmarked
-                            copiedTransaction.userMetadata = state.transactionList[index].userMetadata
                         }
                         
                         // update the read/unread state

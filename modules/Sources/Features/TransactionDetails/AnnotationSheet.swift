@@ -1,5 +1,5 @@
 //
-//  UserMetadataSheet.swift
+//  AnnotationSheet.swift
 //  Zashi
 //
 //  Created by Lukáš Korba on 2025-01-27.
@@ -11,7 +11,7 @@ import Generated
 import UIComponents
 
 extension TransactionDetailsView {
-    @ViewBuilder func userMetadataContent(_ isEditMode: Bool) -> some View {
+    @ViewBuilder func annotationContent(_ isEditMode: Bool) -> some View {
         WithPerceptionTracking {
             if #available(iOS 16.0, *) {
                 mainBodyUM(isEditMode: isEditMode)
@@ -38,8 +38,8 @@ extension TransactionDetailsView {
             .padding(.bottom, 16)
             
             VStack(alignment: .leading, spacing: 6) {
-                TextEditor(text: $store.userMetadata)
-                    .focused($isUserMetadataFocused)
+                TextEditor(text: $store.annotation)
+                    .focused($isAnnotationFocused)
                     .font(.custom(FontFamily.Inter.medium.name, size: 16))
                     .frame(height: 122)
                     .padding(.horizontal, 10)
@@ -48,14 +48,14 @@ extension TransactionDetailsView {
                     .colorBackground(Design.Inputs.Default.bg.color(colorScheme))
                     .cornerRadius(10)
                     .overlay {
-                        if store.userMetadata.isEmpty {
+                        if store.annotation.isEmpty {
                             HStack {
                                 VStack {
                                     Text("Write an optional note to describe this transaction...")
                                         .font(.custom(FontFamily.Inter.regular.name, size: 16))
                                         .zForegroundColor(Design.Inputs.Default.text)
                                         .onTapGesture {
-                                            isUserMetadataFocused = true
+                                            isAnnotationFocused = true
                                         }
 
                                     Spacer()
@@ -70,7 +70,7 @@ extension TransactionDetailsView {
                         }
                     }
 
-                Text("\(store.userMetadata.count)/\(TransactionDetails.State.Constants.userMetadataMaxLength) characters")
+                Text("\(store.annotation.count)/\(TransactionDetails.State.Constants.annotationMaxLength) characters")
                     .zFont(size: 14, style: Design.Inputs.Default.hint)
             }
             .padding(.bottom, 32)
@@ -81,16 +81,16 @@ extension TransactionDetailsView {
                         "Delete note",
                         type: .destructive1
                     ) {
-                        store.send(.deleteNoteTapped(store.transaction.id))
+                        store.send(.deleteNoteTapped)
                     }
 
                     ZashiButton(
                         "Save note",
                         type: .secondary
                     ) {
-                        store.send(.saveNoteTapped(store.transaction.id))
+                        store.send(.saveNoteTapped)
                     }
-                    .disabled(store.userMetadata == store.userMetadataOrigin)
+                    .disabled(store.annotation == store.annotationOrigin)
                 }
                 .padding(.bottom, 24)
             } else {
@@ -98,9 +98,9 @@ extension TransactionDetailsView {
                     "Add note",
                     type: .secondary
                 ) {
-                    store.send(.addNoteTapped(store.transaction.id))
+                    store.send(.addNoteTapped)
                 }
-                .disabled(store.userMetadata.isEmpty)
+                .disabled(store.annotation.isEmpty)
                 .padding(.bottom, 24)
             }
         }

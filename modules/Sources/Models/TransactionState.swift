@@ -41,10 +41,6 @@ public struct TransactionState: Equatable, Identifiable {
     public var isMarkedAsRead = false
     public var isInAddressBook = false
     public var hasTransparentOutputs = false
-    
-    public var bookmarked = false
-    public var userMetadata = "" // equivalent of note in the UI
-//    public var userMetadata = "testing of note in the ui, to see it as a user data that somebody willingly put into the form." // equivalent of note in the UI
 
     public var rawID: Data? = nil
     
