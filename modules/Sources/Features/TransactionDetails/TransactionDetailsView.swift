@@ -50,7 +50,7 @@ public struct TransactionDetailsView: View {
     @Environment(\.colorScheme) var colorScheme
 
     @State var filtersSheetHeight: CGFloat = .zero
-    @FocusState var isUserMetadataFocused
+    @FocusState var isAnnotationFocused
 
     @Perception.Bindable var store: StoreOf<TransactionDetails>
     let tokenName: String
@@ -110,7 +110,7 @@ public struct TransactionDetailsView: View {
                 
                 HStack(spacing: 12) {
                     ZashiButton(
-                        store.transaction.userMetadata.isEmpty
+                        store.annotation.isEmpty
                         ? "Add a note"
                         : "Edit a note",
                         type: .tertiary
@@ -148,8 +148,8 @@ public struct TransactionDetailsView: View {
             .onAppear {
                 store.send(.onAppear)
             }
-            .sheet(isPresented: $store.userMetadataRequest) {
-                userMetadataContent(!store.transaction.userMetadata.isEmpty)
+            .sheet(isPresented: $store.annotationRequest) {
+                annotationContent(store.isEditMode)
             }
         }
         .navigationBarTitleDisplayMode(.inline)
@@ -161,9 +161,9 @@ public struct TransactionDetailsView: View {
 extension TransactionDetailsView {
     @ViewBuilder func bookmarkButton() -> some View {
         Button {
-            store.send(.bookmarkTapped(store.transaction.id))
+            store.send(.bookmarkTapped)
         } label: {
-            if store.transaction.bookmarked {
+            if store.isBookmarked {
                 Asset.Assets.Icons.bookmarkCheck.image
                     .zImage(size: 32, style: Design.Text.primary)
                     .padding(4)
@@ -365,7 +365,7 @@ extension TransactionDetailsView {
                 detailView(
                     title: "Completed",
                     value: store.transaction.listDateYearString ?? "Pending",
-                    rowAppereance: store.transaction.userMetadata.isEmpty ? .bottom : .middle
+                    rowAppereance: store.annotation.isEmpty ? .bottom : .middle
                 )
 
                 noteView()
@@ -469,7 +469,7 @@ extension TransactionDetailsView {
                     detailView(
                         title: "Completed",
                         value: store.transaction.listDateYearString ?? "Pending",
-                        rowAppereance: store.transaction.userMetadata.isEmpty ? .bottom : .middle
+                        rowAppereance: store.annotation.isEmpty ? .bottom : .middle
                     )
                     
                     noteView()
@@ -479,13 +479,13 @@ extension TransactionDetailsView {
     }
 
     @ViewBuilder func noteView() -> some View {
-        if !store.transaction.userMetadata.isEmpty {
+        if !store.annotation.isEmpty {
             VStack(alignment: .leading, spacing: 0) {
                 Text("Note")
                     .zFont(size: 14, style: Design.Text.tertiary)
                     .padding(.bottom, 4)
 
-                Text(store.transaction.userMetadata)
+                Text(store.annotation)
                     .zFont(.medium, size: 14, style: Design.Text.primary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)

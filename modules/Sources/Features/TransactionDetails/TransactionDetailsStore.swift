@@ -18,6 +18,7 @@ import ZcashSDKEnvironment
 import AddressBookClient
 import UIComponents
 import AddressBookClient
+import UserMetadataProvider
 
 @Reducer
 public struct TransactionDetails {
@@ -25,7 +26,7 @@ public struct TransactionDetails {
     public struct State: Equatable {
         enum Constants {
             static let messageExpandThreshold: Int = 130
-            static let userMetadataMaxLength: Int = 90
+            static let annotationMaxLength: Int = 90
         }
         
         public enum MessageState: Equatable {
@@ -38,13 +39,15 @@ public struct TransactionDetails {
         public var areMessagesResolved = false
         public var alias: String?
         public var areDetailsExpanded = false
+        public var isEditMode = false
+        public var isBookmarked = false
         @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
         public var messageStates: [MessageState] = []
-        public var userMetadata = ""
-        public var userMetadataOrigin = ""
+        public var annotation = ""
+        public var annotationOrigin = ""
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
         public var transaction: TransactionState
-        public var userMetadataRequest = false
+        public var annotationRequest = false
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
         public var feeStr: String {
@@ -67,11 +70,11 @@ public struct TransactionDetails {
     }
     
     public enum Action: BindableAction, Equatable {
-        case addNoteTapped(String)
+        case addNoteTapped
         case addressTapped
         case binding(BindingAction<TransactionDetails.State>)
-        case bookmarkTapped(String)
-        case deleteNoteTapped(String)
+        case bookmarkTapped
+        case deleteNoteTapped
         case fetchedABContacts(AddressBookContacts)
         case memosLoaded([Memo])
         case messageTapped(Int)
@@ -79,7 +82,7 @@ public struct TransactionDetails {
         case onAppear
         case resolveMemos
         case saveAddressTapped
-        case saveNoteTapped(String)
+        case saveNoteTapped
         case sendAgainTapped
         case sentToRowTapped
         case transactionIdTapped
@@ -88,6 +91,7 @@ public struct TransactionDetails {
     @Dependency(\.addressBook) var addressBook
     @Dependency(\.pasteboard) var pasteboard
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.userMetadataProvider) var userMetadataProvider
 
     public init() { }
 
@@ -101,6 +105,9 @@ public struct TransactionDetails {
                 state.messageStates = []
                 state.alias = nil
                 state.areMessagesResolved = false
+                state.isBookmarked = userMetadataProvider.isBookmarked(state.transaction.id)
+                state.annotation = userMetadataProvider.annotationFor(state.transaction.id) ?? ""
+                state.annotationOrigin = state.annotation
                 if let account = state.zashiWalletAccount {
                     do {
                         let result = try addressBook.allLocalContacts(account.account)
@@ -119,9 +126,9 @@ public struct TransactionDetails {
                 }
                 return .send(.resolveMemos)
 
-            case .binding(\.userMetadata):
-                if state.userMetadata.count > TransactionDetails.State.Constants.userMetadataMaxLength {
-                    state.userMetadata = String(state.userMetadata.prefix(TransactionDetails.State.Constants.userMetadataMaxLength))
+            case .binding(\.annotation):
+                if state.annotation.count > TransactionDetails.State.Constants.annotationMaxLength {
+                    state.annotation = String(state.annotation.prefix(TransactionDetails.State.Constants.annotationMaxLength))
                 }
                 return .none
                 
@@ -129,19 +136,18 @@ public struct TransactionDetails {
                 return .none
 
             case .deleteNoteTapped:
-                state.userMetadata = ""
-                state.transaction.userMetadata = ""
+                userMetadataProvider.deleteAnnotationFor(state.transaction.id)
+                state.annotation = userMetadataProvider.annotationFor(state.transaction.id) ?? ""
+                state.annotationRequest = false
                 return .none
 
-            case .saveNoteTapped:
-                state.transaction.userMetadata = state.userMetadata
-                state.userMetadataOrigin = ""
+            case .saveNoteTapped, .addNoteTapped:
+                userMetadataProvider.addAnnotationFor(state.annotation, state.transaction.id)
+                state.annotation = userMetadataProvider.annotationFor(state.transaction.id) ?? ""
+                state.annotationOrigin = ""
+                state.annotationRequest = false
                 return .none
 
-            case .addNoteTapped:
-                state.transaction.userMetadata = state.userMetadata
-                return .none
-                
             case .resolveMemos:
                 if let rawID = state.transaction.rawID {
                     return .run { send in
@@ -173,10 +179,14 @@ public struct TransactionDetails {
                 return .none
 
             case .noteButtonTapped:
-                state.userMetadataOrigin = state.userMetadata
+                state.isEditMode = !state.annotation.isEmpty
+                state.annotationOrigin = state.annotation
+                state.annotationRequest = true
                 return .none
 
             case .bookmarkTapped:
+                userMetadataProvider.toggleBookmarkFor(state.transaction.id)
+                state.isBookmarked = userMetadataProvider.isBookmarked(state.transaction.id)
                 return .none
 
             case .messageTapped(let index):

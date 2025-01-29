@@ -19,6 +19,7 @@ import AddressBookClient
 import UIComponents
 import AddressBook
 import NumberFormatter
+import UserMetadataProvider
 
 @Reducer
 public struct TransactionsManager {
@@ -97,6 +98,7 @@ public struct TransactionsManager {
     @Dependency(\.numberFormatter) var numberFormatter
     @Dependency(\.readTransactionsStorage) var readTransactionsStorage
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @Dependency(\.userMetadataProvider) var userMetadataProvider
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public init() { }
@@ -238,8 +240,6 @@ public struct TransactionsManager {
                         if let index = state.transactionList.index(id: transaction.id) {
                             copiedTransaction.rawID = state.transactionList[index].rawID
                             copiedTransaction.memos = state.transactionList[index].memos
-                            copiedTransaction.bookmarked = state.transactionList[index].bookmarked
-                            copiedTransaction.userMetadata = state.transactionList[index].userMetadata
                         }
                         
                         // update the read/unread state
@@ -312,7 +312,11 @@ public struct TransactionsManager {
                         for i in 0..<state.activeFilters.count {
                             let filter = state.activeFilters[i]
                             
-                            if !filter.applyFilter(transaction, addressBookContacts: state.addressBookContacts) {
+                            if !filter.applyFilter(
+                                transaction,
+                                addressBookContacts: state.addressBookContacts,
+                                userMetadataProvider: userMetadataProvider
+                            ) {
                                 isFilteredOut = true
                                 break
                             }
@@ -447,6 +451,11 @@ extension TransactionsManager {
         if input.contains(searchTerm) {
             return true
         }
+        
+        // fullsearch annotations
+        if let annotation = userMetadataProvider.annotationFor(transaction.id), annotation.contains(searchTerm) {
+            return true
+        }
 
         return false
     }
@@ -454,16 +463,20 @@ extension TransactionsManager {
 }
 
 extension TransactionsManager.Filter {
-    func applyFilter(_ transaction: TransactionState, addressBookContacts: AddressBookContacts) -> Bool {
+    func applyFilter(
+        _ transaction: TransactionState,
+        addressBookContacts: AddressBookContacts,
+        userMetadataProvider: UserMetadataProviderClient
+    ) -> Bool {
         switch self {
         case .bookmarked:
-            return transaction.bookmarked
+            return userMetadataProvider.isBookmarked(transaction.id)
         case .contact:
             return addressBookContacts.contacts.contains(where: { $0.id == transaction.address })
         case .memos:
             return transaction.memoCount > 0
         case .notes:
-            return !transaction.userMetadata.isEmpty
+            return userMetadataProvider.annotationFor(transaction.id) != nil
         case .received:
             return !transaction.isSentTransaction
         case .sent:

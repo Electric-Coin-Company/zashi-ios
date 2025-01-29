@@ -80,6 +80,7 @@ let package = Package(
         .library(name: "UIComponents", targets: ["UIComponents"]),
         .library(name: "URIParser", targets: ["URIParser"]),
         .library(name: "UserDefaults", targets: ["UserDefaults"]),
+        .library(name: "UserMetadataProvider", targets: ["UserMetadataProvider"]),
         .library(name: "UserPreferencesStorage", targets: ["UserPreferencesStorage"]),
         .library(name: "Utils", targets: ["Utils"]),
         .library(name: "Vendors", targets: ["Vendors"]),
@@ -869,6 +870,7 @@ let package = Package(
                 "TransactionDetails",
                 "TransactionsManager",
                 "UIComponents",
+                "UserMetadataProvider",
                 "UserPreferencesStorage",
                 "ZecKeyboard",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -935,6 +937,7 @@ let package = Package(
                 "SDKSynchronizer",
                 "TransactionDetails",
                 "UIComponents",
+                "UserMetadataProvider",
                 "Utils",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -976,6 +979,13 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Dependencies/UserDefaults"
+        ),
+        .target(
+            name: "UserMetadataProvider",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Dependencies/UserMetadataProvider"
         ),
         .target(
             name: "UserPreferencesStorage",
