@@ -94,7 +94,7 @@ public struct HomeView: View {
     @ViewBuilder func transactionsView() -> some View {
         WithPerceptionTracking {
             HStack(spacing: 0) {
-                Text("Transactions")
+                Text(L10n.TransactionHistory.title)
                     .zFont(.semiBold, size: 18, style: Design.Text.primary)
                 
                 Spacer()
@@ -104,7 +104,7 @@ public struct HomeView: View {
                         store.send(.seeAllTransactionsTapped)
                     } label: {
                         HStack(spacing: 4) {
-                            Text("See all")
+                            Text(L10n.TransactionHistory.seeAll)
                                 .zFont(.semiBold, size: 14, style: Design.Btns.Tertiary.fg)
                             
                             Asset.Assets.chevronRight.image
@@ -150,17 +150,17 @@ public struct HomeView: View {
                         .frame(width: 164, height: 164)
                         .padding(.bottom, 20)
 
-                    Text("There’s nothing here, yet.")
+                    Text(L10n.TransactionHistory.nothingHere)
                         .zFont(.semiBold, size: 18, style: Design.Text.primary)
                         .padding(.bottom, 8)
 
                     if walletStatus != .restoring {
-                        Text("Make the first move...")
+                        Text(L10n.TransactionHistory.makeTransaction)
                             .zFont(size: 14, style: Design.Text.tertiary)
                             .padding(.bottom, 20)
                         
                         ZashiButton(
-                            "Send a transaction",
+                            L10n.TransactionHistory.sendTransaction,
                             type: .tertiary,
                             infinityWidth: false
                         ) {

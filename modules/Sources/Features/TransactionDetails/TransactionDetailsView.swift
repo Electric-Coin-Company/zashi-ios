@@ -111,8 +111,8 @@ public struct TransactionDetailsView: View {
                 HStack(spacing: 12) {
                     ZashiButton(
                         store.annotation.isEmpty
-                        ? "Add a note"
-                        : "Edit a note",
+                        ? L10n.Annotation.addArticle
+                        : L10n.Annotation.edit,
                         type: .tertiary
                     ) {
                         store.send(.noteButtonTapped)
@@ -120,15 +120,11 @@ public struct TransactionDetailsView: View {
 
                     if store.transaction.isSentTransaction && !store.transaction.isShieldingTransaction {
                         if store.alias == nil {
-                            ZashiButton(
-                                "Save address"
-                            ) {
+                            ZashiButton(L10n.TransactionHistory.saveAddress) {
                                 store.send(.saveAddressTapped)
                             }
                         } else {
-                            ZashiButton(
-                                "Send again"
-                            ) {
+                            ZashiButton(L10n.TransactionHistory.sendAgain) {
                                 store.send(.sendAgainTapped)
                             }
                         }
@@ -271,7 +267,7 @@ extension TransactionDetailsView {
     @ViewBuilder func transactionDetailsListTransparent() -> some View {
         WithPerceptionTracking {
             LazyVStack(alignment: .leading, spacing: 0) {
-                Text("Transaction Details")
+                Text(L10n.TransactionHistory.details)
                     .zFont(.medium, size: 14, style: Design.Text.tertiary)
                     .padding(.bottom, 8)
 
@@ -279,7 +275,7 @@ extension TransactionDetailsView {
                     if store.areDetailsExpanded {
                         VStack(alignment: .leading, spacing: 0) {
                             HStack(spacing: 0) {
-                                Text("Sent to")
+                                Text(L10n.TransactionHistory.sentTo)
                                     .zFont(size: 14, style: Design.Text.tertiary)
                                 
                                 Spacer()
@@ -297,7 +293,7 @@ extension TransactionDetailsView {
                             .padding(.bottom, 24)
                             
                             VStack(alignment: .leading, spacing: 0) {
-                                Text("Address")
+                                Text(L10n.TransactionHistory.address)
                                     .zFont(size: 14, style: Design.Text.tertiary)
                                     .padding(.bottom, 4)
                                 
@@ -321,7 +317,7 @@ extension TransactionDetailsView {
                         }
                     } else {
                         detailView(
-                            title: "Sent to",
+                            title: L10n.TransactionHistory.sentTo,
                             value: store.alias ?? store.transaction.address.zip316,
                             icon: store.areDetailsExpanded
                             ? Asset.Assets.chevronUp.image
@@ -363,8 +359,8 @@ extension TransactionDetailsView {
                 }
                 
                 detailView(
-                    title: "Completed",
-                    value: store.transaction.listDateYearString ?? "Pending",
+                    title: L10n.TransactionHistory.completed,
+                    value: store.transaction.listDateYearString ?? L10n.TransactionHistory.pending,
                     rowAppereance: store.annotation.isEmpty ? .bottom : .middle
                 )
 
@@ -376,7 +372,7 @@ extension TransactionDetailsView {
     @ViewBuilder func transactionDetailsListShielded() -> some View {
         WithPerceptionTracking {
             LazyVStack(alignment: .leading, spacing: 0) {
-                Text("Transaction Details")
+                Text(L10n.TransactionHistory.details)
                     .zFont(.medium, size: 14, style: Design.Text.tertiary)
                     .padding(.bottom, 8)
 
@@ -384,7 +380,7 @@ extension TransactionDetailsView {
                     if store.areDetailsExpanded {
                         VStack(alignment: .leading, spacing: 0) {
                             HStack(spacing: 0) {
-                                Text("Sent to")
+                                Text(L10n.TransactionHistory.sentTo)
                                     .zFont(size: 14, style: Design.Text.tertiary)
                                 
                                 Spacer()
@@ -402,7 +398,7 @@ extension TransactionDetailsView {
                             .padding(.bottom, 24)
                             
                             VStack(alignment: .leading, spacing: 0) {
-                                Text("Address")
+                                Text(L10n.TransactionHistory.address)
                                     .zFont(size: 14, style: Design.Text.tertiary)
                                     .padding(.bottom, 4)
                                 
@@ -426,7 +422,7 @@ extension TransactionDetailsView {
                         }
                     } else {
                         detailView(
-                            title: "Sent to",
+                            title: L10n.TransactionHistory.sentTo,
                             value: store.alias ?? store.transaction.address.zip316,
                             icon: store.areDetailsExpanded
                             ? Asset.Assets.chevronUp.image
@@ -467,8 +463,8 @@ extension TransactionDetailsView {
                     }
 
                     detailView(
-                        title: "Completed",
-                        value: store.transaction.listDateYearString ?? "Pending",
+                        title: L10n.TransactionHistory.completed,
+                        value: store.transaction.listDateYearString ?? L10n.TransactionHistory.pending,
                         rowAppereance: store.annotation.isEmpty ? .bottom : .middle
                     )
                     
@@ -481,7 +477,7 @@ extension TransactionDetailsView {
     @ViewBuilder func noteView() -> some View {
         if !store.annotation.isEmpty {
             VStack(alignment: .leading, spacing: 0) {
-                Text("Note")
+                Text(L10n.Annotation.title)
                     .zFont(size: 14, style: Design.Text.tertiary)
                     .padding(.bottom, 4)
 
@@ -551,8 +547,8 @@ extension TransactionDetailsView {
                         if index < store.messageStates.count && store.messageStates[index] != .short {
                             HStack(spacing: 6) {
                                 Text(index < store.messageStates.count && store.messageStates[index] == .longExpanded
-                                     ? "View more"
-                                     : "View less"
+                                     ? L10n.TransactionHistory.viewMore
+                                     : L10n.TransactionHistory.viewLess
                                 )
                                 .zFont(.medium, size: 14, style: Design.Text.primary)
                                 
@@ -595,7 +591,7 @@ extension TransactionDetailsView {
                         .zImage(size: 20, style: Design.Text.support)
                         .padding(.trailing, 8)
                     
-                    Text("No Message")
+                    Text(L10n.TransactionHistory.noMessage)
                         .zFont(size: 14, style: Design.Text.support)
                     
                     Spacer()

@@ -442,22 +442,6 @@ public struct Tabs {
                 state.selectedTab = .balances
                 return .none
 
-//            case .home(.transactionList(.selectText(let selectText))):
-//                state.selectTextRequest = true
-//                state.textToSelect = selectText
-//                return .none
-                
-//            case .home(.transactionList(.transactionDetails(.sendAgainTapped))):
-//                state.selectedTab = .send
-//                state.homeState.transactionListState.stackDestination = nil
-//                state.sendState.address = state.homeState.transactionListState.transactionDetailsState.transaction.address.redacted
-//                state.sendState.memoState.text = state.homeState.transactionListState.transactionDetailsState.transaction.textMemos?.first ?? ""
-//                let zecAmount = state.homeState.transactionListState.transactionDetailsState.transaction.zecAmount.decimalString().redacted
-//                return .merge(
-//                    .send(.send(.zecAmountUpdated(zecAmount))),
-//                    .send(.send(.validateAddress))
-//                )
-                
             case .home(.makeATransactionTapped):
                 state.selectedTab = .send
                 return .none

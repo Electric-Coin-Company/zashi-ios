@@ -82,40 +82,38 @@ extension TransactionsManagerView {
                 Spacer()
             }
             
-            Text("Filter")
+            Text(L10n.Filter.title)
                 .zFont(.semiBold, size: 20, style: Design.Text.primary)
                 .padding(.top, 32)
                 .padding(.bottom, 24)
             
             VStack(alignment: .leading, spacing: 8) {
                 HStack(spacing: 8) {
-                    FilterView(title: "Sent", active: store.isSentFilterActive) { store.send(.toggleFilter(.sent)) }
-                    FilterView(title: "Received", active: store.isReceivedFilterActive) { store.send(.toggleFilter(.received)) }
-                    FilterView(title: "Memos", active: store.isMemosFilterActive) { store.send(.toggleFilter(.memos)) }
+                    FilterView(title: L10n.Filter.sent, active: store.isSentFilterActive) { store.send(.toggleFilter(.sent)) }
+                    FilterView(title: L10n.Filter.received, active: store.isReceivedFilterActive) { store.send(.toggleFilter(.received)) }
+                    FilterView(title: L10n.Filter.memos, active: store.isMemosFilterActive) { store.send(.toggleFilter(.memos)) }
                 }
                 
                 HStack(spacing: 8) {
-                    FilterView(title: "Notes", active: store.isNotesFilterActive) { store.send(.toggleFilter(.notes)) }
-                    FilterView(title: "Bookmarked", active: store.isBookmarkedFilterActive) { store.send(.toggleFilter(.bookmarked)) }
+                    FilterView(title: L10n.Filter.notes, active: store.isNotesFilterActive) { store.send(.toggleFilter(.notes)) }
+                    FilterView(title: L10n.Filter.bookmarked, active: store.isBookmarkedFilterActive) { store.send(.toggleFilter(.bookmarked)) }
                 }
                 
                 HStack(spacing: 8) {
-                    FilterView(title: "Contact", active: store.isContactFilterActive) { store.send(.toggleFilter(.contact)) }
+                    FilterView(title: L10n.Filter.contact, active: store.isContactFilterActive) { store.send(.toggleFilter(.contact)) }
                 }
             }
             .padding(.bottom, 32)
             
             HStack(spacing: 12) {
                 ZashiButton(
-                    "Reset",
+                    L10n.Filter.reset,
                     type: .secondary
                 ) {
                     store.send(.resetFiltersTapped)
                 }
                 
-                ZashiButton(
-                    "Apply"
-                ) {
+                ZashiButton(L10n.Filter.apply) {
                     store.send(.applyFiltersTapped)
                 }
             }

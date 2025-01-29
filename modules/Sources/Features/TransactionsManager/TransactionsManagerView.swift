@@ -34,7 +34,7 @@ public struct TransactionsManagerView: View {
                 HStack(spacing: 0) {
                     ZashiTextField(
                         text: $store.searchTerm,
-                        placeholder: "Search",
+                        placeholder: L10n.Filter.search,
                         eraseAction: { store.send(.eraseSearchTermTapped) },
                         accessoryView: !store.searchTerm.isEmpty ? Asset.Assets.Icons.xClose.image
                             .zImage(size: 16, style: Design.Btns.Tertiary.fg) : nil,
@@ -155,7 +155,7 @@ public struct TransactionsManagerView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .zashiBack()
-        .screenTitle("Transactions".uppercased())
+        .screenTitle(L10n.TransactionHistory.title.uppercased())
     }
     
     @ViewBuilder func hideBalancesButton() -> some View {
@@ -196,11 +196,11 @@ public struct TransactionsManagerView: View {
                         .frame(width: 164, height: 164)
                         .padding(.bottom, 20)
 
-                    Text("No results")
+                    Text(L10n.Filter.noResults)
                         .zFont(.semiBold, size: 20, style: Design.Text.primary)
                         .padding(.bottom, 8)
 
-                    Text("We tried but couldn’t find anything.")
+                    Text(L10n.Filter.weTried)
                         .zFont(size: 14, style: Design.Text.tertiary)
                         .padding(.bottom, 20)
                 }
