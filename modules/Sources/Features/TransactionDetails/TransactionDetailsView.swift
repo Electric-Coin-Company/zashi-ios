@@ -144,9 +144,8 @@ public struct TransactionDetailsView: View {
                         bookmarkButton()
                     }
             )
-            .onAppear {
-                store.send(.onAppear)
-            }
+            .onAppear { store.send(.onAppear) }
+            .onDisappear { store.send(.onDisappear) }
             .sheet(isPresented: $store.annotationRequest) {
                 annotationContent(store.isEditMode)
             }

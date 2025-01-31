@@ -24,6 +24,8 @@ import UserMetadataProvider
 public struct TransactionDetails {
     @ObservableState
     public struct State: Equatable {
+        public var CancelId = UUID()
+        
         enum Constants {
             static let messageExpandThreshold: Int = 130
             static let annotationMaxLength: Int = 90
@@ -39,15 +41,18 @@ public struct TransactionDetails {
         public var areMessagesResolved = false
         public var alias: String?
         public var areDetailsExpanded = false
-        public var isEditMode = false
         public var isBookmarked = false
         public var isCloseButtonRequired = false
+        public var isEditMode = false
+        public var isMined = false
         @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
         public var messageStates: [MessageState] = []
         public var annotation = ""
         public var annotationOrigin = ""
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
         public var transaction: TransactionState
+        @Shared(.inMemory(.transactionMemos)) public var transactionMemos: [String: [String]] = [:]
+        @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
         public var annotationRequest = false
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
@@ -56,11 +61,7 @@ public struct TransactionDetails {
         }
         
         public var memos: [String] {
-            if let memos = transaction.memos {
-                return memos.compactMap { $0.toString() }
-            }
-            
-            return []
+            transactionMemos[transaction.id] ?? []
         }
         
         public init(
@@ -77,17 +78,19 @@ public struct TransactionDetails {
         case bookmarkTapped
         case closeDetailTapped
         case deleteNoteTapped
-        case fetchedABContacts(AddressBookContacts)
         case memosLoaded([Memo])
         case messageTapped(Int)
         case noteButtonTapped
         case onAppear
+        case onDisappear
+        case observeTransactionChange
         case resolveMemos
         case saveAddressTapped
         case saveNoteTapped
         case sendAgainTapped
         case sentToRowTapped
         case transactionIdTapped
+        case transactionsUpdated
     }
 
     @Dependency(\.addressBook) var addressBook
@@ -106,28 +109,52 @@ public struct TransactionDetails {
                 state.areDetailsExpanded = false
                 state.messageStates = []
                 state.alias = nil
+                for contact in state.addressBookContacts.contacts {
+                    if contact.id == state.transaction.address {
+                        state.alias = contact.name
+                        break
+                    }
+                }
                 state.areMessagesResolved = false
+                state.isMined = state.transaction.minedHeight != nil
                 state.isBookmarked = userMetadataProvider.isBookmarked(state.transaction.id)
                 state.annotation = userMetadataProvider.annotationFor(state.transaction.id) ?? ""
                 state.annotationOrigin = state.annotation
-                if let account = state.zashiWalletAccount {
-                    do {
-                        let result = try addressBook.allLocalContacts(account.account)
-                        let abContacts = result.contacts
-                        if result.remoteStoreResult == .failure {
-                            // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
-                        }
-                        return .merge(
-                            .send(.resolveMemos),
-                            .send(.fetchedABContacts(abContacts))
-                        )
-                    } catch {
-                        // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
-                        return .send(.resolveMemos)
+                state.areMessagesResolved = !state.memos.isEmpty
+                if state.memos.isEmpty {
+                    return .merge(
+                        .send(.resolveMemos),
+                        .send(.observeTransactionChange)
+                    )
+                }
+                return .send(.observeTransactionChange)
+
+            case .onDisappear:
+                return .cancel(id: state.CancelId)
+                
+            case .observeTransactionChange:
+                if !state.isMined {
+                    return .publisher {
+                        state.$transactions.publisher
+                            .map { _ in
+                                TransactionDetails.Action.transactionsUpdated
+                            }
+                    }
+                    .cancellable(id: state.CancelId, cancelInFlight: true)
+                }
+                return .none
+                
+            case .transactionsUpdated:
+                if let index = state.transactions.index(id: state.transaction.id) {
+                    let transaction = state.transactions[index]
+                    if !state.isMined && transaction.minedHeight != nil {
+                        state.transaction = transaction
+                        state.isMined = true
+                        return .cancel(id: state.CancelId)
                     }
                 }
-                return .send(.resolveMemos)
-
+                return .none
+                
             case .binding(\.annotation):
                 if state.annotation.count > TransactionDetails.State.Constants.annotationMaxLength {
                     state.annotation = String(state.annotation.prefix(TransactionDetails.State.Constants.annotationMaxLength))
@@ -164,23 +191,14 @@ public struct TransactionDetails {
                 state.areMessagesResolved = true
                 return .none
 
-            case .fetchedABContacts(let abContacts):
-                state.$addressBookContacts.withLock { $0 = abContacts }
-                state.alias = nil
-                for contact in state.addressBookContacts.contacts {
-                    if contact.id == state.transaction.address {
-                        state.alias = contact.name
-                        break
-                    }
-                }
-                return .none
-                
             case .memosLoaded(let memos):
-                state.transaction.memos = memos
+                state.areMessagesResolved = true
+                state.$transactionMemos.withLock {
+                    $0[state.transaction.id] = memos.compactMap { $0.toString() }
+                }
                 state.messageStates = state.memos.map {
                     $0.count < State.Constants.messageExpandThreshold ? .short : .longCollapsed
                 }
-                state.areMessagesResolved = true
                 return .none
 
             case .noteButtonTapped:

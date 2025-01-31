@@ -169,7 +169,6 @@ public struct SendConfirmation {
         case binding(BindingAction<SendConfirmation.State>)
         case closeTapped
         case confirmWithKeystoneTapped
-        case fetchedABContacts(AddressBookContacts)
         case getSignatureTapped
         case goBackPressed
         case goBackPressedFromRequestZec
@@ -192,7 +191,6 @@ public struct SendConfirmation {
         case shareFinished
         case showHideButtonTapped
         case transactionDetails(TransactionDetails.Action)
-        case transactionResultReady
         case updateDestination(State.Destination?)
         case updateFailedData(Int, String, String)
         case updateResult(State.Result?)
@@ -258,24 +256,6 @@ public struct SendConfirmation {
                 state.isTransparentAddress = derivationTool.isTransparentAddress(state.address, zcashSDKEnvironment.network.networkType)
                 state.canSendMail = MFMailComposeViewController.canSendMail()
                 state.alias = nil
-                if let account = state.zashiWalletAccount {
-                    do {
-                        let result = try addressBook.allLocalContacts(account.account)
-                        let abContacts = result.contacts
-                        if result.remoteStoreResult == .failure {
-                            // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
-                        }
-                        return .send(.fetchedABContacts(abContacts))
-                    } catch {
-                        // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
-                        return .none
-                    }
-                }
-                return .none
-
-            case .fetchedABContacts(let abContacts):
-                state.$addressBookContacts.withLock { $0 = abContacts }
-                state.alias = nil
                 for contact in state.addressBookContacts.contacts {
                     if contact.id == state.address {
                         state.alias = contact.name
@@ -283,7 +263,7 @@ public struct SendConfirmation {
                     }
                 }
                 return .none
-                
+
             case .alert(.presented(let action)):
                 return .send(action)
 
@@ -349,8 +329,6 @@ public struct SendConfirmation {
                         let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, zip32AccountIndex, network)
 
                         let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
-
-                        await send(.transactionResultReady)
 
                         switch result {
                         case .grpcFailure(let txIds):
@@ -611,7 +589,6 @@ public struct SendConfirmation {
                         let result = try await sdkSynchronizer.createTransactionFromPCZT(pcztWithProofs, pcztWithSigs)
 
                         await send(.resetPCZTs)
-                        await send(.transactionResultReady)
 
                         switch result {
                         case .grpcFailure(let txIds):
@@ -659,10 +636,7 @@ public struct SendConfirmation {
                 state.pcztToShare = nil
                 state.proposal = nil
                 return .none
-                
-            case .transactionResultReady:
-                return .none
-                
+
             case .addressBook:
                 return .none
                 

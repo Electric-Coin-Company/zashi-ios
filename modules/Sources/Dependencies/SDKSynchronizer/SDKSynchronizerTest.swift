@@ -27,6 +27,7 @@ extension SDKSynchronizerClient: TestDependencyKey {
         importAccount: unimplemented("\(Self.self).importAccount", placeholder: nil),
         rewind: unimplemented("\(Self.self).rewind", placeholder: Fail(error: "Error").eraseToAnyPublisher()),
         getAllTransactions: unimplemented("\(Self.self).getAllTransactions", placeholder: []),
+        transactionStatesFromZcashTransactions: unimplemented("\(Self.self).transactionStatesFromZcashTransactions", placeholder: []),
         getMemos: unimplemented("\(Self.self).getMemos", placeholder: []),
         getUnifiedAddress: unimplemented("\(Self.self).getUnifiedAddress", placeholder: nil),
         getTransparentAddress: unimplemented("\(Self.self).getTransparentAddress", placeholder: nil),
@@ -63,6 +64,7 @@ extension SDKSynchronizerClient {
         importAccount: { _, _, _, _, _, _ in nil },
         rewind: { _ in Empty<Void, Error>().eraseToAnyPublisher() },
         getAllTransactions: { _ in [] },
+        transactionStatesFromZcashTransactions: { _, _ in [] },
         getMemos: { _ in [] },
         getUnifiedAddress: { _ in nil },
         getTransparentAddress: { _ in nil },
@@ -152,6 +154,7 @@ extension SDKSynchronizerClient {
 
             return clearedTransactions
         },
+        transactionStatesFromZcashTransactions: @escaping (AccountUUID?, [ZcashTransaction.Overview]) async throws -> [TransactionState] = { _, _ in [] },
         getMemos: @escaping (_ rawID: Data) -> [Memo] = { _ in [] },
         getUnifiedAddress: @escaping (_ account: AccountUUID) -> UnifiedAddress? = { _ in
             // swiftlint:disable force_try
@@ -203,6 +206,7 @@ extension SDKSynchronizerClient {
             importAccount: importAccount,
             rewind: rewind,
             getAllTransactions: getAllTransactions,
+            transactionStatesFromZcashTransactions: transactionStatesFromZcashTransactions,
             getMemos: getMemos,
             getUnifiedAddress: getUnifiedAddress,
             getTransparentAddress: getTransparentAddress,

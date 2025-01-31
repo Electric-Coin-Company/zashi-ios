@@ -43,18 +43,19 @@ public struct SDKSynchronizerClient {
     public let rewind: (RewindPolicy) -> AnyPublisher<Void, Error>
     
     public var getAllTransactions: (AccountUUID?) async throws -> [TransactionState]
+    public var transactionStatesFromZcashTransactions: (AccountUUID?, [ZcashTransaction.Overview]) async throws -> [TransactionState]
     public var getMemos: (Data) async throws -> [Memo]
 
     public let getUnifiedAddress: (_ account: AccountUUID) async throws -> UnifiedAddress?
     public let getTransparentAddress: (_ account: AccountUUID) async throws -> TransparentAddress?
     public let getSaplingAddress: (_ account: AccountUUID) async throws -> SaplingAddress?
-    
+
     public let getAccountsBalances: () async throws -> [AccountUUID: AccountBalance]
 
     public var wipe: () -> AnyPublisher<Void, Error>?
-    
+
     public var switchToEndpoint: (LightWalletEndpoint) async throws -> Void
-    
+
     // Proposals
     public var proposeTransfer: (AccountUUID, Recipient, Zatoshi, Memo?) async throws -> Proposal
     public var createProposedTransactions: (Proposal, UnifiedSpendingKey) async throws -> CreateProposedTransactionsResult

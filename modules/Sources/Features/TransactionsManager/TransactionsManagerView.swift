@@ -142,12 +142,11 @@ public struct TransactionsManagerView: View {
                     }
                 }
             }
-            .disabled(store.transactionList.isEmpty)
+            .disabled(store.transactions.isEmpty)
             .walletStatusPanel()
             .applyScreenBackground()
             .listStyle(.plain)
             .onAppear { store.send(.onAppear) }
-            .onDisappear(perform: { store.send(.onDisappear) })
             .navigationBarItems(trailing: hideBalancesButton())
             .sheet(isPresented: $store.filtersRequest) {
                 filtersContent()
@@ -229,5 +228,5 @@ extension TransactionsManager {
 // MARK: - Placeholders
 
 extension TransactionsManager.State {
-    public static let initial = TransactionsManager.State(transactionList: [])
+    public static let initial = TransactionsManager.State()
 }

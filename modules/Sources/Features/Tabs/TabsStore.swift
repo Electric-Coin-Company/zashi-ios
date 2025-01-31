@@ -134,6 +134,8 @@ public struct Tabs {
         public var stackDestinationTransactionsHPBindingsAlive = 0
         public var textToSelect = ""
         public var transactionDetailsState: TransactionDetails.State = .initial
+        @Shared(.inMemory(.transactionMemos)) public var transactionMemos: [String: [String]] = [:]
+        @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
         public var transactionsManagerState: TransactionsManager.State = .initial
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         public var zecKeyboardState: ZecKeyboard.State
@@ -307,8 +309,7 @@ public struct Tabs {
                 return .concatenate(
                     .send(.home(.walletBalances(.updateBalances))),
                     .send(.send(.walletBalances(.updateBalances))),
-                    .send(.balanceBreakdown(.walletBalances(.updateBalances))),
-                    .send(.home(.transactionList(.foundTransactions)))
+                    .send(.balanceBreakdown(.walletBalances(.updateBalances)))
                 )
             
             case .addKeystoneHWWallet(.continueTapped):
@@ -474,13 +475,10 @@ public struct Tabs {
                 state.selectedTab = .send
                 return .none
 
-            case .sendConfirmation(.updateTxIdToExpand):
-                return .send(.home(.transactionList(.synchronizerStateChanged(.upToDate))))
-
             case .sendConfirmation(.viewTransactionTapped):
                 if let txid = state.sendConfirmationState.txIdToExpand {
-                    if let index = state.homeState.transactionListState.transactionList.index(id: txid) {
-                        state.sendConfirmationState.transactionDetailsState.transaction = state.homeState.transactionListState.transactionList[index]
+                    if let index = state.transactions.index(id: txid) {
+                        state.sendConfirmationState.transactionDetailsState.transaction = state.transactions[index]
                         state.sendConfirmationState.transactionDetailsState.isCloseButtonRequired = true
                         return .send(.sendConfirmation(.updateStackDestinationTransactions(.details)))
                     }
@@ -561,9 +559,6 @@ public struct Tabs {
                     .send(.sendConfirmation(.updateResult(nil))),
                     .send(.sendConfirmation(.updateStackDestination(nil)))
                 )
-
-            case.sendConfirmation(.transactionResultReady):
-                return .send(.home(.transactionList(.foundTransactions)))
 
             case .sendConfirmation:
                 return .none
@@ -661,39 +656,19 @@ public struct Tabs {
                 return .none
                 
             case .home(.transactionList(.transactionTapped(let txId))):
-                if let index = state.homeState.transactionListState.transactionList.index(id: txId) {
-                    let transaction = state.homeState.transactionListState.transactionList[index]
-                    // update of the unread state
-                    if !transaction.isSpending
-                        && !transaction.isMarkedAsRead
-                        && transaction.isUnread {
-                        do {
-                            try readTransactionsStorage.markIdAsRead(transaction.id.redacted)
-                            state.homeState.transactionListState.transactionList[index].isMarkedAsRead = true
-                        } catch { }
-                    }
-                    state.transactionDetailsState.transaction = transaction
+                if let index = state.transactions.index(id: txId) {
+                    state.transactionDetailsState.transaction = state.transactions[index]
                     return .send(.updateStackDestinationTransactionsHP(.details))
                 }
                 return .none
-                
+
             case .transactionsManager(.transactionTapped(let txId)):
-                if let index = state.transactionsManagerState.transactionList.index(id: txId) {
-                    let transaction = state.transactionsManagerState.transactionList[index]
-                    // update of the unread state
-                    if !transaction.isSpending
-                        && !transaction.isMarkedAsRead
-                        && transaction.isUnread {
-                        do {
-                            try readTransactionsStorage.markIdAsRead(transaction.id.redacted)
-                            state.transactionsManagerState.transactionList[index].isMarkedAsRead = true
-                        } catch { }
-                    }
-                    state.transactionDetailsState.transaction = transaction
+                if let index = state.transactions.index(id: txId) {
+                    state.transactionDetailsState.transaction = state.transactions[index]
                     return .send(.updateStackDestinationTransactions(.details))
                 }
                 return .none
-                
+
             case .transactionDetails(.saveAddressTapped):
                 state.addressBookState.address = state.transactionDetailsState.transaction.address
                 state.addressBookState.originalAddress = state.addressBookState.address
@@ -710,7 +685,7 @@ public struct Tabs {
                 state.stackDestinationTransactions = nil
                 state.stackDestinationTransactionsHP = nil
                 state.sendState.address = state.transactionDetailsState.transaction.address.redacted
-                state.sendState.memoState.text = state.transactionDetailsState.transaction.textMemos?.first ?? ""
+                state.sendState.memoState.text = state.transactionMemos[state.transactionDetailsState.transaction.id]?.first ?? ""
                 let zecAmount = state.transactionDetailsState.transaction.zecAmount.decimalString().redacted
                 return .run { send in
                     await send(.send(.zecAmountUpdated(zecAmount)))
