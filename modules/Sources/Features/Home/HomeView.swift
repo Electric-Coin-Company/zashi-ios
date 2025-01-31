@@ -51,7 +51,7 @@ public struct HomeView: View {
                 }
                 
                 VStack(spacing: 0) {
-                    if store.transactionListState.transactionList.isEmpty && !store.transactionListState.isInvalidated {
+                    if store.transactionListState.transactions.isEmpty && !store.transactionListState.isInvalidated {
                         noTransactionsView()
                     } else {
                         transactionsView()
@@ -99,7 +99,7 @@ public struct HomeView: View {
                 
                 Spacer()
                 
-                if store.transactionListState.transactionList.count > TransactionList.Constants.homePageTransactionsCount {
+                if store.transactionListState.transactions.count > TransactionList.Constants.homePageTransactionsCount {
                     Button {
                         store.send(.seeAllTransactionsTapped)
                     } label: {
@@ -189,7 +189,7 @@ struct HomeView_Previews: PreviewProvider {
                                         synchronizerStatusSnapshot: SyncStatusSnapshot(.syncing(0.41)),
                                         syncStatusMessage: "Syncing"
                                     ),
-                                    transactionListState: .placeholder,
+                                    transactionListState: .initial,
                                     walletBalancesState: .initial,
                                     walletConfig: .initial
                                 )

@@ -9,7 +9,7 @@ import AddressBook
 public struct TransactionListView: View {
     let store: StoreOf<TransactionList>
     let tokenName: String
-    
+
     public init(store: StoreOf<TransactionList>, tokenName: String) {
         self.store = store
         self.tokenName = tokenName
@@ -48,11 +48,10 @@ public struct TransactionListView: View {
                     .listRowSeparator(.hidden)
                 }
             }
-            .disabled(store.transactionList.isEmpty)
+            .disabled(store.transactions.isEmpty)
             .applyScreenBackground()
             .listStyle(.plain)
             .onAppear { store.send(.onAppear) }
-            .onDisappear(perform: { store.send(.onDisappear) })
         }
     }
 }
@@ -61,7 +60,7 @@ public struct TransactionListView: View {
 
 #Preview {
     NavigationView {
-        TransactionListView(store: .placeholder, tokenName: "ZEC")
+        TransactionListView(store: .initial, tokenName: "ZEC")
             .preferredColorScheme(.light)
     }
 }
@@ -69,47 +68,17 @@ public struct TransactionListView: View {
 // MARK: Placeholders
 
 extension TransactionList.State {
-    public static var placeholder: Self {
-        .init(transactionList: .mocked)
-    }
-
     public static var initial: Self {
-        .init(transactionList: [])
+        .init()
     }
 }
 
 extension StoreOf<TransactionList> {
-    public static var placeholder: Store<TransactionList.State, TransactionList.Action> {
+    public static var initial: Store<TransactionList.State, TransactionList.Action> {
         Store(
-            initialState: .placeholder
+            initialState: .initial
         ) {
             TransactionList()
-                .dependency(\.zcashSDKEnvironment, .testnet)
         }
-    }
-}
-
-extension IdentifiedArrayOf where Element == TransactionState {
-    public static var placeholder: IdentifiedArrayOf<TransactionState> {
-        .init(
-            uniqueElements: (0..<30).map {
-                TransactionState(
-                    fee: Zatoshi(10),
-                    id: String($0),
-                    status: .paid,
-                    timestamp: 1234567,
-                    zecAmount: Zatoshi(25)
-                )
-            }
-        )
-    }
-    
-    public static var mocked: IdentifiedArrayOf<TransactionState> {
-        .init(
-            uniqueElements: [
-                TransactionState.mockedSent,
-                TransactionState.mockedReceived
-            ]
-        )
     }
 }

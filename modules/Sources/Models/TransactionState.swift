@@ -25,7 +25,6 @@ public struct TransactionState: Equatable, Identifiable {
     public var errorMessage: String?
     public var expiryHeight: BlockHeight?
     public var memoCount: Int
-    public var memos: [Memo]?
     public var minedHeight: BlockHeight?
     public var shielded = true
     public var zAddress: String?
@@ -83,36 +82,6 @@ public struct TransactionState: Equatable, Identifiable {
         : isPending
         ? Design.Utility.HyperBlue._100.color(colorScheme)
         : Design.Surfaces.bgSecondary.color(colorScheme)
-    }
-
-    public var isUnread: Bool {
-        // in case memos haven't been loaded yet
-        // non-nil rawID represents unloaded memos state
-        if rawID != nil && memoCount > 0 {
-            return !isMarkedAsRead
-        }
-        
-        // there must be memos
-        guard let memos else { return false }
-        
-        // it must be a textual one
-        var textMemoExists = false
-        
-        for memo in memos {
-            if case .text = memo {
-                if let memoText = memo.toString(), !memoText.isEmpty {
-                    textMemoExists = true
-                    break
-                }
-            }
-        }
-
-        if !textMemoExists {
-            return false
-        }
-        
-        // and it must be externally marked as read
-        return !isMarkedAsRead
     }
 
     // UI Texts
@@ -230,29 +199,10 @@ public struct TransactionState: Equatable, Identifiable {
         Zatoshi(zecAmount.amount + (fee?.amount ?? 0))
     }
 
-    public var textMemos: [String]? {
-        guard let memos else { return nil }
-        
-        var res: [String] = []
-        
-        for memo in memos {
-            if case .text = memo {
-                guard let memoText = memo.toString(), !memoText.isEmpty else {
-                    continue
-                }
-                
-                res.append(memoText)
-            }
-        }
-        
-        return res.isEmpty ? nil : res
-    }
-    
     public init(
         errorMessage: String? = nil,
         expiryHeight: BlockHeight? = nil,
         memoCount: Int = 0,
-        memos: [Memo]? = nil,
         minedHeight: BlockHeight? = nil,
         shielded: Bool = true,
         zAddress: String? = nil,
@@ -269,7 +219,6 @@ public struct TransactionState: Equatable, Identifiable {
         self.errorMessage = errorMessage
         self.expiryHeight = expiryHeight
         self.memoCount = memoCount
-        self.memos = memos
         self.minedHeight = minedHeight
         self.shielded = shielded
         self.zAddress = zAddress
@@ -323,7 +272,6 @@ extension TransactionState {
         isTransparentRecipient = false
         self.hasTransparentOutputs = hasTransparentOutputs
         memoCount = transaction.memoCount
-        self.memos = memos
 
         // TODO: [#1313] SDK improvements so a client doesn't need to determing if the transaction isPending
         // https://github.com/zcash/ZcashLightClientKit/issues/1313
@@ -362,7 +310,6 @@ extension TransactionState {
     ) -> TransactionState {
         .init(
             expiryHeight: -1,
-            memos: nil,
             minedHeight: -1,
             shielded: shielded,
             zAddress: nil,
@@ -375,7 +322,6 @@ extension TransactionState {
     }
     
     public static let mockedSent = TransactionState(
-        memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
         minedHeight: BlockHeight(1),
         zAddress: "utest1vergg5jkp4xy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzjanqtl8uqp5vln3zyy246ejtx86vqftp73j7jg9099jxafyjhfm6u956j3",
         fee: Zatoshi(10_000),
@@ -386,7 +332,6 @@ extension TransactionState {
     )
     
     public static let mockedReceived = TransactionState(
-        memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
         minedHeight: BlockHeight(1),
         fee: Zatoshi(10_000),
         id: "t1vergg5jkp4xy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja",
@@ -396,7 +341,6 @@ extension TransactionState {
     )
     
     public static let mockedFailed = TransactionState(
-        memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
         minedHeight: nil,
         zAddress: "utest1vergg5jkp4xy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzjanqtl8uqp5vln3zyy246ejtx86vqftp73j7jg9099jxafyjhfm6u956j3",
         fee: Zatoshi(10_000),
@@ -408,7 +352,6 @@ extension TransactionState {
     )
     
     public static let mockedFailedReceive = TransactionState(
-        memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
         minedHeight: nil,
         fee: Zatoshi(10_000),
         id: "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja",
@@ -419,7 +362,6 @@ extension TransactionState {
     )
     
     public static let mockedSending = TransactionState(
-        memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
         minedHeight: nil,
         zAddress: "utest1vergg5jkp4xy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzjanqtl8uqp5vln3zyy246ejtx86vqftp73j7jg9099jxafyjhfm6u956j3",
         fee: Zatoshi(10_000),
@@ -431,7 +373,6 @@ extension TransactionState {
     )
     
     public static let mockedReceiving = TransactionState(
-        memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
         minedHeight: nil,
         fee: Zatoshi(10_000),
         id: "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja",

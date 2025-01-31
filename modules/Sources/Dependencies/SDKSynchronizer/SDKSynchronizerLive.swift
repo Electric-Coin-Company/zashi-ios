@@ -83,55 +83,20 @@ extension SDKSynchronizerClient: DependencyKey {
             },
             rewind: { synchronizer.rewind($0) },
             getAllTransactions: { accountUUID in
-                guard let accountUUID else {
-                    return []
-                }
+                let clearedTransactions = try await synchronizer.allTransactions()
                 
-                let clearedTransactions = try await synchronizer.allTransactions().compactMap { rawTransaction in
-                    rawTransaction.accountUUID == accountUUID ? rawTransaction : nil
-                }
-
-                var clearedTxs: [TransactionState] = []
-                
-                let latestBlockHeight = try await SDKSynchronizerClient.latestBlockHeight(synchronizer: synchronizer)
-                
-                for clearedTransaction in clearedTransactions {
-                    var hasTransparentOutputs = false
-                    let outputs = await synchronizer.getTransactionOutputs(for: clearedTransaction)
-                    for output in outputs {
-                        if case .transaparent = output.pool {
-                            hasTransparentOutputs = true
-                            break
-                        }
-                    }
-
-                    var transaction = TransactionState.init(
-                        transaction: clearedTransaction,
-                        memos: nil,
-                        hasTransparentOutputs: hasTransparentOutputs,
-                        latestBlockHeight: latestBlockHeight
-                    )
-
-                    let recipients = await synchronizer.getRecipients(for: clearedTransaction)
-                    let addresses = recipients.compactMap {
-                        if case let .address(address) = $0 {
-                            return address
-                        } else {
-                            return nil
-                        }
-                    }
-                    
-                    transaction.rawID = clearedTransaction.rawID
-                    transaction.zAddress = addresses.first?.stringEncoded
-                    if let someAddress = addresses.first,
-                       case .transparent = someAddress {
-                        transaction.isTransparentRecipient = true
-                    }
-                    
-                    clearedTxs.append(transaction)
-                }
-
-                return clearedTxs
+                return try await SDKSynchronizerClient.transactionStatesFromZcashTransactions(
+                    accountUUID: accountUUID,
+                    zcashTransactions: clearedTransactions,
+                    synchronizer: synchronizer
+                )
+            },
+            transactionStatesFromZcashTransactions: { accountUUID, zcashTransactions in
+                try await SDKSynchronizerClient.transactionStatesFromZcashTransactions(
+                    accountUUID: accountUUID,
+                    zcashTransactions: zcashTransactions,
+                    synchronizer: synchronizer
+                )
             },
             getMemos: { try await synchronizer.getMemos(for: $0) },
             getUnifiedAddress: { try await synchronizer.getUnifiedAddress(accountUUID: $0) },
@@ -323,5 +288,63 @@ private extension SDKSynchronizerClient {
         }
         
         return latestBlockHeight
+    }
+}
+
+extension SDKSynchronizerClient {
+    static func transactionStatesFromZcashTransactions(
+        accountUUID: AccountUUID?,
+        zcashTransactions: [ZcashTransaction.Overview],
+        synchronizer: SDKSynchronizer
+    ) async throws -> [TransactionState] {
+        guard let accountUUID else {
+            return []
+        }
+        
+        let clearedTransactions = zcashTransactions.compactMap { rawTransaction in
+            rawTransaction.accountUUID == accountUUID ? rawTransaction : nil
+        }
+
+        var clearedTxs: [TransactionState] = []
+        
+        let latestBlockHeight = try await SDKSynchronizerClient.latestBlockHeight(synchronizer: synchronizer)
+        
+        for clearedTransaction in clearedTransactions {
+            var hasTransparentOutputs = false
+            let outputs = await synchronizer.getTransactionOutputs(for: clearedTransaction)
+            for output in outputs {
+                if case .transaparent = output.pool {
+                    hasTransparentOutputs = true
+                    break
+                }
+            }
+
+            var transaction = TransactionState.init(
+                transaction: clearedTransaction,
+                memos: nil,
+                hasTransparentOutputs: hasTransparentOutputs,
+                latestBlockHeight: latestBlockHeight
+            )
+
+            let recipients = await synchronizer.getRecipients(for: clearedTransaction)
+            let addresses = recipients.compactMap {
+                if case let .address(address) = $0 {
+                    return address
+                } else {
+                    return nil
+                }
+            }
+            
+            transaction.rawID = clearedTransaction.rawID
+            transaction.zAddress = addresses.first?.stringEncoded
+            if let someAddress = addresses.first,
+               case .transparent = someAddress {
+                transaction.isTransparentRecipient = true
+            }
+            
+            clearedTxs.append(transaction)
+        }
+
+        return clearedTxs
     }
 }

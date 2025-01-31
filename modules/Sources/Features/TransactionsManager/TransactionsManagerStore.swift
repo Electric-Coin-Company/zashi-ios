@@ -42,20 +42,18 @@ public struct TransactionsManager {
 
     @ObservableState
     public struct State: Equatable {
-        public var CancelStateId = UUID()
-        public var CancelEventId = UUID()
+        public var CancelId = UUID()
 
         public var activeFilters: [Filter] = []
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         public var filteredTransactionsList: IdentifiedArrayOf<TransactionState> = []
         public var filtersRequest = false
         public var isInvalidated = true
-        public var latestTransactionList: [TransactionState] = []
         public var searchedTransactionsList: IdentifiedArrayOf<TransactionState> = []
         public var searchTerm = ""
         public var selectedFilters: [Filter] = []
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
-        public var transactionList: IdentifiedArrayOf<TransactionState>
+        @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
         public var transactionSections: [Section] = []
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
@@ -67,11 +65,7 @@ public struct TransactionsManager {
         public var isSentFilterActive: Bool { selectedFilters.contains(.sent) }
         public var isUnreadFilterActive: Bool { selectedFilters.contains(.unread) }
 
-        public init(
-            transactionList: IdentifiedArrayOf<TransactionState>
-        ) {
-            self.transactionList = transactionList
-        }
+        public init() { }
     }
     
     public enum Action: BindableAction, Equatable {
@@ -80,14 +74,11 @@ public struct TransactionsManager {
         case binding(BindingAction<TransactionsManager.State>)
         case eraseSearchTermTapped
         case filterTapped
-        case foundTransactions
         case onAppear
-        case onDisappear
         case resetFiltersTapped
-        case synchronizerStateChanged(SyncStatus)
         case toggleFilter(Filter)
+        case transactionsUpdated
         case transactionTapped(String)
-        case updateTransactionList([TransactionState])
         case updateTransactionPeriods
         case updateTransactionsAccordingToFilters
         case updateTransactionsAccordingToSearchTerm
@@ -96,7 +87,6 @@ public struct TransactionsManager {
     @Dependency(\.addressBook) var addressBook
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.numberFormatter) var numberFormatter
-    @Dependency(\.readTransactionsStorage) var readTransactionsStorage
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.userMetadataProvider) var userMetadataProvider
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
@@ -109,51 +99,14 @@ public struct TransactionsManager {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                let selectedAccount = state.selectedWalletAccount
-                if let abAccount = state.zashiWalletAccount {
-                    do {
-                        let result = try addressBook.allLocalContacts(abAccount.account)
-                        let abContacts = result.contacts
-                        if result.remoteStoreResult == .failure {
-                            // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                return .publisher {
+                    state.$transactions.publisher
+                        .map { _ in
+                            TransactionsManager.Action.transactionsUpdated
                         }
-                        state.$addressBookContacts.withLock { $0 = abContacts }
-                    } catch {
-                        // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
-                    }
                 }
-                return .merge(
-                    .publisher {
-                        sdkSynchronizer.stateStream()
-                            .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                            .map { TransactionsManager.Action.synchronizerStateChanged($0.syncStatus) }
-                    }
-                    .cancellable(id: state.CancelStateId, cancelInFlight: true),
-                    .publisher {
-                        sdkSynchronizer.eventStream()
-                            .throttle(for: .seconds(0.2), scheduler: mainQueue, latest: true)
-                            .compactMap {
-                                if case SynchronizerEvent.foundTransactions = $0 {
-                                    return TransactionsManager.Action.foundTransactions
-                                }
-                                return nil
-                            }
-                    }
-                    .cancellable(id: state.CancelEventId, cancelInFlight: true),
-                    .run { send in
-                        guard selectedAccount != nil else { return }
-                        if let transactions = try? await sdkSynchronizer.getAllTransactions(selectedAccount?.id) {
-                            await send(.updateTransactionList(transactions))
-                        }
-                    }
-                )
-                
-            case .onDisappear:
-                return .concatenate(
-                    .cancel(id: state.CancelStateId),
-                    .cancel(id: state.CancelEventId)
-                )
-                
+                .cancellable(id: state.CancelId, cancelInFlight: true)
+
             case .binding(\.searchTerm):
                 return .send(.updateTransactionsAccordingToSearchTerm)
 
@@ -186,93 +139,20 @@ public struct TransactionsManager {
                     state.selectedFilters.append(filter)
                 }
                 return .none
-                
-            case .synchronizerStateChanged(.upToDate):
-                guard let accountUUID = state.selectedWalletAccount?.id else {
-                    return .none
-                }
-                return .run { send in
-                    if let transactions = try? await sdkSynchronizer.getAllTransactions(accountUUID) {
-                        await send(.updateTransactionList(transactions))
-                    }
-                }
-
-            case .synchronizerStateChanged:
-                return .none
 
             case .transactionTapped:
                 return .none
-                
-            case .foundTransactions:
-                guard let accountUUID = state.selectedWalletAccount?.id else {
-                    return .none
-                }
-                return .run { send in
-                    if let transactions = try? await sdkSynchronizer.getAllTransactions(accountUUID) {
-                        await send(.updateTransactionList(transactions))
-                    }
-                }
-                
-            case .updateTransactionList(let transactionList):
+
+            case .transactionsUpdated:
                 state.isInvalidated = false
-                // update the list only if there is anything new
-                guard state.latestTransactionList != transactionList else {
-                    return .none
-                }
-                state.latestTransactionList = transactionList
-                
-                var readIds: [RedactableString: Bool] = [:]
-                if let ids = try? readTransactionsStorage.readIds() {
-                    readIds = ids
-                }
-                
-                let timestamp: TimeInterval = (try? readTransactionsStorage.availabilityTimestamp()) ?? 0
-                
-                let mempoolHeight = sdkSynchronizer.latestState().latestBlockHeight + 1
-                
-                let sortedTransactionList = transactionList
-                    .sorted(by: { lhs, rhs in
-                        lhs.transactionListHeight(mempoolHeight) > rhs.transactionListHeight(mempoolHeight)
-                    }).map { transaction in
-                        var copiedTransaction = transaction
-                        
-                        // update the expanded states
-                        if let index = state.transactionList.index(id: transaction.id) {
-                            copiedTransaction.rawID = state.transactionList[index].rawID
-                            copiedTransaction.memos = state.transactionList[index].memos
-                        }
-                        
-                        // update the read/unread state
-                        if !transaction.isSpending {
-                            if let tsTimestamp = copiedTransaction.timestamp, tsTimestamp > timestamp {
-                                copiedTransaction.isMarkedAsRead = readIds[copiedTransaction.id.redacted] ?? false
-                            } else {
-                                copiedTransaction.isMarkedAsRead = true
-                            }
-                        }
-                        
-                        // in address book
-                        copiedTransaction.isInAddressBook = false
-                        for contact in state.addressBookContacts.contacts {
-                            if contact.id == transaction.address {
-                                copiedTransaction.isInAddressBook = true
-                                break
-                            }
-                        }
-                        
-                        return copiedTransaction
-                    }
-                
-                state.transactionList = IdentifiedArrayOf(uniqueElements: sortedTransactionList)
-                
                 return .send(.updateTransactionsAccordingToSearchTerm)
-                
+
             case .updateTransactionsAccordingToSearchTerm:
                 if !state.searchTerm.isEmpty && state.searchTerm.count >= 2 {
                     state.searchedTransactionsList.removeAll()
 
                     // synchronous search
-                    state.transactionList.forEach { transaction in
+                    state.transactions.forEach { transaction in
                         if checkSearchTerm(state.searchTerm, transaction: transaction, addressBookContacts: state.addressBookContacts) {
                             state.searchedTransactionsList.append(transaction)
                         }
@@ -291,13 +171,13 @@ public struct TransactionsManager {
                         }
                     }
                 } else {
-                    state.searchedTransactionsList = state.transactionList
+                    state.searchedTransactionsList = state.transactions
                 }
                 
                 return .send(.updateTransactionsAccordingToFilters)
 
             case .asynchronousMemoSearchResult(let txids):
-                let results = state.transactionList.filter { txids.contains($0.id) }
+                let results = state.transactions.filter { txids.contains($0.id) }
                 state.searchedTransactionsList.append(contentsOf: results)
                 return .send(.updateTransactionsAccordingToFilters)
                 
@@ -420,7 +300,7 @@ extension TransactionsManager {
         }
 
         // Regex amounts
-        var input = transaction.totalAmount.decimalString()
+        var input = transaction.zecAmount.decimalString()
         
         if transaction.isSpending {
             input = "-\(input)"

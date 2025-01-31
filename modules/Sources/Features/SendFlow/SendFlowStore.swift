@@ -204,7 +204,6 @@ public struct SendFlow {
         case currencyUpdated(RedactableString)
         case dismissAddressBookHint
         case exchangeRateSetupChanged
-        case fetchedABContacts(AddressBookContacts)
         case memo(MessageEditor.Action)
         case onAppear
         case onDisapear
@@ -252,25 +251,8 @@ public struct SendFlow {
                 guard let account = state.zashiWalletAccount else {
                     return .send(.exchangeRateSetupChanged)
                 }
-                do {
-                    let result = try addressBook.allLocalContacts(account.account)
-                    let abContacts = result.contacts
-                    if result.remoteStoreResult == .failure {
-                        // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
-                    }
-                    return .merge(
-                        .send(.exchangeRateSetupChanged),
-                        .send(.fetchedABContacts(abContacts))
-                        )
-                } catch {
-                    // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
-                    return .send(.exchangeRateSetupChanged)
-                }
+                return .send(.exchangeRateSetupChanged)
 
-            case .fetchedABContacts(let abContacts):
-                state.$addressBookContacts.withLock { $0 = abContacts }
-                return .none
-                
             case .onDisapear:
                 return .cancel(id: state.cancelId)
                 

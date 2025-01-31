@@ -32,6 +32,7 @@ import LocalAuthenticationHandler
 import DeeplinkWarning
 import URIParser
 import OSStatusError
+import AddressBookClient
 
 @Reducer
 public struct Root {
@@ -50,8 +51,12 @@ public struct Root {
 
     @ObservableState
     public struct State: Equatable {
+        public var CancelEventId = UUID()
+        public var CancelStateId = UUID()
+
         public var addressBookBinding: Bool = false
         public var addressBookContactBinding: Bool = false
+        @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         public var addressBookState: AddressBook.State
         @Presents public var alert: AlertState<Action>?
         public var appInitializationState: InitializationState = .uninitialized
@@ -77,6 +82,8 @@ public struct Root {
         public var serverSetupViewBinding: Bool = false
         public var splashAppeared = false
         public var tabsState: Tabs.State
+        @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
+        @Shared(.inMemory(.transactionMemos)) public var transactionMemos: [String: [String]] = [:]
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         public var walletConfig: WalletConfig
         @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
@@ -162,8 +169,21 @@ public struct Root {
         case updateStateAfterConfigUpdate(WalletConfig)
         case walletConfigLoaded(WalletConfig)
         case welcome(Welcome.Action)
+        
+        // Transactions
+        case observeTransactions
+        case foundTransactions([ZcashTransaction.Overview])
+        case minedTransaction(ZcashTransaction.Overview)
+        case fetchTransactionsForTheSelectedAccount
+        case fetchedTransactions([TransactionState])
+        case noChangeInTransactions
+        
+        // Address Book
+        case loadContacts
+        case contactsLoaded(AddressBookContacts)
     }
 
+    @Dependency(\.addressBook) var addressBook
     @Dependency(\.autolockHandler) var autolockHandler
     @Dependency(\.crashReporter) var crashReporter
     @Dependency(\.databaseFiles) var databaseFiles
@@ -235,6 +255,10 @@ public struct Root {
         destinationReduce()
         
         debugReduce()
+        
+        transactionsReduce()
+        
+        addressBookReduce()
     }
     
     public var body: some Reducer<State, Action> {
