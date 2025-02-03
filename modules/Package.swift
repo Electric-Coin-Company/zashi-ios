@@ -985,7 +985,8 @@ let package = Package(
         .target(
             name: "UserMetadataProvider",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
             ],
             path: "Sources/Dependencies/UserMetadataProvider"
         ),

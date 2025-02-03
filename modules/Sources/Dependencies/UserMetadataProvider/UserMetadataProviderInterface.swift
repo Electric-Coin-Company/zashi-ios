@@ -29,7 +29,7 @@ public struct UserMetadataProviderClient {
     public let addAnnotationFor: (String, String) -> Void
     public let deleteAnnotationFor: (String) -> Void
 
-    // Unread
-    public let isUnread: (String) -> Bool
-    public let toggleUnreadFor: (String) -> Void
+    // Read
+    public let isRead: (String) -> Bool
+    public let updateReadFor: (String, Bool) -> Void
 }

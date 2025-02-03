@@ -6,53 +6,64 @@
 //
 
 import Foundation
+import ZcashLightClientKit
 
 public class UserMetadataStorage {
+    // General
+    var accountUUID: AccountUUID
+    
     // Bookmarks
-    var bookmarkedIds: [String] = []
+    var bookmarkedIds: [String: UMBookmark] = [:]
     
     // Annotations
-    var annotations: [String: String] = [:]
+    var annotations: [String: UMAnnotation] = [:]
 
-    // Unread
-    var unreadIds: [String] = []
+    // Read
+    var read: [String: UMRead] = [:]
 
-    public init() {
-        
+    public init(accountUUID: AccountUUID) {
+        self.accountUUID = accountUUID
     }
     
     // MARK: - General
     
-    public func store() async throws {
+    public func store(accountUUID: AccountUUID) async throws {
         
     }
     
-    public func load() async throws {
+    public func load(accountUUID: AccountUUID) async throws {
         
     }
     
     // MARK: - Bookmarking
     
     public func isBookmarked(txid: String) -> Bool {
-        bookmarkedIds.contains(txid)
+        bookmarkedIds[txid] != nil
     }
     
     public func toggleBookmarkFor(txid: String) {
-        if bookmarkedIds.contains(txid) {
-            bookmarkedIds.removeAll { $0 == txid }
+        if bookmarkedIds[txid] != nil {
+            bookmarkedIds.removeValue(forKey: txid)
         } else {
-            bookmarkedIds.append(txid)
+            bookmarkedIds[txid] = UMBookmark(
+                txid: txid,
+                lastUpdated: Date().timeIntervalSince1970 * 1000
+            )
         }
     }
     
     // MARK: - Annotations
     
     public func annotationFor(txid: String) -> String? {
-        annotations[txid]
+        annotations[txid]?.text
     }
     
     public func add(annotation: String, for txid: String) {
-        annotations[txid] = annotation
+        annotations[txid] = UMAnnotation(
+            txid: txid,
+            lastUpdated: Date().timeIntervalSince1970 * 1000,
+            text: annotation
+        )
     }
     
     public func deleteAnnotationFor(txid: String) {
@@ -61,15 +72,19 @@ public class UserMetadataStorage {
     
     // MARK: - Unread
     
-    public func isUnread(txid: String) -> Bool {
-        unreadIds.contains(txid)
+    public func isRead(txid: String) -> Bool {
+        read[txid] != nil
     }
     
-    public func toggleUnreadFor(txid: String) {
-        if unreadIds.contains(txid) {
-            unreadIds.removeAll { $0 == txid }
+    public func updateReadFor(txid: String, to value: Bool) {
+        if read[txid] != nil {
+            read.removeValue(forKey: txid)
         } else {
-            unreadIds.append(txid)
+            read[txid] = UMRead(
+                txid: txid,
+                lastUpdated: Date().timeIntervalSince1970 * 1000,
+                value: value
+            )
         }
     }
 }
