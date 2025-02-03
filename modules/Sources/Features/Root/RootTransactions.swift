@@ -49,11 +49,9 @@ extension Root {
                 return .none
                 
             case .foundTransactions(let transactions):
-                // v1
                 return .send(.fetchTransactionsForTheSelectedAccount)
                 
             case .minedTransaction(let transaction):
-                // v1
                 return .send(.fetchTransactionsForTheSelectedAccount)
 
             case .fetchTransactionsForTheSelectedAccount:
@@ -70,12 +68,16 @@ extension Root {
                 let mempoolHeight = sdkSynchronizer.latestState().latestBlockHeight + 1
                 
                 let sortedTransactions = transactions
-                    .sorted(by: { lhs, rhs in
+                    .sorted { lhs, rhs in
                         lhs.transactionListHeight(mempoolHeight) > rhs.transactionListHeight(mempoolHeight)
-                    })
+                    }
                 
-                state.$transactions.withLock {
-                    $0 = IdentifiedArrayOf<TransactionState>(uniqueElements: sortedTransactions)
+                let identifiedArray = IdentifiedArrayOf<TransactionState>(uniqueElements: sortedTransactions)
+                
+                if state.transactions != identifiedArray {
+                    state.$transactions.withLock {
+                        $0 = identifiedArray
+                    }
                 }
                 return .none
             
