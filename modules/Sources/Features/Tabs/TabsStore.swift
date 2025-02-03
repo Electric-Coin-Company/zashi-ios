@@ -309,7 +309,8 @@ public struct Tabs {
                 return .concatenate(
                     .send(.home(.walletBalances(.updateBalances))),
                     .send(.send(.walletBalances(.updateBalances))),
-                    .send(.balanceBreakdown(.walletBalances(.updateBalances)))
+                    .send(.balanceBreakdown(.walletBalances(.updateBalances))),
+                    .send(.transactionsManager(.resetFiltersTapped))
                 )
             
             case .addKeystoneHWWallet(.continueTapped):

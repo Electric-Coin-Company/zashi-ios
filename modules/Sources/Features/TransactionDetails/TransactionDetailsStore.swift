@@ -44,7 +44,6 @@ public struct TransactionDetails {
         public var isBookmarked = false
         public var isCloseButtonRequired = false
         public var isEditMode = false
-        public var isMined = false
         @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
         public var messageStates: [MessageState] = []
         public var annotation = ""
@@ -116,7 +115,6 @@ public struct TransactionDetails {
                     }
                 }
                 state.areMessagesResolved = false
-                state.isMined = state.transaction.minedHeight != nil
                 state.isBookmarked = userMetadataProvider.isBookmarked(state.transaction.id)
                 state.annotation = userMetadataProvider.annotationFor(state.transaction.id) ?? ""
                 state.annotationOrigin = state.annotation
@@ -133,7 +131,7 @@ public struct TransactionDetails {
                 return .cancel(id: state.CancelId)
                 
             case .observeTransactionChange:
-                if !state.isMined {
+                if state.transaction.isPending {
                     return .publisher {
                         state.$transactions.publisher
                             .map { _ in
@@ -147,9 +145,10 @@ public struct TransactionDetails {
             case .transactionsUpdated:
                 if let index = state.transactions.index(id: state.transaction.id) {
                     let transaction = state.transactions[index]
-                    if !state.isMined && transaction.minedHeight != nil {
+                    if state.transaction != transaction {
                         state.transaction = transaction
-                        state.isMined = true
+                    }
+                    if !transaction.isPending {
                         return .cancel(id: state.CancelId)
                     }
                 }
