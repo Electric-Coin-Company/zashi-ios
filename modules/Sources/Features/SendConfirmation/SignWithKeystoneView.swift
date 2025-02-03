@@ -83,7 +83,7 @@ public struct SignWithKeystoneView: View {
                         }
                         .padding(.top, 40)
 
-                        if let pczt = store.pczt, let encoder = sdkSynchronizer.urEncoderForPCZT(Pczt(pczt)) {
+                        if let pczt = store.pczt, let encoder = sdkSynchronizer.urEncoderForPCZT(Pczt(pczt)), !isPresented {
                             AnimatedQRCode(urEncoder: encoder, size: 250)
                                 .frame(width: 216, height: 216)
                                 .padding(24)
@@ -97,7 +97,7 @@ public struct SignWithKeystoneView: View {
                                 }
                                 .padding(.top, 32)
                                 .onTapGesture {
-                                    withAnimation(.spring()) {
+                                    withAnimation {
                                         isPresented = true
                                     }
                                 }
@@ -191,22 +191,31 @@ public struct SignWithKeystoneView: View {
         .screenHorizontalPadding()
         .applyScreenBackground()
         .zashiBack(hidden: true)
-        .screenTitle(L10n.Keystone.SignWith.signTransaction)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(L10n.Keystone.SignWith.signTransaction.uppercased())
+                    .zFont(.semiBold, size: 16, style: Design.Text.primary)
+                    .fixedSize()
+                    .opacity((isPresented && colorScheme == .dark)  ? 0.1 : 1)
+            }
+        }
         .overlay {
             if let pczt = store.pczt, let encoder = sdkSynchronizer.urEncoderForPCZT(Pczt(pczt)), isPresented {
-                VisualEffectBlur()
+                Color.black.opacity(0.9)
                     .edgesIgnoringSafeArea(.all)
                     .onTapGesture {
-                        withAnimation(.spring()) {
-                            isPresented = false
-                        }
+                        isPresented = false
                     }
                 
-                AnimatedQRCode(urEncoder: encoder, size: UIScreen.main.bounds.width - 48)
+                AnimatedQRCode(urEncoder: encoder, size: UIScreen.main.bounds.width - 64)
+                    .padding()
+                    .background {
+                        RoundedRectangle(cornerRadius: 24)
+                            .fill(Color.white)
+                    }
                     .onTapGesture {
-                        withAnimation(.spring()) {
-                            isPresented = false
-                        }
+                        isPresented = false
                     }
             }
         }
