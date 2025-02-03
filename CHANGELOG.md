@@ -13,6 +13,9 @@ directly impact users rather than highlighting other crucial architectural updat
 ### Updated
 - Keystone SDK version bumped with scan improvements.
 
+### Fixed
+- The sending screen occasionaly reapeared and stayed on screen forever.
+
 ## 1.3.2 build 1 (2025-01-09)
 
 ### Fixed

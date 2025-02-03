@@ -280,10 +280,15 @@ public struct SendConfirmation {
             case .sendPressed:
                 if state.featureFlags.sendingScreen {
                     state.isSending = true
-                    return .concatenate(
-                        .send(.updateDestination(.sending)),
-                        .send(.sendTriggered)
-                    )
+                    return .run { send in
+                        await send(.updateDestination(.sending))
+                        // delay here is necessary because we've just pushed the sending screen
+                        // and we need it to finish the presentation on screen before the send logic is triggered.
+                        // If the logic fails immediately, failed screen would try to be presented while
+                        // sending screen is still presenting, resulting in a navigational bug.
+                        try? await mainQueue.sleep(for: .seconds(1))
+                        await send(.sendTriggered)
+                    }
                 } else {
                     return .send(.sendTriggered)
                 }
