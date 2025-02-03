@@ -19,8 +19,8 @@ extension UserMetadataProviderClient: DependencyKey {
             annotationFor: { ums.annotationFor(txid: $0) },
             addAnnotationFor: { ums.add(annotation: $0, for: $1) },
             deleteAnnotationFor: { ums.deleteAnnotationFor(txid: $0) },
-            isUnread: { ums.isUnread(txid: $0) },
-            toggleUnreadFor: { ums.toggleUnreadFor(txid: $0) }
+            isRead: { ums.isRead(txid: $0) },
+            updateReadFor: { ums.updateReadFor(txid: $0, to: $1) }
         )
     }()
 }

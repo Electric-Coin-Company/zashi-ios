@@ -48,10 +48,10 @@ extension Root {
             case .noChangeInTransactions:
                 return .none
                 
-            case .foundTransactions(let transactions):
+            case .foundTransactions:
                 return .send(.fetchTransactionsForTheSelectedAccount)
                 
-            case .minedTransaction(let transaction):
+            case .minedTransaction:
                 return .send(.fetchTransactionsForTheSelectedAccount)
 
             case .fetchTransactionsForTheSelectedAccount:
