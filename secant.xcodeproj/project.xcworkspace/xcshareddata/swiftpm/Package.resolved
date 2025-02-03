@@ -194,8 +194,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KeystoneHQ/keystone-sdk-ios/",
       "state" : {
-        "revision" : "1d826dff694cc0fbbf457bc05053fd9f6f8fe386",
-        "version" : "0.8.5"
+        "revision" : "7dbf7476bf6b04b204f79e37f71115574acb3e40",
+        "version" : "0.8.6"
       }
     },
     {
@@ -383,8 +383,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio.git",
       "state" : {
-        "revision" : "dca6594f65308c761a9c409e09fbf35f48d50d34",
-        "version" : "2.77.0"
+        "revision" : "dff45738d84a53dbc8ee899c306b3a7227f54f89",
+        "version" : "2.80.0"
       }
     },
     {
@@ -419,8 +419,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio-transport-services.git",
       "state" : {
-        "revision" : "bbd5e63cf949b7db0c9edaf7a21e141c52afe214",
-        "version" : "1.23.0"
+        "revision" : "3c394067c08d1225ba8442e9cffb520ded417b64",
+        "version" : "1.23.1"
       }
     },
     {

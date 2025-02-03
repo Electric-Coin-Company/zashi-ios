@@ -6,6 +6,13 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Added
+- Tap to enlarge the Keystone Animated QR code.
+- Automatic full brightness for the Keystone Animated QR code.
+
+### Updated
+- Keystone SDK version bumped with scan improvements.
+
 ## 1.3.2 build 1 (2025-01-09)
 
 ### Fixed

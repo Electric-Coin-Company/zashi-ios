@@ -16,13 +16,18 @@ import KeystoneSDK
 import Vendors
 import SDKSynchronizer
 import Scan
+import URKit
 
 public struct SignWithKeystoneView: View {
     @Environment(\.colorScheme) private var colorScheme
-    
+    @Environment(\.presentationMode) var presentationMode
+
     @Perception.Bindable var store: StoreOf<SendConfirmation>
 
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+
+    @State private var previousBrightness: CGFloat = UIScreen.main.brightness
+    @State private var isPresented = false
     
     let tokenName: String
     
@@ -79,7 +84,7 @@ public struct SignWithKeystoneView: View {
                         .padding(.top, 40)
 
                         if let pczt = store.pczt, let encoder = sdkSynchronizer.urEncoderForPCZT(Pczt(pczt)) {
-                            AnimatedQRCode(urEncoder: encoder)
+                            AnimatedQRCode(urEncoder: encoder, size: 250)
                                 .frame(width: 216, height: 216)
                                 .padding(24)
                                 .background {
@@ -91,6 +96,11 @@ public struct SignWithKeystoneView: View {
                                         }
                                 }
                                 .padding(.top, 32)
+                                .onTapGesture {
+                                    withAnimation(.spring()) {
+                                        isPresented = true
+                                    }
+                                }
                         } else {
                             VStack {
                                 ProgressView()
@@ -151,7 +161,16 @@ public struct SignWithKeystoneView: View {
                 
                 shareView()
             }
-            .onAppear { store.send(.onAppear) }
+            .onAppear {
+                store.send(.onAppear)
+                previousBrightness = UIScreen.main.brightness
+                UIScreen.main.brightness = 1.0
+            }
+            .onChange(of: presentationMode.wrappedValue.isPresented) { isPresented in
+                if !isPresented {
+                    UIScreen.main.brightness = previousBrightness
+                }
+            }
             .frame(maxWidth: .infinity)
             .padding(.top, 20)
             .navigationLinkEmpty(
@@ -173,9 +192,27 @@ public struct SignWithKeystoneView: View {
         .applyScreenBackground()
         .zashiBack(hidden: true)
         .screenTitle(L10n.Keystone.SignWith.signTransaction)
+        .overlay {
+            if let pczt = store.pczt, let encoder = sdkSynchronizer.urEncoderForPCZT(Pczt(pczt)), isPresented {
+                VisualEffectBlur()
+                    .edgesIgnoringSafeArea(.all)
+                    .onTapGesture {
+                        withAnimation(.spring()) {
+                            isPresented = false
+                        }
+                    }
+                
+                AnimatedQRCode(urEncoder: encoder, size: UIScreen.main.bounds.width - 48)
+                    .onTapGesture {
+                        withAnimation(.spring()) {
+                            isPresented = false
+                        }
+                    }
+            }
+        }
     }
 }
- 
+
 extension SignWithKeystoneView {
     @ViewBuilder func shareView() -> some View {
         if let pczt = store.pcztToShare {
