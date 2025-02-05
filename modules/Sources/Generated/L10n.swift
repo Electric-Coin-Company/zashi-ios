@@ -1036,6 +1036,10 @@ public enum L10n {
     public static let flexaDesc = L10n.tr("Localizable", "settings.flexaDesc", fallback: "Pay with Flexa payment clips and explore a new way of spending Zcash.")
     /// Integrations
     public static let integrations = L10n.tr("Localizable", "settings.integrations", fallback: "Integrations")
+    /// Connect Keystone Device
+    public static let keystone = L10n.tr("Localizable", "settings.keystone", fallback: "Connect Keystone Device")
+    /// Pair your Keystone hardware wallet with Zashi to sign transactions.
+    public static let keystoneDesc = L10n.tr("Localizable", "settings.keystoneDesc", fallback: "Pair your Keystone hardware wallet with Zashi to sign transactions.")
     /// Zashi Recovery Phrase
     public static let recoveryPhrase = L10n.tr("Localizable", "settings.recoveryPhrase", fallback: "Zashi Recovery Phrase")
     /// During the Restore process, it is not possible to use payment integrations.

@@ -783,6 +783,7 @@ let package = Package(
             name: "Settings",
             dependencies: [
                 "About",
+                "AddKeystoneHWWallet",
                 "AddressBook",
                 "AppVersion",
                 "CurrencyConversionSetup",
@@ -794,6 +795,7 @@ let package = Package(
                 "Pasteboard",
                 "PrivateDataConsent",
                 "RecoveryPhraseDisplay",
+                "Scan",
                 "SendFeedback",
                 "ServerSetup",
                 "SupportDataGenerator",

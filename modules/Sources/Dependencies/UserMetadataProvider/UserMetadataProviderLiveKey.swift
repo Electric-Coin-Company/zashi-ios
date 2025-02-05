@@ -26,6 +26,5 @@ extension UserMetadataProviderClient: DependencyKey {
 }
 
 extension UserMetadataStorage {
-    public static let live = UserMetadataStorage(
-    )
+    public static let live = UserMetadataStorage()
 }

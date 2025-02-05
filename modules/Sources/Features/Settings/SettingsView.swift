@@ -61,6 +61,13 @@ public struct SettingsView: View {
                                                     .frame(width: 20, height: 20)
                                                     .offset(x: -4)
                                             }
+                                            
+                                            if !store.isKeystoneConnected {
+                                                Asset.Assets.Partners.keystoneSeekLogo.image
+                                                    .resizable()
+                                                    .frame(width: 20, height: 20)
+                                                    .offset(x: store.featureFlags.flexa ? -8 : -4)
+                                            }
                                         }
                                     }
                             ) {
