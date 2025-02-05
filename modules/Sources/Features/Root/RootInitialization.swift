@@ -248,7 +248,7 @@ extension Root {
                     zcashNetwork: zcashSDKEnvironment.network
                 )
                 return .send(.initialization(.respondToWalletInitializationState(walletState)))
-                
+
                 /// Respond to all possible states of the wallet and initiate appropriate side effects including errors handling
             case .initialization(.respondToWalletInitializationState(let walletState)):
                 switch walletState {

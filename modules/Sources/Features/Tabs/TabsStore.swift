@@ -452,6 +452,12 @@ public struct Tabs {
                 state.selectTextRequest = false
                 return .none
 
+            case .settings(.integrations(.addKeystoneHWWallet(.accountImported))):
+                state.destination = nil
+                state.settingsState.integrationsState.stackDestinationAddKeystoneHWWallet = nil
+                state.settingsState.destination = nil
+                return .none
+
             case .settings(.advancedSettings(.currencyConversionSetup(.saveChangesTapped))):
                 return .send(.send(.exchangeRateSetupChanged))
                 

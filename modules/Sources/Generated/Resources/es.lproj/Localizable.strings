@@ -561,3 +561,5 @@
 "filter.weTried" = "We tried but couldn’t find anything.";
 "filter.at" = "at";
 "filter.daysAgo" = "%@ days ago";
+"settings.keystone" = "Connect Keystone Device";
+"settings.keystoneDesc" = "Pair your Keystone hardware wallet with Zashi to sign transactions.";

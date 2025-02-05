@@ -54,9 +54,7 @@ extension TransactionDetailsView {
                                     Text(L10n.Annotation.placeholder)
                                         .font(.custom(FontFamily.Inter.regular.name, size: 16))
                                         .zForegroundColor(Design.Inputs.Default.text)
-                                        .onTapGesture {
-                                            isAnnotationFocused = true
-                                        }
+                                        .allowsHitTesting(false)
 
                                     Spacer()
                                 }

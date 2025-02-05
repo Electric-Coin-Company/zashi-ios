@@ -10,7 +10,6 @@ import ZcashLightClientKit
 
 public class UserMetadataStorage {
     // General
-    var accountUUID: AccountUUID
     
     // Bookmarks
     var bookmarkedIds: [String: UMBookmark] = [:]
@@ -21,17 +20,15 @@ public class UserMetadataStorage {
     // Read
     var read: [String: UMRead] = [:]
 
-    public init(accountUUID: AccountUUID) {
-        self.accountUUID = accountUUID
-    }
+    public init() { }
     
     // MARK: - General
     
-    public func store(accountUUID: AccountUUID) async throws {
+    public func store() async throws {
         
     }
     
-    public func load(accountUUID: AccountUUID) async throws {
+    public func load() async throws {
         
     }
     

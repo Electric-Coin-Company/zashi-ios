@@ -440,6 +440,13 @@ extension AlertState where Action == Root.Action {
     public static func walletStateFailed(_ walletState: InitializationState) -> AlertState {
         AlertState {
             TextState(L10n.Root.Initialization.Alert.Failed.title)
+        } actions: {
+            ButtonState(role: .destructive, action: .initialization(.resetZashi)) {
+                TextState(L10n.Settings.deleteZashi)
+            }
+            ButtonState(role: .cancel, action: .alert(.dismiss)) {
+                TextState(L10n.General.ok)
+            }
         } message: {
             TextState(L10n.Root.Initialization.Alert.WalletStateFailed.message(walletState))
         }
