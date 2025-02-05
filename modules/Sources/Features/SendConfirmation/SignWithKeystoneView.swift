@@ -185,6 +185,18 @@ public struct SignWithKeystoneView: View {
                             SendingView(store: store, tokenName: tokenName)
                         }
                     )
+                    .navigationLinkEmpty(
+                        isActive: $store.scanFailedDuringScanBinding,
+                        destination: {
+                            PreSendingFailureView(store: store, tokenName: tokenName)
+                        }
+                    )
+                }
+            )
+            .navigationLinkEmpty(
+                isActive: $store.scanFailedPreScanBinding,
+                destination: {
+                    PreSendingFailureView(store: store, tokenName: tokenName)
                 }
             )
         }

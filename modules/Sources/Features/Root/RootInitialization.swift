@@ -420,8 +420,6 @@ extension Root {
                         await send(.destination(.updateDestination(landingDestination)))
                     }
                     .cancellable(id: CancelId, cancelInFlight: true)
-                } catch {
-                    return .send(.initialization(.initializationFailed(error.toZcashError())))
                 }
 
             case .initialization(.resetZashiRequest):

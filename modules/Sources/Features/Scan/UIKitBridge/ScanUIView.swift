@@ -28,7 +28,7 @@ public class ScanUIView: UIView {
 
     var onQRScanningDidFail: (() -> Void)?
     var onQRScanningSucceededWithCode: ((String) -> Void)?
-    
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         doInitialSetup()
@@ -42,7 +42,7 @@ public class ScanUIView: UIView {
     deinit {
         captureSession?.stopRunning()
     }
-    
+
     override public class var layerClass: AnyClass {
         return AVCaptureVideoPreviewLayer.self
     }

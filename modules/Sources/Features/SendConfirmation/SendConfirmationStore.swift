@@ -29,6 +29,10 @@ import KeystoneHandler
 
 @Reducer
 public struct SendConfirmation {
+    enum Constants {
+        static let delay = 1.0
+    }
+    
     @ObservableState
     public struct State: Equatable {
         public enum Destination: Equatable {
@@ -80,6 +84,8 @@ public struct SendConfirmation {
         public var result: Result?
         public var scanState: Scan.State = .initial
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
+        public var scanFailedDuringScanBinding = false
+        public var scanFailedPreScanBinding = false
         public var sendingScreenOnAppearTimestamp: TimeInterval = 0
         public var stackDestination: StackDestination?
         public var stackDestinationBindingsAlive = 0
@@ -180,8 +186,10 @@ public struct SendConfirmation {
         
         // PCZT
         case addProofsToPczt
+        case backFromPCZTFailurePressed
         case createTransactionFromPCZT
         case pcztResolved(Pczt)
+        case pcztSendFailed(ZcashError?)
         case pcztWithProofsResolved(Pczt)
         case resetPCZTs
         case resolvePCZT
@@ -216,7 +224,7 @@ public struct SendConfirmation {
             switch action {
             case .onAppear:
                 state.txIdToExpand = nil
-                state.scanState.checkers = [.keystoneScanChecker, .keystonePCZTScanChecker]
+                state.scanState.checkers = [.keystonePCZTScanChecker]
                 state.scanState.instructions = L10n.Keystone.scanInfoTransaction
                 state.scanState.forceLibraryToHide = true
                 state.randomSuccessIconIndex = Int.random(in: 1...2)
@@ -286,7 +294,7 @@ public struct SendConfirmation {
                         // and we need it to finish the presentation on screen before the send logic is triggered.
                         // If the logic fails immediately, failed screen would try to be presented while
                         // sending screen is still presenting, resulting in a navigational bug.
-                        try? await mainQueue.sleep(for: .seconds(1))
+                        try? await mainQueue.sleep(for: .seconds(Constants.delay))
                         await send(.sendTriggered)
                     }
                 } else {
@@ -396,7 +404,7 @@ public struct SendConfirmation {
                     } else {
                         return .run { _ in
                             audioServices.systemSoundVibrate()
-                            try? await mainQueue.sleep(for: .seconds(1.0))
+                            try? await mainQueue.sleep(for: .seconds(Constants.delay))
                             audioServices.systemSoundVibrate()
                         }
                     }
@@ -469,11 +477,15 @@ public struct SendConfirmation {
                 return .send(.updateStackDestination(.signWithKeystone))
 
             case .scan(.foundPCZT(let pcztWithSigs)):
+                guard !state.scanFailedPreScanBinding && !state.scanFailedDuringScanBinding else {
+                    return .none
+                }
                 if !state.isKeystoneCodeFound {
                     state.isKeystoneCodeFound = true
                     state.pcztWithSigs = pcztWithSigs
                     return .run { send in
                         await send(.updateStackDestination(.sending))
+                        try? await mainQueue.sleep(for: .seconds(Constants.delay))
                         await send(.createTransactionFromPCZT)
                     }
                 }
@@ -484,14 +496,20 @@ public struct SendConfirmation {
                 
             case .resolvePCZT:
                 guard let proposal = state.proposal, let account = state.selectedWalletAccount else {
-                    return .none
+                    return .run { send in
+                        try? await mainQueue.sleep(for: .seconds(Constants.delay))
+                        await send(.updateFailedData(-899, "resolvePCZT failed to start the process", ""))
+                        await send(.pcztSendFailed("resolvePCZT failed to start the process".toZcashError()))
+                    }
                 }
                 return .run { send in
                     do {
                         let pczt = try await sdkSynchronizer.createPCZTFromProposal(account.id, proposal)
                         await send(.pcztResolved(pczt))
                     } catch {
-                        await send(.updateFailedData(-996, error.toZcashError().detailedMessage, ""))
+                        try? await mainQueue.sleep(for: .seconds(Constants.delay))
+                        await send(.updateFailedData(-898, error.toZcashError().detailedMessage, ""))
+                        await send(.pcztSendFailed("resolvePCZT createPCZTFromProposal failed".toZcashError()))
                     }
                 }
                 
@@ -501,14 +519,20 @@ public struct SendConfirmation {
                 
             case .addProofsToPczt:
                 guard let pczt = state.pczt else {
-                    return .none
+                    return .run { send in
+                        try? await mainQueue.sleep(for: .seconds(Constants.delay))
+                        await send(.updateFailedData(-799, "addProofsToPczt failed to start the process", ""))
+                        await send(.pcztSendFailed("addProofsToPczt failed to start the process".toZcashError()))
+                    }
                 }
                 return .run { send in
                     do {
                         let pcztWithProofs = try await sdkSynchronizer.addProofsToPCZT(Pczt(pczt))
                         await send(.pcztWithProofsResolved(pcztWithProofs))
                     } catch {
-                        await send(.updateFailedData(-995, error.toZcashError().detailedMessage, ""))
+                        try? await mainQueue.sleep(for: .seconds(Constants.delay))
+                        await send(.updateFailedData(-798, error.toZcashError().detailedMessage, ""))
+                        await send(.pcztSendFailed("addProofsToPczt failed".toZcashError()))
                     }
                 }
                 
@@ -572,6 +596,18 @@ public struct SendConfirmation {
                         await send(.sendFailed(error.toZcashError(), true))
                     }
                 }
+
+            case .pcztSendFailed(let error):
+                state.isSending = false
+                state.scanFailedPreScanBinding = state.stackDestination == .signWithKeystone
+                state.scanFailedDuringScanBinding = state.stackDestination == .scan
+                if state.stackDestination == .sending {
+                    return .send(.sendFailed(error?.toZcashError(), true))
+                }
+                return .none
+
+            case .backFromPCZTFailurePressed:
+                return .none
                 
             case .resetPCZTs:
                 state.pczt = nil
