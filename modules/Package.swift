@@ -652,6 +652,7 @@ let package = Package(
                 "UIComponents",
                 "URIParser",
                 "UserDefaults",
+                "UserMetadataProvider",
                 "UserPreferencesStorage",
                 "Utils",
                 "WalletConfigProvider",
