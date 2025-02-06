@@ -146,8 +146,8 @@ public struct WalletStorage {
         }
     }
     
-    public func resetZashi() {
-        deleteData(forKey: Constants.zcashStoredWallet)
+    public func resetZashi() throws {
+        try deleteData(forKey: Constants.zcashStoredWallet)
     }
     
     public func importAddressBookEncryptionKeys(_ keys: AddressBookEncryptionKeys) throws {
@@ -257,16 +257,17 @@ public struct WalletStorage {
     }
     
     /// Use carefully:  Deletes data for key
-    @discardableResult
     public func deleteData(
         forKey: String,
         account: String = ""
-    ) -> Bool {
+    ) throws {
         let query = baseQuery(forAccount: account, andKey: forKey)
 
         let status = secItem.delete(query as CFDictionary)
 
-        return status == noErr
+        guard status == noErr else {
+            throw KeychainError.unknown(status)
+        }
     }
     
     /// Store data for key

@@ -12,6 +12,7 @@ import Models
 import NotEnoughFreeSpace
 import Utils
 import Generated
+import WalletStorage
 
 /// In this file is a collection of helpers that control all state and action related operations
 /// for the `Root` with a connection to the app/wallet initialization and erasure of the wallet.
@@ -371,7 +372,8 @@ extension Root {
                         autolockHandler.batteryStatePublisher()
                             .map(Root.Action.batteryStateChanged)
                     }
-                    .cancellable(id: CancelBatteryStateId, cancelInFlight: true)
+                    .cancellable(id: CancelBatteryStateId, cancelInFlight: true),
+                    .send(.batteryStateChanged(nil))
                 )
                 
             case .initialization(.loadedWalletAccounts(let walletAccounts)):
@@ -431,71 +433,120 @@ extension Root {
                 
             case .initialization(.resetZashi), .tabs(.settings(.advancedSettings(.deleteWallet(.deleteTapped)))):
                 guard let wipePublisher = sdkSynchronizer.wipe() else {
-                    return .send(.resetZashiFailed)
+                    return .send(.resetZashiSDKFailed)
                 }
                 return .publisher {
                     wipePublisher
                         .replaceEmpty(with: Void())
-                        .map { _ in return Root.Action.resetZashiSucceeded }
-                        .replaceError(with: Root.Action.resetZashiFailed)
+                        .map { _ in return Root.Action.resetZashiSDKSucceeded }
+                        .replaceError(with: Root.Action.resetZashiSDKFailed)
                         .receive(on: mainQueue)
                 }
                 .cancellable(id: SynchronizerCancelId, cancelInFlight: true)
 
-            case .resetZashiSucceeded:
+            case .resetZashiSDKSucceeded:
                 if state.appInitializationState != .keysMissing {
                     state = .initial
                 }
                 state.splashAppeared = true
                 state.isRestoringWallet = false
                 userDefaults.remove(Constants.udIsRestoringWallet)
-                state.$walletStatus.withLock { $0 = .none }
-                walletStorage.resetZashi()
                 flexaHandler.signOut()
+                userStoredPreferences.removeAll()
                 try? readTransactionsStorage.resetZashi()
+                state.$walletStatus.withLock { $0 = .none }
                 state.$selectedWalletAccount.withLock { $0 = nil }
                 state.$walletAccounts.withLock { $0 = [] }
                 state.$zashiWalletAccount.withLock { $0 = nil }
+                return .send(.resetZashiKeychainRequest)
+                
+            case .resetZashiKeychainRequest:
+                return .run { send in
+                    do {
+                        try walletStorage.resetZashi()
+                        await send(.resetZashiFinishProcessing)
+                    } catch WalletStorage.KeychainError.unknown(let osStatus) {
+                        await send(.resetZashiKeychainFailed(osStatus))
+                    }
+                }
 
+            case .resetZashiFinishProcessing:
+                do {
+                    let areKeysPresent = try walletStorage.areKeysPresent()
+                    if areKeysPresent {
+                        return .send(.resetZashiKeychainFailedWithCorruptedData("Keychain keys are still present"))
+                    }
+                } catch WalletStorage.WalletStorageError.alreadyImported {
+                    return .send(.resetZashiKeychainFailedWithCorruptedData("alreadyImported"))
+                } catch WalletStorage.WalletStorageError.uninitializedAddressBookEncryptionKeys {
+                    return .send(.resetZashiKeychainFailedWithCorruptedData("uninitializedAddressBookEncryptionKeys"))
+                } catch WalletStorage.WalletStorageError.storageError(let error) {
+                    return .send(.resetZashiKeychainFailedWithCorruptedData("storageError, \(error.localizedDescription)"))
+                } catch WalletStorage.WalletStorageError.unsupportedVersion(let version) {
+                    return .send(.resetZashiKeychainFailedWithCorruptedData("unsupportedVersion \(version)"))
+                } catch WalletStorage.WalletStorageError.unsupportedLanguage(let language) {
+                    return .send(.resetZashiKeychainFailedWithCorruptedData("unsupportedLanguage, \(language)"))
+                } catch WalletStorage.KeychainError.decoding {
+                    return .send(.resetZashiKeychainFailedWithCorruptedData("decoding"))
+                } catch WalletStorage.KeychainError.duplicate {
+                    return .send(.resetZashiKeychainFailedWithCorruptedData("duplicate"))
+                } catch WalletStorage.KeychainError.encoding {
+                    return .send(.resetZashiKeychainFailedWithCorruptedData("encoding"))
+                } catch WalletStorage.KeychainError.noDataFound {
+                    return .send(.resetZashiKeychainFailedWithCorruptedData("noDataFound"))
+                } catch WalletStorage.KeychainError.unknown(let osStatus) {
+                    return .send(.resetZashiKeychainFailedWithCorruptedData("unknown, OSStatus \(osStatus)"))
+                } catch WalletStorage.WalletStorageError.uninitializedWallet {
+                    // this is valid state and what we expect
+                } catch {
+                    return .send(.resetZashiKeychainFailedWithCorruptedData(error.localizedDescription))
+                }
                 if state.appInitializationState == .keysMissing && state.onboardingState.destination == .importExistingWallet {
                     state.appInitializationState = .uninitialized
-                    userStoredPreferences.removeAll()
                     return .concatenate(
                         .cancel(id: SynchronizerCancelId),
                         .send(.onboarding(.importWallet(.updateDestination(.birthday))))
                     )
                 } else if state.appInitializationState == .keysMissing && state.onboardingState.destination == .createNewWallet {
                     state.appInitializationState = .uninitialized
-                    userStoredPreferences.removeAll()
                     return .concatenate(
                         .cancel(id: SynchronizerCancelId),
                         .send(.onboarding(.securityWarning(.createNewWallet)))
                     )
                 } else {
-                    userStoredPreferences.removeAll()
                     return .concatenate(
                         .cancel(id: SynchronizerCancelId),
                         .send(.initialization(.checkWalletInitialization))
                     )
                 }
+                
+            case .resetZashiKeychainFailedWithCorruptedData(let errMsg):
+                state.tabsState.settingsState.advancedSettingsState.deleteWalletState.isProcessing = false
+                state.alert = AlertState.wipeKeychainFailed(errMsg)
+                return .cancel(id: SynchronizerCancelId)
 
-            case .resetZashiFailed:
-                let backDestination: Effect<Root.Action>
-                if let previousDestination = state.destinationState.previousDestination {
-                    backDestination = .send(.destination(.updateDestination(previousDestination)))
-                } else {
-                    backDestination = .send(.destination(.updateDestination(state.destinationState.destination)))
+            case .resetZashiKeychainFailed(let osStatus):
+                guard state.maxResetZashiAppAttempts == 0 else {
+                    state.maxResetZashiAppAttempts -= 1
+                    return .send(.resetZashiKeychainRequest)
                 }
-                state.alert = AlertState.wipeFailed()
+                state.maxResetZashiAppAttempts = ResetZashiConstants.maxResetZashiAppAttempts
+                state.tabsState.settingsState.advancedSettingsState.deleteWalletState.isProcessing = false
+                state.alert = AlertState.wipeFailed(osStatus)
+                return .cancel(id: SynchronizerCancelId)
 
-                if state.appInitializationState == .keysMissing {
-                    return .cancel(id: SynchronizerCancelId)
-                } else {
+            case .resetZashiSDKFailed:
+                guard state.maxResetZashiSDKAttempts == 0 else {
+                    state.maxResetZashiSDKAttempts -= 1
                     return .concatenate(
                         .cancel(id: SynchronizerCancelId),
-                        backDestination
+                        .send(.initialization(.resetZashi))
                     )
                 }
+                state.maxResetZashiSDKAttempts = ResetZashiConstants.maxResetZashiSDKAttempts
+                state.tabsState.settingsState.advancedSettingsState.deleteWalletState.isProcessing = false
+                state.alert = AlertState.wipeFailed(Int32.max)
+                return .cancel(id: SynchronizerCancelId)
 
             case .phraseDisplay(.finishedPressed), .onboarding(.securityWarning(.recoveryPhraseDisplay(.finishedPressed))):
                 do {

@@ -365,7 +365,8 @@
 "root.initialization.alert.cantStoreThatUserPassedPhraseBackupTest.message" = "Can't store information that user passed phrase backup test. Error: %@";
 "root.initialization.alert.wipe.title" = "Wipe of the wallet";
 "root.initialization.alert.wipe.message" = "Are you sure?";
-"root.initialization.alert.wipeFailed.title" = "Nuke of the wallet failed";
+"root.initialization.alert.wipeFailed.title" = "Wallet deletion failed.";
+"root.initialization.alert.wipeFailed.message" = "Wallet deletion only partially succeeded. Please retry to finish the resetting process.";
 
 "root.destination.alert.failedToProcessDeeplink.title" = "Failed to process deeplink.";
 "root.destination.alert.failedToProcessDeeplink.message" = "Deeplink: \(%@))\nError: \(%@) (code: %@)";

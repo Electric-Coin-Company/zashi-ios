@@ -42,7 +42,7 @@ final class WalletNukeTests: XCTestCase {
 
         await store.send(.initialization(.resetZashi))
         
-        await store.receive(.resetZashiFailed) { state in
+        await store.receive(.resetZashiSDKFailed) { state in
             state.alert = AlertState.wipeFailed()
         }
         

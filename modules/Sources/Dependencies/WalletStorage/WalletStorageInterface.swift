@@ -73,7 +73,7 @@ public struct WalletStorageClient {
 
     /// Use carefully: deletes the stored wallet.
     /// There's no fate but what we make for ourselves - Sarah Connor.
-    public var resetZashi: () -> Void
+    public var resetZashi: () throws -> Void
 
     public var importAddressBookEncryptionKeys: (AddressBookEncryptionKeys) throws -> Void
     public var exportAddressBookEncryptionKeys: () throws -> AddressBookEncryptionKeys

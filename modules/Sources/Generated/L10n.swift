@@ -727,8 +727,10 @@ public enum L10n {
           public static let title = L10n.tr("Localizable", "root.initialization.alert.wipe.title", fallback: "Wipe of the wallet")
         }
         public enum WipeFailed {
-          /// Nuke of the wallet failed
-          public static let title = L10n.tr("Localizable", "root.initialization.alert.wipeFailed.title", fallback: "Nuke of the wallet failed")
+          /// Wallet deletion only partially succeeded. Please retry to finish the resetting process.
+          public static let message = L10n.tr("Localizable", "root.initialization.alert.wipeFailed.message", fallback: "Wallet deletion only partially succeeded. Please retry to finish the resetting process.")
+          /// Wallet deletion failed.
+          public static let title = L10n.tr("Localizable", "root.initialization.alert.wipeFailed.title", fallback: "Wallet deletion failed.")
         }
       }
     }

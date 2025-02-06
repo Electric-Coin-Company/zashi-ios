@@ -166,7 +166,7 @@ extension Root {
                 return .none
 
             case .tabs, .initialization, .onboarding, .updateStateAfterConfigUpdate, .alert, .phraseDisplay, .synchronizerStateChanged,
-                    .welcome, .binding, .resetZashiFailed, .resetZashiSucceeded, .debug, .walletConfigLoaded, .exportLogs, .confirmationDialog,
+                    .welcome, .binding, .resetZashiSDKFailed, .resetZashiSDKSucceeded, .resetZashiKeychainFailed, .resetZashiKeychainRequest, .resetZashiFinishProcessing, .resetZashiKeychainFailedWithCorruptedData, .debug, .walletConfigLoaded, .exportLogs, .confirmationDialog,
                     .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated, .batteryStateChanged, .cancelAllRunningEffects, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted, .osStatusError:
                 return .none
             }

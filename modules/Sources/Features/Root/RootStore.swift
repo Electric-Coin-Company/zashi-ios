@@ -35,6 +35,11 @@ import OSStatusError
 
 @Reducer
 public struct Root {
+    public enum ResetZashiConstants {
+        static let maxResetZashiAppAttempts = 3
+        static let maxResetZashiSDKAttempts = 3
+    }
+    
     let CancelId = UUID()
     let CancelStateId = UUID()
     let CancelBatteryStateId = UUID()
@@ -61,6 +66,8 @@ public struct Root {
         public var isLockedInKeychainUnavailableState = false
         public var isRestoringWallet = false
         @Shared(.appStorage(.lastAuthenticationTimestamp)) public var lastAuthenticationTimestamp: Int = 0
+        public var maxResetZashiAppAttempts = ResetZashiConstants.maxResetZashiAppAttempts
+        public var maxResetZashiSDKAttempts = ResetZashiConstants.maxResetZashiSDKAttempts
         public var notEnoughFreeSpaceState: NotEnoughFreeSpace.State
         public var onboardingState: OnboardingFlow.State
         public var osStatusErrorState: OSStatusError.State
@@ -125,7 +132,7 @@ public struct Root {
         case addressBookContactBinding(Bool)
         case addressBookAccessGranted
         case alert(PresentationAction<Action>)
-        case batteryStateChanged(Notification)
+        case batteryStateChanged(Notification?)
         case binding(BindingAction<Root.State>)
         case cancelAllRunningEffects
         case confirmationDialog(PresentationAction<ConfirmationDialog>)
@@ -138,8 +145,12 @@ public struct Root {
         case tabs(Tabs.Action)
         case initialization(InitializationAction)
         case notEnoughFreeSpace(NotEnoughFreeSpace.Action)
-        case resetZashiFailed
-        case resetZashiSucceeded
+        case resetZashiFinishProcessing
+        case resetZashiKeychainFailed(OSStatus)
+        case resetZashiKeychainFailedWithCorruptedData(String)
+        case resetZashiKeychainRequest
+        case resetZashiSDKFailed
+        case resetZashiSDKSucceeded
         case onboarding(OnboardingFlow.Action)
         case osStatusError(OSStatusError.Action)
         case phraseDisplay(RecoveryPhraseDisplay.Action)
@@ -417,9 +428,19 @@ extension AlertState where Action == Root.Action {
         }
     }
     
-    public static func wipeFailed() -> AlertState {
+    public static func wipeFailed(_ osStatus: OSStatus) -> AlertState {
         AlertState {
             TextState(L10n.Root.Initialization.Alert.WipeFailed.title)
+        } message: {
+            TextState("OSStatus: \(osStatus), \(L10n.Root.Initialization.Alert.WipeFailed.message)")
+        }
+    }
+    
+    public static func wipeKeychainFailed(_ errMsg: String) -> AlertState {
+        AlertState {
+            TextState(L10n.Root.Initialization.Alert.WipeFailed.title)
+        } message: {
+            TextState("Keychain failed: \(errMsg)")
         }
     }
     
