@@ -12,6 +12,8 @@ import WhatsNew
 import SendFeedback
 
 public struct SettingsView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     @Perception.Bindable var store: StoreOf<Settings>
     
     public init(store: StoreOf<Settings>) {
@@ -41,32 +43,24 @@ public struct SettingsView: View {
                                     HStack(spacing: 0) {
                                         if store.isKeystoneAccount {
                                             Asset.Assets.Partners.coinbaseSeeklogoDisabled.image
-                                                .resizable()
-                                                .frame(width: 20, height: 20)
+                                                .seekOutline(colorScheme)
                                             
                                             if store.featureFlags.flexa {
                                                 Asset.Assets.Partners.flexaSeeklogoDisabled.image
-                                                    .resizable()
-                                                    .frame(width: 20, height: 20)
-                                                    .offset(x: -4)
+                                                    .seekOutline(colorScheme)
                                             }
                                         } else {
                                             Asset.Assets.Partners.coinbaseSeeklogo.image
-                                                .resizable()
-                                                .frame(width: 20, height: 20)
-                                            
+                                                .seekOutline(colorScheme)
+
                                             if store.featureFlags.flexa {
                                                 Asset.Assets.Partners.flexaSeekLogo.image
-                                                    .resizable()
-                                                    .frame(width: 20, height: 20)
-                                                    .offset(x: -4)
+                                                    .seekOutline(colorScheme)
                                             }
                                             
                                             if !store.isKeystoneConnected {
                                                 Asset.Assets.Partners.keystoneSeekLogo.image
-                                                    .resizable()
-                                                    .frame(width: 20, height: 20)
-                                                    .offset(x: store.featureFlags.flexa ? -8 : -4)
+                                                    .seekOutline(colorScheme)
                                             }
                                         }
                                     }
@@ -103,7 +97,6 @@ public struct SettingsView: View {
                             divider: false
                         ) {
                             store.send(.updateDestination(.sendFeedback))
-                            //store.send(.sendSupportMail)
                         }
                     }
                     .listRowInsets(EdgeInsets())
@@ -169,6 +162,15 @@ public struct SettingsView: View {
         .zashiBack()
         .screenTitle(L10n.Settings.title)
         .walletStatusPanel()
+    }
+}
+
+extension Image {
+    func seekOutline(_ colorScheme: ColorScheme) -> some View {
+        self
+            .resizable()
+            .frame(width: 20, height: 20)
+            .background { Circle().fill(Design.Surfaces.bgPrimary.color(colorScheme)).frame(width: 26, height: 26) }
     }
 }
 

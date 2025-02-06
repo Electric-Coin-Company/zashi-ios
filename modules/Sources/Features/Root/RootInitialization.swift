@@ -374,7 +374,8 @@ extension Root {
                     }
                     .cancellable(id: CancelBatteryStateId, cancelInFlight: true),
                     .send(.batteryStateChanged(nil)),
-                    .send(.observeTransactions)
+                    .send(.observeTransactions),
+                    .send(.loadUserMetadata)
                 )
                 
             case .initialization(.loadedWalletAccounts(let walletAccounts)):
@@ -637,7 +638,7 @@ extension Root {
                 
             case .tabs, .destination, .onboarding, .phraseDisplay, .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated,
                     .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, 
-                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects, .flexaOnTransactionRequest, .flexaTransactionFailed, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted, .deeplinkWarning, .osStatusError, .observeTransactions, .foundTransactions, .minedTransaction, .fetchTransactionsForTheSelectedAccount, .fetchedTransactions, .noChangeInTransactions, .loadContacts, .contactsLoaded:
+                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects, .flexaOnTransactionRequest, .flexaTransactionFailed, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted, .deeplinkWarning, .osStatusError, .observeTransactions, .foundTransactions, .minedTransaction, .fetchTransactionsForTheSelectedAccount, .fetchedTransactions, .noChangeInTransactions, .loadContacts, .contactsLoaded, .loadUserMetadata, .userMetadataSync:
                 return .none
             }
         }

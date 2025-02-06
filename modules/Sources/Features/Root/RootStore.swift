@@ -33,6 +33,7 @@ import DeeplinkWarning
 import URIParser
 import OSStatusError
 import AddressBookClient
+import UserMetadataProvider
 
 @Reducer
 public struct Root {
@@ -53,6 +54,7 @@ public struct Root {
     public struct State: Equatable {
         public var CancelEventId = UUID()
         public var CancelStateId = UUID()
+        public var CancelUMTimerId = UUID()
 
         public var addressBookBinding: Bool = false
         public var addressBookContactBinding: Bool = false
@@ -71,6 +73,7 @@ public struct Root {
         public var isLockedInKeychainUnavailableState = false
         public var isRestoringWallet = false
         @Shared(.appStorage(.lastAuthenticationTimestamp)) public var lastAuthenticationTimestamp: Int = 0
+        public var lastUserMetadataSyncTimestamp: TimeInterval?
         public var maxResetZashiAppAttempts = ResetZashiConstants.maxResetZashiAppAttempts
         public var maxResetZashiSDKAttempts = ResetZashiConstants.maxResetZashiSDKAttempts
         public var notEnoughFreeSpaceState: NotEnoughFreeSpace.State
@@ -181,6 +184,10 @@ public struct Root {
         // Address Book
         case loadContacts
         case contactsLoaded(AddressBookContacts)
+        
+        // UserMetadata
+        case loadUserMetadata
+        case userMetadataSync(Date)
     }
 
     @Dependency(\.addressBook) var addressBook
@@ -200,6 +207,7 @@ public struct Root {
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.uriParser) var uriParser
     @Dependency(\.userDefaults) var userDefaults
+    @Dependency(\.userMetadataProvider) var userMetadataProvider
     @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.walletConfigProvider) var walletConfigProvider
     @Dependency(\.walletStorage) var walletStorage
@@ -259,6 +267,8 @@ public struct Root {
         transactionsReduce()
         
         addressBookReduce()
+        
+        userMetadataReduce()
     }
     
     public var body: some Reducer<State, Action> {
