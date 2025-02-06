@@ -204,14 +204,7 @@ public struct SignWithKeystoneView: View {
         .applyScreenBackground()
         .zashiBack(hidden: true)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                Text(L10n.Keystone.SignWith.signTransaction.uppercased())
-                    .zFont(.semiBold, size: 16, style: Design.Text.primary)
-                    .fixedSize()
-                    .opacity((isPresented && colorScheme == .dark)  ? 0.1 : 1)
-            }
-        }
+        .screenTitle(L10n.Keystone.SignWith.signTransaction)
         .overlay {
             if let pczt = store.pczt, let encoder = sdkSynchronizer.urEncoderForPCZT(Pczt(pczt)), isPresented {
                 Color.black.opacity(0.9)
