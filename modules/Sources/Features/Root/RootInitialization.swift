@@ -411,13 +411,16 @@ extension Root {
                     }
                     
                     state.appInitializationState = .initialized
+                    let isAtDeeplinkWarningScreen = state.destinationState.destination == .deeplinkWarning
 
                     return .run { [landingDestination] send in
                         if landingDestination == .tabs {
                             await send(.tabs(.home(.transactionList(.onAppear))))
                         }
                         try await mainQueue.sleep(for: .seconds(0.5))
-                        await send(.destination(.updateDestination(landingDestination)))
+                        if !isAtDeeplinkWarningScreen {
+                            await send(.destination(.updateDestination(landingDestination)))
+                        }
                     }
                     .cancellable(id: CancelId, cancelInFlight: true)
                 }
