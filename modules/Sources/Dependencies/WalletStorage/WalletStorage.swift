@@ -95,7 +95,7 @@ public struct WalletStorage {
         }
         
         guard let wallet = try decode(json: reqData, as: StoredWallet.self) else {
-            throw WalletStorageError.uninitializedWallet
+            throw KeychainError.decoding
         }
         
         guard wallet.version == Constants.zcashKeychainVersion else {
