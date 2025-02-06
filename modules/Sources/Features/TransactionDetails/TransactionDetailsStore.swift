@@ -55,6 +55,10 @@ public struct TransactionDetails {
         public var annotationRequest = false
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
+        public var isAnnotationModified: Bool {
+            annotation.trimmingCharacters(in: .whitespaces) != annotationOrigin
+        }
+        
         public var feeStr: String {
             transaction.fee?.decimalString() ?? L10n.TransactionHistory.defaultFee
         }
