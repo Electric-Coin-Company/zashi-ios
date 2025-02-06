@@ -88,7 +88,7 @@ extension TransactionDetailsView {
                     ) {
                         store.send(.saveNoteTapped)
                     }
-                    .disabled(store.annotation == store.annotationOrigin)
+                    .disabled(!store.isAnnotationModified)
                 }
                 .padding(.bottom, 24)
             } else {
