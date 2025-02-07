@@ -1,6 +1,33 @@
 {
     "releases": [
         {
+            "version": "1.3.3",
+            "date": "02-07-2025",
+            "timestamp": 1738929599,
+            "sections": [
+                {
+                    "title": "Added:",
+                    "bulletpoints": [
+                        "We added a new feature for signing a transaction with a Keystone device, which allows you to enlarge the QR code upon tap."
+                    ]
+                },
+                {
+                    "title": "Changed:",
+                    "bulletpoints": [
+                        "We implemented automatic screen brightness increase for Keystone QR code scanning.",
+                        "We updated the Keystone SDK to version 0.7.10 which includes another QR code scanning improvement.",
+                        "We also optimized and improved the Keystone logic for older and slower devices."
+                    ]
+                },
+                {
+                    "title": "Fixed:",
+                    "bulletpoints": [
+                        "We added a few fixes to handle cases when Reset of Zashi fails to complete."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "1.3.2",
             "date": "01-09-2025",
             "timestamp": 1736420570,
