@@ -12,6 +12,7 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ### Updated
 - Keystone SDK version bumped with scan improvements.
+- Reset Zashi flow enhanced with retry logic and better error handling.
 
 ### Fixed
 - The sending screen occasionaly reapeared and stayed on screen forever.
