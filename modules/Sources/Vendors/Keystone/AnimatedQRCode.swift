@@ -13,16 +13,17 @@ import UIKit
 public struct AnimatedQRCode: View {
     @StateObject private var viewModel: ViewModel
     private var timer = Timer.publish(every: 0.2, on: .main, in: .common).autoconnect()
-    
-    public init(urEncoder: UREncoder){
+    let size: CGFloat
+
+    public init(urEncoder: UREncoder, size: CGFloat){
         self._viewModel = StateObject(wrappedValue: ViewModel(urEncoder: urEncoder))
+        self.size = size
     }
 
     public var body: some View {
         Image(uiImage: UIImage(data: viewModel.content) ?? UIImage())
             .resizable()
-            .frame(width: 250, height: 250)
-            .padding()
+            .frame(width: size, height: size)
             .onReceive(timer) { _ in
                 if viewModel.errorMessage.isEmpty {
                     viewModel.nextQRCode()
@@ -38,7 +39,7 @@ struct AnimatedQRCode_Previews: PreviewProvider {
         let keystoneSDK = KeystoneSDK()
         KeystoneSDK.maxFragmentLen = 200 // default 400
         let qrCode: UREncoder = try! keystoneSDK.btc.generatePSBT(psbt: MockData.psbt)
-        return AnimatedQRCode(urEncoder: qrCode)
+        return AnimatedQRCode(urEncoder: qrCode, size: 250)
     }
 }
 

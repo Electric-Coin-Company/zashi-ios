@@ -53,14 +53,24 @@ public struct DeleteWalletView: View {
                 .padding(.bottom, 24)
                 .padding(.leading, 1)
                 
-                ZashiButton(
-                    L10n.DeleteWallet.actionButtonTitle,
-                    type: .destructive1
-                ) {
-                    store.send(.deleteTapped)
+                if store.isProcessing {
+                    ZashiButton(
+                        L10n.DeleteWallet.actionButtonTitle,
+                        type: .destructive1,
+                        accessoryView: ProgressView()
+                    ) { }
+                    .disabled(true)
+                    .padding(.bottom, 8)
+                } else {
+                    ZashiButton(
+                        L10n.DeleteWallet.actionButtonTitle,
+                        type: .destructive1
+                    ) {
+                        store.send(.deleteTapped)
+                    }
+                    .disabled(!store.isAcknowledged || store.isProcessing)
+                    .padding(.bottom, 20)
                 }
-                .disabled(!store.isAcknowledged || store.isProcessing)
-                .padding(.bottom, 20)
             }
             .zashiBack(store.isProcessing)
         }

@@ -56,20 +56,20 @@ public struct ScanView: View {
                 }
 
                 VStack {
-                    Spacer()
-  
                     WithPerceptionTracking {
                         if let instructions = store.instructions {
                             Text(instructions)
                                 .font(.custom(FontFamily.Inter.semiBold.name, size: 20))
                                 .foregroundColor(Asset.Colors.ZDesign.shark200.color)
-                                .padding(.bottom, 32)
+                                .padding(.top, 64)
                                 .lineLimit(nil)
                                 .multilineTextAlignment(.center)
                                 .lineSpacing(3)
                                 .screenHorizontalPadding()
                         }
-                        
+
+                        Spacer()
+
                         HStack(alignment: .top, spacing: 0) {
                             if !store.info.isEmpty {
                                 Asset.Assets.infoOutline.image
@@ -210,7 +210,7 @@ public struct ScanView: View {
         .tint(Asset.Colors.ZDesign.Base.brand.color)
         .position(
             x: topLeft.x + frameSize.width * 0.5,
-            y: topLeft.y - 80
+            y: topLeft.y - 56
         )
     }
 }

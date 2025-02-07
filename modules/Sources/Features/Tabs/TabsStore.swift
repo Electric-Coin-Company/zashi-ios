@@ -250,7 +250,6 @@ public struct Tabs {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                state.scanState.checkers = [.keystoneScanChecker, .keystonePCZTScanChecker]
                 state.scanState.instructions = L10n.Keystone.scanInfo
                 state.scanState.forceLibraryToHide = true
                 state.isRateEducationEnabled = userStoredPreferences.exchangeRate() == nil
@@ -262,6 +261,7 @@ public struct Tabs {
                 
             case .addKeystoneHWWalletTapped:
                 state.accountSwitchRequest = false
+                state.scanState.checkers = [.keystoneScanChecker]
                 return .send(.updateStackDestinationAddKeystoneHWWallet(.addKeystoneHWWallet))
                 
             case .walletAccountTapped(let walletAccount):
@@ -364,6 +364,10 @@ public struct Tabs {
             case .requestZec:
                 return .none
                 
+            case .balanceBreakdown(.shieldFundsWithKeystone):
+                state.scanState.checkers = [.keystonePCZTScanChecker]
+                return .none
+                
             case .balanceBreakdown(.shieldFundsSuccess):
                 return .none
             
@@ -451,6 +455,18 @@ public struct Tabs {
                 state.sendConfirmationState.stackDestinationBindingsAlive = 0
                 return .concatenate(
                     .send(.updateDestination(nil)),
+                    .send(.updateStackDestinationRequestPayment(nil)),
+                    .send(.sendConfirmation(.updateDestination(nil))),
+                    .send(.sendConfirmation(.updateResult(nil))),
+                    .send(.sendConfirmation(.updateStackDestination(nil)))
+                )
+
+            case .sendConfirmation(.backFromPCZTFailurePressed):
+                state.sendConfirmationState.stackDestinationBindingsAlive = 0
+                state.destination = nil
+                state.sendConfirmationState.scanFailedPreScanBinding = false
+                state.sendConfirmationState.scanFailedDuringScanBinding = false
+                return .concatenate(
                     .send(.updateStackDestinationRequestPayment(nil)),
                     .send(.sendConfirmation(.updateDestination(nil))),
                     .send(.sendConfirmation(.updateResult(nil))),
