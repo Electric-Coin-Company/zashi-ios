@@ -16,13 +16,13 @@
                     "bulletpoints": [
                         "Implementamos el aumento automático del brillo de la pantalla para mejorar el escaneo de códigos QR con Keystone.",
                         "Actualizamos el SDK de Keystone a la versión 0.7.10, que incluye mejoras adicionales en el escaneo de códigos QR.",
-                        "También optimizamos y mejoramos la lógica Keystone para dispositivos más antiguos y lentos."
+                        "También optimizamos y mejoramos la lógica de Keystone para teléfonos más antiguos y lentos."
                     ]
                 },
                 {
                     "title": "Arreglado:",
                     "bulletpoints": [
-                        "Agregamos algunas correcciones para manejar los casos en los que el Reinicio de Zashi no se completa."
+                        "Agregamos algunas correcciones para manejar los casos en los que el Restablecimiento de Zashi no se completa."
                     ]
                 }
             ]
