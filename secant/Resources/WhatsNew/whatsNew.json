@@ -15,7 +15,7 @@
                     "title": "Changed:",
                     "bulletpoints": [
                         "We implemented automatic screen brightness increase for Keystone QR code scanning.",
-                        "We updated the Keystone SDK to version 0.7.10 which includes another QR code scanning improvement.",
+                        "We updated the Keystone SDK to version 0.8.6 which includes another QR code scanning improvement.",
                         "We also optimized and improved the Keystone logic for older and slower devices."
                     ]
                 },
