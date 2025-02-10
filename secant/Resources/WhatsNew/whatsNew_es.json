@@ -15,7 +15,7 @@
                     "title": "Cambiado:",
                     "bulletpoints": [
                         "Implementamos el aumento automático del brillo de la pantalla para mejorar el escaneo de códigos QR con Keystone.",
-                        "Actualizamos el SDK de Keystone a la versión 0.7.10, que incluye mejoras adicionales en el escaneo de códigos QR.",
+                        "Actualizamos el SDK de Keystone a la versión 0.8.6, que incluye mejoras adicionales en el escaneo de códigos QR.",
                         "También optimizamos y mejoramos la lógica de Keystone para teléfonos más antiguos y lentos."
                     ]
                 },
@@ -27,7 +27,7 @@
                 }
             ]
         },
-{
+        {
             "version": "1.3.2",
             "date": "01-09-2025",
             "timestamp": 1736420570,
