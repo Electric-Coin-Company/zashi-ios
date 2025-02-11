@@ -459,6 +459,8 @@ extension Root {
                 state.$walletAccounts.withLock { $0 = [] }
                 state.$zashiWalletAccount.withLock { $0 = nil }
                 state.$transactionMemos.withLock { $0 = [:] }
+                state.$addressBookContacts.withLock { $0 = .empty }
+                state.$transactions.withLock { $0 = [] }
 
                 return .send(.resetZashiKeychainRequest)
                 
