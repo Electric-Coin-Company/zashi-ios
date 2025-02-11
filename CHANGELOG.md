@@ -9,10 +9,12 @@ directly impact users rather than highlighting other crucial architectural updat
 ### Added
 - Tap to enlarge the Keystone Animated QR code.
 - Automatic full brightness for the Keystone Animated QR code.
+- Confirm the rejection of a Keystone transaction dialog added.
 
 ### Updated
 - Keystone SDK version bumped with scan improvements.
 - Reset Zashi flow enhanced with retry logic and better error handling.
+- Keystone flows swapped the buttons for the better UX, the main CTA is the closes button for a thumb.
 
 ### Fixed
 - The sending screen occasionaly reapeared and stayed on screen forever.

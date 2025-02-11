@@ -174,12 +174,20 @@ public struct SendConfirmationView: View {
                 
                 Spacer()
                 
+                ZashiButton(L10n.Send.goBack, type: .ghost) {
+                    store.send(.goBackPressed)
+                }
+                .screenHorizontalPadding()
+                .disabled(store.isSending)
+                .padding(.top, 40)
+                .padding(.bottom, 8)
+
                 if store.selectedWalletAccount?.vendor == .keystone {
                     ZashiButton(L10n.Keystone.confirm) {
                         store.send(.confirmWithKeystoneTapped)
                     }
                     .screenHorizontalPadding()
-                    .padding(.top, 40)
+                    .padding(.bottom, 24)
                 } else {
                     if store.isSending {
                         ZashiButton(
@@ -192,25 +200,17 @@ public struct SendConfirmationView: View {
                                     )
                                 )
                         ) { }
-                            .screenHorizontalPadding()
-                            .padding(.top, 40)
-                            .disabled(store.isSending)
+                        .screenHorizontalPadding()
+                        .padding(.bottom, 24)
+                        .disabled(store.isSending)
                     } else {
                         ZashiButton(L10n.General.send) {
                             store.send(.sendPressed)
                         }
                         .screenHorizontalPadding()
-                        .padding(.top, 40)
+                        .padding(.bottom, 24)
                     }
                 }
-                
-                ZashiButton(L10n.Send.goBack, type: .tertiary) {
-                    store.send(.goBackPressed)
-                }
-                .screenHorizontalPadding()
-                .disabled(store.isSending)
-                .padding(.top, 4)
-                .padding(.bottom, 24)
             }
             .onAppear { store.send(.onAppear) }
             .screenTitle(
