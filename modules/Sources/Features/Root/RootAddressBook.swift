@@ -35,10 +35,6 @@ extension Root {
             case .contactsLoaded(let abContacts):
                 state.$addressBookContacts.withLock { $0 = abContacts }
                 return .none
-                
-            case .resetZashiSucceeded:
-                state.$addressBookContacts.withLock { $0 = .empty }
-                return .none
 
             default: return .none
             }

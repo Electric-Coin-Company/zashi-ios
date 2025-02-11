@@ -86,10 +86,6 @@ extension Root {
             case .tabs(.walletAccountTapped):
                 return .send(.fetchTransactionsForTheSelectedAccount)
 
-            case .resetZashiSucceeded:
-                state.$transactions.withLock { $0 = [] }
-                return .none
-
             default: return .none
             }
         }
