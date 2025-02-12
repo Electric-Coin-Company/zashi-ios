@@ -25,6 +25,7 @@ public struct SignWithKeystoneView: View {
     @Perception.Bindable var store: StoreOf<SendConfirmation>
 
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
+    @State var accountSwitchSheetHeight: CGFloat = .zero
 
     @State private var previousBrightness: CGFloat = UIScreen.main.brightness
     @State private var isPresented = false
@@ -145,21 +146,24 @@ public struct SignWithKeystoneView: View {
                 Spacer()
 
                 ZashiButton(
-                    L10n.Keystone.SignWith.getSignature
+                    L10n.Keystone.SignWith.reject,
+                    type: .destructive1
                 ) {
-                    store.send(.getSignatureTapped)
+                    store.send(.rejectRequested)
                 }
                 .padding(.bottom, 8)
 
                 ZashiButton(
-                    L10n.Keystone.SignWith.reject,
-                    type: .ghost
+                    L10n.Keystone.SignWith.getSignature
                 ) {
-                    store.send(.rejectTapped)
+                    store.send(.getSignatureTapped)
                 }
-                .padding(.bottom, 20)
-                
+                .padding(.bottom, 24)
+
                 shareView()
+            }
+            .sheet(isPresented: $store.rejectSendRequest) {
+                rejectSendContent(colorScheme)
             }
             .onAppear {
                 store.send(.onAppear)

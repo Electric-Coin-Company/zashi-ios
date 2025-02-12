@@ -501,3 +501,9 @@
 "accounts.zashi.transparentAddress" = "Zashi Transparent Address";
 "accounts.keystone.shieldedAddress" = "Keystone Shielded Address";
 "accounts.keystone.transparentAddress" = "Keystone Transparent Address";
+
+// Keystone iteration 1
+"keystoneTransactionReject.title" = "Are you sure?";
+"keystoneTransactionReject.msg" = "Rejecting the signature will cancel the transaction, and you’ll need to start over if you want to proceed.";
+"keystoneTransactionReject.goBack" = "Go back";
+"keystoneTransactionReject.rejectSig" = "Reject Signature";

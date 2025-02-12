@@ -81,6 +81,7 @@ public struct SendConfirmation {
         public var randomSuccessIconIndex = 0
         public var randomFailureIconIndex = 0
         public var randomResubmissionIconIndex = 0
+        public var rejectSendRequest = false
         public var result: Result?
         public var scanState: Scan.State = .initial
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
@@ -163,6 +164,8 @@ public struct SendConfirmation {
         case onAppear
         case partialProposalError(PartialProposalError.Action)
         case partialProposalErrorDismiss
+        case rejectRequestCanceled
+        case rejectRequested
         case rejectTapped
         case reportTapped
         case saveAddressTapped(RedactableString)
@@ -463,6 +466,14 @@ public struct SendConfirmation {
                 state.isKeystoneCodeFound = false
                 keystoneHandler.resetQRDecoder()
                 return .send(.updateStackDestination(.scan))
+            
+            case .rejectRequestCanceled:
+                state.rejectSendRequest = false
+                return .none
+
+            case .rejectRequested:
+                state.rejectSendRequest = true
+                return .none
                 
             case .rejectTapped:
                 return .send(.resetPCZTs)

@@ -70,6 +70,7 @@ public enum Asset {
     public static let flyReceivedFilled = ImageAsset(name: "flyReceivedFilled")
     public enum Icons {
       public static let alertCircle = ImageAsset(name: "alertCircle")
+      public static let arrowUp = ImageAsset(name: "arrowUp")
       public static let authKey = ImageAsset(name: "authKey")
       public static let coinsHand = ImageAsset(name: "coinsHand")
       public static let connectWallet = ImageAsset(name: "connectWallet")

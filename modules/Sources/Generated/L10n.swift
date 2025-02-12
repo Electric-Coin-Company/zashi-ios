@@ -407,6 +407,16 @@ public enum L10n {
       public static let title = L10n.tr("Localizable", "keystone.signWith.title", fallback: "Scan with your Keystone wallet")
     }
   }
+  public enum KeystoneTransactionReject {
+    /// Go back
+    public static let goBack = L10n.tr("Localizable", "keystoneTransactionReject.goBack", fallback: "Go back")
+    /// Rejecting the signature will cancel the transaction, and you’ll need to start over if you want to proceed. This action cannot be undone.
+    public static let msg = L10n.tr("Localizable", "keystoneTransactionReject.msg", fallback: "Rejecting the signature will cancel the transaction, and you’ll need to start over if you want to proceed. This action cannot be undone.")
+    /// Reject Signature
+    public static let rejectSig = L10n.tr("Localizable", "keystoneTransactionReject.rejectSig", fallback: "Reject Signature")
+    /// Are you sure?
+    public static let title = L10n.tr("Localizable", "keystoneTransactionReject.title", fallback: "Are you sure?")
+  }
   public enum LocalAuthentication {
     /// The Following content requires authentication.
     public static let reason = L10n.tr("Localizable", "localAuthentication.reason", fallback: "The Following content requires authentication.")
