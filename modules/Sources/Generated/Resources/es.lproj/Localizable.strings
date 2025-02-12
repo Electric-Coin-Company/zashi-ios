@@ -365,8 +365,8 @@
 "root.initialization.alert.cantStoreThatUserPassedPhraseBackupTest.message" = "No se puede almacenar la información de que el usuario pasó la prueba de respaldo de frase. Error: %@";
 "root.initialization.alert.wipe.title" = "Borrado de la billetera";
 "root.initialization.alert.wipe.message" = "¿Estás seguro?";
-"root.initialization.alert.wipeFailed.title" = "Falló el borrado de la billetera";
-"root.initialization.alert.wipeFailed.message" = "Wallet deletion only partially succeeded. Please retry to finish the resetting process.";
+"root.initialization.alert.wipeFailed.title" = "La eliminación de la billetera falló";
+"root.initialization.alert.wipeFailed.message" = "La eliminación de la billetera solo tuvo éxito parcialmente. Por favor, intenta de nuevo para completar el proceso de restablecimiento.";
 
 "root.destination.alert.failedToProcessDeeplink.title" = "No se pudo procesar el enlace profundo.";
 "root.destination.alert.failedToProcessDeeplink.message" = "Enlace profundo: \(%@))\nError: \(%@) (código: %@)";
@@ -503,7 +503,7 @@
 "accounts.keystone.transparentAddress" = "Dirección Transparente de Keystone";
 
 // Keystone iteration 1
-"keystoneTransactionReject.title" = "Are you sure?";
-"keystoneTransactionReject.msg" = "Rejecting the signature will cancel the transaction, and you’ll need to start over if you want to proceed. This action cannot be undone.";
-"keystoneTransactionReject.goBack" = "Go back";
-"keystoneTransactionReject.rejectSig" = "Reject Signature";
+"keystoneTransactionReject.title" = "¿Estás seguro?";
+"keystoneTransactionReject.msg" = "Rechazar la firma cancelará la transacción y tendrás que empezar de nuevo si deseas continuar.";
+"keystoneTransactionReject.goBack" = "Volver";
+"keystoneTransactionReject.rejectSig" = "Rechazar firma";
