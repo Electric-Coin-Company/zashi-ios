@@ -17,6 +17,7 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
     var placeholder: String
     var title: String?
     var error: String?
+    let eraseAction: (() -> Void)?
     
     @ViewBuilder let accessoryView: AccessoryContent?
     @ViewBuilder let prefixView: PrefixContent?
@@ -27,6 +28,7 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
         placeholder: String = "",
         title: String? = nil,
         error: String? = nil,
+        eraseAction: (() -> Void)? = nil,
         accessoryView: AccessoryContent? = EmptyView(),
         prefixView: PrefixContent? = EmptyView()
     ) {
@@ -35,6 +37,7 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
         self.placeholder = placeholder
         self.title = title
         self.error = error
+        self.eraseAction = eraseAction
         self.accessoryView = accessoryView
         self.prefixView = prefixView
     }
@@ -65,6 +68,7 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
                             .foregroundColor(Design.Inputs.Default.text.color(colorScheme))
                 )
                 .autocapitalization(.none)
+                .autocorrectionDisabled()
                 .font(.custom(
                     addressFont
                     ? FontFamily.RobotoMono.regular.name
@@ -78,8 +82,17 @@ public struct ZashiTextField<PrefixContent, AccessoryContent>: View where Prefix
                 Spacer()
                 
                 if let accessoryView {
-                    accessoryView
-                        .padding(.leading, 8)
+                    if let eraseAction {
+                        Button {
+                            eraseAction()
+                        } label: {
+                            accessoryView
+                                .padding(.leading, 8)
+                        }
+                    } else {
+                        accessoryView
+                            .padding(.leading, 8)
+                    }
                 }
             }
             .padding(.vertical, 12)

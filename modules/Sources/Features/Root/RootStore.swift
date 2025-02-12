@@ -32,6 +32,8 @@ import LocalAuthenticationHandler
 import DeeplinkWarning
 import URIParser
 import OSStatusError
+import AddressBookClient
+import UserMetadataProvider
 
 @Reducer
 public struct Root {
@@ -50,8 +52,13 @@ public struct Root {
 
     @ObservableState
     public struct State: Equatable {
+        public var CancelEventId = UUID()
+        public var CancelStateId = UUID()
+        public var CancelUMTimerId = UUID()
+
         public var addressBookBinding: Bool = false
         public var addressBookContactBinding: Bool = false
+        @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         public var addressBookState: AddressBook.State
         @Presents public var alert: AlertState<Action>?
         public var appInitializationState: InitializationState = .uninitialized
@@ -66,6 +73,7 @@ public struct Root {
         public var isLockedInKeychainUnavailableState = false
         public var isRestoringWallet = false
         @Shared(.appStorage(.lastAuthenticationTimestamp)) public var lastAuthenticationTimestamp: Int = 0
+        public var lastUserMetadataSyncTimestamp: TimeInterval?
         public var maxResetZashiAppAttempts = ResetZashiConstants.maxResetZashiAppAttempts
         public var maxResetZashiSDKAttempts = ResetZashiConstants.maxResetZashiSDKAttempts
         public var notEnoughFreeSpaceState: NotEnoughFreeSpace.State
@@ -77,6 +85,8 @@ public struct Root {
         public var serverSetupViewBinding: Bool = false
         public var splashAppeared = false
         public var tabsState: Tabs.State
+        @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
+        @Shared(.inMemory(.transactionMemos)) public var transactionMemos: [String: [String]] = [:]
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         public var walletConfig: WalletConfig
         @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
@@ -162,8 +172,25 @@ public struct Root {
         case updateStateAfterConfigUpdate(WalletConfig)
         case walletConfigLoaded(WalletConfig)
         case welcome(Welcome.Action)
+        
+        // Transactions
+        case observeTransactions
+        case foundTransactions([ZcashTransaction.Overview])
+        case minedTransaction(ZcashTransaction.Overview)
+        case fetchTransactionsForTheSelectedAccount
+        case fetchedTransactions([TransactionState])
+        case noChangeInTransactions
+        
+        // Address Book
+        case loadContacts
+        case contactsLoaded(AddressBookContacts)
+        
+        // UserMetadata
+        case loadUserMetadata
+        case userMetadataSync(Date)
     }
 
+    @Dependency(\.addressBook) var addressBook
     @Dependency(\.autolockHandler) var autolockHandler
     @Dependency(\.crashReporter) var crashReporter
     @Dependency(\.databaseFiles) var databaseFiles
@@ -180,6 +207,7 @@ public struct Root {
     @Dependency(\.sdkSynchronizer) var sdkSynchronizer
     @Dependency(\.uriParser) var uriParser
     @Dependency(\.userDefaults) var userDefaults
+    @Dependency(\.userMetadataProvider) var userMetadataProvider
     @Dependency(\.userStoredPreferences) var userStoredPreferences
     @Dependency(\.walletConfigProvider) var walletConfigProvider
     @Dependency(\.walletStorage) var walletStorage
@@ -235,6 +263,12 @@ public struct Root {
         destinationReduce()
         
         debugReduce()
+        
+        transactionsReduce()
+        
+        addressBookReduce()
+        
+        userMetadataReduce()
     }
     
     public var body: some Reducer<State, Action> {
@@ -255,13 +289,6 @@ public struct Root {
 
             case .addressBookContactBinding(let newValue):
                 state.addressBookContactBinding = newValue
-                return .none
-
-            case .tabs(.home(.transactionList(.saveAddressTapped(let address)))):
-                state.addressBookContactBinding = true
-                state.addressBookState.isValidZcashAddress = true
-                state.addressBookState.isNameFocused = true
-                state.addressBookState.address = address.data
                 return .none
 
             case .tabs(.send(.addNewContactTapped(let address))):
@@ -423,6 +450,13 @@ extension AlertState where Action == Root.Action {
     public static func walletStateFailed(_ walletState: InitializationState) -> AlertState {
         AlertState {
             TextState(L10n.Root.Initialization.Alert.Failed.title)
+        } actions: {
+            ButtonState(role: .destructive, action: .initialization(.resetZashi)) {
+                TextState(L10n.Settings.deleteZashi)
+            }
+            ButtonState(role: .cancel, action: .alert(.dismiss)) {
+                TextState(L10n.General.ok)
+            }
         } message: {
             TextState(L10n.Root.Initialization.Alert.WalletStateFailed.message(walletState))
         }

@@ -42,8 +42,8 @@ public enum Design {
         case disabled
         case error
         case link
-        case light
-        case lightSupport
+        case opposite
+        case oppositeSupport
     }
 
     public enum Btns {
@@ -198,6 +198,19 @@ public enum Design {
         case disabledFg
     }
     
+    public enum Dropdowns {
+        public enum Default: Colorable {
+            case bg
+            case label
+            case text
+            case hint
+            case required
+            case icon
+            case dropdown
+            case active
+        }
+    }
+    
     public enum Utility {
         public enum Gray: Colorable {
             case _50
@@ -345,8 +358,8 @@ public extension Design.Text {
         case .disabled: return Design.col(Asset.Colors.ZDesign.gray300.color, Asset.Colors.ZDesign.shark600.color, colorScheme)
         case .error: return Design.col(Asset.Colors.ZDesign.errorRed500.color, Asset.Colors.ZDesign.errorRed300.color, colorScheme)
         case .link: return Design.col(Asset.Colors.ZDesign.hyperBlue500.color, Asset.Colors.ZDesign.hyperBlue300.color, colorScheme)
-        case .light: return Design.col(Asset.Colors.ZDesign.gray25.color, Asset.Colors.ZDesign.shark50.color, colorScheme)
-        case .lightSupport: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark200.color, colorScheme)
+        case .opposite: return Design.col(Asset.Colors.ZDesign.gray25.color, Asset.Colors.ZDesign.Base.obsidian.color, colorScheme)
+        case .oppositeSupport: return Design.col(Asset.Colors.ZDesign.gray200.color, Asset.Colors.ZDesign.shark700.color, colorScheme)
         }
     }
 }
@@ -551,6 +564,21 @@ public extension Design.HintTooltips {
         case .focusedStroke: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color, colorScheme)
         case .disabledBg: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark800.color, colorScheme)
         case .disabledFg: return Design.col(Asset.Colors.ZDesign.gray400.color, Asset.Colors.ZDesign.shark600.color, colorScheme)
+        }
+    }
+}
+
+public extension Design.Dropdowns.Default {
+    func color(_ colorScheme: ColorScheme) -> Color {
+        switch self {
+        case .bg: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark900.color, colorScheme)
+        case .label: return Design.col(Asset.Colors.ZDesign.Base.obsidian.color, Asset.Colors.ZDesign.shark50.color, colorScheme)
+        case .text: return Design.col(Asset.Colors.ZDesign.gray600.color, Asset.Colors.ZDesign.shark400.color, colorScheme)
+        case .hint: return Design.col(Asset.Colors.ZDesign.gray700.color, Asset.Colors.ZDesign.shark300.color, colorScheme)
+        case .required: return Design.col(Asset.Colors.ZDesign.errorRed600.color, Asset.Colors.ZDesign.errorRed400.color, colorScheme)
+        case .icon: return Design.col(Asset.Colors.ZDesign.gray400.color, Asset.Colors.ZDesign.shark400.color, colorScheme)
+        case .dropdown: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color, colorScheme)
+        case .active: return Design.col(Asset.Colors.ZDesign.successGreen500.color, Asset.Colors.ZDesign.successGreen400.color, colorScheme)
         }
     }
 }

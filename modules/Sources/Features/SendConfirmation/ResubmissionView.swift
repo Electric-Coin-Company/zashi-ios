@@ -13,6 +13,8 @@ import Generated
 import UIComponents
 import Utils
 import PartialProposalError
+import AddressBook
+import TransactionDetails
 
 public struct ResubmissionView: View {
     @Perception.Bindable var store: StoreOf<SendConfirmation>
@@ -42,14 +44,16 @@ public struct ResubmissionView: View {
                     .lineSpacing(1.5)
                     .screenHorizontalPadding()
 
-                ZashiButton(
-                    L10n.Send.viewTransaction,
-                    type: .tertiary,
-                    infinityWidth: false
-                ) {
-                    store.send(.viewTransactionTapped)
+                if store.txIdToExpand != nil {
+                    ZashiButton(
+                        L10n.Send.viewTransaction,
+                        type: .tertiary,
+                        infinityWidth: false
+                    ) {
+                        store.send(.viewTransactionTapped)
+                    }
+                    .padding(.top, 16)
                 }
-                .padding(.top, 16)
 
                 Spacer()
 
@@ -58,6 +62,21 @@ public struct ResubmissionView: View {
                 }
                 .padding(.bottom, 24)
             }
+            .navigationLinkEmpty(
+                isActive: store.bindingForStackTransactions(.details),
+                destination: {
+                    TransactionDetailsView(
+                        store: store.transactionDetailsStore(),
+                        tokenName: tokenName
+                    )
+                    .navigationLinkEmpty(
+                        isActive: store.bindingForStackTransactions(.addressBook),
+                        destination: {
+                            AddressBookContactView(store: store.addressBookStore())
+                        }
+                    )
+                }
+            )
         }
         .navigationBarBackButtonHidden()
         .padding(.vertical, 1)

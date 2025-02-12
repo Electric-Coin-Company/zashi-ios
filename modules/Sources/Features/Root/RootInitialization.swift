@@ -248,7 +248,7 @@ extension Root {
                     zcashNetwork: zcashSDKEnvironment.network
                 )
                 return .send(.initialization(.respondToWalletInitializationState(walletState)))
-                
+
                 /// Respond to all possible states of the wallet and initiate appropriate side effects including errors handling
             case .initialization(.respondToWalletInitializationState(let walletState)):
                 switch walletState {
@@ -373,7 +373,9 @@ extension Root {
                             .map(Root.Action.batteryStateChanged)
                     }
                     .cancellable(id: CancelBatteryStateId, cancelInFlight: true),
-                    .send(.batteryStateChanged(nil))
+                    .send(.batteryStateChanged(nil)),
+                    .send(.observeTransactions),
+                    .send(.loadUserMetadata)
                 )
                 
             case .initialization(.loadedWalletAccounts(let walletAccounts)):
@@ -387,46 +389,44 @@ extension Root {
                         }
                     }
                 }
-                return .none
+                return .send(.loadContacts)
                 
             case .initialization(.checkBackupPhraseValidation):
+                let storedWallet: StoredWallet
                 do {
-                    let storedWallet: StoredWallet
-                    do {
-                        storedWallet = try walletStorage.exportWallet()
-                    } catch {
-                        return .send(.destination(.updateDestination(.osStatusError)))
-                    }
-                    var landingDestination = Root.DestinationState.Destination.tabs
-
-                    if !storedWallet.hasUserPassedPhraseBackupTest {
-                        let phraseWords = mnemonic.asWords(storedWallet.seedPhrase.value())
-                        
-                        let recoveryPhrase = RecoveryPhrase(words: phraseWords.map { $0.redacted })
-                        state.phraseDisplayState.phrase = recoveryPhrase
-                        state.phraseDisplayState.birthday = storedWallet.birthday
-                        if let value = storedWallet.birthday?.value() {
-                            let latestBlock = numberFormatter.string(NSDecimalNumber(value: value))
-                            state.phraseDisplayState.birthdayValue = "\(String(describing: latestBlock ?? ""))"
-                        }
-                        landingDestination = .phraseDisplay
-                    }
-                    
-                    state.appInitializationState = .initialized
-                    let isAtDeeplinkWarningScreen = state.destinationState.destination == .deeplinkWarning
-
-                    return .run { [landingDestination] send in
-                        if landingDestination == .tabs {
-                            await send(.tabs(.home(.transactionList(.onAppear))))
-                        }
-                        try await mainQueue.sleep(for: .seconds(0.5))
-                        if !isAtDeeplinkWarningScreen {
-                            await send(.destination(.updateDestination(landingDestination)))
-                        }
-                    }
-                    .cancellable(id: CancelId, cancelInFlight: true)
+                    storedWallet = try walletStorage.exportWallet()
+                } catch {
+                    return .send(.destination(.updateDestination(.osStatusError)))
                 }
-
+                var landingDestination = Root.DestinationState.Destination.tabs
+                
+                if !storedWallet.hasUserPassedPhraseBackupTest {
+                    let phraseWords = mnemonic.asWords(storedWallet.seedPhrase.value())
+                    
+                    let recoveryPhrase = RecoveryPhrase(words: phraseWords.map { $0.redacted })
+                    state.phraseDisplayState.phrase = recoveryPhrase
+                    state.phraseDisplayState.birthday = storedWallet.birthday
+                    if let value = storedWallet.birthday?.value() {
+                        let latestBlock = numberFormatter.string(NSDecimalNumber(value: value))
+                        state.phraseDisplayState.birthdayValue = "\(String(describing: latestBlock ?? ""))"
+                    }
+                    landingDestination = .phraseDisplay
+                }
+                
+                state.appInitializationState = .initialized
+                let isAtDeeplinkWarningScreen = state.destinationState.destination == .deeplinkWarning
+                
+                return .run { [landingDestination] send in
+                    if landingDestination == .tabs {
+                        await send(.tabs(.home(.transactionList(.onAppear))))
+                    }
+                    try await mainQueue.sleep(for: .seconds(0.5))
+                    if !isAtDeeplinkWarningScreen {
+                        await send(.destination(.updateDestination(landingDestination)))
+                    }
+                }
+                .cancellable(id: CancelId, cancelInFlight: true)
+                
             case .initialization(.resetZashiRequest):
                 state.alert = AlertState.wipeRequest()
                 return .none
@@ -458,6 +458,10 @@ extension Root {
                 state.$selectedWalletAccount.withLock { $0 = nil }
                 state.$walletAccounts.withLock { $0 = [] }
                 state.$zashiWalletAccount.withLock { $0 = nil }
+                state.$transactionMemos.withLock { $0 = [:] }
+                state.$addressBookContacts.withLock { $0 = .empty }
+                state.$transactions.withLock { $0 = [] }
+
                 return .send(.resetZashiKeychainRequest)
                 
             case .resetZashiKeychainRequest:
@@ -636,7 +640,7 @@ extension Root {
                 
             case .tabs, .destination, .onboarding, .phraseDisplay, .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated,
                     .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, 
-                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects, .flexaOnTransactionRequest, .flexaTransactionFailed, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted, .deeplinkWarning, .osStatusError:
+                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects, .flexaOnTransactionRequest, .flexaTransactionFailed, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted, .deeplinkWarning, .osStatusError, .observeTransactions, .foundTransactions, .minedTransaction, .fetchTransactionsForTheSelectedAccount, .fetchedTransactions, .noChangeInTransactions, .loadContacts, .contactsLoaded, .loadUserMetadata, .userMetadataSync:
                 return .none
             }
         }
