@@ -474,8 +474,8 @@ public enum L10n {
   public enum KeystoneTransactionReject {
     /// Go back
     public static let goBack = L10n.tr("Localizable", "keystoneTransactionReject.goBack", fallback: "Go back")
-    /// Rejecting the signature will cancel the transaction, and you’ll need to start over if you want to proceed. This action cannot be undone.
-    public static let msg = L10n.tr("Localizable", "keystoneTransactionReject.msg", fallback: "Rejecting the signature will cancel the transaction, and you’ll need to start over if you want to proceed. This action cannot be undone.")
+    /// Rejecting the signature will cancel the transaction, and you’ll need to start over if you want to proceed.
+    public static let msg = L10n.tr("Localizable", "keystoneTransactionReject.msg", fallback: "Rejecting the signature will cancel the transaction, and you’ll need to start over if you want to proceed.")
     /// Reject Signature
     public static let rejectSig = L10n.tr("Localizable", "keystoneTransactionReject.rejectSig", fallback: "Reject Signature")
     /// Are you sure?
