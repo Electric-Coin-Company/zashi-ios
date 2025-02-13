@@ -39,12 +39,12 @@ public struct Tooltip: View {
                 VStack(alignment: .leading) {
                     Text(title)
                         .font(.custom(FontFamily.Inter.semiBold.name, size: 16))
-                        .zForegroundColor(Design.Text.light)
+                        .zForegroundColor(Design.Text.primary)
                         .padding(.bottom, 4)
                     
                     Text(desc)
                         .font(.custom(FontFamily.Inter.medium.name, size: 14))
-                        .zForegroundColor(Design.Text.lightSupport)
+                        .zForegroundColor(Design.Text.primary)
                         .lineLimit(nil)
                         .lineSpacing(1.5)
                 }

@@ -10,6 +10,8 @@ import ComposableArchitecture
 
 import Generated
 import UIComponents
+import AddKeystoneHWWallet
+import Scan
 
 import Flexa
 
@@ -35,7 +37,7 @@ public struct IntegrationsView: View {
                                 title: L10n.Settings.buyZecCB,
                                 desc: L10n.Settings.coinbaseDesc,
                                 customIcon: true,
-                                divider: !store.featureFlags.flexa
+                                divider: store.featureFlags.flexa
                             ) {
                                 store.send(.buyZecTapped)
                             }
@@ -49,7 +51,7 @@ public struct IntegrationsView: View {
                                 title: L10n.Settings.flexa,
                                 desc: L10n.Settings.flexaDesc,
                                 customIcon: true,
-                                divider: false
+                                divider: !store.isKeystoneConnected
                             ) {
                                 store.send(.flexaTapped)
                             }
@@ -66,6 +68,18 @@ public struct IntegrationsView: View {
                                 .zFont(size: 12, style: Design.Utility.WarningYellow._700)
                                 .padding(.vertical, 12)
                                 .screenHorizontalPadding()
+                            }
+                        }
+                        
+                        if !store.isKeystoneConnected {
+                            ActionRow(
+                                icon: Asset.Assets.Partners.keystone.image,
+                                title: L10n.Settings.keystone,
+                                desc: L10n.Settings.keystoneDesc,
+                                customIcon: true,
+                                divider: false
+                            ) {
+                                store.send(.keystoneTapped)
                             }
                         }
                     }
@@ -103,6 +117,30 @@ public struct IntegrationsView: View {
                 .padding(.bottom, 24)
                 .screenHorizontalPadding()
             }
+            .navigationLinkEmpty(
+                isActive: store.bindingForStackAddKeystoneKWWallet(.addKeystoneHWWallet),
+                destination: {
+                    AddKeystoneHWWalletView(
+                        store: store.addKeystoneHWWalletStore()
+                    )
+                    .navigationLinkEmpty(
+                        isActive: store.bindingForStackAddKeystoneKWWallet(.scan),
+                        destination: {
+                            ScanView(
+                                store: store.scanStore()
+                            )
+                            .navigationLinkEmpty(
+                                isActive: store.bindingForStackAddKeystoneKWWallet(.accountSelection),
+                                destination: {
+                                    AccountsSelectionView(
+                                        store: store.addKeystoneHWWalletStore()
+                                    )
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
         .applyScreenBackground()
         .listStyle(.plain)
@@ -117,6 +155,57 @@ public struct IntegrationsView: View {
 #Preview {
     NavigationView {
         IntegrationsView(store: .initial)
+    }
+}
+
+// MARK: - Store
+
+extension StoreOf<Integrations> {
+    func addKeystoneHWWalletStore() -> StoreOf<AddKeystoneHWWallet> {
+        self.scope(
+            state: \.addKeystoneHWWalletState,
+            action: \.addKeystoneHWWallet
+        )
+    }
+    
+    func scanStore() -> StoreOf<Scan> {
+        self.scope(
+            state: \.scanState,
+            action: \.scan
+        )
+    }
+}
+
+// MARK: - ViewStore
+
+extension StoreOf<Integrations> {
+    func bindingForStackAddKeystoneKWWallet(_ destination: Integrations.State.StackDestinationAddKeystoneHWWallet) -> Binding<Bool> {
+        Binding<Bool>(
+            get: {
+                if let currentStackValue = self.stackDestinationAddKeystoneHWWallet?.rawValue {
+                    return currentStackValue >= destination.rawValue
+                } else {
+                    if destination.rawValue == 0 {
+                        return false
+                    } else if destination.rawValue <= self.stackDestinationAddKeystoneHWWalletBindingsAlive {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+            },
+            set: { _ in
+                if let currentStackValue = self.stackDestinationAddKeystoneHWWallet?.rawValue, currentStackValue == destination.rawValue {
+                    let popIndex = destination.rawValue - 1
+                    if popIndex >= 0 {
+                        let popDestination = Integrations.State.StackDestinationAddKeystoneHWWallet(rawValue: popIndex)
+                        self.send(.updateStackDestinationAddKeystoneHWWallet(popDestination))
+                    } else {
+                        self.send(.updateStackDestinationAddKeystoneHWWallet(nil))
+                    }
+                }
+            }
+        )
     }
 }
 
