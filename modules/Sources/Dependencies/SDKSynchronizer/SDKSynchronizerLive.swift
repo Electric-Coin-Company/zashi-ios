@@ -54,13 +54,13 @@ extension SDKSynchronizerClient: DependencyKey {
             latestState: { synchronizer.latestState },
             prepareWith: {
                 seedBytes,
-                walletBirtday,
+                walletBirthday,
                 walletMode,
                 name,
                 keySource in
                 let result = try await synchronizer.prepare(
                     with: seedBytes,
-                    walletBirthday: walletBirtday,
+                    walletBirthday: walletBirthday,
                     for: walletMode,
                     name: name,
                     keySource: keySource
@@ -99,7 +99,7 @@ extension SDKSynchronizerClient: DependencyKey {
                     var hasTransparentOutputs = false
                     let outputs = await synchronizer.getTransactionOutputs(for: clearedTransaction)
                     for output in outputs {
-                        if case .transaparent = output.pool {
+                        if case .transparent = output.pool {
                             hasTransparentOutputs = true
                             break
                         }
@@ -306,9 +306,9 @@ extension SDKSynchronizerClient: DependencyKey {
     }
 }
 
-// TODO: [#1313] SDK improvements so a client doesn't need to determing if the transaction isPending
+// TODO: [#1313] SDK improvements so a client doesn't need to determine if the transaction isPending
 // https://github.com/zcash/ZcashLightClientKit/issues/1313
-// Once #1313 is done, cleint will no longer need to call for a `latestHeight()`
+// Once #1313 is done, client will no longer need to call for a `latestHeight()`
 private extension SDKSynchronizerClient {
     static func latestBlockHeight(synchronizer: SDKSynchronizer) async throws -> BlockHeight {
         let latestBlockHeight: BlockHeight
