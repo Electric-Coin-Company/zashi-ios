@@ -13,6 +13,7 @@ import ZcashLightClientKit
 import PartnerKeys
 import CurrencyConversionSetup
 import Flexa
+import ExportTransactionHistory
 
 @Reducer
 public struct AdvancedSettings {
@@ -22,6 +23,7 @@ public struct AdvancedSettings {
             case backupPhrase
             case currencyConversionSetup
             case deleteWallet
+            case exportTransactionHistory
             case privateDataConsent
             case serverSetup
         }
@@ -30,10 +32,12 @@ public struct AdvancedSettings {
         public var currencyConversionSetupState: CurrencyConversionSetup.State
         public var deleteWalletState: DeleteWallet.State
         public var destination: Destination?
+        public var exportTransactionHistoryState: ExportTransactionHistory.State = .initial
         public var isEnoughFreeSpaceMode = true
         public var phraseDisplayState: RecoveryPhraseDisplay.State
         public var privateDataConsentState: PrivateDataConsent.State
         public var serverSetupState: ServerSetup.State
+        @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
 
         public init(
             currencyConversionSetupState: CurrencyConversionSetup.State,
@@ -58,6 +62,7 @@ public struct AdvancedSettings {
         case binding(BindingAction<AdvancedSettings.State>)
         case currencyConversionSetup(CurrencyConversionSetup.Action)
         case deleteWallet(DeleteWallet.Action)
+        case exportTransactionHistory(ExportTransactionHistory.Action)
         case onAppear
         case phraseDisplay(RecoveryPhraseDisplay.Action)
         case privateDataConsent(PrivateDataConsent.Action)
@@ -73,6 +78,10 @@ public struct AdvancedSettings {
     public var body: some Reducer<State, Action> {
         BindingReducer()
         
+        Scope(state: \.exportTransactionHistoryState, action: \.exportTransactionHistory) {
+            ExportTransactionHistory()
+        }
+        
         Reduce { state, action in
             switch action {
             case .onAppear:
@@ -85,6 +94,9 @@ public struct AdvancedSettings {
             case .currencyConversionSetup:
                 return .none
 
+            case .exportTransactionHistory:
+                return .none
+                
             case .protectedAccessRequest(let destination):
                 return .run { send in
                     if await localAuthentication.authenticate() {

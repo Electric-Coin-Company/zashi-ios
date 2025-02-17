@@ -32,6 +32,7 @@ let package = Package(
         .library(name: "DiskSpaceChecker", targets: ["DiskSpaceChecker"]),
         .library(name: "ExchangeRate", targets: ["ExchangeRate"]),
         .library(name: "ExportLogs", targets: ["ExportLogs"]),
+        .library(name: "ExportTransactionHistory", targets: ["ExportTransactionHistory"]),
         .library(name: "FeedbackGenerator", targets: ["FeedbackGenerator"]),
         .library(name: "FileManager", targets: ["FileManager"]),
         .library(name: "FlexaHandler", targets: ["FlexaHandler"]),
@@ -72,6 +73,7 @@ let package = Package(
         .library(name: "SyncProgress", targets: ["SyncProgress"]),
         .library(name: "ReadTransactionsStorage", targets: ["ReadTransactionsStorage"]),
         .library(name: "Tabs", targets: ["Tabs"]),
+        .library(name: "TaxExporter", targets: ["TaxExporter"]),
         .library(name: "TransactionList", targets: ["TransactionList"]),
         .library(name: "UIComponents", targets: ["UIComponents"]),
         .library(name: "URIParser", targets: ["URIParser"]),
@@ -335,6 +337,19 @@ let package = Package(
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
             path: "Sources/Features/ExportLogs"
+        ),
+        .target(
+            name: "ExportTransactionHistory",
+            dependencies: [
+                "Generated",
+                "Models",
+                "SDKSynchronizer",
+                "TaxExporter",
+                "UIComponents",
+                "Utils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Features/ExportTransactionHistory"
         ),
         .target(
             name: "FeedbackGenerator",
@@ -781,6 +796,7 @@ let package = Package(
                 "AppVersion",
                 "CurrencyConversionSetup",
                 "DeleteWallet",
+                "ExportTransactionHistory",
                 "Generated",
                 "LocalAuthenticationHandler",
                 "Models",
@@ -853,6 +869,15 @@ let package = Package(
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
             path: "Sources/Features/Tabs"
+        ),
+        .target(
+            name: "TaxExporter",
+            dependencies: [
+                "Generated",
+                "Models",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "Sources/Dependencies/TaxExporter"
         ),
         .target(
             name: "TransactionList",

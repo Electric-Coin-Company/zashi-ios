@@ -507,3 +507,11 @@
 "keystoneTransactionReject.msg" = "Rechazar la firma cancelará la transacción y tendrás que empezar de nuevo si deseas continuar.";
 "keystoneTransactionReject.goBack" = "Volver";
 "keystoneTransactionReject.rejectSig" = "Rechazar firma";
+
+// Transaction History Tax Export
+"taxExport.fileName" = "%@_transaction_history_%@.csv";
+"taxExport.download" = "Download";
+"taxExport.title" = "Data Export";
+"taxExport.taxFile" = "Export Tax File";
+"taxExport.desc" = "Download your %@ transaction history from the previous calendar year in a .csv format.";
+"taxExport.shareDesc" = "%@ transaction history";

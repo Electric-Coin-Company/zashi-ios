@@ -16,4 +16,8 @@ extension Zatoshi {
     public func decimalZashiFullFormatted() -> String {
         NumberFormatter.zcashNumberFormatter8FractionDigits.string(from: decimalValue.roundedZec) ?? ""
     }
+    
+    public func decimalZashiUSFormatted() -> String {
+        NumberFormatter.zashiUSBalanceFormatter.string(from: decimalValue.roundedZec) ?? ""
+    }
 }

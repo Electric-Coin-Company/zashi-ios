@@ -12,7 +12,6 @@ import Models
 import Generated
 import Utils
 import SwiftUI
-import ExportLogs
 import DatabaseFiles
 import ExportLogs
 import ZcashSDKEnvironment
@@ -29,7 +28,6 @@ public struct PrivateDataConsent {
         public var isExportingLogs: Bool
         public var dataDbURL: [URL] = []
         public var exportLogsState: ExportLogs.State
-        @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
         
         public var isExportPossible: Bool {
             !isExportingData && !isExportingLogs && isAcknowledged

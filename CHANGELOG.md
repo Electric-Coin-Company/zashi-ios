@@ -7,6 +7,11 @@ directly impact users rather than highlighting other crucial architectural updat
 ## [Unreleased]
 
 ### Added
+- Export transaction history as a CSV file in the Advanced Settings.
+
+## 1.3.3 build 7 (2025-02-10)
+
+### Added
 - Tap to enlarge the Keystone Animated QR code.
 - Automatic full brightness for the Keystone Animated QR code.
 - Confirm the rejection of a Keystone transaction dialog added.
