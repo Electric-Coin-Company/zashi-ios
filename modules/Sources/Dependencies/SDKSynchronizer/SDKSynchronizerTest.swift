@@ -46,6 +46,7 @@ extension SDKSynchronizerClient: TestDependencyKey {
         addProofsToPCZT: unimplemented("\(Self.self).addProofsToPCZT", placeholder: Pczt()),
         createTransactionFromPCZT: unimplemented("\(Self.self).createTransactionFromPCZT", placeholder: .success(txIds: [])),
         urEncoderForPCZT: unimplemented("\(Self.self).urEncoderForPCZT", placeholder: nil),
+        redactPCZTForSigner: unimplemented("\(Self.self).redactPCZTForSigner", placeholder: Pczt()),
         fetchTxidsWithMemoContaining: unimplemented("\(Self.self).fetchTxidsWithMemoContaining", placeholder: [])
     )
 }
@@ -83,6 +84,7 @@ extension SDKSynchronizerClient {
         addProofsToPCZT: { _ in Pczt() },
         createTransactionFromPCZT: { _, _ in .success(txIds: []) },
         urEncoderForPCZT: { _ in nil },
+        redactPCZTForSigner: { _ in Pczt() },
         fetchTxidsWithMemoContaining: { _ in [] }
     )
 
@@ -191,6 +193,7 @@ extension SDKSynchronizerClient {
         addProofsToPCZT: @escaping (Data) async throws -> Pczt = { _ in Pczt() },
         createTransactionFromPCZT: @escaping (Pczt, Pczt) async throws -> CreateProposedTransactionsResult = { _, _ in .success(txIds: []) },
         urEncoderForPCZT: @escaping (Pczt) -> UREncoder? = { _ in nil },
+        redactPCZTForSigner: @escaping (Pczt) async throws -> Pczt = { _ in Pczt() },
         fetchTxidsWithMemoContaining: @escaping (String) async throws -> [Data] = { _ in [] }
     ) -> SDKSynchronizerClient {
         SDKSynchronizerClient(
@@ -225,6 +228,7 @@ extension SDKSynchronizerClient {
             addProofsToPCZT: addProofsToPCZT,
             createTransactionFromPCZT: createTransactionFromPCZT,
             urEncoderForPCZT: urEncoderForPCZT,
+            redactPCZTForSigner: redactPCZTForSigner,
             fetchTxidsWithMemoContaining: fetchTxidsWithMemoContaining
         )
     }

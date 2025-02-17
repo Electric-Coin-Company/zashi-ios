@@ -89,6 +89,7 @@ public struct SendConfirmation {
         public var randomSuccessIconIndex = 0
         public var randomFailureIconIndex = 0
         public var randomResubmissionIconIndex = 0
+        public var redactedPcztForSigner: Pczt?
         public var rejectSendRequest = false
         public var result: Result?
         public var scanState: Scan.State = .initial
@@ -206,6 +207,8 @@ public struct SendConfirmation {
         case pcztResolved(Pczt)
         case pcztSendFailed(ZcashError?)
         case pcztWithProofsResolved(Pczt)
+        case redactedPCZTForSigner(Pczt)
+        case redactPCZTForSigner
         case resetPCZTs
         case resolvePCZT
         case sharePCZT
@@ -317,8 +320,7 @@ public struct SendConfirmation {
                     return .none
                 }
                 return .run { send in
-                    if await !localAuthentication.authenticate() {
-                        await send(.sendFailed(nil, true))
+                    guard await localAuthentication.authenticate() else {
                         return
                     }
 
@@ -536,8 +538,34 @@ public struct SendConfirmation {
                 
             case .pcztResolved(let pczt):
                 state.pczt = pczt
-                return .send(.addProofsToPczt)
+                return .merge(
+                    .send(.addProofsToPczt),
+                    .send(.redactPCZTForSigner)
+                )
                 
+            case .redactPCZTForSigner:
+                guard let pczt = state.pczt else {
+                    return .run { send in
+                        try? await mainQueue.sleep(for: .seconds(Constants.delay))
+                        await send(.updateFailedData(-797, "redactPCZTForSigner failed to start the process", ""))
+                        await send(.pcztSendFailed("redactPCZTForSigner failed to start the process".toZcashError()))
+                    }
+                }
+                return .run { send in
+                    do {
+                        let redactedPczt = try await sdkSynchronizer.redactPCZTForSigner(Pczt(pczt))
+                        await send(.redactedPCZTForSigner(redactedPczt))
+                    } catch {
+                        try? await mainQueue.sleep(for: .seconds(Constants.delay))
+                        await send(.updateFailedData(-796, error.toZcashError().detailedMessage, ""))
+                        await send(.pcztSendFailed("redactPCZTForSigner failed".toZcashError()))
+                    }
+                }
+                
+            case .redactedPCZTForSigner(let redactedPczt):
+                state.redactedPcztForSigner = redactedPczt
+                return .none
+
             case .addProofsToPczt:
                 guard let pczt = state.pczt else {
                     return .run { send in
@@ -573,7 +601,10 @@ public struct SendConfirmation {
                 let pcztMessage =
                 """
                 original pczt:
-                \(state.pczt!.hexEncodedString())
+                \(state.pczt?.hexEncodedString() ?? "failed to unwrap")
+
+                redactedPcztForSigner:
+                \(state.redactedPcztForSigner?.hexEncodedString() ?? "failed to unwrap")
                 
                 pcztWithProofs:
                 \(pcztWithProofs.hexEncodedString())

@@ -267,6 +267,9 @@ extension SDKSynchronizerClient: DependencyKey {
                 
                 return encoder
             },
+            redactPCZTForSigner: { pczt in
+                try await synchronizer.redactPCZTForSigner(pczt: pczt)
+            },
             fetchTxidsWithMemoContaining: { searchTerm in
                 try await synchronizer.fetchTxidsWithMemoContaining(searchTerm: searchTerm)
             }

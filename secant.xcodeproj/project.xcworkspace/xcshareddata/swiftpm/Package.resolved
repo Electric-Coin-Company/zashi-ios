@@ -554,8 +554,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-light-client-ffi",
       "state" : {
-        "revision" : "11b0db058288b12ada9c5a95ed56f17f82d2868f",
-        "version" : "0.12.0"
+        "revision" : "8e7f8207b5f225cfe6b1e5cbc096fcd24b96776b"
       }
     },
     {
@@ -572,8 +571,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/LukasKorba/ZcashLightClientKit",
       "state" : {
-        "branch" : "1526-Failed-transaction-timestamps",
-        "revision" : "4c7b8004ebcc65f513c5116c11c0180176787bf0"
+        "branch" : "preview-ffi-0.13.0",
+        "revision" : "970d6edbbba2f696c5f3256a6d4f7c29d503493c"
       }
     }
   ],

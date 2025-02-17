@@ -99,7 +99,8 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-url-routing", from: "0.6.2"),
         .package(url: "https://github.com/zcash-hackworks/MnemonicSwift", from: "2.2.4"),
 //        .package(url: "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk", from: "2.2.8"),
-        .package(url: "https://github.com/LukasKorba/ZcashLightClientKit", branch: "1526-Failed-transaction-timestamps"),
+//        .package(url: "https://github.com/LukasKorba/ZcashLightClientKit", branch: "1526-Failed-transaction-timestamps"),
+        .package(url: "https://github.com/LukasKorba/ZcashLightClientKit", branch: "preview-ffi-0.13.0"),
         .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "11.6.0"),
         .package(url: "https://github.com/flexa/flexa-ios.git", from: "1.0.9"),
         .package(url: "https://github.com/pacu/zcash-swift-payment-uri", from: "0.1.0-beta.10"),
@@ -347,10 +348,8 @@ let package = Package(
             dependencies: [
                 "Generated",
                 "Models",
-                "SDKSynchronizer",
                 "TaxExporter",
                 "UIComponents",
-                "Utils",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Features/ExportTransactionHistory"
