@@ -37,6 +37,18 @@ extension NumberFormatter {
         return formatter
     }()
     
+    public static let zashiUSBalanceFormatter: NumberFormatter = {
+        var formatter = NumberFormatter()
+        formatter.maximumFractionDigits = 3
+        formatter.minimumFractionDigits = 3
+        formatter.maximumIntegerDigits = 8
+        formatter.numberStyle = .decimal
+        formatter.usesGroupingSeparator = true
+        formatter.roundingMode = .halfUp
+        formatter.locale = Locale(identifier: "en_US")
+        return formatter
+    }()
+    
     public static let zcashUSNumberFormatter: NumberFormatter = {
         var formatter = NumberFormatter()
         formatter.maximumFractionDigits = 8

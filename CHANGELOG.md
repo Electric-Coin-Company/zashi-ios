@@ -10,6 +10,7 @@ directly impact users rather than highlighting other crucial architectural updat
 - Tap to enlarge the Keystone Animated QR code.
 - Automatic full brightness for the Keystone Animated QR code.
 - Confirm the rejection of a Keystone transaction dialog added.
+- Export transaction history as a CSV file in the Advanced Settings.
 
 ### Updated
 - Keystone SDK version bumped with scan improvements.

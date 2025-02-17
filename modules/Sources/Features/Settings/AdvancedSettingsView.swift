@@ -15,6 +15,7 @@ import UIComponents
 import PrivateDataConsent
 import ServerSetup
 import CurrencyConversionSetup
+import ExportTransactionHistory
 
 import Flexa
 
@@ -22,6 +23,7 @@ public struct AdvancedSettingsView: View {
     @Environment(\.colorScheme) private var colorScheme
     
     @Perception.Bindable var store: StoreOf<AdvancedSettings>
+    @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
     
     public init(store: StoreOf<AdvancedSettings>) {
         self.store = store
@@ -45,7 +47,15 @@ public struct AdvancedSettingsView: View {
                         ) {
                             store.send(.protectedAccessRequest(.privateDataConsent))
                         }
-                        
+
+                        ActionRow(
+                            icon: Asset.Assets.Icons.file.image,
+                            title: L10n.TaxExport.taxFile
+                        ) {
+                            store.send(.protectedAccessRequest(.exportTransactionHistory))
+                        }
+                        .disabled(walletStatus == .restoring)
+
                         if store.isEnoughFreeSpaceMode {
                             ActionRow(
                                 icon: Asset.Assets.Icons.server.image,
@@ -98,6 +108,12 @@ public struct AdvancedSettingsView: View {
                     isActive: store.bindingFor(.currencyConversionSetup),
                     destination: {
                         CurrencyConversionSetupView(store: store.currencyConversionSetupStore())
+                    }
+                )
+                .navigationLinkEmpty(
+                    isActive: store.bindingFor(.exportTransactionHistory),
+                    destination: {
+                        ExportTransactionHistoryView(store: store.exportTransactionHistoryStore())
                     }
                 )
 
@@ -192,6 +208,13 @@ extension StoreOf<AdvancedSettings> {
         self.scope(
             state: \.currencyConversionSetupState,
             action: \.currencyConversionSetup
+        )
+    }
+    
+    func exportTransactionHistoryStore() -> StoreOf<ExportTransactionHistory> {
+        self.scope(
+            state: \.exportTransactionHistoryState,
+            action: \.exportTransactionHistory
         )
     }
 }

@@ -410,8 +410,8 @@ public enum L10n {
   public enum KeystoneTransactionReject {
     /// Go back
     public static let goBack = L10n.tr("Localizable", "keystoneTransactionReject.goBack", fallback: "Go back")
-    /// Rejecting the signature will cancel the transaction, and you’ll need to start over if you want to proceed. This action cannot be undone.
-    public static let msg = L10n.tr("Localizable", "keystoneTransactionReject.msg", fallback: "Rejecting the signature will cancel the transaction, and you’ll need to start over if you want to proceed. This action cannot be undone.")
+    /// Rejecting the signature will cancel the transaction, and you’ll need to start over if you want to proceed.
+    public static let msg = L10n.tr("Localizable", "keystoneTransactionReject.msg", fallback: "Rejecting the signature will cancel the transaction, and you’ll need to start over if you want to proceed.")
     /// Reject Signature
     public static let rejectSig = L10n.tr("Localizable", "keystoneTransactionReject.rejectSig", fallback: "Reject Signature")
     /// Are you sure?
@@ -1080,6 +1080,26 @@ public enum L10n {
     public static let receive = L10n.tr("Localizable", "tabs.receive", fallback: "Receive")
     /// Send
     public static let send = L10n.tr("Localizable", "tabs.send", fallback: "Send")
+  }
+  public enum TaxExport {
+    /// Download your %@ transaction history from the previous calendar year in a .csv format.
+    public static func desc(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "taxExport.desc", String(describing: p1), fallback: "Download your %@ transaction history from the previous calendar year in a .csv format.")
+    }
+    /// Download
+    public static let download = L10n.tr("Localizable", "taxExport.download", fallback: "Download")
+    /// %@_transaction_history_%@.csv
+    public static func fileName(_ p1: Any, _ p2: Any) -> String {
+      return L10n.tr("Localizable", "taxExport.fileName", String(describing: p1), String(describing: p2), fallback: "%@_transaction_history_%@.csv")
+    }
+    /// %@ transaction history
+    public static func shareDesc(_ p1: Any) -> String {
+      return L10n.tr("Localizable", "taxExport.shareDesc", String(describing: p1), fallback: "%@ transaction history")
+    }
+    /// Export Tax File
+    public static let taxFile = L10n.tr("Localizable", "taxExport.taxFile", fallback: "Export Tax File")
+    /// Data Export
+    public static let title = L10n.tr("Localizable", "taxExport.title", fallback: "Data Export")
   }
   public enum Tooltip {
     public enum ExchangeRate {
