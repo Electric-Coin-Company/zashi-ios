@@ -1210,6 +1210,8 @@ public enum L10n {
     public static let defaultFee = L10n.tr("Localizable", "transactionHistory.defaultFee", fallback: "0.001")
     /// Transaction Details
     public static let details = L10n.tr("Localizable", "transactionHistory.details", fallback: "Transaction Details")
+    /// Get some ZEC
+    public static let getSomeZec = L10n.tr("Localizable", "transactionHistory.getSomeZec", fallback: "Get some ZEC")
     /// Make the first move...
     public static let makeTransaction = L10n.tr("Localizable", "transactionHistory.makeTransaction", fallback: "Make the first move...")
     /// No Message
@@ -1224,8 +1226,6 @@ public enum L10n {
     public static let seeAll = L10n.tr("Localizable", "transactionHistory.seeAll", fallback: "See all")
     /// Send again
     public static let sendAgain = L10n.tr("Localizable", "transactionHistory.sendAgain", fallback: "Send again")
-    /// Send a transaction
-    public static let sendTransaction = L10n.tr("Localizable", "transactionHistory.sendTransaction", fallback: "Send a transaction")
     /// Sent to
     public static let sentTo = L10n.tr("Localizable", "transactionHistory.sentTo", fallback: "Sent to")
     /// %@...

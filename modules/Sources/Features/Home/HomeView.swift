@@ -160,11 +160,11 @@ public struct HomeView: View {
                             .padding(.bottom, 20)
                         
                         ZashiButton(
-                            L10n.TransactionHistory.sendTransaction,
+                            L10n.TransactionHistory.getSomeZec,
                             type: .tertiary,
                             infinityWidth: false
                         ) {
-                            store.send(.makeATransactionTapped)
+                            store.send(.getSomeZecTapped)
                         }
                     }
                 }

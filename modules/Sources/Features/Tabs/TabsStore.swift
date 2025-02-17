@@ -444,9 +444,8 @@ public struct Tabs {
                 state.selectedTab = .balances
                 return .none
 
-            case .home(.makeATransactionTapped):
-                state.selectedTab = .send
-                return .none
+            case .home(.getSomeZecTapped):
+                return .send(.receive(.requestTapped(state.receiveState.unifiedAddress.redacted, true)))
 
             case .dismissSelectTextEditor:
                 state.selectTextRequest = false

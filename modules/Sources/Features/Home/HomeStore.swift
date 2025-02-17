@@ -47,7 +47,7 @@ public struct Home {
     public enum Action: Equatable {
         case alert(PresentationAction<Action>)
         case foundTransactions
-        case makeATransactionTapped
+        case getSomeZecTapped
         case onAppear
         case onDisappear
         case resolveReviewRequest
@@ -119,7 +119,7 @@ public struct Home {
                 state.canRequestReview = false
                 return .none
                           
-            case .makeATransactionTapped:
+            case .getSomeZecTapped:
                 return .none
                 
             case .seeAllTransactionsTapped:

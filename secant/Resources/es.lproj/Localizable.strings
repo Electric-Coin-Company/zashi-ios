@@ -522,7 +522,7 @@
 "transactionHistory.seeAll" = "See all";
 "transactionHistory.nothingHere" = "There’s nothing here, yet.";
 "transactionHistory.makeTransaction" = "Make the first move...";
-"transactionHistory.sendTransaction" = "Send a transaction";
+"transactionHistory.getSomeZec" = "Get some ZEC";
 "transactionHistory.saveAddress" = "Save address";
 "transactionHistory.sendAgain" = "Send again";
 "transactionHistory.details" = "Transaction Details";
