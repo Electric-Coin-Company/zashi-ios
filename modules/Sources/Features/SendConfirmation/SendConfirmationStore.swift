@@ -83,6 +83,7 @@ public struct SendConfirmation {
         public var partialProposalErrorState: PartialProposalError.State
         public var partialProposalErrorViewBinding = false
         public var pczt: Pczt?
+        public var pcztForUI: Pczt?
         public var pcztWithProofs: Pczt?
         public var pcztWithSigs: Pczt?
         public var proposal: Proposal?
@@ -249,6 +250,8 @@ public struct SendConfirmation {
         Reduce { state, action in
             switch action {
             case .onAppear:
+                state.pcztForUI = nil
+                state.rejectSendRequest = false
                 state.txIdToExpand = nil
                 state.scanState.checkers = [.keystonePCZTScanChecker]
                 state.scanState.instructions = L10n.Keystone.scanInfoTransaction
@@ -488,6 +491,7 @@ public struct SendConfirmation {
                 return .none
                 
             case .rejectTapped:
+                state.rejectSendRequest = false
                 return .send(.resetPCZTs)
                 
             case .confirmWithKeystoneTapped:
@@ -539,8 +543,8 @@ public struct SendConfirmation {
             case .pcztResolved(let pczt):
                 state.pczt = pczt
                 return .merge(
-                    .send(.addProofsToPczt),
-                    .send(.redactPCZTForSigner)
+                    .send(.redactPCZTForSigner),
+                    .send(.addProofsToPczt)
                 )
                 
             case .redactPCZTForSigner:
@@ -564,6 +568,7 @@ public struct SendConfirmation {
                 
             case .redactedPCZTForSigner(let redactedPczt):
                 state.redactedPcztForSigner = redactedPczt
+                state.pcztForUI = redactedPczt
                 return .none
 
             case .addProofsToPczt:
@@ -666,6 +671,7 @@ public struct SendConfirmation {
                 state.pcztWithSigs = nil
                 state.pcztToShare = nil
                 state.proposal = nil
+                state.redactedPcztForSigner = nil
                 return .none
 
             case .addressBook:
