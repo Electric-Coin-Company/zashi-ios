@@ -8,13 +8,9 @@
 import Foundation
 import ComposableArchitecture
 import ZcashLightClientKit
-import Models
-import Generated
-import Utils
 import SwiftUI
-import ZcashSDKEnvironment
 import TaxExporter
-import SDKSynchronizer
+import Models
 
 @Reducer
 public struct ExportTransactionHistory {
@@ -24,6 +20,7 @@ public struct ExportTransactionHistory {
         public var isExportingData = false
         public var dataURL: URL = .emptyURL
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
+        @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
 
         public var isExportPossible: Bool {
             !isExportingData
@@ -38,7 +35,6 @@ public struct ExportTransactionHistory {
     
     public enum Action: Equatable {
         case exportRequested
-        case onAppear
         case preparationOfUrlsFailed
         case shareFinished
         case urlsPrepared(URL)
@@ -46,36 +42,24 @@ public struct ExportTransactionHistory {
 
     public init() { }
 
-    @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.taxExporter) var taxExporter
-    @Dependency(\.sdkSynchronizer) var sdkSynchronizer
 
     public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
-            case .onAppear:
-                return .none
-
             case .exportRequested:
                 guard let account = state.selectedWalletAccount else {
                     return .none
                 }
                 state.isExportingData = true
-                return .run { send in
-                    var url: URL = .emptyURL
-
-                    if let transactions = try? await sdkSynchronizer.getAllTransactions(account.id) {
-                        let accountName = account.vendor.name()
-                        do {
-                            url = try taxExporter.cointrackerCSVfor(transactions, accountName)
-                        } catch {
-                            await send(.preparationOfUrlsFailed)
-                        }
-                    }
-                    
-                    await send(.urlsPrepared(url))
+                let accountName = account.vendor.name()
+                do {
+                    let url = try taxExporter.cointrackerCSVfor(state.transactions.elements, accountName)
+                    return .send(.urlsPrepared(url))
+                } catch {
+                    return .send(.preparationOfUrlsFailed)
                 }
-                
+
             case .preparationOfUrlsFailed:
                 state.isExportingData = false
                 return .none

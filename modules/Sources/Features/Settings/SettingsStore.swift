@@ -36,7 +36,18 @@ public struct Settings {
         public var supportData: SupportData?
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var sendFeedbackState: SendFeedback.State = .initial
+        @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         public var whatsNewState: WhatsNew.State = .initial
+
+        public var isKeystoneConnected: Bool {
+            for account in walletAccounts {
+                if account.vendor == .keystone {
+                    return true
+                }
+            }
+            
+            return false
+        }
 
         public var isKeystoneAccount: Bool {
             selectedWalletAccount?.vendor == .keystone ? true : false

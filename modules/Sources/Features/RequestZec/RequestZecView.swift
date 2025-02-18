@@ -77,6 +77,7 @@ public struct RequestZecView: View {
                     }
                     .disabled(!store.memoState.isValid)
                     .padding(.bottom, keyboardVisible ? 48 : 24)
+                    .padding(.top, 8)
                 }
                 .screenTitle(L10n.General.request)
                 .zashiBack()

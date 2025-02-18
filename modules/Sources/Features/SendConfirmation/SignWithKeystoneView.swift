@@ -84,7 +84,7 @@ public struct SignWithKeystoneView: View {
                         }
                         .padding(.top, 40)
 
-                        if let pczt = store.pczt, let encoder = sdkSynchronizer.urEncoderForPCZT(Pczt(pczt)), !isPresented {
+                        if let pczt = store.pcztForUI, let encoder = sdkSynchronizer.urEncoderForPCZT(pczt), !isPresented {
                             AnimatedQRCode(urEncoder: encoder, size: 250)
                                 .frame(width: 216, height: 216)
                                 .padding(24)
@@ -210,7 +210,7 @@ public struct SignWithKeystoneView: View {
         .navigationBarTitleDisplayMode(.inline)
         .screenTitle(L10n.Keystone.SignWith.signTransaction)
         .overlay {
-            if let pczt = store.pczt, let encoder = sdkSynchronizer.urEncoderForPCZT(Pczt(pczt)), isPresented {
+            if let pczt = store.pcztForUI, let encoder = sdkSynchronizer.urEncoderForPCZT(pczt), isPresented {
                 Color.black.opacity(0.9)
                     .edgesIgnoringSafeArea(.all)
                     .onTapGesture {

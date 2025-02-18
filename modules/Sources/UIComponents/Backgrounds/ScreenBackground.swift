@@ -26,6 +26,7 @@ public struct ScreenGradientBackground: View {
 
     public enum Mode {
         case branded
+        case defaultGradient
         case erred
         case failure
         case onboardingDark
@@ -39,6 +40,11 @@ public struct ScreenGradientBackground: View {
                     Gradient.Stop(color: Design.Utility.Brand._600.color(colorScheme), location: 0.0),
                     Gradient.Stop(color: Design.Utility.Brand._400.color(colorScheme), location: 0.5),
                     Gradient.Stop(color: Design.screenBackground.color(colorScheme), location: 0.75)
+                ]
+            case .defaultGradient:
+                return [
+                    Gradient.Stop(color: Design.Surfaces.bgAdjust.color(colorScheme), location: 0.0),
+                    Gradient.Stop(color: Design.Surfaces.bgPrimary.color(colorScheme), location: 0.25)
                 ]
             case .erred:
                 return [
@@ -108,6 +114,21 @@ struct ScreenOnboardingGradientBackgroundModifier: ViewModifier {
     }
 }
 
+struct ScreenDefaultGradientBackgroundModifier: ViewModifier {
+    @Environment(\.colorScheme) var colorScheme
+
+    func body(content: Content) -> some View {
+        ZStack {
+            ScreenGradientBackground(
+                mode: .defaultGradient
+            )
+            .edgesIgnoringSafeArea(.all)
+            
+            content
+        }
+    }
+}
+
 extension View {
     public func applyScreenBackground() -> some View {
         modifier(
@@ -134,7 +155,13 @@ extension View {
             ScreenOnboardingGradientBackgroundModifier()
         )
     }
-    
+
+    public func applyDefaultGradientScreenBackground() -> some View {
+        self.modifier(
+            ScreenDefaultGradientBackgroundModifier()
+        )
+    }
+
     public func applySuccessScreenBackground() -> some View {
         modifier(
             ScreenGradientBackgroundModifier(mode: .success)
