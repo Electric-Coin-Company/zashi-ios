@@ -84,7 +84,10 @@ extension Root {
                 // MARK: - External Signals
             
             case .tabs(.walletAccountTapped):
-                return .send(.fetchTransactionsForTheSelectedAccount)
+                return .merge(
+                    .send(.fetchTransactionsForTheSelectedAccount),
+                    .send(.loadUserMetadata)
+                )
 
             default: return .none
             }

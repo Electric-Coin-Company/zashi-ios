@@ -54,7 +54,6 @@ public struct Root {
     public struct State: Equatable {
         public var CancelEventId = UUID()
         public var CancelStateId = UUID()
-        public var CancelUMTimerId = UUID()
 
         public var addressBookBinding: Bool = false
         public var addressBookContactBinding: Bool = false
@@ -73,7 +72,6 @@ public struct Root {
         public var isLockedInKeychainUnavailableState = false
         public var isRestoringWallet = false
         @Shared(.appStorage(.lastAuthenticationTimestamp)) public var lastAuthenticationTimestamp: Int = 0
-        public var lastUserMetadataSyncTimestamp: TimeInterval?
         public var maxResetZashiAppAttempts = ResetZashiConstants.maxResetZashiAppAttempts
         public var maxResetZashiSDKAttempts = ResetZashiConstants.maxResetZashiSDKAttempts
         public var notEnoughFreeSpaceState: NotEnoughFreeSpace.State
@@ -187,7 +185,6 @@ public struct Root {
         
         // UserMetadata
         case loadUserMetadata
-        case userMetadataSync(Date)
     }
 
     @Dependency(\.addressBook) var addressBook

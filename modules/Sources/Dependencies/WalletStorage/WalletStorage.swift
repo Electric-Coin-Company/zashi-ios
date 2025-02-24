@@ -19,6 +19,7 @@ public struct WalletStorage {
     public enum Constants {
         public static let zcashStoredWallet = "zcashStoredWallet"
         public static let zcashStoredAdressBookEncryptionKeys = "zcashStoredAdressBookEncryptionKeys"
+        public static let zcashStoredUserMetadataEncryptionKeys = "zcashStoredUserMetadataEncryptionKeys"
         /// Versioning of the stored data
         public static let zcashKeychainVersion = 1
     }
@@ -34,6 +35,7 @@ public struct WalletStorage {
     public enum WalletStorageError: Error {
         case alreadyImported
         case uninitializedAddressBookEncryptionKeys
+        case uninitializedUserMetadataEncryptionKeys
         case uninitializedWallet
         case storageError(Error)
         case unsupportedVersion(Int)
@@ -181,6 +183,42 @@ public struct WalletStorage {
         
         guard let wallet = try decode(json: reqData, as: AddressBookEncryptionKeys.self) else {
             throw WalletStorageError.uninitializedAddressBookEncryptionKeys
+        }
+
+        return wallet
+    }
+    
+    public func importUserMetadataEncryptionKeys(_ keys: UserMetadataEncryptionKeys) throws {
+        do {
+            guard let data = try encode(object: keys) else {
+                throw KeychainError.encoding
+            }
+            
+            try setData(data, forKey: Constants.zcashStoredUserMetadataEncryptionKeys)
+        } catch KeychainError.duplicate {
+            throw WalletStorageError.alreadyImported
+        } catch {
+            throw WalletStorageError.storageError(error)
+        }
+    }
+    
+    public func exportUserMetadataEncryptionKeys() throws -> UserMetadataEncryptionKeys {
+        let reqData: Data?
+        
+        do {
+            reqData = try data(forKey: Constants.zcashStoredUserMetadataEncryptionKeys)
+        } catch KeychainError.noDataFound {
+            throw WalletStorageError.uninitializedUserMetadataEncryptionKeys
+        } catch {
+            throw error
+        }
+        
+        guard let reqData else {
+            throw WalletStorageError.uninitializedUserMetadataEncryptionKeys
+        }
+        
+        guard let wallet = try decode(json: reqData, as: UserMetadataEncryptionKeys.self) else {
+            throw WalletStorageError.uninitializedUserMetadataEncryptionKeys
         }
 
         return wallet

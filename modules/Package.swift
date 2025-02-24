@@ -902,6 +902,7 @@ let package = Package(
                 "SDKSynchronizer",
                 "ReadTransactionsStorage",
                 "UIComponents",
+                "UserMetadataProvider",
                 "Utils",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -921,6 +922,7 @@ let package = Package(
                 "SDKSynchronizer",
                 "TransactionDetails",
                 "UIComponents",
+                "UserMetadataProvider",
                 "Utils",
                 "ZcashSDKEnvironment",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -987,6 +989,11 @@ let package = Package(
         .target(
             name: "UserMetadataProvider",
             dependencies: [
+                "Models",
+                "RemoteStorage",
+                "UserDefaults",
+                "Utils",
+                "WalletStorage",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "ZcashLightClientKit")
             ],

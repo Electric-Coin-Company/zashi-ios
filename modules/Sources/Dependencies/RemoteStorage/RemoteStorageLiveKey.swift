@@ -11,7 +11,6 @@ import ComposableArchitecture
 extension RemoteStorageClient: DependencyKey {
     private enum Constants {
         static let ubiquityContainerIdentifier = "iCloud.com.electriccoinco.zashi"
-        static let component = "AddressBookData"
     }
     
     public enum RemoteStorageError: Error {
@@ -23,7 +22,7 @@ extension RemoteStorageClient: DependencyKey {
     
     public static func live() -> Self {
         return Self(
-            loadAddressBookContacts: { filename in
+            loadDataFromFile: { filename in
                 let fileManager = FileManager.default
 
                 guard let containerURL = path(fileManager, filename: filename) else {
@@ -36,7 +35,7 @@ extension RemoteStorageClient: DependencyKey {
 
                 return try Data(contentsOf: containerURL)
             },
-            storeAddressBookContacts: { data, filename in
+            storeDataToFile: { data, filename in
                 let fileManager = FileManager.default
 
                 guard let containerURL = path(fileManager, filename: filename) else {
@@ -44,6 +43,15 @@ extension RemoteStorageClient: DependencyKey {
                 }
 
                 try data.write(to: containerURL)
+            },
+            removeFile: { filename in
+                let fileManager = FileManager.default
+
+                guard let containerURL = path(fileManager, filename: filename) else {
+                    throw RemoteStorageError.containerURL
+                }
+
+                try fileManager.removeItem(at: containerURL)
             }
         )
     }

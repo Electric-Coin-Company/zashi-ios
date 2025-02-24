@@ -41,6 +41,7 @@ public struct TransactionDetails {
         public var areMessagesResolved = false
         public var alias: String?
         public var areDetailsExpanded = false
+        public var hasInteractedWithBookmark = false
         public var isBookmarked = false
         public var isCloseButtonRequired = false
         public var isEditMode = false
@@ -48,6 +49,7 @@ public struct TransactionDetails {
         public var messageStates: [MessageState] = []
         public var annotation = ""
         public var annotationOrigin = ""
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         @Shared(.inMemory(.toast)) public var toast: Toast.Edge? = nil
         public var transaction: TransactionState
         @Shared(.inMemory(.transactionMemos)) public var transactionMemos: [String: [String]] = [:]
@@ -109,6 +111,7 @@ public struct TransactionDetails {
         Reduce { state, action in
             switch action {
             case .onAppear:
+                state.hasInteractedWithBookmark = false
                 state.areDetailsExpanded = false
                 state.messageStates = []
                 state.alias = nil
@@ -132,6 +135,11 @@ public struct TransactionDetails {
                 return .send(.observeTransactionChange)
 
             case .onDisappear:
+                if state.hasInteractedWithBookmark {
+                    if let account = state.selectedWalletAccount?.account {
+                        try? userMetadataProvider.store(account)
+                    }
+                }
                 return .cancel(id: state.CancelId)
                 
             case .observeTransactionChange:
@@ -174,6 +182,9 @@ public struct TransactionDetails {
                 userMetadataProvider.deleteAnnotationFor(state.transaction.id)
                 state.annotation = userMetadataProvider.annotationFor(state.transaction.id) ?? ""
                 state.annotationRequest = false
+                if let account = state.selectedWalletAccount?.account {
+                    try? userMetadataProvider.store(account)
+                }
                 return .none
 
             case .saveNoteTapped, .addNoteTapped:
@@ -181,6 +192,9 @@ public struct TransactionDetails {
                 state.annotation = userMetadataProvider.annotationFor(state.transaction.id) ?? ""
                 state.annotationOrigin = ""
                 state.annotationRequest = false
+                if let account = state.selectedWalletAccount?.account {
+                    try? userMetadataProvider.store(account)
+                }
                 return .none
 
             case .resolveMemos:
@@ -211,6 +225,7 @@ public struct TransactionDetails {
                 return .none
 
             case .bookmarkTapped:
+                state.hasInteractedWithBookmark = true
                 userMetadataProvider.toggleBookmarkFor(state.transaction.id)
                 state.isBookmarked = userMetadataProvider.isBookmarked(state.transaction.id)
                 return .none

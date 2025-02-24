@@ -38,6 +38,7 @@ public struct TransactionListView: View {
                             } label: {
                                 TransactionRowView(
                                     transaction: transaction,
+                                    isUnread: TransactionList.isUnread(transaction),
                                     divider: store.latestTransactionId != transaction.id
                                 )
                             }

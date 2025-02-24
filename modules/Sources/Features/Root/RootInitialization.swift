@@ -331,8 +331,8 @@ extension Root {
                                 }
                             }
 
-                            let addressBookEncryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys()
                             if let account = selectedAccount {
+                                let addressBookEncryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys()
                                 if addressBookEncryptionKeys == nil {
                                     var keys = AddressBookEncryptionKeys.empty
                                     try keys.cacheFor(
@@ -343,6 +343,22 @@ extension Root {
                                     
                                     do {
                                         try walletStorage.importAddressBookEncryptionKeys(keys)
+                                    } catch {
+                                        // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                                    }
+                                }
+
+                                let userMetadataEncryptionKeys = try? walletStorage.exportUserMetadataEncryptionKeys()
+                                if userMetadataEncryptionKeys == nil {
+                                    var keys = UserMetadataEncryptionKeys.empty
+                                    try keys.cacheFor(
+                                        seed: seedBytes,
+                                        account: account.account,
+                                        network: zcashSDKEnvironment.network.networkType
+                                    )
+                                    
+                                    do {
+                                        try walletStorage.importUserMetadataEncryptionKeys(keys)
                                     } catch {
                                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
                                     }
@@ -374,8 +390,7 @@ extension Root {
                     }
                     .cancellable(id: CancelBatteryStateId, cancelInFlight: true),
                     .send(.batteryStateChanged(nil)),
-                    .send(.observeTransactions),
-                    .send(.loadUserMetadata)
+                    .send(.observeTransactions)
                 )
                 
             case .initialization(.loadedWalletAccounts(let walletAccounts)):
@@ -389,7 +404,13 @@ extension Root {
                         }
                     }
                 }
-                return .send(.loadContacts)
+                return .merge(
+                    .send(.loadContacts),
+                    .send(.loadUserMetadata)
+                )
+
+            case .tabs(.addKeystoneHWWallet(.loadedWalletAccounts)), .tabs(.settings(.integrations(.addKeystoneHWWallet(.loadedWalletAccounts)))):
+                return .send(.loadUserMetadata)
                 
             case .initialization(.checkBackupPhraseValidation):
                 let storedWallet: StoredWallet
@@ -454,6 +475,10 @@ extension Root {
                 flexaHandler.signOut()
                 userStoredPreferences.removeAll()
                 try? readTransactionsStorage.resetZashi()
+                state.walletAccounts.forEach { account in
+                    try? userMetadataProvider.resetAccount(account.account)
+                }
+                try? userMetadataProvider.reset()
                 state.$walletStatus.withLock { $0 = .none }
                 state.$selectedWalletAccount.withLock { $0 = nil }
                 state.$walletAccounts.withLock { $0 = [] }
@@ -640,7 +665,7 @@ extension Root {
                 
             case .tabs, .destination, .onboarding, .phraseDisplay, .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated,
                     .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, 
-                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects, .flexaOnTransactionRequest, .flexaTransactionFailed, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted, .deeplinkWarning, .osStatusError, .observeTransactions, .foundTransactions, .minedTransaction, .fetchTransactionsForTheSelectedAccount, .fetchedTransactions, .noChangeInTransactions, .loadContacts, .contactsLoaded, .loadUserMetadata, .userMetadataSync:
+                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects, .flexaOnTransactionRequest, .flexaTransactionFailed, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted, .deeplinkWarning, .osStatusError, .observeTransactions, .foundTransactions, .minedTransaction, .fetchTransactionsForTheSelectedAccount, .fetchedTransactions, .noChangeInTransactions, .loadContacts, .contactsLoaded, .loadUserMetadata:
                 return .none
             }
         }

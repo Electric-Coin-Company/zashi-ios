@@ -140,7 +140,15 @@ public struct TransactionsManager {
                 }
                 return .none
 
-            case .transactionTapped:
+            case .transactionTapped(let txId):
+                if let index = state.transactions.index(id: txId) {
+                    if TransactionsManager.isUnread(state.transactions[index]) {
+                        userMetadataProvider.readTx(txId)
+                        if let account = state.selectedWalletAccount?.account {
+                            try? userMetadataProvider.store(account)
+                        }
+                    }
+                }
                 return .none
 
             case .transactionsUpdated:
@@ -363,5 +371,25 @@ extension TransactionsManager.Filter {
         case .unread:
             return true
         }
+    }
+}
+
+public extension TransactionsManager {
+    static func isUnread(_ transaction: TransactionState) -> Bool {
+        guard !transaction.isSentTransaction else {
+            return false
+        }
+
+        guard !transaction.isShieldingTransaction else {
+            return false
+        }
+        
+        guard transaction.memoCount > 0 else {
+            return false
+        }
+
+        @Dependency(\.userMetadataProvider) var userMetadataProvider
+
+        return !userMetadataProvider.isRead(transaction.id, transaction.timestamp)
     }
 }

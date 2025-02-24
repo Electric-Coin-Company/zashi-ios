@@ -5,7 +5,9 @@
 //  Created by Lukáš Korba on 2025-01-28.
 //
 
+import Foundation
 import ComposableArchitecture
+import ZcashLightClientKit
 
 extension DependencyValues {
     public var userMetadataProvider: UserMetadataProviderClient {
@@ -17,8 +19,10 @@ extension DependencyValues {
 @DependencyClient
 public struct UserMetadataProviderClient {
     // General
-    public let store: () async throws -> Void
-    public let load: () async throws -> Void
+    public let store: (Account) throws -> Void
+    public let load: (Account) throws -> Void
+    public let resetAccount: (Account) throws -> Void
+    public let reset: () throws -> Void
 
     // Bookmarking
     public let isBookmarked: (String) -> Bool
@@ -30,6 +34,6 @@ public struct UserMetadataProviderClient {
     public let deleteAnnotationFor: (String) -> Void
 
     // Read
-    public let isRead: (String) -> Bool
-    public let updateReadFor: (String, Bool) -> Void
+    public let isRead: (String, TimeInterval?) -> Bool
+    public let readTx: (String) -> Void
 }

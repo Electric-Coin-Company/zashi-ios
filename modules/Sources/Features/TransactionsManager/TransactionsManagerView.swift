@@ -115,6 +115,7 @@ public struct TransactionsManagerView: View {
                                                     } label: {
                                                         TransactionRowView(
                                                             transaction: transaction,
+                                                            isUnread: TransactionsManager.isUnread(transaction),
                                                             divider: section.latestTransactionId != transaction.id
                                                         )
                                                     }
