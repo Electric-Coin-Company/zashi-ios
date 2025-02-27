@@ -87,6 +87,7 @@ public struct BalancesView: View {
         .navigationBarTitleDisplayMode(.inline)
         .padding(.vertical, 1)
         .applyScreenBackground()
+        .zashiBack()
         .alert(
             store: store.scope(
                 state: \.$alert,

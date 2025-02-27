@@ -50,7 +50,7 @@ public struct Root {
     let CancelFlexaId = UUID()
 
     @ObservableState
-    public struct State: Equatable {
+    public struct State {
         public var CancelEventId = UUID()
         public var CancelStateId = UUID()
 
@@ -128,7 +128,7 @@ public struct Root {
         }
     }
 
-    public enum Action: Equatable {
+    public enum Action {
         public enum ConfirmationDialog: Equatable {
             case fullRescan
             case quickRescan

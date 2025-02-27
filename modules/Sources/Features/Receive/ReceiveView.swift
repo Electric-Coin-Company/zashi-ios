@@ -158,6 +158,7 @@ public struct ReceiveView: View {
         }
         .padding(.horizontal, 4)
         .applyScreenBackground()
+        .zashiBack()
     }
     
     @ViewBuilder private func addressBlock(
