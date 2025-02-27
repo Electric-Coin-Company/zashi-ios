@@ -22,7 +22,7 @@ extension Root {
         static let noAuthenticationWithinXMinutes = 15
     }
     
-    public enum InitializationAction: Equatable {
+    public enum InitializationAction {
         case appDelegate(AppDelegateAction)
         case checkBackupPhraseValidation
         case checkRestoreWalletFlag(SyncStatus)

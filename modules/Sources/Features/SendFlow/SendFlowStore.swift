@@ -24,14 +24,14 @@ import AddressBookClient
 
 @Reducer
 public struct SendFlow {
-    public enum Confirmation: Equatable {
+    public enum Confirmation {
         case requestPayment
         case send
     }
     
     @ObservableState
-    public struct State: Equatable {
-        public enum Destination: Equatable {
+    public struct State {
+        public enum Destination {
             case partialProposalError
             case scanQR
         }
@@ -194,7 +194,7 @@ public struct SendFlow {
         }
     }
 
-    public enum Action: Equatable {
+    public enum Action {
         case addNewContactTapped(RedactableString)
         case addressBookTapped
         case addressUpdated(RedactableString)
@@ -248,7 +248,7 @@ public struct SendFlow {
             case .onAppear:
                 state.scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
                 state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
-                guard let account = state.zashiWalletAccount else {
+                guard let _ = state.zashiWalletAccount else {
                     return .send(.exchangeRateSetupChanged)
                 }
                 return .send(.exchangeRateSetupChanged)

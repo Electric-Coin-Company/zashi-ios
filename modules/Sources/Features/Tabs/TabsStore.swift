@@ -36,8 +36,15 @@ import UserMetadataProvider
 
 @Reducer
 public struct Tabs {
+    @Reducer
+    public enum Path {
+        case sendFlow(SendFlow)
+    }
+    
     @ObservableState
-    public struct State: Equatable {
+    public struct State {
+        var path = StackState<Path.State>()
+
         public enum Destination: Equatable {
             case addressDetails
             case currencyConversionSetup
@@ -84,19 +91,6 @@ public struct Tabs {
             case send
             case receive
             case balances
-            
-            public var title: String {
-                switch self {
-                case .account:
-                    return L10n.Tabs.account
-                case .send:
-                    return L10n.Tabs.send
-                case .receive:
-                    return L10n.Tabs.receive
-                case .balances:
-                    return L10n.Tabs.balances
-                }
-            }
         }
 
         public var accountSwitchRequest = false
@@ -177,7 +171,7 @@ public struct Tabs {
         }
     }
     
-    public enum Action: BindableAction, Equatable {
+    public enum Action: BindableAction {
         case accountSwitchTapped
         case addKeystoneHWWalletTapped
         case addKeystoneHWWallet(AddKeystoneHWWallet.Action)
@@ -191,6 +185,7 @@ public struct Tabs {
         case home(Home.Action)
         case keystoneBannerTapped
         case onAppear
+        case path(StackActionOf<Path>)
         case presentKeystoneWeb
         case rateTooltipTapped
         case receive(Receive.Action)
@@ -236,9 +231,9 @@ public struct Tabs {
             Scan()
         }
 
-        Scope(state: \.sendState, action: \.send) {
-            SendFlow()
-        }
+//        Scope(state: \.sendState, action: \.send) {
+//            SendFlow()
+//        }
 
         Scope(state: \.sendConfirmationState, action: \.sendConfirmation) {
             SendConfirmation()
@@ -290,6 +285,9 @@ public struct Tabs {
                 state.scanState.instructions = L10n.Keystone.scanInfo
                 state.scanState.forceLibraryToHide = true
                 state.isRateEducationEnabled = userStoredPreferences.exchangeRate() == nil
+                return .none
+                
+            case .path:
                 return .none
                 
             case .accountSwitchTapped:
@@ -385,6 +383,18 @@ public struct Tabs {
                     return .send(.updateStackDestinationTransactionsHP(.details))
                 }
                 return .send(.updateStackDestinationRequestPayment(.requestPaymentConfirmation))
+
+            case .home(.receiveTapped):
+                print("__LD \(state.sendState.address)")
+                state.selectedTab = .receive
+                return .none
+
+            case .home(.sendTapped):
+                var test = SendFlow.State()
+                test.address = "aaa"
+                state.path.append(.sendFlow(test))
+                state.selectedTab = .send
+                return .none
 
             case .home(.seeAllTransactionsTapped):
                 return .send(.updateStackDestinationTransactions(.manager))
@@ -716,5 +726,6 @@ public struct Tabs {
                 return .none
             }
         }
+        .forEach(\.path, action: \.path)
     }
 }
