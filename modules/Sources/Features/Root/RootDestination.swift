@@ -17,8 +17,8 @@ import SwiftUI
 /// In this file is a collection of helpers that control all state and action related operations
 /// for the `Root` with a connection to the UI navigation.
 extension Root {
-    public struct DestinationState: Equatable {
-        public enum Destination: Equatable {
+    public struct DestinationState {
+        public enum Destination {
             case deeplinkWarning
             case notEnoughFreeSpace
             case onboarding
@@ -42,7 +42,7 @@ extension Root {
         }
     }
     
-    public enum DestinationAction: Equatable {
+    public enum DestinationAction {
         case deeplink(URL)
         case deeplinkHome
         case deeplinkSend(Zatoshi, String, String)

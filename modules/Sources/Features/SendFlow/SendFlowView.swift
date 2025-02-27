@@ -214,6 +214,7 @@ public struct SendFlowView: View {
             }
             .padding(.vertical, 1)
             .applyScreenBackground()
+            .zashiBack()
             .alert(store: store.scope(
                 state: \.$alert,
                 action: \.alert

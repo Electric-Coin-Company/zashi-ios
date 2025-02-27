@@ -50,6 +50,40 @@ public struct HomeView: View {
                     .padding(.bottom, 20)
                 }
                 
+                HStack(spacing: 8) {
+                    button(
+                        L10n.Tabs.receive,
+                        icon: Asset.Assets.Icons.received.image
+                    ) {
+                        store.send(.receiveTapped)
+                    }
+
+                    button(
+                        L10n.Tabs.send,
+                        icon: Asset.Assets.Icons.sent.image
+                    ) {
+                        store.send(.sendTapped)
+                    }
+
+                    button(
+                        "Scan",
+                        icon: Asset.Assets.Icons.scan.image
+                    ) {
+                        store.send(.scanTapped)
+                    }
+
+                    button(
+                        "More",
+                        icon: Asset.Assets.Icons.dotsMenu.image
+                    ) {
+                        store.send(.moreTapped)
+                    }
+                }
+                .zFont(.medium, size: 12, style: Design.Text.primary)
+                .padding(.top, 24)
+                .padding(.bottom, 32)
+                .screenHorizontalPadding()
+
                 VStack(spacing: 0) {
                     if store.transactionListState.transactions.isEmpty && !store.transactionListState.isInvalidated {
                         noTransactionsView()
@@ -169,6 +203,27 @@ public struct HomeView: View {
                     }
                 }
                 .padding(.top, 40)
+            }
+        }
+    }
+    
+    private func button(_ title: String, icon: Image, action: @escaping () -> Void) -> some View {
+        Button {
+            action()
+        } label: {
+            VStack(spacing: 4) {
+                icon
+                    .resizable()
+                    .renderingMode(.template)
+                    .frame(width: 24, height: 24)
+                
+                Text(title)
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 76)
+            .background {
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(Design.Surfaces.bgSecondary.color(colorScheme))
             }
         }
     }

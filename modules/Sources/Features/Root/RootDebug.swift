@@ -16,9 +16,9 @@ import Pasteboard
 /// In this file is a collection of helpers that control all state and action related operations
 /// for the `Root` with a connection to the UI navigation.
 extension Root {
-    public struct DebugState: Equatable { }
+    public struct DebugState { }
     
-    public indirect enum DebugAction: Equatable {
+    public indirect enum DebugAction {
         case cancelRescan
         case cantStartSync(ZcashError)
         case copySeedToPasteboard

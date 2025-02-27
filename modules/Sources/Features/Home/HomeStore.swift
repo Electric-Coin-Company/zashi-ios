@@ -61,6 +61,12 @@ public struct Home {
         case updateTransactionList([TransactionState])
         case transactionList(TransactionList.Action)
         case walletBalances(WalletBalances.Action)
+        
+        // primary actions
+        case receiveTapped
+        case sendTapped
+        case scanTapped
+        case moreTapped
     }
     
     @Dependency(\.mainQueue) var mainQueue
@@ -105,6 +111,9 @@ public struct Home {
                     .cancel(id: CancelStateId),
                     .cancel(id: CancelEventId)
                 )
+                
+            case .receiveTapped, .sendTapped, .scanTapped, .moreTapped:
+                return .none
 
             case .resolveReviewRequest:
                 if reviewRequest.canRequestReview() {
