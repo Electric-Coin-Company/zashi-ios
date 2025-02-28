@@ -286,10 +286,7 @@ public struct Tabs {
                 state.scanState.forceLibraryToHide = true
                 state.isRateEducationEnabled = userStoredPreferences.exchangeRate() == nil
                 return .none
-                
-            case .path:
-                return .none
-                
+
             case .accountSwitchTapped:
                 state.accountSwitchRequest.toggle()
                 return .none
@@ -390,11 +387,39 @@ public struct Tabs {
                 return .none
 
             case .home(.sendTapped):
-                var test = SendFlow.State()
-                test.address = "aaa"
-                state.path.append(.sendFlow(test))
+//                var test = SendFlow.State(
+//                    addMemoState: false,
+//                    memoState: .initial,
+//                    scanState: .initial,
+//                    walletBalancesState: .initial
+//                )
+//                test.address = "aaa".redacted
+//                state.path.append(.sendFlow(test))
+                state.sendState.address = "aaa2".redacted
+                state.path.append(.sendFlow(state.sendState))
                 state.selectedTab = .send
                 return .none
+
+            case .path(.element(id: _, action: .sendFlow(.addressUpdated))):
+                print("__LD \(state.sendState.address)")
+//                if case let .sendFlow(sendData) = state.path {
+//                    print("__LD \(sendData)")
+//                }
+                for (id, element) in zip(state.path.ids, state.path) {
+                    switch element {
+                    case .sendFlow(let sendState):
+                        print("__LD \(sendState.address)")
+                    default: break
+                    }
+                }
+                return .none
+
+            case .path:
+                return .none
+
+//            case .send(.addressUpdated):
+//                print("__LD \(state.sendState.address)")
+//                return .none
 
             case .home(.seeAllTransactionsTapped):
                 return .send(.updateStackDestinationTransactions(.manager))
