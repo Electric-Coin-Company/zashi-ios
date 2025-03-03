@@ -25,10 +25,10 @@ public struct UserMetadata: Codable {
     }
     
     let version: Int
-    let lastUpdated: TimeInterval
+    let lastUpdated: Int64
     let accountMetadata: UMAccount
     
-    public init(version: Int, lastUpdated: TimeInterval, accountMetadata: UMAccount) {
+    public init(version: Int, lastUpdated: Int64, accountMetadata: UMAccount) {
         self.version = version
         self.lastUpdated = lastUpdated
         self.accountMetadata = accountMetadata
@@ -44,7 +44,7 @@ public struct UMAccount: Codable {
     
     let bookmarked: [UMBookmark]
     let annotations: [UMAnnotation]
-    let read: [UMRead]
+    let read: [String]
 }
 
 public struct UMBookmark: Codable {
@@ -55,7 +55,7 @@ public struct UMBookmark: Codable {
     }
     
     let txId: String
-    let lastUpdated: TimeInterval
+    let lastUpdated: Int64
     var isBookmarked: Bool
 }
 
@@ -68,15 +68,7 @@ public struct UMAnnotation: Codable {
     
     let txId: String
     let content: String?
-    let lastUpdated: TimeInterval
-}
-
-public struct UMRead: Codable {
-    public enum CodingKeys: CodingKey {
-        case txId
-    }
-    
-    let txId: String
+    let lastUpdated: Int64
 }
 
 public extension UserMetadata {
@@ -178,9 +170,7 @@ public extension UserMetadata {
                 let data = try ChaChaPoly.open(sealed, using: subKey)
                 
                 // deserialize the json's data
-                if let decodedUM = try? JSONDecoder().decode(UserMetadata.self, from: data) {
-                    return decodedUM
-                }
+                return try JSONDecoder().decode(UserMetadata.self, from: data)
             } catch {
                 // this key failed to decrypt, try another one
             }

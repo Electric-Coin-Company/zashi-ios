@@ -36,7 +36,7 @@ public class UserMetadataStorage {
     var annotations: [String: UMAnnotation] = [:]
 
     // Read
-    var read: [String: UMRead] = [:]
+    var read: [String: String] = [:]
 
     public init() { }
     
@@ -172,7 +172,7 @@ public class UserMetadataStorage {
         }
         
         umData.accountMetadata.read.forEach { umRead in
-            read[umRead.txId] = umRead
+            read[umRead] = umRead
         }
         
         umData.accountMetadata.annotations.forEach { annotation in
@@ -193,7 +193,7 @@ public class UserMetadataStorage {
         
         return UserMetadata(
             version: UserMetadata.Constants.version,
-            lastUpdated: Date().timeIntervalSince1970 * 1000,
+            lastUpdated: Int64(Date().timeIntervalSince1970 * 1000),
             accountMetadata: umAccount
         )
     }
@@ -208,7 +208,7 @@ public class UserMetadataStorage {
         guard let existingBookmark = bookmarked[txId] else {
             bookmarked[txId] = UMBookmark(
                 txId: txId,
-                lastUpdated: Date().timeIntervalSince1970 * 1000,
+                lastUpdated: Int64(Date().timeIntervalSince1970 * 1000),
                 isBookmarked: true
             )
             return
@@ -216,7 +216,7 @@ public class UserMetadataStorage {
         
         bookmarked[txId] = UMBookmark(
             txId: txId,
-            lastUpdated: Date().timeIntervalSince1970 * 1000,
+            lastUpdated: Int64(Date().timeIntervalSince1970 * 1000),
             isBookmarked: !existingBookmark.isBookmarked
         )
     }
@@ -231,7 +231,7 @@ public class UserMetadataStorage {
         annotations[txId] = UMAnnotation(
             txId: txId,
             content: annotation,
-            lastUpdated: Date().timeIntervalSince1970 * 1000
+            lastUpdated: Int64(Date().timeIntervalSince1970 * 1000) 
         )
     }
     
@@ -255,6 +255,6 @@ public class UserMetadataStorage {
     }
     
     public func readTx(txId: String) {
-        read[txId] = UMRead(txId: txId)
+        read[txId] = txId
     }
 }

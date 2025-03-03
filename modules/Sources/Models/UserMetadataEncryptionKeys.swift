@@ -35,7 +35,10 @@ public struct UserMetadataEncryptionKeys: Codable, Equatable {
             networkType: network
         )
         
-        let privateMetadataKeys = try metadataKey.derivePrivateUseMetadataKey(ufvk: account.ufvk, privateUseSubject: [UInt8](info))
+        let privateMetadataKeys = try metadataKey.derivePrivateUseMetadataKey(
+            ufvk: account.name?.lowercased() == "zashi" ? nil : account.ufvk,
+            privateUseSubject: [UInt8](info)
+        )
 
         keys[Int(zip32AccountIndex.index)] = UserMetadataKeys(privateKeys: privateMetadataKeys)
     }
@@ -100,8 +103,8 @@ public struct UserMetadataKeys: Codable, Equatable, Redactable {
     ) -> SymmetricKey {
         assert(salt.count == 32)
 
-        guard let info = "encryption_key".data(using: .utf8) else {
-            fatalError("Unable to prepare `encryption_key` info")
+        guard let info = "metadata_key".data(using: .utf8) else {
+            fatalError("Unable to prepare `metadata_key` info")
         }
         
         guard let firstKey = keys.first else {
@@ -122,8 +125,8 @@ public struct UserMetadataKeys: Codable, Equatable, Redactable {
     ) -> [SymmetricKey] {
         assert(salt.count == 32)
 
-        guard let info = "encryption_key".data(using: .utf8) else {
-            fatalError("Unable to prepare `encryption_key` info")
+        guard let info = "metadata_key".data(using: .utf8) else {
+            fatalError("Unable to prepare `decryption_key` info")
         }
 
         var decryptionKeys: [SymmetricKey] = []
