@@ -40,6 +40,8 @@ public struct TransactionState: Equatable, Identifiable {
     public var isMarkedAsRead = false
     public var isInAddressBook = false
     public var hasTransparentOutputs = false
+    public var totalSpent: Zatoshi?
+    public var totalReceived: Zatoshi?
 
     public var rawID: Data? = nil
     
@@ -198,6 +200,12 @@ public struct TransactionState: Equatable, Identifiable {
     public var totalAmount: Zatoshi {
         Zatoshi(zecAmount.amount + (fee?.amount ?? 0))
     }
+    
+    public var netValue: String {
+        isShieldingTransaction
+        ? Zatoshi(totalSpent?.amount ?? 0).decimalString()
+        : zecAmount.decimalString()
+    }
 
     public init(
         errorMessage: String? = nil,
@@ -272,6 +280,8 @@ extension TransactionState {
         isTransparentRecipient = false
         self.hasTransparentOutputs = hasTransparentOutputs
         memoCount = transaction.memoCount
+        totalSpent = transaction.totalSpent
+        totalReceived = transaction.totalReceived
 
         // TODO: [#1313] SDK improvements so a client doesn't need to determing if the transaction isPending
         // https://github.com/zcash/ZcashLightClientKit/issues/1313

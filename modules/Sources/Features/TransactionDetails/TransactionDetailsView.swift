@@ -211,7 +211,7 @@ extension TransactionDetailsView {
                                     .frame(width: 51, height: 51)
 
                                 Asset.Assets.Icons.shieldTickFilled.image
-                                    .zImage(size: 24, style: Design.Text.tertiary)
+                                    .zImage(size: 24, style: Design.Text.primary)
                             }
                         }
                         .offset(x: -4)
@@ -243,7 +243,7 @@ extension TransactionDetailsView {
                 if store.isSensitiveContentHidden {
                     Text(L10n.General.hideBalancesMost)
                 } else {
-                    Text(store.transaction.zecAmount.decimalString())
+                    Text(store.transaction.netValue)
                     + Text(" \(tokenName)")
                         .foregroundColor(Design.Text.quaternary.color(colorScheme))
                 }

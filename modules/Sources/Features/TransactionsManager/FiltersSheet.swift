@@ -98,10 +98,11 @@ extension TransactionsManagerView {
                     FilterView(title: L10n.Filter.notes, active: store.isNotesFilterActive) { store.send(.toggleFilter(.notes)) }
                     FilterView(title: L10n.Filter.bookmarked, active: store.isBookmarkedFilterActive) { store.send(.toggleFilter(.bookmarked)) }
                 }
-                
-                HStack(spacing: 8) {
-                    FilterView(title: L10n.Filter.contact, active: store.isContactFilterActive) { store.send(.toggleFilter(.contact)) }
-                }
+
+                // Hidden for now but possibly released in the near future
+//                HStack(spacing: 8) {
+//                    FilterView(title: L10n.Filter.contact, active: store.isContactFilterActive) { store.send(.toggleFilter(.contact)) }
+//                }
             }
             .padding(.bottom, 32)
             

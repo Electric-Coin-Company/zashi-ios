@@ -89,7 +89,7 @@ public extension UserMetadata {
     static func encryptUserMetadata(_ umData: UserMetadata, account: Account) throws -> Data {
         @Dependency(\.walletStorage) var walletStorage
         
-        guard let encryptionKeys = try? walletStorage.exportUserMetadataEncryptionKeys(),
+        guard let encryptionKeys = try? walletStorage.exportUserMetadataEncryptionKeys(account),
                 let umKey = encryptionKeys.getCached(account: account) else {
             throw UserMetadataStorage.UMError.missingEncryptionKey
         }
@@ -131,7 +131,7 @@ public extension UserMetadata {
     static func userMetadataFrom(encryptedData: Data, account: Account) throws -> UserMetadata? {
         @Dependency(\.walletStorage) var walletStorage
         
-        guard let encryptionKeys = try? walletStorage.exportUserMetadataEncryptionKeys(),
+        guard let encryptionKeys = try? walletStorage.exportUserMetadataEncryptionKeys(account),
                 let umKey = encryptionKeys.getCached(account: account) else {
             throw UserMetadataStorage.UMError.missingEncryptionKey
         }
@@ -151,32 +151,39 @@ public extension UserMetadata {
         }
 
         let encryptedSubData = try UserMetadata.subdata(of: encryptedData, in: offset..<encryptedData.count)
-        offset = 0
         
         // Derive the sub-key for decrypting the user metadata.
         let salt = encryptedSubData.prefix(upTo: 32)
-        let subKey = umKey.deriveEncryptionKey(salt: salt)
-        offset += 32
-
-        // Deserialize `metadata version`
-        let metadataVersionBytes = try UserMetadata.subdata(of: encryptedSubData, in: offset..<(offset + UserMetadataStorage.Constants.int64Size))
-        offset += UserMetadataStorage.Constants.int64Size
         
-        guard let metadataVersion = UserMetadata.bytesToInt(Array(metadataVersionBytes)) else {
-            return nil
-        }
+        let subKeys = umKey.deriveDecryptionKeys(salt: salt)
         
-        guard metadataVersion == UserMetadata.Constants.version else {
-            throw UserMetadataStorage.UMError.metadataVersionNotSupported
-        }
-
-        // Unseal the encrypted user metadata.
-        let sealed = try ChaChaPoly.SealedBox.init(combined: encryptedSubData.suffix(from: 32 +  UserMetadataStorage.Constants.int64Size))
-        let data = try ChaChaPoly.open(sealed, using: subKey)
-        
-        // deserialize the json's data
-        if let decodedUM = try? JSONDecoder().decode(UserMetadata.self, from: data) {
-            return decodedUM
+        for subKey in subKeys {
+            offset = 32
+            
+            do {
+                // Deserialize `metadata version`
+                let metadataVersionBytes = try UserMetadata.subdata(of: encryptedSubData, in: offset..<(offset + UserMetadataStorage.Constants.int64Size))
+                offset += UserMetadataStorage.Constants.int64Size
+                
+                guard let metadataVersion = UserMetadata.bytesToInt(Array(metadataVersionBytes)) else {
+                    return nil
+                }
+                
+                guard metadataVersion == UserMetadata.Constants.version else {
+                    throw UserMetadataStorage.UMError.metadataVersionNotSupported
+                }
+                
+                // Unseal the encrypted user metadata.
+                let sealed = try ChaChaPoly.SealedBox.init(combined: encryptedSubData.suffix(from: 32 +  UserMetadataStorage.Constants.int64Size))
+                let data = try ChaChaPoly.open(sealed, using: subKey)
+                
+                // deserialize the json's data
+                if let decodedUM = try? JSONDecoder().decode(UserMetadata.self, from: data) {
+                    return decodedUM
+                }
+            } catch {
+                // this key failed to decrypt, try another one
+            }
         }
 
         return nil

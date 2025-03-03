@@ -19,9 +19,13 @@ public struct WalletStorage {
     public enum Constants {
         public static let zcashStoredWallet = "zcashStoredWallet"
         public static let zcashStoredAdressBookEncryptionKeys = "zcashStoredAdressBookEncryptionKeys"
-        public static let zcashStoredUserMetadataEncryptionKeys = "zcashStoredUserMetadataEncryptionKeys"
+        public static let zcashStoredUserMetadataEncryptionKeys = "zcashStoredMetadataEncryptionKeys"
         /// Versioning of the stored data
         public static let zcashKeychainVersion = 1
+        
+        public static func accountMetadataFilename(account: Account) -> String {
+            Constants.zcashStoredUserMetadataEncryptionKeys + "_\(account.name?.lowercased() ?? "")"
+        }
     }
 
     public enum KeychainError: Error, Equatable {
@@ -150,6 +154,9 @@ public struct WalletStorage {
     
     public func resetZashi() throws {
         try deleteData(forKey: Constants.zcashStoredWallet)
+        try? deleteData(forKey: Constants.zcashStoredAdressBookEncryptionKeys)
+        try? deleteData(forKey: "\(Constants.zcashStoredUserMetadataEncryptionKeys)_zashi")
+        try? deleteData(forKey: "\(Constants.zcashStoredUserMetadataEncryptionKeys)_keystone")
     }
     
     public func importAddressBookEncryptionKeys(_ keys: AddressBookEncryptionKeys) throws {
@@ -188,13 +195,13 @@ public struct WalletStorage {
         return wallet
     }
     
-    public func importUserMetadataEncryptionKeys(_ keys: UserMetadataEncryptionKeys) throws {
+    public func importUserMetadataEncryptionKeys(_ keys: UserMetadataEncryptionKeys, account: Account) throws {
         do {
             guard let data = try encode(object: keys) else {
                 throw KeychainError.encoding
             }
             
-            try setData(data, forKey: Constants.zcashStoredUserMetadataEncryptionKeys)
+            try setData(data, forKey: Constants.accountMetadataFilename(account: account))
         } catch KeychainError.duplicate {
             throw WalletStorageError.alreadyImported
         } catch {
@@ -202,11 +209,11 @@ public struct WalletStorage {
         }
     }
     
-    public func exportUserMetadataEncryptionKeys() throws -> UserMetadataEncryptionKeys {
+    public func exportUserMetadataEncryptionKeys(account: Account) throws -> UserMetadataEncryptionKeys {
         let reqData: Data?
         
         do {
-            reqData = try data(forKey: Constants.zcashStoredUserMetadataEncryptionKeys)
+            reqData = try data(forKey: Constants.accountMetadataFilename(account: account))
         } catch KeychainError.noDataFound {
             throw WalletStorageError.uninitializedUserMetadataEncryptionKeys
         } catch {

@@ -118,7 +118,7 @@ public struct TransactionRowView: View {
                 Text(L10n.General.hideBalancesMost)
             } else {
                 Text(transaction.isSpending ? "- " : "")
-                + Text(transaction.zecAmount.decimalString())
+                + Text(transaction.netValue)
                 + Text(" \(tokenName)")
             }
         }

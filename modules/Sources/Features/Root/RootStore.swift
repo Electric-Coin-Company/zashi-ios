@@ -185,6 +185,7 @@ public struct Root {
         
         // UserMetadata
         case loadUserMetadata
+        case resolveMetadataEncryptionKeys
     }
 
     @Dependency(\.addressBook) var addressBook

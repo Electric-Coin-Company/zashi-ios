@@ -78,6 +78,6 @@ public struct WalletStorageClient {
     public var importAddressBookEncryptionKeys: (AddressBookEncryptionKeys) throws -> Void
     public var exportAddressBookEncryptionKeys: () throws -> AddressBookEncryptionKeys
     
-    public var importUserMetadataEncryptionKeys: (UserMetadataEncryptionKeys) throws -> Void
-    public var exportUserMetadataEncryptionKeys: () throws -> UserMetadataEncryptionKeys
+    public var importUserMetadataEncryptionKeys: (UserMetadataEncryptionKeys, Account) throws -> Void
+    public var exportUserMetadataEncryptionKeys: (Account) throws -> UserMetadataEncryptionKeys
 }

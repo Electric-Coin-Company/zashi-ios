@@ -18,17 +18,29 @@ public struct UserMetadataEncryptionKeys: Codable, Equatable {
         public static let version = 1
     }
     
-    var keys: [Int: UserMetadataKey]
+    var keys: [Int: UserMetadataKeys]
 
-    public mutating func cacheFor(seed: [UInt8], account: Account, network: NetworkType) throws{
+    public mutating func cacheFor(seed: [UInt8], account: Account, network: NetworkType) throws {
         guard let zip32AccountIndex = account.hdAccountIndex else {
             return
         }
         
-        keys[Int(zip32AccountIndex.index)] = try UserMetadataKey(seed: seed, account: account, network: network)
+        guard let info = "metadata".data(using: .utf8) else {
+            fatalError("Unable to prepare `info` info")
+        }
+        
+        let metadataKey = try AccountMetadataKey(
+            from: seed,
+            accountIndex: zip32AccountIndex,
+            networkType: network
+        )
+        
+        let privateMetadataKeys = try metadataKey.derivePrivateUseMetadataKey(ufvk: account.ufvk, privateUseSubject: [UInt8](info))
+
+        keys[Int(zip32AccountIndex.index)] = UserMetadataKeys(privateKeys: privateMetadataKeys)
     }
 
-    public func getCached(account: Account) -> UserMetadataKey? {
+    public func getCached(account: Account) -> UserMetadataKeys? {
         guard let zip32AccountIndex = account.hdAccountIndex else {
             return nil
         }
@@ -43,19 +55,25 @@ extension UserMetadataEncryptionKeys {
     )
 }
 
-public struct UserMetadataKey: Codable, Equatable, Redactable {
-    let key: SymmetricKey
+public struct UserMetadataKeys: Codable, Equatable, Redactable {
+    let keys: [SymmetricKey]
 
     public init(from decoder: any Decoder) throws {
         let container = try decoder.singleValueContainer()
-        key = SymmetricKey(data: try container.decode(Data.self))
+        keys = try container.decode([Data].self).map { SymmetricKey(data: $0) }
     }
 
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.singleValueContainer()
-        try key.withUnsafeBytes { key in
-            let key = Data(key)
-            try container.encode(key)
+        do {
+            let privateKeys = keys.map { symmetricKey in
+                symmetricKey.withUnsafeBytes { key in
+                    return Data(key)
+                }
+            }
+            try container.encode(privateKeys)
+        } catch {
+            fatalError("Unable to encode `UserMetadataKeys`")
         }
     }
 
@@ -67,21 +85,8 @@ public struct UserMetadataKey: Codable, Equatable, Redactable {
      * control requirements for the seed phrase and the user metadata, this key
      * should be cached in the app's keystore.
      */
-    public init(seed: [UInt8], account: Account, network: NetworkType) throws {
-        let zip32AccountIndex: Zip32AccountIndex
-        
-        if let zip32AccountIndexUnwrapped = account.hdAccountIndex {
-            zip32AccountIndex = zip32AccountIndexUnwrapped
-        } else {
-            zip32AccountIndex = Zip32AccountIndex(0)
-        }
-
-        self.key = try SymmetricKey(data: DerivationToolClient.live().deriveArbitraryAccountKey(
-            [UInt8]("ZashiAddressBookEncryptionV1".utf8),
-            seed,
-            zip32AccountIndex,
-            network
-        ))
+    public init(privateKeys: [Data]) {
+        keys = privateKeys.map { SymmetricKey(data: $0) }
     }
 
     /**
@@ -99,26 +104,60 @@ public struct UserMetadataKey: Codable, Equatable, Redactable {
             fatalError("Unable to prepare `encryption_key` info")
         }
         
-        return HKDF<SHA256>.deriveKey(inputKeyMaterial: key, info: salt + info, outputByteCount: 32)
+        guard let firstKey = keys.first else {
+            fatalError("Unable to process `firstKey`")
+        }
+        
+        return HKDF<SHA256>.deriveKey(inputKeyMaterial: firstKey, info: salt + info, outputByteCount: 32)
+    }
+    
+    /**
+     * Derives a one-time user metadata decryption keys.
+     *
+     * At decryption time, the one-time property MUST be ensured by generating a
+     * random 32-byte salt.
+     */
+    public func deriveDecryptionKeys(
+        salt: Data
+    ) -> [SymmetricKey] {
+        assert(salt.count == 32)
+
+        guard let info = "encryption_key".data(using: .utf8) else {
+            fatalError("Unable to prepare `encryption_key` info")
+        }
+
+        var decryptionKeys: [SymmetricKey] = []
+
+        keys.forEach {
+            decryptionKeys.append(HKDF<SHA256>.deriveKey(inputKeyMaterial: $0, info: salt + info, outputByteCount: 32))
+        }
+
+        return decryptionKeys
     }
 
     /**
      * Derives the filename that this key is able to decrypt.
      */
-    public func fileIdentifier() -> String? {
+    public func fileIdentifier(account: Account) -> String? {
         guard let info = "file_identifier".data(using: .utf8) else {
             fatalError("Unable to prepare `file_identifier` info")
         }
 
+        guard let firstKey = keys.first else {
+            fatalError("Unable to process `firstKey`")
+        }
+
         // Perform HKDF with SHA-256
-        let hkdfKey = HKDF<SHA256>.deriveKey(inputKeyMaterial: key, info: info, outputByteCount: 32)
+        let hkdfKey = HKDF<SHA256>.deriveKey(inputKeyMaterial: firstKey, info: info, outputByteCount: 32)
         
         // Convert the HKDF output to a hex string
         let fileIdentifier = hkdfKey.withUnsafeBytes { rawBytes in
             rawBytes.map { String(format: "%02x", $0) }.joined()
         }
         
+        let prefix = "\(account.name?.lowercased() ?? "")"
+        
         // Prepend the prefix to the result
-        return "zashi-user-metadata-\(fileIdentifier)"
+        return "\(prefix)-metadata-\(fileIdentifier)"
     }
 }

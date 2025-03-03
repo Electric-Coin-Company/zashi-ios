@@ -45,12 +45,12 @@ public class UserMetadataStorage {
     func filenameForEncryptedFile(account: Account) throws -> String {
         @Dependency(\.walletStorage) var walletStorage
 
-        guard let encryptionKeys = try? walletStorage.exportUserMetadataEncryptionKeys(),
+        guard let encryptionKeys = try? walletStorage.exportUserMetadataEncryptionKeys(account),
                 let umKey = encryptionKeys.getCached(account: account) else {
             throw UMError.missingEncryptionKey
         }
 
-        guard let filename = umKey.fileIdentifier() else {
+        guard let filename = umKey.fileIdentifier(account: account) else {
             throw UMError.fileIdentifier
         }
         
@@ -97,7 +97,7 @@ public class UserMetadataStorage {
         
         let encryptedUMData = try UserMetadata.encryptUserMetadata(metadata, account: account)
         
-        try encryptedUMData.write(to: fileURL, options: .atomic)
+        try encryptedUMData.write(to: fileURL)
 
         @Dependency(\.remoteStorage) var remoteStorage
 
@@ -132,10 +132,10 @@ public class UserMetadataStorage {
         // Try to find and get the data from the encrypted file with the latest encryption version
         let encryptedFileURL = documentsDirectory.appendingPathComponent(try filenameForEncryptedFile(account: account))
         
-        if FileManager.default.fileExists(atPath: encryptedFileURL.path) {
+        if !FileManager.default.fileExists(atPath: encryptedFileURL.path) {
             throw UMError.localFileDoesntExist
         }
-        
+
         if let encryptedUMData = try? Data(contentsOf: encryptedFileURL) {
             return try UserMetadata.userMetadataFrom(encryptedData: encryptedUMData, account: account)
         }
@@ -201,7 +201,7 @@ public class UserMetadataStorage {
     // MARK: - Bookmarking
     
     public func isBookmarked(txId: String) -> Bool {
-        bookmarked[txId] != nil
+        bookmarked[txId]?.isBookmarked ?? false
     }
     
     public func toggleBookmarkFor(txId: String) {

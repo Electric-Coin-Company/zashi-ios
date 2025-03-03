@@ -309,7 +309,7 @@ extension SDKSynchronizerClient {
         }
 
         var clearedTxs: [TransactionState] = []
-        
+
         let latestBlockHeight = try await SDKSynchronizerClient.latestBlockHeight(synchronizer: synchronizer)
         
         for clearedTransaction in clearedTransactions {

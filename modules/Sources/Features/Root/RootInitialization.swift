@@ -319,46 +319,29 @@ extension Root {
                             
                             let walletAccounts = try await sdkSynchronizer.walletAccounts()
                             await send(.initialization(.loadedWalletAccounts(walletAccounts)))
+                            await send(.resolveMetadataEncryptionKeys)
 
                             try await sdkSynchronizer.start(false)
 
                             var selectedAccount: WalletAccount?
-                                
+                            
                             for account in walletAccounts {
                                 if account.vendor == .zcash {
                                     selectedAccount = account
-                                    break
                                 }
                             }
 
                             if let account = selectedAccount {
                                 let addressBookEncryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys()
                                 if addressBookEncryptionKeys == nil {
-                                    var keys = AddressBookEncryptionKeys.empty
-                                    try keys.cacheFor(
-                                        seed: seedBytes,
-                                        account: account.account,
-                                        network: zcashSDKEnvironment.network.networkType
-                                    )
-                                    
                                     do {
+                                        var keys = AddressBookEncryptionKeys.empty
+                                        try keys.cacheFor(
+                                            seed: seedBytes,
+                                            account: account.account,
+                                            network: zcashSDKEnvironment.network.networkType
+                                        )
                                         try walletStorage.importAddressBookEncryptionKeys(keys)
-                                    } catch {
-                                        // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
-                                    }
-                                }
-
-                                let userMetadataEncryptionKeys = try? walletStorage.exportUserMetadataEncryptionKeys()
-                                if userMetadataEncryptionKeys == nil {
-                                    var keys = UserMetadataEncryptionKeys.empty
-                                    try keys.cacheFor(
-                                        seed: seedBytes,
-                                        account: account.account,
-                                        network: zcashSDKEnvironment.network.networkType
-                                    )
-                                    
-                                    do {
-                                        try walletStorage.importUserMetadataEncryptionKeys(keys)
                                     } catch {
                                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
                                     }
@@ -410,7 +393,45 @@ extension Root {
                 )
 
             case .tabs(.addKeystoneHWWallet(.loadedWalletAccounts)), .tabs(.settings(.integrations(.addKeystoneHWWallet(.loadedWalletAccounts)))):
-                return .send(.loadUserMetadata)
+                return .merge(
+                    .send(.resolveMetadataEncryptionKeys),
+                    .send(.loadUserMetadata)
+                )
+                
+            case .resolveMetadataEncryptionKeys:
+                do {
+                    let storedWallet: StoredWallet
+                    do {
+                        storedWallet = try walletStorage.exportWallet()
+                    } catch {
+                        return .send(.destination(.updateDestination(.osStatusError)))
+                    }
+                    try mnemonic.isValid(storedWallet.seedPhrase.value())
+                    let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
+                    
+                    return .run { [walletAccounts = state.walletAccounts] send in
+                        do {
+                            
+                            for account in walletAccounts {
+                                let userMetadataEncryptionKeys = try? walletStorage.exportUserMetadataEncryptionKeys(account.account)
+                                if userMetadataEncryptionKeys == nil {
+                                    do {
+                                        var keys = UserMetadataEncryptionKeys.empty
+                                        try keys.cacheFor(
+                                            seed: seedBytes,
+                                            account: account.account,
+                                            network: zcashSDKEnvironment.network.networkType
+                                        )
+                                        try walletStorage.importUserMetadataEncryptionKeys(keys, account.account)
+                                    } catch {
+                                        // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch { }
+                return .none
                 
             case .initialization(.checkBackupPhraseValidation):
                 let storedWallet: StoredWallet

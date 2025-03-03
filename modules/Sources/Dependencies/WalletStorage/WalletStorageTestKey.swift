@@ -33,7 +33,7 @@ extension WalletStorageClient {
         resetZashi: { },
         importAddressBookEncryptionKeys: { _ in },
         exportAddressBookEncryptionKeys: { .empty },
-        importUserMetadataEncryptionKeys: { _ in },
-        exportUserMetadataEncryptionKeys: { .empty }
+        importUserMetadataEncryptionKeys: { _, _ in },
+        exportUserMetadataEncryptionKeys: { _ in .empty }
     )
 }
