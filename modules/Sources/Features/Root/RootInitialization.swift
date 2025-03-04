@@ -362,6 +362,7 @@ extension Root {
                 
             case .initialization(.initializationSuccessfullyDone(let uAddress)):
                 state.tabsState.settingsState.integrationsState.uAddress = uAddress
+                state.tabsState.uAddress = uAddress
                 if let uAddress = uAddress?.stringEncoded {
                     state.tabsState.sendState.memoState.uAddress = uAddress
                 }

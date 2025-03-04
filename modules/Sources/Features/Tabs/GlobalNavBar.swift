@@ -13,7 +13,7 @@ import Settings
 
 extension TabsView {
     func settingsButton() -> some View {
-        Asset.Assets.Icons.menu.image
+        Asset.Assets.Icons.settings.image
             .zImage(size: 24, style: Design.Text.primary)
             .padding(8)
             .navigationLink(
