@@ -8,6 +8,13 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ### Added
 - Export transaction history as a CSV file in the Advanced Settings.
+- Add private Notes to transactions.
+- Mark transactions as favorite with a new Bookmark feature.
+- New Transaction Filters to filter for Received, Sent, Memos, Notes, and Bookmarked transactions.
+- Access Keystone from the Integrations screen.
+
+### Fixed
+- No more failures of Keystone Send, issue with missing Sapling parameters is fixed!
 
 ## 1.3.3 build 7 (2025-02-10)
 
