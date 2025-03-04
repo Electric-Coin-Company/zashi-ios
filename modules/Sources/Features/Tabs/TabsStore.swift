@@ -33,11 +33,14 @@ import TransactionsManager
 import TransactionDetails
 import ReadTransactionsStorage
 import UserMetadataProvider
+import PartnerKeys
 
 @Reducer
 public struct Tabs {
     @Reducer
     public enum Path {
+        case receive(Receive)
+        case scan(Scan)
         case sendFlow(SendFlow)
     }
     
@@ -97,6 +100,7 @@ public struct Tabs {
         public var addKeystoneHWWalletState: AddKeystoneHWWallet.State = .initial
         public var addressBookState: AddressBook.State = .initial
         public var addressDetailsState: AddressDetails.State
+        public var appId: String?
         public var balanceBreakdownState: Balances.State
         public var currencyConversionSetupState: CurrencyConversionSetup.State
         public var destination: Destination?
@@ -105,6 +109,7 @@ public struct Tabs {
         public var isRateEducationEnabled = false
         public var isRateTooltipEnabled = false
         public var homeState: Home.State
+        public var moreRequest = false
         public var receiveState: Receive.State
         public var requestZecState: RequestZec.State
         public var scanState: Scan.State = .initial
@@ -131,11 +136,26 @@ public struct Tabs {
         @Shared(.inMemory(.transactionMemos)) public var transactionMemos: [String: [String]] = [:]
         @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
         public var transactionsManagerState: TransactionsManager.State = .initial
+        public var uAddress: UnifiedAddress? = nil
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         public var zecKeyboardState: ZecKeyboard.State
-        
-        public var inAppBrowserURL: String {
-            "https://keyst.one/shop/products/keystone-3-pro?discount=Zashi"
+
+        public var isKeystoneConnected: Bool {
+            for account in walletAccounts {
+                if account.vendor == .keystone {
+                    return true
+                }
+            }
+            
+            return false
+        }
+
+        public var inAppBrowserURL: String? {
+            if let address = try? uAddress?.transparentReceiver().stringEncoded, let appId {
+                return L10n.Partners.coinbaseOnrampUrl(appId, address)
+            }
+            
+            return nil
         }
 
         public init(
@@ -206,6 +226,10 @@ public struct Tabs {
         case updateStackDestinationTransactionsHP(Tabs.State.StackDestinationTransactionsHP?)
         case walletAccountTapped(WalletAccount)
         case zecKeyboard(ZecKeyboard.Action)
+        
+        // more actions
+        case coinbaseTapped
+        case flexaTapped
     }
 
     @Dependency(\.exchangeRate) var exchangeRate
@@ -282,6 +306,7 @@ public struct Tabs {
         Reduce { state, action in
             switch action {
             case .onAppear:
+                state.appId = PartnerKeys.cbProjectId
                 state.scanState.instructions = L10n.Keystone.scanInfo
                 state.scanState.forceLibraryToHide = true
                 state.isRateEducationEnabled = userStoredPreferences.exchangeRate() == nil
@@ -293,6 +318,7 @@ public struct Tabs {
                 
             case .addKeystoneHWWalletTapped:
                 state.accountSwitchRequest = false
+                state.moreRequest = false
                 state.scanState.checkers = [.keystoneScanChecker]
                 return .send(.updateStackDestinationAddKeystoneHWWallet(.addKeystoneHWWallet))
                 
@@ -381,9 +407,26 @@ public struct Tabs {
                 }
                 return .send(.updateStackDestinationRequestPayment(.requestPaymentConfirmation))
 
+            case .coinbaseTapped:
+                state.moreRequest = false
+                state.isInAppBrowserOn = true
+                return .none
+                
+            case .flexaTapped:
+                return .none
+
+            case .home(.moreTapped):
+                state.moreRequest.toggle()
+                return .none
+                
+            case .home(.scanTapped):
+                state.path.append(.scan(Scan.State()))
+                return .none
+
             case .home(.receiveTapped):
-                print("__LD \(state.sendState.address)")
-                state.selectedTab = .receive
+                state.path.append(.receive(Receive.State()))
+//                print("__LD \(state.sendState.address)")
+//                state.selectedTab = .receive
                 return .none
 
             case .home(.sendTapped):
@@ -397,22 +440,22 @@ public struct Tabs {
 //                state.path.append(.sendFlow(test))
                 state.sendState.address = "aaa2".redacted
                 state.path.append(.sendFlow(state.sendState))
-                state.selectedTab = .send
+//                state.selectedTab = .send
                 return .none
 
-            case .path(.element(id: _, action: .sendFlow(.addressUpdated))):
-                print("__LD \(state.sendState.address)")
-//                if case let .sendFlow(sendData) = state.path {
-//                    print("__LD \(sendData)")
+//            case .path(.element(id: _, action: .sendFlow(.addressUpdated))):
+//                print("__LD \(state.sendState.address)")
+////                if case let .sendFlow(sendData) = state.path {
+////                    print("__LD \(sendData)")
+////                }
+//                for (id, element) in zip(state.path.ids, state.path) {
+//                    switch element {
+//                    case .sendFlow(let sendState):
+//                        print("__LD \(sendState.address)")
+//                    default: break
+//                    }
 //                }
-                for (id, element) in zip(state.path.ids, state.path) {
-                    switch element {
-                    case .sendFlow(let sendState):
-                        print("__LD \(sendState.address)")
-                    default: break
-                    }
-                }
-                return .none
+//                return .none
 
             case .path:
                 return .none
