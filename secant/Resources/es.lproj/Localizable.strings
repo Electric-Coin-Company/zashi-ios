@@ -1,5 +1,5 @@
 // MARK: - Plain Onboarding Flow
-"plainOnboarding.title" = "La billetera de Zcash más fácil de usar. Diseñada para pagos privados.";
+"plainOnboarding.title" = "Una billetera Zcash (ZEC) diseñada para pagos privados";
 "plainOnboarding.button.createNewWallet" = "Crear nueva billetera";
 "plainOnboarding.button.restoreWallet" = "Restaurar billetera existente";
 

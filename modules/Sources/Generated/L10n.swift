@@ -537,8 +537,8 @@ public enum L10n {
     }
   }
   public enum PlainOnboarding {
-    /// The most user-friendly Zcash wallet. Built for private payments.
-    public static let title = L10n.tr("Localizable", "plainOnboarding.title", fallback: "The most user-friendly Zcash wallet. Built for private payments.")
+    /// A Zcash (ZEC) wallet built for private payments
+    public static let title = L10n.tr("Localizable", "plainOnboarding.title", fallback: "A Zcash (ZEC) wallet built for private payments")
     public enum Button {
       /// Create new wallet
       public static let createNewWallet = L10n.tr("Localizable", "plainOnboarding.button.createNewWallet", fallback: "Create new wallet")
