@@ -1,5 +1,5 @@
 // MARK: - Plain Onboarding Flow
-"plainOnboarding.title" = "The most user-friendly Zcash wallet. Built for private payments.";
+"plainOnboarding.title" = "A Zcash (ZEC) wallet built for private payments";
 "plainOnboarding.button.createNewWallet" = "Create new wallet";
 "plainOnboarding.button.restoreWallet" = "Restore existing wallet";
 
