@@ -113,7 +113,7 @@ extension Root {
                 exchangeRate.refreshExchangeRateUSD()
                 return .none
 
-            case .tabs(.settings(.integrations(.flexaTapped))):
+            case .tabs(.settings(.integrations(.flexaTapped))), .tabs(.flexaTapped):
                 flexaHandler.open()
                 return .publisher {
                     flexaHandler.onTransactionRequest()

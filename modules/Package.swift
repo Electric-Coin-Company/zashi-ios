@@ -862,6 +862,7 @@ let package = Package(
                 "Generated",
                 "Home",
                 "Models",
+                "PartnerKeys",
                 "ReadTransactionsStorage",
                 "Receive",
                 "RequestZec",

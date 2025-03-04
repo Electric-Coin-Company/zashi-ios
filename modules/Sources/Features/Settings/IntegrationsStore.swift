@@ -24,7 +24,6 @@ public struct Integrations {
         public var appBuild = ""
         public var appId: String?
         public var appVersion = ""
-        public var isFlexaOn = false
         public var isInAppBrowserOn = false
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
         public var scanState: Scan.State = .initial
