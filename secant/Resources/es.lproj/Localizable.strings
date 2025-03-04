@@ -510,12 +510,12 @@
 "keystoneTransactionReject.rejectSig" = "Rechazar firma";
 
 // Transaction History Tax Export
-"taxExport.fileName" = "%@_transaction_history_%@.csv";
-"taxExport.download" = "Download";
-"taxExport.title" = "Data Export";
-"taxExport.taxFile" = "Export Tax File";
-"taxExport.desc" = "Download your %@ transaction history from the previous calendar year in a .csv format.";
-"taxExport.shareDesc" = "%@ transaction history";
+"taxExport.fileName" = "%@_historial_de_transacciones_%@.csv";
+"taxExport.download" = "Descargar";
+"taxExport.title" = "Exportación de Datos";
+"taxExport.taxFile" = "Exportar Archivo de Impuestos";
+"taxExport.desc" = "Descarga el historial de transacciones de %@ del año calendario anterior en formato .csv.";
+"taxExport.shareDesc" = "%@ historial de transacciones";
 
 // transaction history redesign
 "transactionHistory.title" = "Transacciones";
