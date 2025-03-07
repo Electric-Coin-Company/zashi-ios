@@ -265,5 +265,3 @@ extension AddressBookClient {
         return data.subdata(in: range)
     }
 }
-
-

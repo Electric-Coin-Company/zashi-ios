@@ -19,4 +19,6 @@ public extension String {
     static let walletAccounts = "sharedStateKey_walletAccounts"
     static let selectedWalletAccount = "sharedStateKey_selectedWalletAccount"
     static let zashiWalletAccount = "sharedStateKey_zashiWalletAccount"
+    static let transactions = "sharedStateKey_transactions"
+    static let transactionMemos = "sharedStateKey_transactionMemos"
 }

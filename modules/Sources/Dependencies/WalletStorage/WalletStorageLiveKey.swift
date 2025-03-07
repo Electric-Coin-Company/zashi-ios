@@ -44,6 +44,12 @@ extension WalletStorageClient: DependencyKey {
             },
             exportAddressBookEncryptionKeys: {
                 try walletStorage.exportAddressBookEncryptionKeys()
+            },
+            importUserMetadataEncryptionKeys: { keys, account in
+                try walletStorage.importUserMetadataEncryptionKeys(keys, account: account)
+            },
+            exportUserMetadataEncryptionKeys: { account in
+                try walletStorage.exportUserMetadataEncryptionKeys(account: account)
             }
         )
     }

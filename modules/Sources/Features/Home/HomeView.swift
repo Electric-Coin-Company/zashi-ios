@@ -11,6 +11,8 @@ import Models
 import WalletBalances
 
 public struct HomeView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     let store: StoreOf<Home>
     let tokenName: String
     
@@ -24,7 +26,6 @@ public struct HomeView: View {
     public var body: some View {
         WithPerceptionTracking {
             VStack(spacing: 0) {
-
                 WalletBalancesView(
                     store: store.scope(
                         state: \.walletBalancesState,
@@ -46,16 +47,25 @@ public struct HomeView: View {
                     .frame(maxWidth: .infinity)
                     .background(Asset.Colors.syncProgresBcg.color)
                     .padding(.top, 7)
+                    .padding(.bottom, 20)
                 }
                 
-                TransactionListView(
-                    store:
-                        store.scope(
-                            state: \.transactionListState,
-                            action: \.transactionList
-                        ),
-                    tokenName: tokenName
-                )
+                VStack(spacing: 0) {
+                    if store.transactionListState.transactions.isEmpty && !store.transactionListState.isInvalidated {
+                        noTransactionsView()
+                    } else {
+                        transactionsView()
+
+                        TransactionListView(
+                            store:
+                                store.scope(
+                                    state: \.transactionListState,
+                                    action: \.transactionList
+                                ),
+                            tokenName: tokenName
+                        )
+                    }
+                }
             }
             .walletStatusPanel()
             .applyScreenBackground()
@@ -80,6 +90,88 @@ public struct HomeView: View {
             )
         }
     }
+
+    @ViewBuilder func transactionsView() -> some View {
+        WithPerceptionTracking {
+            HStack(spacing: 0) {
+                Text(L10n.TransactionHistory.title)
+                    .zFont(.semiBold, size: 18, style: Design.Text.primary)
+                
+                Spacer()
+                
+                if store.transactionListState.transactions.count > TransactionList.Constants.homePageTransactionsCount {
+                    Button {
+                        store.send(.seeAllTransactionsTapped)
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text(L10n.TransactionHistory.seeAll)
+                                .zFont(.semiBold, size: 14, style: Design.Btns.Tertiary.fg)
+                            
+                            Asset.Assets.chevronRight.image
+                                .zImage(size: 16, style: Design.Btns.Tertiary.fg)
+                        }
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background {
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(Design.Btns.Tertiary.bg.color(colorScheme))
+                        }
+                    }
+                }
+            }
+            .screenHorizontalPadding()
+        }
+    }
+
+    @ViewBuilder func noTransactionsView() -> some View {
+        WithPerceptionTracking {
+            ZStack {
+                VStack(spacing: 0) {
+                    ForEach(0..<5) { _ in
+                        NoTransactionPlaceholder()
+                    }
+                    
+                    Spacer()
+                }
+                .overlay {
+                    LinearGradient(
+                        stops: [
+                            Gradient.Stop(color: .clear, location: 0.0),
+                            Gradient.Stop(color: Asset.Colors.background.color, location: 0.3)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                }
+                
+                VStack(spacing: 0) {
+                    Asset.Assets.Illustrations.emptyState.image
+                        .resizable()
+                        .frame(width: 164, height: 164)
+                        .padding(.bottom, 20)
+
+                    Text(L10n.TransactionHistory.nothingHere)
+                        .zFont(.semiBold, size: 18, style: Design.Text.primary)
+                        .padding(.bottom, 8)
+
+                    if walletStatus != .restoring {
+                        Text(L10n.TransactionHistory.makeTransaction)
+                            .zFont(size: 14, style: Design.Text.tertiary)
+                            .padding(.bottom, 20)
+                        
+                        ZashiButton(
+                            L10n.TransactionHistory.getSomeZec,
+                            type: .tertiary,
+                            infinityWidth: false
+                        ) {
+                            store.send(.getSomeZecTapped)
+                        }
+                    }
+                }
+                .padding(.top, 40)
+            }
+        }
+    }
 }
 
 // MARK: - Previews
@@ -97,7 +189,7 @@ struct HomeView_Previews: PreviewProvider {
                                         synchronizerStatusSnapshot: SyncStatusSnapshot(.syncing(0.41)),
                                         syncStatusMessage: "Syncing"
                                     ),
-                                    transactionListState: .placeholder,
+                                    transactionListState: .initial,
                                     walletBalancesState: .initial,
                                     walletConfig: .initial
                                 )

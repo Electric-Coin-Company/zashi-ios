@@ -38,7 +38,7 @@ public struct WalletStorageClient {
     ///   - `WalletStorageError.alreadyImported` when valid wallet is already in the storage
     ///   - `WalletStorageError.storageError` when some unrecognized error occurred
     public let importWallet: (String, BlockHeight?, MnemonicLanguageType, Bool) throws -> Void
-
+    
     /// Load the representation of the wallet from the persistent and secured storage.
     ///
     /// - Returns: the representation of the wallet from the persistent and secured storage.
@@ -47,12 +47,12 @@ public struct WalletStorageClient {
     ///   - `WalletStorageError.storageError` when some unrecognized error occurred.
     ///   - `WalletStorageError.unsupportedVersion` when wallet's version stored in the keychain is outdated.
     public var exportWallet: () throws -> StoredWallet
-
+    
     /// Check if the wallet representation `StoredWallet` is present in the persistent storage.
     ///
     /// - Returns: the information whether some wallet is stored or is not available
     public var areKeysPresent: () throws -> Bool
-
+    
     /// Update the birthday in the securely stored wallet.
     ///
     /// - Parameters:
@@ -61,7 +61,7 @@ public struct WalletStorageClient {
     ///   - `WalletStorage.KeychainError.encoding`:  when encoding the wallet's data failed.
     ///   - `WalletStorageError.storageError` when some unrecognized error occurred.
     public let updateBirthday: (BlockHeight) throws -> Void
-
+    
     /// Update the information that user has passed the recovery phrase backup test.
     /// The function doesn't take any parameters, default value is the user hasn't passed the test
     /// and this function only sets the true = fact user passed.
@@ -70,11 +70,14 @@ public struct WalletStorageClient {
     ///   - `WalletStorage.KeychainError.encoding`:  when encoding the wallet's data failed.
     ///   - `WalletStorageError.storageError` when some unrecognized error occurred.
     public let markUserPassedPhraseBackupTest: (Bool) throws -> Void
-
+    
     /// Use carefully: deletes the stored wallet.
     /// There's no fate but what we make for ourselves - Sarah Connor.
     public var resetZashi: () throws -> Void
-
+    
     public var importAddressBookEncryptionKeys: (AddressBookEncryptionKeys) throws -> Void
     public var exportAddressBookEncryptionKeys: () throws -> AddressBookEncryptionKeys
+    
+    public var importUserMetadataEncryptionKeys: (UserMetadataEncryptionKeys, Account) throws -> Void
+    public var exportUserMetadataEncryptionKeys: (Account) throws -> UserMetadataEncryptionKeys
 }

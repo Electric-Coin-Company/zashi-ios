@@ -26,6 +26,8 @@ import AddressBookClient
 import MessageUI
 import SupportDataGenerator
 import KeystoneHandler
+import TransactionDetails
+import AddressBook
 
 @Reducer
 public struct SendConfirmation {
@@ -52,8 +54,14 @@ public struct SendConfirmation {
             case sending
         }
 
+        public enum StackDestinationTransactions: Int, Equatable {
+            case details = 0
+            case addressBook
+        }
+
         public var address: String
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
+        public var addressBookState: AddressBook.State = .initial
         public var alias: String?
         @Presents public var alert: AlertState<Action>?
         public var amount: Zatoshi
@@ -75,12 +83,14 @@ public struct SendConfirmation {
         public var partialProposalErrorState: PartialProposalError.State
         public var partialProposalErrorViewBinding = false
         public var pczt: Pczt?
+        public var pcztForUI: Pczt?
         public var pcztWithProofs: Pczt?
         public var pcztWithSigs: Pczt?
         public var proposal: Proposal?
         public var randomSuccessIconIndex = 0
         public var randomFailureIconIndex = 0
         public var randomResubmissionIconIndex = 0
+        public var redactedPcztForSigner: Pczt?
         public var rejectSendRequest = false
         public var result: Result?
         public var scanState: Scan.State = .initial
@@ -90,7 +100,10 @@ public struct SendConfirmation {
         public var sendingScreenOnAppearTimestamp: TimeInterval = 0
         public var stackDestination: StackDestination?
         public var stackDestinationBindingsAlive = 0
+        public var stackDestinationTransactions: StackDestinationTransactions?
+        public var stackDestinationTransactionsBindingsAlive = 0
         public var supportData: SupportData?
+        public var transactionDetailsState: TransactionDetails.State = .initial
         public var txIdToExpand: String?
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
@@ -152,12 +165,12 @@ public struct SendConfirmation {
     }
     
     public enum Action: BindableAction, Equatable {
+        case addressBook(AddressBook.Action)
         case alert(PresentationAction<Action>)
         case backFromFailurePressed
         case binding(BindingAction<SendConfirmation.State>)
         case closeTapped
         case confirmWithKeystoneTapped
-        case fetchedABContacts(AddressBookContacts)
         case getSignatureTapped
         case goBackPressed
         case goBackPressedFromRequestZec
@@ -179,11 +192,12 @@ public struct SendConfirmation {
         case sendTriggered
         case shareFinished
         case showHideButtonTapped
-        case transactionResultReady
+        case transactionDetails(TransactionDetails.Action)
         case updateDestination(State.Destination?)
         case updateFailedData(Int, String, String)
         case updateResult(State.Result?)
         case updateStackDestination(SendConfirmation.State.StackDestination?)
+        case updateStackDestinationTransactions(SendConfirmation.State.StackDestinationTransactions?)
         case updateTxIdToExpand(String?)
         case viewTransactionTapped
         
@@ -194,6 +208,8 @@ public struct SendConfirmation {
         case pcztResolved(Pczt)
         case pcztSendFailed(ZcashError?)
         case pcztWithProofsResolved(Pczt)
+        case redactedPCZTForSigner(Pczt)
+        case redactPCZTForSigner
         case resetPCZTs
         case resolvePCZT
         case sharePCZT
@@ -215,6 +231,10 @@ public struct SendConfirmation {
     public var body: some Reducer<State, Action> {
         BindingReducer()
         
+        Scope(state: \.addressBookState, action: \.addressBook) {
+            AddressBook()
+        }
+
         Scope(state: \.partialProposalErrorState, action: \.partialProposalError) {
             PartialProposalError()
         }
@@ -223,9 +243,15 @@ public struct SendConfirmation {
             Scan()
         }
         
+        Scope(state: \.transactionDetailsState, action: \.transactionDetails) {
+            TransactionDetails()
+        }
+        
         Reduce { state, action in
             switch action {
             case .onAppear:
+                state.pcztForUI = nil
+                state.rejectSendRequest = false
                 state.txIdToExpand = nil
                 state.scanState.checkers = [.keystonePCZTScanChecker]
                 state.scanState.instructions = L10n.Keystone.scanInfoTransaction
@@ -236,24 +262,6 @@ public struct SendConfirmation {
                 state.isTransparentAddress = derivationTool.isTransparentAddress(state.address, zcashSDKEnvironment.network.networkType)
                 state.canSendMail = MFMailComposeViewController.canSendMail()
                 state.alias = nil
-                if let account = state.zashiWalletAccount {
-                    do {
-                        let result = try addressBook.allLocalContacts(account.account)
-                        let abContacts = result.contacts
-                        if result.remoteStoreResult == .failure {
-                            // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
-                        }
-                        return .send(.fetchedABContacts(abContacts))
-                    } catch {
-                        // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
-                        return .none
-                    }
-                }
-                return .none
-
-            case .fetchedABContacts(let abContacts):
-                state.$addressBookContacts.withLock { $0 = abContacts }
-                state.alias = nil
                 for contact in state.addressBookContacts.contacts {
                     if contact.id == state.address {
                         state.alias = contact.name
@@ -261,7 +269,7 @@ public struct SendConfirmation {
                     }
                 }
                 return .none
-                
+
             case .alert(.presented(let action)):
                 return .send(action)
 
@@ -285,7 +293,10 @@ public struct SendConfirmation {
             case .goBackPressed:
                 return .none
 
-            case .closeTapped, .viewTransactionTapped, .backFromFailurePressed:
+            case .viewTransactionTapped:
+                return .none
+                
+            case .closeTapped, .backFromFailurePressed:
                 return .none
 
             case .sendPressed:
@@ -312,8 +323,7 @@ public struct SendConfirmation {
                     return .none
                 }
                 return .run { send in
-                    if await !localAuthentication.authenticate() {
-                        await send(.sendFailed(nil, true))
+                    guard await localAuthentication.authenticate() else {
                         return
                     }
 
@@ -324,8 +334,6 @@ public struct SendConfirmation {
                         let spendingKey = try derivationTool.deriveSpendingKey(seedBytes, zip32AccountIndex, network)
 
                         let result = try await sdkSynchronizer.createProposedTransactions(proposal, spendingKey)
-
-                        await send(.transactionResultReady)
 
                         switch result {
                         case .grpcFailure(let txIds):
@@ -430,6 +438,13 @@ public struct SendConfirmation {
                 state.stackDestination = destination
                 return .none
                 
+            case .updateStackDestinationTransactions(let destination):
+                if let destination {
+                    state.stackDestinationTransactionsBindingsAlive = destination.rawValue
+                }
+                state.stackDestinationTransactions = destination
+                return .none
+
             case .reportTapped:
                 var supportData = SupportDataGenerator.generate()
                 supportData.message =
@@ -476,6 +491,7 @@ public struct SendConfirmation {
                 return .none
                 
             case .rejectTapped:
+                state.rejectSendRequest = false
                 return .send(.resetPCZTs)
                 
             case .confirmWithKeystoneTapped:
@@ -526,8 +542,35 @@ public struct SendConfirmation {
                 
             case .pcztResolved(let pczt):
                 state.pczt = pczt
-                return .send(.addProofsToPczt)
+                return .merge(
+                    .send(.redactPCZTForSigner),
+                    .send(.addProofsToPczt)
+                )
                 
+            case .redactPCZTForSigner:
+                guard let pczt = state.pczt else {
+                    return .run { send in
+                        try? await mainQueue.sleep(for: .seconds(Constants.delay))
+                        await send(.updateFailedData(-797, "redactPCZTForSigner failed to start the process", ""))
+                        await send(.pcztSendFailed("redactPCZTForSigner failed to start the process".toZcashError()))
+                    }
+                }
+                return .run { send in
+                    do {
+                        let redactedPczt = try await sdkSynchronizer.redactPCZTForSigner(Pczt(pczt))
+                        await send(.redactedPCZTForSigner(redactedPczt))
+                    } catch {
+                        try? await mainQueue.sleep(for: .seconds(Constants.delay))
+                        await send(.updateFailedData(-796, error.toZcashError().detailedMessage, ""))
+                        await send(.pcztSendFailed("redactPCZTForSigner failed".toZcashError()))
+                    }
+                }
+                
+            case .redactedPCZTForSigner(let redactedPczt):
+                state.redactedPcztForSigner = redactedPczt
+                state.pcztForUI = redactedPczt
+                return .none
+
             case .addProofsToPczt:
                 guard let pczt = state.pczt else {
                     return .run { send in
@@ -563,7 +606,10 @@ public struct SendConfirmation {
                 let pcztMessage =
                 """
                 original pczt:
-                \(state.pczt!.hexEncodedString())
+                \(state.pczt?.hexEncodedString() ?? "failed to unwrap")
+
+                redactedPcztForSigner:
+                \(state.redactedPcztForSigner?.hexEncodedString() ?? "failed to unwrap")
                 
                 pcztWithProofs:
                 \(pcztWithProofs.hexEncodedString())
@@ -579,7 +625,6 @@ public struct SendConfirmation {
                         let result = try await sdkSynchronizer.createTransactionFromPCZT(pcztWithProofs, pcztWithSigs)
 
                         await send(.resetPCZTs)
-                        await send(.transactionResultReady)
 
                         switch result {
                         case .grpcFailure(let txIds):
@@ -626,9 +671,13 @@ public struct SendConfirmation {
                 state.pcztWithSigs = nil
                 state.pcztToShare = nil
                 state.proposal = nil
+                state.redactedPcztForSigner = nil
+                return .none
+
+            case .addressBook:
                 return .none
                 
-            case .transactionResultReady:
+            case .transactionDetails:
                 return .none
             }
         }

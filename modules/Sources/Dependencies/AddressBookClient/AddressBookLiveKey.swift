@@ -208,7 +208,7 @@ extension AddressBookClient: DependencyKey {
 
         do {
             let filenameForEncryptedFile = try AddressBookClient.filenameForEncryptedFile(account: account)
-            let encryptedData = try remoteStorage.loadAddressBookContacts(filenameForEncryptedFile)
+            let encryptedData = try remoteStorage.loadDataFromFile(filenameForEncryptedFile)
             remoteContacts = try AddressBookClient.contactsFrom(encryptedData: encryptedData, account: account)
         } catch RemoteStorageClient.RemoteStorageError.fileDoesntExist {
             // If the remote file doesn't exist, always try to write it when
@@ -293,7 +293,7 @@ extension AddressBookClient: DependencyKey {
         // store encrypted data to the remote storage
         if remoteStore {
             do {
-                try remoteStorage.storeAddressBookContacts(encryptedContacts, filenameForEncryptedFile)
+                try remoteStorage.storeDataToFile(encryptedContacts, filenameForEncryptedFile)
                 return .success
             } catch {
                 return .failure

@@ -17,7 +17,9 @@ extension WalletStorageClient: TestDependencyKey {
         markUserPassedPhraseBackupTest: unimplemented("\(Self.self).markUserPassedPhraseBackupTest", placeholder: {}()),
         resetZashi: unimplemented("\(Self.self).resetZashi", placeholder: {}()),
         importAddressBookEncryptionKeys: unimplemented("\(Self.self).importAddressBookEncryptionKeys", placeholder: {}()),
-        exportAddressBookEncryptionKeys: unimplemented("\(Self.self).exportAddressBookEncryptionKeys", placeholder: .empty)
+        exportAddressBookEncryptionKeys: unimplemented("\(Self.self).exportAddressBookEncryptionKeys", placeholder: .empty),
+        importUserMetadataEncryptionKeys: unimplemented("\(Self.self).importUserMetadataEncryptionKeys", placeholder: {}()),
+        exportUserMetadataEncryptionKeys: unimplemented("\(Self.self).exportUserMetadataEncryptionKeys", placeholder: .empty)
     )
 }
 
@@ -30,6 +32,8 @@ extension WalletStorageClient {
         markUserPassedPhraseBackupTest: { _ in },
         resetZashi: { },
         importAddressBookEncryptionKeys: { _ in },
-        exportAddressBookEncryptionKeys: { .empty }
+        exportAddressBookEncryptionKeys: { .empty },
+        importUserMetadataEncryptionKeys: { _, _ in },
+        exportUserMetadataEncryptionKeys: { _ in .empty }
     )
 }

@@ -23,6 +23,14 @@ public extension String {
             return self.zip316
         }
     }
+    
+    var truncateMiddle: String {
+        if self.count > 10 {
+            return "\(self.prefix(5))...\(self.suffix(5))"
+        } else {
+            return self.zip316
+        }
+    }
 }
 
 extension String: @retroactive Error {}

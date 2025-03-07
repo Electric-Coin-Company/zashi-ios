@@ -1,5 +1,5 @@
 // MARK: - Plain Onboarding Flow
-"plainOnboarding.title" = "La billetera de Zcash más fácil de usar. Diseñada para pagos privados.";
+"plainOnboarding.title" = "Una billetera Zcash (ZEC) diseñada para pagos privados";
 "plainOnboarding.button.createNewWallet" = "Crear nueva billetera";
 "plainOnboarding.button.restoreWallet" = "Restaurar billetera existente";
 
@@ -129,7 +129,7 @@
 "balances.pendingTransactions" = "Transacciones pendientes";
 "balances.transparentBalance" = "Saldo transparente";
 "balances.shieldButtonTitle" = "Proteger y consolidar fondos";
-"balances.shieldingInProgress" = "Protegiendo fondos";
+"balances.shieldingInProgress" = "Protegiendo";
 "balances.synced" = "Sincronizado";
 "balances.syncing" = "Sincronizando";
 "balances.syncingError" = "Zashi encontró un error al sincronizar, intentando resolver...";
@@ -181,7 +181,7 @@
 "send.resubmission" = "Error de Conexión";
 "send.resubmissionInfo" = "Zashi encontró problemas de conexión al enviar la transacción. Intentará de nuevo en los próximos minutos.";
 "send.report" = "Reportar";
-"send.shielding" = "Protegiendo...";
+"send.shielding" = "Protegiendo";
 "send.shieldingInfo" = "Tus tokens están siendo protegidos";
 "send.successShielding" = "¡Protegidos!";
 "send.successShieldingInfo" = "Tus tokens han sido protegidos con éxito";
@@ -302,6 +302,7 @@
 "qrCodeFor" = "Código QR para %@";
 "general.tapToCopy" = "Toca para copiar";
 "general.fee" = "Tarifa Típica < %@";
+"general.feeShort" = "< %@";
 "general.hideBalancesMost" = "-----";
 "general.hideBalancesMostStandalone" = "-----";
 "general.hideBalancesLeast" = "";
@@ -326,16 +327,16 @@
 
 // MARK: - Transactions
 "transaction.sent" = "Enviado";
-"transaction.sending" = "Enviando...";
-"transaction.receiving" = "Recibiendo...";
+"transaction.sending" = "Enviando";
+"transaction.receiving" = "Recibiendo";
 "transaction.received" = "Recibido";
 "transaction.failedSend" = "Envío fallido";
 "transaction.failedReceive" = "Recepción fallida";
-"transaction.shieldingFunds" = "Protegiendo Fondos";
-"transaction.shieldedFunds" = "Fondos Protegidos";
+"transaction.shieldingFunds" = "Protegiendo";
 "transaction.failedShieldedFunds" = "Fondos Protegidos Fallidos";
 "transaction.saveAddress" = "Guardar dirección";
 "transaction.selectText" = "Seleccionar texto";
+"transaction.shieldedFunds" = "Protegidos";
 
 // MARK: - Local authentication
 "localAuthentication.reason" = "El siguiente contenido requiere autenticación.";
@@ -509,9 +510,56 @@
 "keystoneTransactionReject.rejectSig" = "Rechazar firma";
 
 // Transaction History Tax Export
-"taxExport.fileName" = "%@_transaction_history_%@.csv";
-"taxExport.download" = "Download";
-"taxExport.title" = "Data Export";
-"taxExport.taxFile" = "Export Tax File";
-"taxExport.desc" = "Download your %@ transaction history from the previous calendar year in a .csv format.";
-"taxExport.shareDesc" = "%@ transaction history";
+"taxExport.fileName" = "%@_historial_de_transacciones_%@.csv";
+"taxExport.download" = "Descargar";
+"taxExport.title" = "Exportación de Datos";
+"taxExport.taxFile" = "Exportar Archivo de Impuestos";
+"taxExport.desc" = "Descarga el historial de transacciones de %@ del año calendario anterior en formato .csv.";
+"taxExport.shareDesc" = "%@ historial de transacciones";
+
+// transaction history redesign
+"transactionHistory.title" = "Transacciones";
+"transactionHistory.seeAll" = "Ver todo";
+"transactionHistory.nothingHere" = "Aún no hay nada aquí.";
+"transactionHistory.makeTransaction" = "Haz el primer movimiento...";
+"transactionHistory.getSomeZec" = "Obtén algo de ZEC";
+"transactionHistory.saveAddress" = "Guardar dirección";
+"transactionHistory.sendAgain" = "Enviar de nuevo";
+"transactionHistory.details" = "Detalles de la transacción";
+"transactionHistory.sentTo" = "Enviado a";
+"transactionHistory.address" = "Dirección";
+"transactionHistory.pending" = "Pendiente";
+"transactionHistory.completed" = "Completado";
+"transactionHistory.viewMore" = "Ver más";
+"transactionHistory.viewLess" = "Ver menos";
+"transactionHistory.noMessage" = "Sin mensaje";
+"transactionHistory.threeDots" = "%@...";
+"transactionHistory.defaultFee" = "0.001";
+"annotation.edit" = "Editar nota";
+"annotation.addArticle" = "Agregar una nota";
+"annotation.add" = "Agregar nota";
+"annotation.delete" = "Eliminar nota";
+"annotation.save" = "Guardar nota";
+"annotation.placeholder" = "Escribe una nota opcional para describir esta transacción...";
+"annotation.chars" = "%@/%@ caracteres";
+"annotation.title" = "Nota";
+"filter.title" = "Filtrar";
+"filter.sent" = "Enviado";
+"filter.received" = "Recibido";
+"filter.memos" = "Memorandos";
+"filter.notes" = "Notas";
+"filter.bookmarked" = "Marcado";
+"filter.contact" = "Contacto";
+"filter.reset" = "Restablecer";
+"filter.apply" = "Aplicar";
+"filter.today" = "Hoy";
+"filter.yesterday" = "Ayer";
+"filter.previous7days" = "Últimos 7 días";
+"filter.previous30days" = "Últimos 30 días";
+"filter.search" = "Buscar";
+"filter.noResults" = "Sin resultados";
+"filter.weTried" = "Lo intentamos, pero no pudimos encontrar nada.";
+"filter.at" = "a las"; // ejemplo: 29 de nov a las 4:15 p. m.
+"filter.daysAgo" = "Hace %@ días";
+"settings.keystone" = "Conectar dispositivo Keystone";
+"settings.keystoneDesc" = "Empareja tu billetera de hardware Keystone con Zashi para firmar transacciones.";

@@ -25,7 +25,6 @@ public struct TransactionState: Equatable, Identifiable {
     public var errorMessage: String?
     public var expiryHeight: BlockHeight?
     public var memoCount: Int
-    public var memos: [Memo]?
     public var minedHeight: BlockHeight?
     public var shielded = true
     public var zAddress: String?
@@ -38,14 +37,12 @@ public struct TransactionState: Equatable, Identifiable {
     public var status: Status
     public var timestamp: TimeInterval?
     public var zecAmount: Zatoshi
-
-    public var isAddressExpanded: Bool
-    public var isExpanded: Bool
-    public var isIdExpanded: Bool
     public var isMarkedAsRead = false
     public var isInAddressBook = false
     public var hasTransparentOutputs = false
-    
+    public var totalSpent: Zatoshi?
+    public var totalReceived: Zatoshi?
+
     public var rawID: Data? = nil
     
     // UI Colors
@@ -59,40 +56,34 @@ public struct TransactionState: Equatable, Identifiable {
 
     public func titleColor(_ colorScheme: ColorScheme) -> Color {
         status == .failed
-        ? Design.Utility.ErrorRed._600.color(colorScheme)
+        ? Design.Text.error.color(colorScheme)
+        : !isSentTransaction
+        ? Design.Utility.SuccessGreen._700.color(colorScheme)
+        : Design.Text.primary.color(colorScheme)
+    }
+    
+    public func iconColor(_ colorScheme: ColorScheme) -> Color {
+        status == .failed
+        ? Design.Utility.WarningYellow._500.color(colorScheme)
         : isPending
-        ? Asset.Colors.shade47.color
-        : Asset.Colors.primary.color
+        ? Design.Utility.HyperBlue._500.color(colorScheme)
+        : Design.Text.tertiary.color(colorScheme)
     }
 
-    public var isUnread: Bool {
-        // in case memos haven't been loaded yet
-        // non-nil rawID represents unloaded memos state
-        if rawID != nil && memoCount > 0 {
-            return !isMarkedAsRead
-        }
-        
-        // there must be memos
-        guard let memos else { return false }
-        
-        // it must be a textual one
-        var textMemoExists = false
-        
-        for memo in memos {
-            if case .text = memo {
-                if let memoText = memo.toString(), !memoText.isEmpty {
-                    textMemoExists = true
-                    break
-                }
-            }
-        }
+    public func iconGradientStartColor(_ colorScheme: ColorScheme) -> Color {
+        status == .failed
+        ? Design.Utility.WarningYellow._50.color(colorScheme)
+        : isPending
+        ? Design.Utility.HyperBlue._50.color(colorScheme)
+        : Design.Surfaces.bgSecondary.color(colorScheme)
+    }
 
-        if !textMemoExists {
-            return false
-        }
-        
-        // and it must be externally marked as read
-        return !isMarkedAsRead
+    public func iconGradientEndColor(_ colorScheme: ColorScheme) -> Color {
+        status == .failed
+        ? Design.Utility.WarningYellow._100.color(colorScheme)
+        : isPending
+        ? Design.Utility.HyperBlue._100.color(colorScheme)
+        : Design.Surfaces.bgSecondary.color(colorScheme)
     }
 
     // UI Texts
@@ -123,10 +114,52 @@ public struct TransactionState: Equatable, Identifiable {
     }
 
     public var dateString: String? {
-        guard minedHeight != nil else { return "" }
         guard let timestamp else { return nil }
         
         return Date(timeIntervalSince1970: timestamp).asHumanReadable()
+    }
+
+    public var listDateString: String? {
+        guard let timestamp else { return nil }
+
+        let formatter = DateFormatter()
+        let date = Date(timeIntervalSince1970: timestamp)
+        formatter.dateFormat = "MMM d '\(L10n.Filter.at)' h:mm a"
+        return formatter.string(from: date)
+    }
+    
+    public var listDateYearString: String? {
+        guard let timestamp else { return nil }
+
+        let formatter = DateFormatter()
+        let date = Date(timeIntervalSince1970: timestamp)
+        formatter.dateFormat = "MMM d, YYYY '\(L10n.Filter.at)' h:mm a"
+        return formatter.string(from: date)
+    }
+
+    public var daysAgo: String {
+        guard let timestamp else { return "" }
+        
+        let transactionDate = Date(timeIntervalSince1970: timestamp)
+        
+        let calendar = Calendar.current
+        let startOfToday = calendar.startOfDay(for: Date())
+        let startOfGivenDate = calendar.startOfDay(for: transactionDate)
+        let components = calendar.dateComponents([.day], from: startOfGivenDate, to: startOfToday)
+        
+        if let daysAgo = components.day {
+            if daysAgo == 0 {
+                return L10n.Filter.today
+            } else if daysAgo == 1 {
+                return L10n.Filter.yesterday
+            } else if daysAgo < 31 {
+                return L10n.Filter.daysAgo(daysAgo)
+            } else {
+                return listDateString ?? ""
+            }
+        } else {
+            return ""
+        }
     }
 
     // Helper flags
@@ -167,30 +200,17 @@ public struct TransactionState: Equatable, Identifiable {
     public var totalAmount: Zatoshi {
         Zatoshi(zecAmount.amount + (fee?.amount ?? 0))
     }
-
-    public var textMemos: [String]? {
-        guard let memos else { return nil }
-        
-        var res: [String] = []
-        
-        for memo in memos {
-            if case .text = memo {
-                guard let memoText = memo.toString(), !memoText.isEmpty else {
-                    continue
-                }
-                
-                res.append(memoText)
-            }
-        }
-        
-        return res.isEmpty ? nil : res
-    }
     
+    public var netValue: String {
+        isShieldingTransaction
+        ? Zatoshi(totalSpent?.amount ?? 0).decimalString()
+        : zecAmount.decimalString()
+    }
+
     public init(
         errorMessage: String? = nil,
         expiryHeight: BlockHeight? = nil,
         memoCount: Int = 0,
-        memos: [Memo]? = nil,
         minedHeight: BlockHeight? = nil,
         shielded: Bool = true,
         zAddress: String? = nil,
@@ -202,15 +222,11 @@ public struct TransactionState: Equatable, Identifiable {
         isSentTransaction: Bool = false,
         isShieldingTransaction: Bool = false,
         isTransparentRecipient: Bool = false,
-        isAddressExpanded: Bool = false,
-        isExpanded: Bool = false,
-        isIdExpanded: Bool = false,
         isMarkedAsRead: Bool = false
     ) {
         self.errorMessage = errorMessage
         self.expiryHeight = expiryHeight
         self.memoCount = memoCount
-        self.memos = memos
         self.minedHeight = minedHeight
         self.shielded = shielded
         self.zAddress = zAddress
@@ -222,9 +238,6 @@ public struct TransactionState: Equatable, Identifiable {
         self.isSentTransaction = isSentTransaction
         self.isShieldingTransaction = isShieldingTransaction
         self.isTransparentRecipient = isTransparentRecipient
-        self.isAddressExpanded = isAddressExpanded
-        self.isExpanded = isExpanded
-        self.isIdExpanded = isIdExpanded
         self.isMarkedAsRead = isMarkedAsRead
     }
     
@@ -265,12 +278,10 @@ extension TransactionState {
         isShieldingTransaction = transaction.isShielding
         zecAmount = isSentTransaction ? Zatoshi(-transaction.value.amount) : transaction.value
         isTransparentRecipient = false
-        isAddressExpanded = false
-        isExpanded = false
-        isIdExpanded = false
         self.hasTransparentOutputs = hasTransparentOutputs
         memoCount = transaction.memoCount
-        self.memos = memos
+        totalSpent = transaction.totalSpent
+        totalReceived = transaction.totalReceived
 
         // TODO: [#1313] SDK improvements so a client doesn't need to determing if the transaction isPending
         // https://github.com/zcash/ZcashLightClientKit/issues/1313
@@ -309,7 +320,6 @@ extension TransactionState {
     ) -> TransactionState {
         .init(
             expiryHeight: -1,
-            memos: nil,
             minedHeight: -1,
             shielded: shielded,
             zAddress: nil,
@@ -322,34 +332,25 @@ extension TransactionState {
     }
     
     public static let mockedSent = TransactionState(
-        memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
         minedHeight: BlockHeight(1),
         zAddress: "utest1vergg5jkp4xy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzjanqtl8uqp5vln3zyy246ejtx86vqftp73j7jg9099jxafyjhfm6u956j3",
         fee: Zatoshi(10_000),
         id: "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja",
         status: .paid,
         timestamp: 1699290621,
-        zecAmount: Zatoshi(25_000_000),
-        isAddressExpanded: false,
-        isExpanded: false,
-        isIdExpanded: false
+        zecAmount: Zatoshi(25_000_000)
     )
     
     public static let mockedReceived = TransactionState(
-        memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
         minedHeight: BlockHeight(1),
         fee: Zatoshi(10_000),
         id: "t1vergg5jkp4xy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja",
         status: .received,
         timestamp: 1699292621,
-        zecAmount: Zatoshi(25_000_000),
-        isAddressExpanded: false,
-        isExpanded: false,
-        isIdExpanded: false
+        zecAmount: Zatoshi(25_000_000)
     )
     
     public static let mockedFailed = TransactionState(
-        memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
         minedHeight: nil,
         zAddress: "utest1vergg5jkp4xy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzjanqtl8uqp5vln3zyy246ejtx86vqftp73j7jg9099jxafyjhfm6u956j3",
         fee: Zatoshi(10_000),
@@ -357,28 +358,20 @@ extension TransactionState {
         status: .failed,
         timestamp: 1699290621,
         zecAmount: Zatoshi(25_108_700),
-        isSentTransaction: true,
-        isAddressExpanded: true,
-        isExpanded: true,
-        isIdExpanded: false
+        isSentTransaction: true
     )
     
     public static let mockedFailedReceive = TransactionState(
-        memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
         minedHeight: nil,
         fee: Zatoshi(10_000),
         id: "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja",
         status: .failed,
         timestamp: 1699290621,
         zecAmount: Zatoshi(25_001_000),
-        isSentTransaction: false,
-        isAddressExpanded: false,
-        isExpanded: false,
-        isIdExpanded: false
+        isSentTransaction: false
     )
     
     public static let mockedSending = TransactionState(
-        memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
         minedHeight: nil,
         zAddress: "utest1vergg5jkp4xy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzjanqtl8uqp5vln3zyy246ejtx86vqftp73j7jg9099jxafyjhfm6u956j3",
         fee: Zatoshi(10_000),
@@ -386,24 +379,17 @@ extension TransactionState {
         status: .sending,
         timestamp: 1699290621,
         zecAmount: Zatoshi(25_000_000),
-        isSentTransaction: true,
-        isAddressExpanded: false,
-        isExpanded: false,
-        isIdExpanded: false
+        isSentTransaction: true
     )
     
     public static let mockedReceiving = TransactionState(
-        memos: [try! Memo(string: "Hi, pay me and I'll pay you")],
         minedHeight: nil,
         fee: Zatoshi(10_000),
         id: "t1vergg5jkp4wy8sqfasw6s5zkdpnxvfxlxh35uuc3me7dp596y2r05t6dv9htwe3pf8ksrfr8ksca2lskzja",
         status: .receiving,
         timestamp: 1699290621,
         zecAmount: Zatoshi(25_000_000),
-        isSentTransaction: false,
-        isAddressExpanded: false,
-        isExpanded: false,
-        isIdExpanded: false
+        isSentTransaction: false
     )
     
     public static let mockedShielded = TransactionState(
@@ -414,10 +400,7 @@ extension TransactionState {
         status: .shielded,
         timestamp: 1699290621,
         zecAmount: Zatoshi(25_000_000),
-        isShieldingTransaction: true,
-        isAddressExpanded: false,
-        isExpanded: false,
-        isIdExpanded: false
+        isShieldingTransaction: true
     )
     
     public static let mockedShieldedExpanded = TransactionState(
@@ -428,10 +411,7 @@ extension TransactionState {
         status: .shielded,
         timestamp: 1699290621,
         zecAmount: Zatoshi(25_000_000),
-        isShieldingTransaction: true,
-        isAddressExpanded: false,
-        isExpanded: true,
-        isIdExpanded: false
+        isShieldingTransaction: true
     )
 }
 

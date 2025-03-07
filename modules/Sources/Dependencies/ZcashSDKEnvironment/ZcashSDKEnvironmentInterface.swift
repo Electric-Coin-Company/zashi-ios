@@ -68,6 +68,8 @@ extension ZcashSDKEnvironment {
             }
             
             servers.append(contentsOf: mainnetServers)
+        } else if network == .testnet {
+            servers.append(.custom)
         }
         
         return servers

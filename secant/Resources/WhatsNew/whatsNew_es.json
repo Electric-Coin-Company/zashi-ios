@@ -1,6 +1,36 @@
 {
     "releases": [
         {
+            "version": "1.4",
+            "date": "03-03-2025",
+            "timestamp": 1741028813,
+            "sections": [
+                {
+                    "title": "Añadido:",
+                    "bulletpoints": [
+                        "Exporta tus transacciones del ultimo año, con la nueva opción de ""Exporta Archivo de Impuestos"".",
+                        "Personaliza tus transacciones con notas privadas que te ayudan a recordar detalles de los pagos.",
+                        "Marca tus transacciones favoritas con la nueva opción de ""Favoritos"".",
+                        "Utiliza los nuevos filtros de transacciones para filtrar Recibidas, Enviadas, Memos, Notas o Favoritas."
+                    ]
+                },
+                {
+                    "title": "Cambiado:",
+                    "bulletpoints": [
+                        "Descubre la rediseñada pagina de historial de transacciones, que es más elegante y funcional.",
+                        "Accede a tu KeyStone también desde la pagina de integraciones.",
+                        "Mejorada experiencia de firmado de transacciones para KeyStone."
+                    ]
+                },
+                {
+                    "title": "Corregido:",
+                    "bulletpoints": [
+                        "No más fallos al enviar en KeyStone, parametros de Sapling han sido arreglados."
+                    ]
+                }
+            ]
+        },
+        {
             "version": "1.3.3",
             "date": "02-07-2025",
             "timestamp": 1738929599,

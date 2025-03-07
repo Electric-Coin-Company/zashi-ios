@@ -248,7 +248,7 @@ extension Root {
                     zcashNetwork: zcashSDKEnvironment.network
                 )
                 return .send(.initialization(.respondToWalletInitializationState(walletState)))
-                
+
                 /// Respond to all possible states of the wallet and initiate appropriate side effects including errors handling
             case .initialization(.respondToWalletInitializationState(let walletState)):
                 switch walletState {
@@ -319,29 +319,28 @@ extension Root {
                             
                             let walletAccounts = try await sdkSynchronizer.walletAccounts()
                             await send(.initialization(.loadedWalletAccounts(walletAccounts)))
+                            await send(.resolveMetadataEncryptionKeys)
 
                             try await sdkSynchronizer.start(false)
 
                             var selectedAccount: WalletAccount?
-                                
+                            
                             for account in walletAccounts {
                                 if account.vendor == .zcash {
                                     selectedAccount = account
-                                    break
                                 }
                             }
 
-                            let addressBookEncryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys()
                             if let account = selectedAccount {
+                                let addressBookEncryptionKeys = try? walletStorage.exportAddressBookEncryptionKeys()
                                 if addressBookEncryptionKeys == nil {
-                                    var keys = AddressBookEncryptionKeys.empty
-                                    try keys.cacheFor(
-                                        seed: seedBytes,
-                                        account: account.account,
-                                        network: zcashSDKEnvironment.network.networkType
-                                    )
-                                    
                                     do {
+                                        var keys = AddressBookEncryptionKeys.empty
+                                        try keys.cacheFor(
+                                            seed: seedBytes,
+                                            account: account.account,
+                                            network: zcashSDKEnvironment.network.networkType
+                                        )
                                         try walletStorage.importAddressBookEncryptionKeys(keys)
                                     } catch {
                                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
@@ -373,7 +372,8 @@ extension Root {
                             .map(Root.Action.batteryStateChanged)
                     }
                     .cancellable(id: CancelBatteryStateId, cancelInFlight: true),
-                    .send(.batteryStateChanged(nil))
+                    .send(.batteryStateChanged(nil)),
+                    .send(.observeTransactions)
                 )
                 
             case .initialization(.loadedWalletAccounts(let walletAccounts)):
@@ -387,9 +387,18 @@ extension Root {
                         }
                     }
                 }
-                return .none
+                return .merge(
+                    .send(.loadContacts),
+                    .send(.loadUserMetadata)
+                )
+
+            case .tabs(.addKeystoneHWWallet(.loadedWalletAccounts)), .tabs(.settings(.integrations(.addKeystoneHWWallet(.loadedWalletAccounts)))):
+                return .merge(
+                    .send(.resolveMetadataEncryptionKeys),
+                    .send(.loadUserMetadata)
+                )
                 
-            case .initialization(.checkBackupPhraseValidation):
+            case .resolveMetadataEncryptionKeys:
                 do {
                     let storedWallet: StoredWallet
                     do {
@@ -397,36 +406,69 @@ extension Root {
                     } catch {
                         return .send(.destination(.updateDestination(.osStatusError)))
                     }
-                    var landingDestination = Root.DestinationState.Destination.tabs
-
-                    if !storedWallet.hasUserPassedPhraseBackupTest {
-                        let phraseWords = mnemonic.asWords(storedWallet.seedPhrase.value())
-                        
-                        let recoveryPhrase = RecoveryPhrase(words: phraseWords.map { $0.redacted })
-                        state.phraseDisplayState.phrase = recoveryPhrase
-                        state.phraseDisplayState.birthday = storedWallet.birthday
-                        if let value = storedWallet.birthday?.value() {
-                            let latestBlock = numberFormatter.string(NSDecimalNumber(value: value))
-                            state.phraseDisplayState.birthdayValue = "\(String(describing: latestBlock ?? ""))"
-                        }
-                        landingDestination = .phraseDisplay
-                    }
+                    try mnemonic.isValid(storedWallet.seedPhrase.value())
+                    let seedBytes = try mnemonic.toSeed(storedWallet.seedPhrase.value())
                     
-                    state.appInitializationState = .initialized
-                    let isAtDeeplinkWarningScreen = state.destinationState.destination == .deeplinkWarning
-
-                    return .run { [landingDestination] send in
-                        if landingDestination == .tabs {
-                            await send(.tabs(.home(.transactionList(.onAppear))))
-                        }
-                        try await mainQueue.sleep(for: .seconds(0.5))
-                        if !isAtDeeplinkWarningScreen {
-                            await send(.destination(.updateDestination(landingDestination)))
+                    return .run { [walletAccounts = state.walletAccounts] send in
+                        do {
+                            
+                            for account in walletAccounts {
+                                let userMetadataEncryptionKeys = try? walletStorage.exportUserMetadataEncryptionKeys(account.account)
+                                if userMetadataEncryptionKeys == nil {
+                                    do {
+                                        var keys = UserMetadataEncryptionKeys.empty
+                                        try keys.cacheFor(
+                                            seed: seedBytes,
+                                            account: account.account,
+                                            network: zcashSDKEnvironment.network.networkType
+                                        )
+                                        try walletStorage.importUserMetadataEncryptionKeys(keys, account.account)
+                                    } catch {
+                                        // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
+                                    }
+                                }
+                            }
                         }
                     }
-                    .cancellable(id: CancelId, cancelInFlight: true)
+                } catch { }
+                return .none
+                
+            case .initialization(.checkBackupPhraseValidation):
+                let storedWallet: StoredWallet
+                do {
+                    storedWallet = try walletStorage.exportWallet()
+                } catch {
+                    return .send(.destination(.updateDestination(.osStatusError)))
                 }
-
+                var landingDestination = Root.DestinationState.Destination.tabs
+                
+                if !storedWallet.hasUserPassedPhraseBackupTest {
+                    let phraseWords = mnemonic.asWords(storedWallet.seedPhrase.value())
+                    
+                    let recoveryPhrase = RecoveryPhrase(words: phraseWords.map { $0.redacted })
+                    state.phraseDisplayState.phrase = recoveryPhrase
+                    state.phraseDisplayState.birthday = storedWallet.birthday
+                    if let value = storedWallet.birthday?.value() {
+                        let latestBlock = numberFormatter.string(NSDecimalNumber(value: value))
+                        state.phraseDisplayState.birthdayValue = "\(String(describing: latestBlock ?? ""))"
+                    }
+                    landingDestination = .phraseDisplay
+                }
+                
+                state.appInitializationState = .initialized
+                let isAtDeeplinkWarningScreen = state.destinationState.destination == .deeplinkWarning
+                
+                return .run { [landingDestination] send in
+                    if landingDestination == .tabs {
+                        await send(.tabs(.home(.transactionList(.onAppear))))
+                    }
+                    try await mainQueue.sleep(for: .seconds(0.5))
+                    if !isAtDeeplinkWarningScreen {
+                        await send(.destination(.updateDestination(landingDestination)))
+                    }
+                }
+                .cancellable(id: CancelId, cancelInFlight: true)
+                
             case .initialization(.resetZashiRequest):
                 state.alert = AlertState.wipeRequest()
                 return .none
@@ -454,10 +496,18 @@ extension Root {
                 flexaHandler.signOut()
                 userStoredPreferences.removeAll()
                 try? readTransactionsStorage.resetZashi()
+                state.walletAccounts.forEach { account in
+                    try? userMetadataProvider.resetAccount(account.account)
+                }
+                try? userMetadataProvider.reset()
                 state.$walletStatus.withLock { $0 = .none }
                 state.$selectedWalletAccount.withLock { $0 = nil }
                 state.$walletAccounts.withLock { $0 = [] }
                 state.$zashiWalletAccount.withLock { $0 = nil }
+                state.$transactionMemos.withLock { $0 = [:] }
+                state.$addressBookContacts.withLock { $0 = .empty }
+                state.$transactions.withLock { $0 = [] }
+
                 return .send(.resetZashiKeychainRequest)
                 
             case .resetZashiKeychainRequest:
@@ -636,7 +686,7 @@ extension Root {
                 
             case .tabs, .destination, .onboarding, .phraseDisplay, .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated,
                     .welcome, .binding, .debug, .exportLogs, .alert, .splashFinished, .splashRemovalRequested, 
-                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects, .flexaOnTransactionRequest, .flexaTransactionFailed, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted, .deeplinkWarning, .osStatusError:
+                    .confirmationDialog, .batteryStateChanged, .cancelAllRunningEffects, .flexaOnTransactionRequest, .flexaTransactionFailed, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted, .deeplinkWarning, .osStatusError, .observeTransactions, .foundTransactions, .minedTransaction, .fetchTransactionsForTheSelectedAccount, .fetchedTransactions, .noChangeInTransactions, .loadContacts, .contactsLoaded, .loadUserMetadata:
                 return .none
             }
         }

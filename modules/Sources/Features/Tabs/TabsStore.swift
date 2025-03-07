@@ -29,6 +29,10 @@ import AddressBook
 import Models
 import AddKeystoneHWWallet
 import Scan
+import TransactionsManager
+import TransactionDetails
+import ReadTransactionsStorage
+import UserMetadataProvider
 
 @Reducer
 public struct Tabs {
@@ -62,6 +66,17 @@ public struct Tabs {
             case addKeystoneHWWallet = 0
             case scan
             case accountSelection
+        }
+
+        public enum StackDestinationTransactions: Int, Equatable {
+            case manager = 0
+            case details
+            case addressBook
+        }
+
+        public enum StackDestinationTransactionsHP: Int, Equatable {
+            case details
+            case addressBook
         }
 
         public enum Tab: Int, Equatable, CaseIterable {
@@ -113,7 +128,15 @@ public struct Tabs {
         public var stackDestinationMaxPrivacyBindingsAlive = 0
         public var stackDestinationRequestPayment: StackDestinationRequestPayment?
         public var stackDestinationRequestPaymentBindingsAlive = 0
+        public var stackDestinationTransactions: StackDestinationTransactions?
+        public var stackDestinationTransactionsBindingsAlive = 0
+        public var stackDestinationTransactionsHP: StackDestinationTransactionsHP?
+        public var stackDestinationTransactionsHPBindingsAlive = 0
         public var textToSelect = ""
+        public var transactionDetailsState: TransactionDetails.State = .initial
+        @Shared(.inMemory(.transactionMemos)) public var transactionMemos: [String: [String]] = [:]
+        @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
+        public var transactionsManagerState: TransactionsManager.State = .initial
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         public var zecKeyboardState: ZecKeyboard.State
         
@@ -177,17 +200,23 @@ public struct Tabs {
         case send(SendFlow.Action)
         case sendConfirmation(SendConfirmation.Action)
         case settings(Settings.Action)
+        case transactionDetails(TransactionDetails.Action)
+        case transactionsManager(TransactionsManager.Action)
         case updateDestination(Tabs.State.Destination?)
         case updateStackDestinationAddKeystoneHWWallet(Tabs.State.StackDestinationAddKeystoneHWWallet?)
         case updateStackDestinationLowPrivacy(Tabs.State.StackDestinationLowPrivacy?)
         case updateStackDestinationMaxPrivacy(Tabs.State.StackDestinationMaxPrivacy?)
         case updateStackDestinationRequestPayment(Tabs.State.StackDestinationRequestPayment?)
+        case updateStackDestinationTransactions(Tabs.State.StackDestinationTransactions?)
+        case updateStackDestinationTransactionsHP(Tabs.State.StackDestinationTransactionsHP?)
         case walletAccountTapped(WalletAccount)
         case zecKeyboard(ZecKeyboard.Action)
     }
 
     @Dependency(\.exchangeRate) var exchangeRate
     @Dependency(\.mainQueue) var mainQueue
+    @Dependency(\.readTransactionsStorage) var readTransactionsStorage
+    @Dependency(\.userMetadataProvider) var userMetadataProvider
     @Dependency(\.userStoredPreferences) var userStoredPreferences
 
     public init() { }
@@ -246,6 +275,14 @@ public struct Tabs {
         Scope(state: \.zecKeyboardState, action: \.zecKeyboard) {
             ZecKeyboard()
         }
+        
+        Scope(state: \.transactionsManagerState, action: \.transactionsManager) {
+            TransactionsManager()
+        }
+
+        Scope(state: \.transactionDetailsState, action: \.transactionDetails) {
+            TransactionDetails()
+        }
 
         Reduce { state, action in
             switch action {
@@ -273,7 +310,7 @@ public struct Tabs {
                     .send(.home(.walletBalances(.updateBalances))),
                     .send(.send(.walletBalances(.updateBalances))),
                     .send(.balanceBreakdown(.walletBalances(.updateBalances))),
-                    .send(.home(.transactionList(.foundTransactions)))
+                    .send(.transactionsManager(.resetFiltersTapped))
                 )
             
             case .addKeystoneHWWallet(.continueTapped):
@@ -339,8 +376,16 @@ public struct Tabs {
                 return .send(.updateStackDestinationRequestPayment(.addressBookNewContact))
 
             case .addressBook(.saveButtonTapped):
+                if state.stackDestinationTransactions == .addressBook {
+                    return .send(.updateStackDestinationTransactions(.details))
+                } else if state.stackDestinationTransactionsHP == .addressBook {
+                    return .send(.updateStackDestinationTransactionsHP(.details))
+                }
                 return .send(.updateStackDestinationRequestPayment(.requestPaymentConfirmation))
 
+            case .home(.seeAllTransactionsTapped):
+                return .send(.updateStackDestinationTransactions(.manager))
+                
             case .home(.walletBalances(.exchangeRateRefreshTapped)), .send(.walletBalances(.exchangeRateRefreshTapped)), .balanceBreakdown(.walletBalances(.exchangeRateRefreshTapped)):
                 if state.isRateTooltipEnabled {
                     state.isRateTooltipEnabled = false
@@ -399,18 +444,19 @@ public struct Tabs {
                 state.selectedTab = .balances
                 return .none
 
-            case .home(.transactionList(.selectText(let selectText))):
-                state.selectTextRequest = true
-                state.textToSelect = selectText
-                return .none
-                
+            case .home(.getSomeZecTapped):
+                return .send(.receive(.requestTapped(state.receiveState.unifiedAddress.redacted, true)))
+
             case .dismissSelectTextEditor:
                 state.selectTextRequest = false
                 return .none
-            
-            case .home:
+
+            case .settings(.integrations(.addKeystoneHWWallet(.accountImported))):
+                state.destination = nil
+                state.settingsState.integrationsState.stackDestinationAddKeystoneHWWallet = nil
+                state.settingsState.destination = nil
                 return .none
-            
+
             case .settings(.advancedSettings(.currencyConversionSetup(.saveChangesTapped))):
                 return .send(.send(.exchangeRateSetupChanged))
                 
@@ -436,10 +482,17 @@ public struct Tabs {
                 return .none
 
             case .sendConfirmation(.viewTransactionTapped):
-                state.selectedTab = .account
-                if state.sendConfirmationState.txIdToExpand == nil {
-                    state.sendConfirmationState.txIdToExpand = state.homeState.transactionListState.transactionList.first?.id
+                if let txid = state.sendConfirmationState.txIdToExpand {
+                    if let index = state.transactions.index(id: txid) {
+                        state.sendConfirmationState.transactionDetailsState.transaction = state.transactions[index]
+                        state.sendConfirmationState.transactionDetailsState.isCloseButtonRequired = true
+                        return .send(.sendConfirmation(.updateStackDestinationTransactions(.details)))
+                    }
                 }
+                return .none
+
+            case .sendConfirmation(.transactionDetails(.closeDetailTapped)):
+                state.selectedTab = .account
                 state.sendConfirmationState.stackDestinationBindingsAlive = 0
                 return .concatenate(
                     .send(.updateDestination(nil)),
@@ -447,8 +500,8 @@ public struct Tabs {
                     .send(.sendConfirmation(.updateDestination(nil))),
                     .send(.sendConfirmation(.updateResult(nil))),
                     .send(.sendConfirmation(.updateStackDestination(nil))),
-                    .send(.send(.resetForm)),
-                    .send(.home(.transactionList(.transactionExpandRequested(state.sendConfirmationState.txIdToExpand ?? ""))))
+                    .send(.sendConfirmation(.updateStackDestinationTransactions(nil))),
+                    .send(.send(.resetForm))
                 )
 
             case .sendConfirmation(.backFromFailurePressed):
@@ -513,9 +566,6 @@ public struct Tabs {
                     .send(.sendConfirmation(.updateStackDestination(nil)))
                 )
 
-            case.sendConfirmation(.transactionResultReady):
-                return .send(.home(.transactionList(.foundTransactions)))
-
             case .sendConfirmation:
                 return .none
 
@@ -566,6 +616,20 @@ public struct Tabs {
                 state.stackDestinationRequestPayment = destination
                 return .none
 
+            case .updateStackDestinationTransactions(let destination):
+                if let destination {
+                    state.stackDestinationTransactionsBindingsAlive = destination.rawValue
+                }
+                state.stackDestinationTransactions = destination
+                return .none
+                
+            case .updateStackDestinationTransactionsHP(let destination):
+                if let destination {
+                    state.stackDestinationTransactionsHPBindingsAlive = destination.rawValue
+                }
+                state.stackDestinationTransactionsHP = destination
+                return .none
+
             case .rateTooltipTapped:
                 state.isRateTooltipEnabled = false
                 return .none
@@ -595,6 +659,57 @@ public struct Tabs {
                 
             case .presentKeystoneWeb:
                 state.isInAppBrowserOn = true
+                return .none
+                
+            case .home(.transactionList(.transactionTapped(let txId))):
+                if let index = state.transactions.index(id: txId) {
+                    state.transactionDetailsState.transaction = state.transactions[index]
+                    return .send(.updateStackDestinationTransactionsHP(.details))
+                }
+                return .none
+
+            case .transactionsManager(.transactionTapped(let txId)):
+                if let index = state.transactions.index(id: txId) {
+                    state.transactionDetailsState.transaction = state.transactions[index]
+                    return .send(.updateStackDestinationTransactions(.details))
+                }
+                return .none
+
+            case .transactionDetails(.saveAddressTapped):
+                state.addressBookState.address = state.transactionDetailsState.transaction.address
+                state.addressBookState.originalAddress = state.addressBookState.address
+                state.addressBookState.isNameFocused = true
+                state.addressBookState.isValidZcashAddress = true
+                if state.stackDestinationTransactions == .details {
+                    return .send(.updateStackDestinationTransactions(.addressBook))
+                } else if state.stackDestinationTransactionsHP == .details {
+                    return .send(.updateStackDestinationTransactionsHP(.addressBook))
+                }
+                return .none
+
+            case .transactionDetails(.sendAgainTapped):
+                state.stackDestinationTransactions = nil
+                state.stackDestinationTransactionsHP = nil
+                state.sendState.address = state.transactionDetailsState.transaction.address.redacted
+                state.sendState.memoState.text = state.transactionMemos[state.transactionDetailsState.transaction.id]?.first ?? ""
+                let zecAmount = state.transactionDetailsState.transaction.zecAmount.decimalString().redacted
+                return .run { send in
+                    await send(.send(.zecAmountUpdated(zecAmount)))
+                    await send(.send(.validateAddress))
+                    try await mainQueue.sleep(for: .seconds(0.1))
+                    await send(.selectedTabChanged(.send))
+                }
+
+            case .transactionDetails(.bookmarkTapped):
+                return .send(.transactionsManager(.updateTransactionsAccordingToSearchTerm))
+                
+            case .transactionsManager:
+                return .none
+                
+            case .transactionDetails:
+                return .none
+
+            case .home:
                 return .none
             }
         }

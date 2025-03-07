@@ -55,7 +55,7 @@
 			<key>NSUbiquitousContainerIsDocumentStorage</key>
 			<true/>
 			<key>NSUbiquitousContainerName</key>
-			<string>Zashi Address Book</string>
+			<string>Zashi Internal</string>
 		</dict>
 	</dict>
 	<key>UIAppFonts</key>
