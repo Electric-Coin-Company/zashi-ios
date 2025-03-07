@@ -295,9 +295,9 @@ public struct Root {
                 return .none
                 
             case .addressBook(.saveButtonTapped):
-                if state.addressBookBinding {
-                    state.addressBookBinding = false
-                }
+//                if state.addressBookBinding {
+//                    state.addressBookBinding = false
+//                }
                 if state.addressBookContactBinding {
                     state.addressBookContactBinding = false
                 }
@@ -308,7 +308,8 @@ public struct Root {
                 state.addressBookState.isInSelectMode = true
                 return .none
 
-            case .tabs(.send(.addressBookTapped)):
+            //case .tabs(.send(.addressBookTapped)):
+            case .tabs(.path(.element(id: _, action: .sendFlow(.addressBookTapped)))):
                 return .run { send in
                     if await !localAuthentication.authenticate() {
                         return
@@ -325,7 +326,18 @@ public struct Root {
 
             case .addressBook(.editId(let address)):
                 state.addressBookBinding = false
-                return .send(.tabs(.send(.scan(.found(address.redacted)))))
+                guard let first = state.tabsState.path.ids.first else {
+                    return .none
+                }
+//                return .send(.tabs(.path(.element(id: first, action: .sendFlow(.addressUpdated(address.redacted))))))
+                return .send(.tabs(.path(.element(id: first, action: .sendFlow(.scan(.found(address.redacted)))))))
+//                for (_, element) in zip(state.path.ids, state.path) {
+//                    switch element {
+//                    case .sendFlow(let sendState):
+//                    }
+//                }
+                //return .send(.tabs(.send(.scan(.found(address.redacted)))))
+                //return
                 
             case .serverSetup:
                 return .none
