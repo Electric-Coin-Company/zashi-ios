@@ -13,16 +13,20 @@ import Settings
 
 extension TabsView {
     func settingsButton() -> some View {
-        Asset.Assets.Icons.settings.image
-            .zImage(size: 24, style: Design.Text.primary)
-            .padding(8)
-            .navigationLink(
-                isActive: store.bindingFor(.settings),
-                destination: {
-                    SettingsView(store: store.settingsStore())
-                }
-            )
-            .tint(Asset.Colors.primary.color)
+        Button {
+            store.send(.updateDestination(.settings))
+        } label: {
+            Asset.Assets.Icons.settings.image
+                .zImage(size: 24, style: Design.Text.primary)
+                .padding(8)
+                .tint(Asset.Colors.primary.color)
+//                .navigationLink(
+//                    isActive: store.bindingFor(.settings),
+//                    destination: {
+//                        SettingsView(store: store.settingsStore())
+//                    }
+//                )
+        }
     }
     
     @ViewBuilder func hideBalancesButton() -> some View {

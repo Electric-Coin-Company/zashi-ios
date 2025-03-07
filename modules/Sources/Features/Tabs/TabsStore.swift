@@ -42,16 +42,17 @@ public struct Tabs {
         case receive(Receive)
         case scan(Scan)
         case sendFlow(SendFlow)
+        case sendConfirmation(SendConfirmation)
     }
     
     @ObservableState
     public struct State {
-        var path = StackState<Path.State>()
+        public var path = StackState<Path.State>()
 
         public enum Destination: Equatable {
             case addressDetails
             case currencyConversionSetup
-            case sendConfirmation
+            //case sendConfirmation
             case sendConfirmationKeystone
             case settings
         }
@@ -110,9 +111,10 @@ public struct Tabs {
         public var isRateTooltipEnabled = false
         public var homeState: Home.State
         public var moreRequest = false
-        public var receiveState: Receive.State
+//        public var receiveState: Receive.State
         public var requestZecState: RequestZec.State
         public var scanState: Scan.State = .initial
+        // adept to be removed
         public var selectedTab: Tab = .account
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var selectTextRequest = false
@@ -166,7 +168,7 @@ public struct Tabs {
             isRateEducationEnabled: Bool = false,
             isRateTooltipEnabled: Bool = false,
             homeState: Home.State,
-            receiveState: Receive.State,
+//            receiveState: Receive.State,
             requestZecState: RequestZec.State,
             selectedTab: Tab = .account,
             sendConfirmationState: SendConfirmation.State,
@@ -181,7 +183,7 @@ public struct Tabs {
             self.isRateEducationEnabled = isRateEducationEnabled
             self.isRateTooltipEnabled = isRateTooltipEnabled
             self.homeState = homeState
-            self.receiveState = receiveState
+//            self.receiveState = receiveState
             self.requestZecState = requestZecState
             self.selectedTab = selectedTab
             self.sendConfirmationState = sendConfirmationState
@@ -208,7 +210,7 @@ public struct Tabs {
         case path(StackActionOf<Path>)
         case presentKeystoneWeb
         case rateTooltipTapped
-        case receive(Receive.Action)
+//        case receive(Receive.Action)
         case requestZec(RequestZec.Action)
         case scan(Scan.Action)
         case selectedTabChanged(State.Tab)
@@ -263,9 +265,9 @@ public struct Tabs {
             SendConfirmation()
         }
 
-        Scope(state: \.receiveState, action: \.receive) {
-            Receive()
-        }
+//        Scope(state: \.receiveState, action: \.receive) {
+//            Receive()
+//        }
 
         Scope(state: \.requestZecState, action: \.requestZec) {
             RequestZec()
@@ -329,7 +331,7 @@ public struct Tabs {
                 }
                 state.$selectedWalletAccount.withLock { $0 = walletAccount }
                 state.homeState.transactionListState.isInvalidated = true
-                state.receiveState.currentFocus = .uaAddress
+//                state.receiveState.currentFocus = .uaAddress
                 return .concatenate(
                     .send(.home(.walletBalances(.updateBalances))),
                     .send(.send(.walletBalances(.updateBalances))),
@@ -345,31 +347,6 @@ public struct Tabs {
                 
             case .addKeystoneHWWallet:
                 return .none
-
-            case let .receive(.addressDetailsRequest(address, maxPrivacy)):
-                state.addressDetailsState.address = address
-                state.addressDetailsState.maxPrivacy = maxPrivacy
-                if state.selectedWalletAccount?.vendor == .keystone {
-                    state.addressDetailsState.addressTitle = maxPrivacy
-                    ? L10n.Accounts.Keystone.shieldedAddress
-                    : L10n.Accounts.Keystone.transparentAddress
-                } else {
-                    state.addressDetailsState.addressTitle = maxPrivacy
-                    ? L10n.Accounts.Zashi.shieldedAddress
-                    : L10n.Accounts.Zashi.transparentAddress
-                }
-                return .send(.updateDestination(.addressDetails))
-
-            case let .receive(.requestTapped(address, maxPrivacy)):
-                state.zecKeyboardState.input = "0"
-                state.requestZecState.address = address
-                state.requestZecState.maxPrivacy = maxPrivacy
-                state.requestZecState.memoState = .initial
-                if maxPrivacy {
-                    return .send(.updateStackDestinationMaxPrivacy(.zecKeyboard))
-                } else {
-                    return .send(.updateStackDestinationLowPrivacy(.zecKeyboard))
-                }
 
             case .zecKeyboard(.nextTapped):
                 state.requestZecState.requestedZec = state.zecKeyboardState.amount
@@ -420,7 +397,9 @@ public struct Tabs {
                 return .none
                 
             case .home(.scanTapped):
-                state.path.append(.scan(Scan.State()))
+                var scanState = Scan.State()
+                scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
+                state.path.append(.scan(scanState))
                 return .none
 
             case .home(.receiveTapped):
@@ -438,7 +417,7 @@ public struct Tabs {
 //                )
 //                test.address = "aaa".redacted
 //                state.path.append(.sendFlow(test))
-                state.sendState.address = "aaa2".redacted
+                //state.sendState.address = "aaa2".redacted
                 state.path.append(.sendFlow(state.sendState))
 //                state.selectedTab = .send
                 return .none
@@ -457,10 +436,7 @@ public struct Tabs {
 //                }
 //                return .none
 
-            case .path:
-                return .none
-
-//            case .send(.addressUpdated):
+                //            case .send(.addressUpdated):
 //                print("__LD \(state.sendState.address)")
 //                return .none
 
@@ -483,10 +459,7 @@ public struct Tabs {
 
             case .binding:
                 return .none
-                
-            case .receive:
-                return .none
-            
+
             case .requestZec:
                 return .none
                 
@@ -525,9 +498,6 @@ public struct Tabs {
                 state.selectedTab = .balances
                 return .none
 
-            case .home(.getSomeZecTapped):
-                return .send(.receive(.requestTapped(state.receiveState.unifiedAddress.redacted, true)))
-
             case .dismissSelectTextEditor:
                 state.selectTextRequest = false
                 return .none
@@ -540,17 +510,46 @@ public struct Tabs {
 
             case .settings(.advancedSettings(.currencyConversionSetup(.saveChangesTapped))):
                 return .send(.send(.exchangeRateSetupChanged))
+
+            case .path(.element(id: _, action: .scan(.cancelPressed))):
+                state.path.removeAll()
+                return .none
+
+            case .path(.element(id: _, action: .scan(.found(let address)))):
+                state.sendState.address = address
+                state.path.append(.sendFlow(state.sendState))
+                return .none
+
+            //case .send(.confirmationRequired(let type)):
+            case .path(.element(id: _, action: .sendFlow(.confirmationRequired(let type)))):
+//                if case .sendFlow = state.path {
+//                    
+//                }
                 
-            case .send(.confirmationRequired(let type)):
-                state.sendConfirmationState.amount = state.sendState.amount
-                state.sendConfirmationState.address = state.sendState.address.data
-                state.sendConfirmationState.isShielding = false
-                state.sendConfirmationState.proposal = state.sendState.proposal
-                state.sendConfirmationState.feeRequired = state.sendState.feeRequired
-                state.sendConfirmationState.message = state.sendState.message
-                state.sendConfirmationState.currencyAmount = state.sendState.currencyConversion?.convert(state.sendState.amount).redacted ?? .empty
+                for (_, element) in zip(state.path.ids, state.path) {
+                    switch element {
+                    case .sendFlow(let sendState):
+                        state.sendConfirmationState.amount = sendState.amount
+                        state.sendConfirmationState.address = sendState.address.data
+                        state.sendConfirmationState.isShielding = false
+                        state.sendConfirmationState.proposal = sendState.proposal
+                        state.sendConfirmationState.feeRequired = sendState.feeRequired
+                        state.sendConfirmationState.message = sendState.message
+                        state.sendConfirmationState.currencyAmount = sendState.currencyConversion?.convert(sendState.amount).redacted ?? .empty
+                    default: break
+                    }
+                }
+//                state.sendConfirmationState.amount = state.sendState.amount
+//                state.sendConfirmationState.address = state.sendState.address.data
+//                state.sendConfirmationState.isShielding = false
+//                state.sendConfirmationState.proposal = state.sendState.proposal
+//                state.sendConfirmationState.feeRequired = state.sendState.feeRequired
+//                state.sendConfirmationState.message = state.sendState.message
+//                state.sendConfirmationState.currencyAmount = state.sendState.currencyConversion?.convert(state.sendState.amount).redacted ?? .empty
                 if type == .send {
-                    return .send(.updateDestination(.sendConfirmation))
+                    //return .send(.updateDestination(.sendConfirmation))
+                    state.path.append(.sendConfirmation(state.sendConfirmationState))
+                    return .none
                 } else {
                     return .send(.updateStackDestinationRequestPayment(.requestPaymentConfirmation))
                 }
@@ -626,8 +625,6 @@ public struct Tabs {
                     await send(.sendConfirmation(.partialProposalErrorDismiss))
                 }
 
-            case .sendConfirmation(.goBackPressed):
-                return .send(.updateDestination(nil))
 
             case .sendConfirmation(.goBackPressedFromRequestZec):
                 state.sendState.address = .empty
@@ -647,12 +644,7 @@ public struct Tabs {
                     .send(.sendConfirmation(.updateStackDestination(nil)))
                 )
 
-            case .sendConfirmation:
-                return .none
-
-            case .settings:
-                return .none
-
+                // adept to be removed?
             case .selectedTabChanged(let tab):
                 state.selectedTab = tab
                 if tab == .send {
@@ -660,7 +652,34 @@ public struct Tabs {
                 }
                 state.isRateTooltipEnabled = false
                 return .none
+
+            case .rateTooltipTapped:
+                state.isRateTooltipEnabled = false
+                return .none
+
+            case .scan(.cancelPressed):
+                return .send(.updateStackDestinationAddKeystoneHWWallet(.addKeystoneHWWallet))
+
+            case .scan(.foundZA(let zcashAccounts)):
+                if state.addKeystoneHWWalletState.zcashAccounts == nil {
+                    state.addKeystoneHWWalletState.zcashAccounts = zcashAccounts
+                    return .send(.updateStackDestinationAddKeystoneHWWallet(.accountSelection))
+                }
+                return .none
+
+            case .keystoneBannerTapped:
+                return .run { send in
+                    await send(.accountSwitchTapped)
+                    try? await mainQueue.sleep(for: .seconds(1))
+                    await send(.presentKeystoneWeb)
+                }
                 
+            case .presentKeystoneWeb:
+                state.isInAppBrowserOn = true
+                return .none
+
+                // MARK: - Enum Destinations
+
             case .updateDestination(.currencyConversionSetup):
                 state.destination = .currencyConversionSetup
                 return .send(.currencyConversionCloseTapped)
@@ -711,37 +730,16 @@ public struct Tabs {
                 state.stackDestinationTransactionsHP = destination
                 return .none
 
-            case .rateTooltipTapped:
-                state.isRateTooltipEnabled = false
-                return .none
-                
-            case .zecKeyboard:
-                return .none
+                // MARK: - Send Confirmation
 
-            case .scan(.cancelPressed):
-                return .send(.updateStackDestinationAddKeystoneHWWallet(.addKeystoneHWWallet))
+//            case .sendConfirmation(.goBackPressed):
+            case .path(.element(id: _, action: .sendConfirmation(.goBackPressed))):
+                state.path.popLast()
+                return .none
+                //return .send(.updateDestination(nil))
 
-            case .scan(.foundZA(let zcashAccounts)):
-                if state.addKeystoneHWWalletState.zcashAccounts == nil {
-                    state.addKeystoneHWWalletState.zcashAccounts = zcashAccounts
-                    return .send(.updateStackDestinationAddKeystoneHWWallet(.accountSelection))
-                }
-                return .none
-                
-            case .scan:
-                return .none
-                
-            case .keystoneBannerTapped:
-                return .run { send in
-                    await send(.accountSwitchTapped)
-                    try? await mainQueue.sleep(for: .seconds(1))
-                    await send(.presentKeystoneWeb)
-                }
-                
-            case .presentKeystoneWeb:
-                state.isInAppBrowserOn = true
-                return .none
-                
+                // MARK: - Transaction History
+
             case .home(.transactionList(.transactionTapped(let txId))):
                 if let index = state.transactions.index(id: txId) {
                     state.transactionDetailsState.transaction = state.transactions[index]
@@ -749,12 +747,16 @@ public struct Tabs {
                 }
                 return .none
 
+                // MARK: - Transaction Manager
+
             case .transactionsManager(.transactionTapped(let txId)):
                 if let index = state.transactions.index(id: txId) {
                     state.transactionDetailsState.transaction = state.transactions[index]
                     return .send(.updateStackDestinationTransactions(.details))
                 }
                 return .none
+
+                // MARK: - Transaction Details
 
             case .transactionDetails(.saveAddressTapped):
                 state.addressBookState.address = state.transactionDetailsState.transaction.address
@@ -768,29 +770,90 @@ public struct Tabs {
                 }
                 return .none
 
+                // broken
             case .transactionDetails(.sendAgainTapped):
-                state.stackDestinationTransactions = nil
-                state.stackDestinationTransactionsHP = nil
+//                state.stackDestinationTransactions = nil
+//                state.stackDestinationTransactionsHP = nil
                 state.sendState.address = state.transactionDetailsState.transaction.address.redacted
                 state.sendState.memoState.text = state.transactionMemos[state.transactionDetailsState.transaction.id]?.first ?? ""
                 let zecAmount = state.transactionDetailsState.transaction.zecAmount.decimalString().redacted
-                return .run { send in
-                    await send(.send(.zecAmountUpdated(zecAmount)))
-                    await send(.send(.validateAddress))
-                    try await mainQueue.sleep(for: .seconds(0.1))
-                    await send(.selectedTabChanged(.send))
-                }
+//                return .run { send in
+//                    await send(.send(.zecAmountUpdated(zecAmount)))
+//                    await send(.send(.validateAddress))
+//                    try await mainQueue.sleep(for: .seconds(0.1))
+//                    await send(.selectedTabChanged(.send))
+//                }
+                return .none
 
             case .transactionDetails(.bookmarkTapped):
                 return .send(.transactionsManager(.updateTransactionsAccordingToSearchTerm))
+
+                // MARK: - Request ZEC flow
+
+            case .home(.getSomeZecTapped):
+                guard let unifiedAddress = state.uAddress?.stringEncoded else {
+                    return .none
+                }
+                state.zecKeyboardState.input = "0"
+                state.requestZecState.address = unifiedAddress.redacted
+                state.requestZecState.maxPrivacy = true
+                state.requestZecState.memoState = .initial
+                return .send(.updateStackDestinationMaxPrivacy(.zecKeyboard))
+
+                // MARK: - Receive
+
+            case let .path(.element(id: _, action: .receive(.addressDetailsRequest(address, maxPrivacy)))):
+                state.addressDetailsState.address = address
+                state.addressDetailsState.maxPrivacy = maxPrivacy
+                if state.selectedWalletAccount?.vendor == .keystone {
+                    state.addressDetailsState.addressTitle = maxPrivacy
+                    ? L10n.Accounts.Keystone.shieldedAddress
+                    : L10n.Accounts.Keystone.transparentAddress
+                } else {
+                    state.addressDetailsState.addressTitle = maxPrivacy
+                    ? L10n.Accounts.Zashi.shieldedAddress
+                    : L10n.Accounts.Zashi.transparentAddress
+                }
+                return .send(.updateDestination(.addressDetails))
+                
+            case let .path(.element(id: _, action: .receive(.requestTapped(address, maxPrivacy)))):
+                state.zecKeyboardState.input = "0"
+                state.requestZecState.address = address
+                state.requestZecState.maxPrivacy = maxPrivacy
+                state.requestZecState.memoState = .initial
+                if maxPrivacy {
+                    return .send(.updateStackDestinationMaxPrivacy(.zecKeyboard))
+                } else {
+                    return .send(.updateStackDestinationLowPrivacy(.zecKeyboard))
+                }
+
+                // MARK: - Root cases
+
+            case .path:
+                return .none
+                
+            case .home:
+                return .none
                 
             case .transactionsManager:
                 return .none
                 
             case .transactionDetails:
                 return .none
+                
+                // adept to be removed?
+            case .scan:
+                return .none
+            
+                // adept to be removed?
+            case .zecKeyboard:
+                return .none
 
-            case .home:
+                // adept to be removed?
+            case .sendConfirmation:
+                return .none
+
+            case .settings:
                 return .none
             }
         }

@@ -200,6 +200,7 @@ public struct AddressBook {
                 state.alert = AlertState.confirmDelete()
                 return .none
                 
+                // broken
             case .deleteIdConfirmed:
                 guard let deleteIdToConfirm = state.deleteIdToConfirm, let account = state.zashiWalletAccount else {
                     return .none
