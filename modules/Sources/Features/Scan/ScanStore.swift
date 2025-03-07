@@ -39,6 +39,7 @@ public struct Scan {
         public var forceLibraryToHide = false
         public var info = ""
         public var instructions: String?
+        public var isAnythingFound = false
         public var isCameraEnabled = true
         public var isTorchAvailable = false
         public var isTorchOn = false
@@ -97,6 +98,7 @@ public struct Scan {
             switch action {
             case .onAppear:
                 // reset the values
+                state.isAnythingFound = false
                 state.reportedPart = -1
                 state.reportedParts = 0
                 state.expectedParts = 0
@@ -115,14 +117,21 @@ public struct Scan {
             case .onDisappear:
                 return .cancel(id: state.cancelId)
                 
+            case .found:
+                state.isAnythingFound = true
+                return .none
+
             case .foundRP:
+                state.isAnythingFound = true
                 return .none
                 
             case .foundZA:
+                state.isAnythingFound = true
                 state.progress = nil
                 return .none
 
             case .foundPCZT:
+                state.isAnythingFound = true
                 state.progress = nil
                 return .none
 
@@ -141,9 +150,6 @@ public struct Scan {
                 }
                 state.expectedParts = Int(Float(expectedParts ?? 0) * 1.75)
                 state.progress = progress
-                return .none
-                
-            case .found:
                 return .none
 
             case .libraryImage(let image):
@@ -186,6 +192,9 @@ public struct Scan {
                 )
 
             case .scan(let code):
+                guard !state.isAnythingFound else {
+                    return .none
+                }
                 for checker in state.checkers {
                     if let action = checker.checker.checkQRCode(code.data) {
                         return .send(action)

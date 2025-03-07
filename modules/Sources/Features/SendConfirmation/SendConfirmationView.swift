@@ -233,6 +233,8 @@ public struct SendConfirmationView: View {
                 }
             )
         }
+//        .zashiBack()
+        .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden()
         .padding(.vertical, 1)
         .applyScreenBackground()
