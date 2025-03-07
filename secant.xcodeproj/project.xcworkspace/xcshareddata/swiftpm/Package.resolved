@@ -568,6 +568,15 @@
       }
     },
     {
+      "identity" : "zcash-swift-wallet-sdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk",
+      "state" : {
+        "revision" : "b84047c2619fd0bdfd296411496131a262268768",
+        "version" : "2.2.9"
+      }
+    },
+    {
       "identity" : "zcashlightclientkit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/LukasKorba/ZcashLightClientKit",
