@@ -1,6 +1,6 @@
 //
 //  GlobalNavBar.swift
-//  modules
+//  Zashi
 //
 //  Created by Lukáš Korba on 26.11.2024.
 //
@@ -11,21 +11,15 @@ import Generated
 import UIComponents
 import Settings
 
-extension TabsView {
+extension HomeView {
     func settingsButton() -> some View {
         Button {
-            store.send(.updateDestination(.settings))
+            store.send(.settingsTapped)
         } label: {
             Asset.Assets.Icons.settings.image
                 .zImage(size: 24, style: Design.Text.primary)
                 .padding(8)
                 .tint(Asset.Colors.primary.color)
-//                .navigationLink(
-//                    isActive: store.bindingFor(.settings),
-//                    destination: {
-//                        SettingsView(store: store.settingsStore())
-//                    }
-//                )
         }
     }
     
@@ -42,7 +36,7 @@ extension TabsView {
     
     @ViewBuilder func walletAccountSwitcher() -> some View {
         Button {
-            store.send(.accountSwitchTapped)
+            //store.send(.accountSwitchTapped)
         } label: {
             HStack(spacing: 0) {
                 if let selectedWalletAccount = store.selectedWalletAccount {

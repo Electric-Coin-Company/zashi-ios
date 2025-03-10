@@ -48,7 +48,7 @@ public struct TabsView: View {
 
     public var body: some View {
         WithPerceptionTracking {
-            NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
+            //NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
                 HomeView(
                     store: self.store.scope(
                         state: \.homeState,
@@ -56,33 +56,33 @@ public struct TabsView: View {
                     ),
                     tokenName: tokenName
                 )
-                .navigationBarItems(
-                    leading:
-                        walletAccountSwitcher()
-                )
-                .navigationBarItems(
-                    trailing:
-                        HStack(spacing: 0) {
-                            if store.selectedTab != .receive {
-                                hideBalancesButton()
-                            }
-                            
-                            settingsButton()
-                        }
-                        //.animation(nil, value: store.selectedTab)
-                )
-            } destination: { store in
-                switch store.case {
-                case let .sendFlow(store):
-                    SendFlowView(store: store, tokenName: tokenName)
-                case let .receive(store):
-                    ReceiveView(store: store, networkType: networkType)
-                case let .scan(store):
-                    ScanView(store: store)
-                case let .sendConfirmation(store):
-                    SendConfirmationView(store: store, tokenName: tokenName)
-                }
-            }
+//                .navigationBarItems(
+//                    leading:
+//                        walletAccountSwitcher()
+//                )
+//                .navigationBarItems(
+//                    trailing:
+//                        HStack(spacing: 0) {
+//                            if store.selectedTab != .receive {
+//                                hideBalancesButton()
+//                            }
+//                            
+//                            settingsButton()
+//                        }
+//                        //.animation(nil, value: store.selectedTab)
+//                )
+//            } destination: { store in
+//                switch store.case {
+//                case let .sendFlow(store):
+//                    SendFlowView(store: store, tokenName: tokenName)
+//                case let .receive(store):
+//                    ReceiveView(store: store, networkType: networkType)
+//                case let .scan(store):
+//                    ScanView(store: store)
+//                case let .sendConfirmation(store):
+//                    SendConfirmationView(store: store, tokenName: tokenName)
+//                }
+//            }
             .onAppear { store.send(.onAppear) }
             .navigationLinkEmpty(
                 isActive: store.bindingFor(.settings),

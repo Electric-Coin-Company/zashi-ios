@@ -25,7 +25,7 @@ extension Root {
             case osStatusError
             case phraseDisplay
             case startup
-            case tabs
+            case home
             case welcome
         }
         
@@ -57,7 +57,7 @@ extension Root {
             switch action {
             case let .destination(.updateDestination(destination)):
                 guard (state.destinationState.destination != .deeplinkWarning)
-                        || (state.destinationState.destination == .deeplinkWarning && destination == .tabs) else {
+                        || (state.destinationState.destination == .deeplinkWarning && destination == .home) else {
                     return .none
                 }
                 guard state.destinationState.destination != .onboarding && state.onboardingState.destination != .importExistingWallet && state.onboardingState.importWalletState.destination != .restoreInfo else {
@@ -69,9 +69,9 @@ extension Root {
             case .deeplinkWarning(.gotItTapped):
                 state = .initial
                 state.splashAppeared = true
-                state.tabsState.selectedTab = .send
-                state.tabsState.sendState.destination = .scanQR
-                return .send(.destination(.updateDestination(.tabs)))
+//                state.tabsState.selectedTab = .send
+//                state.tabsState.sendState.destination = .scanQR
+                return .send(.destination(.updateDestination(.home)))
                 
             case .destination(.deeplink(let url)):
                 if let _ = uriParser.checkRP(url.absoluteString) {
@@ -81,16 +81,16 @@ extension Root {
                 return .none
 
             case .destination(.deeplinkHome):
-                state.destinationState.destination = .tabs
-                state.tabsState.destination = nil
+//                state.destinationState.destination = .home
+////                state.tabsState.destination = nil
                 return .none
-
-            case let .destination(.deeplinkSend(amount, address, memo)):
-                state.destinationState.destination = .tabs
-                state.tabsState.selectedTab = .send
-                state.tabsState.sendState.amount = amount
-                state.tabsState.sendState.address = address.redacted
-                state.tabsState.sendState.memoState.text = memo
+//
+            case .destination(.deeplinkSend):
+//                state.destinationState.destination = .home
+//                state.tabsState.selectedTab = .send
+//                state.tabsState.sendState.amount = amount
+//                state.tabsState.sendState.address = address.redacted
+//                state.tabsState.sendState.memoState.text = memo
                 return .none
 
             case let .destination(.deeplinkFailed(url, error)):
@@ -113,14 +113,14 @@ extension Root {
                 exchangeRate.refreshExchangeRateUSD()
                 return .none
 
-            case .tabs(.settings(.integrations(.flexaTapped))), .tabs(.flexaTapped):
-                flexaHandler.open()
-                return .publisher {
-                    flexaHandler.onTransactionRequest()
-                        .map(Root.Action.flexaOnTransactionRequest)
-                        .receive(on: mainQueue)
-                }
-                .cancellable(id: CancelFlexaId, cancelInFlight: true)
+//            case .tabs(.settings(.integrations(.flexaTapped))), .tabs(.flexaTapped):
+//                flexaHandler.open()
+//                return .publisher {
+//                    flexaHandler.onTransactionRequest()
+//                        .map(Root.Action.flexaOnTransactionRequest)
+//                        .receive(on: mainQueue)
+//                }
+//                .cancellable(id: CancelFlexaId, cancelInFlight: true)
 
             case .flexaOnTransactionRequest(let transaction):
                 guard let transaction else {
@@ -165,9 +165,7 @@ extension Root {
                 flexaHandler.flexaAlert(L10n.Partners.Flexa.transactionFailedTitle, message)
                 return .none
 
-            case .tabs, .initialization, .onboarding, .updateStateAfterConfigUpdate, .alert, .phraseDisplay, .synchronizerStateChanged,
-                    .welcome, .binding, .resetZashiSDKFailed, .resetZashiSDKSucceeded, .resetZashiKeychainFailed, .resetZashiKeychainRequest, .resetZashiFinishProcessing, .resetZashiKeychainFailedWithCorruptedData, .debug, .walletConfigLoaded, .exportLogs, .confirmationDialog,
-                    .notEnoughFreeSpace, .serverSetup, .serverSetupBindingUpdated, .batteryStateChanged, .cancelAllRunningEffects, .addressBookBinding, .addressBook, .addressBookContactBinding, .addressBookAccessGranted, .osStatusError, .observeTransactions, .foundTransactions, .minedTransaction, .fetchTransactionsForTheSelectedAccount, .fetchedTransactions, .noChangeInTransactions, .loadContacts, .contactsLoaded, .loadUserMetadata, .resolveMetadataEncryptionKeys:
+            default:
                 return .none
             }
         }
