@@ -8,19 +8,29 @@ import RecoveryPhraseDisplay
 import Welcome
 import ExportLogs
 import OnboardingFlow
-import Tabs
 import ZcashLightClientKit
 import UIComponents
 import ServerSetup
-import AddressBook
 import DeeplinkWarning
 import OSStatusError
+
+import About
+import AddressBook
+import AddressDetails
+import Home
+import Receive
+import RequestZec
+import SendFeedback
+import SendFlow
+import Settings
+import WhatsNew
+import ZecKeyboard
 
 public struct RootView: View {
     @Environment(\.scenePhase) var scenePhase
     @State var covered = false
     
-    let store: StoreOf<Root>
+    @Perception.Bindable var store: StoreOf<Root>
     let tokenName: String
     let networkType: NetworkType
 
@@ -109,52 +119,43 @@ private extension RootView {
                         store.send(.splashRemovalRequested)
                     }
 
-                case .tabs:
-                    NavigationView {
-                        TabsView(
+                case .home:
+                    NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
+                        HomeView(
                             store: store.scope(
-                                state: \.tabsState,
-                                action: \.tabs
+                                state: \.homeState,
+                                action: \.home
                             ),
-                            tokenName: tokenName,
-                            networkType: networkType
+                            tokenName: tokenName
                         )
-                        .navigationLinkEmpty(
-                            isActive: Binding<Bool>(
-                                get: {
-                                    store.addressBookBinding
-                                }, set: {
-                                    store.send(.addressBookBinding($0))
-                                }
-                            ),
-                            destination: {
-                                AddressBookView(
-                                    store: store.scope(
-                                        state: \.addressBookState,
-                                        action: \.addressBook
-                                    )
-                                )
-                            }
-                        )
-                        .navigationLinkEmpty(
-                            isActive: Binding<Bool>(
-                                get: {
-                                    store.addressBookContactBinding
-                                }, set: {
-                                    store.send(.addressBookContactBinding($0))
-                                }
-                            ),
-                            destination: {
-                                AddressBookContactView(
-                                    store: store.scope(
-                                        state: \.addressBookState,
-                                        action: \.addressBook
-                                    )
-                                )
-                            }
-                        )
+                    } destination: { store in
+                        switch store.case {
+                        case let .about(store):
+                            AboutView(store: store)
+                        case let .addressBook(store):
+                            AddressBookView(store: store)
+                        case let .addressBookContact(store):
+                            AddressBookContactView(store: store)
+                        case let .addressDetails(store):
+                            AddressDetailsView(store: store)
+                        case let .receive(store):
+                            ReceiveView(store: store, networkType: networkType)
+                        case let .requestZec(store):
+                            RequestZecView(store: store, tokenName: tokenName)
+                        case let .requestZecSummary(store):
+                            RequestZecSummaryView(store: store, tokenName: tokenName)
+                        case let .sendUsFeedback(store):
+                            SendFeedbackView(store: store)
+                        case let .sendFlow(store):
+                            SendFlowView(store: store, tokenName: tokenName)
+                        case let .settings(store):
+                            SettingsView(store: store)
+                        case let .whatsNew(store):
+                            WhatsNewView(store: store)
+                        case let .zecKeyboard(store):
+                            ZecKeyboardView(store: store, tokenName: tokenName)
+                        }
                     }
-                    .navigationViewStyle(.stack)
                     .overlayedWithSplash(store.splashAppeared) {
                         store.send(.splashRemovalRequested)
                     }
@@ -257,9 +258,9 @@ private extension RootView {
 
     @ViewBuilder func debugView(_ store: StoreOf<Root>) -> some View {
         VStack(alignment: .leading) {
-            if store.destinationState.previousDestination == .tabs {
+            if store.destinationState.previousDestination == .home {
                 ZashiButton(L10n.General.back) {
-                    store.goToDestination(.tabs)
+                    store.goToDestination(.home)
                 }
                 .frame(width: 150)
                 .padding()
@@ -331,7 +332,7 @@ extension Root.State {
             exportLogsState: .initial,
             onboardingState: .initial,
             phraseDisplayState: .initial,
-            tabsState: .initial,
+            //tabsState: .initial,
             walletConfig: .initial,
             welcomeState: .initial
         )

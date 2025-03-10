@@ -24,6 +24,7 @@ public struct Home {
         public var migratingDatabase = true
         public var syncProgressState: SyncProgress.State
         public var walletConfig: WalletConfig
+        @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var transactionListState: TransactionList.State
         public var walletBalancesState: WalletBalances.State
 
@@ -48,12 +49,17 @@ public struct Home {
         case alert(PresentationAction<Action>)
         case foundTransactions
         case getSomeZecTapped
+        case moreTapped
         case onAppear
         case onDisappear
+        case receiveTapped
         case resolveReviewRequest
         case retrySync
         case reviewRequestFinished
+        case scanTapped
         case seeAllTransactionsTapped
+        case sendTapped
+        case settingsTapped
         case showSynchronizerErrorAlert(ZcashError)
         case synchronizerStateChanged(RedactableSynchronizerState)
         case syncFailed(ZcashError)
@@ -61,12 +67,6 @@ public struct Home {
         case updateTransactionList([TransactionState])
         case transactionList(TransactionList.Action)
         case walletBalances(WalletBalances.Action)
-        
-        // primary actions
-        case receiveTapped
-        case sendTapped
-        case scanTapped
-        case moreTapped
     }
     
     @Dependency(\.mainQueue) var mainQueue
@@ -189,6 +189,9 @@ public struct Home {
                 return .none
 
             case .alert:
+                return .none
+                
+            case .settingsTapped:
                 return .none
             }
         }

@@ -1,15 +1,8 @@
 import SwiftUI
 import ComposableArchitecture
 
-import About
 import Generated
-import RecoveryPhraseDisplay
 import UIComponents
-import PrivateDataConsent
-import ServerSetup
-import AddressBook
-import WhatsNew
-import SendFeedback
 
 public struct SettingsView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -29,7 +22,7 @@ public struct SettingsView: View {
                             icon: Asset.Assets.Icons.user.image,
                             title: L10n.Settings.addressBook
                         ) {
-                            store.send(.protectedAccessRequest(.addressBook))
+                            store.send(.addressBookTapped)
                         }
 
                         if store.isEnoughFreeSpaceMode {
@@ -65,7 +58,7 @@ public struct SettingsView: View {
                                         }
                                     }
                             ) {
-                                store.send(.updateDestination(.integrations))
+                                store.send(.integrationsTapped)
                             }
                             .disabled(store.isKeystoneAccount)
                         }
@@ -74,21 +67,21 @@ public struct SettingsView: View {
                             icon: Asset.Assets.Icons.settings.image,
                             title: L10n.Settings.advanced
                         ) {
-                            store.send(.updateDestination(.advanced))
+                            store.send(.advancedSettingsTapped)
                         }
 
                         ActionRow(
                             icon: Asset.Assets.Icons.magicWand.image,
                             title: L10n.Settings.whatsNew
                         ) {
-                            store.send(.updateDestination(.whatsNew))
+                            store.send(.whatsNewTapped)
                         }
 
                         ActionRow(
                             icon: Asset.Assets.infoOutline.image,
                             title: L10n.Settings.about
                         ) {
-                            store.send(.updateDestination(.about))
+                            store.send(.aboutTapped)
                         }
                         
                         ActionRow(
@@ -96,7 +89,7 @@ public struct SettingsView: View {
                             title: L10n.Settings.feedback,
                             divider: false
                         ) {
-                            store.send(.updateDestination(.sendFeedback))
+                            store.send(.sendUsFeedbackTapped)
                         }
                     }
                     .listRowInsets(EdgeInsets())
@@ -105,45 +98,7 @@ public struct SettingsView: View {
                 }
                 .padding(.top, 24)
                 .padding(.horizontal, 4)
-                .navigationLinkEmpty(
-                    isActive: store.bindingFor(.about),
-                    destination: {
-                        AboutView(store: store.aboutStore())
-                    }
-                )
-                .navigationLinkEmpty(
-                    isActive: store.bindingFor(.advanced),
-                    destination: {
-                        AdvancedSettingsView(store: store.advancedSettingsStore())
-                    }
-                )
-                .navigationLinkEmpty(
-                    isActive: store.bindingFor(.integrations),
-                    destination: {
-                        IntegrationsView(store: store.integrationsStore())
-                    }
-                )
-                .navigationLinkEmpty(
-                    isActive: store.bindingFor(.addressBook),
-                    destination: {
-                        AddressBookView(store: store.addressBookStore())
-                    }
-                )
-                .navigationLinkEmpty(
-                    isActive: store.bindingFor(.whatsNew),
-                    destination: {
-                        WhatsNewView(store: store.whatsNewStore())
-                    }
-                )
-                .navigationLinkEmpty(
-                    isActive: store.bindingFor(.sendFeedback),
-                    destination: {
-                        SendFeedbackView(store: store.sendFeedbackStore())
-                    }
-                )
-                .onAppear {
-                    store.send(.onAppear)
-                }
+                .onAppear { store.send(.onAppear) }
 
                 Spacer()
                 
@@ -185,12 +140,7 @@ extension Image {
 // MARK: Placeholders
 
 extension Settings.State {
-    public static let initial = Settings.State(
-        aboutState: .initial,
-        addressBookState: .initial,
-        advancedSettingsState: .initial,
-        integrationsState: .initial
-    )
+    public static let initial = Settings.State()
 }
 
 extension StoreOf<Settings> {
@@ -198,75 +148,5 @@ extension StoreOf<Settings> {
         initialState: .initial
     ) {
         Settings()
-    }
-    
-    public static let demo = StoreOf<Settings>(
-        initialState: .init(
-            aboutState: .initial,
-            addressBookState: .initial,
-            advancedSettingsState: .initial,
-            appVersion: "0.0.1",
-            appBuild: "54",
-            integrationsState: .initial
-        )
-    ) {
-        Settings()
-    }
-}
-
-// MARK: - Store
-
-extension StoreOf<Settings> {
-    func advancedSettingsStore() -> StoreOf<AdvancedSettings> {
-        self.scope(
-            state: \.advancedSettingsState,
-            action: \.advancedSettings
-        )
-    }
-    
-    func aboutStore() -> StoreOf<About> {
-        self.scope(
-            state: \.aboutState,
-            action: \.about
-        )
-    }
-
-    func addressBookStore() -> StoreOf<AddressBook> {
-        self.scope(
-            state: \.addressBookState,
-            action: \.addressBook
-        )
-    }
-
-    func integrationsStore() -> StoreOf<Integrations> {
-        self.scope(
-            state: \.integrationsState,
-            action: \.integrations
-        )
-    }
-
-    func sendFeedbackStore() -> StoreOf<SendFeedback> {
-        self.scope(
-            state: \.sendFeedbackState,
-            action: \.sendFeedback
-        )
-    }
-
-    func whatsNewStore() -> StoreOf<WhatsNew> {
-        self.scope(
-            state: \.whatsNewState,
-            action: \.whatsNew
-        )
-    }
-}
-
-// MARK: - Bindings
-
-extension StoreOf<Settings> {
-    func bindingFor(_ destination: Settings.State.Destination) -> Binding<Bool> {
-        Binding<Bool>(
-            get: { self.destination == destination },
-            set: { self.send(.updateDestination($0 ? destination : nil)) }
-        )
     }
 }

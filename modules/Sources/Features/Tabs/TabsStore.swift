@@ -802,19 +802,19 @@ public struct Tabs {
 
                 // MARK: - Receive
 
-            case let .path(.element(id: _, action: .receive(.addressDetailsRequest(address, maxPrivacy)))):
-                state.addressDetailsState.address = address
-                state.addressDetailsState.maxPrivacy = maxPrivacy
-                if state.selectedWalletAccount?.vendor == .keystone {
-                    state.addressDetailsState.addressTitle = maxPrivacy
-                    ? L10n.Accounts.Keystone.shieldedAddress
-                    : L10n.Accounts.Keystone.transparentAddress
-                } else {
-                    state.addressDetailsState.addressTitle = maxPrivacy
-                    ? L10n.Accounts.Zashi.shieldedAddress
-                    : L10n.Accounts.Zashi.transparentAddress
-                }
-                return .send(.updateDestination(.addressDetails))
+//            case let .path(.element(id: _, action: .receive(.addressDetailsRequest(address, maxPrivacy)))):
+//                state.addressDetailsState.address = address
+//                state.addressDetailsState.maxPrivacy = maxPrivacy
+//                if state.selectedWalletAccount?.vendor == .keystone {
+//                    state.addressDetailsState.addressTitle = maxPrivacy
+//                    ? L10n.Accounts.Keystone.shieldedAddress
+//                    : L10n.Accounts.Keystone.transparentAddress
+//                } else {
+//                    state.addressDetailsState.addressTitle = maxPrivacy
+//                    ? L10n.Accounts.Zashi.shieldedAddress
+//                    : L10n.Accounts.Zashi.transparentAddress
+//                }
+//                return .send(.updateDestination(.addressDetails))
                 
             case let .path(.element(id: _, action: .receive(.requestTapped(address, maxPrivacy)))):
                 state.zecKeyboardState.input = "0"

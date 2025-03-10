@@ -83,11 +83,11 @@ extension Root {
             
                 // MARK: - External Signals
             
-            case .tabs(.walletAccountTapped):
-                return .merge(
-                    .send(.fetchTransactionsForTheSelectedAccount),
-                    .send(.loadUserMetadata)
-                )
+//            case .tabs(.walletAccountTapped):
+//                return .merge(
+//                    .send(.fetchTransactionsForTheSelectedAccount),
+//                    .send(.loadUserMetadata)
+//                )
 
             default: return .none
             }

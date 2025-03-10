@@ -214,7 +214,7 @@ public struct SendFlowView: View {
             }
             .padding(.vertical, 1)
             .applyScreenBackground()
-            .zashiBack()
+            .zashiBack { store.send(.dismissRequired) }
             .alert(store: store.scope(
                 state: \.$alert,
                 action: \.alert

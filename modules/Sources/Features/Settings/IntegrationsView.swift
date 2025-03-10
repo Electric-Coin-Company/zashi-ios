@@ -117,30 +117,30 @@ public struct IntegrationsView: View {
                 .padding(.bottom, 24)
                 .screenHorizontalPadding()
             }
-            .navigationLinkEmpty(
-                isActive: store.bindingForStackAddKeystoneKWWallet(.addKeystoneHWWallet),
-                destination: {
-                    AddKeystoneHWWalletView(
-                        store: store.addKeystoneHWWalletStore()
-                    )
-                    .navigationLinkEmpty(
-                        isActive: store.bindingForStackAddKeystoneKWWallet(.scan),
-                        destination: {
-                            ScanView(
-                                store: store.scanStore()
-                            )
-                            .navigationLinkEmpty(
-                                isActive: store.bindingForStackAddKeystoneKWWallet(.accountSelection),
-                                destination: {
-                                    AccountsSelectionView(
-                                        store: store.addKeystoneHWWalletStore()
-                                    )
-                                }
-                            )
-                        }
-                    )
-                }
-            )
+//            .navigationLinkEmpty(
+//                isActive: store.bindingForStackAddKeystoneKWWallet(.addKeystoneHWWallet),
+//                destination: {
+//                    AddKeystoneHWWalletView(
+//                        store: store.addKeystoneHWWalletStore()
+//                    )
+//                    .navigationLinkEmpty(
+//                        isActive: store.bindingForStackAddKeystoneKWWallet(.scan),
+//                        destination: {
+//                            ScanView(
+//                                store: store.scanStore()
+//                            )
+//                            .navigationLinkEmpty(
+//                                isActive: store.bindingForStackAddKeystoneKWWallet(.accountSelection),
+//                                destination: {
+//                                    AccountsSelectionView(
+//                                        store: store.addKeystoneHWWalletStore()
+//                                    )
+//                                }
+//                            )
+//                        }
+//                    )
+//                }
+//            )
         }
         .applyScreenBackground()
         .listStyle(.plain)
@@ -160,54 +160,54 @@ public struct IntegrationsView: View {
 
 // MARK: - Store
 
-extension StoreOf<Integrations> {
-    func addKeystoneHWWalletStore() -> StoreOf<AddKeystoneHWWallet> {
-        self.scope(
-            state: \.addKeystoneHWWalletState,
-            action: \.addKeystoneHWWallet
-        )
-    }
-    
-    func scanStore() -> StoreOf<Scan> {
-        self.scope(
-            state: \.scanState,
-            action: \.scan
-        )
-    }
-}
+//extension StoreOf<Integrations> {
+//    func addKeystoneHWWalletStore() -> StoreOf<AddKeystoneHWWallet> {
+//        self.scope(
+//            state: \.addKeystoneHWWalletState,
+//            action: \.addKeystoneHWWallet
+//        )
+//    }
+//    
+//    func scanStore() -> StoreOf<Scan> {
+//        self.scope(
+//            state: \.scanState,
+//            action: \.scan
+//        )
+//    }
+//}
 
 // MARK: - ViewStore
 
-extension StoreOf<Integrations> {
-    func bindingForStackAddKeystoneKWWallet(_ destination: Integrations.State.StackDestinationAddKeystoneHWWallet) -> Binding<Bool> {
-        Binding<Bool>(
-            get: {
-                if let currentStackValue = self.stackDestinationAddKeystoneHWWallet?.rawValue {
-                    return currentStackValue >= destination.rawValue
-                } else {
-                    if destination.rawValue == 0 {
-                        return false
-                    } else if destination.rawValue <= self.stackDestinationAddKeystoneHWWalletBindingsAlive {
-                        return true
-                    } else {
-                        return false
-                    }
-                }
-            },
-            set: { _ in
-                if let currentStackValue = self.stackDestinationAddKeystoneHWWallet?.rawValue, currentStackValue == destination.rawValue {
-                    let popIndex = destination.rawValue - 1
-                    if popIndex >= 0 {
-                        let popDestination = Integrations.State.StackDestinationAddKeystoneHWWallet(rawValue: popIndex)
-                        self.send(.updateStackDestinationAddKeystoneHWWallet(popDestination))
-                    } else {
-                        self.send(.updateStackDestinationAddKeystoneHWWallet(nil))
-                    }
-                }
-            }
-        )
-    }
-}
+//extension StoreOf<Integrations> {
+//    func bindingForStackAddKeystoneKWWallet(_ destination: Integrations.State.StackDestinationAddKeystoneHWWallet) -> Binding<Bool> {
+//        Binding<Bool>(
+//            get: {
+//                if let currentStackValue = self.stackDestinationAddKeystoneHWWallet?.rawValue {
+//                    return currentStackValue >= destination.rawValue
+//                } else {
+//                    if destination.rawValue == 0 {
+//                        return false
+//                    } else if destination.rawValue <= self.stackDestinationAddKeystoneHWWalletBindingsAlive {
+//                        return true
+//                    } else {
+//                        return false
+//                    }
+//                }
+//            },
+//            set: { _ in
+//                if let currentStackValue = self.stackDestinationAddKeystoneHWWallet?.rawValue, currentStackValue == destination.rawValue {
+//                    let popIndex = destination.rawValue - 1
+//                    if popIndex >= 0 {
+//                        let popDestination = Integrations.State.StackDestinationAddKeystoneHWWallet(rawValue: popIndex)
+//                        self.send(.updateStackDestinationAddKeystoneHWWallet(popDestination))
+//                    } else {
+//                        self.send(.updateStackDestinationAddKeystoneHWWallet(nil))
+//                    }
+//                }
+//            }
+//        )
+//    }
+//}
 
 // MARK: Placeholders
 

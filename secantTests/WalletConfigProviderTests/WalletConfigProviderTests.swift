@@ -138,7 +138,7 @@ class WalletConfigProviderTests: XCTestCase {
         await store.receive(.updateStateAfterConfigUpdate(flags)) { state in
             state.walletConfig = flags
             state.onboardingState.walletConfig = flags
-            state.tabsState.homeState.walletConfig = flags
+//            state.tabsState.homeState.walletConfig = flags
         }
         
         await store.finish()
