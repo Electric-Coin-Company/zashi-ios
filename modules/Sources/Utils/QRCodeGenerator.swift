@@ -85,10 +85,10 @@ public enum QRCodeGenerator {
         vendor: Vendor,
         export: Bool = true
     ) -> CGImage? {
-        var maxPrivacyPostfix = vendor == .zashi ? maxPrivacy ? "Max" : "Low" : ""
+        let maxPrivacyPostfix = vendor == .zashi ? maxPrivacy ? "Max" : "Low" : ""
         let vendorPrefix = vendor == .zashi ? "" : "KS_"
         let filename = export ? "QROverlay" : "QRDynamicOverlay"
-        var overlayImageName = "\(vendorPrefix)\(filename)\(maxPrivacyPostfix)"
+        let overlayImageName = "\(vendorPrefix)\(filename)\(maxPrivacyPostfix)"
         
         guard let overlayImage = UIImage(named: overlayImageName) else {
             return nil

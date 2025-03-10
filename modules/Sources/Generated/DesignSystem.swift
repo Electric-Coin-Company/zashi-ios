@@ -196,6 +196,8 @@ public enum Design {
         case focusedStroke
         case disabledBg
         case disabledFg
+        case titleText
+        case bodyText
     }
     
     public enum Dropdowns {
@@ -564,6 +566,8 @@ public extension Design.HintTooltips {
         case .focusedStroke: return Design.col(Asset.Colors.ZDesign.gray500.color, Asset.Colors.ZDesign.shark500.color, colorScheme)
         case .disabledBg: return Design.col(Asset.Colors.ZDesign.gray900.color, Asset.Colors.ZDesign.shark800.color, colorScheme)
         case .disabledFg: return Design.col(Asset.Colors.ZDesign.gray400.color, Asset.Colors.ZDesign.shark600.color, colorScheme)
+        case .titleText: return Design.col(Asset.Colors.ZDesign.gray50.color, Asset.Colors.ZDesign.shark50.color, colorScheme)
+        case .bodyText: return Design.col(Asset.Colors.ZDesign.gray300.color, Asset.Colors.ZDesign.shark300.color, colorScheme)
         }
     }
 }
