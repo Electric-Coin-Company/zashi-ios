@@ -6,6 +6,9 @@ directly impact users rather than highlighting other crucial architectural updat
 
 ## [Unreleased]
 
+### Fixed
+- Crash in the background task during the overnight sync.
+
 ## 1.4 build 2 (2025-03-06)
 
 ### Added
