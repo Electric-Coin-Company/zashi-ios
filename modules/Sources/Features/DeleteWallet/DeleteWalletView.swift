@@ -60,7 +60,7 @@ public struct DeleteWalletView: View {
                         accessoryView: ProgressView()
                     ) { }
                     .disabled(true)
-                    .padding(.bottom, 8)
+                    .padding(.bottom, 24)
                 } else {
                     ZashiButton(
                         L10n.DeleteWallet.actionButtonTitle,
@@ -69,7 +69,7 @@ public struct DeleteWalletView: View {
                         store.send(.deleteTapped)
                     }
                     .disabled(!store.isAcknowledged || store.isProcessing)
-                    .padding(.bottom, 20)
+                    .padding(.bottom, 24)
                 }
             }
             .zashiBack(store.isProcessing)

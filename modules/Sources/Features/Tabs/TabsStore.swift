@@ -384,17 +384,17 @@ public struct Tabs {
                 }
                 return .send(.updateStackDestinationRequestPayment(.requestPaymentConfirmation))
 
-            case .coinbaseTapped:
-                state.moreRequest = false
-                state.isInAppBrowserOn = true
-                return .none
+//            case .coinbaseTapped:
+//                state.moreRequest = false
+//                state.isInAppBrowserOn = true
+//                return .none
                 
-            case .flexaTapped:
-                return .none
+//            case .flexaTapped:
+//                return .none
 
-            case .home(.moreTapped):
-                state.moreRequest.toggle()
-                return .none
+//            case .home(.moreTapped):
+//                state.moreRequest.toggle()
+//                return .none
                 
             case .home(.scanTapped):
                 var scanState = Scan.State()
@@ -443,13 +443,13 @@ public struct Tabs {
             case .home(.seeAllTransactionsTapped):
                 return .send(.updateStackDestinationTransactions(.manager))
                 
-            case .home(.walletBalances(.exchangeRateRefreshTapped)), .send(.walletBalances(.exchangeRateRefreshTapped)), .balanceBreakdown(.walletBalances(.exchangeRateRefreshTapped)):
-                if state.isRateTooltipEnabled {
-                    state.isRateTooltipEnabled = false
-                    return .none
-                }
-                state.isRateTooltipEnabled = state.homeState.walletBalancesState.isExchangeRateStale
-                return .none
+//            case .home(.walletBalances(.exchangeRateRefreshTapped)), .send(.walletBalances(.exchangeRateRefreshTapped)), .balanceBreakdown(.walletBalances(.exchangeRateRefreshTapped)):
+//                if state.isRateTooltipEnabled {
+//                    state.isRateTooltipEnabled = false
+//                    return .none
+//                }
+//                state.isRateTooltipEnabled = state.homeState.walletBalancesState.isExchangeRateStale
+//                return .none
 
             case .addressBook:
                 return .none

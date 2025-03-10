@@ -10,7 +10,7 @@ import ComposableArchitecture
 import Generated
 import UIComponents
 
-extension TabsView {
+extension HomeView {
     @ViewBuilder func moreContent() -> some View {
         WithPerceptionTracking {
             if #available(iOS 16.0, *) {
@@ -35,7 +35,7 @@ extension TabsView {
                 .padding(.bottom, 24)
                 .padding(.horizontal, 20)
             
-            if store.inAppBrowserURL != nil {
+            if store.inAppBrowserURLCoinbase != nil {
                 ActionRow(
                     icon: Asset.Assets.Partners.coinbase.image,
                     title: L10n.Settings.buyZecCB,

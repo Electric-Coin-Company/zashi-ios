@@ -357,6 +357,8 @@ extension Root {
                 }
                 
             case .initialization(.initializationSuccessfullyDone(let uAddress)):
+                state.zashiUAddress = uAddress
+                state.homeState.uAddress = uAddress
 //                state.tabsState.settingsState.integrationsState.uAddress = uAddress
 //                state.tabsState.uAddress = uAddress
 //                if let uAddress = uAddress?.stringEncoded {
@@ -470,7 +472,7 @@ extension Root {
                 state.alert = AlertState.wipeRequest()
                 return .none
                 
-            case .initialization(.resetZashi)://, .tabs(.settings(.advancedSettings(.deleteWallet(.deleteTapped)))):
+            case .initialization(.resetZashi):
                 guard let wipePublisher = sdkSynchronizer.wipe() else {
                     return .send(.resetZashiSDKFailed)
                 }
@@ -504,6 +506,7 @@ extension Root {
                 state.$transactionMemos.withLock { $0 = [:] }
                 state.$addressBookContacts.withLock { $0 = .empty }
                 state.$transactions.withLock { $0 = [] }
+                state.path.removeAll()
 
                 return .send(.resetZashiKeychainRequest)
                 
@@ -568,7 +571,12 @@ extension Root {
                 }
                 
             case .resetZashiKeychainFailedWithCorruptedData(let errMsg):
-//                state.tabsState.settingsState.advancedSettingsState.deleteWalletState.isProcessing = false
+                for element in state.path {
+                    if case .resetZashi(var resetZashiState) = element {
+                        resetZashiState.isProcessing = false
+                        break
+                    }
+                }
                 state.alert = AlertState.wipeKeychainFailed(errMsg)
                 return .cancel(id: SynchronizerCancelId)
 
@@ -578,7 +586,12 @@ extension Root {
                     return .send(.resetZashiKeychainRequest)
                 }
                 state.maxResetZashiAppAttempts = ResetZashiConstants.maxResetZashiAppAttempts
-//                state.tabsState.settingsState.advancedSettingsState.deleteWalletState.isProcessing = false
+                for element in state.path {
+                    if case .resetZashi(var resetZashiState) = element {
+                        resetZashiState.isProcessing = false
+                        break
+                    }
+                }
                 state.alert = AlertState.wipeFailed(osStatus)
                 return .cancel(id: SynchronizerCancelId)
 
@@ -591,7 +604,12 @@ extension Root {
                     )
                 }
                 state.maxResetZashiSDKAttempts = ResetZashiConstants.maxResetZashiSDKAttempts
-//                state.tabsState.settingsState.advancedSettingsState.deleteWalletState.isProcessing = false
+                for element in state.path {
+                    if case .resetZashi(var resetZashiState) = element {
+                        resetZashiState.isProcessing = false
+                        break
+                    }
+                }
                 state.alert = AlertState.wipeFailed(Int32.max)
                 return .cancel(id: SynchronizerCancelId)
 

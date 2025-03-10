@@ -22,7 +22,7 @@ public struct SettingsView: View {
                             icon: Asset.Assets.Icons.user.image,
                             title: L10n.Settings.addressBook
                         ) {
-                            store.send(.addressBookTapped)
+                            store.send(.addressBookAccessCheck)
                         }
 
                         if store.isEnoughFreeSpaceMode {
