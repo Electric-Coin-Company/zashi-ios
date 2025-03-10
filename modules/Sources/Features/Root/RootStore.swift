@@ -14,7 +14,6 @@ import Generated
 import Foundation
 import ExportLogs
 import OnboardingFlow
-import Tabs
 import CrashReporter
 import ReadTransactionsStorage
 import RecoveryPhraseDisplay
@@ -27,7 +26,6 @@ import FlexaHandler
 import Flexa
 import AutolockHandler
 import UIComponents
-import AddressBook
 import LocalAuthenticationHandler
 import DeeplinkWarning
 import URIParser
@@ -35,11 +33,40 @@ import OSStatusError
 import AddressBookClient
 import UserMetadataProvider
 
+// Screens
+import About
+import AddressBook
+import AddressDetails
+import Home
+import Receive
+import RequestZec
+import SendFeedback
+import SendFlow
+import Settings
+import WhatsNew
+import ZecKeyboard
+
 @Reducer
 public struct Root {
     public enum ResetZashiConstants {
         static let maxResetZashiAppAttempts = 3
         static let maxResetZashiSDKAttempts = 3
+    }
+    
+    @Reducer//(state: .equatable, action: .equatable)
+    public enum Path {
+        case about(About)
+        case addressBook(AddressBook)
+        case addressBookContact(AddressBook)
+        case addressDetails(AddressDetails)
+        case receive(Receive)
+        case requestZec(RequestZec)
+        case requestZecSummary(RequestZec)
+        case sendFlow(SendFlow)
+        case sendUsFeedback(SendFeedback)
+        case settings(Settings)
+        case whatsNew(WhatsNew)
+        case zecKeyboard(ZecKeyboard)
     }
     
     let CancelId = UUID()
@@ -55,10 +82,10 @@ public struct Root {
         public var CancelEventId = UUID()
         public var CancelStateId = UUID()
 
-        public var addressBookBinding: Bool = false
-        public var addressBookContactBinding: Bool = false
+//        public var addressBookBinding: Bool = false
+//        public var addressBookContactBinding: Bool = false
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
-        public var addressBookState: AddressBook.State
+//        public var addressBookState: AddressBook.State
         @Presents public var alert: AlertState<Action>?
         public var appInitializationState: InitializationState = .uninitialized
         public var appStartState: AppStartState = .unknown
@@ -69,6 +96,7 @@ public struct Root {
         public var destinationState: DestinationState
         public var exportLogsState: ExportLogs.State
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
+        public var homeState: Home.State = .initial
         public var isLockedInKeychainUnavailableState = false
         public var isRestoringWallet = false
         @Shared(.appStorage(.lastAuthenticationTimestamp)) public var lastAuthenticationTimestamp: Int = 0
@@ -77,12 +105,12 @@ public struct Root {
         public var notEnoughFreeSpaceState: NotEnoughFreeSpace.State
         public var onboardingState: OnboardingFlow.State
         public var osStatusErrorState: OSStatusError.State
+        public var path = StackState<Path.State>()
         public var phraseDisplayState: RecoveryPhraseDisplay.State
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var serverSetupState: ServerSetup.State
         public var serverSetupViewBinding: Bool = false
         public var splashAppeared = false
-        public var tabsState: Tabs.State
         @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
         @Shared(.inMemory(.transactionMemos)) public var transactionMemos: [String: [String]] = [:]
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
@@ -92,8 +120,11 @@ public struct Root {
         public var welcomeState: Welcome.State
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
+        // coordinator states
+        public var requestZecState = RequestZec.State.initial
+        
         public init(
-            addressBookState: AddressBook.State = .initial,
+//            addressBookState: AddressBook.State = .initial,
             appInitializationState: InitializationState = .uninitialized,
             appStartState: AppStartState = .unknown,
             debugState: DebugState,
@@ -105,12 +136,11 @@ public struct Root {
             onboardingState: OnboardingFlow.State,
             osStatusErrorState: OSStatusError.State = .initial,
             phraseDisplayState: RecoveryPhraseDisplay.State,
-            tabsState: Tabs.State,
             serverSetupState: ServerSetup.State = .initial,
             walletConfig: WalletConfig,
             welcomeState: Welcome.State
         ) {
-            self.addressBookState = addressBookState
+//            self.addressBookState = addressBookState
             self.appInitializationState = appInitializationState
             self.appStartState = appStartState
             self.debugState = debugState
@@ -123,22 +153,21 @@ public struct Root {
             self.notEnoughFreeSpaceState = notEnoughFreeSpaceState
             self.phraseDisplayState = phraseDisplayState
             self.serverSetupState = serverSetupState
-            self.tabsState = tabsState
             self.walletConfig = walletConfig
             self.welcomeState = welcomeState
         }
     }
 
-    public enum Action {
+    public enum Action: BindableAction {
         public enum ConfirmationDialog: Equatable {
             case fullRescan
             case quickRescan
         }
 
-        case addressBook(AddressBook.Action)
-        case addressBookBinding(Bool)
-        case addressBookContactBinding(Bool)
-        case addressBookAccessGranted
+//        case addressBook(AddressBook.Action)
+//        case addressBookBinding(Bool)
+//        case addressBookContactBinding(Bool)
+//        case addressBookAccessGranted
         case alert(PresentationAction<Action>)
         case batteryStateChanged(Notification?)
         case binding(BindingAction<Root.State>)
@@ -150,9 +179,10 @@ public struct Root {
         case exportLogs(ExportLogs.Action)
         case flexaOnTransactionRequest(FlexaTransaction?)
         case flexaTransactionFailed(String)
-        case tabs(Tabs.Action)
+        case home(Home.Action)
         case initialization(InitializationAction)
         case notEnoughFreeSpace(NotEnoughFreeSpace.Action)
+        case path(StackActionOf<Path>)
         case resetZashiFinishProcessing
         case resetZashiKeychainFailed(OSStatus)
         case resetZashiKeychainFailedWithCorruptedData(String)
@@ -216,20 +246,22 @@ public struct Root {
     
     @ReducerBuilder<State, Action>
     var core: some Reducer<State, Action> {
+        BindingReducer()
+        
         Scope(state: \.deeplinkWarningState, action: \.deeplinkWarning) {
             DeeplinkWarning()
         }
         
-        Scope(state: \.addressBookState, action: \.addressBook) {
-            AddressBook()
-        }
+//        Scope(state: \.addressBookState, action: \.addressBook) {
+//            AddressBook()
+//        }
         
         Scope(state: \.serverSetupState, action: \.serverSetup) {
             ServerSetup()
         }
 
-        Scope(state: \.tabsState, action: \.tabs) {
-            Tabs()
+        Scope(state: \.homeState, action: \.home) {
+            Home()
         }
 
         Scope(state: \.exportLogsState, action: \.exportLogs) {
@@ -267,6 +299,8 @@ public struct Root {
         addressBookReduce()
         
         userMetadataReduce()
+        
+        coordinatorReduce()
     }
     
     public var body: some Reducer<State, Action> {
@@ -281,58 +315,59 @@ public struct Root {
                 state.alert = nil
                 return .none
             
-            case .addressBookBinding(let newValue):
-                state.addressBookBinding = newValue
-                return .none
+//            case .addressBookBinding(let newValue):
+//                state.addressBookBinding = newValue
+//                return .none
+//
+//            case .addressBookContactBinding(let newValue):
+//                state.addressBookContactBinding = newValue
+//                return .none
 
-            case .addressBookContactBinding(let newValue):
-                state.addressBookContactBinding = newValue
-                return .none
-
-            case .tabs(.send(.addNewContactTapped(let address))):
-                state.addressBookContactBinding = true
-                state.addressBookState.isValidZcashAddress = true
-                state.addressBookState.isNameFocused = true
-                state.addressBookState.address = address.data
-                return .none
+//            case .tabs(.send(.addNewContactTapped(let address))):
+//                state.addressBookContactBinding = true
+//                state.addressBookState.isValidZcashAddress = true
+//                state.addressBookState.isNameFocused = true
+//                state.addressBookState.address = address.data
+//                return .none
                 
-            case .addressBook(.saveButtonTapped):
-//                if state.addressBookBinding {
-//                    state.addressBookBinding = false
+//            case .addressBook(.saveButtonTapped):
+////                if state.addressBookBinding {
+////                    state.addressBookBinding = false
+////                }
+//                if state.addressBookContactBinding {
+//                    state.addressBookContactBinding = false
 //                }
-                if state.addressBookContactBinding {
-                    state.addressBookContactBinding = false
-                }
-                return .none
+//                return .none
 
-            case .addressBookAccessGranted:
-                state.addressBookBinding = true
-                state.addressBookState.isInSelectMode = true
-                return .none
+//            case .addressBookAccessGranted:
+//                state.addressBookBinding = true
+//                state.addressBookState.isInSelectMode = true
+//                return .none
 
             //case .tabs(.send(.addressBookTapped)):
-            case .tabs(.path(.element(id: _, action: .sendFlow(.addressBookTapped)))):
-                return .run { send in
-                    if await !localAuthentication.authenticate() {
-                        return
-                    }
-                    await send(.addressBookAccessGranted)
-                }
+//            case .tabs(.path(.element(id: _, action: .sendFlow(.addressBookTapped)))):
+//                return .run { send in
+//                    if await !localAuthentication.authenticate() {
+//                        return
+//                    }
+//                    await send(.addressBookAccessGranted)
+//                }
 
-            case .addressBook(.walletAccountTapped(let walletAccount)):
-                guard let address = walletAccount.uAddress?.stringEncoded else {
-                    return .none
-                }
-                state.addressBookBinding = false
-                return .send(.tabs(.send(.scan(.found(address.redacted)))))
-
-            case .addressBook(.editId(let address)):
-                state.addressBookBinding = false
-                guard let first = state.tabsState.path.ids.first else {
-                    return .none
-                }
+//            case .addressBook(.walletAccountTapped(let walletAccount)):
+//                guard let address = walletAccount.uAddress?.stringEncoded else {
+//                    return .none
+//                }
+//                state.addressBookBinding = false
+////                return .send(.tabs(.send(.scan(.found(address.redacted)))))
+//                return .none
+//
+//            case .addressBook(.editId(let address)):
+//                state.addressBookBinding = false
+//                guard let first = state.tabsState.path.ids.first else {
+//                    return .none
+//                }
 //                return .send(.tabs(.path(.element(id: first, action: .sendFlow(.addressUpdated(address.redacted))))))
-                return .send(.tabs(.path(.element(id: first, action: .sendFlow(.scan(.found(address.redacted)))))))
+//                return .send(.tabs(.path(.element(id: first, action: .sendFlow(.scan(.found(address.redacted)))))))
 //                for (_, element) in zip(state.path.ids, state.path) {
 //                    switch element {
 //                    case .sendFlow(let sendState):
@@ -340,6 +375,7 @@ public struct Root {
 //                }
                 //return .send(.tabs(.send(.scan(.found(address.redacted)))))
                 //return
+//                return .none
                 
             case .serverSetup:
                 return .none
@@ -365,6 +401,7 @@ public struct Root {
             default: return .none
             }
         }
+        .forEach(\.path, action: \.path)
         .ifLet(\.$confirmationDialog, action: \.confirmationDialog)
     }
 }

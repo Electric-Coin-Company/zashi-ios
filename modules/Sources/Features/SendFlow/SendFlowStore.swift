@@ -200,6 +200,7 @@ public struct SendFlow {
         case addressUpdated(RedactableString)
         case alert(PresentationAction<Action>)
         case confirmationRequired(Confirmation)
+        case dismissRequired
         case getProposal(Confirmation)
         case currencyUpdated(RedactableString)
         case dismissAddressBookHint
@@ -488,6 +489,9 @@ public struct SendFlow {
             case .zecAmountUpdated(let newValue):
                 state.zecAmountText = newValue
                 return .send(.syncAmounts(true))
+                
+            case .dismissRequired:
+                return .none
             }
         }
     }

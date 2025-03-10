@@ -48,11 +48,11 @@ extension Root {
                 return .none
 
             case .confirmationDialog(.presented(.quickRescan)):
-                state.destinationState.destination = .tabs
+                state.destinationState.destination = .home
                 return rewind(policy: .quick, sourceAction: .quickRescan)
 
             case .confirmationDialog(.presented(.fullRescan)):
-                state.destinationState.destination = .tabs
+                state.destinationState.destination = .home
                 return rewind(policy: .birthday, sourceAction: .fullRescan)
 
             case let .debug(.rewindDone(error, _)):

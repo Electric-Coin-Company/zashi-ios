@@ -13,7 +13,6 @@ import DerivationTool
 import Generated
 import Models
 import ZcashSDKEnvironment
-import Scan
 import AudioServices
 import ZcashLightClientKit
 
@@ -25,18 +24,13 @@ public struct AddressBook {
     
     @ObservableState
     public struct State: Equatable {
-        public enum Destination: Equatable {
-            case add
-        }
-        
         public var address = ""
         public var addressAlreadyExists = false
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
         @Presents public var alert: AlertState<Action>?
         public var deleteIdToConfirm: String?
-        public var destination: Destination?
         public var isAddressFocused = false
-        public var isInEditMode = false
+        public var editId: String?
         public var isInSelectMode = false
         public var isNameFocused = false
         public var isValidForm = false
@@ -46,8 +40,6 @@ public struct AddressBook {
         public var originalAddress = ""
         public var originalName = ""
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
-        public var scanState: Scan.State
-        public var scanViewBinding = false
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
@@ -82,11 +74,7 @@ public struct AddressBook {
             : nil
         }
 
-        public init(
-            scanState: Scan.State
-        ) {
-            self.scanState = scanState
-        }
+        public init() { }
     }
 
     public enum Action: BindableAction, Equatable {
@@ -96,15 +84,14 @@ public struct AddressBook {
         case contactStoreSuccess
         case deleteId(String)
         case deleteIdConfirmed
+        case dismissAddContactRequired
         case editId(String)
         case fetchedABContacts(AddressBookContacts, Bool)
         case fetchABContactsRequested
         case onAppear
         case checkDuplicates
         case saveButtonTapped
-        case scan(Scan.Action)
         case scanButtonTapped
-        case updateDestination(AddressBook.State.Destination?)
         case walletAccountTapped(WalletAccount)
     }
 
@@ -118,16 +105,11 @@ public struct AddressBook {
     public var body: some Reducer<State, Action> {
         BindingReducer()
 
-        Scope(state: \.scanState, action: \.scan) {
-            Scan()
-        }
-
         Reduce { state, action in
             switch action {
             case .onAppear:
                 state.originalName = ""
                 state.originalAddress = ""
-                state.isInEditMode = false
                 state.isValidForm = false
                 state.isValidZcashAddress = false
                 state.deleteIdToConfirm = nil
@@ -137,7 +119,13 @@ public struct AddressBook {
                 state.addressAlreadyExists = false
                 state.isAddressFocused = false
                 state.isNameFocused = false
-                state.scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
+//                state.scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
+                if let editId = state.editId {
+                    return .concatenate(
+                        .send(.editId(editId)),
+                        .send(.fetchABContactsRequested)
+                    )
+                }
                 return .send(.fetchABContactsRequested)
 
             case .alert(.presented(let action)):
@@ -154,9 +142,9 @@ public struct AddressBook {
                 state.address = ""
                 state.name = ""
                 state.isValidForm = false
-                state.isInEditMode = false
                 state.isAddressFocused = true
-                return .send(.updateDestination(.add))
+                return .none
+//                return .send(.updateDestination(.add))
 
             case .checkDuplicates:
                 state.nameAlreadyExists = false
@@ -172,23 +160,24 @@ public struct AddressBook {
                 return .none
                 
             case .scanButtonTapped:
-                state.scanViewBinding = true
+//                state.scanViewBinding = true
                 return .none
 
-            case .scan(.found(let address)):
-                state.address = address.data
-                state.name = ""
-                audioServices.systemSoundVibrate()
-                state.scanViewBinding = false
-                state.isNameFocused = true
-                return .send(.updateDestination(.add))
+//            case .scan(.found(let address)):
+//                state.address = address.data
+//                state.name = ""
+//                audioServices.systemSoundVibrate()
+//                state.scanViewBinding = false
+//                state.isNameFocused = true
+////                return .send(.updateDestination(.add))
+//                return .none
 
-            case .scan(.cancelPressed):
-                state.scanViewBinding = false
-                return .none
+//            case .scan(.cancelPressed):
+//                state.scanViewBinding = false
+//                return .none
 
-            case .scan:
-                return .none
+//            case .scan:
+//                return .none
 
             case .binding:
                 state.isValidZcashAddress = derivationTool.isZcashAddress(state.address, zcashSDKEnvironment.network.networkType)
@@ -217,8 +206,8 @@ public struct AddressBook {
                             // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
                         }
                         return .concatenate(
-                            .send(.fetchedABContacts(abContacts, false)),
-                            .send(.updateDestination(nil))
+                            .send(.fetchedABContacts(abContacts, false))
+//                            .send(.updateDestination(nil))
                         )
                     } catch {
                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
@@ -244,11 +233,10 @@ public struct AddressBook {
                 state.name = record.name
                 state.originalAddress = state.address
                 state.originalName = state.name
-                state.isInEditMode = true
                 state.isValidForm = true
                 state.isNameFocused = true
                 state.isValidZcashAddress = derivationTool.isZcashAddress(state.address, zcashSDKEnvironment.network.networkType)
-                return .send(.updateDestination(.add))
+                return .none
 
             case .saveButtonTapped:
                 guard let account = state.zashiWalletAccount else {
@@ -262,19 +250,22 @@ public struct AddressBook {
                     }
                     return .concatenate(
                         .send(.fetchedABContacts(abContacts, false)),
-                        .send(.contactStoreSuccess)
+                        .send(.contactStoreSuccess),
+                        .send(.dismissAddContactRequired)
                     )
                 } catch {
                     // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
-                    return .send(.updateDestination(nil))
+//                    return .send(.updateDestination(nil))
                 }
+                return .none
 
             case .contactStoreSuccess:
                 state.address = ""
                 state.name = ""
                 state.isAddressFocused = false
                 state.isNameFocused = false
-                return .send(.updateDestination(nil))
+//                return .send(.updateDestination(nil))
+                return .none
 
             case .fetchABContactsRequested:
                 guard let account = state.zashiWalletAccount else {
@@ -289,8 +280,8 @@ public struct AddressBook {
                     return .send(.fetchedABContacts(abContacts, true))
                 } catch {
                     // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
-                    return .none
                 }
+                return .none
 
             case let .fetchedABContacts(abContacts, requestToSync):
                 guard let account = state.zashiWalletAccount else {
@@ -310,12 +301,10 @@ public struct AddressBook {
                             // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
                         }
                     }
-                } else {
-                    return .none
                 }
-
-            case .updateDestination(let destination):
-                state.destination = destination
+                return .none
+                
+            case .dismissAddContactRequired:
                 return .none
             }
         }

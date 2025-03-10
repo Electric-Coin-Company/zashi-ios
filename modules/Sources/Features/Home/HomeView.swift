@@ -11,11 +11,12 @@ import Models
 import WalletBalances
 
 public struct HomeView: View {
-    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.colorScheme) var colorScheme
     
     let store: StoreOf<Home>
     let tokenName: String
     
+    @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
     @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
 
     public init(store: StoreOf<Home>, tokenName: String) {
@@ -101,6 +102,18 @@ public struct HomeView: View {
                     }
                 }
             }
+            .navigationBarItems(
+                leading:
+                    walletAccountSwitcher()
+            )
+            .navigationBarItems(
+                trailing:
+                    HStack(spacing: 0) {
+                        hideBalancesButton()
+                        
+                        settingsButton()
+                    }
+            )
             .walletStatusPanel()
             .applyScreenBackground()
             .onAppear {

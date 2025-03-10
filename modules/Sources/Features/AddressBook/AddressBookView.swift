@@ -9,7 +9,6 @@ import SwiftUI
 import ComposableArchitecture
 import Generated
 import UIComponents
-import Scan
 
 extension String {
     var initials: String {
@@ -68,23 +67,6 @@ public struct AddressBookView: View {
             )
             .navigationBarTitleDisplayMode(.inline)
             .applyScreenBackground()
-            .navigationLinkEmpty(
-                isActive: store.bindingFor(.add),
-                destination: {
-                    AddressBookContactView(store: store, isInEditMode: store.isInEditMode)
-                }
-            )
-            .navigationLinkEmpty(
-                isActive: $store.scanViewBinding,
-                destination: {
-                    ScanView(
-                        store: store.scope(
-                            state: \.scanState,
-                            action: \.scan
-                        )
-                    )
-                }
-            )
             .alert(
                 store: store.scope(
                     state: \.$alert,
@@ -320,16 +302,5 @@ extension AddressBook {
 // MARK: - Placeholders
 
 extension AddressBook.State {
-    public static let initial = AddressBook.State(scanState: .initial)
-}
-
-// MARK: - Bindings
-
-extension StoreOf<AddressBook> {
-    func bindingFor(_ destination: AddressBook.State.Destination) -> Binding<Bool> {
-        Binding<Bool>(
-            get: { self.destination == destination },
-            set: { self.send(.updateDestination($0 ? destination : nil)) }
-        )
-    }
+    public static let initial = AddressBook.State()
 }

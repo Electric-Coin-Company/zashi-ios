@@ -12,14 +12,12 @@ import Generated
 
 public struct AddressBookContactView: View {
     @Perception.Bindable var store: StoreOf<AddressBook>
-    let isInEditMode: Bool
 
     @FocusState public var isAddressFocused: Bool
     @FocusState public var isNameFocused: Bool
     
-    public init(store: StoreOf<AddressBook>, isInEditMode: Bool = false) {
+    public init(store: StoreOf<AddressBook>) {
         self.store = store
-        self.isInEditMode = isInEditMode
     }
 
     public var body: some View {
@@ -50,9 +48,9 @@ public struct AddressBookContactView: View {
                     store.send(.saveButtonTapped)
                 }
                 .disabled(store.isSaveButtonDisabled)
-                .padding(.bottom, isInEditMode ? 0 : 24)
+                .padding(.bottom, store.editId != nil ? 0 : 24)
 
-                if isInEditMode {
+                if store.editId != nil {
                     ZashiButton(L10n.General.delete, type: .destructive1) {
                         store.send(.deleteId(store.address))
                     }
@@ -65,12 +63,13 @@ public struct AddressBookContactView: View {
                 if !isAddressFocused {
                     isNameFocused = store.isNameFocused
                 }
+                store.send(.onAppear)
             }
         }
         .applyScreenBackground()
         .zashiBack()
         .screenTitle(
-            isInEditMode
+            store.editId != nil
             ? L10n.AddressBook.savedAddress
             : L10n.AddressBook.NewContact.title
         )
