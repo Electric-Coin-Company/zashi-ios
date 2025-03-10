@@ -4,24 +4,30 @@ import ComposableArchitecture
 import Generated
 import Models
 import NotEnoughFreeSpace
-import RecoveryPhraseDisplay
 import Welcome
 import ExportLogs
 import OnboardingFlow
 import ZcashLightClientKit
 import UIComponents
-import ServerSetup
 import DeeplinkWarning
 import OSStatusError
 
 import About
+import AddKeystoneHWWallet
 import AddressBook
 import AddressDetails
+import CurrencyConversionSetup
+import DeleteWallet
+import ExportTransactionHistory
 import Home
+import PrivateDataConsent
 import Receive
+import RecoveryPhraseDisplay
 import RequestZec
+import Scan
 import SendFeedback
 import SendFlow
+import ServerSetup
 import Settings
 import WhatsNew
 import ZecKeyboard
@@ -132,18 +138,40 @@ private extension RootView {
                         switch store.case {
                         case let .about(store):
                             AboutView(store: store)
+                        case let .accountHWWalletSelection(store):
+                            AccountsSelectionView(store: store)
+                        case let .addKeystoneHWWallet(store):
+                            AddKeystoneHWWalletView(store: store)
                         case let .addressBook(store):
                             AddressBookView(store: store)
                         case let .addressBookContact(store):
                             AddressBookContactView(store: store)
                         case let .addressDetails(store):
                             AddressDetailsView(store: store)
+                        case let .advancedSettings(store):
+                            AdvancedSettingsView(store: store)
+                        case let .chooseServerSetup(store):
+                            ServerSetupView(store: store)
+                        case let .currencyConversionSetup(store):
+                            CurrencyConversionSetupView(store: store)
+                        case let .exportPrivateData(store):
+                            PrivateDataConsentView(store: store)
+                        case let .exportTransactionHistory(store):
+                            ExportTransactionHistoryView(store: store)
+                        case let .integrations(store):
+                            IntegrationsView(store: store)
                         case let .receive(store):
                             ReceiveView(store: store, networkType: networkType)
+                        case let .recoveryPhrase(store):
+                            RecoveryPhraseDisplayView(store: store)
                         case let .requestZec(store):
                             RequestZecView(store: store, tokenName: tokenName)
                         case let .requestZecSummary(store):
                             RequestZecSummaryView(store: store, tokenName: tokenName)
+                        case let .resetZashi(store):
+                            DeleteWalletView(store: store)
+                        case let .scan(store):
+                            ScanView(store: store)
                         case let .sendUsFeedback(store):
                             SendFeedbackView(store: store)
                         case let .sendFlow(store):

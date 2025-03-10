@@ -113,15 +113,6 @@ extension Root {
                 exchangeRate.refreshExchangeRateUSD()
                 return .none
 
-//            case .tabs(.settings(.integrations(.flexaTapped))), .tabs(.flexaTapped):
-//                flexaHandler.open()
-//                return .publisher {
-//                    flexaHandler.onTransactionRequest()
-//                        .map(Root.Action.flexaOnTransactionRequest)
-//                        .receive(on: mainQueue)
-//                }
-//                .cancellable(id: CancelFlexaId, cancelInFlight: true)
-
             case .flexaOnTransactionRequest(let transaction):
                 guard let transaction else {
                     return .none

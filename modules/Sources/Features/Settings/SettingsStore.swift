@@ -4,6 +4,7 @@ import ComposableArchitecture
 import AppVersion
 import Generated
 import Models
+import LocalAuthenticationHandler
 
 @Reducer
 public struct Settings {
@@ -35,6 +36,7 @@ public struct Settings {
 
     public enum Action: Equatable {
         case aboutTapped
+        case addressBookAccessCheck
         case addressBookTapped
         case advancedSettingsTapped
         case integrationsTapped
@@ -44,6 +46,7 @@ public struct Settings {
     }
 
     @Dependency(\.appVersion) var appVersion
+    @Dependency(\.localAuthentication) var localAuthentication
 
     public init() { }
 
@@ -57,6 +60,13 @@ public struct Settings {
 
             case .aboutTapped:
                 return .none
+                
+            case .addressBookAccessCheck:
+                return .run { send in
+                    if await localAuthentication.authenticate() {
+                        await send(.addressBookTapped)
+                    }
+                }
                 
             case .addressBookTapped:
                 return .none

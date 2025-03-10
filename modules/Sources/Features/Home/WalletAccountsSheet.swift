@@ -10,7 +10,7 @@ import ComposableArchitecture
 import Generated
 import UIComponents
 
-extension TabsView {
+extension HomeView {
     @ViewBuilder func accountSwitchContent() -> some View {
         WithPerceptionTracking {
             if #available(iOS 16.0, *) {
