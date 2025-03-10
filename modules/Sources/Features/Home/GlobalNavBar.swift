@@ -36,7 +36,7 @@ extension HomeView {
     
     @ViewBuilder func walletAccountSwitcher() -> some View {
         Button {
-            //store.send(.accountSwitchTapped)
+            store.send(.accountSwitchTapped)
         } label: {
             HStack(spacing: 0) {
                 if let selectedWalletAccount = store.selectedWalletAccount {

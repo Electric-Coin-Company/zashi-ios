@@ -13,9 +13,12 @@ import WalletBalances
 public struct HomeView: View {
     @Environment(\.colorScheme) var colorScheme
     
-    let store: StoreOf<Home>
+    @Perception.Bindable var store: StoreOf<Home>
     let tokenName: String
     
+    @State var accountSwitchSheetHeight: CGFloat = .zero
+    @State var moreSheetHeight: CGFloat = .zero
+
     @Shared(.appStorage(.sensitiveContent)) var isSensitiveContentHidden = false
     @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
 
@@ -102,6 +105,22 @@ public struct HomeView: View {
                     }
                 }
             }
+            .sheet(isPresented: $store.isInAppBrowserCoinbaseOn) {
+                if let urlStr = store.inAppBrowserURLCoinbase, let url = URL(string: urlStr) {
+                    InAppBrowserView(url: url)
+                }
+            }
+            .sheet(isPresented: $store.isInAppBrowserKeystoneOn) {
+                if let url = URL(string: store.inAppBrowserURLKeystone) {
+                    InAppBrowserView(url: url)
+                }
+            }
+            .sheet(isPresented: $store.accountSwitchRequest) {
+                accountSwitchContent()
+            }
+            .sheet(isPresented: $store.moreRequest) {
+                moreContent()
+            }
             .navigationBarItems(
                 leading:
                     walletAccountSwitcher()
@@ -114,6 +133,93 @@ public struct HomeView: View {
                         settingsButton()
                     }
             )
+            .overlayPreferenceValue(ExchangeRateStaleTooltipPreferenceKey.self) { preferences in
+                WithPerceptionTracking {
+                    if store.isRateTooltipEnabled {
+                        GeometryReader { geometry in
+                            preferences.map {
+                                Tooltip(
+                                    title: L10n.Tooltip.ExchangeRate.title,
+                                    desc: L10n.Tooltip.ExchangeRate.desc
+                                ) {
+                                    store.send(.rateTooltipTapped)
+                                }
+                                .frame(width: geometry.size.width - 40)
+                                .offset(x: 20, y: geometry[$0].minY + geometry[$0].height)
+                            }
+                        }
+                    }
+                }
+            }
+            .overlayPreferenceValue(ExchangeRateFeaturePreferenceKey.self) { preferences in
+                WithPerceptionTracking {
+                    if store.isRateEducationEnabled {
+                        GeometryReader { geometry in
+                            preferences.map {
+                                VStack(alignment: .leading, spacing: 0) {
+                                    HStack(alignment: .top, spacing: 0) {
+                                        Asset.Assets.coinsSwap.image
+                                            .zImage(size: 20, style: Design.Text.primary)
+                                            .padding(10)
+                                            .background {
+                                                Circle()
+                                                    .fill(Design.Surfaces.bgTertiary.color(colorScheme))
+                                            }
+                                            .padding(.trailing, 16)
+                                        
+                                        VStack(alignment: .leading, spacing: 5) {
+                                            Text(L10n.CurrencyConversion.cardTitle)
+                                                .zFont(size: 14, style: Design.Text.tertiary)
+                                            
+                                            Text(L10n.CurrencyConversion.title)
+                                                .zFont(.semiBold, size: 16, style: Design.Text.primary)
+                                                .lineLimit(1)
+                                                .minimumScaleFactor(0.5)
+                                        }
+                                        .padding(.trailing, 16)
+                                        
+                                        Spacer(minLength: 0)
+                                        
+                                        Button {
+                                            store.send(.currencyConversionCloseTapped)
+                                        } label: {
+                                            Asset.Assets.buttonCloseX.image
+                                                .zImage(size: 20, style: Design.HintTooltips.defaultFg)
+                                        }
+                                        .padding(20)
+                                        .offset(x: 20, y: -20)
+                                    }
+                                    
+                                    Button {
+                                        store.send(.currencyConversionSetupTapped)
+                                    } label: {
+                                        Text(L10n.CurrencyConversion.cardButton)
+                                            .zFont(.semiBold, size: 16, style: Design.Btns.Tertiary.fg)
+                                            .frame(height: 24)
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, 12)
+                                            .background {
+                                                RoundedRectangle(cornerRadius: 12)
+                                                    .fill(Design.Btns.Tertiary.bg.color(colorScheme))
+                                            }
+                                    }
+                                }
+                                .padding(24)
+                                .background {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Design.Surfaces.bgPrimary.color(colorScheme))
+                                        .background {
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .stroke(Design.Surfaces.strokeSecondary.color(colorScheme))
+                                        }
+                                }
+                                .frame(width: geometry.size.width - 40)
+                                .offset(x: 20, y: geometry[$0].minY + geometry[$0].height)
+                            }
+                        }
+                    }
+                }
+            }
             .walletStatusPanel()
             .applyScreenBackground()
             .onAppear {

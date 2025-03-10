@@ -85,7 +85,7 @@ public struct AddKeystoneHWWalletView: View {
                 ZashiButton(
                     L10n.Keystone.AddHWWallet.readyToScan
                 ) {
-                    store.send(.continueTapped)
+                    store.send(.readyToScanTapped)
                 }
                 .padding(.vertical, 24)
             }

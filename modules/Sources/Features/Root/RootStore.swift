@@ -16,11 +16,9 @@ import ExportLogs
 import OnboardingFlow
 import CrashReporter
 import ReadTransactionsStorage
-import RecoveryPhraseDisplay
 import BackgroundTasks
 import Utils
 import UserDefaults
-import ServerSetup
 import ExchangeRate
 import FlexaHandler
 import Flexa
@@ -35,13 +33,21 @@ import UserMetadataProvider
 
 // Screens
 import About
+import AddKeystoneHWWallet
 import AddressBook
 import AddressDetails
+import CurrencyConversionSetup
+import DeleteWallet
+import ExportTransactionHistory
 import Home
+import PrivateDataConsent
 import Receive
+import RecoveryPhraseDisplay
 import RequestZec
+import Scan
 import SendFeedback
 import SendFlow
+import ServerSetup
 import Settings
 import WhatsNew
 import ZecKeyboard
@@ -53,15 +59,26 @@ public struct Root {
         static let maxResetZashiSDKAttempts = 3
     }
     
-    @Reducer//(state: .equatable, action: .equatable)
+    @Reducer
     public enum Path {
         case about(About)
+        case accountHWWalletSelection(AddKeystoneHWWallet)
+        case addKeystoneHWWallet(AddKeystoneHWWallet)
         case addressBook(AddressBook)
         case addressBookContact(AddressBook)
         case addressDetails(AddressDetails)
+        case advancedSettings(AdvancedSettings)
+        case chooseServerSetup(ServerSetup)
+        case currencyConversionSetup(CurrencyConversionSetup)
+        case exportPrivateData(PrivateDataConsent)
+        case exportTransactionHistory(ExportTransactionHistory)
+        case integrations(Integrations)
         case receive(Receive)
+        case recoveryPhrase(RecoveryPhraseDisplay)
         case requestZec(RequestZec)
         case requestZecSummary(RequestZec)
+        case resetZashi(DeleteWallet)
+        case scan(Scan)
         case sendFlow(SendFlow)
         case sendUsFeedback(SendFeedback)
         case settings(Settings)
@@ -118,6 +135,7 @@ public struct Root {
         @Shared(.inMemory(.walletStatus)) public var walletStatus: WalletStatus = .none
         public var wasRestoringWhenDisconnected = false
         public var welcomeState: Welcome.State
+        public var zashiUAddress: UnifiedAddress? = nil
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
         // coordinator states
@@ -178,6 +196,7 @@ public struct Root {
         case destination(DestinationAction)
         case exportLogs(ExportLogs.Action)
         case flexaOnTransactionRequest(FlexaTransaction?)
+        case flexaOpenRequest
         case flexaTransactionFailed(String)
         case home(Home.Action)
         case initialization(InitializationAction)
