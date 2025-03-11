@@ -13,7 +13,7 @@ import NumberFormatter
 import Models
 import WalletStorage
 import SendConfirmation
-import SendFlow
+import SendForm
 import UIComponents
 import WalletBalances
 @testable import secant_testnet
@@ -61,7 +61,7 @@ class SendTests: XCTestCase {
 //        store.dependencies.zcashSDKEnvironment = .testValue
 //        
 //        // simulate the sending confirmation button to be pressed
-//        await store.send(.sendPressed) { state in
+//        await store.send(.sendTapped) { state in
 //            // once sending is confirmed, the attempts to try to send again by pressing the button
 //            // needs to be eliminated, indicated by the flag `isSending`, need to be true
 //            state.isSending = true
@@ -100,7 +100,7 @@ class SendTests: XCTestCase {
 //        store.dependencies.zcashSDKEnvironment = .testValue
 //        
 //        // simulate the sending confirmation button to be pressed
-//        await store.send(.sendPressed) { state in
+//        await store.send(.sendTapped) { state in
 //            // once sending is confirmed, the attempts to try to send again by pressing the button
 //            // needs to be eliminated, indicated by the flag `isSending`, need to be true
 //            state.isSending = true
@@ -140,7 +140,7 @@ class SendTests: XCTestCase {
 //        store.dependencies.walletStorage.exportWallet = { throw walletStorageError }
 //        
 //        // simulate the sending confirmation button to be pressed
-//        await store.send(.sendPressed) { state in
+//        await store.send(.sendTapped) { state in
 //            state.isSending = true
 //        }
 //        
@@ -156,7 +156,7 @@ class SendTests: XCTestCase {
 //        let store = TestStore(
 //            initialState: .initial
 //        ) {
-//            SendFlow()
+//            SendForm()
 //        }
 //
 //        store.dependencies.derivationTool = .noOp
@@ -181,7 +181,7 @@ class SendTests: XCTestCase {
 //        let store = TestStore(
 //            initialState: .initial
 //        ) {
-//            SendFlow()
+//            SendForm()
 //        }
 //
 //        store.dependencies.derivationTool = .noOp
@@ -203,13 +203,13 @@ class SendTests: XCTestCase {
 //    }
 //
 //    func testInvalidAmountFormatEmptyInput() async throws {
-//        var state = SendFlow.State.initial
+//        var state = SendForm.State.initial
 //        state.transactionAmountInputState = .amount
 //        
 //        let store = TestStore(
 //            initialState: state
 //        ) {
-//            SendFlow()
+//            SendForm()
 //        }
 //
 //        store.dependencies.numberFormatter = .noOp
@@ -225,7 +225,7 @@ class SendTests: XCTestCase {
 //        let store = TestStore(
 //            initialState: .initial
 //        ) {
-//            SendFlow()
+//            SendForm()
 //        }
 //
 //        store.dependencies.derivationTool = .noOp
@@ -245,7 +245,7 @@ class SendTests: XCTestCase {
 //    }
 //
 //    func testFundsSufficiency_SufficientAmount() async throws {
-//        let sendState = SendFlow.State(
+//        let sendState = SendForm.State(
 //            addMemoState: true,
 //            memoState: .initial,
 //            scanState: .initial,
@@ -258,7 +258,7 @@ class SendTests: XCTestCase {
 //        let store = TestStore(
 //            initialState: sendState
 //        ) {
-//            SendFlow()
+//            SendForm()
 //        }
 //
 //        store.dependencies.numberFormatter = .live(numberFormatter: usNumberFormatter)
@@ -280,7 +280,7 @@ class SendTests: XCTestCase {
 //    }
 //
 //    func testFundsSufficiency_InsufficientAmount() async throws {
-//        let sendState = SendFlow.State(
+//        let sendState = SendForm.State(
 //            addMemoState: true,
 //            memoState: .initial,
 //            scanState: .initial,
@@ -292,7 +292,7 @@ class SendTests: XCTestCase {
 //        let store = TestStore(
 //            initialState: sendState
 //        ) {
-//            SendFlow()
+//            SendForm()
 //        }
 //
 //        store.dependencies.numberFormatter = .live(numberFormatter: usNumberFormatter)
@@ -336,7 +336,7 @@ class SendTests: XCTestCase {
 //    }
 //
 //    func testValidForm() async throws {
-//        let sendState = SendFlow.State(
+//        let sendState = SendForm.State(
 //            addMemoState: true,
 //            memoState: .initial,
 //            scanState: .initial,
@@ -349,7 +349,7 @@ class SendTests: XCTestCase {
 //        let store = TestStore(
 //            initialState: sendState
 //        ) {
-//            SendFlow()
+//            SendForm()
 //        }
 //
 //        store.dependencies.numberFormatter = .live(numberFormatter: usNumberFormatter)
@@ -387,7 +387,7 @@ class SendTests: XCTestCase {
 //    }
 //
 //    func testValidForm_NoFees() async throws {
-//        let sendState = SendFlow.State(
+//        let sendState = SendForm.State(
 //            addMemoState: true,
 //            memoState: .initial,
 //            scanState: .initial,
@@ -409,7 +409,7 @@ class SendTests: XCTestCase {
 //        let store = TestStore(
 //            initialState: sendState
 //        ) {
-//            SendFlow()
+//            SendForm()
 //        }
 //        
 //        store.dependencies.derivationTool = .noOp
@@ -432,7 +432,7 @@ class SendTests: XCTestCase {
 //    }
 //
 //    func testInvalidForm_InsufficientFunds() async throws {
-//        let sendState = SendFlow.State(
+//        let sendState = SendForm.State(
 //            addMemoState: true,
 //            memoState: .initial,
 //            scanState: .initial,
@@ -454,7 +454,7 @@ class SendTests: XCTestCase {
 //        let store = TestStore(
 //            initialState: sendState
 //        ) {
-//            SendFlow()
+//            SendForm()
 //        }
 //
 //        store.dependencies.derivationTool = .noOp
@@ -478,7 +478,7 @@ class SendTests: XCTestCase {
 //    }
 //
 //    func testInvalidForm_AddressFormat() async throws {
-//        let sendState = SendFlow.State(
+//        let sendState = SendForm.State(
 //            addMemoState: true,
 //            memoState: .initial,
 //            scanState: .initial,
@@ -499,7 +499,7 @@ class SendTests: XCTestCase {
 //        let store = TestStore(
 //            initialState: sendState
 //        ) {
-//            SendFlow()
+//            SendForm()
 //        }
 //
 //        store.dependencies.derivationTool = .noOp
@@ -521,7 +521,7 @@ class SendTests: XCTestCase {
 //    }
 //
 //    func testInvalidForm_ExceededMemoCharLimit() async throws {
-//        let sendState = SendFlow.State(
+//        let sendState = SendForm.State(
 //            addMemoState: true,
 //            memoState: MessageEditor.State(charLimit: 3),
 //            scanState: .initial,
@@ -551,7 +551,7 @@ class SendTests: XCTestCase {
 //        let store = TestStore(
 //            initialState: sendState
 //        ) {
-//            SendFlow()
+//            SendForm()
 //        }
 //
 //        let value = "test".redacted
@@ -568,7 +568,7 @@ class SendTests: XCTestCase {
 //    }
 //
 //    func testMemoCharLimitSet() async throws {
-//        let sendState = SendFlow.State(
+//        let sendState = SendForm.State(
 //            addMemoState: true,
 //            memoState: .initial,
 //            scanState: .initial,
@@ -589,7 +589,7 @@ class SendTests: XCTestCase {
 //        let store = TestStore(
 //            initialState: sendState
 //        ) {
-//            SendFlow()
+//            SendForm()
 //        }
 //
 //        store.dependencies.mainQueue = .immediate
@@ -601,7 +601,7 @@ class SendTests: XCTestCase {
 //    }
 //
 //    func testScannedAddress() async throws {
-//        let sendState = SendFlow.State(
+//        let sendState = SendForm.State(
 //            addMemoState: true,
 //            memoState: .initial,
 //            scanState: .initial,
@@ -613,7 +613,7 @@ class SendTests: XCTestCase {
 //        let store = TestStore(
 //            initialState: sendState
 //        ) {
-//            SendFlow()
+//            SendForm()
 //        }
 //
 //        store.dependencies.audioServices = AudioServicesClient(systemSoundVibrate: { })
@@ -631,8 +631,8 @@ class SendTests: XCTestCase {
 //        await store.receive(.updateDestination(nil))
 //    }
 //    
-//    func testReviewPressed() async throws {
-//        var sendState = SendFlow.State(
+//    func testReviewTapped() async throws {
+//        var sendState = SendForm.State(
 //            addMemoState: true,
 //            memoState: .initial,
 //            scanState: .initial,
@@ -645,14 +645,14 @@ class SendTests: XCTestCase {
 //        let store = TestStore(
 //            initialState: sendState
 //        ) {
-//            SendFlow()
+//            SendForm()
 //        }
 //        
 //        store.dependencies.sdkSynchronizer = .noOp
 //        let proposal = Proposal.testOnlyFakeProposal(totalFee: 10_000)
 //        store.dependencies.sdkSynchronizer.proposeTransfer = { _, _, _, _ in proposal }
 //
-//        await store.send(.reviewPressed)
+//        await store.send(.reviewTapped)
 //        
 //        await store.receive(.proposal(proposal)) { state in
 //            state.proposal = proposal
@@ -666,7 +666,7 @@ class SendTests: XCTestCase {
 //    func testMemoToMessage() throws {
 //        let testMessage = "test message".redacted
 //        
-//        let sendState = SendFlow.State(
+//        let sendState = SendForm.State(
 //            addMemoState: true,
 //            memoState: MessageEditor.State(charLimit: 512, text: testMessage),
 //            scanState: .initial,
@@ -678,7 +678,7 @@ class SendTests: XCTestCase {
 //        let store = TestStore(
 //            initialState: sendState
 //        ) {
-//            SendFlow()
+//            SendForm()
 //        }
 //        
 //        XCTAssertEqual(store.state.message, testMessage.data)
@@ -690,7 +690,7 @@ class SendTests: XCTestCase {
 //
 //        let feeFormat = "(Typical Fee < 0.001)"
 //        
-//        let sendState = SendFlow.State(
+//        let sendState = SendForm.State(
 //            addMemoState: true,
 //            memoState: .initial,
 //            scanState: .initial,
@@ -702,7 +702,7 @@ class SendTests: XCTestCase {
 //        let store = TestStore(
 //            initialState: sendState
 //        ) {
-//            SendFlow()
+//            SendForm()
 //        }
 //        
 //        XCTAssertEqual(store.state.feeFormat, feeFormat)

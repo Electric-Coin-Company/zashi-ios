@@ -1,5 +1,5 @@
 //
-//  SendFlowStore.swift
+//  SendFormStore.swift
 //  secant-testnet
 //
 //  Created by Lukáš Korba on 04/25/2022.
@@ -23,7 +23,7 @@ import UserPreferencesStorage
 import AddressBookClient
 
 @Reducer
-public struct SendFlow {
+public struct SendForm {
     public enum Confirmation {
         case requestPayment
         case send
@@ -31,10 +31,10 @@ public struct SendFlow {
     
     @ObservableState
     public struct State {
-        public enum Destination {
-            case partialProposalError
-            case scanQR
-        }
+//        public enum Destination {
+//            case partialProposalError
+//            case scanQR
+//        }
 
         public var cancelId = UUID()
         
@@ -44,7 +44,7 @@ public struct SendFlow {
         @Presents public var alert: AlertState<Action>?
         @Shared(.inMemory(.exchangeRate)) public var currencyConversion: CurrencyConversion? = nil
         public var currencyText: RedactableString = .empty
-        public var destination: Destination?
+//        public var destination: Destination?
         public var isAddressBookHintVisible = false
         public var isCurrencyConversionEnabled = false
         public var isNotAddressInAddressBook = false
@@ -55,7 +55,7 @@ public struct SendFlow {
         public var memoState: MessageEditor.State
         public var proposal: Proposal?
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
-        public var scanState: Scan.State
+//        public var scanState: Scan.State
         public var shieldedBalance: Zatoshi
         public var walletBalancesState: WalletBalances.State
         public var requestsAddressFocus = false
@@ -179,16 +179,16 @@ public struct SendFlow {
         
         public init(
             addMemoState: Bool,
-            destination: Destination? = nil,
+//            destination: Destination? = nil,
             memoState: MessageEditor.State,
-            scanState: Scan.State,
+//            scanState: Scan.State,
             shieldedBalance: Zatoshi = .zero,
             walletBalancesState: WalletBalances.State
         ) {
             self.addMemoState = addMemoState
-            self.destination = destination
+//            self.destination = destination
             self.memoState = memoState
-            self.scanState = scanState
+//            self.scanState = scanState
             self.shieldedBalance = shieldedBalance
             self.walletBalancesState = walletBalancesState
         }
@@ -211,11 +211,11 @@ public struct SendFlow {
         case proposal(Proposal)
         case requestsAddressFocusResolved
         case resetForm
-        case reviewPressed
-        case scan(Scan.Action)
+        case reviewTapped
+//        case scan(Scan.Action)
         case sendFailed(ZcashError, Confirmation)
         case syncAmounts(Bool)
-        case updateDestination(SendFlow.State.Destination?)
+//        case updateDestination(SendForm.State.Destination?)
         case validateAddress
         case walletBalances(WalletBalances.Action)
         case zecAmountUpdated(RedactableString)
@@ -236,9 +236,9 @@ public struct SendFlow {
             MessageEditor()
         }
 
-        Scope(state: \.scanState, action: \.scan) {
-            Scan()
-        }
+//        Scope(state: \.scanState, action: \.scan) {
+//            Scan()
+//        }
 
         Scope(state: \.walletBalancesState, action: \.walletBalances) {
             WalletBalances()
@@ -247,7 +247,7 @@ public struct SendFlow {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                state.scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
+//                state.scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
                 state.memoState.charLimit = zcashSDKEnvironment.memoCharLimit
                 guard let _ = state.zashiWalletAccount else {
                     return .send(.exchangeRateSetupChanged)
@@ -290,12 +290,12 @@ public struct SendFlow {
                 state.proposal = proposal
                 return .none
         
-            case let .updateDestination(destination):
-                if destination == .scanQR {
-                    state.isPaymentRequestInProgress = false
-                }
-                state.destination = destination
-                return .none
+//            case let .updateDestination(destination):
+//                if destination == .scanQR {
+//                    state.isPaymentRequestInProgress = false
+//                }
+//                state.destination = destination
+//                return .none
 
             case .walletBalances(.exchangeRateEvent(let result)):
                 switch result {
@@ -310,7 +310,7 @@ public struct SendFlow {
                 }
                 return .none
                 
-            case .reviewPressed:
+            case .reviewTapped:
                 return .send(.getProposal(.send))
                 
             case .getProposal(let confirmationType):
@@ -341,12 +341,13 @@ public struct SendFlow {
                 
             case let .sendFailed(error, confirmationType):
                 if confirmationType == .requestPayment {
-                    return .send(.updateDestination(nil))
+//                    return .send(.updateDestination(nil))
                 } else {
                     state.alert = AlertState.sendFailure(error)
                     return .none
                 }
-                
+                return .none
+
             case .confirmationRequired:
                 return .none
 
@@ -387,50 +388,51 @@ public struct SendFlow {
             case .memo:
                 return .none
                 
-            case .scan(.foundRP(let requestPayment)):
-                guard !state.isPaymentRequestInProgress else {
-                    return .none
-                }
-                state.isPaymentRequestInProgress = true
-                if case .legacy(let address) = requestPayment {
-                    audioServices.systemSoundVibrate()
-                    return .send(.scan(.found(address.value.redacted)))
-                } else if case .request(let paymentRequest) = requestPayment {
-                    if let payment = paymentRequest.payments.first {
-                        if let memoBytes = payment.memo, let memo = try? Memo(bytes: [UInt8](memoBytes.memoData)) {
-                            state.memoState.text = memo.toString() ?? ""
-                        }
-                        let numberLocale = numberFormatter.convertUSToLocale(payment.amount.toString()) ?? ""
-                        state.address = payment.recipientAddress.value.redacted
-                        state.zecAmountText = numberLocale.redacted
-                        audioServices.systemSoundVibrate()
-                        return .send(.getProposal(.requestPayment))
-                    }
-                }
-                return .none
-                
-            case .scan(.found(let address)):
-                state.address = address
-                // The is valid Zcash address check is already covered in the scan feature
-                // so we can be sure it's valid and thus `true` value here.
-                state.isValidAddress = true
-                state.isValidTransparentAddress = derivationTool.isTransparentAddress(
-                    address.data,
-                    zcashSDKEnvironment.network.networkType
-                )
-                state.isValidTexAddress = derivationTool.isTexAddress(
-                    address.data,
-                    zcashSDKEnvironment.network.networkType
-                )
-                audioServices.systemSoundVibrate()
-                return .send(.updateDestination(nil))
-
-            case .scan(.cancelPressed):
-                state.destination = nil
-                return .none
-                
-            case .scan:
-                return .none
+//            case .scan(.foundRP(let requestPayment)):
+//                guard !state.isPaymentRequestInProgress else {
+//                    return .none
+//                }
+//                state.isPaymentRequestInProgress = true
+//                if case .legacy(let address) = requestPayment {
+//                    audioServices.systemSoundVibrate()
+//                    return .send(.scan(.found(address.value.redacted)))
+//                } else if case .request(let paymentRequest) = requestPayment {
+//                    if let payment = paymentRequest.payments.first {
+//                        if let memoBytes = payment.memo, let memo = try? Memo(bytes: [UInt8](memoBytes.memoData)) {
+//                            state.memoState.text = memo.toString() ?? ""
+//                        }
+//                        let numberLocale = numberFormatter.convertUSToLocale(payment.amount.toString()) ?? ""
+//                        state.address = payment.recipientAddress.value.redacted
+//                        state.zecAmountText = numberLocale.redacted
+//                        audioServices.systemSoundVibrate()
+//                        return .send(.getProposal(.requestPayment))
+//                    }
+//                }
+//                return .none
+//                
+//            case .scan(.found(let address)):
+//                state.address = address
+//                // The is valid Zcash address check is already covered in the scan feature
+//                // so we can be sure it's valid and thus `true` value here.
+//                state.isValidAddress = true
+//                state.isValidTransparentAddress = derivationTool.isTransparentAddress(
+//                    address.data,
+//                    zcashSDKEnvironment.network.networkType
+//                )
+//                state.isValidTexAddress = derivationTool.isTexAddress(
+//                    address.data,
+//                    zcashSDKEnvironment.network.networkType
+//                )
+//                audioServices.systemSoundVibrate()
+////                return .send(.updateDestination(nil))
+//                return .none
+//
+//            case .scan(.cancelTapped):
+//                state.destination = nil
+//                return .none
+//                
+//            case .scan:
+//                return .none
                 
             case .walletBalances(.balanceUpdated):
                 state.shieldedBalance = state.walletBalancesState.shieldedBalance
@@ -499,7 +501,7 @@ public struct SendFlow {
 
 // MARK: Alerts
 
-extension AlertState where Action == SendFlow.Action {
+extension AlertState where Action == SendForm.Action {
     public static func sendFailure(_ error: ZcashError) -> AlertState {
         AlertState {
             TextState(L10n.Send.Alert.Failure.title)

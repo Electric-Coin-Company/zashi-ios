@@ -108,17 +108,17 @@ public struct AddressBook {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                state.originalName = ""
-                state.originalAddress = ""
+//                state.originalName = ""
+//                state.originalAddress = ""
                 state.isValidForm = false
-                state.isValidZcashAddress = false
+//                state.isValidZcashAddress = false
                 state.deleteIdToConfirm = nil
-                state.name = ""
-                state.address = ""
+//                state.name = ""
+//                state.address = ""
                 state.nameAlreadyExists = false
                 state.addressAlreadyExists = false
-                state.isAddressFocused = false
-                state.isNameFocused = false
+//                state.isAddressFocused = false
+//                state.isNameFocused = false
 //                state.scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
                 if let editId = state.editId {
                     return .concatenate(
@@ -172,7 +172,7 @@ public struct AddressBook {
 ////                return .send(.updateDestination(.add))
 //                return .none
 
-//            case .scan(.cancelPressed):
+//            case .scan(.cancelTapped):
 //                state.scanViewBinding = false
 //                return .none
 

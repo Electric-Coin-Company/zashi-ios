@@ -78,7 +78,7 @@ public struct ImportWallet {
         case binding(BindingAction<ImportWallet.State>)
         case importPrivateOrViewingKey
         case initializeSDK
-        case nextPressed
+        case nextTapped
         case onAppear
         case restoreInfo(RestoreInfo.Action)
         case restoreInfoRequested(Bool)
@@ -142,7 +142,7 @@ public struct ImportWallet {
             case .alert:
                 return .none
                 
-            case .nextPressed:
+            case .nextTapped:
                 return .none
                 
             case .restoreInfo:

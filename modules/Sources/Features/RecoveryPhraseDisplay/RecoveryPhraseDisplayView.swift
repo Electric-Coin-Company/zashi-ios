@@ -149,7 +149,7 @@ public struct RecoveryPhraseDisplayView: View {
                     
                     if !store.showBackButton {
                         ZashiButton(L10n.RecoveryPhraseDisplay.Button.wroteItDown) {
-                            store.send(.finishedPressed)
+                            store.send(.finishedTapped)
                         }
                         .padding(.bottom, 20)
                     } else {

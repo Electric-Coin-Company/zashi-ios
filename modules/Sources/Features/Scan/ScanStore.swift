@@ -75,7 +75,7 @@ public struct Scan {
     @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
 
     public enum Action: Equatable {
-        case cancelPressed
+        case cancelTapped
         case clearInfo
         case libraryImage(UIImage?)
         case onAppear
@@ -87,7 +87,7 @@ public struct Scan {
         case animatedQRProgress(Int, Int?, Int?)
         case scanFailed(ScanImageResult)
         case scan(RedactableString)
-        case torchPressed
+        case torchTapped
     }
     
     public init() { }
@@ -135,7 +135,7 @@ public struct Scan {
                 state.progress = nil
                 return .none
 
-            case .cancelPressed:
+            case .cancelTapped:
                 return .none
                 
             case .clearInfo:
@@ -206,7 +206,7 @@ public struct Scan {
                 }
                 return .send(.scanFailed(.noQRCodeFound))
 
-            case .torchPressed:
+            case .torchTapped:
                 do {
                     try captureDevice.torch(!state.isTorchOn)
                     state.isTorchOn.toggle()

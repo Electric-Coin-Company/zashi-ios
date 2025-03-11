@@ -161,23 +161,23 @@ public struct SendConfirmationView: View {
                     }
                 }
                 .padding(.vertical, 1)
-                .navigationLinkEmpty(
-                    isActive: $store.partialProposalErrorViewBinding,
-                    destination: {
-                        PartialProposalErrorView(
-                            store: store.scope(
-                                state: \.partialProposalErrorState,
-                                action: \.partialProposalError
-                            )
-                        )
-                    }
-                )
+//                .navigationLinkEmpty(
+//                    isActive: $store.partialProposalErrorViewBinding,
+//                    destination: {
+//                        PartialProposalErrorView(
+//                            store: store.scope(
+//                                state: \.partialProposalErrorState,
+//                                action: \.partialProposalError
+//                            )
+//                        )
+//                    }
+//                )
                 .alert($store.scope(state: \.alert, action: \.alert))
                 
                 Spacer()
                 
                 ZashiButton(L10n.Send.goBack, type: .ghost) {
-                    store.send(.goBackPressed)
+                    store.send(.cancelTapped)
                 }
                 .screenHorizontalPadding()
                 .disabled(store.isSending)
@@ -207,7 +207,7 @@ public struct SendConfirmationView: View {
                         .disabled(store.isSending)
                     } else {
                         ZashiButton(L10n.General.send) {
-                            store.send(.sendPressed)
+                            store.send(.sendTapped)
                         }
                         .screenHorizontalPadding()
                         .padding(.bottom, 24)
@@ -220,18 +220,18 @@ public struct SendConfirmationView: View {
                 ? L10n.Send.review
                 : L10n.Send.confirmationTitle
             )
-            .navigationLinkEmpty(
-                isActive: store.bindingFor(.sending),
-                destination: {
-                    SendingView(store: store, tokenName: tokenName)
-                }
-            )
-            .navigationLinkEmpty(
-                isActive: store.bindingForStack(.signWithKeystone),
-                destination: {
-                    SignWithKeystoneView(store: store, tokenName: tokenName)
-                }
-            )
+//            .navigationLinkEmpty(
+//                isActive: store.bindingFor(.sending),
+//                destination: {
+//                    SendingView(store: store, tokenName: tokenName)
+//                }
+//            )
+//            .navigationLinkEmpty(
+//                isActive: store.bindingForStack(.signWithKeystone),
+//                destination: {
+//                    SignWithKeystoneView(store: store, tokenName: tokenName)
+//                }
+//            )
         }
 //        .zashiBack()
         .navigationBarTitleDisplayMode(.inline)
@@ -252,88 +252,88 @@ public struct SendConfirmationView: View {
 
 // MARK: - ViewStore
 
-extension StoreOf<SendConfirmation> {
-    func bindingForStack(_ destination: SendConfirmation.State.StackDestination) -> Binding<Bool> {
-        Binding<Bool>(
-            get: {
-                if let currentStackValue = self.stackDestination?.rawValue {
-                    return currentStackValue >= destination.rawValue
-                } else {
-                    if destination.rawValue == 0 {
-                        return false
-                    } else if destination.rawValue <= self.stackDestinationBindingsAlive {
-                        return true
-                    } else {
-                        return false
-                    }
-                }
-            },
-            set: { _ in
-                if let currentStackValue = self.stackDestination?.rawValue, currentStackValue == destination.rawValue {
-                    let popIndex = destination.rawValue - 1
-                    if popIndex >= 0 {
-                        let popDestination = SendConfirmation.State.StackDestination(rawValue: popIndex)
-                        self.send(.updateStackDestination(popDestination))
-                    } else {
-                        self.send(.updateStackDestination(nil))
-                    }
-                }
-            }
-        )
-    }
-    
-    func bindingForStackTransactions(_ destination: SendConfirmation.State.StackDestinationTransactions) -> Binding<Bool> {
-        Binding<Bool>(
-            get: {
-                if let currentStackValue = self.stackDestinationTransactions?.rawValue {
-                    return currentStackValue >= destination.rawValue
-                } else {
-                    if destination.rawValue == 0 {
-                        return false
-                    } else if destination.rawValue <= self.stackDestinationTransactionsBindingsAlive {
-                        return true
-                    } else {
-                        return false
-                    }
-                }
-            },
-            set: { _ in
-                if let currentStackValue = self.stackDestinationTransactions?.rawValue, currentStackValue == destination.rawValue {
-                    let popIndex = destination.rawValue - 1
-                    if popIndex >= 0 {
-                        let popDestination = SendConfirmation.State.StackDestinationTransactions(rawValue: popIndex)
-                        self.send(.updateStackDestinationTransactions(popDestination))
-                    } else {
-                        self.send(.updateStackDestinationTransactions(nil))
-                    }
-                }
-            }
-        )
-    }
-}
+//extension StoreOf<SendConfirmation> {
+//    func bindingForStack(_ destination: SendConfirmation.State.StackDestination) -> Binding<Bool> {
+//        Binding<Bool>(
+//            get: {
+//                if let currentStackValue = self.stackDestination?.rawValue {
+//                    return currentStackValue >= destination.rawValue
+//                } else {
+//                    if destination.rawValue == 0 {
+//                        return false
+//                    } else if destination.rawValue <= self.stackDestinationBindingsAlive {
+//                        return true
+//                    } else {
+//                        return false
+//                    }
+//                }
+//            },
+//            set: { _ in
+//                if let currentStackValue = self.stackDestination?.rawValue, currentStackValue == destination.rawValue {
+//                    let popIndex = destination.rawValue - 1
+//                    if popIndex >= 0 {
+//                        let popDestination = SendConfirmation.State.StackDestination(rawValue: popIndex)
+//                        self.send(.updateStackDestination(popDestination))
+//                    } else {
+//                        self.send(.updateStackDestination(nil))
+//                    }
+//                }
+//            }
+//        )
+//    }
+//    
+//    func bindingForStackTransactions(_ destination: SendConfirmation.State.StackDestinationTransactions) -> Binding<Bool> {
+//        Binding<Bool>(
+//            get: {
+//                if let currentStackValue = self.stackDestinationTransactions?.rawValue {
+//                    return currentStackValue >= destination.rawValue
+//                } else {
+//                    if destination.rawValue == 0 {
+//                        return false
+//                    } else if destination.rawValue <= self.stackDestinationTransactionsBindingsAlive {
+//                        return true
+//                    } else {
+//                        return false
+//                    }
+//                }
+//            },
+//            set: { _ in
+//                if let currentStackValue = self.stackDestinationTransactions?.rawValue, currentStackValue == destination.rawValue {
+//                    let popIndex = destination.rawValue - 1
+//                    if popIndex >= 0 {
+//                        let popDestination = SendConfirmation.State.StackDestinationTransactions(rawValue: popIndex)
+//                        self.send(.updateStackDestinationTransactions(popDestination))
+//                    } else {
+//                        self.send(.updateStackDestinationTransactions(nil))
+//                    }
+//                }
+//            }
+//        )
+//    }
+//}
 
-extension StoreOf<SendConfirmation> {
-    func scanStore() -> StoreOf<Scan> {
-        self.scope(
-            state: \.scanState,
-            action: \.scan
-        )
-    }
-    
-    func addressBookStore() -> StoreOf<AddressBook> {
-        self.scope(
-            state: \.addressBookState,
-            action: \.addressBook
-        )
-    }
-    
-    func transactionDetailsStore() -> StoreOf<TransactionDetails> {
-        self.scope(
-            state: \.transactionDetailsState,
-            action: \.transactionDetails
-        )
-    }
-}
+//extension StoreOf<SendConfirmation> {
+////    func scanStore() -> StoreOf<Scan> {
+////        self.scope(
+////            state: \.scanState,
+////            action: \.scan
+////        )
+////    }
+//    
+//    func addressBookStore() -> StoreOf<AddressBook> {
+//        self.scope(
+//            state: \.addressBookState,
+//            action: \.addressBook
+//        )
+//    }
+//    
+//    func transactionDetailsStore() -> StoreOf<TransactionDetails> {
+//        self.scope(
+//            state: \.transactionDetailsState,
+//            action: \.transactionDetails
+//        )
+//    }
+//}
 
 // MARK: - Store
 
@@ -353,25 +353,25 @@ extension SendConfirmation.State {
         amount: .zero,
         feeRequired: .zero,
         message: "",
-        partialProposalErrorState: .initial,
+//        partialProposalErrorState: .initial,
         proposal: nil
     )
 }
 
 // MARK: - ViewStore
 
-extension StoreOf<SendConfirmation> {
-    func bindingFor(_ destination: SendConfirmation.State.Destination) -> Binding<Bool> {
-        Binding<Bool>(
-            get: { self.destination == destination },
-            set: { self.send(.updateDestination($0 ? destination : nil)) }
-        )
-    }
-    
-    func bindingForResult(_ result: SendConfirmation.State.Result) -> Binding<Bool> {
-        Binding<Bool>(
-            get: { self.result == result },
-            set: { self.send(.updateResult($0 ? result : nil)) }
-        )
-    }
-}
+//extension StoreOf<SendConfirmation> {
+////    func bindingFor(_ destination: SendConfirmation.State.Destination) -> Binding<Bool> {
+//        Binding<Bool>(
+//            get: { self.destination == destination },
+//            set: { self.send(.updateDestination($0 ? destination : nil)) }
+//        )
+//    }
+//    
+//    func bindingForResult(_ result: SendConfirmation.State.Result) -> Binding<Bool> {
+//        Binding<Bool>(
+//            get: { self.result == result },
+//            set: { self.send(.updateResult($0 ? result : nil)) }
+//        )
+//    }
+//}

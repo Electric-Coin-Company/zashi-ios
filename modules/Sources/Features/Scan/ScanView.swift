@@ -94,7 +94,7 @@ public struct ScanView: View {
                             }
                         } else {
                             primaryButton(L10n.General.cancel) {
-                                store.send(.cancelPressed)
+                                store.send(.cancelTapped)
                             }
                         }
                     }
@@ -145,7 +145,7 @@ public struct ScanView: View {
 
         return WithPerceptionTracking {
             Button {
-                store.send(.torchPressed)
+                store.send(.torchTapped)
             } label: {
                 if store.isTorchOn {
                     Asset.Assets.Icons.flashOff.image
