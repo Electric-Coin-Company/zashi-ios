@@ -613,7 +613,7 @@ extension Root {
                 state.alert = AlertState.wipeFailed(Int32.max)
                 return .cancel(id: SynchronizerCancelId)
 
-            case .phraseDisplay(.finishedPressed), .onboarding(.securityWarning(.recoveryPhraseDisplay(.finishedPressed))):
+            case .phraseDisplay(.finishedTapped), .onboarding(.securityWarning(.recoveryPhraseDisplay(.finishedTapped))):
                 do {
                     try walletStorage.markUserPassedPhraseBackupTest(true)
                     state.destinationState.destination = .home
@@ -643,7 +643,7 @@ extension Root {
                     await send(.onboarding(.importExistingWallet))
                 }
                 
-            case .onboarding(.importWallet(.nextPressed)):
+            case .onboarding(.importWallet(.nextTapped)):
                 if state.appInitializationState == .keysMissing {
                     let seedPhrase = state.onboardingState.importWalletState.importedSeedPhrase
                     return .run { send in

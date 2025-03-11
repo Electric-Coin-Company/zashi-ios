@@ -42,7 +42,7 @@ public struct RecoveryPhraseDisplay {
     
     public enum Action: Equatable {
         case alert(PresentationAction<Action>)
-        case finishedPressed
+        case finishedTapped
         case onAppear
         case recoveryPhraseTapped
         case tooltipTapped
@@ -82,7 +82,7 @@ public struct RecoveryPhraseDisplay {
                 state.alert = nil
                 return .none
                 
-            case .finishedPressed:
+            case .finishedTapped:
                 return .none
                 
             case .tooltipTapped:

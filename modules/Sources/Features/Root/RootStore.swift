@@ -29,6 +29,7 @@ import URIParser
 import OSStatusError
 import AddressBookClient
 import UserMetadataProvider
+import AudioServices
 
 // Screens
 import About
@@ -39,15 +40,19 @@ import CurrencyConversionSetup
 import DeleteWallet
 import ExportTransactionHistory
 import Home
+import PartialProposalError
 import PrivateDataConsent
 import Receive
 import RecoveryPhraseDisplay
 import RequestZec
 import Scan
+import SendConfirmation
 import SendFeedback
-import SendFlow
+import SendForm
 import ServerSetup
 import Settings
+import TransactionDetails
+import TransactionsManager
 import WhatsNew
 import ZecKeyboard
 
@@ -72,19 +77,28 @@ public struct Root {
         case exportPrivateData(PrivateDataConsent)
         case exportTransactionHistory(ExportTransactionHistory)
         case integrations(Integrations)
+        //case preSendingFailure(SendConfirmation)
         case receive(Receive)
         case recoveryPhrase(RecoveryPhraseDisplay)
         case requestZec(RequestZec)
         case requestZecSummary(RequestZec)
         case resetZashi(DeleteWallet)
         case scan(Scan)
-        case sendFlow(SendFlow)
+        case sendConfirmation(SendConfirmation)
+        case sendForm(SendForm)
+        case sending(SendConfirmation)
+        case sendResultFailure(SendConfirmation)
+        case sendResultPartial(PartialProposalError)
+        case sendResultResubmission(SendConfirmation)
+        case sendResultSuccess(SendConfirmation)
         case sendUsFeedback(SendFeedback)
         case settings(Settings)
+        case transactionDetails(TransactionDetails)
+        case transactionsManager(TransactionsManager)
         case whatsNew(WhatsNew)
         case zecKeyboard(ZecKeyboard)
     }
-    
+
     let CancelId = UUID()
     let CancelStateId = UUID()
     let CancelBatteryStateId = UUID()
@@ -139,7 +153,7 @@ public struct Root {
 
         // coordinator states
         public var requestZecState = RequestZec.State.initial
-        
+
         public init(
 //            addressBookState: AddressBook.State = .initial,
             appInitializationState: InitializationState = .uninitialized,
@@ -215,6 +229,7 @@ public struct Root {
         case serverSetup(ServerSetup.Action)
         case serverSetupBindingUpdated(Bool)
         case synchronizerStateChanged(RedactableSynchronizerState)
+        case transactionDetailsOpen(String)
         case updateStateAfterConfigUpdate(WalletConfig)
         case walletConfigLoaded(WalletConfig)
         case welcome(Welcome.Action)
@@ -237,6 +252,7 @@ public struct Root {
     }
 
     @Dependency(\.addressBook) var addressBook
+    @Dependency(\.audioServices) var audioServices
     @Dependency(\.autolockHandler) var autolockHandler
     @Dependency(\.databaseFiles) var databaseFiles
     @Dependency(\.deeplink) var deeplink

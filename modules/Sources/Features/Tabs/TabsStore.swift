@@ -15,7 +15,7 @@ import Generated
 import Receive
 import BalanceBreakdown
 import Home
-import SendFlow
+import SendForm
 import Settings
 import ZcashLightClientKit
 import SendConfirmation
@@ -41,7 +41,7 @@ public struct Tabs {
     public enum Path {
         case receive(Receive)
         case scan(Scan)
-        case sendFlow(SendFlow)
+        case sendFlow(SendForm)
         case sendConfirmation(SendConfirmation)
     }
     
@@ -119,7 +119,7 @@ public struct Tabs {
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var selectTextRequest = false
         public var sendConfirmationState: SendConfirmation.State
-        public var sendState: SendFlow.State
+        public var sendState: SendForm.State
         public var settingsState: Settings.State
         public var stackDestinationAddKeystoneHWWallet: StackDestinationAddKeystoneHWWallet?
         public var stackDestinationAddKeystoneHWWalletBindingsAlive = 0
@@ -172,7 +172,7 @@ public struct Tabs {
             requestZecState: RequestZec.State,
             selectedTab: Tab = .account,
             sendConfirmationState: SendConfirmation.State,
-            sendState: SendFlow.State,
+            sendState: SendForm.State,
             settingsState: Settings.State,
             zecKeyboardState: ZecKeyboard.State
         ) {
@@ -214,7 +214,7 @@ public struct Tabs {
         case requestZec(RequestZec.Action)
         case scan(Scan.Action)
         case selectedTabChanged(State.Tab)
-        case send(SendFlow.Action)
+        case send(SendForm.Action)
         case sendConfirmation(SendConfirmation.Action)
         case settings(Settings.Action)
         case transactionDetails(TransactionDetails.Action)
@@ -258,7 +258,7 @@ public struct Tabs {
         }
 
 //        Scope(state: \.sendState, action: \.send) {
-//            SendFlow()
+//            SendForm()
 //        }
 
         Scope(state: \.sendConfirmationState, action: \.sendConfirmation) {
@@ -408,19 +408,19 @@ public struct Tabs {
 //                state.selectedTab = .receive
                 return .none
 
-            case .home(.sendTapped):
-//                var test = SendFlow.State(
-//                    addMemoState: false,
-//                    memoState: .initial,
-//                    scanState: .initial,
-//                    walletBalancesState: .initial
-//                )
-//                test.address = "aaa".redacted
-//                state.path.append(.sendFlow(test))
-                //state.sendState.address = "aaa2".redacted
-                state.path.append(.sendFlow(state.sendState))
-//                state.selectedTab = .send
-                return .none
+//            case .home(.sendTapped):
+////                var test = SendForm.State(
+////                    addMemoState: false,
+////                    memoState: .initial,
+////                    scanState: .initial,
+////                    walletBalancesState: .initial
+////                )
+////                test.address = "aaa".redacted
+////                state.path.append(.sendFlow(test))
+//                //state.sendState.address = "aaa2".redacted
+//                state.path.append(.sendFlow(state.sendState))
+////                state.selectedTab = .send
+//                return .none
 
 //            case .path(.element(id: _, action: .sendFlow(.addressUpdated))):
 //                print("__LD \(state.sendState.address)")
@@ -511,7 +511,7 @@ public struct Tabs {
             case .settings(.advancedSettings(.currencyConversionSetup(.saveChangesTapped))):
                 return .send(.send(.exchangeRateSetupChanged))
 
-            case .path(.element(id: _, action: .scan(.cancelPressed))):
+            case .path(.element(id: _, action: .scan(.cancelTapped))):
                 state.path.removeAll()
                 return .none
 
@@ -521,38 +521,38 @@ public struct Tabs {
                 return .none
 
             //case .send(.confirmationRequired(let type)):
-            case .path(.element(id: _, action: .sendFlow(.confirmationRequired(let type)))):
-//                if case .sendFlow = state.path {
-//                    
+//            case .path(.element(id: _, action: .sendFlow(.confirmationRequired(let type)))):
+////                if case .sendFlow = state.path {
+////                    
+////                }
+//                
+//                for (_, element) in zip(state.path.ids, state.path) {
+//                    switch element {
+//                    case .sendFlow(let sendState):
+//                        state.sendConfirmationState.amount = sendState.amount
+//                        state.sendConfirmationState.address = sendState.address.data
+//                        state.sendConfirmationState.isShielding = false
+//                        state.sendConfirmationState.proposal = sendState.proposal
+//                        state.sendConfirmationState.feeRequired = sendState.feeRequired
+//                        state.sendConfirmationState.message = sendState.message
+//                        state.sendConfirmationState.currencyAmount = sendState.currencyConversion?.convert(sendState.amount).redacted ?? .empty
+//                    default: break
+//                    }
 //                }
-                
-                for (_, element) in zip(state.path.ids, state.path) {
-                    switch element {
-                    case .sendFlow(let sendState):
-                        state.sendConfirmationState.amount = sendState.amount
-                        state.sendConfirmationState.address = sendState.address.data
-                        state.sendConfirmationState.isShielding = false
-                        state.sendConfirmationState.proposal = sendState.proposal
-                        state.sendConfirmationState.feeRequired = sendState.feeRequired
-                        state.sendConfirmationState.message = sendState.message
-                        state.sendConfirmationState.currencyAmount = sendState.currencyConversion?.convert(sendState.amount).redacted ?? .empty
-                    default: break
-                    }
-                }
-//                state.sendConfirmationState.amount = state.sendState.amount
-//                state.sendConfirmationState.address = state.sendState.address.data
-//                state.sendConfirmationState.isShielding = false
-//                state.sendConfirmationState.proposal = state.sendState.proposal
-//                state.sendConfirmationState.feeRequired = state.sendState.feeRequired
-//                state.sendConfirmationState.message = state.sendState.message
-//                state.sendConfirmationState.currencyAmount = state.sendState.currencyConversion?.convert(state.sendState.amount).redacted ?? .empty
-                if type == .send {
-                    //return .send(.updateDestination(.sendConfirmation))
-                    state.path.append(.sendConfirmation(state.sendConfirmationState))
-                    return .none
-                } else {
-                    return .send(.updateStackDestinationRequestPayment(.requestPaymentConfirmation))
-                }
+////                state.sendConfirmationState.amount = state.sendState.amount
+////                state.sendConfirmationState.address = state.sendState.address.data
+////                state.sendConfirmationState.isShielding = false
+////                state.sendConfirmationState.proposal = state.sendState.proposal
+////                state.sendConfirmationState.feeRequired = state.sendState.feeRequired
+////                state.sendConfirmationState.message = state.sendState.message
+////                state.sendConfirmationState.currencyAmount = state.sendState.currencyConversion?.convert(state.sendState.amount).redacted ?? .empty
+//                if type == .send {
+//                    //return .send(.updateDestination(.sendConfirmation))
+//                    state.path.append(.sendConfirmation(state.sendConfirmationState))
+//                    return .none
+//                } else {
+//                    return .send(.updateStackDestinationRequestPayment(.requestPaymentConfirmation))
+//                }
                                 
             case .send:
                 return .none
@@ -584,17 +584,17 @@ public struct Tabs {
                     .send(.send(.resetForm))
                 )
 
-            case .sendConfirmation(.backFromFailurePressed):
-                state.sendConfirmationState.stackDestinationBindingsAlive = 0
-                return .concatenate(
-                    .send(.updateDestination(nil)),
-                    .send(.updateStackDestinationRequestPayment(nil)),
-                    .send(.sendConfirmation(.updateDestination(nil))),
-                    .send(.sendConfirmation(.updateResult(nil))),
-                    .send(.sendConfirmation(.updateStackDestination(nil)))
-                )
+//            case .sendConfirmation(.backFromFailureTapped):
+//                state.sendConfirmationState.stackDestinationBindingsAlive = 0
+//                return .concatenate(
+//                    .send(.updateDestination(nil)),
+//                    .send(.updateStackDestinationRequestPayment(nil)),
+//                    .send(.sendConfirmation(.updateDestination(nil))),
+//                    .send(.sendConfirmation(.updateResult(nil))),
+//                    .send(.sendConfirmation(.updateStackDestination(nil)))
+//                )
 
-            case .sendConfirmation(.backFromPCZTFailurePressed):
+            case .sendConfirmation(.backFromPCZTFailureTapped):
                 state.sendConfirmationState.stackDestinationBindingsAlive = 0
                 state.destination = nil
                 state.sendConfirmationState.scanFailedPreScanBinding = false
@@ -626,7 +626,7 @@ public struct Tabs {
                 }
 
 
-            case .sendConfirmation(.goBackPressedFromRequestZec):
+            case .sendConfirmation(.goBackTappedFromRequestZec):
                 state.sendState.address = .empty
                 state.sendState.memoState.text = ""
                 state.sendState.zecAmountText = .empty
@@ -657,7 +657,7 @@ public struct Tabs {
                 state.isRateTooltipEnabled = false
                 return .none
 
-            case .scan(.cancelPressed):
+            case .scan(.cancelTapped):
                 return .send(.updateStackDestinationAddKeystoneHWWallet(.addKeystoneHWWallet))
 
             case .scan(.foundZA(let zcashAccounts)):
@@ -732,10 +732,10 @@ public struct Tabs {
 
                 // MARK: - Send Confirmation
 
-//            case .sendConfirmation(.goBackPressed):
-            case .path(.element(id: _, action: .sendConfirmation(.goBackPressed))):
-                state.path.popLast()
-                return .none
+//            case .sendConfirmation(.goBackTapped):
+//            case .path(.element(id: _, action: .sendConfirmation(.goBackTapped))):
+//                state.path.popLast()
+//                return .none
                 //return .send(.updateDestination(nil))
 
                 // MARK: - Transaction History

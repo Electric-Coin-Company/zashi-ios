@@ -1,5 +1,5 @@
 //
-//  SendFlowView.swift
+//  SendFormView.swift
 //  secant-testnet
 //
 //  Created by Lukáš Korba on 04/25/2022.
@@ -8,12 +8,12 @@
 import SwiftUI
 import ComposableArchitecture
 import Generated
-import Scan
+//import Scan
 import UIComponents
 import BalanceFormatter
 import WalletBalances
 
-public struct SendFlowView: View {
+public struct SendFormView: View {
     @Environment(\.colorScheme) private var colorScheme
     
     private enum InputID: Hashable {
@@ -23,7 +23,7 @@ public struct SendFlowView: View {
     
     @State private var keyboardVisible: Bool = false
     
-    @Perception.Bindable var store: StoreOf<SendFlow>
+    @Perception.Bindable var store: StoreOf<SendForm>
     let tokenName: String
     
     @FocusState private var isAddressFocused
@@ -31,7 +31,7 @@ public struct SendFlowView: View {
     @FocusState private var isCurrencyFocused
     @FocusState private var isMemoFocused
 
-    public init(store: StoreOf<SendFlow>, tokenName: String) {
+    public init(store: StoreOf<SendForm>, tokenName: String) {
         self.store = store
         self.tokenName = tokenName
     }
@@ -77,7 +77,7 @@ public struct SendFlowView: View {
                                                             }
                                                             
                                                             fieldButton(icon: Asset.Assets.Icons.qr.image) {
-                                                                store.send(.updateDestination(.scanQR))
+//                                                                store.send(.updateDestination(.scanQR))
                                                             }
                                                         }
                                                     }
@@ -171,7 +171,7 @@ public struct SendFlowView: View {
                                         }
                                         
                                         ZashiButton(L10n.Send.review) {
-                                            store.send(.reviewPressed)
+                                            store.send(.reviewTapped)
                                         }
                                         .disabled(!store.isValidForm)
                                         .padding(.top, 40)
@@ -203,12 +203,12 @@ public struct SendFlowView: View {
                             }
                         }
                         .applyScreenBackground()
-                        .navigationLinkEmpty(
-                            isActive: store.bindingFor(.scanQR),
-                            destination: {
-                                ScanView(store: store.scanStore())
-                            }
-                        )
+//                        .navigationLinkEmpty(
+//                            isActive: store.bindingFor(.scanQR),
+//                            destination: {
+//                                ScanView(store: store.scanStore())
+//                            }
+//                        )
                     }
                 }
             }
@@ -316,17 +316,17 @@ public struct SendFlowView: View {
 
 #Preview {
     NavigationView {
-        SendFlowView(
+        SendFormView(
             store: .init(
                 initialState: .init(
                     addMemoState: true,
-                    destination: nil,
+//                    destination: nil,
                     memoState: .initial,
-                    scanState: .initial,
+//                    scanState: .initial,
                     walletBalancesState: .initial
                 )
             ) {
-                SendFlow()
+                SendForm()
             },
             tokenName: "ZEC"
         )
@@ -336,31 +336,31 @@ public struct SendFlowView: View {
 
 // MARK: - Store
 
-extension StoreOf<SendFlow> {
+extension StoreOf<SendForm> {
     func memoStore() -> StoreOf<MessageEditor> {
         self.scope(
             state: \.memoState,
             action: \.memo
         )
     }
-    
-    func scanStore() -> StoreOf<Scan> {
-        self.scope(
-            state: \.scanState,
-            action: \.scan
-        )
-    }
+//    
+//    func scanStore() -> StoreOf<Scan> {
+//        self.scope(
+//            state: \.scanState,
+//            action: \.scan
+//        )
+//    }
 }
 
 // MARK: - ViewStore
 
-extension StoreOf<SendFlow> {
-    func bindingFor(_ destination: SendFlow.State.Destination) -> Binding<Bool> {
-        Binding<Bool>(
-            get: { self.destination == destination },
-            set: { self.send(.updateDestination($0 ? destination : nil)) }
-        )
-    }
+extension StoreOf<SendForm> {
+//    func bindingFor(_ destination: SendForm.State.Destination) -> Binding<Bool> {
+//        Binding<Bool>(
+//            get: { self.destination == destination },
+//            set: { self.send(.updateDestination($0 ? destination : nil)) }
+//        )
+//    }
 
     var bindingForAddress: Binding<String> {
         Binding(
@@ -386,25 +386,25 @@ extension StoreOf<SendFlow> {
 
 // MARK: Placeholders
 
-extension SendFlow.State {
+extension SendForm.State {
     public static var initial: Self {
         .init(
             addMemoState: true,
-            destination: nil,
+//            destination: nil,
             memoState: .initial,
-            scanState: .initial,
+//            scanState: .initial,
             walletBalancesState: .initial
         )
     }
 }
 
 // #if DEBUG // FIX: Issue #306 - Release build is broken
-extension StoreOf<SendFlow> {
-    public static var placeholder: StoreOf<SendFlow> {
-        StoreOf<SendFlow>(
+extension StoreOf<SendForm> {
+    public static var placeholder: StoreOf<SendForm> {
+        StoreOf<SendForm>(
             initialState: .initial
         ) {
-            SendFlow()
+            SendForm()
         }
     }
 }
