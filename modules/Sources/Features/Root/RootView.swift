@@ -20,15 +20,19 @@ import CurrencyConversionSetup
 import DeleteWallet
 import ExportTransactionHistory
 import Home
+import PartialProposalError
 import PrivateDataConsent
 import Receive
 import RecoveryPhraseDisplay
 import RequestZec
 import Scan
+import SendConfirmation
 import SendFeedback
-import SendFlow
+import SendForm
 import ServerSetup
 import Settings
+import TransactionDetails
+import TransactionsManager
 import WhatsNew
 import ZecKeyboard
 
@@ -170,14 +174,32 @@ private extension RootView {
                             RequestZecSummaryView(store: store, tokenName: tokenName)
                         case let .resetZashi(store):
                             DeleteWalletView(store: store)
+//                        case let .preSendingFailure(store):
+//                            PreSendingFailureView(store: store, tokenName: tokenName)
                         case let .scan(store):
                             ScanView(store: store)
+                        case let .sendConfirmation(store):
+                            SendConfirmationView(store: store, tokenName: tokenName)
+                        case let .sending(store):
+                            SendingView(store: store, tokenName: tokenName)
                         case let .sendUsFeedback(store):
                             SendFeedbackView(store: store)
-                        case let .sendFlow(store):
-                            SendFlowView(store: store, tokenName: tokenName)
+                        case let .sendForm(store):
+                            SendFormView(store: store, tokenName: tokenName)
+                        case let .sendResultFailure(store):
+                            FailureView(store: store, tokenName: tokenName)
+                        case let .sendResultPartial(store):
+                            PartialProposalErrorView(store: store)
+                        case let .sendResultResubmission(store):
+                            ResubmissionView(store: store, tokenName: tokenName)
+                        case let .sendResultSuccess(store):
+                            SuccessView(store: store, tokenName: tokenName)
                         case let .settings(store):
                             SettingsView(store: store)
+                        case let .transactionDetails(store):
+                            TransactionDetailsView(store: store, tokenName: tokenName)
+                        case let .transactionsManager(store):
+                            TransactionsManagerView(store: store, tokenName: tokenName)
                         case let .whatsNew(store):
                             WhatsNewView(store: store)
                         case let .zecKeyboard(store):

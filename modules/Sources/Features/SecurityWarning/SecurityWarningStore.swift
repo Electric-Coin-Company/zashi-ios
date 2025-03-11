@@ -109,7 +109,7 @@ public struct SecurityWarning {
             case .newWalletCreated:
                 return .none
                 
-            case .recoveryPhraseDisplay(.finishedPressed):
+            case .recoveryPhraseDisplay(.finishedTapped):
                 state.recoveryPhraseDisplayViewBinding = false
                 return .none
                 

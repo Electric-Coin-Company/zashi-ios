@@ -66,7 +66,7 @@ let package = Package(
         .library(name: "SecurityWarning", targets: ["SecurityWarning"]),
         .library(name: "SendConfirmation", targets: ["SendConfirmation"]),
         .library(name: "SendFeedback", targets: ["SendFeedback"]),
-        .library(name: "SendFlow", targets: ["SendFlow"]),
+        .library(name: "SendForm", targets: ["SendForm"]),
         .library(name: "ServerSetup", targets: ["ServerSetup"]),
         .library(name: "Settings", targets: ["Settings"]),
         .library(name: "SupportDataGenerator", targets: ["SupportDataGenerator"]),
@@ -626,6 +626,7 @@ let package = Package(
                 "AddKeystoneHWWallet",
                 "AddressBook",
                 "AddressDetails",
+                "AudioServices",
                 "AutolockHandler",
                 "CrashReporter",
                 "CurrencyConversionSetup",
@@ -648,6 +649,7 @@ let package = Package(
                 "NumberFormatter",
                 "OnboardingFlow",
                 "OSStatusError",
+                "PartialProposalError",
                 "Pasteboard",
                 "PrivateDataConsent",
                 "ReadTransactionsStorage",
@@ -656,10 +658,13 @@ let package = Package(
                 "RequestZec",
                 "SDKSynchronizer",
                 "Scan",
+                "SendConfirmation",
                 "SendFeedback",
-                "SendFlow",
+                "SendForm",
                 "ServerSetup",
                 "Settings",
+                "TransactionDetails",
+                "TransactionsManager",
                 "UIComponents",
                 "URIParser",
                 "UserDefaults",
@@ -775,7 +780,7 @@ let package = Package(
             path: "Sources/Features/SendFeedback"
         ),
         .target(
-            name: "SendFlow",
+            name: "SendForm",
             dependencies: [
                 "AddressBookClient",
                 "AudioServices",
@@ -793,7 +798,7 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
-            path: "Sources/Features/SendFlow"
+            path: "Sources/Features/SendForm"
         ),
         .target(
             name: "ServerSetup",

@@ -46,7 +46,7 @@ class ScanTests: XCTestCase {
 
         store.dependencies.captureDevice = .noOp
 
-        await store.send(.torchPressed) { state in
+        await store.send(.torchTapped) { state in
             state.isTorchOn = true
         }
         
@@ -64,7 +64,7 @@ class ScanTests: XCTestCase {
 
         store.dependencies.captureDevice = .noOp
 
-        await store.send(.torchPressed) { state in
+        await store.send(.torchTapped) { state in
             state.isTorchOn = false
         }
         

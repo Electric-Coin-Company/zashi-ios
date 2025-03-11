@@ -15,15 +15,19 @@ import AddressDetails
 import CurrencyConversionSetup
 import DeleteWallet
 import ExportTransactionHistory
+import PartialProposalError
 import PrivateDataConsent
 import Receive
 import RecoveryPhraseDisplay
 import RequestZec
 import Scan
+import SendConfirmation
 import SendFeedback
-import SendFlow
+import SendForm
 import ServerSetup
 import Settings
+import TransactionDetails
+import TransactionsManager
 import WhatsNew
 import ZecKeyboard
 
@@ -45,7 +49,7 @@ extension Root {
             case .path(.element(id: _, action: .accountHWWalletSelection(.forgetThisDeviceTapped))):
                 var isIntegrationsFlow = false
                 for (id, element) in zip(state.path.ids, state.path) {
-                    if case .integrations = element {
+                    if element.is(\.integrations) {
                         isIntegrationsFlow = true
                         state.path.pop(to: id)
                         break
@@ -68,10 +72,24 @@ extension Root {
 
             case .path(.element(id: _, action: .addressBook(.editId(let address)))):
                 var isAddressBookFromSettings = false
-                for element in state.path {
-                    if case .settings = element {
+                for (id, element) in zip(state.path.ids, state.path) {
+                    if element.is(\.settings) {
                         isAddressBookFromSettings = true
-                        break
+                    }
+                    if element.is(\.sendForm) {
+                        state.path[id: id, case: \.sendForm]?.address = address.redacted
+                        state.path[id: id, case: \.sendForm]?.isValidAddress = true
+                        state.path[id: id, case: \.sendForm]?.isValidTransparentAddress = derivationTool.isTransparentAddress(
+                            address,
+                            zcashSDKEnvironment.network.networkType
+                        )
+                        state.path[id: id, case: \.sendForm]?.isValidTexAddress = derivationTool.isTexAddress(
+                            address,
+                            zcashSDKEnvironment.network.networkType
+                        )
+                        audioServices.systemSoundVibrate()
+                        let _ = state.path.popLast()
+                        return .none
                     }
                 }
                 if isAddressBookFromSettings {
@@ -80,9 +98,9 @@ extension Root {
                     addressBookContactState.isNameFocused = true
                     state.path.append(.addressBookContact(addressBookContactState))
                 } else {
-                    var sendFlowState = SendFlow.State.initial
-                    sendFlowState.address = address.redacted
-                    state.path.append(.sendFlow(sendFlowState))
+                    var sendFormState = SendForm.State.initial
+                    sendFormState.address = address.redacted
+                    state.path.append(.sendForm(sendFormState))
                 }
                 return .none
 
@@ -141,7 +159,7 @@ extension Root {
                 return .none
 
             case .home(.sendTapped):
-                state.path.append(.addressBook(AddressBook.State.initial))
+                state.path.append(.sendForm(SendForm.State.initial))
                 return .none
 
             case .home(.flexaTapped):
@@ -150,6 +168,13 @@ extension Root {
             case .home(.addKeystoneHWWalletTapped):
                 state.path.append(.addKeystoneHWWallet(AddKeystoneHWWallet.State.initial))
                 return .none
+
+            case .home(.seeAllTransactionsTapped):
+                state.path.append(.transactionsManager(TransactionsManager.State.initial))
+                return .none
+
+            case .home(.transactionList(.transactionTapped(let txId))):
+                return .send(.transactionDetailsOpen(txId))
 
                 // MARK: - Integrations
 
@@ -207,7 +232,7 @@ extension Root {
                 
             case .path(.element(id: _, action: .scan(.foundZA(let account)))):
                 for element in state.path {
-                    if case .addKeystoneHWWallet = element {
+                    if element.is(\.addKeystoneHWWallet) {
                         var addKeystoneHWWalletState = AddKeystoneHWWallet.State.initial
                         addKeystoneHWWalletState.zcashAccounts = account
                         state.path.append(.accountHWWalletSelection(addKeystoneHWWalletState))
@@ -216,10 +241,115 @@ extension Root {
                 }
                 return .none
 
-                // MARK: - Send Flow
+                // MARK: - Send Confirmation
+
+            case .path(.element(id: _, action: .sendConfirmation(.cancelTapped))):
+                let _ = state.path.popLast()
+                return .none
+
+            case .path(.element(id: _, action: .sendConfirmation(.sendTapped))):
+                for element in state.path {
+                    if case .sendConfirmation(let sendConfirmationState) = element {
+                        state.path.append(.sending(sendConfirmationState))
+                        break
+                    }
+                }
+                return .none
                 
-            case .path(.element(id: _, action: .sendFlow(.dismissRequired))):
+            case .path(.element(id: _, action: .sendConfirmation(.updateResult(let result)))):
+                for element in state.path {
+                    if case .sendConfirmation(let sendConfirmationState) = element {
+                        switch result {
+                        case .failure:
+                            state.path.append(.sendResultFailure(sendConfirmationState))
+                            break
+                        case .partial:
+                            var partialProposalErrorState = PartialProposalError.State.initial
+                            partialProposalErrorState.statuses = sendConfirmationState.partialFailureStatuses
+                            partialProposalErrorState.txIds = sendConfirmationState.partialFailureTxIds
+                            state.path.append(.sendResultPartial(partialProposalErrorState))
+                            break
+                        case .resubmission:
+                            state.path.append(.sendResultResubmission(sendConfirmationState))
+                            break
+                        case .success:
+                            state.path.append(.sendResultSuccess(sendConfirmationState))
+                        default: break
+                        }
+                        break
+                    }
+                }
+                return .none
+                
+            case .path(.element(id: _, action: .sendResultSuccess(.closeTapped))):
                 state.path.removeAll()
+                return .none
+                
+            case .path(.element(id: _, action: .sendResultSuccess(.backFromFailureTapped))):
+                for (id, element) in zip(state.path.ids, state.path) {
+                    if element.is(\.sendForm) {
+                        state.path.pop(to: id)
+                        break
+                    }
+                }
+                return .none
+
+            case .path(.element(id: _, action: .sendResultSuccess(.viewTransactionTapped))):
+                var transactionDetailsState = TransactionDetails.State.initial
+                for element in state.path {
+                    if case .sendConfirmation(let sendConfirmationState) = element {
+                        if let txid = sendConfirmationState.txIdToExpand {
+                            if let index = state.transactions.index(id: txid) {
+                                transactionDetailsState.transaction = state.transactions[index]
+                                transactionDetailsState.isCloseButtonRequired = true
+                                state.path.append(.transactionDetails(transactionDetailsState))
+                                break
+                            }
+                        }
+                    }
+                }
+                return .none
+
+                // MARK: - Send Form
+                
+            case .path(.element(id: _, action: .sendForm(.dismissRequired))):
+                var popToRoot = true
+                for element in state.path {
+                    if element.is(\.transactionDetails) {
+                        popToRoot = false
+                        break
+                    }
+                }
+                if popToRoot {
+                    state.path.removeAll()
+                } else {
+                    let _ = state.path.popLast()
+                }
+                return .none
+
+            case .path(.element(id: _, action: .sendForm(.addressBookTapped))):
+                var addressBookState = AddressBook.State.initial
+                addressBookState.isInSelectMode = true
+                state.path.append(.addressBook(addressBookState))
+                return .none
+
+            case .path(.element(id: _, action: .sendForm(.confirmationRequired(let confirmationType)))):
+                var sendConfirmationState = SendConfirmation.State.initial
+                for element in state.path.reversed() {
+                    if case .sendForm(let sendState) = element {
+                        sendConfirmationState.amount = sendState.amount
+                        sendConfirmationState.address = sendState.address.data
+                        sendConfirmationState.isShielding = false
+                        sendConfirmationState.proposal = sendState.proposal
+                        sendConfirmationState.feeRequired = sendState.feeRequired
+                        sendConfirmationState.message = sendState.message
+                        sendConfirmationState.currencyAmount = sendState.currencyConversion?.convert(sendState.amount).redacted ?? .empty
+                        break
+                    }
+                }
+                if confirmationType == .send {
+                    state.path.append(.sendConfirmation(sendConfirmationState))
+                }
                 return .none
 
                 // MARK: - Settings
@@ -250,14 +380,59 @@ extension Root {
                 state.path.append(.sendUsFeedback(SendFeedback.State.initial))
                 return .none
 
+                // MARK: - Transaction Details
+
+            case .transactionDetailsOpen(let txId):
+                var transactionDetailsState = TransactionDetails.State.initial
+                if let index = state.transactions.index(id: txId) {
+                    transactionDetailsState.transaction = state.transactions[index]
+                }
+                state.path.append(.transactionDetails(transactionDetailsState))
+                return .none
+
+            case .path(.element(id: _, action: .transactionDetails(.saveAddressTapped))):
+                for element in state.path {
+                    if case .transactionDetails(let transactionDetailsState) = element {
+                        var addressBookState = AddressBook.State.initial
+                        addressBookState.address = transactionDetailsState.transaction.address
+                        addressBookState.isNameFocused = true
+                        addressBookState.isValidZcashAddress = true
+                        state.path.append(.addressBookContact(addressBookState))
+                        break
+                    }
+                }
+                return .none
+                
+            case .path(.element(id: _, action: .transactionDetails(.sendAgainTapped))):
+                for element in state.path {
+                    if case .transactionDetails(let transactionDetailsState) = element {
+                        var sendFormState = SendForm.State.initial
+                        sendFormState.address = transactionDetailsState.transaction.address.redacted
+                        sendFormState.isValidAddress = true
+                        sendFormState.zecAmountText = transactionDetailsState.transaction.amountWithoutFee.decimalString().redacted
+                        sendFormState.memoState.text = state.transactionMemos[transactionDetailsState.transaction.id]?.first ?? ""
+                        state.path.append(.sendForm(sendFormState))
+                        break
+                    }
+                }
+                return .none
+
+            case .path(.element(id: _, action: .transactionDetails(.closeDetailTapped))):
+                state.path.removeAll()
+                return .none
+
+                // MARK: - Transactions Manager
+
+            case .path(.element(id: _, action: .transactionsManager(.transactionTapped(let txId)))):
+                return .send(.transactionDetailsOpen(txId))
+
                 // MARK: - Zec Keyboard
 
             case .path(.element(id: _, action: .zecKeyboard(.nextTapped))):
-                for (_, element) in zip(state.path.ids, state.path) {
-                    switch element {
-                    case .zecKeyboard(let zecKeyboardState):
+                for element in state.path {
+                    if case .zecKeyboard(let zecKeyboardState) = element {
                         state.requestZecState.requestedZec = zecKeyboardState.amount
-                    default: break
+                        break
                     }
                 }
                 state.path.append(.requestZec(state.requestZecState))
@@ -272,3 +447,11 @@ extension Root {
     }
 }
 
+
+//for (_, element) in zip(state.path.ids, state.path) {
+//    switch element {
+//    case .zecKeyboard(let zecKeyboardState):
+//        state.requestZecState.requestedZec = zecKeyboardState.amount
+//    default: break
+//    }
+//}

@@ -177,32 +177,32 @@ public struct SignWithKeystoneView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 20)
-            .navigationLinkEmpty(
-                isActive: store.bindingForStack(.scan),
-                destination: {
-                    ScanView(
-                        store: store.scanStore()
-                    )
-                    .navigationLinkEmpty(
-                        isActive: store.bindingForStack(.sending),
-                        destination: {
-                            SendingView(store: store, tokenName: tokenName)
-                        }
-                    )
-                    .navigationLinkEmpty(
-                        isActive: $store.scanFailedDuringScanBinding,
-                        destination: {
-                            PreSendingFailureView(store: store, tokenName: tokenName)
-                        }
-                    )
-                }
-            )
-            .navigationLinkEmpty(
-                isActive: $store.scanFailedPreScanBinding,
-                destination: {
-                    PreSendingFailureView(store: store, tokenName: tokenName)
-                }
-            )
+//            .navigationLinkEmpty(
+//                isActive: store.bindingForStack(.scan),
+//                destination: {
+//                    ScanView(
+//                        store: store.scanStore()
+//                    )
+//                    .navigationLinkEmpty(
+//                        isActive: store.bindingForStack(.sending),
+//                        destination: {
+//                            SendingView(store: store, tokenName: tokenName)
+//                        }
+//                    )
+//                    .navigationLinkEmpty(
+//                        isActive: $store.scanFailedDuringScanBinding,
+//                        destination: {
+//                            PreSendingFailureView(store: store, tokenName: tokenName)
+//                        }
+//                    )
+//                }
+//            )
+//            .navigationLinkEmpty(
+//                isActive: $store.scanFailedPreScanBinding,
+//                destination: {
+//                    PreSendingFailureView(store: store, tokenName: tokenName)
+//                }
+//            )
         }
         .screenHorizontalPadding()
         .applyScreenBackground()

@@ -76,12 +76,12 @@ public struct BalancesView: View {
                 )
                 .padding(.top, walletStatus == .restoring ? 0 : 40)
                 .padding(.bottom, 25)
-                .navigationLinkEmpty(
-                    isActive: store.bindingFor(.partialProposalError),
-                    destination: {
-                        PartialProposalErrorView(store: store.partialProposalErrorStore())
-                    }
-                )
+//                .navigationLinkEmpty(
+//                    isActive: store.bindingFor(.partialProposalError),
+//                    destination: {
+//                        PartialProposalErrorView(store: store.partialProposalErrorStore())
+//                    }
+//                )
             }
         }
         .navigationBarTitleDisplayMode(.inline)

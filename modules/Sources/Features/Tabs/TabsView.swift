@@ -14,7 +14,7 @@ import Generated
 import Receive
 import BalanceBreakdown
 import Home
-import SendFlow
+import SendForm
 import Settings
 import UIComponents
 import SendConfirmation
@@ -74,7 +74,7 @@ public struct TabsView: View {
 //            } destination: { store in
 //                switch store.case {
 //                case let .sendFlow(store):
-//                    SendFlowView(store: store, tokenName: tokenName)
+//                    SendFormView(store: store, tokenName: tokenName)
 //                case let .receive(store):
 //                    ReceiveView(store: store, networkType: networkType)
 //                case let .scan(store):
@@ -686,7 +686,7 @@ public struct TabsView: View {
 //            .navigationLinkEmpty(
 //                isActive: store.bindingTabFor(.send),
 //                destination: {
-//                    SendFlowView(
+//                    SendFormView(
 //                        store: self.store.scope(
 //                            state: \.sendState,
 //                            action: \.send
