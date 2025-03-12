@@ -67,12 +67,6 @@ public struct AddressBookView: View {
             )
             .navigationBarTitleDisplayMode(.inline)
             .applyScreenBackground()
-            .alert(
-                store: store.scope(
-                    state: \.$alert,
-                    action: \.alert
-                )
-            )
         }
     }
 

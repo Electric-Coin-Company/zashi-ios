@@ -77,7 +77,7 @@ public struct SendFormView: View {
                                                             }
                                                             
                                                             fieldButton(icon: Asset.Assets.Icons.qr.image) {
-//                                                                store.send(.updateDestination(.scanQR))
+                                                                store.send(.scanTapped)
                                                             }
                                                         }
                                                     }
@@ -214,7 +214,8 @@ public struct SendFormView: View {
             }
             .padding(.vertical, 1)
             .applyScreenBackground()
-            .zashiBack { store.send(.dismissRequired) }
+            .zashiBack(hidden: store.isPopToRootBack) { store.send(.dismissRequired) }
+            .zashiBackV2(hidden: !store.isPopToRootBack) { store.send(.dismissRequired) }
             .alert(store: store.scope(
                 state: \.$alert,
                 action: \.alert

@@ -34,6 +34,8 @@ public struct Home {
         public var moreRequest = false
         public var syncProgressState: SyncProgress.State
         public var walletConfig: WalletConfig
+//        public var scanBinding = false
+//        public var scanState = Scan.State.initial
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var transactionListState: TransactionList.State
         public var uAddress: UnifiedAddress? = nil
@@ -98,6 +100,7 @@ public struct Home {
         case resolveReviewRequest
         case retrySync
         case reviewRequestFinished
+//        case scan(Scan.Action)
         case scanTapped
         case seeAllTransactionsTapped
         case sendTapped
@@ -131,6 +134,10 @@ public struct Home {
             TransactionList()
         }
 
+//        Scope(state: \.scanState, action: \.scan) {
+//            Scan()
+//        }
+
         Scope(state: \.syncProgressState, action: \.syncProgress) {
             SyncProgress()
         }
@@ -142,6 +149,7 @@ public struct Home {
         Reduce { state, action in
             switch action {
             case .onAppear:
+//                state.scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
                 state.appId = PartnerKeys.cbProjectId
                 state.walletBalancesState.migratingDatabase = state.migratingDatabase
                 state.migratingDatabase = false
@@ -164,9 +172,13 @@ public struct Home {
                     .cancel(id: CancelEventId)
                 )
                 
-            case .receiveTapped, .sendTapped, .scanTapped:
+            case .receiveTapped, .sendTapped:
                 return .none
                 
+            case .scanTapped:
+//                state.scanBinding = true
+                return .none
+
             case .moreTapped:
                 state.moreRequest = true
                 return .none
@@ -261,6 +273,10 @@ public struct Home {
                 state.alert = nil
                 return .none
 
+//            case .scan(.cancelTapped):
+//                state.scanBinding = false
+//                return .none
+                
             case .alert:
                 return .none
                 
@@ -272,6 +288,9 @@ public struct Home {
                 
             case .currencyConversionSetupTapped:
                 return .none
+
+//            case .scan:
+//                return .none
 
                 // Accounts
                 

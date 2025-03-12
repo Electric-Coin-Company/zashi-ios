@@ -49,6 +49,7 @@ public struct SendForm {
         public var isCurrencyConversionEnabled = false
         public var isNotAddressInAddressBook = false
         public var isPaymentRequestInProgress = false
+        public var isPopToRootBack = false
         public var isValidAddress = false
         public var isValidTransparentAddress = false
         public var isValidTexAddress = false
@@ -212,6 +213,7 @@ public struct SendForm {
         case requestsAddressFocusResolved
         case resetForm
         case reviewTapped
+        case scanTapped
 //        case scan(Scan.Action)
         case sendFailed(ZcashError, Confirmation)
         case syncAmounts(Bool)
@@ -493,6 +495,9 @@ public struct SendForm {
                 return .send(.syncAmounts(true))
                 
             case .dismissRequired:
+                return .none
+                
+            case .scanTapped:
                 return .none
             }
         }
