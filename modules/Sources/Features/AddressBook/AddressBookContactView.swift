@@ -65,6 +65,12 @@ public struct AddressBookContactView: View {
                 }
                 store.send(.onAppear)
             }
+            .alert(
+                store: store.scope(
+                    state: \.$alert,
+                    action: \.alert
+                )
+            )
         }
         .applyScreenBackground()
         .zashiBack()
