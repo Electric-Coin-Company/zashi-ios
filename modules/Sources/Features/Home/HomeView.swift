@@ -9,6 +9,7 @@ import SyncProgress
 import Utils
 import Models
 import WalletBalances
+import Scan
 
 public struct HomeView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -225,6 +226,15 @@ public struct HomeView: View {
             .onAppear {
                 store.send(.onAppear)
             }
+//            .popover(isPresented: $store.scanBinding) {
+//                ScanView(
+//                    store:
+//                        store.scope(
+//                            state: \.scanState,
+//                            action: \.scan
+//                        )
+//                )
+//            }
             .onChange(of: store.canRequestReview) { canRequestReview in
                 if canRequestReview {
                     if let currentScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {

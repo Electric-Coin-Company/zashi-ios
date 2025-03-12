@@ -85,6 +85,7 @@ public struct AddressBook {
         case deleteId(String)
         case deleteIdConfirmed
         case dismissAddContactRequired
+        case dismissDeleteContactRequired
         case editId(String)
         case fetchedABContacts(AddressBookContacts, Bool)
         case fetchABContactsRequested
@@ -188,9 +189,9 @@ public struct AddressBook {
                 state.deleteIdToConfirm = id
                 state.alert = AlertState.confirmDelete()
                 return .none
-                
-                // broken
+
             case .deleteIdConfirmed:
+                state.alert = nil
                 guard let deleteIdToConfirm = state.deleteIdToConfirm, let account = state.zashiWalletAccount else {
                     return .none
                 }
@@ -206,8 +207,8 @@ public struct AddressBook {
                             // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
                         }
                         return .concatenate(
-                            .send(.fetchedABContacts(abContacts, false))
-//                            .send(.updateDestination(nil))
+                            .send(.fetchedABContacts(abContacts, false)),
+                            .send(.dismissDeleteContactRequired)
                         )
                     } catch {
                         // TODO: [#1408] error handling https://github.com/Electric-Coin-Company/zashi-ios/issues/1408
@@ -305,6 +306,9 @@ public struct AddressBook {
                 return .none
                 
             case .dismissAddContactRequired:
+                return .none
+
+            case .dismissDeleteContactRequired:
                 return .none
             }
         }

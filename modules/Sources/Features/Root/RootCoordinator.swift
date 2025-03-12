@@ -107,10 +107,26 @@ extension Root {
             case .path(.element(id: _, action: .addressBook(.addManualButtonTapped))):
                 state.path.append(.addressBookContact(AddressBook.State.initial))
                 return .none
+                
+            case .path(.element(id: _, action: .addressBook(.scanButtonTapped))):
+                var scanState = Scan.State.initial
+                scanState.checkers = [.zcashAddressScanChecker]
+                state.path.append(.scan(scanState))
+                return .none
 
                 // MARK: - Address Book Contact
                 
             case .path(.element(id: _, action: .addressBookContact(.dismissAddContactRequired))):
+                let _ = state.path.popLast()
+                for element in state.path {
+                    if element.is(\.scan) {
+                        let _ = state.path.popLast()
+                        return .none
+                    }
+                }
+                return .none
+
+            case .path(.element(id: _, action: .addressBookContact(.dismissDeleteContactRequired))):
                 let _ = state.path.popLast()
                 return .none
 
@@ -149,17 +165,23 @@ extension Root {
                 .cancellable(id: CancelFlexaId, cancelInFlight: true)
 
                 // MARK: - Home
-                
-            case .home(.receiveTapped):
-                state.path.append(.receive(Receive.State.initial))
-                return .none
-                
+
             case .home(.settingsTapped):
                 state.path.append(.settings(Settings.State.initial))
                 return .none
 
+            case .home(.receiveTapped):
+                state.path.append(.receive(Receive.State.initial))
+                return .none
+
             case .home(.sendTapped):
                 state.path.append(.sendForm(SendForm.State.initial))
+                return .none
+
+            case .home(.scanTapped):
+                var scanState = Scan.State.initial
+                scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
+                state.path.append(.scan(scanState))
                 return .none
 
             case .home(.flexaTapped):
@@ -239,6 +261,61 @@ extension Root {
                         break
                     }
                 }
+                return .none
+
+            case .path(.element(id: _, action: .scan(.found(let address)))):
+                // Handling of scan used in address book to add a contact
+                // This handling must preceed the next one with Send Form check
+                for (id, element) in zip(state.path.ids, state.path) {
+                    if element.is(\.addressBook) {
+                        var addressBookState = AddressBook.State.initial
+                        addressBookState.address = address.data
+                        addressBookState.isValidZcashAddress = true
+                        addressBookState.isNameFocused = true
+                        state.path.append(.addressBookContact(addressBookState))
+                        audioServices.systemSoundVibrate()
+                        return .none
+                    }
+                }
+                // Handling of scan used in the Send Form
+                for (id, element) in zip(state.path.ids, state.path) {
+                    if element.is(\.sendForm) {
+                        state.path[id: id, case: \.sendForm]?.address = address
+                        state.path[id: id, case: \.sendForm]?.isValidAddress = true
+                        state.path[id: id, case: \.sendForm]?.isValidTransparentAddress = derivationTool.isTransparentAddress(
+                            address.data,
+                            zcashSDKEnvironment.network.networkType
+                        )
+                        state.path[id: id, case: \.sendForm]?.isValidTexAddress = derivationTool.isTexAddress(
+                            address.data,
+                            zcashSDKEnvironment.network.networkType
+                        )
+                        audioServices.systemSoundVibrate()
+                        let _ = state.path.popLast()
+                        return .none
+                    }
+                }
+                // Scan from Home, Send Form is the following flow
+                if state.path.ids.count == 1 {
+                    var sendFormState = SendForm.State.initial
+                    sendFormState.address = address
+                    sendFormState.isValidAddress = true
+                    sendFormState.isValidTransparentAddress = derivationTool.isTransparentAddress(
+                        address.data,
+                        zcashSDKEnvironment.network.networkType
+                    )
+                    sendFormState.isValidTexAddress = derivationTool.isTexAddress(
+                        address.data,
+                        zcashSDKEnvironment.network.networkType
+                    )
+
+                    state.path.append(.sendForm(sendFormState))
+                    audioServices.systemSoundVibrate()
+                }
+                return .none
+                
+            case .path(.element(id: _, action: .scan(.cancelTapped))):
+                let _ = state.path.popLast()
                 return .none
 
                 // MARK: - Send Confirmation
@@ -331,6 +408,12 @@ extension Root {
                 var addressBookState = AddressBook.State.initial
                 addressBookState.isInSelectMode = true
                 state.path.append(.addressBook(addressBookState))
+                return .none
+                
+            case .path(.element(id: _, action: .sendForm(.scanTapped))):
+                var scanState = Scan.State.initial
+                scanState.checkers = [.zcashAddressScanChecker, .requestZecScanChecker]
+                state.path.append(.scan(scanState))
                 return .none
 
             case .path(.element(id: _, action: .sendForm(.confirmationRequired(let confirmationType)))):
