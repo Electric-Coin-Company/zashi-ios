@@ -7,6 +7,7 @@
 
 import ComposableArchitecture
 import Generated
+//import ZcashLightClientKit
 
 import About
 import AddKeystoneHWWallet
@@ -167,7 +168,8 @@ extension Root {
                 // MARK: - Home
 
             case .home(.settingsTapped):
-                state.path.append(.settings(Settings.State.initial))
+//                state.path.append(.settings(Settings.State.initial))
+                state.settingsBinding = true
                 return .none
 
             case .home(.receiveTapped):
@@ -258,6 +260,7 @@ extension Root {
                         var addKeystoneHWWalletState = AddKeystoneHWWallet.State.initial
                         addKeystoneHWWalletState.zcashAccounts = account
                         state.path.append(.accountHWWalletSelection(addKeystoneHWWalletState))
+                        audioServices.systemSoundVibrate()
                         break
                     }
                 }
@@ -266,7 +269,7 @@ extension Root {
             case .path(.element(id: _, action: .scan(.found(let address)))):
                 // Handling of scan used in address book to add a contact
                 // This handling must preceed the next one with Send Form check
-                for (id, element) in zip(state.path.ids, state.path) {
+                for element in state.path {
                     if element.is(\.addressBook) {
                         var addressBookState = AddressBook.State.initial
                         addressBookState.address = address.data
@@ -295,25 +298,107 @@ extension Root {
                         return .none
                     }
                 }
-                // Scan from Home, Send Form is the following flow
+                // Scan from Home
                 if state.path.ids.count == 1 {
-                    var sendFormState = SendForm.State.initial
-                    sendFormState.address = address
-                    sendFormState.isValidAddress = true
-                    sendFormState.isValidTransparentAddress = derivationTool.isTransparentAddress(
-                        address.data,
-                        zcashSDKEnvironment.network.networkType
-                    )
-                    sendFormState.isValidTexAddress = derivationTool.isTexAddress(
-                        address.data,
-                        zcashSDKEnvironment.network.networkType
-                    )
-
-                    state.path.append(.sendForm(sendFormState))
+//                    var sendFormState = SendForm.State.initial
+//                    sendFormState.address = address
+//                    sendFormState.isValidAddress = true
+//                    sendFormState.isValidTransparentAddress = derivationTool.isTransparentAddress(
+//                        address.data,
+//                        zcashSDKEnvironment.network.networkType
+//                    )
+//                    sendFormState.isValidTexAddress = derivationTool.isTexAddress(
+//                        address.data,
+//                        zcashSDKEnvironment.network.networkType
+//                    )
+//
+//                    state.path.append(.sendForm(sendFormState))
                     audioServices.systemSoundVibrate()
+                    state.path.append(.sendForm(SendForm.State.initial))
+                    if let id = state.path.ids.last {
+                        return .send(.path(.element(id: id, action: .sendForm(.addressUpdated(address)))))
+                    }
                 }
                 return .none
                 
+//            case .path(.element(id: _, action: .scan(.foundRP(let requestPayment)))):
+//                for (id, element) in zip(state.path.ids, state.path) {
+//                    if element.is(\.sendForm) {
+//                        if case .legacy(let address) = requestPayment {
+//                            var sendFormState = SendForm.State.initial
+//                            sendFormState.address = address.value.redacted
+//                            sendFormState.isValidAddress = true
+//                            sendFormState.isValidTransparentAddress = derivationTool.isTransparentAddress(
+//                                address.value,
+//                                zcashSDKEnvironment.network.networkType
+//                            )
+//                            sendFormState.isValidTexAddress = derivationTool.isTexAddress(
+//                                address.value,
+//                                zcashSDKEnvironment.network.networkType
+//                            )
+//                            
+//                            state.path.append(.sendForm(sendFormState))
+//                            audioServices.systemSoundVibrate()
+//                        } else if case .request(let paymentRequest) = requestPayment {
+//                            if let payment = paymentRequest.payments.first {
+//                                //                        if let memoBytes = payment.memo, let memo = try? Memo(bytes: [UInt8](memoBytes.memoData)) {
+//                                //                            state.memoState.text = memo.toString() ?? ""
+//                                //                        }
+//                                //                        let numberLocale = numberFormatter.convertUSToLocale(payment.amount.toString()) ?? ""
+//                                //                        state.address = payment.recipientAddress.value.redacted
+//                                //                        state.zecAmountText = numberLocale.redacted
+//                                //                        audioServices.systemSoundVibrate()
+//                            }
+//                        }
+//                    }
+//                }
+//                // Scan from Home
+//                if state.path.ids.count == 1 {
+//                    if case .legacy(let address) = requestPayment {
+//                        var sendFormState = SendForm.State.initial
+//                        sendFormState.address = address.value.redacted
+//                        sendFormState.isValidAddress = true
+//                        sendFormState.isValidTransparentAddress = derivationTool.isTransparentAddress(
+//                            address.value,
+//                            zcashSDKEnvironment.network.networkType
+//                        )
+//                        sendFormState.isValidTexAddress = derivationTool.isTexAddress(
+//                            address.value,
+//                            zcashSDKEnvironment.network.networkType
+//                        )
+//                        
+//                        state.path.append(.sendForm(sendFormState))
+//                        audioServices.systemSoundVibrate()
+//                    } else if case .request(let paymentRequest) = requestPayment {
+//                        if let payment = paymentRequest.payments.first {
+//                            let address = payment.recipientAddress.value.redacted
+//                            var sendFormState = SendForm.State.initial
+//                            sendFormState.address = address
+//                            sendFormState.isValidAddress = true
+//                            sendFormState.isValidTransparentAddress = derivationTool.isTransparentAddress(
+//                                address.data,
+//                                zcashSDKEnvironment.network.networkType
+//                            )
+//                            sendFormState.isValidTexAddress = derivationTool.isTexAddress(
+//                                address.data,
+//                                zcashSDKEnvironment.network.networkType
+//                            )
+//
+//                            if let memoBytes = payment.memo, let memo = try? Memo(bytes: [UInt8](memoBytes.memoData)) {
+//                                sendFormState.memoState.text = memo.toString() ?? ""
+//                            }
+//                            let numberLocale = numberFormatter.convertUSToLocale(payment.amount.toString()) ?? ""
+//                            sendFormState.zecAmountText = numberLocale.redacted
+//                            audioServices.systemSoundVibrate()
+//                            state.path.append(.sendForm(sendFormState))
+//                            if let id = state.path.ids.last {
+//                                return .send(.path(.element(id: id, action: .sendForm(.getProposal(.requestPayment)))))
+//                            }
+//                        }
+//                    }
+//                }
+//                return .none
+
             case .path(.element(id: _, action: .scan(.cancelTapped))):
                 let _ = state.path.popLast()
                 return .none
@@ -452,7 +537,7 @@ extension Root {
                 return .none
 
             case .path(.element(id: _, action: .settings(.whatsNewTapped))):
-                state.path.append(.whatsNew(WhatsNew.State.initial))
+//                state.path.append(.whatsNew(WhatsNew.State.initial))
                 return .none
 
             case .path(.element(id: _, action: .settings(.aboutTapped))):
