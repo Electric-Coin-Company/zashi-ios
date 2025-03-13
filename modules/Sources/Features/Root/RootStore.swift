@@ -65,24 +65,25 @@ public struct Root {
     
     @Reducer
     public enum Path {
-        case about(About)
-        case accountHWWalletSelection(AddKeystoneHWWallet)
-        case addKeystoneHWWallet(AddKeystoneHWWallet)
-        case addressBook(AddressBook)
-        case addressBookContact(AddressBook)
+            case about(About)
+            case accountHWWalletSelection(AddKeystoneHWWallet)
+            case addKeystoneHWWallet(AddKeystoneHWWallet)
+            case addressBook(AddressBook)
+            case addressBookContact(AddressBook)
         case addressDetails(AddressDetails)
-        case advancedSettings(AdvancedSettings)
-        case chooseServerSetup(ServerSetup)
-        case currencyConversionSetup(CurrencyConversionSetup)
-        case exportPrivateData(PrivateDataConsent)
-        case exportTransactionHistory(ExportTransactionHistory)
-        case integrations(Integrations)
-        //case preSendingFailure(SendConfirmation)
+            case advancedSettings(AdvancedSettings)
+            case chooseServerSetup(ServerSetup)
+            case currencyConversionSetup(CurrencyConversionSetup)
+            case exportPrivateData(PrivateDataConsent)
+            case exportTransactionHistory(ExportTransactionHistory)
+            case integrations(Integrations)
+//        case preSendingFailure(SendConfirmation)
         case receive(Receive)
         case recoveryPhrase(RecoveryPhraseDisplay)
         case requestZec(RequestZec)
+//        case requestZecConfirmation(SendConfirmation)
         case requestZecSummary(RequestZec)
-        case resetZashi(DeleteWallet)
+            case resetZashi(DeleteWallet)
         case scan(Scan)
         case sendConfirmation(SendConfirmation)
         case sendForm(SendForm)
@@ -91,11 +92,11 @@ public struct Root {
         case sendResultPartial(PartialProposalError)
         case sendResultResubmission(SendConfirmation)
         case sendResultSuccess(SendConfirmation)
-        case sendUsFeedback(SendFeedback)
+            case sendUsFeedback(SendFeedback)
         case settings(Settings)
         case transactionDetails(TransactionDetails)
         case transactionsManager(TransactionsManager)
-        case whatsNew(WhatsNew)
+            case whatsNew(WhatsNew)
         case zecKeyboard(ZecKeyboard)
     }
 
@@ -111,6 +112,10 @@ public struct Root {
     public struct State {
         public var CancelEventId = UUID()
         public var CancelStateId = UUID()
+        
+        
+        public var settingsState = Settings.State.initial
+        public var settingsBinding = false
 
 //        public var addressBookBinding: Bool = false
 //        public var addressBookContactBinding: Bool = false
@@ -195,6 +200,8 @@ public struct Root {
             case quickRescan
         }
 
+        case settings(Settings.Action)
+        
 //        case addressBook(AddressBook.Action)
 //        case addressBookBinding(Bool)
 //        case addressBookContactBinding(Bool)
@@ -321,6 +328,10 @@ public struct Root {
             OSStatusError()
         }
 
+        Scope(state: \.settingsState, action: \.settings) {
+            Settings()
+        }
+
         initializationReduce()
 
         destinationReduce()
@@ -435,7 +446,7 @@ public struct Root {
             }
         }
         .forEach(\.path, action: \.path)
-        .ifLet(\.$confirmationDialog, action: \.confirmationDialog)
+        //.ifLet(\.$confirmationDialog, action: \.confirmationDialog)
     }
 }
 

@@ -13,6 +13,7 @@ import SyncProgress
 import WalletBalances
 import PartnerKeys
 import UserPreferencesStorage
+import Utils
 
 @Reducer
 public struct Home {
