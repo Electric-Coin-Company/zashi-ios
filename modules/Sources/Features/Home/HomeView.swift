@@ -54,7 +54,7 @@ public struct HomeView: View {
                     .padding(.top, 7)
                     .padding(.bottom, 20)
                 }
-                
+
                 HStack(spacing: 8) {
                     button(
                         L10n.Tabs.receive,
@@ -86,25 +86,49 @@ public struct HomeView: View {
                 }
                 .zFont(.medium, size: 12, style: Design.Text.primary)
                 .padding(.top, 24)
-                .padding(.bottom, 32)
+                //.padding(.bottom, 32)
                 .screenHorizontalPadding()
 
-                VStack(spacing: 0) {
+                SmartBanner {
+//                    EmptyView()
+                    Text("any content here")
+                }
+//                .padding(.bottom, 40)
+
+//                SmartBanner()
+//                    .padding(.bottom, 40)
+
+//                SmartBanner {
+//                    Text("content is much bigger content is much bigger content is much bigger content is much bigger content is much bigger content is much bigger content is much bigger content is much bigger content is much bigger content is much bigger content is much bigger ")
+//                        .fixedSize(horizontal: false, vertical: true)
+//                }
+//                SmartBanner {
+//                    Text("ch bigger content is much bigger content is much bigger content is much bigger content is much bigger content is much bigger ")
+//                }
+
+                //VStack(spacing: 0) {
+                ScrollView {
                     if store.transactionListState.transactions.isEmpty && !store.transactionListState.isInvalidated {
                         noTransactionsView()
+                            .padding(.top, 12)
                     } else {
-                        transactionsView()
-
-                        TransactionListView(
-                            store:
-                                store.scope(
-                                    state: \.transactionListState,
-                                    action: \.transactionList
-                                ),
-                            tokenName: tokenName
-                        )
+                        VStack(spacing: 0) {
+                            transactionsView()
+                            
+                            TransactionListView(
+                                store:
+                                    store.scope(
+                                        state: \.transactionListState,
+                                        action: \.transactionList
+                                    ),
+                                tokenName: tokenName,
+                                scrollable: false
+                            )
+                        }
+                        .padding(.top, 12)
                     }
                 }
+                //.padding(.top, 12)
             }
             .sheet(isPresented: $store.isInAppBrowserCoinbaseOn) {
                 if let urlStr = store.inAppBrowserURLCoinbase, let url = URL(string: urlStr) {

@@ -43,7 +43,6 @@ public struct Settings {
     
     @ObservableState
     public struct State: Equatable {
-        @CoW public var test = ""
         public var appVersion = ""
         public var appBuild = ""
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
