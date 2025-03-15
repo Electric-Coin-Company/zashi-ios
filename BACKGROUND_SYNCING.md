@@ -1,7 +1,7 @@
 # Background Syncing
 
 ## Sources
-We encourange you to watch WWDC videos:
+We encourage you to watch WWDC videos:
  - [Advances in App Background Execution]: https://developer.apple.com/videos/play/wwdc2019/707
  - [Background execution demystified]: https://developer.apple.com/videos/play/wwdc2020/10063
  
@@ -64,7 +64,5 @@ You can see specific details of the Zashi implementation in:
 - RootInitialization.swift, step 11.
 
 ## Gotchas
-- The `requiresNetworkConnectivity` flag doesn't specify or deal with the type of connectivity. It simply allows scheduling when the iPhone is connected to the internet. We deal with it when the task is triggered. The custom check wheather the wifi is or is not connected preceeds the start of the synchronizer. 
+- The `requiresNetworkConnectivity` flag doesn't specify or deal with the type of connectivity. It simply allows scheduling when the iPhone is connected to the internet. We deal with it when the task is triggered. The custom check whether the wifi is or is not connected preceds the start of the synchronizer.
 - When the app is killed by a user in the app switcher, the scheduled BGTask is deleted. So the BGTask is triggered at the scheduled time only when the app is suspended or killed by the system. Explicit termination of the app by a user leads to termination of any background processing.
-
-

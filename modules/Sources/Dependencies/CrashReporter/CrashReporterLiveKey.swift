@@ -15,7 +15,7 @@ extension CrashReporterClient: DependencyKey {
         configure: { canConfigure in
             let fileName = "GoogleService-Info.plist"
 
-            // checks whether the crash reporter's config file is a dummy_file purposedly placed by the build job or the real one.
+            // checks whether the crash reporter's config file is a dummy_file purposely placed by the build job or the real one.
             // this does not check the integrity of the Plist file for Firebase.
             // that's a problem for the library itself.
             guard
