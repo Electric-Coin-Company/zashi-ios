@@ -87,6 +87,7 @@ public struct RequestZecView: View {
                     observeKeyboardNotifications()
                 }
             }
+            .onDisappear { store.send(.onDisappearMemoStep(store.memoState.text)) }
             .overlay(
                 VStack(spacing: 0) {
                     Spacer()

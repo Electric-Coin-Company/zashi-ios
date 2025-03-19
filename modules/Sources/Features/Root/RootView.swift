@@ -12,29 +12,30 @@ import UIComponents
 import DeeplinkWarning
 import OSStatusError
 
-import About
-import AddKeystoneHWWallet
-import AddressBook
-import AddressDetails
-import CurrencyConversionSetup
-import DeleteWallet
-import ExportTransactionHistory
+//import About
+//import AddKeystoneHWWallet
+//import AddressBook
+//import AddressDetails
+//import CurrencyConversionSetup
+//import DeleteWallet
+//import ExportTransactionHistory
 import Home
-import PartialProposalError
-import PrivateDataConsent
+//import PartialProposalError
+//import PrivateDataConsent
 import Receive
 import RecoveryPhraseDisplay
-import RequestZec
-import Scan
-import SendConfirmation
-import SendFeedback
-import SendForm
+import CoordFlows
+//import RequestZec
+//import Scan
+//import SendConfirmation
+//import SendFeedback
+//import SendForm
 import ServerSetup
 import Settings
-import TransactionDetails
-import TransactionsManager
-import WhatsNew
-import ZecKeyboard
+//import TransactionDetails
+//import TransactionsManager
+//import WhatsNew
+//import ZecKeyboard
 
 public struct RootView: View {
     @Environment(\.scenePhase) var scenePhase
@@ -139,12 +140,40 @@ private extension RootView {
                             ),
                             tokenName: tokenName
                         )
-                        .navigationLinkEmpty(isActive: $store.settingsBinding) {
+                        .navigationLinkEmpty(isActive: store.bindingFor(.settings)) {
                             SettingsView(
                                 store:
                                     store.scope(
                                         state: \.settingsState,
                                         action: \.settings)
+                            )
+                        }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.receive)) {
+                            ReceiveView(
+                                store:
+                                    store.scope(
+                                        state: \.receiveState,
+                                        action: \.receive),
+                                networkType: networkType,
+                                tokenName: tokenName
+                            )
+                        }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.requestZecCoordFlow)) {
+                            RequestZecCoordFlowView(
+                                store:
+                                    store.scope(
+                                        state: \.requestZecCoordFlowState,
+                                        action: \.requestZecCoordFlow),
+                                tokenName: tokenName
+                            )
+                        }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.sendCoordFlow)) {
+                            SendCoordFlowView(
+                                store:
+                                    store.scope(
+                                        state: \.sendCoordFlowState,
+                                        action: \.sendCoordFlow),
+                                tokenName: tokenName
                             )
                         }
                     }
@@ -383,6 +412,17 @@ private extension RootView {
             },
             tokenName: "ZEC",
             networkType: .testnet
+        )
+    }
+}
+
+// MARK: - Binding
+
+extension StoreOf<Root> {
+    func bindingFor(_ path: Root.State.Path) -> Binding<Bool> {
+        Binding<Bool>(
+            get: { self.path == path },
+            set: { self.path = $0 ? path : nil }
         )
     }
 }

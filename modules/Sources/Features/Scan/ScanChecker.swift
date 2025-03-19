@@ -27,7 +27,7 @@ public struct ZcashAddressScanChecker: ScanChecker, Equatable {
         @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
         
         if uriParser.isValidURI(qrCode, zcashSDKEnvironment.network.networkType) {
-            return .found(qrCode.redacted)
+            return .foundAddress(qrCode.redacted)
         } else {
             return nil
         }
@@ -42,7 +42,7 @@ public struct RequestZecScanChecker: ScanChecker, Equatable {
         @Dependency(\.zcashSDKEnvironment) var zcashSDKEnvironment
         
         if let parserResult = uriParser.checkRP(qrCode) {
-            return .foundRP(parserResult)
+            return .foundRequestZec(parserResult)
         } else {
             return nil
         }
@@ -62,7 +62,7 @@ public struct KeystoneScanChecker: ScanChecker, Equatable {
 
             if let resultUR = result.ur, result.progress == 100 {
                 if let zcashAccounts = try? KeystoneSDK().parseZcashAccounts(ur: resultUR) {
-                    return .foundZA(zcashAccounts)
+                    return .foundAccounts(zcashAccounts)
                 } else {
                     return nil
                 }

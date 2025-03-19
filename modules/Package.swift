@@ -21,6 +21,7 @@ let package = Package(
         .library(name: "BalanceBreakdown", targets: ["BalanceBreakdown"]),
         .library(name: "BalanceFormatter", targets: ["BalanceFormatter"]),
         .library(name: "CaptureDevice", targets: ["CaptureDevice"]),
+        .library(name: "CoordFlows", targets: ["CoordFlows"]),
         .library(name: "CurrencyConversionSetup", targets: ["CurrencyConversionSetup"]),
         .library(name: "DatabaseFiles", targets: ["DatabaseFiles"]),
         .library(name: "Date", targets: ["Date"]),
@@ -230,6 +231,27 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "Sources/Dependencies/CaptureDevice"
+        ),
+        .target(
+            name: "CoordFlows",
+            dependencies: [
+                "AddressBook",
+                "AudioServices",
+                "Generated",
+                "Models",
+                "RequestZec",
+                "Scan",
+                "SendConfirmation",
+                "SendForm",
+                "TransactionDetails",
+                "UIComponents",
+                "Utils",
+                "ZcashSDKEnvironment",
+                "ZecKeyboard",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
+            ],
+            path: "Sources/Features/CoordFlows"
         ),
         .target(
             name: "CurrencyConversionSetup",
@@ -543,11 +565,14 @@ let package = Package(
         .target(
             name: "Receive",
             dependencies: [
+                "AddressDetails",
                 "Generated",
                 "Models",
                 "Pasteboard",
+                "RequestZec",
                 "UIComponents",
                 "Utils",
+                "ZecKeyboard",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "ZcashLightClientKit", package: "zcash-swift-wallet-sdk")
             ],
@@ -618,6 +643,7 @@ let package = Package(
                 "AddressDetails",
                 "AudioServices",
                 "AutolockHandler",
+                "CoordFlows",
                 "CurrencyConversionSetup",
                 "DeleteWallet",
                 "DatabaseFiles",
@@ -809,6 +835,7 @@ let package = Package(
                 "AddKeystoneHWWallet",
                 "AddressBook",
                 "AppVersion",
+                "AudioServices",
                 "CurrencyConversionSetup",
                 "DeleteWallet",
                 "ExportTransactionHistory",

@@ -194,8 +194,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-composable-architecture",
       "state" : {
-        "revision" : "76c4411e02cc7768a3f27ca058bd2143c342e5b2",
-        "version" : "1.18.0"
+        "revision" : "fd409c79ea8ba378bd3997e2719dcf74f4ed909b",
+        "version" : "1.19.0"
       }
     },
     {
@@ -446,8 +446,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-light-client-ffi",
       "state" : {
-        "revision" : "a2e08b26000cba7c65c69f078b32db327e13bec7",
-        "version" : "0.13.0"
+        "revision" : "78cc7388a2ba5530888a99e584823a7399631d48",
+        "version" : "0.14.2"
       }
     },
     {
@@ -464,8 +464,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Electric-Coin-Company/zcash-swift-wallet-sdk",
       "state" : {
-        "revision" : "b84047c2619fd0bdfd296411496131a262268768",
-        "version" : "2.2.9"
+        "revision" : "e5e826d13349746eabf7b481ccf7c6adcbc32bce",
+        "version" : "2.2.11"
       }
     }
   ],

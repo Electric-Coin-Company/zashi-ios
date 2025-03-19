@@ -7,12 +7,13 @@ import UIComponents
 import About
 import AddKeystoneHWWallet
 import AddressBook
-import ServerSetup
 import CurrencyConversionSetup
-import PrivateDataConsent
-import ExportTransactionHistory
 import DeleteWallet
+import ExportTransactionHistory
+import PrivateDataConsent
+import RecoveryPhraseDisplay
 import Scan
+import ServerSetup
 import SendFeedback
 import WhatsNew
 
@@ -27,7 +28,7 @@ public struct SettingsView: View {
     
     public var body: some View {
         WithPerceptionTracking {
-            //NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
+            NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
                 VStack {
                     List {
                         Group {
@@ -125,43 +126,46 @@ public struct SettingsView: View {
                 }
                 .listStyle(.plain)
                 //.applyScreenBackground()
-//            } destination: { store in
-//                switch store.case {
-//                case let .about(store):
-//                    AboutView(store: store)
-//                case let .accountHWWalletSelection(store):
-//                    AccountsSelectionView(store: store)
-//                case let .addKeystoneHWWallet(store):
-//                    AddKeystoneHWWalletView(store: store)
-//                case let .addressBook(store):
-//                    AddressBookView(store: store)
-//                case let .addressBookContact(store):
-//                    AddressBookContactView(store: store)
-//                case let .advancedSettings(store):
-//                    AdvancedSettingsView(store: store)
-//                case let .chooseServerSetup(store):
-//                    ServerSetupView(store: store)
-//                case let .currencyConversionSetup(store):
-//                    CurrencyConversionSetupView(store: store)
-//                case let .exportPrivateData(store):
-//                    PrivateDataConsentView(store: store)
-//                case let .exportTransactionHistory(store):
-//                    ExportTransactionHistoryView(store: store)
-//                case let .integrations(store):
-//                    IntegrationsView(store: store)
-//                case let .resetZashi(store):
-//                    DeleteWalletView(store: store)
-//                case let .scan(store):
-//                    ScanView(store: store)
-//                case let .sendUsFeedback(store):
-//                    SendFeedbackView(store: store)
-//                case let .whatsNew(store):
-//                    WhatsNewView(store: store)
-//                }
-//            }
+            } destination: { store in
+                switch store.case {
+                case let .about(store):
+                    AboutView(store: store)
+                case let .accountHWWalletSelection(store):
+                    AccountsSelectionView(store: store)
+                case let .addKeystoneHWWallet(store):
+                    AddKeystoneHWWalletView(store: store)
+                case let .addressBook(store):
+                    AddressBookView(store: store)
+                case let .addressBookContact(store):
+                    AddressBookContactView(store: store)
+                case let .advancedSettings(store):
+                    AdvancedSettingsView(store: store)
+                case let .chooseServerSetup(store):
+                    ServerSetupView(store: store)
+                case let .currencyConversionSetup(store):
+                    CurrencyConversionSetupView(store: store)
+                case let .exportPrivateData(store):
+                    PrivateDataConsentView(store: store)
+                case let .exportTransactionHistory(store):
+                    ExportTransactionHistoryView(store: store)
+                case let .integrations(store):
+                    IntegrationsView(store: store)
+                case let .recoveryPhrase(store):
+                    RecoveryPhraseDisplayView(store: store)
+                case let .resetZashi(store):
+                    DeleteWalletView(store: store)
+                case let .scan(store):
+                    ScanView(store: store)
+                case let .sendUsFeedback(store):
+                    SendFeedbackView(store: store)
+                case let .whatsNew(store):
+                    WhatsNewView(store: store)
+                }
+            }
             .applyScreenBackground()
             .navigationBarTitleDisplayMode(.inline)
             .zashiBack()
+            .navigationBarHidden(!store.path.isEmpty)
             .screenTitle(L10n.Settings.title)
             .walletStatusPanel()
         }
