@@ -63,7 +63,7 @@ public struct AboutView: View {
             .screenTitle(L10n.Settings.about)
             .walletStatusPanel(background: .transparent)
         }
-        .navigationBarTitleDisplayMode(.inline)
+        //.navigationBarTitleDisplayMode(.inline)
         .screenHorizontalPadding()
         .applyScreenBackground()
     }

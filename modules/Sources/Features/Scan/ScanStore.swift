@@ -80,9 +80,9 @@ public struct Scan {
         case libraryImage(UIImage?)
         case onAppear
         case onDisappear
-        case found(RedactableString)
-        case foundRP(ParserResult)
-        case foundZA(ZcashAccounts)
+        case foundAddress(RedactableString)
+        case foundRequestZec(ParserResult)
+        case foundAccounts(ZcashAccounts)
         case foundPCZT(Data)
         case animatedQRProgress(Int, Int?, Int?)
         case scanFailed(ScanImageResult)
@@ -117,15 +117,15 @@ public struct Scan {
             case .onDisappear:
                 return .cancel(id: state.cancelId)
                 
-            case .found:
+            case .foundAddress:
                 state.isAnythingFound = true
                 return .none
 
-            case .foundRP:
+            case .foundRequestZec:
                 state.isAnythingFound = true
                 return .none
                 
-            case .foundZA:
+            case .foundAccounts:
                 state.isAnythingFound = true
                 state.progress = nil
                 return .none

@@ -33,29 +33,30 @@ import UserMetadataProvider
 import AudioServices
 
 // Screens
-import About
-import AddKeystoneHWWallet
-import AddressBook
-import AddressDetails
-import CurrencyConversionSetup
-import DeleteWallet
-import ExportTransactionHistory
+//import About
+//import AddKeystoneHWWallet
+//import AddressBook
+//import AddressDetails
+//import CurrencyConversionSetup
+//import DeleteWallet
+//import ExportTransactionHistory
 import Home
-import PartialProposalError
-import PrivateDataConsent
+//import PartialProposalError
+//import PrivateDataConsent
 import Receive
 import RecoveryPhraseDisplay
-import RequestZec
-import Scan
-import SendConfirmation
-import SendFeedback
-import SendForm
+import CoordFlows
+//import RequestZec
+//import Scan
+//import SendConfirmation
+//import SendFeedback
+//import SendForm
 import ServerSetup
 import Settings
-import TransactionDetails
-import TransactionsManager
-import WhatsNew
-import ZecKeyboard
+//import TransactionDetails
+//import TransactionsManager
+//import WhatsNew
+//import ZecKeyboard
 
 @Reducer
 public struct Root {
@@ -64,42 +65,42 @@ public struct Root {
         static let maxResetZashiSDKAttempts = 3
     }
     
-    @Reducer
-    public enum Path {
-            case about(About)
-            case accountHWWalletSelection(AddKeystoneHWWallet)
-            case addKeystoneHWWallet(AddKeystoneHWWallet)
-            case addressBook(AddressBook)
-            case addressBookContact(AddressBook)
-        case addressDetails(AddressDetails)
-            case advancedSettings(AdvancedSettings)
-            case chooseServerSetup(ServerSetup)
-            case currencyConversionSetup(CurrencyConversionSetup)
-            case exportPrivateData(PrivateDataConsent)
-            case exportTransactionHistory(ExportTransactionHistory)
-            case integrations(Integrations)
-//        case preSendingFailure(SendConfirmation)
-        case receive(Receive)
-        case recoveryPhrase(RecoveryPhraseDisplay)
-        case requestZec(RequestZec)
-//        case requestZecConfirmation(SendConfirmation)
-        case requestZecSummary(RequestZec)
-            case resetZashi(DeleteWallet)
-        case scan(Scan)
-        case sendConfirmation(SendConfirmation)
-        case sendForm(SendForm)
-        case sending(SendConfirmation)
-        case sendResultFailure(SendConfirmation)
-        case sendResultPartial(PartialProposalError)
-        case sendResultResubmission(SendConfirmation)
-        case sendResultSuccess(SendConfirmation)
-            case sendUsFeedback(SendFeedback)
-        case settings(Settings)
-        case transactionDetails(TransactionDetails)
-        case transactionsManager(TransactionsManager)
-            case whatsNew(WhatsNew)
-        case zecKeyboard(ZecKeyboard)
-    }
+//    @Reducer
+//    public enum Path {
+//            case about(About)
+//            case accountHWWalletSelection(AddKeystoneHWWallet)
+//            case addKeystoneHWWallet(AddKeystoneHWWallet)
+//            case addressBook(AddressBook)
+//            case addressBookContact(AddressBook)
+//        case addressDetails(AddressDetails)
+//            case advancedSettings(AdvancedSettings)
+//            case chooseServerSetup(ServerSetup)
+//            case currencyConversionSetup(CurrencyConversionSetup)
+//            case exportPrivateData(PrivateDataConsent)
+//            case exportTransactionHistory(ExportTransactionHistory)
+//            case integrations(Integrations)
+////        case preSendingFailure(SendConfirmation)
+//        case receive(Receive)
+//        case recoveryPhrase(RecoveryPhraseDisplay)
+//        case requestZec(RequestZec)
+////        case requestZecConfirmation(SendConfirmation)
+//        case requestZecSummary(RequestZec)
+//            case resetZashi(DeleteWallet)
+//        case scan(Scan)
+//        case sendConfirmation(SendConfirmation)
+//        case sendForm(SendForm)
+//        case sending(SendConfirmation)
+//        case sendResultFailure(SendConfirmation)
+//        case sendResultPartial(PartialProposalError)
+//        case sendResultResubmission(SendConfirmation)
+//        case sendResultSuccess(SendConfirmation)
+//            case sendUsFeedback(SendFeedback)
+//        case settings(Settings)
+//        case transactionDetails(TransactionDetails)
+//        case transactionsManager(TransactionsManager)
+//            case whatsNew(WhatsNew)
+//        case zecKeyboard(ZecKeyboard)
+//    }
 
     let CancelId = UUID()
     let CancelStateId = UUID()
@@ -111,14 +112,17 @@ public struct Root {
 
     @ObservableState
     public struct State {
+        public enum Path {
+            case receive
+            case requestZecCoordFlow
+            case sendCoordFlow
+            case settings
+        }
+        
         public var CancelEventId = UUID()
         public var CancelStateId = UUID()
-        
-        
-        public var settingsState = Settings.State.initial
-        public var settingsBinding = false
 
-//        public var addressBookBinding: Bool = false
+        //        public var addressBookBinding: Bool = false
 //        public var addressBookContactBinding: Bool = false
         @Shared(.inMemory(.addressBookContacts)) public var addressBookContacts: AddressBookContacts = .empty
 //        public var addressBookState: AddressBook.State
@@ -141,11 +145,12 @@ public struct Root {
         public var notEnoughFreeSpaceState: NotEnoughFreeSpace.State
         public var onboardingState: OnboardingFlow.State
         public var osStatusErrorState: OSStatusError.State
-        public var path = StackState<Path.State>()
+//        public var path = StackState<Path.State>()
+        public var path: Path? = nil
         public var phraseDisplayState: RecoveryPhraseDisplay.State
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
         public var serverSetupState: ServerSetup.State
-        public var serverSetupViewBinding: Bool = false
+        public var serverSetupViewBinding = false
         public var splashAppeared = false
         @Shared(.inMemory(.transactions)) public var transactions: IdentifiedArrayOf<TransactionState> = []
         @Shared(.inMemory(.transactionMemos)) public var transactionMemos: [String: [String]] = [:]
@@ -157,8 +162,13 @@ public struct Root {
         public var zashiUAddress: UnifiedAddress? = nil
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
-        // coordinator states
-        public var requestZecState = RequestZec.State.initial
+        // Path
+        public var receiveState = Receive.State.initial
+        public var requestZecCoordFlowState = RequestZecCoordFlow.State.initial
+        public var sendCoordFlowState = SendCoordFlow.State.initial
+        public var settingsState = Settings.State.initial
+
+        //public var requestZecState = RequestZec.State.initial
 
         public init(
 //            addressBookState: AddressBook.State = .initial,
@@ -201,9 +211,7 @@ public struct Root {
             case quickRescan
         }
 
-        case settings(Settings.Action)
-        
-//        case addressBook(AddressBook.Action)
+        //        case addressBook(AddressBook.Action)
 //        case addressBookBinding(Bool)
 //        case addressBookContactBinding(Bool)
 //        case addressBookAccessGranted
@@ -222,7 +230,7 @@ public struct Root {
         case home(Home.Action)
         case initialization(InitializationAction)
         case notEnoughFreeSpace(NotEnoughFreeSpace.Action)
-        case path(StackActionOf<Path>)
+//        case path(StackActionOf<Path>)
         case resetZashiFinishProcessing
         case resetZashiKeychainFailed(OSStatus)
         case resetZashiKeychainFailedWithCorruptedData(String)
@@ -242,6 +250,12 @@ public struct Root {
         case walletConfigLoaded(WalletConfig)
         case welcome(Welcome.Action)
         
+        // Path
+        case receive(Receive.Action)
+        case requestZecCoordFlow(RequestZecCoordFlow.Action)
+        case sendCoordFlow(SendCoordFlow.Action)
+        case settings(Settings.Action)
+
         // Transactions
         case observeTransactions
         case foundTransactions([ZcashTransaction.Overview])
@@ -332,6 +346,18 @@ public struct Root {
 
         Scope(state: \.settingsState, action: \.settings) {
             Settings()
+        }
+
+        Scope(state: \.receiveState, action: \.receive) {
+            Receive()
+        }
+        
+        Scope(state: \.requestZecCoordFlowState, action: \.requestZecCoordFlow) {
+            RequestZecCoordFlow()
+        }
+        
+        Scope(state: \.sendCoordFlowState, action: \.sendCoordFlow) {
+            SendCoordFlow()
         }
 
         initializationReduce()
@@ -447,7 +473,7 @@ public struct Root {
             default: return .none
             }
         }
-        .forEach(\.path, action: \.path)
+        //.forEach(\.path, action: \.path)
         //.ifLet(\.$confirmationDialog, action: \.confirmationDialog)
     }
 }

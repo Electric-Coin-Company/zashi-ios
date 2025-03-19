@@ -13,7 +13,7 @@ import Settings
 @Reducer
 public struct NotEnoughFreeSpace {
     @ObservableState
-    public struct State: Equatable {
+    public struct State {
         public var freeSpaceRequiredForSync = ""
         public var freeSpace = ""
         public var isSettingsOpen = false
@@ -29,7 +29,7 @@ public struct NotEnoughFreeSpace {
         }
     }
     
-    public enum Action: BindableAction, Equatable {
+    public enum Action: BindableAction {
         case binding(BindingAction<NotEnoughFreeSpace.State>)
         case onAppear
         case settings(Settings.Action)
