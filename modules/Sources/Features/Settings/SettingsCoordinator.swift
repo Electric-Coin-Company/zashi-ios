@@ -44,15 +44,6 @@ extension Settings {
                 }
                 return .none
 
-//            case .path(.element(id: _, action: .accountHWWalletSelection(.accountImportSucceeded))):
-                //state.path.removeAll()
-//                return .none
-//                return .merge(
-//                    .send(.loadContacts),
-//                    .send(.resolveMetadataEncryptionKeys),
-//                    .send(.loadUserMetadata)
-//                )
-                
                 // MARK: - Address Book
 
             case .path(.element(id: _, action: .addressBook(.editId(let address)))):

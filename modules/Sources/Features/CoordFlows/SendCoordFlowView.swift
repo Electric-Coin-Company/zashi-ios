@@ -1,5 +1,5 @@
 //
-//  RequestZecCoordFlowView.swift
+//  SendCoordFlowView.swift
 //  Zashi
 //
 //  Created by Lukáš Korba on 2023-03-18.
@@ -9,13 +9,15 @@ import SwiftUI
 import ComposableArchitecture
 
 import UIComponents
-import ZecKeyboard
 import Generated
 
 // Path
 import AddressBook
+import PartialProposalError
 import Scan
+import SendConfirmation
 import SendForm
+import TransactionDetails
 
 public struct SendCoordFlowView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -46,15 +48,30 @@ public struct SendCoordFlowView: View {
                     AddressBookView(store: store)
                 case let .addressBookContact(store):
                     AddressBookContactView(store: store)
+                case let .preSendingFailure(store):
+                    PreSendingFailureView(store: store, tokenName: tokenName)
                 case let .scan(store):
                     ScanView(store: store)
+                case let .sendConfirmation(store):
+                    SendConfirmationView(store: store, tokenName: tokenName)
+                case let .sending(store):
+                    SendingView(store: store, tokenName: tokenName)
+                case let .sendResultFailure(store):
+                    FailureView(store: store, tokenName: tokenName)
+                case let .sendResultPartial(store):
+                    PartialProposalErrorView(store: store)
+                case let .sendResultResubmission(store):
+                    ResubmissionView(store: store, tokenName: tokenName)
+                case let .sendResultSuccess(store):
+                    SuccessView(store: store, tokenName: tokenName)
+                case let .transactionDetails(store):
+                    TransactionDetailsView(store: store, tokenName: tokenName)
                 }
             }
             .navigationBarHidden(!store.path.isEmpty)
         }
-        .padding(.horizontal, 4)
         .applyScreenBackground()
-        .zashiBack()
+        .zashiBack { store.send(.dismissRequired) }
         .screenTitle(L10n.General.send)
     }
 }

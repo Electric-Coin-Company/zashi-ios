@@ -125,7 +125,7 @@ public struct SettingsView: View {
                         .padding(.bottom, 24)
                 }
                 .listStyle(.plain)
-                //.applyScreenBackground()
+                .applyScreenBackground()
             } destination: { store in
                 switch store.case {
                 case let .about(store):

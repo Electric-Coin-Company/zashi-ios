@@ -176,6 +176,24 @@ private extension RootView {
                                 tokenName: tokenName
                             )
                         }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.scanCoordFlow)) {
+                            ScanCoordFlowView(
+                                store:
+                                    store.scope(
+                                        state: \.scanCoordFlowState,
+                                        action: \.scanCoordFlow),
+                                tokenName: tokenName
+                            )
+                        }
+                        .navigationLinkEmpty(isActive: store.bindingFor(.addKeystoneHWWalletCoordFlow)) {
+                            AddKeystoneHWWalletCoordFlowView(
+                                store:
+                                    store.scope(
+                                        state: \.addKeystoneHWWalletCoordFlowState,
+                                        action: \.addKeystoneHWWalletCoordFlow),
+                                tokenName: tokenName
+                            )
+                        }
                     }
                     .navigationViewStyle(.stack)
                     .overlayedWithSplash(store.splashAppeared) {

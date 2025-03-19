@@ -113,8 +113,10 @@ public struct Root {
     @ObservableState
     public struct State {
         public enum Path {
+            case addKeystoneHWWalletCoordFlow
             case receive
             case requestZecCoordFlow
+            case scanCoordFlow
             case sendCoordFlow
             case settings
         }
@@ -163,8 +165,10 @@ public struct Root {
         @Shared(.inMemory(.zashiWalletAccount)) public var zashiWalletAccount: WalletAccount? = nil
 
         // Path
+        public var addKeystoneHWWalletCoordFlowState = AddKeystoneHWWalletCoordFlow.State.initial
         public var receiveState = Receive.State.initial
         public var requestZecCoordFlowState = RequestZecCoordFlow.State.initial
+        public var scanCoordFlowState = ScanCoordFlow.State.initial
         public var sendCoordFlowState = SendCoordFlow.State.initial
         public var settingsState = Settings.State.initial
 
@@ -251,8 +255,10 @@ public struct Root {
         case welcome(Welcome.Action)
         
         // Path
+        case addKeystoneHWWalletCoordFlow(AddKeystoneHWWalletCoordFlow.Action)
         case receive(Receive.Action)
         case requestZecCoordFlow(RequestZecCoordFlow.Action)
+        case scanCoordFlow(ScanCoordFlow.Action)
         case sendCoordFlow(SendCoordFlow.Action)
         case settings(Settings.Action)
 
@@ -358,6 +364,14 @@ public struct Root {
         
         Scope(state: \.sendCoordFlowState, action: \.sendCoordFlow) {
             SendCoordFlow()
+        }
+        
+        Scope(state: \.scanCoordFlowState, action: \.scanCoordFlow) {
+            ScanCoordFlow()
+        }
+        
+        Scope(state: \.addKeystoneHWWalletCoordFlowState, action: \.addKeystoneHWWalletCoordFlow) {
+            AddKeystoneHWWalletCoordFlow()
         }
 
         initializationReduce()

@@ -241,6 +241,7 @@ let package = Package(
                 "AudioServices",
                 "Generated",
                 "Models",
+                "PartialProposalError",
                 "RequestZec",
                 "Scan",
                 "SendConfirmation",
