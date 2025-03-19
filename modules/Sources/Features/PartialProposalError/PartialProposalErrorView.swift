@@ -79,7 +79,7 @@ public struct PartialProposalErrorView: View {
                         
                         shareMessageView()
                     }
-                    .zashiBack(hidden: store.isBackButtonHidden) { store.send(.dismiss) }
+                    .zashiBackV2(hidden: store.isBackButtonHidden) { store.send(.dismiss) }
                     .onAppear { store.send(.onAppear) }
                 }
                 .padding(.vertical, 1)
