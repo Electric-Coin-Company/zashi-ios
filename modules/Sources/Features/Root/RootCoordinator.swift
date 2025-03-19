@@ -11,7 +11,43 @@ extension Root {
     public func coordinatorReduce() -> Reduce<Root.State, Root.Action> {
         Reduce { state, action in
             switch action {
-                // MARK: - Add Keystone HW Wallet
+                // MARK: - Accounts
+
+            case .home(.walletAccountTapped(let walletAccount)):
+                state.$selectedWalletAccount.withLock { $0 = walletAccount }
+                state.homeState.transactionListState.isInvalidated = true
+                return .merge(
+                    .send(.home(.walletBalances(.updateBalances))),
+                    .send(.loadContacts),
+                    .send(.resolveMetadataEncryptionKeys),
+                    .send(.loadUserMetadata),
+                    .send(.fetchTransactionsForTheSelectedAccount)
+                    //.send(.transactionsManager(.resetFiltersTapped))
+                )
+
+//                            case .walletAccountTapped(let walletAccount):
+//                                state.accountSwitchRequest = false
+//                                return .concatenate(
+//                                    .send(.transactionsManager(.resetFiltersTapped))
+//                                )
+
+                
+                // MARK: - Add Keystone HW Wallet Coord Flow
+
+            case .addKeystoneHWWalletCoordFlow(.path(.element(id: _, action: .accountHWWalletSelection(.forgetThisDeviceTapped)))):
+                state.path = nil
+                return .none
+
+            case .addKeystoneHWWalletCoordFlow(.path(.element(id: _, action: .accountHWWalletSelection(.accountImportSucceeded)))):
+                state.path = nil
+                return .merge(
+                    .send(.loadContacts),
+                    .send(.resolveMetadataEncryptionKeys),
+                    .send(.loadUserMetadata),
+                    .send(.fetchTransactionsForTheSelectedAccount)
+                )
+
+                // MARK: - Add Keystone HW Wallet from Settings
 
             case .settings(.path(.element(id: _, action: .accountHWWalletSelection(.accountImportSucceeded)))):
                 state.path = nil
@@ -51,6 +87,11 @@ extension Root {
                 state.path = .sendCoordFlow
                 return .none
 
+            case .home(.scanTapped):
+                state.scanCoordFlowState = .initial
+                state.path = .scanCoordFlow
+                return .none
+
             case .home(.getSomeZecTapped):
                 state.requestZecCoordFlowState = .initial
                 state.path = .requestZecCoordFlow
@@ -58,6 +99,11 @@ extension Root {
                 
             case .home(.flexaTapped):
                 return .send(.flexaOpenRequest)
+                
+            case .home(.addKeystoneHWWalletTapped):
+                state.addKeystoneHWWalletCoordFlowState = .initial
+                state.path = .addKeystoneHWWalletCoordFlow
+                return .none
 
                 // MARK: - Integrations
 
@@ -74,6 +120,42 @@ extension Root {
 
             case .settings(.path(.element(id: _, action: .resetZashi(.deleteTapped)))):
                 return .send(.initialization(.resetZashiRequest))
+
+                // MARK: - Scan Coord Flow
+                
+            case .scanCoordFlow(.scan(.cancelTapped)):
+                state.path = nil
+                return .none
+
+            case .scanCoordFlow(.sendCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped))))),
+                    .scanCoordFlow(.sendCoordFlow(.path(.element(id: _, action: .sendResultResubmission(.closeTapped))))),
+                    .scanCoordFlow(.sendCoordFlow(.path(.element(id: _, action: .sendResultPartial(.dismiss))))):
+                state.path = nil
+                return .none
+
+            case .scanCoordFlow(.sendCoordFlow(.path(.element(id: _, action: .transactionDetails(.closeDetailTapped))))):
+                state.path = nil
+                return .none
+
+            case .scanCoordFlow(.sendCoordFlow(.dismissRequired)):
+                state.path = nil
+                return .none
+
+                // MARK: - Send Coord Flow
+                
+            case .sendCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped)))),
+                    .sendCoordFlow(.path(.element(id: _, action: .sendResultResubmission(.closeTapped)))),
+                    .sendCoordFlow(.path(.element(id: _, action: .sendResultPartial(.dismiss)))):
+                state.path = nil
+                return .none
+
+            case .sendCoordFlow(.path(.element(id: _, action: .transactionDetails(.closeDetailTapped)))):
+                state.path = nil
+                return .none
+
+            case .sendCoordFlow(.dismissRequired):
+                state.path = nil
+                return .none
 
             default: return .none
             }
