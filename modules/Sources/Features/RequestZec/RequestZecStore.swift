@@ -42,6 +42,7 @@ public struct RequestZec {
         case memo(MessageEditor.Action)
         case onAppear
         case onDisappear
+        case onDisappearMemoStep(String)
         case qrCodeTapped
         case rememberQR(CGImage?)
         case requestTapped
@@ -69,6 +70,9 @@ public struct RequestZec {
             case .onDisappear:
                 return .cancel(id: state.cancelId)
 
+            case .onDisappearMemoStep:
+                return .none
+                
             case .cancelRequestTapped:
                 return .none
                 

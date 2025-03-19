@@ -1,54 +1,57 @@
 import SwiftUI
 import ComposableArchitecture
+import ZcashLightClientKit
 
 import AppVersion
 import Generated
 import Models
 import LocalAuthenticationHandler
+import AudioServices
 
 import About
 import AddKeystoneHWWallet
 import AddressBook
-import ServerSetup
 import CurrencyConversionSetup
-import PrivateDataConsent
-import ExportTransactionHistory
 import DeleteWallet
+import ExportTransactionHistory
+import PrivateDataConsent
+import RecoveryPhraseDisplay
 import Scan
+import ServerSetup
 import SendFeedback
 import WhatsNew
 
-import Utils
-
 @Reducer
 public struct Settings {
-//    @Reducer
-//    public enum Path {
-//        case about(About)
-//        case accountHWWalletSelection(AddKeystoneHWWallet)
-//        case addKeystoneHWWallet(AddKeystoneHWWallet)
-//        case addressBook(AddressBook)
-//        case addressBookContact(AddressBook)
-//        case advancedSettings(AdvancedSettings)
-//        case chooseServerSetup(ServerSetup)
-//        case currencyConversionSetup(CurrencyConversionSetup)
-//        case exportPrivateData(PrivateDataConsent)
-//        case exportTransactionHistory(ExportTransactionHistory)
-//        case integrations(Integrations)
-//        case resetZashi(DeleteWallet)
-//        case scan(Scan)
-//        case sendUsFeedback(SendFeedback)
-//        case whatsNew(WhatsNew)
-//    }
+    @Reducer
+    public enum Path {
+        case about(About)
+        case accountHWWalletSelection(AddKeystoneHWWallet)
+        case addKeystoneHWWallet(AddKeystoneHWWallet)
+        case addressBook(AddressBook)
+        case addressBookContact(AddressBook)
+        case advancedSettings(AdvancedSettings)
+        case chooseServerSetup(ServerSetup)
+        case currencyConversionSetup(CurrencyConversionSetup)
+        case exportPrivateData(PrivateDataConsent)
+        case exportTransactionHistory(ExportTransactionHistory)
+        case integrations(Integrations)
+        case recoveryPhrase(RecoveryPhraseDisplay)
+        case resetZashi(DeleteWallet)
+        case scan(Scan)
+        case sendUsFeedback(SendFeedback)
+        case whatsNew(WhatsNew)
+    }
     
     @ObservableState
-    public struct State: Equatable {
+    public struct State {
         public var appVersion = ""
         public var appBuild = ""
         @Shared(.inMemory(.featureFlags)) public var featureFlags: FeatureFlags = .initial
         public var isEnoughFreeSpaceMode = true
-//        public var path = StackState<Path.State>()
+        public var path = StackState<Path.State>()
         @Shared(.inMemory(.selectedWalletAccount)) public var selectedWalletAccount: WalletAccount? = nil
+        public var uAddress: UnifiedAddress? = nil
         @Shared(.inMemory(.walletAccounts)) public var walletAccounts: [WalletAccount] = []
 
         public var isKeystoneConnected: Bool {
@@ -68,29 +71,33 @@ public struct Settings {
         public init() { }
     }
 
-    public enum Action: Equatable {
+    public enum Action {
         case aboutTapped
         case addressBookAccessCheck
         case addressBookTapped
         case advancedSettingsTapped
         case integrationsTapped
         case onAppear
-//        case path(StackActionOf<Path>)
+        case path(StackActionOf<Path>)
         case sendUsFeedbackTapped
         case whatsNewTapped
     }
 
     @Dependency(\.appVersion) var appVersion
+    @Dependency(\.audioServices) var audioServices
     @Dependency(\.localAuthentication) var localAuthentication
 
     public init() { }
 
     public var body: some Reducer<State, Action> {
+        coordinatorReduce()
+        
         Reduce { state, action in
             switch action {
             case .onAppear:
                 state.appVersion = appVersion.appVersion()
                 state.appBuild = appVersion.appBuild()
+                state.path.removeAll()
                 return .none
 
             case .aboutTapped:
@@ -118,10 +125,10 @@ public struct Settings {
             case .whatsNewTapped:
                 return .none
                 
-//            case .path:
-//                return .none
+            case .path:
+                return .none
             }
         }
-//        .forEach(\.path, action: \.path)
+        .forEach(\.path, action: \.path)
     }
 }

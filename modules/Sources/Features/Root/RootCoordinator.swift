@@ -6,6 +6,83 @@
 //
 
 import ComposableArchitecture
+
+extension Root {
+    public func coordinatorReduce() -> Reduce<Root.State, Root.Action> {
+        Reduce { state, action in
+            switch action {
+                // MARK: - Add Keystone HW Wallet
+
+            case .settings(.path(.element(id: _, action: .accountHWWalletSelection(.accountImportSucceeded)))):
+                state.path = nil
+                return .merge(
+                    .send(.loadContacts),
+                    .send(.resolveMetadataEncryptionKeys),
+                    .send(.loadUserMetadata),
+                    .send(.fetchTransactionsForTheSelectedAccount)
+                )
+                
+                // MARK: - Flexa
+
+            case .flexaOpenRequest:
+                flexaHandler.open()
+                return .publisher {
+                    flexaHandler.onTransactionRequest()
+                        .map(Root.Action.flexaOnTransactionRequest)
+                        .receive(on: mainQueue)
+                }
+                .cancellable(id: CancelFlexaId, cancelInFlight: true)
+                
+                // MARK: - Home
+
+            case .home(.settingsTapped):
+                state.settingsState = .initial
+                state.settingsState.uAddress = state.zashiUAddress
+                state.path = .settings
+                return .none
+                
+            case .home(.receiveTapped):
+                state.receiveState = .initial
+                state.path = .receive
+                return .none
+
+            case .home(.sendTapped):
+                state.sendCoordFlowState = .initial
+                state.path = .sendCoordFlow
+                return .none
+
+            case .home(.getSomeZecTapped):
+                state.requestZecCoordFlowState = .initial
+                state.path = .requestZecCoordFlow
+                return .none
+                
+            case .home(.flexaTapped):
+                return .send(.flexaOpenRequest)
+
+                // MARK: - Integrations
+
+            case .settings(.path(.element(id: _, action: .integrations(.flexaTapped)))):
+                return .send(.flexaOpenRequest)
+                
+                // MARK: - Request Zec
+
+            case .requestZecCoordFlow(.path(.element(id: _, action: .requestZecSummary(.cancelRequestTapped)))):
+                state.path = nil
+                return .none
+
+                // MARK: - Reset Zashi
+
+            case .settings(.path(.element(id: _, action: .resetZashi(.deleteTapped)))):
+                return .send(.initialization(.resetZashiRequest))
+
+            default: return .none
+            }
+        }
+    }
+}
+
+/*
+import ComposableArchitecture
 import Generated
 //import ZcashLightClientKit
 
@@ -202,12 +279,15 @@ extension Root {
 
                 // MARK: - Integrations
 
-            case .path(.element(id: _, action: .integrations(.flexaTapped))):
+            case .settings(.path(.element(id: _, action: .integrations(.flexaTapped)))):
                 return .send(.flexaOpenRequest)
-
-            case .path(.element(id: _, action: .integrations(.keystoneTapped))):
-                state.path.append(.addKeystoneHWWallet(AddKeystoneHWWallet.State.initial))
-                return .none
+                
+//            case .path(.element(id: _, action: .integrations(.flexaTapped))):
+//                return .send(.flexaOpenRequest)
+//
+//            case .path(.element(id: _, action: .integrations(.keystoneTapped))):
+//                state.path.append(.addKeystoneHWWallet(AddKeystoneHWWallet.State.initial))
+//                return .none
 
                 // MARK: - Receive
 
@@ -520,33 +600,33 @@ extension Root {
                 }
                 return .none
 
-                // MARK: - Settings
-
-            case .path(.element(id: _, action: .settings(.addressBookTapped))):
-                state.path.append(.addressBook(AddressBook.State.initial))
-                return .none
-
-            case .path(.element(id: _, action: .settings(.integrationsTapped))):
-                var integrationsState = Integrations.State.initial
-                integrationsState.uAddress = state.zashiUAddress
-                state.path.append(.integrations(integrationsState))
-                return .none
-
-            case .path(.element(id: _, action: .settings(.advancedSettingsTapped))):
-                state.path.append(.advancedSettings(AdvancedSettings.State.initial))
-                return .none
-
-            case .path(.element(id: _, action: .settings(.whatsNewTapped))):
-//                state.path.append(.whatsNew(WhatsNew.State.initial))
-                return .none
-
-            case .path(.element(id: _, action: .settings(.aboutTapped))):
-                state.path.append(.about(About.State.initial))
-                return .none
-
-            case .path(.element(id: _, action: .settings(.sendUsFeedbackTapped))):
-                state.path.append(.sendUsFeedback(SendFeedback.State.initial))
-                return .none
+//                 MARK: - Settings
+//
+//            case .path(.element(id: _, action: .settings(.addressBookTapped))):
+//                state.path.append(.addressBook(AddressBook.State.initial))
+//                return .none
+//
+//            case .path(.element(id: _, action: .settings(.integrationsTapped))):
+//                var integrationsState = Integrations.State.initial
+//                integrationsState.uAddress = state.zashiUAddress
+//                state.path.append(.integrations(integrationsState))
+//                return .none
+//
+//            case .path(.element(id: _, action: .settings(.advancedSettingsTapped))):
+//                state.path.append(.advancedSettings(AdvancedSettings.State.initial))
+//                return .none
+//
+//            case .path(.element(id: _, action: .settings(.whatsNewTapped))):
+////                state.path.append(.whatsNew(WhatsNew.State.initial))
+//                return .none
+//
+//            case .path(.element(id: _, action: .settings(.aboutTapped))):
+//                state.path.append(.about(About.State.initial))
+//                return .none
+//
+//            case .path(.element(id: _, action: .settings(.sendUsFeedbackTapped))):
+//                state.path.append(.sendUsFeedback(SendFeedback.State.initial))
+//                return .none
 
                 // MARK: - Transaction Details
 
@@ -623,3 +703,4 @@ extension Root {
 //    default: break
 //    }
 //}
+*/

@@ -363,6 +363,8 @@ extension Root {
             case .initialization(.initializationSuccessfullyDone(let uAddress)):
                 state.zashiUAddress = uAddress
                 state.homeState.uAddress = uAddress
+                state.settingsState.uAddress = uAddress
+                state.requestZecCoordFlowState.uAddress = uAddress
 //                state.tabsState.settingsState.integrationsState.uAddress = uAddress
 //                state.tabsState.uAddress = uAddress
 //                if let uAddress = uAddress?.stringEncoded {
@@ -510,7 +512,7 @@ extension Root {
                 state.$transactionMemos.withLock { $0 = [:] }
                 state.$addressBookContacts.withLock { $0 = .empty }
                 state.$transactions.withLock { $0 = [] }
-                state.path.removeAll()
+                state.path = nil
 
                 return .send(.resetZashiKeychainRequest)
                 
@@ -575,7 +577,7 @@ extension Root {
                 }
                 
             case .resetZashiKeychainFailedWithCorruptedData(let errMsg):
-                for element in state.path {
+                for element in state.settingsState.path {
                     if case .resetZashi(var resetZashiState) = element {
                         resetZashiState.isProcessing = false
                         break
@@ -590,7 +592,7 @@ extension Root {
                     return .send(.resetZashiKeychainRequest)
                 }
                 state.maxResetZashiAppAttempts = ResetZashiConstants.maxResetZashiAppAttempts
-                for element in state.path {
+                for element in state.settingsState.path {
                     if case .resetZashi(var resetZashiState) = element {
                         resetZashiState.isProcessing = false
                         break
@@ -608,7 +610,7 @@ extension Root {
                     )
                 }
                 state.maxResetZashiSDKAttempts = ResetZashiConstants.maxResetZashiSDKAttempts
-                for element in state.path {
+                for element in state.settingsState.path {
                     if case .resetZashi(var resetZashiState) = element {
                         resetZashiState.isProcessing = false
                         break

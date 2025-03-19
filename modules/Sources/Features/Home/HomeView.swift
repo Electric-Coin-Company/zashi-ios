@@ -89,9 +89,32 @@ public struct HomeView: View {
                 //.padding(.bottom, 32)
                 .screenHorizontalPadding()
 
-                SmartBanner {
+                SmartBanner(isOpen: true) {
 //                    EmptyView()
-                    Text("any content here")
+                    HStack(spacing: 0) {
+                        //VStack(alignment: .leading, spacing: 0) {
+                            Asset.Assets.infoCircle.image
+                                .zImage(size: 20, style: Design.Utility.Gray._900)
+                                .padding(.trailing, 12)
+                            //Spacer()
+                        //}
+                        
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("Wallet Backup Required")
+                                .zFont(.medium, size: 14, style: Design.Utility.Gray._900)
+                            Text("Prevent potential loss of funds")
+                                .zFont(.medium, size: 12, style: Design.Utility.Gray._700)
+                        }
+                        .lineLimit(1)
+                        
+                        Spacer()
+                        
+                        ZashiButton("Get started") {
+                            
+                        }
+                        .frame(width: 106)
+                        .padding(.trailing, 6)
+                    }
                 }
 //                .padding(.bottom, 40)
 
@@ -113,6 +136,7 @@ public struct HomeView: View {
                             .padding(.top, 12)
                     } else {
                         VStack(spacing: 0) {
+//                            noTransactionsView()
                             transactionsView()
                             
                             TransactionListView(

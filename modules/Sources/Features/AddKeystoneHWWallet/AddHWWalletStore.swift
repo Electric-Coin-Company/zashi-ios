@@ -105,7 +105,7 @@ public struct AddKeystoneHWWallet {
                         )
                         if let uuid {
                             await send(.accountImported(uuid))
-                            await send(.accountImportFailed)
+                            await send(.accountImportSucceeded)
                         }
                     } catch {
                         // TODO: error handling

@@ -86,8 +86,15 @@ public struct SmartBanner<Content: View>: View {
     @State private var height: CGFloat = 0
     let content: () -> Content?
 
-    public init(content: @escaping () -> Content?) {
+    var test = false
+    
+    public init(isOpen: Bool = false, content: @escaping () -> Content?) {
         self.content = content
+//        if isOpen {
+//            withAnimation {
+        test = isOpen
+//            }
+//        }
     }
     
     public var body: some View {
@@ -134,5 +141,13 @@ public struct SmartBanner<Content: View>: View {
                 isOpen.toggle()
             }
         }
+//        .task { @MainActor in
+//            try? await Task.sleep(for: .seconds(2))
+//            if test {
+//                withAnimation(.easeInOut(duration: 0.5)) {
+//                    isOpen.toggle()
+//                }
+//            }
+//        }
     }
 }
