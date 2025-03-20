@@ -60,6 +60,8 @@ public struct SendCoordFlowView: View {
                     FailureView(store: store, tokenName: tokenName)
                 case let .sendResultPartial(store):
                     PartialProposalErrorView(store: store)
+                case let .requestZecConfirmation(store):
+                    RequestPaymentConfirmationView(store: store, tokenName: tokenName)
                 case let .sendResultResubmission(store):
                     ResubmissionView(store: store, tokenName: tokenName)
                 case let .sendResultSuccess(store):

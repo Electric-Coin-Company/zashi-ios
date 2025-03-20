@@ -49,11 +49,7 @@ public struct AddKeystoneHWWalletCoordFlow {
         
         Reduce { state, action in
             switch action {
-            case .addKeystoneHWWallet:
-                return .none
-
-            case .path:
-                return .none
+            default: return .none
             }
         }
         .forEach(\.path, action: \.path)

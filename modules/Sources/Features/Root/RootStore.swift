@@ -119,6 +119,7 @@ public struct Root {
             case scanCoordFlow
             case sendCoordFlow
             case settings
+            case transactionsCoordFlow
         }
         
         public var CancelEventId = UUID()
@@ -171,6 +172,7 @@ public struct Root {
         public var scanCoordFlowState = ScanCoordFlow.State.initial
         public var sendCoordFlowState = SendCoordFlow.State.initial
         public var settingsState = Settings.State.initial
+        public var transactionsCoordFlowState = TransactionsCoordFlow.State.initial
 
         //public var requestZecState = RequestZec.State.initial
 
@@ -261,6 +263,7 @@ public struct Root {
         case scanCoordFlow(ScanCoordFlow.Action)
         case sendCoordFlow(SendCoordFlow.Action)
         case settings(Settings.Action)
+        case transactionsCoordFlow(TransactionsCoordFlow.Action)
 
         // Transactions
         case observeTransactions
@@ -372,6 +375,10 @@ public struct Root {
         
         Scope(state: \.addKeystoneHWWalletCoordFlowState, action: \.addKeystoneHWWalletCoordFlow) {
             AddKeystoneHWWalletCoordFlow()
+        }
+
+        Scope(state: \.transactionsCoordFlowState, action: \.transactionsCoordFlow) {
+            TransactionsCoordFlow()
         }
 
         initializationReduce()

@@ -12,7 +12,12 @@ import UIComponents
 import Generated
 
 // Path
+import AddressBook
+import PartialProposalError
 import Scan
+import SendConfirmation
+import SendForm
+import TransactionDetails
 
 public struct ScanCoordFlowView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -27,23 +32,47 @@ public struct ScanCoordFlowView: View {
     
     public var body: some View {
         WithPerceptionTracking {
-            ScanView(
-                store:
-                    store.scope(
-                        state: \.scanState,
-                        action: \.scan
-                    )
-            )
-            .onAppear() { store.send(.onAppear) }
-            .navigationLinkEmpty(isActive: $store.sendCoordFlowBinding) {
-                SendCoordFlowView(
+            NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
+                ScanView(
                     store:
                         store.scope(
-                            state: \.sendCoordFlowState,
-                            action: \.sendCoordFlow),
-                    tokenName: tokenName
+                            state: \.scanState,
+                            action: \.scan
+                        )
                 )
+                .onAppear { store.send(.onAppear) }
+            } destination: { store in
+                switch store.case {
+                case let .addressBook(store):
+                    AddressBookView(store: store)
+                case let .addressBookContact(store):
+                    AddressBookContactView(store: store)
+                case let .preSendingFailure(store):
+                    PreSendingFailureView(store: store, tokenName: tokenName)
+                case let .scan(store):
+                    ScanView(store: store)
+                case let .sendConfirmation(store):
+                    SendConfirmationView(store: store, tokenName: tokenName)
+                case let .sendForm(store):
+                    SendFormView(store: store, tokenName: tokenName)
+                case let .sending(store):
+                    SendingView(store: store, tokenName: tokenName)
+                case let .sendResultFailure(store):
+                    FailureView(store: store, tokenName: tokenName)
+                case let .sendResultPartial(store):
+                    PartialProposalErrorView(store: store)
+                case let .requestZecConfirmation(store):
+                    RequestPaymentConfirmationView(store: store, tokenName: tokenName)
+                case let .sendResultResubmission(store):
+                    ResubmissionView(store: store, tokenName: tokenName)
+                case let .sendResultSuccess(store):
+                    SuccessView(store: store, tokenName: tokenName)
+                case let .transactionDetails(store):
+                    TransactionDetailsView(store: store, tokenName: tokenName)
+                }
             }
+            .navigationBarHidden(true)
+            .navigationBarBackButtonHidden()
         }
     }
 }

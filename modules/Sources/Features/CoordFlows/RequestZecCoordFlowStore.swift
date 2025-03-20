@@ -49,11 +49,7 @@ public struct RequestZecCoordFlow {
 
         Reduce { state, action in
             switch action {
-            case .zecKeyboard:
-                return .none
-                
-            case .path:
-                return .none
+            default: return .none
             }
         }
         .forEach(\.path, action: \.path)

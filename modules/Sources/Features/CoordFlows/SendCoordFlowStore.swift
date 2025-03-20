@@ -11,6 +11,7 @@ import ZcashLightClientKit
 
 import AudioServices
 import Models
+import NumberFormatter
 
 // Path
 import AddressBook
@@ -27,6 +28,7 @@ public struct SendCoordFlow {
         case addressBook(AddressBook)
         case addressBookContact(AddressBook)
         case preSendingFailure(SendConfirmation)
+        case requestZecConfirmation(SendConfirmation)
         case scan(Scan)
         case sendConfirmation(SendConfirmation)
         case sending(SendConfirmation)
@@ -53,6 +55,7 @@ public struct SendCoordFlow {
     }
 
     @Dependency(\.audioServices) var audioServices
+    @Dependency(\.numberFormatter) var numberFormatter
 
     public init() { }
 
@@ -65,14 +68,7 @@ public struct SendCoordFlow {
 
         Reduce { state, action in
             switch action {
-            case .dismissRequired:
-                return .none
-                
-            case .sendForm:
-                return .none
-                
-            case .path:
-                return .none
+            default: return .none
             }
         }
         .forEach(\.path, action: \.path)

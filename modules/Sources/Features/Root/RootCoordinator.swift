@@ -104,6 +104,17 @@ extension Root {
                 state.addKeystoneHWWalletCoordFlowState = .initial
                 state.path = .addKeystoneHWWalletCoordFlow
                 return .none
+                
+            case .home(.transactionList(.transactionTapped(let txId))):
+                state.transactionsCoordFlowState = .initial
+                state.transactionsCoordFlowState.transactionToOpen = txId
+                state.path = .transactionsCoordFlow
+                return .none
+
+            case .home(.seeAllTransactionsTapped):
+                state.transactionsCoordFlowState = .initial
+                state.path = .transactionsCoordFlow
+                return .none
 
                 // MARK: - Integrations
 
@@ -126,20 +137,25 @@ extension Root {
             case .scanCoordFlow(.scan(.cancelTapped)):
                 state.path = nil
                 return .none
-
-            case .scanCoordFlow(.sendCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped))))),
-                    .scanCoordFlow(.sendCoordFlow(.path(.element(id: _, action: .sendResultResubmission(.closeTapped))))),
-                    .scanCoordFlow(.sendCoordFlow(.path(.element(id: _, action: .sendResultPartial(.dismiss))))):
+                
+            case .scanCoordFlow(.path(.element(id: _, action: .sendForm(.dismissRequired)))):
                 state.path = nil
                 return .none
-
-            case .scanCoordFlow(.sendCoordFlow(.path(.element(id: _, action: .transactionDetails(.closeDetailTapped))))):
-                state.path = nil
-                return .none
-
-            case .scanCoordFlow(.sendCoordFlow(.dismissRequired)):
-                state.path = nil
-                return .none
+                
+//
+//            case .scanCoordFlow(.sendCoordFlow(.path(.element(id: _, action: .sendResultSuccess(.closeTapped))))),
+//                    .scanCoordFlow(.sendCoordFlow(.path(.element(id: _, action: .sendResultResubmission(.closeTapped))))),
+//                    .scanCoordFlow(.sendCoordFlow(.path(.element(id: _, action: .sendResultPartial(.dismiss))))):
+//                state.path = nil
+//                return .none
+//
+//            case .scanCoordFlow(.sendCoordFlow(.path(.element(id: _, action: .transactionDetails(.closeDetailTapped))))):
+//                state.path = nil
+//                return .none
+//
+//            case .scanCoordFlow(.sendCoordFlow(.dismissRequired)):
+//                state.path = nil
+//                return .none
 
                 // MARK: - Send Coord Flow
                 
@@ -154,6 +170,16 @@ extension Root {
                 return .none
 
             case .sendCoordFlow(.dismissRequired):
+                state.path = nil
+                return .none
+
+                // MARK: - Transactions Coord Flow
+                
+            case .transactionsCoordFlow(.transactionDetails(.closeDetailTapped)):
+                state.path = nil
+                return .none
+
+            case .transactionsCoordFlow(.transactionsManager(.dismissRequired)):
                 state.path = nil
                 return .none
 
